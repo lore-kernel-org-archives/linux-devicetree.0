@@ -7,124 +7,95 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C20C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 21:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614E6C32771
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 22:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6E8246A9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 21:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242A4206E6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 22:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="sWCNj0ZQ"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Hma47cnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgARV5O (ORCPT
+        id S1727031AbgARWAp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jan 2020 16:57:14 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43846 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgARV5O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 16:57:14 -0500
-Received: by mail-ed1-f68.google.com with SMTP id dc19so25865846edb.10;
-        Sat, 18 Jan 2020 13:57:13 -0800 (PST)
+        Sat, 18 Jan 2020 17:00:45 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:32826 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgARWAp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 17:00:45 -0500
+Received: by mail-ed1-f65.google.com with SMTP id r21so25890823edq.0;
+        Sat, 18 Jan 2020 14:00:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xhEeNJG6Xe03fAdCWoX8L2PNC8Ts9rcXxVowinyH7Jk=;
-        b=sWCNj0ZQnbgArqLuw0XgK3tLKDpG6In0kiTRu4lFsb3+62AuuZEdDNrhrHEkXU2ZjV
-         +NrFKwt20CkDMRpye3isHNQcsRe4mFxsOjdn7Gp4QbGCaPHjbubuf4xMV4m850btYfaU
-         TH81GKDtQnnthH05MnOsT+EYtj9H+Mq8IYH5JvMpfk5DC5lpx1gJUk04CLiNe0kou6CR
-         CxjhEulvlHdjr/a8LTvPVSqxb22EoK7D09WKmiSuVPsSpOEI306HLTEK9GmVQdhZeXrk
-         nqo7nRAKokRDqaXotijdhTP9Q8nwucOa4JcN2DR+I55VtM5D4dpSNez7Cw7SNzYTZsas
-         v3Ng==
+        bh=hhGX1nqtyoIZtWHowHcHPTDuXomALEwGp67YDIAs05A=;
+        b=Hma47cnZkW8SDZySjYMuPSLqtSqE+IGLh9ZGHEFQJ7/WvVbaeTgLg5nEdn68Vy0dCK
+         GUBMZrRmAWrTo84VZE44KJpsZFWbb1YoVyTe6dCcVTbLHIJHY/7SAUFl27ZA4Kr8ZVID
+         BijVsnKRqrvLW6r9pjuSbPKhlMb5Aaei7Niboxwmwr2HPBl/F2yJpy3XtSVI6Xz09G8m
+         hZwYqoMwOLqnUbyrNTdQx2+v5XDeC6RmkSaUKqrMWGBja8VIZgczhZk4bYCaG4KFh3sv
+         WHuYswNS0goNqezzYhOH8T07sY0avlTpkA7XYSTvuyl+k6G+wYkk8RZhv4ALnNcG8kI0
+         4t1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xhEeNJG6Xe03fAdCWoX8L2PNC8Ts9rcXxVowinyH7Jk=;
-        b=m5qydpr/y7Z/kyd//Xmhcem7usvxMcm3DRA7gmoLFTEL6S5sHduAbCou/UAXm067vA
-         9EZUtROY/SPU9uRCxoLFJkgbF609+yvaiT39sqXz+MhSuCzAcOIrVo06/ofRQhWv/NVe
-         21ydFh7wPHMfWkLMo77zNqxerkw0+7gvoZdfWbkGFb/oih8sgSSPX0sIA/tpJVgY91m4
-         jU1kw6VUgi0KyH5kUGJwKbf2FzYDLz7jdlRt5Y6dt0B9TT1mXI34ykDbOQW6WAlNT9Zo
-         GxcBzGA8E75mAGF7OmSTA6OjyodUMshdGRPvzgzrKeWH5zKaiNHVxDzCrxSiaOuXzcUL
-         wiaw==
-X-Gm-Message-State: APjAAAU8gG7ewlrFuepsXt7BS0o9q6f2ajuqUIojQm6djp/OO0NoOIj/
-        SeWAntXdgUoYI6+axvaOsBYS4kygkZh+RjzFjxMwACcq
-X-Google-Smtp-Source: APXvYqyjnAk8oubKYhxKxWzUPog0rE1nkqWdTWkbrvxjIY8nWbYmSn4gzUFbwFiw03cl5ZtTyqcd01lYsxkaQM35M+Q=
-X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr10507644edb.146.1579384632180;
- Sat, 18 Jan 2020 13:57:12 -0800 (PST)
+        bh=hhGX1nqtyoIZtWHowHcHPTDuXomALEwGp67YDIAs05A=;
+        b=YZY11TQ+CyUjUzbRYiTbM/5V4ekKEuceSFgQh3m+4LrdVwmKHxsWvN5/I/Tk3FuyxW
+         C3ZmV7ZkO0dd/xGjFHF/viHPUpRDvA2jszYBSpc6bnhtEVlLc1xaN1pofxhDcbz82Chg
+         qRbMuVnmDoJWO+xQ+H3Ro347UixFCvw74h+fYcnt8tntWNFKWiQL1RFaOYXpi/2o9yyf
+         eMNS1zkuibhHvL394bSmE+1Hw2HyQevoftP5swkxnWG+dBGH6CcltkTegX1RKAPG7p5G
+         QaR3J6NQc8BzzXLDLnNT1PULEeUhbkGd2z07JRX68UOTZYmRN5kO47wqH3THLrWJ3/Z6
+         HAlg==
+X-Gm-Message-State: APjAAAXJHW+qhFe8qP3RfubYQsjMYEwyK9olf1dttZQi5lAW+gOczs0q
+        G+jrbnDclvEcXJtMQGM6q6xHXo2WO1EFmQt4gwU=
+X-Google-Smtp-Source: APXvYqx5U4qXgJUFLodBAh/Su0iA4o4YjM2gOenS+CuMOI6/b0kQEpYd45al918MVd/znVyYVIAaXhGujEJ328y18VE=
+X-Received: by 2002:a17:906:2359:: with SMTP id m25mr13932991eja.22.1579384843512;
+ Sat, 18 Jan 2020 14:00:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20200116080440.118679-1-jian.hu@amlogic.com> <20200116080440.118679-3-jian.hu@amlogic.com>
-In-Reply-To: <20200116080440.118679-3-jian.hu@amlogic.com>
+References: <1579220504-110067-1-git-send-email-hanjie.lin@amlogic.com> <1579220504-110067-5-git-send-email-hanjie.lin@amlogic.com>
+In-Reply-To: <1579220504-110067-5-git-send-email-hanjie.lin@amlogic.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 18 Jan 2020 22:57:01 +0100
-Message-ID: <CAFBinCCkmUzNBeUz0k7na2FgR1SPKda81j+RnhEp9Jj84HEzmg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] clk: meson: add support for A1 PLL clock ops
-To:     Jian Hu <jian.hu@amlogic.com>
+Date:   Sat, 18 Jan 2020 23:00:32 +0100
+Message-ID: <CAFBinCAZ1iUKDnV2ewrT0ytXjVbpbZVpn-Ybj9caN4Od3Z0UEg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/6] usb: dwc3: Add Amlogic A1 DWC3 glue
+To:     Hanjie Lin <hanjie.lin@amlogic.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
         Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Liang Yang <liang.yang@amlogic.com>,
         Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
         Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
+        Xingyu Chen <xingyu.chen@amlogic.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jian,
+Hi Hanjie,
 
-thank you for the update!
+thank you for this update - your patch looks great now!
 
-On Thu, Jan 16, 2020 at 9:04 AM Jian Hu <jian.hu@amlogic.com> wrote:
+On Fri, Jan 17, 2020 at 1:22 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
 >
-> Compared with the previous SoCs, self-adaption current module
-> is newly added for A1, and there is no reset parm except the
-> fixed pll. In A1 PLL, the PLL enable sequence is different, using
-> the new power-on sequence to enable the PLL.
+> Adds support for Amlogic A1 USB Control Glue HW.
 >
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-[...]
-> @@ -323,13 +330,34 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->                 return 0;
+> The Amlogic A1 SoC Family embeds 1 USB Controllers:
+> - a DWC3 IP configured as Host for USB2 and USB3
 >
->         /* Make sure the pll is in reset */
-> -       meson_parm_write(clk->map, &pll->rst, 1);
-> +       if (MESON_PARM_APPLICABLE(&pll->rst))
-> +               meson_parm_write(clk->map, &pll->rst, 1);
+> A glue connects the controllers to the USB2 PHY of A1 SoC.
 >
->         /* Enable the pll */
->         meson_parm_write(clk->map, &pll->en, 1);
->
->         /* Take the pll out reset */
-> -       meson_parm_write(clk->map, &pll->rst, 0);
-> +       if (MESON_PARM_APPLICABLE(&pll->rst))
-> +               meson_parm_write(clk->map, &pll->rst, 0);
-> +
-> +       /*
-> +        * Compared with the previous SoCs, self-adaption current module
-> +        * is newly added for A1, keep the new power-on sequence to enable the
-> +        * PLL. The sequence is:
-> +        * 1. enable the pll, delay for 10us
-> +        * 2. enable the pll self-adaption current module, delay for 40us
-> +        * 3. enable the lock detect module
-> +        */
-> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
-> +               udelay(10);
-> +               meson_parm_write(clk->map, &pll->current_en, 1);
-> +               udelay(40);
-note to myself: first I thought that these have to be converted to ulseep_range
-BUT: clk_enable can be called from atomic context, so the atomic
-versions (udelay instead of usleep/usleep_range) are perfectly fine in
-Jian's patch
-
-
-Martin
+> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
