@@ -2,123 +2,125 @@ Return-Path: <SRS0=Evye=3H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077FBC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 16:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B132C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 17:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C641B2469A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 16:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5696246A2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 17:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMs7U+f0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f77OMoHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgARQgb (ORCPT
+        id S1726460AbgARRCS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jan 2020 11:36:31 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39289 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgARQgb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 11:36:31 -0500
-Received: by mail-wm1-f67.google.com with SMTP id 20so10573630wmj.4;
-        Sat, 18 Jan 2020 08:36:29 -0800 (PST)
+        Sat, 18 Jan 2020 12:02:18 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37797 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbgARRCS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 12:02:18 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so25591207wru.4;
+        Sat, 18 Jan 2020 09:02:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rYU4lKJZz8jrmAECEotQPYwMWUzBimgsvUxqlI2dv1k=;
-        b=eMs7U+f0WTVzLTGS3JpZuOspADfN/RH4GPEaLFXau9e7PlwXVGxW/i/z6GcAEc3s/c
-         2R1d9PihI4ijay5hnM+xZBEusLA3RmIlIdcxND65O7RzjJYdvlGuIDlyssCC8PoCub1u
-         xzJ/yKbpRO1U0jeYkaOCYS7qrskqsb3Q34OtTXVeFsw/LZ/rdqdTR7Ju6Zj66Y0q6XoX
-         9sm1jU4C+urIjrvuJQFMAnaywuBm7D7yzdrkUGFs/o9bC8kSzuMmc43EEUqsqlDf28pt
-         uNofFHmFp+gDxBHlYoIZ7bYtJZ1QAkAailZFt5nlM05nGQV3T5/qyDlPwPWJF+Jk0xaz
-         UL5Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UVdKI4qzpgYXt1ARI5Pkn0qMmMdORH3SJ+ruk4Mge5o=;
+        b=f77OMoHUjuk/UxCeuv2xlrDIqAhVEcRmw9pCin/HRcvWEDTgjP4u499mvyYNlrNR5J
+         cS0o0sQxngEGmSZF8AzszGBfbAb/J05Z3ns0kIJCGIn3D+3ZoZGQDtViYb7/80dDZjXS
+         qn0udBTgAS0qLBwX9GN+PQREKhRTCtRgFOCEjnRLUnqyKl7QVi7y5CvcqzmWhKAO01y4
+         TdBtIXzYFI3ZzIVzKaH05cnkR3pGtlhqYEK4nC7mvzstWxQbaqTytXmCOUqqaGYEIPhW
+         8rqavzR/ddSGCOqPfKawroyiz6VlJYjaS8MUdM5uh+c7G9R/LZLC70vuwEsvioEvgnIu
+         kJPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=rYU4lKJZz8jrmAECEotQPYwMWUzBimgsvUxqlI2dv1k=;
-        b=EjqcUdRQkzciNmVd2Fm8WJTsGc3jSBNfHJpxd5sJ5sNR8CL4UzoufAVsPfK1xOfOLp
-         lLbhrjWcg5BpO2BujDCfhWtuZ8Rm4brsAkeZgdNa7idrmYa20EIkpZh7UeAMAk+HI3g3
-         RWQcP1KJKpZxBkSfYHUkp90RsEVEBzGat0YjCFvcVTR+g2Y79Y+JjVaRjfFf3Kb7plhW
-         SdgHTETDFip+toknX2i0jZ7sXd+ZIkOun+lWqauOJSvShRM+WlH1PdmtrvXC5YPbQHas
-         py/G8vP7HhitUIiDFpk7nTLm3xYAGKf9p7zJxiR76i+wavA8mEAcq4XxulfZkDpj3tWQ
-         WpRg==
-X-Gm-Message-State: APjAAAWK6s0eGs+s3ll5GHiWsqfGos6cuiCyIlvpeAv8m577QN9uEg75
-        xNbLAFKXhI/qOvIB+Ccnnwk=
-X-Google-Smtp-Source: APXvYqx7Ck4c3p5eVRuk5D9QilKU9w2oGrZ1Mo95ReXz+vTsLujg+C91uSTkkkCyU6bRQGrd+OnOeA==
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr10731975wmj.175.1579365389079;
-        Sat, 18 Jan 2020 08:36:29 -0800 (PST)
-Received: from [192.168.1.94] (93-41-244-45.ip84.fastwebnet.it. [93.41.244.45])
-        by smtp.gmail.com with ESMTPSA id x10sm39099676wrp.58.2020.01.18.08.36.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jan 2020 08:36:28 -0800 (PST)
-Subject: Re: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
-To:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        bh=UVdKI4qzpgYXt1ARI5Pkn0qMmMdORH3SJ+ruk4Mge5o=;
+        b=pN6n7/s8UIgAjk9yhDd0kJ2l7SucrktfqEUSdd9Gj31OIJvl29CQgZ8DySHoBQlvK3
+         ka1PzHYmnZAfNxTOnMeHD5HEVx6mq0TtN3CxstCGIiYvg6M3yeKMFt0fV21AWZ1fRPvN
+         2L4WbdARSeufBRADo8vF8FBP8es0BDDNVVmBpKIL0B81ANscBZLgICdoie+tnSBB2k6a
+         EvfkR30S764LvIfsmkIgqDOghFYGvlZV0/G83aFMf8CVu0rFbu8cda4nz7lOpmQwPXZN
+         dwvY4HFKjpavyOWULhvMC6QmmHv1mlPhnB4PeOlpPmT1fNwYUPXyOia/I0rYP7CE+cDB
+         AtMA==
+X-Gm-Message-State: APjAAAVOzU7ueLRp/b+sAT3kP37yqvbgWXL7wHhEX8D6BY5PHqFmxVyB
+        +6ULXl+KjzuHb/cIyaL40Ts=
+X-Google-Smtp-Source: APXvYqz7ImU2NwQQn0UM/ohkl4agpIr6kw0ptBWP3KlQk0db+EE5ZP41NsqYzOa2Lw+G5Pps7GjwVg==
+X-Received: by 2002:adf:fe8c:: with SMTP id l12mr9197083wrr.215.1579366935977;
+        Sat, 18 Jan 2020 09:02:15 -0800 (PST)
+Received: from localhost.localdomain (abag109.neoplus.adsl.tpnet.pl. [83.6.170.109])
+        by smtp.googlemail.com with ESMTPSA id j12sm39896087wrt.55.2020.01.18.09.02.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 09:02:15 -0800 (PST)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     devicetree@vger.kernel.org, Simon Xue <xxm@rock-chips.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
-        William Wu <william.wu@rock-chips.com>
-References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
- <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
-From:   Francesco Lavra <francescolavra.fl@gmail.com>
-Message-ID: <0975b4e4-4bee-3f8e-5276-2bc78e6dabc0@gmail.com>
-Date:   Sat, 18 Jan 2020 17:36:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] ARM: dts: qcom: msm8974-honami: Add USB node.
+Date:   Sat, 18 Jan 2020 17:55:18 +0100
+Message-Id: <20200118165518.36036-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/14/20 8:25 AM, Shawn Lin wrote:
-> +static int rockchip_pcie_reset_control_release(struct rockchip_pcie *rockchip)
-> +{
-> +	struct device *dev = rockchip->pci->dev;
-> +	struct property *prop;
-> +	const char *name;
-> +	int ret, count, i = 0;
-> +
-> +	count = of_property_count_strings(dev->of_node, "reset-names");
-> +	if (count < 1)
-> +		return -ENODEV;
-> +
-> +	rockchip->rsts = devm_kcalloc(dev, count,
-> +				     sizeof(struct reset_bulk_data),
-> +				     GFP_KERNEL);
-> +	if (!rockchip->rsts)
-> +		return -ENOMEM;
-> +
-> +	of_property_for_each_string(dev->of_node, "reset-names",
-> +				    prop, name) {
-> +		rockchip->rsts[i].id = name;
-> +		if (!rockchip->rsts[i].id)
-> +			return -ENOMEM;
-> +		i++;
-> +	}
-> +
-> +	for (i = 0; i < count; i++) {
-> +		rockchip->rsts[i].rst = devm_reset_control_get_exclusive(dev,
-> +						rockchip->rsts[i].id);
-> +		if (IS_ERR_OR_NULL(rockchip->rsts[i].rst)) {
-> +			dev_err(dev, "failed to get %s\n",
-> +				rockchip->clks[i].id);
-> +			return -PTR_ERR(rockchip->rsts[i].rst);
+This exact node has been included in Amami DTS
+ever since 2017, turns out it works perfectly
+fine with Honami, as tested with postmarketOS.
 
-IS_ERR_OR_NULL() should be replaced with IS_ERR(), because 
-devm_reset_control_get_exclusive() never returns a NULL value.
-Also, in case of error you should return the value from PTR_ERR(), 
-without the minus sign.
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ .../dts/qcom-msm8974-sony-xperia-honami.dts   | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+index 450b8321e0a6..611bae9fe66b 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+@@ -260,6 +260,31 @@ l24 {
+ };
+ 
+ &soc {
++	usb@f9a55000 {
++		status = "ok";
++
++		phys = <&usb_hs1_phy>;
++		phy-select = <&tcsr 0xb000 0>;
++		extcon = <&smbb>, <&usb_id>;
++		vbus-supply = <&chg_otg>;
++
++		hnp-disable;
++		srp-disable;
++		adp-disable;
++
++		ulpi {
++			phy@a {
++				status = "ok";
++
++				v1p8-supply = <&pm8941_l6>;
++				v3p3-supply = <&pm8941_l24>;
++
++				extcon = <&smbb>;
++				qcom,init-seq = /bits/ 8 <0x1 0x64>;
++			};
++		};
++	};
++
+ 	sdhci@f9824900 {
+ 		status = "ok";
+ 
+-- 
+2.24.1
+
