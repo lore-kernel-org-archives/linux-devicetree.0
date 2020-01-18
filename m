@@ -2,106 +2,113 @@ Return-Path: <SRS0=Evye=3H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DD2C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 09:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF23C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 09:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90EE2468B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 09:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5847621D56
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 09:23:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=essensium.com header.i=@essensium.com header.b="SMUce4J8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgARJLr (ORCPT
+        id S1726673AbgARJX1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jan 2020 04:11:47 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:52912 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgARJLr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 04:11:47 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id E15CA80440;
-        Sat, 18 Jan 2020 10:11:41 +0100 (CET)
-Date:   Sat, 18 Jan 2020 10:11:40 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: display: Convert a bunch of panels to DT
- schema
-Message-ID: <20200118091140.GA12245@ravnborg.org>
-References: <20200117231756.3141-1-robh@kernel.org>
+        Sat, 18 Jan 2020 04:23:27 -0500
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:37071 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbgARJX1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 04:23:27 -0500
+Received: by mail-ed1-f49.google.com with SMTP id cy15so24650197edb.4
+        for <devicetree@vger.kernel.org>; Sat, 18 Jan 2020 01:23:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=essensium.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tEv3CQeWt5hgTO0fdyyZhcvyQnL+294XMDPWLhPD0R4=;
+        b=SMUce4J8PyOnFUcMTF2ulvGT7HqcEyboIZ3KRX7jYrCBEgNZz+iFoIlg4VsZa6SyMc
+         086ujzTghpMkQffnqvRdTAFDcGjL7QJQobuR1yAQqvgiBrnxbdfCjT/ImBMSz6Jy1yUj
+         ziYtTh3HDbM2B0CIiIFQdk7BitRo/ldAfzU5WO0ANJRbU4qHSNfl81Sp//EBvjhyQdWe
+         JKOyR7AWS/h5ON/7JIwjPVsZkRN3gWjhxKFvzD9eX5mNTIQ/bGwljs6Mc6UCN3MVHEua
+         6gLQxK425u4sX1X1OLOH5L28vGlWgYt9fQh1YAoerrWGXHnYertUyBepmLVynHWmo21I
+         Fsjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tEv3CQeWt5hgTO0fdyyZhcvyQnL+294XMDPWLhPD0R4=;
+        b=Li0xZNbM2E3Uc2dP0Qf+2THvfdzsTsFESEO7q1Nh+MyYRm1OnpRnRtzZb2Ie/Us6gB
+         h+tcCjOx1mCIxgvkWDdwYh35dvd7+9lR76CyoessI6oP1IHxUfLaga3AGlRtQi5aGVHZ
+         U/bxh/N+bjlBHUVEvlaZ6HJEpEuCWgZgZKYirwCzbaXLvUElrAL+28ebqifapMf/cPpS
+         iKfXHAjBH+aDfwgW1F+yooj56uBDcEbDYsROU+R+s2Jj7cC7mDX8tD9/X+eC07uFKXRA
+         PSwIGISLf37MSM1JF14htUARj0gMw83HTtZSK6C9s9aBVEdDzfIoRG9E9/F5MMGVqzB9
+         fZdw==
+X-Gm-Message-State: APjAAAXPw/6LPNj+xn+vVfkt7aeRKyoy4/NOeJBsBtqYovpiN6tI6BJP
+        qyrcWyO9Lj3NMRqpkq3n1bxGfQ==
+X-Google-Smtp-Source: APXvYqx9Kth68jmU6ZU3PMNsEVaG87MpswBkVRsp/aKO6HUfEFpig+CaMPfYXrx4zig/ZT9lckSpTw==
+X-Received: by 2002:a17:906:5586:: with SMTP id y6mr11686039ejp.336.1579339405582;
+        Sat, 18 Jan 2020 01:23:25 -0800 (PST)
+Received: from Abby.home (10.20-136-217.adsl-dyn.isp.belgacom.be. [217.136.20.10])
+        by smtp.googlemail.com with ESMTPSA id s19sm1057402edr.55.2020.01.18.01.23.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 01:23:25 -0800 (PST)
+From:   Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Charles-Antoine Couret <charles-antoine.couret@essensium.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 2/2] ASoC: tas5756m: Add DT binding document
+Date:   Sat, 18 Jan 2020 10:23:15 +0100
+Message-Id: <20200118092315.10384-2-charles-antoine.couret@essensium.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200118092315.10384-1-charles-antoine.couret@essensium.com>
+References: <20200118092315.10384-1-charles-antoine.couret@essensium.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117231756.3141-1-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=mvVtXd7HAW45dodTMrUA:9 a=dLSrt29t64xHWj39:21 a=gagzr6WNY6cZXZWM:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob.
+Document the bindings for the tas5756m driver.
+---
+ .../devicetree/bindings/sound/tas5756m.txt    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas5756m.txt
 
-On Fri, Jan 17, 2020 at 05:17:56PM -0600, Rob Herring wrote:
-> Convert all the 'simple' panels which match the constraints of the
-> common panel-simple.yaml schema. This conversion is based on how the
-> panels are documented. Some may turn out to be more complex once the
-> schema is applied to actual dts files.
+diff --git a/Documentation/devicetree/bindings/sound/tas5756m.txt b/Documentation/devicetree/bindings/sound/tas5756m.txt
+new file mode 100644
+index 000000000000..293eaf20d008
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas5756m.txt
+@@ -0,0 +1,25 @@
++TAS5756M audio CODEC
++
++Required properties:
++
++  - compatible: should be one of the following:
++    - "ti,tas5756m"
++    - "ti,tas5754m"
++  - reg: the I2C address of the device for I2C.
++
++Optional properties:
++
++  - mute-gpio : GPIO wired to the mute pin.
++  - hybridflow : an integer between 1 and 9 to select the HybridFlow program.
++      if not supplied default DSP program is used.
++
++Example:
++
++	tas5756m: tas5756m@4c {
++		compatible = "ti,tas5756m";
++		reg = <0x4c>;
++		#sound-dai-cells = <0>;
++
++		hybridflow = <6>;
++		mute-gpio = <&gpio1 11 GPIO_ACTIVE_LOW>;
++	};
+-- 
+2.24.1
 
-Thanks for updating this patch - and very good to reduce the number of
-files with almost the same content.
-
-One comment below, with that addressed:
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-
-There are likely some dt files that assume panels need no power and need a
-fixed-regulator or something as power-supply now is mandatory.
-Should this be checked before we apply this patch?
-
-As we continue to see new panels more or less every week I would like
-this patch applied to drm-misc-next as soon as possible to avoid any
-future conflicts.
-
-> index 513f03466aba..000000000000
-> --- a/Documentation/devicetree/bindings/display/panel/innolux,p120zdg-bf1.txt
-> +++ /dev/null
-> @@ -1,22 +0,0 @@
-> -Innolux P120ZDG-BF1 12.02 inch eDP 2K display panel
-> -
-> -This binding is compatible with the simple-panel binding, which is specified
-> -in simple-panel.txt in this directory.
-> -
-> -Required properties:
-> -- compatible: should be "innolux,p120zdg-bf1"
-> -- power-supply: regulator to provide the supply voltage
-> -
-> -Optional properties:
-> -- enable-gpios: GPIO pin to enable or disable the panel
-> -- backlight: phandle of the backlight device attached to the panel
-> -- no-hpd: If HPD isn't hooked up; add this property.
-
-panel-simple.yaml does not include the no-hpd property.
-We only have 2 bindings, this and sharp,ld-d5116z01b.yaml
-that include the no-hpd property.
-
-We have two options:
-1) add the no-hpd property to panel-simple.yaml
-2) keep an independent binding for panels using no-hpd
-
-I suggest to keep an independent binding for innolux,p120zdg-bf1
-so we keep panel-simple.yaml slim.
-In other words do not delete this file and remove the compatible from
-panel-simple.yaml
-
-	Sam
