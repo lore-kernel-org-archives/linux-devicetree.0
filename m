@@ -2,111 +2,123 @@ Return-Path: <SRS0=Evye=3H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03995C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 15:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077FBC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 16:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D21E82469C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 15:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C641B2469A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 16:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMs7U+f0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgARPZK (ORCPT
+        id S1726614AbgARQgb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jan 2020 10:25:10 -0500
-Received: from mx2.freebsd.org ([96.47.72.81]:23582 "EHLO mx2.freebsd.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726359AbgARPZK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Jan 2020 10:25:10 -0500
-Received: from mx1.freebsd.org (mx1.freebsd.org [IPv6:2610:1c1:1:606c::19:1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx2.freebsd.org (Postfix) with ESMTPS id 9773B7B638;
-        Sat, 18 Jan 2020 15:25:08 +0000 (UTC)
-        (envelope-from manu@FreeBSD.Org)
-Received: from smtp.freebsd.org (smtp.freebsd.org [IPv6:2610:1c1:1:606c::24b:4])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx1.freebsd.org (Postfix) with ESMTPS id 480MF01jhmz44FZ;
-        Sat, 18 Jan 2020 15:25:08 +0000 (UTC)
-        (envelope-from manu@FreeBSD.Org)
-Received: from localhost.localdomain (lfbn-idf2-1-1164-130.w90-92.abo.wanadoo.fr [90.92.223.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: manu)
-        by smtp.freebsd.org (Postfix) with ESMTPSA id 3942E17F81;
-        Sat, 18 Jan 2020 15:25:07 +0000 (UTC)
-        (envelope-from manu@FreeBSD.Org)
-From:   Emmanuel Vadot <manu@FreeBSD.Org>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH v2] arm64: dts: allwinner: a64: Add gpio bank supply for A64-Olinuxino
-Date:   Sat, 18 Jan 2020 16:24:59 +0100
-Message-Id: <20200118152459.17199-1-manu@FreeBSD.Org>
-X-Mailer: git-send-email 2.25.0
+        Sat, 18 Jan 2020 11:36:31 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39289 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbgARQgb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 11:36:31 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 20so10573630wmj.4;
+        Sat, 18 Jan 2020 08:36:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rYU4lKJZz8jrmAECEotQPYwMWUzBimgsvUxqlI2dv1k=;
+        b=eMs7U+f0WTVzLTGS3JpZuOspADfN/RH4GPEaLFXau9e7PlwXVGxW/i/z6GcAEc3s/c
+         2R1d9PihI4ijay5hnM+xZBEusLA3RmIlIdcxND65O7RzjJYdvlGuIDlyssCC8PoCub1u
+         xzJ/yKbpRO1U0jeYkaOCYS7qrskqsb3Q34OtTXVeFsw/LZ/rdqdTR7Ju6Zj66Y0q6XoX
+         9sm1jU4C+urIjrvuJQFMAnaywuBm7D7yzdrkUGFs/o9bC8kSzuMmc43EEUqsqlDf28pt
+         uNofFHmFp+gDxBHlYoIZ7bYtJZ1QAkAailZFt5nlM05nGQV3T5/qyDlPwPWJF+Jk0xaz
+         UL5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rYU4lKJZz8jrmAECEotQPYwMWUzBimgsvUxqlI2dv1k=;
+        b=EjqcUdRQkzciNmVd2Fm8WJTsGc3jSBNfHJpxd5sJ5sNR8CL4UzoufAVsPfK1xOfOLp
+         lLbhrjWcg5BpO2BujDCfhWtuZ8Rm4brsAkeZgdNa7idrmYa20EIkpZh7UeAMAk+HI3g3
+         RWQcP1KJKpZxBkSfYHUkp90RsEVEBzGat0YjCFvcVTR+g2Y79Y+JjVaRjfFf3Kb7plhW
+         SdgHTETDFip+toknX2i0jZ7sXd+ZIkOun+lWqauOJSvShRM+WlH1PdmtrvXC5YPbQHas
+         py/G8vP7HhitUIiDFpk7nTLm3xYAGKf9p7zJxiR76i+wavA8mEAcq4XxulfZkDpj3tWQ
+         WpRg==
+X-Gm-Message-State: APjAAAWK6s0eGs+s3ll5GHiWsqfGos6cuiCyIlvpeAv8m577QN9uEg75
+        xNbLAFKXhI/qOvIB+Ccnnwk=
+X-Google-Smtp-Source: APXvYqx7Ck4c3p5eVRuk5D9QilKU9w2oGrZ1Mo95ReXz+vTsLujg+C91uSTkkkCyU6bRQGrd+OnOeA==
+X-Received: by 2002:a05:600c:248:: with SMTP id 8mr10731975wmj.175.1579365389079;
+        Sat, 18 Jan 2020 08:36:29 -0800 (PST)
+Received: from [192.168.1.94] (93-41-244-45.ip84.fastwebnet.it. [93.41.244.45])
+        by smtp.gmail.com with ESMTPSA id x10sm39099676wrp.58.2020.01.18.08.36.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Jan 2020 08:36:28 -0800 (PST)
+Subject: Re: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
+To:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     devicetree@vger.kernel.org, Simon Xue <xxm@rock-chips.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+        William Wu <william.wu@rock-chips.com>
+References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
+ <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
+From:   Francesco Lavra <francescolavra.fl@gmail.com>
+Message-ID: <0975b4e4-4bee-3f8e-5276-2bc78e6dabc0@gmail.com>
+Date:   Sat, 18 Jan 2020 17:36:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Emmanuel Vadot <manu@freebsd.org>
+On 1/14/20 8:25 AM, Shawn Lin wrote:
+> +static int rockchip_pcie_reset_control_release(struct rockchip_pcie *rockchip)
+> +{
+> +	struct device *dev = rockchip->pci->dev;
+> +	struct property *prop;
+> +	const char *name;
+> +	int ret, count, i = 0;
+> +
+> +	count = of_property_count_strings(dev->of_node, "reset-names");
+> +	if (count < 1)
+> +		return -ENODEV;
+> +
+> +	rockchip->rsts = devm_kcalloc(dev, count,
+> +				     sizeof(struct reset_bulk_data),
+> +				     GFP_KERNEL);
+> +	if (!rockchip->rsts)
+> +		return -ENOMEM;
+> +
+> +	of_property_for_each_string(dev->of_node, "reset-names",
+> +				    prop, name) {
+> +		rockchip->rsts[i].id = name;
+> +		if (!rockchip->rsts[i].id)
+> +			return -ENOMEM;
+> +		i++;
+> +	}
+> +
+> +	for (i = 0; i < count; i++) {
+> +		rockchip->rsts[i].rst = devm_reset_control_get_exclusive(dev,
+> +						rockchip->rsts[i].id);
+> +		if (IS_ERR_OR_NULL(rockchip->rsts[i].rst)) {
+> +			dev_err(dev, "failed to get %s\n",
+> +				rockchip->clks[i].id);
+> +			return -PTR_ERR(rockchip->rsts[i].rst);
 
-Add the regulators for each bank on this boards.
-For VCC-PL only add a comment on what regulator is used. We cannot add
-the property without causing a circular dependency as the PL pins are
-used to talk to the PMIC.
-
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
-v2:
- - Remove vcc-pl-supply in r_pio as it cause a circular dependency.
-
- .../boot/dts/allwinner/sun50i-a64-olinuxino.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 01a9a52edae4..7e71b5b12f98 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -163,6 +163,17 @@ &ohci1 {
- 	status = "okay";
- };
- 
-+&pio {
-+	vcc-pa-supply = <&reg_dcdc1>;
-+	vcc-pb-supply = <&reg_dcdc1>;
-+	vcc-pc-supply = <&reg_dcdc1>;
-+	vcc-pd-supply = <&reg_dcdc1>;
-+	vcc-pe-supply = <&reg_aldo1>;
-+	vcc-pf-supply = <&reg_dcdc1>;
-+	vcc-pg-supply = <&reg_dldo4>;
-+	vcc-ph-supply = <&reg_dcdc1>;
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
-@@ -175,6 +186,12 @@ axp803: pmic@3a3 {
- 	};
- };
- 
-+/* VCC-PL is powered by aldo2 but we cannot add it as the RSB */
-+/* interface used to talk to the PMIC in on the PL pins */
-+/* &r_pio { */
-+/*	vcc-pl-supply = <&reg_aldo2>; */
-+/* }; */
-+
- #include "axp803.dtsi"
- 
- &ac_power_supply {
--- 
-2.24.1
-
+IS_ERR_OR_NULL() should be replaced with IS_ERR(), because 
+devm_reset_control_get_exclusive() never returns a NULL value.
+Also, in case of error you should return the value from PTR_ERR(), 
+without the minus sign.
