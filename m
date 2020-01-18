@@ -2,57 +2,98 @@ Return-Path: <SRS0=Evye=3H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B70BC32771
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 23:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA737C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 23:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0427C24656
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 23:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC50246AE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 23:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcOPjCFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgARXBx (ORCPT
+        id S1727465AbgARXJC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jan 2020 18:01:53 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:40748 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgARXBx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Jan 2020 18:01:53 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1isx6F-0007IW-PK; Sun, 19 Jan 2020 00:01:51 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] arm: rockchip: dts: Kill off "simple-panel" compatibles
-Date:   Sun, 19 Jan 2020 00:01:51 +0100
-Message-ID: <11733187.XpjhTr9bNC@phil>
-In-Reply-To: <20200117230851.25434-1-robh@kernel.org>
-References: <20200117230851.25434-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Sat, 18 Jan 2020 18:09:02 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:47033 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbgARXI7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 18:08:59 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so25940278wrl.13;
+        Sat, 18 Jan 2020 15:08:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=zieK1rZ40R+8dR9w9wxIfPfmZcLHznAHvHJSGV+7afI=;
+        b=WcOPjCFxbQWN8I82H5+ql2IT5LtNNZEE54Ef1UQEznrAlFFQXvjOAAp7l95UefDFNS
+         sM8rfr3puhtQih9QwjB8lgLbpQW+1pl84qKR1dtOyHoj80fgXj14bSdwyBPtD4nCBgAu
+         r4JKfQzwqy/2UdJotQ4fW8GH+X3hrxLYIAmUk8XmbYO67tu4LW/XAwM3qUfWN6L4jWVi
+         uLNlfl1Bqm7jOCu8h76EFoIQkUw8VSsfYlFjJ8qj0gZ+6vmWVgbnVEB+ZG5tk2ovR5AQ
+         VWv4+iOzUpx7qNTcWQhFq02mgr0DZvKT89oxZ7tRKJ8XbA8m5m/BtpgAU6aHzrPrFkiy
+         Lmgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=zieK1rZ40R+8dR9w9wxIfPfmZcLHznAHvHJSGV+7afI=;
+        b=k9d05YY1R+Oldzoj5eAqKOugxY398vK0rMbavKOAOFs8lpfQQNpbIPNmFcQFDzSJ7V
+         rQ+yQxoX2BEqmbnmDnTSJYbmB/sNeq27Wgbq3h6A6M/iFSafVXGdC0eneZVgHhudhUkh
+         MYFKhsmhI/WPIaqNBS8Pw6i1bS8bldAz2i+Gd67G2r49+CU+EvYHYR1B6AjQSRw/7R+z
+         41ziMIvxpqQ/Ziwo3EeylGUszVYDknaNNoLzdt7AlqVTmcth0tRU5lyDA1JHoYCJ4EGS
+         f4iLkqn0qnDCiBlVqi2eLxuCq4Nsvy13qCEK9LE4o05bm/73DH/jeoO6iG9AxaKTpMeG
+         y2og==
+X-Gm-Message-State: APjAAAWoTNxOuD18BenqFzpJCmzu1R9A6NoyqaFpHA6L639QcjTb8sfV
+        +IJtCfpnQP/Ord4mzYba5mM=
+X-Google-Smtp-Source: APXvYqwUVkfqKTEe+IdcTJGpN/Oh1StsZugRXWPB63ViZ0Prt/rRHknvczy59Jrcs1kniRrGyk/cBw==
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr10351910wrs.11.1579388937355;
+        Sat, 18 Jan 2020 15:08:57 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id x16sm5746408wmk.35.2020.01.18.15.08.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Jan 2020 15:08:56 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     broonie@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 3/3] dt-bindings: spi: spi-rockchip: add description for rk3328
+Date:   Sun, 19 Jan 2020 00:08:48 +0100
+Message-Id: <20200118230848.15326-3-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200118230848.15326-1-jbx6244@gmail.com>
+References: <20200118230848.15326-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Samstag, 18. Januar 2020, 00:08:51 CET schrieb Rob Herring:
-> "simple-panel" is a Linux driver and has never been an accepted upstream
-> compatible string, so remove it.
-> 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-rockchip@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+The description below is already in use for rk3328.dtsi,
+but was somehow never added to a document, so add
+"rockchip,rk3328-spi", "rockchip,rk3066-spi"
+for spi nodes on a rk3328 platform to spi-rockchip.yaml.
 
-I've split this into arm32+arm64 variants and applied it for
-maybe still 5.6
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks
-Heiko
-
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+index 24d9567a6..27b2d1df9 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+@@ -30,6 +30,7 @@ properties:
+             - rockchip,rk3188-spi  #for rk3188 SoCs.
+             - rockchip,rk3288-spi  #for rk3288 SoCs.
+             - rockchip,rk3308-spi  #for rk3308 SoCs.
++            - rockchip,rk3328-spi  #for rk3328 SoCs.
+             - rockchip,rk3368-spi  #for rk3368 SoCs.
+             - rockchip,rk3399-spi  #for rk3399 SoCs.
+           - const: rockchip,rk3066-spi
+-- 
+2.11.0
 
