@@ -1,159 +1,104 @@
-Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=Evye=3H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8616C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 23:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13369C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 00:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC1822464
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 23:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1F922522
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 00:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kRqauqv0"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="h//ca95y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgAQXyg (ORCPT
+        id S1730320AbgARAOr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 18:54:36 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44285 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbgAQXyg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 18:54:36 -0500
-Received: by mail-vs1-f65.google.com with SMTP id p6so15895316vsj.11
-        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 15:54:35 -0800 (PST)
+        Fri, 17 Jan 2020 19:14:47 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42788 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730232AbgARAOr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 19:14:47 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 4so12675366pfz.9
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 16:14:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E8NH+1a7F0WHIbRqp4rgZ//dPF83s70QZVUublxQDJk=;
-        b=kRqauqv0A8IJZAnyv/N+3xLExXjs4/9vSzOBDDgFPTLxjwCoi5V2OvsBTILHRr5vCN
-         aIQ1emXkFTxcYZvD49A44J5vujNjZb1lKdhrsljJEk/+IPYGQvgyuhPgiu6Nww9oc0Nh
-         Phel0bF23O4QoXZ2j4pca1GgKWaMFNdLBmXWk=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rIiAvm32XEnWHnoC4eW2jcWJDNVynX17TBKUA2iGuwU=;
+        b=h//ca95yCGwVF9dI2j1jcWYQ3VZ1utPcu2hpXdMAljPJikwZ+YeoRbIu/cb4F9MY33
+         buwUXxrKw7om1mxwS7xy/X0RbUFF/mvwSDWBWMxKvHlgs24mzRa1FOr0+NBJCWOnyOV2
+         Y2JTJSoa0R2OXH1t9Ojg6tz24053YnBAxATcXc/qFryKO1TwLq1O+pavaHReZjpUrHuG
+         CQddxSduiFQNij++HQCaE3RORcZhaIKxq9vAqQc75QGtzQOJrwGvU5+OPp0a5uaoq9lK
+         0qUodEAYPJhFB7hQLwiMjZEzv0NCCrM2U2yIHCCimSZfP1NYRe2fO2DD7/SMXM3QdXNi
+         VITQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E8NH+1a7F0WHIbRqp4rgZ//dPF83s70QZVUublxQDJk=;
-        b=e6A40jAo9K5O9hxlUMSQ2+YZs+D3eKU+WyBdWuYruB3U4bgvbKuxgFBV7naa6pIzRF
-         Rx71mwQgT6ot/E2EgqLkD3gwxbVxhnNsf8BMo/etV1poqW0lkJsKIKkqqd9QzIkHdPyu
-         PpilsMYkpUWyToULdw6+4qTlOCFH5+XuR+1jq90Hsn1qXZPNyumuGfjaWAutL7c/0Dxt
-         3PzIEGbfLyikRPCbHm8yS2klVtNzp4ttTaG/af19lQMTLlKBYrshnKe3bmJNZfNQe8PB
-         a5fCG6KvYKfvt5bYz9J+B2pglbAq2DID8mlID1EI7SrxtxGg+SIWeEMBAxOybQzoqNQy
-         75fA==
-X-Gm-Message-State: APjAAAVSJ744rfJNWIyomj/S7u9S4mkz7r+eGbXjHMaMYSCAKTDg1hm0
-        wXNjkAnDEuj8iHzGWWBSG1NPcaQ9Lwg=
-X-Google-Smtp-Source: APXvYqxJhPV0Ve2rxXhhIPk5T7x0OPe4kivNRngtGbMP0uswjcGeC6UXQumIiwGkbl4G9eNNrLgWaQ==
-X-Received: by 2002:a67:89c4:: with SMTP id l187mr3793466vsd.31.1579305274318;
-        Fri, 17 Jan 2020 15:54:34 -0800 (PST)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id w62sm7719383vkw.35.2020.01.17.15.54.33
-        for <devicetree@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rIiAvm32XEnWHnoC4eW2jcWJDNVynX17TBKUA2iGuwU=;
+        b=OjYvaidJqUIQzGWvuQcmqt7GfIH1Phn2sRgUOdvJo7uK4niQgll0tYyfv0I4ui7Hkw
+         urZ+zwPpW/zEQRvTcvTVjIBtaXLDOSKFy5ZF8pNJBJdqNbhbh7I0lvn3qctqPUAPceuF
+         8qQBpTq+M0wkPbRId6cXn5CIokP+r4ako/lSOYTBpujfg+JmxHWylszbXFzvId/YeCRL
+         5wut1TSQZLrgaiNPWGStWp7Pdx4y/EPAhYo3md/5InR9hkhNKv+crjqmCWjFrl5ho92c
+         Cjs5nRcvkjp1UC/UX/dhCJcNM16TnD5xPt6roAm0sdTtxVMW2GAj7lsSnK0ZAY1fe6Kp
+         1TEA==
+X-Gm-Message-State: APjAAAUnM3jkvAkaZz1iTAsvSpW3IEsimBtFumLt/0Mpu4+nmK/AktO9
+        2Up2HzXdExpPikc8wVe0PyGyBsInJjw=
+X-Google-Smtp-Source: APXvYqzqWBYrMw1HB+Gk+5row/Uyjq+Gu6i/XptFJ1/s9DZ0JyZM4VsGKwPDgo+z8F1YNamjT0Ippg==
+X-Received: by 2002:aa7:971d:: with SMTP id a29mr5700501pfg.29.1579306486813;
+        Fri, 17 Jan 2020 16:14:46 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id j2sm30294998pfi.22.2020.01.17.16.14.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 15:54:33 -0800 (PST)
-Received: by mail-ua1-f47.google.com with SMTP id 1so9599597uao.1
-        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 15:54:33 -0800 (PST)
-X-Received: by 2002:ab0:2006:: with SMTP id v6mr24170327uak.22.1579305272950;
- Fri, 17 Jan 2020 15:54:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20200117155001.v2.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid>
-In-Reply-To: <20200117155001.v2.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 17 Jan 2020 15:54:19 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Wg3gpLXz1+xxL_6Ki404+oXyma6NB33eps_Gs8R4LX4Q@mail.gmail.com>
-Message-ID: <CAD=FV=Wg3gpLXz1+xxL_6Ki404+oXyma6NB33eps_Gs8R4LX4Q@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: timer: Use non-empty ranges in example
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 17 Jan 2020 16:14:46 -0800 (PST)
+Subject: Re: [PATCH v4 0/2] ata: ahci_brcm: Follow-up changes for BCM7216
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Hans de Goede <hdegoede@redhat.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com
+References: <20200117235313.14202-1-f.fainelli@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d171e5fa-7fcd-2176-12d4-5c2286bee46e@kernel.dk>
+Date:   Fri, 17 Jan 2020 17:14:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200117235313.14202-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On 1/17/20 4:53 PM, Florian Fainelli wrote:
+> Hi Jens,
+> 
+> These three patches are a follow-up to my previous series titled: ata:
+> ahci_brcm: Fixes and new device support.
+> 
+> After submitting the BCM7216 RESCAL reset driver, Philipp the reset
+> controller maintained indicated that the reset line should be self
+> de-asserting and so reset_control_reset() should be used instead.
+> 
+> These three patches update the driver in that regard. It would be great if
+> you could apply those and get them queued up for 5.6 since they are
+> directly related to the previous series.
 
-On Fri, Jan 17, 2020 at 3:50 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> On many arm64 qcom device trees, running `make dtbs_check` yells:
->
->   timer@17c20000: #size-cells:0:0: 1 was expected
->
-> It appears that someone was trying to assert the fact that sub-nodes
-> describing frames would never have a size that's more than 32-bits
-> big.  That does indeed appear to be true for all cases I could find.
->
-> Currently many arm64 qcom device tree files have a #address-cells and
-> about in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase
-> address and size cells for soc").  That means the only way we can
-> shrink them down is to use a non-empty ranges.
->
-> Since forever it has said in "writing-bindings.txt" to "DO use
-> non-empty 'ranges' to limit the size of child buses/devices".  I guess
-> we should start listening to it.
->
-> I believe (but am not certain) that this also means that we should use
-> "ranges" to simplify the "reg" of our sub devices by specifying an
-> offset.  Let's update the example in the bindings to make this
-> obvious.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> See:
->   https://lore.kernel.org/r/20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid
->
-> ...for the patch that sparked this change.
->
-> Changes in v2:
-> - Fixed my typo 0xf0000000 => 0xf0001000
->
->  .../devicetree/bindings/timer/arm,arch_timer_mmio.yaml | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
-> index b3f0fe96ff0d..b92d958d7541 100644
-> --- a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
-> +++ b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
-> @@ -99,22 +99,22 @@ examples:
->        compatible = "arm,armv7-timer-mem";
->        #address-cells = <1>;
->        #size-cells = <1>;
-> -      ranges;
-> +      ranges = <0 0xf0001000 0x1000>;
->        reg = <0xf0000000 0x1000>;
->        clock-frequency = <50000000>;
->
-> -      frame@f0001000 {
-> +      frame@0 {
->          frame-number = <0>;
->          interrupts = <0 13 0x8>,
->                 <0 14 0x8>;
-> -        reg = <0xf0001000 0x1000>,
-> -              <0xf0002000 0x1000>;
-> +        reg = <0x0000 0x1000>,
-> +              <0x1000 0x1000>;
->        };
->
->        frame@f0003000 {
->          frame-number = <1>;
->          interrupts = <0 15 0x8>;
-> -        reg = <0xf0003000 0x1000>;
-> +        reg = <0x2000 0x1000>;
+Thanks, applied.
 
-Wow, how many stupid mistakes can I make in one small change?  :(  I
-forgot to change the node name.  v3 is now at:
+-- 
+Jens Axboe
 
-https://lore.kernel.org/r/20200117155303.v3.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid
-
--Doug
