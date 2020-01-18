@@ -2,101 +2,235 @@ Return-Path: <SRS0=Evye=3H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2854C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 02:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B803EC32771
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 04:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2E221582
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 02:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C5C2072B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jan 2020 04:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sMUiJhur"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJRPpWc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730679AbgARCmF (ORCPT
+        id S1726950AbgARECQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 21:42:05 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41486 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgARCmE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 21:42:04 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so28388556ljc.8;
-        Fri, 17 Jan 2020 18:42:03 -0800 (PST)
+        Fri, 17 Jan 2020 23:02:16 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33273 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgARECQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 23:02:16 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b18so24385645otp.0
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 20:02:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ds2vxYVCII0rQhNGIg+GsyVnkbjiJdX12kWA/mq4wMs=;
-        b=sMUiJhurkj+REFjcm9uScNDQIWo6atrRvOjAFPbcL6BpRg3vIFAnr2vdTucrKAIRnv
-         Apy8gALjD6klDmBWI6WLZ4Cejs8+lPmONV9jxR1V+3G42wxcyTR48sR6CPBogGl2mLzj
-         lYYTq5xwBIF6Sp/gLmW2AzEHytAProEN7//A8mCxjNzPyMkKksCgwwvZiMAS6KuvRU6B
-         66tqKw81oNi2vpLmVHR1mfR1R+Gg9mV32d+FsEMvaV74/AWulZCDG2oX7NQ0p64U0fv3
-         Jxlv76t7KxZx7Dy1M2p3vC8ySDMgUgRyiU38JM1K0LQtbH8eTf+IhXoYwWuGSZyveE4D
-         BDPw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vb5cyWLJV5ZR0F5iDmlf/8PvEYOZeZfUNSdNGtLvZJI=;
+        b=oJRPpWc86aW8ElClMpbeSmGps0a3/zd+opvvpOkEBC8hVNCtjdLp5PzynS4G4c56BU
+         3VSWjMLxP2DgfZAY4Ynqq28PxgwynoAx/Ega1iY5vHADe1nx28Ss+oVjWt9i17loT/Tn
+         /hJnGFOj25AP5GZ9CftweA9mgLEHxvhOGHMWu4SjXw7OsNretKxT+LYInNxlwjS8R8tX
+         Kvx6LsE4imBsm/FB7RCiHcxLA7Gd4WNxHPzi9y/zW+G3PDYWzBmvAJI8YG+Bi4dU8j07
+         3cRGWMsJ6Qcd04JnH4bRW0YK5AQHQQcVmjuz3NgVrXoa9eJdOhYIIChJqAExfXq0gD00
+         gpLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ds2vxYVCII0rQhNGIg+GsyVnkbjiJdX12kWA/mq4wMs=;
-        b=riC5k9EOdhI2ji50issVyeOHyZVDpDS7znErQ8ngLOUg5Nik955Own7Ei/r2czVg0T
-         yXbOCuACssx8BqRBJsoUaezvuqxXxU1gHsdgoFID+tbCqMBEgtJEv3A0smFCo+ykXwPs
-         RuWKgtk0ABUsW8ut7/MLgrSU61prDyZB8HgmMhm9Wdbpjc/d7NM0X+qMymyS1jpjRwQI
-         zX9GSzDkrchz8nD43k9VlDEKIQY4uUGwHhPDoG9krSuAAtzoiM2qITzZmaPaVIC6ad/W
-         UJETsMuvBkdQ75EBjUnKm2ZP6oQnIs8BQS05/YyiE5RXY1/mZ/GyqqZ3lrW12RPKRUDl
-         oSeg==
-X-Gm-Message-State: APjAAAU8QCrzZwzJGVlwIicUPl1IUU7FkD8lWTsc7mN9Of9GB/129jBZ
-        M/btD9f7g34OoRDevzQB8qZV5QFp
-X-Google-Smtp-Source: APXvYqx4SPgXNQgiofbWRBqxg8Hg8OszJg54wd+IHTNo65z8DlowN83LeuGQdUx107VLbo6GadT5jw==
-X-Received: by 2002:a2e:3609:: with SMTP id d9mr6949836lja.188.1579315322666;
-        Fri, 17 Jan 2020 18:42:02 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id z22sm13103530ljm.24.2020.01.17.18.42.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 18:42:02 -0800 (PST)
-Subject: Re: [PATCH v1 2/2] dt-bindings: iio: accel: kxcjk1013: Document
- mount-matrix property
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Robert Yang <decatf@gmail.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200112203301.30235-1-digetx@gmail.com>
- <20200112203301.30235-2-digetx@gmail.com> <20200115153941.GA9685@bogus>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <48acb337-5928-975c-e0cb-046278464203@gmail.com>
-Date:   Sat, 18 Jan 2020 05:42:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vb5cyWLJV5ZR0F5iDmlf/8PvEYOZeZfUNSdNGtLvZJI=;
+        b=jUOc7TXxZdnGcMRNd0aDSNzRtCd/TRHXd6zl7cTabi974MG+nMHJAgSJUirsPRqqzR
+         eN4N08I/98kpE+SnQI++tbCgWxTeH2XycovDrThxBpF491jciFIEvsTe8yl7+gjQese2
+         rpGG2qz0zsr4WttHc4VFFVcYWuWjGw6c3q4NrDZoMPFxcH+FOG4HdNARLUnGHfKwaK0T
+         RISDo9F2ScsxHKuuUj177hRujFB4tkcw/rRY//1gmBLwt0VV+Zn3p0KJHjoHpdk5pQaT
+         Q7JYBTVF68yuvct+fjGclelXIQzOeNWusMvR5Ig0BM1c/chfUMgJzq9NiZJnO93vYW04
+         ninw==
+X-Gm-Message-State: APjAAAXJ0HpSFXJeo4aGG98+s8rCLpA04KGYQptPhQjnYeMxL1AttU8O
+        aSlk6Yoa2mCu7ifHU8XoQLEtGI420b/XgELxaczdLg==
+X-Google-Smtp-Source: APXvYqxzZjCff57xw2STewj8hvzXGMNapCy6Befwm57vvCLoE09f+Ii81TVHsJjBeSvPmeIU9AkG5ERsKsyGqT2FA8Q=
+X-Received: by 2002:a9d:66ca:: with SMTP id t10mr8495244otm.352.1579320135542;
+ Fri, 17 Jan 2020 20:02:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200115153941.GA9685@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1569493933.git.shengjiu.wang@nxp.com> <d728f65194e9978cbec4132b522d4fed420d704a.1569493933.git.shengjiu.wang@nxp.com>
+ <CANcMJZBy=yH+4YgZWwphiE-PO6d4hzhFK3XFtpN677ZAv_N4WQ@mail.gmail.com>
+ <CANcMJZCuU_-Xii=YT5Rp5DAyxboptJCrpp51jForuYUpeMuhmQ@mail.gmail.com> <CAA+D8AP39bo6EsHvWhVXvAYAho_xMnWmePPAK6dBsOh5wsz48Q@mail.gmail.com>
+In-Reply-To: <CAA+D8AP39bo6EsHvWhVXvAYAho_xMnWmePPAK6dBsOh5wsz48Q@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 17 Jan 2020 20:02:04 -0800
+Message-ID: <CALAqxLVapiMC-qPX4fza9cPCKFqvoi2KWhZkJa42DiHwOqGe8Q@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH V6 3/4] ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-15.01.2020 18:39, Rob Herring пишет:
-> On Sun, 12 Jan 2020 23:33:01 +0300, Dmitry Osipenko wrote:
->> The generic IIO mount-matrix property conveys physical orientation of the
->> hardware chip.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  .../devicetree/bindings/iio/accel/kionix,kxcjk1013.txt     | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+On Thu, Jan 16, 2020 at 11:11 PM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
+>
+> Hi
+>
+> On Thu, Jan 16, 2020 at 1:56 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Wed, Jan 8, 2020 at 8:58 PM John Stultz <john.stultz@linaro.org> wrote:
+> > > On Thu, Sep 26, 2019 at 6:50 PM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
+> > > >
+> > > > When set the runtime hardware parameters, we may need to query
+> > > > the capability of DMA to complete the parameters.
+> > > >
+> > > > This patch is to Extract this operation from
+> > > > dmaengine_pcm_set_runtime_hwparams function to a separate function
+> > > > snd_dmaengine_pcm_refine_runtime_hwparams, that other components
+> > > > which need this feature can call this function.
+> > > >
+> > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > > Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > >
+> > > As a heads up, this patch seems to be causing a regression on the HiKey board.
+> > >
+> > > On boot up I'm seeing:
+> > > [   17.721424] hi6210_i2s f7118000.i2s: ASoC: can't open component
+> > > f7118000.i2s: -6
+> > >
+> > > And HDMI audio isn't working. With this patch reverted, audio works again.
+> > >
+> > >
+> > > > diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
+> > > > index 89a05926ac73..5749a8a49784 100644
+> > > > --- a/sound/core/pcm_dmaengine.c
+> > > > +++ b/sound/core/pcm_dmaengine.c
+> > > > @@ -369,4 +369,87 @@ int snd_dmaengine_pcm_close_release_chan(struct snd_pcm_substream *substream)
+> > > ...
+> > > > +       ret = dma_get_slave_caps(chan, &dma_caps);
+> > > > +       if (ret == 0) {
+> > > > +               if (dma_caps.cmd_pause && dma_caps.cmd_resume)
+> > > > +                       hw->info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
+> > > > +               if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
+> > > > +                       hw->info |= SNDRV_PCM_INFO_BATCH;
+> > > > +
+> > > > +               if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> > > > +                       addr_widths = dma_caps.dst_addr_widths;
+> > > > +               else
+> > > > +                       addr_widths = dma_caps.src_addr_widths;
+> > > > +       }
+> > >
+> > > It seems a failing ret from dma_get_slave_caps() here is being returned...
+> > >
+> > > > +
+> > > > +       /*
+> > > > +        * If SND_DMAENGINE_PCM_DAI_FLAG_PACK is set keep
+> > > > +        * hw.formats set to 0, meaning no restrictions are in place.
+> > > > +        * In this case it's the responsibility of the DAI driver to
+> > > > +        * provide the supported format information.
+> > > > +        */
+> > > > +       if (!(dma_data->flags & SND_DMAENGINE_PCM_DAI_FLAG_PACK))
+> > > > +               /*
+> > > > +                * Prepare formats mask for valid/allowed sample types. If the
+> > > > +                * dma does not have support for the given physical word size,
+> > > > +                * it needs to be masked out so user space can not use the
+> > > > +                * format which produces corrupted audio.
+> > > > +                * In case the dma driver does not implement the slave_caps the
+> > > > +                * default assumption is that it supports 1, 2 and 4 bytes
+> > > > +                * widths.
+> > > > +                */
+> > > > +               for (i = SNDRV_PCM_FORMAT_FIRST; i <= SNDRV_PCM_FORMAT_LAST; i++) {
+> > > > +                       int bits = snd_pcm_format_physical_width(i);
+> > > > +
+> > > > +                       /*
+> > > > +                        * Enable only samples with DMA supported physical
+> > > > +                        * widths
+> > > > +                        */
+> > > > +                       switch (bits) {
+> > > > +                       case 8:
+> > > > +                       case 16:
+> > > > +                       case 24:
+> > > > +                       case 32:
+> > > > +                       case 64:
+> > > > +                               if (addr_widths & (1 << (bits / 8)))
+> > > > +                                       hw->formats |= pcm_format_to_bits(i);
+> > > > +                               break;
+> > > > +                       default:
+> > > > +                               /* Unsupported types */
+> > > > +                               break;
+> > > > +                       }
+> > > > +               }
+> > > > +
+> > > > +       return ret;
+> > >
+> > > ... down here.
+> > >
+> > > Where as in the old code...
+> > >
+> > > > diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+> > > > index 748f5f641002..b9f147eaf7c4 100644
+> > > > --- a/sound/soc/soc-generic-dmaengine-pcm.c
+> > > > +++ b/sound/soc/soc-generic-dmaengine-pcm.c
+> > >
+> > > > @@ -145,56 +140,12 @@ static int dmaengine_pcm_set_runtime_hwparams(struct snd_pcm_substream *substrea
+> > > >         if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
+> > > >                 hw.info |= SNDRV_PCM_INFO_BATCH;
+> > > >
+> > > > -       ret = dma_get_slave_caps(chan, &dma_caps);
+> > > > -       if (ret == 0) {
+> > > > -               if (dma_caps.cmd_pause && dma_caps.cmd_resume)
+> > > > -                       hw.info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
+> > > > -               if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
+> > > > -                       hw.info |= SNDRV_PCM_INFO_BATCH;
+> > > > -
+> > > > -               if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> > > > -                       addr_widths = dma_caps.dst_addr_widths;
+> > > > -               else
+> > > > -                       addr_widths = dma_caps.src_addr_widths;
+> > > > -       }
+> > >
+> > > ...the ret from dma_get_slave_caps()  checked above, but is not
+> > > actually returned.
+> > >
+> > > Suggestions on how to sort this out?
+> >
+> > Just wanted to check in on this, as I'm still seeing this regression with -rc6.
+> >
+> Compare with the old code. it seems that we shouldn't check the return value.
+>
+> Could you help to test below changes?
+>
+> --- a/sound/soc/soc-generic-dmaengine-pcm.c
+> +++ b/sound/soc/soc-generic-dmaengine-pcm.c
+> @@ -138,12 +138,10 @@ dmaengine_pcm_set_runtime_hwparams(struct
+> snd_soc_component *component,
+>         if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
+>                 hw.info |= SNDRV_PCM_INFO_BATCH;
+>
+> -       ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
+> +       snd_dmaengine_pcm_refine_runtime_hwparams(substream,
+>                                                         dma_data,
+>                                                         &hw,
+>                                                         chan);
+> -       if (ret)
+> -               return ret;
+>
+>         return snd_soc_set_runtime_hwparams(substream, &hw);
+>  }
 
-Thanks!
+Yes, thanks for taking a look at this! Your patch does appear to avoid
+the regression.
+(Though you'll want to drop the ret declaration to avoid "warning:
+unused variable 'ret'" compiler warnings.)
+
+thanks
+-john
