@@ -2,138 +2,99 @@ Return-Path: <SRS0=IhJs=3I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7379C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 11:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F1EC33CB7
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 11:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840AC2053B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 11:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8468A2072B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 11:30:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwr9gpqQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgASLBq (ORCPT
+        id S1726775AbgASLaB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jan 2020 06:01:46 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:39088 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726744AbgASLBq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jan 2020 06:01:46 -0500
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 00JB0bDq001026;
-        Sun, 19 Jan 2020 13:00:37 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id E2DBD6032E; Sun, 19 Jan 2020 13:00:37 +0200 (IST)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com, joel@jms.id.au
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 2/2] iio: adc: modify NPCM reset support
-Date:   Sun, 19 Jan 2020 13:00:32 +0200
-Message-Id: <20200119110032.124745-2-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200119110032.124745-1-tmaimon77@gmail.com>
-References: <20200119110032.124745-1-tmaimon77@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 19 Jan 2020 06:30:01 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44829 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgASLaB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jan 2020 06:30:01 -0500
+Received: by mail-pl1-f196.google.com with SMTP id d9so133980plo.11;
+        Sun, 19 Jan 2020 03:30:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MGnExAerV3JssOOZACwzhm+zW2U1SumUHkN5NAnxS0Q=;
+        b=hwr9gpqQT3P2kQsR8YXzNLRLMkzjUx23Hx54nrlDIGbMd46ssImw5RROfQO85tnsV/
+         DIg591x/HIQrI730wfPYKOOnOLO0sMRHbW+MUkfBEqQgwlu4vaugQfP0mAdshEcX+0ur
+         UaDCBwxFFLDsmSPLB4GGTyiFWVe+ZFJxqOPSX1097YQ8X6IHSm/C1KJfgNq/FgEKux+y
+         //oELbxGNGdGy/wlr0ofLPKoXWa6Pbq9nATbCV+oaxqqrbVwf107uJpwwlqtNbFFANqj
+         mlTf3vOltWXMBuwPrFqx13N3FVISOUXg7WMy6dTlI0Qvxq7KmvZmzccU1zkcNjaGVPg8
+         jcJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MGnExAerV3JssOOZACwzhm+zW2U1SumUHkN5NAnxS0Q=;
+        b=FAmevLVgbl36VlVMsVC5eNX9Meg4jcTyKpI6/VadcG+rZiswJ7rv/49mKcXXu5t4Gy
+         asTK9AphjHteWt8llnsgwS/tIsLS6OigqXnYhm/cCwntlH+eOyJI2P/ZAPiEU38m25d+
+         3/Hmp6t2eNAPssX1yKzTbh4QmI7LKN3naLKEKmjswZTUhitunGsDEMlJrBPPUA1F4sKj
+         1s26z2XmD9883Z2U0t5ioAC+zhydArUZnHYnZveGks/VBL59jX6KWJ4KGPlcSzFPt9bR
+         YYHWV1jDIl19baW82iYBPNRhyI9N4PH/i6VZ7mIbIIPhBLZwh9Iy+M2oEKJlt5i9A4uI
+         DwAA==
+X-Gm-Message-State: APjAAAXRc8crRmy+WT71MhDiZA4FlOaHzt28hzv3re1fQNCatKHbi16C
+        3DABunnR4N0XXqqdhTAYGPg=
+X-Google-Smtp-Source: APXvYqzo++TpbfuUhlZ+uPgXY1tOjvMFpk1EWs5JAEdEXQOU62JdFbFh330RKhYkRdgyT8MuteUKqQ==
+X-Received: by 2002:a17:902:9005:: with SMTP id a5mr4915526plp.338.1579433400536;
+        Sun, 19 Jan 2020 03:30:00 -0800 (PST)
+Received: from localhost.localdomain ([219.91.191.70])
+        by smtp.gmail.com with ESMTPSA id q10sm36496600pfn.5.2020.01.19.03.29.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 19 Jan 2020 03:29:59 -0800 (PST)
+From:   Raag Jadav <raagjadav@gmail.com>
+To:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Raag Jadav <raagjadav@gmail.com>
+Subject: [PATCH] ARM: dts: am43x-epos-evm: set data pin directions for spi0 and spi1
+Date:   Sun, 19 Jan 2020 16:58:59 +0530
+Message-Id: <1579433339-10663-1-git-send-email-raagjadav@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Modify NPCM ADC reset support from
-direct register access to reset controller support.
+Set d0 and d1 pin directions for spi0 and spi1 as per their pinmux.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Signed-off-by: Raag Jadav <raagjadav@gmail.com>
 ---
- drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+ arch/arm/boot/dts/am43x-epos-evm.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
-index a6170a37ebe8..83bad2d5575d 100644
---- a/drivers/iio/adc/npcm_adc.c
-+++ b/drivers/iio/adc/npcm_adc.c
-@@ -14,6 +14,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/spinlock.h>
- #include <linux/uaccess.h>
-+#include <linux/reset.h>
- 
- struct npcm_adc {
- 	bool int_status;
-@@ -23,13 +24,9 @@ struct npcm_adc {
- 	struct clk *adc_clk;
- 	wait_queue_head_t wq;
- 	struct regulator *vref;
--	struct regmap *rst_regmap;
-+	struct reset_control *reset;
+diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+index 078cb47..a6fbc08 100644
+--- a/arch/arm/boot/dts/am43x-epos-evm.dts
++++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+@@ -848,6 +848,7 @@
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&spi0_pins_default>;
+ 	pinctrl-1 = <&spi0_pins_sleep>;
++	ti,pindir-d0-out-d1-in = <1>;
  };
  
--/* NPCM7xx reset module */
--#define NPCM7XX_IPSRST1_OFFSET		0x020
--#define NPCM7XX_IPSRST1_ADC_RST		BIT(27)
--
- /* ADC registers */
- #define NPCM_ADCCON	 0x00
- #define NPCM_ADCDATA	 0x04
-@@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
- 					       msecs_to_jiffies(10));
- 	if (ret == 0) {
- 		regtemp = ioread32(info->regs + NPCM_ADCCON);
--		if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
-+		if (regtemp & NPCM_ADCCON_ADC_CONV) {
- 			/* if conversion failed - reset ADC module */
--			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
--				     NPCM7XX_IPSRST1_ADC_RST);
-+			reset_control_assert(info->reset);
- 			msleep(100);
--			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
--				     0x0);
-+			reset_control_deassert(info->reset);
- 			msleep(100);
+ &spi1 {
+@@ -855,6 +856,7 @@
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&spi1_pins_default>;
+ 	pinctrl-1 = <&spi1_pins_sleep>;
++	ti,pindir-d0-out-d1-in = <1>;
+ };
  
- 			/* Enable ADC and start conversion module */
-@@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
- 	struct npcm_adc *info;
- 	struct iio_dev *indio_dev;
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = pdev->dev.of_node;
- 
- 	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
- 	if (!indio_dev)
-@@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device *pdev)
- 	if (IS_ERR(info->regs))
- 		return PTR_ERR(info->regs);
- 
-+	info->reset = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(info->reset))
-+		return PTR_ERR(info->reset);
-+
- 	info->adc_clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(info->adc_clk)) {
- 		dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
-@@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
- 	div = div >> NPCM_ADCCON_DIV_SHIFT;
- 	info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) * 2);
- 
--	if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
--		info->rst_regmap = syscon_regmap_lookup_by_compatible
--			("nuvoton,npcm750-rst");
--		if (IS_ERR(info->rst_regmap)) {
--			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-rst\n");
--			ret = PTR_ERR(info->rst_regmap);
--			goto err_disable_clk;
--		}
--	}
--
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq <= 0) {
- 		ret = -EINVAL;
+ &usb2_phy1 {
 -- 
-2.22.0
+2.7.4
 
