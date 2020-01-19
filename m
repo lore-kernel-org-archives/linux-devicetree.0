@@ -2,112 +2,73 @@ Return-Path: <SRS0=IhJs=3I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AB2C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 17:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5A8C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 19:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4876F20674
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 17:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A0820679
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 19:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgASRQD (ORCPT
+        id S1727144AbgASTpE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jan 2020 12:16:03 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:54588 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgASRQD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jan 2020 12:16:03 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id D241520020;
-        Sun, 19 Jan 2020 18:15:56 +0100 (CET)
-Date:   Sun, 19 Jan 2020 18:15:55 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] drm: Add support for Okaya RH128128T
-Message-ID: <20200119171555.GA31055@ravnborg.org>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
+        Sun, 19 Jan 2020 14:45:04 -0500
+Received: from muru.com ([72.249.23.125]:51754 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbgASTpE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 19 Jan 2020 14:45:04 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 23B84804F;
+        Sun, 19 Jan 2020 19:45:46 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH] ARM: dts: motorola-cpcap-mapphone: Configure calibration interrupt
+Date:   Sun, 19 Jan 2020 11:45:01 -0800
+Message-Id: <20200119194501.17125-1-tony@atomide.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115124548.3951-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=I7rRU4mLAAAA:8
-        a=VwQbUJbxAAAA:8 a=7xOLcxuHRxORoo7z8OsA:9 a=CjuIK1q_8ugA:10
-        a=zVIc4Sw0WK5ZSny7osSx:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=jd6J4Gguk5HxikPWLKER:22
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert.
+We added coulomb counter calibration support With commit 0cb90f071f73
+("power: supply: cpcap-battery: Add basic coulomb counter calibrate
+support"), but we also need to configure the related interrupt.
 
-On Wed, Jan 15, 2020 at 01:45:43PM +0100, Geert Uytterhoeven wrote:
-> 	Hi all,
-> 
-> This patch series adds support for the Okaya RH128128T LCD to the
-> existing ST7735R driver.  This is a 128x128 1.4" TFT display driven by a
-> Sitronix ST7715R TFT Controller/Driver.  It is used on e.g. the Renesas
-> YRSK-LCD-PMOD extension board, which is shipped with Renesas RSK+RZA1
-> development boards[1], and with several other Renesas starter kits, for
-> RX, Synergy, and RZ/T1 MCUs and SoCs.
-> 
-> Changes compared to v1[2]:
->   - Convert DT bindings to DT schema,
->   - Add YRSK-LCD-PMOD reference and links,
->   - Add Reviewed-by,
->   - Split driver preparation and adding actual support in two separate
->     patches,
->   - Replace st7735r_priv.rgb by a pointer to struct st7735r_cfg,
->   - Change prefix of jd_t18003_t01_pipe_enable() and
->     jd_t18003_t01_pipe_funcs(),
->   - Update Kconfig help text,
->   - Improve file comment header.
-> 
-> This has been tested using the r7s72100-rskrza1-pmod-spi.dtso and
-> r7s72100-rskrza1-pmod2-lcd.dtso DT overlays[3].
-> Note that for using this on RSK+RZA1, there is a dependency on RSPI
-> cs-gpios support (now in linux-next).
-> With DT overlays, this also depends on DT overlays[4] and gpio-hog
-> overlay support[5].
-> 
-> Thanks!
-> 
-> [1] https://renesasrulz.com/the_vault/f/archive-forum/4981/upgrading-to-the-renesas-rz-a1h
-> [1] https://lore.kernel.org/dri-devel/20200102141246.370-1-geert+renesas@glider.be/
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/renesas-overlays
-> [4] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/overlays
-> [5] "[PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs"
->     https://lore.kernel.org/lkml/20191230133852.5890-1-geert+renesas@glider.be/
-> 
-> Geert Uytterhoeven (5):
->   dt-bindings: display: sitronix,st7735r: Convert to DT schema
->   dt-bindings: display: sitronix,st7735r: Add Okaya RH128128T
->   drm/mipi_dbi: Add support for display offsets
->   drm: tiny: st7735r: Prepare for adding support for more displays
->   drm: tiny: st7735r: Add support for Okaya RH128128T
+Without the interrupt calibration happens based on a timeout after two
+seconds, with the interrupt the calibration just gets done a bit faster.
 
-Thanks, it ended up with a nice small patch adding support for
-another controller/panel combo to this driver.
-All 5 patches applied to drm-misc-next.
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-	Sam
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -27,11 +27,12 @@
+ 			compatible = "motorola,cpcap-battery";
+ 			interrupts-extended = <
+ 				&cpcap 6 0 &cpcap 5 0 &cpcap 3 0
+-				&cpcap 20 0 &cpcap 54 0
++				&cpcap 20 0 &cpcap 54 0 &cpcap 57 0
+ 			>;
+ 			interrupt-names =
+ 				"eol", "lowbph", "lowbpl",
+-				"chrgcurr1", "battdetb";
++				"chrgcurr1", "battdetb",
++				"cccal";
+ 			io-channels = <&cpcap_adc 0 &cpcap_adc 1
+ 				       &cpcap_adc 5 &cpcap_adc 6>;
+ 			io-channel-names = "battdetb", "battp",
+-- 
+2.24.1
