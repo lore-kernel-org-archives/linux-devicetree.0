@@ -2,266 +2,111 @@ Return-Path: <SRS0=IhJs=3I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F77C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 13:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31542C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 15:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035252072B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 13:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D302073A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 15:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r05aL27u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oFFzQbKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgASNQD (ORCPT
+        id S1727022AbgASPEt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jan 2020 08:16:03 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:43957 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727007AbgASNQD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 19 Jan 2020 08:16:03 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579439762; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=tLtMCXFHqRnKQLdUTW9wSpw3TsBZMWUWzXvDuYzcyH0=; b=r05aL27u+KtOIzqa46YQKmFcdq4hRj6YaMf73bqdDNjY7reYXfca2JVyRzoLG7sXIVhsfj4h
- R0LI1Rh37SbtkIebQRMjW6MWDV2qOukhSSAYMd1MLfPufp4uAHFi6DomJQPCQp0a/2tCTujT
- +ynLM3zPSMmLAa6DAhiEBwMiRbQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e24568e.7efaf3d5cb58-smtp-out-n02;
- Sun, 19 Jan 2020 13:15:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9FE2DC447A1; Sun, 19 Jan 2020 13:15:57 +0000 (UTC)
-Received: from [192.168.1.8] (unknown [171.78.179.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D2FBC43383;
-        Sun, 19 Jan 2020 13:15:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D2FBC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH V5 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
- bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
-        sivaprak@codeaurora.org,
-        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-References: <1579160701-32408-1-git-send-email-sricharan@codeaurora.org>
- <1579160701-32408-2-git-send-email-sricharan@codeaurora.org>
- <20200117160102.GA16177@bogus>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <728e4966-8aa8-014c-76b4-2453aa305fe3@codeaurora.org>
-Date:   Sun, 19 Jan 2020 18:45:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Sun, 19 Jan 2020 10:04:49 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34219 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgASPEt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jan 2020 10:04:49 -0500
+Received: by mail-lj1-f194.google.com with SMTP id z22so31268514ljg.1;
+        Sun, 19 Jan 2020 07:04:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9VNghwXuw2TCLa0rtdbPjJ8tOH6v56j1WENS326EONY=;
+        b=oFFzQbKqj9h7E9kWXr2KRXnYniIgcPEjHN628/Ar/DxI9gzm2x2rip6S4eJZsh5ZVg
+         i7kIvArClESXcQpvgarxsmm9BzSlKTn54ZMUPgAB/os6EnTopmf3OArHx4rQKtSkDoJg
+         u/AQ6f3XLJC/7ra9Xm3h9cX2sauj+fN3xVnKIS1WPJLv245zO5ya0zeX4ZLierAzDv5i
+         /7E3QEIFVVtgX3LWgxRmzpeBNmAlRPoJtvfJZndH746PU5V9Eq7wsrq3v+v3dFJqtQS/
+         3sHIF7iBC+jledrZjzJXHXWdZ6VIy5XeSbJjxPYgPZnKN62LyAIhT92sPwN/EA5abw0+
+         woBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9VNghwXuw2TCLa0rtdbPjJ8tOH6v56j1WENS326EONY=;
+        b=N6+DQ39CbPkifJWAJGDEnmaWVvDKr51R0mHk7qZTqJ3vvNZKvR/uzBoTIXsu5U/9HL
+         l7V0j1fuDPyvcSbr7vS8mWePFM2odZ11xzujVpLU40elRJX2A9MX3xA+N1O3LAkysphy
+         57BetPrXkVGJo2XnjjvCpjgsc6adX2ZiK8LXw4ScGAao2Xxl6/rGCFC9ihSgw8IaVuWR
+         NyrY0UqcZZiYcLm+NMG8sXLmuVerfXzwssEuqumb5Uz0jvEndxLnDOuvpvbwPxyWf8ww
+         x3J37kLJEBmrGgnitthg5RGk+l6+bir1pRPlNwC/cNIoYkwBZgfFBaydMkuPMGxpkHq9
+         6bVg==
+X-Gm-Message-State: APjAAAWXuOGSai91cHair2XJfFe5IfTetp75BFwITLoeQyv0kOJpk1r5
+        EfZeTEtUtuQ4eTyhcw0uSuAoYo4a
+X-Google-Smtp-Source: APXvYqz+9zpXnHmALemXTEO72nrluxayIDyd/Y5iJ7IZz+t6l9mxFixXpJJcGbXffWeUbBGWIk6Qpg==
+X-Received: by 2002:a2e:7313:: with SMTP id o19mr11208964ljc.131.1579446286929;
+        Sun, 19 Jan 2020 07:04:46 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l64sm15254291lfd.30.2020.01.19.07.04.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Jan 2020 07:04:46 -0800 (PST)
+Subject: Re: [PATCH v8 22/22] clk: tegra: Remove audio clocks configuration
+ from clock driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
+ <1578986667-16041-23-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d69fe7a8-71cc-c560-a567-f89b936753ad@gmail.com>
+Date:   Sun, 19 Jan 2020 18:04:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200117160102.GA16177@bogus>
+In-Reply-To: <1578986667-16041-23-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-  Thanks for the review.
+14.01.2020 10:24, Sowjanya Komatineni пишет:
 
-On 1/17/2020 9:31 PM, Rob Herring wrote:
-> On Thu, Jan 16, 2020 at 01:14:57PM +0530, Sricharan R wrote:
->> Add device tree binding Documentation details for ipq6018
->> pinctrl driver.
->>
->> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->> [V5]
->> * Addressed review comments from Rob
->> * Ran dt bindings check and no errors were reported
->>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 162 +++++++++++++++++++++
->>  1 file changed, 162 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->> new file mode 100644
->> index 0000000..0622258
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->> @@ -0,0 +1,162 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
->> +
->> +maintainers:
->> +  - Sricharan R <sricharan@codeaurora.org>
->> +
->> +description: |
->> +  This binding describes the Top Level Mode Multiplexer block found in the
->> +  IPQ6018 platform.
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,ipq6018-pinctrl
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    description: Specifies the TLMM summary IRQ
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +  '#interrupt-cells':
->> +    description:
->> +      Specifies the PIN numbers and Flags, as defined in defined in
->> +      include/dt-bindings/interrupt-controller/irq.h
->> +    const: 2
->> +
->> +  gpio-controller: true
->> +
->> +  '#gpio-cells':
->> +    description: Specifying the pin number and flags, as defined in
->> +      include/dt-bindings/gpio/gpio.h
->> +    const: 2
->> +
->> +  gpio-ranges:
->> +    description: Documentation/devicetree/bindings/gpio/gpio.txt
-> 
-> You can drop the description. Nothing here specific to this binding.
->
+[snip]
 
- ok.
-
- 
->> +    maxItems: 1
->> +
->> +#PIN CONFIGURATION NODES
->> +patternProperties:
->> +  '.*-pin.*':
-> 
-> Ideally, this would be a bit more constrained. Such as '-pin$' or 
-> '-pinmux$'.
-> 
-> Note that '-pin' is equivalent to what you have.
->
-
- ok.
- 
->> +    type: object
->> +    description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +    allOf:
->> +      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
->> +
->> +    properties:
->> +      pins:
->> +        description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode. The valid values are gpio1-80, sdc1_clk, sdc1_cmd,
->> +          sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data, qdsd_cmd, qdsd_data0,
->> +          qdsd_data1, qdsd_data2, qdsd_data3
-> 
-> Looks like constraints:
-> 
-> items:
->   oneOf:
->     - pattern: "^gpio([1-9]|[1-7][0-9]|80)$"
->     - enum: [ sdc1_clk, sdc1_cmd, ... ]
->
-
- ok.
- 
->> +        minItems: 1
->> +        maxItems: 4
->> +
->> +      function:
->> +        description:
->> +          Specify the alternative function to be configured for the specified
->> +          pins.
->> +        enum: [ adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
->> +          atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
->> +          atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
->> +          atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp1_i2c,
->> +          blsp2_i2c, blsp3_i2c, blsp4_i2c, blsp5_i2c, blsp6_i2c,  blsp1_spi,
->> +          blsp1_spi_cs1, blsp1_spi_cs2, blsp1_spi_cs3, blsp2_spi,
->> +          blsp2_spi_cs1, blsp2_spi_cs2, blsp2_spi_cs3, blsp3_spi,
->> +          blsp3_spi_cs1, blsp3_spi_cs2, blsp3_spi_cs3, blsp4_spi, blsp5_spi,
->> +          blsp6_spi, blsp1_uart, blsp2_uart, blsp1_uim, blsp2_uim, cam1_rst,
->> +          cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
->> +          cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
->> +          dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
->> +          flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
->> +          gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
->> +          gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
->> +          ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
->> +          nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
->> +          pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
->> +          pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
->> +          pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
->> +          qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
->> +          qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
->> +          qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
->> +          qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
->> +          sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
->> +          uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst ]
->> +
->> +      drive-strength:
->> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
->> +        default: 2
->> +        description:
->> +          Selects the drive strength for the specified pins, in mA.
-> 
->> +
->> +      bias-pull-down:
->> +        type: boolean
->> +        description: The specified pin should be configured as pull down.
->> +
->> +      bias-pull-up:
->> +        type: boolean
->> +        description: The specified pin should be configured as pull up.
->> +
->> +      bias-disable:
->> +        type: boolean
->> +        description: The specified pin should be configured as no pull.
->> +
->> +      output-high:
->> +        type: boolean
->> +        description: The specified pin is configured in output mode, driven
->> +          high.
->> +
->> +      output-low:
->> +        type: boolean
->> +        description: The specified pin is configured in output mode, driven
->> +          low.
-> 
-> No need to redefine the type and description on these 5 properties. Just 
-> a value of 'true' is enough.
+> diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+> index 5732fdbe20db..53d1c48532ae 100644
+> --- a/drivers/clk/tegra/clk-tegra30.c
+> +++ b/drivers/clk/tegra/clk-tegra30.c
+> @@ -1221,9 +1221,8 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+>  	{ TEGRA30_CLK_UARTC, TEGRA30_CLK_PLL_P, 408000000, 0 },
+>  	{ TEGRA30_CLK_UARTD, TEGRA30_CLK_PLL_P, 408000000, 0 },
+>  	{ TEGRA30_CLK_UARTE, TEGRA30_CLK_PLL_P, 408000000, 0 },
+> -	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
+> -	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
+> -	{ TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
+> +	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 0 },
+> +	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 0 },
+>  	{ TEGRA30_CLK_I2S0, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+>  	{ TEGRA30_CLK_I2S1, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+>  	{ TEGRA30_CLK_I2S2, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
 > 
 
- ok.
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+What about to use the assigned-clock-rates in device-tree and thus to
+remove those PLL_A entries?
