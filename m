@@ -2,179 +2,202 @@ Return-Path: <SRS0=IhJs=3I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B846C32771
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 03:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B84C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 06:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E741C2087E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 03:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D3E20714
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jan 2020 06:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FkHOHZ/E"
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="BzcCdKt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgASDXA (ORCPT
+        id S1726728AbgASGlP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jan 2020 22:23:00 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:42200 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725497AbgASDXA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jan 2020 22:23:00 -0500
-X-UUID: cbf1c8442ccc4d1eb8a13a21161e6f20-20200119
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=hm6lnO5QlH7ot9sHtfmnJSN7OgWXnD6EkGNxaWdllRs=;
-        b=FkHOHZ/EcjJX2+j4NzjxK2Lt9lkpdVjYoA2xmw3wdB2Uy54cRQgc/bL0BVOLaejNmhPccquQVxnvplIUbRqo0KAdowGUnuBwYfw/YBLlbARvdlGapiJ2rjNUAX+fpHS/aJFeKYHmQBGwrgsQF6xbpWd3tkCHfBq80LU83QavIyQ=;
-X-UUID: cbf1c8442ccc4d1eb8a13a21161e6f20-20200119
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.liang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1018494963; Sun, 19 Jan 2020 11:22:45 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 19 Jan
- 2020 11:21:28 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 19 Jan 2020 11:22:51 +0800
-Message-ID: <1579404156.27500.1.camel@mhfsdcap03>
-Subject: Re: [PATCH v12 3/4] watchdog: mtk_wdt: mt8183: Add reset controller
-From:   Yong Liang <yong.liang@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Sun, 19 Jan 2020 01:41:15 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47209 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbgASGlP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 19 Jan 2020 01:41:15 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 480lYz0zN6z9sRR; Sun, 19 Jan 2020 17:41:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1579416071;
+        bh=ZJ/xYJ5wpESqE5uf0LWIWHInaiHGexmbonhCseCk2tg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BzcCdKt6wbcH1+xKyJK7QLsYAnnWX6jdRetXhTy3ZgIOF89Mh4HogbAzZ4j36xRng
+         cKg1f5faC1ijMnw4VvGcfLeOceAc7JuZ1dLmp6kXQ3ME2tgT+fhCJgZphwD2qihhdp
+         5w5Cb0UesKEUIycmZeKh/kz1DLVnFFdYDL1fXCc0=
+Date:   Sun, 19 Jan 2020 16:39:16 +1000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chang-An Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B6=E5=AE=89=29?= 
-        <Chang-An.Chen@mediatek.com>,
-        Freddy Hsin =?UTF-8?Q?=28=E8=BE=9B=E6=81=92=E8=B1=90=29?= 
-        <Freddy.Hsin@mediatek.com>,
-        Jiaxin Yu =?UTF-8?Q?=28=E4=BF=9E=E5=AE=B6=E9=91=AB=29?= 
-        <Jiaxin.Yu@mediatek.com>,
-        Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= 
-        <Yingjoe.Chen@mediatek.com>, "sboyd@kernel.org" <sboyd@kernel.org>
-Date:   Sun, 19 Jan 2020 11:22:36 +0800
-In-Reply-To: <372a4c8e-2ff1-3424-069c-7d359e1f16f1@gmail.com>
-References: <20200115085828.27791-1-yong.liang@mediatek.com>
-         <20200115085828.27791-4-yong.liang@mediatek.com>
-         <372a4c8e-2ff1-3424-069c-7d359e1f16f1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Steve McIntyre <steve.mcintyre@linaro.org>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+Message-ID: <20200119063916.GD54439@umbus>
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com>
+ <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
+ <20200117090937.GU54439@umbus>
+ <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 9A9910F4F12A5AE0331104063D22AC4683A93A64C642237FABC1506255239E8F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="/7F8UcOhwbEJvS7n"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAxLTE2IGF0IDAwOjE4ICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMTUvMDEvMjAyMCAwOTo1OCwgWW9uZyBMaWFuZyB3cm90ZToNCj4gPiBGcm9t
-OiAieW9uZy5saWFuZyIgPHlvbmcubGlhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IA0KPiA+IEFkZCBy
-ZXNldCBjb250cm9sbGVyIEFQSSBpbiB3YXRjaGRvZyBkcml2ZXIuDQo+ID4gQmVzaWRlcyB3YXRj
-aGRvZywgTVRLIHRvcHJndSBtb2R1bGUgYWxzYSBwcm92aWRlIHN1Yi1zeXN0ZW0gKGVnLCBhdWRp
-bywNCj4gPiBjYW1lcmEsIGNvZGVjIGFuZCBjb25uZWN0aXZpdHkpIHNvZnR3YXJlIHJlc2V0IGZ1
-bmN0aW9uYWxpdHkuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogeW9uZy5saWFuZyA8eW9uZy5s
-aWFuZ0BtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogSmlheGluIFl1IDxqaWF4aW4u
-eXVAbWVkaWF0ZWsuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBZaW5nam9lIENoZW4gPHlpbmdqb2Uu
-Y2hlbkBtZWRpYXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFi
-ZWxAcGVuZ3V0cm9uaXguZGU+DQo+IA0KPiBBY2tlZC1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0
-dGhpYXMuYmdnQGdtYWlsLmNvbT4NCg0KICBNYXkgSSBuZWVkIHNlbmQgYSBuZXcgcGF0Y2ggd2hp
-dGggdGhpcyB0YWc/DQo+IA0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3dhdGNoZG9nL210a193ZHQu
-YyB8IDk5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCA5OCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jIGIvZHJpdmVycy93YXRjaGRvZy9t
-dGtfd2R0LmMNCj4gPiBpbmRleCA5YzNkMDAzMzI2MGQuLmU4OGFhY2IwNDA0ZCAxMDA2NDQNCj4g
-PiAtLS0gYS9kcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYw0KPiA+ICsrKyBiL2RyaXZlcnMvd2F0
-Y2hkb2cvbXRrX3dkdC5jDQo+ID4gQEAgLTksNiArOSw4IEBADQo+ID4gICAqIEJhc2VkIG9uIHN1
-bnhpX3dkdC5jDQo+ID4gICAqLw0KPiA+ICANCj4gPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Jl
-c2V0LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvZGVs
-YXkuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2Vyci5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgv
-aW5pdC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gPiBAQCAtMTYsMTAgKzE4LDEx
-IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4
-L21vZHVsZXBhcmFtLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+ICsjaW5jbHVk
-ZSA8bGludXgvb2ZfZGV2aWNlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZp
-Y2UuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3Jlc2V0LWNvbnRyb2xsZXIuaD4NCj4gPiAgI2lu
-Y2x1ZGUgPGxpbnV4L3R5cGVzLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC93YXRjaGRvZy5oPg0K
-PiA+IC0jaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4gPiAgDQo+ID4gICNkZWZpbmUgV0RUX01B
-WF9USU1FT1VUCQkzMQ0KPiA+ICAjZGVmaW5lIFdEVF9NSU5fVElNRU9VVAkJMQ0KPiA+IEBAIC00
-NCw2ICs0Nyw5IEBADQo+ID4gICNkZWZpbmUgV0RUX1NXUlNUCQkweDE0DQo+ID4gICNkZWZpbmUg
-V0RUX1NXUlNUX0tFWQkJMHgxMjA5DQo+ID4gIA0KPiA+ICsjZGVmaW5lIFdEVF9TV1NZU1JTVAkJ
-MHgxOFUNCj4gPiArI2RlZmluZSBXRFRfU1dTWVNfUlNUX0tFWQkweDg4MDAwMDAwDQo+ID4gKw0K
-PiA+ICAjZGVmaW5lIERSVl9OQU1FCQkibXRrLXdkdCINCj4gPiAgI2RlZmluZSBEUlZfVkVSU0lP
-TgkJIjEuMCINCj4gPiAgDQo+ID4gQEAgLTUzLDggKzU5LDkwIEBAIHN0YXRpYyB1bnNpZ25lZCBp
-bnQgdGltZW91dDsNCj4gPiAgc3RydWN0IG10a193ZHRfZGV2IHsNCj4gPiAgCXN0cnVjdCB3YXRj
-aGRvZ19kZXZpY2Ugd2R0X2RldjsNCj4gPiAgCXZvaWQgX19pb21lbSAqd2R0X2Jhc2U7DQo+ID4g
-KwlzcGlubG9ja190IGxvY2s7IC8qIHByb3RlY3RzIFdEVF9TV1NZU1JTVCByZWcgKi8NCj4gPiAr
-CXN0cnVjdCByZXNldF9jb250cm9sbGVyX2RldiByY2RldjsNCj4gPiArfTsNCj4gPiArDQo+ID4g
-K3N0cnVjdCBtdGtfd2R0X2RhdGEgew0KPiA+ICsJaW50IHRvcHJndV9zd19yc3RfbnVtOw0KPiA+
-ICB9Ow0KPiA+ICANCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfd2R0X2RhdGEgbXQ4MTgz
-X2RhdGEgPSB7DQo+ID4gKwkudG9wcmd1X3N3X3JzdF9udW0gPSBNVDgxODNfVE9QUkdVX1NXX1JT
-VF9OVU0sDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHRvcHJndV9yZXNldF91cGRh
-dGUoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwNCj4gPiArCQkJICAgICAgIHVu
-c2lnbmVkIGxvbmcgaWQsIGJvb2wgYXNzZXJ0KQ0KPiA+ICt7DQo+ID4gKwl1bnNpZ25lZCBpbnQg
-dG1wOw0KPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiArCXN0cnVjdCBtdGtfd2R0X2Rl
-diAqZGF0YSA9DQo+ID4gKwkJIGNvbnRhaW5lcl9vZihyY2Rldiwgc3RydWN0IG10a193ZHRfZGV2
-LCByY2Rldik7DQo+ID4gKw0KPiA+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJmRhdGEtPmxvY2ssIGZs
-YWdzKTsNCj4gPiArDQo+ID4gKwl0bXAgPSByZWFkbChkYXRhLT53ZHRfYmFzZSArIFdEVF9TV1NZ
-U1JTVCk7DQo+ID4gKwlpZiAoYXNzZXJ0KQ0KPiA+ICsJCXRtcCB8PSBCSVQoaWQpOw0KPiA+ICsJ
-ZWxzZQ0KPiA+ICsJCXRtcCAmPSB+QklUKGlkKTsNCj4gPiArCXRtcCB8PSBXRFRfU1dTWVNfUlNU
-X0tFWTsNCj4gPiArCXdyaXRlbCh0bXAsIGRhdGEtPndkdF9iYXNlICsgV0RUX1NXU1lTUlNUKTsN
-Cj4gPiArDQo+ID4gKwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZkYXRhLT5sb2NrLCBmbGFncyk7
-DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQg
-dG9wcmd1X3Jlc2V0X2Fzc2VydChzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgKnJjZGV2LA0K
-PiA+ICsJCQkgICAgICAgdW5zaWduZWQgbG9uZyBpZCkNCj4gPiArew0KPiA+ICsJcmV0dXJuIHRv
-cHJndV9yZXNldF91cGRhdGUocmNkZXYsIGlkLCB0cnVlKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAr
-c3RhdGljIGludCB0b3ByZ3VfcmVzZXRfZGVhc3NlcnQoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJf
-ZGV2ICpyY2RldiwNCj4gPiArCQkJCSB1bnNpZ25lZCBsb25nIGlkKQ0KPiA+ICt7DQo+ID4gKwly
-ZXR1cm4gdG9wcmd1X3Jlc2V0X3VwZGF0ZShyY2RldiwgaWQsIGZhbHNlKTsNCj4gPiArfQ0KPiA+
-ICsNCj4gPiArc3RhdGljIGludCB0b3ByZ3VfcmVzZXQoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJf
-ZGV2ICpyY2RldiwNCj4gPiArCQkJdW5zaWduZWQgbG9uZyBpZCkNCj4gPiArew0KPiA+ICsJaW50
-IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSB0b3ByZ3VfcmVzZXRfYXNzZXJ0KHJjZGV2LCBpZCk7
-DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0dXJu
-IHRvcHJndV9yZXNldF9kZWFzc2VydChyY2RldiwgaWQpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IHJlc2V0X2NvbnRyb2xfb3BzIHRvcHJndV9yZXNldF9vcHMgPSB7
-DQo+ID4gKwkuYXNzZXJ0ID0gdG9wcmd1X3Jlc2V0X2Fzc2VydCwNCj4gPiArCS5kZWFzc2VydCA9
-IHRvcHJndV9yZXNldF9kZWFzc2VydCwNCj4gPiArCS5yZXNldCA9IHRvcHJndV9yZXNldCwNCj4g
-PiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgdG9wcmd1X3JlZ2lzdGVyX3Jlc2V0X2NvbnRy
-b2xsZXIoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gPiArCQkJCQkgICAgaW50IHJz
-dF9udW0pDQo+ID4gK3sNCj4gPiArCWludCByZXQ7DQo+ID4gKwlzdHJ1Y3QgbXRrX3dkdF9kZXYg
-Km10a193ZHQgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gPiArDQo+ID4gKwlzcGlu
-X2xvY2tfaW5pdCgmbXRrX3dkdC0+bG9jayk7DQo+ID4gKw0KPiA+ICsJbXRrX3dkdC0+cmNkZXYu
-b3duZXIgPSBUSElTX01PRFVMRTsNCj4gPiArCW10a193ZHQtPnJjZGV2Lm5yX3Jlc2V0cyA9IHJz
-dF9udW07DQo+ID4gKwltdGtfd2R0LT5yY2Rldi5vcHMgPSAmdG9wcmd1X3Jlc2V0X29wczsNCj4g
-PiArCW10a193ZHQtPnJjZGV2Lm9mX25vZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4gPiArCXJl
-dCA9IGRldm1fcmVzZXRfY29udHJvbGxlcl9yZWdpc3RlcigmcGRldi0+ZGV2LCAmbXRrX3dkdC0+
-cmNkZXYpOw0KPiA+ICsJaWYgKHJldCAhPSAwKQ0KPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwN
-Cj4gPiArCQkJImNvdWxkbid0IHJlZ2lzdGVyIHdkdCByZXNldCBjb250cm9sbGVyOiAlZFxuIiwg
-cmV0KTsNCj4gPiArCXJldHVybiByZXQ7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBpbnQg
-bXRrX3dkdF9yZXN0YXJ0KHN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndkdF9kZXYsDQo+ID4gIAkJ
-CSAgIHVuc2lnbmVkIGxvbmcgYWN0aW9uLCB2b2lkICpkYXRhKQ0KPiA+ICB7DQo+ID4gQEAgLTE1
-NSw2ICsyNDMsNyBAQCBzdGF0aWMgaW50IG10a193ZHRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikNCj4gPiAgew0KPiA+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRl
-djsNCj4gPiAgCXN0cnVjdCBtdGtfd2R0X2RldiAqbXRrX3dkdDsNCj4gPiArCWNvbnN0IHN0cnVj
-dCBtdGtfd2R0X2RhdGEgKndkdF9kYXRhOw0KPiA+ICAJaW50IGVycjsNCj4gPiAgDQo+ID4gIAlt
-dGtfd2R0ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCptdGtfd2R0KSwgR0ZQX0tFUk5FTCk7
-DQo+ID4gQEAgLTE5MCw2ICsyNzksMTMgQEAgc3RhdGljIGludCBtdGtfd2R0X3Byb2JlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlkZXZfaW5mbyhkZXYsICJXYXRjaGRvZyBl
-bmFibGVkICh0aW1lb3V0PSVkIHNlYywgbm93YXlvdXQ9JWQpXG4iLA0KPiA+ICAJCSBtdGtfd2R0
-LT53ZHRfZGV2LnRpbWVvdXQsIG5vd2F5b3V0KTsNCj4gPiAgDQo+ID4gKwl3ZHRfZGF0YSA9IG9m
-X2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiA+ICsJaWYgKHdkdF9kYXRhKSB7DQo+ID4g
-KwkJZXJyID0gdG9wcmd1X3JlZ2lzdGVyX3Jlc2V0X2NvbnRyb2xsZXIocGRldiwNCj4gPiArCQkJ
-CQkJICAgICAgIHdkdF9kYXRhLT50b3ByZ3Vfc3dfcnN0X251bSk7DQo+ID4gKwkJaWYgKGVycikN
-Cj4gPiArCQkJcmV0dXJuIGVycjsNCj4gPiArCX0NCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+
-ID4gIA0KPiA+IEBAIC0yMTksNiArMzE1LDcgQEAgc3RhdGljIGludCBtdGtfd2R0X3Jlc3VtZShz
-dHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gIA0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rl
-dmljZV9pZCBtdGtfd2R0X2R0X2lkc1tdID0gew0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxtdDY1ODktd2R0IiB9LA0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgx
-ODMtd2R0IiwgLmRhdGEgPSAmbXQ4MTgzX2RhdGEgfSwNCj4gPiAgCXsgLyogc2VudGluZWwgKi8g
-fQ0KPiA+ICB9Ow0KPiA+ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBtdGtfd2R0X2R0X2lkcyk7
-DQo+ID4gDQoNCg==
 
+--/7F8UcOhwbEJvS7n
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
+> On Fri, Jan 17, 2020 at 6:26 AM David Gibson
+> <david@gibson.dropbear.id.au> wrote:
+> >
+> > On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
+> > > Hi David
+> > >
+> > > On 1/16/20 1:57 AM, David Gibson wrote:
+> > > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
+> > > > > This commit adds the possibility to add build information for a D=
+TB.
+> > > > > Build information can be: build date, DTS version, "who built the=
+ DTB"
+> > > > > (same kind of information that we get in Linux with the Linux ban=
+ner).
+> > > > >
+> > > > > To do this, an extra option "-B" using an information file as arg=
+ument
+> > > > > has been added. If this option is used, input device tree is appe=
+nded with
+> > > > > a new string property "Build-info". This property is built with i=
+nformation
+> > > > > found in information file given as argument. This file has to be =
+generated
+> > > > > by user and shouldn't exceed 256 bytes.
+> > > > >
+> > > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> > > >
+> > > > At the very least, this patch of the series will need to be sent to
+> > > > upstream dtc first.
+> > >
+> > > Ok sorry. I thought that sending all the series would give more
+> > > information.
+> >
+> > That's fair enough, but in order to merge, you'll need to post against
+> > upstream dtc.
+> >
+> > > > I'm also not terribly clear on what you're trying to accomplish her=
+e,
+> > > > and why it's useful.
+> > >
+> > > Let's take Kernel boot at example (but could be extend to other DTB "=
+users"
+> > > like U-Boot). When Linux kernel booting we get a log that gives useful
+> > > information about kernel image: source version, build date, people wh=
+o built
+> > > the kernel image, compiler version. This information is useful for de=
+bug and
+> > > support. The aim is to get same kind of information but for the DTB.
+> > >
+> > > > Since you're doing this specifically for use with dtbs built in the
+> > > > kernel build, could you just use a:
+> > > >     Build-info =3D /incbin/ "build-info.txt";
+> > > > in each of the in-kernel .dts files?
+> > >
+> > > My first idea was to not modify all existing .dts files. Adding an ex=
+tra
+> > > option in dtc is (for me) the softer way to do it. I mean, compile
+> > > information should come through compiler without modify .dts files ou=
+tside
+> > > from dtc. In this way it will be easy to everybody using dtc (inside =
+our
+> > > outside Linux tree) to add dtb build info (even if they don't how to =
+write a
+> > > dts file).
+> >
+> > But you're not really having this information coming from the
+> > compiler.  Instead you're adding a compiler option that just force
+> > includes another file into the generated tree, and it's up to your
+> > build scripts to put something useful into that file.
+> >
+> > I don't really see that as preferable to modifying the .dts files.
+> >
+> > I also dislike the fact that the option as proposed is much more
+> > general than the name suggests, but also very similar too, but much
+> > more specific than the existing /incbin/ option.
+> >
+> > What might be better would be to have a dtc option which force appends
+> > an extra .dts to the mail .dts compiled.  You can then put an overlay
+> > template in that file, something like:
+> >
+> > &{/} {
+> >         linux,build-info =3D /incbin/ "build-info.txt;
+> > }
+>=20
+> I like this suggestion either as an include another dts file or an
+> overlay.
+
+Sorry, to be clear what I'm talking about here is just including
+another dts file, and using the compile-type overlay syntax.  This is
+not the same as .dtbo style runtime overlays (though the final result
+is about the same in this case).
+
+> The latter could be useful as a way to maintain current dtb
+> files while splitting the source files into base and overlay dts
+> files.
+>=20
+> But no, let's not prepend this with 'linux'. It's not a property
+> specific for Linux to consume.
+
+It's not really about who consumes it.  It's about defining a
+namespace for the new property to exist in, since it's not part of a
+relevant standard (if we wanted to make it such, we should pin down
+what goes in there with much more precision).
+
+This is specific to files built in the Linux tree, hence my suggestion
+of "linux", whoever ends up consuming them.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--/7F8UcOhwbEJvS7n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4j+ZEACgkQbDjKyiDZ
+s5IzcA/+IyEwTDYdDd6VKWlGKJQEhbs/IyFPI3YP75Tdtkb9dwd/Q71XD+NmmY1u
+8+4df67hhQGyaD3IJuPjLWIJEFnYm/X89l1a2P4tbz0EQ+pQGzSFE16Z/IR1NCE0
+9zeYqOkrm2my7jTZHMUyunFbnTu1tSxjNQ6tHHITOWMJUjIYqimacFa3Fb6FFreo
+aAh4c2vOvla8qrCYN582f7aSTkFkLiy3Ifom0WtWz1YIqtaiUnWBTTozULZCRlQN
+Y/MQJ8yA64eIAO/WXbOFVFWIStWt7p/kASGEHotkrI3+JnKxxPD0vdmhjOfe6e1k
+FnVWFXrKWhDlbGY7F4epUUxMQPJZFizbH7YrnEPfE8ojvXkALxVJNc0Rj8C/2CGD
+nc42tciqKGUlKCqt3Z/sBwjX5SsEPeK/7edxMo99MVxXGxt8LcVQSapVWKjGwiKH
+WiupM00CdLuNbgffsogfTtMpHBbwsgnn6G9r9HCs24Vul58hRXOj7MbfEgylb6Rz
+fisW47lTYGZSneIrjnJI4yw8zcey0WdYjz24hsIaWqxwpowIhs4E714O7Q8xLMSj
+XBPeFU1iGMUusjlKA491LNKmrJ9ovKvZ3zUsIfqktgKIHLQ3H2BPf69H93OpYefr
+7uPBk8TSrzpUVo/Sua+Z3KQorYyDcqcpqCZkdZWMSnjIf1AB0JA=
+=yRUO
+-----END PGP SIGNATURE-----
+
+--/7F8UcOhwbEJvS7n--
