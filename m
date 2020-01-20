@@ -6,70 +6,66 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A94BC33CA1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 09:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D75CC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 09:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8A02077C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 09:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BE9207E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 09:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579511150;
-	bh=hOGKfcLdv9OKkNbqFbJrj6fJFh85PVPo/RJsKujWiAo=;
+	s=default; t=1579511395;
+	bh=vbAaO1LjWMydY+UDit/LOlD+QdhAMjmRUBC6/xTciUI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lCSjLH5Lfr64gzb/zN2i+17vjn6o5X7oDKqAABTJX2ySQTYE4feV8nnHpTgbmX2V1
-	 0+Habzjm4qwnHXMfjGLuxKLOZBUKhU+EDOeJ50mJu0CaPH8zhr14iMuc/ZT/L8zs23
-	 n/6FszCyJW68d2+5TtXsBfLjatbDItaQxcE8gKhw=
+	b=l7LoU8PzP8UB7D6AyeDqJFhojNWmSMTK8xVqVEUdsLYdbUNzFMyHeKDVY8C367DvD
+	 ZKLksDiCRRnc6Y7B6qXfGSxgOY0AndFPx+woVxsHink4BKVDMh0e3x3R+KwP6T7OHk
+	 xKzoVW19xTBdQM1gktEByH1F+8rPPHeK70pdivak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgATJFt (ORCPT
+        id S1726421AbgATJJy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:05:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37780 "EHLO mail.kernel.org"
+        Mon, 20 Jan 2020 04:09:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgATJFt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:05:49 -0500
+        id S1726130AbgATJJy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:09:54 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7E862073D;
-        Mon, 20 Jan 2020 09:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A67020684;
+        Mon, 20 Jan 2020 09:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579511148;
-        bh=hOGKfcLdv9OKkNbqFbJrj6fJFh85PVPo/RJsKujWiAo=;
+        s=default; t=1579511393;
+        bh=vbAaO1LjWMydY+UDit/LOlD+QdhAMjmRUBC6/xTciUI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KbYBd1i7M1f6Yi0KbjFcHi7YS7/6lzCyR+2JxRRHfgmnMVia5eOQJ2GGnK/JBx0LP
-         3gAE456ROqcf1XhKUVbR3cd/UJCKZIDyOj8x5UaTUH1Kpmdulkkbwe6veIF9ydwboF
-         S+sYd70GT8p0L9wX4178FSqtf7Fn62N4DhyxDuRc=
+        b=Z8JoobvHuhNgmbrbIoqg/RNLpNLhodMK2TnkhVzBAaozj7wRwet84iBLCdbKiu68V
+         JTPENT7TvgZv0pRxV3YVp4G79sL4cu+peo64P9DRY6axIzHnliS19t4ctptG/k6BU0
+         Ae//fG/4yViRpu4zaXyfma5rNZ92GppC49HKsues=
 Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
         by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1itT0E-000DbN-Tx; Mon, 20 Jan 2020 09:05:47 +0000
+        id 1itT4B-000DhL-KB; Mon, 20 Jan 2020 09:09:51 +0000
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jan 2020 10:05:46 +0100
+Date:   Mon, 20 Jan 2020 10:09:51 +0100
 From:   Marc Zyngier <maz@kernel.org>
-To:     Qianggui Song <qianggui.song@amlogic.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 0/4] irqchip/meson-gpio: Add support for Meson-A1 SoC
-In-Reply-To: <20191216123645.10099-1-qianggui.song@amlogic.com>
-References: <20191216123645.10099-1-qianggui.song@amlogic.com>
-Message-ID: <8e78c2728bec3601cb9a6615a7f5b103@kernel.org>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com,
+        atish.patra@wdc.com, sagar.kadam@sifive.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com
+Subject: Re: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+In-Reply-To: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
+References: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
+Message-ID: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
 X-Sender: maz@kernel.org
 User-Agent: Roundcube Webmail/1.3.8
 X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: qianggui.song@amlogic.com, tglx@linutronix.de, jason@lakedaemon.net, khilman@baylibre.com, narmstrong@baylibre.com, jbrunet@baylibre.com, jianxin.pan@amlogic.com, xingyu.chen@amlogic.com, hanjie.lin@amlogic.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
@@ -77,33 +73,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-16 13:36, Qianggui Song wrote:
-> This patchset adds support for GPIO interrupt controller of Meson-A1 
-> SoC
-> which use new register layout, two main things are done in the patchset
-> 1. rework current driver
-> 2. add a1 support
+On 2019-12-10 12:11, Yash Shah wrote:
+> This patch series adds GPIO drivers, DT documentation and DT nodes for
+> HiFive Unleashed board. The gpio patches are mostly based on Wesley's 
+> patch.
+> The patchset also adds hierarchy irq domain support as it is required 
+> by this
+> gpio driver. It also includes the irqdomain patch to introduce
+> irq_domain_translate_onecell() and irq-nvic driver patch to use this 
+> newly
+> introduced function.
 > 
-> changes since v1 at [0]
->  - place initial macro after the definition of param structure
->  - make common data as parameter of initial macro
->  - add dummy init function for previous chips
+> This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed 
+> board
 > 
-> [0]https://lore.kernel.org/linux-amlogic/20191206121714.14579-1-qianggui.song@amlogic.com
+> Changes:
+> v4 vs v3:
+> - Rename the DT yaml document to more standard naming 
+> (sifive,gpio.yaml)
+> - Drop "clock-names" property from yaml document
+> - Add "minItems" to "interrupts" node in yaml
 > 
-> Qianggui Song (4):
->   dt-bindings: interrupt-controller: New binding for Meson-A1 SoCs
->   irqchip/meson-gpio: rework meson irqchip driver to support meson-A1
->     SoCs
->   irqchip/meson-gpio: Add support for meson a1 SoCs
->   arm64: dts: meson: a1: add gpio interrupt controller support
+> v3 vs v2:
+> - Include patch for irq-nvic driver to use irq_domain_translate_onecell
+> - Remove unnecessary inclusion of header files
+> - Use a single prefix for all symbols in this driver
+> - Rename the "enabled" field of struct sifive_gpio to "irq_state"
+> - Remove unused variables and locking from probe()
+> - Other minor changes
 > 
->  .../amlogic,meson-gpio-intc.txt               |   1 +
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   9 ++
->  drivers/irqchip/irq-meson-gpio.c              | 137 ++++++++++++++----
->  3 files changed, 122 insertions(+), 25 deletions(-)
+> v2 vs v1:
+> - Add patch to introduce irq_domain_translate_onecell() and use it in
+>   the sifive PLIC driver
+> - Drop the usage of own locks, instead use internal bgpio_locks
+> - Consistently use regmap for register access throughout the gpio code
+> - Convert the GPIO DT documentation into a json schema
+> - Other minor changes based upon feedback received on v1
+> 
+> v1 vs RFC:
+> Incorporated below changes as suggested by Linus Walleij on RFC version 
+> of this
+> patchset[0]
+> - Dropped PWM patches as they are already merged.
+> - Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
+> - Remove unwanted inclusion of header files
+> - Use regmap MMIO instead of customised sifive_assign_bit()
+> - Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
+> - Use hierarchical irqdomain
+> 
+> [0]
+> https://lore.kernel.org/linux-riscv/20181010123519.RVexDppaPFpIWl7QU_hpP8tc5qqWPJgeuLYn0FaGbeQ@z/
+> 
+> Yash Shah (6):
+>   genirq: introduce irq_domain_translate_onecell
+>   irqchip: nvic: Use irq_domain_translate_onecell instead of custom 
+> func
+>   irqchip: sifive: Support hierarchy irq domain
+>   gpio: sifive: Add DT documentation for SiFive GPIO
+>   gpio: sifive: Add GPIO driver for SiFive SoCs
+>   riscv: dts: Add DT support for SiFive FU540 GPIO driver
 
-I've queued the first 3 patches. The last one can go taken via arm-soc.
+I've queued the first 5 patches. The last one should go via the
+corresponding platform tree.
 
 Thanks,
 
