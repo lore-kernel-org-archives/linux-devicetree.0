@@ -2,110 +2,133 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920BBC33CB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 08:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDF5C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 699ED2077C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 08:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DS89j9PW"
+	by mail.kernel.org (Postfix) with ESMTP id 23285207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579510445;
+	bh=7658EiAaUp7PZdEgintuX/ZlhBgoO6/vEgyIccALm9A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=u6BFQUSDns3mUFNNB+VdOeTosB4jwhwrgeg7HHw8WkdPCPHkGPmMKiP2RSKjyp8Zj
+	 x8iPX0rxuoFPt1Ii/bI2E6aPrAYy223Ge1AbwfRBaxqEeaze3USuuAy9Kq6umGfWfL
+	 BQc2Swf0NQhhEM13/p5XJot6s0rxETNjn+1cEHH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgATIo0 (ORCPT
+        id S1726738AbgATIyE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:44:26 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50872 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgATIo0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 03:44:26 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so13541818wmb.0
-        for <devicetree@vger.kernel.org>; Mon, 20 Jan 2020 00:44:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=s+lxv8yS+tPPVLLVda+OIOe+B0+kZ5og8HXVAwOgVOE=;
-        b=DS89j9PWMbSs7Q0oYxvC9+QxP7mMSQtykSp6CPFm9blhsNBPlaMHsPGvSxHMFwMWYf
-         mce//OGWonh+G0xoWFBeMQ6MygHTpF/5MXnrL8h2bDTKR5wY8YOQ0tCm1yfjldA1AzcF
-         DdOkqgraTIAY2ENvTPKz6wEVvJaqaVn/g0objOAyDQ4PagQTQ75B5YcW+L3q6VG0qrLv
-         QOoQ/s7+hBCUPWP3K8MhMjLpe5THZ8jHhX5GoXsIBpf+VGSNSXshpqmK2meAgKvEwHQL
-         d7AxVplHo9ZfzqOwGdNhqWXXLBe8I9I0KxmqKoEYZvXF1IWpMDYPcXH9SUha06mzy86L
-         m3/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=s+lxv8yS+tPPVLLVda+OIOe+B0+kZ5og8HXVAwOgVOE=;
-        b=SqLUoKiaWWDk3u9RHJRGfYWGwICCGxg1xkkLvhxEqQgSzbCcMNUfQOmdpoybfaL9vU
-         HJQI35TOphOBmy9A1cHQj3Hc9TMCJcNmFA+a0pEf8B2tGo+1lD3kuqerwr1tktCBSejc
-         S2oGt5YdHRu3cHfS+vkZQuyEvUFT6yK3bg6sBdlcszhFeoI3m78gpozHcnZhUYxzSgSb
-         RVOhdXB1RS8FJi9dfRQ544F3DmXAZ3wG2HdGdtn9ikP+jYRwbqKmKWCRJ4OGu4vkY9kL
-         yurH5C36F4hiXxXLF1No4uDu3qQlnWq6cbs3LSpxWISv81NWWobYpCYmd0B9ne+rpNBZ
-         SbgQ==
-X-Gm-Message-State: APjAAAXf4HQ0Vg8gDZ3zYy2cJ9086UzsQTfyetAg+UAPA0hForyd2FYi
-        6dKaYmP0V26rpfyU8BZITd9cIQ==
-X-Google-Smtp-Source: APXvYqyxULuntfgFhWunP/TGRe20THFA3uILY3jQLy0UfU93w71D1ribWIK30iqLIEbqoWtsxy0iAQ==
-X-Received: by 2002:a1c:9cce:: with SMTP id f197mr18331493wme.133.1579509863421;
-        Mon, 20 Jan 2020 00:44:23 -0800 (PST)
-Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id b137sm3009206wme.26.2020.01.20.00.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 00:44:22 -0800 (PST)
-Date:   Mon, 20 Jan 2020 08:44:39 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wen Su <Wen.Su@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [RESEND 2/4] mfd: Add for PMIC MT6359 registers definition
-Message-ID: <20200120084439.GX15507@dell>
-References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
- <1579506450-21830-3-git-send-email-Wen.Su@mediatek.com>
+        Mon, 20 Jan 2020 03:54:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgATIyE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:54:04 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ADD22077C;
+        Mon, 20 Jan 2020 08:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579510443;
+        bh=7658EiAaUp7PZdEgintuX/ZlhBgoO6/vEgyIccALm9A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iqssyyfSMZovWsn4zGGw2eWcWEy4oBVZI40yYEm6haUwX+7L+0ERyopt5aoWZjpiV
+         aL2fAboolvdnOIv7YES1actzjAuNStq7dJxxynuGZJvYD5/gEhE/qIdeKCp5xi1KxL
+         O3L4u76IVni+YXqLngVLArqY7RYXyTcqfQQ/OojY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1itSor-000DOa-Jh; Mon, 20 Jan 2020 08:54:01 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1579506450-21830-3-git-send-email-Wen.Su@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Jan 2020 09:54:01 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        jason@lakedaemon.net, robh+dt@kernel.org, tglx@linutronix.de,
+        joel@jms.id.au, andrew@aj.id.au
+Subject: Re: [PATCH v6 00/12] aspeed: Add SCU interrupt controller and XDMA
+ engine drivers
+In-Reply-To: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
+References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
+Message-ID: <1c0315d197ae5b8b01ea5beaaf32fa21@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: eajames@linux.ibm.com, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, robh+dt@kernel.org, tglx@linutronix.de, joel@jms.id.au, andrew@aj.id.au
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Jan 2020, Wen Su wrote:
-
-> From: Wen Su <wen.su@mediatek.com>
+On 2020-01-15 22:29, Eddie James wrote:
+> This series first adds a driver to control the interrupt controller 
+> provided by
+> the System Control Unit (SCU) on the AST2500 and AST2600 SOCs. The 
+> interrupts
+> made available are necessary for the control of the XDMA engine 
+> embedded in the
+> same Aspeed SOCs.
+> This series then adds a driver to control the XDMA engine. This driver 
+> was
+> previously sent to the list without support for the AST2600, and has 
+> been
+> refactored significantly to enable that support. The XDMA engine 
+> performs
+> automatic DMA operations between the Aspeed SOC (acting as a BMC) and a 
+> host
+> processor.
 > 
-> This adds MediaTek PMIC MT6359 registers definition for the
-> following sub modules:
+> Changes since v5:
+>  - Rework the XDMA locking completely; thanks Andrew Jeffrey for the 
+> help.
 > 
-> - Regulator
-> - RTC
-> - Interrupt
+> Changes since v4:
+>  - Fix dts documentation example for XDMA
+>  - Add errno in warning for SCU failure in XDMA PCIe config
+>  - Add a check for in_reset before proceeding in O_NONBLOCK case
+>  - Add comments to memory sizes in the witherspoon/tacoma XDMA dts 
+> entries
 > 
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> Changes since v3:
+>  - See individual patches; just clean-up items
+> 
+> Changes since v2:
+>  - See individual patches
+>  - Drop rainier dts patch
+>  - In summary, remove references to VGA memory as the XDMA driver 
+> doesn't care
+>    where it is. Remove SDRAM controller reference. Move user reset
+>    functionality to a separate patch and make it an ioctl.
+> 
+> Changes since v1:
+>  - See individual patches
+>  - In summary, first the irqchip driver switched to use the parent SCU 
+> regmap
+>    rather than iomapping it's register. Secondly, the XDMA 
+> initialization
+>    switched to use properties from the device tree rather than 
+> dynamically
+>    calculate memory spaces, and system config.
+> 
+> Eddie James (12):
+>   dt-bindings: interrupt-controller: Add Aspeed SCU interrupt 
+> controller
+>   irqchip: Add Aspeed SCU interrupt controller
 
-FYI, this is a real Acked-by.
+I've now queued these two patches in the irqchip tree.
 
-Whoever takes this set can take this patch.
+Thanks,
 
-> Signed-off-by: Wen Su <wen.su@mediatek.com>
-> ---
->  include/linux/mfd/mt6359/registers.h | 531 +++++++++++++++++++++++++++++++++++
->  1 file changed, 531 insertions(+)
->  create mode 100644 include/linux/mfd/mt6359/registers.h
-
+          M.
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Jazz is not dead. It just smells funny...
