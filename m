@@ -2,255 +2,238 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A8CC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605F4C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0339C21D7E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAFC22464
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OK/DzpV4"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nxitAyNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgATOYY (ORCPT
+        id S1728901AbgATOmI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:24:24 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8648 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgATOYX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 09:24:23 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e25b7ec0002>; Mon, 20 Jan 2020 06:23:40 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Jan 2020 06:24:22 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Jan 2020 06:24:22 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jan
- 2020 14:24:22 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 20 Jan 2020 14:24:22 +0000
-Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e25b8110000>; Mon, 20 Jan 2020 06:24:22 -0800
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 9/9] arm64: tegra: enable AHUB modules for few Tegra chips
-Date:   Mon, 20 Jan 2020 19:53:18 +0530
-Message-ID: <1579530198-13431-10-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+        Mon, 20 Jan 2020 09:42:08 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:10433 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgATOmI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 09:42:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1579531326; x=1611067326;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=gKcvgCuvnxsmMrSqVMP8I3jCbAOxHqI5Zf/I7NhlmXQ=;
+  b=nxitAyNLRyMa4au2N332a/Bsqwy4YCZ7h63cp2T2P4JJFxyY6gSJfnBH
+   StSkBy6Eo22kTAdFlfH1rM4fixi4tFeVCyrSM1B4L+5xOineNBKkkRxRh
+   yJGuuF5UVcn6xoIUjcbcu9QxRz6Bpg31Ft/zXKFfdKn17Ibhj20jCnI4M
+   4=;
+IronPort-SDR: kOowB5dfeAw9jGKaq9Bzmkt5Bc8aqgZFC80RStNdKmrg03CU0XAmMXUbIHCvIAs6AljMKHU1Bs
+ D0u3sXDiWluQ==
+X-IronPort-AV: E=Sophos;i="5.70,342,1574121600"; 
+   d="scan'208";a="13773069"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 20 Jan 2020 14:42:05 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id CAB4B240F67;
+        Mon, 20 Jan 2020 14:42:00 +0000 (UTC)
+Received: from EX13D13UWB004.ant.amazon.com (10.43.161.218) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 20 Jan 2020 14:41:59 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D13UWB004.ant.amazon.com (10.43.161.218) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 20 Jan 2020 14:41:59 +0000
+Received: from [10.95.92.21] (10.95.92.21) by mail-relay.amazon.com
+ (10.43.161.249) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Mon, 20 Jan 2020 14:41:53 +0000
+Subject: Re: [PATCH v7 1/3] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+To:     James Morse <james.morse@arm.com>, <Sudeep.Holla@arm.com>
+CC:     <bp@alien8.de>, <mchehab@kernel.org>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <linus.walleij@linaro.org>, <daniel@iogearbox.net>,
+        <paulmck@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>
+References: <20191015120927.10470-1-hhhawa@amazon.com>
+ <20191015120927.10470-2-hhhawa@amazon.com>
+ <9ef0917d-b1d1-53c1-e459-309e509c2ff2@arm.com>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <0bd30915-71ca-cba2-f273-f7a1ff6d5a8d@amazon.com>
+Date:   Mon, 20 Jan 2020 16:41:51 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579530220; bh=QLJog4DfYyxTa/pGhw8zE2jdA/xz/qI7iFpPR8p4Zno=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=OK/DzpV4HbhmKsexkuMvmA+q3VySwGYKQRrylVrBUtDATeRaxSP5ESUf9CLgPpKfN
-         9G/FyJkD+6uAxeRL3vBBRW5hMmIuoggLp6wT/tAdXfrtry2Xm0MOj6jA0Q8q1Wwxmp
-         92GGVO6XLpzTmT6S2/UIU4Vnzlypu+AjhMT7fb85Nlu3rgZvtaC1uRrdMGWNjIadMP
-         KAA8cINzkNN5xI/RY7pqDCim7t3pKJBYER+EEhPAgl4jM8Zkv5RUxRKSK7STW9dyh9
-         X7MPNRU+tq7o/Hx4H774UPIVXKmclkoZJI4o/P+l4ng1ZV8/GzP5r+tj25mWQtbKDT
-         YwZn5Mfuir6Ig==
+In-Reply-To: <9ef0917d-b1d1-53c1-e459-309e509c2ff2@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch enables AHUB, ADMAIF modules for following Tegra platforms.
-Along with this specific instances of I/O modules are enabled as per
-the board design.
 
- * Jetson TX1
-   - I2S1, I2S2, I2S3, I2S4 and I2S5
-   - DMIC1, DMIC2 and DMIC3
 
- * Jetson TX2
-   - I2S1, I2S2, I2S3, I2S4, I2S5 and I2S6
-   - DMIC1, DMIC2 and DMIC3
-   - DSPK2
+On 1/15/2020 8:49 PM, James Morse wrote:
+> Hi Hanna,
+> 
+> (This was still on my list. I've not seen a newer version, its not in next, and it still
+> applies, so:)
 
- * Jetson AGX Xavier
-   - I2S1, I2S2, I2S4 and I2S6
-   - DMIC2 and DMIC3
-   - DSPK1
+Thank you.
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts | 48 ++++++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts | 36 ++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 40 ++++++++++++++++++
- 3 files changed, 124 insertions(+)
+> 
+> On 15/10/2019 13:09, Hanna Hawa wrote:
+>> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
+>> report L1 errors.
+> 
+>> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
+>> new file mode 100644
+>> index 000000000000..e363a80b4d13
+>> --- /dev/null
+>> +++ b/drivers/edac/al_l1_edac.c
+>> @@ -0,0 +1,190 @@
+> 
+>> +#include <asm/sysreg.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/of.h>
+>> +#include <linux/smp.h>
+> 
+> You need <linux/platform_device.h> for platform_device_register_simple().
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-index f1de4ff..717993c 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-@@ -20,6 +20,54 @@
- 		interrupt-controller@2a40000 {
- 			status = "okay";
- 		};
-+
-+		ahub@2900800 {
-+			status = "okay";
-+
-+			admaif@290f000 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901000 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901100 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901200 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901300 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901400 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901500 {
-+				status = "okay";
-+			};
-+
-+			dmic@2904000 {
-+				status = "okay";
-+			};
-+
-+			dmic@2904100 {
-+				status = "okay";
-+			};
-+
-+			dmic@2904200 {
-+				status = "okay";
-+			};
-+
-+			dspk@2905100 {
-+				status = "okay";
-+			};
-+		};
- 	};
- 
- 	i2c@3160000 {
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index 985e7d8..f5d5832 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -21,6 +21,42 @@
- 			interrupt-controller@2a40000 {
- 				status = "okay";
- 			};
-+
-+			ahub@2900800 {
-+				status = "okay";
-+
-+				admaif@290f000 {
-+					status = "okay";
-+				};
-+
-+				i2s@2901000 {
-+					status = "okay";
-+				};
-+
-+				i2s@2901100 {
-+					status = "okay";
-+				};
-+
-+				i2s@2901300 {
-+					status = "okay";
-+				};
-+
-+				i2s@2901500 {
-+					status = "okay";
-+				};
-+
-+				dmic@2904100 {
-+					status = "okay";
-+				};
-+
-+				dmic@2904200 {
-+					status = "okay";
-+				};
-+
-+				dspk@2905000 {
-+					status = "okay";
-+				};
-+			};
- 		};
- 
- 		ddc: i2c@31c0000 {
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-index a3cafe3..c8d2c21 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-@@ -123,5 +123,45 @@
- 		agic@702f9000 {
- 			status = "okay";
- 		};
-+
-+		ahub@702d0800 {
-+			status = "okay";
-+
-+			admaif@702d0000 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1000 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1100 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1200 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1300 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1400 {
-+				status = "okay";
-+			};
-+
-+			dmic@702d4000 {
-+				status = "okay";
-+			};
-+
-+			dmic@702d4100 {
-+				status = "okay";
-+			};
-+
-+			dmic@702d4200 {
-+				status = "okay";
-+			};
-+		};
- 	};
- };
--- 
-2.7.4
+Will be added in next PS.
 
+> 
+> [...]
+> 
+>> +static void al_l1_edac_cpumerrsr_read_status(void *arg)
+>> +{
+> 
+>> +	for (i = 0; i < repeat; i++) {
+>> +		if (fatal)
+>> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+>> +		else
+>> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+>> +	}
+> 
+> What serialises these? You kick this off from on_each_cpu(), what stops two CPUs calling
+> this at the same time? 'edac_dev->counters.ce_count += count;' will go wrong in this case.
+> 
+> I think you need a spinlock around the edac_device_* calls that take edac_dev so that only
+> one occurs at a time.
+
+Agree with you, will add spinlock in next PS.
+
+> 
+> 
+>> +}
+>> +
+>> +static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
+>> +{
+>> +	on_each_cpu(al_l1_edac_cpumerrsr_read_status, edac_dev, 1);
+>> +}
+>> +
+>> +static int al_l1_edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(0, DRV_NAME, 1, "L", 1, 1, NULL,
+>> +					      0, edac_device_alloc_index());
+>> +	if (!edac_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	edac_dev->edac_check = al_l1_edac_check;
+>> +	edac_dev->dev = dev;
+>> +	edac_dev->mod_name = DRV_NAME;
+>> +	edac_dev->dev_name = dev_name(dev);
+>> +	edac_dev->ctl_name = "L1_cache";
+>> +	platform_set_drvdata(pdev, edac_dev);
+>> +
+>> +	ret = edac_device_add_device(edac_dev);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	return 0;
+>> +err:
+> 
+> (this goto has one user, meaning you can remove it by restructuring the code)
+
+Will be fixed in next PS.
+
+> 
+> 
+>> +	dev_err(dev, "Failed to add L1 edac device (%d)\n", ret);
+>> +	edac_device_free_ctl_info(edac_dev);
+>> +
+>> +	return ret;
+>> +}
+>> +
+> 
+>> +static const struct of_device_id al_l1_edac_of_match[] = {
+>> +	{ .compatible = "al,alpine-v2" },
+>> +	{ .compatible = "amazon,alpine-v3" },
+>> +	{}
+>> +};
+> 
+> Unusually these are machine compatibles. It may be worth a comment that these are the
+> platforms which are known to have Cortex-A57/A72 configured with this support, and access
+> to the registers enabled by firmware.
+
+Will be added.
+
+> 
+> 
+>> +MODULE_DEVICE_TABLE(of, al_l1_edac_of_match);
+> 
+> [..]
+> 
+>> +static int __init al_l1_init(void)
+>> +{
+>> +	struct device_node *root = of_find_node_by_path("/");
+>> +	int ret;
+> 
+> root could be NULL here.
+
+Will be fixed.
+
+> 
+> 
+>> +	if (!of_match_node(al_l1_edac_of_match, root))
+>> +		return 0;
+>> +
+>> +	ret = platform_driver_register(&al_l1_edac_driver);
+>> +	if (ret) {
+>> +		pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	edac_l1_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
+>> +	if (IS_ERR(edac_l1_device)) {
+>> +		pr_err("Failed to register EDAC AL L1 platform device\n");
+>> +		return PTR_ERR(edac_l1_device);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> With the edac_device_handle_ce() race fixed:
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thanks,
+Hanna
+
+> 
+> 
+> Thanks,
+> 
+> James
+> 
