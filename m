@@ -2,143 +2,64 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0017BC33CA1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 07:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B01C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 07:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E3920684
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 07:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8912073D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 07:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="r59H1ZXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgATH1t (ORCPT
+        id S1726148AbgATHrx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 02:27:49 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49897 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgATH1t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 02:27:49 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itRTJ-0000sd-HT; Mon, 20 Jan 2020 08:27:41 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itRTH-0000jo-GG; Mon, 20 Jan 2020 08:27:39 +0100
-Date:   Mon, 20 Jan 2020 08:27:39 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v4 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20200120072739.sixr5e76uckrugvu@pengutronix.de>
-References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
- <1579228475-6681-5-git-send-email-jeff@labundy.com>
- <20200117073427.ufrduwagvppeasgr@pengutronix.de>
- <20200119233234.GB28865@labundy.com>
+        Mon, 20 Jan 2020 02:47:53 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:7459 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726130AbgATHrw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 02:47:52 -0500
+X-UUID: 91f1ec16ecb5461794a5a9c265c0e8e4-20200120
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=VOjHatv3U3xNNKFat1fmDIBCP5I8ZbhE5gQiqF6rP2w=;
+        b=r59H1ZXxekmZNY5OeHyzdXWDMB08W/kvJ7Fe1nanW1+yJjK1Ze1efpKWOpmrvkMEzVJAdcR3xRPsyN5ANj0B5JuIiSyZuqRtBl7S5fI4d/skY1mHtLrIwjmARJlz+tNUC1MGkI9A01S7D1Z5EFn7KN9Y78KqlGb1VT/MDkx51S0=;
+X-UUID: 91f1ec16ecb5461794a5a9c265c0e8e4-20200120
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1878007573; Mon, 20 Jan 2020 15:47:46 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 20 Jan 2020 15:47:12 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 20 Jan 2020 15:48:39 +0800
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <wsd_upstream@mediatek.com>, <wen.su@mediatek.com>
+Subject: [RESEND 0/4] Add Support for MediaTek PMIC MT6359 Regulator
+Date:   Mon, 20 Jan 2020 15:47:26 +0800
+Message-ID: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200119233234.GB28865@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Jeff,
+VGhpcyBwYXRjaHNldCBhZGQgc3VwcG9ydCB0byBNVDYzNTkgUE1JQyByZWd1bGF0b3IuIE1UNjM1
+OSBpcyBwcmltYXJ5DQpQTUlDIGZvciBNVDY3NzkgcGxhdGZvcm0uDQo=
 
-On Sun, Jan 19, 2020 at 11:32:39PM +0000, Jeff LaBundy wrote:
-> On Fri, Jan 17, 2020 at 08:34:27AM +0100, Uwe Kleine-König wrote:
-> > On Fri, Jan 17, 2020 at 02:35:57AM +0000, Jeff LaBundy wrote:
-> > > +static void iqs620_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > +				 struct pwm_state *state)
-> > > +{
-> > > +	struct iqs620_pwm_private *iqs620_pwm;
-> > > +
-> > > +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
-> > > +
-> > > +	mutex_lock(&iqs620_pwm->lock);
-> > > +
-> > > +	/*
-> > > +	 * Since the device cannot generate a 0% duty cycle, requests to do so
-> > > +	 * cause subsequent calls to iqs620_pwm_get_state to report the output
-> > > +	 * as disabled with duty cycle equal to that which was in use prior to
-> > > +	 * the request. This is not ideal, but is the best compromise based on
-> > > +	 * the capabilities of the device.
-> > > +	 */
-> > > +	state->enabled = iqs620_pwm->out_en;
-> > 
-> > Hmm, when .get_state is called first (before the first invokation of
-> > .apply) .out_en doesn't represent the hardware's state but is false
-> > unconditionally. This makes it hard to take over a running PWM setup by
-> > the bootloader.
-> 
-> This was intentional, albeit poorly documented on my part. When the parent
-> MFD driver probes the device, it issues a soft reset (which returns all of
-> its registers to their default state). It then loads firmware (essentially
-> tuning/calibration register settings) and then triggers the device's self-
-> calibration sequence.
-> 
-> Both IQS620_PWR_SETTINGS_PWM_OUT and IQS620_PWM_DUTY_CYCLE default to zero,
-> and the firmware does not modify these. Therefore out_en and duty_val match
-> the hardware even before iqs620_pwm_apply is called, as they're initialized
-> to zero as well.
-> 
-> I would be happy to add a comment in iqs620_pwm_get_state describing this
-> behavior; I should have described it there rather than the review history
-> (sorry about that).
-
-I didn't saw that mentioned in the review history, just skimmed through
-the driver.
-
-> However, you bring up a really interesting point about preserving what may
-> have been done by the bootloader. The device holds itself in POR until its
-> supply reaches a sufficient level, so there isn't necessarily a functional
-> reason to manually issue a soft reset from the parent MFD driver.
-> 
-> I could get rid of the manual soft reset, and then simply sync both out_en
-> and duty_val in iqs620_pwm_probe which would allow iqs620_pwm_get_state to
-> pick up any changes made by the bootloader prior to the kernel coming up.
-
-That sounds good. This way the PWM driver is independent of the MFD
-driver and does the right thing no matter if parent resets the chip or
-not.
- 
-> The only problem is that leds-pwm disables the pwm at start-up, so the end
-> result is the same anyway. Regardless of the behavior of any one consumer,
-> however, I'm slightly inclined to go with the second option as it seems to
-> be less restrictive and more maintainable. Let me know if you disagree.
-
-With
-
-	default-state = "keep";
-
-in your dt the LED shouldn't get disabled.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
