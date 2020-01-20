@@ -2,170 +2,140 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D15C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 03:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8E7C33CB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 03:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F7820678
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 03:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFADB2075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 03:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgATD2L (ORCPT
+        id S1729021AbgATDto (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jan 2020 22:28:11 -0500
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:18790 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729011AbgATD2L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jan 2020 22:28:11 -0500
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 20 Jan 2020 10:59:08 +0800
-Received: from csbcas.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
-        by mse.ite.com.tw with ESMTP id 00K2x1nv079300;
-        Mon, 20 Jan 2020 10:59:01 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 20 Jan 2020 10:58:54 +0800
-From:   allen <allen.chen@ite.com.tw>
-CC:     Allen Chen <allen.chen@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 3/4] dt-bindings: Add binding for IT6505.
-Date:   Mon, 20 Jan 2020 10:44:33 +0800
-Message-ID: <1579488364-13182-4-git-send-email-allen.chen@ite.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1579488364-13182-1-git-send-email-allen.chen@ite.com.tw>
-References: <1579488364-13182-1-git-send-email-allen.chen@ite.com.tw>
+        Sun, 19 Jan 2020 22:49:44 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:13027 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729015AbgATDto (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jan 2020 22:49:44 -0500
+Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 20 Jan 2020
+ 11:50:11 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v7 0/5] add Amlogic A1 clock controller driver
+Date:   Mon, 20 Jan 2020 11:49:32 +0800
+Message-ID: <20200120034937.128600-1-jian.hu@amlogic.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.70.14]
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP: FCF751CC26A93D9A5BB88666EF62CF7855EBC473629BDB91C384C1D4AD94D6932000:8
-X-MAIL: mse.ite.com.tw 00K2x1nv079300
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.25]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a DT binding documentation for IT6505.
+add support for Amlogic A1 clock driver, the clock includes 
+three parts: peripheral clocks, pll clocks, CPU clocks.
+sys pll and CPU clocks will be sent in next patch.
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
- .../bindings/display/bridge/ite,it6505.yaml        | 89 ++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+Changes since v6 at [7]:
+-fix 'dt_binding_check' compiling error
+-add acked-by
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-new file mode 100644
-index 00000000..5c152ca8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ITE it6505 Device Tree Bindings
-+
-+maintainers:
-+  - Allen Chen <allen.chen@ite.com.tw>
-+
-+description: |
-+  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
-+  fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
-+  The IT6505 supports color depth of up to 36 bits (12 bits/color)
-+  and ensures robust transmission of high-quality uncompressed video
-+  content, along with uncompressed and compressed digital audio content.
-+
-+  Aside from the various video output formats supported, the IT6505
-+  also encodes and transmits up to 8 channels of I2S digital audio,
-+  with sampling rate up to 192kHz and sample size up to 24 bits.
-+  In addition, an S/PDIF input port takes in compressed audio of up to
-+  192kHz frame rate.
-+
-+  Each IT6505 chip comes preprogrammed with an unique HDCP key,
-+  in compliance with the HDCP 1.3 standard so as to provide secure
-+  transmission of high-definition content. Users of the IT6505 need not
-+  purchase any HDCP keys or ROMs.
-+
-+properties:
-+  compatible:
-+    const: ite,it6505
-+
-+  reg:
-+    maxItems: 1
-+    description: i2c address of the bridge
-+
-+  ovdd-supply:
-+    maxItems: 1
-+    description: I/O voltage
-+
-+  pwr18-supply:
-+    maxItems: 1
-+    description: core voltage
-+
-+  interrupts:
-+    maxItems: 1
-+    description: interrupt specifier of INT pin
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: gpio specifier of RESET pin
-+
-+  extcon:
-+    maxItems: 1
-+    description: extcon specifier for the Power Delivery
-+
-+  port:
-+    type: object
-+    description: A port node pointing to DPI host port node
-+
-+required:
-+  - compatible
-+  - reg
-+  - ovdd-supply
-+  - pwr18-supply
-+  - interrupts
-+  - reset-gpios
-+  - extcon
-+
-+examples:
-+  - |
-+    dp-bridge@5c {
-+        compatible = "ite,it6505";
-+        interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
-+        reg = <0x5c>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&it6505_pins>;
-+        ovdd-supply = <&mt6358_vsim1_reg>;
-+        pwr18-supply = <&it6505_pp18_reg>;
-+        reset-gpios = <&pio 179 1>;
-+        extcon = <&usbc_extcon>;
-+
-+        port {
-+            it6505_in: endpoint {
-+                remote-endpoint = <&dpi_out>;
-+            };
-+        };
-+    };
+Changes since v5 at [6]:
+-fix yaml file
+-add rst/current_en/l_detect parm detection
+-remove 'meson_eeclkc_data' in a1.c and a1-pll.c
+
+Changes since v4 at [5]:
+- change yaml GPL
+- drop meson-eeclk.c patch, add probe function in each driver
+- add CLK_IS_CRITICAL for sys_clk clock, drop the flag for sys_a and sys_b
+- add new parm for pll, add protection for rst parm
+- drop flag for a1_fixed_pll
+- remove the same comment for fclk_div, add "refer to"
+- add critical flag for a1_sys_clk
+- remove rtc table
+- rename a1_dspa_en_dspa and a1_dspb_en_dspb
+- remove useless comment
+
+Changes since v3 at [3]:
+-fix reparenting orphan failed, it depends on jerome's patch [4]
+-fix changelist in v3 about reparenting orphan
+-remove the dts patch 
+
+Changes since v2 at [2]:
+-add probe function for A1
+-seperate the clock driver into two patch
+-change some clock flags and ops
+-add support for a1 PLL ops
+-add A1 clock node
+-fix reparenting orphan clock failed, registering xtal_fixpll
+ and xtal_hifipll after the provider registration, it is not
+ a best way.
+
+Changes since v1 at [1]:
+-place A1 config alphabetically
+-add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
+-separate the driver into two driver: peripheral and pll driver
+-delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
+-delete the change in Kconfig.platforms, address to Kevin alone
+-remove the useless comments
+-modify the meson pll driver to support A1 PLLs
+
+[1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
+[2] https://lkml.kernel.org/r/1571382865-41978-1-git-send-email-jian.hu@amlogic.com
+[3] https://lkml.kernel.org/r/20191129144605.182774-1-jian.hu@amlogic.com
+[4] https://lkml.kernel.org/r/20191203080805.104628-1-jbrunet@baylibre.com
+[5] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+[6] https://lkml.kernel.org/r/20191227094606.143637-1-jian.hu@amlogic.com
+[7] https://lkml.kernel.org/r/20200116080440.118679-1-jian.hu@amlogic.com
+
+Jian Hu (5):
+  dt-bindings: clock: meson: add A1 PLL clock controller bindings
+  clk: meson: add support for A1 PLL clock ops
+  clk: meson: a1: add support for Amlogic A1 PLL clock driver
+  dt-bindings: clock: meson: add A1 peripheral clock controller bindings
+  clk: meson: a1: add support for Amlogic A1 Peripheral clock driver
+
+ .../bindings/clock/amlogic,a1-clkc.yaml       |   65 +
+ .../bindings/clock/amlogic,a1-pll-clkc.yaml   |   52 +
+ drivers/clk/meson/Kconfig                     |   18 +
+ drivers/clk/meson/Makefile                    |    2 +
+ drivers/clk/meson/a1-pll.c                    |  360 +++
+ drivers/clk/meson/a1-pll.h                    |   56 +
+ drivers/clk/meson/a1.c                        | 2249 +++++++++++++++++
+ drivers/clk/meson/a1.h                        |  120 +
+ drivers/clk/meson/clk-pll.c                   |   47 +-
+ drivers/clk/meson/clk-pll.h                   |    2 +
+ include/dt-bindings/clock/a1-clkc.h           |   98 +
+ include/dt-bindings/clock/a1-pll-clkc.h       |   16 +
+ 12 files changed, 3078 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+ create mode 100644 drivers/clk/meson/a1-pll.c
+ create mode 100644 drivers/clk/meson/a1-pll.h
+ create mode 100644 drivers/clk/meson/a1.c
+ create mode 100644 drivers/clk/meson/a1.h
+ create mode 100644 include/dt-bindings/clock/a1-clkc.h
+ create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+
 -- 
-1.9.1
+2.24.0
 
