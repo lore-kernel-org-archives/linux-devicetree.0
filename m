@@ -2,106 +2,197 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D416C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 20:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27182C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 21:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7822322525
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 20:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31FE22525
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 21:02:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IwCUvv+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgATUxn (ORCPT
+        id S1726982AbgATVCm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 15:53:43 -0500
-Received: from outgoing18.flk.host-h.net ([197.242.87.52]:45779 "EHLO
-        outgoing18.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgATUxm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 15:53:42 -0500
-X-Greylist: delayed 4094 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 15:53:42 EST
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam5-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itczF-00045Z-9N; Mon, 20 Jan 2020 21:45:25 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itczA-0004Hk-RM; Mon, 20 Jan 2020 21:45:20 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] [media] dt-bindings: Add rk3228 to the Rockchip RGA binding doc
-Date:   Mon, 20 Jan 2020 19:41:55 +0000
-Message-Id: <20200120194158.25357-2-justin.swartz@risingedge.co.za>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
-References: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0Xm17NJf4el5vffImWwWrhCpSDasLI4SayDByyq9LIhVjN6Oe0bZSj7x
- nWUgTBxzfkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
- qhBpvAyWwieZyauFYqHkIbFa+ipF21HJWO60ZqrvKy/1AXUV5oXt6ymoFHaG7BQtEYvFCSrK5j1T
- Po5/LpleUgQM5/MAHmDvzkMd4joYqrUfcPIQdUYI3fUXyt8g6v09xrG7vu/fdUS1M5thdxxsnOTC
- rRmvZNXA7urqkuRkjn1fyteVYP+HXs9CMbFn9vCz9Z+lGmDQvQDDheqH4lBQpR0ziVlLWDAC1vRC
- hq319+C3vxdCgsyStZRkQwmoMeUp+gQglixgZmTW6H0Uo/QzUeaLOBvNEC1g+U1SXfUhLsTk5wUY
- WaWokZC3JOaEfAcg3rPhhfeK9cZ48uDEoRc5vgP+N4akg5nlaTNYebWa2W6GbNvgwptlhJrsz+8j
- XuMdjIbLZhwoK/VzePATsXS/rFxRypFKMiPLyoQzvILSDO18VtgBXbQkUN2dXl9fJsQYqiZZBuHY
- Ta6/LJzl4pg0ZC9q5gYH7EOMauBWC98ol0xUHcbfIJ9ZJ7PpnPxGejDS+HAMyOjpxOsB8gG0slV7
- ra6jI4BS3XLmxFz+88FWeB7miCnFrS+xkiYMmdOwRIKnLhTyDa49KiI6ApkBL1M2pjeIsNv0i2bz
- nHJ53CHS5fL+CC61pH+Mdi8KDLlrJjQEyoQkvVqjwoXSktopqY7X3mJE1vuavCrJPmnnTHzVkpyb
- MK7ZTZV8hN6hngxqNW/p6/rAjB3Bo9WPi4IE45J8SMIBWsA7tm+5pSj1YjV94R3x16NaT9yCB/zW
- LYsk4/ealtlYzK51KubfNuS9lgsouDG6gpp8iIlTfpXH3eJ/htNFsfRJIIsn2dSUfOon4SSOHnp1
- et/MPu6LuWW8C6xs4jnP0QXTijBi5PZExX8sQXRK2Ohd4N83CNy2/HP4CS/B6ymwJqdrYqktDHCy
- f2KOgPWiC6z4HnV1R/vfaN0C4C3KdSxIKbHYhXQwhXELIBZC+BuxdgK5cVvzDCtuQClUbi7eRJvI
- 01OLeFH4QvqpC2nLfIqdZUeVlVebzZqu+9TcX2V266qVhLwCLj5UzlqDZIb7xEp3klSpLYn5Sshm
- tRDo/ib6qUd+ON9Iwv3fqFcmzUrJkUoL/PyVSe2/DDFq5n7HBuKWYRb2mL6sFaAAW2m3yODQWZ6C
- UzN46xT2FnDD31r1QFs2yPRk3H1E4ANRdN1BlPI5cpunCmbc5xpJVMDSneyWOiQlotRPFwUdX67F
- 3JAjgow=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Mon, 20 Jan 2020 16:02:42 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60808 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgATVCm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 16:02:42 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00KL2TeA098579;
+        Mon, 20 Jan 2020 15:02:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579554149;
+        bh=GJVGzM2njQggg1l0RAGivpH2DHYPT9XiOoI7CqAS69I=;
+        h=From:To:CC:Subject:Date;
+        b=IwCUvv+tEYLpoFIcE3Li/oYIvdMgaKK+MX2x7YswA4UrZ/uz3+QQD4Q85oZzIlk7W
+         TeNO1hAyiN5rexvl0Wg8FMqOZkH98MFt71H8x6ZkuvucBjwOdj47kYw6xzoqIORdQo
+         cpFyu8eyMbhelzvoT7cJcbZ4XlroeviW5Wb5D5wQ=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00KL2TBi005816;
+        Mon, 20 Jan 2020 15:02:29 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 20
+ Jan 2020 15:02:27 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 20 Jan 2020 15:02:27 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00KL2PYX079658;
+        Mon, 20 Jan 2020 15:02:25 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <subhajit_paul@ti.com>,
+        <praneeth@ti.com>, <yamonkar@cadence.com>, <sjakhade@cadence.com>,
+        <sam@ravnborg.org>, <jsarha@ti.com>
+Subject: [PATCH v8 0/5] drm/tidss: New driver for TI Keystone platform Display SubSystem
+Date:   Mon, 20 Jan 2020 23:02:19 +0200
+Message-ID: <cover.1579553817.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add "rockchip,rk3228-rga" to the list of acceptable values for
-the "compatible" property.
+Changes since v7:
+- "drm/tidss: New driver for TI Keystone platform Display SubSystem"
+  - Remove idle debug prints from dispc_init()
+  - Add Reviewed-by: Benoit Parrot <bparrot@ti.com>
+- "MAINTAINERS: add entry for tidss"
+  - Add Reviewed-by: Benoit Parrot <bparrot@ti.com>
 
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- Documentation/devicetree/bindings/media/rockchip-rga.txt | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v6:
+- Rebase on top of drm-misc-next-2020-01-10
+- Fix all checkpatch.pl -q --emacs --strict --show-types issues
+  - all issues but these have been fixed:
+    - over 80 char lines in scale coefficients found in tidss_scale_coefs.c
+    - Co-developed-by and Signed-off-by: name/email do not match
+    - added, moved or deleted file(s), does MAINTAINERS need updating
+- Add Acked-by: Sam Ravnborg <sam@ravnborg.org> to "drm/tidss: New driver ..."
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
-index fd5276abf..9bac1782d 100644
---- a/Documentation/devicetree/bindings/media/rockchip-rga.txt
-+++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
-@@ -6,6 +6,7 @@ BitBLT, alpha blending and image blur/sharpness.
- 
- Required properties:
- - compatible: value should be one of the following
-+		"rockchip,rk3228-rga";
- 		"rockchip,rk3288-rga";
- 		"rockchip,rk3399-rga";
- 
+Changes since v5:
+- Add Add Reviewed-by: from Rob Herring <robh@kernel.org> and
+  Benoit Parrot <bparrot@ti.com> to binding patches
+- Color property changes and fixes to the driver implementation patch
+  - Check CTM and gamma support from dispc_features when creating crtc
+  - Implement CTM support for k2g and fix k3 CTM implementation
+  - Remove gamma property persistence and always write color properties
+    in a new modeset
+
+Changes since v4:
+- itemize named resource property descriptions in dt binding
+- fix wp to wb in the ti,j721e-dss reg property description
+- remove fifo underflow irq handling, it is not an error and
+  it should be used for debug purposes only
+- memory tuning, prefetch plane fifo up to high-threshold value to
+  minimize possibility of underflows.
+
+Changes since v3:
+- Add descriptions some yaml binding properites
+- Remove redundant minItems directives from yaml bindings
+- Remove ports node from ti,k2g-dss yaml binding
+- no change to MAINTAINERS or to the driver code
+
+Changes since v2:
+- Add version history to commit messages
+- Fix yaml bindings now that got dt_binding_check dtbs_check working property
+- Move tidss entry in MAINTAINERS after omapdrm and add "T: git
+  git://anongit.freedesktop.org/drm/drm-misc"
+- no change to driver code
+
+Changes since the first version of the patch series [2]:
+- "drm/tidss: New driver for TI Keystone platform Display SubSystem"
+ - rebased on top of drm-next-2019-11-27
+ - sort all include lines in all files
+ - remove all include <drm/drmP.h>
+ - remove select "select VIDEOMODE_HELPERS"
+ - call dispc_vp_setup() later in tidss_crtc_atomic_flush() (there is no
+   to call it in new modeset case as it is also called in vp_enable())
+ - change probe sequence and drm_device allocation (follow example in drm_drv.c)
+ - use __maybe_unused instead of #ifdef for pm functions
+ - remove "struct drm_fbdev_cma *fbdev;" from driver data
+ - check panel connector type before connecting it
+- No change to binding or MAINTAINERS patches
+
+There was couple of attempts upstream an earlier version of this
+driver about a year ago [1]. Back then I needed to stop my efforts to
+implement support for next Keystone DSS version, so now the driver
+supports three different Keystone DSS version on three different SoCs.
+
+I am starting the patch series versioning from the beginning because it
+has been over a year since the previous patch set and the structure of
+the driver has evolved quite a bit. However, all the earlier comments
+should be addressed in this series.
+
+[1] https://patchwork.freedesktop.org/series/44947/
+[2] https://lists.freedesktop.org/archives/dri-devel/2019-November/246542.html
+
+Jyri Sarha (5):
+  dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding
+  dt-bindings: display: ti,am65x-dss: Add dt-schema yaml binding
+  dt-bindings: display: ti,j721e-dss: Add dt-schema yaml binding
+  drm/tidss: New driver for TI Keystone platform Display SubSystem
+  MAINTAINERS: add entry for tidss
+
+ .../bindings/display/ti/ti,am65x-dss.yaml     |  152 +
+ .../bindings/display/ti/ti,j721e-dss.yaml     |  208 ++
+ .../bindings/display/ti/ti,k2g-dss.yaml       |  109 +
+ MAINTAINERS                                   |   11 +
+ drivers/gpu/drm/Kconfig                       |    2 +
+ drivers/gpu/drm/Makefile                      |    1 +
+ drivers/gpu/drm/tidss/Kconfig                 |   14 +
+ drivers/gpu/drm/tidss/Makefile                |   12 +
+ drivers/gpu/drm/tidss/tidss_crtc.c            |  377 +++
+ drivers/gpu/drm/tidss/tidss_crtc.h            |   46 +
+ drivers/gpu/drm/tidss/tidss_dispc.c           | 2768 +++++++++++++++++
+ drivers/gpu/drm/tidss/tidss_dispc.h           |  132 +
+ drivers/gpu/drm/tidss/tidss_dispc_regs.h      |  243 ++
+ drivers/gpu/drm/tidss/tidss_drv.c             |  285 ++
+ drivers/gpu/drm/tidss/tidss_drv.h             |   39 +
+ drivers/gpu/drm/tidss/tidss_encoder.c         |   88 +
+ drivers/gpu/drm/tidss/tidss_encoder.h         |   17 +
+ drivers/gpu/drm/tidss/tidss_irq.c             |  146 +
+ drivers/gpu/drm/tidss/tidss_irq.h             |   77 +
+ drivers/gpu/drm/tidss/tidss_kms.c             |  249 ++
+ drivers/gpu/drm/tidss/tidss_kms.h             |   15 +
+ drivers/gpu/drm/tidss/tidss_plane.c           |  217 ++
+ drivers/gpu/drm/tidss/tidss_plane.h           |   25 +
+ drivers/gpu/drm/tidss/tidss_scale_coefs.c     |  202 ++
+ drivers/gpu/drm/tidss/tidss_scale_coefs.h     |   22 +
+ 25 files changed, 5457 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+ create mode 100644 drivers/gpu/drm/tidss/Kconfig
+ create mode 100644 drivers/gpu/drm/tidss/Makefile
+ create mode 100644 drivers/gpu/drm/tidss/tidss_crtc.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_crtc.h
+ create mode 100644 drivers/gpu/drm/tidss/tidss_dispc.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_dispc.h
+ create mode 100644 drivers/gpu/drm/tidss/tidss_dispc_regs.h
+ create mode 100644 drivers/gpu/drm/tidss/tidss_drv.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_drv.h
+ create mode 100644 drivers/gpu/drm/tidss/tidss_encoder.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_encoder.h
+ create mode 100644 drivers/gpu/drm/tidss/tidss_irq.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_irq.h
+ create mode 100644 drivers/gpu/drm/tidss/tidss_kms.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_kms.h
+ create mode 100644 drivers/gpu/drm/tidss/tidss_plane.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_plane.h
+ create mode 100644 drivers/gpu/drm/tidss/tidss_scale_coefs.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_scale_coefs.h
+
 -- 
-2.11.0
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
