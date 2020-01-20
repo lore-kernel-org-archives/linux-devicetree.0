@@ -2,85 +2,80 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D35C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 15:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B320C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 15:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE95921D7E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 15:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4DE22314
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 15:58:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfMihwdT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fP/G9x+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgATPcx (ORCPT
+        id S1727031AbgATP6P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:32:53 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45858 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATPcw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 10:32:52 -0500
-Received: by mail-ed1-f68.google.com with SMTP id v28so29818241edw.12;
-        Mon, 20 Jan 2020 07:32:51 -0800 (PST)
+        Mon, 20 Jan 2020 10:58:15 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35147 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgATP6P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 10:58:15 -0500
+Received: by mail-ed1-f65.google.com with SMTP id f8so29955826edv.2;
+        Mon, 20 Jan 2020 07:58:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OOCggNlyS9YgNLOjDZC4k2CQrj3lgyEzbj3H+eP3SQE=;
-        b=dfMihwdTWj/I8wOKg2Rs9iY5ghrDiTIiktCY71UOSpkgssYifYXSdlBSd609/u9xjS
-         Ds5XiFhFGB5p8GMBSwQ9bZKjmlihWm66nuZmyaaMpi/JL+tME+w0seGaOeRaOg9fGaqW
-         94iTMGe9++uLByUGQzUl2nIquM6MJ3tOFOHU9AlgX6/x2YRYSS2ZN+8HJc6IX1rzz/Iu
-         FzdPETX1u4WE+J3M79HpiN/eryDdkm9hcvES6+9e4RNHGYM+kUdJv7BSLmmmTHJf9ANN
-         VZUv8VfYfOyFBDcmIMWV7byCSHZ/pKFimZbXmL5h2ueObDPJ8/ZoVK+OC77fg6HNkbd0
-         E+7Q==
+        bh=hCx0FkOyPUAD6FImSxkekqB+LP9ak15a5zOVHzRkbmQ=;
+        b=fP/G9x+L9PkgABveHZWoY9IaNc5ecTNODt99ULgbvz4WSGj+RnBE9AphLW93GtkZ3F
+         1JJaEFbixiJRZPRtcGTck/aS3dEh5qIPQaxMRxB2EgifHFzu9s6KQfhgI9PzfbSboilB
+         IXo01B8GkrtVd7FFkOOl3Up1RM4ZRrWx+OJ/9NSKwrc9AngKrSVo/8izMGXL+UvzS3Vd
+         8LvD+ure5A3IoxOcaX7RuFrYapJxo/1o86BbhRX+6EtEA167ic6Ecytm9lh9h2EJWyP8
+         px4zrGg8O6XS7YbF8EQTkILa04SzPKDDcjT9b8yvTyKs/0yLzcZZ2s/azXsJbH20itbq
+         zN5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=OOCggNlyS9YgNLOjDZC4k2CQrj3lgyEzbj3H+eP3SQE=;
-        b=qQ5b+yjmAR3V6I6tzHB1GXQWoTcGTsYYTjrPZ5Qx0ktr7+NQ56sPUB649MADnsVbTj
-         l5uVfR58jX5WfynbYHUoWPp4NK2Tae3bLyAhH0zWhiqdYYFCX+WuprRg50R3bfJ6mASx
-         1rNmwKSH+sxx/4ugY7uxp8peXvOpmDHXmsqCDQ+Ot+5ucLvfGOAq4STuhHlaMt1P+qRT
-         kLXfxHBPnyPjYLx+QH7S3Q0fu/ibi6RWur/PGpTFRMe3yOoYcOHfnDVVFj3mj6jJKB2G
-         8js3aVh/uGT4hYDI6PXhGd9VA4b9M+latJ1Y40N3i9EaR0Vxvm3Vo2WlmsfaYTs8VpuX
-         DPdA==
-X-Gm-Message-State: APjAAAUss5OQji2wzM5yxyhbF5Xi9cuHCHRI8+nPNf1VX41dYATfIY+0
-        bRwVphJKEhtAFqVZQtUEeXWZo52M
-X-Google-Smtp-Source: APXvYqxjYvtLuxzmFSvORJMHr9PS1DmMWSmU08ILsHKVYQCqsxBngzG4LUM4tpU9XK2ZYIqVfQd7Bg==
-X-Received: by 2002:a17:906:948e:: with SMTP id t14mr20975740ejx.123.1579534370408;
-        Mon, 20 Jan 2020 07:32:50 -0800 (PST)
+        bh=hCx0FkOyPUAD6FImSxkekqB+LP9ak15a5zOVHzRkbmQ=;
+        b=NFRZn6ILXyfVszk1r4EXfCzAe1yOtlSwHot9uMUA74Lcq6vvedec9TV+f7q/ajb2tu
+         9rocu8kD2JbEsIvw8N4A76Wus0cxDccP8F7979tWnx/b175UuoiUxy1q5HIzQrHe8Y0M
+         ZhTbYxzam9sc9lM665As4p/SGr29tW9gE0JC9BtnFILkSecLHddmgm72zZOz88YRwZi6
+         7oDB/8z7IODwDhkoWoOWIpmJWurY3D/mKRP75duvRiC7ctriWlj9cLX7odY1AOjbo6pu
+         FMeuDqJ3jHG35frrLevx+y7r0AdeC0pbwTeD8ej3r5d84GofJPBX0K/mkuMNSryD8mVu
+         kG9w==
+X-Gm-Message-State: APjAAAWE0jSGIsYTKbOAtM8Ex1f+lVxjT4SOFMOwTI4lqNj8l8k3To+B
+        NPlPGjMHItmAid8AQb/j7IU=
+X-Google-Smtp-Source: APXvYqyWbXRB0TX6y0VmIJ7AAivnItgalHZTSGnWc7Y6DX1cBKxWX2c1pdhOcKTxeWIEECp/nlZ/zA==
+X-Received: by 2002:a17:906:7006:: with SMTP id n6mr53213ejj.1.1579535893494;
+        Mon, 20 Jan 2020 07:58:13 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id z10sm1121714ejn.16.2020.01.20.07.32.48
+        by smtp.googlemail.com with ESMTPSA id r9sm1162950ejx.31.2020.01.20.07.58.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jan 2020 07:32:49 -0800 (PST)
-Subject: Re: [PATCH v8 19/22] ASoC: tegra: Enable audio mclk during
- tegra_asoc_utils_init
-To:     Sameer Pujar <spujar@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, josephl@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
- <1578986667-16041-20-git-send-email-skomatineni@nvidia.com>
- <3a8e609a-58aa-d2c1-c140-e1f0127dd53b@gmail.com>
- <64027c16-763b-350f-9975-4f9727450ae9@nvidia.com>
+        Mon, 20 Jan 2020 07:58:12 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 2/9] ASoC: tegra: add support for CIF
+ programming
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-3-git-send-email-spujar@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0b13d21c-1daf-4e9d-f2c2-e78a3b8935f2@gmail.com>
-Date:   Mon, 20 Jan 2020 18:32:45 +0300
+Message-ID: <d01ed171-d949-19b2-3390-ee30eada2779@gmail.com>
+Date:   Mon, 20 Jan 2020 18:58:11 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <64027c16-763b-350f-9975-4f9727450ae9@nvidia.com>
+In-Reply-To: <1579530198-13431-3-git-send-email-spujar@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -89,72 +84,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-20.01.2020 07:10, Sameer Pujar пишет:
-> 
-> On 1/19/2020 8:44 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 14.01.2020 10:24, Sowjanya Komatineni пишет:
->>> Tegra PMC clock clk_out_1 is dedicated for audio mclk from Tegra30
->>> through Tegra210 and currently Tegra clock driver keeps the audio
->>> mclk enabled.
->>>
->>> With the move of PMC clocks from clock driver into pmc driver,
->>> audio mclk enable from clock driver is removed and this should be
->>> taken care by the audio driver.
->>>
->>> tegra_asoc_utils_init calls tegra_asoc_utils_set_rate and audio mclk
->>> rate configuration is not needed during init and set_rate is actually
->>> done during hw_params callback.
->>>
->>> So, this patch removes tegra_asoc_utils_set_rate call and just leaves
->>> the audio mclk enabled.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   sound/soc/tegra/tegra_asoc_utils.c | 11 +++++++++--
->>>   1 file changed, 9 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
->>> b/sound/soc/tegra/tegra_asoc_utils.c
->>> index 1dce5ad6e665..99584970f5f4 100644
->>> --- a/sound/soc/tegra/tegra_asoc_utils.c
->>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
->>> @@ -216,9 +216,16 @@ int tegra_asoc_utils_init(struct
->>> tegra_asoc_utils_data *data,
->>>                data->clk_cdev1 = clk_out_1;
->>>        }
->>>
->>> -     ret = tegra_asoc_utils_set_rate(data, 44100, 256 * 44100);
->>> -     if (ret)
->>> +     /*
->>> +      * FIXME: There is some unknown dependency between audio mclk
->>> disable
->>> +      * and suspend-resume functionality on Tegra30, although audio
->>> mclk is
->>> +      * only needed for audio.
->>> +      */
->>> +     ret = clk_prepare_enable(data->clk_cdev1);
->>> +     if (ret) {
->>> +             dev_err(data->dev, "Can't enable cdev1: %d\n", ret);
->>>                return ret;
->>> +     }
->>>
->>>        return 0;
->>>   }
->>>
->> Shouldn't the clock be disabled on driver's removal?
-> 
-> I am not sure if we really need to do in this series as it does not
-> change the behavior from what was there earlier. Also there is already a
-> FIXME item here and we end up adding clock disable in remove() path of
-> multiple drivers, which is going to be removed once we address FIXME.
-> 
+Hello Sameer,
 
-Well, perhaps this is indeed good enough for the time being.
+20.01.2020 17:23, Sameer Pujar пишет:
 
-BTW, I didn't spot any suspend-resume problems using v8.
+[snip]
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Tegra30 and Tegra124 have an identical CIF programming helper function.
+
+[snip]
+
+> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT	24
+> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK_US	0x3f
+> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK	(TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK_US << TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT)
+> -
+> -/* Channel count minus 1 */
+> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT	24
+> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK_US	7
+> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK	(TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK_US << TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT)
+
+The AUDIOCIF_CTRL bitfields are not the same on T30 and T124, why are
+you claiming that programming is identical? Have you actually tried to
+test these patches on T30?
