@@ -2,146 +2,196 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAF1C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 16:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04419C33CB8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 16:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92BF21D7E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 16:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB8422527
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 16:30:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6vSuXn0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E3TUXDLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgATQQI (ORCPT
+        id S1729277AbgATQav (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:16:08 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:33416 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATQQH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 11:16:07 -0500
-Received: by mail-yw1-f66.google.com with SMTP id 192so74235ywy.0;
-        Mon, 20 Jan 2020 08:16:07 -0800 (PST)
+        Mon, 20 Jan 2020 11:30:51 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40170 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729221AbgATQau (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 11:30:50 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so84704wrn.7
+        for <devicetree@vger.kernel.org>; Mon, 20 Jan 2020 08:30:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dMR2QJBU8mwguXzF24MAtQqBj4xzoWj1UhHfZ6DEbQU=;
-        b=l6vSuXn0iQNJtBxu529TjmBhwLNJihjMleP6uAWGtww6EEirV0ECyzCD+JyhDY8l/h
-         kgr7jaJqqHkvG7jN8Ry3cAW0p9xmmWnH+PRyvapw0Zzbre3M9luzSErDmil5ltMWqkQj
-         89lHeyacBjV5dLQ74tP4dU1g/hgOO2zoptyv+6bCoHgv7wXweeMTtwmTy9LTRRj9R4tE
-         /AdvK2RoTJS85dloI5jhYngyrZxKaYdwTQ3RNtH3f9PEWudTFCIke7dafsTBAZR1ZHnJ
-         OOs5ZRZ+3A/c82goic1SvVXZyTZtlm7XawaUj9tePNAaEFmN82GduiaywpJ35hXHlanY
-         JhsQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nTFFco0gWzvhgT9KdZyGts1IZHmn3ADc6A60yVAjcjA=;
+        b=E3TUXDLFsRf1DDHWwkKh7tckR0wSSQmYwx7t2OpjARissZgKnYrJ/ZSN7y8mj9ZxJK
+         SPb/Uwj1ZoYSJtQWV04eIYbHRTFMVXAxCrS0tzNJnSHEZwKTlLg/JOg4p/2WOVe90Ksl
+         tLwyAdhOiQsJyrf3GAS0wOK/vWnvek13HtVnymYsZ7+wSUkdK6HWPoBt7eE+s7wYF26D
+         qOeMrFrCSi2Hy/gmtRWe//9MGWj9Td0DnEShAMcRRwJktAuTyfBnOF+x+w56mLA2bDac
+         Mf4PmJwc6ZZTRIK6N2QNrfsP6qcaimBat6dycGo86hUR9oPUyqXLS4p+7mFMVkPVBGaS
+         24dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dMR2QJBU8mwguXzF24MAtQqBj4xzoWj1UhHfZ6DEbQU=;
-        b=OqmeWCYv+UFt1kVIBcWY3AsbQLNduEvRv/ApYkwEmsNUQzR7XIK44AQWCq25J2f8+9
-         xZfADq6WeVco2VaJCoPym4czoWQc05cLxhLk7sEWB7fmaqcirqrVrdg+NscgkpzDSMeM
-         5xm/clxeaDFRnp5d76wp14rMDzYsdTbz2dxPgsUZrBJRVCc35AwUiuIERPutTYgazCvf
-         pPNI1g3Xru52rO182vm7u3g/l8bVvwD8s9GPtPilqThjN9t0EgaKCKhJ5ptAOQLVXvc+
-         JuvpFGKjONyz4xTV1+5NiRBlGYBKtG1OiTgKPdU4pKiKXck+8XDrSFn24k75FSvpuDci
-         982w==
-X-Gm-Message-State: APjAAAXPmt4EdAZ7rwNrk/WkVxrpOT2BBfzefwm/sL0KzGyE1HnTYJHt
-        axDhYnVj5+eO+mxUbiE2OlI=
-X-Google-Smtp-Source: APXvYqwMpDjDDEtNiDqpnf1C9x4lDmRnx9+4m89tTbXV9PL6UBk55W99RfoijHH264iLsM1tTIxm2w==
-X-Received: by 2002:a0d:fb46:: with SMTP id l67mr42006467ywf.38.1579536966644;
-        Mon, 20 Jan 2020 08:16:06 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id f138sm16113793ywb.99.2020.01.20.08.16.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 08:16:06 -0800 (PST)
-Subject: Re: [RFC PATCH 3/3] scripts: Use -B dtc option to generate dtb build
- information.
-To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-4-alexandre.torgue@st.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <5b5a40b5-6954-05aa-5c7f-5ae8100aa1ee@gmail.com>
-Date:   Mon, 20 Jan 2020 10:16:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nTFFco0gWzvhgT9KdZyGts1IZHmn3ADc6A60yVAjcjA=;
+        b=h7R/zh1So2eZoiDjEFN0Uynlnbl2N9Uo+rWAW8FmZVtgfy40YKL+I6rCUuyP47ghTT
+         8f0xx/uoSTJMmncOYfH/Ul7METMTbUtqQSvcSe/+gp40ZnToiWTkvfT7ecfoScCGDgkb
+         AOF3mZL/PrPHjpa1BWAhsZDIxvyM4qmlnY25kHMvkD8HWDTgnozlmgDzOhxxUaifKL/i
+         cNVJ50sWm4vm9QE0viOd4Ew6jouB9T94J+FGsSr48SWv3Mg/NWoKZMTvJ2VX98dPo5GF
+         UZHqkdwrd5Lr+glkjmUsF/1l5MGhU7MvUFs/3jVOq1/nd0cUhdQ5iNvlGgmGqWRXeWRa
+         bavg==
+X-Gm-Message-State: APjAAAWEZ7MqmAegC46qQDEo0cvDN1fYng+jQL1UxR10gEtOmxQBAxPg
+        hHWd20M9RiXpcHdGfl4nAclEaw==
+X-Google-Smtp-Source: APXvYqwQd9Ak+wLCPW1MjhuwABPMU2OcpO5+S4zND3DZkbpw3Va8L9RDfryhgP5CaMmMUnDRqPlwwg==
+X-Received: by 2002:adf:f508:: with SMTP id q8mr341639wro.334.1579537849345;
+        Mon, 20 Jan 2020 08:30:49 -0800 (PST)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id p26sm22631756wmc.24.2020.01.20.08.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 08:30:48 -0800 (PST)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Anu Ramanathan <anur@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH v2 02/19] dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed USB PHY binding
+Date:   Mon, 20 Jan 2020 16:30:59 +0000
+Message-Id: <20200120163116.1197682-3-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200120163116.1197682-1-bryan.odonoghue@linaro.org>
+References: <20200120163116.1197682-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200113181625.3130-4-alexandre.torgue@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/13/20 12:16 PM, Alexandre Torgue wrote:
-> This commit adds a new script to create a string in tmp file with
-> some information (date, linux version, user). This file is then used by
-> dtc with -B option to append dts file with a new property.
-> During kernel boot it will then be possible to printout DTB build
-> information (date, linux version used, user).
-> 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 3fa32f83b2d7..6a98eac1e56d 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -235,6 +235,7 @@ quiet_cmd_gzip = GZIP    $@
->  # DTC
->  # ---------------------------------------------------------------------------
->  DTC ?= $(objtree)/scripts/dtc/dtc
-> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info
->  
->  # Disable noisy checks by default
->  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
-> @@ -275,11 +276,13 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->  
->  quiet_cmd_dtc = DTC     $@
->  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
-> -	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> -	$(DTC) -O $(2) -o $@ -b 0 \
-> +       $(DTB_GEN_INFO) $(@).info ;\
-> +       $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> +       $(DTC) -O $(2) -o $@ -b 0 -B $(@).info\
->  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
-> -		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
-> -	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
-> +               -d $(depfile).dtc.tmp $(dtc-tmp) ; \
-> +       rm $(@).info ; \
-> +       cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+From: Sriharsha Allenki <sallenki@codeaurora.org>
 
-The indentation should be tabs instead of spaces.
+Adds bindings for QCS404 USB PHY supporting Low-Speed, Full-Speed and
+Hi-Speed USB connectivity on Qualcomm chipsets.
 
--Frank
+[bod: Converted to YAML. Changed name dropping snps, 28nm components]
 
->  
->  $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
->  	$(call if_changed_dep,dtc,dtb)
-> diff --git a/scripts/gen_dtb_build_info b/scripts/gen_dtb_build_info
-> new file mode 100755
-> index 000000000000..30cf7506b9d5
-> --- /dev/null
-> +++ b/scripts/gen_dtb_build_info
-> @@ -0,0 +1,11 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +DTB_TARGET=$@
-> +COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
-> +
-> +touch $DTB_TARGET
-> +
-> +{
-> +  echo From Linux $KERNELRELEASE by $COMPILE_BY the $(date).
-> +} > $DTB_TARGET
-> 
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+ .../bindings/phy/qcom,qcs404-usb-hs.yaml      | 77 +++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+new file mode 100644
+index 000000000000..d71beb822ae2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom,qcs404-usb-hs.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm Synopsys QCS-404 High-Speed PHY
++
++maintainers:
++  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
++
++description: |
++  Qualcomm QCS-404 Low-Speed, Full-Speed, Hi-Speed USB PHY
++
++properties:
++  compatible:
++    enum:
++      - qcom,qcs404-usb-hsphy
++
++  reg:
++    maxItems: 1
++    description: USB PHY base address and length of the register map.
++
++  "#phy-cells":
++    const: 0
++    description: Should be 0. See phy/phy-bindings.txt for details.
++
++  clocks:
++    minItems: 3
++    maxItems: 3
++    description: phandles to rpmcc ref clock, PHY AHB clock, rentention clock.
++
++  clock-names:
++    items:
++      - const: ref
++      - const: phy
++      - const: sleep
++
++  resets:
++    items:
++      - description: PHY core reset
++      - description: POR reset
++
++  reset-names:
++    items:
++      - const: phy
++      - const: por
++
++  vdd-supply:
++    maxItems: 1
++    description: phandle to the regulator VDD supply node.
++
++  vdda1p8-supply:
++    maxItems: 1
++    description: phandle to the regulator 1.8V supply node.
++
++  vdda3p3-supply:
++    maxItems: 1
++    description: phandle to the regulator 3.3V supply node.
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++    #include <dt-bindings/clock/qcom,rpmcc.h>
++    usb2_phy_prim: phy@7a000 {
++        compatible = "qcom,qcs404-usb-hsphy";
++        reg = <0x0007a000 0x200>;
++        #phy-cells = <0>;
++        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
++                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
++                 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
++        clock-names = "ref", "phy", "sleep";
++        resets = <&gcc GCC_USB_HS_PHY_CFG_AHB_BCR>,
++                 <&gcc GCC_USB2A_PHY_BCR>;
++        reset-names = "phy", "por";
++    };
++...
+-- 
+2.25.0
 
