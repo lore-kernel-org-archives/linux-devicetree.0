@@ -2,108 +2,137 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B56AC33CA1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D821EC33CA1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 08:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0EB2087E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5682077C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 08:16:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i64XnSVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgATICP (ORCPT
+        id S1726148AbgATIQj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:02:15 -0500
-Received: from mout.perfora.net ([74.208.4.194]:56535 "EHLO mout.perfora.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbgATICO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:02:14 -0500
-Received: from marcel-nb-toradex-int.toradex.int ([31.10.206.124]) by
- mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
- 0M5O2r-1jq3lT27Bf-00zXV3; Mon, 20 Jan 2020 09:01:08 +0100
-From:   Marcel Ziswiler <marcel@ziswiler.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, info@logictechno.com,
-        j.bauer@endrich.com, Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Rob Herring <robh@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH v4 1/3] dt-bindings: add vendor prefix for logic technologies limited
-Date:   Mon, 20 Jan 2020 09:00:58 +0100
-Message-Id: <20200120080100.170294-1-marcel@ziswiler.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:cz02pypmXVVY9XStb0HoEZkx90vTXXjTAnxUxTCC/wEc/muxf/f
- AJAG1HLkGWz4YsSAlYrIu4ElEUR7z6r56s8TmO19+3b292a/Pvewx3QCaEwdvzQc0CLRHe4
- OqTco8zERosmNtc6+SbmNbaZkLKw6XbpvXA0JyizMUYY/nDnwx2XRR+m+uDdshsF9ZECjyU
- BxGjZgn7K+Nc5XiuUk6pg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lpKVWY8NVCU=:A8i+IMii7mHWnzZPyIhoTq
- 60gLU+m3boGJcEechrLIBb6UWPHspULkn7x1DyF0jIIcxKMnH31oINGHoP5kKk4F3c1Pklk8Q
- LoKGfl4XRa6lQDpPS2yEy1cI77IGIXxyYERX8yWGGoxKKgEXHgcrdjPPzhEZJs0IQIh9mVx0L
- IRNII7qpfWA1IlZqWv+TFRAzZY2rCzbIC3UJbRh7AyxGCSTJnIPAivMQ35GDtroj4BoOBTWxP
- LwvmHp47lcMsIIXMD15ERoqZ8w7Zc8vNkfYYg7g5A8s6Dwsm3k5+ckSTZvxCSNZPK7KafdQrr
- OjeK8Ex5WxGAoozdtY6ClPSgnmPVhfaPxFSPAX3dR6ULUW80sF/vfj6AwR/ARSO5pYSHv6utJ
- 2PBIqOg5m2kg7xzquw+onkTgX/mAEZ0J4ho8SNmKz6yNh4vh8m0gcbRw2rvjVXnjhSJVq0FOo
- 2nKj9fdEEwqrQWQiqFriDcnzwoKCt6uKqmPcvjiQCm4rbp278N6DjOcV6Sfrk76d0HKwYUgP4
- LjQD7u2ohhTHTcSTUcP7wXy/NVm4xAzcG9LttYD2u5Go+t2cmXOeAIyS01kDdHj0s+WhVNeAd
- yx0e3dH4uTplhsJElQob3FFNhjuOkB28K7AjhmUP6jXHa64NyvTNDyhBeOtZrUuo3LfwOViPc
- og00QIEt7EDT/g34nQFqCVBsgyO2bMbeP1g4LaW59D3qZdgPOAOazg4WXtRKxAVROPs5oWxKw
- x1JD/EAxyqoO/SvT59u7OcXM/FiBJu0DrgtX3LmusJ6IoYFcbysaRzgr2X5+GdoR/BVJ+5pku
- 6Ziny4Kvc3Vg4AS4NXk35tHbCu12jxW/GkucotLLK/DC/uDCVx7tRkFs/rE5dWLSyqtk9Xtt9
- lXvFVLCWTNMUtElXqFjA==
+        Mon, 20 Jan 2020 03:16:39 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36383 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgATIQi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 03:16:38 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f24so2205899lfh.3
+        for <devicetree@vger.kernel.org>; Mon, 20 Jan 2020 00:16:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=32qSjrlmgTQ7SJtLpH0BG/gMi8aameyFBWW4CPPRTsg=;
+        b=i64XnSVKIi3G41VBkcx/pnISdsA3nAP2SEa2eiFheZ6KWEi17hD3aQe3UqwsQCKqWN
+         fPvtvQwDFHZePoznFlOCTq7eureO8pOGpcuwVlR1yEiS3H2zuF6K4VrhIMcOQMhRoUgY
+         +571jPkmOQpS+NMtWQQZo9YLYzXxvw26V6SErsvmf/JPFbRZ2q8nWGX9cNBY18/pe6gE
+         8Ulda7zDN9tMREZ/+SEZtYABCNmR3QrIR7rW2rvCTd9u8CPP7V6lGAwjz+eyT4noyz7s
+         sY3gPnCu/3tDRv8iKfpYNp1Kfz4ft+IQl8z+2Zwlo9gNMtZD1belAT3JAEOk1BCDKYAQ
+         U4TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=32qSjrlmgTQ7SJtLpH0BG/gMi8aameyFBWW4CPPRTsg=;
+        b=Cd9tJ5TnFB/eTqvq7D3zgokFSkoJiqpIS2oEevy4rz5qbQUdWL+Z/a0cS0+PnP44Vv
+         +IrU4irv9p9AOA/MQNoW9Jb0pbbGSMF3koT+UfQxRnEJSD5GYSMxdkVhPXw7n578YE1h
+         a7HWzL+F3EIJebXFvZ/F50DsL3M2WPzanjb0dB87xhNEqCmYclDhHSp1+y7egRUqq624
+         U51o+s8MCfAQO+4hrqYwva957BwpW9GRlDeZc5NTP2B8+FKOiRg//jTO/nnKNopDKjfc
+         wly+FPHJZXp+pdrJLo6Iedu6P9JiKZKwSFzho/6r10EaSqOUdu2zpqIw198fZXVO0br4
+         xc+Q==
+X-Gm-Message-State: APjAAAWcHLLP54+deVVxxxu/oUO7Gvx6gyE+VTbop640O0jhX3xu7Pp+
+        NWd8oZMBwZxOGguo8B8+99Xcxg==
+X-Google-Smtp-Source: APXvYqwhwOCZnRex8L/j8NGhZuDJGjm6ZYIGT9mZDPghbEIMlrcb+roier0byMNeGE/1ALC9USVoZQ==
+X-Received: by 2002:a19:9d5:: with SMTP id 204mr3931489lfj.120.1579508196781;
+        Mon, 20 Jan 2020 00:16:36 -0800 (PST)
+Received: from localhost.localdomain (95-28-65-22.broadband.corbina.ru. [95.28.65.22])
+        by smtp.googlemail.com with ESMTPSA id m21sm16261977lfh.53.2020.01.20.00.16.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 00:16:35 -0800 (PST)
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+To:     mchehab@kernel.org, robh+dt@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        sakari.ailus@iki.fi, peter.griffin@linaro.org,
+        dave.stevenson@raspberrypi.com, ezequiel@collabora.com,
+        Andrey Konovalov <andrey.konovalov@linaro.org>
+Subject: [PATCH v4 0/2] Add IMX219 CMOS image sensor support
+Date:   Mon, 20 Jan 2020 11:15:56 +0300
+Message-Id: <20200120081558.25258-1-andrey.konovalov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+This patchset adds support for IMX219 CMOS image sensor from Sony.
+Sony IMX219 is an 8MPix, 1/4.0-inch CMOS active pixel digital image sensor
+with an active array size of 3280H x 2464V. It is programmable through
+I2C interface. Image data are sent through MIPI CSI-2, which can be configured
+as either 2 or 4 data lanes, but this driver currently only supports 2 lanes.
+The currently supported resolutions are 3280x2464 @ 15fps, 1920x1080 @ 30fps
+(cropped FOV), and 1640x1232 (2x2 binned) @ 30fps.
 
-Add vendor prefix for Logic Technologies Limited [1] which is a Chinese
-display manufacturer e.g. distributed by German Endrich Bauelemente
-Vertriebs GmbH [2].
+The driver has been tested with Raspberry Pi Camera Module v2 connected to
+Raspberry Pi Zero W.
 
-[1] https://logictechno.com/contact-us/
-[2] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
+Changes since v3 [1]:
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Philippe Schenker <philippe.schenker@toradex.com>
-Acked-by: Rob Herring <robh@kernel.org>
+dt-bindings:
+  - "link-frequencies" property added
 
----
+imx219 sensor driver:
+  - "depends on MEDIA_CAMERA_SUPPORT" removed from the Kconfig as all the
+    sensor drivers are under "if MEDIA_CAMERA_SUPPORT" now
+  - in imx219_get_pad_format(), when 'which' argument is V4L2_SUBDEV_FORMAT_TRY
+    update the code field in v4l2_mbus_framefmt structure, as the format code
+    could change due to vflip or hflip
+  - in imx219_power_on(), the delay after de-asserting the reset is changed
+    (reduced from 10 mS to 6.2 mS) to fit the startup timings better. Also
+    switched from using msleep() to usleep_range(), as otherwise the change
+    from 10 mS to 6.2 mS wouldn't have an effect (see
+    https://www.kernel.org/doc/Documentation/timers/timers-howto.txt).
+    Added the comment which explains how the value of the delay was calculated,
+    and why it is fixed value
+  - empty lines added before "return x;" statements
+  - in imx219_get_regulators() "int i;" changed to "unsigned int i;"
+  - the 'dev' field dropped from struct imx219
+  - the link frequencies check is added. As the current driver supports only
+    single link frequency, the check just compares the link-frequency in DT to
+    the predefined value.
+    To be able to read link-frequencies from the DT, call to
+    v4l2_fwnode_endpoint_parse() was replaced with call to
+    v4l2_fwnode_endpoint_alloc_parse(), and the code was rearranged:
+    imx219_check_hwcfg() was introduced, and 'ep' field was removed from imx219
+    structure, as the parsed DT endpoint info is not used outside
+    imx219_check_hwcfg()
+  - in imx219_remove(), the code was added to power off the sensor in the case
+    when runtime PM is disabled
+  - 'probe_new' is used instead of 'probe'
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- Added Philippe's reviewed-by.
-- Added Rob's acked-by.
+Thanks,
+Andrey
 
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+[1] https://patchwork.kernel.org/cover/11328425/
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index f9b84f24a382..ac4804d0a991 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -549,6 +549,8 @@ patternProperties:
-     description: Linear Technology Corporation
-   "^logicpd,.*":
-     description: Logic PD, Inc.
-+  "^logictechno,.*":
-+    description: Logic Technologies Limited
-   "^longcheer,.*":
-     description: Longcheer Technology (Shanghai) Co., Ltd.
-   "^lsi,.*":
+
+Andrey Konovalov (1):
+  dt-bindings: media: i2c: Add IMX219 CMOS sensor binding
+
+Dave Stevenson (1):
+  media: i2c: Add driver for Sony IMX219 sensor
+
+ .../devicetree/bindings/media/i2c/imx219.yaml |  114 ++
+ MAINTAINERS                                   |    8 +
+ drivers/media/i2c/Kconfig                     |   11 +
+ drivers/media/i2c/Makefile                    |    1 +
+ drivers/media/i2c/imx219.c                    | 1312 +++++++++++++++++
+ 5 files changed, 1446 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+ create mode 100644 drivers/media/i2c/imx219.c
+
 -- 
-2.24.1
+2.17.1
 
