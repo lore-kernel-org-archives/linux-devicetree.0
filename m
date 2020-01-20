@@ -2,111 +2,124 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A57C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2CCC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 13:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70F322522
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKbv5hop"
+	by mail.kernel.org (Postfix) with ESMTP id C7E2522314
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 13:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgATNie (ORCPT
+        id S1726798AbgATNl6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:38:34 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39341 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgATNie (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 08:38:34 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q10so15876009pfs.6;
-        Mon, 20 Jan 2020 05:38:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2pttOwdfC/dADBrcJDiI0NHj3/FeUPR6VyWuxCBiU/8=;
-        b=WKbv5hopk7D5k/569P1LHTLk/qvnOp/+Y4AoH6FlK4YBzMV+PjgroU3oNCo092xTSs
-         Kd05y6KWgur8svEagrb87W2Dahymp0L8/EiuMWBrsSWaEiWzHOFRfembMpArcjXAiP4v
-         rEfLWg6tkmEZtj7F/v6RwuaTXTS4PrehFdZuG77JueEewFeVblTx+SarQydbwApP7rTa
-         sF2w2aS1Cl4w0gWfnmUM17mmgIhLgJa8W+9tThwp0gLLy7F6iBUE8MCjBCHYj/x0Losy
-         D/4uLuvhWqPUrQE0SNEvJ37zFoETmy0zDD5dihR+xvB/SbMir1CpLGMopPQdDAwkro7W
-         EPkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2pttOwdfC/dADBrcJDiI0NHj3/FeUPR6VyWuxCBiU/8=;
-        b=dXu9+XVa+3p1Q58lOnuT1GzMNGZmyhLUTk0Gu/NUdjLCYYBnMrv7OG/IFnf4dR4WFe
-         n1pOT7uuvctlirskzNLtFOhvFpUK6+xDeTZMr4JpVFOIcCPdfpdHl8GBEA4yV9346M73
-         3nJKa+buHDdx5PsFnO542k3xl8C91T3MhaTYYMcVsEKF2/lSwA9bPwTqfDC+4QeHchEV
-         rfGoteHM9yU2wem3NV8J5hGShrTHXH35BSi/IFz4skSRCVRnYP1OdSQoO98XMLx/PFFO
-         L7HobRuUjVydMbn3rWcxpSg5IaJbNsUn3Hg0LJju7Z7QBQ3Wj8jVKwEVoQNsN3s0E+qh
-         QZCA==
-X-Gm-Message-State: APjAAAWYYPAE4c0h7Fz40TVl5XEqICmU5Q3yFzCiRTw3e5c4+b1gyL8K
-        bPvuNAw2TcN2DtMBzKmNHlE=
-X-Google-Smtp-Source: APXvYqzMFes9HQOld2+PzYvHu7PDu9+P9ajIw8QZajI75moHBzGmZx1OomAacJmds3LWv8dGCQiygw==
-X-Received: by 2002:a62:1a97:: with SMTP id a145mr17871202pfa.244.1579527513307;
-        Mon, 20 Jan 2020 05:38:33 -0800 (PST)
-Received: from localhost (187.100.30.125.dy.iij4u.or.jp. [125.30.100.187])
-        by smtp.gmail.com with ESMTPSA id e2sm18105373pjs.25.2020.01.20.05.38.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 05:38:32 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Mon, 20 Jan 2020 22:38:29 +0900
-To:     lijiazi <jqqlijiazi@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        lijiazi <lijiazi@xiaomi.com>
-Subject: Re: [PATCH v3 2/3] lib/vsprintf: introduce OF_DEVICE_NODE_FLAG_MAX
-Message-ID: <20200120133829.GB386200@jagdpanzerIV.localdomain>
-References: <54fe6854ede6e2f22eb9775837da1ad7a13a3df4.1579423564.git.lijiazi@xiaomi.com>
- <2d432e67cab2eb51f36f5b2e904a185ef48df6e0.1579423564.git.lijiazi@xiaomi.com>
+        Mon, 20 Jan 2020 08:41:58 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:45730 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgATNl6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 08:41:58 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-81-5e25ae239d7c
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 5F.FA.08102.32EA52E5; Mon, 20 Jan 2020 14:41:55 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Mon, 20 Jan 2020 14:41:42 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Subject: Re: [PATCH v12 00/10] Support ROHM BD71828 PMIC
+Thread-Topic: [PATCH v12 00/10] Support ROHM BD71828 PMIC
+Thread-Index: AQHVz3GxRarqEI+FJkC62zSkifitkKfzbi0AgAAQ5QA=
+Date:   Mon, 20 Jan 2020 13:41:41 +0000
+Message-ID: <bf1ad63605a11f7d6a4e89233fbd478cb9114650.camel@fi.rohmeurope.com>
+References: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
+         <ecc8ab43dfdb78c7bcab82311f608f6d4e12dc5c.camel@fi.rohmeurope.com>
+In-Reply-To: <ecc8ab43dfdb78c7bcab82311f608f6d4e12dc5c.camel@fi.rohmeurope.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <065C929F2988BA4DAC7FE848157AFD1B@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d432e67cab2eb51f36f5b2e904a185ef48df6e0.1579423564.git.lijiazi@xiaomi.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxTVxjeuff23sPHXQ612GOdy1aHc8uGI1nimTGLyWZ2SZZp4qZxQdkV
+        7igbbclta9QtocE5B3QMHPjRlK9JBaWCVBmTiJKmgNbFrZEC82vrJCyYpWwOLYrT3Uun8Oec
+        532f8zzP++M9kNYe5Qyw0GKXZItYZGSTmb7WGf+rS9sztr4WDehJczjCkb2xIxz5d98AR6bq
+        QgypjY6xZKxvLyANwUsaUnHxlIbsPtzBkqtdJxjy651+QO4OfUWRmgctFPnbdUNDmr5sZsjJ
+        hgeAXO7xsKTrz3ZABtqGWOIdCVPE4z3PkMnbZRQJh9aS2lCMI9dD/SzZHR6lyZ7eIEceDncy
+        pPLSO2uWCL56HxBm7u8DwuToHk6o930mnHZf5wT/sTJWuDZ8hhXO1fk44XDltxrh7o/VjDDe
+        1MEIg6PdlHCg/h4ldLiCQGhti3PCP/5n16MPU1ZvE+3bNxQWWFa8+VGK6dA3MU1xEO1wNg9S
+        TuBC5SAJYvQ6Pni6iy4HyVCLIgDHZmrZRHEe4Mo77UoBIYtW4/JfOBXq0Bu4M5ymPqFRKAXX
+        t7o41WgBIvjA5bhGxeqbn/d7qARehWu+P8uomEEZ+GysilYxj97DnbGrs32tMgpu25+n4iS0
+        Dt+PVsz2AVqCy5yxWR8a6bF/POGPEcLNZ36iEzgdT9x8+H/fiHvvRRl1Thq9hDt6ViTgGuz8
+        7YWEy/O4piLKJSZIwxcOjTFVYKF7XoB7TuyeE7vnid3zxI1Acwxgs1hYVCDapaxMWXJkylaT
+        WbnyrGY/SCzd1A/gUSA7ACgIAmARpIzpvO5Ixlbt09us+TtNos2UKzuKJFsAYEgbdXxjqcLx
+        +eLOXZJsfUwthoxRz78Yrd6iRWrWp5JULMmP2WcgNGLe4VOEabJUIO34uLDIPkdTMEk1Tzbo
+        bJIlX5JFh92Uqy5Hrk3ZDpVKVXKfO67m2opFs9JNSEMgC1ZN1H1Hw2CdVzlHJnu9tJaxWC2S
+        Qc+XqAKkCkwOy5O4W0APgXEB39+msKnK/3vidksJopSgyEqjGmQX5yiDE5x69+Smpve3V7Rc
+        KElv2Lz2Ke+1/OWRsoVL418s3nVl6sSi8cFAtmFYN7kMlgqffH3j0dt/TQ98cBHEe7I3Nqbk
+        bFx2PN6aanCs+n0dP+EQ0ofoP6ZHzDc9EILIWzmkr2X9tKvk87SVSSxffXtLliFzec4rV8zn
+        NhR7jnb3lua5unOMjM0kZr1MyzbxPzRZ5II8BAAA
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On (20/01/20 19:38), lijiazi wrote:
-[..]
-> Changes in v3:
->  - fix incorrect multi-line comment style.
->  - split v2 to 3 patches.
-> ---
->  include/linux/of.h | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index c669c0a..c5bbfa6 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -147,6 +147,13 @@ extern raw_spinlock_t devtree_lock;
->  #define OF_OVERLAY		5 /* allocated for an overlay */
->  #define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
->  
-> +/*
-> + * add OF_DEVICE_NODE_FLAG_MAX for %pOF related printk.
-> + * if there is any change on these flags, please synchronize the change
-> + * to device_node_string function in lib/vsprintf.c.
-
-So maybe the flags can become enum then?
-
-> + */
-> +#define OF_DEVICE_NODE_FLAG_MAX 6 /* Maximum available flags */
-
-	-ss
+DQpPbiBNb24sIDIwMjAtMDEtMjAgYXQgMTQ6NDEgKzAyMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90
+ZToNCj4gSGVsbG8sDQo+IA0KPiBEbyB5b3Uga25vdyB0aG9zZSBkYXlzIHdoZW4gbm90aGluZywg
+X25vdGhpbmdfIGp1c3Qgd29ya3Mgb3V0IGFzDQo+IGludGVuZGVkPyBUb2RheSBpcyBvbmUgb2Yg
+dGhvc2UuDQo+IA0KPiBPbiBNb24sIDIwMjAtMDEtMjAgYXQgMTE6MTIgKzAyMDAsIE1hdHRpIFZh
+aXR0aW5lbiB3cm90ZToNCj4gPiBQYXRjaCBzZXJpZXMgaW50cm9kdWNpbmcgc3VwcG9ydCBmb3Ig
+Uk9ITSBCRDcxODI4IFBNSUMNCj4gPiANCj4gPiBST0hNIEJENzE4MjggaXMgYSBwb3dlciBtYW5h
+Z2VtZW50IElDIGNvbnRhaW5pbmcgNyBidWNrcyBhbmQgNw0KPiA+IExET3MuDQo+ID4gQWxsDQo+
+ID4gcmVndWxhdG9ycyBjYW4gYmUgY29udHJvbGxlZCBpbmRpdmlkdWFsbHkgdmlhIEkyQy4gQnVj
+a3MgMSwyLDYgYW5kDQo+ID4gNyBjYW4gYWxzbyBiZSBhc3NpZ25lZCB0byBhICJyZWd1bGF0b3Ig
+Z3JvdXAiIGNvbnRyb2xsZWQgYnkgcnVuLQ0KPiA+IGxldmVscy4NCj4gPiBFZy4gUnVuIGxldmVs
+IHNwZWNpZmljIHZvbHRhZ2VzIGFuZCBlbmFibGUvZGlzYWJsZSBzdGF0dXNlcyBmb3INCj4gPiBl
+YWNoDQo+ID4gb2YNCj4gPiB0aGVzZSBidWNrcyBjYW4gYmUgc2V0IHZpYSByZWdpc3RlciBpbnRl
+cmZhY2UuIFRoZSBidWNrIHJ1bi1sZXZlbA0KPiA+IGdyb3VwDQo+ID4gYXNzaWdubWVudCAoc2Vs
+ZWN0aW9uIGlmIGJ1Y2sgaXMgdG8gYmUgY29udHJvbGxlZCBpbmRpdmlkdWFsbHkgb3INCj4gPiB2
+aWENCj4gPiBydW4tbGV2ZWxzKSBjYW4gYmUgY2hhbmdlZCBhdCBydW4tdGltZSB2aWEgSTJDLg0K
+PiA+IA0KPiA+IFRoaXMgcGF0Y2ggc2VyaWVzIGJyaW5ncyBvbmx5IHRoZSBiYXNpYyBzdXBwb3J0
+IGZvciBjb250cm9sbGluZw0KPiA+IHJlZ3VsYXRvcnMgaW5kaXZpZHVhbGx5IHZpYSBJMkMuDQo+
+IA0KPiAvL3NuaXANCj4gDQo+ID4gUGF0Y2ggMTE6DQo+ID4gICAgICAgICBBbGxvdyBjb250cm9s
+IG9mIEdQKEkpTyBwaW5zIG9uIEJENzE4MjggdmlhIEdQSU8gc3Vic3lzdGVtDQo+ID4gDQo+IA0K
+PiBJIGFjY2lkZW50YWxseSByZWJhc2VkIHRvIHdyb25nIGNvbW1pdCBhbmQgY3JvcHBlZCB0aGUg
+R1BJTyBwYXRjaCBvdXQNCj4gb2YgdGhlIHNlcmllcy4gTGVlIC0gY2FuIHlvdSB0YWtlIHRoZSBH
+UElPIHBhcnQgZnJvbSB2MTEgKHBhdGNoIDExLzEzDQo+IHRoZXJlKS4gSXQgc2hvdWxkIGFwcGx5
+IGNsZWFubHkgYW5kIEkgaGF2ZSBubyBjaGFuZ2VzIHRvIGl0LiBPcg0KPiBzaG91bGQNCj4gSSBq
+dXN0IHJlc2VuZCB0aGUgd2hvbGUgc2VyaWVzIChhZ2Fpbik/DQoNCk1heWJlIGl0IGlzIGNsZWFy
+ZXN0IGlmIEkganVzdCBkbyByZXNlbmQuLi4gdjEzIGlzIG9uIGl0J3Mgd2F5IGJ1dCBJDQpkcm9w
+cGVkIG1vc3Qgb2YgdGhlIHJlY2lwaWVudHMuIFBsZWFzZSBsZXQgbWUga25vdyBpZiBzb21lIG9m
+IHlvdSB3YW50DQp0byBnZXQgaXQuDQoNCj4gDQo+IEJyLA0KPiAgICAgTWF0dGkgVmFpdHRpbmVu
+DQoNCg==
