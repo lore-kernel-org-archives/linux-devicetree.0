@@ -2,166 +2,275 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE33C33CAA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 12:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2509C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 12:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709CB208E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 12:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D5921D7E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 12:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgATMOz (ORCPT
+        id S1726819AbgATMct (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:14:55 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53928 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgATMOy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 07:14:54 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id C7E013C00C5;
-        Mon, 20 Jan 2020 13:14:50 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Bta2hz3l_WGv; Mon, 20 Jan 2020 13:14:42 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id AC1BB3C04C1;
-        Mon, 20 Jan 2020 13:14:42 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 20 Jan
- 2020 13:14:42 +0100
-Date:   Mon, 20 Jan 2020 13:14:39 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v3 0/7] gpio: Add GPIO Aggregator/Repeater
-Message-ID: <20200120121439.GA24951@lxhi-065.adit-jv.com>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20200118014632.GA14644@lxhi-065.adit-jv.com>
- <CAMuHMdUUc17n0TxOrtQNby+ZiHDpz-aEh-ncnkz50vcwQe6z6w@mail.gmail.com>
+        Mon, 20 Jan 2020 07:32:49 -0500
+Received: from mga18.intel.com ([134.134.136.126]:19059 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbgATMct (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jan 2020 07:32:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 04:32:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="399361636"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga005.jf.intel.com with ESMTP; 20 Jan 2020 04:32:45 -0800
+Subject: Re: [PATCH 2/3] mmc: sdhci_am654: Update OTAPDLY writes
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org
+References: <20200108150920.14547-1-faiz_abbas@ti.com>
+ <20200108150920.14547-3-faiz_abbas@ti.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <dfa97953-7990-e1b5-5e83-9ab6cbdd54e9@intel.com>
+Date:   Mon, 20 Jan 2020 14:31:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUUc17n0TxOrtQNby+ZiHDpz-aEh-ncnkz50vcwQe6z6w@mail.gmail.com>
-X-Originating-IP: [10.72.93.66]
+In-Reply-To: <20200108150920.14547-3-faiz_abbas@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Mon, Jan 20, 2020 at 10:33:53AM +0100, Geert Uytterhoeven wrote:
-> On Sat, Jan 18, 2020 at 2:46 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > The only unexpected thing is seeing below messages (where gpiochip99 and
-> > gpiochip22 are inexisting gpiochip names, mistakenly provided on command
-> > line prior to passing the correct name):
-> >
-> > root@rcar-gen3:~# echo gpiochip6 12-13 > /sys/bus/platform/drivers/gpio-aggregator/new_device
-> > [  915.572905] gpio-aggregator gpio-aggregator.0: cannot find GPIO chip gpiochip99, deferring
-> > [  915.584224] gpio-aggregator gpio-aggregator.2: cannot find GPIO chip gpiochip99, deferring
-> > [  915.865281] gpio-aggregator gpio-aggregator.29: cannot find GPIO chip gpiochip22, deferring
-> >
-> > Obviously, in the above case, due to a typo in the names, the gpio
-> > chips will never be found, no matter how long gpio-aggregator defers
+On 8/01/20 5:09 pm, Faiz Abbas wrote:
+> According to the latest AM65x Data Manual[1], a different output tap
+> delay value is optimum for a given speed mode. Therefore, deprecate the
+> ti,otap-del-sel binding and introduce a new binding for each of the
+> possible MMC/SD speed modes. If the legacy mode is not found, fall back
+> to old binding to maintain dts compatibility.
 > 
-> Indeed, that is expected behavior: you have created platform devices
-> referring to resources that are not available.
-
-Got it. Sounds reasonable to me.
-
+> [1] http://www.ti.com/lit/gpn/am6526
 > 
-> > their probing. Unfortunately, the driver will continuously emit those
-> > messages, upon each successfully created/aggregated gpiochip. I built
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+>  drivers/mmc/host/sdhci_am654.c | 123 ++++++++++++++++++++++++++++-----
+>  include/linux/mmc/host.h       |   2 +
+>  2 files changed, 107 insertions(+), 18 deletions(-)
 > 
-> That is expected behavior, too: every time the driver core manages to
-> bind a device to a driver, it will retry all previously deferred probes,
-> in the hope they can be satisfied by the just bound device.
+> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+> index b8fe94fd9525..bb977de43f7d 100644
+> --- a/drivers/mmc/host/sdhci_am654.c
+> +++ b/drivers/mmc/host/sdhci_am654.c
+> @@ -81,7 +81,8 @@ static struct regmap_config sdhci_am654_regmap_config = {
+>  
+>  struct sdhci_am654_data {
+>  	struct regmap *base;
+> -	int otap_del_sel;
+> +	bool legacy_otapdly;
+> +	int otap_del_sel[11];
+>  	int trm_icp;
+>  	int drv_strength;
+>  	bool dll_on;
+> @@ -98,11 +99,34 @@ struct sdhci_am654_driver_data {
+>  #define DLL_PRESENT	(1 << 3)
+>  };
+>  
+> +struct timing_data {
+> +	const char *binding;
+> +	u32 capability;
+> +};
+> +
+> +static const struct timing_data td[] = {
+> +	[MMC_TIMING_LEGACY] = {"ti,otap-del-sel-legacy", 0},
+> +	[MMC_TIMING_MMC_HS] = {"ti,otap-del-sel-mmc-hs", MMC_CAP_MMC_HIGHSPEED},
+> +	[MMC_TIMING_SD_HS]  = {"ti,otap-del-sel-sd-hs", MMC_CAP_SD_HIGHSPEED},
+> +	[MMC_TIMING_UHS_SDR12] = {"ti,otap-del-sel-sdr12", MMC_CAP_UHS_SDR12},
+> +	[MMC_TIMING_UHS_SDR25] = {"ti,otap-del-sel-sdr25", MMC_CAP_UHS_SDR25},
+> +	[MMC_TIMING_UHS_SDR50] = {"ti,otap-del-sel-sdr50", MMC_CAP_UHS_SDR50},
+> +	[MMC_TIMING_UHS_SDR104] = {"ti,otap-del-sel-sdr104",
+> +				   MMC_CAP_UHS_SDR104},
+> +	[MMC_TIMING_UHS_DDR50] = {"ti,otap-del-sel-ddr50", MMC_CAP_UHS_DDR50},
+> +	[MMC_TIMING_MMC_DDR52] = {"ti,otap-del-sel-ddr52", MMC_CAP_DDR},
+> +	[MMC_TIMING_MMC_HS200] = {"ti,otap-del-sel-hs200", MMC_CAP2_HS200},
+> +	[MMC_TIMING_MMC_HS400] = {"ti,otap-del-sel-hs400", MMC_CAP2_HS400},
+> +};
+> +
+>  static void sdhci_am654_set_clock(struct sdhci_host *host, unsigned int clock)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>  	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
+> +	unsigned char timing = host->mmc->ios.timing;
+>  	int sel50, sel100, freqsel;
+> +	u32 otap_del_sel;
+> +	u32 otap_del_ena;
+>  	u32 mask, val;
+>  	int ret;
+>  
+> @@ -116,22 +140,29 @@ static void sdhci_am654_set_clock(struct sdhci_host *host, unsigned int clock)
+>  
+>  	if (clock > CLOCK_TOO_SLOW_HZ) {
+>  		/* Setup DLL Output TAP delay */
+> +		if (sdhci_am654->legacy_otapdly)
+> +			otap_del_sel = sdhci_am654->otap_del_sel[0];
+> +		else
+> +			otap_del_sel = sdhci_am654->otap_del_sel[timing];
+> +
+> +		otap_del_ena = (timing > MMC_TIMING_UHS_SDR25) ? 1 : 0;
+> +
+>  		mask = OTAPDLYENA_MASK | OTAPDLYSEL_MASK;
+> -		val = (1 << OTAPDLYENA_SHIFT) |
+> -		      (sdhci_am654->otap_del_sel << OTAPDLYSEL_SHIFT);
+> -		regmap_update_bits(sdhci_am654->base, PHY_CTRL4, mask, val);
+> +		val = (otap_del_ena << OTAPDLYENA_SHIFT) |
+> +		      (otap_del_sel << OTAPDLYSEL_SHIFT);
+> +
+>  		/* Write to STRBSEL for HS400 speed mode */
+> -		if (host->mmc->ios.timing == MMC_TIMING_MMC_HS400) {
+> +		if (timing == MMC_TIMING_MMC_HS400) {
+>  			if (sdhci_am654->flags & STRBSEL_4_BIT)
+> -				mask = STRBSEL_4BIT_MASK;
+> +				mask |= STRBSEL_4BIT_MASK;
+>  			else
+> -				mask = STRBSEL_8BIT_MASK;
+> +				mask |= STRBSEL_8BIT_MASK;
+>  
+> -			regmap_update_bits(sdhci_am654->base, PHY_CTRL4, mask,
+> -					   sdhci_am654->strb_sel <<
+> -					   STRBSEL_SHIFT);
+> +			val |= sdhci_am654->strb_sel << STRBSEL_SHIFT;
+>  		}
+>  
+> +		regmap_update_bits(sdhci_am654->base, PHY_CTRL4, mask, val);
+> +
+>  		if (sdhci_am654->flags & FREQSEL_2_BIT) {
+>  			switch (clock) {
+>  			case 200000000:
+> @@ -198,11 +229,19 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>  	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
+> -	int val, mask;
+> +	unsigned char timing = host->mmc->ios.timing;
+> +	u32 otap_del_sel;
+> +	u32 mask, val;
+> +
+> +	/* Setup DLL Output TAP delay */
+> +	if (sdhci_am654->legacy_otapdly)
+> +		otap_del_sel = sdhci_am654->otap_del_sel[0];
+> +	else
+> +		otap_del_sel = sdhci_am654->otap_del_sel[timing];
+>  
+>  	mask = OTAPDLYENA_MASK | OTAPDLYSEL_MASK;
+> -	val = (1 << OTAPDLYENA_SHIFT) |
+> -	      (sdhci_am654->otap_del_sel << OTAPDLYSEL_SHIFT);
+> +	val = (0x1 << OTAPDLYENA_SHIFT) |
+> +	      (otap_del_sel << OTAPDLYSEL_SHIFT);
+>  	regmap_update_bits(sdhci_am654->base, PHY_CTRL4, mask, val);
+>  
+>  	sdhci_set_clock(host, clock);
+> @@ -371,6 +410,55 @@ static int sdhci_am654_cqe_add_host(struct sdhci_host *host)
+>  	return ret;
+>  }
+>  
+> +static int sdhci_am654_get_otap_delay(struct sdhci_host *host,
+> +				      struct sdhci_am654_data *sdhci_am654)
+> +{
+> +	struct device *dev = mmc_dev(host->mmc);
+> +	int i;
+> +	int ret;
+> +
+> +	ret = device_property_read_u32(dev, td[MMC_TIMING_LEGACY].binding,
+> +				 &sdhci_am654->otap_del_sel[MMC_TIMING_LEGACY]);
+> +	if (ret) {
+> +		/*
+> +		 * ti,otap-del-sel-legacy is mandatory, look for old binding
+> +		 * if not found.
+> +		 */
+> +		ret = device_property_read_u32(dev, "ti,otap-del-sel",
+> +					       &sdhci_am654->otap_del_sel[0]);
+> +		if (ret) {
+> +			dev_err(dev, "Couldn't find otap-del-sel\n");
+> +
+> +			return ret;
+> +		}
+> +
+> +		dev_info(dev, "Using legacy binding ti,otap-del-sel\n");
+> +		sdhci_am654->legacy_otapdly = true;
+> +
+> +		return 0;
+> +	}
+> +
+> +	for (i = MMC_TIMING_MMC_HS; i <= MMC_TIMING_MMC_HS400; i++) {
+> +
+> +		ret = device_property_read_u32(dev, td[i].binding,
+> +					       &sdhci_am654->otap_del_sel[i]);
+> +		if (ret) {
+> +			dev_dbg(dev, "Couldn't find %s\n",
+> +				td[i].binding);
+> +			/*
+> +			 * Remove the corresponding capability
+> +			 * if an otap-del-sel value is not found
+> +			 */
+> +			if (i <= MMC_TIMING_MMC_DDR52)
+> +				host->mmc->caps &= ~td[i].capability;
+> +			else
+> +				host->mmc->caps2 &= ~td[i].capability;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int sdhci_am654_init(struct sdhci_host *host)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> @@ -419,6 +507,10 @@ static int sdhci_am654_init(struct sdhci_host *host)
+>  	if (ret)
+>  		goto err_cleanup_host;
+>  
+> +	ret = sdhci_am654_get_otap_delay(host, sdhci_am654);
+> +	if (ret)
+> +		goto err_cleanup_host;
+> +
+>  	ret = __sdhci_add_host(host);
+>  	if (ret)
+>  		goto err_cleanup_host;
+> @@ -437,11 +529,6 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
+>  	int drv_strength;
+>  	int ret;
+>  
+> -	ret = device_property_read_u32(dev, "ti,otap-del-sel",
+> -				       &sdhci_am654->otap_del_sel);
+> -	if (ret)
+> -		return ret;
+> -
+>  	if (sdhci_am654->flags & DLL_PRESENT) {
+>  		ret = device_property_read_u32(dev, "ti,trm-icp",
+>  					       &sdhci_am654->trm_icp);
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index ba703384bea0..a22a10456c62 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -322,6 +322,8 @@ struct mmc_host {
+>  #define MMC_CAP_3_3V_DDR	(1 << 11)	/* Host supports eMMC DDR 3.3V */
+>  #define MMC_CAP_1_8V_DDR	(1 << 12)	/* Host supports eMMC DDR 1.8V */
+>  #define MMC_CAP_1_2V_DDR	(1 << 13)	/* Host supports eMMC DDR 1.2V */
+> +#define MMC_CAP_DDR		(MMC_CAP_3_3V_DDR | MMC_CAP_1_8V_DDR | \
+> +				 MMC_CAP_1_2V_DDR)
+>  #define MMC_CAP_POWER_OFF_CARD	(1 << 14)	/* Can power off after boot */
+>  #define MMC_CAP_BUS_WIDTH_TEST	(1 << 15)	/* CMD14/CMD19 bus width ok */
+>  #define MMC_CAP_UHS_SDR12	(1 << 16)	/* Host supports UHS SDR12 mode */
 > 
-> Note that you can destroy these bogus devices, using e.g.
-> 
->     # echo gpio-aggregator.0 > \
->     /sys/bus/platform/drivers/gpio-aggregator/delete_device
 
-Yep, I can get rid of the bogus devices this way. Thanks!
-
-> 
-> > gpio-aggregator as a loadable module, if that's relevant.
-> 
-> Modular or non-modular shouldn't matter w.r.t. this behavior.
-> Although unloading the module should get rid of the cruft.
-
-Yes, indeed!
-
-> 
-> > Another comment is that, while the series _does_ allow specifying
-> > gpio lines in the DTS (this would require a common compatible string
-> > in gpio_aggregator_dt_ids[] and in the DTS node) and while those lines
-> > are indeed exposed to userspace, based on my testing, these same gpio
-> > lines are marked as "used/reserved" by the kernel. This means that
-> > operating on those gpio pins from userspace will not be possible.
-> > For instance, gpioget/gpioset return "Device or resource busy":
-> >
-> > gpioget: error reading GPIO values: Device or resource busy
-> > gpioset: error setting the GPIO line values: Device or resource busy
-> >
-> > I guess Harish will be unhappy about that, as his expectation was that
-> > upon merging gpio-aggregator with gpio-inverter, he will be able to
-> > describe GPIO polarity and names in DTS without "hogging" the pins.
-> > Perhaps this can be supplemented via an add-on patch later on?
-> 
-> When aggregating GPIO lines, the original GPIO lines are indeed marked
-> used/reserved, so you cannot use them from userspace.
-> However, you are expected to use them through the newly created virtual
-> gpiochip representing the aggregated GPIO lines.
-> 
-> You can try this using the "door" example in
-> Documentation/admin-guide/gpio/gpio-aggregator.rst, after replacing
-> gpio2 {19,20} by gpio6 {12,13} to suit your H3ULCB.
-
-Confirmed. The example works like a charm. One difference between
-the runtime-created and DTS-created gpiochips is the name:
- - gpio-aggregator.<number>, for the ones created via sysfs
- - <name-of-DTS-node>, for the ones created via DTS
-
-Seeing this behavior on my target, I believe the expectations of
-Harish should be met w/o any major limitations.
-
-> 
-> > For the whole series (leaving the above findings to your discretion):
-> >
-> > Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> > Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
-The recent [v3] discussion actually applies to [v4], for which I did
-review and testing. Will relay the signatures to the latest version.
-
-Thank you very much.
-
--- 
-Best Regards,
-Eugeniu
