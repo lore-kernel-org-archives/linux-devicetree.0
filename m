@@ -2,257 +2,257 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFEDC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE559C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E824217F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oe9toNJn"
+	by mail.kernel.org (Postfix) with ESMTP id C48E222314
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgATOm3 (ORCPT
+        id S1726819AbgATOnP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:42:29 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38351 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgATOm2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 09:42:28 -0500
-Received: by mail-pl1-f193.google.com with SMTP id f20so13267341plj.5;
-        Mon, 20 Jan 2020 06:42:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=YqfXc8yXrudcqJ9+BPypAzGN1yskDe+7msexUEFvfvc=;
-        b=oe9toNJnvkAP4PD5GyZiZnfkpld67CC1xeoorIFWRKSe8teuBreIpOIS6DVl+qkOjr
-         SU05RpSvRxi40FipKfZpxf1nzdcjU6aMU9GVeH78Uo6n70vQ11pGUr3qsavc/C+PCHis
-         XpfxUsGyC2LwKx12Mef/FWYPVtuf6U01FDZoUnG9xxIqandQFZFPlGWR0cJfyY0n0Fac
-         Np6IxInbcjlOJ40Mxll/xAkkWz9F12fL30qVCL3Uq/jwbasYlaP0UyTgpayvN5reOFUH
-         YUfaJP1ANyImjcYXwmeqciOZ88vk3QlBQq1kdkfPNTl/SYf+MXkAYs13m6nD4yof/B0X
-         XrKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=YqfXc8yXrudcqJ9+BPypAzGN1yskDe+7msexUEFvfvc=;
-        b=LrHRgNzg5FF/fBqtIcvTpeueZQaDty83tHm1x7USNG6fIrPuTEoy6xDnxHOteZs8KM
-         FdCPNPbC6P3TCAHE8ZvY7elXL6gU0TJmLJU3GcpbcyTMNIEwlT6egC7n0A48Ju1mQ3FY
-         WUsaY0eoUMFdx+Kibe2zyzlXbO80ca8JnJ+lbJpHaO0WgaNXto4VjjDoCJbVsq0yUrSu
-         CN0yDlpz90vcER68jKI7HD81QBJhIFwfxW2kwvMmAeaRbEVXwI7wgarrsx9+BSuJg6mF
-         EbVKLxSOaWrciKHrtP3jpK137FJy23OVySSGa0Sk7uXMM8yjFegmrEYQRXFh4NEGO6wW
-         qEvw==
-X-Gm-Message-State: APjAAAWZuDkxZXkvN/e9DScRbQFBtwt6I7MMt71ywCdJ/5ENcUMvm3m8
-        QBAIk+qzUafBAnIPjJvMaJA=
-X-Google-Smtp-Source: APXvYqxLZ61cO6F7r43DS1R/LrcLbFu87VZDZuIPlM4HJvu6ugke2TJ0dojPO/76HcTXndeugKX8xg==
-X-Received: by 2002:a17:90a:f998:: with SMTP id cq24mr23057835pjb.6.1579531347713;
-        Mon, 20 Jan 2020 06:42:27 -0800 (PST)
-Received: from cnn ([42.111.130.113])
-        by smtp.gmail.com with ESMTPSA id w3sm36152429pgj.48.2020.01.20.06.42.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 06:42:27 -0800 (PST)
-Date:   Mon, 20 Jan 2020 20:12:21 +0530
-From:   Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-To:     andrew@aj.id.au, joel@jms.id.au
-Cc:     sam@mendozajonas.com, sdasari@fb.com, vijaykhemka@fb.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, manikandan.e@hcl.com
-Subject: [PATCH v6] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20200120144221.GA22195@cnn>
+        Mon, 20 Jan 2020 09:43:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:32968 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbgATOnP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jan 2020 09:43:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48ABF30E;
+        Mon, 20 Jan 2020 06:43:14 -0800 (PST)
+Received: from [10.1.194.52] (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D7403F52E;
+        Mon, 20 Jan 2020 06:43:12 -0800 (PST)
+Subject: Re: [PATCH v3 4/7] drm/panfrost: Add support for multiple regulators
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200114071602.47627-1-drinkcat@chromium.org>
+ <20200114071602.47627-5-drinkcat@chromium.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <7e82cac2-efbf-806b-8c2e-04dbd0482b50@arm.com>
+Date:   Mon, 20 Jan 2020 14:43:10 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200114071602.47627-5-drinkcat@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Yosemite V2 is a facebook multi-node server
-platform that host four OCP server. The BMC
-in the Yosemite V2 platform based on AST2500 SoC.
+On 14/01/2020 07:15, Nicolas Boichat wrote:
+> Some GPUs, namely, the bifrost/g72 part on MT8183, have a second
+> regulator for their SRAM, let's add support for that.
+> 
+> We extend the framework in a generic manner so that we could
+> support more than 2 regulators, if required.
+> 
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> 
+> ---
+> 
+> v3:
+>  - Make this more generic, by allowing any number of regulators
+>    (in practice we fix the maximum number of regulators to 2, but
+>    this could be increased easily).
+>  - We only probe the second regulator if the device tree matching
+>    data asks for it.
+>  - I couldn't find a way to detect the number of regulators in the
+>    device tree, if we wanted to refuse to probe the device if there
+>    are too many regulators, which might be required for safety, see
+>    the thread on v2 [1].
+>  - The discussion also included the idea of a separate device tree
+>    entry for a "soft PDC", or at least a separate driver. I'm not
+>    sure to understand the full picture, and how different vendors
+>    implement this, so I'm still integrating everything in the main
+>    driver. I'd be happy to try to make mt8183 fit into such a
+>    framework after it's created, but I don't think I'm best placed
+>    to implement (and again, the main purpose of this was to test
+>    if the binding is correct).
 
-This patch adds linux device tree entry related to
-Yosemite V2 specific devices connected to BMC SoC.
+From discussions offline, I think I've come round to the view that
+having a "soft PDC" in device tree isn't the right solution. Device tree
+should be describing the hardware and that isn't actually a hardware
+component.
 
-Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-Acked-by     : Andrew Jeffery <andrew@aj.id.au>
-Reviewed-by  : Vijay Khemka <vkhemka@fb.com>
----
----      v6 - Added device tree property for multi-host Mellanox NIC in the ncsi driver.
----      v5 - Spell and contributor name correction.
----           - License identifier changed to GPL-2.0-or-later.
----           - aspeed-gpio.h removed.
----           - FAN2 tacho channel changed.
----      v4 - Bootargs removed.
----      v3 - Uart1 Debug removed .
----      v2 - LPC and VUART removed .
----      v1 - Initial draft.
----
- .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 149 +++++++++++++++++++++
- 1 file changed, 149 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+I guess we'll have to wait to see how many devices have a similar
+'quirk' and whether it's worth representing this is software in a more
+generic manner, or if matching on compatible strings will be sufficient
+for the devices that need multiple regulators.
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-new file mode 100644
-index 0000000..04a6a32
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright (c) 2018 Facebook Inc.
-+
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+/ {
-+	model = "Facebook Yosemitev2 BMC";
-+	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	iio-hwmon {
-+		// VOLATAGE SENSOR
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-+		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-+		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-+		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
-+
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	mlx,multi-host;
-+	use-ncsi;
-+};
-+
-+&adc {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+			&pinctrl_adc1_default
-+			&pinctrl_adc2_default
-+			&pinctrl_adc3_default
-+			&pinctrl_adc4_default
-+			&pinctrl_adc5_default
-+			&pinctrl_adc6_default
-+			&pinctrl_adc7_default
-+			&pinctrl_adc8_default
-+			&pinctrl_adc9_default
-+			&pinctrl_adc10_default
-+			&pinctrl_adc11_default
-+			&pinctrl_adc12_default
-+			&pinctrl_adc13_default
-+			&pinctrl_adc14_default
-+			&pinctrl_adc15_default>;
-+};
-+
-+&i2c8 {
-+	//FRU EEPROM
-+	status = "okay";
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c9 {
-+	//INLET & OUTLET TEMP
-+	status = "okay";
-+	tmp421@4e {
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&i2c10 {
-+	//HSC
-+	status = "okay";
-+	adm1278@40 {
-+		compatible = "adi,adm1278";
-+		reg = <0x40>;
-+	};
-+};
-+
-+&i2c11 {
-+	//MEZZ_TEMP_SENSOR
-+	status = "okay";
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
-+};
-+
-+&i2c12 {
-+	//MEZZ_FRU
-+	status = "okay";
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&pwm_tacho {
-+	//FSC
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+	};
-+};
--- 
-2.7.4
+One (minor) comment below, but otherwise LGTM.
+
+> 
+> [1] https://patchwork.kernel.org/patch/11322839/
+> 
+>  drivers/gpu/drm/panfrost/panfrost_device.c | 25 ++++++++++++-------
+>  drivers/gpu/drm/panfrost/panfrost_device.h | 15 +++++++++++-
+>  drivers/gpu/drm/panfrost/panfrost_drv.c    | 28 +++++++++++++++-------
+>  3 files changed, 50 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> index 238fb6d54df4732..c30e0a3772a4f57 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> @@ -87,18 +87,26 @@ static void panfrost_clk_fini(struct panfrost_device *pfdev)
+>  
+>  static int panfrost_regulator_init(struct panfrost_device *pfdev)
+>  {
+> -	int ret;
+> +	int ret, i;
+>  
+> -	pfdev->regulator = devm_regulator_get(pfdev->dev, "mali");
+> -	if (IS_ERR(pfdev->regulator)) {
+> -		ret = PTR_ERR(pfdev->regulator);
+> -		dev_err(pfdev->dev, "failed to get regulator: %d\n", ret);
+> +	BUG_ON(pfdev->comp->num_supplies > ARRAY_SIZE(pfdev->regulators));
+> +
+> +	for (i = 0; i < pfdev->comp->num_supplies; i++) {
+> +		pfdev->regulators[i].supply = pfdev->comp->supply_names[i];
+> +	}
+> +
+> +	ret = devm_regulator_bulk_get(pfdev->dev,
+> +				      pfdev->comp->num_supplies,
+> +				      pfdev->regulators);
+> +	if (ret < 0) {
+> +		dev_err(pfdev->dev, "failed to get regulators: %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> -	ret = regulator_enable(pfdev->regulator);
+> +	ret = regulator_bulk_enable(pfdev->comp->num_supplies,
+> +				    pfdev->regulators);
+>  	if (ret < 0) {
+> -		dev_err(pfdev->dev, "failed to enable regulator: %d\n", ret);
+> +		dev_err(pfdev->dev, "failed to enable regulators: %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> @@ -107,7 +115,8 @@ static int panfrost_regulator_init(struct panfrost_device *pfdev)
+>  
+>  static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+>  {
+> -	regulator_disable(pfdev->regulator);
+> +	regulator_bulk_disable(pfdev->comp->num_supplies,
+> +			pfdev->regulators);
+>  }
+>  
+>  int panfrost_device_init(struct panfrost_device *pfdev)
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+> index 06713811b92cdf7..021f063ffb3747f 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> @@ -7,6 +7,7 @@
+>  
+>  #include <linux/atomic.h>
+>  #include <linux/io-pgtable.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/spinlock.h>
+>  #include <drm/drm_device.h>
+>  #include <drm/drm_mm.h>
+> @@ -19,6 +20,7 @@ struct panfrost_job;
+>  struct panfrost_perfcnt;
+>  
+>  #define NUM_JOB_SLOTS 3
+> +#define MAX_REGULATORS 2
+>  
+>  struct panfrost_features {
+>  	u16 id;
+> @@ -51,6 +53,16 @@ struct panfrost_features {
+>  	unsigned long hw_issues[64 / BITS_PER_LONG];
+>  };
+>  
+> +/*
+> + * Features that cannot be automatically detected and need matching using the
+> + * compatible string, typically SoC-specific.
+> + */
+> +struct panfrost_compatible {
+> +	/* Supplies count and names. */
+> +	int num_supplies;
+> +	const char * const *supply_names;
+> +};
+> +
+>  struct panfrost_device {
+>  	struct device *dev;
+>  	struct drm_device *ddev;
+> @@ -59,10 +71,11 @@ struct panfrost_device {
+>  	void __iomem *iomem;
+>  	struct clk *clock;
+>  	struct clk *bus_clock;
+> -	struct regulator *regulator;
+> +	struct regulator_bulk_data regulators[MAX_REGULATORS];
+>  	struct reset_control *rstc;
+>  
+>  	struct panfrost_features features;
+> +	const struct panfrost_compatible* comp;
+>  
+>  	spinlock_t as_lock;
+>  	unsigned long as_in_use_mask;
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> index 48e3c4165247cea..db3563b80150c9d 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> @@ -510,6 +510,10 @@ static int panfrost_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, pfdev);
+>  
+> +	pfdev->comp = of_device_get_match_data(&pdev->dev);
+> +	if (!pfdev->comp)
+> +		return -ENODEV;
+> +
+>  	/* Allocate and initialze the DRM device. */
+>  	ddev = drm_dev_alloc(&panfrost_drm_driver, &pdev->dev);
+>  	if (IS_ERR(ddev))
+> @@ -581,16 +585,22 @@ static int panfrost_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +const char * const default_supplies[] = { "mali" };
+
+This should be static.
+
+Steve
+
+> +static const struct panfrost_compatible default_data = {
+> +	.num_supplies = ARRAY_SIZE(default_supplies),
+> +	.supply_names = default_supplies,
+> +};
+> +
+>  static const struct of_device_id dt_match[] = {
+> -	{ .compatible = "arm,mali-t604" },
+> -	{ .compatible = "arm,mali-t624" },
+> -	{ .compatible = "arm,mali-t628" },
+> -	{ .compatible = "arm,mali-t720" },
+> -	{ .compatible = "arm,mali-t760" },
+> -	{ .compatible = "arm,mali-t820" },
+> -	{ .compatible = "arm,mali-t830" },
+> -	{ .compatible = "arm,mali-t860" },
+> -	{ .compatible = "arm,mali-t880" },
+> +	{ .compatible = "arm,mali-t604", .data = &default_data, },
+> +	{ .compatible = "arm,mali-t624", .data = &default_data, },
+> +	{ .compatible = "arm,mali-t628", .data = &default_data, },
+> +	{ .compatible = "arm,mali-t720", .data = &default_data, },
+> +	{ .compatible = "arm,mali-t760", .data = &default_data, },
+> +	{ .compatible = "arm,mali-t820", .data = &default_data, },
+> +	{ .compatible = "arm,mali-t830", .data = &default_data, },
+> +	{ .compatible = "arm,mali-t860", .data = &default_data, },
+> +	{ .compatible = "arm,mali-t880", .data = &default_data, },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, dt_match);
+> 
 
