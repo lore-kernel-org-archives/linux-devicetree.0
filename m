@@ -2,298 +2,288 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33924C35240
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30CDC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 15:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B5D22527
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B17521D7E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 15:06:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3KHWKsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgATOxt (ORCPT
+        id S1729145AbgATPGL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:53:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:33194 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgATOxt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:53:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55DBCFEC;
-        Mon, 20 Jan 2020 06:53:48 -0800 (PST)
-Received: from [10.1.194.52] (e112269-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CEDB3F52E;
-        Mon, 20 Jan 2020 06:53:46 -0800 (PST)
-Subject: Re: [PATCH v3 5/7] drm/panfrost: Add support for multiple power
- domains
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200114071602.47627-1-drinkcat@chromium.org>
- <20200114071602.47627-6-drinkcat@chromium.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <8b300f30-aa6d-89ee-77e3-271e3fa013f8@arm.com>
-Date:   Mon, 20 Jan 2020 14:53:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 20 Jan 2020 10:06:11 -0500
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:52572 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728760AbgATPGK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 10:06:10 -0500
+Received: by mail-wm1-f46.google.com with SMTP id p9so14850666wmc.2;
+        Mon, 20 Jan 2020 07:06:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jjkGrI+KVfcJfDj45xmGl/4VyHE7c0jJdesecDITtMQ=;
+        b=o3KHWKszdd1iAZneRvzPpeI2u5VXTQ1l3jTkHGTYDQzgBi3EAMILsXWMQ3mnATqaKN
+         g7eji2Z58pjJVCm7B5zdbnQ/T2h1tOHPJf24rrMGTn176om2tyGNKLmllro9W/2ziQ85
+         FlrcUGN/gBQxcEbCF/TF1cayKntGOUrcvurb7n7HveeNGQfdzhvRtfYvAwdKC8UdbLn5
+         5J3tSlmauU9X7F758V+nH9NNqzYENcTEl35Q/WtxXxSFWGMrPMiWHASEKCHvudGKEjwK
+         Hw6hISxl1jppgpDfiKYnMfws1pRpfW1sBfx2R7PWdtfsWo/WtV8sL3P8Pg9lbglFCOJj
+         /bBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jjkGrI+KVfcJfDj45xmGl/4VyHE7c0jJdesecDITtMQ=;
+        b=QLoVQxxJh8CCW3/aOWxoOSidk5h8hEjtaKzty1fLkBFeGaPUp/M7OfrRN2gDo7kgkF
+         D4bU6ofbkegfwA3CnbDXRCarjeoM8j+KLDBPFltqgpb9ueYE/TmNjNSthnEqLaKpuWWf
+         NeZW5uSezOH+rtQ20RVYGdbhJHNIHRckKmXaul9VlZQdysb/aAByoQijP2GS6RD/wUXk
+         RlCxjkYwQlvBvLtaaI8PAMlWkK9YbKVyK2Fudl9OqvORSwH5WG2p9d1Fovk22Ej5MOPG
+         BI09SnJF0UwgqAPsGBJg/n2DbOU4hDGMS+RRbjSMB4jNwNa7P5TdF5QJoP92mfsM1PFF
+         FjCA==
+X-Gm-Message-State: APjAAAXQ9shqYRDshGmd3TRAwNj25T2A0//Oh13KwST6kcpWwifFApI0
+        DfUfaJ9Qo6KlpsWdfvtK9wM=
+X-Google-Smtp-Source: APXvYqw37KVItciqP7tMFoIrM44uXFC+XSmPrp/svB2B5OpO/wQn8XHFOIcrG40/GA6Q2IPA9mu9og==
+X-Received: by 2002:a1c:f31a:: with SMTP id q26mr19050683wmq.142.1579532767691;
+        Mon, 20 Jan 2020 07:06:07 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id d14sm51139253wru.9.2020.01.20.07.06.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 07:06:06 -0800 (PST)
+Date:   Mon, 20 Jan 2020 16:06:05 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC 2/2] dt-bindings: firmware: tegra186-bpmp: Document
+ interconnects property
+Message-ID: <20200120150605.GA712203@ulmo>
+References: <20200114181519.3402385-1-thierry.reding@gmail.com>
+ <20200114181519.3402385-2-thierry.reding@gmail.com>
+ <7aefac6c-092c-b5a6-2fa6-e283d2147fc3@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200114071602.47627-6-drinkcat@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Content-Disposition: inline
+In-Reply-To: <7aefac6c-092c-b5a6-2fa6-e283d2147fc3@linaro.org>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14/01/2020 07:16, Nicolas Boichat wrote:
-> When there is a single power domain per device, the core will
-> ensure the power domain is switched on (so it is technically
-> equivalent to having not power domain specified at all).
-> 
-> However, when there are multiple domains, as in MT8183 Bifrost
-> GPU, we need to handle them in driver code.
-> 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> 
-> ---
-> 
-> The downstream driver we use on chromeos-4.19 currently uses 2
-> additional devices in device tree to accomodate for this [1], but
-> I believe this solution is cleaner.
-> 
-> [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
-> 
-> v3:
->  - Use the compatible matching data to specify the number of power
->    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
->    as the core will handle these 2 cases in the exact same way
->    (automatically, without driver intervention), and there should
->    be no adverse consequence in this case (the concern is about
->    switching on only some power domains and not others).
-> 
->  drivers/gpu/drm/panfrost/panfrost_device.c | 95 ++++++++++++++++++++--
->  drivers/gpu/drm/panfrost/panfrost_device.h |  9 ++
->  drivers/gpu/drm/panfrost/panfrost_drv.c    |  1 +
->  3 files changed, 97 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-> index c30e0a3772a4f57..7c9766f76cc7689 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> @@ -5,6 +5,7 @@
->  #include <linux/clk.h>
->  #include <linux/reset.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/regulator/consumer.h>
->  
->  #include "panfrost_device.h"
-> @@ -119,6 +120,75 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
->  			pfdev->regulators);
->  }
->  
-> +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
-> +		if (!pfdev->pm_domain_devs[i])
-> +			break;
-> +
-> +		if (pfdev->pm_domain_links[i])
-> +			device_link_del(pfdev->pm_domain_links[i]);
-> +
-> +		dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
-> +	}
-> +}
-> +
-> +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
-> +{
-> +	int err;
-> +	int i, num_domains;
-> +
-> +	num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
-> +						 "power-domains",
-> +						 "#power-domain-cells");
-> +
-> +	/*
-> +	 * Single domain is handled by the core, and, if only a single power
-> +	 * the power domain is requested, the property is optional.
-> +	 */
-> +	if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
-> +		return 0;
-> +
-> +	if (num_domains != pfdev->comp->num_pm_domains) {
-> +		dev_err(pfdev->dev,
-> +			"Incorrect number of power domains: %d provided, %d needed\n",
-> +			num_domains, pfdev->comp->num_pm_domains);
-> +		return -EINVAL;
-> +	}
-> +
-> +	BUG_ON(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs));
-> +
-> +	for (i = 0; i < num_domains; i++) {
-> +		pfdev->pm_domain_devs[i] =
-> +			dev_pm_domain_attach_by_id(pfdev->dev, i);
-> +		if (IS_ERR(pfdev->pm_domain_devs[i])) {
-> +			err = PTR_ERR(pfdev->pm_domain_devs[i]);
-> +			pfdev->pm_domain_devs[i] = NULL;
-> +			dev_err(pfdev->dev,
-> +				"failed to get pm-domain %d: %d\n", i, err);
-> +			goto err;
-> +		}
-> +
-> +		pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
-> +				pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
-> +				DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
-> +		if (!pfdev->pm_domain_links[i]) {
-> +			dev_err(pfdev->pm_domain_devs[i],
-> +				"adding device link failed!\n");
-> +			err = -ENODEV;
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	panfrost_pm_domain_fini(pfdev);
-> +	return err;
-> +}
-> +
->  int panfrost_device_init(struct panfrost_device *pfdev)
->  {
->  	int err;
-> @@ -149,37 +219,45 @@ int panfrost_device_init(struct panfrost_device *pfdev)
->  		goto err_out1;
->  	}
->  
-> +	err = panfrost_pm_domain_init(pfdev);
-> +	if (err) {
-> +		dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
 
-No need for this print - panfrost_pm_domain_init() will output a (more
-appropriate) error message on failure.
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +		goto err_out2;
-> +	}
-> +
->  	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
->  	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
->  	if (IS_ERR(pfdev->iomem)) {
->  		dev_err(pfdev->dev, "failed to ioremap iomem\n");
->  		err = PTR_ERR(pfdev->iomem);
-> -		goto err_out2;
-> +		goto err_out3;
->  	}
->  
->  	err = panfrost_gpu_init(pfdev);
->  	if (err)
-> -		goto err_out2;
-> +		goto err_out3;
->  
->  	err = panfrost_mmu_init(pfdev);
->  	if (err)
-> -		goto err_out3;
-> +		goto err_out4;
->  
->  	err = panfrost_job_init(pfdev);
->  	if (err)
-> -		goto err_out4;
-> +		goto err_out5;
->  
->  	err = panfrost_perfcnt_init(pfdev);
->  	if (err)
-> -		goto err_out5;
-> +		goto err_out6;
->  
->  	return 0;
-> -err_out5:
-> +err_out6:
->  	panfrost_job_fini(pfdev);
-> -err_out4:
-> +err_out5:
->  	panfrost_mmu_fini(pfdev);
-> -err_out3:
-> +err_out4:
->  	panfrost_gpu_fini(pfdev);
-> +err_out3:
-> +	panfrost_pm_domain_fini(pfdev);
->  err_out2:
->  	panfrost_reset_fini(pfdev);
->  err_out1:
-> @@ -196,6 +274,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
->  	panfrost_mmu_fini(pfdev);
->  	panfrost_gpu_fini(pfdev);
->  	panfrost_reset_fini(pfdev);
-> +	panfrost_pm_domain_fini(pfdev);
+On Fri, Jan 17, 2020 at 05:23:43PM +0200, Georgi Djakov wrote:
+> Hi Thierry,
+>=20
+> Thanks for the patch!
+>=20
+> On 1/14/20 20:15, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > Document the interconnects property that is used to describe the paths
+> > from and to system memory from and to the BPMP.
+> >=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> > Rob, Georgi,
+> >=20
+> > after the initial RFC that I did for adding interconnect properties on
+> > Tegra, I realized that the description wasn't complete. This is an
+> > attempt at a more accurate description, but unfortunately I'm not sure
+> > if it's even correct in terms of the interconnect bindings.
+> >=20
+> > The problem here is that on Tegra, each device has multiple paths to
+> > system memory, and I have no good idea on what to pick as the default.
+> > They are all basically the same path, but each provides extra controls
+> > to configure the "interconnect".
+>=20
+> Are these multiple paths between a device and system memory used simultan=
+eously
+> for load-balancing, or who makes the decision about which path would be u=
+sed?
 
-NIT: The reverse of the construction order would be to do this before
-panfrost_reset_fini().
+It varies. The vast majority of these paths are read/write pairs, which
+can be configured separately. There are also cases where multiple paths
+are used for load-balancing and I don't think there's any direct
+software control over which path will be used.
 
-Otherwise this LGTM.
+A third class is where you have one device, but two read/write pairs,
+one which is tied to a microcontroller that's part of the device, and
+another read/write pair that is used for DMA to/from the device.
 
-Thanks,
-Steve
+Often in the latter case, the microcontroller memory client interfaces
+will be used by the microcontroller to read firmware and once the micro-
+controller has booted up, the DMA memory client interfaces will be used
+to read/write system memory with bulk data (like frame buffers, etc.).
 
->  	panfrost_regulator_fini(pfdev);
->  	panfrost_clk_fini(pfdev);
->  }
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index 021f063ffb3747f..143eab57180a2e1 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -21,6 +21,7 @@ struct panfrost_perfcnt;
->  
->  #define NUM_JOB_SLOTS 3
->  #define MAX_REGULATORS 2
-> +#define MAX_PM_DOMAINS 3
->  
->  struct panfrost_features {
->  	u16 id;
-> @@ -61,6 +62,11 @@ struct panfrost_compatible {
->  	/* Supplies count and names. */
->  	int num_supplies;
->  	const char * const *supply_names;
-> +	/*
-> +	 * Number of power domains required, note that values 0 and 1 are
-> +	 * handled identically, as only values > 1 need special handling.
-> +	 */
-> +	int num_pm_domains;
->  };
->  
->  struct panfrost_device {
-> @@ -73,6 +79,9 @@ struct panfrost_device {
->  	struct clk *bus_clock;
->  	struct regulator_bulk_data regulators[MAX_REGULATORS];
->  	struct reset_control *rstc;
-> +	/* pm_domains for devices with more than one. */
-> +	struct device *pm_domain_devs[MAX_PM_DOMAINS];
-> +	struct device_link *pm_domain_links[MAX_PM_DOMAINS];
->  
->  	struct panfrost_features features;
->  	const struct panfrost_compatible* comp;
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> index db3563b80150c9d..42b87e29e605149 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -589,6 +589,7 @@ const char * const default_supplies[] = { "mali" };
->  static const struct panfrost_compatible default_data = {
->  	.num_supplies = ARRAY_SIZE(default_supplies),
->  	.supply_names = default_supplies,
-> +	.num_pm_domains = 1, /* optional */
->  };
->  
->  static const struct of_device_id dt_match[] = {
-> 
+> Is this based on the client/stream ID that you mentioned previously?
 
+These are now all what's call memory client IDs, which identify the
+corresponding interface to the memory controller. Stream IDs are
+slightly higher-level and typically identify the "module" that uses
+the SMMU. Generally a stream ID is mapped to one or more memory client
+IDs.
+
+> Looking at the the binding below, it seems to me like there are different
+> master/slave pairs between MC and EMC and each link is used for
+> unidirectional traffic only. In terms of the interconnect API, both read
+> and write paths have the same direction.
+
+I'm not sure I understand what you mean by this last sentence. Are you
+saying that each path in terms of the interconnect API is a always a
+bidirectional link?
+
+> Is the EMC really an interconnect provider or is it just a slave port? Can
+> we scale both EMC and MC independently?
+
+The EMC is the only one where we can scale the frequency, but the MC has
+various knobs that can be used to fine-tune arbitration, set maximum
+latency, etc.
+
+I vaguely recall Dmitry mentioning that the EMC in early generations of
+Tegra used to have controls for individual memory clients, but I don't
+see that in more recent generations.
+
+Thierry
+
+> > Any ideas on how to resolve this? Let me know if the DT bindings and
+> > example don't make things clear enough.
+> >=20
+> > Thierry
+> >=20
+> >  .../firmware/nvidia,tegra186-bpmp.yaml        | 59 +++++++++++++++++++
+> >  1 file changed, 59 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186=
+-bpmp.yaml b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpm=
+p.yaml
+> > index dabf1c1aec2f..d40fcd836e90 100644
+> > --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.y=
+aml
+> > +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.y=
+aml
+> > @@ -43,6 +43,24 @@ properties:
+> >        - enum:
+> >            - nvidia,tegra186-bpmp
+> > =20
+> > +  interconnects:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    description: A list of phandle and specifier pairs that describe t=
+he
+> > +      interconnect paths to and from the BPMP.
+> > +
+> > +  interconnect-names:
+> > +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> > +    description: One string for each pair of phandle and specifier in =
+the
+> > +      "interconnects" property.
+> > +    # XXX We need at least one of these to be named dma-mem so that th=
+e core
+> > +    # will set the DMA mask based on the DMA parent, but all of these =
+go to
+> > +    # system memory eventually.
+> > +    items:
+> > +      - const: dma-mem
+> > +      - const: dma-mem
+> > +      - const: dma-mem
+> > +      - const: dma-mem
+> > +
+> >    iommus:
+> >      $ref: /schemas/types.yaml#/definitions/phandle-array
+> >      description: |
+> > @@ -152,8 +170,43 @@ additionalProperties: false
+> > =20
+> >  examples:
+> >    - |
+> > +    #include <dt-bindings/clock/tegra186-clock.h>
+> >      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >      #include <dt-bindings/mailbox/tegra186-hsp.h>
+> > +    #include <dt-bindings/memory/tegra186-mc.h>
+> > +
+> > +    mc: memory-controller@2c00000 {
+> > +        compatible =3D "nvidia,tegra186-mc";
+> > +        reg =3D <0x02c00000 0xb0000>;
+> > +        interrupts =3D <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+> > +        status =3D "disabled";
+> > +
+> > +        #interconnect-cells =3D <1>;
+> > +        #address-cells =3D <2>;
+> > +        #size-cells =3D <2>;
+> > +
+> > +        ranges =3D <0x02c00000 0x0 0x02c00000 0x0 0xb0000>;
+> > +
+> > +        /*
+> > +         * Memory clients have access to all 40 bits that the memory
+> > +         * controller can address.
+> > +         */
+> > +        dma-ranges =3D <0x0 0x0 0x0 0x100 0x0>;
+> > +
+> > +        #memory-controller-cells =3D <0>;
+> > +
+> > +        emc: external-memory-controller@2c60000 {
+> > +            compatible =3D "nvidia,tegra186-emc";
+> > +            reg =3D <0x0 0x02c60000 0x0 0x50000>;
+> > +            interrupts =3D <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
+> > +            clocks =3D <&bpmp TEGRA186_CLK_EMC>;
+> > +            clock-names =3D "emc";
+> > +
+> > +            #interconnect-cells =3D <0>;
+> > +
+> > +            nvidia,bpmp =3D <&bpmp>;
+> > +        };
+> > +    };
+> > =20
+> >      hsp_top0: hsp@3c00000 {
+> >          compatible =3D "nvidia,tegra186-hsp";
+> > @@ -187,6 +240,12 @@ examples:
+> > =20
+> >      bpmp {
+> >          compatible =3D "nvidia,tegra186-bpmp";
+> > +        interconnects =3D <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPR>,
+> > +                        <&mc TEGRA186_MEMORY_CLIENT_BPMPW &emc>,
+> > +                        <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPDMAR>,
+> > +                        <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &emc>;
+> > +        interconnect-names =3D "dma-mem", "dma-mem", "dma-mem", "dma-m=
+em";
+> > +
+> >          iommus =3D <&smmu TEGRA186_SID_BPMP>;
+> >          mboxes =3D <&hsp_top0 TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MAST=
+ER_BPMP>;
+> >          shmem =3D <&cpu_bpmp_tx &cpu_bpmp_rx>;
+> >=20
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4lwdsACgkQ3SOs138+
+s6Hdgg/+PAPsRJzrmRnjHtctC9WCw3qssBToHFiLFo2ggkiMJ/C7xDYSV6oP3Ntr
+45st7Nu+TjphUW4BmDROUA+0YN4pUikmwmiCwm4Xr0xx2Og4pYc1SjChC3+/Cj2+
+IO3bPBlLzorH36dL2vNiEF8ZemsdCHSBQKdJQ8tohuTYEEf/OcXvPbXo8F9/WMJj
+REfgg4sJaGFt+1O7ESJhAvSQuLQ+8mva5Nm7CVqbi2tYb5w1Tzo6seM7mBtmUWdL
+jDr5yYC4pqJcJF0gZ0Y7Bz6IIhwepKfer2LQDW87/8cy7/kAUEezI7Es9SEq0t6G
+SjMAU39bSNe9jHpCg9hKu1NIQC4W6ItZlZG42nkxgLpLPlIddzArRdb+IhSV4xFb
+bpvOLEa+4dktjtUHZ2S2dJMSNKb3X13MAQ031eYRHC8eZJeA4+fCVGlGrTUygt4W
+3CMOrx6Kk2z+Qj4OXZWbvK1Xo1XetN50BEfewrQG8HI4Pd2IDskRHXdpCkCMMVee
+B8vzmRQf5lNoaeQsy6T+zr3SMd+HXBYxNgDOpO3D9NFlpV4jPu0I4PJIQMLpde87
+cl1PS0uh5Bq+Owpda22WIqSUczCLIFNjegUxzbgZQULa76vOXiOTr3iAOVNUwk1X
+18Caf9PG1LWpiWGoxdFFOQt/fRRgIHnhHY6flotcZcjqbtrcouM=
+=GEA6
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
