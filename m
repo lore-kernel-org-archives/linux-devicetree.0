@@ -2,233 +2,96 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C20C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 16:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73E7C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 16:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B771624653
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 16:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="DQeNOKDj"
+	by mail.kernel.org (Postfix) with ESMTP id AA3A5217F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 16:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgATQBC (ORCPT
+        id S1729108AbgATQNA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:01:02 -0500
-Received: from vern.gendns.com ([98.142.107.122]:42808 "EHLO vern.gendns.com"
+        Mon, 20 Jan 2020 11:13:00 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:56100 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgATQBB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:01:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oetEg5fj/8NVUMsSSQOrxfgNlGM/ZZ/jjm0sZwoCSO4=; b=DQeNOKDjz9g1nGoGOuDajUmD3+
-        gMdqW1mQqsYHpytC4feb++yYn3XPWDQOPhX/3gxTwp5Q2iLqiyWAsh/vc5Bc4ORx80wVg71E+QB0L
-        yeZ9/YLAkahXl5poGpuT2uHekfU0KXec2cPJibm5lzX4IjfZyymJbkrpwhoI8kSWMUYy7nwtj23iy
-        iTsPdyg8A4qH3XvK2wkOiaCOn3mCqBHr1BA7unu+NQjuJaGgegtgpn4r0AqkGMgMO5wyGG9EQNy9m
-        NZTh0FAic/prdQteKCb3voaRDHyLkZfb7FLAmZLai4LQVZbEDJHQvNrxSNnbdFS9dRHTTT7uyhFDP
-        sXvIvaUA==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:49460 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1itZTv-0006Fx-E5; Mon, 20 Jan 2020 11:00:51 -0500
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: sitronix,st7735r: Convert to
- DT schema
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200115124548.3951-1-geert+renesas@glider.be>
- <20200115124548.3951-2-geert+renesas@glider.be>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <ba21d2c8-ccc6-2704-fa1f-d28239700547@lechnology.com>
-Date:   Mon, 20 Jan 2020 10:00:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727285AbgATQNA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:13:00 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 58995FB03;
+        Mon, 20 Jan 2020 17:12:57 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id SaOQFEdPtkQE; Mon, 20 Jan 2020 17:12:56 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id E324F404AA; Mon, 20 Jan 2020 17:12:55 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: imx8mq-librem5-devkit: Add proximity sensor
+Date:   Mon, 20 Jan 2020 17:12:55 +0100
+Message-Id: <e0434a87d8d46211a076c8a7c75c9f47b9e963c7.1579536647.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20200115124548.3951-2-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/15/20 6:45 AM, Geert Uytterhoeven wrote:
-> Convert the DT binding documentation for Sitronix ST7735R displays to DT
-> schema.
-> 
-> Add a reference to the Adafruit 1.8" LCD while at it.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->    - New.
-> ---
->   .../bindings/display/sitronix,st7735r.txt     | 35 ----------
->   .../bindings/display/sitronix,st7735r.yaml    | 65 +++++++++++++++++++
->   MAINTAINERS                                   |  2 +-
->   3 files changed, 66 insertions(+), 36 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.txt
->   create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-> deleted file mode 100644
-> index cd5c7186890a2be7..0000000000000000
-> --- a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-> +++ /dev/null
-> @@ -1,35 +0,0 @@
-> -Sitronix ST7735R display panels
-> -
-> -This binding is for display panels using a Sitronix ST7735R controller in SPI
-> -mode.
-> -
-> -Required properties:
-> -- compatible:	"jianda,jd-t18003-t01", "sitronix,st7735r"
-> -- dc-gpios:	Display data/command selection (D/CX)
-> -- reset-gpios:	Reset signal (RSTX)
-> -
-> -The node for this driver must be a child node of a SPI controller, hence
-> -all mandatory properties described in ../spi/spi-bus.txt must be specified.
-> -
-> -Optional properties:
-> -- rotation:	panel rotation in degrees counter clockwise (0,90,180,270)
-> -- backlight:	phandle of the backlight device attached to the panel
-> -
-> -Example:
-> -
-> -	backlight: backlight {
-> -		compatible = "gpio-backlight";
-> -		gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
-> -	};
-> -
-> -	...
-> -
-> -	display@0{
-> -		compatible = "jianda,jd-t18003-t01", "sitronix,st7735r";
-> -		reg = <0>;
-> -		spi-max-frequency = <32000000>;
-> -		dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
-> -		reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
-> -		rotation = <270>;
-> -		backlight = &backlight;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> new file mode 100644
-> index 0000000000000000..21bccc91f74255e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/sitronix,st7735r.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sitronix ST7735R Display Panels Device Tree Bindings
-> +
-> +maintainers:
-> +  - David Lechner <david@lechnology.com>
-> +
-> +description:
-> +  This binding is for display panels using a Sitronix ST7735R controller in
-> +  SPI mode.
-> +
-> +allOf:
-> +  - $ref: panel/panel-common.yaml#
+Support for the vcnl4040 landet a while ago so add it and the
+corresponding pinmux. The irq is currently unused in the driver so don't
+configure it yet.
 
-not all of these properties are applicable.
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ .../boot/dts/freescale/imx8mq-librem5-devkit.dts     | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - description:
-> +          Adafruit 1.8" 160x128 Color TFT LCD (Product ID 358 or 618)
-> +        items:
-> +          - enum:
-> +              - jianda,jd-t18003-t01
-> +          - const: sitronix,st7735r
-> +
-> +  spi-max-frequency:
-> +    maximum: 32000000
-> +
-> +  dc-gpios:
-> +    maxItems: 1
-> +    description: Display data/command selection (D/CX)
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - dc-gpios
-> +  - reset-gpios
-
-Missing optional rotation and backlight properties.
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    backlight: backlight {
-> +            compatible = "gpio-backlight";
-> +            gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
-> +    };
-> +
-> +    spi {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            display@0{
-> +                    compatible = "jianda,jd-t18003-t01", "sitronix,st7735r";
-> +                    reg = <0>;
-> +                    spi-max-frequency = <32000000>;
-> +                    dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
-> +                    reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
-> +                    rotation = <270>;
-> +            };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ea8262509bdd21ac..3007f83bd504194a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5382,7 +5382,7 @@ M:	David Lechner <david@lechnology.com>
->   T:	git git://anongit.freedesktop.org/drm/drm-misc
->   S:	Maintained
->   F:	drivers/gpu/drm/tiny/st7735r.c
-> -F:	Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-> +F:	Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
->   
->   DRM DRIVER FOR SONY ACX424AKP PANELS
->   M:	Linus Walleij <linus.walleij@linaro.org>
-> 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index c8627f6614ae..b87c2e39b16c 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -448,6 +448,12 @@
+ 		VDDIO-supply = <&reg_1v8_p>;
+ 	};
+ 
++	prox@60 {
++		compatible = "vishay,vcnl4040";
++		reg = <0x60>;
++		pinctrl-0 = <&pinctrl_prox>;
++	};
++
+ 	accel-gyro@6a {
+ 		compatible = "st,lsm9ds1-imu";
+ 		reg = <0x6a>;
+@@ -550,6 +556,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_prox: proxgrp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x80  /* prox intr */
++		>;
++	};
++
+ 	pinctrl_pwr_en: pwrengrp {
+ 		fsl,pins = <
+ 			MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8	0x06
+-- 
+2.23.0
 
