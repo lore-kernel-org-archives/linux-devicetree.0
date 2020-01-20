@@ -2,243 +2,298 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598CCC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33924C35240
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314872253D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="A72DNGKn"
+	by mail.kernel.org (Postfix) with ESMTP id 08B5D22527
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgATOxS (ORCPT
+        id S1728978AbgATOxt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:53:18 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:46673 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATOxS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 09:53:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579531997; x=1611067997;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=057jgfK1HdronAF1AHKfXFpD2PIVIcm1QUPFLoi0iqc=;
-  b=A72DNGKn4pEcv1UXWPPakeqQ/R4akDDRw2wHe/XZdkXBw90y2uwEFOW6
-   /Hvtr1olP6j93qPncAdSEXHSY2TJ1srl4420sEY6jZTuPTG6yTRRkVN8L
-   7jkfthOREw5IgJm4Pf0bGggVreJ1QIB63JDw0nejyBIz++05qtea6gM1X
-   c=;
-IronPort-SDR: PMEgJVRDn9OMWdmQHZhh3XlVJbV78T+FBt1EyNPD+N60TezKY0x8CEH6pbDdZ+qv3Wljdzjqeq
- hVzcI+vpWa5g==
-X-IronPort-AV: E=Sophos;i="5.70,342,1574121600"; 
-   d="scan'208";a="11380116"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 20 Jan 2020 14:53:04 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id ACA8CA2350;
-        Mon, 20 Jan 2020 14:53:02 +0000 (UTC)
-Received: from EX13D21UWB004.ant.amazon.com (10.43.161.221) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 20 Jan 2020 14:53:02 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D21UWB004.ant.amazon.com (10.43.161.221) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 20 Jan 2020 14:53:02 +0000
-Received: from [10.95.92.21] (10.95.92.21) by mail-relay.amazon.com
- (10.43.161.249) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Mon, 20 Jan 2020 14:52:56 +0000
-Subject: Re: [PATCH v7 3/3] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-To:     James Morse <james.morse@arm.com>
-CC:     <bp@alien8.de>, <mchehab@kernel.org>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <linus.walleij@linaro.org>, <daniel@iogearbox.net>,
-        <paulmck@linux.ibm.com>, <Sudeep.Holla@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
-        <jonnyc@amazon.com>, <hanochu@amazon.com>
-References: <20191015120927.10470-1-hhhawa@amazon.com>
- <20191015120927.10470-4-hhhawa@amazon.com>
- <a6c7d925-22fb-4324-ce12-662b97976e61@arm.com>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <ce51b629-a9b9-9848-8cbb-620d8a6549c3@amazon.com>
-Date:   Mon, 20 Jan 2020 16:52:54 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 20 Jan 2020 09:53:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:33194 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbgATOxt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jan 2020 09:53:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55DBCFEC;
+        Mon, 20 Jan 2020 06:53:48 -0800 (PST)
+Received: from [10.1.194.52] (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CEDB3F52E;
+        Mon, 20 Jan 2020 06:53:46 -0800 (PST)
+Subject: Re: [PATCH v3 5/7] drm/panfrost: Add support for multiple power
+ domains
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200114071602.47627-1-drinkcat@chromium.org>
+ <20200114071602.47627-6-drinkcat@chromium.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <8b300f30-aa6d-89ee-77e3-271e3fa013f8@arm.com>
+Date:   Mon, 20 Jan 2020 14:53:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <a6c7d925-22fb-4324-ce12-662b97976e61@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200114071602.47627-6-drinkcat@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 14/01/2020 07:16, Nicolas Boichat wrote:
+> When there is a single power domain per device, the core will
+> ensure the power domain is switched on (so it is technically
+> equivalent to having not power domain specified at all).
+> 
+> However, when there are multiple domains, as in MT8183 Bifrost
+> GPU, we need to handle them in driver code.
+> 
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> 
+> ---
+> 
+> The downstream driver we use on chromeos-4.19 currently uses 2
+> additional devices in device tree to accomodate for this [1], but
+> I believe this solution is cleaner.
+> 
+> [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+> 
+> v3:
+>  - Use the compatible matching data to specify the number of power
+>    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
+>    as the core will handle these 2 cases in the exact same way
+>    (automatically, without driver intervention), and there should
+>    be no adverse consequence in this case (the concern is about
+>    switching on only some power domains and not others).
+> 
+>  drivers/gpu/drm/panfrost/panfrost_device.c | 95 ++++++++++++++++++++--
+>  drivers/gpu/drm/panfrost/panfrost_device.h |  9 ++
+>  drivers/gpu/drm/panfrost/panfrost_drv.c    |  1 +
+>  3 files changed, 97 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> index c30e0a3772a4f57..7c9766f76cc7689 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/reset.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/regulator/consumer.h>
+>  
+>  #include "panfrost_device.h"
+> @@ -119,6 +120,75 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+>  			pfdev->regulators);
+>  }
+>  
+> +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> +		if (!pfdev->pm_domain_devs[i])
+> +			break;
+> +
+> +		if (pfdev->pm_domain_links[i])
+> +			device_link_del(pfdev->pm_domain_links[i]);
+> +
+> +		dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> +	}
+> +}
+> +
+> +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> +{
+> +	int err;
+> +	int i, num_domains;
+> +
+> +	num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> +						 "power-domains",
+> +						 "#power-domain-cells");
+> +
+> +	/*
+> +	 * Single domain is handled by the core, and, if only a single power
+> +	 * the power domain is requested, the property is optional.
+> +	 */
+> +	if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> +		return 0;
+> +
+> +	if (num_domains != pfdev->comp->num_pm_domains) {
+> +		dev_err(pfdev->dev,
+> +			"Incorrect number of power domains: %d provided, %d needed\n",
+> +			num_domains, pfdev->comp->num_pm_domains);
+> +		return -EINVAL;
+> +	}
+> +
+> +	BUG_ON(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs));
+> +
+> +	for (i = 0; i < num_domains; i++) {
+> +		pfdev->pm_domain_devs[i] =
+> +			dev_pm_domain_attach_by_id(pfdev->dev, i);
+> +		if (IS_ERR(pfdev->pm_domain_devs[i])) {
+> +			err = PTR_ERR(pfdev->pm_domain_devs[i]);
+> +			pfdev->pm_domain_devs[i] = NULL;
+> +			dev_err(pfdev->dev,
+> +				"failed to get pm-domain %d: %d\n", i, err);
+> +			goto err;
+> +		}
+> +
+> +		pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> +				pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> +				DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> +		if (!pfdev->pm_domain_links[i]) {
+> +			dev_err(pfdev->pm_domain_devs[i],
+> +				"adding device link failed!\n");
+> +			err = -ENODEV;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	panfrost_pm_domain_fini(pfdev);
+> +	return err;
+> +}
+> +
+>  int panfrost_device_init(struct panfrost_device *pfdev)
+>  {
+>  	int err;
+> @@ -149,37 +219,45 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+>  		goto err_out1;
+>  	}
+>  
+> +	err = panfrost_pm_domain_init(pfdev);
+> +	if (err) {
+> +		dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
 
+No need for this print - panfrost_pm_domain_init() will output a (more
+appropriate) error message on failure.
 
-On 1/15/2020 8:50 PM, James Morse wrote:
-> Hi Hanna,
-> 
-> On 15/10/2019 13:09, Hanna Hawa wrote:
->> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
->> report L2 errors.
-> 
-> 
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 7887a62dc843..0eabcfcf91a9 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -748,6 +748,11 @@ M:	Hanna Hawa <hhhawa@amazon.com>
->>   S:	Maintained
->>   F:	drivers/edac/al_l1_edac.c
->>   
->> +AMAZON ANNAPURNA LABS L2 EDAC
->> +M:	Hanna Hawa <hhhawa@amazon.com>
->> +S:	Maintained
->> +F:	drivers/edac/al_l2_edac.c
-> 
-> (Why not add the file to the previous section? All this does is come up with an email
-> address based on the file)
+> +		goto err_out2;
+> +	}
+> +
+>  	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
+>  	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
+>  	if (IS_ERR(pfdev->iomem)) {
+>  		dev_err(pfdev->dev, "failed to ioremap iomem\n");
+>  		err = PTR_ERR(pfdev->iomem);
+> -		goto err_out2;
+> +		goto err_out3;
+>  	}
+>  
+>  	err = panfrost_gpu_init(pfdev);
+>  	if (err)
+> -		goto err_out2;
+> +		goto err_out3;
+>  
+>  	err = panfrost_mmu_init(pfdev);
+>  	if (err)
+> -		goto err_out3;
+> +		goto err_out4;
+>  
+>  	err = panfrost_job_init(pfdev);
+>  	if (err)
+> -		goto err_out4;
+> +		goto err_out5;
+>  
+>  	err = panfrost_perfcnt_init(pfdev);
+>  	if (err)
+> -		goto err_out5;
+> +		goto err_out6;
+>  
+>  	return 0;
+> -err_out5:
+> +err_out6:
+>  	panfrost_job_fini(pfdev);
+> -err_out4:
+> +err_out5:
+>  	panfrost_mmu_fini(pfdev);
+> -err_out3:
+> +err_out4:
+>  	panfrost_gpu_fini(pfdev);
+> +err_out3:
+> +	panfrost_pm_domain_fini(pfdev);
+>  err_out2:
+>  	panfrost_reset_fini(pfdev);
+>  err_out1:
+> @@ -196,6 +274,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
+>  	panfrost_mmu_fini(pfdev);
+>  	panfrost_gpu_fini(pfdev);
+>  	panfrost_reset_fini(pfdev);
+> +	panfrost_pm_domain_fini(pfdev);
 
-Added new section as this separated driver.
+NIT: The reverse of the construction order would be to do this before
+panfrost_reset_fini().
 
-> 
-> 
->> diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
->> new file mode 100644
->> index 000000000000..156610c85591
->> --- /dev/null
->> +++ b/drivers/edac/al_l2_edac.c
->> @@ -0,0 +1,251 @@
->> +static int al_l2_edac_probe(struct platform_device *pdev)
->> +{
-> 
->> +	for_each_possible_cpu(i) {
->> +		struct device_node *cpu;
->> +		struct device_node *cpu_cache;
->> +		struct al_l2_cache *l2_cache;
->> +		bool found = false;
->> +
->> +		cpu = of_get_cpu_node(i, NULL);
->> +		if (!cpu)
->> +			continue;
->> +
->> +		cpu_cache = of_find_next_cache_node(cpu);
->> +		list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node) {
->> +			if (l2_cache->of_node == cpu_cache) {
->> +				found = true;
->> +				break;
->> +			}
->> +		}
->> +
->> +		if (found) {
->> +			cpumask_set_cpu(i, &l2_cache->cluster_cpus);
-> 
-> 			of_node_put(cpu_cache); ?
-> 
-> (I can see why you might keep the reference in the else block)
-
-Will be added in next PS.
-
-> 
-> 
->> +		} else {
->> +			l2_cache = devm_kzalloc(dev, sizeof(*l2_cache),
->> +						GFP_KERNEL);
->> +			l2_cache->of_node = cpu_cache;
->> +			list_add(&l2_cache->list_node, &al_l2->l2_caches);
->> +			cpumask_set_cpu(i, &l2_cache->cluster_cpus);
->> +		}
->> +
->> +		of_node_put(cpu);
->> +	}
->> +
->> +	if (list_empty(&al_l2->l2_caches)) {
->> +		dev_err(dev, "L2 Cache list is empty for EDAC device\n");
->> +		ret = -EINVAL;
->> +		goto err;
->> +	}
-> 
-> You are doing this at probe time to create a static list of which CPUs map onto the L2
-> caches. cacheinfo does something very similar, but it looks like you can't use it as its
-> only populated for online CPUs, and you'd need to walk multiple CPUs cacheinfo leaves to
-> find the same information. The alternative is more complicated.
-
-> 
-> 
->> +	ret = edac_device_add_device(edac_dev);
->> +	if (ret)
-> 
-> Any references held in the al_l2->l2_caches list leak here.
-> 
-> 
->> +		goto err;
->> +
->> +	return 0;
->> +
->> +err:
->> +	dev_err(dev, "Failed to add L2 edac device (%d)\n", ret);
->> +	edac_device_free_ctl_info(edac_dev);
->> +
->> +	return ret;
->> +}
-> 
-> 
->> +static int al_l2_edac_remove(struct platform_device *pdev)
->> +{
->> +	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-> 
-> Do you need to roll over the al_l2->l2_caches list to of_node_put() the l2_cache's ?
-
-will add loop after for_each_possible_cpu() to call of_node_put() on 
-each l2_cache.
-
-> 
-> 
->> +	edac_device_del_device(edac_dev->dev);
->> +	edac_device_free_ctl_info(edac_dev);
->> +
->> +	return 0;
->> +}
-> 
-> [..]
-> 
->> +static const struct of_device_id al_l2_edac_of_match[] = {
->> +	{ .compatible = "al,alpine-v2" },
->> +	{ .compatible = "amazon,alpine-v3" },
->> +	{}
->> +};
-> 
-> Same comment on these being machine compatibles and what property that applies to.
-
-Fix comments from your review from L1 driver.
-
-> 
-> The code to match the platform and create the platform_device is identical, is there any
-> way it can be shared?
-> 
-> I'm guessing the two-files is because these can be built as independent modules. Would
-> anyone ever have one, but not the other? The L1 support is optional, but you've listed the
-> same set of platforms in both cases here, so do we need to support one but not the other
-> today?
-
-It's not related to that platform will have one, but not the other. The 
-two drivers are not related to each other, I agree with you that there 
-is identical code in matching platform. But this is not good reason to 
-combine the two drivers.
+Otherwise this LGTM.
 
 Thanks,
-Hanna
+Steve
 
+>  	panfrost_regulator_fini(pfdev);
+>  	panfrost_clk_fini(pfdev);
+>  }
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+> index 021f063ffb3747f..143eab57180a2e1 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> @@ -21,6 +21,7 @@ struct panfrost_perfcnt;
+>  
+>  #define NUM_JOB_SLOTS 3
+>  #define MAX_REGULATORS 2
+> +#define MAX_PM_DOMAINS 3
+>  
+>  struct panfrost_features {
+>  	u16 id;
+> @@ -61,6 +62,11 @@ struct panfrost_compatible {
+>  	/* Supplies count and names. */
+>  	int num_supplies;
+>  	const char * const *supply_names;
+> +	/*
+> +	 * Number of power domains required, note that values 0 and 1 are
+> +	 * handled identically, as only values > 1 need special handling.
+> +	 */
+> +	int num_pm_domains;
+>  };
+>  
+>  struct panfrost_device {
+> @@ -73,6 +79,9 @@ struct panfrost_device {
+>  	struct clk *bus_clock;
+>  	struct regulator_bulk_data regulators[MAX_REGULATORS];
+>  	struct reset_control *rstc;
+> +	/* pm_domains for devices with more than one. */
+> +	struct device *pm_domain_devs[MAX_PM_DOMAINS];
+> +	struct device_link *pm_domain_links[MAX_PM_DOMAINS];
+>  
+>  	struct panfrost_features features;
+>  	const struct panfrost_compatible* comp;
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> index db3563b80150c9d..42b87e29e605149 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> @@ -589,6 +589,7 @@ const char * const default_supplies[] = { "mali" };
+>  static const struct panfrost_compatible default_data = {
+>  	.num_supplies = ARRAY_SIZE(default_supplies),
+>  	.supply_names = default_supplies,
+> +	.num_pm_domains = 1, /* optional */
+>  };
+>  
+>  static const struct of_device_id dt_match[] = {
 > 
-> 
-> Thanks,
-> 
-> James
-> 
+
