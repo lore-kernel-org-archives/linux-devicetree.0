@@ -2,225 +2,166 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E11C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 11:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE33C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 12:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08FF207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 11:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709CB208E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 12:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgATLsz (ORCPT
+        id S1726999AbgATMOz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:48:55 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:53796 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726642AbgATLsz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:48:55 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 20 Jan 2020 07:14:55 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53928 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgATMOy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 07:14:54 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id C7E013C00C5;
+        Mon, 20 Jan 2020 13:14:50 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Bta2hz3l_WGv; Mon, 20 Jan 2020 13:14:42 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id A0B84634C86;
-        Mon, 20 Jan 2020 13:48:42 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1itVXu-0000XL-KJ; Mon, 20 Jan 2020 13:48:42 +0200
-Date:   Mon, 20 Jan 2020 13:48:42 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        peter.griffin@linaro.org, dave.stevenson@raspberrypi.com,
-        ezequiel@collabora.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
- binding
-Message-ID: <20200120114842.GF856@valkosipuli.retiisi.org.uk>
-References: <20200120081558.25258-1-andrey.konovalov@linaro.org>
- <20200120081558.25258-2-andrey.konovalov@linaro.org>
- <c3c8c2a7-d21a-6e2d-f4ec-e62cfac1d5d6@linaro.org>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id AC1BB3C04C1;
+        Mon, 20 Jan 2020 13:14:42 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 20 Jan
+ 2020 13:14:42 +0100
+Date:   Mon, 20 Jan 2020 13:14:39 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v3 0/7] gpio: Add GPIO Aggregator/Repeater
+Message-ID: <20200120121439.GA24951@lxhi-065.adit-jv.com>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20200118014632.GA14644@lxhi-065.adit-jv.com>
+ <CAMuHMdUUc17n0TxOrtQNby+ZiHDpz-aEh-ncnkz50vcwQe6z6w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <c3c8c2a7-d21a-6e2d-f4ec-e62cfac1d5d6@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdUUc17n0TxOrtQNby+ZiHDpz-aEh-ncnkz50vcwQe6z6w@mail.gmail.com>
+X-Originating-IP: [10.72.93.66]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrey,
+Hi Geert,
 
-On Mon, Jan 20, 2020 at 02:32:16PM +0300, Andrey Konovalov wrote:
-> v3 of this patch got "Reviewed-by" from Rob Herring.
-> But unfortunately, as one more property had to be added afterwards, my understanding
-> is that that "Reviewed-by" doesn't apply to v4.
+On Mon, Jan 20, 2020 at 10:33:53AM +0100, Geert Uytterhoeven wrote:
+> On Sat, Jan 18, 2020 at 2:46 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> > The only unexpected thing is seeing below messages (where gpiochip99 and
+> > gpiochip22 are inexisting gpiochip names, mistakenly provided on command
+> > line prior to passing the correct name):
+> >
+> > root@rcar-gen3:~# echo gpiochip6 12-13 > /sys/bus/platform/drivers/gpio-aggregator/new_device
+> > [  915.572905] gpio-aggregator gpio-aggregator.0: cannot find GPIO chip gpiochip99, deferring
+> > [  915.584224] gpio-aggregator gpio-aggregator.2: cannot find GPIO chip gpiochip99, deferring
+> > [  915.865281] gpio-aggregator gpio-aggregator.29: cannot find GPIO chip gpiochip22, deferring
+> >
+> > Obviously, in the above case, due to a typo in the names, the gpio
+> > chips will never be found, no matter how long gpio-aggregator defers
+> 
+> Indeed, that is expected behavior: you have created platform devices
+> referring to resources that are not available.
 
-I assumed that Rob's Reviewed-by: applies also to v4 as adding the link
-frequency is a small change, and also because the link-frequency property
-is also present in pretty much all other recently added camera sensor DT
-bindings (apart from the one that only supports a single frequency).
+Got it. Sounds reasonable to me.
 
 > 
-> Thanks,
-> Andrey
+> > their probing. Unfortunately, the driver will continuously emit those
+> > messages, upon each successfully created/aggregated gpiochip. I built
 > 
-> On 20.01.2020 11:15, Andrey Konovalov wrote:
-> > Add YAML device tree binding for IMX219 CMOS image sensor, and
-> > the relevant MAINTAINERS entries.
-> > 
-> > Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> > ---
-> >   .../devicetree/bindings/media/i2c/imx219.yaml | 114 ++++++++++++++++++
-> >   MAINTAINERS                                   |   8 ++
-> >   2 files changed, 122 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> > new file mode 100644
-> > index 000000000000..32d6b693274f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> > @@ -0,0 +1,114 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
-> > +
-> > +maintainers:
-> > +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
-> > +
-> > +description: |-
-> > +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
-> > +  with an active array size of 3280H x 2464V. It is programmable through
-> > +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
-> > +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
-> > +  4 data lanes.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: sony,imx219
-> > +
-> > +  reg:
-> > +    description: I2C device address
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  VDIG-supply:
-> > +    description:
-> > +      Digital I/O voltage supply, 1.8 volts
-> > +
-> > +  VANA-supply:
-> > +    description:
-> > +      Analog voltage supply, 2.8 volts
-> > +
-> > +  VDDL-supply:
-> > +    description:
-> > +      Digital core voltage supply, 1.2 volts
-> > +
-> > +  reset-gpios:
-> > +    description: |-
-> > +      Reference to the GPIO connected to the xclr pin, if any.
-> > +      Must be released (set high) after all supplies are applied.
-> > +
-> > +  # See ../video-interfaces.txt for more details
-> > +  port:
-> > +    type: object
-> > +    properties:
-> > +      endpoint:
-> > +        type: object
-> > +        properties:
-> > +          data-lanes:
-> > +            description: |-
-> > +              The sensor supports either two-lane, or four-lane operation.
-> > +              If this property is omitted four-lane operation is assumed.
-> > +              For two-lane operation the property must be set to <1 2>.
-> > +            items:
-> > +              - const: 1
-> > +              - const: 2
-> > +
-> > +          clock-noncontinuous:
-> > +            type: boolean
-> > +            description: |-
-> > +              MIPI CSI-2 clock is non-continuous if this property is present,
-> > +              otherwise it's continuous.
-> > +
-> > +          link-frequencies:
-> > +            allOf:
-> > +              - $ref: /schemas/types.yaml#/definitions/uint64-array
-> > +            description:
-> > +              Allowed data bus frequencies.
-> > +
-> > +        required:
-> > +          - link-frequencies
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - VANA-supply
-> > +  - VDIG-supply
-> > +  - VDDL-supply
-> > +  - port
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c0 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        imx219: sensor@10 {
-> > +            compatible = "sony,imx219";
-> > +            reg = <0x10>;
-> > +            clocks = <&imx219_clk>;
-> > +            VANA-supply = <&imx219_vana>;   /* 2.8v */
-> > +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
-> > +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
-> > +
-> > +            port {
-> > +                imx219_0: endpoint {
-> > +                    remote-endpoint = <&csi1_ep>;
-> > +                    data-lanes = <1 2>;
-> > +                    clock-noncontinuous;
-> > +                    link-frequencies = /bits/ 64 <456000000>;
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index cf6ccca6e61c..aae83699e146 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -15351,6 +15351,14 @@ S:	Maintained
-> >   F:	drivers/media/i2c/imx214.c
-> >   F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> > +SONY IMX219 SENSOR DRIVER
-> > +M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
-> > +L:	linux-media@vger.kernel.org
-> > +T:	git git://linuxtv.org/media_tree.git
-> > +S:	Maintained
-> > +F:	drivers/media/i2c/imx219.c
-> > +F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> > +
-> >   SONY IMX258 SENSOR DRIVER
-> >   M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-> >   L:	linux-media@vger.kernel.org
-> > 
+> That is expected behavior, too: every time the driver core manages to
+> bind a device to a driver, it will retry all previously deferred probes,
+> in the hope they can be satisfied by the just bound device.
+> 
+> Note that you can destroy these bogus devices, using e.g.
+> 
+>     # echo gpio-aggregator.0 > \
+>     /sys/bus/platform/drivers/gpio-aggregator/delete_device
+
+Yep, I can get rid of the bogus devices this way. Thanks!
+
+> 
+> > gpio-aggregator as a loadable module, if that's relevant.
+> 
+> Modular or non-modular shouldn't matter w.r.t. this behavior.
+> Although unloading the module should get rid of the cruft.
+
+Yes, indeed!
+
+> 
+> > Another comment is that, while the series _does_ allow specifying
+> > gpio lines in the DTS (this would require a common compatible string
+> > in gpio_aggregator_dt_ids[] and in the DTS node) and while those lines
+> > are indeed exposed to userspace, based on my testing, these same gpio
+> > lines are marked as "used/reserved" by the kernel. This means that
+> > operating on those gpio pins from userspace will not be possible.
+> > For instance, gpioget/gpioset return "Device or resource busy":
+> >
+> > gpioget: error reading GPIO values: Device or resource busy
+> > gpioset: error setting the GPIO line values: Device or resource busy
+> >
+> > I guess Harish will be unhappy about that, as his expectation was that
+> > upon merging gpio-aggregator with gpio-inverter, he will be able to
+> > describe GPIO polarity and names in DTS without "hogging" the pins.
+> > Perhaps this can be supplemented via an add-on patch later on?
+> 
+> When aggregating GPIO lines, the original GPIO lines are indeed marked
+> used/reserved, so you cannot use them from userspace.
+> However, you are expected to use them through the newly created virtual
+> gpiochip representing the aggregated GPIO lines.
+> 
+> You can try this using the "door" example in
+> Documentation/admin-guide/gpio/gpio-aggregator.rst, after replacing
+> gpio2 {19,20} by gpio6 {12,13} to suit your H3ULCB.
+
+Confirmed. The example works like a charm. One difference between
+the runtime-created and DTS-created gpiochips is the name:
+ - gpio-aggregator.<number>, for the ones created via sysfs
+ - <name-of-DTS-node>, for the ones created via DTS
+
+Seeing this behavior on my target, I believe the expectations of
+Harish should be met w/o any major limitations.
+
+> 
+> > For the whole series (leaving the above findings to your discretion):
+> >
+> > Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> > Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+The recent [v3] discussion actually applies to [v4], for which I did
+review and testing. Will relay the signatures to the latest version.
+
+Thank you very much.
 
 -- 
-Regards,
-
-Sakari Ailus
+Best Regards,
+Eugeniu
