@@ -2,124 +2,87 @@ Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530D5C33CAA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 18:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A4CC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 18:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CECB24676
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 18:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rnCEvDwo"
+	by mail.kernel.org (Postfix) with ESMTP id C5FF322314
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 18:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579545841;
+	bh=SqJSCOxFkJaU2tSYOqvJmmtqoiHyzngIPutpw684604=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P72o6oBECJDfUzN9XzEWSwJHGVMLkGeQNK0o50YbPdNYH2RNjnW1m1UgGVNWYHY69
+	 X/22I3UV5TVxD0oW3axiSV6M7r4FeeqnIhwa+Xjs7GQM2w28GLfMb5hws5AoxCVo4c
+	 v5fgpsOir6b50Ah9oroHawzqkTUphKQBuY4A/fDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgATS3G (ORCPT
+        id S1727018AbgATSoB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:29:06 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46145 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgATS3F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 13:29:05 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so446338wrl.13
-        for <devicetree@vger.kernel.org>; Mon, 20 Jan 2020 10:29:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yIHlrjvTOBvuMpFxI0UYD9+tFFNdXNguPvpgjUnqhD8=;
-        b=rnCEvDwoDApbJGuPbGXHyTmTfCOAtLcbDINEzjIPsBiL0I6zRdXgOBRf/u65dYl0BH
-         axtA40kBe/RmDUUzNbSTXzR2AdR8dIQbq29rU9iNmi39NtYEj7PBwxCMQLoUQtsLBlnu
-         GwpWj8s5B+zNDXG3qIyjkteGklth5fmsS+e54J1EpMMZ8RXmSUso3bry7fXmU3ara/Oh
-         +MOBBxJqON6SkNDK94PcyuUwFpNvMonXB8/5TF0OpHEH4TUHyxTRD5ryLQ6rbUqb76QV
-         PUUcsplJUyih4E0D/3avUFNyrChquEIyy+KGcwz5bYspkTqaSNj2YL2jC7SIguuhvkDM
-         Cr6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yIHlrjvTOBvuMpFxI0UYD9+tFFNdXNguPvpgjUnqhD8=;
-        b=PduyeIuFshj9V/nqmA5/UQqpILNuWLiexJ5356mP5UNMcyz4e/afzd43SGB1x22iDW
-         HXjTA9MtPaxCo5m7AGN6e6R2DXKNXi5DiBfrRC/xpOPU92lNG39P3atncQe1BGm8e9/+
-         fnt1seKTEqhT6J1tRp9Yf731YDqEwL6hjXqf8XM848FG7aY4j95WrEYnjv1pjVL2uCqv
-         mdC2nh+nloX6z6lc0h9rNNp6Yl5lOKDQYk/tBK/BOaLC+MDaSkyHh/LnjcrjaEMp3VJx
-         5kGLqoSGCl2xCr7+bpNQ4G5UlHn3VQkVvtqjkHuDfl4FH7o5THTJfRLJiqFQTU1Dceuf
-         NrOA==
-X-Gm-Message-State: APjAAAUNQxmykExpsOTriAbZPiqgJGPowJ9QcBUClzRNSg0eSqafcugo
-        oOVCJztFZUbvor5xTg9tBZeydA==
-X-Google-Smtp-Source: APXvYqxvQK4V8dMtd6ZtRxxVvbyJkdKcCSpZibN3HKJDILdQxrPgvQ7rilAQ8MjYiBi2J1DVEFmdkw==
-X-Received: by 2002:adf:e692:: with SMTP id r18mr779306wrm.413.1579544943325;
-        Mon, 20 Jan 2020 10:29:03 -0800 (PST)
-Received: from cheddar.halon.org.uk (cheddar.halon.org.uk. [93.93.131.118])
-        by smtp.gmail.com with ESMTPSA id z11sm50787522wrt.82.2020.01.20.10.29.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jan 2020 10:29:02 -0800 (PST)
-Received: from bsmtp by cheddar.halon.org.uk with local-bsmtp (Exim 4.89)
-        (envelope-from <steve.mcintyre@linaro.org>)
-        id 1itbnK-0003S9-8x; Mon, 20 Jan 2020 18:29:02 +0000
-Received: from stemci01 by c30-smcintyre.einval.org with local (Exim 4.92)
-        (envelope-from <steve.mcintyre@linaro.org>)
-        id 1itbn4-0001Zh-1f; Mon, 20 Jan 2020 18:28:46 +0000
-Date:   Mon, 20 Jan 2020 18:28:46 +0000
-From:   Steve McIntyre <steve.mcintyre@linaro.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-Message-ID: <20200120182837.GO3697@linaro.org>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
- <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
- <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
- <220e3aea-b273-417a-69c9-059236c888af@st.com>
- <a1233cd8-e73a-82d7-74bf-69109d1a0a07@gmail.com>
+        Mon, 20 Jan 2020 13:44:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:35706 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgATSoB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jan 2020 13:44:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF7F531B;
+        Mon, 20 Jan 2020 10:44:00 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E8013F68E;
+        Mon, 20 Jan 2020 10:44:00 -0800 (PST)
+Date:   Mon, 20 Jan 2020 18:43:58 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Wen Su <Wen.Su@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
+Subject: Re: [RESEND 1/4] dt-bindings: regulator: Add document for MT6359
+ regulator
+Message-ID: <20200120184358.GN6852@sirena.org.uk>
+References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
+ <1579506450-21830-2-git-send-email-Wen.Su@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oIlomvtVtXAVxSKT"
 Content-Disposition: inline
-In-Reply-To: <a1233cd8-e73a-82d7-74bf-69109d1a0a07@gmail.com>
-X-attached: none
+In-Reply-To: <1579506450-21830-2-git-send-email-Wen.Su@mediatek.com>
+X-Cookie: I invented skydiving in 1989!
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-wibble: sender_address steve.mcintyre@linaro.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Frank!
 
-Thanks for the link back to the previous discussion, it's very
-helpful.
+--oIlomvtVtXAVxSKT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Jan 20, 2020 at 10:14:22AM -0600, Frank Rowand wrote:
->On 1/20/20 4:56 AM, Alexandre Torgue wrote:
+On Mon, Jan 20, 2020 at 03:47:27PM +0800, Wen Su wrote:
 
-...
+> +- mt6359regulator: List of regulators provided by this controller. It is named
 
->> and the date). There are no "dtb versions", and "absolute/relative"
->> path which created concerns. One remaining concern is "reproducible
->
->Here is an example of the info from one of my builds:
->
->   From Linux 5.5.0-rc2-dirty by frowand the Mon Jan 20 09:50:58 CST 2020.
->
->The information 'Linux 5.5.0-rc2-dirty' is precisely what was most objected
->to in my proposal.
+Any great reason for not just calling this regulators like most other
+devices?
 
-ACK. :-( I'm surprised to see so much push-back on what looks like a
-simple piece of information here.
+--oIlomvtVtXAVxSKT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I've had users *specifically* asking for this kind of identification
-so that they can verify the version of the DTB they're using at
-runtime. Right now it can be a guessing game, which does not help
-people trying to debug problems.
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
--- 
-Steve McIntyre                                steve.mcintyre@linaro.org
-<http://www.linaro.org/> Linaro.org | Open source software for ARM SoCs
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4l9O0ACgkQJNaLcl1U
+h9CJ3Qf9F1Lz97+TNbVFwl3OCaMrrmSbjc2psD1Lqb+aFCX9c1c2JwLmvwJK4jf/
+YWvSq2TOjt8g/5poJO36dbSjBU7tlGGvIly8ZIMpZcb/GuN+P5TEj4HoLhDtTXLX
+vWhIS8j6d29tnV2TzqrrbQCoj42uvNtaE2CJjUeXXt1Hsifhf2DKKh5HZNGXGxEo
+IEfqgWrmb5NjwwjiZIkiIdgcXnbaWs4KxOe5dvTC9RjhMwlnWZve9t7ZazhoQCZk
+j77N3//8c21A2Iljh3NR70mS/izQMedpXjFZ49vpXbIBzZjpHoCFzKy2C7I5MCHr
+Nk4O2xvPd5ZU1NMffAGo4UEcXa4L0w==
+=ZKXN
+-----END PGP SIGNATURE-----
 
+--oIlomvtVtXAVxSKT--
