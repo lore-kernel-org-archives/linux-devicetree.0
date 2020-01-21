@@ -2,197 +2,95 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5ECC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392FDC33CAA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB0624125
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:57:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvs0k64W"
+	by mail.kernel.org (Postfix) with ESMTP id 1277F2465A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579629633;
+	bh=f63fWL0gfswfCgDyROI3UH+hAceNmDOuei+FtTK247s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DKt4XFFK0QdY2WCdnwj+VmRZoadWlJj5anbgazCl0sTJSM2RsrkIaRK9APAQtPEOI
+	 V0jqkv6mOmxIzHOC/nkc8Y3fucGnSHT11dGZCs0Pfl2JIhXggYND1TpTbw/Xpm+hcm
+	 dXLiTlC30jznT9JI1PGiWI5lImWB0tzlCC7hdvVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgAUR5n (ORCPT
+        id S1729180AbgAUSAc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:57:43 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34796 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAUR5n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 12:57:43 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l136so3437057oig.1;
-        Tue, 21 Jan 2020 09:57:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mp6DdFVSXVePI6iSGCnPMxvllFc7taA3faXPCTrJyOk=;
-        b=fvs0k64WTpLPoEYSU10yB4vhu1oKNCS3z851fAJBpMS31H71pFpdt95LE6mt0lodMh
-         Jdqv99H4gGi4rcE1ufxinz/IjL1qBRzTshBYn4yImdugBHqsI/JvBDKbrLNnszNs8xDQ
-         7CACHghR7TC+u1H1Yz57CoWfMmQiueT0PCEvJJHkVw72rFCT5yBklHSpu+SqGcn8vxNN
-         8/lDvlGdM44tQFfDAWN260vjs6rXfoO5JpDNlqIuhvQJWCGbaCFHPIxVhRtMpVzJM3ye
-         NPI62fQL1BoPCFs8rgxB6F9lcQFjMQlGgM4h7Y0zL2uDpQAFC7BdMYhoTEx8/xAwnt7p
-         C3Pw==
+        Tue, 21 Jan 2020 13:00:32 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44903 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgAUSAc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 13:00:32 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so3396803oia.11;
+        Tue, 21 Jan 2020 10:00:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mp6DdFVSXVePI6iSGCnPMxvllFc7taA3faXPCTrJyOk=;
-        b=hfQGcjjWghvA35CTt3kKlehWLtCMqUhn7rxmgEig062Hd0y6yyO87TaC8hZxeDmnEL
-         Ql+2l5/ny9wMgTZJzZtlfB16WhB3vV+5eybDi1ZKcuN5SjHLI+oQ1SJfrURq2Yp+ipE0
-         bdtkPns61LsupGBIFp3RKknA4NcqPiIJ7R/AxC453b+0Bpu/uRwlUJ12evAFAzCY20J3
-         0fzi2tf5SohtoUS4ckfwgLgC70a4ULFv0n1t6KE7GmVucFDv2a0zPjmv0TKy1MLAR5vE
-         hq7U+fRbCCbnlZXjrSXI39KKpHs3s5LsnXL+BumfcxnmlUbpU+V6BmOuczUy+STzNbGt
-         fdiQ==
-X-Gm-Message-State: APjAAAV185nsAcdawaUq0BRvHnviOLKoeSDXrYqndt35QKN+GTV39YYb
-        pe8E6BsGnv3kXQ4FUiimagx8mmY2VoJzfWS4cHw=
-X-Google-Smtp-Source: APXvYqz8UqpqSR+lXSTxQDudfV5ATY6jfXYA7jHRsg0MIEWnG2M2frTp3v08cP9d/Qo4VBKw58GIa5lu+/MAx1m8ARs=
-X-Received: by 2002:aca:4ad5:: with SMTP id x204mr3773363oia.162.1579629462726;
- Tue, 21 Jan 2020 09:57:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SoGNpAAYd8DkgVCg9hs0SkAVcBA4n3ThwNDs+CIvNyk=;
+        b=t+ezNWbDC5rg1Nq+ExG1kGjBJcafOCVblECPp0CIoK76CAGe8Eh6yi0npLrNWcDY8+
+         oJgsLkJpwJLYOM7Y2B9fqbA4D1T651YKEeKvT1kkTUcM7uHyGHr8mxWz7VCQAT4ycPMb
+         wJA2MAVJE2Vx6fgsFnsp2yIKTbMzQCSaibqT7uqb12udcksObCTNCLpdHUbXH0C0bgQK
+         jFlavRPNv43pVt/j2Xx9eOAmYbjEdiqORWFA3XLLWtadvIhMsttw3BwrjE2Yzg1UnScY
+         0Jgni9ixVNGXfVn9Z4utvb9ekvJ5Y9Kov0+qUvab/TF6Duuse+eNdotZ/e6TKzFwsPJP
+         qN4Q==
+X-Gm-Message-State: APjAAAUYzYZkibj7sBeXwWMPsCoys4N5XcPDaKMugGvx+zMSiYcA4GHt
+        ghdPtagfJ29TPp6roAC2fg==
+X-Google-Smtp-Source: APXvYqxV/jfzDtlEscsmucJbThOSjtw0N+fNnRo93t5V2zWaWVxVOSgi81r7XVL1s+pZoFyxAk9rlg==
+X-Received: by 2002:aca:e146:: with SMTP id y67mr3739978oig.93.1579629631200;
+        Tue, 21 Jan 2020 10:00:31 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s83sm12139907oif.33.2020.01.21.10.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 10:00:30 -0800 (PST)
+Received: (nullmailer pid 362 invoked by uid 1000);
+        Tue, 21 Jan 2020 18:00:29 -0000
+Date:   Tue, 21 Jan 2020 12:00:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+Cc:     linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
+        Chris.Packham@alliedtelesis.co.nz, logan.shaw@alliedtelesis.co.nz
+Subject: Re: [PATCH v4 2/2] hwmon: (adt7475) Added attenuator bypass support
+Message-ID: <20200121180029.GA32498@bogus>
+References: <20200120001703.9927-1-logan.shaw@alliedtelesis.co.nz>
+ <20200120001703.9927-3-logan.shaw@alliedtelesis.co.nz>
 MIME-Version: 1.0
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 21 Jan 2020 17:57:18 +0000
-Message-ID: <CA+V-a8s1Jx8uZiSr0uiryS492EbFRoFg9QTwkosZsuyfRYp-3g@mail.gmail.com>
-Subject: Re: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-To:     Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120001703.9927-3-logan.shaw@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob/Kishon,
-
-On Wed, Jan 8, 2020 at 4:22 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->
-> This patch adds the bindings for the R-Car PCIe endpoint driver.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, 20 Jan 2020 13:17:03 +1300, Logan Shaw wrote:
+> 
+> Added a new file documenting the adt7475 devicetree and added the four
+> new properties to it.
+> 
+> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 > ---
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..99c2a1174463
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas R-Car PCIe Endpoint
-> +
-> +maintainers:
-> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: renesas,r8a774c0-pcie-ep
-> +      - const: renesas,rcar-gen3-pcie-ep
-> +
-> +  reg:
-> +    maxItems: 5
-> +
-> +  reg-names:
-> +    items:
-> +      - const: apb-base
-> +      - const: memory0
-> +      - const: memory1
-> +      - const: memory2
-> +      - const: memory3
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pcie
-> +
-> +  max-functions:
-> +    minimum: 1
-> +    maximum: 6
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - resets
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +  - max-functions
-> +
-apart from dt_binding_check error are we OK with dt bindings ?
+> ---
+>  .../devicetree/bindings/hwmon/adt7475.yaml    | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> 
 
-Cheers,
---Prabhakar
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
-> +    #include <dt-bindings/power/r8a774c0-sysc.h>
-> +
-> +     pcie0_ep: pcie-ep@fe000000 {
-> +            compatible = "renesas,r8a774c0-pcie-ep",
-> +                         "renesas,rcar-gen3-pcie-ep";
-> +            reg = <0 0xfe000000 0 0x80000>,
-> +                  <0x0 0xfe100000 0 0x100000>,
-> +                  <0x0 0xfe200000 0 0x200000>,
-> +                  <0x0 0x30000000 0 0x8000000>,
-> +                  <0x0 0x38000000 0 0x8000000>;
-> +            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-> +            resets = <&cpg 319>;
-> +            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> +            clocks = <&cpg CPG_MOD 319>;
-> +            clock-names = "pcie";
-> +            max-functions = /bits/ 8 <1>;
-> +    };
-> --
-> 2.20.1
->
+Documentation/devicetree/bindings/hwmon/adt7475.example.dts:19.11-24: Warning (reg_format): /example-0/hwmon@2e:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
+Documentation/devicetree/bindings/hwmon/adt7475.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/hwmon/adt7475.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/hwmon/adt7475.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+
+See https://patchwork.ozlabs.org/patch/1225573
+Please check and re-submit.
