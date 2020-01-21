@@ -4,88 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46038C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A26C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1844124653
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA03624653
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579645342;
-	bh=d97/IBZtg9IT3MppVd9usNpNw3epuKqXkUTb86TDSD4=;
+	s=default; t=1579645417;
+	bh=gNBVw5K0WvUkmLFqZTsRXICaht8UYbIu6sywnUufuJE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GKvYTQtZRq/351NAug7y8K+pfvUG44jA9oKrfAYfpnV1X5UHXW0Uj7nTxKbVYqHBU
-	 QvThejyKwhqG+n32gze/R7FAYwWotoiGkZtvHCkdAgnNaPgKUhmuI33iaCiKIxRoaC
-	 FtPXzykRLjGuiQjzVARB21TnzgPFQ0DFx1OrTDLs=
+	b=cf2FQpTkbpmk9uMLaFJAyyYVTuWKva2bRbl4gDvfrPIA3M2+u6Zy16fdhX3RsrSzG
+	 /vEGuKbP/3Sz/ejG45+/0zNQR/LhVNY07HVGuSUKvCw7F1si/jzwnNbF7brmWgIJ9N
+	 YPwdQd0t3Ae4CtxFdIZoNgvt28n/JYIEY2fRRESg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgAUWWV (ORCPT
+        id S1728842AbgAUWXh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:22:21 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34747 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbgAUWWV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:22:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l136so4229441oig.1;
-        Tue, 21 Jan 2020 14:22:20 -0800 (PST)
+        Tue, 21 Jan 2020 17:23:37 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43860 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgAUWXh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:23:37 -0500
+Received: by mail-ot1-f65.google.com with SMTP id p8so4459774oth.10;
+        Tue, 21 Jan 2020 14:23:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qQ3ESJiwe24A1xRRFdOQ68BgNu0jHa+2w0EJEUQi0CQ=;
-        b=eEpHeoG0e8ktLhNa1jtFubcJGrUpTDQDhtJZLV26rOaTa0kEEjuigzqAgHhO0AS4RP
-         Ai9AhDYgaeyeljOfRD3QXXOVYvgRpRNiitPYF0Lml1avoxJvz2aEYutnbG9rsXid37Uq
-         nRMEXTUhDdjHAcG3dhE9DRYxj8cUo2r0TjH+lM3SWkaadPfTkRlciHV+fxROhshFHQrW
-         HBKT7z87ALcqghsbRJPRO9awsbA4fIwCu6nnRSuy+H+kyO1+xmdB4E3gbQjmzzMME9Ik
-         sikglUHgT9Bhm69TPL/3pVfnHnPKxI2ynPm2IH5uZRGbxEtboayieJ9jjIuZe6lCEyDF
-         y9Hg==
-X-Gm-Message-State: APjAAAVC0KLq8ZyEgM37WGvVVfawf0Wy92df9t7uXbsrRcccYM1f/Xtr
-        dTE/hU7bwI/MeELYZBDpJg==
-X-Google-Smtp-Source: APXvYqxtTBp1m0NoVYXgYISnqaA0oCc25esO/7iHUU9wqcKpSAWyGjQXwz90q4B5a30iOmY5CpuOCw==
-X-Received: by 2002:a05:6808:1c6:: with SMTP id x6mr4687242oic.49.1579645340281;
-        Tue, 21 Jan 2020 14:22:20 -0800 (PST)
+        bh=zPYQbb1L3qIzvQ8N5DCuUQt8MKkG6UVa2pPHYKx0lMQ=;
+        b=P3wjMeRvHeVhTzlMDZdaH4kj3rCF4ntTouR7+RgWYbVJThbYZsSl2EzjCKPQzfWewp
+         PiPbgMXaWbBNK7UEO8/0Kmnz/TNzVVLXBLAvaXP5Nu5svxtt/gKlBLgRBLtD7wdnksyj
+         kUHPpJyWKrS2X+78SHWeWyK8Nbz7HAfi68kVjCQ2Fj/rnoTQraLOaeVdz8jpfPKM1maw
+         2TRis/tDyEW93uGXI1Jr7nE7iAaWt7eblzXfVV8WKNwQ4CsCAyWoWzsLRa7ze3WdJ4Az
+         JX8e/W8vROuufBlPS7fiJbysJtaOaW55XzgnRJyz8jWItvrvRwtSNiFJVw/6eNyM8dL5
+         86uw==
+X-Gm-Message-State: APjAAAWAMR3ZCWyffT+thwlG2n6MAi0E/wnzdC4kLhmtPiQxwz6Jk4nb
+        oJ/7XKkqlSi2cURi9quoWQ==
+X-Google-Smtp-Source: APXvYqx/4SnFjRHl3ZzxW5AWsiHfbDdKsmN1qLjNM8Tn8RWFSe4Ynq6be51tbcx1pyQKKkiVIuXkVw==
+X-Received: by 2002:a9d:518b:: with SMTP id y11mr4950524otg.349.1579645416152;
+        Tue, 21 Jan 2020 14:23:36 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m185sm12426354oia.26.2020.01.21.14.22.19
+        by smtp.gmail.com with ESMTPSA id e10sm13997385otj.59.2020.01.21.14.23.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 14:22:19 -0800 (PST)
-Received: (nullmailer pid 11864 invoked by uid 1000);
-        Tue, 21 Jan 2020 22:22:18 -0000
-Date:   Tue, 21 Jan 2020 16:22:18 -0600
+        Tue, 21 Jan 2020 14:23:35 -0800 (PST)
+Received: (nullmailer pid 13684 invoked by uid 1000);
+        Tue, 21 Jan 2020 22:23:34 -0000
+Date:   Tue, 21 Jan 2020 16:23:34 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     gregkh@linuxfoundation.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com,
-        erwan.leray@st.com
-Subject: Re: [PATCH 2/2] dt-bindings: serial: Convert STM32 UART to
- json-schema
-Message-ID: <20200121222218.GA9196@bogus>
-References: <20200114123329.3792-1-benjamin.gaignard@st.com>
- <20200114123329.3792-3-benjamin.gaignard@st.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        jarkko.sakkinen@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, masahisa.kojima@linaro.org,
+        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
+        peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PATCH v2 1/2] dt-bindings: tpm-tis-mmio: add compatible string
+ for SynQuacer TPM
+Message-ID: <20200121222334.GA13624@bogus>
+References: <20200114141647.109347-1-ardb@kernel.org>
+ <20200114141647.109347-2-ardb@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200114123329.3792-3-benjamin.gaignard@st.com>
+In-Reply-To: <20200114141647.109347-2-ardb@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 01:33:29PM +0100, Benjamin Gaignard wrote:
-> Convert STM32 UART bindings to json-schema.
+On Tue, 14 Jan 2020 15:16:46 +0100, Ard Biesheuvel wrote:
+> Add a compatible string for the SynQuacer TPM to the binding for a
+> TPM exposed via a memory mapped TIS frame. The MMIO window behaves
+> slightly differently on this hardware, so it requires its own
+> identifier.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 > ---
->  .../devicetree/bindings/serial/st,stm32-uart.yaml  | 80 ++++++++++++++++++++++
->  .../devicetree/bindings/serial/st,stm32-usart.txt  | 57 ---------------
->  2 files changed, 80 insertions(+), 57 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
->  delete mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+>  Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Looks fine. Will pick up when you respin patch 1.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
