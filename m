@@ -6,84 +6,86 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B97C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74689C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3CF206A2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BE72467F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBsH58uX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V3RDjf48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgAURLR (ORCPT
+        id S1728904AbgAURTO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:11:17 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40001 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgAURLN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 12:11:13 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so4108720wrn.7
-        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 09:11:12 -0800 (PST)
+        Tue, 21 Jan 2020 12:19:14 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54990 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729165AbgAURTN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 12:19:13 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b19so3773158wmj.4
+        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 09:19:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ZGs+4DUJDSvBqJ//fVqMbttGqRoxAKV0f+ErvAbm5L8=;
-        b=EBsH58uX53UDW9/nRW8udKKKe06jKEr+n8gx6G9QSL2/NkKdjeoB1bVKUP6O/x3ouq
-         cTuUJxlAHY5gB1+bQaH0jRnZtsfVFtunbtbfIspa/qvNnhkdCnLlq/zmIMUQN05k1DDG
-         q+2M++veTbrYCoMSPp8GUjGatjIR2yq4peoPTH1U3X1y5nbegNcANqKY37WwRQM90+6M
-         xu2TVvJo6hrsAneOloOPEw01LAQk3lB+2RXhKTeZmVGrV5j7dNi+GjcilaACOkvK+ac9
-         SheTyjSLBZEoulkJdX9aGjip+T9fcLoaOtpf1XiEsfb9T0+56H8sqtuUxEdhNfUO8TmB
-         kACQ==
+        bh=haPd6HRvqtRLXCPbKwJIqyrzbzZjxA8VnTnctWQzHDQ=;
+        b=V3RDjf48Ukt0EGvEB2uID5QG+IuQGdlsKsBAVfkHlSYnb1Xv93A92YrzpguYKFALWI
+         UwIZfxIyimaFSUW5d1y+/EfTV74zGVbxhVkaqVP5s3Dj/Fp8aGAV14uIUA1uxF1DcH0t
+         IKMswMCWnZZAho3mplkrBDA4RWxs+38kvWH7rLKoCuTPmacKNYUmYy8IN5WbvoHEQ4Ne
+         vOeM+eEFSyArJLkgVd9mSSrMIDM7q0j/H19ogL07dQcQxb+61IbdnpGi5L5TCbumgBeT
+         wVFOsETaP1NSsMRYE1RFOxbzKT+JBGaWUwNML4Qw26nxXiXxeOwzaZCRpHX5g2POwMzA
+         Op6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZGs+4DUJDSvBqJ//fVqMbttGqRoxAKV0f+ErvAbm5L8=;
-        b=gFc/fLJuv2xQMHR1apBJawX2QVvnIMyyPgc+GGEHPdWLWzkSvOkWD3i1g5L88hp4IJ
-         z7U0xuLPmZn96JAOYSGGezHD19kxMO4ywLZoUW+WSigcZukSyQ10ofuuN9BGltYz/zEf
-         XXi/9ZZp4N+8eXg7xTGek4M/xaYL6AY1uiWGq2dr0TRAPPVeE8yvgk40t6fvkfFv+Gem
-         IG2P/4BHjCpbwS5zEEM6AjeyYUiTbNfx+17zyr3gPAnYBNd28S6Xa1if8ZAru3SIc03X
-         K4utdq64wlpLYqzpgs0ekH4/+sXKhXTEtVSEbFi2G2rbCsalDKpW+HtuZ+RcG9744TWU
-         yDNw==
-X-Gm-Message-State: APjAAAUrzEBjoci6ueFngDVWgiq2kQ00htOl71zfikEmOQvTAcPith/0
-        uuWQuZdcjPchCrzgn1HzZizJXw==
-X-Google-Smtp-Source: APXvYqxOw+/RCexAIK0/PEftnp59kp31SffdYzOIBv9fhO0Pd8QkKlcd4t1De7O+sOSBJ2kmnvIsaQ==
-X-Received: by 2002:a5d:5491:: with SMTP id h17mr6324330wrv.374.1579626671678;
-        Tue, 21 Jan 2020 09:11:11 -0800 (PST)
+        bh=haPd6HRvqtRLXCPbKwJIqyrzbzZjxA8VnTnctWQzHDQ=;
+        b=JCqV4CUPiquHpjOU25eNU4jI2p+TjIhTB07BD5nmJyHCK6Oiri3SzxDxXATfLrzPes
+         kAQGFndvJcRaBmVzAX9iHFmMGcXbNeYuFuDt2CjOzrxHtVE7GLvnAG8Kequ5hwMZyy8n
+         QystDN/0XdiP4BBsa+LlCAex3XuCgcgjTwM4b/EWrvBgUMjK9tnICiP8HWFzQDx/BRBa
+         e2GvqYzk1tSNBp3JxekhxS3aHOY8xZk00yBdIgGJBQfNiJn6ch6wCBEKsZZGksPnvHHO
+         fpWzBc/YD4RzYoKflJVrpr//z0z2YDDK3wigYBfimVNITtXw1Xrw4Jm7aj/h7BRGdEWE
+         UzbQ==
+X-Gm-Message-State: APjAAAWDLRiiphHe8hQOBX96H/nVFTuQg5V6lPgnRnXSMFeVGgF9zuL/
+        ERudap3r+6+S01FVfyY+G4o+/g==
+X-Google-Smtp-Source: APXvYqybAtRFD3tR6SvMFsaIZbOuse1eNvM1AEYQtBuLj9xMw29hn5KAlx1+3UIYOJMKj8S9Vnb+hw==
+X-Received: by 2002:a7b:cd86:: with SMTP id y6mr159546wmj.5.1579627151673;
+        Tue, 21 Jan 2020 09:19:11 -0800 (PST)
 Received: from cheddar.halon.org.uk (cheddar.halon.org.uk. [93.93.131.118])
-        by smtp.gmail.com with ESMTPSA id z83sm33634wmg.2.2020.01.21.09.11.11
+        by smtp.gmail.com with ESMTPSA id b16sm55167860wrj.23.2020.01.21.09.19.10
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Jan 2020 09:11:11 -0800 (PST)
+        Tue, 21 Jan 2020 09:19:11 -0800 (PST)
 Received: from bsmtp by cheddar.halon.org.uk with local-bsmtp (Exim 4.89)
         (envelope-from <steve.mcintyre@linaro.org>)
-        id 1itx3W-000263-Qo; Tue, 21 Jan 2020 17:11:10 +0000
+        id 1itxBG-0002ib-Nt; Tue, 21 Jan 2020 17:19:10 +0000
 Received: from steve by tack.einval.org with local (Exim 4.92)
         (envelope-from <steve.mcintyre@linaro.org>)
-        id 1itx3I-0001fB-Ld; Tue, 21 Jan 2020 17:10:56 +0000
-Date:   Tue, 21 Jan 2020 17:10:56 +0000
+        id 1itxAl-0003E3-KQ; Tue, 21 Jan 2020 17:18:39 +0000
+Date:   Tue, 21 Jan 2020 17:18:39 +0000
 From:   Steve McIntyre <steve.mcintyre@linaro.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     David Gibson <david@gibson.dropbear.id.au>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Frank Rowand <frowand.list@gmail.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-Message-ID: <20200121171048.GF6796@tack.einval.com>
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+Message-ID: <20200121171833.GG6796@tack.einval.com>
 References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
- <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
- <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
- <220e3aea-b273-417a-69c9-059236c888af@st.com>
- <a1233cd8-e73a-82d7-74bf-69109d1a0a07@gmail.com>
- <20200120182837.GO3697@linaro.org>
- <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com>
+ <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
+ <20200117090937.GU54439@umbus>
+ <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+ <20200119063916.GD54439@umbus>
+ <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
+In-Reply-To: <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
 X-attached: none
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-wibble: sender_address steve.mcintyre@linaro.org
@@ -92,49 +94,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[ Adding lakml to the CC list ]
-
-On Mon, Jan 20, 2020 at 09:20:55PM -0600, Frank Rowand wrote:
->On 1/20/20 12:28 PM, Steve McIntyre wrote:
->> On Mon, Jan 20, 2020 at 10:14:22AM -0600, Frank Rowand wrote:
->>> On 1/20/20 4:56 AM, Alexandre Torgue wrote:
->>>
->>> Here is an example of the info from one of my builds:
->>>
->>>   From Linux 5.5.0-rc2-dirty by frowand the Mon Jan 20 09:50:58 CST 2020.
->>>
->>> The information 'Linux 5.5.0-rc2-dirty' is precisely what was most objected
->>> to in my proposal.
->> 
->> ACK. :-( I'm surprised to see so much push-back on what looks like a
->> simple piece of information here.
+On Tue, Jan 21, 2020 at 09:59:44AM -0600, Rob Herring wrote:
+>On Sun, Jan 19, 2020 at 12:41 AM David Gibson
+><david@gibson.dropbear.id.au> wrote:
+>>
+>> It's not really about who consumes it.  It's about defining a
+>> namespace for the new property to exist in, since it's not part of a
+>> relevant standard (if we wanted to make it such, we should pin down
+>> what goes in there with much more precision).
 >
->Me too.
+>I can't think of any cases of the 'linux' prefix not being about who
+>consumes it. And we often end up dropping 'linux' because it turns out
+>to not be Linux specific. I don't care to see u-boot,build-info,
+>freebsd,build-info, etc. when a given dtb can only have 1 of those.
 
-So, looking at the comments back on the old thread...
+Yes, exactly. What would happen if somebody (tried to) fill in more
+than one of XXXX.build-info? It makes no sense.
 
-Alexandre is proposing somthing slightly different here: a patch to
-add a simple string to allow for a description of where the DTB came
-from. The particular example he uses here fills in build details from
-the Linux repo, but it could just as easily be filled in as part of a
-U-Boot build, or the build of a DTB included with EDK2, or whatever
-other firmware might include it. It might be useful to also add
-similar debug output into U-Boot, or for that matter any other
-DT-using project.
+>My intent is this property name is added to the DT spec, but I don't
+>agree we should define what's in it beyond a string. It is information
+>that is useful for humans identifying what the dtb was built from.
 
-As Rob says later, it's simply information for humans to help identify
-where a DTB came from. Nothing more.
-
->> I've had users *specifically* asking for this kind of identification
->> so that they can verify the version of the DTB they're using at
->> runtime. Right now it can be a guessing game, which does not help
->> people trying to debug problems.
->
->If the information was reported as debug information via pr_debug(),
->would that work for your use case?  Or would the users' kernels
->not have debug enabled in the configuration?
-
-Quite possibly not - I'm not 100% sure to be honest. :-/
+Nod - defining this as a free-form string lets people put their own
+information in, without us having to try and agree on a full spec
+which we'll need to update as ideas change.
 
 -- 
 Steve McIntyre                                steve.mcintyre@linaro.org
