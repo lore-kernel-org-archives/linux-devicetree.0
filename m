@@ -2,89 +2,226 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A26C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56774C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA03624653
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E1824655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579645417;
-	bh=gNBVw5K0WvUkmLFqZTsRXICaht8UYbIu6sywnUufuJE=;
+	s=default; t=1579646294;
+	bh=n16MhtYG7ERK7Pw/gn29T/pK73S5XNQ3JFm/L9788uA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cf2FQpTkbpmk9uMLaFJAyyYVTuWKva2bRbl4gDvfrPIA3M2+u6Zy16fdhX3RsrSzG
-	 /vEGuKbP/3Sz/ejG45+/0zNQR/LhVNY07HVGuSUKvCw7F1si/jzwnNbF7brmWgIJ9N
-	 YPwdQd0t3Ae4CtxFdIZoNgvt28n/JYIEY2fRRESg=
+	b=ElTCoBrbnYt+jM/+Nt1UBAfYp/DYSY34fa3buT8WqdYUChLxc+BWDjWgCMbkOdons
+	 r20gsI4nPgMPm5h3hOgHROupiQAT5WawEMFgIUn9qEepXgTIHFuNM+bUjVc1bgchdY
+	 HT2nqMQnvwixB8FC51w5hEPAhxn/CoXRLJKCum9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAUWXh (ORCPT
+        id S1726584AbgAUWiK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:23:37 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43860 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbgAUWXh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:23:37 -0500
-Received: by mail-ot1-f65.google.com with SMTP id p8so4459774oth.10;
-        Tue, 21 Jan 2020 14:23:36 -0800 (PST)
+        Tue, 21 Jan 2020 17:38:10 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37864 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgAUWiK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:38:10 -0500
+Received: by mail-ot1-f66.google.com with SMTP id k14so4529103otn.4;
+        Tue, 21 Jan 2020 14:38:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zPYQbb1L3qIzvQ8N5DCuUQt8MKkG6UVa2pPHYKx0lMQ=;
-        b=P3wjMeRvHeVhTzlMDZdaH4kj3rCF4ntTouR7+RgWYbVJThbYZsSl2EzjCKPQzfWewp
-         PiPbgMXaWbBNK7UEO8/0Kmnz/TNzVVLXBLAvaXP5Nu5svxtt/gKlBLgRBLtD7wdnksyj
-         kUHPpJyWKrS2X+78SHWeWyK8Nbz7HAfi68kVjCQ2Fj/rnoTQraLOaeVdz8jpfPKM1maw
-         2TRis/tDyEW93uGXI1Jr7nE7iAaWt7eblzXfVV8WKNwQ4CsCAyWoWzsLRa7ze3WdJ4Az
-         JX8e/W8vROuufBlPS7fiJbysJtaOaW55XzgnRJyz8jWItvrvRwtSNiFJVw/6eNyM8dL5
-         86uw==
-X-Gm-Message-State: APjAAAWAMR3ZCWyffT+thwlG2n6MAi0E/wnzdC4kLhmtPiQxwz6Jk4nb
-        oJ/7XKkqlSi2cURi9quoWQ==
-X-Google-Smtp-Source: APXvYqx/4SnFjRHl3ZzxW5AWsiHfbDdKsmN1qLjNM8Tn8RWFSe4Ynq6be51tbcx1pyQKKkiVIuXkVw==
-X-Received: by 2002:a9d:518b:: with SMTP id y11mr4950524otg.349.1579645416152;
-        Tue, 21 Jan 2020 14:23:36 -0800 (PST)
+        bh=rCPpFo01LA0ufFxgslJygDyMKU7n29hE5cPSJPV/Tis=;
+        b=OxUKNe9V7GuLMJ0jqODlCKNtsA1gBvm4xIaDzrrDODo3yfg/ATfFb4PDr973Isi+XZ
+         1LWH5kbzYdjN3mHicl433V/TWgoM9+ywFjrLvQ3+9dyF81D8e4iKeWWBL/TrL6mj+3w/
+         35EmkOGwVJG/LAdeJpnxl1WI8HIngXsF2Iv/EQRegFw/mCZXGE6w8uHXFq3GKXghR9JK
+         agiUkFanhMzQMJc1cRm8f+kedvL4OrhdPJ1fXfCgnbE3Gu1HUMtBBlpbZBek/JmmlCLT
+         Lz/Wh6Nqfqp8RXX/TaKy3V46dp+qUNJa7EtD6c37IuEgJvJN/nbT+QALhrFA+ZAY0jfP
+         uXxg==
+X-Gm-Message-State: APjAAAVxkno8VKFSimet1VUoQ8Z2MzhKiKeym3GjORch6mZy7yoDSkoL
+        q105lOZMgDjWat7P9V1bPw==
+X-Google-Smtp-Source: APXvYqxaMwA5tZhskkLIJL7NCltuCFOMNVxEM744Gs29VLJijpUh//35TuSNy4uUL26HFT1N/gjOsw==
+X-Received: by 2002:a05:6830:1481:: with SMTP id s1mr5259732otq.66.1579646288799;
+        Tue, 21 Jan 2020 14:38:08 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e10sm13997385otj.59.2020.01.21.14.23.35
+        by smtp.gmail.com with ESMTPSA id v14sm13967733oto.16.2020.01.21.14.38.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 14:23:35 -0800 (PST)
-Received: (nullmailer pid 13684 invoked by uid 1000);
-        Tue, 21 Jan 2020 22:23:34 -0000
-Date:   Tue, 21 Jan 2020 16:23:34 -0600
+        Tue, 21 Jan 2020 14:38:08 -0800 (PST)
+Received: (nullmailer pid 1428 invoked by uid 1000);
+        Tue, 21 Jan 2020 22:38:07 -0000
+Date:   Tue, 21 Jan 2020 16:38:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        jarkko.sakkinen@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, masahisa.kojima@linaro.org,
-        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
-        peterhuewe@gmx.de, jgg@ziepe.ca
-Subject: Re: [PATCH v2 1/2] dt-bindings: tpm-tis-mmio: add compatible string
- for SynQuacer TPM
-Message-ID: <20200121222334.GA13624@bogus>
-References: <20200114141647.109347-1-ardb@kernel.org>
- <20200114141647.109347-2-ardb@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        mark.rutland@arm.com, s.hauer@pengutronix.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V3 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to
+ json-schema
+Message-ID: <20200121223807.GA24850@bogus>
+References: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200114141647.109347-2-ardb@kernel.org>
+In-Reply-To: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Jan 2020 15:16:46 +0100, Ard Biesheuvel wrote:
-> Add a compatible string for the SynQuacer TPM to the binding for a
-> TPM exposed via a memory mapped TIS frame. The MMIO window behaves
-> slightly differently on this hardware, so it requires its own
-> identifier.
+On Wed, Jan 15, 2020 at 09:30:43AM +0800, Anson Huang wrote:
+> Convert the i.MX8MQ pinctrl binding to DT schema format using json-schema
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Changes since V2:
+> 	- the lisence should be GPL-2.0.
+> ---
+>  .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 36 -----------
+>  .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml       | 69 ++++++++++++++++++++++
+>  2 files changed, 69 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+> deleted file mode 100644
+> index 66de750..0000000
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+> +++ /dev/null
+> @@ -1,36 +0,0 @@
+> -* Freescale IMX8MQ IOMUX Controller
+> -
+> -Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+> -for common binding part and usage.
+> -
+> -Required properties:
+> -- compatible: "fsl,imx8mq-iomuxc"
+> -- reg: should contain the base physical address and size of the iomuxc
+> -  registers.
+> -
+> -Required properties in sub-nodes:
+> -- fsl,pins: each entry consists of 6 integers and represents the mux and config
+> -  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+> -  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+> -  imx8mq-pinfunc.h under device tree source folder.  The last integer CONFIG is
+> -  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Quad
+> -  Reference Manual for detailed CONFIG settings.
+> -
+> -Examples:
+> -
+> -&uart1 {
+> -       pinctrl-names = "default";
+> -       pinctrl-0 = <&pinctrl_uart1>;
+> -};
+> -
+> -iomuxc: pinctrl@30330000 {
+> -        compatible = "fsl,imx8mq-iomuxc";
+> -        reg = <0x0 0x30330000 0x0 0x10000>;
+> -
+> -        pinctrl_uart1: uart1grp {
+> -                fsl,pins = <
+> -                        MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX             0x49
+> -                        MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX             0x49
+> -                >;
+> -        };
+> -};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+> new file mode 100644
+> index 0000000..e010808
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mq-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale IMX8MQ IOMUX Controller
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +description:
+> +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+> +  for common binding part and usage.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx8mq-iomuxc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +# Client device subnode's properties
+> +patternProperties:
+> +  'grp$':
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +
+> +    properties:
+> +      fsl,pins:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        description:
+> +          each entry consists of 6 integers and represents the mux and config
+> +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
+> +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
+> +          be found in <arch/arm64/boot/dts/freescale/imx8mq-pinfunc.h>. The last
+> +          integer CONFIG is the pad setting value like pull-up on this pin. Please
+> +          refer to i.MX8M Quad Reference Manual for detailed CONFIG settings.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Based on the description, I think this should be an uint32-matrix type 
+instead with a schema like this:
+
+items:
+  items:
+    - description: mux_reg
+    - description: conf_reg
+    - description: input_reg
+    - description: mux_val
+    - description: input_val
+    - description: pad setting
+
+(With better descriptions preferrably)
+
+The dts files should then be bracketed accordingly.
+   
+> +
+> +    required:
+> +      - fsl,pins
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # Pinmux controller node
+> +  - |
+> +    iomuxc: pinctrl@30330000 {
+> +        compatible = "fsl,imx8mq-iomuxc";
+> +        reg = <0x30330000 0x10000>;
+> +
+> +        pinctrl_uart1: uart1grp {
+> +            fsl,pins = <
+> +                0x234 0x49C 0x4F4 0x0 0x0	0x49
+> +                0x238 0x4A0 0x4F4 0x0 0x0	0x49
+> +            >;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.7.4
+> 
