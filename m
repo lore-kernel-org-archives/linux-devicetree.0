@@ -2,220 +2,147 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA1EC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF5CC33CB8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048C022522
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579591775;
-	bh=qkBSjs+8ufPF7XL8qAf0QcnKCBadVCoM8RLnOVSXrZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bnN4uVO5U2jj4rjZ1jwjKuT4OknlpfizszUanOVvgve9SDCgSkp2Vp/tA1VC8bO54
-	 HS7IPRBjy1IJft12KNb/6qJlG8JFFHmcn6whPazgTdwdMYfOR+34HfQ18hQN0Gh32C
-	 Uy3cfPVdP4TFy5EIBbS+00yzqb3+g5efTctwTZms=
+	by mail.kernel.org (Postfix) with ESMTP id 5494222522
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:32:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZwkhhEm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgAUH3e (ORCPT
+        id S1727255AbgAUHcI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:29:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgAUH3e (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:29:34 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F7721734;
-        Tue, 21 Jan 2020 07:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579591773;
-        bh=qkBSjs+8ufPF7XL8qAf0QcnKCBadVCoM8RLnOVSXrZg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vbXWSGJ45x04Ff/ti+Nhqn8t0ktcaI5YlVLOxEifVfMoZYEWaJCM9ScZAc2NnWbyE
-         9KCTjoQIA++zGPPZBK6MqLHdWeLh3U9zLb9+KWDt41vAsiYmVuxcLtfbQin9BsmGId
-         GR56iSawr/BYN2hpAPT+s8Ab5f0KDVwcC/UW4AE8=
-Date:   Tue, 21 Jan 2020 08:29:30 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: display: add panel-timing.yaml
-Message-ID: <20200121072930.6qk2ylrb3p4qjfqz@gilmour.lan>
-References: <20200120200641.15047-1-sam@ravnborg.org>
- <20200120200641.15047-2-sam@ravnborg.org>
+        Tue, 21 Jan 2020 02:32:08 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:32796 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgAUHcI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 02:32:08 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00L7W5sU052878;
+        Tue, 21 Jan 2020 01:32:05 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579591925;
+        bh=UH7vEp8e3RHqeOGM3MMo9Rhle7S9dmR82oGqsfwiB0o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZwkhhEm5NUW9Evg+nJwUk4uCn4VaU8V76dMifqYbw9ulUcOcUS470CFjZebhsWleu
+         EEYM5TQT1CyMtVdtzoFMnop6OtIEMpIXTqMVjccnyrGgc9b6waUwiWni44QaE9x66o
+         D3AwhpcErDrbVd/nmeSZuqUZZ1t79LFOIv6FPdkg=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00L7W5RN000759;
+        Tue, 21 Jan 2020 01:32:05 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 21
+ Jan 2020 01:32:04 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 21 Jan 2020 01:32:04 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00L7W2EC053962;
+        Tue, 21 Jan 2020 01:32:02 -0600
+Subject: Re: [PATCH] dt-bindings: clock: Move ti-dra7-atl.h to
+ dt-bindigs/clock
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <mturquette@baylibre.com>,
+        <robh+dt@kernel.org>
+CC:     <sboyd@kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <tony@atomide.com>, <devicetree@vger.kernel.org>
+References: <20191114101817.20831-1-peter.ujfalusi@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <bbb7386a-4f5d-6574-c971-0812f0272450@ti.com>
+Date:   Tue, 21 Jan 2020 09:32:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120200641.15047-2-sam@ravnborg.org>
+In-Reply-To: <20191114101817.20831-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On 14/11/2019 12:18, Peter Ujfalusi wrote:
+> Most of the clock related dt-binding header files are located in
+> dt-bindings/clock folder. It would be good to keep all the similar
+> header files at a single location.
+> 
+> Suggested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-On Mon, Jan 20, 2020 at 09:06:39PM +0100, Sam Ravnborg wrote:
-> Add meta-schema variant of panel-timing and
-> reference it from panel-common.yaml.
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> Cc: devicetree@vger.kernel.org
+Queued up towards 5.6, thanks.
+
+-Tero
+
 > ---
->  .../bindings/display/panel/panel-common.yaml  |   7 +-
->  .../bindings/display/panel/panel-timing.yaml  | 253 ++++++++++++++++++
->  2 files changed, 256 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-timing.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> index ef8d8cdfcede..8070c439adbd 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> @@ -54,13 +54,12 @@ properties:
->
->    # Display Timings
->    panel-timing:
-> -    type: object
->      description:
->        Most display panels are restricted to a single resolution and
->        require specific display timings. The panel-timing subnode expresses those
-> -      timings as specified in the timing subnode section of the display timing
-> -      bindings defined in
-> -      Documentation/devicetree/bindings/display/panel/display-timing.txt.
-> +      timings.
-> +    allOf:
-> +      - $ref: panel-timing.yaml#
->
->    # Connectivity
->    port:
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-timing.yaml b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
-> new file mode 100644
-> index 000000000000..59891c7a58ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
-> @@ -0,0 +1,253 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/panel-timing.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: panel timing bindings
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Sam Ravnborg <sam@ravnborg.org>
-> +
-> +description: |
-> +  There are different ways of describing the timing data data of a panel. The
-> +  devicetree representation corresponds to the one commonly found in datasheets
-> +  for panels. If a panel supports multiple signal timings, the native-mode
-> +  can be specified.
-> +
-> +  The parameters are defined as seen in the following illustration.
-> +
-> +  +----------+-------------------------------------+----------+-------+
-> +  |          |        ^                            |          |       |
-> +  |          |        |vback_porch                 |          |       |
-> +  |          |        v                            |          |       |
-> +  +----------#######################################----------+-------+
-> +  |          #        ^                            #          |       |
-> +  |          #        |                            #          |       |
-> +  |  hback   #        |                            #  hfront  | hsync |
-> +  |   porch  #        |       hactive              #  porch   |  len  |
-> +  |<-------->#<-------+--------------------------->#<-------->|<----->|
-> +  |          #        |                            #          |       |
-> +  |          #        |vactive                     #          |       |
-> +  |          #        |                            #          |       |
-> +  |          #        v                            #          |       |
-> +  +----------#######################################----------+-------+
-> +  |          |        ^                            |          |       |
-> +  |          |        |vfront_porch                |          |       |
-> +  |          |        v                            |          |       |
-> +  +----------+-------------------------------------+----------+-------+
-> +  |          |        ^                            |          |       |
-> +  |          |        |vsync_len                   |          |       |
-> +  |          |        v                            |          |       |
-> +  +----------+-------------------------------------+----------+-------+
-> +
-> +
-> +  The following is the panel timings shown with time on the x-axis.
-> +  This matches the timing diagrams often found in data sheets.
-> +
-> +              Active                 Front           Sync           Back
-> +              Region                 Porch                          Porch
-> +  <-----------------------><----------------><-------------><-------------->
-> +    //////////////////////|
-> +   ////////////////////// |
-> +  //////////////////////  |..................               ................
-> +                                             _______________
-> +
-> +  Timing can be specified either as a typical value or as a tuple
-> +  of min, typ, max values.
-> +
-> +properties:
-> +
-> +  clock-frequency:
-> +   $ref: /schemas/types.yaml#/definitions/uint32
-> +   description: |
-> +     Panel clock in Hz
-> +
-> +  hactive:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +       Horizontal panel resolution in pixels
-> +
-> +  vactive:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Verical panel resolution in pixels
-> +
-> +  hfront-porch:
-> +    description: |
-> +      Horizontal front porch panel timing
-> +    oneOf:
-> +      - allOf:
-> +        - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        - maxItems: 1
-> +          items:
-> +            description: typical number of pixels
+>   Documentation/devicetree/bindings/clock/ti/dra7-atl.txt | 4 ++--
+>   arch/arm/boot/dts/dra7-evm-common.dtsi                  | 2 +-
+>   arch/arm/boot/dts/dra72-evm-common.dtsi                 | 2 +-
+>   include/dt-bindings/{clk => clock}/ti-dra7-atl.h        | 0
+>   4 files changed, 4 insertions(+), 4 deletions(-)
+>   rename include/dt-bindings/{clk => clock}/ti-dra7-atl.h (100%)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/ti/dra7-atl.txt b/Documentation/devicetree/bindings/clock/ti/dra7-atl.txt
+> index 10f7047755f3..21c002d28b9b 100644
+> --- a/Documentation/devicetree/bindings/clock/ti/dra7-atl.txt
+> +++ b/Documentation/devicetree/bindings/clock/ti/dra7-atl.txt
+> @@ -43,7 +43,7 @@ Configuration of ATL instances:
+>   	- aws : Audio word select signal selection
+>   };
+>   
+> -For valid word select signals, see the dt-bindings/clk/ti-dra7-atl.h include
+> +For valid word select signals, see the dt-bindings/clock/ti-dra7-atl.h include
+>   file.
+>   
+>   Examples:
+> @@ -83,7 +83,7 @@ atl: atl@4843c000 {
+>   	clock-names = "fck";
+>   };
+>   
+> -#include <dt-bindings/clk/ti-dra7-atl.h>
+> +#include <dt-bindings/clock/ti-dra7-atl.h>
+>   
+>   &atl {
+>   
+> diff --git a/arch/arm/boot/dts/dra7-evm-common.dtsi b/arch/arm/boot/dts/dra7-evm-common.dtsi
+> index 82eeba8faef1..23244b5a9942 100644
+> --- a/arch/arm/boot/dts/dra7-evm-common.dtsi
+> +++ b/arch/arm/boot/dts/dra7-evm-common.dtsi
+> @@ -4,7 +4,7 @@
+>    */
+>   
+>   #include <dt-bindings/gpio/gpio.h>
+> -#include <dt-bindings/clk/ti-dra7-atl.h>
+> +#include <dt-bindings/clock/ti-dra7-atl.h>
+>   #include <dt-bindings/input/input.h>
+>   
+>   / {
+> diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
+> index 8641a3d7d8ad..9eabfd1502da 100644
+> --- a/arch/arm/boot/dts/dra72-evm-common.dtsi
+> +++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
+> @@ -6,7 +6,7 @@
+>   
+>   #include "dra72x.dtsi"
+>   #include <dt-bindings/gpio/gpio.h>
+> -#include <dt-bindings/clk/ti-dra7-atl.h>
+> +#include <dt-bindings/clock/ti-dra7-atl.h>
+>   
+>   / {
+>   	compatible = "ti,dra72-evm", "ti,dra722", "ti,dra72", "ti,dra7";
+> diff --git a/include/dt-bindings/clk/ti-dra7-atl.h b/include/dt-bindings/clock/ti-dra7-atl.h
+> similarity index 100%
+> rename from include/dt-bindings/clk/ti-dra7-atl.h
+> rename to include/dt-bindings/clock/ti-dra7-atl.h
+> 
 
-You have that on a number of occasions, but that could just be an
-uint32, right?
-
-> +      - allOf:
-> +        - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        - minItems: 3
-> +          maxItems: 3
-> +          items:
-> +            description: min, typ, max number of pixels
-
-When minItems and maxitems are equal, you can just set one, the other
-one will be filled by the DT schemas tools.
-
-> +  hsync-active:
-> +    description: |
-> +      Horizontal sync pulse.
-> +      If omitted then it is not used by the hardware
-> +    oneOf:
-> +      - const: 0
-> +        description: active low
-> +      - const: 1
-> +        description: active high
-
-You probably should use an enum here (and in other similar
-places). oneOf / anyOf / allOF errors are pretty cryptic, while it
-will it's really better with an enum.
-
-Thanks!
-Maxime
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
