@@ -4,102 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAA3C33CAA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D7DC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148982465A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9BD24655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579644429;
-	bh=ul/xQj1jGDQglY+pdWlfjCPiA90/kCcFe29S+ZX6wU8=;
+	s=default; t=1579644461;
+	bh=z+NThT+BzcYVlOg9jsSHhHzjcswjF1r9/46XSLY0gIQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g9TLGyLMDxMVkScCCkR6ayGxler1gEi8M/JuEN/o5nklXnDXNJUu2e2U3COfDtCqf
-	 YjwS2OqgaMOzj7tfHp3MmJx+oK/K8waoEZ+Cee3o7UMpqgdw1o4Scbxys4NaBE1Ben
-	 TJmdOOpwtIqdB/GQrqsrpRhVw8x7WHGsw1RFaOfQ=
+	b=b0URLJAK186V4HYAQycJCjtn6i647wzD8ptMDWiKcDi15Blc1/vQlz9QJZHfEUjrc
+	 LDWDyARWl70KsWvI0irq9LGeFweuEqW5wRZrdDqrAAbEseLEIitkIvOPRHUAyMHJva
+	 6e7FPjao1Vw0IpFwUw5LMmh+qiIu5TlfwAWheiZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgAUWHI (ORCPT
+        id S1728139AbgAUWHk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:07:08 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35594 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbgAUWHI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:07:08 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i15so4475043oto.2;
-        Tue, 21 Jan 2020 14:07:07 -0800 (PST)
+        Tue, 21 Jan 2020 17:07:40 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33104 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgAUWHk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:07:40 -0500
+Received: by mail-oi1-f195.google.com with SMTP id q81so4207971oig.0;
+        Tue, 21 Jan 2020 14:07:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mf/yLE4fhksL4+41Ux+KrRepfjoWtmsOsdPONyuKv80=;
-        b=GoxSp8PM84NKJRzelQAidPqEN2Qc5fK9Q5YlOfplvlTrgP3nK1aeZW0LmekATfW9ZD
-         DHarhSIGlFPDAnrbTkt4I2tUJE4k3GHv50zbhGWD9F0FnqXZP+jcW9nnDsj9EkExifwC
-         ZAoNJ82ug/R+J2WPGFA8TlbzLqotvV1UG/FVtyVlpOn3E2qNYMVmvRtj27gOVoCnrkEB
-         dp25JNY0YDrhhh9ju8NDMkBeULgegYB58UlLY07LCm4waTIh2MqjRS7d32XxGOIU5vdm
-         RlrTnFASvTYE2CQTk3tJpP/92BkQ4/JjX4Octze62zJ+TWemTBHk1+kVrPlQNBFXFzcC
-         uAtQ==
-X-Gm-Message-State: APjAAAU+lS8uzN2wbNnsqA0nRnqdZGZwXjxljrzo2Or/oCJfGQAjWuHv
-        ESoOON8Jy+u6z4XjkZGnEXJpX8o=
-X-Google-Smtp-Source: APXvYqyUPROewNgBwvEiDeEneFjZDF2in+v16Msxe/0x8RMLHkcmdQx2vG0w1GAJjHM/GUJh7O8FFw==
-X-Received: by 2002:a9d:7f83:: with SMTP id t3mr4991921otp.115.1579644427111;
-        Tue, 21 Jan 2020 14:07:07 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:content-language
+         :user-agent;
+        bh=jrV7x2HT1HzIJs/17V/npvjy8NaCs9LfSMbU1/e5LoE=;
+        b=UMPe00fxYduyFq0Vg5gM9SWMTSiCp4t16JfUDgQtF0bpHPC2YSKJziECHJMprbxN33
+         d2CUAiky+e/bWqhhOOE5RCHl50Oq8gEGfZI6jmeSYF1GGssc2iuedg323CoFbg8BRRUK
+         qcLr+9/eTier5AyjQ/ExUG2jtqX8hkYVJIN0YTBXbZxHyAu9Mjsc6gpH8w4C4orrE0Np
+         Oa1eo+rlJb2TfW48FQTEcX1eJc6FDS+ylvRX2qMKUBB1RQi7FcBte8Gt6c1N4qbTCMqq
+         FVZncCJ8+upl9GRB5owOhFt5EhSuKBnpED5u2KoseGh7SPWToS3JebEdHE8RdQ4gH3w9
+         CG2A==
+X-Gm-Message-State: APjAAAXEGHc/cOdGiKEZXaJICIoNBGc0QthYZ2O2e+eP87GZCetTZXiL
+        V9gPExNCClG8HJLdkV7QkXyx+RY=
+X-Google-Smtp-Source: APXvYqwnNIFZJUWPyA92HwXngPZjGPZuBujZdvC603o0NUcsnM1zSTX/tUl2maBAnH23lN0yUOZkMQ==
+X-Received: by 2002:aca:d502:: with SMTP id m2mr4531075oig.41.1579644459940;
+        Tue, 21 Jan 2020 14:07:39 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e65sm14081508otb.62.2020.01.21.14.07.06
+        by smtp.gmail.com with ESMTPSA id m68sm12444096oig.50.2020.01.21.14.07.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 14:07:06 -0800 (PST)
-Received: (nullmailer pid 23030 invoked by uid 1000);
-        Tue, 21 Jan 2020 22:07:05 -0000
-Date:   Tue, 21 Jan 2020 16:07:05 -0600
+        Tue, 21 Jan 2020 14:07:39 -0800 (PST)
+Received: (nullmailer pid 24002 invoked by uid 1000);
+        Tue, 21 Jan 2020 22:07:38 -0000
+Date:   Tue, 21 Jan 2020 16:07:38 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Matt Ranostay <matt.ranostay@konsulko.com>,
-        linux-iio@vger.kernel.org, jic23@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: iio: chemical: consolidate
- atlas-sensor docs
-Message-ID: <20200121220705.GA15425@bogus>
-References: <20200114022348.8676-1-matt.ranostay@konsulko.com>
- <20200114022348.8676-4-matt.ranostay@konsulko.com>
- <20200116182124.00006e19@Huawei.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH] dt-bindings: arm-boards: typo fix
+Message-ID: <20200121220738.GA23950@bogus>
+References: <1578983860-23747-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200116182124.00006e19@Huawei.com>
+In-Reply-To: <1578983860-23747-1-git-send-email-peng.fan@nxp.com>
+Content-Language: en-US
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 06:21:24PM +0000, Jonathan Cameron wrote:
-> On Tue, 14 Jan 2020 04:23:48 +0200
-> Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+On Tue, 14 Jan 2020 06:41:49 +0000, Peng Fan wrote:
 > 
-> > Since Atlas Scientific device support only varies from the compatible
-> > string is ideal all the respective docs are merged into a single doc
-> > named atlas,sensor.txt
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> No chance of a yaml conversion whilst you are at it?
+> Typo fix, "withe" -> "with".
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/arm/arm-boards | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-I asked for that on v1.
+Applied, thanks.
 
-> Maybe dt maintainers will take the view this is step in the right direction and
-> let this go, but I will want an Ack for that.
-
-When I can get 4 for the price of 1, I'll take the conversion. :) 
-
-> > ---
-> >  .../bindings/iio/chemical/atlas,ec-sm.txt     | 21 ------------
-> >  .../bindings/iio/chemical/atlas,orp-sm.txt    | 21 ------------
-> >  .../bindings/iio/chemical/atlas,ph-sm.txt     | 21 ------------
-> >  .../bindings/iio/chemical/atlas,sensor.txt    | 34 +++++++++++++++++++
-> >  4 files changed, 34 insertions(+), 63 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,sensor.txt
+Rob
