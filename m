@@ -7,75 +7,76 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738ABC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4102FC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45211217F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BFE217F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3g8phga"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oSkJmsMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgAUQAi (ORCPT
+        id S1729096AbgAUQDW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:00:38 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33640 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAUQAi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 11:00:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id d139so2406100wmd.0
-        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 08:00:37 -0800 (PST)
+        Tue, 21 Jan 2020 11:03:22 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33375 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729030AbgAUQDW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 11:03:22 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so2750186lfl.0;
+        Tue, 21 Jan 2020 08:03:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ytwKdiKDkBrq5dWN34mZGZBl7UpibNepadICMkoJFGA=;
-        b=A3g8phgaxu7x2jJLxOOrTVVNprEJJJPK5vGTb65L/lIrSnqdZod0XDVtme4mjiZWmB
-         tbew2hAP3T/tHd19LKPUnuHOwrZhT0zt/NvwCaVQrx9VhHjbFJOK9+CKbCksBbq4sy/7
-         1eOvdE6fyAYUUJfR6BjXc3TKC6jRXwx4dawndZh3kksTjoT+G7KX7yyuwfjEMc3z+6xn
-         uUPo3msBSjzJ6zx4QL3Kg0YBK7HGBW67OG7ymS7ZOZ+CBl0D9gOmIxJ/im5KvK6tEDN0
-         5xgt0RFB6O5JTrS1WJOljBYb3636Iy35GI1N22oQwN0sydZmNcXUeL03g/Uogpxhj9c8
-         zbkQ==
+        bh=qjcDJDT5ZhsuJU+cktfSQ3R47ar0BoE5LFZ4QYOhvk4=;
+        b=oSkJmsMPFvlrGrBgt/E7oyZ7wGMURN57NLfvXkRGUfFsMcqdMQxLpm2Bz38hClF7Ln
+         ShLcsQB78iaEi+nE1RjpRnLjH6+ka2Y4If1K8tbkLYtT5lV1/3zFNNRLyAGrURJlyE8W
+         mMWg/hkKqaT3aoM++ZzTwhHFPcyy2/ecRP8Pv0g+7JIPrbDTLEheR0JiAzwV+e/Ur0dr
+         pNYHzfUgFTYMjXWYop3hoUUsMJaPNO2kbYZsDkzP0HxdYKy4xccXnf2fuvYcjwD6enz3
+         e12I1oL1VSsvUHi56JrA6kwd0pTVkYNmlVysL/n3hJ8Hn0w/lswn6moIte9zZJRUJxrc
+         U39w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ytwKdiKDkBrq5dWN34mZGZBl7UpibNepadICMkoJFGA=;
-        b=s1Yq2oXSt9+UKLF/xhV5DkGbdvmA7Hs1Qyw1BKnEhdWRYNGVSKNplsnVSFVbHUBxVR
-         dAHPnaUDV+QXLhrffKBW7/CRCNpMYov52KI0/l/nBfac2j9PBVaqA8l4AyutfUHEdX6N
-         QgeMwknr7ay6V1NLsbag2G6u1gz7glzdmUyFzCFm9LZbAlrkH8pKXuNjC6Hae1Rec6CQ
-         N9itCdikFs+dSIhDJRdbHbAueVl+20o9/lZYs+M0xc/JDpsethTWsS4DBr8K3Abili5A
-         YSG8lJar+NdLJvS1loTA0wsqVUfWgeHL5+8AUZDz6nT2uwgC6RpRVtoJdd8W/3kiGFgw
-         6Sug==
-X-Gm-Message-State: APjAAAVLSbTOqzIcR9pnFfTNTVkKN+rAyRCuGnzsHWECnTf7Jt/O9l6m
-        keQiJ3WqEby+sV/ydOOX5Og=
-X-Google-Smtp-Source: APXvYqw/5uPfelRwAOPcMQ/7ch5/ttpQTTV4/ZW3Orj4e+6tsxvKNnOwkfDYFwEyTwz4cepmMWDCIg==
-X-Received: by 2002:a1c:3c89:: with SMTP id j131mr5150540wma.34.1579622436737;
-        Tue, 21 Jan 2020 08:00:36 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u1sm4335276wmc.5.2020.01.21.08.00.35
+        bh=qjcDJDT5ZhsuJU+cktfSQ3R47ar0BoE5LFZ4QYOhvk4=;
+        b=IWurWOO84AIDRfvjE0Clt4ROTHoK/gnoLL3i75iJKNROY+QzC5pendzZdlYg2rgFDh
+         Efw8BJFST08KhPo3iyTs8/nZwPWOjSIf8m2Pa+9DZIUqOdT5eAf1iapljzbW0EKC40GO
+         Z7PhyK+Hf4K10TehkubO8w0u4EXFpzxUF4fBTTnEIw1q0LUDF0FnHnaMMTXTRdQBtfeG
+         GE4cBTuesumIKdvDGevOIE9xIkH5syotBV73OKY1jPSEcKxv2NKcGIHI7LPtb4w7faOu
+         s70i02KgGDaeOLHu9rkdx/APfGSj4uxi7qcrlI997OvxpemXmXtQ0xCaqMt9S3iDXKKg
+         3p1g==
+X-Gm-Message-State: APjAAAVA0I7BsiuyrEEj2nzK0ji+e49o3yzk2r+BIs6udgdsnLZAottF
+        kBOS2kRcBd2aLTAW7BoLVQU=
+X-Google-Smtp-Source: APXvYqzclMF2A4gK1qZbpXyXqercR78rGBMYz+1kp1LUvr0QDXRGPs35zL7ilE/pQbIxRvtkvvNXRA==
+X-Received: by 2002:ac2:515b:: with SMTP id q27mr2939168lfd.119.1579622599111;
+        Tue, 21 Jan 2020 08:03:19 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id w16sm19566502lfc.1.2020.01.21.08.03.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 08:00:36 -0800 (PST)
-Subject: Re: [PATCH v2] dt-bindings: convert rockchip-drm.txt to
- rockchip-drm.yaml
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     airlied@linux.ie, dafna3@gmail.com, daniel@ffwll.ch,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        ezequiel@collabora.com, heiko@sntech.de, helen.koike@collabora.com,
-        hjc@rock-chips.com, kernel@collabora.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        Tue, 21 Jan 2020 08:03:18 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
         robh+dt@kernel.org
-References: <6371f95f-8bf8-47c9-021e-b23006f25405@collabora.com>
- <573dc6d1-5857-f3ba-a392-67351db727b5@gmail.com>
- <7c79efd2-f5b0-6736-19b0-4d116714f887@collabora.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <633202b7-31cb-a2ff-9461-631652cd94c0@gmail.com>
-Date:   Tue, 21 Jan 2020 17:00:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+Date:   Tue, 21 Jan 2020 19:03:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <7c79efd2-f5b0-6736-19b0-4d116714f887@collabora.com>
+In-Reply-To: <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -84,101 +85,136 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+21.01.2020 17:21, Sameer Pujar пишет:
 
-On 1/21/20 4:26 PM, Dafna Hirschfeld wrote:
+[snip]
+
+>>> +static int tegra210_i2s_put_control(struct snd_kcontrol *kcontrol,
+>>> +     struct snd_ctl_elem_value *ucontrol)
+>> Checkpatch should complain about the wrong indentation here.
 > 
+> I had run checkpatch before sending the patch, below is the result.
+> -----
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #70:
+> new file mode 100644
 > 
-> On 21.01.20 16:11, Johan Jonker wrote:
->> Hi Dafna,
->>
->>
->>>
->>>
->>> On 21.01.20 15:03, Rob Herring wrote:
->>>> On Tue, Jan 21, 2020 at 6:35 AM Dafna Hirschfeld
->>>> <dafna.hirschfeld@collabora.com> wrote:
->>>>>
->>>>> convert the binding file rockchip-drm.txt to yaml format.
->>>>> This was tested and verified with:
->>>>> make dt_binding_check
->>>>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
->>>>>
->>>>
->>>> Also, make sure just 'make dt_binding_check' passes as that checks the
->>>> example against all schemas.
->>>
->>> But this also checks the other schemas in general, and when running it,
->>> it fails because of bugs in other schemas.
->>
->>
->>> For example with arm=ARM I get:
->>
->> Use:
->>
->> # enable Rockchip arm in menuconfig
->> make ARCH=arm menuconfig
->>
->> make ARCH=arm dt_binding_check
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
->>
->>
->> and not:
->> arm=ARM
->>
-> yes, sorry, this is what I did. When running with the DT_SCHEMA_FILES
-> set then it passes both on ARM and ARM64
-> but when this variable is not set I get the above error.
+> total: 0 errors, 1 warnings, 1103 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or
+> --fix-inplace.
+> -----
 
-# for Intel use:
-make dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
+Using 'checkpatch --strict':
 
+CHECK: Alignment should match open parenthesis
+#2693: FILE: sound/soc/tegra/tegra210_i2s.c:362:
++static int tegra210_i2s_put_control(struct snd_kcontrol *kcontrol,
++       struct snd_ctl_elem_value *ucontrol
 
-# for Rockchip use:
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
+[snip]
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
+>>> +
+>>> +     } else if (strstr(kcontrol->id.name, "Playback Audio Bit Format"))
+>>> +             i2s->audio_fmt_override[I2S_RX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Capture Audio Bit Format"))
+>>> +             i2s->audio_fmt_override[I2S_TX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Client Bit Format"))
+>>> +             i2s->client_fmt_override = value;
+>>> +     else if (strstr(kcontrol->id.name, "Playback Audio Channels"))
+>>> +             i2s->audio_ch_override[I2S_RX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Capture Audio Channels"))
+>>> +             i2s->audio_ch_override[I2S_TX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Client Channels"))
+>>> +             i2s->client_ch_override = value;
+>>> +     else if (strstr(kcontrol->id.name, "Capture Stereo To Mono"))
+>>> +             i2s->stereo_to_mono[I2S_TX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Capture Mono To Stereo"))
+>>> +             i2s->mono_to_stereo[I2S_TX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Playback Stereo To Mono"))
+>>> +             i2s->stereo_to_mono[I2S_RX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Playback Mono To Stereo"))
+>>> +             i2s->mono_to_stereo[I2S_RX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Playback FIFO Threshold"))
+>>> +             i2s->rx_fifo_th = value;
+>>> +     else if (strstr(kcontrol->id.name, "BCLK Ratio"))
+>>> +             i2s->bclk_ratio = value;
+>> I'm pretty sure that checkpatch should complain about the missing
+>> brackets, they should make code's indentation uniform and thus easier to
+>> read. Same for all other occurrences in the code.
+> 
+> same as above
 
-Also change:
+CHECK: braces {} should be used on all arms of this statement
+#2699: FILE: sound/soc/tegra/tegra210_i2s.c:368:
++       if (strstr(kcontrol->id.name, "Loopback")) {
+[...]
++       } else if (strstr(kcontrol->id.name, "Sample Rate"))
+[...]
++       else if (strstr(kcontrol->id.name, "FSYNC Width")) {
+[...]
++       } else if (strstr(kcontrol->id.name, "Playback Audio Bit Format"))
+[...]
++       else if (strstr(kcontrol->id.name, "Capture Audio Bit Format"))
+[...]
++       else if (strstr(kcontrol->id.name, "Client Bit Format"))
+[...]
++       else if (strstr(kcontrol->id.name, "Playback Audio Channels"))
+[...]
++       else if (strstr(kcontrol->id.name, "Capture Audio Channels"))
+[...]
++       else if (strstr(kcontrol->id.name, "Client Channels"))
+[...]
++       else if (strstr(kcontrol->id.name, "Capture Stereo To Mono"))
+[...]
++       else if (strstr(kcontrol->id.name, "Capture Mono To Stereo"))
+[...]
++       else if (strstr(kcontrol->id.name, "Playback Stereo To Mono"))
+[...]
++       else if (strstr(kcontrol->id.name, "Playback Mono To Stereo"))
+[...]
++       else if (strstr(kcontrol->id.name, "Playback FIFO Threshold"))
+[...]
++       else if (strstr(kcontrol->id.name, "BCLK Ratio"))
+[...]
 
-example:
-  Reduce some spaces here.
+[snip]
 
-Also remove "|" from description.
+>>> +     pm_runtime_enable(dev);
+>> Error checking?
+> 
+> return type for above is void()
 
-See:
-description: |
-  A more detailed multi-line description of the binding.
+Ok
 
-  Details about the hardware device and any links to datasheets can go here.
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
+>>> +{
+>>> +     pm_runtime_disable(&pdev->dev);
+>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
+>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
+>> This breaks device's RPM refcounting if it was disabled in the active
+>> state. This code should be removed. At most you could warn about the
+>> unxpected RPM state here, but it shouldn't be necessary.
+> 
+> I guess this was added for safety and explicit suspend keeps clock
+> disabled.
+> Not sure if ref-counting of the device matters when runtime PM is
+> disabled and device is removed.
+> I see few drivers using this way.
 
-  Literal blocks are marked with the '|' at the beginning. The end is
-marked by
-  indentation less than the first line of the literal block. Lines also
-cannot
-  begin with a tab character.
+It should matter (if I'm not missing something) because RPM should be in
+a wrecked state once you'll try to re-load the driver's module. Likely
+that those few other drivers are wrong.
+
+[snip]
 
 > 
-> Dafna
+>>> +     int rx_fifo_th;
+>> Could rx_fifo_th be negative?
 > 
->>
->>>
->>>     DTC    
->>> Documentation/devicetree/bindings/clock/qcom,gcc.example.dt.yaml
->>> Error:
->>> Documentation/devicetree/bindings/clock/qcom,gcc.example.dts:111.28-29
->>> syntax error
->>> FATAL ERROR: Unable to parse input tree
->>>
->>> Dafna
->>>
->>>>
->>>>> make dtbs_check
->>>>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
->>>>>
->>>>>
->>
-
+> rx_fifo_th itself does not take negative values, explicit typecasting> is avoided in "if" condition by declaring this as "int"
+Explicit typecasting isn't needed for integers.
