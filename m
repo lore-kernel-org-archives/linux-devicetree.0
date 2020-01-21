@@ -2,107 +2,158 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC9AC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 11:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2175FC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 12:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9103924125
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 11:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CF620882
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 12:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwou/e7W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UoarV1BV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgAULxH (ORCPT
+        id S1729030AbgAUMa5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:53:07 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34025 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgAULxH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 06:53:07 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c9so1251202plo.1
-        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 03:53:07 -0800 (PST)
+        Tue, 21 Jan 2020 07:30:57 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46294 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728898AbgAUMa5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 07:30:57 -0500
+Received: by mail-ed1-f65.google.com with SMTP id m8so2729439edi.13
+        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 04:30:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=/3S5mon5VDk6nkhKS1chVu47TkFHP/2m+taqKFCAbCo=;
-        b=uwou/e7W7PCFfX7d2gX6/3Vq7WAki1MzMw1v/9OmR7gq0tETyM1+eMIJCFCmjC20GQ
-         P09bH8U92KIT+plgMwGnLaDLwc5MmYzl2TQBY3tvrle4VWwfnQQ+we1V0qzx6WZeyoLu
-         8TAIQ9tOKyw8/XfTm0BEXa6FyghzGD5qocDd2Fc68ajlJd9cDA9TCY7uoDp5OiqfWR7q
-         //uH89kZFZl4RTnwzAXUVcnaeViY2y0fvdWa9chYTHAgdf8lddJ3+Ydh5HS8rZHAKDzb
-         ojJzFiaS5lFFLAVAVYjmBsU/if8wl2tHwcx24QGrHiH4W7jLrTjPAM7iYh1y6rwfxAL+
-         wsVg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jNbiAMxqqOj55GSDQKDWmBh++d71tG7ldeLAk9zmd6A=;
+        b=UoarV1BVm2Btqxccp5b5Ri5nQVCi4Ed1USfuvenRzygLxhAnESncPto4TO3kZatVli
+         QJA3MCg+PyaCkzLmTwafsRywirHdNWFoQxU1wuHF34s95eo+ODIJNmBeU67HHB9UdH4b
+         1WJNGQAtjgmvSTg/+Y26fXK2c56Szm+bAp2UvGxtHky9FxucphpRDNM1F4BnTP7mRhbP
+         sbsi+STGoHLSUFCC6Z9bfVTtE/tMwSEzGW9UFnrs1V07S6DwMcBEOOS590K0Jaqg6Kwy
+         CfeyldwuK79EoSWeqzGv1fQ1qSlfbLqN3ALcxWqca3eywyApnMS82jIPkP0Dl2X9pGwJ
+         RhSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/3S5mon5VDk6nkhKS1chVu47TkFHP/2m+taqKFCAbCo=;
-        b=N1ymm3bbndH3tnZr1OomAg4BVdgu1Ob8s+q+XcwM/IxeHnggDVsdKqI7y6Ove+7lYD
-         8iIgSEfSIuArwzK08f8AoWNSO1HHkKClaT3mtXYGiCvryHPbq6KxETxjEzgjNOYXspGf
-         bZl3pRFLMKshx4IsmwPAD+b9mIrpFofHcw7PP7ZJght02faVAZmzxoWJIkUT/31Piz4T
-         fLda7up/W1JD+Z6zpGyuXPYYyJfmB4k86RVxabm0aWE5hlvr2No0eS2c/n2kBGnIjmaV
-         g17swvyajxganijy28V/x9mwcUUUUecpiYVPQ5IFP8MnkRpGSMmYFUcNM/tj9wj1nhhb
-         uoiA==
-X-Gm-Message-State: APjAAAX6RQf3USjLuoMPQd6uUvttl/UxNql3jpLh+aSu1NIr3HXvrlO3
-        7zl5KF8y33yvHaWZ0lEPXxvLxOQE
-X-Google-Smtp-Source: APXvYqztthmY94b4xleeH1RBzVRekGoQHvIFxQkIDCLoTQeMOP3AZ3iqgA50Iv/ewU0LFNKmNKKtGQ==
-X-Received: by 2002:a17:902:8b85:: with SMTP id ay5mr4653873plb.253.1579607587173;
-        Tue, 21 Jan 2020 03:53:07 -0800 (PST)
-Received: from localhost ([43.224.245.181])
-        by smtp.gmail.com with ESMTPSA id j38sm41190186pgj.27.2020.01.21.03.53.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jan 2020 03:53:06 -0800 (PST)
-From:   lijiazi <jqqlijiazi@gmail.com>
-X-Google-Original-From: lijiazi <lijiazi@xiaomi.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     lijiazi <lijiazi@xiaomi.com>, devicetree@vger.kernel.org
-Subject: [PATCH] of: Use enum instead of macro to define flag
-Date:   Tue, 21 Jan 2020 19:52:36 +0800
-Message-Id: <00a5abf82a735ff0de442c28c25a60ff4b408a66.1579603361.git.lijiazi@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jNbiAMxqqOj55GSDQKDWmBh++d71tG7ldeLAk9zmd6A=;
+        b=DzdoEyHVK+CpE+OpLyp+yKpyEzbR9gyBBewcAJ0CHL7C6w+C/E6H6AKchXH6Y3NeoR
+         ch3K0GV/BR0PG/WQMxo6lkZVPyq3pIPGxHTUYbwaTuTTLmofEG9o0Ayhr326LNvtCGRz
+         sfltJnZAnLAd0wRmjToDYh2hjm7lsUL5at2X5LGwMZbiZl8DOWlft/aUqdQkNTspsqqX
+         C0DS8pLVQ6oz9e/HoSBdVu25GswVMXjGuwDBfauf06UQU4lInYR8XfLuyP5CiqtrwIU2
+         Jk5WDbICwlAGa0ePGXeoa2UM+DUXd4WrigT4SVHjVwGiXha9K42EyIW5KY2T5TJ2OGh5
+         OlzA==
+X-Gm-Message-State: APjAAAVqih1fl6MUu5muDtFsnLRsWQA54OnYvwhrfB/m2Hb8m1gUgXdP
+        4spwk8JT+MODSg20kyyqxjhN6g==
+X-Google-Smtp-Source: APXvYqxOZnZWPEscqDETn75LsvLIexfMmx0NUCw7dFoO8A8E4cUz1jWb7ytPgjienQN4l3NNB7qxjw==
+X-Received: by 2002:aa7:da13:: with SMTP id r19mr3580963eds.188.1579609855545;
+        Tue, 21 Jan 2020 04:30:55 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id t1sm1277494ejg.32.2020.01.21.04.30.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 04:30:54 -0800 (PST)
+Subject: Re: [PATCH V4 1/4] arm64: dts: sc7180: Add Venus video codec DT node
+To:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
+References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
+ <1579006416-11599-2-git-send-email-dikshita@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <fff8744d-05cf-f7a3-6d1f-78111fd85deb@linaro.org>
+Date:   Tue, 21 Jan 2020 14:30:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <1579006416-11599-2-git-send-email-dikshita@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use enum instead of macro to define device node flag.
-And it seems that no need start with 1, so let's start with 0.
+Hi,
 
-Suggested-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: lijiazi <lijiazi@xiaomi.com>
----
- include/linux/of.h | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+On 1/14/20 2:53 PM, Dikshita Agarwal wrote:
+> This adds Venus video codec DT node for sc7180.
+> 
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index c669c0a..b90936c0 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -140,12 +140,14 @@ extern raw_spinlock_t devtree_lock;
-  * struct device_node flag descriptions
-  * (need to be visible even when !CONFIG_OF)
-  */
--#define OF_DYNAMIC		1 /* (and properties) allocated via kmalloc */
--#define OF_DETACHED		2 /* detached from the device tree */
--#define OF_POPULATED		3 /* device already created */
--#define OF_POPULATED_BUS	4 /* platform bus created for children */
--#define OF_OVERLAY		5 /* allocated for an overlay */
--#define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
-+enum of_device_node_flag {
-+	OF_DYNAMIC = 0,		/* (and properties) allocated via kmalloc */
-+	OF_DETACHED,		/* detached from the device tree */
-+	OF_POPULATED,		/* device already created */
-+	OF_POPULATED_BUS,	/* platform bus created for children */
-+	OF_OVERLAY,		/* allocated for an overlay */
-+	OF_OVERLAY_FREE_CSET,	/* in overlay cset being freed */
-+};
- 
- #define OF_BAD_ADDR	((u64)-1)
- 
+Reviewed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3676bfd..6ecacca 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> +#include <dt-bindings/clock/qcom,videocc-sc7180.h>
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -66,6 +67,11 @@
+>  			compatible = "qcom,cmd-db";
+>  			no-map;
+>  		};
+> +
+> +		venus_mem: memory@8f600000 {
+> +			reg = <0 0x8f600000 0 0x500000>;
+> +			no-map;
+> +		};
+>  	};
+>  
+>  	cpus {
+> @@ -1043,6 +1049,36 @@
+>  			};
+>  		};
+>  
+> +		venus: video-codec@aa00000 {
+> +			compatible = "qcom,sc7180-venus";
+> +			reg = <0 0x0aa00000 0 0xff000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			power-domains = <&videocc VENUS_GDSC>,
+> +					<&videocc VCODEC0_GDSC>;
+> +			power-domain-names = "venus", "vcodec0";
+> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> +				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +			clock-names = "core", "iface", "bus",
+> +				      "vcodec0_core", "vcodec0_bus";
+> +			iommus = <&apps_smmu 0x0c00 0x60>;
+> +			memory-region = <&venus_mem>;
+> +
+> +			interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
+> +					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
+> +			interconnect-names = "video-mem", "cpu-cfg";
+> +
+> +			video-decoder {
+> +				compatible = "venus-decoder";
+> +			};
+> +
+> +			video-encoder {
+> +				compatible = "venus-encoder";
+> +			};
+> +		};
+> +
+>  		pdc: interrupt-controller@b220000 {
+>  			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+>  			reg = <0 0x0b220000 0 0x30000>;
+> 
+
 -- 
-2.7.4
-
+regards,
+Stan
