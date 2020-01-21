@@ -2,87 +2,295 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5774EC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A865BC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E54324656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579592484;
-	bh=qL0bG8t0a29UEckKmtSr4GhjBXsVZzayHhqiBlD7ISY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P3CwPEAuhMkE3RQhS/b8AAUiTUu68P8Owqpmc9g/TsYkIKhlu2+vWjWARq6quYty/
-	 P9JtlBfQmIMSCkXIXhEHeEcmOyLL2PTazZFNslZWNlke0yWT0GpG3KRUEp8vFGLw7C
-	 nRUw+mHz59PBDYmq1Py/YVRseLc5JPFvtyQtBfs4=
+	by mail.kernel.org (Postfix) with ESMTP id 7F80524125
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:47:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XDbNeddJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbgAUHlX (ORCPT
+        id S1726052AbgAUHrf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:41:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgAUHlX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:41:23 -0500
-Received: from localhost (unknown [171.76.119.14])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B2F2253D;
-        Tue, 21 Jan 2020 07:41:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579592483;
-        bh=qL0bG8t0a29UEckKmtSr4GhjBXsVZzayHhqiBlD7ISY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P2VPXr5ZvaJzoURnqhDyGmynma/up6Pi6xhYxTPsDAC9Xla4u+SRJEeYyHQgRYvOr
-         Yx7LnZO0Lb5KIAo1ZB5T0v6QKhhVDBZU/8BCNcEQxpuWMaerIM8VLSc8FCs9r/Y/fT
-         v0sAdCig0VXhDcDzc2GKgwTa59RaStewP2Ho+YSM=
-Date:   Tue, 21 Jan 2020 13:11:18 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com, vigneshr@ti.com, frowand.list@gmail.com
-Subject: Re: [PATCH v8 00/18] dmaengine/soc: Add Texas Instruments UDMA
- support
-Message-ID: <20200121074118.GB2841@vkoul-mobl>
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+        Tue, 21 Jan 2020 02:47:35 -0500
+Received: from mail-pg1-f179.google.com ([209.85.215.179]:33287 "EHLO
+        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgAUHre (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 02:47:34 -0500
+Received: by mail-pg1-f179.google.com with SMTP id 6so1045130pgk.0
+        for <devicetree@vger.kernel.org>; Mon, 20 Jan 2020 23:47:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=J462gP7vhbxhDoIzruVoV6J83M4pWVmr5aPKKbidvG4=;
+        b=XDbNeddJYVmmDLRt6LlcQGbrwFmW1VnuKdBXSMiYe9N16Zu4fWvgmeRkPT+6maf1lp
+         DepU3zGR01Ha2+asfeYb9i16wfTuGzF4OIfFdgYMdFKxm6I9s+J8WqwCKcR7QhEd21mv
+         tGbUwLiF00x1y4Hc0T/VchRIer+zAZbOGTVtM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=J462gP7vhbxhDoIzruVoV6J83M4pWVmr5aPKKbidvG4=;
+        b=TzIgIv8RBwY5ddk5xlm12Hh3S/pXw7Y24z6nEBzCi1q7+qFKqlMNYDKo7VGzInqWvN
+         YTi5UCUDftidUotREBE+diqg5PwchJjmhfmRbhRovRJAj84HkI+P9sYv9X8+KK4qXxvN
+         cbob4ACDmcQE2/KCWA958IPHnoNr1NDMtKf02S9SdyZip2GPMfQmaMSCyvXxM3P85S28
+         YK8QVk0OFjFNwFLt9Y0B4T/+LorL3sMv8dWFCTvFhq4PscHGko0XOw9s2Vua4jlmJu5W
+         BrgX/Oo+QD6r2iN6GamBuQz+3MXID7x/JenpBtbOXw2wQ79XKnxeuyNqI3IiqajVOsvD
+         hXQQ==
+X-Gm-Message-State: APjAAAXyX2gSMiGCCLpZSk9hN1fCtnjZwW0SIOri6tLQ1R/uNW6eURcW
+        nwJGAiA2aw/RhdXefjJVd4X+NX3Kz4g=
+X-Google-Smtp-Source: APXvYqxvhyNTu/rh+VS1Kd9uktStHRdVGLtQRXtowuNvPhmCoCRbbi+/iAYaXGiBOkRYuRxOtC0DqQ==
+X-Received: by 2002:a63:551a:: with SMTP id j26mr4016736pgb.370.1579592853609;
+        Mon, 20 Jan 2020 23:47:33 -0800 (PST)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
+        by smtp.gmail.com with ESMTPSA id z4sm41655059pfn.42.2020.01.20.23.47.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 23:47:32 -0800 (PST)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     devicetree@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH v3] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
+Date:   Tue, 21 Jan 2020 15:47:27 +0800
+Message-Id: <20200121074727.35893-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+In-Reply-To: <20200114021934.178057-1-ikjn@chromium.org>
+References: <20200114021934.178057-1-ikjn@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23-12-19, 13:04, Peter Ujfalusi wrote:
-> Hi,
-> 
-> Vinod, Nishanth, Tero, Santosh: the ti_sci patch in this series was sent
-> upstream over a month ago:
-> https://lore.kernel.org/lkml/20191025084715.25098-1-peter.ujfalusi@ti.com/
-> 
-> I'm still waiting on it's fate (Tero has given his r-b).
-> The ti_sci patch did not made it to 5.5-rc1, but I included it in the series and
-> let the maintainers decide if it can go via DMAengine for 5.6 or to later
-> releases (5.6 probably for the ti_sci and 5.7 for the UDMA driver patch).
-> 
-> Patch 1-11 is the initial DMA support which can be applied as it is.
-> Patch 12-13 adds support for j721e tdtype for ti_sci and the UDMAP driver
-> Patch 14-15 exports the currently unexported functions:
-> 		devm_ti_sci_get_of_resource()
-> 		of_msi_get_domain()
-> Patch 16-18 makes the ringacc, DMAengine and glue layer buildable as module.
-> 
-> Changes since v7:
-> (https://lore.kernel.org/lkml/20191209094332.4047-1-peter.ujfalusi@ti.com/)
+Convert the ChromeOS EC bindings to json-schema.
 
-Applied 3-11 after merged tag from Santosh, thanks
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+---
+v3: node name changed in rpmsg example
+v2: cleanup description, fix typos, remove LPC, add add RPMSG example
+---
+ .../devicetree/bindings/mfd/cros-ec.txt       |  76 ------------
+ .../devicetree/bindings/mfd/cros-ec.yaml      | 111 ++++++++++++++++++
+ 2 files changed, 111 insertions(+), 76 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
 
+diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+deleted file mode 100644
+index 4860eabd0f72..000000000000
+--- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
++++ /dev/null
+@@ -1,76 +0,0 @@
+-ChromeOS Embedded Controller
+-
+-Google's ChromeOS EC is a Cortex-M device which talks to the AP and
+-implements various function such as keyboard and battery charging.
+-
+-The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
+-compatible string used depends on the interface. Each connection method has
+-its own driver which connects to the top level interface-agnostic EC driver.
+-Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
+-the top-level driver.
+-
+-Required properties (I2C):
+-- compatible: "google,cros-ec-i2c"
+-- reg: I2C slave address
+-
+-Required properties (SPI):
+-- compatible: "google,cros-ec-spi"
+-- reg: SPI chip select
+-
+-Required properties (RPMSG):
+-- compatible: "google,cros-ec-rpmsg"
+-
+-Optional properties (SPI):
+-- google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
+-  time to wake up from sleep before they can receive SPI transfers at a high
+-  clock rate. This property specifies the delay, in usecs, between the
+-  assertion of the CS to the start of the first clock pulse.
+-- google,cros-ec-spi-msg-delay: Some implementations of the EC require some
+-  additional processing time in order to accept new transactions. If the delay
+-  between transactions is not long enough the EC may not be able to respond
+-  properly to subsequent transactions and cause them to hang. This property
+-  specifies the delay, in usecs, introduced between transactions to account
+-  for the time required by the EC to get back into a state in which new data
+-  can be accepted.
+-
+-Required properties (LPC):
+-- compatible: "google,cros-ec-lpc"
+-- reg: List of (IO address, size) pairs defining the interface uses
+-
+-Optional properties (all):
+-- google,has-vbc-nvram: Some implementations of the EC include a small
+-  nvram space used to store verified boot context data. This boolean flag
+-  is used to specify whether this nvram is present or not.
+-
+-Example for I2C:
+-
+-i2c@12ca0000 {
+-	cros-ec@1e {
+-		reg = <0x1e>;
+-		compatible = "google,cros-ec-i2c";
+-		interrupts = <14 0>;
+-		interrupt-parent = <&wakeup_eint>;
+-		wakeup-source;
+-	};
+-
+-
+-Example for SPI:
+-
+-spi@131b0000 {
+-	ec@0 {
+-		compatible = "google,cros-ec-spi";
+-		reg = <0x0>;
+-		interrupts = <14 0>;
+-		interrupt-parent = <&wakeup_eint>;
+-		wakeup-source;
+-		spi-max-frequency = <5000000>;
+-		controller-data {
+-		cs-gpio = <&gpf0 3 4 3 0>;
+-		samsung,spi-cs;
+-		samsung,spi-feedback-delay = <2>;
+-		};
+-	};
+-};
+-
+-
+-Example for LPC is not supplied as it is not yet implemented.
+diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.yaml b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
+new file mode 100644
+index 000000000000..6a5b87cebcfa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
+@@ -0,0 +1,111 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/cros-ec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ChromeOS Embedded Controller
++
++maintainers:
++  - Benson Leung <bleung@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++  - Guenter Roeck <groeck@chromium.org>
++
++description: |
++  Google's ChromeOS EC is a microcontroller which talks to the AP and
++  implements various functions such as keyboard and battery charging.
++  The EC can be connected through various interfaces (I2C, SPI, and others)
++  and the compatible string specifies which interface is being used.
++
++properties:
++  compatible:
++    oneOf:
++      - description:
++          For implementations of the EC is connected through I2C.
++        const: google,cros-ec-i2c
++      - description:
++          For implementations of the EC is connected through SPI.
++        const: google,cros-ec-spi
++      - description:
++          For implementations of the EC is connected through RPMSG.
++        const: google,cros-ec-rpmsg
++
++  google,has-vbc-nvram:
++    description: |
++      Some implementations of the EC include a small
++      nvram space used to store verified boot context data.
++      This boolean flag is used to specify whether this nvram is
++      present or not.
++    type: boolean
++
++required:
++  - compatible
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          const: google,cros-ec-i2c
++    then:
++      properties:
++        reg:
++          description: I2C slave address
++          maxItems: 1
++      required:
++        - reg
++  - if:
++      properties:
++        compatible:
++          const: google,cros-ec-spi
++    then:
++      properties:
++        reg:
++          description: SPI chip select
++          maxItems: 1
++        google,cros-ec-spi-pre-delay:
++          description: |
++            This property specifies the delay in usecs between the
++            assertion of the CS and the first clock pulse.
++        google,cros-ec-spi-msg-delay:
++          description: |
++            This property specifies the delay in usecs between messages.
++      required:
++        - reg
++
++examples:
++  # Example for I2C
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        cros-ec@1e {
++            compatible = "google,cros-ec-i2c";
++            reg = <0x1e>;
++            interrupts = <6 0>;
++            interrupt-parent = <&gpx1>;
++        };
++    };
++  # Example for SPI
++  - |
++    spi0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        cros-ec@0 {
++            compatible = "google,cros-ec-spi";
++            reg = <0x0>;
++            google,cros-ec-spi-msg-delay = <30>;
++            interrupts = <99 0>;
++            interrupt-parent = <&gpio7>;
++            spi-max-frequency = <5000000>;
++        };
++    };
++  # Example for RPMSG
++  - |
++    scp0 {
++        cros-ec@0 {
++            compatible = "google,cros-ec-rpmsg";
++        };
++    };
++...
 -- 
-~Vinod
+2.25.0.341.g760bfbb309-goog
+
