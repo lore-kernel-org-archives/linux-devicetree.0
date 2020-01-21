@@ -2,112 +2,218 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABBEC33CAA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 04:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE23FC33CAA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 05:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1115B217F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 04:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C0E22314
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 05:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EnKysQf2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oHAWBpWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgAUElZ (ORCPT
+        id S1725890AbgAUFKQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 23:41:25 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16995 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728042AbgAUElZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 23:41:25 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2680e50000>; Mon, 20 Jan 2020 20:41:09 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Jan 2020 20:41:24 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Jan 2020 20:41:24 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jan
- 2020 04:41:19 +0000
-Subject: Re: [alsa-devel] [PATCH 2/9] ASoC: tegra: add support for CIF
- programming
-To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <atalambedu@nvidia.com>, <linux-kernel@vger.kernel.org>,
-        <lgirdwood@gmail.com>, <jonathanh@nvidia.com>,
-        <viswanathl@nvidia.com>, <sharadg@nvidia.com>,
-        <broonie@kernel.org>, <thierry.reding@gmail.com>,
-        <linux-tegra@vger.kernel.org>, <rlokhande@nvidia.com>,
-        <mkumard@nvidia.com>, <dramesh@nvidia.com>
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-3-git-send-email-spujar@nvidia.com>
- <d01ed171-d949-19b2-3390-ee30eada2779@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <a8409b81-7c6b-37a9-81fd-772eb2eca185@nvidia.com>
-Date:   Tue, 21 Jan 2020 10:11:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 00:10:16 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42294 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUFKQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 00:10:16 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00L5A5UW109643;
+        Mon, 20 Jan 2020 23:10:05 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579583405;
+        bh=g4km0bHBqi0VKPsKp25oxKkp+0Wceu8TT0XwSBVu6I4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=oHAWBpWOt0ilV21Fv5+aZl2sbF7GMihEBDIM9iz4c2hwls8xx6AM3kqlaxYu4GeMe
+         woeev1qpDGmCMudPiFpwl0zaGEspv2M7TBvfE+au6pgZjVacLepQkv8L0Mk6Qo5dd+
+         t/O3Vv2MXPVzz7smzDCV011XidPZSiawHLizX6pE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00L5A5HY056622;
+        Mon, 20 Jan 2020 23:10:05 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 20
+ Jan 2020 23:10:04 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 20 Jan 2020 23:10:04 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00L5A1G2057059;
+        Mon, 20 Jan 2020 23:10:02 -0600
+Subject: Re: [PATCH 2/5] arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl
+ node to select SERDES lane mux
+To:     Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>
+CC:     <t-kristo@ti.com>, <nm@ti.com>, <nsekhar@ti.com>,
+        <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200108111830.8482-1-rogerq@ti.com>
+ <20200108111830.8482-3-rogerq@ti.com> <20200115014724.GA20772@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <1c55f0a8-99e3-934f-e8b8-d090df06a12e@ti.com>
+Date:   Tue, 21 Jan 2020 10:43:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <d01ed171-d949-19b2-3390-ee30eada2779@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579581669; bh=GRt9U4PodCr86yU5eOb42L+DV/cuxomWCgBuTVfGcsY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=EnKysQf2VsOESTATJ6csnBbQLyGt6UD8fN0ZDiNDa5pHNJZPSq756z+cvYTNkkbUR
-         UJFZvBvLGpXkRtSCG6VeBOwje4GuJ/bIGrtWbWabJb0ytEuAMf6OEmXj9QY1+i7Eij
-         wY3N0EifVoSVE7jDcRa9T6gakYcJnbOGb/VyUmy/kYDYFVL/KDJo0Tj7LpzUecg/G4
-         m4FUDbKigHjs669jxNj15+GX06SaH0850lcGpK38nDe6IjhcTKbqFbvm4D3L1wwk2R
-         cgEfj67npqikvcgyjnrnyOpigqYZ37U+8rY75ZlUoykyl7mmLnBsNDuOc931gti59l
-         QbwzC5wDwFsQQ==
+In-Reply-To: <20200115014724.GA20772@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
-On 1/20/2020 9:28 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> Hello Sameer,
->
-> 20.01.2020 17:23, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->
-> [snip]
->
->> Tegra30 and Tegra124 have an identical CIF programming helper function.
-> [snip]
->
->> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT  24
->> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK_US        0x3f
->> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK   (TEGRA124_AUDIOCIF=
-_CTRL_FIFO_THRESHOLD_MASK_US << TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT=
-)
->> -
->> -/* Channel count minus 1 */
->> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT   24
->> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK_US 7
->> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK    (TEGRA30_AUDIOCIF_=
-CTRL_AUDIO_CHANNELS_MASK_US << TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT)
-> The AUDIOCIF_CTRL bitfields are not the same on T30 and T124, why are
-> you claiming that programming is identical? Have you actually tried to
-> test these patches on T30?
+On 15/01/20 7:17 AM, Rob Herring wrote:
+> On Wed, Jan 08, 2020 at 01:18:27PM +0200, Roger Quadros wrote:
+>> From: Kishon Vijay Abraham I <kishon@ti.com>
+>>
+>> Add serdes_ln_ctrl node used for selecting SERDES lane mux.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 26 +++++++++++
+>>  include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
+>>  2 files changed, 79 insertions(+)
+>>  create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> index 24cb78db28e4..6741c1e67f50 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> @@ -5,6 +5,8 @@
+>>   * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
+>>   */
+>>  #include <dt-bindings/phy/phy.h>
+>> +#include <dt-bindings/mux/mux.h>
+>> +#include <dt-bindings/mux/mux-j721e-wiz.h>
+>>  
+>>  &cbass_main {
+>>  	msmc_ram: sram@70000000 {
+>> @@ -19,6 +21,30 @@
+>>  		};
+>>  	};
+>>  
+>> +	scm_conf: scm_conf@100000 {
+> 
+> Don't use '_' in node names.
 
-Oh yes! seems like I overlooked the macro values. Thanks for pointing=20
-this. I will retain separate CIF function for Tegra30.
-I do not have a Tegra30 board with me and hence could not test anything=20
-specific to it apart from build sanity.
-If someone can help me test I would really appreciate.
+Okay.
+> 
+>> +		compatible = "syscon", "simple-mfd";
+> 
+> Needs a specific compatible especially since the child node doesn't have 
+> one.
 
+Child node has "mmio-mux" as compatible no? Are you referring to
+something else here?
+> 
+>> +		reg = <0 0x00100000 0 0x1c000>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0x0 0x0 0x00100000 0x1c000>;
+>> +
+>> +		serdes_ln_ctrl: serdes_ln_ctrl@4080 {
+> 
+> 'reg' is needed if there's a unit-address. If there's a register range 
+> with only the mux controls, then add 'reg'.
+
+Sure, will add.
+
+
+Thanks
+Kishon
+
+> 
+>> +			compatible = "mmio-mux";
+>> +			#mux-control-cells = <1>;
+>> +			mux-reg-masks = <0x4080 0x3>, <0x4084 0x3>, /* SERDES0 lane0/1 select */
+>> +					<0x4090 0x3>, <0x4094 0x3>, /* SERDES1 lane0/1 select */
+>> +					<0x40a0 0x3>, <0x40a4 0x3>, /* SERDES2 lane0/1 select */
+>> +					<0x40b0 0x3>, <0x40b4 0x3>, /* SERDES3 lane0/1 select */
+>> +					<0x40c0 0x3>, <0x40c4 0x3>, <0x40c8 0x3>, <0x40cc 0x3>;
+>> +					/* SERDES4 lane0/1/2/3 select */
+>> +			idle-states = <SERDES0_LANE0_PCIE0_LANE0>, <SERDES0_LANE1_PCIE0_LANE1>,
+>> +				      <SERDES1_LANE0_PCIE1_LANE0>, <SERDES1_LANE1_PCIE1_LANE1>,
+>> +				      <SERDES2_LANE0_PCIE2_LANE0>, <SERDES2_LANE1_PCIE2_LANE1>,
+>> +				      <MUX_IDLE_AS_IS>, <SERDES3_LANE1_USB3_0>,
+>> +				      <SERDES4_LANE0_EDP_LANE0>, <SERDES4_LANE1_EDP_LANE1>, <SERDES4_LANE2_EDP_LANE2>, <SERDES4_LANE3_EDP_LANE3>;
+>> +		};
+>> +	};
+>> +
+>>  	gic500: interrupt-controller@1800000 {
+>>  		compatible = "arm,gic-v3";
+>>  		#address-cells = <2>;
+>> diff --git a/include/dt-bindings/mux/mux-j721e-wiz.h b/include/dt-bindings/mux/mux-j721e-wiz.h
+>> new file mode 100644
+>> index 000000000000..fd1c4ea9fc7f
+>> --- /dev/null
+>> +++ b/include/dt-bindings/mux/mux-j721e-wiz.h
+>> @@ -0,0 +1,53 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * This header provides constants for J721E WIZ.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_J721E_WIZ
+>> +#define _DT_BINDINGS_J721E_WIZ
+>> +
+>> +#define SERDES0_LANE0_QSGMII_LANE1	0x0
+>> +#define SERDES0_LANE0_PCIE0_LANE0	0x1
+>> +#define SERDES0_LANE0_USB3_0_SWAP	0x2
+>> +
+>> +#define SERDES0_LANE1_QSGMII_LANE2	0x0
+>> +#define SERDES0_LANE1_PCIE0_LANE1	0x1
+>> +#define SERDES0_LANE1_USB3_0		0x2
+>> +
+>> +#define SERDES1_LANE0_QSGMII_LANE3	0x0
+>> +#define SERDES1_LANE0_PCIE1_LANE0	0x1
+>> +#define SERDES1_LANE0_USB3_1_SWAP	0x2
+>> +#define SERDES1_LANE0_SGMII_LANE0	0x3
+>> +
+>> +#define SERDES1_LANE1_QSGMII_LANE4	0x0
+>> +#define SERDES1_LANE1_PCIE1_LANE1	0x1
+>> +#define SERDES1_LANE1_USB3_1		0x2
+>> +#define SERDES1_LANE1_SGMII_LANE1	0x3
+>> +
+>> +#define SERDES2_LANE0_PCIE2_LANE0	0x1
+>> +#define SERDES2_LANE0_SGMII_LANE0	0x3
+>> +#define SERDES2_LANE0_USB3_1_SWAP	0x2
+>> +
+>> +#define SERDES2_LANE1_PCIE2_LANE1	0x1
+>> +#define SERDES2_LANE1_USB3_1		0x2
+>> +#define SERDES2_LANE1_SGMII_LANE1	0x3
+>> +
+>> +#define SERDES3_LANE0_PCIE3_LANE0	0x1
+>> +#define SERDES3_LANE0_USB3_0_SWAP	0x2
+>> +
+>> +#define SERDES3_LANE1_PCIE3_LANE1	0x1
+>> +#define SERDES3_LANE1_USB3_0		0x2
+>> +
+>> +#define SERDES4_LANE0_EDP_LANE0		0x0
+>> +#define SERDES4_LANE0_QSGMII_LANE5	0x2
+>> +
+>> +#define SERDES4_LANE1_EDP_LANE1		0x0
+>> +#define SERDES4_LANE1_QSGMII_LANE6	0x2
+>> +
+>> +#define SERDES4_LANE2_EDP_LANE2		0x0
+>> +#define SERDES4_LANE2_QSGMII_LANE7	0x2
+>> +
+>> +#define SERDES4_LANE3_EDP_LANE3		0x0
+>> +#define SERDES4_LANE3_QSGMII_LANE8	0x2
+>> +
+>> +#endif /* _DT_BINDINGS_J721E_WIZ */
+>> -- 
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
