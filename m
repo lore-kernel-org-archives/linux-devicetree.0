@@ -2,134 +2,141 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6EBC33CAA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 16:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B97C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2406B21569
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 16:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3CF206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMjx9T7P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBsH58uX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgAUQ57 (ORCPT
+        id S1728852AbgAURLR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:57:59 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45201 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbgAUQ56 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 11:57:58 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 203so2842066lfa.12;
-        Tue, 21 Jan 2020 08:57:56 -0800 (PST)
+        Tue, 21 Jan 2020 12:11:17 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40001 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729080AbgAURLN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 12:11:13 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c14so4108720wrn.7
+        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 09:11:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=13rfNwxyiR9yuh7eK/7sBMvhz8O70v72cEL2FYuVuuw=;
-        b=CMjx9T7PtY1kfCg2UepPrVQ1Hpe7hOMZU/pLX4viCwRLqN/qlrwhwyJUAuQPjE73ha
-         MX/QAp600urA0KcCNWXi70P5jCWzwjVxgQdgQA704meGkw9BBq6HfJljGniXS3/tV6Sh
-         rXBfa93dOG1XoDH6wLQCKUghxqXlCcCanLsdxNZZstCtE6HheuASHqU29T6tw3SVtPWU
-         r8F+INeCbTbPEWEn1Rq/XwxUg6AB3TLDfVXIoSjfBUZopXm3iLKOE9u19hdcshXffCr2
-         FJnK3dgh+wGWAq6lTe7pFuGusnmjcTf1NzYb6LY0QsEIthGl1F4d0fdSgUlCbUWnLjOk
-         tqoQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZGs+4DUJDSvBqJ//fVqMbttGqRoxAKV0f+ErvAbm5L8=;
+        b=EBsH58uX53UDW9/nRW8udKKKe06jKEr+n8gx6G9QSL2/NkKdjeoB1bVKUP6O/x3ouq
+         cTuUJxlAHY5gB1+bQaH0jRnZtsfVFtunbtbfIspa/qvNnhkdCnLlq/zmIMUQN05k1DDG
+         q+2M++veTbrYCoMSPp8GUjGatjIR2yq4peoPTH1U3X1y5nbegNcANqKY37WwRQM90+6M
+         xu2TVvJo6hrsAneOloOPEw01LAQk3lB+2RXhKTeZmVGrV5j7dNi+GjcilaACOkvK+ac9
+         SheTyjSLBZEoulkJdX9aGjip+T9fcLoaOtpf1XiEsfb9T0+56H8sqtuUxEdhNfUO8TmB
+         kACQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=13rfNwxyiR9yuh7eK/7sBMvhz8O70v72cEL2FYuVuuw=;
-        b=CSxAA09tZzsnRQuA+RjcP+hJRetplg6bHbM6OVmglOz0ze9IRk6ctQNByVHm7f3jBU
-         cBaiOONoo2/dEnuDVa+HOY6aPkDFKsWxtQtVR+4CtYiqhfw7JWqIqMwH5/9AkwisKZzZ
-         65i+ls1ekhtnKjpKTYLrRm6sRuR+DOBAaGyYzkK61zAt7gvSFRa1iginDAqPApM4xdHt
-         +HZ4RDNdymslV8NY0zwW79ObWxWZw2eQc/nCnlf9j01x0AnVGaPEB8wVTFGQSR9a9BGf
-         jQWqMCO+YRBVz8LrMLtn1mCvfX/ZCbTJAeqduggdMTfCPwnxEmtZViJBpropbDP+6hNN
-         Hs0Q==
-X-Gm-Message-State: APjAAAVLfWc56mWRMtnMpiTxBf58q2WQJ8Q5L4zQMTxqN1kZsk6muzmG
-        +SwmRBk9/EngQyMMQtxcgyGp6V5S
-X-Google-Smtp-Source: APXvYqz8y+exlJhNtla7NozdORcCyX05vAJjJeIxAxEhtNFlCSv1FCczCahSTpmAE+gzeqg/mFl3pg==
-X-Received: by 2002:ac2:5216:: with SMTP id a22mr3177132lfl.18.1579625875608;
-        Tue, 21 Jan 2020 08:57:55 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r20sm19173224lfi.91.2020.01.21.08.57.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 08:57:55 -0800 (PST)
-Subject: Re: [PATCH v8 22/22] clk: tegra: Remove audio clocks configuration
- from clock driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
- <1578986667-16041-23-git-send-email-skomatineni@nvidia.com>
- <d69fe7a8-71cc-c560-a567-f89b936753ad@gmail.com>
- <9765b723-33af-9863-72c9-8094203c8cb8@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f2506b91-0199-f2a5-ea8c-ace7b651b443@gmail.com>
-Date:   Tue, 21 Jan 2020 19:57:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZGs+4DUJDSvBqJ//fVqMbttGqRoxAKV0f+ErvAbm5L8=;
+        b=gFc/fLJuv2xQMHR1apBJawX2QVvnIMyyPgc+GGEHPdWLWzkSvOkWD3i1g5L88hp4IJ
+         z7U0xuLPmZn96JAOYSGGezHD19kxMO4ywLZoUW+WSigcZukSyQ10ofuuN9BGltYz/zEf
+         XXi/9ZZp4N+8eXg7xTGek4M/xaYL6AY1uiWGq2dr0TRAPPVeE8yvgk40t6fvkfFv+Gem
+         IG2P/4BHjCpbwS5zEEM6AjeyYUiTbNfx+17zyr3gPAnYBNd28S6Xa1if8ZAru3SIc03X
+         K4utdq64wlpLYqzpgs0ekH4/+sXKhXTEtVSEbFi2G2rbCsalDKpW+HtuZ+RcG9744TWU
+         yDNw==
+X-Gm-Message-State: APjAAAUrzEBjoci6ueFngDVWgiq2kQ00htOl71zfikEmOQvTAcPith/0
+        uuWQuZdcjPchCrzgn1HzZizJXw==
+X-Google-Smtp-Source: APXvYqxOw+/RCexAIK0/PEftnp59kp31SffdYzOIBv9fhO0Pd8QkKlcd4t1De7O+sOSBJ2kmnvIsaQ==
+X-Received: by 2002:a5d:5491:: with SMTP id h17mr6324330wrv.374.1579626671678;
+        Tue, 21 Jan 2020 09:11:11 -0800 (PST)
+Received: from cheddar.halon.org.uk (cheddar.halon.org.uk. [93.93.131.118])
+        by smtp.gmail.com with ESMTPSA id z83sm33634wmg.2.2020.01.21.09.11.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jan 2020 09:11:11 -0800 (PST)
+Received: from bsmtp by cheddar.halon.org.uk with local-bsmtp (Exim 4.89)
+        (envelope-from <steve.mcintyre@linaro.org>)
+        id 1itx3W-000263-Qo; Tue, 21 Jan 2020 17:11:10 +0000
+Received: from steve by tack.einval.org with local (Exim 4.92)
+        (envelope-from <steve.mcintyre@linaro.org>)
+        id 1itx3I-0001fB-Ld; Tue, 21 Jan 2020 17:10:56 +0000
+Date:   Tue, 21 Jan 2020 17:10:56 +0000
+From:   Steve McIntyre <steve.mcintyre@linaro.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 0/3] Add device tree build information
+Message-ID: <20200121171048.GF6796@tack.einval.com>
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
+ <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
+ <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
+ <220e3aea-b273-417a-69c9-059236c888af@st.com>
+ <a1233cd8-e73a-82d7-74bf-69109d1a0a07@gmail.com>
+ <20200120182837.GO3697@linaro.org>
+ <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <9765b723-33af-9863-72c9-8094203c8cb8@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
+X-attached: none
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-wibble: sender_address steve.mcintyre@linaro.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-21.01.2020 19:19, Sowjanya Komatineni пишет:
-> 
-> On 1/19/20 7:04 AM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 14.01.2020 10:24, Sowjanya Komatineni пишет:
->>
->> [snip]
->>
->>> diff --git a/drivers/clk/tegra/clk-tegra30.c
->>> b/drivers/clk/tegra/clk-tegra30.c
->>> index 5732fdbe20db..53d1c48532ae 100644
->>> --- a/drivers/clk/tegra/clk-tegra30.c
->>> +++ b/drivers/clk/tegra/clk-tegra30.c
->>> @@ -1221,9 +1221,8 @@ static struct tegra_clk_init_table init_table[]
->>> __initdata = {
->>>        { TEGRA30_CLK_UARTC, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>>        { TEGRA30_CLK_UARTD, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>>        { TEGRA30_CLK_UARTE, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>> -     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
->>> -     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
->>> -     { TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
->>> +     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 0 },
->>> +     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 0 },
->>>        { TEGRA30_CLK_I2S0, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>        { TEGRA30_CLK_I2S1, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>        { TEGRA30_CLK_I2S2, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>
->> What about to use the assigned-clock-rates in device-tree and thus to
->> remove those PLL_A entries?
-> 
-> Yes clock rates can be used and also PLL rate is set based on sample
-> rate during hw_params. So this can be removed.
-> 
-> But PLLA clock rates are not related to this patch series and also
-> changing this needs audio function testing across all platforms and
-> currently we don't have audio functional tests in place for older
-> platforms.
-> 
-> All audio clocks proper fixes and cleanup b/w clock driver and audio
-> driver will be done separately.
+[ Adding lakml to the CC list ]
 
-If there are real plans to make sound driver to drive the PLLA rate,
-then indeed should be fine to keep it as-is for now.
+On Mon, Jan 20, 2020 at 09:20:55PM -0600, Frank Rowand wrote:
+>On 1/20/20 12:28 PM, Steve McIntyre wrote:
+>> On Mon, Jan 20, 2020 at 10:14:22AM -0600, Frank Rowand wrote:
+>>> On 1/20/20 4:56 AM, Alexandre Torgue wrote:
+>>>
+>>> Here is an example of the info from one of my builds:
+>>>
+>>>   From Linux 5.5.0-rc2-dirty by frowand the Mon Jan 20 09:50:58 CST 2020.
+>>>
+>>> The information 'Linux 5.5.0-rc2-dirty' is precisely what was most objected
+>>> to in my proposal.
+>> 
+>> ACK. :-( I'm surprised to see so much push-back on what looks like a
+>> simple piece of information here.
+>
+>Me too.
+
+So, looking at the comments back on the old thread...
+
+Alexandre is proposing somthing slightly different here: a patch to
+add a simple string to allow for a description of where the DTB came
+from. The particular example he uses here fills in build details from
+the Linux repo, but it could just as easily be filled in as part of a
+U-Boot build, or the build of a DTB included with EDK2, or whatever
+other firmware might include it. It might be useful to also add
+similar debug output into U-Boot, or for that matter any other
+DT-using project.
+
+As Rob says later, it's simply information for humans to help identify
+where a DTB came from. Nothing more.
+
+>> I've had users *specifically* asking for this kind of identification
+>> so that they can verify the version of the DTB they're using at
+>> runtime. Right now it can be a guessing game, which does not help
+>> people trying to debug problems.
+>
+>If the information was reported as debug information via pr_debug(),
+>would that work for your use case?  Or would the users' kernels
+>not have debug enabled in the configuration?
+
+Quite possibly not - I'm not 100% sure to be honest. :-/
+
+-- 
+Steve McIntyre                                steve.mcintyre@linaro.org
+<http://www.linaro.org/> Linaro.org | Open source software for ARM SoCs
+
