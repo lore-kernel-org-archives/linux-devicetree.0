@@ -2,110 +2,78 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D608C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 21:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA143C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 21:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211E82465A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 21:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898562465B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 21:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579642590;
-	bh=vn0Oub+WybfcQhhlYhuWUlxPYbgiuhXIGoMeISRoyiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kkGwQO1Q+foralq3ryhgvDaZN1e6X/6fR2KtFrvHcoxss1KUPPX4zqJBATzybj17M
-	 Wu6aR50VOnu27q0g78WE//RYPa7OBACAbpnYn24g/GWOw9t0ZB6E3ZXWIG37X+urBj
-	 0VZT8Zk5PGQP7MPfgzxZJwuGgtueKH26eNnTMqoE=
+	s=default; t=1579643117;
+	bh=sW3Z/vDCOlrs/wYR714h8Inna747mCM9wqEoq6y+Ywk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ca3I2rVW/v5CuC3A8sX3Sp3c0ENtVGv++elXUtielnkjoBA5QiqmL+ciSs1h5Ys17
+	 js4Yzkwk3i4Ym5oZsJwmwUaU65A/z0uLe5K4UwN3QD4mp9kAnl0R5t5pNzmv4gURp5
+	 K1ldlZKN1kmp5jYN+kjpMwePJudy6KJx2i6xMBxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAUVg0 (ORCPT
+        id S1729028AbgAUVpQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 16:36:26 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37919 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgAUVg0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 16:36:26 -0500
-Received: by mail-pg1-f196.google.com with SMTP id a33so2222302pgm.5;
-        Tue, 21 Jan 2020 13:36:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5E3leOx8mkDeLNWMdug8yTuuSxcBJ1PUjfQJE88tDM4=;
-        b=bCEpghtS+P14O8QiseXoCxBdMIG/XChBWV1/a3uUE3Wbb1u8IwwtB6GBG3UJvVGSPE
-         Fp4NPedroDcY5jzGSKZyCliG2lo8hm4njAMvtcSZ2npRC7/b+rclvpW94k3//Nbzeaoj
-         xzeriL9RTp7oNYt9a6+iSo60oXSFTzmY8TfavPkVvYCfzUv4n5GL0pmiXHYt3kz/9rk3
-         3ouVf1TQFg7IJe0whqerBmgyF4lBxKWgGmLElE6BZRqxn9+sWqDDa4A2G6Lb9LHd9pUL
-         usHDJuoOZ8EgTclW0W3w/LmGsk+45+hXqWxp8dGD32r7hmWKgz6wNEpZbILntN4pugLi
-         21Xg==
-X-Gm-Message-State: APjAAAW+y8mYYYRPdbErX3K9LJZJurTj4OoHnvJxrzEaRfZ/dFKEKG5f
-        ih2Nm/pvSxZRwynjGcCPMsU=
-X-Google-Smtp-Source: APXvYqxsUHAjAyitLEiDaPpJCe7u+UqiIWSvSSQ37YpJNgMu144R9j4TyoyRpzpeVvHls0KTjJ5jWw==
-X-Received: by 2002:a63:2a49:: with SMTP id q70mr7371095pgq.265.1579642585629;
-        Tue, 21 Jan 2020 13:36:25 -0800 (PST)
-Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id k21sm43078123pgt.22.2020.01.21.13.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 13:36:24 -0800 (PST)
-Date:   Tue, 21 Jan 2020 13:36:24 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V2 2/3] arch: mips: brcm: Add 7425 flash-edu support
-Message-ID: <20200121213624.iy2zcmixdea4iwqg@pburton-laptop>
-References: <20200121200011.32296-1-kdasu.kdev@gmail.com>
- <20200121200011.32296-2-kdasu.kdev@gmail.com>
+        Tue, 21 Jan 2020 16:45:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728831AbgAUVpQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jan 2020 16:45:16 -0500
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2838024672;
+        Tue, 21 Jan 2020 21:45:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579643116;
+        bh=sW3Z/vDCOlrs/wYR714h8Inna747mCM9wqEoq6y+Ywk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BH49rnPO3D5lfEKZk9x1zhVQ0sEUW4S9mHVXxPmuKZ7EfczXrLkpCOHPSJFk9Ra3p
+         RS09z4rhFdD+JrZJHIJuci0dcKlI1ibdF8IpVaUomUkilpoXV+IzB4pcOP0xwB6qCj
+         YhBeojp5DcZaaESZ9hka7LGE5C9YGRGEnQqu6tJ8=
+Received: by mail-qt1-f169.google.com with SMTP id i13so4003312qtr.3;
+        Tue, 21 Jan 2020 13:45:16 -0800 (PST)
+X-Gm-Message-State: APjAAAXPdJQ7l3rdNdSa26IJ4RXT4LuvtkJksLxcjzO1QOcOvsBlMl5x
+        GGkupHI8wIabdBOX3PtHoh23g6q8HCDZcmyOJA==
+X-Google-Smtp-Source: APXvYqx4PwccTkV+t/aD29wO5YL0fi71bBCe5y6Otd0s7hRSgBALPre4Tw0eOtz6QNmolgArMK3ckPCvqapfFEfHT1k=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr6804541qtp.224.1579643115282;
+ Tue, 21 Jan 2020 13:45:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121200011.32296-2-kdasu.kdev@gmail.com>
+References: <20200120081558.25258-1-andrey.konovalov@linaro.org>
+ <20200120081558.25258-2-andrey.konovalov@linaro.org> <c3c8c2a7-d21a-6e2d-f4ec-e62cfac1d5d6@linaro.org>
+In-Reply-To: <c3c8c2a7-d21a-6e2d-f4ec-e62cfac1d5d6@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 21 Jan 2020 15:45:04 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJJKM5eBTO9ub4bbjWR6c7VbOz-RTvzsztWWP5W-Stc9A@mail.gmail.com>
+Message-ID: <CAL_JsqJJKM5eBTO9ub4bbjWR6c7VbOz-RTvzsztWWP5W-Stc9A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor binding
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>,
+        Peter Griffin <peter.griffin@linaro.org>,
+        dave.stevenson@raspberrypi.com,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kamal,
+On Mon, Jan 20, 2020 at 5:32 AM Andrey Konovalov
+<andrey.konovalov@linaro.org> wrote:
+>
+> v3 of this patch got "Reviewed-by" from Rob Herring.
+> But unfortunately, as one more property had to be added afterwards, my understanding
+> is that that "Reviewed-by" doesn't apply to v4.
 
-On Tue, Jan 21, 2020 at 03:00:07PM -0500, Kamal Dasu wrote:
-> Nand controller v5.0 and v6.0 have nand edu blocks that enable
-> dma nand flash transfers. This allows for faster read and write
-> access.
-> 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> ---
->  arch/mips/boot/dts/brcm/bcm7425.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/mips/boot/dts/brcm/bcm7425.dtsi b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> index 410e61ebaf9e..aa0b2d39c902 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> @@ -403,8 +403,8 @@
->  			compatible = "brcm,brcmnand-v5.0", "brcm,brcmnand";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> -			reg-names = "nand";
-> -			reg = <0x41b800 0x400>;
-> +			reg-names = "nand", "flash-edu";
-> +			reg = <0x41b800 0x400>, <0x41bc00 0x24>;
->  			interrupt-parent = <&hif_l2_intc>;
->  			interrupts = <24>;
->  			status = "disabled";
+It's fine to keep it.
 
-I wasn't copied on the rest of the series, but presuming patch 1
-documents flash-edu in the binding documentation at
-Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt:
-
-    Acked-by: Paul Burton <paulburton@kernel.org>
-
-Thanks,
-    Paul
+Rob
