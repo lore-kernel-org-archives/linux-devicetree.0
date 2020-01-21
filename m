@@ -6,90 +6,105 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A532BC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74341C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 18:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6BB2465A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486F12465A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 18:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579629721;
-	bh=fZiA77TLUSjSX6AGszvtoHtqoxgQKsDAHPSz6OKpLdo=;
+	s=default; t=1579629879;
+	bh=eWx9r3OgGFha93yD4HcPPTOU3j/WWgtWVraB0zKY4ks=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RHGMKdSvBhuxKauNIlS6mmOo1wTsadP5P68QCFKEBkmOa9pRq6uqU1KIPGFlNHN/b
-	 zF1boQkYkDUtsSL5K0gJWmubz4pskojkChGnzMeyEYnoLs+wPtKaoaoE0Zn6yVQmTg
-	 VwH8aQChazhh4rc/QcwnZ4iUd9KmosP3FOFE3uFM=
+	b=Lxs4yCysgUB7qi+mXQBIGAlFjx/vPGGlfzzdDKQPmLUMnseUYHvKCFE+EbHKAMuuB
+	 bda7SlRNUXxSH+i6evJBhwplbUBRvTLZmw9+dPnfoF1WWq3VcHxT9FRbfzQS6IpwUq
+	 +O7HpCL2SE4XmE4o9asFjh6yWfrVQdI1j7vPJ/pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgAUSCB (ORCPT
+        id S1728901AbgAUSEi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:02:01 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34423 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgAUSCA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 13:02:00 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l136so3452526oig.1;
-        Tue, 21 Jan 2020 10:02:00 -0800 (PST)
+        Tue, 21 Jan 2020 13:04:38 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38555 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgAUSEi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 13:04:38 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l9so3444652oii.5;
+        Tue, 21 Jan 2020 10:04:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6/QK3q9NCXm+bnCLIspTgs5FXLWf1OX2s+9532Imp1Q=;
-        b=lNEhaJ0iu0GREHNynfcbm6/n1jXIdrdYOXjKlG9A7bWAf31fpW4r8Zu2q/lFgoRDG3
-         IeBGz68x5tlbfXsZWO7jb7BOZTiwlpkCIqz9ixX6B8vJeAwjDz7Ff/5UBeYw7UtVBodw
-         a0mrp1YD4B++wbWF4CQLrgTUHyO6o38aVjesZLzwBLr9eVB/dNdYaht1Kb12CGTJhLqm
-         u67cRGAbLGxzgAzs/bTTFUXd0f4I7ynDG/pxD6//rp7bBg3LwRIf2asObf4BnxCz7SjD
-         Et+amYMZGUDhARIO04zUsazAQ6ly61s7odLSJTLAS80Vwn9lMYyv/XWfE/+BFLspYJij
-         5AmQ==
-X-Gm-Message-State: APjAAAW7xRFEQv7tiS4GooPu+lRhaPio+y6RI9nwNsDiWFYnn3kXeVHr
-        28LIKbVRZ2C2SMJhkCIs0w==
-X-Google-Smtp-Source: APXvYqxDXrKf5Kwy/DOlvRO4xmWfgKDz7oKWNV+bJKDYSK9C+HDRXw27pcPVs5UUIatIALYzQ2/QyQ==
-X-Received: by 2002:aca:3cd7:: with SMTP id j206mr2460188oia.142.1579629719880;
-        Tue, 21 Jan 2020 10:01:59 -0800 (PST)
+        bh=5AOc1fVDSObIakXLqV48NhVm6z9cVbBEAMQpRuKiW50=;
+        b=mu0BSfSIm7zEE2Lc55hQxXG3Q60EEz3iM4Kxy5Vij9LAMf9KOBcfld2nlbTCheKGJA
+         x3yRkM44/ifHS1F0nr+EagFu9nINrVltIcNpcLdRvTtQkI1CZa35BpV9BvIfxHCMemJ8
+         yDE9AMdfMIiCR00geQZ3oW97FPQyS//AyNkc7+IRWU5tHbcoX73/jTaJmcTfE3G08u87
+         cPOkcBVsM/DSfLMm17DK3hfxP4AkpbteHWLPN5xlm2Ifz+2vcAtUH1mYvC5SITTX+aA/
+         A/k09na8six6Ieu4khiLvakNwAJNvAAWFcAdA2KG8XNkDRrpCCzrVPuNaKScI3r0yFUj
+         Rm2Q==
+X-Gm-Message-State: APjAAAXm4WEXWtk2Ez307aVqq59/XhZMEpoyQvi0zOqF4f6da7yKkLcW
+        YkZ2md0JAnxfqyCAAA1hSF10zTI=
+X-Google-Smtp-Source: APXvYqxJ2H+vZyDN3gmn4pC4D+ZcrNIsyxhR4/L25BmvN4Dqt/xngylC9DS3CsGIERCxiizPEYHg3w==
+X-Received: by 2002:aca:503:: with SMTP id 3mr3791581oif.24.1579629877653;
+        Tue, 21 Jan 2020 10:04:37 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y13sm13663899otk.40.2020.01.21.10.01.58
+        by smtp.gmail.com with ESMTPSA id l17sm6793267otj.21.2020.01.21.10.04.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 10:01:59 -0800 (PST)
-Received: (nullmailer pid 3058 invoked by uid 1000);
-        Tue, 21 Jan 2020 18:01:58 -0000
-Date:   Tue, 21 Jan 2020 12:01:58 -0600
+        Tue, 21 Jan 2020 10:04:37 -0800 (PST)
+Received: (nullmailer pid 7135 invoked by uid 1000);
+        Tue, 21 Jan 2020 18:04:36 -0000
+Date:   Tue, 21 Jan 2020 12:04:36 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Konrad Kociolek <konrad@cadence.com>
-Cc:     Konrad Kociolek <konrad@cadence.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] spi: Add dt-bindings schema for Cadence XSPI
- controller driver
-Message-ID: <20200121180158.GA2461@bogus>
-References: <20200120125443.9523-1-konrad@cadence.com>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v2 04/19] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Message-ID: <20200121180436.GA6701@bogus>
+References: <20200120163116.1197682-1-bryan.odonoghue@linaro.org>
+ <20200120163116.1197682-5-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120125443.9523-1-konrad@cadence.com>
+In-Reply-To: <20200120163116.1197682-5-bryan.odonoghue@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Jan 2020 13:54:31 +0100, Konrad Kociolek wrote:
-> Add dt-bindings documentation for Cadence XSPI controller to support
-> SPI based flash memories.
+On Mon, 20 Jan 2020 16:31:01 +0000, Bryan O'Donoghue wrote:
+> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > 
-> Signed-off-by: Konrad Kociolek <konrad@cadence.com>
+> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed phy
+> controller embedded in QCS404.
+> 
+> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+> definitions.
+> 
+> [bod: converted to yaml format]
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 > ---
->  .../devicetree/bindings/spi/cdns,xspi.yaml         | 164 +++++++++++++++++++++
->  1 file changed, 164 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+>  .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/spi/cdns,xspi.yaml: $id: path/filename 'spi/cadence,xspi.yaml' doesn't match actual filename
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/spi/cdns,xspi.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/spi/cdns,xspi.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-ss.example.dt.yaml: usb3-phy@78000: clock-names:2: 'sleep' was expected
 
-See https://patchwork.ozlabs.org/patch/1225933
+See https://patchwork.ozlabs.org/patch/1226060
 Please check and re-submit.
