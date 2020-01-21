@@ -2,404 +2,150 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF74C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 20:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F40FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 20:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2648224655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 20:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7EB821734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 20:21:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPsuwgqa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgeVtyQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgAUUMR (ORCPT
+        id S1729304AbgAUUVK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:12:17 -0500
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:33392 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgAUUMR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 15:12:17 -0500
-Received: by mail-ed1-f54.google.com with SMTP id r21so4381504edq.0;
-        Tue, 21 Jan 2020 12:12:15 -0800 (PST)
+        Tue, 21 Jan 2020 15:21:10 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40425 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbgAUUVK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 15:21:10 -0500
+Received: by mail-ed1-f65.google.com with SMTP id b8so4354928edx.7;
+        Tue, 21 Jan 2020 12:21:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OLMvn6qeOr15jGIjyjZjXJ6NUS+PfMqPuEabnOb39AQ=;
-        b=pPsuwgqaLnKUQ+KkW5cZMrESXmYrTs8BCgw4VHkxOo7GTrpRQeKj3RDMsBUgayS2Eu
-         gmibZooVmOu2Yy7cWwBg9h1LszRrqnTconCFTzuSboP0JYEAXZ2xFNbcHWgHnT93ZQ0x
-         Ul/368z+8ILUu7lquLvOv9IWJwR0Tc2RZp1wJGQ9UuvHuAhRI5hKVAU0W/colFWNiljF
-         0TSRqGHS5e/EIr1WVrnsSAxxFjt7xjr53yCBFJTS03Yc16gh7tG1uhxxRo658XG6Hc6K
-         qLIYLGggwPYeGBi3YSj0Cmwt/Kvra/f/JXkc1IJNefv36zx3nwtUJnYF47d6CTotgMjG
-         OHNQ==
+        bh=TRCk+6Qjyby8BHn6hMnsONcAAIdhFzLCvT/O0SPXFY4=;
+        b=lgeVtyQQqZju0WZbrYWyMVVftFIQhSm4XP+DdNGzGte1qpLqERd39zu4NwGpEUCp5V
+         8vqMGq/0UnFs9whxaqNiGhIF16IR8zMT/FrfF+3Pd3cij9GnMPp3/v32g+chHoVO4LBh
+         cCnoeQtzXDc1jd58656mxK9eOVDse6pQ72FHPysBsoYuVm1ufNEwPkmXjnrrtsK37PFc
+         exX0pK9h99RnUwh23PD5AbFcseccWIW28CVi6CMujliLPMUJYub0tTtKkAAAm2VZ4iFA
+         9sF+K08T8Ez/LibvvmXrV42OMTTsafdkqCq7hz/xj6t7UtIFNfbWeZtxCJfxTMj3tjdG
+         uCvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OLMvn6qeOr15jGIjyjZjXJ6NUS+PfMqPuEabnOb39AQ=;
-        b=MWuXEB04efuM30AM0HrV5te7L74zro12aNB31IpOxCMFwY+oDJp3xNVrXdjGqop94z
-         sT+Vl6dU/RiScX3Z7RMnkyEQSuLH30XrFlggotrXcheSo19o10Yhbc+RU6AFGhRuQ4Y8
-         De6RGc5P3oHVyu4pEFRoViRP+EFr0qGJZ8eCmn6WI/2mWMm35JaVD8x6hJmOm695qxjF
-         YWSBV2QihI7Y2BzvxPJRKZhZscCillSFKdDVzlaDP49NfxUdXo5R6+JUXYEqWg0oTzV2
-         uPjmNMP3mkXmnkM197f7uXfTGIm69S8xx51Bo7V2bgJzD5Bd7uOtasE8j8KlvfmVsqv2
-         y4YA==
-X-Gm-Message-State: APjAAAV5rbjLc5RWi4DEQlFyouezPcQmwzH0NEpO0cZp7xMC5UMHyflb
-        1JXkkQc6dguCaIBeUvd50WHZVAY2
-X-Google-Smtp-Source: APXvYqynFhrGtqU03CqFM5l76JkmVk0ezg/LO1hLHZOEy5T6L8435G6v+u8bUWHgo4NNSfsEj/4lfg==
-X-Received: by 2002:a17:906:5210:: with SMTP id g16mr5885432ejm.305.1579637534590;
-        Tue, 21 Jan 2020 12:12:14 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id q18sm1192844eje.34.2020.01.21.12.12.13
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TRCk+6Qjyby8BHn6hMnsONcAAIdhFzLCvT/O0SPXFY4=;
+        b=DMvcjuVMfsznqlcTar3N9v/NhOHcEPTTeSqPJYqYL66AM3IwOoeDnlSLvGub5G0bPG
+         YzCSh1LxpepTHMK8TQw1INeiybmqZgShKJL2YJm4PiUd3r3PSOTJDMDJZmhOUgWEgZ1u
+         0XrDzK/ietA0QgyNRydt0AbuGTd7kMJqsgBPxaEKcJ8Grhe5xDEbVSGYgrj8VbWWXVx6
+         hM2546HAIrOjv0OidW2AbufHofbfTnSzb2jOMZiJgj9r3pt4r1uwX7aiVpL6SUMhSbf6
+         WyU4uWUaWI8aILekgi9iNlxs6si93pj2uU35T0kw4mpzKUoBf2uxnRTaaPKMnyR+rcJD
+         XO0g==
+X-Gm-Message-State: APjAAAUNNBLCNURJk8yv3+fQ2qotWEPWvvDQpS9rzXVlgOsqTgGn7DBL
+        Q4tP6+qGn8+3Uzv/Um1RCDQa7R6O
+X-Google-Smtp-Source: APXvYqzoHzi+RaDUTRCgfCqCvKSckovxtXC2jA8eLBmbZry+YYJlL5xFVuml63vNlWb+BQN/qDSdGw==
+X-Received: by 2002:a50:dacd:: with SMTP id s13mr5700690edj.194.1579638066820;
+        Tue, 21 Jan 2020 12:21:06 -0800 (PST)
+Received: from [10.67.49.70] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id cb8sm1087083ejb.42.2020.01.21.12.21.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 12:12:13 -0800 (PST)
-Subject: Re: [RFC 2/2] dt-bindings: firmware: tegra186-bpmp: Document
- interconnects property
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        Tue, 21 Jan 2020 12:21:05 -0800 (PST)
+Subject: Re: [PATCH V2 2/3] arch: mips: brcm: Add 7425 flash-edu support
+To:     Kamal Dasu <kdasu.kdev@gmail.com>, linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         devicetree@vger.kernel.org
-References: <20200114181519.3402385-1-thierry.reding@gmail.com>
- <20200114181519.3402385-2-thierry.reding@gmail.com>
- <7aefac6c-092c-b5a6-2fa6-e283d2147fc3@linaro.org>
- <20200120150605.GA712203@ulmo>
- <57c37b3c-1473-d444-db59-8c6650241188@gmail.com>
- <20200121141027.GE899558@ulmo>
- <83d94918-bc01-131b-924c-9750767d3b29@linaro.org>
- <20200121155432.GA912205@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ffc22502-0e7e-522c-543d-0e74cc25f4b1@gmail.com>
-Date:   Tue, 21 Jan 2020 23:12:11 +0300
+References: <20200121200011.32296-1-kdasu.kdev@gmail.com>
+ <20200121200011.32296-2-kdasu.kdev@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <3b0cecd3-f44d-4cc2-97dc-20ff7481b442@gmail.com>
+Date:   Tue, 21 Jan 2020 12:21:01 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200121155432.GA912205@ulmo>
+In-Reply-To: <20200121200011.32296-2-kdasu.kdev@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-21.01.2020 18:54, Thierry Reding пишет:
-> On Tue, Jan 21, 2020 at 05:18:43PM +0200, Georgi Djakov wrote:
->> On 1/21/20 16:10, Thierry Reding wrote:
->>> On Tue, Jan 21, 2020 at 09:53:48AM +0300, Dmitry Osipenko wrote:
->>>> 20.01.2020 18:06, Thierry Reding пишет:
->>>>> On Fri, Jan 17, 2020 at 05:23:43PM +0200, Georgi Djakov wrote:
->>>>>> Hi Thierry,
->>>>>>
->>>>>> Thanks for the patch!
->>>>>>
->>>>>> On 1/14/20 20:15, Thierry Reding wrote:
->>>>>>> From: Thierry Reding <treding@nvidia.com>
->>>>>>>
->>>>>>> Document the interconnects property that is used to describe the paths
->>>>>>> from and to system memory from and to the BPMP.
->>>>>>>
->>>>>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
->>>>>>> ---
->>>>>>> Rob, Georgi,
->>>>>>>
->>>>>>> after the initial RFC that I did for adding interconnect properties on
->>>>>>> Tegra, I realized that the description wasn't complete. This is an
->>>>>>> attempt at a more accurate description, but unfortunately I'm not sure
->>>>>>> if it's even correct in terms of the interconnect bindings.
->>>>>>>
->>>>>>> The problem here is that on Tegra, each device has multiple paths to
->>>>>>> system memory, and I have no good idea on what to pick as the default.
->>>>>>> They are all basically the same path, but each provides extra controls
->>>>>>> to configure the "interconnect".
->>>>>>
->>>>>> Are these multiple paths between a device and system memory used simultaneously
->>>>>> for load-balancing, or who makes the decision about which path would be used?
->>>>>
->>>>> It varies. The vast majority of these paths are read/write pairs, which
->>>>> can be configured separately. There are also cases where multiple paths
->>>>> are used for load-balancing and I don't think there's any direct
->>>>> software control over which path will be used.
->>>>>
->>>>> A third class is where you have one device, but two read/write pairs,
->>>>> one which is tied to a microcontroller that's part of the device, and
->>>>> another read/write pair that is used for DMA to/from the device.
->>>>>
->>>>> Often in the latter case, the microcontroller memory client interfaces
->>>>> will be used by the microcontroller to read firmware and once the micro-
->>>>> controller has booted up, the DMA memory client interfaces will be used
->>>>> to read/write system memory with bulk data (like frame buffers, etc.).
->>>>>
->>>>>> Is this based on the client/stream ID that you mentioned previously?
->>>>>
->>>>> These are now all what's call memory client IDs, which identify the
->>>>> corresponding interface to the memory controller. Stream IDs are
->>>>> slightly higher-level and typically identify the "module" that uses
->>>>> the SMMU. Generally a stream ID is mapped to one or more memory client
->>>>> IDs.
->>>>>
->>>>>> Looking at the the binding below, it seems to me like there are different
->>>>>> master/slave pairs between MC and EMC and each link is used for
->>>>>> unidirectional traffic only. In terms of the interconnect API, both read
->>>>>> and write paths have the same direction.
->>>>
->>>> Yes, that definition should be incorrect.
->>>>
->>>>> I'm not sure I understand what you mean by this last sentence. Are you
->>>>> saying that each path in terms of the interconnect API is a always a
->>>>> bidirectional link?
->>>>
->>>> Please see more below.
->>>>
->>>>>> Is the EMC really an interconnect provider or is it just a slave port? Can
->>>>>> we scale both EMC and MC independently?
->>>>>
->>>>> The EMC is the only one where we can scale the frequency, but the MC has
->>>>> various knobs that can be used to fine-tune arbitration, set maximum
->>>>> latency, etc.
->>>>
->>>> Yes..
->>>>
->>>>
->>>> EMC controls the total amount of available memory bandwidth, things like
->>>> DRAM timing and EMC-DRAM channel's performance. EMC is facing MC from
->>>> one side and DRAM (EMEM) from the other.
->>>>
->>
->> Right, so we can use the icc framework here to aggregate the requested bandwidth
->> from all clients and scale the frequency/voltage of EMC.
+On 1/21/20 12:00 PM, Kamal Dasu wrote:
+> Nand controller v5.0 and v6.0 have nand edu blocks that enable
+> dma nand flash transfers. This allows for faster read and write
+> access.
 > 
-> Yeah, that was the plan. Dmitry's patches implement most of that. Note
-> that we're working on this from two sides: on one hand we need to figure
-> out the bindings so that we can set up the interconnect paths, then the
-> memory controller and external memory controller drivers need to be made
-> interconnect providers so that we can actually implement the dynamic
-> scaling (and then finally all memory client drivers need to be updated
-> to actually use these ICC framework to request bandwidth).
-> 
-> I'm prioritizing the first issue right now because that's currently a
-> blocker for enabling SMMU support on Tegra194 where we need to set the
-> DMA mask based on the "bus" (i.e. DMA parent, i.e. the MC) because there
-> are additional restrictions that don't exist on prior generations where
-> we can simply set the DMA mask to the device's "native" DMA mask.
-> 
-> EMC frequency scaling is slightly lower on my priority list because in
-> most use-cases there is enough bandwidth at the default EMC frequency.
-> 
->>>> MC controls allocation of that total bandwidth between the memory
->>>> clients. It has knobs to prioritize clients, the knobs are per
->>>> read/write port. MC is facing memory clients from one side and EMC from
->>>> the other.
->>>>
->>
->> Thanks for clarifying! So are these QoS knobs (priority, latency etc.) tuned
->> dynamically during runtime or is it more like a static configuration that is
->> done for example just once during system boot?
-> 
-> The hardware defaults are usually sufficient unless the system is under
-> very high memory pressure. I'm only aware of one case where we actually
-> need to override the hardware default on boot and it's exotic enough to
-> not be upstream yet.
-> 
-> Ultimately we want to tune these at runtime, typically together with and
-> depending on the EMC frequency. Under memory pressure you can use the
-> "latency allowance" registers to prioritize memory requests from
-> isochronous clients (like display controllers) to ensure they don't
-> underrun.
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 
-Perhaps USB could be one example of a memory client that may need ISO
-transfers for multimedia things (live audio/video), while ISO not needed
-for file transfers.
-
-> Given that we only have to tune these under somewhat extreme conditions,
-> I think these are lower priority from an implementation point of view
-> than the EMC frequency scaling, but the registers are based on the
-> memory client IDs, so I think it's convenient to have those be part of
-> the bindings in the first place.
-> 
->>>>> I vaguely recall Dmitry mentioning that the EMC in early generations of
->>>>> Tegra used to have controls for individual memory clients, but I don't
->>>>> see that in more recent generations.
->>>>
->>>> EMC doesn't have direct controls over memory clients on all Tegra SoCs,
->>>> but it may have some extra knobs for the MC arbitration config.
->>>>
->>>> The MC bandwidth allocation logic and hardware programming interface
->>>> differs among SoC generations, but the basic principle is the same.
->>>>
->>>>>>> Any ideas on how to resolve this? Let me know if the DT bindings and
->>>>>>> example don't make things clear enough.
->>>>
->>>> I'm also interested in the answer to this question.
->>>>
->>>> A quick thought.. maybe it could be some new ICC DT property which tells
->>>> that all paths are the "dma-mem":
->>>>
->>>> 	interconnects-all-dma-mem;
->>>
->>> There could easily be cases where multiple interconnects are to system
->>> memory but there are additional ones which aren't, so the above wouldn't
->>> be able to represent such cases.
->>
->> Yes, true.
-
-Sure, but then that property shouldn't be used.
-
-Anyways, I think Thierry's suggestion about the generic memory
-controller API sounds more attractive.
-
->>>>>>>  .../firmware/nvidia,tegra186-bpmp.yaml        | 59 +++++++++++++++++++
->>>>>>>  1 file changed, 59 insertions(+)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
->>>>>>> index dabf1c1aec2f..d40fcd836e90 100644
->>>>>>> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
->>>>>>> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
->>>>>>> @@ -43,6 +43,24 @@ properties:
->>>>>>>        - enum:
->>>>>>>            - nvidia,tegra186-bpmp
->>>>>>>  
->>>>>>> +  interconnects:
->>>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>>>>>> +    description: A list of phandle and specifier pairs that describe the
->>>>>>> +      interconnect paths to and from the BPMP.
->>>>>>> +
->>>>>>> +  interconnect-names:
->>>>>>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
->>>>>>> +    description: One string for each pair of phandle and specifier in the
->>>>>>> +      "interconnects" property.
->>>>>>> +    # XXX We need at least one of these to be named dma-mem so that the core
->>>>>>> +    # will set the DMA mask based on the DMA parent, but all of these go to
->>>>>>> +    # system memory eventually.
->>>>>>> +    items:
->>>>>>> +      - const: dma-mem
->>>>>>> +      - const: dma-mem
->>>>>>> +      - const: dma-mem
->>>>>>> +      - const: dma-mem
->>>>
->>>> Names should be unique, otherwise it's not possible to retrieve ICC path
->>>> other than the first one.
->>>
->>> Yeah, I know, that's why there's an XXX comment. =) I just wasn't sure
->>> what else to put there and thought this kinda made it clear that it was
->>> only half-baked.
->>>
->>>>>>>    iommus:
->>>>>>>      $ref: /schemas/types.yaml#/definitions/phandle-array
->>>>>>>      description: |
->>>>>>> @@ -152,8 +170,43 @@ additionalProperties: false
->>>>>>>  
->>>>>>>  examples:
->>>>>>>    - |
->>>>>>> +    #include <dt-bindings/clock/tegra186-clock.h>
->>>>>>>      #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>>>>>      #include <dt-bindings/mailbox/tegra186-hsp.h>
->>>>>>> +    #include <dt-bindings/memory/tegra186-mc.h>
->>>>>>> +
->>>>>>> +    mc: memory-controller@2c00000 {
->>>>>>> +        compatible = "nvidia,tegra186-mc";
->>>>>>> +        reg = <0x02c00000 0xb0000>;
->>>>>>> +        interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>> +        status = "disabled";
->>>>>>> +
->>>>>>> +        #interconnect-cells = <1>;
->>>>>>> +        #address-cells = <2>;
->>>>>>> +        #size-cells = <2>;
->>>>>>> +
->>>>>>> +        ranges = <0x02c00000 0x0 0x02c00000 0x0 0xb0000>;
->>>>>>> +
->>>>>>> +        /*
->>>>>>> +         * Memory clients have access to all 40 bits that the memory
->>>>>>> +         * controller can address.
->>>>>>> +         */
->>>>>>> +        dma-ranges = <0x0 0x0 0x0 0x100 0x0>;
->>>>>>> +
->>>>>>> +        #memory-controller-cells = <0>;
->>>>>>> +
->>>>>>> +        emc: external-memory-controller@2c60000 {
->>>>>>> +            compatible = "nvidia,tegra186-emc";
->>>>>>> +            reg = <0x0 0x02c60000 0x0 0x50000>;
->>>>>>> +            interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
->>>>>>> +            clocks = <&bpmp TEGRA186_CLK_EMC>;
->>>>>>> +            clock-names = "emc";
->>>>>>> +
->>>>>>> +            #interconnect-cells = <0>;
->>>>>>> +
->>>>>>> +            nvidia,bpmp = <&bpmp>;
->>>>>>> +        };
->>>>>>> +    };
->>>>>>>  
->>>>>>>      hsp_top0: hsp@3c00000 {
->>>>>>>          compatible = "nvidia,tegra186-hsp";
->>>>>>> @@ -187,6 +240,12 @@ examples:
->>>>>>>  
->>>>>>>      bpmp {
->>>>>>>          compatible = "nvidia,tegra186-bpmp";
->>>>>>> +        interconnects = <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPR>,
->>>>>>> +                        <&mc TEGRA186_MEMORY_CLIENT_BPMPW &emc>,
->>>>>>> +                        <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPDMAR>,
->>>>>>> +                        <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &emc>;
->>>>
->>>> I don't think this is a correct definition of the ICC paths because the
->>>> first node-MC_ID pair should define the source, second pair is the final
->>>> destination. Then the interconnect core builds (by itself) the path from
->>>> MC client to MC and finally to EMC based on the given source /
->>>> destination. Please see my v1 patchset for the example.
->>>
->>> Okay, sounds like "source" in this case means the initiator of the
->>> transaction and destination is the target of the transaction. I had
->>> interpreted the "source" as the "source location" of the transaction (so
->>> for reads the source would be the system memory via the EMC, and for
->>> writes the source would be the memory client interface).
->>
->> Yes, exactly. Maybe it would be more correct to call these pairs
->> initiator/target or master/slave.
-> 
-> Do you want me to extend the bindings documentation to mention these
-> alternative names?
-> 
->>> Yeah, I think that makes sense. It was also pointed out to me (offline)
->>> that the above doesn't work as intented for the use-case where I really
->>> need it. The primary reason why I need these "dma-mem" interconnect
->>> paths is so that the memory controller is specified as the "DMA parent"
->>> for these devices, which is important so that the DMA masks can be
->>> correctly set. Having the &emc reference in the first slot breaks that.
->>> Your suggestion makes sense when interpreting the terminology
->>> differently and it fixes the DMA parent issue (at least partially).
->>>
->>>> It should look somewhat like this:
->>>>
->>>> interconnects =
->>>>     <&mc TEGRA186_MEMORY_CLIENT_BPMPR &emc TEGRA_ICC_EMEM>,
->>>>     <&mc TEGRA186_MEMORY_CLIENT_BPMPW &emc TEGRA_ICC_EMEM>,
->>>>     <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAR &emc TEGRA_ICC_EMEM>,
->>>>     <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &emc TEGRA_ICC_EMEM>;
->>>>
->>>> interconnect-names = "bpmpr", "bpmpw", "bpmpdmar", "bpmpdmaw";
->>
->> This looks better to me.
->>
->>> I'm not sure if that TEGRA_ICC_EMEM makes a lot of sense. It's always
->>> going to be the same and it's arbitrarily defined, so it's effectively
->>> useless. But other than that it looks good.
->>
->> Well, in most cases the target would be the EMEM, so that's fine. I have seen
->> that other vendors that may have an additional internal memory, especially
->> dedicated to some DSPs and in such cases the bandwidth needs are different for
->> the two paths (to internal memory and DDR).
-> 
-> Most chips have a small internal memory that can be used, though it
-> seldomly is. However, in that case I would expect the target to be a
-> completely different device, so it'd look more like this:
-> 
-> 	interconnects = <&mc TEGRA186_MEMORY_CLIENT_BPMPR &iram>,
-> 			...;
-> 
-> I don't think EMEM has any "downstream" other than external memory.
-
-The node ID should be mandatory in terms of interconnect, even if it's a
-single node. EMC (provider) != EMEM (endpoint).
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
