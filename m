@@ -7,138 +7,179 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45794C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B78C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6FB24656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEC9217F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579644897;
-	bh=6Eq6lP+J8xkmDTjFf66pv+50rgm+IHkdDoavDqU/qAg=;
+	s=default; t=1579645214;
+	bh=3uzcw75p8PScJ1WChjuOQmCS2ZpxerDxdL48GCpXnp0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hCMHGJeOwtli7T4tKPbhJu8soODRYMytsPj0Px+jENQShIzuMltmy4w/fnpvOumcZ
-	 syXCOLUjc9SqkTrMKVMZL+7AaRiweJgCWLzx5Su8aGZdoxk9pdJKR62Nxo8MxB1xL0
-	 unX0Iwc68GftU5i8ix7BDMDS6mp5Gev5tQjOoNho=
+	b=ybqRmDZ7ukM1txXUDrKPnRWjWyd2IgJlerERcqzz5rz4fs4Uwyx4SG3zHlco1WfDF
+	 +Lgrp3sHd+97SluDdRnrEPYr6JBQS6ad5+tgKtkBjEDQNdatKl/hT9vM3HX0uWef/D
+	 6FOSKu+I7yPlOBSPf20MhkJOhEA3YvTxfAoZMLtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgAUWOw (ORCPT
+        id S1727847AbgAUWUK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:14:52 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46897 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbgAUWOw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:14:52 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 13so4157232oij.13;
-        Tue, 21 Jan 2020 14:14:51 -0800 (PST)
+        Tue, 21 Jan 2020 17:20:10 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39590 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728760AbgAUWUK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:20:10 -0500
+Received: by mail-oi1-f195.google.com with SMTP id z2so4206589oih.6;
+        Tue, 21 Jan 2020 14:20:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XeT9kzkIHCvSt/qNrsfQn5oLTaIKQtpNqKnbt7XpRAU=;
-        b=tqwvsjnurKGu9rQOG0U26erhb0Q5i3S1Ov2rrsl6/Y8RlQEqrxKgn6K10mApKy2a0x
-         IpDF4gh2ZHAZRpgLe8RjHwMkOxk3q2dBSBEAhoqHa4Zsfv2fLQhoi2Jr6nDb+YRhIdfe
-         twlkQDs4w/yRsAJLYrw4yzEm5Twt2/j+e4RLi/4AtF1OLfwx44dLH3v/wfGoUEHcpps7
-         Yay8CILP+/wYZJfslmVjaIcFIXfegN9ms9ph3X5yGdEX4Y2fG8JXwPiBcO8r75a9Hmu3
-         hDGcwo3q0xYcN5GQjbPFuvVViB8Cj2rWJEhdwFxqdFG5LIluZ/3pEh5pnVfRNTvpiUvY
-         EomA==
-X-Gm-Message-State: APjAAAWuY4gdGO02zRa2tEBUQGQXnUtHuKzGC+7WU2GV5DWOc5R3p0lF
-        Y/2z/1i4J7HIXLtGTQkYYA==
-X-Google-Smtp-Source: APXvYqyLemxUnMpNDM+pJQJvFcfqR3NxQi7BGrwaFu5XgWlF4uD8+O0BJuRJD1JSkakbLg1/vTxvxA==
-X-Received: by 2002:a05:6808:683:: with SMTP id k3mr4558084oig.50.1579644890978;
-        Tue, 21 Jan 2020 14:14:50 -0800 (PST)
+        bh=JYjL5Dj4sHium7MXkG5wUfXThgHrFk9aKNPtUfH5UZc=;
+        b=LuxAJOSCVwPh9i2HOnCZn3xqV3Yt7+t5+U5WeARTAVgEXTkTJGsdLJubR03kpvyKnK
+         Op9kdntraDRJO1nEeC1Ae/XbWPqwXN5Bbm11MKsx600vlwLxFzgJ8zDGywzFxHApWMxJ
+         6V8pGLqG7+aE6gVvlsOJO2zC/phOg3uvMkdp8bd4/aplnKl1A05QpuOI+hjQIO38BL+F
+         n8B9cT1KH7TLo/rHoxoOFPjrdcJ1Fc4KMJF5sDnSHFlIRoNyqu3F6fSoSQB7Hqx5a+3D
+         NNeunCl61djJoq3Cb17Q3S+Ph9aRxe7YkCp8oUHVLb9X7+FjAHlYsUNvPpfJ0VaNBa5n
+         jWYw==
+X-Gm-Message-State: APjAAAWLAVXMzruSKEKtGBIWlVh/8IknN23L8F82o6qJXfN44fKBV/Oj
+        Jj3mJ6D5g5rCeNiQX8f4bw==
+X-Google-Smtp-Source: APXvYqyA0cFBVl5WxqRWUAajmwQG24um1yPraaZ5cnlqeSKW61xBpYW8L1xuloSvzFgFL8RaFKDW6w==
+X-Received: by 2002:aca:5588:: with SMTP id j130mr4595173oib.122.1579645208961;
+        Tue, 21 Jan 2020 14:20:08 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i13sm12372864oik.7.2020.01.21.14.14.49
+        by smtp.gmail.com with ESMTPSA id d7sm12406255oic.46.2020.01.21.14.20.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 14:14:50 -0800 (PST)
-Received: (nullmailer pid 1380 invoked by uid 1000);
-        Tue, 21 Jan 2020 22:14:49 -0000
-Date:   Tue, 21 Jan 2020 16:14:49 -0600
+        Tue, 21 Jan 2020 14:20:08 -0800 (PST)
+Received: (nullmailer pid 8896 invoked by uid 1000);
+        Tue, 21 Jan 2020 22:20:07 -0000
+Date:   Tue, 21 Jan 2020 16:20:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v1] dt-bindings: phy: Fix for intel,lgm-emmc-phy.yaml
- build error
-Message-ID: <20200121221449.GA25322@bogus>
-References: <20200114104710.23135-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com,
+        erwan.leray@st.com
+Subject: Re: [PATCH 1/2] dt-bindings: serial: Convert rs485 bindings to
+ json-schema
+Message-ID: <20200121222007.GA1686@bogus>
+References: <20200114123329.3792-1-benjamin.gaignard@st.com>
+ <20200114123329.3792-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200114104710.23135-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20200114123329.3792-2-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 06:47:10PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Tue, Jan 14, 2020 at 01:33:28PM +0100, Benjamin Gaignard wrote:
+> Convert rs485 binding to yaml style file.
 > 
-> This patch fixes the devicetree binding yaml build errors
-> in linux-next kernel Error: Documentation/devicetree/bindings/
-> phy/intel,lgm-emmc-phy.example.dts:21.19-20
-> syntax error FATAL ERROR: Unable to parse input tree
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Reported-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  .../devicetree/bindings/phy/intel,lgm-emmc-phy.yaml       | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
+>  Documentation/devicetree/bindings/serial/rs485.txt | 32 +--------------
+>  .../devicetree/bindings/serial/rs485.yaml          | 45 ++++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 31 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/rs485.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> index ff7959c21af0..d9bd2e47dfe7 100644
-> --- a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> @@ -16,10 +16,7 @@ description: |+
->    The eMMC PHY node should be the child of a syscon node with the
->    required property:
->  
-> -  - compatible:         Should be one of the following:
-> -                        "intel,lgm-syscon", "syscon"
-> -  - reg:
-> -      maxItems: 1
-> +  should be compatible strings are - "intel,lgm-syscon", "syscon"
-
-What's this change for?
-
->  
->  properties:
->    compatible:
-> @@ -34,6 +31,12 @@ properties:
->    clocks:
->      maxItems: 1
->  
-> +  "#address-cells":
-> +    const: 1
+> diff --git a/Documentation/devicetree/bindings/serial/rs485.txt b/Documentation/devicetree/bindings/serial/rs485.txt
+> index b92592dff6dd..a7fe93efc4a5 100644
+> --- a/Documentation/devicetree/bindings/serial/rs485.txt
+> +++ b/Documentation/devicetree/bindings/serial/rs485.txt
+> @@ -1,31 +1 @@
+> -* RS485 serial communications
+> -
+> -The RTS signal is capable of automatically controlling line direction for
+> -the built-in half-duplex mode.
+> -The properties described hereafter shall be given to a half-duplex capable
+> -UART node.
+> -
+> -Optional properties:
+> -- rs485-rts-delay: prop-encoded-array <a b> where:
+> -  * a is the delay between rts signal and beginning of data sent in milliseconds.
+> -      it corresponds to the delay before sending data.
+> -  * b is the delay between end of data sent and rts signal in milliseconds
+> -      it corresponds to the delay after sending data and actual release of the line.
+> -  If this property is not specified, <0 0> is assumed.
+> -- rs485-rts-active-low: drive RTS low when sending (default is high).
+> -- linux,rs485-enabled-at-boot-time: empty property telling to enable the rs485
+> -  feature at boot time. It can be disabled later with proper ioctl.
+> -- rs485-rx-during-tx: empty property that enables the receiving of data even
+> -  while sending data.
+> -
+> -RS485 example for Atmel USART:
+> -	usart0: serial@fff8c000 {
+> -		compatible = "atmel,at91sam9260-usart";
+> -		reg = <0xfff8c000 0x4000>;
+> -		interrupts = <7>;
+> -		atmel,use-dma-rx;
+> -		atmel,use-dma-tx;
+> -		linux,rs485-enabled-at-boot-time;
+> -		rs485-rts-delay = <0 200>;		// in milliseconds
+> -	};
+> -
+> +See rs485.yaml
+> diff --git a/Documentation/devicetree/bindings/serial/rs485.yaml b/Documentation/devicetree/bindings/serial/rs485.yaml
+> new file mode 100644
+> index 000000000000..65c6a98969a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/rs485.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/rs485.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +  "#size-cells":
-> +    const: 1
+> +title: RS485 serial communications Bindings
 > +
+> +description: The RTS signal is capable of automatically controlling
+> +             line direction for the built-in half-duplex mode.
+> +             The properties described hereafter shall be given to a
+> +             half-duplex capable UART node.
+> +
+> +maintainers:
+> +  -  Rob Herring <robh@kernel.org>
+> +
+> +properties:
+> +  rs485-rts-delay:
+> +    description: prop-encoded-array <a b>
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +      - items:
+> +          items:
+> +            - description:
+> +                Delay between rts signal and beginning of data sent in milliseconds.
+> +                It corresponds to the delay before sending data.
+> +              $ref: "/schemas/types.yaml#/definitions/uint32"
 
-This schema is properties in the emmc-phy node, so these don't belong 
-here. But the example change is correct.
+This is not correct. The types only apply to whole properties.
 
->  required:
->    - "#phy-cells"
->    - compatible
-> @@ -45,8 +48,10 @@ examples:
->      sysconf: chiptop@e0200000 {
->        compatible = "intel,lgm-syscon", "syscon";
->        reg = <0xe0200000 0x100>;
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
->  
-> -      emmc-phy: emmc-phy@a8 {
-> +      emmc_phy: emmc_phy@a8 {
+Is there a maximum? Seems like 1 sec would be more than anyone would 
+ever want?
 
-Don't use '_' in node names. The error was in the label.
-
-emmc_phy: emmc-phy@a8 {
-
->          compatible = "intel,lgm-emmc-phy";
->          reg = <0x00a8 0x10>;
->          clocks = <&emmc>;
+> +              default: 0
+> +            - description:
+> +                Delay between end of data sent and rts signal in milliseconds.
+> +                It corresponds to the delay after sending data and actual release of the line.
+> +              $ref: "/schemas/types.yaml#/definitions/uint32"
+> +              default: 0
+> +
+> +  rs485-rts-active-low:
+> +    description: drive RTS low when sending (default is high).
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +  linux,rs485-enabled-at-boot-time:
+> +    description: enables the rs485 feature at boot time. It can be disabled later with proper ioctl.
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +  rs485-rx-during-tx:
+> +   description: enables the receiving of data even while sending data.
+> +   $ref: /schemas/types.yaml#/definitions/flag
 > -- 
-> 2.11.0
+> 2.15.0
 > 
