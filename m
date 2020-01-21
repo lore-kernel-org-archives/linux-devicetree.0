@@ -2,116 +2,111 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBABC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72B9C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3133124673
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C5320882
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 17:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579627688;
-	bh=QlqT49URJVbPWP6LbKPNyGswtd/IKPHVa7o3M9hosYg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=pzClAtaybmtX4aYPXE60ssETkmymfa9wTvUlNYlBgCrOqg3iC9GO5B9OnnDiQ6ilL
-	 HUOEb3IDhuyYYBw8G9SJZi4MpTISDN3zRb49r2RzEULv5caFfaTrfR3cSiJUr2UE1Q
-	 LswgGauVOMsKud9KHThDqnplsRuQflSaWne1TysU=
+	s=default; t=1579629220;
+	bh=jSqnb8251iB+PaUjwL/WFnS37zciALpQsGn4VLiEZOM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Pp/biTj2bLt9Ls2tV34kQYUC5ezjEiFzqACD870CBIsET1xBWJFIxvKP+2WhnaXJl
+	 0o1qJxdyd9iyxXWwdeKmP4rKtbXVhr766mxv9k78IHoK1XBR4kysGHAJzcKR/2dlW4
+	 mQmesTDht+qdoE4jsbj3GN/qfIGxUMlgD78QYXeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAUR2H (ORCPT
+        id S1729081AbgAURxh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:28:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:46354 "EHLO foss.arm.com"
+        Tue, 21 Jan 2020 12:53:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgAUR2H (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:28:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8260830E;
-        Tue, 21 Jan 2020 09:28:06 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C82203F6C4;
-        Tue, 21 Jan 2020 09:28:05 -0800 (PST)
-Date:   Tue, 21 Jan 2020 17:28:04 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        devicetree@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>,
+        id S1728186AbgAURxh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:53:37 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66C4720882;
+        Tue, 21 Jan 2020 17:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579629216;
+        bh=jSqnb8251iB+PaUjwL/WFnS37zciALpQsGn4VLiEZOM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pssvT+PNFm+V3NvPNyFH+RbfyYZF5MO2gKEGEnsd0K1kGLLSzzSQr2WAaFqWFlWXY
+         aHO7HW+SWWV7htzelymF29D+hVY70A3cWLPyP46zOG8QNDg/OsPxGOZbMo6IQ7yesV
+         2eqyFQXlAJZbovUdFWJ3wU4SGj16jqPUjA0Vi8r4=
+Received: by mail-qk1-f182.google.com with SMTP id 21so3607035qky.4;
+        Tue, 21 Jan 2020 09:53:36 -0800 (PST)
+X-Gm-Message-State: APjAAAW2bHa4BicuauCnSmK36hnbDUumROoDLhpV4XT7JhYV7/y0zK0+
+        jcQVDmiHlSlg+NvLD8RL2oFEZ1DDfgtFZKA/pw==
+X-Google-Smtp-Source: APXvYqzHLixt8IrlgT/au2K+GmxkDhCwSit+HjQFs08D+Z88/At71jstGFhsanilwAJ1+GPhBTdil9wNxv/SeT9soW8=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr5331728qkl.119.1579629215564;
+ Tue, 21 Jan 2020 09:53:35 -0800 (PST)
+MIME-Version: 1.0
+References: <4fbf026a-4878-cd65-55f7-7d992782b331@gmail.com> <20200116233939.GI27148@zn.tnic>
+In-Reply-To: <20200116233939.GI27148@zn.tnic>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 21 Jan 2020 11:53:23 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKqC_xm9rrHYaO87BtEv=-ji080p_G8axFduqu1mcqHCA@mail.gmail.com>
+Message-ID: <CAL_JsqKqC_xm9rrHYaO87BtEv=-ji080p_G8axFduqu1mcqHCA@mail.gmail.com>
+Subject: Re: [PATCH v9 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Shiping Ji <shiping.linux@gmail.com>,
+        James Morse <james.morse@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>, robh+dt@kernel.org
-Subject: Applied "ASoC: dt-bindings: rt5645: add suppliers" to the asoc tree
-In-Reply-To: <20200114150151.8537-1-matthias.bgg@kernel.org>
-Message-Id: <applied-20200114150151.8537-1-matthias.bgg@kernel.org>
-X-Patchwork-Hint: ignore
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>, wangglei@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+On Thu, Jan 16, 2020 at 5:39 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Wed, Jan 15, 2020 at 06:32:27AM -0800, Shiping Ji wrote:
+> > This is the device tree bindings for new EDAC driver dmc520_edac.c.
+> >
+> > Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> > Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> > Reviewed-by: James Morse <james.morse@arm.com>
+>
+> So for this patch, v2 had Rui Zhao as an author:
+>
+> https://lkml.kernel.org/r/BN7PR08MB5572B3388B2D7DC8F6C7F285AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com
+>
+> v3 got Lei as an author:
+>
+> https://lkml.kernel.org/r/CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com
+>
+> and now it is you.
+>
+> So when you send next time, think about who's going to be the author.
+>
+> > +     line numbers. The valid interrupt names are the followings:
+>
+> WARNING: 'followings' may be misspelled - perhaps 'following'?
+> #51: FILE: Documentation/devicetree/bindings/edac/arm-dmc520.txt:10:
+> +     line numbers. The valid interrupt names are the followings:
+>
+> Please integrate scripts/checkpatch.pl into your patch creation
+> workflow. Some of the warnings/errors *actually* make sense.
+>
+> Also, this patch throws this other checkpatch warning:
+>
+> WARNING: DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst
+>
+> but since Rob reviewed it, I'm going to assume checkpatch is wrong here.
 
-   ASoC: dt-bindings: rt5645: add suppliers
+Would be happy for a schema, but not going to ask for that on a v9.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 26aa19174f0d1837cb268b744f6dcb013265ab03 Mon Sep 17 00:00:00 2001
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Date: Tue, 14 Jan 2020 16:01:50 +0100
-Subject: [PATCH] ASoC: dt-bindings: rt5645: add suppliers
-
-The rt5645 and rt5650 have two suppliers, document them.
-
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-Link: https://lore.kernel.org/r/20200114150151.8537-1-matthias.bgg@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/rt5645.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/rt5645.txt b/Documentation/devicetree/bindings/sound/rt5645.txt
-index a03f9a872a71..41a62fd2ae1f 100644
---- a/Documentation/devicetree/bindings/sound/rt5645.txt
-+++ b/Documentation/devicetree/bindings/sound/rt5645.txt
-@@ -10,6 +10,10 @@ Required properties:
- 
- - interrupts : The CODEC's interrupt output.
- 
-+- avdd-supply: Power supply for AVDD, providing 1.8V.
-+
-+- cpvdd-supply: Power supply for CPVDD, providing 3.5V.
-+
- Optional properties:
- 
- - hp-detect-gpios:
--- 
-2.20.1
-
+Rob
