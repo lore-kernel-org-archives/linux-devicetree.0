@@ -2,128 +2,101 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADF7C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 13:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396F9C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 14:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E73021569
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 13:11:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwdomRqh"
+	by mail.kernel.org (Postfix) with ESMTP id 00B2C22314
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 14:04:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579615451;
+	bh=RhQe3QXk/zDnaa/l8gaC+5yGDQC5asHgWocfmrxWn1U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NOdMQf3RFcvo0B1szta/n9aklTbLOTzgUPtA6MtxMX604IsZvyvAg2P/gR6xLSD1a
+	 9sEgj/q29MGhG3+NHqDz9kDz+fhHzG9BBKtbbwiH3zC3V6qwxS6an/y4HQTZan4EJt
+	 ziSHPeEuiLW5CsZQnseRblMb32jQ4vkC6a1irbi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbgAUNLI (ORCPT
+        id S1728898AbgAUOEK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:11:08 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36216 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgAUNLI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 08:11:08 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so3149074wru.3
-        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 05:11:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mhGneesRMqca+G49CZkv9yFBdFGx22i2fZyrgZ2cdGw=;
-        b=RwdomRqhuMOj43ismwGzp1Fn9myxOX4PmSiivmXLjE759KnCPFdq6kSqbtUq4Gb1AV
-         LRL36IqyVwak5YFseCmqvX1cXovudgDifBWbdGBXO2YLke3b0GYT4zp8gEsBw6QpUfJ/
-         DlMozGPqDqQ+MaMKCcTQEbZNYQzlN5/CgjtFvuxYmE8bC09gaNISw6vxB+5tVBqE8mjl
-         SQtzYLvvE4H3yCHZaX6SrOVQJMN38MN56JqjVT68LiNpghq6pn0ld7PIIK9pnNyTVRgY
-         gfsMi+JTRAwXAPvAwE30zKb5MpaT8pzvRO+ZglfQ1Xua3J4xULANYKk11lL2b9TOzFqb
-         vqAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mhGneesRMqca+G49CZkv9yFBdFGx22i2fZyrgZ2cdGw=;
-        b=RK2ZeuU1sTk2sryAc5BDwpFGg4fJWCBbI4g1u9/30Wl31LOplOs52KlTK6x2mCzC+s
-         3Xv14o98ckDeHKPmr4i1NVq2dGAhsw1nJaDgiwqPsbdMRTTN7JuvUTAm2apIGYMxdhuq
-         rZmCZoQajyWpFhUwReTIa6xQ9PPxXZdLqJsE2yjcuaL5cdZrOiYIcpDoEmZHKIijnfmh
-         YHCmMvwjFDDwhjMh519T+qHWHhNaQejVS+n70wBKaTZh1nToMKweUihu26aBk0nKzsGi
-         zZ27qSal3NpMw2wIvGFy8aekhfAs6uLFmndX6cm7O6/6J1CgTPU8Xf841M21WoE93m3H
-         kH6A==
-X-Gm-Message-State: APjAAAVE6v8xG/zyQ7AZMexX50KPaOKh42yNySotSOgojrLfczANQCTh
-        exw/7LHu1cNZLCecOPwBrNE=
-X-Google-Smtp-Source: APXvYqy7hlBDQUa9WHN965x6FyXWEPReEs8xegXUSVTD5onpjUdQNV4o3/tnfrFGE4I4NWSoKssCgw==
-X-Received: by 2002:adf:fe86:: with SMTP id l6mr5353879wrr.252.1579612265353;
-        Tue, 21 Jan 2020 05:11:05 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id c17sm52327271wrr.87.2020.01.21.05.11.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 05:11:04 -0800 (PST)
-To:     dafna.hirschfeld@collabora.com
-Cc:     airlied@linux.ie, dafna3@gmail.com, daniel@ffwll.ch,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        ezequiel@collabora.com, heiko@sntech.de, helen.koike@collabora.com,
-        hjc@rock-chips.com, kernel@collabora.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-References: <20200121123445.29774-1-dafna.hirschfeld@collabora.com>
-Subject: Re: [PATCH v2] dt-bindings: convert rockchip-drm.txt to
- rockchip-drm.yaml
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <dccee12a-71cd-efac-02ca-3668d10434c7@gmail.com>
-Date:   Tue, 21 Jan 2020 14:11:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 21 Jan 2020 09:04:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728896AbgAUOEK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:04:10 -0500
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A245422314
+        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 14:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579615448;
+        bh=RhQe3QXk/zDnaa/l8gaC+5yGDQC5asHgWocfmrxWn1U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WnCBsBD6Ubqmsw+kuDpAuwoXL+ZBKTujsV2Mn9pGOGY/JpcSL4Z4wCIMC4/bQiIxs
+         ciqdP3aF193Vy8Ynphlo+jx2gNFDamyVt+ugDe72nqzZ6L/YVpPjU5OVCRSmv3OiPq
+         oyKNS7wpbkA4CxR5eorhPsu9/8RfxcZbyLbsK71E=
+Received: by mail-qv1-f41.google.com with SMTP id y8so1465410qvk.6
+        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 06:04:08 -0800 (PST)
+X-Gm-Message-State: APjAAAW1p0YebzlajJ1GRLZ6f+zah7SQfBU3/VYONS29CQQE3PKYyHRq
+        MDXjFZBD3I94ksjhY0LP0DSadRZjV4h/LEtFdQ==
+X-Google-Smtp-Source: APXvYqwJp13n5rPTJJDOXfMUKI9hXM9vs+rUXNz1Y5Q8u6qz7eER6mpKwoqon55uA3F4Uxi8MfmUkTp8hNPqSH0uU+Y=
+X-Received: by 2002:ad4:4511:: with SMTP id k17mr4650910qvu.135.1579615447751;
+ Tue, 21 Jan 2020 06:04:07 -0800 (PST)
 MIME-Version: 1.0
+References: <20200121123445.29774-1-dafna.hirschfeld@collabora.com>
 In-Reply-To: <20200121123445.29774-1-dafna.hirschfeld@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 21 Jan 2020 08:03:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJv-gXOK=80nqnO0TB1P-+1+E_vDaN3XSymKQfSLVTBsQ@mail.gmail.com>
+Message-ID: <CAL_JsqJv-gXOK=80nqnO0TB1P-+1+E_vDaN3XSymKQfSLVTBsQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: convert rockchip-drm.txt to rockchip-drm.yaml
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?B?6buE5a626ZKX?= <hjc@rock-chips.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dafna,
-
-You are checking at the wrong platforms.
-Maintainers incomplete. ">" is missing.
-Recheck please.
-
-Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml:
-ignoring, error in schema: maintainers: 0
-
-make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- menuconfig
-# change in menuconfig to Rockchip system
-
-make ARCH=arm dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-
-make ARCH=arm64 defconfig
-
-make ARCH=arm64 menuconfig
-# change in menuconfig to Rockchip platform
-
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-
-> From: Dafna Hirschfeld <dafna.hirschfeld at gmail.com>
-> 
+On Tue, Jan 21, 2020 at 6:35 AM Dafna Hirschfeld
+<dafna.hirschfeld@collabora.com> wrote:
+>
 > convert the binding file rockchip-drm.txt to yaml format.
 > This was tested and verified with:
 > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
+
+Also, make sure just 'make dt_binding_check' passes as that checks the
+example against all schemas.
+
 > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-> 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld at gmail.com>
+>
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 > ---
+> Changes since v1:
+> - fixed worng sign-off
+> - fixed the path of the $id property to be the path of the yaml file
+>
 >  .../display/rockchip/rockchip-drm.txt         | 19 ----------
 >  .../display/rockchip/rockchip-drm.yaml        | 38 +++++++++++++++++++
 >  2 files changed, 38 insertions(+), 19 deletions(-)
 >  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-drm.txt
 >  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-> 
+>
 > diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.txt
 > deleted file mode 100644
 > index 5707af89319d..000000000000
@@ -146,30 +119,30 @@ DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip-drm.
 > -example:
 > -
 > -display-subsystem {
-> -	compatible = "rockchip,display-subsystem";
-> -	ports = <&vopl_out>, <&vopb_out>;
+> -       compatible = "rockchip,display-subsystem";
+> -       ports = <&vopl_out>, <&vopb_out>;
 > -};
 > diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
 > new file mode 100644
-> index 000000000000..e4ef1a02196d
+> index 000000000000..538898ada9d1
 > --- /dev/null
 > +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
 > @@ -0,0 +1,38 @@
 > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+Do you have rights to change the license? The default is GPL-2.0-only.
+Looks like Rockchip owns the copyright.
+
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/rockchip-drm.yaml#
+> +$id: http://devicetree.org/schemas/display/rockchip/rockchip-drm.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
 > +title: Rockchip DRM master device
 > +
 > +maintainers:
-
-> +  - Sandy Huang <hjc at rock-chips.com
-
-Add extra ">"
-
-> +  - Heiko Stuebner <heiko at sntech.de>
+> +  - Sandy Huang <hjc@rock-chips.com
+> +  - Heiko Stuebner <heiko@sntech.de>
 > +
 > +description: |
 > +  The Rockchip DRM master device is a virtual device needed to list all
@@ -190,6 +163,11 @@ Add extra ">"
 > +required:
 > +  - compatible
 > +  - ports
+
+Add:
+
+additionalProperties: false
+
 > +
 > +examples:
 > +  - |
@@ -197,6 +175,6 @@ Add extra ">"
 > +        compatible = "rockchip,display-subsystem";
 > +        ports = <&vopl_out>, <&vopb_out>;
 > +    };
-> -- 
+> --
 > 2.17.1
-
+>
