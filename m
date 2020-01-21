@@ -2,134 +2,121 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65C5C33CAA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 09:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73655C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 09:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA23217F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 09:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EAB2253D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 09:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rrg59eJV"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="nUOfHjOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgAUJjh (ORCPT
+        id S1728826AbgAUJvG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:39:37 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43334 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgAUJjh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 04:39:37 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00L9dR66062753;
-        Tue, 21 Jan 2020 03:39:27 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579599567;
-        bh=JCpIWpKZmeZ+Ms921F9R3mQuzoHIAVicFLQDZsZzNhE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Rrg59eJV5PuvreL+/N0kkFvZN7EHJCCZNfiXRFMjJk/CJLOb3gDPsc0ZbzDAveb1s
-         5CThyPJu53v+wBLTd2X4FfsJfyZt1P5knAjxGl5zDplHPNMHAX9KgM4vr2yx2NekcV
-         3YUYP7qDHUQjw1iUkR9zWZ1iHgO9u36EVcksCM6Y=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00L9dRg3035119
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jan 2020 03:39:27 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 21
- Jan 2020 03:39:26 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 21 Jan 2020 03:39:26 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00L9dNBu024317;
-        Tue, 21 Jan 2020 03:39:24 -0600
-Subject: Re: [PATCH v8 4/5] drm/tidss: New driver for TI Keystone platform
- Display SubSystem
-To:     Jyri Sarha <jsarha@ti.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>
-CC:     <laurent.pinchart@ideasonboard.com>, <peter.ujfalusi@ti.com>,
-        <bparrot@ti.com>, <subhajit_paul@ti.com>, <praneeth@ti.com>,
-        <yamonkar@cadence.com>, <sjakhade@cadence.com>, <sam@ravnborg.org>
-References: <cover.1579553817.git.jsarha@ti.com>
- <96c8aa362a426a64086da92cb3b486c6cdce3e7f.1579553817.git.jsarha@ti.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <a54d264d-ea83-3fb7-399d-58e84ed20058@ti.com>
-Date:   Tue, 21 Jan 2020 11:39:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 04:51:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46166 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgAUJvG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 04:51:06 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so2335759wrl.13
+        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 01:51:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZI0atwJ3s6X/StOieAcUPING7QLdESS+gVuKdESoeM8=;
+        b=nUOfHjOz93uo00Ul9JjHIYcdpXRpD91FGhXKiI3DbvxV2BO2aWgkLtnZjTUxfmDW2I
+         5wIjUPAD3CzImoTZMmLQ0tdqq7owN/2wAWIgtyc1Slp/tQJa7ONrJG/tX1IOk2iNx3ps
+         zKOatbgNJTJ9Wm869mOIX92Ypbuo/2KCMP+cN2yU1ZftTtlMXsr31wiBQDonV/Y81i/C
+         JlegtyqVzaVGNXZ5PRRX9N0NLM/lLz0bw9imTqJpvFskBb6jf4N7D4CntVRBplsZ8sof
+         T4Zz0YfiHYja9NZzcrxHfnDGnqq+jK+w7KXA9sMdIN2/gSWsULahN+ko5SxdZQZBxuKP
+         ouug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZI0atwJ3s6X/StOieAcUPING7QLdESS+gVuKdESoeM8=;
+        b=dva91FNg3kdeG1zSPw5553/2w0HXvIFDYqQa9vpEqfYlRflIs8JT/fAmW/DCp8zJTF
+         gHYoNRon88fJHFqjsbjJcPAb74duYA7yegl0dgEXu/ekXMTtdm8DfpiXze9h8lSE3Gvw
+         3yjFnrIzfRDj0S0YNKMArMQCtJmF2SUrqUdZnXkYYajW7e0+ozp/8sqIU9/tvZsqDZ0x
+         Usx7Bkn5jH7warKKxj6snJPcc6TVcWRQdieYn0JuUnRihwTKe3oZxPkJmMahigV5Ibo+
+         EbuSSO+B4U0+9CrggM8g6d0ocUFYuZceC3RclPt+QNpJ2IYI8+D6EEfaO6ys6J3IJOh/
+         /SoA==
+X-Gm-Message-State: APjAAAWX2k231uQKusCNo1GKqrXTZX6sWRlD7ZCv2OGKH/+O3g0Rz2Ws
+        RZwWYDs7aMWDegg1tudgQmVZmv6bMr6IZPSOs78KrQ==
+X-Google-Smtp-Source: APXvYqxAKCqSHMRYwdAc4+G8YAFujr0n0Lp3fm9R3/wAR6Pi012ThbAAQo6Ca5vAsTFhTl5nyeRAizZaA/Jf2zrnUbU=
+X-Received: by 2002:a5d:530e:: with SMTP id e14mr4242678wrv.250.1579600262652;
+ Tue, 21 Jan 2020 01:51:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <96c8aa362a426a64086da92cb3b486c6cdce3e7f.1579553817.git.jsarha@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1578578535.git.michal.simek@xilinx.com>
+In-Reply-To: <cover.1578578535.git.michal.simek@xilinx.com>
+From:   Michal Simek <monstr@monstr.eu>
+Date:   Tue, 21 Jan 2020 10:50:50 +0100
+Message-ID: <CAHTX3dJZ+fsHKpen=wtw2g2fPWq1FZwKmvn5mWJpE7m3ZJSM7Q@mail.gmail.com>
+Subject: Re: [PATCH 0/7] arm64: zynqmp: Enable iio-hwmon based on iio ina226
+ driver with labels
+To:     linux-arm <linux-arm-kernel@lists.infradead.org>,
+        git <git@xilinx.com>
+Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>,
+        DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20/01/2020 23:02, Jyri Sarha wrote:
-> This patch adds a new DRM driver for Texas Instruments DSS IPs used on
-> Texas Instruments Keystone K2G, AM65x, and J721e SoCs. The new DSS IP is
-> a major change to the older DSS IP versions, which are supported by
-> the omapdrm driver. While on higher level the Keystone DSS resembles
-> the older DSS versions, the registers are completely different and the
-> internal pipelines differ a lot.
-> 
-> DSS IP found on K2G is an "ultra-light" version, and has only a single
-> plane and a single output. The K3 DSS IPs are found on AM65x and J721E
-> SoCs. AM65x DSS has two video ports, one full video plane, and another
-> "lite" plane without scaling support. J721E has 4 video ports, 2 video
-> planes and 2 lite planes. AM65x DSS has also an integrated OLDI (LVDS)
-> output.
-> 
-> Version history:
-> 
-> v2: - rebased on top of drm-next-2019-11-27
->      - sort all include lines in all files
->      - remove all include <drm/drmP.h>
->      - remove select "select VIDEOMODE_HELPERS"
->      - call dispc_vp_setup() later in tidss_crtc_atomic_flush() (there is no
->        to call it in new modeset case as it is also called in vp_enable())
->      - change probe sequence and drm_device allocation (follow example in
->        drm_drv.c)
->      - use __maybe_unused instead of #ifdef for pm functions
->      - remove "struct drm_fbdev_cma *fbdev;" from driver data
->      - check panel connector type before connecting it
-> 
-> v3: no change
-> 
-> v4: no change
-> 
-> v5: - remove fifo underflow irq handling, it is not an error and
->        it should be used for debug purposes only
->      - memory tuning, prefetch plane fifo up to high-threshold value to
->        minimize possibility of underflows.
-> 
-> v6: - Check CTM and gamma support from dispc_features when creating crtc
->      - Implement CTM support for k2g and fix k3 CTM implementation
->      - Remove gamma property persistence and always write color properties
->        in a new modeset
-> 
-> v7: - Fix checkpatch.pl --strict issues
->      - Rebase on top of drm-misc-next-2020-01-10
-> 
-> v8: - Remove idle debug prints from dispc_init()
->      - Add Reviewed-by: Benoit Parrot <bparrot@ti.com>
-> 
-> Co-developed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> Reviewed-by: Benoit Parrot <bparrot@ti.com>
+=C4=8Dt 9. 1. 2020 v 15:02 odes=C3=ADlatel Michal Simek <michal.simek@xilin=
+x.com> napsal:
+>
+> Hi,
+>
+> the patch 2c3d0c9ffd24 ("iio: core: Add optional symbolic label to device=
+ attributes")
+> added support for labelling IIO devices that's why I can enable iio based
+> ina226 driver with label property.
+>
+> Thanks,
+> Michal
+>
+>
+> Michal Simek (7):
+>   arm64: zynqmp: Enable iio-hwmon for ina226 on zcu100
+>   arm64: zynqmp: Enable iio-hwmon for ina226 on zcu111
+>   arm64: zynqmp: Add label property to all ina226 on zcu111
+>   arm64: zynqmp: Enable iio-hwmon for ina226 on zcu102
+>   arm64: zynqmp: Add label property to all ina226 on zcu102
+>   arm64: zynqmp: Enable iio-hwmon for ina226 on zcu106
+>   arm64: zynqmp: Add label property to all ina226 on zcu106
+>
+>  .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    |   8 +-
+>  .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    | 145 +++++++++++++++---
+>  .../boot/dts/xilinx/zynqmp-zcu106-revA.dts    | 145 +++++++++++++++---
+>  .../boot/dts/xilinx/zynqmp-zcu111-revA.dts    | 113 ++++++++++++--
+>  4 files changed, 360 insertions(+), 51 deletions(-)
+>
+> --
+> 2.24.0
+>
 
-You can add my SoB too:
+Applied.
+M
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
