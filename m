@@ -1,103 +1,205 @@
-Return-Path: <SRS0=m/NK=3J=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5929C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 21:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED0DC32771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 01:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9F722527
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jan 2020 21:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB81324125
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 01:53:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="IUMcFpRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgATVzR (ORCPT
+        id S1728998AbgAUBx2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 16:55:17 -0500
-Received: from outgoing11.flk.host-h.net ([188.40.208.241]:60969 "EHLO
-        outgoing11.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgATVzQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 16:55:16 -0500
-X-Greylist: delayed 7787 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 16:55:16 EST
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itczG-0000cv-RT; Mon, 20 Jan 2020 21:45:27 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itczD-0004Hk-Es; Mon, 20 Jan 2020 21:45:23 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] ARM: dts: rockchip: add rga to rk3229-xms6
-Date:   Mon, 20 Jan 2020 19:41:57 +0000
-Message-Id: <20200120194158.25357-4-justin.swartz@risingedge.co.za>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
-References: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.03)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fKZ8wcD78QFAaYhvfMzLIKpSDasLI4SayDByyq9LIhVeWb5TMLTma+i
- 4jOGzZGfZETNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
- f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
- qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
- E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18afb/FOITJmxBc0QX+fY5eUpAVXirbLu
- Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
- ttWGem52QLIiDo2hv5/Q58JTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
- 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
- CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
- RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
- gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
- TwbwMaed1BaNkB2/QnXFItfl/CWjT+yf5NxUSmxyzYlBxqy338NrFoXSENXH6UXfnav35JPA4YfM
- 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
- fozs0E8f2AsASs7mWOF+2zisWBpVRcW84PzgOLDW9zuKlWbjO41FyBEqIaDudcVplPE6wCr6GXU1
- lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
- 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
- 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Mon, 20 Jan 2020 20:53:28 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33940 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgAUBx2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 20:53:28 -0500
+Received: by mail-qk1-f195.google.com with SMTP id d10so804726qke.1;
+        Mon, 20 Jan 2020 17:53:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DLwWB53t6sz09f9B1uK0zwEN9SxdL7h+I/vAqzXh1rs=;
+        b=IUMcFpRQ8vz/Oz098DsJ/MlfrAlkASfp0SYSePY2V0VNezU4rSDADZWDuogLY83ITE
+         6qOiftcsBHTGequV+QapUdKtSjbKt+Lu/mUFk4ZyU+XNjiuz67a5JUmyh7cgP3cDXB4u
+         h3CtmwJqCqQUK9zrwgIefdFvbNJZ8pnnLyo0s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DLwWB53t6sz09f9B1uK0zwEN9SxdL7h+I/vAqzXh1rs=;
+        b=RFVwYGJeImdSbgdeNHWPVDCP5OayzcCwJ35wPeUFJCEJfr6srXiJDKnSqXXvbcAwVE
+         A1Ayxnca7ojSDDmd8mS01uWYIJcCi+Tx+sjgN3mcRZ0l1jCfBNcBlFS93ccAIr3EO40Y
+         L69F9o/1p+2eZoniGI51w1dBewdLzHyvS31stD9J9tcf/Xnasvuro4v6MmfRZ/E0az2d
+         Ygtyeg2so8fp8cCVFeduOXXcovEHiwjxsSnkh8GOK7kv5QbBC5zQ9KU1qdjQEa461cRB
+         fOEnKGSWpl8FtNS+gGAugVWJKUklihxP+q7UDw4qaBf4uK7fqLaawCKssJ2V9JFPKnhR
+         sUCQ==
+X-Gm-Message-State: APjAAAXNbyniISMoW3E248uLxl3SyOmr97DcoN6Pitg6BuF1/mhoT5RF
+        7qtUx54zr7A1uA1nSYQVbhNER0tXYvrRZ/+8AwE=
+X-Google-Smtp-Source: APXvYqwu+C+7GEOmDwQMJ1OCXr0L1MJ1vO3XA/YvvHsO/1Pr4qqlLpiL2FeuSh8Rtqj95aStJGWL/5FEIAlw9Nv83x8=
+X-Received: by 2002:a37:a43:: with SMTP id 64mr36517qkk.292.1579571606933;
+ Mon, 20 Jan 2020 17:53:26 -0800 (PST)
+MIME-Version: 1.0
+References: <20200120150113.2565-1-linux@neuralgames.com>
+In-Reply-To: <20200120150113.2565-1-linux@neuralgames.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 21 Jan 2020 01:53:15 +0000
+Message-ID: <CACPK8XfuVN3Q=npEoOP-amQS0-wemxcx6LKaHHZEsBAHzq1wzA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
+To:     Oscar A Perez <linux@neuralgames.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable RGA for Mecer Xtreme Mini S6.
+Hi,
 
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- arch/arm/boot/dts/rk3229-xms6.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+On Mon, 20 Jan 2020 at 15:12, Oscar A Perez <linux@neuralgames.com> wrote:
+>
+> This minimal driver adds support for the Hardware Random Number Generator
+> that comes with the AST2400/AST2500/AST2600 SOCs from AspeedTech.
+>
+> The HRNG on these SOCs uses Ring Oscillators working together to generate
+> a stream of random bits that can be read by the platform via a 32bit data
+> register.
 
-diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
-index 679fc2b00..894f64a4a 100644
---- a/arch/arm/boot/dts/rk3229-xms6.dts
-+++ b/arch/arm/boot/dts/rk3229-xms6.dts
-@@ -202,6 +202,10 @@
- 	status = "okay";
- };
- 
-+&rga {
-+	status = "okay";
-+};
-+
- &sdmmc {
- 	cap-mmc-highspeed;
- 	disable-wp;
--- 
-2.11.0
+Thanks for the patch.
 
+We've been using the timeriomem-rng driver for the past few years on
+aspeed hardware. You can see how that's set up by looking at
+arch/arm/boot/dts/aspeed-g{4,5,6}.dtsi
+
+I suggest we continue to use the generic driver.
+
+Cheers,
+
+Joel
+
+
+
+>
+> Signed-off-by: Oscar A Perez <linux@neuralgames.com>
+> ---
+>  .../devicetree/bindings/rng/aspeed-rng.yaml   | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/aspeed-rng.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/rng/aspeed-rng.yaml b/Documentation/devicetree/bindings/rng/aspeed-rng.yaml
+> new file mode 100644
+> index 000000000000..06070ebe1c33
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/aspeed-rng.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/rng/aspeed-rng.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +
+> +title: Bindings for Aspeed Hardware Random Number Generator
+> +
+> +
+> +maintainers:
+> +  - Oscar A Perez <linux@neuralgames.com>
+> +
+> +
+> +description: |
+> +  The HRNG on the AST2400/AST2500/AST2600 SOCs from AspeedTech  uses four Ring
+> +  Oscillators working together to generate a stream of random bits that can be
+> +  read by the platform via a 32bit data register every one microsecond.
+> +  All the platform has to do is to provide to the driver the 'quality' entropy
+> +  value, the  'mode' in which the combining  ROs will generate the  stream  of
+> +  random bits and, the 'period' value that is used as a wait-time between reads
+> +  from the 32bit data register.
+> +
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - aspeed,ast2400-rng
+> +              - aspeed,ast2500-rng
+> +              - aspeed,ast2600-rng
+> +
+> +
+> +  reg:
+> +    description:
+> +      Base address and length of the register set of this block.
+> +      Currently 'reg' must be eight bytes wide and 32-bit aligned.
+> +
+> +    maxItems: 1
+> +
+> +
+> +  period:
+> +    description:
+> +      Wait time in microseconds to be used between reads.
+> +      The RNG on these Aspeed SOCs generates 32bit of random data
+> +      every one microsecond. Choose between 1 and n microseconds.
+> +
+> +    maxItems: 1
+> +
+> +
+> +  mode:
+> +    description:
+> +      One of the eight modes in which the four internal ROs (Ring
+> +      Oscillators)  are combined to generate a stream  of random
+> +      bits. The default mode is seven which is the default method
+> +      of combining RO random bits on these Aspeed SOCs.
+> +
+> +    maxItems: 1
+> +
+> +
+> +  quality:
+> +    description:
+> +      Estimated number of bits of entropy per 1024 bits read from
+> +      the RNG.  Note that the default quality is zero which stops
+> +      this HRNG from automatically filling the kernel's entropy
+> +      pool with data.
+> +
+> +    maxItems: 1
+> +
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - period
+> +  - quality
+> +
+> +
+> +examples:
+> +  - |
+> +    rng: hwrng@1e6e2074 {
+> +         compatible = "aspeed,ast2500-rng";
+> +         reg = <0x1e6e2074 0x8>;
+> +         period = <4>;
+> +         quality = <128>;
+> +         mode = <0x7>;
+> +    };
+> +
+> +
+> +...
+> --
+> 2.17.1
+>
