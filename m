@@ -2,110 +2,104 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2AAC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAA3C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BC624653
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148982465A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 22:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579644429;
+	bh=ul/xQj1jGDQglY+pdWlfjCPiA90/kCcFe29S+ZX6wU8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g9TLGyLMDxMVkScCCkR6ayGxler1gEi8M/JuEN/o5nklXnDXNJUu2e2U3COfDtCqf
+	 YjwS2OqgaMOzj7tfHp3MmJx+oK/K8waoEZ+Cee3o7UMpqgdw1o4Scbxys4NaBE1Ben
+	 TJmdOOpwtIqdB/GQrqsrpRhVw8x7WHGsw1RFaOfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgAUWGG (ORCPT
+        id S1728205AbgAUWHI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:06:06 -0500
-Received: from outgoing20.flk.host-h.net ([197.242.87.54]:58735 "EHLO
-        outgoing20.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgAUWGD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:06:03 -0500
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam5-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1iu1eo-0006Ux-JY; Wed, 22 Jan 2020 00:05:59 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1iu1em-0007M5-Bg; Wed, 22 Jan 2020 00:05:56 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] ARM: dts: rockchip: add rga node for rk322x
-Date:   Tue, 21 Jan 2020 22:02:40 +0000
-Message-Id: <20200121220242.22815-2-justin.swartz@risingedge.co.za>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200121220242.22815-1-justin.swartz@risingedge.co.za>
-References: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
- <20200121220242.22815-1-justin.swartz@risingedge.co.za>
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0Xm17NJf4el5vffImWwWrhCpSDasLI4SayDByyq9LIhVLvXefnN6xBTY
- MH2U0pbe0UTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
- f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
- qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
- E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18afe0BCpZ6f+WkZ8jHfuxOJfAVXirbLu
- Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
- tgmYFaNu+2UDArzT1gq7P+ZTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
- 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
- CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
- RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
- gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
- TwbwMWQbSR6Wmuan/Ls9Qsz9RDB5/WrGSF6UweUtzKHDONG938NrFoXSENXH6UXfnav35JPA4YfM
- 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
- foxurxT65n0uOBZNu5AbEDwzUs9wZkqvP6wAYdCA4Yq6fGbjO41FyBEqIaDudcVplPE6wCr6GXU1
- lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
- 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
- 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Tue, 21 Jan 2020 17:07:08 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35594 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgAUWHI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 17:07:08 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i15so4475043oto.2;
+        Tue, 21 Jan 2020 14:07:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Mf/yLE4fhksL4+41Ux+KrRepfjoWtmsOsdPONyuKv80=;
+        b=GoxSp8PM84NKJRzelQAidPqEN2Qc5fK9Q5YlOfplvlTrgP3nK1aeZW0LmekATfW9ZD
+         DHarhSIGlFPDAnrbTkt4I2tUJE4k3GHv50zbhGWD9F0FnqXZP+jcW9nnDsj9EkExifwC
+         ZAoNJ82ug/R+J2WPGFA8TlbzLqotvV1UG/FVtyVlpOn3E2qNYMVmvRtj27gOVoCnrkEB
+         dp25JNY0YDrhhh9ju8NDMkBeULgegYB58UlLY07LCm4waTIh2MqjRS7d32XxGOIU5vdm
+         RlrTnFASvTYE2CQTk3tJpP/92BkQ4/JjX4Octze62zJ+TWemTBHk1+kVrPlQNBFXFzcC
+         uAtQ==
+X-Gm-Message-State: APjAAAU+lS8uzN2wbNnsqA0nRnqdZGZwXjxljrzo2Or/oCJfGQAjWuHv
+        ESoOON8Jy+u6z4XjkZGnEXJpX8o=
+X-Google-Smtp-Source: APXvYqyUPROewNgBwvEiDeEneFjZDF2in+v16Msxe/0x8RMLHkcmdQx2vG0w1GAJjHM/GUJh7O8FFw==
+X-Received: by 2002:a9d:7f83:: with SMTP id t3mr4991921otp.115.1579644427111;
+        Tue, 21 Jan 2020 14:07:07 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e65sm14081508otb.62.2020.01.21.14.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 14:07:06 -0800 (PST)
+Received: (nullmailer pid 23030 invoked by uid 1000);
+        Tue, 21 Jan 2020 22:07:05 -0000
+Date:   Tue, 21 Jan 2020 16:07:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Matt Ranostay <matt.ranostay@konsulko.com>,
+        linux-iio@vger.kernel.org, jic23@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] dt-bindings: iio: chemical: consolidate
+ atlas-sensor docs
+Message-ID: <20200121220705.GA15425@bogus>
+References: <20200114022348.8676-1-matt.ranostay@konsulko.com>
+ <20200114022348.8676-4-matt.ranostay@konsulko.com>
+ <20200116182124.00006e19@Huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116182124.00006e19@Huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a node to define the presence of RGA, a 2D raster
-graphic acceleration unit.
+On Thu, Jan 16, 2020 at 06:21:24PM +0000, Jonathan Cameron wrote:
+> On Tue, 14 Jan 2020 04:23:48 +0200
+> Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+> 
+> > Since Atlas Scientific device support only varies from the compatible
+> > string is ideal all the respective docs are merged into a single doc
+> > named atlas,sensor.txt
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+> 
+> No chance of a yaml conversion whilst you are at it?
 
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+I asked for that on v1.
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 340ed6ccb..29d50bebc 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -621,6 +621,17 @@
- 		status = "disabled";
- 	};
- 
-+	rga: rga@20060000 {
-+		compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
-+		reg = <0x20060000 0x1000>;
-+		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
-+		clock-names = "aclk", "hclk", "sclk";
-+		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
-+		reset-names = "core", "axi", "ahb";
-+		status = "disabled";
-+	};
-+
- 	iep_mmu: iommu@20070800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x20070800 0x100>;
--- 
-2.11.0
+> Maybe dt maintainers will take the view this is step in the right direction and
+> let this go, but I will want an Ack for that.
 
+When I can get 4 for the price of 1, I'll take the conversion. :) 
+
+> > ---
+> >  .../bindings/iio/chemical/atlas,ec-sm.txt     | 21 ------------
+> >  .../bindings/iio/chemical/atlas,orp-sm.txt    | 21 ------------
+> >  .../bindings/iio/chemical/atlas,ph-sm.txt     | 21 ------------
+> >  .../bindings/iio/chemical/atlas,sensor.txt    | 34 +++++++++++++++++++
+> >  4 files changed, 34 insertions(+), 63 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,sensor.txt
