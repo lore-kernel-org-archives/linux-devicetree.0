@@ -2,130 +2,101 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566D2C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 23:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37521C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 23:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFDF24656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 23:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB7C24653
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 23:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579648117;
-	bh=isyJcTtmLqQY5h7KGj6x7ryAw2JabEkSkewbTWLPkqI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hHUOKOK+2j67ydjuj67g818XwC30jzcmnTXEA27BD9ezSSpobyOfxcMWOeMOcTuZh
-	 AqWcx/PZ0RapAzTXrxr2Aaj6SEK3bBAVeWp/CEhJa/DfXtPmbTL4A7z5d/Ya0clGEz
-	 URT19RZEnGBlpjuQC2XflPwEkI5kAXpFxCVnuKXc=
+	s=default; t=1579648396;
+	bh=vOOvfaBkUsxOjHrx9gKADSHIfn9WlXE/OyKwBqXD4IA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x63D0j23u/VDqwD3H6XgHy5hrXET1GPLsUtz6/Y0m+co0+320pLu36eXt04EOq0Pc
+	 ke7gkPWncaHM7wda2eAjmbl2iu5BNZ8AzbkouYhWg4SKxMYqOOdIhAFEl4igPLYOre
+	 4bMPutnQpOZooEbU8RZqNgJc2iuQ2S6pql4K5jgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgAUXIg (ORCPT
+        id S1726407AbgAUXNM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:08:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgAUXIg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:08:36 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC09524672;
-        Tue, 21 Jan 2020 23:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579648116;
-        bh=isyJcTtmLqQY5h7KGj6x7ryAw2JabEkSkewbTWLPkqI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TIHRX+PHjjNRSMOtnjbGuGVcseY9vip3xj4afElS8NZWdyJhL0t5iMH1/zbZ4n7Xq
-         SocBH7nxq6j9a3R0gN20ug5W+gbVbmqk3wx9IoWLHCQfN48oxqNMJ1VdT+Flj6DWZ5
-         Eb5hn8Jyvue6vBUxFJSTGf+jUoOLMsr88O3yJjcI=
-Received: by mail-qt1-f171.google.com with SMTP id e5so4156349qtm.6;
-        Tue, 21 Jan 2020 15:08:35 -0800 (PST)
-X-Gm-Message-State: APjAAAVZ7p3hjaGGS7dnN3GffDjY/DhHIkgnaMhBih9Moo040iyQlPuT
-        GMhoC5XEqYP/GXwk7I6njPxv10bLiVK+x2OSNQ==
-X-Google-Smtp-Source: APXvYqwC/GoCff9pALlwjNcY5bRH4J0nuKhoikFBbQMufVBHG5zsv+j5mLtvw7EZee6cFsjyrV5aX0XhEmMo8ukFmmk=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr7223067qtg.110.1579648115077;
- Tue, 21 Jan 2020 15:08:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20200115122908.16954-1-repk@triplefau.lt> <20200115122908.16954-3-repk@triplefau.lt>
- <20200121230512.GA4486@bogus>
-In-Reply-To: <20200121230512.GA4486@bogus>
+        Tue, 21 Jan 2020 18:13:12 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35849 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgAUXNM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 18:13:12 -0500
+Received: by mail-ot1-f67.google.com with SMTP id m2so4624091otq.3;
+        Tue, 21 Jan 2020 15:13:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ooI0TC2R0RPnixxhz1OoqRc6n/Cpz0oN4+WUYyVQIJQ=;
+        b=CGba/AGft6uyQb4xAt8nAoEH2ZFMFcztqdYDKFdVInE4HS3SBC4PrhwlNN8Zp6ADx6
+         hPNWlAd8NpxW6te0TP/516LVo+3UHXGBQ5J73qN+eh5OqRo4NHGl7mpfHzZEWGXcR/3i
+         gZ90CqxOKoNGatOi/QQ/Kn4lIPsMotHBGJmwQmCrz8Qn8/DXabNGB1pmlvXEFEpRrSKl
+         bZjVg11/spkdN7dG1519N3XIU8Kw4es67tP2PUUtXvfvbloQ9eV74vXfiZehX31KMz1R
+         9EDSMIpWfhDiMEIMe3cwNglJt8hXEh/f8ygwuXMzQNs88G/tz0GVm8MTzXn5NC2QU8oQ
+         XKQg==
+X-Gm-Message-State: APjAAAU6NBW2bKP01Qsrza3atBhSf5Dy2RonN4LqhvzMYZALsTxRDwmJ
+        ZMrBhf1crLDLUwcW575vYQ==
+X-Google-Smtp-Source: APXvYqyPBzxIhoP3H+P9LqIiK3hX3lZ5SBs7l9OTqvE4gQGrbgUrEC2A1vykW7mfrIfYpBNwc/eCWQ==
+X-Received: by 2002:a9d:3cf:: with SMTP id f73mr5553811otf.11.1579648391091;
+        Tue, 21 Jan 2020 15:13:11 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 67sm12497977oid.30.2020.01.21.15.13.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 15:13:10 -0800 (PST)
+Received: (nullmailer pid 17419 invoked by uid 1000);
+        Tue, 21 Jan 2020 23:13:09 -0000
+Date:   Tue, 21 Jan 2020 17:13:09 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 21 Jan 2020 17:08:23 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKE09177p6n3a5o2E9s73bSg6MJUo5eJVwKvE8gr3i-=A@mail.gmail.com>
-Message-ID: <CAL_JsqKE09177p6n3a5o2E9s73bSg6MJUo5eJVwKvE8gr3i-=A@mail.gmail.com>
-Subject: Re: [PATCH v4 2/7] dt-bindings: Add AXG shared MIPI/PCIE PHY bindings
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, alexandre.torgue@st.com,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com,
+        olivier.moysan@st.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: iio: adc: stm32-adc: convert bindings to
+ json-schema
+Message-ID: <20200121231309.GA17359@bogus>
+References: <1579095941-18648-1-git-send-email-fabrice.gasnier@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579095941-18648-1-git-send-email-fabrice.gasnier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 5:05 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Jan 15, 2020 at 01:29:03PM +0100, Remi Pommarel wrote:
-> > Add documentation for the shared MIPI/PCIE PHYs found in AXG SoCs.
-> >
-> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > ---
-> >  .../phy/amlogic,meson-axg-mipi-pcie.yaml      | 34 +++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie.yaml
-> > new file mode 100644
-> > index 000000000000..3184146318cf
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie.yaml
-> > @@ -0,0 +1,34 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright 2019 BayLibre, SAS
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/phy/amlogic,meson-axg-mipi-pcie.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Amlogic AXG shared MIPI/PCIE PHY
-> > +
-> > +maintainers:
-> > +  - Remi Pommarel <repk@triplefau.lt>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: amlogic,axg-mipi-pcie-phy
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  "#phy-cells":
-> > +    const: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#phy-cells"
->
-> Add:
->
-> additionalProperties: false
->
->
-> With that,
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, 15 Jan 2020 14:45:41 +0100, Fabrice Gasnier wrote:
+> Convert the STM32 ADC binding to DT schema format using json-schema
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+> Changes in V3:
+> - Fix minimum and maximum syntax for uint32-array properties as pointed
+>   out by Rob.
+> - update example to better show this syntax e.g. st,adc-channels = <0 1>;
+> 
+> Changes in V2:
+> - Take almost all of Rob suggestions (removed reg generic description,
+>   added minItems, maxItems, st,max-clk-rate-hz range, drop some pipes,
+>   simplify clock-names, remove unneeded allOfs)
+> - For now, keep all in one file despite there are lots of if/thens in the
+>   bindings
+> ---
+>  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 149 -------
+>  .../devicetree/bindings/iio/adc/st,stm32-adc.yaml  | 458 +++++++++++++++++++++
+>  2 files changed, 458 insertions(+), 149 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
+> 
 
-I missed that I already ack'ed v5, but looks like the same comment
-applies to both DT patches.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
