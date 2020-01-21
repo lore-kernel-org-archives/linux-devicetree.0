@@ -2,391 +2,503 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64346C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 14:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC8DC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 14:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB62217F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 14:10:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uzT1khDs"
+	by mail.kernel.org (Postfix) with ESMTP id 57DCB217F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 14:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAUOKe (ORCPT
+        id S1727508AbgAUONQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:10:34 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:37769 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgAUOKe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 09:10:34 -0500
-Received: by mail-wr1-f51.google.com with SMTP id w15so3376441wru.4;
-        Tue, 21 Jan 2020 06:10:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XRpphs2S9wZTGTytK13LtytO9wnJoc1ItNQDAtJ9sJY=;
-        b=uzT1khDsSuk3Vgl0MBaHZfT/MNypKjXd9XugPdUZL/m5sWVrgxd7xZoKpo0ZCC7/i7
-         +ZYVvih2CAao09ynWt37QJWQ2wnQrwoMYfDE5UPKiEGh1xn0ThIZmoiycEzTm5sDvecu
-         kyrAjIAxUoqKhQzfJTaCdqsrBdawgoDhhxv7wrzH0qcArfPalClpB20a0s+HWNz629AR
-         +2iaF+CFGqYocWLzI/LupCpsDOQnf2Tl/GqoBMX+24boVejMD7IiB+UfspSsOQIteIqr
-         z0ud/IzRzBqfwkiIXzRfTyzvZ8vxBoT2+xrb22xI4M8DZVSeO9YIUk6orFTayh2TiWJY
-         os3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XRpphs2S9wZTGTytK13LtytO9wnJoc1ItNQDAtJ9sJY=;
-        b=X0Nml2zVyJiPObkue5rGTkLFmzAwYO0iEegYVTDE1Fk43OM3CIv3m3ksGrc16Gm19n
-         vxO/pewEzJwLrCaHPEU+p/B2pQ/YYL2e/Yvx8kuXj6BJX/6TXwG+YZaLhi8P5zETtUZ+
-         /0dq/eNEjPNx3jK2C79/6UQ9yJaJ34iU54iIzP45gKWVbjz5nRV+e0doX4mDYE0SqdRG
-         CFnMFdobB4O4xOQR0hryY/KI50TUKQvwCILZVqUb57mYprANjjah3v+9JYRUnIjgnAlZ
-         Lz30TnCF9Qy8pyJQhvoWVc+0COovgYVSFIIBuTYqx8WzDpJTtyUmsPZq0sQ7qLfX5OJP
-         k6DQ==
-X-Gm-Message-State: APjAAAVh29M+z6eoOGk7lsDQt0BYSXZzwRpikZ+shTwt5mtwtyb9cqJx
-        b5zTYXkgRvTd4ncSi53JEAU=
-X-Google-Smtp-Source: APXvYqxW80LwqMX7ZQFDkbH92p2ADBj+z4A5Iv4J1Z3o+tOe3H2AekLZ3cnTAmOZtv9qlqDHj1dDCw==
-X-Received: by 2002:a5d:6708:: with SMTP id o8mr5650970wru.296.1579615830901;
-        Tue, 21 Jan 2020 06:10:30 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id d16sm56769006wrg.27.2020.01.21.06.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 06:10:29 -0800 (PST)
-Date:   Tue, 21 Jan 2020 15:10:27 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 2/2] dt-bindings: firmware: tegra186-bpmp: Document
- interconnects property
-Message-ID: <20200121141027.GE899558@ulmo>
-References: <20200114181519.3402385-1-thierry.reding@gmail.com>
- <20200114181519.3402385-2-thierry.reding@gmail.com>
- <7aefac6c-092c-b5a6-2fa6-e283d2147fc3@linaro.org>
- <20200120150605.GA712203@ulmo>
- <57c37b3c-1473-d444-db59-8c6650241188@gmail.com>
+        Tue, 21 Jan 2020 09:13:16 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:55100 "EHLO manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729162AbgAUONQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:13:16 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by manjaro.org (Postfix) with ESMTP id D66FD37E1762;
+        Tue, 21 Jan 2020 15:13:13 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 15c4yKmLzXHI; Tue, 21 Jan 2020 15:13:06 +0100 (CET)
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add initial support for
+ Pinebook Pro
+To:     Emmanuel Vadot <manu@freebsd.org>, heiko@sntech.de,
+        pbrobinson@gmail.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, andy.yan@rock-chips.com,
+        robin.murphy@arm.com, nick@khadas.com, kever.yang@rock-chips.com,
+        m.reichl@fivetechno.de, aballier@gentoo.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200116225617.6318-1-manu@freebsd.org>
+ <20200116225617.6318-2-manu@freebsd.org>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Autocrypt: addr=tobias@t-sys.eu; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <477e2602-d740-5954-5573-87db5fd83888@manjaro.org>
+Date:   Tue, 21 Jan 2020 15:13:06 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gDGSpKKIBgtShtf+"
-Content-Disposition: inline
-In-Reply-To: <57c37b3c-1473-d444-db59-8c6650241188@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200116225617.6318-2-manu@freebsd.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---gDGSpKKIBgtShtf+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I do strongly oppose merging this DTS. It is missing several device
+components (for example the eDP panel and the lid switch) and the power
+supply setup does not reflect the implementation in the device at all.
+Also some control/irq GPIOs are incorrect. See comments below.
 
-On Tue, Jan 21, 2020 at 09:53:48AM +0300, Dmitry Osipenko wrote:
-> 20.01.2020 18:06, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Fri, Jan 17, 2020 at 05:23:43PM +0200, Georgi Djakov wrote:
-> >> Hi Thierry,
-> >>
-> >> Thanks for the patch!
-> >>
-> >> On 1/14/20 20:15, Thierry Reding wrote:
-> >>> From: Thierry Reding <treding@nvidia.com>
-> >>>
-> >>> Document the interconnects property that is used to describe the paths
-> >>> from and to system memory from and to the BPMP.
-> >>>
-> >>> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> >>> ---
-> >>> Rob, Georgi,
-> >>>
-> >>> after the initial RFC that I did for adding interconnect properties on
-> >>> Tegra, I realized that the description wasn't complete. This is an
-> >>> attempt at a more accurate description, but unfortunately I'm not sure
-> >>> if it's even correct in terms of the interconnect bindings.
-> >>>
-> >>> The problem here is that on Tegra, each device has multiple paths to
-> >>> system memory, and I have no good idea on what to pick as the default.
-> >>> They are all basically the same path, but each provides extra controls
-> >>> to configure the "interconnect".
-> >>
-> >> Are these multiple paths between a device and system memory used simul=
-taneously
-> >> for load-balancing, or who makes the decision about which path would b=
-e used?
-> >=20
-> > It varies. The vast majority of these paths are read/write pairs, which
-> > can be configured separately. There are also cases where multiple paths
-> > are used for load-balancing and I don't think there's any direct
-> > software control over which path will be used.
-> >=20
-> > A third class is where you have one device, but two read/write pairs,
-> > one which is tied to a microcontroller that's part of the device, and
-> > another read/write pair that is used for DMA to/from the device.
-> >=20
-> > Often in the latter case, the microcontroller memory client interfaces
-> > will be used by the microcontroller to read firmware and once the micro-
-> > controller has booted up, the DMA memory client interfaces will be used
-> > to read/write system memory with bulk data (like frame buffers, etc.).
-> >=20
-> >> Is this based on the client/stream ID that you mentioned previously?
-> >=20
-> > These are now all what's call memory client IDs, which identify the
-> > corresponding interface to the memory controller. Stream IDs are
-> > slightly higher-level and typically identify the "module" that uses
-> > the SMMU. Generally a stream ID is mapped to one or more memory client
-> > IDs.
-> >=20
-> >> Looking at the the binding below, it seems to me like there are differ=
-ent
-> >> master/slave pairs between MC and EMC and each link is used for
-> >> unidirectional traffic only. In terms of the interconnect API, both re=
-ad
-> >> and write paths have the same direction.
->=20
-> Yes, that definition should be incorrect.
->=20
-> > I'm not sure I understand what you mean by this last sentence. Are you
-> > saying that each path in terms of the interconnect API is a always a
-> > bidirectional link?
->=20
-> Please see more below.
->=20
-> >> Is the EMC really an interconnect provider or is it just a slave port?=
- Can
-> >> we scale both EMC and MC independently?
-> >=20
-> > The EMC is the only one where we can scale the frequency, but the MC has
-> > various knobs that can be used to fine-tune arbitration, set maximum
-> > latency, etc.
->=20
-> Yes..
->=20
->=20
-> EMC controls the total amount of available memory bandwidth, things like
-> DRAM timing and EMC-DRAM channel's performance. EMC is facing MC from
-> one side and DRAM (EMEM) from the other.
->=20
->=20
->=20
-> MC controls allocation of that total bandwidth between the memory
-> clients. It has knobs to prioritize clients, the knobs are per
-> read/write port. MC is facing memory clients from one side and EMC from
-> the other.
->=20
->=20
-> > I vaguely recall Dmitry mentioning that the EMC in early generations of
-> > Tegra used to have controls for individual memory clients, but I don't
-> > see that in more recent generations.
->=20
-> EMC doesn't have direct controls over memory clients on all Tegra SoCs,
-> but it may have some extra knobs for the MC arbitration config.
->=20
-> The MC bandwidth allocation logic and hardware programming interface
-> differs among SoC generations, but the basic principle is the same.
->=20
-> >>> Any ideas on how to resolve this? Let me know if the DT bindings and
-> >>> example don't make things clear enough.
->=20
-> I'm also interested in the answer to this question.
->=20
-> A quick thought.. maybe it could be some new ICC DT property which tells
-> that all paths are the "dma-mem":
->=20
-> 	interconnects-all-dma-mem;
+The schematic of the Pinebook Pro can be found here:
+http://files.pine64.org/doc/PinebookPro/pinebookpro_v2.1_mainboard_schematic.pdf
 
-There could easily be cases where multiple interconnects are to system
-memory but there are additional ones which aren't, so the above wouldn't
-be able to represent such cases.
+I'm currently planning on submitting a DTS with correct power supply and
+GPIO setup as well as more supported hardware components late February.
+Unfortunately I won't get around to doing it any sooner.
 
-> >>>  .../firmware/nvidia,tegra186-bpmp.yaml        | 59 +++++++++++++++++=
-++
-> >>>  1 file changed, 59 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra1=
-86-bpmp.yaml b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-b=
-pmp.yaml
-> >>> index dabf1c1aec2f..d40fcd836e90 100644
-> >>> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp=
-=2Eyaml
-> >>> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp=
-=2Eyaml
-> >>> @@ -43,6 +43,24 @@ properties:
-> >>>        - enum:
-> >>>            - nvidia,tegra186-bpmp
-> >>> =20
-> >>> +  interconnects:
-> >>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> >>> +    description: A list of phandle and specifier pairs that describe=
- the
-> >>> +      interconnect paths to and from the BPMP.
-> >>> +
-> >>> +  interconnect-names:
-> >>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> >>> +    description: One string for each pair of phandle and specifier i=
-n the
-> >>> +      "interconnects" property.
-> >>> +    # XXX We need at least one of these to be named dma-mem so that =
-the core
-> >>> +    # will set the DMA mask based on the DMA parent, but all of thes=
-e go to
-> >>> +    # system memory eventually.
-> >>> +    items:
-> >>> +      - const: dma-mem
-> >>> +      - const: dma-mem
-> >>> +      - const: dma-mem
-> >>> +      - const: dma-mem
->=20
-> Names should be unique, otherwise it's not possible to retrieve ICC path
-> other than the first one.
+Current state of the DTS can be found here:
+https://gitlab.manjaro.org/tsys/linux-pinebook-pro/blob/v5.5-rc7/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
 
-Yeah, I know, that's why there's an XXX comment. =3D) I just wasn't sure
-what else to put there and thought this kinda made it clear that it was
-only half-baked.
 
-> >>>    iommus:
-> >>>      $ref: /schemas/types.yaml#/definitions/phandle-array
-> >>>      description: |
-> >>> @@ -152,8 +170,43 @@ additionalProperties: false
-> >>> =20
-> >>>  examples:
-> >>>    - |
-> >>> +    #include <dt-bindings/clock/tegra186-clock.h>
-> >>>      #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>>      #include <dt-bindings/mailbox/tegra186-hsp.h>
-> >>> +    #include <dt-bindings/memory/tegra186-mc.h>
-> >>> +
-> >>> +    mc: memory-controller@2c00000 {
-> >>> +        compatible =3D "nvidia,tegra186-mc";
-> >>> +        reg =3D <0x02c00000 0xb0000>;
-> >>> +        interrupts =3D <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
-> >>> +        status =3D "disabled";
-> >>> +
-> >>> +        #interconnect-cells =3D <1>;
-> >>> +        #address-cells =3D <2>;
-> >>> +        #size-cells =3D <2>;
-> >>> +
-> >>> +        ranges =3D <0x02c00000 0x0 0x02c00000 0x0 0xb0000>;
-> >>> +
-> >>> +        /*
-> >>> +         * Memory clients have access to all 40 bits that the memory
-> >>> +         * controller can address.
-> >>> +         */
-> >>> +        dma-ranges =3D <0x0 0x0 0x0 0x100 0x0>;
-> >>> +
-> >>> +        #memory-controller-cells =3D <0>;
-> >>> +
-> >>> +        emc: external-memory-controller@2c60000 {
-> >>> +            compatible =3D "nvidia,tegra186-emc";
-> >>> +            reg =3D <0x0 0x02c60000 0x0 0x50000>;
-> >>> +            interrupts =3D <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
-> >>> +            clocks =3D <&bpmp TEGRA186_CLK_EMC>;
-> >>> +            clock-names =3D "emc";
-> >>> +
-> >>> +            #interconnect-cells =3D <0>;
-> >>> +
-> >>> +            nvidia,bpmp =3D <&bpmp>;
-> >>> +        };
-> >>> +    };
-> >>> =20
-> >>>      hsp_top0: hsp@3c00000 {
-> >>>          compatible =3D "nvidia,tegra186-hsp";
-> >>> @@ -187,6 +240,12 @@ examples:
-> >>> =20
-> >>>      bpmp {
-> >>>          compatible =3D "nvidia,tegra186-bpmp";
-> >>> +        interconnects =3D <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPR>,
-> >>> +                        <&mc TEGRA186_MEMORY_CLIENT_BPMPW &emc>,
-> >>> +                        <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPDMAR>,
-> >>> +                        <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &emc>;
->=20
-> I don't think this is a correct definition of the ICC paths because the
-> first node-MC_ID pair should define the source, second pair is the final
-> destination. Then the interconnect core builds (by itself) the path from
-> MC client to MC and finally to EMC based on the given source /
-> destination. Please see my v1 patchset for the example.
+> From: Peter Robinson <pbrobinson@gmail.com>
+> 
 
-Okay, sounds like "source" in this case means the initiator of the
-transaction and destination is the target of the transaction. I had
-interpreted the "source" as the "source location" of the transaction (so
-for reads the source would be the system memory via the EMC, and for
-writes the source would be the memory client interface).
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		autorepeat;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pwrbtn>;
+> +
+> +		power {
+> +			debounce-interval = <100>;
+> +			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_LOW>;
+> +			label = "GPIO Key Power";
+> +			linux,code = <KEY_POWER>;
+> +			wakeup-source;
+> +		};
 
-Yeah, I think that makes sense. It was also pointed out to me (offline)
-that the above doesn't work as intented for the use-case where I really
-need it. The primary reason why I need these "dma-mem" interconnect
-paths is so that the memory controller is specified as the "DMA parent"
-for these devices, which is important so that the DMA masks can be
-correctly set. Having the &emc reference in the first slot breaks that.
-Your suggestion makes sense when interpreting the terminology
-differently and it fixes the DMA parent issue (at least partially).
+Missing lid switch
+> +	};
+> +
+> +	leds {
+> +		status = "okay";
+> +		compatible = "gpio-leds";
+> +
+> +		work-led {
+> +			label = "work";
+> +			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		standby-led {
+> +			label = "standby";
+> +			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
+vcc1v8_s3 and vcca1v8_s3 are not the same. They are powered from
+different vin supplies.
 
-> It should look somewhat like this:
->=20
-> interconnects =3D
->     <&mc TEGRA186_MEMORY_CLIENT_BPMPR &emc TEGRA_ICC_EMEM>,
->     <&mc TEGRA186_MEMORY_CLIENT_BPMPW &emc TEGRA_ICC_EMEM>,
->     <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAR &emc TEGRA_ICC_EMEM>,
->     <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &emc TEGRA_ICC_EMEM>;
->=20
-> interconnect-names =3D "bpmpr", "bpmpw", "bpmpdmar", "bpmpdmaw";
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc1v8_s3";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vcc_1v8>;
+> +	};
+> +
+> +	dc_12v: dc-12v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "dc_12v";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
+> +	};
+There is no primary 12 V supply on the Pinebook Pro
 
-I'm not sure if that TEGRA_ICC_EMEM makes a lot of sense. It's always
-going to be the same and it's arbitrarily defined, so it's effectively
-useless. But other than that it looks good.
+> +
+> +	vcc3v3_sys: vcc3v3-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	vcc5v0_host: vcc5v0-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&host_vbus_drv>;
+> +		regulator-name = "vcc5v0_host";
+> +	};
+> +
+> +	vcc5v0_usb3_host: vcc5v0-usb3-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&host_usb3_drv>;
+> +		regulator-name = "vcc5v0_usb3_host";
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc3v3_s0: vcc3v3-s0-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio1 RK_PC6 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&lcdvcc_en>;
+> +		regulator-name = "vcc3v3_s0";
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc_sys: vcc-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&dc_12v>;
+> +	};
+> +The main system voltage is not 5 V and it is not powered by a 12 V rail
 
-I suppose one could argue about the names a bit. Having the "bpmp"
-prefix for all of them feels a little redundant. They could also be
-[ "read", "write", "dma-read", "dma-write" ], which would make them
-a little more contextual, like we do with other clocks.
+> +	vdd_log: vdd-log {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm2 0 25000 1>;
+> +		pwm-supply = <&vcc_sys>;
+> +		regulator-name = "vdd_log";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-init-microvolt = <950000>;
+> +		regulator-min-microvolt = <800000>;
+> +		regulator-max-microvolt = <1400000>;
+> +	};
+> +};
+> +
 
-However, like I said before, at least one of these would need to be
-named "dma-mem" in order for the memory controller to be selected as
-the DMA parent. But, perhaps we just need to look at this some other
-way and specify an additional way of specifying the DMA parent for
-devices that doesn't rely on a "dma-mem" interconnect-names property.
+Regulators for backlight, 0.9 V rail, USB-C power out and SD card power
+are missing
 
-Perhaps some new dma-parent property that takes a phandle (with perhaps
-an optional specifier) would work? I think that may tie in nicely with
-the memory controller mini-framework that I had proposed a while ago.
+Also most regulator names do not match the names of the power rails in
+the schematic
 
-Rob, any thoughts on that?
+> +&cpu_l0 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l1 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l2 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l3 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&emmc_phy {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	clock-frequency = <400000>;
+> +	i2c-scl-rising-time-ns = <168>;
+> +	i2c-scl-falling-time-ns = <4>;
+> +	status = "okay";
+> +
+> +	rk808: pmic@1b {
+> +		compatible = "rockchip,rk808";
+> +		reg = <0x1b>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
+Interrupt GPIO is not correct, should be 10. This will stop the RTC from
+working correctly.
 
-Thierry
+> +		#clock-cells = <1>;
+> +		clock-output-names = "xin32k", "rk808-clkout2";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_int_l>;
+> +		rockchip,system-power-controller;
+> +		wakeup-source;
+> +
+> +		vcc1-supply = <&vcc_sys>;
+> +		vcc2-supply = <&vcc_sys>;
+> +		vcc3-supply = <&vcc_sys>;
+> +		vcc4-supply = <&vcc_sys>;
+> +		vcc6-supply = <&vcc_sys>;
+> +		vcc7-supply = <&vcc_sys>;
+> +		vcc8-supply = <&vcc3v3_sys>;
+> +		vcc9-supply = <&vcc_sys>;
+> +		vcc10-supply = <&vcc_sys>;
+> +		vcc11-supply = <&vcc_sys>;
+> +		vcc12-supply = <&vcc3v3_sys>;
+> +		vddio-supply = <&vcc_1v8>;
+vddio-supply is not vcc_1v8 but vcc_3v0
 
-> >>> +        interconnect-names =3D "dma-mem", "dma-mem", "dma-mem", "dma=
--mem";
-> >>> +
-> >>>          iommus =3D <&smmu TEGRA186_SID_BPMP>;
-> >>>          mboxes =3D <&hsp_top0 TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MA=
-STER_BPMP>;
-> >>>          shmem =3D <&cpu_bpmp_tx &cpu_bpmp_rx>;
-> >>>
->=20
+> +
+> +		regulators {
+> +			vdd_center: DCDC_REG1 {
+> +				regulator-name = "vdd_center";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-ramp-delay = <6001>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd_cpu_l: DCDC_REG2 {
+> +				regulator-name = "vdd_cpu_l";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-ramp-delay = <6001>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-name = "vcc_ddr";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v8: DCDC_REG4 {
+> +				regulator-name = "vcc_1v8";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc1v8_dvp: LDO_REG1 {
+> +				regulator-name = "vcc1v8_dvp";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc3v0_touch: LDO_REG2 {
+> +				regulator-name = "vcc3v0_touch";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3000000>;
+> +				};
+> +			};
+> +
+> +			vcc1v8_pmu: LDO_REG3 {
+> +				regulator-name = "vcc1v8_pmu";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc_sdio: LDO_REG4 {
+> +				regulator-name = "vcc_sdio";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcca3v0_codec: LDO_REG5 {
+> +				regulator-name = "vcca3v0_codec";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v5: LDO_REG6 {
+> +				regulator-name = "vcc_1v5";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1500000>;
+> +				};
+> +			};
+> +
+> +			vcca1v8_codec: LDO_REG7 {
+> +				regulator-name = "vcca1v8_codec";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_3v0: LDO_REG8 {
+> +				regulator-name = "vcc_3v0";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3000000>;
+> +				};
+> +			};
+> +
+> +			vcc3v3_s3: SWITCH_REG1 {
+> +				regulator-name = "vcc3v3_s3";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			switch_reg2: SWITCH_REG2 {
+> +				regulator-name = "SWITCH_REG2";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	vdd_cpu_b: regulator@40 {
+> +		compatible = "silergy,syr827";
+> +		reg = <0x40>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vsel1_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+> +		regulator-compatible = "fan53555-reg";
+> +		regulator-name = "vdd_cpu_b";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <1000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +	vdd_gpu: regulator@41 {
+> +		compatible = "silergy,syr828";
+> +		reg = <0x41>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vsel2_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+> +		regulator-compatible = "fan53555-reg";
+> +		regulator-name = "vdd_gpu";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <1000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +};
 
---gDGSpKKIBgtShtf+
-Content-Type: application/pgp-signature; name="signature.asc"
+Additionally there a quite a few components missing. This includes the
+aforementioned lid switch and eDP panel but there are also a battery
+gauge, two chargers, a es8316 audio codec, two speaker amplifiers and a
+BT/WiFi module.
 
------BEGIN PGP SIGNATURE-----
+Best regards,
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4nBlEACgkQ3SOs138+
-s6EXeA//eeSqKALLtIqM2VZRxdqYkhL0dvy2ONjL2j8WtbXRKpc4OiEPNmaOesxU
-+31NGNnstcMlOxpZ3PGLq9ENk77wJj+SMl/HOL4a/herC1X5uKuS0b0zJ6ezY/7B
-6IK+WpoVheRwa5eiV1Un2bAb/IQtlYMz5FC+tqs1XN0ot6TlHwESxv3iS+L8XEXy
-lmD8M+PY0Eb3W6UDsR0U5Nkxc4ZihPbwQ/IObuPZ2m7miX5NHzEL4PgArb9dzkGB
-WtTpVvLHSVJagFprkXXH//cmWNjd0QebhBIc1niJ0XJyL6XAO6LcNoeQKbeqIKZJ
-c0tVX/mk+FGUc6RvvW5/6BS6p4KaD9+7JpsWawIYn3p1JASQMMoBymMXzdWjCcd8
-W35vKWfPks7EENWooi7lGHNnwRDTFZtQSpSi+wEkRxy6u2bD36ylcLTpIAg+dtgx
-6cw5oyYYALbBxMTGaGZfzikbqMvaMKzJIYSyP7qwKDD3tX9AuvEw2YON0N3nGkkJ
-0jtg+Ct1coDuw+Wi8O6+R7GwEGRiBRovoTeP+SbtyMOR+eDyFhz9QTuQ4vUUtF0h
-EdSwwfqhXoJJQl/lWCFsm0lDfiMSQxuNJTqSiJcfQW5QobSSL6igtSkEXtW3HpIz
-PdAcEHs4Ca+36mydC0rOiiaZLD1BSXN1AKRgjZu6t/j1rN6AkoQ=
-=MTNd
------END PGP SIGNATURE-----
+Tobias
 
---gDGSpKKIBgtShtf+--
