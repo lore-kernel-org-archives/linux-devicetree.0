@@ -2,295 +2,203 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A865BC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18F9C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 08:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F80524125
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 07:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75E521734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 08:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XDbNeddJ"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="ap+jDAeV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgAUHrf (ORCPT
+        id S1728709AbgAUIxa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:47:35 -0500
-Received: from mail-pg1-f179.google.com ([209.85.215.179]:33287 "EHLO
-        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgAUHre (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 02:47:34 -0500
-Received: by mail-pg1-f179.google.com with SMTP id 6so1045130pgk.0
-        for <devicetree@vger.kernel.org>; Mon, 20 Jan 2020 23:47:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=J462gP7vhbxhDoIzruVoV6J83M4pWVmr5aPKKbidvG4=;
-        b=XDbNeddJYVmmDLRt6LlcQGbrwFmW1VnuKdBXSMiYe9N16Zu4fWvgmeRkPT+6maf1lp
-         DepU3zGR01Ha2+asfeYb9i16wfTuGzF4OIfFdgYMdFKxm6I9s+J8WqwCKcR7QhEd21mv
-         tGbUwLiF00x1y4Hc0T/VchRIer+zAZbOGTVtM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=J462gP7vhbxhDoIzruVoV6J83M4pWVmr5aPKKbidvG4=;
-        b=TzIgIv8RBwY5ddk5xlm12Hh3S/pXw7Y24z6nEBzCi1q7+qFKqlMNYDKo7VGzInqWvN
-         YTi5UCUDftidUotREBE+diqg5PwchJjmhfmRbhRovRJAj84HkI+P9sYv9X8+KK4qXxvN
-         cbob4ACDmcQE2/KCWA958IPHnoNr1NDMtKf02S9SdyZip2GPMfQmaMSCyvXxM3P85S28
-         YK8QVk0OFjFNwFLt9Y0B4T/+LorL3sMv8dWFCTvFhq4PscHGko0XOw9s2Vua4jlmJu5W
-         BrgX/Oo+QD6r2iN6GamBuQz+3MXID7x/JenpBtbOXw2wQ79XKnxeuyNqI3IiqajVOsvD
-         hXQQ==
-X-Gm-Message-State: APjAAAXyX2gSMiGCCLpZSk9hN1fCtnjZwW0SIOri6tLQ1R/uNW6eURcW
-        nwJGAiA2aw/RhdXefjJVd4X+NX3Kz4g=
-X-Google-Smtp-Source: APXvYqxvhyNTu/rh+VS1Kd9uktStHRdVGLtQRXtowuNvPhmCoCRbbi+/iAYaXGiBOkRYuRxOtC0DqQ==
-X-Received: by 2002:a63:551a:: with SMTP id j26mr4016736pgb.370.1579592853609;
-        Mon, 20 Jan 2020 23:47:33 -0800 (PST)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id z4sm41655059pfn.42.2020.01.20.23.47.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 23:47:32 -0800 (PST)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     devicetree@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH v3] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
-Date:   Tue, 21 Jan 2020 15:47:27 +0800
-Message-Id: <20200121074727.35893-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200114021934.178057-1-ikjn@chromium.org>
-References: <20200114021934.178057-1-ikjn@chromium.org>
+        Tue, 21 Jan 2020 03:53:30 -0500
+Received: from mail-dm6nam12on2044.outbound.protection.outlook.com ([40.107.243.44]:23104
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727220AbgAUIxa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:53:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LQH1hJFoz2bxx90/x5ouX/dG09YT1UyDCmrQJOHjSy7OoazCuetWtEPv7cCc2BXpLWdiqHWIR9nN/B2CwcMX1junZwBgQ9uqILVH1OjjTzEV3r40LL2otu71bQZqQo1hdTGleHYre0vje7kWf34qHClqQJfUBA+hanDQtuk4+mQTlCZ2YJWZSluhu3PyjirxtMfMwdWPIlN0hiv/ncDAGV5z8mcBsYOMjFLkSywQ3cUnYCy3FzBIoLyILeALDz29XvPl8u37cQ/UsvryV+c/p0PK6y4xACAoyVxT3D2LZeEPadOr/1wURyxYsxV263Ev1wQqnqxaI8oTIRg5FObdwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gV32NLsqq/wTt3dDDn60JYdntv6g/flZbaGSC2MnbvM=;
+ b=BWqXuQYpMD2jvbcZEUW8x4EMGvAgFUL80qqo8YGUd8mSCMU9KS/bbQ1CxgB3HZCjeVpWuMvbfl58bhbNMS/oqnzMdncVoWBVo8NwXwac6AUt/C/BP4qWu68XBtXdd/LutW1JiLxsIGPkXGnQfti10KpEyyXJ/nSx0fy9/ITW3sFvJBMzgBkF45hiahIFDKOoBzsdFZ60l+WfTgcg058FR/P1ZDM+7Ucp/P5JN+7kNjx5rfzfVdYa5eUDd3RdlottEz3/nuXFeru1Dl5wezRlqocg8GsHei7Q4cBFB+j5KKc+YGsvzjXsvMYmc1MdgBrPxNWhAiq/nSf2MhaTbKdFjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gV32NLsqq/wTt3dDDn60JYdntv6g/flZbaGSC2MnbvM=;
+ b=ap+jDAeVfkGGy8dqENuOJziWfgcqTPPn58OLDDYEEVBfRLSU4clhYYqW733pu8zMVnlDhPHOzv+Wm2HybGRRM0yHR0LYIpU1631mBRzzz8ymS2WIgYxhalxanZZRPZx9DGKHDHJNla7n8ylQmSE6GOSDPsFaKgOtxrJ2dwjJnVs=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3701.namprd13.prod.outlook.com (20.180.14.200) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.15; Tue, 21 Jan 2020 08:53:26 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2665.015; Tue, 21 Jan 2020
+ 08:53:26 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: RE: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+Thread-Topic: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+Thread-Index: AQHVr0qXIGRQgEWZxkGyu8rRJnxI3qfzhCiAgAGNCQA=
+Date:   Tue, 21 Jan 2020 08:53:26 +0000
+Message-ID: <CH2PR13MB33684A3DB50725FC496C26F18C0D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
+ <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
+In-Reply-To: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 76388797-e791-4dcb-b766-08d79e4f60f7
+x-ms-traffictypediagnostic: CH2PR13MB3701:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB37019CD3E2FD4C3484B2EA2E8C0D0@CH2PR13MB3701.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:608;
+x-forefront-prvs: 0289B6431E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(366004)(39850400004)(396003)(376002)(346002)(136003)(199004)(189003)(316002)(52536014)(53546011)(7416002)(54906003)(33656002)(966005)(44832011)(5660300002)(6636002)(110136005)(81156014)(81166006)(6506007)(9686003)(4001150100001)(186003)(55016002)(26005)(86362001)(4326008)(19627235002)(8936002)(2906002)(7696005)(8676002)(76116006)(71200400001)(66946007)(66476007)(107886003)(64756008)(66556008)(478600001)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3701;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tuyo8CveiKXrpdD/Zum+WzSax1Nl38WKEeal5+603TFQ8kOnzVtmo4GtoBvBwro+sVd3xTD8zbSI3mS34I8nCPw7FC14Fr+aOACUJm9/7KWd34uJjQnvGv0q44wYlIHtD889EnsckcmTh9rgNPRNucNMBvQmin3L2jSEFMrfIh2JQmVQdL/VBsC+pmtry/gbMRFku1e/fW7UaMuRJBKaZgXk6vT61v/zI3KjueXneZn2D12xPRlFEn+B9Jl6UOG2NSkdtsZREHY7JpQKhRxZziW3YQLRQKEhWoux6Uq/faBOP0h8lMWtz/oK788d4Qd++Qcv64D8+J976HtxtHTIVO7pNbo6fKC51JE5BEJ6/JzPh6Rpm1Ai6acLbG/W1qREhtHEoAG1h7y8WGe1CQDaYObh/zewWjz1Ntvi7DU6fUNHsy/6LHgJb/z61YfXubsj/Vie4nJtx/fuZVu3wlrWywpkeUiHGhzekmb2xHeeP/v2xzyHeMVGPQY1cVJghwOcdQtxUwPjOSgahw8MJH/xXg==
+x-ms-exchange-antispam-messagedata: SnSvbcTOVNSbNiAteJ9/yI8wZFKwrhXiLoE53VsE2Oy5iKuTsKAAgPL0Ri8EjiXQYFwISQ9V7apqLb2qHXpBohbiapMTLIlin8+jiweqwmv12UUh9qa3HkdPoIL12/OEBdpmqD7geMUhuU8W/tR3rQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76388797-e791-4dcb-b766-08d79e4f60f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 08:53:26.0877
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dZHy2hoHi326GAmIShuecuAiI92wn9xQ7FWMhspHF40A3VI8Ns/BhbJukDYHOOhKHOL1Xf8lpOEawZ/F6aE5dw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3701
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the ChromeOS EC bindings to json-schema.
+> -----Original Message-----
+> From: Marc Zyngier <maz@kernel.org>
+> Sent: 20 January 2020 14:40
+> To: Yash Shah <yash.shah@sifive.com>
+> Cc: linus.walleij@linaro.org; bgolaszewski@baylibre.com;
+> robh+dt@kernel.org; mark.rutland@arm.com; palmer@dabbelt.com; Paul
+> Walmsley ( Sifive) <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu;
+> tglx@linutronix.de; jason@lakedaemon.net; bmeng.cn@gmail.com;
+> atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>; linux-
+> gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Sachin Ghadi
+> <sachin.ghadi@sifive.com>
+> Subject: Re: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive
+> Unleashed
+>=20
+> On 2019-12-10 12:11, Yash Shah wrote:
+> > This patch series adds GPIO drivers, DT documentation and DT nodes for
+> > HiFive Unleashed board. The gpio patches are mostly based on Wesley's
+> > patch.
+> > The patchset also adds hierarchy irq domain support as it is required
+> > by this gpio driver. It also includes the irqdomain patch to introduce
+> > irq_domain_translate_onecell() and irq-nvic driver patch to use this
+> > newly introduced function.
+> >
+> > This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed
+> > board
+> >
+> > Changes:
+> > v4 vs v3:
+> > - Rename the DT yaml document to more standard naming
+> > (sifive,gpio.yaml)
+> > - Drop "clock-names" property from yaml document
+> > - Add "minItems" to "interrupts" node in yaml
+> >
+> > v3 vs v2:
+> > - Include patch for irq-nvic driver to use
+> > irq_domain_translate_onecell
+> > - Remove unnecessary inclusion of header files
+> > - Use a single prefix for all symbols in this driver
+> > - Rename the "enabled" field of struct sifive_gpio to "irq_state"
+> > - Remove unused variables and locking from probe()
+> > - Other minor changes
+> >
+> > v2 vs v1:
+> > - Add patch to introduce irq_domain_translate_onecell() and use it in
+> >   the sifive PLIC driver
+> > - Drop the usage of own locks, instead use internal bgpio_locks
+> > - Consistently use regmap for register access throughout the gpio code
+> > - Convert the GPIO DT documentation into a json schema
+> > - Other minor changes based upon feedback received on v1
+> >
+> > v1 vs RFC:
+> > Incorporated below changes as suggested by Linus Walleij on RFC
+> > version of this patchset[0]
+> > - Dropped PWM patches as they are already merged.
+> > - Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
+> > - Remove unwanted inclusion of header files
+> > - Use regmap MMIO instead of customised sifive_assign_bit()
+> > - Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
+> > - Use hierarchical irqdomain
+> >
+> > [0]
+> > https://lore.kernel.org/linux-
+> riscv/20181010123519.RVexDppaPFpIWl7QU_h
+> > pP8tc5qqWPJgeuLYn0FaGbeQ@z/
+> >
+> > Yash Shah (6):
+> >   genirq: introduce irq_domain_translate_onecell
+> >   irqchip: nvic: Use irq_domain_translate_onecell instead of custom
+> > func
+> >   irqchip: sifive: Support hierarchy irq domain
+> >   gpio: sifive: Add DT documentation for SiFive GPIO
+> >   gpio: sifive: Add GPIO driver for SiFive SoCs
+> >   riscv: dts: Add DT support for SiFive FU540 GPIO driver
+>=20
+> I've queued the first 5 patches. The last one should go via the correspon=
+ding
+> platform tree.
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
----
-v3: node name changed in rpmsg example
-v2: cleanup description, fix typos, remove LPC, add add RPMSG example
----
- .../devicetree/bindings/mfd/cros-ec.txt       |  76 ------------
- .../devicetree/bindings/mfd/cros-ec.yaml      | 111 ++++++++++++++++++
- 2 files changed, 111 insertions(+), 76 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
+Thanks.
+@Paul, Are you going to merge the last patch (DT support for GPIO) or you w=
+ant me to rebase and send it separately?
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-deleted file mode 100644
-index 4860eabd0f72..000000000000
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ /dev/null
-@@ -1,76 +0,0 @@
--ChromeOS Embedded Controller
--
--Google's ChromeOS EC is a Cortex-M device which talks to the AP and
--implements various function such as keyboard and battery charging.
--
--The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
--compatible string used depends on the interface. Each connection method has
--its own driver which connects to the top level interface-agnostic EC driver.
--Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
--the top-level driver.
--
--Required properties (I2C):
--- compatible: "google,cros-ec-i2c"
--- reg: I2C slave address
--
--Required properties (SPI):
--- compatible: "google,cros-ec-spi"
--- reg: SPI chip select
--
--Required properties (RPMSG):
--- compatible: "google,cros-ec-rpmsg"
--
--Optional properties (SPI):
--- google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
--  time to wake up from sleep before they can receive SPI transfers at a high
--  clock rate. This property specifies the delay, in usecs, between the
--  assertion of the CS to the start of the first clock pulse.
--- google,cros-ec-spi-msg-delay: Some implementations of the EC require some
--  additional processing time in order to accept new transactions. If the delay
--  between transactions is not long enough the EC may not be able to respond
--  properly to subsequent transactions and cause them to hang. This property
--  specifies the delay, in usecs, introduced between transactions to account
--  for the time required by the EC to get back into a state in which new data
--  can be accepted.
--
--Required properties (LPC):
--- compatible: "google,cros-ec-lpc"
--- reg: List of (IO address, size) pairs defining the interface uses
--
--Optional properties (all):
--- google,has-vbc-nvram: Some implementations of the EC include a small
--  nvram space used to store verified boot context data. This boolean flag
--  is used to specify whether this nvram is present or not.
--
--Example for I2C:
--
--i2c@12ca0000 {
--	cros-ec@1e {
--		reg = <0x1e>;
--		compatible = "google,cros-ec-i2c";
--		interrupts = <14 0>;
--		interrupt-parent = <&wakeup_eint>;
--		wakeup-source;
--	};
--
--
--Example for SPI:
--
--spi@131b0000 {
--	ec@0 {
--		compatible = "google,cros-ec-spi";
--		reg = <0x0>;
--		interrupts = <14 0>;
--		interrupt-parent = <&wakeup_eint>;
--		wakeup-source;
--		spi-max-frequency = <5000000>;
--		controller-data {
--		cs-gpio = <&gpf0 3 4 3 0>;
--		samsung,spi-cs;
--		samsung,spi-feedback-delay = <2>;
--		};
--	};
--};
--
--
--Example for LPC is not supplied as it is not yet implemented.
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.yaml b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
-new file mode 100644
-index 000000000000..6a5b87cebcfa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
-@@ -0,0 +1,111 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/cros-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChromeOS Embedded Controller
-+
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+  - Guenter Roeck <groeck@chromium.org>
-+
-+description: |
-+  Google's ChromeOS EC is a microcontroller which talks to the AP and
-+  implements various functions such as keyboard and battery charging.
-+  The EC can be connected through various interfaces (I2C, SPI, and others)
-+  and the compatible string specifies which interface is being used.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description:
-+          For implementations of the EC is connected through I2C.
-+        const: google,cros-ec-i2c
-+      - description:
-+          For implementations of the EC is connected through SPI.
-+        const: google,cros-ec-spi
-+      - description:
-+          For implementations of the EC is connected through RPMSG.
-+        const: google,cros-ec-rpmsg
-+
-+  google,has-vbc-nvram:
-+    description: |
-+      Some implementations of the EC include a small
-+      nvram space used to store verified boot context data.
-+      This boolean flag is used to specify whether this nvram is
-+      present or not.
-+    type: boolean
-+
-+required:
-+  - compatible
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          const: google,cros-ec-i2c
-+    then:
-+      properties:
-+        reg:
-+          description: I2C slave address
-+          maxItems: 1
-+      required:
-+        - reg
-+  - if:
-+      properties:
-+        compatible:
-+          const: google,cros-ec-spi
-+    then:
-+      properties:
-+        reg:
-+          description: SPI chip select
-+          maxItems: 1
-+        google,cros-ec-spi-pre-delay:
-+          description: |
-+            This property specifies the delay in usecs between the
-+            assertion of the CS and the first clock pulse.
-+        google,cros-ec-spi-msg-delay:
-+          description: |
-+            This property specifies the delay in usecs between messages.
-+      required:
-+        - reg
-+
-+examples:
-+  # Example for I2C
-+  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cros-ec@1e {
-+            compatible = "google,cros-ec-i2c";
-+            reg = <0x1e>;
-+            interrupts = <6 0>;
-+            interrupt-parent = <&gpx1>;
-+        };
-+    };
-+  # Example for SPI
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0x0>;
-+            google,cros-ec-spi-msg-delay = <30>;
-+            interrupts = <99 0>;
-+            interrupt-parent = <&gpio7>;
-+            spi-max-frequency = <5000000>;
-+        };
-+    };
-+  # Example for RPMSG
-+  - |
-+    scp0 {
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-rpmsg";
-+        };
-+    };
-+...
--- 
-2.25.0.341.g760bfbb309-goog
+- Yash
 
+>=20
+> Thanks,
+>=20
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
