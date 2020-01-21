@@ -7,70 +7,69 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598BFC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 12:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473B8C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 12:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F1720882
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 12:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6B221734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 12:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gPjxCUcG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F4LJ0mcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgAUMcG (ORCPT
+        id S1729650AbgAUMc3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:32:06 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42128 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729274AbgAUMcG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 07:32:06 -0500
-Received: by mail-ed1-f68.google.com with SMTP id e10so2770100edv.9
-        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 04:32:05 -0800 (PST)
+        Tue, 21 Jan 2020 07:32:29 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42192 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgAUMc2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 07:32:28 -0500
+Received: by mail-ed1-f67.google.com with SMTP id e10so2771233edv.9
+        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 04:32:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=h37iko5DIvMs0xYnBxqks04OIBG81FsI2poREuA7OHM=;
-        b=gPjxCUcG8y/LwUpZQOkE0+CHDDhb7y83Wjap6NfNpoGepeAlp6xZM7AYMg53JqMXeS
-         0qn1vz8Dt06YFwKk9XmYu+4LuhqjJRnzG/GcxCjGz99RjOmuULy21uo3mmNLedN90rn4
-         hHDQuUhWGnfKCbUwlSkDd6z8K7eScr4LnbBE3wQ82U4CCL7bB+XRriiNFRyBtvucIxvJ
-         skjbqbeAZnjb7tv/QnNHmBz543s9491RA3T2VqE4mrNjkI0lk9fvfyn/u+D/0AGvDXOX
-         gFucaFSIqSAzg1FYSzJUGOfdJzqNq/81scG3svUUsEehyDX84yds5xR4lrId6lYk4CZv
-         tnuw==
+        bh=SL+YF5Uofufimw4rDKfqmNibtNPjVUG+hLupAtvlD2M=;
+        b=F4LJ0mcgZTCF24ZNSkWceJ2+LXhM1w8W9vLaRiJYZG+NfN3Q6zP6KECdytxCUQLcdj
+         378uw024Loy9mByscDnH7SyccPgbbumow0Fh1LlcNQWGh0boDEUyKTwlJdttgVrW34Rt
+         T/gDIx+cRlMycWAgj2wSx4PGodUHLt6IYEwRUF+DvHd/hPCkZ05WgaGvRT5YMa882FZZ
+         gZ8j5hqB6Gpkgs2ZhO+WQvpoqPWggEMkQaicgBgSm4+k4UOhgn1qPjnh/XmH5Y9HIQWO
+         H3MjwkA9OW0g2YCyA9qyN9PKwdN37236q/nsHWTAmzNS+sZezuvPnHE74gMA/Na+PXn4
+         mvNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=h37iko5DIvMs0xYnBxqks04OIBG81FsI2poREuA7OHM=;
-        b=p2WzCgZkMaZ8+QbDWUc+5xxjUY4LG3nD/yiwhcFLhVTGZQ/wu8Bs5DvVe34RxUZPSX
-         rEofaolcIz/0ZMcZWHIm07UE5gBBMz1ico+5qUTQ9FVU9xRPuX6qhU+jgxVin5ECpiOv
-         0VLmNY4dBhS//6+OL7qQvemVdZTRtlofrAW6ZYL+9Bn6tF9osonqKAR4XQzP34bYKmvp
-         +zvs1v8+FWs80t3tZy29FVqigggAAJ2CRMtuWF1ebTpB0BHMYRhPS1xHyIC8uMEBcze0
-         8s7qDOciI1chIqTrnqYJYLb2cASskhP50YS+k7v2QTy5qv4v6sbfPgGSdy1L3VW+3hds
-         z7bA==
-X-Gm-Message-State: APjAAAV2Kfx8pNuESoOsjA6GPZ4jGpgu5ZNdrhIgCKNPMu1RYKEP+9ax
-        LSy2hXVzXaJQAM5CnqAahvLwfA==
-X-Google-Smtp-Source: APXvYqwe/4J5WWKBWvO8Pn60zUuQZsQH7KfZU5Ne6omgReHLBiLVtBMRt2O/riyFt6LonLCjidX8kw==
-X-Received: by 2002:a17:906:b219:: with SMTP id p25mr4018940ejz.36.1579609924411;
-        Tue, 21 Jan 2020 04:32:04 -0800 (PST)
+        bh=SL+YF5Uofufimw4rDKfqmNibtNPjVUG+hLupAtvlD2M=;
+        b=l2UsrQocy7ps0m1Edlp2V4HMp9I5qQXMMXjqgqST0wQN+d9MzY0lpvVwIfLIORNCSc
+         mdeJPqy30dyt35QqAhVlfX8iaNJTmFUMJfyvcViLj5lx+G208b+oRT/Z4gBb5vP+V2aO
+         LErkjUbqCR4rYQjtRs/OyV0EKyLBpA1JH5nIbut2COMtmdNo/IkH/thSF/bhZU86wxAJ
+         kmULEmYnG4iPPUO/u/L/iWigGPbxSmjuLK93Z5Yj8jfO3ZJGRBqVyry/V3ZjsehNmBrA
+         /DlC1h0bNb08NHQXUT2035pce6Ns+rum0HFstNDVk47eTRQ3T3cJMN2+6F3UVgm5Ylto
+         rnlw==
+X-Gm-Message-State: APjAAAX7Ae4SdB/heK/1kvEGxmTJ3vxWbH8zLSR1/NReNMzzw5fwicLW
+        QJF3C3nFSG/sLQJjlndlLs5X7g==
+X-Google-Smtp-Source: APXvYqwUyxzwa78ktvSmQlERGkWfMEq+Iav0VLVz+58M305ktq8lVUWTidW0Amk/Zxhdv1fRA7FIHQ==
+X-Received: by 2002:a17:906:b841:: with SMTP id ga1mr4129501ejb.184.1579609946792;
+        Tue, 21 Jan 2020 04:32:26 -0800 (PST)
 Received: from [192.168.27.209] ([37.157.136.193])
-        by smtp.googlemail.com with ESMTPSA id w10sm1407143eds.69.2020.01.21.04.32.03
+        by smtp.googlemail.com with ESMTPSA id e21sm1411279eds.36.2020.01.21.04.32.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 04:32:03 -0800 (PST)
-Subject: Re: [PATCH V4 3/4] venus: core: add sc7180 DT compatible and resource
- struct
+        Tue, 21 Jan 2020 04:32:26 -0800 (PST)
+Subject: Re: [PATCH V4 4/4] arm64: dts: sc7180: Add Venus firmware subnode
 To:     Dikshita Agarwal <dikshita@codeaurora.org>,
         linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
 References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
- <1579006416-11599-4-git-send-email-dikshita@codeaurora.org>
+ <1579006416-11599-5-git-send-email-dikshita@codeaurora.org>
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <c017502d-c8ec-5b6c-848b-88278a64e041@linaro.org>
-Date:   Tue, 21 Jan 2020 14:32:03 +0200
+Message-ID: <9c874b8f-1ac0-d1f5-043f-9a89b8203cd1@linaro.org>
+Date:   Tue, 21 Jan 2020 14:32:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1579006416-11599-4-git-send-email-dikshita@codeaurora.org>
+In-Reply-To: <1579006416-11599-5-git-send-email-dikshita@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,77 +81,33 @@ X-Mailing-List: devicetree@vger.kernel.org
 Hi,
 
 On 1/14/20 2:53 PM, Dikshita Agarwal wrote:
-> This add DT compatible string and resource structure for sc7180.
+> This adds Venus firmware subnode for non-TZ platform.
 > 
 > Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
 > ---
->  drivers/media/platform/qcom/venus/core.c | 45 ++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Reviewed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
 > 
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-> index c7525d9..194b10b9 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
-> @@ -521,11 +521,56 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
->  	.fwname = "qcom/venus-5.2/venus.mdt",
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..2f82510 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -287,6 +287,12 @@
+>  	vdda-pll-supply = <&vreg_l4a_0p8>;
 >  };
 >  
-> +static const struct freq_tbl sc7180_freq_table[] = {
-> +	{  0, 500000000 },
-> +	{  0, 434000000 },
-> +	{  0, 340000000 },
-> +	{  0, 270000000 },
-> +	{  0, 150000000 },
+> +&venus {
+> +	video-firmware {
+> +		iommus = <&apps_smmu 0x0c42 0x0>;
+> +	};
 > +};
 > +
-> +static const struct bw_tbl sc7180_bw_table_enc[] = {
-> +	{  972000,  750000, 0, 0, 0 },	/* 3840x2160@30 */
-> +	{  489600,  451000, 0, 0, 0 },	/* 1920x1080@60 */
-> +	{  244800,  234000, 0, 0, 0 },	/* 1920x1080@30 */
-> +};
-> +
-> +static const struct bw_tbl sc7180_bw_table_dec[] = {
-> +	{ 1036800, 1386000, 0, 1875000, 0 },	/* 4096x2160@30 */
-> +	{  489600,  865000, 0, 1146000, 0 },	/* 1920x1080@60 */
-> +	{  244800,  530000, 0,  583000, 0 },	/* 1920x1080@30 */
-> +};
-> +
-> +static const struct venus_resources sc7180_res = {
-> +	.freq_tbl = sc7180_freq_table,
-> +	.freq_tbl_size = ARRAY_SIZE(sc7180_freq_table),
-> +	.bw_tbl_enc = sc7180_bw_table_enc,
-> +	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
-> +	.bw_tbl_dec = sc7180_bw_table_dec,
-> +	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
-> +	.codec_freq_data = sdm845_codec_freq_data,
-> +	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
-> +	.clks = {"core", "iface", "bus" },
-> +	.clks_num = 3,
-> +	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
-> +	.vcodec_clks_num = 2,
-> +	.vcodec_pmdomains = { "venus", "vcodec0" },
-> +	.vcodec_pmdomains_num = 2,
-> +	.vcodec_num = 1,
-> +	.hfi_version = HFI_VERSION_4XX,
-> +	.vmem_id = VIDC_RESOURCE_NONE,
-> +	.vmem_size = 0,
-> +	.vmem_addr = 0,
-> +	.dma_mask = 0xe0000000 - 1,
-> +	.fwname = "qcom/venus-5.4/venus.mdt",
-> +};
-> +
->  static const struct of_device_id venus_dt_match[] = {
->  	{ .compatible = "qcom,msm8916-venus", .data = &msm8916_res, },
->  	{ .compatible = "qcom,msm8996-venus", .data = &msm8996_res, },
->  	{ .compatible = "qcom,sdm845-venus", .data = &sdm845_res, },
->  	{ .compatible = "qcom,sdm845-venus-v2", .data = &sdm845_res_v2, },
-> +	{ .compatible = "qcom,sc7180-venus", .data = &sc7180_res, },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, venus_dt_match);
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+>  &qspi_clk {
 > 
 
 -- 
