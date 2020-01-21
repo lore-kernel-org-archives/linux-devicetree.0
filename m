@@ -2,534 +2,241 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F64C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 23:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15F5C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 23:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9505217F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 23:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2B124656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 23:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqRTuQB9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A8+hE7I8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgAUXle (ORCPT
+        id S1726968AbgAUXo4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:41:34 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40347 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgAUXle (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 18:41:34 -0500
-Received: by mail-io1-f68.google.com with SMTP id x1so4710476iop.7;
-        Tue, 21 Jan 2020 15:41:33 -0800 (PST)
+        Tue, 21 Jan 2020 18:44:56 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36269 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgAUXoz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 18:44:55 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k3so2393746pgc.3
+        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 15:44:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=zm1wsMsip18Uq3we45CeeUiLmXWcsvTs9fWxXZcq9Gs=;
-        b=oqRTuQB9fbHn80YjyVxHKWegylJGGq2mlu5KGTXOtXieaJAC+N0MpZA95mOJQQRK7x
-         eYyswEO2cTaZN5oQVXOrQg/eKY6ZKXlP6c470wruzVUlS5BNgy0SCFvN8G+Pn5Ae4wk0
-         sOaN8xT9DVAtn/gqjBfEEO1Y1U7TgzAJ5ATUhtDp+wN8wc6hmcy16IUPOJDBKA0C6VQw
-         qRDrbQ3xQGqt8/hBtJxGxPC7OgdBSCAlO/RFrsS/c4o/TYWN7oDSITUA8nCfVF5YuIa6
-         qYfXXQOqSfIKgCL5owmAsbwLvC/vLTgjidTxEWIQOjagx4n2sKmF3pJ8iazcg16Ejmg4
-         medg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HjUpoeX4YdaRqbuTABV6ngWl1iP5khVVeq5ucr6BmI4=;
+        b=A8+hE7I8Bs79HcypjskxtoOMrmYsHUnGQYYKjvbT05uwioIjpjROOii8SdChwAwTRo
+         n5FPoC5p9ffecmhCYCk7bac7FfCDg7KNxvC8f5tu1euT0ibfyKWgHJNsrDGrwkENbDTV
+         iMxG8gErHP/g5bEM2WuA6rKRB2/y+t3rMK7lQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=zm1wsMsip18Uq3we45CeeUiLmXWcsvTs9fWxXZcq9Gs=;
-        b=RRGH/sTChSZnXUwscT7PamTONR61vIf6i7TsFF4FpRm78SjKcheOd3eeh8+z1Ag7X+
-         m8N9o6aa+MoI1F11lyJkZpIE4o6exTX4Uqql6GBzLQq4gRDcEcP0kyQlEvN5Hv2NHB/t
-         sEv/vWivJUNwslq+vtG2oOWbsyPT9+Vx36DaS+H8pT8KiIOKryB43RO7CpTXpWsHpF4u
-         X8ogbQjAxDUKY4lNfZJOg8zb6pzxayFWA80J1FH1USnneduPJm0k3fNfS5uUMHyBnEeR
-         QHPWiU+QGURRp+69qIonezgy3NhhTPY0GiODNa+oimTq0nRZC8HLV1EMQOC/+0BPkTov
-         fRpw==
-X-Gm-Message-State: APjAAAVvqVSzC8KEhkJoO+sVCPodz5dGLtsYpKweT6zInwFD7j1KgID9
-        qInV88h5BmFe/+i2YWsifZUcdV015Pg8hY1z4NU=
-X-Google-Smtp-Source: APXvYqyeTzMq49vnb9fLjPE3VJu6gH3vnQ+4wN5vSX/y4iE1xbVpjr2I75eGSAovrTjl59h0zkm+wRjoIolyw4oNkm8=
-X-Received: by 2002:a05:6638:a2c:: with SMTP id 12mr5240952jao.60.1579650092934;
- Tue, 21 Jan 2020 15:41:32 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HjUpoeX4YdaRqbuTABV6ngWl1iP5khVVeq5ucr6BmI4=;
+        b=VvJtzxxjjM03cqcpP135qPF1wCAMziI07t95cto6gwQdHGWPPlH/YXyO1xjks7NkpH
+         5FJXt/ejuSqE0o8ExRioYOOoPrZHch8O/54LsHTAmVHjPSokABI+1+Rg9AHdKVBhsVU6
+         CNJKWyKPtJ4pU+GEAdrPdTfP/RqKI8i6nHNCfHdYNXKbO0eskNXCA8Zx4VtEPY7zJkCV
+         fpmAXLgBf5dh8pDQFu8BWZgAOuCnfiBUDU6MoDnWD3sMOUOt78UENlfGeMZwuS3jwN11
+         vdXD2UPKRYzwurbd75HDpOl+v4nqYycdBs3Q0oXUaNeQAl/Y3PKzS3BXQdNdTWSccfGV
+         X2vg==
+X-Gm-Message-State: APjAAAUjP39AFPNYth2tmwepi8G+bULxnurm9eKoy6rUuQDz/c1SLVGP
+        DWnQHRnYMB2cnGGi8udwAEK70w==
+X-Google-Smtp-Source: APXvYqxd6VR1UOpjrwuDNyi5uF08oFLWZkyGgiNDxxRwi7fsupmCk5D3rfPHM9YUeLW+SwAJAVODVw==
+X-Received: by 2002:a62:788a:: with SMTP id t132mr14342pfc.134.1579650294897;
+        Tue, 21 Jan 2020 15:44:54 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id p28sm42695027pgb.93.2020.01.21.15.44.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 15:44:54 -0800 (PST)
+Date:   Tue, 21 Jan 2020 15:44:52 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add cpuidle low power states
+Message-ID: <20200121234452.GW89495@google.com>
+References: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
+ <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-References: <20200121200011.32296-1-kdasu.kdev@gmail.com> <20200121200011.32296-3-kdasu.kdev@gmail.com>
-In-Reply-To: <20200121200011.32296-3-kdasu.kdev@gmail.com>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Tue, 21 Jan 2020 18:41:21 -0500
-Message-ID: <CAC=U0a2_FvocPthU6LLYxVRcxfqC+prQVqsK9n8xD0+mU_6Ddw@mail.gmail.com>
-Subject: Fwd: [PATCH V2 3/3] mtd: rawnand: brcmnand: Add support for flash-edu
- for dma transfers
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Legacy mips soc platforms that have controller v5.0 and 6.0 use
-flash-edu block for dma transfers. This change adds support for
-nand dma transfers using the EDU block.
+Hi Maulik,
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 296 ++++++++++++++++++++++-
- 1 file changed, 290 insertions(+), 6 deletions(-)
+what is the state of this patch? Sudeep and Stephen had comments requesting
+minor changes, do you plan to send a v2 soon?
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 1a66b1cd51c0..61347607f1da 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -102,6 +102,45 @@ struct brcm_nand_dma_desc {
- #define NAND_CTRL_RDY                  (INTFC_CTLR_READY | INTFC_FLASH_READY)
- #define NAND_POLL_STATUS_TIMEOUT_MS    100
+Thanks
 
-+#define EDU_CMD_WRITE          0x00
-+#define EDU_CMD_READ           0x01
-+#define EDU_STATUS_ACTIVE      BIT(0)
-+#define EDU_ERR_STATUS_ERRACK  BIT(0)
-+#define EDU_DONE_MASK          GENMASK(1, 0)
-+
-+#define EDU_CONFIG_MODE_NAND   BIT(0)
-+#define EDU_CONFIG_SWAP_BYTE   BIT(1)
-+#ifdef CONFIG_CPU_BIG_ENDIAN
-+#define EDU_CONFIG_SWAP_CFG     EDU_CONFIG_SWAP_BYTE
-+#else
-+#define EDU_CONFIG_SWAP_CFG     0
-+#endif
-+
-+/* edu registers */
-+enum edu_reg {
-+       EDU_CONFIG = 0,
-+       EDU_DRAM_ADDR,
-+       EDU_EXT_ADDR,
-+       EDU_LENGTH,
-+       EDU_CMD,
-+       EDU_STOP,
-+       EDU_STATUS,
-+       EDU_DONE,
-+       EDU_ERR_STATUS,
-+};
-+
-+static const u16  edu_regs[] = {
-+       [EDU_CONFIG] = 0x00,
-+       [EDU_DRAM_ADDR] = 0x04,
-+       [EDU_EXT_ADDR] = 0x08,
-+       [EDU_LENGTH] = 0x0c,
-+       [EDU_CMD] = 0x10,
-+       [EDU_STOP] = 0x14,
-+       [EDU_STATUS] = 0x18,
-+       [EDU_DONE] = 0x1c,
-+       [EDU_ERR_STATUS] = 0x20,
-+};
-+
- /* flash_dma registers */
- enum flash_dma_reg {
-        FLASH_DMA_REVISION = 0,
-@@ -167,6 +206,8 @@ enum {
-        BRCMNAND_HAS_WP                         = BIT(3),
- };
+Matthias
 
-+struct brcmnand_host;
-+
- struct brcmnand_controller {
-        struct device           *dev;
-        struct nand_controller  controller;
-@@ -185,17 +226,32 @@ struct brcmnand_controller {
-
-        int                     cmd_pending;
-        bool                    dma_pending;
-+       bool                    edu_pending;
-        struct completion       done;
-        struct completion       dma_done;
-+       struct completion       edu_done;
-
-        /* List of NAND hosts (one for each chip-select) */
-        struct list_head host_list;
-
-+       /* EDU info, per-transaction */
-+       const u16               *edu_offsets;
-+       void __iomem            *edu_base;
-+       unsigned int            edu_irq;
-+       int                     edu_count;
-+       u64                     edu_dram_addr;
-+       u32                     edu_ext_addr;
-+       u32                     edu_cmd;
-+       u32                     edu_config;
-+
-        /* flash_dma reg */
-        const u16               *flash_dma_offsets;
-        struct brcm_nand_dma_desc *dma_desc;
-        dma_addr_t              dma_pa;
-
-+       int (*dma_trans)(struct brcmnand_host *host, u64 addr, u32 *buf,
-+                        u32 len, u8 dma_cmd);
-+
-        /* in-memory cache of the FLASH_CACHE, used only for some commands */
-        u8                      flash_cache[FC_BYTES];
-
-@@ -216,6 +272,7 @@ struct brcmnand_controller {
-        u32                     nand_cs_nand_xor;
-        u32                     corr_stat_threshold;
-        u32                     flash_dma_mode;
-+       u32                     flash_edu_mode;
-        bool                    pio_poll_mode;
- };
-
-@@ -657,6 +714,22 @@ static inline void brcmnand_write_fc(struct
-brcmnand_controller *ctrl,
-        __raw_writel(val, ctrl->nand_fc + word * 4);
- }
-
-+static inline void edu_writel(struct brcmnand_controller *ctrl,
-+                             enum edu_reg reg, u32 val)
-+{
-+       u16 offs = ctrl->edu_offsets[reg];
-+
-+       brcmnand_writel(val, ctrl->edu_base + offs);
-+}
-+
-+static inline u32 edu_readl(struct brcmnand_controller *ctrl,
-+                           enum edu_reg reg)
-+{
-+       u16 offs = ctrl->edu_offsets[reg];
-+
-+       return brcmnand_readl(ctrl->edu_base + offs);
-+}
-+
- static void brcmnand_clear_ecc_addr(struct brcmnand_controller *ctrl)
- {
-
-@@ -926,6 +999,16 @@ static inline bool has_flash_dma(struct
-brcmnand_controller *ctrl)
-        return ctrl->flash_dma_base;
- }
-
-+static inline bool has_edu(struct brcmnand_controller *ctrl)
-+{
-+       return ctrl->edu_base;
-+}
-+
-+static inline bool use_dma(struct brcmnand_controller *ctrl)
-+{
-+       return has_flash_dma(ctrl) || has_edu(ctrl);
-+}
-+
- static inline void disable_ctrl_irqs(struct brcmnand_controller *ctrl)
- {
-        if (ctrl->pio_poll_mode)
-@@ -1299,6 +1382,52 @@ static int write_oob_to_regs(struct
-brcmnand_controller *ctrl, int i,
-        return tbytes;
- }
-
-+static void brcmnand_edu_init(struct brcmnand_controller *ctrl)
-+{
-+       /* initialize edu */
-+       edu_writel(ctrl, EDU_ERR_STATUS, 0);
-+       edu_readl(ctrl, EDU_ERR_STATUS);
-+       edu_writel(ctrl, EDU_DONE, 0);
-+       edu_writel(ctrl, EDU_DONE, 0);
-+       edu_writel(ctrl, EDU_DONE, 0);
-+       edu_writel(ctrl, EDU_DONE, 0);
-+       edu_readl(ctrl, EDU_DONE);
-+}
-+
-+/* edu irq */
-+static irqreturn_t brcmnand_edu_irq(int irq, void *data)
-+{
-+       struct brcmnand_controller *ctrl = data;
-+
-+       if (ctrl->edu_count) {
-+               ctrl->edu_count--;
-+               while (!(edu_readl(ctrl, EDU_DONE) & EDU_DONE_MASK))
-+                       udelay(1);
-+               edu_writel(ctrl, EDU_DONE, 0);
-+               edu_readl(ctrl, EDU_DONE);
-+       }
-+
-+       if (ctrl->edu_count) {
-+               ctrl->edu_dram_addr += FC_BYTES;
-+               ctrl->edu_ext_addr += FC_BYTES;
-+
-+               edu_writel(ctrl, EDU_DRAM_ADDR, (u32)ctrl->edu_dram_addr);
-+               edu_readl(ctrl, EDU_DRAM_ADDR);
-+               edu_writel(ctrl, EDU_EXT_ADDR, ctrl->edu_ext_addr);
-+               edu_readl(ctrl, EDU_EXT_ADDR);
-+
-+               mb(); /* flush previous writes */
-+               edu_writel(ctrl, EDU_CMD, ctrl->edu_cmd);
-+               edu_readl(ctrl, EDU_CMD);
-+
-+               return IRQ_HANDLED;
-+       }
-+
-+       complete(&ctrl->edu_done);
-+
-+       return IRQ_HANDLED;
-+}
-+
- static irqreturn_t brcmnand_ctlrdy_irq(int irq, void *data)
- {
-        struct brcmnand_controller *ctrl = data;
-@@ -1307,6 +1436,16 @@ static irqreturn_t brcmnand_ctlrdy_irq(int irq,
-void *data)
-        if (ctrl->dma_pending)
-                return IRQ_HANDLED;
-
-+       /* check if you need to piggy back on the ctrlrdy irq */
-+       if (ctrl->edu_pending) {
-+               if (irq == ctrl->irq && ((int)ctrl->edu_irq >= 0))
-+       /* Discard interrupts while using dedicated edu irq */
-+                       return IRQ_HANDLED;
-+
-+       /* no registered edu irq, call handler */
-+               return brcmnand_edu_irq(irq, data);
-+       }
-+
-        complete(&ctrl->done);
-        return IRQ_HANDLED;
- }
-@@ -1644,6 +1783,83 @@ static void brcmnand_write_buf(struct nand_chip
-*chip, const uint8_t *buf,
-        }
- }
-
-+/**
-+ *  Kick EDU engine
-+ */
-+static int brcmnand_edu_trans(struct brcmnand_host *host, u64 addr, u32 *buf,
-+                             u32 len, u8 cmd)
-+{
-+       struct brcmnand_controller *ctrl = host->ctrl;
-+       unsigned long timeo = msecs_to_jiffies(200);
-+       int ret = 0;
-+       int dir = (cmd == CMD_PAGE_READ ? DMA_FROM_DEVICE : DMA_TO_DEVICE);
-+       u8 edu_cmd = (cmd == CMD_PAGE_READ ? EDU_CMD_READ : EDU_CMD_WRITE);
-+       unsigned int trans = len >> FC_SHIFT;
-+       dma_addr_t pa;
-+
-+       pa = dma_map_single(ctrl->dev, buf, len, dir);
-+       if (dma_mapping_error(ctrl->dev, pa)) {
-+               dev_err(ctrl->dev, "unable to map buffer for EDU DMA\n");
-+               return -ENOMEM;
-+       }
-+
-+       ctrl->edu_pending = true;
-+       mb(); /* flush previous writes */
-+
-+       ctrl->edu_dram_addr = pa;
-+       ctrl->edu_ext_addr = addr;
-+       ctrl->edu_cmd = edu_cmd;
-+       ctrl->edu_count = trans;
-+
-+       edu_writel(ctrl, EDU_DRAM_ADDR, (u32)ctrl->edu_dram_addr);
-+       edu_readl(ctrl,  EDU_DRAM_ADDR);
-+       edu_writel(ctrl, EDU_EXT_ADDR, ctrl->edu_ext_addr);
-+       edu_readl(ctrl, EDU_EXT_ADDR);
-+       edu_writel(ctrl, EDU_LENGTH, FC_BYTES);
-+       edu_readl(ctrl, EDU_LENGTH);
-+
-+       /* Start edu engine */
-+       mb(); /* flush previous writes */
-+       edu_writel(ctrl, EDU_CMD, ctrl->edu_cmd);
-+       edu_readl(ctrl, EDU_CMD);
-+
-+       if (wait_for_completion_timeout(&ctrl->edu_done, timeo) <= 0) {
-+               dev_err(ctrl->dev,
-+                       "timeout waiting for EDU; status %#x, error
-status %#x\n",
-+                       edu_readl(ctrl, EDU_STATUS),
-+                       edu_readl(ctrl, EDU_ERR_STATUS));
-+       }
-+
-+       dma_unmap_single(ctrl->dev, pa, len, dir);
-+
-+       /* for program page check NAND status */
-+       if (((brcmnand_read_reg(ctrl, BRCMNAND_INTFC_STATUS) &
-+             INTFC_FLASH_STATUS) & NAND_STATUS_FAIL) &&
-+           edu_cmd == EDU_CMD_WRITE) {
-+               dev_info(ctrl->dev, "program failed at %llx\n",
-+                        (unsigned long long)addr);
-+               ret = -EIO;
-+       }
-+
-+       /* Make sure the EDU status is clean */
-+       if (edu_readl(ctrl, EDU_STATUS) & EDU_STATUS_ACTIVE)
-+               dev_warn(ctrl->dev, "EDU still active: %#x\n",
-+                        edu_readl(ctrl, EDU_STATUS));
-+
-+       if (unlikely(edu_readl(ctrl, EDU_ERR_STATUS) & EDU_ERR_STATUS_ERRACK)) {
-+               dev_warn(ctrl->dev, "EDU RBUS error at addr %llx\n",
-+                        (unsigned long long)addr);
-+               ret = -EIO;
-+       }
-+
-+       ctrl->edu_pending = false;
-+       brcmnand_edu_init(ctrl);
-+       edu_writel(ctrl, EDU_STOP, 0); /* force stop */
-+       edu_readl(ctrl, EDU_STOP);
-+
-+       return ret;
-+}
-+
- /**
-  * Construct a FLASH_DMA descriptor as part of a linked list. You must know the
-  * following ahead of time:
-@@ -1850,9 +2066,11 @@ static int brcmnand_read(struct mtd_info *mtd,
-struct nand_chip *chip,
- try_dmaread:
-        brcmnand_clear_ecc_addr(ctrl);
-
--       if (has_flash_dma(ctrl) && !oob && flash_dma_buf_ok(buf)) {
--               err = brcmnand_dma_trans(host, addr, buf, trans * FC_BYTES,
--                                            CMD_PAGE_READ);
-+       if (ctrl->dma_trans && !oob && flash_dma_buf_ok(buf)) {
-+               err = ctrl->dma_trans(host, addr, buf,
-+                                     trans * FC_BYTES,
-+                                     CMD_PAGE_READ);
-+
-                if (err) {
-                        if (mtd_is_bitflip_or_eccerr(err))
-                                err_addr = addr;
-@@ -1988,10 +2206,12 @@ static int brcmnand_write(struct mtd_info
-*mtd, struct nand_chip *chip,
-        for (i = 0; i < ctrl->max_oob; i += 4)
-                oob_reg_write(ctrl, i, 0xffffffff);
-
--       if (has_flash_dma(ctrl) && !oob && flash_dma_buf_ok(buf)) {
--               if (brcmnand_dma_trans(host, addr, (u32 *)buf,
--                                       mtd->writesize, CMD_PROGRAM_PAGE))
-+       if (use_dma(ctrl) && !oob && flash_dma_buf_ok(buf)) {
-+               if (ctrl->dma_trans(host, addr, (u32 *)buf, mtd->writesize,
-+                                   CMD_PROGRAM_PAGE))
-+
-                        ret = -EIO;
-+
-                goto out;
-        }
-
-@@ -2494,6 +2714,8 @@ static int brcmnand_suspend(struct device *dev)
-
-        if (has_flash_dma(ctrl))
-                ctrl->flash_dma_mode = flash_dma_readl(ctrl, FLASH_DMA_MODE);
-+       else if (has_edu(ctrl))
-+               ctrl->edu_config = edu_readl(ctrl, EDU_CONFIG);
-
-        return 0;
- }
-@@ -2508,6 +2730,14 @@ static int brcmnand_resume(struct device *dev)
-                flash_dma_writel(ctrl, FLASH_DMA_ERROR_STATUS, 0);
-        }
-
-+       if (has_edu(ctrl))
-+               ctrl->edu_config = edu_readl(ctrl, EDU_CONFIG);
-+       else {
-+               edu_writel(ctrl, EDU_CONFIG, ctrl->edu_config);
-+               edu_readl(ctrl, EDU_CONFIG);
-+               brcmnand_edu_init(ctrl);
-+       }
-+
-        brcmnand_write_reg(ctrl, BRCMNAND_CS_SELECT, ctrl->nand_cs_nand_select);
-        brcmnand_write_reg(ctrl, BRCMNAND_CS_XOR, ctrl->nand_cs_nand_xor);
-        brcmnand_write_reg(ctrl, BRCMNAND_CORR_THRESHOLD,
-@@ -2553,6 +2783,52 @@ MODULE_DEVICE_TABLE(of, brcmnand_of_match);
- /***********************************************************************
-  * Platform driver setup (per controller)
-  ***********************************************************************/
-+static int brcmnand_edu_setup(struct platform_device *pdev)
-+{
-+       struct device *dev = &pdev->dev;
-+       struct brcmnand_controller *ctrl = dev_get_drvdata(&pdev->dev);
-+       struct resource *res;
-+       int ret;
-+
-+       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "flash-edu");
-+       if (res) {
-+               ctrl->edu_base = devm_ioremap_resource(dev, res);
-+               if (IS_ERR(ctrl->edu_base))
-+                       return PTR_ERR(ctrl->edu_base);
-+
-+               ctrl->edu_offsets = edu_regs;
-+
-+               edu_writel(ctrl, EDU_CONFIG, EDU_CONFIG_MODE_NAND |
-+                          EDU_CONFIG_SWAP_CFG);
-+               edu_readl(ctrl, EDU_CONFIG);
-+
-+               /* initialize edu */
-+               brcmnand_edu_init(ctrl);
-+
-+               ctrl->edu_irq = platform_get_irq_optional(pdev, 1);
-+               if ((int)ctrl->edu_irq < 0) {
-+                       dev_warn(dev,
-+                                "FLASH EDU enabled, using ctlrdy irq\n");
-+               } else {
-+                       ret = devm_request_irq(dev, ctrl->edu_irq,
-+                                              brcmnand_edu_irq, 0,
-+                                              "brcmnand-edu", ctrl);
-+                       if (ret < 0) {
-+                               dev_err(ctrl->dev, "can't allocate IRQ
-%d: error %d\n",
-+                                       ctrl->edu_irq, ret);
-+                               return ret;
-+                       }
-+
-+                       dev_info(dev, "FLASH EDU enabled using irq %u\n",
-+                                ctrl->edu_irq);
-+               }
-+
-+               /* set the appropriate edu transfer function to call */
-+               ctrl->dma_trans = brcmnand_edu_trans;
-+       }
-+
-+       return 0;
-+}
-
- int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
- {
-@@ -2578,6 +2854,7 @@ int brcmnand_probe(struct platform_device *pdev,
-struct brcmnand_soc *soc)
-
-        init_completion(&ctrl->done);
-        init_completion(&ctrl->dma_done);
-+       init_completion(&ctrl->edu_done);
-        nand_controller_init(&ctrl->controller);
-        ctrl->controller.ops = &brcmnand_controller_ops;
-        INIT_LIST_HEAD(&ctrl->host_list);
-@@ -2623,6 +2900,7 @@ int brcmnand_probe(struct platform_device *pdev,
-struct brcmnand_soc *soc)
-                                ctrl->reg_offsets[BRCMNAND_FC_BASE];
-        }
-
-+       ctrl->dma_trans = NULL;
-        /* FLASH_DMA */
-        res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "flash-dma");
-        if (res) {
-@@ -2665,6 +2943,12 @@ int brcmnand_probe(struct platform_device
-*pdev, struct brcmnand_soc *soc)
-                }
-
-                dev_info(dev, "enabling FLASH_DMA\n");
-+               /* set the appropriate flash dma transfer function to call */
-+               ctrl->dma_trans = brcmnand_dma_trans;
-+       } else  {
-+               ret = brcmnand_edu_setup(pdev);
-+               if (ret < 0)
-+                       goto err;
-        }
-
-        /* Disable automatic device ID config, direct addressing */
---
-2.17.1
+On Wed, Oct 30, 2019 at 09:35:18AM +0530, Maulik Shah wrote:
+> Add device bindings for cpuidle states for cpu devices.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index fceac50..69d5e2c 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -70,6 +70,9 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  				compatible = "cache";
+> @@ -85,6 +88,9 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>  			next-level-cache = <&L2_100>;
+>  			L2_100: l2-cache {
+>  				compatible = "cache";
+> @@ -97,6 +103,9 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x200>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>  			next-level-cache = <&L2_200>;
+>  			L2_200: l2-cache {
+>  				compatible = "cache";
+> @@ -109,6 +118,9 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x300>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>  			next-level-cache = <&L2_300>;
+>  			L2_300: l2-cache {
+>  				compatible = "cache";
+> @@ -121,6 +133,9 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x400>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>  			next-level-cache = <&L2_400>;
+>  			L2_400: l2-cache {
+>  				compatible = "cache";
+> @@ -133,6 +148,9 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x500>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>  			next-level-cache = <&L2_500>;
+>  			L2_500: l2-cache {
+>  				compatible = "cache";
+> @@ -145,6 +163,9 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x600>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_SLEEP_0
+> +					   &BIG_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>  			next-level-cache = <&L2_600>;
+>  			L2_600: l2-cache {
+>  				compatible = "cache";
+> @@ -157,12 +178,69 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x700>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_SLEEP_0
+> +					   &BIG_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>  			next-level-cache = <&L2_700>;
+>  			L2_700: l2-cache {
+>  				compatible = "cache";
+>  				next-level-cache = <&L3_0>;
+>  			};
+>  		};
+> +
+> +		idle-states {
+> +			entry-method = "psci";
+> +
+> +			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "little-power-down";
+> +				arm,psci-suspend-param = <0x40000003>;
+> +				entry-latency-us = <350>;
+> +				exit-latency-us = <461>;
+> +				min-residency-us = <1890>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "little-rail-power-down";
+> +				arm,psci-suspend-param = <0x40000004>;
+> +				entry-latency-us = <360>;
+> +				exit-latency-us = <531>;
+> +				min-residency-us = <3934>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "big-power-down";
+> +				arm,psci-suspend-param = <0x40000003>;
+> +				entry-latency-us = <264>;
+> +				exit-latency-us = <621>;
+> +				min-residency-us = <952>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "big-rail-power-down";
+> +				arm,psci-suspend-param = <0x40000004>;
+> +				entry-latency-us = <702>;
+> +				exit-latency-us = <1061>;
+> +				min-residency-us = <4488>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "cluster-power-down";
+> +				arm,psci-suspend-param = <0x400000F4>;
+> +				entry-latency-us = <3263>;
+> +				exit-latency-us = <6562>;
+> +				min-residency-us = <9987>;
+> +				local-timer-stop;
+> +			};
+> +		};
+>  	};
+>  
+>  	memory@80000000 {
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
