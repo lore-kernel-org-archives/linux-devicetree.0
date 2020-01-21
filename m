@@ -2,115 +2,104 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6E5C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 19:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312CDC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 20:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7D42073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 19:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A29217F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 20:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FhT/TGIJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlFqOs0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgAUTet (ORCPT
+        id S1727360AbgAUUAQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:34:49 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46011 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727360AbgAUTet (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 14:34:49 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b22so1752208pls.12
-        for <devicetree@vger.kernel.org>; Tue, 21 Jan 2020 11:34:48 -0800 (PST)
+        Tue, 21 Jan 2020 15:00:16 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46993 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgAUUAQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 15:00:16 -0500
+Received: by mail-pf1-f196.google.com with SMTP id n9so2017502pff.13;
+        Tue, 21 Jan 2020 12:00:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aUV9WIf/+WuAijFM7r520YHMbrBwtEKarCWd4/n07Ys=;
-        b=FhT/TGIJMNKVqvFezudJmCy70QJau4Lgjp/pVETFpLGKQ8EmDVkEUFFtkyXnRrHkYb
-         +abi96OWoGwyy6dr/SieIwnoqw5R20Gjd4ckWsVfX2yGHbtWL5aUyMGRW6LiVsxYV6y3
-         Qaf+kymrwXrnTh5GVcrKKSPuR9zJ47P/iXy6k=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eeX2JNGz9HgVPRGIoEvaZTiS7IkFyrAlD7or7JXr8vc=;
+        b=UlFqOs0X9yC5fqiMCEgHjeGUefzh3fJ/FdvxvkBy25yIKgMFlYTZkUmpDcRVBEdlgF
+         ZUR71N8z2yAkKbb01kfMh9nrdSr9a3jQyKklhi8pORyOx2F48pWtCL7SDCV5kUYLFbfj
+         A/6zRjM0wgnykN0SLUXAWZmLwNhPwM20CVx7WUKQBeOdwm+e4WLIinqeFaDYPZ0C0sy7
+         YjjRflOWXmANDIET32nY3CfBQrUvFa+t+v9HZMVIUgx5LURr/P/Q7n9+R8Q9fpN7OJs0
+         i8IcKpfWQcTlzHzCI96q5NwSLtKodwMFHjPce6nR7OGqQaNCAJhNNWcr3hsgODln4HZF
+         pxNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aUV9WIf/+WuAijFM7r520YHMbrBwtEKarCWd4/n07Ys=;
-        b=jv6sqB78Uc4KxP4FaA1Splam504v6p5nFPPomWEx/+W7VS7+Ve0DI3hGcAwwpW6Duc
-         Etsub31NNaAseenXAy6Z1Syl35j/2sSaUoAmwC+ZIiSm6P9rACB5ZlkoPg2PxFQt30p7
-         oF2GyQ9tatIqNvkzkedxUjfJVhCIHlvH4ILFbrUmHY9XgNFV/EPLWBS7pfwZRfCoQ8a6
-         MdlmoBJPeZhZW6PNdQj/Tpd0ldnSW/Fq7X/sCdFHMaFX0bIAMj+3P6I823CC2TQP4/4e
-         lnwDXcMRrLjp5/WjE9jm3B0ElTTT0eccrOI4t5oledPk+AqCKJdS6MzkXBr7e/iAgh7x
-         U04A==
-X-Gm-Message-State: APjAAAXuiUptykSuGuQR2B8mNfn/4kqIEBjpDGIISifOhUxSAtC3KS9l
-        62Ei7/bdmQHH4BCOJ3Z/L3Lsfw==
-X-Google-Smtp-Source: APXvYqzJng6CekTMfIFgFFnU9bzTC0FCHkYRdePeFO8BpDutiEMXegb/7f1wmc0/BSfJE/kQze50dQ==
-X-Received: by 2002:a17:902:ba94:: with SMTP id k20mr7189330pls.60.1579635288161;
-        Tue, 21 Jan 2020 11:34:48 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id z64sm45459115pfz.23.2020.01.21.11.34.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 11:34:47 -0800 (PST)
-Date:   Tue, 21 Jan 2020 11:34:46 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        lee.jones@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and
- pm6150l
-Message-ID: <20200121193446.GU89495@google.com>
-References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
- <5dc1cb4c.1c69fb81.af253.0b8a@mx.google.com>
- <c4cee81775c6d82024ca05250290f603@codeaurora.org>
- <5dc2f71e.1c69fb81.8912a.f2c0@mx.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5dc2f71e.1c69fb81.8912a.f2c0@mx.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eeX2JNGz9HgVPRGIoEvaZTiS7IkFyrAlD7or7JXr8vc=;
+        b=Uk1ScOcYWmInzulGXeBBcaOtg+xv7fEVIXZFQHNG8bVWycoHa11nQqqguXqES/R5Yp
+         Vmj9fP+B7kWwT+nfcIHbJcEU2YwU+ns9mOVu0GBhJHStnJ77V7LRYx8qPXhTudGBpOwh
+         FtmJs1/RwTYutuB4APhsu55381P1h4kTPpMKsjjAkyzGgFtTTzHcVULTsH5PkcSBj+kp
+         a4Ep56LznGH7ccL1t/OUpTED96ymee1+qWrARdklcYpiV7pzGFDFDjcgHjGp+tZkFInF
+         thhaLuuWkZgcnX1S+rjBJAYG7WqR6eK5qkhr6LqiVKEUprcxnfaIICpLf47+eSBMjemx
+         ZEwQ==
+X-Gm-Message-State: APjAAAVHkEBDfqm7PUmX5t9Th7kNMclWZx2h9WoxwtdZwniBIj5+Gfz5
+        mqW28riwiWwGVEUE3WfOjME=
+X-Google-Smtp-Source: APXvYqxKq2oDlprFk1+QK2TFgGB5hdnvvHi3lXqLm35fMfkoRjqwMH0R05FaBJfIZvrz79we+8RMcg==
+X-Received: by 2002:a63:2cc8:: with SMTP id s191mr7137691pgs.206.1579636815427;
+        Tue, 21 Jan 2020 12:00:15 -0800 (PST)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id d2sm261576pjv.18.2020.01.21.12.00.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 12:00:15 -0800 (PST)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH V2 1/3] dt: bindings: brcmnand: Add support for flash-edu
+Date:   Tue, 21 Jan 2020 15:00:06 -0500
+Message-Id: <20200121200011.32296-1-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kiran,
+Adding support for EBI DMA unit (EDU).
 
-What is the status of this patch? It has outstanding comments and I
-couldn't find a later version. Do you plan to post a v3 in the near
-future?
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ .../devicetree/bindings/mtd/brcm,brcmnand.txt          | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 82156dc8f304..05651a654c66 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -35,11 +35,11 @@ Required properties:
+                      (optional) NAND flash cache range (if at non-standard offset)
+ - reg-names        : a list of the names corresponding to the previous register
+                      ranges. Should contain "nand" and (optionally)
+-                     "flash-dma" and/or "nand-cache".
+-- interrupts       : The NAND CTLRDY interrupt and (if Flash DMA is available)
+-                     FLASH_DMA_DONE
+-- interrupt-names  : May be "nand_ctlrdy" or "flash_dma_done", if broken out as
+-                     individual interrupts.
++                     "flash-dma" or "flash-edu" and/or "nand-cache".
++- interrupts       : The NAND CTLRDY interrupt, (if Flash DMA is available)
++                     FLASH_DMA_DONE and if EDU is avaialble and used FLASH_EDU_DONE
++- interrupt-names  : May be "nand_ctlrdy" or "flash_dma_done" or "flash_edu_done",
++                     if broken out as individual interrupts.
+                      May be "nand", if the SoC has the individual NAND
+                      interrupts multiplexed behind another custom piece of
+                      hardware
+-- 
+2.17.1
 
-Matthias
-
-On Wed, Nov 06, 2019 at 08:38:53AM -0800, Stephen Boyd wrote:
-> Quoting kgunda@codeaurora.org (2019-11-05 22:43:59)
-> > On 2019-11-06 00:49, Stephen Boyd wrote:
-> > > Quoting Kiran Gunda (2019-11-04 21:21:49)
-> > >> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
-> > >> found on SC7180 based platforms.
-> > >> 
-> > >> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> > >> ---
-> > >>  - Changes from V1:
-> > >>    Sorted the macros and compatibles.
-> > > 
-> > > I don't see anything sorted though.
-> > > 
-> > Sorry .. I might have misunderstood your comment. Let me know if my 
-> > understanding is correct.
-> > 
-> > >>>> And compatible here.
-> > >>> And on macro name here.
-> > 
-> > This means you want to sort all the existing compatible and macros in 
-> > alpha numeric order ?
-> 
-> Sorry I also got confused on what the driver is doing. I replied on the
-> original patch with what is preferred.
-> 
