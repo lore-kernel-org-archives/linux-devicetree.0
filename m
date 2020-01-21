@@ -2,132 +2,100 @@ Return-Path: <SRS0=tTw7=3K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23948C33CAA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 03:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C20DC33CAA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 04:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A4524125
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 03:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC2D22522
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jan 2020 04:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0rGhZJT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y437XdOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgAUDjb (ORCPT
+        id S1728767AbgAUEh0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jan 2020 22:39:31 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40153 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgAUDjb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 22:39:31 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dp13so809395qvb.7;
-        Mon, 20 Jan 2020 19:39:30 -0800 (PST)
+        Mon, 20 Jan 2020 23:37:26 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:37134 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbgAUEh0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jan 2020 23:37:26 -0500
+Received: by mail-qv1-f67.google.com with SMTP id f16so859206qvi.4
+        for <devicetree@vger.kernel.org>; Mon, 20 Jan 2020 20:37:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zdgsz84FvwJzIN/En/yZAdV4WDABHd4kiHJoyghAqMA=;
-        b=E0rGhZJTc7LrntC7wA6B/ETc1nRH8YtUrXlz+Pgq0AHx/c9KXbI4UCuv5Cxtxo0IYP
-         04KOPPEaVLUD4VgkLT2R5TUn4Nn2eXygh/WPH0fIhFtQpmcQ6ZsCtKqAIe2KHUllEpx1
-         FQIwhUmuUiA3uxr7eQwyevTVy5fDFV3kfx/JuQ+Wj8n7N/8rWv2qupGBqnrsMoa0E0+a
-         G/yYs9DiMOZwZFDdfMnSI6CweIQxxrPl73jZEgg9IYLTR43pgFBTLMwbkBNmBhFsnVOC
-         TKRylTPKHDXRz6Dh2MIhFRj0oBRMsb7edt4B2VYYzsLv2Js69qqDeN2WMzwQXI9ROUN4
-         jhXw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tE6t4zYqaVXPST4AhwIQ9GsXTC/ddB8hjT5O44X4X2A=;
+        b=Y437XdOv0Hto2lq+dzGstZ/dDsYcyHpK4I+DVf73M1v48j1EjilwkEp0HlSg8Iu9gL
+         0tTOS38rUYrM9yCpro7VwAwprgAfaJvNt0icSyt0cimanM+SnEp2Xre2R1C/rtGm8iVZ
+         lRVWu7xtrpg+9KP77O5tLZX+QnE1zQQIxeaZk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zdgsz84FvwJzIN/En/yZAdV4WDABHd4kiHJoyghAqMA=;
-        b=TLvabdMefNcSBXnQtp7Pnu8ckGyfVFIfI4xaM5jPg+GzKd++GM4CzeJ0qUOW3puv4W
-         /C5AGtjwE2lGFrXrw6yk7Vw+BVlDu5NW3kdtT4AT7ece63TlysbrMl2S543t/zWUxTg+
-         bFucE+nxm57pU1ixIPeyL0dBk/f+Gx/Jbt4fviRn6RYN/yehN9xJ/9xFo5tpYyntp3i7
-         dMEwGzwiYrfuaMoAam0Ng0DiEtGp+HBLc8SOMV42a6YdLn2KxQTB/EYzUTcpYzbu+sXj
-         JQHfF/gby9bX6zgeM5OajQsETO9tRFPsQuinC9vkyLzJJKUwGWiNAF0/zN4dg1CObojr
-         ijvg==
-X-Gm-Message-State: APjAAAVwFPot1jpsaYv7WFrAy0fbA4iyOt+oM0JouUU0wSffrOQ5Pq7r
-        CXAG4hXhess8w1piY8YvweQ=
-X-Google-Smtp-Source: APXvYqwUfj2YD1sGgvoN79oBFVUE/pV8wx0UGCxlDZ/Nx1621wSd4zo48zzZYlwvfg+oU3rr8oP2AQ==
-X-Received: by 2002:ad4:4f45:: with SMTP id eu5mr2948932qvb.235.1579577969907;
-        Mon, 20 Jan 2020 19:39:29 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id d3sm18165079qtp.25.2020.01.20.19.39.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 19:39:29 -0800 (PST)
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Steve McIntyre <steve.mcintyre@linaro.org>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
- <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
- <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
- <220e3aea-b273-417a-69c9-059236c888af@st.com>
- <a1233cd8-e73a-82d7-74bf-69109d1a0a07@gmail.com>
- <20200120182837.GO3697@linaro.org>
- <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
-Message-ID: <e8cdbcaa-800b-18db-11ec-3d8df9da68b5@gmail.com>
-Date:   Mon, 20 Jan 2020 21:39:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tE6t4zYqaVXPST4AhwIQ9GsXTC/ddB8hjT5O44X4X2A=;
+        b=dhzPnaDtGNXQO7NkI3SzomViVmnfIbWIgny1VvsnHmEDYmccxDN9zAZ4Nj1jkj5SaO
+         lE5TAbccJw8St9aVhW6n35amyDGc5xg9QvBC6DHgVSw4n7MLnWkFY7ZvyrsLQszGjmjZ
+         wURbk9jUqmhPiDzxFd6vjcN9xL7egOLrSmVAv80JWCdW88S5mXzeRrQ9mW5aV8K15GlO
+         gsy8KxbWSnsf7xVJwm2gIE2rGeoACTp3UVUHt8OTTwi7d12duLp0nQ3/mdDKpMQfIMg+
+         5bEBuMxrTiq39Wo9ctv0AE0S8gqYRnGqA2NO+Dqi+lq9GuFAfqYumMHNmQyLocMsqGm3
+         qlkA==
+X-Gm-Message-State: APjAAAX8+QnaiuJAgMZYxFXxi7GSs2R+gTSw0GYmBJJTB77FWZ8lVWV8
+        YpKk5oGUeGEn+Fjer+MEXk4VHugpIuAIAvCwyX6p7Q==
+X-Google-Smtp-Source: APXvYqzdl4VdxIrAynyQuScJnrpT9ZczyRYljUJVkw1OCPfHpQClTp+aKVQtQGPPLLXXuyebvlkJ/h7fxsuCkIoPT4Y=
+X-Received: by 2002:a0c:f703:: with SMTP id w3mr3120793qvn.6.1579581445521;
+ Mon, 20 Jan 2020 20:37:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200114071602.47627-1-drinkcat@chromium.org> <20200114071602.47627-5-drinkcat@chromium.org>
+ <20200114151643.GW3897@sirena.org.uk>
+In-Reply-To: <20200114151643.GW3897@sirena.org.uk>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 21 Jan 2020 11:37:14 +0700
+Message-ID: <CANMq1KC_-g45wdGgGiBmEyVXAJMkKwsJBJXGBHOMJk_=NyfpYw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] drm/panfrost: Add support for multiple regulators
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/20/20 9:20 PM, Frank Rowand wrote:
-> On 1/20/20 12:28 PM, Steve McIntyre wrote:
->> Hi Frank!
->>
->> Thanks for the link back to the previous discussion, it's very
->> helpful.
->>
->> On Mon, Jan 20, 2020 at 10:14:22AM -0600, Frank Rowand wrote:
->>> On 1/20/20 4:56 AM, Alexandre Torgue wrote:
->>
->> ...
->>
->>>> and the date). There are no "dtb versions", and "absolute/relative"
->>>> path which created concerns. One remaining concern is "reproducible
->>>
->>> Here is an example of the info from one of my builds:
->>>
->>>   From Linux 5.5.0-rc2-dirty by frowand the Mon Jan 20 09:50:58 CST 2020.
->>>
->>> The information 'Linux 5.5.0-rc2-dirty' is precisely what was most objected
->>> to in my proposal.
->>
->> ACK. :-( I'm surprised to see so much push-back on what looks like a
->> simple piece of information here.
-> 
-> Me too.
-> 
-> 
->>
->> I've had users *specifically* asking for this kind of identification
->> so that they can verify the version of the DTB they're using at
->> runtime. Right now it can be a guessing game, which does not help
->> people trying to debug problems.
->>
->> Cheers,
->>
-> 
-> If the information was reported as debug information via pr_debug(),
-> would that work for your use case?  Or would the users' kernels
-> not have debug enabled in the configuration?
+On Tue, Jan 14, 2020 at 10:16 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Jan 14, 2020 at 03:15:59PM +0800, Nicolas Boichat wrote:
+>
+> >  - I couldn't find a way to detect the number of regulators in the
+> >    device tree, if we wanted to refuse to probe the device if there
+> >    are too many regulators, which might be required for safety, see
+> >    the thread on v2 [1].
+>
+> You'd need to enumerate all the properties of the device and look
+> for things matching *-supply.
 
-And even pr_debug() might not be sufficient since the property
-value is available via /proc/device-tree if the proc file
-system is enabled.
+I see ,-) I was hoping for something slightly cleaner, or maybe an
+existing function in the core.
+
+Steven: How strongly do you feel about this? If so I can add that
+check in the next revision.
+
+Also, just a heads-up, I'm out for the next 2 weeks, I'll send v4 after that.
+
+>
+> Reviewed-by: Mark Brown <broonie@kernel.org>
