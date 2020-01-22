@@ -4,83 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FECC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4298C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A1221835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E832071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579709307;
-	bh=Wt/QXdeR9dhB+sV9Tei7vifvbp6xJGRZkZesXjdoQw0=;
+	s=default; t=1579709359;
+	bh=59FpaJ1LMLGLLrqsfkukZ/L4kT9NOS0JYwyVm43bdsE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0i41jRzUFCw3C+7d2ovfJY1NLf8IRXirEVY+vZiCmoFcMqmbrEzCFYOzvNU/5Jz5o
-	 iMeJW1bIOzIIiCmTK/BIkemLmVifgfZGs2aWXBOl+GJqjh3ahCZJfgFaI5KRJKEHWy
-	 yaLBM5u1jWt0164+MB+aqcwxsNZ4pVKK9tWRc5iA=
+	b=wRNNY7ISdIOBVlfT3H0UAhBafrqsWW0mP89rcbcr5t1gudbb0QygJ7Wmv0gMfyWGT
+	 d55tUscYyyn7PwQ1SrxJRzyx50ZPhzmqZMRKQ02OTm1DKYTFf4u73YrRgAmk8djdkJ
+	 O7Mv0l6WoOAxAmZ61QIGOiMjOG2jMYh16cjxel2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgAVQI0 (ORCPT
+        id S1729137AbgAVQJP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:08:26 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38815 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbgAVQIZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 11:08:25 -0500
-Received: by mail-ot1-f68.google.com with SMTP id z9so6748916oth.5;
-        Wed, 22 Jan 2020 08:08:24 -0800 (PST)
+        Wed, 22 Jan 2020 11:09:15 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44069 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgAVQJO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 11:09:14 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so6687316otj.11;
+        Wed, 22 Jan 2020 08:09:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fJ6RphyD8sSyPTqyOLqAI/Xz7E4nNP+XR5CyPMuI564=;
-        b=BP0JmMHeWNbH2s3xrZkfG/MUGgwt4T/GJq0kR96G9AkFbzotPU/JwjMKhN/g2KPU+5
-         YhVkuhS2gMYjo5RJ1tiaYUuNyICRfrfjn+BnljYJMJTgwZuH0P9vSSuxmssW8M21k5EU
-         qwey/57t80DqixS2qcSgDv7jLAwgCgH/5rbEhtegL427b0XZw3JblaNtyOHXOhKrsjsb
-         PlvwpqoYQ3o0kplqdCPeVM8AU4hSOLBdW1adBCY9Qd2LDXjKuoZcT7FUFH7vTv/RDn/c
-         T7Gl1GqUa7rcM5aHhDFN4HvIJnOKOSbCIK4db4Z8GI4M1uK9PnxtaRqSCluiZJKQ7UKF
-         MGcA==
-X-Gm-Message-State: APjAAAUWd7kGZ8DwwqhIWM2JpSvB+WRtBI4tkeNCJlZ2yreEjBbDImWn
-        ZNc19xnji8u3RUB4yP/lRg==
-X-Google-Smtp-Source: APXvYqxLEOxbsL08vDuEoLiLKQY5f0wqCbNPih8yNmPTCMWHpkhVewkTCUhbZi3T/uga/TLzgU10Zg==
-X-Received: by 2002:a05:6830:10c6:: with SMTP id z6mr8270289oto.203.1579709304565;
-        Wed, 22 Jan 2020 08:08:24 -0800 (PST)
+        bh=NicELhRH97phufI5K+uhmipswu42ZkrWjRlsnZOlQZA=;
+        b=pRUNvgoLQAOgog3zi4AKICD1SXvhd/maCEJJz+Bo7ppAet0yNLa80Si7kDTbNoIg1l
+         F6DENmWkxlQ+kaex5bEGgoXgoT9cSOfGIJnRuF0TYuy4ToOWosTbysqxBdfxMPvKe6QR
+         Ox9lMxhLWOpc2BhZVVbZ7dwu32U040+r2hVoBnUhGwOAdBhPsTK1ZvCg8iH7gs6D62+5
+         SmPJrzQ5GYHM6dyB75l+xQpHHKnoEYujefwljRdweDFh/L3Lk6DZjw7Q1ATIwth30AML
+         7JebSpjgQYEXf4W/nGm5pAjVKMKHab+Ipa/rSPKqLfQGu9y9/B2iOvcrJgdEP6nQ6/Yg
+         kFCg==
+X-Gm-Message-State: APjAAAWK3t2mTgIrOpWTO0PRshNBixYbA3fWS0XDDOE6MZlhyM+4BBPC
+        tgElg9QDB3GVGOVeL01dKg==
+X-Google-Smtp-Source: APXvYqw21Gi0ZiYsrMeofTeccP/C6CiR5RfOpcCRRQzj/Uy0gPrukIylWs23kLSl7jRdEPaPfq1MEg==
+X-Received: by 2002:a9d:e83:: with SMTP id 3mr7856299otj.218.1579709353640;
+        Wed, 22 Jan 2020 08:09:13 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y13sm14708687otk.40.2020.01.22.08.08.23
+        by smtp.gmail.com with ESMTPSA id l17sm15135155ota.27.2020.01.22.08.09.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 08:08:23 -0800 (PST)
-Received: (nullmailer pid 15086 invoked by uid 1000);
-        Wed, 22 Jan 2020 16:08:22 -0000
-Date:   Wed, 22 Jan 2020 10:08:22 -0600
+        Wed, 22 Jan 2020 08:09:12 -0800 (PST)
+Received: (nullmailer pid 16612 invoked by uid 1000);
+        Wed, 22 Jan 2020 16:09:11 -0000
+Date:   Wed, 22 Jan 2020 10:09:11 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Emmanuel Vadot <manu@freebsd.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        dianders@chromium.org, andy.yan@rock-chips.com,
-        robin.murphy@arm.com, mka@chromium.org, jagan@amarulasolutions.com,
-        nick@khadas.com, kever.yang@rock-chips.com, m.reichl@fivetechno.de,
-        aballier@gentoo.org, pbrobinson@gmail.com, vicencb@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Emmanuel Vadot <manu@freebsd.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add doc for Pine64 Pinebook Pro
-Message-ID: <20200122160822.GA15049@bogus>
-References: <20200116225617.6318-1-manu@freebsd.org>
+To:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, vinod.koul@linaro.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        jshriram@codeaurora.org, tdas@codeaurora.org,
+        vnkgutta@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] dt-bindings: clock: Add RPMHCC bindings for SM8250
+Message-ID: <20200122160911.GA16555@bogus>
+References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
+ <1579217994-22219-2-git-send-email-vnkgutta@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200116225617.6318-1-manu@freebsd.org>
+In-Reply-To: <1579217994-22219-2-git-send-email-vnkgutta@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Jan 2020 23:56:16 +0100, Emmanuel Vadot wrote:
-> Add a compatible for Pine64 Pinebook Pro
+On Thu, 16 Jan 2020 15:39:48 -0800, Venkata Narendra Kumar Gutta wrote:
+> From: Taniya Das <tdas@codeaurora.org>
 > 
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> Add bindings and update documentation for clock rpmh driver on SM8250.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
+>  include/dt-bindings/clock/qcom,rpmh.h                    | 4 +++-
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
