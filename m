@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F95C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94914C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F402624673
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B5E22522
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:57:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EACekihj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nimU/LM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgAVS4i (ORCPT
+        id S1729316AbgAVS4f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:56:38 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40707 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729340AbgAVS4i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 13:56:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so182237wmi.5
-        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 10:56:36 -0800 (PST)
+        Wed, 22 Jan 2020 13:56:35 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50830 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729279AbgAVS4e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 13:56:34 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so214783wmb.0
+        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 10:56:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+TYQNQQWESi4gKsyKl1vTO3f1E3mp/r/avow7BgHKMw=;
-        b=EACekihjpCPMuOqdeZaEjVRHAd/Nobwhg9yODd2M/hZHedkApPn8slvoG9T2pBI39L
-         XDk82lRDLU9B9xV8Bx5mfx6RI2SNXEqCXD8kOJXNi8PEu3k5wxPp5cY743k/FZzNBpjR
-         zgEBxu+06xNAMyYJYk8nyudSpf/l0G3qDxLQwaEb2lZ38fO3LpepH9nE2aBor+ek8o8z
-         L5qj0F2fXq02YhiH6rMll2KCB+/KESOOajBQkmso3N1Pk/9PoIoh/I55PdJEFjiSaOnr
-         moWt3Hryn4u0yJeUQLL7f9+tRudAZn0AknxhmOZwuFLdVsLfuUqCrCM8AooW9E9DqyID
-         eSPQ==
+        bh=4Kx77RkRZ6BLkxPPbqLY1opgnPyzoSH+OO3s+PAvU9w=;
+        b=nimU/LM/GmWwEqMZ1R1DBF3ixewkPrqu9MKxcANuV5XhZSMGawF0kAJ90zatF8Wk6Q
+         4EnMJ+MiLs5gMXeCXUCyuXOoF9d2oZHe2k9VpZoqWR0Tqtv/QrlyKgBTpc2BALacVLNh
+         0EHvgWUXo7x7dfQGt3V/GZ5bDlV17IolYRGqcnAKepjyKSN8wG1nsm8EFGZmYlSAErO1
+         Vk9m3vthY9Bkq5XwSdVxtdAO89+i6gXt2qIaeJERQwC2pw9B19y/0d0Pv1AMVkQ3OVAr
+         INTiIyfkFvAS7qx48Zozq7ySGI8E9GrdxIv0AprS7Mu9AEIn6TedcqkXmW/dnESF+KyL
+         OXGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+TYQNQQWESi4gKsyKl1vTO3f1E3mp/r/avow7BgHKMw=;
-        b=DauiJ2MoYs5jthjFkakRLjJCp+fKAcCdy0aZZ9qZlyv8eRP+aYreNPHB8idGCPEW+/
-         3qflX+ZV1iq0iz1pJzGgzigYEAZz3UNGRMuxGgqrnjFHs/1y7Dnam29ih5eEUN7w5QWK
-         oP0M4byTbPQk0eGp7X8EInDNq8t1JAt8+i2dbxW5qqN0JcZWEjuChDaRzRZbgDS0DYqc
-         yjmcuEXeEhfRp7qzWCGPTAxJqtl2DKFkSZ1IngNMVGcmGEMtCNQFAdY5pdo/eBOg4w5P
-         WMfPMdVWBQeJ6k8QKJ0v17MzLhyheYRz4MhoEfTgp2xEl1qBC1vilguDaWNcKWPltrcQ
-         1MJw==
-X-Gm-Message-State: APjAAAVUcwExHmfIvsJdSIt2Oj8zrgr4MfmVioFKvy0wk4aqFXRRy3Lh
-        8KXapi2J0bsWnYfSR7OgIRiZBw==
-X-Google-Smtp-Source: APXvYqwFeZF6Nc6JIvCGJNF9g5Rv0fQCMT+vAOEUUcrAKz5qIfdz87a+PSp7C2abxVLFjFKkp7Lccw==
-X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr4356860wmf.100.1579719395769;
-        Wed, 22 Jan 2020 10:56:35 -0800 (PST)
+        bh=4Kx77RkRZ6BLkxPPbqLY1opgnPyzoSH+OO3s+PAvU9w=;
+        b=AeJy9FoFGOOalb9o/HoYsSGFJnYWjA+MafDBBwZlm9Hjhe/c5Wu1pp29nvCQTgk829
+         k+tyRokpV/XfbhE+aIcujPyUjMIHTjKasYEhOh5Rnrc8y9wJww9Ks0eBhMddwSacVwJF
+         KYJNr4CeuvmfSWyhumwMK2wxrsGx7GUBI2vCFtE1QEsDjgIZyuNBjzGZzsM2qcNGEWmm
+         HBzARmz0sLzgtD+2addmFNSx1j+9XYAq+iczCos8q7iFE9RDE+fzneWxqR3uzYAFtVv9
+         VvhWg2/+llIVETcMDxYeItCERSIdtkvJs23WlJhKaWnRA+3fFDZzy1GLaKcK0q+r3mKH
+         uXNQ==
+X-Gm-Message-State: APjAAAUaaeta2NBV1uf4K/M1so0wCus7Q4j8HBhpaito4RkGTFzBjeE1
+        kb08BLfPQhQKjzYmsWg7wjjEgA==
+X-Google-Smtp-Source: APXvYqwVqPVLGjeGaPZUz4tHdwCIhaBwIWmHqxUY8sIc2gAQdn2BnZnw5GNe/UyuRjKbEAmGhe5jtg==
+X-Received: by 2002:a7b:c3cf:: with SMTP id t15mr4216125wmj.135.1579719392571;
+        Wed, 22 Jan 2020 10:56:32 -0800 (PST)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id q15sm58590390wrr.11.2020.01.22.10.56.34
+        by smtp.gmail.com with ESMTPSA id q15sm58590390wrr.11.2020.01.22.10.56.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 10:56:35 -0800 (PST)
+        Wed, 22 Jan 2020 10:56:32 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v3 19/19] arm64: dts: qcom: qcs404-evb: Enable primary USB controller
-Date:   Wed, 22 Jan 2020 18:56:10 +0000
-Message-Id: <20200122185610.131930-20-bryan.odonoghue@linaro.org>
+Subject: [PATCH v3 16/19] arm64: dts: qcom: qcs404-evb: Describe external VBUS regulator
+Date:   Wed, 22 Jan 2020 18:56:07 +0000
+Message-Id: <20200122185610.131930-17-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
 References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
@@ -77,11 +77,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch enables the primary USB controller which has
-
-- One USB3 SS PHY using gpio-usb-conn
-- One USB2 HS PHY in device mode only and no connector driver
-  associated.
+VBUS is supplied by an external regulator controlled by a GPIO pin. This
+patch models the regulator as regulator-usb3-vbus.
 
 Cc: Andy Gross <agross@kernel.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -92,49 +89,32 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 29 ++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 07d6d793a922..a2cbca3a6124 100644
+index abfb2a9a37e9..01ef59e8e5b7 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -329,6 +329,35 @@ &usb2_phy_sec {
- 	status = "okay";
+@@ -33,6 +33,18 @@ vdd_esmps3_3p3: vdd-esmps3-3p3-regulator {
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+ 	};
++
++	usb3_vbus_reg: regulator-usb3-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "VBUS_BOOST_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&pms405_gpios 3 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_vbus_boost_pin>;
++		vin-supply = <&vph_pwr>;
++		enable-active-high;
++	};
  };
  
-+&usb3 {
-+	status = "okay";
-+	dwc3@7580000 {
-+		usb-role-switch;
-+		usb_con: gpio_usb_connector {
-+			compatible = "gpio-usb-b-connector";
-+			label = "USB-C";
-+			id-gpio = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-+			vbus-supply = <&usb3_vbus_reg>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&usb3_id_pin>, <&usb3_vbus_pin>;
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&usb2_phy_prim {
-+	vdd-supply = <&vreg_l4_1p2>;
-+	vdda1p8-supply = <&vreg_l5_1p8>;
-+	vdda3p3-supply = <&vreg_l12_3p3>;
-+	status = "okay";
-+};
-+
-+&usb3_phy {
-+	vdd-supply = <&vreg_l3_1p05>;
-+	vdda1p8-supply = <&vreg_l5_1p8>;
-+	status = "okay";
-+};
-+
- &wifi {
- 	status = "okay";
- 	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
+ &blsp1_uart3 {
 -- 
 2.25.0
 
