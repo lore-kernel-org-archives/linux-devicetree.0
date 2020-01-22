@@ -2,412 +2,202 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CBBC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 10:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9068FC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 10:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A684724683
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 10:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572D724688
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 10:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aUxW6658"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="faFRRIT9";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="oNM//wVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgAVK0S (ORCPT
+        id S1729108AbgAVKpg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:26:18 -0500
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:27474 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbgAVK0R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 05:26:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579688777; x=1611224777;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=EPizAQO93EJTplAs1NARRik68b25j20hVby84Fp7Yew=;
-  b=aUxW6658BFDISC3ayKBoae5cw9CeI8Ag2LqVjNRa3FS3pldHq3NDUJz8
-   SRKDKNAA1N/QJf2XW48Ap2HiIJvWCyv+0LyOiVdAwoDKMe/I3aBq/Kl7f
-   nAgAdrBz8pLqHvwaC7L/eavnJOrc8QDW+Xaih1UVAhdYo1mt65H7l65b/
-   s=;
-IronPort-SDR: 79WZOkfsfX+CkuUkGhamkNX7H4Xt9lsoOMQTQ05UCDbybjtGAxSCa3t0yxEhOca6tC5DvEFhwW
- VvrxSg8p+CYg==
-X-IronPort-AV: E=Sophos;i="5.70,349,1574121600"; 
-   d="scan'208";a="13656338"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 22 Jan 2020 10:26:13 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id 014EBA29D0;
-        Wed, 22 Jan 2020 10:26:07 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Wed, 22 Jan 2020 10:26:07 +0000
-Received: from u8a88181e7b2355.ant.amazon.com (10.43.161.78) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 22 Jan 2020 10:25:56 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <rrichter@marvell.com>, <hhhawa@amazon.com>,
-        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <Jonathan.Cameron@huawei.com>, <arnd@arndb.de>
-CC:     <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
-        <jonnyc@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
-Subject: [PATCH v8 3/3] edac: Add support for Amazon's Annapurna Labs L2 EDAC
-Date:   Wed, 22 Jan 2020 12:25:13 +0200
-Message-ID: <20200122102513.31132-4-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200122102513.31132-1-hhhawa@amazon.com>
-References: <20200122102513.31132-1-hhhawa@amazon.com>
+        Wed, 22 Jan 2020 05:45:36 -0500
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:43686 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729066AbgAVKpg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:45:36 -0500
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MAgqZW009274;
+        Wed, 22 Jan 2020 02:45:27 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=14v69BrqcMHMe86Ri5j+rc6yPlFS1lQe7RrjA9qkd94=;
+ b=faFRRIT93S1LuEOkx3J5hkE3k7HV/9oet4s5Cj9bzXmVA17cJk+8PVL/9K5lKezWIX3m
+ un2KbjUOnE9WO/w+QrYhxBuSLE2KnWvMolSIuQZIlN8ZWIAmC+QSwvdMsDSd8HktSP2I
+ y35iBK42PrPS6f50dv56qQID0rStrVJgXTO5tCmL/0s0P+65Qr6lhxuFyRwKFRp3xzVs
+ RlX4uxPTLXbKeRE8C4h0BZOFIPhQOByOFfj1DJ+hOzQb/+6KHv4sbB6ushaoCXF06Rq5
+ DNA1zm5rkXbeO/J3xmn9DJhu1Zj7X5aTjuNsjjE3UhkW1kA0ZAIXvmNatnSHmuCDDweM 3g== 
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2057.outbound.protection.outlook.com [104.47.37.57])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2xkyf5mgy9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jan 2020 02:45:27 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EAPlp3Y206o4rrEzsXqmTzaSUYUsIq6fAJ2tG8WOSX5D35yd91K9hmfpzCSYzTmi8FM0j8fbHMIopbzSKFctLg20cybg6zOi/1g/oKoK0c8Othn+1iXO+5RCCNejjE6gkuA8RsiJQKqZRS5InZ67bqDEvo+y7DVYnVtZYEFNMWLuv4twDTSYKmw6OSkVFyiCM8oTI0zynGF1sIrGLdjaxgWkNJYq+H44L9rsAHwfIE7Ehm8KdBM27ZiSZKyc1ojYOEGlDsurq4/ISQmA/9RjQo/l4tIXqZ2VnE6TAZPOzPMDvFyEyLUGjnYTsEWZSQZRmVbdmLiHqX8rD8wvcJLZEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=14v69BrqcMHMe86Ri5j+rc6yPlFS1lQe7RrjA9qkd94=;
+ b=MaVaHO3H3WeFn4Q/0WjRUx6dJcMwtTlRcGOY8kH1r227C29UTWV2nGdFnIKh/dLtsDkWY6PH3cktLVbn/+DphkbWb3m7JqpDYSMsmMk9Bevx8kAkLYQ/Ccn5WMmiswA1gGw2VjExPKysI+dGvTif3oOYur4ldoz6nXAuMfnQiXHYt6SxQRrM9/WxxeEj17VVsrqFMhw3NTxftCbq5HmV28rwI6C6IVtcPYFG22C9QJbCdFXgJKhioxUja0YrZPoLCpMC4ogBuzMrtS727kprjFozRGwc01kna5RV9h91D2UTDTD+BPx7rYL3Nl1uW1PfY50czrvDrY7DwjGCA+g4lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 158.140.1.28) smtp.rcpttodomain=ti.com smtp.mailfrom=cadence.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=14v69BrqcMHMe86Ri5j+rc6yPlFS1lQe7RrjA9qkd94=;
+ b=oNM//wVDWcUaEHmYAYeQDbDzrNtXTU3K3HsSJy8BpGh8Ameh1+g8nkSOebh2A7cvFjkHeRq9GmGP+ABO1dgbOLR3tkvx1CkMBW13A0t8WNOvKyb8xTgUxdMUvYqqoNIvat4BsWHllVXYCgdjpWT3jGLlXS7cRkrq6vgiQ3c6pks=
+Received: from SN4PR0701CA0033.namprd07.prod.outlook.com
+ (2603:10b6:803:2d::27) by MN2PR07MB6015.namprd07.prod.outlook.com
+ (2603:10b6:208:109::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.23; Wed, 22 Jan
+ 2020 10:45:25 +0000
+Received: from BN8NAM12FT011.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5b::208) by SN4PR0701CA0033.outlook.office365.com
+ (2603:10b6:803:2d::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend
+ Transport; Wed, 22 Jan 2020 10:45:24 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 158.140.1.28 as permitted sender) receiver=protection.outlook.com;
+ client-ip=158.140.1.28; helo=sjmaillnx1.cadence.com;
+Received: from sjmaillnx1.cadence.com (158.140.1.28) by
+ BN8NAM12FT011.mail.protection.outlook.com (10.13.183.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.6 via Frontend Transport; Wed, 22 Jan 2020 10:45:24 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 00MAjKBB001726
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 22 Jan 2020 02:45:23 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Wed, 22 Jan 2020 11:45:20 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 22 Jan 2020 11:45:20 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 00MAjKQM007242;
+        Wed, 22 Jan 2020 11:45:20 +0100
+Received: (from yamonkar@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 00MAjJLq007241;
+        Wed, 22 Jan 2020 11:45:19 +0100
+From:   Yuti Amonkar <yamonkar@cadence.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <kishon@ti.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <maxime@cerno.tech>
+CC:     <jsarha@ti.com>, <tomi.valkeinen@ti.com>, <praneeth@ti.com>,
+        <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>
+Subject: [PATCH v3 02/14] phy: cadence-dp: Rename to phy-cadence-torrent
+Date:   Wed, 22 Jan 2020 11:45:06 +0100
+Message-ID: <1579689918-7181-3-git-send-email-yamonkar@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1579689918-7181-1-git-send-email-yamonkar@cadence.com>
+References: <1579689918-7181-1-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.161.78]
-X-ClientProxiedBy: EX13D28UWB004.ant.amazon.com (10.43.161.56) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(39860400002)(189003)(199004)(36092001)(6666004)(8936002)(70206006)(70586007)(5660300002)(356004)(4326008)(107886003)(2616005)(86362001)(478600001)(8676002)(426003)(26826003)(7636002)(36756003)(336012)(246002)(186003)(26005)(42186006)(54906003)(316002)(110136005)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB6015;H:sjmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:corp.Cadence.COM;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4b66e909-cfc4-429a-03c8-08d79f282fef
+X-MS-TrafficTypeDiagnostic: MN2PR07MB6015:
+X-Microsoft-Antispam-PRVS: <MN2PR07MB6015C71C2CE8FD5A8271AD7DD20C0@MN2PR07MB6015.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 029097202E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NtkVjCR8hkDWbSIJZzI68Fg9gYC9bv5EwZNFx3TV3hLktqrSK8RJJZfHnmYbJV4EwYOcPMFs0VNAtKURTNbJ80GoaQmWOj34iv8hxO+c1JO17s/EU4yqnr2mKHTKwO9a382Zy5nUCBK2CwUkEMJqQRq8q0DNfCgptFutjQOdBCO+A/HbFhiKPAHz9e1RtPYy65E5JteMWHSJTwkNC1pNC2QCwSVG7ifDaF9N6CDVhywE1P5PDHMqgPnkBaLFKbKz73+FZlB333mZ00VRnQqumNE31RVIUFrxCYGziPk33tFGmFgIllrfg7eAP70auNTJtpbZNf2XZl4XJIuoGtllfPcimGTflrG9run8tFIi8YKK3FAiVQkULyXlhAWlpVnPSL/c+L3xhIzv91E0U0huPlell+cVydkWIebT7/Lq09pdXME5JVVodR610N50Tycui0sxZxlELtM280R82RhlW5t2E8rU5HACsoFsx0DkZtbvRi3Qq9l/TfF5S4S+WLW9
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2020 10:45:24.6486
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b66e909-cfc4-429a-03c8-08d79f282fef
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6015
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxlogscore=999
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001220098
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-report L2 errors.
+Rename Cadence DP PHY driver from phy-cadence-dp to phy-cadence-torrent
+to make it more generic for future use. Modifiy Makefile and Kconfig
+accordingly. Also, change driver compatible from "cdns,dp-phy" to
+"cdns,torrent-phy".This will not affect ABI as the driver has never
+been functional, and therefore do not exist in any active use case.
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
 ---
- MAINTAINERS               |   5 +
- drivers/edac/Kconfig      |   8 ++
- drivers/edac/Makefile     |   1 +
- drivers/edac/al_l2_edac.c | 270 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 284 insertions(+)
- create mode 100644 drivers/edac/al_l2_edac.c
+ drivers/phy/cadence/Kconfig                                     | 6 +++---
+ drivers/phy/cadence/Makefile                                    | 2 +-
+ drivers/phy/cadence/{phy-cadence-dp.c => phy-cadence-torrent.c} | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+ rename drivers/phy/cadence/{phy-cadence-dp.c => phy-cadence-torrent.c} (99%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a36c31c94521..746bc124d2fb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -762,6 +762,11 @@ M:	Hanna Hawa <hhhawa@amazon.com>
- S:	Maintained
- F:	drivers/edac/al_l1_edac.c
+diff --git a/drivers/phy/cadence/Kconfig b/drivers/phy/cadence/Kconfig
+index b2db916d..4595458 100644
+--- a/drivers/phy/cadence/Kconfig
++++ b/drivers/phy/cadence/Kconfig
+@@ -3,13 +3,13 @@
+ # Phy drivers for Cadence PHYs
+ #
  
-+AMAZON ANNAPURNA LABS L2 EDAC
-+M:	Hanna Hawa <hhhawa@amazon.com>
-+S:	Maintained
-+F:	drivers/edac/al_l2_edac.c
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 64621e4f3a6f..077a9ef428ad 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -82,6 +82,14 @@ config EDAC_AL_L1
- 	  for Amazon's Annapurna Labs SoCs.
- 	  This driver detects errors of L1 caches.
+-config PHY_CADENCE_DP
+-	tristate "Cadence MHDP DisplayPort PHY driver"
++config PHY_CADENCE_TORRENT
++	tristate "Cadence Torrent PHY driver"
+ 	depends on OF
+ 	depends on HAS_IOMEM
+ 	select GENERIC_PHY
+ 	help
+-	  Support for Cadence MHDP DisplayPort PHY.
++	  Support for Cadence Torrent PHY.
  
-+config EDAC_AL_L2
-+	tristate "Amazon's Annapurna Labs L2 EDAC"
-+	depends on (ARM64 && ARCH_ALPINE) || COMPILE_TEST
-+	help
-+	  Support for L2 error detection and correction
-+	  for Amazon's Annapurna Labs SoCs.
-+	  This driver detects errors of L2 caches.
-+
- config EDAC_AMD64
- 	tristate "AMD64 (Opteron, Athlon64)"
- 	depends on AMD_NB && EDAC_DECODE_MCE
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 7d67433b683a..ae48f8fccec3 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -23,6 +23,7 @@ edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
+ config PHY_CADENCE_DPHY
+ 	tristate "Cadence D-PHY Support"
+diff --git a/drivers/phy/cadence/Makefile b/drivers/phy/cadence/Makefile
+index 8f89560..6a7ffc6 100644
+--- a/drivers/phy/cadence/Makefile
++++ b/drivers/phy/cadence/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_PHY_CADENCE_DP)	+= phy-cadence-dp.o
++obj-$(CONFIG_PHY_CADENCE_TORRENT)	+= phy-cadence-torrent.o
+ obj-$(CONFIG_PHY_CADENCE_DPHY)	+= cdns-dphy.o
+ obj-$(CONFIG_PHY_CADENCE_SIERRA)	+= phy-cadence-sierra.o
+diff --git a/drivers/phy/cadence/phy-cadence-dp.c b/drivers/phy/cadence/phy-cadence-torrent.c
+similarity index 99%
+rename from drivers/phy/cadence/phy-cadence-dp.c
+rename to drivers/phy/cadence/phy-cadence-torrent.c
+index bc10cb2..beb80f7 100644
+--- a/drivers/phy/cadence/phy-cadence-dp.c
++++ b/drivers/phy/cadence/phy-cadence-torrent.c
+@@ -521,7 +521,7 @@ static int cdns_dp_phy_probe(struct platform_device *pdev)
  
- obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
-+obj-$(CONFIG_EDAC_AL_L2)		+= al_l2_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
-new file mode 100644
-index 000000000000..147094efb6fd
---- /dev/null
-+++ b/drivers/edac/al_l2_edac.c
-@@ -0,0 +1,270 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <asm/sysreg.h>
-+#include <linux/bitfield.h>
-+#include <linux/cpumask.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/smp.h>
-+
-+#include "edac_device.h"
-+#include "edac_module.h"
-+
-+#define DRV_NAME				"al_l2_edac"
-+
-+/* Same bit assignments of L2MERRSR_EL1 in ARM CA57/CA72 */
-+#define ARM_CA57_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
-+#define ARM_CA57_L2MERRSR_RAMID			GENMASK(30, 24)
-+#define  ARM_CA57_L2_TAG_RAM			0x10
-+#define  ARM_CA57_L2_DATA_RAM			0x11
-+#define  ARM_CA57_L2_SNOOP_RAM			0x12
-+#define  ARM_CA57_L2_DIRTY_RAM			0x14
-+#define  ARM_CA57_L2_INC_PF_RAM			0x18
-+#define ARM_CA57_L2MERRSR_VALID			BIT(31)
-+#define ARM_CA57_L2MERRSR_REPEAT		GENMASK_ULL(39, 32)
-+#define ARM_CA57_L2MERRSR_OTHER			GENMASK_ULL(47, 40)
-+#define ARM_CA57_L2MERRSR_FATAL			BIT_ULL(63)
-+
-+#define AL_L2_EDAC_MSG_MAX			256
-+
-+struct al_l2_cache {
-+	cpumask_t cluster_cpus;
-+	struct list_head list_node;
-+	struct device_node *of_node;
-+};
-+
-+struct al_l2_edac {
-+	struct list_head l2_caches;
-+	spinlock_t lock;
-+};
-+
-+static void al_l2_edac_l2merrsr_read_status(void *arg)
-+{
-+	struct edac_device_ctl_info *edac_dev = arg;
-+	struct al_l2_edac *al_l2 = edac_dev->pvt_info;
-+	int cpu, space, count;
-+	u32 ramid, repeat, other, fatal;
-+	u64 val;
-+	char msg[AL_L2_EDAC_MSG_MAX];
-+	char *p;
-+
-+	val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
-+	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
-+		return;
-+
-+	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
-+
-+	cpu = smp_processor_id();
-+	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
-+	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
-+	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
-+	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
-+
-+	space = sizeof(msg);
-+	p = msg;
-+	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
-+			  (fatal) ? "Fatal " : "");
-+	p += count;
-+	space -= count;
-+
-+	switch (ramid) {
-+	case ARM_CA57_L2_TAG_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
-+		break;
-+	case ARM_CA57_L2_DATA_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
-+		break;
-+	case ARM_CA57_L2_SNOOP_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Snoop Tag RAM'");
-+		break;
-+	case ARM_CA57_L2_DIRTY_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
-+		break;
-+	case ARM_CA57_L2_INC_PF_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 internal metadata'");
-+		break;
-+	default:
-+		count = scnprintf(p, space, " RAMID='unknown'");
-+		break;
-+	}
-+
-+	p += count;
-+	space -= count;
-+
-+	count = scnprintf(p, space,
-+			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
-+			  repeat, other, val);
-+
-+	spin_lock(&al_l2->lock);
-+	if (fatal)
-+		edac_device_handle_ue_count(edac_dev, repeat, 0, 0, msg);
-+	else
-+		edac_device_handle_ce_count(edac_dev, repeat, 0, 0, msg);
-+	spin_unlock(&al_l2->lock);
-+}
-+
-+static void al_l2_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct al_l2_edac *al_l2 = edac_dev->pvt_info;
-+	struct al_l2_cache *l2_cache;
-+
-+	list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node)
-+		smp_call_function_any(&l2_cache->cluster_cpus,
-+				      al_l2_edac_l2merrsr_read_status,
-+				      edac_dev, 1);
-+}
-+
-+static int al_l2_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct al_l2_edac *al_l2;
-+	struct al_l2_cache *l2_cache;
-+	struct device *dev = &pdev->dev;
-+	int ret, i;
-+
-+	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2), DRV_NAME, 1, "L",
-+					      1, 2, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (!edac_dev)
-+		return -ENOMEM;
-+
-+	al_l2 = edac_dev->pvt_info;
-+	edac_dev->edac_check = al_l2_edac_check;
-+	edac_dev->dev = dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(dev);
-+	edac_dev->ctl_name = "L2_cache";
-+	platform_set_drvdata(pdev, edac_dev);
-+
-+	spin_lock_init(&al_l2->lock);
-+	INIT_LIST_HEAD(&al_l2->l2_caches);
-+
-+	for_each_possible_cpu(i) {
-+		struct device_node *cpu;
-+		struct device_node *cpu_cache;
-+		bool found = false;
-+
-+		cpu = of_get_cpu_node(i, NULL);
-+		if (!cpu)
-+			continue;
-+
-+		cpu_cache = of_find_next_cache_node(cpu);
-+		list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node) {
-+			if (l2_cache->of_node == cpu_cache) {
-+				found = true;
-+				break;
-+			}
-+		}
-+
-+		if (found) {
-+			cpumask_set_cpu(i, &l2_cache->cluster_cpus);
-+			of_node_put(cpu_cache);
-+		} else {
-+			l2_cache = devm_kzalloc(dev, sizeof(*l2_cache),
-+						GFP_KERNEL);
-+			l2_cache->of_node = cpu_cache;
-+			list_add(&l2_cache->list_node, &al_l2->l2_caches);
-+			cpumask_set_cpu(i, &l2_cache->cluster_cpus);
-+		}
-+
-+		of_node_put(cpu);
-+	}
-+
-+	list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node)
-+		of_node_put(l2_cache->of_node);
-+
-+	if (list_empty(&al_l2->l2_caches)) {
-+		dev_err(dev, "L2 Cache list is empty for EDAC device\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	dev_err(dev, "Failed to add L2 edac device (%d)\n", ret);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return ret;
-+}
-+
-+static int al_l2_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(edac_dev->dev);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_l2_edac_of_match[] = {
-+	/*
-+	 * "al,alpine-v2", and "amazon,al-alpine-v3" are machine compatible
-+	 * strings which have Cortex-A57/A72 configured with this support,
-+	 * and access to L2MERRSR_EL1 register is enabled in firmware.
-+	 */
-+	{ .compatible = "al,alpine-v2" },
-+	{ .compatible = "amazon,al-alpine-v3" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, al_l2_edac_of_match);
-+
-+static struct platform_driver al_l2_edac_driver = {
-+	.probe = al_l2_edac_probe,
-+	.remove = al_l2_edac_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+};
-+
-+static struct platform_device *edac_l2_device;
-+
-+static int __init al_l2_init(void)
-+{
-+	struct device_node *root;
-+	int ret;
-+
-+	root = of_find_node_by_path("/");
-+	if (!root) {
-+		pr_debug("Can't find root node!\n");
-+		return 0;
-+	}
-+
-+	if (!of_match_node(al_l2_edac_of_match, root))
-+		return 0;
-+
-+	ret = platform_driver_register(&al_l2_edac_driver);
-+	if (ret) {
-+		pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
-+		return ret;
-+	}
-+
-+	edac_l2_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
-+	if (IS_ERR(edac_l2_device)) {
-+		pr_err("Failed to register EDAC AL L2 platform device\n");
-+		return PTR_ERR(edac_l2_device);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit al_l2_exit(void)
-+{
-+	platform_device_unregister(edac_l2_device);
-+	platform_driver_unregister(&al_l2_edac_driver);
-+}
-+
-+late_initcall(al_l2_init);
-+module_exit(al_l2_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
-+MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
+ static const struct of_device_id cdns_dp_phy_of_match[] = {
+ 	{
+-		.compatible = "cdns,dp-phy"
++		.compatible = "cdns,torrent-phy"
+ 	},
+ 	{}
+ };
 -- 
-2.17.1
+2.4.5
 
