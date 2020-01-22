@@ -2,100 +2,71 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C740C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 13:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982C1C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 13:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEAB24655
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 13:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700F32253D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 13:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgAVNkE (ORCPT
+        id S1726083AbgAVNq5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:40:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:56732 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgAVNkE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:40:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 991D3328;
-        Wed, 22 Jan 2020 05:40:03 -0800 (PST)
-Received: from [10.37.8.106] (unknown [10.37.8.106])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 740A23F52E;
-        Wed, 22 Jan 2020 05:40:00 -0800 (PST)
-Subject: Re: [PATCH v3 4/7] drm/panfrost: Add support for multiple regulators
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-References: <20200114071602.47627-1-drinkcat@chromium.org>
- <20200114071602.47627-5-drinkcat@chromium.org>
- <20200114151643.GW3897@sirena.org.uk>
- <CANMq1KC_-g45wdGgGiBmEyVXAJMkKwsJBJXGBHOMJk_=NyfpYw@mail.gmail.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <78d5d977-50d5-f28e-0c4c-fd1df9e868e9@arm.com>
-Date:   Wed, 22 Jan 2020 13:40:03 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <CANMq1KC_-g45wdGgGiBmEyVXAJMkKwsJBJXGBHOMJk_=NyfpYw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Wed, 22 Jan 2020 08:46:57 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33428 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVNq4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 08:46:56 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 6C21A294051
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dafna.hirschfeld@collabora.com,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+Subject: [PATCH] dt-binding: fix compilation error of the example in qcom,gcc.yaml
+Date:   Wed, 22 Jan 2020 14:46:39 +0100
+Message-Id: <20200122134639.11735-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 21/01/2020 04:37, Nicolas Boichat wrote:
-> On Tue, Jan 14, 2020 at 10:16 PM Mark Brown <broonie@kernel.org> wrote:
->>
->> On Tue, Jan 14, 2020 at 03:15:59PM +0800, Nicolas Boichat wrote:
->>
->>>   - I couldn't find a way to detect the number of regulators in the
->>>     device tree, if we wanted to refuse to probe the device if there
->>>     are too many regulators, which might be required for safety, see
->>>     the thread on v2 [1].
->>
->> You'd need to enumerate all the properties of the device and look
->> for things matching *-supply.
-> 
-> I see ,-) I was hoping for something slightly cleaner, or maybe an
-> existing function in the core.
-> 
-> Steven: How strongly do you feel about this? If so I can add that
-> check in the next revision.
+Running `make dt_binging_check`, gives the error:
 
-I'm not that strongly bothered about it - my only worry is that there 
-may be hardware out there that might be broken by not activating a 
-regulator. But I don't know how common this multi-regulator design is in 
-practise.
+DTC     Documentation/devicetree/bindings/clock/qcom,gcc.example.dt.yaml
+Error: Documentation/devicetree/bindings/clock/qcom,gcc.example.dts:111.28-29 syntax error
+FATAL ERROR: Unable to parse input tree
 
-Thanks,
+This is because the last example uses the macro RPM_SMD_XO_CLK_SRC which
+is defined in qcom,rpmcc.h but the include of this header is missing.
+Add the include to fix the error.
 
-Steve
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+---
+ Documentation/devicetree/bindings/clock/qcom,gcc.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Also, just a heads-up, I'm out for the next 2 weeks, I'll send v4 after that.
-> 
->>
->> Reviewed-by: Mark Brown <broonie@kernel.org>
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+index 19d00794fe7d..50ff07f80acb 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+@@ -220,6 +220,7 @@ examples:
+ 
+   # Example of MSM8998 GCC:
+   - |
++    #include <dt-bindings/clock/qcom,rpmcc.h>
+     clock-controller@100000 {
+       compatible = "qcom,gcc-msm8998";
+       #clock-cells = <1>;
+-- 
+2.17.1
 
