@@ -2,124 +2,97 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B982C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 09:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877D8C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 09:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9C120704
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 09:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5472E20704
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 09:25:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ucm7i3HD"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QWf4OAlw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgAVJVc (ORCPT
+        id S1726232AbgAVJZi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:21:32 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27562 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729049AbgAVJVc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:21:32 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00M9E5T0017505;
-        Wed, 22 Jan 2020 10:20:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=u/gZg5v5O2lvH7c3i8F88g2U2swQh0X4mBt44nns32Q=;
- b=ucm7i3HDueX2khE20HpGolwzNFjIa0Puk/Wtek/QfMVSRNXuR46O93vA/F7MaMiI6YtR
- MvS9+LEBl3UgQe6UrcIUMWfsWkJT9w7MIg8nhQhsefeADdnJNIFtJmH0Z8W4jxwWx3Qv
- jjWH5313tSr/TywHSg1WyyoqE4wTq1Sn9ffN+gJcrhI+fXag0xJ9llSbvK+PcNZGNTtG
- dipOtYSoCjk2Y9VgTWchVnZiLVQXWRTXE+FIve35owCPS+JJjFc3O5pMOTZD3Nm+2RCT
- ElVOBkgxqBld7vOoWEYVewFfiXLuGJuiexxfSqlQFXaC/BX37SkHOaH/RTI8m9bf4vPn pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkr1e3jkm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 10:20:38 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 923FE10003E;
-        Wed, 22 Jan 2020 10:20:30 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36DBC2AB057;
-        Wed, 22 Jan 2020 10:20:30 +0100 (CET)
-Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 Jan
- 2020 10:20:29 +0100
-Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
- SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
- 15.00.1347.000; Wed, 22 Jan 2020 10:20:29 +0100
-From:   Olivier MOYSAN <olivier.moysan@st.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to
- json-schema
-Thread-Topic: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to
- json-schema
-Thread-Index: AQHV0KYwQJhZ3lJcYU6nre5Twze71af2WFCA
-Date:   Wed, 22 Jan 2020 09:20:29 +0000
-Message-ID: <6a49bf6c-8851-a65c-5606-563776e07c08@st.com>
-References: <20200117170352.16040-1-olivier.moysan@st.com>
- <20200121220022.GA12737@bogus>
-In-Reply-To: <20200121220022.GA12737@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C57D8D8E50C2B442847FA8C55AFD97B6@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 22 Jan 2020 04:25:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53301 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgAVJZh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 04:25:37 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m24so6031488wmc.3
+        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 01:25:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jl1D3AmziTwVaydKZMicfuuKx92SzNFy1wg6z3sQOu8=;
+        b=QWf4OAlw4HblNZpibCzinKXmVcQxe2T3DfOdm82fH1kR0Jy8WNv+EvTlK7H9S+2b5V
+         6n4s6TI9j+qvwWD89eXAY4eDuqw5rfoI8xRW5t31OQdI02Em/Jcng6UEPc/Z7fBvmWcy
+         1HHC/4EpUgA5szvKHBynZhxUgdzdnCq0Hv5rmbgcg9W+GrFcsTx5iiM3xUZ8FX/7KVNW
+         Qpe4pt8y82X9eT/OV+GaI9zSNq3fnqGpIaD20d3czbeOC6wukZGh9xua5d/u33wq4D4I
+         thyksjj+mUNYd5z3wbuon9IKV+KzAGO9j9s2bSQCd3h/9FILqKaTfW9QTjUTCS9/eQpp
+         wtZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jl1D3AmziTwVaydKZMicfuuKx92SzNFy1wg6z3sQOu8=;
+        b=a6LAMgp8Jp3TyveQorMgAv+yl3d2nGZ7jjoqN+bUs8BYMvf43RugUer+sUla06D3T2
+         2czB1IMfUsxDiuojE0ug+GlAvzM4FY9Dh1/9f9s6qSK3XO9VYNB0HLelVvtqevmGWYUD
+         pDMM1CxWu0NaIxMB4On+/IWw5h2V4F2DGPrFCXBYX8BZZrGsB62X/9EBYYCJW0X59RSQ
+         4KhZ4pua9MdQIIqOm9JehzfOafGEVRWb9g05cpqRUBuy8r9aP/mfyZtN+h3b5L1uQlwA
+         s7yXeFP38EAleCoh9Z4PU9E6C7WR9jnbJvD+S3sjsFBMUho8w6vdPW71SBCXPaTzpTod
+         aobg==
+X-Gm-Message-State: APjAAAUFxVMnH3uCKhGenN5yUGuAy1BdX6gYi9CIuSF2BfpYjwv+VSgj
+        71/HF9EXIWK2x8ILq9EI73QgIQ==
+X-Google-Smtp-Source: APXvYqzbK5xmg3Q8pvvBxsVKUN7iX5VNKCEhjLiLQ4URYMDIPnu2V9Aj/FpSlwqF5Jr7ga/yDdQT5g==
+X-Received: by 2002:a7b:c08d:: with SMTP id r13mr2021190wmh.104.1579685135848;
+        Wed, 22 Jan 2020 01:25:35 -0800 (PST)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id g25sm4134125wmh.3.2020.01.22.01.25.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 01:25:35 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: reset: meson: add gxl internal dac reset
+Date:   Wed, 22 Jan 2020 10:25:26 +0100
+Message-Id: <20200122092526.2436421-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpJIGRpZCBub3QgcmVwb3J0IHlvdXIgcmV2aWV3ZWQtYnkgdGFnLCBhcyBJIGhh
-dmUgbWFkZSBhIGV4dHJhIGNoYW5nZSBpbiB2Mi4NClRoaXMgY2hhbmdlIGlzIHJlbGF0ZWQgdG8g
-ZG1hcyBwcm9wZXJ0eSByZXBvcnRlZCBpbiB2MiBjaGFuZ2UgbG9nLg0KU29ycnksIHRoaXMgZXh0
-cmEgY2hhbmdlIHdhcyBpbmRlZWQgbm90IGNsZWFybHkgaGlnaGxpZ2h0ZWQgaW4gbG9nIGNvbW1l
-bnRzLg0KDQpSZWdhcmRzDQpPbGl2aWVyDQoNCk9uIDEvMjEvMjAgMTE6MDAgUE0sIFJvYiBIZXJy
-aW5nIHdyb3RlOg0KPiBPbiBGcmksIDE3IEphbiAyMDIwIDE4OjAzOjUyICswMTAwLCBPbGl2aWVy
-IE1veXNhbiB3cm90ZToNCj4+IENvbnZlcnQgdGhlIFNUTTMyIFNQRElGUlggYmluZGluZ3MgdG8g
-RFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVtYS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5
-OiBPbGl2aWVyIE1veXNhbiA8b2xpdmllci5tb3lzYW5Ac3QuY29tPg0KPj4gLS0tDQo+PiBDaGFu
-Z2VzIGluIHYyOg0KPj4gLSBBZGQgImFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZSINCj4+IC0g
-QWxzbyBjaGFuZ2UgbWluSXRlbXMgdG8gMiBmb3IgZG1hcyBwcm9wZXJ0eSwgYXMgYm90aCBETUFz
-IGFyZSByZXF1aXJlZC4NCj4+DQo+PiBDaGFuZ2VzIGluIHYzOg0KPj4gLSBEcm9wIG1pbkl0ZW1z
-L21heEl0ZW1zIGZvciBkbWFzIHByb3BlcnR5LCByZW1vdmUgcmVmIHRvIHN0bTMyLWRtYS50eHQu
-DQo+PiAtLS0NCj4+ICAgLi4uL2JpbmRpbmdzL3NvdW5kL3N0LHN0bTMyLXNwZGlmcngudHh0ICAg
-ICAgIHwgNTYgLS0tLS0tLS0tLS0tLQ0KPj4gICAuLi4vYmluZGluZ3Mvc291bmQvc3Qsc3RtMzIt
-c3BkaWZyeC55YW1sICAgICAgfCA4MCArKysrKysrKysrKysrKysrKysrDQo+PiAgIDIgZmlsZXMg
-Y2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKSwgNTYgZGVsZXRpb25zKC0pDQo+PiAgIGRlbGV0ZSBt
-b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc3Qsc3Rt
-MzItc3BkaWZyeC50eHQNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdCxzdG0zMi1zcGRpZnJ4LnlhbWwNCj4+DQo+IFBsZWFz
-ZSBhZGQgQWNrZWQtYnkvUmV2aWV3ZWQtYnkgdGFncyB3aGVuIHBvc3RpbmcgbmV3IHZlcnNpb25z
-LiBIb3dldmVyLA0KPiB0aGVyZSdzIG5vIG5lZWQgdG8gcmVwb3N0IHBhdGNoZXMgKm9ubHkqIHRv
-IGFkZCB0aGUgdGFncy4gVGhlIHVwc3RyZWFtDQo+IG1haW50YWluZXIgd2lsbCBkbyB0aGF0IGZv
-ciBhY2tzIHJlY2VpdmVkIG9uIHRoZSB2ZXJzaW9uIHRoZXkgYXBwbHkuDQo+DQo+IElmIGEgdGFn
-IHdhcyBub3QgYWRkZWQgb24gcHVycG9zZSwgcGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBjaGFu
-Z2VkLg0K
+Add the reset line of the internal DAC found on the amlogic gxl SoC family
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ include/dt-bindings/reset/amlogic,meson-gxbb-reset.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+index ea5058618863..883bfd3bcbad 100644
+--- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
++++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+@@ -69,7 +69,7 @@
+ #define RESET_SYS_CPU_L2		58
+ #define RESET_SYS_CPU_P			59
+ #define RESET_SYS_CPU_MBIST		60
+-/*					61	*/
++#define RESET_ACODEC			61
+ /*					62	*/
+ /*					63	*/
+ /*	RESET2					*/
+-- 
+2.24.1
+
