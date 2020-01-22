@@ -2,221 +2,258 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45ABC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 08:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E68C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 08:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A07B92253D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 08:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7294D24655
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 08:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YyTGJm0C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r2bIq1DK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgAVINe (ORCPT
+        id S1729110AbgAVIUD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:13:34 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40544 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgAVINd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 03:13:33 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M8Cxqb099296;
-        Wed, 22 Jan 2020 02:12:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579680779;
-        bh=DhZNPVYtbrpKrZkAkg13qDd9TroZfhPQ/2aqImA4XLQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YyTGJm0CliogdcFd9gnifEAk8QmkOT+QCVGoH27ocDzrZPB7avzwnza5mzPX+UheB
-         WfIed/40LSUiLyMMRn74ExRwIwhhSSv1UJr7souRbL0Yr2UkTH1rE9itP9it9eg9Og
-         aM+RXxLq2QWw9UixnNzaKOvthN/78MMYypz3cRkI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00M8CwGh095984
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 02:12:58 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 02:12:58 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 02:12:58 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M8Co0Y069651;
-        Wed, 22 Jan 2020 02:12:51 -0600
-Subject: Re: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
+        Wed, 22 Jan 2020 03:20:03 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33855 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgAVIUD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 03:20:03 -0500
+Received: by mail-wm1-f65.google.com with SMTP id s144so1005227wme.1
+        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 00:20:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M+iOlDTH3ew9FlBT8LllWQrwpgclA7C5MSbbYFNG6t0=;
+        b=r2bIq1DKmQiUPmT41X6TDYq4i6tmVUjwmxNm0uuwSbeHCz2ACOktDXUiJG2zZYqJ9y
+         3g3FQRJk8CuD6VceKXeYIavP5D8Wy8NNhuopNYauZsS5DQJ07PMGupr4yuftpf0shcbt
+         RbxhotiKll1zyVtETV4J1ejviHIaLihWA0z0paqojTBy4QnOrskzeSWL4qbT+A+tCcao
+         dS0UK0h2IHji3vkKRQzj1I/QXTfCOTp8pdehCNgmVO1pxWe7vEIYBnhEuiIinqJHMR/a
+         NF137O6cOdxbGKd70wjUBFv3dUvPDyiUvuOq4wOW1UqMIW+Qck2XDr+ZeHeGm6h2BPjl
+         SJfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M+iOlDTH3ew9FlBT8LllWQrwpgclA7C5MSbbYFNG6t0=;
+        b=IJ2dIutqocOz/2+d1RJaZuplrH0K0CV/e1g7Ucx6iTs3tAnGgXM92cnpta0ZLU9iBp
+         wlautiCtQ28KrV2Q+cQO08gKkTed6cVKae8ozQFNoe5ogfEFJBLRZ7p8ewqtKW39o3Gr
+         /QyAtR5Z/uxAJvZ8AsiqSO10+GYs5dfEHmtujVXemiWdXfyOxHTaTfBbcsQ7izTp8Nqu
+         rf1hNpob5OpV1IylGZFPnzCW9HLIYP4JHpXqCkfXy3IFW4G11TzZbXFGDPZWhiRLsviX
+         a8E1hmOxbl5StfUZgSEX9u/JSu4zxE3JZF3Qjk40wG5CL6YvHPP/UznsGQTvTtJBA4TY
+         4ryQ==
+X-Gm-Message-State: APjAAAUaYo+XYPlwidkn3pqizVnZQRyL15+Q2Cnl7vZEWoYOMEpDUysl
+        I4EvtpTBUmS7cA/2MArNLjJ5qH7vRiA=
+X-Google-Smtp-Source: APXvYqxlSKg5k7xwSMOzY0s0isT4HpPGdB0mVsgMKOxhoZAnTU+kWDcfGhKQ2E2qyqHzYOpNchy7cQ==
+X-Received: by 2002:a05:600c:108a:: with SMTP id e10mr1603881wmd.38.1579681201241;
+        Wed, 22 Jan 2020 00:20:01 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id a9sm2739774wmm.15.2020.01.22.00.20.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jan 2020 00:20:00 -0800 (PST)
+Subject: Re: [PATCH v4 2/4] interconnect: qcom: Add OSM L3 interconnect
+ provider support
+To:     Sibi Sankar <sibis@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8s1Jx8uZiSr0uiryS492EbFRoFg9QTwkosZsuyfRYp-3g@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9c65eb7a-539b-1fa3-f988-40c32aa8dfe3@ti.com>
-Date:   Wed, 22 Jan 2020 13:45:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+References: <20200109211215.18930-1-sibis@codeaurora.org>
+ <20200109211215.18930-3-sibis@codeaurora.org>
+ <CAE=gft7ZUTiGrvsaqfrVv-bH3w75as7G1UJRn3aJs3ECqodpQg@mail.gmail.com>
+ <dad8936ba4444c3377d777cbbb879dc3@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <03f83755-bdcc-dc39-0eae-08414751be57@linaro.org>
+Date:   Wed, 22 Jan 2020 10:19:58 +0200
 MIME-Version: 1.0
-In-Reply-To: <CA+V-a8s1Jx8uZiSr0uiryS492EbFRoFg9QTwkosZsuyfRYp-3g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <dad8936ba4444c3377d777cbbb879dc3@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
-
-On 21/01/20 11:27 PM, Lad, Prabhakar wrote:
-> Hi Rob/Kishon,
+On 1/22/20 08:45, Sibi Sankar wrote:
+> Hey Evan,
 > 
-> On Wed, Jan 8, 2020 at 4:22 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->>
->> This patch adds the bindings for the R-Car PCIe endpoint driver.
->>
->> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->> ---
->>  .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
->>  1 file changed, 76 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->> new file mode 100644
->> index 000000000000..99c2a1174463
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Renesas R-Car PCIe Endpoint
->> +
->> +maintainers:
->> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: renesas,r8a774c0-pcie-ep
->> +      - const: renesas,rcar-gen3-pcie-ep
->> +
->> +  reg:
->> +    maxItems: 5
->> +
->> +  reg-names:
->> +    items:
->> +      - const: apb-base
->> +      - const: memory0
->> +      - const: memory1
->> +      - const: memory2
->> +      - const: memory3
-
-As I had mentioned in the other patch, I'd prefer if we can create
-standard binding for representing the memory regions. IMHO we should
-create subnode for memory regions Each sub-node itself may or may not
-have more than one memory region.
-
-In your platform, since there can be only one allocation in a memory
-region, there should be 4 sub-nodes for each of the memory region and
-each node should have page_size (or some equivalent property) property
-to indicate page_size (= region_size).
-
-For a platform that doesn't have the restriction, there can be a single
-sub-node containing all the memory region.
-
-Let's wait for Rob's comment though.
-
-Thanks
-Kishon
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: pcie
->> +
->> +  max-functions:
->> +    minimum: 1
->> +    maximum: 6
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - resets
->> +  - power-domains
->> +  - clocks
->> +  - clock-names
->> +  - max-functions
->> +
-> apart from dt_binding_check error are we OK with dt bindings ?
+> Thanks for the review!
 > 
-> Cheers,
-> --Prabhakar
-> 
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
->> +    #include <dt-bindings/power/r8a774c0-sysc.h>
->> +
->> +     pcie0_ep: pcie-ep@fe000000 {
->> +            compatible = "renesas,r8a774c0-pcie-ep",
->> +                         "renesas,rcar-gen3-pcie-ep";
->> +            reg = <0 0xfe000000 0 0x80000>,
->> +                  <0x0 0xfe100000 0 0x100000>,
->> +                  <0x0 0xfe200000 0 0x200000>,
->> +                  <0x0 0x30000000 0 0x8000000>,
->> +                  <0x0 0x38000000 0 0x8000000>;
->> +            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
->> +            resets = <&cpg 319>;
->> +            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
->> +            clocks = <&cpg CPG_MOD 319>;
->> +            clock-names = "pcie";
->> +            max-functions = /bits/ 8 <1>;
->> +    };
->> --
->> 2.20.1
+> On 2020-01-22 03:03, Evan Green wrote:
+>> On Thu, Jan 9, 2020 at 1:12 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+>>>
+>>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
+>>> resources of scaling L3 caches. Add a driver to handle bandwidth
+>>> requests to OSM L3 from CPU on SDM845 SoCs.
+>>>
+>>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>>> ---
+>>>  drivers/interconnect/qcom/Kconfig  |   7 +
+>>>  drivers/interconnect/qcom/Makefile |   2 +
+>>>  drivers/interconnect/qcom/osm-l3.c | 267 +++++++++++++++++++++++++++++
+>>>  3 files changed, 276 insertions(+)
+>>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
+>>>
+>>> diff --git a/drivers/interconnect/qcom/Kconfig
+>>> b/drivers/interconnect/qcom/Kconfig
+>>> index a9bbbdf7400f9..b94d28e7bf700 100644
+>>> --- a/drivers/interconnect/qcom/Kconfig
+>>> +++ b/drivers/interconnect/qcom/Kconfig
+>>> @@ -14,6 +14,13 @@ config INTERCONNECT_QCOM_MSM8974
+>>>          This is a driver for the Qualcomm Network-on-Chip on msm8974-based
+>>>          platforms.
+>>>
+>>> +config INTERCONNECT_QCOM_OSM_L3
+>>> +       tristate "Qualcomm OSM L3 interconnect driver"
+>>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
+>>> +       help
+>>> +         Say y here to support the Operating State Manager (OSM) interconnect
+>>> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
+>>> +
+>>>  config INTERCONNECT_QCOM_QCS404
+>>>         tristate "Qualcomm QCS404 interconnect driver"
+>>>         depends on INTERCONNECT_QCOM
+>>> diff --git a/drivers/interconnect/qcom/Makefile
+>>> b/drivers/interconnect/qcom/Makefile
+>>> index 55ec3c5c89dbd..89fecbd1257c7 100644
+>>> --- a/drivers/interconnect/qcom/Makefile
+>>> +++ b/drivers/interconnect/qcom/Makefile
+>>> @@ -1,5 +1,6 @@
+>>>  # SPDX-License-Identifier: GPL-2.0
+>>>
+>>> +icc-osm-l3-objs                                := osm-l3.o
+>>>  qnoc-msm8974-objs                      := msm8974.o
+>>>  qnoc-qcs404-objs                       := qcs404.o
+>>>  qnoc-sc7180-objs                       := sc7180.o
+>>> @@ -12,6 +13,7 @@ icc-smd-rpm-objs                      := smd-rpm.o
+>>>  obj-$(CONFIG_INTERCONNECT_QCOM_BCM_VOTER) += icc-bcm-voter.o
+>>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
+>>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
+>>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
+>>>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
+>>>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
+>>>  obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
+>>> diff --git a/drivers/interconnect/qcom/osm-l3.c
+>>> b/drivers/interconnect/qcom/osm-l3.c
+>>> new file mode 100644
+>>> index 0000000000000..7fde53c70081e
+>>> --- /dev/null
+>>> +++ b/drivers/interconnect/qcom/osm-l3.c
+>>> @@ -0,0 +1,267 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>>> + *
+>>> + */
+>>> +
+>>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
+>>> +#include <linux/bitfield.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/interconnect-provider.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of_device.h>
+>>> +#include <linux/of_platform.h>
+>>> +#include <linux/platform_device.h>
+>>> +
+>>> +#define LUT_MAX_ENTRIES                        40U
+>>> +#define LUT_SRC                                GENMASK(31, 30)
+>>> +#define LUT_L_VAL                      GENMASK(7, 0)
+>>> +#define LUT_ROW_SIZE                   32
+>>> +#define CLK_HW_DIV                     2
+>>> +
+>>> +/* Register offsets */
+>>> +#define REG_ENABLE                     0x0
+>>> +#define REG_FREQ_LUT                   0x110
+>>> +#define REG_PERF_STATE                 0x920
+>>> +
+>>> +#define OSM_L3_MAX_LINKS               1
+>>> +#define SDM845_MAX_RSC_NODES           130
 >>
+>> I'm nervous this define is going to fall out of date with
+>> qcom,sdm845.h. I'm worried someone will end up adding a few more nodes
+>> that were always there but previously hidden from Linux. Can we put
+>> this define in include/dt-bindings/interconnect/qcom,sdm845.h, so at
+>> least when that happens they'll come face to face with this define?
+>> The same comment goes for the SC7180 define in patch 4.
+> 
+> Yeah both solution require manual
+> intervention how about we just go
+> with what I proposed below.
+> 
+>>
+>> On second thought, this trick only works once. Are we sure there
+>> aren't going to be other drivers that might want to tag on
+>> interconnect nodes as well? How about instead we just add the enum
+>> values below in qcom,sdm845.h as defines?
+> 
+> Georgi/Evan,
+> Since qcom,sdm845.h is specific to
+> bindings shouldn't I just create a
+> .h file with all the enums so that
+> it can used across all icc providers
+> on SDM845?
+
+This sounds good to me, unless Evan has any objections.
+
+Thanks,
+Georgi
