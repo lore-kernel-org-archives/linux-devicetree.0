@@ -2,181 +2,215 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD255C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5226DC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 15:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6BA2467C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1D421734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 15:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U4RQaPc5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONmdKs9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgAVOyF (ORCPT
+        id S1725943AbgAVPD7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:54:05 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:61102 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVOyF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 09:54:05 -0500
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200122145402epoutp01c33f69cdeb79d7c53c05b8bdb76378b8~sPS9VBQps2172121721epoutp01J
-        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 14:54:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200122145402epoutp01c33f69cdeb79d7c53c05b8bdb76378b8~sPS9VBQps2172121721epoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579704842;
-        bh=4itLcJd9TovgkIJA4En20KBiCbGG4bMhv7WMq/yt9qs=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=U4RQaPc5GK99iRyuoOoQ86PvMPg6xZONm++S2v9H3QDPcr2RXbd/Q62zgzehQXVKv
-         75c40NYvV743+KMyPhHjyUb/GMCMl/g/FmWUcfUsAjC2No9A2q3tCSL2XGxCwFtfe0
-         FpVa3SyEHQr2Gw1x4KtsmxiCFRzokrFopo9RJN54=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200122145402epcas5p4502ef8824947d257531b08ebb14484e1~sPS8506Za1067910679epcas5p4v;
-        Wed, 22 Jan 2020 14:54:02 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        05.FC.19629.A02682E5; Wed, 22 Jan 2020 23:54:02 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200122145401epcas5p28907c5b3800ca5410955a856bcd82c8e~sPS72sQu91038710387epcas5p2m;
-        Wed, 22 Jan 2020 14:54:01 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200122145401epsmtrp22cfbc217f006f370bdfa6a2d304687c8~sPS710jVu1347513475epsmtrp2V;
-        Wed, 22 Jan 2020 14:54:01 +0000 (GMT)
-X-AuditID: b6c32a4b-345ff70000014cad-2f-5e28620acae9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        60.A8.10238.902682E5; Wed, 22 Jan 2020 23:54:01 +0900 (KST)
-Received: from sriramdash03 (unknown [107.111.85.29]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200122145358epsmtip174221b741edcd5e2af6c3e4345ad2752~sPS5vIs6s2722127221epsmtip1L;
-        Wed, 22 Jan 2020 14:53:58 +0000 (GMT)
-From:   "Sriram Dash" <sriram.dash@samsung.com>
-To:     "'Faiz Abbas'" <faiz_abbas@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-Cc:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
-        <wg@grandegger.com>, <dmurphy@ti.com>, <nm@ti.com>,
-        <t-kristo@ti.com>
-In-Reply-To: <20200122080310.24653-3-faiz_abbas@ti.com>
-Subject: RE: [PATCH 2/3] can: m_can: m_can_platform: Add support for
- enabling transceiver through the STB line
-Date:   Wed, 22 Jan 2020 20:23:57 +0530
-Message-ID: <002101d5d133$c8352100$589f6300$@samsung.com>
+        Wed, 22 Jan 2020 10:03:59 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52627 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVPD7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 10:03:59 -0500
+Received: by mail-pj1-f66.google.com with SMTP id a6so1635pjh.2;
+        Wed, 22 Jan 2020 07:03:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=honzR1UFYcS5KDzHuxhgOGMS3nFjZMwaX7yvDQgux5I=;
+        b=ONmdKs9BqADGWbE9asU8kLdt+kDIKlUDgJzFNmct4VuHHY+Jmsi7/TyEbBM+f0YxAs
+         S1FV/tuRjZO0Kgf6mael0xqtN2n7b6xjuu/41D8RY3zB5Pr1WMsI5AjGeQDspr6FJPlE
+         XaiEFx7k7IEY4+xDe1SmwMdBCjMZMG7zf439qOTccPOOl4FTmATRggdX7mfrlEVU3tdd
+         E4n7saSRtjbo2xxG1UQqldK/MVfJMbjb6FbyGnVmVngMouO/fhe90TtlQPMntQeaPw2F
+         6wJ66n5f3hDsBFUitDytL1OatmkafyL+v5O3YPg02vfMlVY2agHfN40Q+jlynaGE6g9y
+         baug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=honzR1UFYcS5KDzHuxhgOGMS3nFjZMwaX7yvDQgux5I=;
+        b=aUvz/HaiyzVkZPuGNOP5rh6kXKLFbRCoppEeiyN7vanv+smQ3vnNVjcOIJkBhbRn29
+         ymKcAjCToef9Hlg7Bamne6HjNuWCcr1oCBpjo0bf0NQqOv9Q2s6TPkLYJuR/yMB2gCQy
+         awGXoNAYG3i5NYDZ1SbWQBA2zHleDevpY0DinyRTQUhY12kvIyrv8B+5ndvLj4jmsRe/
+         BbHlaNV1QLFQqLQBxVMbnwBk903EqX0DqEFwSvUpJov127EYG+WybMOY1GhXNkZjvq1R
+         +V6wA0ND2bbyDqPnSjJNTMYvcgTXOUzuMTQlCkBIWIsOHajKLQDmw9zBI9mtAa9RiIC2
+         NOWw==
+X-Gm-Message-State: APjAAAUxEabtNPERHIRTy2Y/tfGpaBs1oiaewGk1/5xiTmbPzpKekeXS
+        pAhq+UUdLm3riGZdDeYZWc0Hkhlg
+X-Google-Smtp-Source: APXvYqxBdRKT3fansVhN9CRONYZuCImJK0uGVCTlqdj1qZmwZ5JVUdobcmoXlUDM0gWs7vAHeJ2pHQ==
+X-Received: by 2002:a17:90a:c708:: with SMTP id o8mr3636388pjt.104.1579705438079;
+        Wed, 22 Jan 2020 07:03:58 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q64sm4171922pjb.1.2020.01.22.07.03.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 07:03:57 -0800 (PST)
+Subject: Re: [PATCH v4 1/2] hwmon: (adt7475) Added attenuator bypass support
+To:     Logan Shaw <logan.shaw@alliedtelesis.co.nz>, jdelvare@suse.com,
+        robh+dt@kernel.org
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
+        Chris.Packham@alliedtelesis.co.nz
+References: <20200120001703.9927-1-logan.shaw@alliedtelesis.co.nz>
+ <20200120001703.9927-2-logan.shaw@alliedtelesis.co.nz>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <09750637-1b1c-9bf0-2a52-5dfd77fb3450@roeck-us.net>
+Date:   Wed, 22 Jan 2020 07:03:55 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20200120001703.9927-2-logan.shaw@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQL34jRp8ckpa4Ru5doAY/bQkCNITwHmOWfLAkdTAPClkTT7kA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsWy7bCmui5Xkkacwet3/Bbvl/UwWsw538Ji
-        Mf/IOVaL7tNbWC2+LG1mttj0+BqrxarvU5ktLu+aw2ax9PpFJov1i6awWBxbIGbx5sdZJovW
-        vUfYLZY87QBK3tvJ6sDvsWbeGkaPLStvMnl8vHSb0WPTqk42j81L6j36/xp4HL+xncnj8ya5
-        AI4oLpuU1JzMstQifbsErozmi43sBe/5Kt7vOc/cwNjF08XIySEhYCLxpvMYK4gtJLCbUaLv
-        uEYXIxeQ/YlR4v7EKewQzjdGiQ97ZzLCdCxY+p0FIrGXUaJpzX0o5xWjxMMTd8BmsQnoSpy9
-        0cQGkhAROMko8ejaSVYQh1ngMNCSjuVgVZwC5hJHf59kArGFBQok3n25wg5iswioSpz79Bxo
-        HwcHr4ClxKIuGZAwr4CgxMmZT1hAbGYBeYntb+cwQ5ykIPHz6TKwkSICThL9p3ewQdSISxz9
-        2cMMsldC4Bi7xMfnn9ggGlwkenshLpUQEJZ4dXwLO4QtJfH53V6ommyJy33PoRaUSMx4tZAF
-        wraXOHBlDgvIbcwCmhLrd+lD7OKT6P39hAkkLCHAK9HRJgRRrSrx6vZmqOnSEgfWnmaCsD0k
-        XvxawDyBUXEWks9mIflsFpIPZiEsW8DIsopRMrWgODc9tdi0wDgvtVyvODG3uDQvXS85P3cT
-        IzjhaXnvYNx0zucQowAHoxIPr4OlRpwQa2JZcWXuIUYJDmYlEd4FTapxQrwpiZVVqUX58UWl
-        OanFhxilOViUxHknsV6NERJITyxJzU5NLUgtgskycXBKNTC6Lf9kvLTv9UYliV8O3j3SNxr1
-        eop/CHy8bP3o0IPI37/Cghk+bNFLCH732cK6KurW38Rtpntabyy++71GsVRIs/Cv0vIz6of5
-        Jmocz/0xcVvphj0TrvIVqoYphcx3mdu0V0iSp8oz8O+PvS/d75+Zdk306woNjosTnv1VXDj5
-        27EER81iDbn3SizFGYmGWsxFxYkAnY/IZXQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCSnC5nkkacQccVVov3y3oYLeacb2Gx
-        mH/kHKtF9+ktrBZfljYzW2x6fI3VYtX3qcwWl3fNYbNYev0ik8X6RVNYLI4tELN48+Msk0Xr
-        3iPsFkuedgAl7+1kdeD3WDNvDaPHlpU3mTw+XrrN6LFpVSebx+Yl9R79fw08jt/YzuTxeZNc
-        AEcUl01Kak5mWWqRvl0CV0bzxUb2gvd8Fe/3nGduYOzi6WLk5JAQMJFYsPQ7SxcjF4eQwG5G
-        iQ9v17F3MXIAJaQlft7VhagRllj57zk7iC0k8IJR4s5SVRCbTUBX4uyNJjaQXhGBs4wSG24s
-        YgdxmAXOM0pMm/qLEWLqZkaJ3V9XMYG0cAqYSxz9fRLMFhbIk9i+qocVxGYRUJU49+k5I8hm
-        XgFLiUVdMiBhXgFBiZMzn7CAhJkF9CTaNjKChJkF5CW2v53DDHGcgsTPp8vApogIOEn0n97B
-        BlEjLnH0Zw/zBEbhWUgmzUKYNAvJpFlIOhYwsqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dL
-        zs/dxAiOWS3NHYyXl8QfYhTgYFTi4XWw1IgTYk0sK67MPcQowcGsJMK7oEk1Tog3JbGyKrUo
-        P76oNCe1+BCjNAeLkjjv07xjkUIC6YklqdmpqQWpRTBZJg5OqQbGSfO0Px0N+dYZ4L7+2OSb
-        S56JTxDd9fk2j/kihvlGPkJHj7ruD0/YuFxg3cb62dbz1BY+Vb9vbP+y7Uj8jMq0Lx2vlEqN
-        zKs+GGx0vMT669AeGV2pU5mx7i+1d2gXC824kbHiKUfNo+DiW5zOsw9MFF3h84Hp7IRll2ZL
-        VT7eGP5nV7ldxpKcHUosxRmJhlrMRcWJAMWcZMnVAgAA
-X-CMS-MailID: 20200122145401epcas5p28907c5b3800ca5410955a856bcd82c8e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200122080213epcas5p46e361ac6fa299521c1bab3ab20862b46
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
-        <CGME20200122080213epcas5p46e361ac6fa299521c1bab3ab20862b46@epcas5p4.samsung.com>
-        <20200122080310.24653-3-faiz_abbas@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> From: linux-can-owner@vger.kernel.org <linux-can-owner@vger.kernel.org> On
-> Behalf Of Faiz Abbas
-> Subject: [PATCH 2/3] can: m_can: m_can_platform: Add support for enabling
-> transceiver through the STB line
+On 1/19/20 4:17 PM, Logan Shaw wrote:
+> Added support for reading DTS properties to set attenuators on
+> device probe for the ADT7473, ADT7475, ADT7476, and ADT7490.
 > 
-> CAN transceivers on some boards have an STB (standby) line which can be
-> toggled to enable/disable the transceiver. Add support for enabling the
-> transceiver using a GPIO connected to the STB line.
-> 
-
-Looks good to me. 
-Other than Dan's concern on stb  as standby,
-Acked-by: Sriram Dash <sriram.dash@samsung.com>
-
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 > ---
->  drivers/net/can/m_can/m_can_platform.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> ---
+>   drivers/hwmon/adt7475.c | 76 +++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 76 insertions(+)
 > 
-> diff --git a/drivers/net/can/m_can/m_can_platform.c
-> b/drivers/net/can/m_can/m_can_platform.c
-> index 38ea5e600fb8..b4e1423bd5d8 100644
-> --- a/drivers/net/can/m_can/m_can_platform.c
-> +++ b/drivers/net/can/m_can/m_can_platform.c
-> @@ -6,6 +6,7 @@
->  // Copyright (C) 2018-19 Texas Instruments Incorporated -
-http://www.ti.com/
-> 
->  #include <linux/platform_device.h>
-> +#include <linux/gpio/consumer.h>
-> 
->  #include "m_can.h"
-> 
-> @@ -57,6 +58,7 @@ static int m_can_plat_probe(struct platform_device
-*pdev)
-> {
->  	struct m_can_classdev *mcan_class;
->  	struct m_can_plat_priv *priv;
-> +	struct gpio_desc *stb;
->  	struct resource *res;
->  	void __iomem *addr;
->  	void __iomem *mram_addr;
-> @@ -111,6 +113,16 @@ static int m_can_plat_probe(struct platform_device
-> *pdev)
-> 
->  	m_can_init_ram(mcan_class);
-> 
-> +	stb = devm_gpiod_get_optional(&pdev->dev, "stb", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(stb)) {
-> +		ret = PTR_ERR(stb);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev,
-> +				"gpio request failed, ret %d\n", ret);
+> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
+> index 6c64d50c9aae..2bb787acb363 100644
+> --- a/drivers/hwmon/adt7475.c
+> +++ b/drivers/hwmon/adt7475.c
+> @@ -19,6 +19,7 @@
+>   #include <linux/hwmon-vid.h>
+>   #include <linux/err.h>
+>   #include <linux/jiffies.h>
+> +#include <linux/of.h>
+>   #include <linux/util_macros.h>
+>   
+>   /* Indexes for the sysfs hooks */
+> @@ -1457,6 +1458,76 @@ static int adt7475_update_limits(struct i2c_client *client)
+>   	return 0;
+>   }
+>   
+> +/**
+
+I don't see the point of adding this private comment into the documentation.
+
+> + * Attempts to read a u32 property from the DTS, if there is no error and
+> + * the properties value is zero then the bit given by parameter bit_index
+> + * is cleared in the parameter config. If the value is non-zero then the bit
+> + * is set.
+> + *
+> + * If reading the dts property returned an error code then it is returned and
+> + * the config parameter is not modified.
+> + */
+> +static int modify_config_from_dts_prop(const struct i2c_client *client,
+> +								char *dts_property, u8 *config, u8 bit_index) {
+
+Alignment is far off. Please run "checkpatch --strict" and fix all problems
+it reports.
+
+total: 6 errors, 12 warnings, 9 checks, 94 lines checked
+
+is a bit much.
+
+modify_config_from_dts_prop and dts_property are unnecessary long and result
+in multi-line code. Please use shorter function/parameter names.
+
+> +	u32 is_attenuator_bypassed = 0;
+> +	int ret = of_property_read_u32(client->dev.of_node, dts_property,
+> +									&is_attenuator_bypassed);
 > +
-> +		goto failed_ret;
+> +	if (! ret) {
+> +			if (is_attenuator_bypassed)
+> +		*config |= (1 << bit_index);
+> +	else
+> +		*config &= ~(1 << bit_index);
 > +	}
 > +
->  	ret = m_can_class_register(mcan_class);
-> 
->  failed_ret:
-> --
-> 2.19.2
+> +	return ret;
 
+This return value is never used. Please drop it.
+
+> +}
+> +
+> +/**
+> + * Reads all individual voltage input bypass attenuator properties from the
+> + * DTS, and if the property is present the corresponding bit is set in the
+> + * register.
+> +
+> + * Properties are in the form of "bypass-attenuator-inx", where x is an
+> + * integer from the set {0, 1, 3, 4} (can not bypass in2 attenuator).
+> +.*
+> + * The adt7473 and adt7475 only support bypassing in1.
+> + *
+> + * Returns a negative error code if there was an error writing to the register.
+> + */
+> +static int load_all_bypass_attenuators(const struct i2c_client *client,
+> +					      int chip, u8 *config2, u8 *config4)
+> +{
+> +	u8 config2_copy = *config2;
+> +	u8 config4_copy = *config4;
+> +
+Two "copy" variables are unnecessary, as only one is ever used.
+
+> +	if (chip == adt7476 || chip == adt7490) {
+> +		modify_config_from_dts_prop(client, "bypass-attenuator-in0",
+> +									&config4_copy, 4);
+> +		modify_config_from_dts_prop(client, "bypass-attenuator-in1",
+> +									&config4_copy, 5);
+> +		modify_config_from_dts_prop(client, "bypass-attenuator-in3",
+> +									&config4_copy, 6);
+> +		modify_config_from_dts_prop(client, "bypass-attenuator-in4",
+> +									&config4_copy, 7);
+> +
+> +		if (i2c_smbus_write_byte_data(client, REG_CONFIG4, config4_copy) < 0)
+> +			return -EREMOTEIO;
+> +
+> +		*config4 = config4_copy;
+> +	} else if (chip == adt7473 || chip == adt7475) {
+> +		modify_config_from_dts_prop(client, "bypass-attenuator-in1",
+> +									&config2_copy, 5);
+> +
+> +		if (i2c_smbus_write_byte_data(client, REG_CONFIG2, config2_copy) < 0)
+> +			return -EREMOTEIO;
+
+Please do not override error codes.
+
+> +
+> +		*config2 = config2_copy;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static int adt7475_probe(struct i2c_client *client,
+>   			 const struct i2c_device_id *id)
+>   {
+> @@ -1546,6 +1617,11 @@ static int adt7475_probe(struct i2c_client *client,
+>   
+>   	/* Voltage attenuators can be bypassed, globally or individually */
+>   	config2 = adt7475_read(REG_CONFIG2);
+> +	if (load_all_bypass_attenuators(client, chip,
+> +						&config2, &(data->config4)) < 0)
+> +		dev_warn(&client->dev,
+> +			 "Error setting bypass attenuator bits\n");
+> +
+>   	if (config2 & CONFIG2_ATTN) {
+>   		data->bypass_attn = (0x3 << 3) | 0x3;
+>   	} else {
+> 
 
