@@ -2,179 +2,119 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AC0C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B5CC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 02:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E64217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 02:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579658726;
-	bh=yVncP2cRerLjCSUEq2+nxA2AX8UnlN8vHXhFAI+A+pQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OUKmj6kodUGgGPC9Hr6jsiHxxzD9MkEvoA+wZWgPgCpMzMa7gc5LmzZi4sNRhYasG
-	 7qekqFC9rtpn0eQYymFKVtZTnuuyhCekxCO+11Xos8uU2JhMw2UKv5BFvALGtvZRGT
-	 6tzYjQ2hH+gYeG6IIhMJZU5okbl9Cr2yLPv68ayo=
+	by mail.kernel.org (Postfix) with ESMTP id B21022465A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 02:23:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LtKA1lMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgAVCFZ (ORCPT
+        id S1726407AbgAVCXb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 21:05:25 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43622 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgAVCFZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 21:05:25 -0500
-Received: by mail-ot1-f67.google.com with SMTP id p8so4871052oth.10;
-        Tue, 21 Jan 2020 18:05:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5KDHhB97+OZpmUZ0CpohOMTK6dCD2tSEOncivv/7Pgw=;
-        b=rMZ8ifBZCC7FE/9t0VWrOMqucWkutK3wl805i/MprW6qPf4rbmxMOzrTlYh1N6nQsC
-         /XH7qX3AEszhYJT5V6clhq9QxXlO9JknVYBMVeTdHOojnUmz+4NGW4/dDRqqqd54qujU
-         MdXT6tLZ9lwDgW0XLMGWj7Bw6chXKqcY7I5vlgBKCjnmFyN9P8fKTEOZhTXsu63RJw6t
-         UdBNXCpdMH6FMa2LeS1oVX+AQC69egaCo0wZk7lCkVkoqILKqcAOTz4EyDiITPdpr6Sm
-         3xDqiHbHrFJVsEJwVFGJs70N+lOv8VBDYUUeZy6VnAFemHaamJr5DwGBrkDSbNvlpN/t
-         oOuA==
-X-Gm-Message-State: APjAAAWjHEMOkwFhC5UJWGAlf7Usu5oVaIpso3PZaMChQnm+8s8Lp1te
-        agd6CI2vOccDVkhmoUk0Bw==
-X-Google-Smtp-Source: APXvYqzkfbpLEJGKkcLHIHyxBnU94Fou1ccxpuM+pfV/pzRrIsQMB2bPSHSJROq5isXH9ct8XAs62w==
-X-Received: by 2002:a9d:7a97:: with SMTP id l23mr6087185otn.34.1579658724729;
-        Tue, 21 Jan 2020 18:05:24 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n22sm14452502otj.36.2020.01.21.18.05.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 18:05:23 -0800 (PST)
-Received: (nullmailer pid 29799 invoked by uid 1000);
-        Wed, 22 Jan 2020 02:05:23 -0000
-Date:   Tue, 21 Jan 2020 20:05:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com
-Subject: Re: [PATCH 4/4] dt-bindings: net: adin: document 1588 TX/RX SOP
- bindings
-Message-ID: <20200122020523.GA22232@bogus>
-References: <20200116091454.16032-1-alexandru.ardelean@analog.com>
- <20200116091454.16032-5-alexandru.ardelean@analog.com>
+        Tue, 21 Jan 2020 21:23:31 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6613 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726396AbgAVCXb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 21:23:31 -0500
+X-UUID: fcdbaeb53caa4f408e399eefad8415ba-20200122
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=lN1pViJIxLnb7UBsGaWmhhbnVEIdvsVPgiy5VY3Xy3Y=;
+        b=LtKA1lMx97XZv7UIK/nq3aXN6POHNFlSHf3A7TTdcuW53AvGsKjbFpJEoPrSNgOuqo7CkhKXhjyuQwFwPIM8LR6YdNs7wUiiKeV6mbdOKLiJA+v6jZKNeNe5809//Ml3vVA3iiTKVmagLo7lY35gzm11O1erNmOkMo1IRD9v+VM=;
+X-UUID: fcdbaeb53caa4f408e399eefad8415ba-20200122
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 861552407; Wed, 22 Jan 2020 10:23:27 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 22 Jan 2020 10:22:53 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 22 Jan 2020 10:22:09 +0800
+Message-ID: <1579659806.6612.12.camel@mtkswgap22>
+Subject: Re: [RESEND 3/4] regulator: mt6359: Add support for MT6359 regulator
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Date:   Wed, 22 Jan 2020 10:23:26 +0800
+In-Reply-To: <20200120190427.GO6852@sirena.org.uk>
+References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
+         <1579506450-21830-4-git-send-email-Wen.Su@mediatek.com>
+         <20200120190427.GO6852@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116091454.16032-5-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 11:14:54AM +0200, Alexandru Ardelean wrote:
-> This change documents the device-tree bindings for the TX/RX indication of
-> IEEE 1588 packets.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  .../devicetree/bindings/net/adi,adin.yaml     | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-> index d95cc691a65f..eb56f35309e0 100644
-> --- a/Documentation/devicetree/bindings/net/adi,adin.yaml
-> +++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-> @@ -36,6 +36,60 @@ properties:
->      enum: [ 4, 8, 12, 16, 20, 24 ]
->      default: 8
->  
-> +  adi,1588-rx-sop-delays-cycles:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> +      - items:
-> +          - minItems: 3
-> +            maxItems: 3
+SGkgTWFyaywNCg0KT24gTW9uLCAyMDIwLTAxLTIwIGF0IDE5OjA0ICswMDAwLCBNYXJrIEJyb3du
+IHdyb3RlOg0KPiBPbiBNb24sIEphbiAyMCwgMjAyMCBhdCAwMzo0NzoyOVBNICswODAwLCBXZW4g
+U3Ugd3JvdGU6DQo+IA0KPiBUaGlzIHNlZW1zIHByZXR0eSBnb29kLCBhIGZldyBjb21tZW50cyBi
+ZWxvdyBidXQgdGhleSdyZSBmYWlybHkgc21hbGwNCj4gYW5kIHNob3VsZCBiZSBlYXN5IHRvIGFk
+ZHJlc3M6DQo+IA0KPiA+ICtzdGF0aWMgaW50IG10NjM1OV9zZXRfdm9sdGFnZV9zZWwoc3RydWN0
+IHJlZ3VsYXRvcl9kZXYgKnJkZXYsDQo+ID4gKwkJCQkgIHVuc2lnbmVkIGludCBzZWxlY3RvcikN
+Cj4gPiArew0KPiA+ICsJaW50IGlkeCwgcmV0Ow0KPiA+ICsJY29uc3QgdTMyICpwdm9sOw0KPiA+
+ICsJc3RydWN0IG10NjM1OV9yZWd1bGF0b3JfaW5mbyAqaW5mbyA9IHJkZXZfZ2V0X2RydmRhdGEo
+cmRldik7DQo+ID4gKw0KPiA+ICsJcHZvbCA9IGluZm8tPmluZGV4X3RhYmxlOw0KPiA+ICsNCj4g
+PiArCWlkeCA9IHB2b2xbc2VsZWN0b3JdOw0KPiA+ICsJcmV0ID0gcmVnbWFwX3VwZGF0ZV9iaXRz
+KHJkZXYtPnJlZ21hcCwgaW5mby0+ZGVzYy52c2VsX3JlZywNCj4gPiArCQkJCSBpbmZvLT5kZXNj
+LnZzZWxfbWFzaywNCj4gPiArCQkJCSBpZHggPDwgaW5mby0+dnNlbF9zaGlmdCk7DQo+ID4gKw0K
+PiA+ICsJcmV0dXJuIHJldDsNCj4gPiArfQ0KPiANCj4gVGhpcyBsb29rcyBsaWtlIHlvdSBzaG91
+bGQgYmUgdXNpbmcgcmVndWxhdG9yX2xpc3Rfdm9sdGFnZV90YWJsZSgpIGFuZA0KPiBhc3NvY2lh
+dGVkIGZ1bmN0aW9ucywgcHJvYmFibHkgbWFwX3ZvbHRhZ2VfYXNjZW5kKCkgb3IgX2l0ZXJhdGUo
+KSBhbmQNCj4ganVzdCBhIHNpbXBsZSBzZXRfdm9sdGFnZV9zZWxfcmVnbWFwKCkuDQpUaGFua3Mg
+Zm9yIHlvdXIgc3VnZ2VzdGlvbi4NCkN1cnJlbnRseSBpdCdzIHVzaW5nIHJlZ3VsYXRvcl9saXN0
+X3ZvbHRhZ2VfdGFibGUoKSBhbmQNCnJlZ3VsYXRvcl9tYXBfdm9sdGFnZV9pdGVyYXRlKCkgYXMg
+YmVsb3c6DQoNCnN0YXRpYyBjb25zdCBzdHJ1Y3QgcmVndWxhdG9yX29wcyBtdDYzNTlfdm9sdF90
+YWJsZV9vcHMgPSB7DQoJLmxpc3Rfdm9sdGFnZSA9IHJlZ3VsYXRvcl9saXN0X3ZvbHRhZ2VfdGFi
+bGUsDQoJLm1hcF92b2x0YWdlID0gcmVndWxhdG9yX21hcF92b2x0YWdlX2l0ZXJhdGUsDQoJLi4u
+DQpUaGUgcmVhc29uIHRvIHVzZSBtdDYzNTlfc2V0X3ZvbHRhZ2Vfc2VsKCkgaXMgdG8gY29udmVy
+dCBzZWxlY3RvciB2YWx1ZQ0KdG8gaGFyZHdhcmUgcmVnaXN0ZXIgaW5kZXggdmFsdWU6DQoJaWR4
+ID0gcHZvbFtzZWxlY3Rvcl07DQoNClRvIGF2b2lkIHVzaW5nIG10NjM1OV9zZXRfdm9sdGFnZV9z
+ZWwoKSwgdGhlICpfdm9sdGFnZXMgYXJyYXkgbmVlZCB0byBiZQ0KZmlsbGVkIHdpdGggemVyb3Mg
+YXMgYmVsb3c6IA0KQ3VycmVudDoNCnN0YXRpYyBjb25zdCB1MzIgdmVtY192b2x0YWdlc1tdID0g
+ew0KCTI5MDAwMDAsIDMwMDAwMDAsIDMzMDAwMDAsDQp9Ow0Kc3RhdGljIGNvbnN0IHUzMiB2ZW1j
+X2lkeFtdID0gew0KCTEwLCAxMSwgMTMsDQp9Ow0KDQpjaGFuZ2UgdG86DQpzdGF0aWMgY29uc3Qg
+dTMyIHZ4bzIyX3ZvbHRhZ2VzW10gPSB7DQoJMCwgMCwgMCwgMCwgMCwgMCwgMCwgMCwgMCwgMCwg
+MjkwMDAwMCwgMzAwMDAwMCwgMCwgMzMwMDAwMCwNCn07DQo+IA0KPiA+ICtzdGF0aWMgaW50IG10
+NjM1OV9nZXRfc3RhdHVzKHN0cnVjdCByZWd1bGF0b3JfZGV2ICpyZGV2KQ0KPiA+ICt7DQo+ID4g
+KwlpbnQgcmV0Ow0KPiA+ICsJdTMyIHJlZ3ZhbDsNCj4gPiArCXN0cnVjdCBtdDYzNTlfcmVndWxh
+dG9yX2luZm8gKmluZm8gPSByZGV2X2dldF9kcnZkYXRhKHJkZXYpOw0KPiA+ICsNCj4gPiArCXJl
+dCA9IHJlZ21hcF9yZWFkKHJkZXYtPnJlZ21hcCwgaW5mby0+c3RhdHVzX3JlZywgJnJlZ3ZhbCk7
+DQo+ID4gKwlpZiAocmV0ICE9IDApIHsNCj4gPiArCQlkZXZfZXJyKCZyZGV2LT5kZXYsICJGYWls
+ZWQgdG8gZ2V0IGVuYWJsZSByZWc6ICVkXG4iLCByZXQpOw0KPiA+ICsJCXJldHVybiByZXQ7DQo+
+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIChyZWd2YWwgJiBpbmZvLT5xaSkgPyBSRUdVTEFU
+T1JfU1RBVFVTX09OIDogUkVHVUxBVE9SX1NUQVRVU19PRkY7DQpUaGFua3MgZm9yIHlvdXIgc3Vn
+Z2VzdGlvbi4NCkkgd2lsbCB1cGRhdGUgaXQgaW4gdGhlIG5leHQgcGF0Y2guDQo+IA0KPiBQbGVh
+c2Ugd3JpdGUgbm9ybWFsIGNvbmRpdGlvbmwgc3RhdGVtZW50cyByYXRoZXIgdGhhbiB1c2luZyB0
+aGUgdGVybmVyeQ0KPiBvcGVyYXRvciB0byBpbXByb3ZlIGxlZ2liaWxpdHkuDQo+IA0KPiA+ICsJ
+c3dpdGNoIChtb2RlKSB7DQo+ID4gKwljYXNlIFJFR1VMQVRPUl9NT0RFX0ZBU1Q6DQo+ID4gKwkJ
+aWYgKGN1cnJfbW9kZSA9PSBSRUdVTEFUT1JfTU9ERV9JRExFKSB7DQo+ID4gKwkJCVdBUk5fT04o
+MSk7DQo+ID4gKwkJCWRldl9ub3RpY2UoJnJkZXYtPmRldiwNCj4gPiArCQkJCSAgICJCVUNLICVz
+IGlzIExQIG1vZGUsIGNhbid0IEZQV01cbiIsDQo+ID4gKwkJCQkgICByZGV2LT5kZXNjLT5uYW1l
+KTsNCj4gPiArCQkJcmV0dXJuIC1FSU87DQo+IA0KPiBJJ2QgZXhwZWN0IHRoZSBkZXZpY2UgdG8g
+Z28gb3V0IG9mIGxvdyBwb3dlciBtb2RlIHRoZW4gaW50byBmb3JjZSBQV00NCj4gbW9kZSBpZiBp
+dCBoYXMgdG8gZG8gdGhhdCByYXRoZXIgdGhhbiByZWplY3QgdGhlIG9wZXJhdGlvbi4NClRoZSBk
+ZXZpY2UgbG93IHBvd2VyIG1vZGUgbWF5IGNvbnRyb2wgYnkgaGFyZHdhcmUgcGFkLCBzbyB0aGF0
+IHRoZQ0KcmVhc29uIHRvIHJlamVjdCB0aGUgb3BlcmF0aW9uIGlzIHRoZSBkZXZpY2UgbG93IHBv
+d2VyIG1vZGUgY2FuIG5vdCBnbw0Kb3V0IGJ5IHNvZnR3YXJlLg0KQW5vdGhlciBzY2VuYXJpbyBp
+cyBvbmUgdXNlciBzZXQgdGhlIGRldmljZSB0byBsb3cgcG93ZXIgbW9kZSwgd2UgdGhpbmsNCml0
+J3Mgbm90IHN1aXRhYmxlIHRvIGNoYW5nZSBkZXZpY2UgbW9kZSB0byBfRkFTVCBtb2RlIGJ5IGFu
+b3RoZXIgdXNlci4NCg0K
 
-You can split up the description into constraints something like this 
-(and minItems/maxItems becomes implied):
-
-items:
-  - description: delay for 10BASE-T
-  - description: delay for 100BASE-T
-  - description: delay for 1000BASE-T
-
-> +    description: |
-> +      Enables Start Packet detection (SOP) for received IEEE 1588 time stamp
-> +      controls, and configures the number of cycles (of the MII RX_CLK clock)
-> +      to delay the indication of RX SOP frames for 10/100/1000 BASE-T links.
-> +      The first element (in the array) configures the delay for 10BASE-T,
-> +      the second for 100BASE-T, and the third for 1000BASE-T.
-> +
-> +  adi,1588-rx-sop-pin-name:
-> +    description: |
-> +      This option must be used in together with 'adi,1588-rx-sop-delays-cycles'
-> +      to specify which physical pin should be used to signal the MAC that
-> +      the PHY is currently processing an IEEE 1588 timestamp control packet.
-> +      The driver will report an error if the value of this property is the
-> +      same as 'adi,1588-tx-sop-pin-name'
-> +    enum:
-> +      - gp_clk
-> +      - link_st
-> +      - int_n
-> +      - led_0
-> +
-> +  adi,1588-tx-sop-delays-ns:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> +      - items:
-> +          - minItems: 3
-> +            maxItems: 3
-
-This should be:
-
-      - minItems: 3
-        maxItems: 3
-        items:
-          multipleOf: 8
-
-> +    description: |
-> +      Enables Start Packet detection (SOP) for IEEE 1588 time stamp controls,
-> +      and configures the number of nano-seconds to delay the indication of
-> +      TX frames for 10/100/1000 BASE-T links.
-> +      The first element (in the array) configures the delay for 10BASE-T,
-> +      the second for 100BASE-T, and the third for 1000BASE-T.
-> +      The delays must be multiples of 8 ns (i.e. 8, 16, 24, etc).
-> +
-> +  adi,1588-tx-sop-pin-name:
-> +    description: |
-> +      This option must be used in together with 'adi,1588-tx-sop-delays-ns'
-> +      to specify which physical pin should be used to signal the MAC that
-> +      the PHY is currently processing an IEEE 1588 timestamp control packet
-> +      on the TX path.
-> +      The driver will report an error if the value of this property is the
-> +      same as 'adi,1588-rx-sop-pin-name'
-> +    enum:
-> +      - gp_clk
-> +      - link_st
-> +      - int_n
-> +      - led_0
-> +
->  examples:
->    - |
->      ethernet {
-> @@ -62,5 +116,11 @@ examples:
->              reg = <1>;
->  
->              adi,fifo-depth-bits = <16>;
-> +
-> +            adi,1588-rx-sop-delays-cycles = [ 00 00 00 ];
-> +            adi,1588-rx-sop-pin-name = "int_n";
-> +
-> +            adi,1588-tx-sop-delays-ns = [ 00 08 10 ];
-> +            adi,1588-tx-sop-pin-name = "led_0";
->          };
->      };
-> -- 
-> 2.20.1
-> 
