@@ -2,148 +2,149 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6549C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C0DC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 12:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928252467F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDF22467A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 12:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579696444;
+	bh=YkMbe5GpP4VDjIwVHsoJprcnaVZrqN9ErPnnX3+2jro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MqqlP6pS9yRCLuWkFa/NNtDe4Gz+gYViZbKIm4jEGBdG6Qkb2t1QIb9N2Ea6ky6wW
+	 bCHZvA2S81qaM1lRjZOHPlgGEPGKkgAbpVHF9uCCuE3sZpc/JwxXRg8ksU29nxcWxQ
+	 7hFeuD4HX5Dp7qQ5nemQ0n5+Wt/mPsijLIWoExGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbgAVMPv (ORCPT
+        id S1728931AbgAVMeE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 07:15:51 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:39556 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729188AbgAVMPv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:15:51 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MCFUSE012424;
-        Wed, 22 Jan 2020 07:15:30 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xkvrbjpyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 07:15:29 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00MCFSpL041152
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 22 Jan 2020 07:15:28 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 22 Jan
- 2020 07:15:28 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 22 Jan 2020 04:15:27 -0800
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00MCF512031122;
-        Wed, 22 Jan 2020 07:15:19 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v2 2/3] dt-bindings: iio: amplifiers: Add docs for HMC425A Step Attenuator
-Date:   Wed, 22 Jan 2020 14:17:01 +0200
-Message-ID: <20200122121702.30494-2-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200122121702.30494-1-beniamin.bia@analog.com>
-References: <20200122121702.30494-1-beniamin.bia@analog.com>
+        Wed, 22 Jan 2020 07:34:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:55834 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726204AbgAVMeE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jan 2020 07:34:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4ECCE328;
+        Wed, 22 Jan 2020 04:34:03 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C34943F52E;
+        Wed, 22 Jan 2020 04:34:02 -0800 (PST)
+Date:   Wed, 22 Jan 2020 12:34:01 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Wen Su <Wen.Su@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
+Subject: Re: [RESEND 3/4] regulator: mt6359: Add support for MT6359 regulator
+Message-ID: <20200122123401.GD3833@sirena.org.uk>
+References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
+ <1579506450-21830-4-git-send-email-Wen.Su@mediatek.com>
+ <20200120190427.GO6852@sirena.org.uk>
+ <1579659806.6612.12.camel@mtkswgap22>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- impostorscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001220112
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rqzD5py0kzyFAOWN"
+Content-Disposition: inline
+In-Reply-To: <1579659806.6612.12.camel@mtkswgap22>
+X-Cookie: Sorry.  Nice try.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
 
-Document support for Analog Devices MC425A Step Attenuator.
+--rqzD5py0kzyFAOWN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
- .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+On Wed, Jan 22, 2020 at 10:23:26AM +0800, Wen Su wrote:
+> On Mon, 2020-01-20 at 19:04 +0000, Mark Brown wrote:
 
-diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-new file mode 100644
-index 000000000000..a0afa661f4ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HMC425A 6-bit Digital Step Attenuator
-+
-+maintainers:
-+- Michael Hennerich <michael.hennerich@analog.com>
-+- Beniamin Bia <beniamin.bia@analog.com>
-+
-+description: |
-+  Digital Step Attenuator IIO device with gpio interface.
-+  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,hmc425a
-+
-+  vcc-supply:
-+    description:
-+      Digital voltage regulator (see regulator/regulator.txt)
-+    maxItems: 1
-+
-+  ctrl-gpios:
-+    description:
-+      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
-+      connected to the control pins V1-V6.
-+    maxItems: 6
-+
-+required:
-+  - compatible
-+  - ctrl-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    gpio {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      gpio_hmc425a: hmc425a {
-+        compatible = "adi,hmc425a";
-+        ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
-+          <&gpio 39 GPIO_ACTIVE_HIGH>,
-+          <&gpio 38 GPIO_ACTIVE_HIGH>,
-+          <&gpio 37 GPIO_ACTIVE_HIGH>,
-+          <&gpio 36 GPIO_ACTIVE_HIGH>,
-+          <&gpio 35 GPIO_ACTIVE_HIGH>;
-+
-+        vcc-supply = <&foo>;
-+      };
-+    };
-+...
--- 
-2.17.1
+> > This looks like you should be using regulator_list_voltage_table() and
+> > associated functions, probably map_voltage_ascend() or _iterate() and
+> > just a simple set_voltage_sel_regmap().
 
+> Thanks for your suggestion.
+> Currently it's using regulator_list_voltage_table() and
+> regulator_map_voltage_iterate() as below:
+
+> The reason to use mt6359_set_voltage_sel() is to convert selector value
+> to hardware register index value:
+> 	idx =3D pvol[selector];
+
+The whole idea behind regulator_list_voltage_table() is that it does the
+selector to voltage conversion for you, you shouldn't need to do any
+additional mapping.
+
+> To avoid using mt6359_set_voltage_sel(), the *_voltages array need to be
+> filled with zeros as below:=20
+> Current:
+> static const u32 vemc_voltages[] =3D {
+> 	2900000, 3000000, 3300000,
+> };
+> static const u32 vemc_idx[] =3D {
+> 	10, 11, 13,
+> };
+
+> change to:
+> static const u32 vxo22_voltages[] =3D {
+> 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2900000, 3000000, 0, 3300000,
+> };
+
+That's fine, the table is small and it only needs to be iterated in
+contexts where we're doing I2C I/O.  If it's really a problem introduce
+generic helpers for this rather than open coding.
+
+> > > +	switch (mode) {
+> > > +	case REGULATOR_MODE_FAST:
+> > > +		if (curr_mode =3D=3D REGULATOR_MODE_IDLE) {
+> > > +			WARN_ON(1);
+> > > +			dev_notice(&rdev->dev,
+> > > +				   "BUCK %s is LP mode, can't FPWM\n",
+> > > +				   rdev->desc->name);
+> > > +			return -EIO;
+
+> > I'd expect the device to go out of low power mode then into force PWM
+> > mode if it has to do that rather than reject the operation.
+
+> The device low power mode may control by hardware pad, so that the
+> reason to reject the operation is the device low power mode can not go
+> out by software.
+
+If this is being forced by hardware you need to check for that directly
+rather than just rejecting it without even trying (but hopefully the
+user set their constraints such that this doesn't happen).
+
+> Another scenario is one user set the device to low power mode, we think
+> it's not suitable to change device mode to _FAST mode by another user.
+
+It's not your driver's problem to worry about arbitrating between higher
+level users, let the framework deal with that (and notice that we have
+no code in kernel that actually sets the mode directly at runtime).
+That way we will have consistent behaviour between devices rather than
+devices trying to enforce their own policies.
+
+--rqzD5py0kzyFAOWN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4oQTgACgkQJNaLcl1U
+h9D4Ygf+Nziq8bZrmbOIKqexjp2v9TvNwy09gwUlAJs9KJ9MjXFHTprK96JdeRLn
+qfl46x/Qb1TgrDRaFus46RApEELBHLOJ8MjMIz0MSlaVeJqyHwn46vTild91pSl3
+6vHfkJKRFHx3Ix2wudcdRcvpGn/HHGCydNn8+mLDOR9GDaZCOn2aOq2LVTU01izu
+7ulyEaYk3jIE86BfISfoXXGZ8eyHYaSynQia91odZsZD4J6W9IaGXFms9MORVIbm
+Ii3wwPwOufroxvff+6HOucaYbNN6UpVbKsvxJ4f0S9U5+T77RgDDdv6Jp6jv/Kjx
+jzkOyueUpjLzFBvhEKl52FhmXf74Vg==
+=ZzAE
+-----END PGP SIGNATURE-----
+
+--rqzD5py0kzyFAOWN--
