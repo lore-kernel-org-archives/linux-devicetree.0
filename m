@@ -2,100 +2,104 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EE3C33CAA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 02:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB5DC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 03:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC842465A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 02:34:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579660498;
-	bh=O/1KNo2LZkxfg23cOJhdUG1/0Lbfv/RB8m80a/jB2+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zmS7Il12QrESj1utao9cEMQ6UoU2jY9kIbcJnbzh/XUEuuVfkw5TPeuRdNJtMdHvh
-	 WE0O14FoBX6mK0SNw36y3YlxXs1mQm3T97ZkGxOrSVaLrxmWMwoaOVkO3O4pyu3PCR
-	 wYUJVKRd+xcAgbUgaGp/yty5VcW8YQbmN0NJKC7Y=
+	by mail.kernel.org (Postfix) with ESMTP id 718EB2087E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 03:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8hn3QZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAVCe5 (ORCPT
+        id S1728927AbgAVDBn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 21:34:57 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37203 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbgAVCe5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 21:34:57 -0500
-Received: by mail-oi1-f196.google.com with SMTP id z64so4724857oia.4;
-        Tue, 21 Jan 2020 18:34:56 -0800 (PST)
+        Tue, 21 Jan 2020 22:01:43 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33252 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728779AbgAVDBm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 22:01:42 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 6so2671754pgk.0;
+        Tue, 21 Jan 2020 19:01:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7xAGUqDF53pB8VMuMvpBoiRKxeymCwVfxrUoJ08X25M=;
+        b=R8hn3QZCAwgs5cL2MUEcAx5e5aGrdPKAGs/w8dmOXUWV6doaHTtrF2TnaBUJulFIyz
+         Kvg7oGuK9zGNt263sfvqN39+heO/qQpPzR9q+Gej4z4wDoJdHbfw5Sed7sTnoCAbrGLi
+         Fs7s31iCp62txho799KqQ2unhLtO0PKFCgfQ3xBCQR5Lw6+vo5eG06sRMxncE1WCNPcP
+         3/FfO6lgQuAMV+eWRqe8kTequ8WZo1DXX/5HuRI9eQLFkEYQx4rTApWNmPWUnTtqzM9A
+         2gaksk1Fr8aK6dAhyHsKqiso3PjqxTGx2c54YTS0cIBI9zvG7+WCCXrwip1xn1KpRToj
+         nVfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xu4UVbzw5q/AJ/ohJxRSgN5x13BSP7On39rYAJwa4OE=;
-        b=rTTjT29rH51bRmWAXHjdC6SzAt/gCK4fHBxnCkftaAmZq0EDxxQLR3P4rTP6VjOw+n
-         n0z/FERX9ZAeela3QXRysG9Ob+pbc3xkdC8QSCtu8a8BjrrNDSCYpCW3bgIaoqq5PoQI
-         JhcVGywv1kfgRIv3LjWX9ARFXWchAe/L0h10XqAHymDHmFQ5zN4D3nC73iKnhEgzXS8H
-         B0yyFF2w4CJ9uhp21/uFkLnVSqqk6t9FCcaGmDjcAYMsDH3DCXZb7I4lfmuEpAsmri5y
-         QyM9ox5BQQS81lCjkYGO7uNh4S+6OmlW4wKhafpERtBgcEKXugn00CnhkYaVU3o4+7MI
-         jrxg==
-X-Gm-Message-State: APjAAAW96IHbNq7bwD4f08lvTH89//W2A4/GBzqFYQddn5V6tyy3IJmx
-        mWIIYxh2HFHKsIGJyL6SRQ==
-X-Google-Smtp-Source: APXvYqylhydEC5uYb2bBmyRcNJOYN2sHqUGX2MwoudpWA/8T3mi+kOtVZXjHOXNvoIp4vEhhVVyHpg==
-X-Received: by 2002:a05:6808:486:: with SMTP id z6mr5503344oid.117.1579660496379;
-        Tue, 21 Jan 2020 18:34:56 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j10sm14215256otr.64.2020.01.21.18.34.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7xAGUqDF53pB8VMuMvpBoiRKxeymCwVfxrUoJ08X25M=;
+        b=Qdg/hjlBNCathMf6iTYC0Vm2UYkWVm5bbdfj1+ZPubouAJg2Nf/50KMF0yAETAIRSA
+         rqsORerSnMeueUrTOhggGnRKctav2REotdgu4FTwEd9ge0CIj2jqTi0w3Hy6m8Hf7bPz
+         57onJ0sZwFVnqtguz7lUGkyPRCNykcukiQFKBA/3znjZc8EzbGWD3nbBZBf4MAOXBy4p
+         G2XMVdwFiYbTdZFzcmNMuZJHC6C/QrwTwTQetPqBL8euBNZXoq6WLxKGsuiPuDeQ/KDE
+         MbtNH6NjMTpFMoeW7CSzblrA/qQJzclMZt5m++zRPnDDUwu/+MEdKaRjTbohdeNW10Bn
+         Q1kg==
+X-Gm-Message-State: APjAAAUuD6f7ixfd4p5Dq6j/Lo3l/805XgYjdNp4kzB098uoiFnucYii
+        u9phzaqmow2OcxBemNa/r5Y=
+X-Google-Smtp-Source: APXvYqw/MThBheZyVETuW7d/jcgXlXpMqqnUuoKoIAqjZ8ljazaTKAlGtGljweSbZAqdTw4+163QOw==
+X-Received: by 2002:a63:597:: with SMTP id 145mr8498882pgf.384.1579662102269;
+        Tue, 21 Jan 2020 19:01:42 -0800 (PST)
+Received: from localhost.localdomain (S0106d80d17472dbd.wp.shawcable.net. [24.79.253.190])
+        by smtp.gmail.com with ESMTPSA id a23sm46838001pfg.82.2020.01.21.19.01.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 18:34:55 -0800 (PST)
-Received: (nullmailer pid 5877 invoked by uid 1000);
-        Wed, 22 Jan 2020 02:34:54 -0000
-Date:   Tue, 21 Jan 2020 20:34:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mathieu.poirier@linaro.org, s-anna@ti.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv5 01/14] dt-bindings: remoteproc: Add OMAP remoteproc
- bindings
-Message-ID: <20200122023454.GA5809@bogus>
-References: <20200116135332.7819-1-t-kristo@ti.com>
- <20200116135332.7819-2-t-kristo@ti.com>
+        Tue, 21 Jan 2020 19:01:41 -0800 (PST)
+From:   jassisinghbrar@gmail.com
+To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, masami.hiramatsu@linaro.org
+Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: [PATCH v3 0/2] Max3420 udc driver
+Date:   Tue, 21 Jan 2020 21:01:36 -0600
+Message-Id: <20200122030136.7300-1-jassisinghbrar@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116135332.7819-2-t-kristo@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Jan 2020 15:53:19 +0200, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> Add the device tree bindings document for the IPU and DSP
-> remote processor devices on OMAP4+ SoCs.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> [t-kristo@ti.com: converted to schema]
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
-> v5:
->   - enforced ordering of reg-names
->   - removed ti,bootreg-shift, instead added this under ti,bootreg
->     property
->   - renamed ti,autosuspend-delay to ti,autosuspend-delay-ms
->   - fixed required property handling
->   - fixed the omap5 ipu example firmware name extension
->   
->  .../remoteproc/ti,omap-remoteproc.yaml        | 322 ++++++++++++++++++
->  1 file changed, 322 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-> 
+From: Jassi Brar <jaswinder.singh@linaro.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes since v2:
+ # Remove inconsistent licence term from the driver
+
+Changes since v1:
+ # No functional changes, just cosmetic changes as suggested in review.
+   o prepend everything with MAX3420_
+   o avoid CaMeLcAsE
+   o use GENMASK some more
+   o reorder struct max3420_ep and struct max3420_udc members
+   o added some comments
+   o changed license in dt-bindings
+   o changed interrupt property to names
+
+
+Jassi Brar (2):
+  dt-bindings: max3421-udc: add dt bindings for MAX3420 UDC
+  usb: gadget: add udc driver for max3420
+
+ .../bindings/usb/maxim,max3420-udc.yaml       |   69 +
+ drivers/usb/gadget/udc/Kconfig                |   10 +
+ drivers/usb/gadget/udc/Makefile               |    1 +
+ drivers/usb/gadget/udc/max3420_udc.c          | 1331 +++++++++++++++++
+ 4 files changed, 1411 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+ create mode 100644 drivers/usb/gadget/udc/max3420_udc.c
+
+-- 
+2.20.1
+
