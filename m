@@ -2,142 +2,378 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3895C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 11:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D00C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A64A2468C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 11:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WdjJGNZ+"
+	by mail.kernel.org (Postfix) with ESMTP id 0B63B2467F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbgAVLwW (ORCPT
+        id S1728900AbgAVMPl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:52:22 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5471 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgAVLwW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 06:52:22 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2837640000>; Wed, 22 Jan 2020 03:52:06 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 22 Jan 2020 03:52:21 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 22 Jan 2020 03:52:21 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Jan
- 2020 11:52:17 +0000
-Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
- driver
-To:     Sameer Pujar <spujar@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <atalambedu@nvidia.com>, <linux-kernel@vger.kernel.org>,
-        <lgirdwood@gmail.com>, <viswanathl@nvidia.com>,
-        <sharadg@nvidia.com>, <broonie@kernel.org>,
-        <thierry.reding@gmail.com>, <linux-tegra@vger.kernel.org>,
-        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-5-git-send-email-spujar@nvidia.com>
- <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
- <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
- <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
- <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
- <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
- <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
-Date:   Wed, 22 Jan 2020 11:52:14 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 22 Jan 2020 07:15:41 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30028 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726204AbgAVMPl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jan 2020 07:15:41 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MCF6qR012257;
+        Wed, 22 Jan 2020 07:15:17 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xkvrbjpxm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jan 2020 07:15:17 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00MCFGZW041101
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 22 Jan 2020 07:15:16 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 22 Jan
+ 2020 07:15:14 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 22 Jan 2020 04:15:14 -0800
+Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00MCF511031122;
+        Wed, 22 Jan 2020 07:15:05 -0500
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v2 1/3] iio: amplifiers: hmc425a: Add support for HMC425A step attenuator with gpio interface
+Date:   Wed, 22 Jan 2020 14:17:00 +0200
+Message-ID: <20200122121702.30494-1-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579693926; bh=L+WKarEuaJmFD3C6XaQOv9lM1k6insdFfgdLwCP9YYM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WdjJGNZ+SKYDjmcbQLw7ufIdQm17d7TcWNRdgZG20fNLJegRVnOWw4PFuLOGPSfrh
-         2beUm9Vzys0K+h84AQjGZx4cXK91lcIToww0+UsbK/8RAnU6AUIkEc1e5OWc5LIM6i
-         wIMM1yCjRsdpoDCPv1rSNIVfWQjtbphOBTIRHpFw4wyGXqu67KK6d/SefllbB8F3p2
-         Jy6zM5UoopaGL0SZtkoH2Np/g0Wm0PjaFU4dAsDtXZ+g3ipTtRhm5BaWPCC/qdWw5A
-         npys/yOwLnsGh+qSN9ljgdNDDQZC3ySqAZPrKhgNzbZa2nfrGCboW0JFAbva3jBMU9
-         abyF6R5zOlpvA==
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ impostorscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001220112
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Michael Hennerich <michael.hennerich@analog.com>
 
-On 22/01/2020 07:16, Sameer Pujar wrote:
+This patch adds support for the HMC425A 0.5 dB LSB GaAs MMIC 6-BIT
+DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz.
 
-...
+Datasheet:
+https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
 
->>>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(&pdev->dev);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (!pm_runtime_status_suspended(&pdev->d=
-ev))
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 tegra210_i2s_runtime_suspend(&pdev->dev);
->>>>>> This breaks device's RPM refcounting if it was disabled in the activ=
-e
->>>>>> state. This code should be removed. At most you could warn about the
->>>>>> unxpected RPM state here, but it shouldn't be necessary.
->>>>> I guess this was added for safety and explicit suspend keeps clock
->>>>> disabled.
->>>>> Not sure if ref-counting of the device matters when runtime PM is
->>>>> disabled and device is removed.
->>>>> I see few drivers using this way.
->>>> It should matter (if I'm not missing something) because RPM should
->>>> be in
->>>> a wrecked state once you'll try to re-load the driver's module. Likely
->>>> that those few other drivers are wrong.
->>>>
->>>> [snip]
->>> Once the driver is re-loaded and RPM is enabled, I don't think it
->>> would use
->>> the same 'dev' and the corresponding ref count. Doesn't it use the new
->>> counters?
->>> If RPM is not working for some reason, most likely it would be the case
->>> for other
->>> devices. What best driver can do is probably do a force suspend during
->>> removal if
->>> already not done. I would prefer to keep, since multiple drivers still
->>> have it,
->>> unless there is a real harm in doing so.
->> I took a closer look and looks like the counter actually should be
->> reset. Still I don't think that it's a good practice to make changes
->> underneath of RPM, it may strike back.
->=20
-> If RPM is broken, it probably would have been caught during device usage.
-> I will remove explicit suspend here if no any concerns from other folks.
-> Thanks.
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+---
+ drivers/iio/amplifiers/Kconfig   |  10 ++
+ drivers/iio/amplifiers/Makefile  |   1 +
+ drivers/iio/amplifiers/hmc425a.c | 251 +++++++++++++++++++++++++++++++
+ 3 files changed, 262 insertions(+)
+ create mode 100644 drivers/iio/amplifiers/hmc425a.c
 
-I recall that this was the preferred way of doing this from the RPM
-folks. Tegra30 I2S driver does the same and Stephen had pointed me to
-this as a reference. I believe that this is meant to ensure that the
-device is always powered-off regardless of it RPM is enabled or not and
-what the current state is.
+diff --git a/drivers/iio/amplifiers/Kconfig b/drivers/iio/amplifiers/Kconfig
+index da7f126d197b..9b02c9a2bc8a 100644
+--- a/drivers/iio/amplifiers/Kconfig
++++ b/drivers/iio/amplifiers/Kconfig
+@@ -22,4 +22,14 @@ config AD8366
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ad8366.
+ 
++config HMC425
++	tristate "Analog Devices HMC425A and similar GPIO Gain Amplifiers"
++	depends on GPIOLIB
++	help
++	  Say yes here to build support for Analog Devices HMC425A and similar
++	  gain amplifiers or step attenuators.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called hmc425a.
++
+ endmenu
+diff --git a/drivers/iio/amplifiers/Makefile b/drivers/iio/amplifiers/Makefile
+index 9abef2ebe9bc..19a89db1d9b1 100644
+--- a/drivers/iio/amplifiers/Makefile
++++ b/drivers/iio/amplifiers/Makefile
+@@ -5,3 +5,4 @@
+ 
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_AD8366) += ad8366.o
++obj-$(CONFIG_HMC425) += hmc425a.o
+\ No newline at end of file
+diff --git a/drivers/iio/amplifiers/hmc425a.c b/drivers/iio/amplifiers/hmc425a.c
+new file mode 100644
+index 000000000000..0a412d56eb8f
+--- /dev/null
++++ b/drivers/iio/amplifiers/hmc425a.c
+@@ -0,0 +1,251 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * HMC425A and similar Gain Amplifiers
++ *
++ * Copyright 2020 Analog Devices Inc.
++ */
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/regulator/consumer.h>
++#include <linux/sysfs.h>
++
++enum hmc425a_type {
++	ID_HMC425A,
++};
++
++struct hmc425a_chip_info {
++	const char			*name;
++	const struct iio_chan_spec	*channels;
++	unsigned int			num_channels;
++	unsigned int			num_gpios;
++	int				gain_min;
++	int				gain_max;
++	int				default_gain;
++};
++
++struct hmc425a_state {
++	struct	regulator *reg;
++	struct	mutex lock; /* protect sensor state */
++	struct	hmc425a_chip_info *chip_info;
++	struct	gpio_descs *gpios;
++	enum	hmc425a_type type;
++	u32	gain;
++};
++
++static int hmc425a_write(struct iio_dev *indio_dev, u32 value)
++{
++	struct hmc425a_state *st = iio_priv(indio_dev);
++	int i, *values;
++
++	values = kmalloc_array(st->chip_info->num_gpios, sizeof(int),
++			       GFP_KERNEL);
++	if (!values)
++		return -ENOMEM;
++
++	for (i = 0; i < st->chip_info->num_gpios; i++)
++		values[i] = (value >> i) & 1;
++
++	gpiod_set_array_value_cansleep(st->gpios->ndescs, st->gpios->desc,
++				       values);
++	kfree(values);
++	return 0;
++}
++
++static int hmc425a_read_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan, int *val,
++			    int *val2, long m)
++{
++	struct hmc425a_state *st = iio_priv(indio_dev);
++	int code, gain = 0;
++	int ret;
++
++	mutex_lock(&st->lock);
++	switch (m) {
++	case IIO_CHAN_INFO_HARDWAREGAIN:
++		code = st->gain;
++
++		switch (st->type) {
++		case ID_HMC425A:
++			gain = ~code * -500;
++			break;
++		}
++
++		*val = gain / 1000;
++		*val2 = (gain % 1000) * 1000;
++
++		ret = IIO_VAL_INT_PLUS_MICRO_DB;
++		break;
++	default:
++		ret = -EINVAL;
++	}
++	mutex_unlock(&st->lock);
++
++	return ret;
++};
++
++static int hmc425a_write_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan, int val,
++			     int val2, long mask)
++{
++	struct hmc425a_state *st = iio_priv(indio_dev);
++	struct hmc425a_chip_info *inf = st->chip_info;
++	int code = 0, gain;
++	int ret;
++
++	if (val < 0)
++		gain = (val * 1000) - (val2 / 1000);
++	else
++		gain = (val * 1000) + (val2 / 1000);
++
++	if (gain > inf->gain_max || gain < inf->gain_min)
++		return -EINVAL;
++
++	switch (st->type) {
++	case ID_HMC425A:
++		code = ~((abs(gain) / 500) & 0x3F);
++		break;
++	}
++
++	mutex_lock(&st->lock);
++	switch (mask) {
++	case IIO_CHAN_INFO_HARDWAREGAIN:
++		st->gain = code;
++
++		ret = hmc425a_write(indio_dev, st->gain);
++		break;
++	default:
++		ret = -EINVAL;
++	}
++	mutex_unlock(&st->lock);
++
++	return ret;
++}
++
++static const struct iio_info hmc425a_info = {
++	.read_raw = &hmc425a_read_raw,
++	.write_raw = &hmc425a_write_raw,
++};
++
++#define HMC425A_CHAN(_channel)                                          \
++{                                                                      \
++	.type = IIO_VOLTAGE, .output = 1, .indexed = 1,                \
++	.channel = _channel,                                           \
++	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),         \
++}
++
++static const struct iio_chan_spec hmc425a_channels[] = {
++	HMC425A_CHAN(0),
++};
++
++/* Match table for of_platform binding */
++static const struct of_device_id hmc425a_of_match[] = {
++	{ .compatible = "adi,hmc425a", .data = (void *)ID_HMC425A },
++	{},
++};
++MODULE_DEVICE_TABLE(of, hmc425a_of_match);
++
++static void hmc425a_reg_disable(void *data)
++{
++	struct hmc425a_state *st = data;
++
++	regulator_disable(st->reg);
++}
++
++static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
++	[ID_HMC425A] = {
++		.name = "hmc425a",
++		.channels = hmc425a_channels,
++		.num_channels = ARRAY_SIZE(hmc425a_channels),
++		.num_gpios = 6,
++		.gain_min = -31500,
++		.gain_max = 0,
++		.default_gain = -0x40, /* set default gain -31.5db*/
++	},
++};
++
++static int hmc425a_probe(struct platform_device *pdev)
++{
++	const struct of_device_id *id;
++	struct iio_dev *indio_dev;
++	struct hmc425a_state *st;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	st = iio_priv(indio_dev);
++	id = of_match_device(hmc425a_of_match, &pdev->dev);
++	if (!id)
++		ret = -ENODEV;
++
++	st->type = (enum hmc425a_type)id->data;
++
++	st->chip_info = &hmc425a_chip_info_tbl[st->type];
++	indio_dev->num_channels = st->chip_info->num_channels;
++	indio_dev->channels = st->chip_info->channels;
++	indio_dev->name = st->chip_info->name;
++	st->gain = st->chip_info->default_gain;
++
++	st->gpios = devm_gpiod_get_array(&pdev->dev, "ctrl", GPIOD_OUT_LOW);
++	if (IS_ERR(st->gpios)) {
++		ret = PTR_ERR(st->gpios);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "failed to get gpios\n");
++		return ret;
++	}
++
++	if (st->gpios->ndescs != st->chip_info->num_gpios) {
++		dev_err(&pdev->dev, "%d GPIOs needed to operate\n",
++			st->chip_info->num_gpios);
++		return -ENODEV;
++	}
++
++	st->reg = devm_regulator_get_optional(&pdev->dev, "vcc-supply");
++	if (IS_ERR(st->reg)) {
++		if (PTR_ERR(st->reg) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		st->reg = NULL;
++	} else {
++		ret = regulator_enable(st->reg);
++		if (ret)
++			return ret;
++		ret = devm_add_action_or_reset(&pdev->dev, hmc425a_reg_disable,
++					       st);
++		if (ret)
++			return ret;
++	}
++
++	platform_set_drvdata(pdev, indio_dev);
++	mutex_init(&st->lock);
++
++	indio_dev->dev.parent = &pdev->dev;
++	indio_dev->info = &hmc425a_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	return devm_iio_device_register(&pdev->dev, indio_dev);
++}
++
++static struct platform_driver hmc425a_driver = {
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.of_match_table = hmc425a_of_match,
++	},
++	.probe = hmc425a_probe,
++};
++module_platform_driver(hmc425a_driver);
++
++MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
++MODULE_DESCRIPTION("Analog Devices HMC425A and similar GPIO control Gain Amplifiers");
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
-Now for Tegra210 (or actually 64-bit Tegra) RPM is always enabled and so
-we don't need to worry about the !RPM case. However, I still don't see
-the harm in this.
-
-Jon
-
---=20
-nvpublic
