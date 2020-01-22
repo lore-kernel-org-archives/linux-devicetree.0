@@ -2,102 +2,116 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0FEC33CB8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 13:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3436C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 13:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B78320704
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 13:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C731B20704
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 13:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="taziyYJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgAVNSQ (ORCPT
+        id S1725802AbgAVNjU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:18:16 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:33688 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729113AbgAVNSP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:18:15 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MD1uDQ000326;
-        Wed, 22 Jan 2020 08:18:04 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xkytaanr6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 08:18:03 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00MDI2vv056044
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 22 Jan 2020 08:18:02 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 22 Jan
- 2020 05:18:00 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 22 Jan 2020 08:18:00 -0500
-Received: from saturn.ad.analog.com ([10.48.65.124])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00MDHqPr026060;
-        Wed, 22 Jan 2020 08:17:57 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <ekigwana@gmail.com>, <jic23@kernel.org>, <lars@metafoo.de>,
-        <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 3/3] MAINTAINERS: add entry for ADF4360 PLL driver
-Date:   Wed, 22 Jan 2020 15:20:04 +0200
-Message-ID: <20200122132004.4621-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200122132004.4621-1-alexandru.ardelean@analog.com>
-References: <20200122132004.4621-1-alexandru.ardelean@analog.com>
+        Wed, 22 Jan 2020 08:39:20 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46584 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgAVNjU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 08:39:20 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MDd0cM057467;
+        Wed, 22 Jan 2020 07:39:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579700340;
+        bh=co1m/tnZ+ImTwD3yuXyZxVaG3wlifWau9XX6MEe8Chg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=taziyYJQlSzT2GyfKCypQhi5IB6lZr9GRxURow+X6+pPSQokO3HMZ5n1Ktm1eOZV+
+         QOsv5YUsmbCQO9rciykyNX8OSaR8Ff8g2cuKfD4CCH/IloXOHZA9/Fm6d1FFzbQAcT
+         LwBwM8c5O1wWlnzNP20hbrcxQGLBFFveLKn91q14=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MDd05r065172
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jan 2020 07:39:00 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Jan 2020 07:38:59 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Jan 2020 07:38:59 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MDcxqI104110;
+        Wed, 22 Jan 2020 07:38:59 -0600
+Subject: Re: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for
+ stb-gpios
+To:     Faiz Abbas <faiz_abbas@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
+CC:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <nm@ti.com>,
+        <t-kristo@ti.com>
+References: <20200122080310.24653-1-faiz_abbas@ti.com>
+ <20200122080310.24653-2-faiz_abbas@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
+Date:   Wed, 22 Jan 2020 07:35:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 mlxlogscore=995 mlxscore=0 suspectscore=0
- impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001220119
+In-Reply-To: <20200122080310.24653-2-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Edward Kigwana <ekigwana@gmail.com>
+Faiz
 
-Add entry in the MAINTAINERS file for the ADF4360 PLL driver.
+On 1/22/20 2:03 AM, Faiz Abbas wrote:
+> The CAN transceiver on some boards has an STB pin which is
+> used to control its standby mode. Add an optional property
+> stb-gpios to toggle the same.
+>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> ---
+>   Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+> index ed614383af9c..cc8ba3f7a2aa 100644
+> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> @@ -48,6 +48,8 @@ Optional Subnode:
+>   			  that can be used for CAN/CAN-FD modes. See
+>   			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>   			  for details.
+> +stb-gpios		: gpio node to toggle the STB (standby) signal on the transceiver
+> +
 
-Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The m_can.txt is for the m_can framework.  If this is specific to the 
+platform then it really does not belong here.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e699fe378e71..d7a404084ad9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -462,6 +462,14 @@ ADDRESS SPACE LAYOUT RANDOMIZATION (ASLR)
- M:	Jiri Kosina <jikos@kernel.org>
- S:	Maintained
- 
-+ADF4360 PLL DRIVER
-+M:	Edward Kigwana <ekigwana@gmail.com>
-+W:	http://ez.analog.com/community/linux-device-drivers
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
-+F:	drivers/iio/frequency/adf4360.c
-+
- ADF7242 IEEE 802.15.4 RADIO DRIVER
- M:	Michael Hennerich <michael.hennerich@analog.com>
- W:	https://wiki.analog.com/ADF7242
--- 
-2.20.1
+If the platform has specific nodes then maybe we need a 
+m_can_platform.txt binding for specific platform nodes.  But I leave 
+that decision to Rob.
 
+Also I prefer you spell out standby like the gpios are spelled out in 
+the tcan binding.
+
+Dan
+
+
+>   Example:
+>   SoC dtsi:
+>   m_can1: can@20e8000 {
