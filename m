@@ -2,121 +2,194 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D44FC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02CFC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00CBE2465B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872DF24689
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sVFv0qgu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYR8w1cp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgAVOho (ORCPT
+        id S1725827AbgAVOrL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:37:44 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49630 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgAVOho (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 09:37:44 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MEbSg1059865;
-        Wed, 22 Jan 2020 08:37:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579703848;
-        bh=ExCKsULHAY09wbOO5eobOUvQLsBWiXPX0ybK/2ZK/to=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sVFv0qguYaSgtrDDtyh7c9sU7oqMHY6VpoQRS9BBgR9GtXBXuL/XeHnit+SO3Ycg+
-         afvW7NgWnlgEmwyh4przgqq7u86VzyKhRq3HC/Y6nEdHyDzw8ejhWTIcOLqDr0k/uJ
-         gxq1gqFfsF9vyxFKx1LUotUt/t26JBT3BlteIDXg=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MEbSLs087066
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 08:37:28 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 08:37:28 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 08:37:28 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MEbRQ4083641;
-        Wed, 22 Jan 2020 08:37:27 -0600
-Subject: Re: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for
- stb-gpios
-To:     Sekhar Nori <nsekhar@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
-        <wg@grandegger.com>, <sriram.dash@samsung.com>, <nm@ti.com>,
-        <t-kristo@ti.com>
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
- <20200122080310.24653-2-faiz_abbas@ti.com>
- <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
- <8fc7c343-267d-c91c-0381-60990cfc35e8@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f834087b-da1c-88a0-93fe-bc72c8ac71ff@ti.com>
-Date:   Wed, 22 Jan 2020 08:34:20 -0600
+        Wed, 22 Jan 2020 09:47:11 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34819 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVOrL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 09:47:11 -0500
+Received: by mail-pj1-f67.google.com with SMTP id s7so3720960pjc.0;
+        Wed, 22 Jan 2020 06:47:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ADCjuEPw44EETM4S2srrF1oIcsWNqgJFd7MKFaEnfRk=;
+        b=gYR8w1cpyQX/IIWcvWuIFRNpl7JWcIhtMDjoFDUaa4ALknxMr+KQ7DT89oArVh6c16
+         Fsb91OXQ+KCfkXYlZa5JaEYwR4QOJofxcK6Gy+6eFogGWy5svS0c5WA59xmNLeOeHe5f
+         5+KYxEuBPay5d/ZLaqnxyaqNNjOmwjjF+0cZNhJX8blAYXMcJR3COexd452nZETb1bEX
+         aYAYUTSqAQixgk2ZSdIqTDcNA0hhaLxOZebiT+rciVm31KqNWIZ0ZF8o6TgBcT+dsavK
+         fZ/nin+3VqRir198VSZCw/Ys9UZvMTP8z7TqQGezSqeoVmCtGZjcYs4DMBchvkduRFyd
+         3mbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ADCjuEPw44EETM4S2srrF1oIcsWNqgJFd7MKFaEnfRk=;
+        b=nzmHdx2+Zu3BXAxUPmlp0p4+kIWCJg+35WJAwSlmuOHi3ZWJ2tzWk8HIw27PYLVZSd
+         NLI0enrfBrZdoxof7Wfjf/O9mdWMzzKxennw0rGc287RsmjMOCh2OAmtByq5NPG5kK7v
+         Vy8/3Uukz59u5o8lJd/E/MMPl5WqWhqYaf0D5uLUEWHHWnnnMoJO9DrFzjehNsETov4R
+         vPPlzE0gZG8dXo7bez3aKN2moaWkbBF62U8IRold3yLUMIXlE/ORpCVtq/rPHliwoOpf
+         BsLc4Qy4hptRePWQBqiqtqYHUPKl1AwtJMESTW+SJyrRSJWbZxa0X28tVJOuiYuC1fQd
+         eXVw==
+X-Gm-Message-State: APjAAAUSvTGEk2S1EgRjn9R17nBOGRiiD7x45LjGUaFyPE/5laJoKedU
+        nMDY0hniTPro/4OmrzXlaVU=
+X-Google-Smtp-Source: APXvYqxnhGFSwqsi3SgX4c9AnxtNRP2F88B4HNzAuqta4TdusNteHhtYs2grK58U/8NAVg+1EGE+2A==
+X-Received: by 2002:a17:90a:d783:: with SMTP id z3mr3349203pju.3.1579704430653;
+        Wed, 22 Jan 2020 06:47:10 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l2sm3653107pjt.31.2020.01.22.06.47.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 06:47:09 -0800 (PST)
+Subject: Re: [PATCH v4 2/2] hwmon: (adt7475) Added attenuator bypass support
+To:     Logan Shaw <logan.shaw@alliedtelesis.co.nz>, jdelvare@suse.com,
+        robh+dt@kernel.org
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
+        Chris.Packham@alliedtelesis.co.nz
+References: <20200120001703.9927-1-logan.shaw@alliedtelesis.co.nz>
+ <20200120001703.9927-3-logan.shaw@alliedtelesis.co.nz>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <f6d272b9-9099-8407-0dd3-ea6cbcb1a39b@roeck-us.net>
+Date:   Wed, 22 Jan 2020 06:47:07 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <8fc7c343-267d-c91c-0381-60990cfc35e8@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200120001703.9927-3-logan.shaw@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sekhar
+On 1/19/20 4:17 PM, Logan Shaw wrote:
+> Added a new file documenting the adt7475 devicetree and added the four
+> new properties to it.
+> 
+> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 
-On 1/22/20 8:24 AM, Sekhar Nori wrote:
-> On 22/01/20 7:05 PM, Dan Murphy wrote:
->> Faiz
->>
->> On 1/22/20 2:03 AM, Faiz Abbas wrote:
->>> The CAN transceiver on some boards has an STB pin which is
->>> used to control its standby mode. Add an optional property
->>> stb-gpios to toggle the same.
->>>
->>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->>> ---
->>>    Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
->>>    1 file changed, 2 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt
->>> b/Documentation/devicetree/bindings/net/can/m_can.txt
->>> index ed614383af9c..cc8ba3f7a2aa 100644
->>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
->>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
->>> @@ -48,6 +48,8 @@ Optional Subnode:
->>>                  that can be used for CAN/CAN-FD modes. See
->>>                 
->>> Documentation/devicetree/bindings/net/can/can-transceiver.txt
->>>                  for details.
->>> +stb-gpios        : gpio node to toggle the STB (standby) signal on
->>> the transceiver
->>> +
->> The m_can.txt is for the m_can framework.  If this is specific to the
->> platform then it really does not belong here.
->>
->> If the platform has specific nodes then maybe we need a
->> m_can_platform.txt binding for specific platform nodes.  But I leave
->> that decision to Rob.
-> Since this is transceiver enable, should this not be in
-> Documentation/devicetree/bindings/net/can/can-transceiver.txt?
+Please fix the reported errors.
 
-+1
+Guenter
 
-Dan
+> ---
+> ---
+>   .../devicetree/bindings/hwmon/adt7475.yaml    | 90 +++++++++++++++++++
+>   1 file changed, 90 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> new file mode 100644
+> index 000000000000..f2427de9991e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/adt7475.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ADT7475 hwmon sensor
+> +
+> +maintainers:
+> +  - Jean Delvare <jdelvare@suse.com>
+> +
+> +description: |
+> +  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors and multiple
+> +  PWN fan controllers.
+> +
+> +  They support monitoring and controlling up to four fans (the ADT7490 can only
+> +  control up to three). They support reading a single on chip temperature
+> +  sensor and two off chip temperature sensors (the ADT7490 additionally
+> +  supports measuring up to three current external temperature sensors with
+> +  series resistance cancellation (SRC)).
+> +
+> +  Datasheets:
+> +  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
+> +  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
+> +  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
+> +  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
+> +
+> +  Description taken from omsemiconductors specification sheets, with minor
+> +  rephrasing.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adt7473
+> +      - adi,adt7475
+> +      - adi,adt7476
+> +      - adi,adt7490
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  bypass-attenuator-in0:
+> +    description: |
+> +      Configures bypassing the individual voltage input
+> +      attenuator, on in0. This is supported on the ADT7476 and ADT7490.
+> +      If set to a non-zero integer the attenuator is bypassed, if set to
+> +      zero the attenuator is not bypassed. If the property is absent then
+> +      the config register is not modified.
+> +    maxItems: 1
+> +
+> +  bypass-attenuator-in1:
+> +    description: |
+> +      Configures bypassing the individual voltage input
+> +      attenuator, on in1. This is supported on the ADT7473, ADT7475,
+> +      ADT7476 and ADT7490. If set to a non-zero integer the attenuator
+> +      is bypassed, if set to zero the attenuator is not bypassed. If the
+> +      property is absent then the config register is not modified.
+> +    maxItems: 1
+> +
+> +  bypass-attenuator-in3:
+> +    description: |
+> +      Configures bypassing the individual voltage input
+> +      attenuator, on in3. This is supported on the ADT7476 and ADT7490.
+> +      If set to a non-zero integer the attenuator is bypassed, if set to
+> +      zero the attenuator is not bypassed. If the property is absent then
+> +      the config register is not modified.
+> +    maxItems: 1
+> +
+> +  bypass-attenuator-in4:
+> +    description: |
+> +      Configures bypassing the individual voltage input
+> +      attenuator, on in4. This is supported on the ADT7476 and ADT7490.
+> +      If set to a non-zero integer the attenuator is bypassed, if set to
+> +      zero the attenuator is not bypassed. If the property is absent then
+> +      the config register is not modified.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    hwmon@2e {
+> +      compatible = "adi,adt7476";
+> +      reg = <0x2e>;
+> +      bypass-attenuator-in0 = <1>;
+> +      bypass-attenuator-in1 = <0>;
+> +    };
+> +...
+> 
 
