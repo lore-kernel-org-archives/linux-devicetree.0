@@ -7,134 +7,134 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B3FC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 06:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E078C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 06:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDA82467C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 06:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E452465B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 06:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SmxnMsZr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2/S4unh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgAVGAV (ORCPT
+        id S1725871AbgAVGXf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:00:21 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36328 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgAVGAU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 01:00:20 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x184so2810120pfb.3;
-        Tue, 21 Jan 2020 22:00:20 -0800 (PST)
+        Wed, 22 Jan 2020 01:23:35 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45749 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgAVGXf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 01:23:35 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so5897291wrj.12;
+        Tue, 21 Jan 2020 22:23:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q6AE7P4ZLtQuKFwEWHmJlyzS5LEfQqdxCBPGs6J70Ns=;
-        b=SmxnMsZrXszPm8r6VzfE5WWUcHsKzzYkyps6RDS4FParQiAG9NkJWoMTK4bvePCkon
-         Au5pFRpLIWqNQ0byUn8QJbwIZ3VsLREp6Rvk+Jmcg79qym7EeOLzXOnYDll0YzRZ+WLc
-         0G1BBCjLMfB/80P4DwpYs0txubiw3LkvKL/CPjzLheoeNeNYiI05x1sTENmL/jU+5JRF
-         Vf6rJe2jfpa1YRsOajT8/ePjCceEGQ3x66hwt2g/OB6JhC7921OIE4A03yjVHteId4pc
-         PQC2ECXq9XOdpC6ouCzZ3Ri9gfOaQMwJ0Wdq9Wh8FaFOlffVIvZ09JLfnfnMmD2KBww3
-         LEag==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yjvd1axR1PqdZTIc08mAWLXgtWgaoB8nmRFDHlqUans=;
+        b=K2/S4unhlBehk1R8CImxKUVzTj990lKFx5dXDMkTvyEXr4UKrzrzaJWtzTJK4oAVny
+         /XjEoKXgkRFpLdunILsdbOB7Et62ma1dPT+77evlk85kGROQyYzEjeqITh0kcJjEOV84
+         TG4vliwoXpPeJ/aCpyUQnyynCOmZqeBut0z67FnDACKkXPqwiOSFokDTHybWPToOwf1u
+         1ldo2LER1/QRDhDA9m/r5mBKuXfQxg42gG8T73pVTPCsi/jyvbDgHjM6TqubwBJrtjOx
+         YBUorN29LqnOwdjYjBoT9/WDOcZXAgwS0JAVzypCHaHt1osWC0F/yqUh4kC5Q8olNcJR
+         oykQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q6AE7P4ZLtQuKFwEWHmJlyzS5LEfQqdxCBPGs6J70Ns=;
-        b=Q2omjDLRUC0tiXLoGXVlEF0PcoVIQ3+178tr6ZR1Z7tmidyqK47hSo+bJEBwa30TvX
-         gAINzLzhxzFPV1MjbsWplHSx8VDmL6t9UjaH3K7qo/wmjRnlbwBhlQBXCiWTdF8Quu/3
-         g/5QzLcgD338pzn4YY9YBdeEVb/iWP5wtY12HbMz4H4s2wYjZJO19duT9XByIVSw6tzN
-         G6SnGrrelDtDxxup1hrkZCDFyJyLbl1JyP3tkZQoTcpfsYzhJNis6z/THQv/uplzmFdR
-         70QFasdy/yIMVAQvCUgVFFwHQ5e8vVID/Yi4EVPAa+VndOouStFIOoOWADiFLdy7ohyE
-         CeMg==
-X-Gm-Message-State: APjAAAW54Ss0XIpPRIPxhyGPkjYnkuqLDd5HccWhm9sYAKzcO2eK8D/h
-        aqDiUd2kz4ZXDGS6FtWJpk8=
-X-Google-Smtp-Source: APXvYqyW7SQF7PHDOhPc9KRISc7/Z492Dp3QPFwCYIKYtwqRjz+lUZnSmKP/vZ7O09rP8l0ry5f8nA==
-X-Received: by 2002:a65:68ca:: with SMTP id k10mr9705967pgt.222.1579672819903;
-        Tue, 21 Jan 2020 22:00:19 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h3sm1491806pjs.0.2020.01.21.22.00.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 22:00:19 -0800 (PST)
-Date:   Tue, 21 Jan 2020 22:00:17 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, alexandre.belloni@bootlin.com,
-        simon.budig@kernelconcepts.de, mripard@kernel.org, bparrot@ti.com,
-        hdegoede@redhat.com, andy.shevchenko@gmail.com, robh+dt@kernel.org,
-        kernel@pengutronix.de, linux-input@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, shawnguo@kernel.org,
-        fcooper@ti.com
-Subject: Re: [PATCH v3 6/6] Input: edt-ft5x06 - improve power management
- operations
-Message-ID: <20200122060017.GC110084@dtor-ws>
-References: <20200108111050.19001-1-m.felsch@pengutronix.de>
- <20200108111050.19001-7-m.felsch@pengutronix.de>
- <20200110010957.GP8314@dtor-ws>
- <20200110071606.g42csvhgtriddqj4@pengutronix.de>
- <20200110071847.h5hqfb7ujnahuuus@pengutronix.de>
- <20200116133219.xtp3wkkcefbcumca@pengutronix.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Yjvd1axR1PqdZTIc08mAWLXgtWgaoB8nmRFDHlqUans=;
+        b=QZaRALdW71FxIm009wZG5ElWG0hYDSFfdy7BXWZvbuFKVg9ulpYNsGvzMhr21P/ZeJ
+         hrEQDnHWuaABwGlBhWvS0Al2UOa40OBQqPoKTY5Rd33fTyrloQrHoI2Ky27ifty7kXoI
+         DHgAjfoWQT0Y5twSpuBx2Q9EzAwl23ohHKzCZa7Qt9eJGxc02peNzS9OsRSlLp9ekGXK
+         gPtLNxTLrKZzGRyNEJucsH610Mt6OlcBXF+s5V1W3BOXCn8ZkgNLWmTowP/1QoD+U61F
+         o98X5zgs9mRiTEmsmpBjX+D4P6f/ljbXClBCsJltuUodI94e1mb6qX45n4nt0f4S8ybm
+         0mHg==
+X-Gm-Message-State: APjAAAWSqmPiSVpcyECMRD9xflcH1CwMHfbDLKd/alvFg5gGAXvESgc4
+        OJKDviRt1tt+yQO+4/rlS1A=
+X-Google-Smtp-Source: APXvYqwCc0NSmc1uA3xXZfLgQ5hogHHHXFIsuV5k40DFrrvLSeqTJgiNuYig6ngVcci+7DDK6HQwzQ==
+X-Received: by 2002:adf:e74f:: with SMTP id c15mr9019793wrn.274.1579674213025;
+        Tue, 21 Jan 2020 22:23:33 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f1sm56691885wrp.93.2020.01.21.22.23.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 22:23:31 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+ <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+ <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
+Date:   Wed, 22 Jan 2020 09:23:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116133219.xtp3wkkcefbcumca@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marco,
-
-On Thu, Jan 16, 2020 at 02:32:19PM +0100, Marco Felsch wrote:
-> Hi Dmitry,
+22.01.2020 07:32, Sameer Pujar пишет:
+[snip]
+>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
+>>>>> +{
+>>>>> +     pm_runtime_disable(&pdev->dev);
+>>>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
+>>>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
+>>>> This breaks device's RPM refcounting if it was disabled in the active
+>>>> state. This code should be removed. At most you could warn about the
+>>>> unxpected RPM state here, but it shouldn't be necessary.
+>>> I guess this was added for safety and explicit suspend keeps clock
+>>> disabled.
+>>> Not sure if ref-counting of the device matters when runtime PM is
+>>> disabled and device is removed.
+>>> I see few drivers using this way.
+>> It should matter (if I'm not missing something) because RPM should be in
+>> a wrecked state once you'll try to re-load the driver's module. Likely
+>> that those few other drivers are wrong.
+>>
+>> [snip]
 > 
-> On 20-01-10 08:18, Marco Felsch wrote:
-> > On 20-01-10 08:16, Marco Felsch wrote:
-> > > Hi Dmitry,
-> > > 
-> > > On 20-01-09 17:09, Dmitry Torokhov wrote:
-> > > > Hi Marco,
-> > > > 
-> > > > On Wed, Jan 08, 2020 at 12:10:50PM +0100, Marco Felsch wrote:
-> > > > > +static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
-> > > > > +{
-> > > > > +	struct i2c_client *client = to_i2c_client(dev);
-> > > > > +	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	if (device_may_wakeup(dev))
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	ret = regulator_enable(tsdata->vcc);
-> > > > > +	if (ret)
-> > > > > +		dev_warn(dev, "Failed to enable vcc\n");
-> > > > 
-> > > > I wonder if we should not return error here instead of continuing. If
-> > > > device is not powered up properly we'll have hard time communicating
-> > > > with it.
-> > > 
-> > > That's a reasonable point.
-> > > 
-> > > > The same is for suspend: maybe we should abort if we can't switch off
-> > > > regulator or write to the device.
-> > > 
-> > > I have no strong opinion about that case but IMHO it's okay to go further
-> > > if we can't switch it off. Instead we should print a warning.
-> > 
-> > I just noticed that we do that already.. So the suspend case should be
-> > okay.
+> Once the driver is re-loaded and RPM is enabled, I don't think it would use
+> the same 'dev' and the corresponding ref count. Doesn't it use the new
+> counters?
+> If RPM is not working for some reason, most likely it would be the case
+> for other
+> devices. What best driver can do is probably do a force suspend during
+> removal if
+> already not done. I would prefer to keep, since multiple drivers still
+> have it,
+> unless there is a real harm in doing so.
+
+I took a closer look and looks like the counter actually should be
+reset. Still I don't think that it's a good practice to make changes
+underneath of RPM, it may strike back.
+
+>>>>> +     int rx_fifo_th;
+>>>> Could rx_fifo_th be negative?
+>>> rx_fifo_th itself does not take negative values, explicit
+>>> typecasting> is avoided in "if" condition by declaring this as "int"
+>> Explicit typecasting isn't needed for integers.
 > 
-> 
-> Is it okay to check the return val for the resume case only? I want to
-> prepare a v4 of this patch to get this done.
+> What I meant was, rx_fifo_th is checked against a 'int' variable in an
+> "if" condition.
 
-OK, I now remember my issues with power management in this driver. It
-supports factory mode vs operational/normal mode, and updating register
-settings at runtime. If you want to cut power off at suspend, then you
-need to make sure you restore the mode and register settings at resume
-time, not simply revert to normal mode.
+What's the problem with comparing of unsigned with signed?
 
-Thanks.
+Besides, cif_conf.audio_ch > I2S_RX_FIFO_DEPTH can't be ever true, isn't
+it? I2S_RX_FIFO_DEPTH=64, channels_max=16
 
--- 
-Dmitry
+Lastly, nothing stops you to make max_th unsigned.
