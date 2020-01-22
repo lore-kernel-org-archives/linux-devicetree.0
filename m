@@ -2,97 +2,117 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877D8C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 09:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883D5C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 09:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5472E20704
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 09:25:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QWf4OAlw"
+	by mail.kernel.org (Postfix) with ESMTP id 6610420704
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 09:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgAVJZi (ORCPT
+        id S1727022AbgAVJ1Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:25:38 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53301 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgAVJZh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 04:25:37 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m24so6031488wmc.3
-        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 01:25:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jl1D3AmziTwVaydKZMicfuuKx92SzNFy1wg6z3sQOu8=;
-        b=QWf4OAlw4HblNZpibCzinKXmVcQxe2T3DfOdm82fH1kR0Jy8WNv+EvTlK7H9S+2b5V
-         6n4s6TI9j+qvwWD89eXAY4eDuqw5rfoI8xRW5t31OQdI02Em/Jcng6UEPc/Z7fBvmWcy
-         1HHC/4EpUgA5szvKHBynZhxUgdzdnCq0Hv5rmbgcg9W+GrFcsTx5iiM3xUZ8FX/7KVNW
-         Qpe4pt8y82X9eT/OV+GaI9zSNq3fnqGpIaD20d3czbeOC6wukZGh9xua5d/u33wq4D4I
-         thyksjj+mUNYd5z3wbuon9IKV+KzAGO9j9s2bSQCd3h/9FILqKaTfW9QTjUTCS9/eQpp
-         wtZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jl1D3AmziTwVaydKZMicfuuKx92SzNFy1wg6z3sQOu8=;
-        b=a6LAMgp8Jp3TyveQorMgAv+yl3d2nGZ7jjoqN+bUs8BYMvf43RugUer+sUla06D3T2
-         2czB1IMfUsxDiuojE0ug+GlAvzM4FY9Dh1/9f9s6qSK3XO9VYNB0HLelVvtqevmGWYUD
-         pDMM1CxWu0NaIxMB4On+/IWw5h2V4F2DGPrFCXBYX8BZZrGsB62X/9EBYYCJW0X59RSQ
-         4KhZ4pua9MdQIIqOm9JehzfOafGEVRWb9g05cpqRUBuy8r9aP/mfyZtN+h3b5L1uQlwA
-         s7yXeFP38EAleCoh9Z4PU9E6C7WR9jnbJvD+S3sjsFBMUho8w6vdPW71SBCXPaTzpTod
-         aobg==
-X-Gm-Message-State: APjAAAUFxVMnH3uCKhGenN5yUGuAy1BdX6gYi9CIuSF2BfpYjwv+VSgj
-        71/HF9EXIWK2x8ILq9EI73QgIQ==
-X-Google-Smtp-Source: APXvYqzbK5xmg3Q8pvvBxsVKUN7iX5VNKCEhjLiLQ4URYMDIPnu2V9Aj/FpSlwqF5Jr7ga/yDdQT5g==
-X-Received: by 2002:a7b:c08d:: with SMTP id r13mr2021190wmh.104.1579685135848;
-        Wed, 22 Jan 2020 01:25:35 -0800 (PST)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id g25sm4134125wmh.3.2020.01.22.01.25.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 01:25:35 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: reset: meson: add gxl internal dac reset
-Date:   Wed, 22 Jan 2020 10:25:26 +0100
-Message-Id: <20200122092526.2436421-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 22 Jan 2020 04:27:24 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58172 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVJ1X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 04:27:23 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id CAEAC28F6BA;
+        Wed, 22 Jan 2020 09:27:21 +0000 (GMT)
+Date:   Wed, 22 Jan 2020 10:27:19 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Clark <robdclark@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 18/21] drm/bridge: panel: Propage bus format/flags
+Message-ID: <20200122102719.1149f6f6@collabora.com>
+In-Reply-To: <20191203101730.GP4730@pendragon.ideasonboard.com>
+References: <20191023154512.9762-1-boris.brezillon@collabora.com>
+        <20191023154512.9762-19-boris.brezillon@collabora.com>
+        <20191203101730.GP4730@pendragon.ideasonboard.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the reset line of the internal DAC found on the amlogic gxl SoC family
+Hi Laurent,
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- include/dt-bindings/reset/amlogic,meson-gxbb-reset.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry for the late reply.
 
-diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-index ea5058618863..883bfd3bcbad 100644
---- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
-@@ -69,7 +69,7 @@
- #define RESET_SYS_CPU_L2		58
- #define RESET_SYS_CPU_P			59
- #define RESET_SYS_CPU_MBIST		60
--/*					61	*/
-+#define RESET_ACODEC			61
- /*					62	*/
- /*					63	*/
- /*	RESET2					*/
--- 
-2.24.1
+On Tue, 3 Dec 2019 12:17:30 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
+> Hi Boris,
+> 
+> Thank you for the patch.
+> 
+> On Wed, Oct 23, 2019 at 05:45:09PM +0200, Boris Brezillon wrote:
+> > So that the previous bridge element in the chain knows which input
+> > format the panel bridge expects.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > ---
+> > Changes in v3:
+> > * Adjust things to match the new bus-format negotiation approach
+> > * Use drm_atomic_helper_bridge_propagate_bus_fmt
+> > * Don't implement ->atomic_check() (the core now takes care of bus
+> >   flags propagation)
+> > 
+> > Changes in v2:
+> > * Adjust things to match the new bus-format negotiation approach
+> > ---
+> >  drivers/gpu/drm/bridge/panel.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+> > index f4e293e7cf64..a70c363a2bd0 100644
+> > --- a/drivers/gpu/drm/bridge/panel.c
+> > +++ b/drivers/gpu/drm/bridge/panel.c
+> > @@ -127,6 +127,7 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
+> >  	.enable = panel_bridge_enable,
+> >  	.disable = panel_bridge_disable,
+> >  	.post_disable = panel_bridge_post_disable,
+> > +	.atomic_get_input_bus_fmts = drm_atomic_helper_bridge_propagate_bus_fmt,  
+> 
+> Shouldn't the format be retrieved from the panel instead of from the
+> connector ? We're moving towards removing connector creation from
+> bridges, so I think it would be more future-proof.
+
+Right now the panel bus_format is not exposed by the drm_panel
+abstraction (only panel_simple have access to this information through
+their panel_desc). I'd rather not add new things to this series so I'm
+in favor of keeping the current implementation, but I add this idea
+(expose bus format through the drm_panel abstraction) to my TODO list.
+
+Thanks,
+
+Boris
