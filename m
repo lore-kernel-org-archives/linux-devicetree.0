@@ -7,148 +7,123 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C0FC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 07:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AE5C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 07:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAEE92465B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 07:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B0124125
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 07:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iHWX8TxA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j2de91DR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgAVHQQ (ORCPT
+        id S1726077AbgAVHVa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 02:16:16 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5405 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVHQP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 02:16:15 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e27f6b00000>; Tue, 21 Jan 2020 23:16:00 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 21 Jan 2020 23:16:15 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 21 Jan 2020 23:16:15 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Jan
- 2020 07:16:10 +0000
-CC:     <spujar@nvidia.com>, <devicetree@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <atalambedu@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <jonathanh@nvidia.com>, <viswanathl@nvidia.com>,
-        <sharadg@nvidia.com>, <broonie@kernel.org>,
-        <thierry.reding@gmail.com>, <linux-tegra@vger.kernel.org>,
-        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
-Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
- driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh+dt@kernel.org>
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-5-git-send-email-spujar@nvidia.com>
- <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
- <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
- <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
- <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
- <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
-Date:   Wed, 22 Jan 2020 12:46:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 22 Jan 2020 02:21:30 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58202 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVHVa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 02:21:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M7LF1d067824;
+        Wed, 22 Jan 2020 01:21:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579677675;
+        bh=tuTL4sy8/HeIWgu77c/L0wft9ngd5/VvsXnD0Sjb69c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=j2de91DRSR8TsZd9qokQJJm9yWglwcaxXA+HihQJyliny9X8ME+obivyz25o3rwL6
+         +TWC35zBF/9qxZjthACt3mqO/UZ11wOut+QR8nGRQCfbxW9gPYfPJcOHeuL0MYxASf
+         gfR7FntSu4FG2XNbQkysJnZ9y/8X+SMNFd6SX+0U=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00M7LF9p017807
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jan 2020 01:21:15 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Jan 2020 01:21:14 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Jan 2020 01:21:14 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M7LCYW067754;
+        Wed, 22 Jan 2020 01:21:13 -0600
+Subject: Re: OK to relicense text from display-timings.txt?
+To:     Sam Ravnborg <sam@ravnborg.org>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     <devicetree@vger.kernel.org>
+References: <20200121211421.GA15494@ravnborg.org>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <e49653de-023c-5598-bc4e-acc605af3e08@ti.com>
+Date:   Wed, 22 Jan 2020 09:21:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579677360; bh=q6Hqy9YMgHF2zriePc5t7xoV1iQAW7z7hSGzyHNQi+A=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=iHWX8TxAEPWQAHMxnsnEpccgp3pldQW1vu2rjCXTentxBDH+5vQXzXatb6ZHUMKVB
-         ScQTwjXFf0s2Av7ssM4F8cN5YrRpAgqRBnbqLzSF0VJqySersVlTpg7yIwnQJ4I/kp
-         irh8ngIcJ7B55wDSXgclt9SKVz4Dwl16spDaerpg/P78xOJ+8Fz8A0Q5z4G8HJ7YRu
-         QT4MD8axncFxWvVt3iIciiYnAzcvdHpkehLG9lKVEUSkUZCczLBXmGKegLZcX02F7e
-         Hs1sMjaq6xqI1BIPOYrPSibIDTlAg2ZKi0jpN81te8kQQlJz+8BqC1Pn20xpr1dViE
-         SwvO+fZZ3/wBg==
+In-Reply-To: <20200121211421.GA15494@ravnborg.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sam,
 
+On 21/01/2020 23.14, Sam Ravnborg wrote:
+> Hi Steffen/Philipp.
+> 
+> In commit:
+> cc3f414cf2e404130584b63d373161ba6fd24bc2 ("video: add of helper for display timings/videomode")
+> 
+> You added display-timings.txt - which include a nice drawing that explains
+> the timing signals.
+> 
+> I am working on a DT schema variant of the same - see:
+> https://www.spinics.net/lists/devicetree/msg331526.html
+> 
+> In the revised version the preferred license is:
+> (GPL-2.0-only OR BSD-2-Clause)
+> 
+> Is it OK to re-license to (GPL-2.0-only OR BSD-2-Clause) in the
+> DT schema variant?
+> 
+> 
+> Hi Peter.
+> 
+> You contributed with following patch:
+> 86f46565dff313a149b4bd09d4a8655274ef8f33 ("dt-bindings: display: display-timing: Add property to configure sync drive edge")
+> 
+> Part of the text is re-used in the panel-timing.yaml file.
+> OK to relicense?
 
-On 1/22/2020 11:53 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 22.01.2020 07:32, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> [snip]
->>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
->>>>>> +{
->>>>>> +     pm_runtime_disable(&pdev->dev);
->>>>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
->>>>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
->>>>> This breaks device's RPM refcounting if it was disabled in the active
->>>>> state. This code should be removed. At most you could warn about the
->>>>> unxpected RPM state here, but it shouldn't be necessary.
->>>> I guess this was added for safety and explicit suspend keeps clock
->>>> disabled.
->>>> Not sure if ref-counting of the device matters when runtime PM is
->>>> disabled and device is removed.
->>>> I see few drivers using this way.
->>> It should matter (if I'm not missing something) because RPM should be i=
-n
->>> a wrecked state once you'll try to re-load the driver's module. Likely
->>> that those few other drivers are wrong.
->>>
->>> [snip]
->> Once the driver is re-loaded and RPM is enabled, I don't think it would =
-use
->> the same 'dev' and the corresponding ref count. Doesn't it use the new
->> counters?
->> If RPM is not working for some reason, most likely it would be the case
->> for other
->> devices. What best driver can do is probably do a force suspend during
->> removal if
->> already not done. I would prefer to keep, since multiple drivers still
->> have it,
->> unless there is a real harm in doing so.
-> I took a closer look and looks like the counter actually should be
-> reset. Still I don't think that it's a good practice to make changes
-> underneath of RPM, it may strike back.
+As it is a necessity for the DT binding, yes (not a big fan of BSD
+license otherwise).
 
-If RPM is broken, it probably would have been caught during device usage.
-I will remove explicit suspend here if no any concerns from other folks.=20
-Thanks.
->
->>>>>> +     int rx_fifo_th;
->>>>> Could rx_fifo_th be negative?
->>>> rx_fifo_th itself does not take negative values, explicit
->>>> typecasting> is avoided in "if" condition by declaring this as "int"
->>> Explicit typecasting isn't needed for integers.
->> What I meant was, rx_fifo_th is checked against a 'int' variable in an
->> "if" condition.
-> What's the problem with comparing of unsigned with signed?
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-consider this example,
-----
-unsigned int x =3D 5;
-int y =3D -1;
+> 
+> Hi Laurent.
+> 
+> You contributed the following patch:
+> 9cad9c95d7e8d6d61d8c9729e0b6bbd18f47d86d ("Documentation: DocBook DRM framework documentation")
+> This patch added a nice timing diagram - which Daniel Vetter later moved to drm_modes.h.
+> 
+> The timing diagram is re-used in panel-timing.yaml.
+> As the original author are you OK that this is relicensed?
+> 
+> 
+> Note: I need positive reply from all of you to re-license.
+> In case I get it your postive feedback it will be documented in
+> the commit message for panel-timing.
+> To keep a record for the background for the re-licensing.
+> 
+> 	Sam
+> 
 
-(x > y) is false.
-----
-Hence should be careful while using signed and unsigned comparisons.
->
-> Besides, cif_conf.audio_ch > I2S_RX_FIFO_DEPTH can't be ever true, isn't
-> it? I2S_RX_FIFO_DEPTH=3D64, channels_max=3D16
+- Péter
 
-Yes true.
-> Lastly, nothing stops you to make max_th unsigned.
-
-will update.
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
