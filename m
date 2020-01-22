@@ -2,93 +2,97 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3E4C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C64EC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4C62465B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5552253D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 14:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="teeba+Jl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKeNkdhQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgAVOAT (ORCPT
+        id S1728792AbgAVOAX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:00:19 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:35971 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgAVOAT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 09:00:19 -0500
-Received: by mail-wm1-f47.google.com with SMTP id p17so7322294wma.1;
-        Wed, 22 Jan 2020 06:00:17 -0800 (PST)
+        Wed, 22 Jan 2020 09:00:23 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45822 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgAVOAW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 09:00:22 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so7329724wrj.12;
+        Wed, 22 Jan 2020 06:00:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iBKN5xxgug5/repGQ+9bClwhlzV1AiyNQfOYQd+MEZo=;
-        b=teeba+JlTst30oUCLQ1KE6aYz73mr2kkSnjMWszt2Zr7jZHQ+h4WJntcjpVzf4b6D5
-         LPVwNiT3Oi6O7vbQZrPnHvplZ2d+0yhuXwpEvXKlS4+IoZTR4Y+SxZNqsf68e00ft0Im
-         5jg0IBKu5BqFqrIeqPgIF7Z3sh01eoMfoa7LedxjeVsVk8DsDtLQI0VfpVMX5fU1TI/g
-         qoPlhfc8HVqdbg2sJuejb3VCZQKbE6meRtoglSOYYpKqSiIL3xY3+pS23h/Vhz0KzXGh
-         aFAyu0nw7vnGjWNR+XVqAQ+fnTdCC2N++NalqK1HRuaqJ+L1pjh3HK0IFZ9sSqbnGZ76
-         a8nA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=S37mEzjCuwUx3aUpRGSkg86M1G/8BxlVxMLDTrBU45Q=;
+        b=gKeNkdhQteJze3+inzS/DmFaXeftA2GIDDb5gWL2wbUMDsgt9u0CKsv3dVmRkjfA2b
+         rsZ0D44FZ5gBrRpFWM+jBXNdPD7q8HdQX7+TuqboIOU+GyYeB+d28926IQKuIcnXX5Ht
+         NCnX2AAsEhIYtVW0eVl6rp+3aGTD3/6dzfsRMLOCr7wMjaFl3jpAO8xLEYNXzqgrIcEt
+         vEK7ER5Jb48mcyFMnMnzsZWxMktW3qLkSgmbciwTuufiD1P2FaaYIGPkWLuq2biBh6FV
+         6Xs1pj4JkDWGEoLCU+hPia4ytI4SO61Y0mNVyzQKM4HHwzhXoocRM7OjLIwxRAedsiP5
+         +EGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iBKN5xxgug5/repGQ+9bClwhlzV1AiyNQfOYQd+MEZo=;
-        b=SoF7HdaYHjTrDVEIf8bniJRi9in9iNQ8UrNaXxl2bv17eO1e2eva08DgkbAfrvMiUL
-         MR9ELAv/fmQY3tYxXt4XlXAGAK/S3N+gRD04j64uVwDeO3js/3WCStizYs3gerYTOBt9
-         /dMoGVT8s+27rrEXw7+sXNYkx44yDdPuwLb2Pujm/FpqIcE1IL4sQdoKD+7zXlT9d3TI
-         cVZsLTLKlSqLZyaDldNe0PqeqjtAqltf98vJ3EALcrVbB3kWb31xlglOG1H3YMGpqd+J
-         nll+x4TUONf63fYJ60zqltlzYN93Gt7xsGSUdHLsiPaKy+f6j67El0Bpd9n3k4W5DzNM
-         DnjQ==
-X-Gm-Message-State: APjAAAX0htdwBcLaoW0vC+nvo0U/RpgbZkbfHpw8WvwE+dsydGlD19wR
-        6/pmTWL804i48wJtntuxAaE=
-X-Google-Smtp-Source: APXvYqweMYvytj5KrqqsLp46MJFTRCcH5Z4sGFJ3KPYCx6P8covo2ndpb3Zri8xYzj31ZWXM22QiCg==
-X-Received: by 2002:a1c:2394:: with SMTP id j142mr3330320wmj.25.1579701617120;
-        Wed, 22 Jan 2020 06:00:17 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=S37mEzjCuwUx3aUpRGSkg86M1G/8BxlVxMLDTrBU45Q=;
+        b=pfud9V33xMOzFX/IXvEphtPPYBmJbg3998P77/H+cqd5AHlRrkFSd2gH/u+hU/RQy6
+         //NQRm9etPTMfc6o+NIMMAXCtxdZOEHAuRxFP8gfyuYZi2suHAwS1W6KVt5ky3yPOeai
+         dn+hE7GSFgi/+ogSscd5sRReKMScLijGLhqDsooi7b5R1QCNJRqpVL8QeKLMEqrBQvh7
+         MRA1wIU2KJZg+/99JM110Kly5dZIUWaizUe1V/jNMIYKxDT0GDI75+9IJGWq5shsEI5c
+         nHkrXD3RiGnB1csGh6bD5KKqg+CcE9NYHZoDkI07THXgNtlFUn3xt2jLVs+ptofeiU2r
+         vctA==
+X-Gm-Message-State: APjAAAWoIaR+FYPr0OSNrM5lA7KrbLO0aHHlb+XLJXx9sYl3c3I+q1TP
+        bq+MoOe0+al4J8gFj+0yvPY=
+X-Google-Smtp-Source: APXvYqxy7k3w+Ry+EG/OXolbGJ7YMhHfWHqAGRBmrzdj+tQhUspgDtyTLtuwJscjM4rMsMprG13zFg==
+X-Received: by 2002:adf:b64b:: with SMTP id i11mr11998529wre.58.1579701621000;
+        Wed, 22 Jan 2020 06:00:21 -0800 (PST)
 Received: from localhost.localdomain (p5DCFF1C1.dip0.t-ipconnect.de. [93.207.241.193])
-        by smtp.gmail.com with ESMTPSA id g2sm57388270wrw.76.2020.01.22.06.00.14
+        by smtp.gmail.com with ESMTPSA id g2sm57388270wrw.76.2020.01.22.06.00.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 06:00:15 -0800 (PST)
+        Wed, 22 Jan 2020 06:00:20 -0800 (PST)
 From:   Saravanan Sekar <sravanhome@gmail.com>
 To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.com,
         gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
         davem@davemloft.net, mchehab+samsung@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] Add regulator support for mpq5416
-Date:   Wed, 22 Jan 2020 14:59:55 +0100
-Message-Id: <20200122135958.13663-1-sravanhome@gmail.com>
+Subject: [PATCH 3/3] MAINTAINERS: Add entry for mp5416 PMIC driver
+Date:   Wed, 22 Jan 2020 14:59:58 +0100
+Message-Id: <20200122135958.13663-4-sravanhome@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200122135958.13663-1-sravanhome@gmail.com>
+References: <20200122135958.13663-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series add support for PMIC regulator driver for Monolithic
-Power System's MP5416 chipset. MP5416 provides support for 4-BUCK converter,
-4-LDO regualtor, accessed over I2C.
+Add MAINTAINERS entry for Monolithic Power Systems mp5416 PMIC driver.
 
-Thanks,
-Saravanan
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Saravanan Sekar (3):
-  dt-bindings: regulator: add document bindings for mp5416
-  regulator: mp5416: add mp5416 regulator driver
-  MAINTAINERS: Add entry for mp5416 PMIC driver
-
- .../bindings/regulator/mps,mp5416.yaml        |  64 +++++
- MAINTAINERS                                   |   2 +
- drivers/regulator/Kconfig                     |  10 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/mp5416.c                    | 245 ++++++++++++++++++
- 5 files changed, 322 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
- create mode 100644 drivers/regulator/mp5416.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9aa438cb9836..e575029f5b89 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11240,7 +11240,9 @@ F:	drivers/tty/mxser.*
+ MONOLITHIC POWER SYSTEM PMIC DRIVER
+ M:	Saravanan Sekar <sravanhome@gmail.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
+ F:	Documentation/devicetree/bindings/regulator/mpq7920.yaml
++F:	drivers/regulator/mp5416.c
+ F:	drivers/regulator/mpq7920.c
+ F:	drivers/regulator/mpq7920.h
+ 
 -- 
 2.17.1
 
