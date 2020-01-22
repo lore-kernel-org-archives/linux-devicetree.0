@@ -2,146 +2,142 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03606C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 11:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3895C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 11:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CEB24683
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 11:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A64A2468C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 11:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C1Ag+u56"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WdjJGNZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgAVLjQ (ORCPT
+        id S1728811AbgAVLwW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:39:16 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34236 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgAVLjQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 06:39:16 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MBd9u6025782;
-        Wed, 22 Jan 2020 05:39:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579693149;
-        bh=HvPGELjrP56iYK9ROZqp0RxXKPmPMfECw6+E+vPm6Y8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=C1Ag+u56cn27rvzG6aLZZqBkw2qAnedvArKU7bGUsiXg6R5qJG+mIlVpFeImopdmF
-         hubbYlaY+7hkLSHCg9tt8yUYOa25W12t72/I/idM6Ht4NIY7YHeOHWZIgzjjD/Gd7b
-         5zbK8vntoZi+9N36xWe5F7VTKHJd0Wp5dfuTow+M=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MBd9hv089272
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 05:39:09 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 05:39:08 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 05:39:08 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MBd6Di039187;
-        Wed, 22 Jan 2020 05:39:07 -0600
-Subject: Re: [PATCH v2 1/9] arm64: dts: ti: k3-am65-main: Correct main NAVSS
- representation
-To:     Lokesh Vutla <lokeshvutla@ti.com>, <t-kristo@ti.com>, <nm@ti.com>
-CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200122082621.4974-1-peter.ujfalusi@ti.com>
- <20200122082621.4974-2-peter.ujfalusi@ti.com>
- <600df214-620b-fa41-82ef-01132d9bdfae@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <04a1bb97-f308-f866-ad4f-907cd7fb3515@ti.com>
-Date:   Wed, 22 Jan 2020 13:39:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 22 Jan 2020 06:52:22 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5471 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgAVLwW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 06:52:22 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2837640000>; Wed, 22 Jan 2020 03:52:06 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 22 Jan 2020 03:52:21 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 22 Jan 2020 03:52:21 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Jan
+ 2020 11:52:17 +0000
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+To:     Sameer Pujar <spujar@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <atalambedu@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <lgirdwood@gmail.com>, <viswanathl@nvidia.com>,
+        <sharadg@nvidia.com>, <broonie@kernel.org>,
+        <thierry.reding@gmail.com>, <linux-tegra@vger.kernel.org>,
+        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+ <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+ <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
+ <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
+ <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
+Date:   Wed, 22 Jan 2020 11:52:14 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <600df214-620b-fa41-82ef-01132d9bdfae@ti.com>
+In-Reply-To: <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579693926; bh=L+WKarEuaJmFD3C6XaQOv9lM1k6insdFfgdLwCP9YYM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=WdjJGNZ+SKYDjmcbQLw7ufIdQm17d7TcWNRdgZG20fNLJegRVnOWw4PFuLOGPSfrh
+         2beUm9Vzys0K+h84AQjGZx4cXK91lcIToww0+UsbK/8RAnU6AUIkEc1e5OWc5LIM6i
+         wIMM1yCjRsdpoDCPv1rSNIVfWQjtbphOBTIRHpFw4wyGXqu67KK6d/SefllbB8F3p2
+         Jy6zM5UoopaGL0SZtkoH2Np/g0Wm0PjaFU4dAsDtXZ+g3ipTtRhm5BaWPCC/qdWw5A
+         npys/yOwLnsGh+qSN9ljgdNDDQZC3ySqAZPrKhgNzbZa2nfrGCboW0JFAbva3jBMU9
+         abyF6R5zOlpvA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+On 22/01/2020 07:16, Sameer Pujar wrote:
 
-On 22/01/2020 13.03, Lokesh Vutla wrote:
-> 
-> 
-> On 22/01/20 1:56 PM, Peter Ujfalusi wrote:
->> NAVSS is a subsystem containing different IPs, it is not really a bus.
->> Change the compatible from "simple-bus" to "simple-mfd" to reflect that.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->> index efb24579922c..e40f7acbec42 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->> @@ -385,8 +385,8 @@ intr_main_gpio: interrupt-controller0 {
->>  		ti,sci-rm-range-girq = <0x1>;
->>  	};
->>  
->> -	cbass_main_navss: interconnect0 {
->> -		compatible = "simple-bus";
->> +	cbass_main_navss: navss@30800000 {
-> 
-> This introduces below dtc warning when built with W=1
-> 
-> arch/arm64/boot/dts/ti/k3-am65-main.dtsi:388.35-530.4: Warning
-> (unit_address_vs_reg): /interconnect@100000/navss@30800000: node has a unit
-> name, but no reg property
+...
 
-Interesting, the example in
-Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+>>>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(&pdev->dev);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (!pm_runtime_status_suspended(&pdev->d=
+ev))
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 tegra210_i2s_runtime_suspend(&pdev->dev);
+>>>>>> This breaks device's RPM refcounting if it was disabled in the activ=
+e
+>>>>>> state. This code should be removed. At most you could warn about the
+>>>>>> unxpected RPM state here, but it shouldn't be necessary.
+>>>>> I guess this was added for safety and explicit suspend keeps clock
+>>>>> disabled.
+>>>>> Not sure if ref-counting of the device matters when runtime PM is
+>>>>> disabled and device is removed.
+>>>>> I see few drivers using this way.
+>>>> It should matter (if I'm not missing something) because RPM should
+>>>> be in
+>>>> a wrecked state once you'll try to re-load the driver's module. Likely
+>>>> that those few other drivers are wrong.
+>>>>
+>>>> [snip]
+>>> Once the driver is re-loaded and RPM is enabled, I don't think it
+>>> would use
+>>> the same 'dev' and the corresponding ref count. Doesn't it use the new
+>>> counters?
+>>> If RPM is not working for some reason, most likely it would be the case
+>>> for other
+>>> devices. What best driver can do is probably do a force suspend during
+>>> removal if
+>>> already not done. I would prefer to keep, since multiple drivers still
+>>> have it,
+>>> unless there is a real harm in doing so.
+>> I took a closer look and looks like the counter actually should be
+>> reset. Still I don't think that it's a good practice to make changes
+>> underneath of RPM, it may strike back.
+>=20
+> If RPM is broken, it probably would have been caught during device usage.
+> I will remove explicit suspend here if no any concerns from other folks.
+> Thanks.
 
-is basically the same and dt_binding_check is happy about it:
-DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
-CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
+I recall that this was the preferred way of doing this from the RPM
+folks. Tegra30 I2S driver does the same and Stephen had pointed me to
+this as a reference. I believe that this is meant to ensure that the
+device is always powered-off regardless of it RPM is enabled or not and
+what the current state is.
 
-but it screamed when I had the simple-bus in there (copied from the
-existing dtsi file).
+Now for Tegra210 (or actually 64-bit Tegra) RPM is always enabled and so
+we don't need to worry about the !RPM case. However, I still don't see
+the harm in this.
 
-The node name for simple-bus _must_ be
-'^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+Jon
 
-I would not use any of these to NAVSS node...
-
-> this is representing cbass inside main_navss, just like cbass_main. You can drop
-> this patch and the similar mcu version.
-
-According to Documentation/devicetree/bindings/mfd/mfd.txt:
-- compatible : "simple-mfd" - this signifies that the operating system
-  should consider all subnodes of the MFD device as separate devices
-  akin to how "simple-bus" indicates when to see subnodes as children
-  for a simple memory-mapped bus.
-
-NAVSS is falling into simple-mfd as the devices under it are independent
-devices.
-
-> 
-> Thanks and regards,
-> Lokesh
-> 
->> +		compatible = "simple-mfd";
->>  		#address-cells = <2>;
->>  		#size-cells = <2>;
->>  		ranges;
->>
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--=20
+nvpublic
