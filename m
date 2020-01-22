@@ -2,81 +2,99 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204EAC32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 22:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC04C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 22:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCF924673
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 22:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579731386;
-	bh=gMznlkKlnEraQs6bi8mMvqUTxahZxYtFxguxpkQyvME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lpq1GE6pU+1ZX3c7a/PYsl5ROuFx+ttiQOq+unlTAhYNOGPtLwI1N63NBSB/foiXv
-	 s9QdcV259bkzs2WUU5FNtyXc3KDlNdPVKNGuGxoEPpQUKpSOmHAe/gY2yfU6lEr4bW
-	 RJS6S7TF1++YGXq8QY6qFWoTg8r2zC5OiSH4G0Kg=
+	by mail.kernel.org (Postfix) with ESMTP id 4C1D42467A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 22:46:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ogBzJA9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725911AbgAVWQ0 (ORCPT
+        id S1726049AbgAVWqH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:16:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgAVWQ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:16:26 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FFFC24673;
-        Wed, 22 Jan 2020 22:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579731385;
-        bh=gMznlkKlnEraQs6bi8mMvqUTxahZxYtFxguxpkQyvME=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x2h5LFBGzqwNyC19r6IFIehFx3ZQHjUiNkA+MOUKFhxmozAO3DH5DTue+2IJ+i14Q
-         6yXcy6MhsJ5u4hkZSyLY0HaWNTU9U79d0kitNpzd1AY4rwzTkxtUNyMAJ4krzXPZlW
-         jRAQHCOSGRM3Mfm28GKPELbGJYirLtB+THd56wec=
-Received: by mail-qk1-f173.google.com with SMTP id d10so1452321qke.1;
-        Wed, 22 Jan 2020 14:16:25 -0800 (PST)
-X-Gm-Message-State: APjAAAVeIU39PaUIgvplwrhoGbfzxKdrtWZ5vI7Wikie78Fn7uzP4fMq
-        OK0YKN5av1s9VKVKjPK5meARHQHdIUnCqXMqpQ==
-X-Google-Smtp-Source: APXvYqzkmuC5aqfg3tJZ3GIJ9N4BfBcSOeRzz/S5dStACI0FD4XIBdfQfwykY16cFmXykRB/+2sC0MDi6Qjmab6Gl60=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr12816454qkg.152.1579731384778;
- Wed, 22 Jan 2020 14:16:24 -0800 (PST)
-MIME-Version: 1.0
-References: <20200122174005.17257-1-sravanhome@gmail.com>
-In-Reply-To: <20200122174005.17257-1-sravanhome@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 22 Jan 2020 16:16:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
-Message-ID: <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
-Subject: Re: [PATCH v8] dt-bindings: regulator: add document bindings for mpq7920
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 22 Jan 2020 17:46:07 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33114 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgAVWqH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 17:46:07 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b6so979463wrq.0;
+        Wed, 22 Jan 2020 14:46:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=DUZxqXCTw8R6QCBbI197sah0uzk3QRUQFWT9ZOyB7Yw=;
+        b=ogBzJA9dCiPDKlIna4Bucj5L7dAS8xsMTknUwWz+zmlCHETAflT6aML3KdCaPEEPl9
+         i5+uApmpVcAOXZvfvzYqcBYYc9wFZaKZvZjyRNZyYFrHrPDoG3q8LIlbdhjAv6sHyXaM
+         Me2d4nLWFV8X/iMcUaIf0w/aqa1CO7il0kH6GPQ0/R3gOwy0eF4JD3ikRQFgdhv/GdP3
+         l5o1wEVwOL3uucpfwD3eDRxPDpNI5NkfIPkyTMIzOZsRJBd7VjDEns6XKkvBPn0MZ3zl
+         5e/8PZlOmhvGX15QtBygZgvWoYLIvV5cwS8EP2mV/8ZSinC3RLgqudno+ItfJKXiNZRN
+         3kzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=DUZxqXCTw8R6QCBbI197sah0uzk3QRUQFWT9ZOyB7Yw=;
+        b=sI4XLRePSQe8u/YCg2vXFH/ubHKtGkIYd3RQ71Kb/WiExY4JHYaV01spF29pymQezs
+         /bsOnzcA1Y0ejcvxlkGLL6xzoaRM5KXM8rogbxAo4lTi2ivLzq2RM5WWQJzi+g8IHmJ1
+         zkqJVq7dL+ejW8auIsRGV3MVywtTad0RLeFUETbMZ4hGM7gPP8uhEHy4nXPEOelaaU6g
+         au1vRqcXIWXo3BBra1ekM9IYPBMOSCCyAsKNmw+AVdK1+2Y5JrBMzLc2UM/JeL5H1BTo
+         yFSArKQgTKcxprvjhW1WJRmDeywssMbxHJBjSJonhByzz8gjh7pnj+jwP0P8/nDIkVU5
+         7E6w==
+X-Gm-Message-State: APjAAAUR9BAwszJkM02SgWUwfcdojInuL0K6/CkRcwr3BV/piFgS7L6D
+        uHq82Wa0Q7diNy+unZZVBjI=
+X-Google-Smtp-Source: APXvYqwv+FPTcvtz3itSHxg+QI3+P6dzgJihxCbSWochxhZPiMdt4J9IWnoCeRlGJMyGwNcYMl+E4w==
+X-Received: by 2002:adf:db45:: with SMTP id f5mr13294137wrj.418.1579733165530;
+        Wed, 22 Jan 2020 14:46:05 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id f1sm342559wro.85.2020.01.22.14.46.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jan 2020 14:46:05 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     broonie@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] dt-bindings: spi: spi-rockchip: add description for rk3308
+Date:   Wed, 22 Jan 2020 23:45:54 +0100
+Message-Id: <20200122224555.6845-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200122224555.6845-1-jbx6244@gmail.com>
+References: <20200122224555.6845-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 11:40 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->
-> Add device tree binding information for mpq7920 regulator driver.
-> Example bindings for mpq7920 are added.
->
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->
-> Notes:
->     Changes on v8 :
->       - fixed error reported by dt_binding_check
+The description below is already in use for rk3308.dtsi,
+but was somehow never added to a document, so add
+"rockchip,rk3308-spi", "rockchip,rk3066-spi"
+for spi nodes on a rk3308 platform to spi-rockchip.yaml.
 
-Still broken. :(
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+index bca8c6142..a797a4748 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+@@ -29,6 +29,7 @@ properties:
+             - rockchip,px30-spi    #for px30 SoCs.
+             - rockchip,rk3188-spi  #for rk3188 SoCs.
+             - rockchip,rk3288-spi  #for rk3288 SoCs.
++            - rockchip,rk3308-spi  #for rk3308 SoCs.
+             - rockchip,rk3368-spi  #for rk3368 SoCs.
+             - rockchip,rk3399-spi  #for rk3399 SoCs.
+           - const: rockchip,rk3066-spi
+-- 
+2.11.0
+
