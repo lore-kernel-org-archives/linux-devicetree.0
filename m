@@ -2,128 +2,230 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 691E0C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 04:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98020C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 04:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361D52064C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 04:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AEF2465A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 04:32:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="LDJBFP6P"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WGBvzz7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgAVEAm (ORCPT
+        id S1727141AbgAVEci (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jan 2020 23:00:42 -0500
-Received: from mail-dm6nam10on2072.outbound.protection.outlook.com ([40.107.93.72]:61463
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726605AbgAVEAm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jan 2020 23:00:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V8CaT8kkDELX+dBC8+ys9+jqyrLIusBbVzKDmoC5VA8btBXdFQsvia8VGg4wo8P4kswtNzlQ5If1fca8HSySSK5e4FnJjAsuGSQPwW72hdzoOJvkHY43qJTsboUgzn9qqnVyRmnRVKW5xkj242RoP0J89uRWT6x/jdVCJeGrBNtQpjgMVmVv7aOfX8T4Iq24lghBLcALQzrroBjep3yNi1bYF2mweavsUEJbUJJjF+3VsPP4xVmBUQP1uHSHb2U5XGOJH+WzZOZonaRgmZ3/BkzBJQWIZyCy/HaQlPKTEyina84/wPLGnuLE6SdDVLkHv4KiBNMdkN0uLjKv+79SCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=crYDMoNhNe50Uhwp9FaCpI5GyAxe/u4dlGBrWl2ABVE=;
- b=NT9orMbYCgJCfH7K5dGkZwt4QvZvzWoyP5O4pKZ0E+GZASm7TeSnA5epN5mSqwZgN53AQvd137HYdHxb8KLvHhnOMfmZ5jHBGvrAZUKVJTmY3ulWmPlYnCh+jwLTeUVNHB+5MsB91UQmF+fqXw3a0PLTg7rN7xC6WDaH3LNKz746LBMlD0aSP2oPWAURIXqMQu+Oa6zg4P0B/HVk9kFcKmkf7HtEvyAQ4o3OrEk0/C+zy0s5cc/Tv6SDzq5YSm8kqhcovIjsdLS09ta91Oy8y8nJD12l9lmARWMyET8xwVGBNd3ijzgiXHs9ZcKJ4tRCaOW6AKH/u9aK+f3g/YSilA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=crYDMoNhNe50Uhwp9FaCpI5GyAxe/u4dlGBrWl2ABVE=;
- b=LDJBFP6P+CQLVKE6D56HlSsY1qJRFTwDnfr7kzNsk/N4VLenWJ6ucNmowKn1N7UXMnGdyCj+RAz7W+f6MP1fpe69Q7BJ/sIqe4qUCJQ+1CIic3Al7QcvS6l1R3tPLtj8Z+YzYvr+n27ED1i2zz8z8CUGJWdjKgyb1UAyLixBGSY=
-Received: from SN6PR08MB5053.namprd08.prod.outlook.com (52.135.107.153) by
- SN6PR08MB4336.namprd08.prod.outlook.com (52.135.69.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Wed, 22 Jan 2020 04:00:37 +0000
-Received: from SN6PR08MB5053.namprd08.prod.outlook.com
- ([fe80::7c80:2b62:5d9a:2139]) by SN6PR08MB5053.namprd08.prod.outlook.com
- ([fe80::7c80:2b62:5d9a:2139%4]) with mapi id 15.20.2644.026; Wed, 22 Jan 2020
- 04:00:37 +0000
-Received: from labundy.com (136.49.227.119) by SN4PR0401CA0015.namprd04.prod.outlook.com (2603:10b6:803:21::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Wed, 22 Jan 2020 04:00:36 +0000
-From:   Jeff LaBundy <jeff@labundy.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 2/7] mfd: Add support for Azoteq
- IQS620A/621/622/624/625
-Thread-Topic: [PATCH v4 2/7] mfd: Add support for Azoteq
- IQS620A/621/622/624/625
-Thread-Index: AQHVzN7LS9UVe3hXOEa6+dol5orE9afu2GCAgAQgfoCAADy8gIAC4aYA
-Date:   Wed, 22 Jan 2020 04:00:37 +0000
-Message-ID: <20200122040034.GB1455@labundy.com>
-References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
- <1579228475-6681-3-git-send-email-jeff@labundy.com>
- <20200117132143.GK15507@dell> <20200120042303.GC28865@labundy.com>
- <20200120080025.GP15507@dell>
-In-Reply-To: <20200120080025.GP15507@dell>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0401CA0015.namprd04.prod.outlook.com
- (2603:10b6:803:21::25) To SN6PR08MB5053.namprd08.prod.outlook.com
- (2603:10b6:805:78::25)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jeff@labundy.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [136.49.227.119]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 30ac4c23-51cd-4225-3b2f-08d79eefa363
-x-ms-traffictypediagnostic: SN6PR08MB4336:
-x-microsoft-antispam-prvs: <SN6PR08MB4336B7D5D848B1B5382BC80CD30C0@SN6PR08MB4336.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 029097202E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39830400003)(396003)(346002)(366004)(189003)(199004)(36756003)(66476007)(64756008)(16526019)(26005)(66946007)(8936002)(7696005)(52116002)(66446008)(66556008)(86362001)(33656002)(6916009)(508600001)(55016002)(8886007)(186003)(71200400001)(5660300002)(2906002)(4326008)(1076003)(316002)(2616005)(54906003)(956004)(8676002)(4744005)(81166006)(81156014)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB4336;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: labundy.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GnrVHRuvZ9iCdzagNEtp7brHz8Fg24cbM7LjO4+lQnThFuOwB5XFJj4B23K97FURhBNKYs8uhGTDSg7ZKDVld91VRsyPett5bPv7Bu04Z7zsclGLpQnwJNJsrhGZN0+BZeJrZ36FkKy2UuIsaDav1Qh1xt/2pq/KT3TJNpidD2hnwVVHbu5D7rvw/+LyA2GcQ48ZmEuMT5bE6tzma/yBlDNAepZUV+eYlWkuakx9A5NMQE1ukLmHXwp1SIlbl7Nij5zFfDG8e9bmDCMpo5yrloX4zxJLgvY+nFSxS6udcj/x8ctZuU40b6nZUWUTQ7N8IgNMfgwUUrMIVZFPaoaS3AfvU+MuZy3eaz74zFKd4sgGxSF7vsx9WR2agM6brFYQt7bBZF1R4SqDwFA2n6BGh+BhAfz1ob+KwIlsL3ATiaQEyLxPNJNFpFg9oj63DSoC
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <45CB669215DDD74BBE895395E0D0A969@namprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 Jan 2020 23:32:38 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16443 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgAVEci (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jan 2020 23:32:38 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e27d0530000>; Tue, 21 Jan 2020 20:32:19 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 21 Jan 2020 20:32:33 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 21 Jan 2020 20:32:33 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Jan
+ 2020 04:32:28 +0000
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <atalambedu@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <lgirdwood@gmail.com>, <jonathanh@nvidia.com>,
+        <viswanathl@nvidia.com>, <sharadg@nvidia.com>,
+        <broonie@kernel.org>, <thierry.reding@gmail.com>,
+        <linux-tegra@vger.kernel.org>, <rlokhande@nvidia.com>,
+        <mkumard@nvidia.com>, <dramesh@nvidia.com>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+ <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
+Date:   Wed, 22 Jan 2020 10:02:25 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30ac4c23-51cd-4225-3b2f-08d79eefa363
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 04:00:37.3775
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DcYKN3OqZ17D5D+sRhAcocHeJK2AnSpRCvRGetzWJAQZQWhy6MrqKJNGeIbu3LoF8AZVFgItAj8EK8Ukq4kwfg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB4336
+In-Reply-To: <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579667539; bh=KdmKX9d8S+PQrtUkIVTaIyhy3ejgQLwLEoBvJKFTNnE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=WGBvzz7KG05TcenZvck/dp97lpcrgOKH51OcIQnur3eIJ4HBue9LyYqC5M6j67Are
+         Oa/gGGlwdl75oHpwowTo6ELVDM92lhTQjkeqeSwtnOnuMFuxA/Y8CXKjariz5Poj09
+         C1snVF41uhsttluLGDnquh8qu7akwvNPjuEg1Z7nCjKvtEDWz7hs2Z/7/MdEBZCsrR
+         LY4gkxw//Q4YwslGwy9XMBzIK274GR63dJQ6QmkLMNBTbZSXr09UAEwWqwlqUkNnCv
+         e5y+/SB796VoegRoJIXRcLrVXz/FHwAbkeJAlrgnAMNvw9vmayJ1zd+fBZ+zMjDF38
+         wC0lDvnkC19Zg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgTGVlLA0KDQpPbiBNb24sIEphbiAyMCwgMjAyMCBhdCAwODowMDoyNUFNICswMDAwLCBMZWUg
-Sm9uZXMgd3JvdGU6DQoNClsuLi5dDQoNCj4gSW4gZnV0dXJlLCBjb3VsZCB5b3UgdHJpbSBhbGwg
-dW5uZWNlc3NhcnkgcGFydHMgb2YgdGhlIHJldmlldywNCj4gc25pcHBpbmcgb3V0IGFsbCBvZiB0
-aGUgcGFydHMgeW91IGFncmVlIHdpdGgsIGxlYXZpbmcgb25seSB0aGUNCj4gY29udGVudGlvdXMg
-Y29udGV4dCBwbGVhc2U/ICBJdCBzYXZlcyBhbiBhd2Z1bCBsb3Qgb2Ygc2Nyb2xsaW5nIG9uDQo+
-IGJlaGFsZiBvZiB0aGUgcmVhZGVyL3Jldmlld2VyLiAgVGhhbmtzLg0KPiANCj4gLS0gDQo+IExl
-ZSBKb25lcyBb5p2O55C85pavXQ0KPiBMaW5hcm8gU2VydmljZXMgVGVjaG5pY2FsIExlYWQNCj4g
-TGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzDQo+IEZvbGxv
-dyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cNCg0KU3VyZSB0aGluZzsgSSdtIGhh
-cHB5IHRvIGRvIHRoYXQgbW92aW5nIGZvcndhcmQuIFRoYW5rIHlvdSBhZ2FpbiBmb3INCmFsbCBv
-ZiB5b3VyIGZlZWRiYWNrLg0KDQpJJ2xsIHNlbmQgdjUgYWZ0ZXIgdGhlIHVwY29taW5nIG1lcmdl
-IHdpbmRvdyBjbG9zZXMuDQoNCktpbmQgcmVnYXJkcywNCkplZmYgTGFCdW5keQ0K
+
+
+On 1/21/2020 9:33 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 21.01.2020 17:21, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>
+> [snip]
+>
+>>>> +static int tegra210_i2s_put_control(struct snd_kcontrol *kcontrol,
+>>>> +     struct snd_ctl_elem_value *ucontrol)
+>>> Checkpatch should complain about the wrong indentation here.
+>> I had run checkpatch before sending the patch, below is the result.
+>> -----
+>> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating=
+?
+>> #70:
+>> new file mode 100644
+>>
+>> total: 0 errors, 1 warnings, 1103 lines checked
+>>
+>> NOTE: For some of the reported defects, checkpatch may be able to
+>>        mechanically convert to the typical style using --fix or
+>> --fix-inplace.
+>> -----
+> Using 'checkpatch --strict':
+>
+> CHECK: Alignment should match open parenthesis
+> #2693: FILE: sound/soc/tegra/tegra210_i2s.c:362:
+> +static int tegra210_i2s_put_control(struct snd_kcontrol *kcontrol,
+> +       struct snd_ctl_elem_value *ucontrol
+>
+> [snip]
+
+will fix
+>>>> +
+>>>> +     } else if (strstr(kcontrol->id.name, "Playback Audio Bit Format"=
+))
+>>>> +             i2s->audio_fmt_override[I2S_RX_PATH] =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Capture Audio Bit Format"))
+>>>> +             i2s->audio_fmt_override[I2S_TX_PATH] =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Client Bit Format"))
+>>>> +             i2s->client_fmt_override =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Playback Audio Channels"))
+>>>> +             i2s->audio_ch_override[I2S_RX_PATH] =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Capture Audio Channels"))
+>>>> +             i2s->audio_ch_override[I2S_TX_PATH] =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Client Channels"))
+>>>> +             i2s->client_ch_override =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Capture Stereo To Mono"))
+>>>> +             i2s->stereo_to_mono[I2S_TX_PATH] =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Capture Mono To Stereo"))
+>>>> +             i2s->mono_to_stereo[I2S_TX_PATH] =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Playback Stereo To Mono"))
+>>>> +             i2s->stereo_to_mono[I2S_RX_PATH] =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Playback Mono To Stereo"))
+>>>> +             i2s->mono_to_stereo[I2S_RX_PATH] =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "Playback FIFO Threshold"))
+>>>> +             i2s->rx_fifo_th =3D value;
+>>>> +     else if (strstr(kcontrol->id.name, "BCLK Ratio"))
+>>>> +             i2s->bclk_ratio =3D value;
+>>> I'm pretty sure that checkpatch should complain about the missing
+>>> brackets, they should make code's indentation uniform and thus easier t=
+o
+>>> read. Same for all other occurrences in the code.
+>> same as above
+> CHECK: braces {} should be used on all arms of this statement
+> #2699: FILE: sound/soc/tegra/tegra210_i2s.c:368:
+> +       if (strstr(kcontrol->id.name, "Loopback")) {
+> [...]
+> +       } else if (strstr(kcontrol->id.name, "Sample Rate"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "FSYNC Width")) {
+> [...]
+> +       } else if (strstr(kcontrol->id.name, "Playback Audio Bit Format")=
+)
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Capture Audio Bit Format"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Client Bit Format"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Playback Audio Channels"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Capture Audio Channels"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Client Channels"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Capture Stereo To Mono"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Capture Mono To Stereo"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Playback Stereo To Mono"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Playback Mono To Stereo"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "Playback FIFO Threshold"))
+> [...]
+> +       else if (strstr(kcontrol->id.name, "BCLK Ratio"))
+> [...]
+>
+> [snip]
+
+will fix
+>>>> +     pm_runtime_enable(dev);
+>>> Error checking?
+>> return type for above is void()
+> Ok
+>
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +     pm_runtime_disable(&pdev->dev);
+>>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
+>>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
+>>> This breaks device's RPM refcounting if it was disabled in the active
+>>> state. This code should be removed. At most you could warn about the
+>>> unxpected RPM state here, but it shouldn't be necessary.
+>> I guess this was added for safety and explicit suspend keeps clock
+>> disabled.
+>> Not sure if ref-counting of the device matters when runtime PM is
+>> disabled and device is removed.
+>> I see few drivers using this way.
+> It should matter (if I'm not missing something) because RPM should be in
+> a wrecked state once you'll try to re-load the driver's module. Likely
+> that those few other drivers are wrong.
+>
+> [snip]
+
+Once the driver is re-loaded and RPM is enabled, I don't think it would use
+the same 'dev' and the corresponding ref count. Doesn't it use the new=20
+counters?
+If RPM is not working for some reason, most likely it would be the case=20
+for other
+devices. What best driver can do is probably do a force suspend during=20
+removal if
+already not done. I would prefer to keep, since multiple drivers still=20
+have it,
+unless there is a real harm in doing so.
+>
+>>>> +     int rx_fifo_th;
+>>> Could rx_fifo_th be negative?
+>> rx_fifo_th itself does not take negative values, explicit typecasting> i=
+s avoided in "if" condition by declaring this as "int"
+> Explicit typecasting isn't needed for integers.
+
+What I meant was, rx_fifo_th is checked against a 'int' variable in an=20
+"if" condition.
+
