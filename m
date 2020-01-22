@@ -2,202 +2,251 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FFEC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0E9C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7D124125
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6C42468F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hdEtixhH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4gg33he"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgAVS2S (ORCPT
+        id S1729108AbgAVS4Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:28:18 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37440 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVS2P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 13:28:15 -0500
-Received: by mail-oi1-f195.google.com with SMTP id z64so343792oia.4
-        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 10:28:14 -0800 (PST)
+        Wed, 22 Jan 2020 13:56:24 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33713 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729074AbgAVS4X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 13:56:23 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d139so185826wmd.0
+        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 10:56:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/nmCPb+XXCVt5KhfGb/8H7zZgYObjRj8769ul8BOa2o=;
-        b=hdEtixhHfOZuWMp0/X6AY8Ms4a/2ls0PXttrGni4Z/DBE8LLDiXkABZ0PJ58/gV3Au
-         /H0Vjqh2uiHmAwmKNvHB15NHTXKz5eQ1qKrd9tYQvGzi+a+kjDkILD3xOWwcjoG5Zn2F
-         mUSZ7B5yHXHdC3euPJ5fOXA1O6ILZ8Qvf4v3/TSKND60QxAmvIE2w2uLIquwDjxWPZD7
-         9AIp/qQcEJDRQPYzU5F/lhOgJCi5Lc7w4EQjdRgCfEGDu0m/mgZAzQO3fcY9AQ0+NpXA
-         H6wwuQKh5/qXBUB4sW5JgHSqkbsChQBpEsh+TgajyWylfp6QxvaI213QqIEgTYUE6kES
-         GgkQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=e20aOreCjy5ntKA5ZsHalS2qITKl4gNKBg3VYWDWJIk=;
+        b=j4gg33he6QJ2c386vn81AJsPFHfI+70MiI8+ym17dWNgYjjKdYVH5MGuMI/+Ab0qe7
+         vZaZsdfGYmYhNB4z08fOchVPnoQcScFgWKR8e5fp7TAGTVoCpNLFrq4kuljONQMej9bW
+         HGhBnXDlFORCrxJf8rSGEg9KX84bIblY9Kfz6qN5sYAOPHjgu5NBGI6HQD/R0v8TZjuH
+         vm2CeyW1OuOaxfXd+m7NcR/KFHUQbnwzL8aTrHpglFBhkRVxTs9r5kKD/tBQWoSGrj9X
+         RSwy423fNbbP5j0pMRVok3nfZPMtTSrlbqnkzfEtMB+lHYhmgeGTb6+YZUs8pJQC9Htg
+         28bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/nmCPb+XXCVt5KhfGb/8H7zZgYObjRj8769ul8BOa2o=;
-        b=nlithPMFhQ9MVaQdUkJsCeMuIa1SdEuCCNa3Uq8NuDaueMRgZxqycnN1s+nUdxbDY3
-         3xG3g2AjIl93mjhwJ4nIv4OehWPzp7lpLvOaasEAe72VDOk0cbkFdzMu03Ox5b7TDQBE
-         W9+ITKXGYYOPi+itIkAfA9aamn3ZMAnIlzmizJzJwyFLg78SzyfV666dzrGIm72WOdrL
-         joUHBiZ/G8dZCauynMZ6l9TXNxvv362ZHHgsiFalXSlgM0ppi7EB4yzyEAFjT6e13jmk
-         qhiGRNsL8gdT8MiRrjEG4/hsssGnWvyqqrMFG0/ttU0OLLEwiolK007Y4UvhdpBpyqEk
-         A0yg==
-X-Gm-Message-State: APjAAAVBki/mCOf1B/Nlx0wphfgm1TDWdyHNTQ+snejxu7SMQ2cUgMRd
-        VD2HG6Sz1JnJUfROVzaKX+/3JjSS10ppsY4yiBXq1Q==
-X-Google-Smtp-Source: APXvYqzSW3nTaM3W/BugRvoJ65EPdnrE0AXnH4fjjOZ+G8Qyw5uBexwDzoPs/jd+hW+LN2XWrUZOYIeT7Ac7gpkLWDE=
-X-Received: by 2002:aca:c551:: with SMTP id v78mr7775111oif.161.1579717694073;
- Wed, 22 Jan 2020 10:28:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20191212014233.32799-1-john.stultz@linaro.org>
- <20191212014233.32799-8-john.stultz@linaro.org> <20191218163738.GA12358@bogus>
- <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com> <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 22 Jan 2020 10:28:03 -0800
-Message-ID: <CALAqxLVgyyDmoKAxrKp-GvkBZ4hfbMgEBThPeVmJ7EZ6GzLjFw@mail.gmail.com>
-Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
- hub and data role switch functionality on HiKey960
-To:     Rob Herring <robh@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=e20aOreCjy5ntKA5ZsHalS2qITKl4gNKBg3VYWDWJIk=;
+        b=heCoRlLOkIhogGucqJqY/ikMVMcwPrwq2EqfEy6czhwmc9hTPuTlNre6w8QT79C7G4
+         WeL4DM0mxIok85Llu4AL4ZwpfbG5WMVJLtSKPnVxyc+iC2mAOvvq65GWgvlpUwegIexL
+         5zqDxFIggOL4358rV5q8fq2GtsK1ABBRi5i05LL3rXod6POThOrkDZlZgr3TYYjkyKcJ
+         +cMIa3SlHeTUhvv9buv1EbejZ7sGviCGzdriMAMXJ/8dZMgC/qAteK05on6GCNESu5dl
+         hgkTkKhr7QStpmMnOmXWNxV5v3XlCjZouGsldLQD5mWxy1E4G+crVhS9POOh2J/Cig4P
+         UB2g==
+X-Gm-Message-State: APjAAAXRXYi24YkCQ9uDyiyuoeQaBg6SInfOn2+tKnPKBMSyTi8gP1PG
+        zA+VbEVcTH3SyFXzCweR2oL1bw==
+X-Google-Smtp-Source: APXvYqwXeWoG2onacSMWnlS4tpaerCB/ga1YCp+p1JkM9aIPxTeBZhRjV7R07Q8v/rvxPpE14Gyd+g==
+X-Received: by 2002:a7b:cc81:: with SMTP id p1mr4192690wma.62.1579719381920;
+        Wed, 22 Jan 2020 10:56:21 -0800 (PST)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id q15sm58590390wrr.11.2020.01.22.10.56.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 10:56:21 -0800 (PST)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, Yu Chen <chenyu56@huawei.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         ShuFan Lee <shufan_lee@richtek.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Jun Li <lijun.kernel@gmail.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH v3 07/19] usb: dwc3: Registering a role switch in the DRD code.
+Date:   Wed, 22 Jan 2020 18:55:58 +0000
+Message-Id: <20200122185610.131930-8-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-(Sorry for the slow reply. The holidays and other priorities struck
-and I'm only now just getting back to this!)
+From: Yu Chen <chenyu56@huawei.com>
 
-On Wed, Dec 18, 2019 at 11:57 AM Rob Herring <robh@kernel.org> wrote:
-> On Wed, Dec 18, 2019 at 11:21 AM John Stultz <john.stultz@linaro.org> wrote:
-> > On Wed, Dec 18, 2019 at 8:37 AM Rob Herring <robh@kernel.org> wrote:
-> > > As a whole this is HiSilicon specific, but really it is not. It's really
-> > > just a hub, a mux, and connectors for which we have bindings for. I
-> > > think you need to model the actual hub in DT. We have 2 ways already to
-> > > describe hubs in DT: a I2C device or USB device.
-> > >
-> > > AIUI, the board looks something like this:
-> > >
-> > > ctrl -> mux --> hub -> type-a connector
-> > >             +-> type-c connector
-> > >
-> > > If the hub I2C is not used, then you could do something like this:
-> > >
-> > > ctrl {
-> > >     mux-controls = <&usb_gpio_mux>;
-> > >     connector@0 {
-> > >         // type C connector binding
-> > >     };
-> > >     hub@1 {
-> > >         // USB device binding
-> > >     };
-> > > };
-> >
-> > I can't say I totally grok all this, but I'll go digging to try to
-> > better understand it.
-> > I don't believe there is any I2C involved here, so I'll try the
-> > approach you outline above.
->
-> Well, it is there in the schematics.
+The Type-C drivers use USB role switch API to inform the
+system about the negotiated data role, so registering a role
+switch in the DRD code in order to support platforms with
+USB Type-C connectors.
 
-Fair point. Though at least for the USB5734 hub, I don't believe we've
-made use of the i2c on it (at least that I can see).  From the
-existing driver, the control is basically just 3 GPIOs:  type-c power,
-hub power, and the mux/switch.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+CC: ShuFan Lee <shufan_lee@richtek.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+ drivers/usb/dwc3/core.h |  3 ++
+ drivers/usb/dwc3/drd.c  | 77 ++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 79 insertions(+), 1 deletion(-)
 
-Trying to get my head around your suggestion:
-ctrl {
-    mux-controls = <&usb_gpio_mux>;
-    connector@0 {
-        // type C connector binding
-    };
-    hub@1 {
-        // USB device binding
-    };
-};
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 77c4a9abe365..a99e57636172 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -25,6 +25,7 @@
+ #include <linux/usb/ch9.h>
+ #include <linux/usb/gadget.h>
+ #include <linux/usb/otg.h>
++#include <linux/usb/role.h>
+ #include <linux/ulpi/interface.h>
+ 
+ #include <linux/phy/phy.h>
+@@ -953,6 +954,7 @@ struct dwc3_scratchpad_array {
+  * @hsphy_mode: UTMI phy mode, one of following:
+  *		- USBPHY_INTERFACE_MODE_UTMI
+  *		- USBPHY_INTERFACE_MODE_UTMIW
++ * @role_sw: usb_role_switch handle
+  * @usb2_phy: pointer to USB2 PHY
+  * @usb3_phy: pointer to USB3 PHY
+  * @usb2_generic_phy: pointer to USB2 PHY
+@@ -1086,6 +1088,7 @@ struct dwc3 {
+ 	struct extcon_dev	*edev;
+ 	struct notifier_block	edev_nb;
+ 	enum usb_phy_interface	hsphy_mode;
++	struct usb_role_switch	*role_sw;
+ 
+ 	u32			fladj;
+ 	u32			irq_gadget;
+diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+index c946d64142ad..3b57d2ddda93 100644
+--- a/drivers/usb/dwc3/drd.c
++++ b/drivers/usb/dwc3/drd.c
+@@ -476,6 +476,73 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
+ 	return edev;
+ }
+ 
++#ifdef CONFIG_USB_ROLE_SWITCH
++#define ROLE_SWITCH 1
++static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
++{
++	struct dwc3 *dwc = dev_get_drvdata(dev);
++	u32 mode;
++
++	switch (role) {
++	case USB_ROLE_HOST:
++		mode = DWC3_GCTL_PRTCAP_HOST;
++		break;
++	case USB_ROLE_DEVICE:
++		mode = DWC3_GCTL_PRTCAP_DEVICE;
++		break;
++	default:
++		mode = DWC3_GCTL_PRTCAP_DEVICE;
++		break;
++	}
++
++	dwc3_set_mode(dwc, mode);
++	return 0;
++}
++
++static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
++{
++	struct dwc3 *dwc = dev_get_drvdata(dev);
++	unsigned long flags;
++	enum usb_role role;
++
++	spin_lock_irqsave(&dwc->lock, flags);
++	switch (dwc->current_dr_role) {
++	case DWC3_GCTL_PRTCAP_HOST:
++		role = USB_ROLE_HOST;
++		break;
++	case DWC3_GCTL_PRTCAP_DEVICE:
++		role = USB_ROLE_DEVICE;
++		break;
++	case DWC3_GCTL_PRTCAP_OTG:
++		role = dwc->current_otg_role;
++		break;
++	default:
++		role = USB_ROLE_DEVICE;
++		break;
++	}
++	spin_unlock_irqrestore(&dwc->lock, flags);
++	return role;
++}
++
++static int dwc3_setup_role_switch(struct dwc3 *dwc)
++{
++	struct usb_role_switch_desc dwc3_role_switch = {NULL};
++
++	dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
++	dwc3_role_switch.set = dwc3_usb_role_switch_set;
++	dwc3_role_switch.get = dwc3_usb_role_switch_get;
++	dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
++	if (IS_ERR(dwc->role_sw))
++		return PTR_ERR(dwc->role_sw);
++
++	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
++	return 0;
++}
++#else
++#define ROLE_SWITCH 0
++#define dwc3_setup_role_switch(x) 0
++#endif
++
+ int dwc3_drd_init(struct dwc3 *dwc)
+ {
+ 	int ret, irq;
+@@ -484,7 +551,12 @@ int dwc3_drd_init(struct dwc3 *dwc)
+ 	if (IS_ERR(dwc->edev))
+ 		return PTR_ERR(dwc->edev);
+ 
+-	if (dwc->edev) {
++	if (ROLE_SWITCH &&
++	    device_property_read_bool(dwc->dev, "usb-role-switch")) {
++		ret = dwc3_setup_role_switch(dwc);
++		if (ret < 0)
++			return ret;
++	} else if (dwc->edev) {
+ 		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
+ 		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
+ 					       &dwc->edev_nb);
+@@ -531,6 +603,9 @@ void dwc3_drd_exit(struct dwc3 *dwc)
+ {
+ 	unsigned long flags;
+ 
++	if (dwc->role_sw)
++		usb_role_switch_unregister(dwc->role_sw);
++
+ 	if (dwc->edev)
+ 		extcon_unregister_notifier(dwc->edev, EXTCON_USB_HOST,
+ 					   &dwc->edev_nb);
+-- 
+2.25.0
 
-The usb_gpio_mux would be the gpio mux switch.
-
-For the "type C connector binding", that would probably be the rt1711h
-type-c chip.
-
-For the "USB device binding" that would be a yet to be implemented
-USB5734 hub driver, I'm guessing?
-
-Though I'm not sure I understand how the hub driver gets a signal to
-power-on/power-off its gpio-regulator from the mux state?  I'm maybe
-still missing some details on the mux infrastructure.
-
-> > > The only new bindings you really need are adding 'mux-controls' to the
-> > > USB host controller and the hub binding (we already have a few).
-
-So this is a little confusing to me. Why is the host controller
-involved?  It seems to me all of this is down-stream of the
-controller, and it's just taking whatever the switch gives it.
-
-I think the switch needs to be signalled from the rt1711h type-c
-connector (when it detects the cable and determines the role). That
-said, I'm not sure how it would think to control the mux in that case
-(as that's pretty special case for this specific hardware). That's why
-we're using the role notifier intermediary trick in the current code.
-
-So I guess we could still have the roll notifier intermediary driver
-which then controls the mux?
-
-I know that's more a driver implementation detail and not really
-hardware description, :) but I'm just trying to figure out how it's
-going to come together and actually work.
-
-> > Is the idea to extend the rt1711h and
-> > dwc3 drivers further to support the mux/hub bit (this part is fairly
-> > foggy to me), completely removing the need for the misc driver?
->
-> I imagine that you need some driver to determine the state of the mux.
-> Perhaps a usb-mux driver which is instantiated by the host controller
-> driver when it sees a mux-controls property. Sorry, haven't looked at
-> the driver side of this at all.
->
-> > I did take an attempt at something similar with an earlier iteration
-> > of the patch set, where I was trying to move the vbus-gpio as a
-> > gpio-regulator to be controlled by the rt1711h/tpcm core, but that
-> > approach didn't work properly and Hans suggested I just go back to the
-> > approach submitted here:
-> >   https://lkml.org/lkml/2019/10/22/42
->
-> I don't see why that would matter. If you need to sense the Vbus
-> state, then you do need a GPIO typically. But for an enable line, it's
-> just another level of abstraction.
-
-My concern is that I suspect the issue we had then was that the order
-and the timing that we switch the 3 GPIOs ends up being important. In
-the current implementation we can adjust them linearly together, where
-as when I took a stab at having the vbus gpio was modeled as a
-regulator and controlled independently by the rt1711h, the typec state
-machine would get confused as I'm guessing the mux/switch wasn't where
-it expected it to be when it wanted to change the state of the type-c
-vbus.
-
-Thoughts?
-
-Thanks again for the review and feedback. And sorry to let so much
-time (and mental context) pass.
--john
