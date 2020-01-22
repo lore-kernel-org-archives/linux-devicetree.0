@@ -4,85 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51652C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B916C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2800F217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77E2217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579710201;
-	bh=LCZBvvOS0KLjWc9/STGzVEdt5nVKnCe0i6V++IqwJis=;
+	s=default; t=1579710255;
+	bh=4Tv4L1162MBfS2v6GYIGBJlvlOG7j6vrF1keEve3toY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yADSKLfAC/Lk2T3UDkrITBq5o0/PwgRRrcKHLnXt2piqgs2SoQZIEujaU/V2QG0El
-	 AFMCwhuQvmG8eSuBb94ZDt1WE05F02EygkV8dORrJhCVS1lTUJR3BGQ0K7j3nVBhNr
-	 c7K5SRjTbLcEg28q8+PJ3DqOaz+9Dijjk+h4A608=
+	b=G3Jr1FDlsRLNwzbg0yGeoJvmjI6Y5hqgKqVMzKuXquOOblj4+RrQkxT7dYKXRFrPa
+	 o5t0rPpGO0Pg+RNUiZP19lpiXmv/60IJ2PS/e66QoKrCEthmcX6U/c0j9Zgw2QmLhq
+	 4pmBvRZcoh4gpRDUnI7lW7TSYZc+X2dftn6zzQjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAVQXR (ORCPT
+        id S1725911AbgAVQYP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:23:17 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46532 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgAVQXR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 11:23:17 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 13so6559842oij.13;
-        Wed, 22 Jan 2020 08:23:16 -0800 (PST)
+        Wed, 22 Jan 2020 11:24:15 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44602 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVQYP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 11:24:15 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so6738415otj.11;
+        Wed, 22 Jan 2020 08:24:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kl6DkjB86yGpM9juSr7kQ2SQ7zaftAaJ+ye7aw840JU=;
-        b=J9LjScM2ZL5NLgNxUMJZxpKOT/SjwjdEj1dHpXqUlXcqEBFYmf04CkyndIXu/8QICi
-         1zTFc+4Jji5Bgv9o77gYlQDOqVQW/iV4WCmhjz77zr67c718erhHOFG0GOEtNodxLKuI
-         ktbFST2gQrG0tehFowoHS8V0rilaIdA4IL8tNblLR0eYM6JAF49Cxm0jJz3RQ59jnAO4
-         H5GRK/hXo9fcoITJcv5u3/ICtWTza9n55I34f5/DhfUaUJSqeae4UNk9ALMWwV4MLJ0L
-         30P0CG1Pqfg3kxvbsFph7ko+XWwqxN01WhYv9Hq3JH1c3lyUOtjGMQN5RGBQF90luU1C
-         /LSw==
-X-Gm-Message-State: APjAAAWPXSWQLzqaTkERv/Oj6VWIo3J5v8f8JCUALE5TNCdDLZLVL6SF
-        61aVqLh/XnNhH6+gM2sNYQ==
-X-Google-Smtp-Source: APXvYqx+wMlJuRZhN1C81TQvWCFvFCstyCoUvH2JF2ogKYXviYxz5AWDV3kOmMi0oeIt8a8lXFN9ZA==
-X-Received: by 2002:aca:c415:: with SMTP id u21mr7373960oif.49.1579710196135;
-        Wed, 22 Jan 2020 08:23:16 -0800 (PST)
+        bh=SBSuorVlBPJZlT0IMnm/ezCQKABZUi84K977zkiUy4Q=;
+        b=ZzpKzWSrIQ9DhhPtx8RzOsg5vR2O/VcuI6z/WYy0PIr4FB228OrywE+JnV7BW370m6
+         M1zCb1naZ1vZcVq2F2/9mHXMO2LEAw21b2yny254cq7dLzCpTtu02sgpZAYDuikX6LmD
+         Ug1l0g+1MgPrm1UeQs5WdiHqXfK6Os1wZBRVSdlzD6dSzFYPkkJfBHjIe2hs5X75cgDs
+         Ydk3Z5vpa/7FZdUTM31uW9eecikjr0ds8LT0N1BSsKcnrSzxuq7gH9rpx5f3oFmoFvlt
+         Ctm5G8MtPaMfa/ETNztSW8o0k91cES5AfE9TpeuyMIDdXvorC90Z08WUkbeL8W3hDkca
+         YLyQ==
+X-Gm-Message-State: APjAAAVVEv+XuoZxOD9rzuoGpv33M8inGzNVW0DvDHTqrl8kR+Gux6a1
+        080gyWnpFOKDBnGcONj4MA==
+X-Google-Smtp-Source: APXvYqw17VzUmX0qRYVT5h/d0qjRAnAfVEstQIvab3ApXczGOHJMy7ssOSpdqRBH6QMPhi2wqFsc3Q==
+X-Received: by 2002:a9d:7342:: with SMTP id l2mr7999588otk.98.1579710254147;
+        Wed, 22 Jan 2020 08:24:14 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p184sm13112789oic.40.2020.01.22.08.23.15
+        by smtp.gmail.com with ESMTPSA id m19sm14777791otn.47.2020.01.22.08.24.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 08:23:15 -0800 (PST)
-Received: (nullmailer pid 8106 invoked by uid 1000);
-        Wed, 22 Jan 2020 16:23:14 -0000
-Date:   Wed, 22 Jan 2020 10:23:14 -0600
+        Wed, 22 Jan 2020 08:24:13 -0800 (PST)
+Received: (nullmailer pid 9959 invoked by uid 1000);
+        Wed, 22 Jan 2020 16:24:12 -0000
+Date:   Wed, 22 Jan 2020 10:24:12 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 3/3] dt-bindings: spi: spi-rockchip: add
- description for rk3328
-Message-ID: <20200122162314.GA8044@bogus>
-References: <20200118230848.15326-1-jbx6244@gmail.com>
- <20200118230848.15326-3-jbx6244@gmail.com>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com, joel@jms.id.au,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-binding: iio: add NPCM ADC reset support
+Message-ID: <20200122162412.GA9924@bogus>
+References: <20200119110032.124745-1-tmaimon77@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200118230848.15326-3-jbx6244@gmail.com>
+In-Reply-To: <20200119110032.124745-1-tmaimon77@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 19 Jan 2020 00:08:48 +0100, Johan Jonker wrote:
-> The description below is already in use for rk3328.dtsi,
-> but was somehow never added to a document, so add
-> "rockchip,rk3328-spi", "rockchip,rk3066-spi"
-> for spi nodes on a rk3328 platform to spi-rockchip.yaml.
+On Sun, 19 Jan 2020 13:00:31 +0200, Tomer Maimon wrote:
+> Add NPCM ADC reset binding documentation.
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > ---
->  Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
