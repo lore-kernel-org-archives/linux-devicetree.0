@@ -2,141 +2,126 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA1DC32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 05:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BBDC32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 05:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A8E21835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 05:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D612465A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 05:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NCRNfyWu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPDYK4I1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbgAVFCV (ORCPT
+        id S1725805AbgAVF5K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 00:02:21 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41994 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgAVFCV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 00:02:21 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M52EbK034781;
-        Tue, 21 Jan 2020 23:02:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579669334;
-        bh=19Euv4bypX6Nyf5cnWQL/mS9NVJvz1Qup12v8d47CGY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NCRNfyWuc/18KD4nNqw6EIUZdIKLO4uIUnoiv4ipzx/IwraS4DtamhJa0iNEi0l/4
-         5YvNzKFkUQbtC2J+KC9Tl+Z6xftNufhBsN2IDu4/IUQsMm6DXa+ACLOlnpxVjAv49j
-         gdpa8v9LKz895pnMTvNjAEc1Nwyz3NI63ucoitI0=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00M52E70073297
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jan 2020 23:02:14 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 21
- Jan 2020 23:02:14 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 21 Jan 2020 23:02:14 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M528Us130655;
-        Tue, 21 Jan 2020 23:02:09 -0600
-Subject: Re: [PATCH 2/5] arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl
- node to select SERDES lane mux
-To:     Rob Herring <robh@kernel.org>
-CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Vignesh R <vigneshr@ti.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200108111830.8482-1-rogerq@ti.com>
- <20200108111830.8482-3-rogerq@ti.com> <20200115014724.GA20772@bogus>
- <1c55f0a8-99e3-934f-e8b8-d090df06a12e@ti.com>
- <CAL_JsqLfJDN2LnqWHehFiM-SQyeqQAk2wjoKRbBiPy4tc5OkMQ@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d1b9fb54-9f6b-ef23-1c6f-d4c341a22785@ti.com>
-Date:   Wed, 22 Jan 2020 10:35:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 22 Jan 2020 00:57:10 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35967 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgAVF5J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 00:57:09 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k3so2872684pgc.3;
+        Tue, 21 Jan 2020 21:57:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7lz8QDCK+adReavpCqjYdLG3ej8deDQg9uk+KtG0Ghs=;
+        b=iPDYK4I1iNLSsOvGa8JcN1j0z+wUsun8dgZ/ZmoOc2bRQtwc8xZzfHG8CJt6Vh24Wa
+         /dzFoCtKgqxmuNUFZqLDsvRbJnM/mxXS3CxI0N7XZI49zcxuDRiBwj1oKzFyQuTdUbkV
+         0BoDXUR8trVrs5CRoLi7ru37+SPbBNbRFW5oxyPUSSd+bs2mg89TKm/OReoE4+R9ZvSH
+         URDFasc3DRgC9hZOgY6DBoLJfzPhaVB6QGxKzweoShu9hgBK5yVWLwF7pO9yagp2Iti5
+         6Wq8XPr3K7K9n8UmwtEPFmPCnHZ48meuQU0PHG02Vkc0xbU8OpYdmjmVqLkXySaBMZx5
+         nvNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7lz8QDCK+adReavpCqjYdLG3ej8deDQg9uk+KtG0Ghs=;
+        b=EdSRuYoF5u08X7KBz5Fi2ifGqx9TLCs1t6iJrOHxw3fPHSrW9WoFJ4POB65/ByoWQ0
+         ayr82tDRFmx4wVlyutz+Gzxf25Mx+h6NyHyGNDy6Kk0hJ7yuKO+HdQPBHufPPVFrSaSH
+         vaOHkGIkvrR6urp9N84bPD94DGH4SJ9BnylBAErcS3WdQTkxNS8AndAydh5GlgmMfXrf
+         qoVU6sv0srI6SdNQTKSEPYP6rH2c8LTL70/bgoHyYhgjuilb2QE8czSjVeIIHHR/G4Xx
+         M1nbOoe9ENzneuI7+v7W5HAidYzLfZ6kAw0C/zHvyQoUReWM0cDYDXM80umedvGHfr7n
+         edYw==
+X-Gm-Message-State: APjAAAUMgkVqWCCfh/aXG9gOHQY82THvYdp0mh+/F/42sFN64w4sM9CX
+        5WK7m40abai8xmKAA0oYMgQ=
+X-Google-Smtp-Source: APXvYqxBwlbIYvMKS8qqbZPOygBixGBUbdiN4i6TVDv/KNDOweI9oUOYKvPJSYDOv4rLoPXOf4R2cQ==
+X-Received: by 2002:a63:4006:: with SMTP id n6mr9165683pga.139.1579672629032;
+        Tue, 21 Jan 2020 21:57:09 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id p24sm44839589pff.69.2020.01.21.21.57.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 21:57:08 -0800 (PST)
+Date:   Tue, 21 Jan 2020 21:57:06 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>, robh+dt@kernel.org
+Cc:     support.opensource@diasemi.com, stwiss.opensource@diasemi.com,
+        Adam.Thomson.Opensource@diasemi.com, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: Input: da9062 - add key-opmode
+ documentation
+Message-ID: <20200122055706.GB110084@dtor-ws>
+References: <20191127132304.22924-1-m.felsch@pengutronix.de>
+ <20191127132304.22924-2-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLfJDN2LnqWHehFiM-SQyeqQAk2wjoKRbBiPy4tc5OkMQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127132304.22924-2-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob,
-
-On 21/01/20 11:27 PM, Rob Herring wrote:
-> On Mon, Jan 20, 2020 at 11:10 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Rob,
->>
->> On 15/01/20 7:17 AM, Rob Herring wrote:
->>> On Wed, Jan 08, 2020 at 01:18:27PM +0200, Roger Quadros wrote:
->>>> From: Kishon Vijay Abraham I <kishon@ti.com>
->>>>
->>>> Add serdes_ln_ctrl node used for selecting SERDES lane mux.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 26 +++++++++++
->>>>  include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
->>>>  2 files changed, 79 insertions(+)
->>>>  create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
->>>>
->>>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>>> index 24cb78db28e4..6741c1e67f50 100644
->>>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>>> @@ -5,6 +5,8 @@
->>>>   * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
->>>>   */
->>>>  #include <dt-bindings/phy/phy.h>
->>>> +#include <dt-bindings/mux/mux.h>
->>>> +#include <dt-bindings/mux/mux-j721e-wiz.h>
->>>>
->>>>  &cbass_main {
->>>>      msmc_ram: sram@70000000 {
->>>> @@ -19,6 +21,30 @@
->>>>              };
->>>>      };
->>>>
->>>> +    scm_conf: scm_conf@100000 {
->>>
->>> Don't use '_' in node names.
->>
->> Okay.
->>>
->>>> +            compatible = "syscon", "simple-mfd";
->>>
->>> Needs a specific compatible especially since the child node doesn't have
->>> one.
->>
->> Child node has "mmio-mux" as compatible no? Are you referring to
->> something else here?
+On Wed, Nov 27, 2019 at 02:23:02PM +0100, Marco Felsch wrote:
+> The onkey behaviour can be changed by programming the NONKEY_PIN
+> bitfield. Since the driver supports the reconfiguration we need to add
+> the documentation here.
 > 
-> I'm referring to exactly what I quoted, but that's also a generic
-> compatible, so you'd never be able to match any of this block to a
-> specific driver or handle any quirks.
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+> v2:
+> - add da9061/3 references
+> - adapt binding description to be more general
+> 
+>  .../devicetree/bindings/input/da9062-onkey.txt         | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/da9062-onkey.txt b/Documentation/devicetree/bindings/input/da9062-onkey.txt
+> index 5f9fbc68e58a..0005b2bdcdd7 100644
+> --- a/Documentation/devicetree/bindings/input/da9062-onkey.txt
+> +++ b/Documentation/devicetree/bindings/input/da9062-onkey.txt
+> @@ -19,6 +19,16 @@ Optional properties:
+>      entry exists the OnKey driver will remove support for the KEY_POWER key
+>      press when triggered using a long press of the OnKey.
+>  
+> +- dlg,key-opmode : Set the nONKEY behaviour. This value is initial set by the
+> +    otp values. 
 
-Okay, right now we didn't see the need for a specific compatible but I
-guess that is necessary to make it more future proof. Will add a
-specific compatible.
+Did you mean to say "nONKEY behavior is normally specified in OTP
+settings; this property allows modifying it".
 
-Thanks
-Kishon
+Rob, do you have any comments?
+
+> See nONKEY_PIN register description for more information.
+> +    Valid value range: 0x0..0x3
+> +
+> +References:
+> +
+> +[1] https://www.dialog-semiconductor.com/sites/default/files/da9061_datasheet_3v6.pdf
+> +[2] https://www.dialog-semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
+> +[3] https://www.dialog-semiconductor.com/sites/default/files/da9063_datasheet_2v2.pdf
+> +
+>  Example: DA9063
+>  
+>  	pmic0: da9063@58 {
+> -- 
+> 2.20.1
+> 
+
+-- 
+Dmitry
