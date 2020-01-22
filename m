@@ -7,124 +7,84 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BD2C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369BDC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8234B21569
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE8C24656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 16:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579712358;
-	bh=Pah8FKEowSfuW3oA2vi7xcChlEyJ6Lz6Hk0Zu1ZJQmQ=;
+	s=default; t=1579712399;
+	bh=urfVuaMSPv+SbvWOh6abRQJS+1dB5s4oWKtRckeulcI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f8MUt7/5dnUQrqq45pQWaabc1Bzr+xh1XtP84lB9WPtx7l42bXO62Ro/Py0Z58PsV
-	 3QtBBZJQlABPC8wNOzKTvOKLAXM7X1ogGpvf0aWCJf/JsnrsGrlb9wtH3UY0gXCe35
-	 ybP/TFBiOKmrQph6fvw+cx2CcMRX5jlNf5PzKr1o=
+	b=ODxFODGXxvYt8A2wXdRwfq1Og8wKWsUiEw7H2Ws5xAauqI14IFgLXKG6LJS3wFqc1
+	 5jzq0jblDBN6gikhAJ3edJXKtYiQiWhTrCChilaqP0wVSL1a021B0M5LBLpwPZZz5R
+	 XMHMOhEL9fAlO376jC98OE3IBs25iewnKPQNrlpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgAVQ7R (ORCPT
+        id S1729076AbgAVQ7z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:59:17 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45296 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgAVQ7R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 11:59:17 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n16so6690726oie.12;
-        Wed, 22 Jan 2020 08:59:17 -0800 (PST)
+        Wed, 22 Jan 2020 11:59:55 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41378 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgAVQ7z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 11:59:55 -0500
+Received: by mail-oi1-f196.google.com with SMTP id i1so29777oie.8;
+        Wed, 22 Jan 2020 08:59:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mou9J8YjfkvnsPaT9Al7wgNVF7rWGQkRBCyvGjZr+Wo=;
-        b=ThOaV9wZzW/jb23FnbhBqmyl4KgC78rflMRx1XnDzGo8kwjJkznfeimugjv7BBOo2k
-         SZF6MM7r/Fzc31UWUSxJ1E0M7Bj9am/i+ttQkQp7mqztC7uliHwTIv/KsYndnjODyMTW
-         RBDi7ppRj1he5giOhTQbzf5VQVJPpOenZA7bdIsI+Jw81eeSpKJZaTh9zcSPcaK1Pw0a
-         V+MiQ8qBTnDTcD92iZqaP9QUR2AIFv3BVrtDSxKsV7TcFcXmiEhJN0u0dLL4Js7/+bYK
-         AEq4OwOmnueM0xURX/F3A09CYeRqsk2NOaCFZLifMRnp4ljmKhgmN/sLowuvhoxlewKp
-         oaLQ==
-X-Gm-Message-State: APjAAAUBAXakKCMQhQw//SrZ7VJ3s8AODUjCK1sBx8KHLGKSqoDmyQVd
-        d9qElYJDVm1vQl7S21QeXg==
-X-Google-Smtp-Source: APXvYqxRqMrZcWvMtfS9saD5x2uaT9DVAasTND+05WtLmz/+OCZmcSwYW9MtXWDUc9h2IyEzc0blQQ==
-X-Received: by 2002:aca:5083:: with SMTP id e125mr7643124oib.96.1579712355982;
-        Wed, 22 Jan 2020 08:59:15 -0800 (PST)
+        bh=MDfiBL9hRIkQihktjqWJHDulsuoBJ4pn4Oh6gdd9G/o=;
+        b=BIxbQFRpL9/7x6Cj6gIxJYC4go+KlEF3aIAHdEpfWQuAyR6o3SMpV5rOPhZGdyztoi
+         gWfYPyu1rhQ16FQUBrRJEbmqS/0WUy3r+A9aZooGlR1DAnLDx+sMNmrsW8wBaF/V5O5J
+         ij9gt3CXoBOCvMIaXv3DjqLwxTb7bhL6G+ZhdaYoYCHXuWO5RkK58KlUwsPav2BOnvMX
+         hpTP8a2IzMDI0oLy1l1ftRI4niUhxBMG24opfh0au/ei6wjbkkEaKffqC7jmFMQwgW3O
+         vRjZcD0rTnMNulz9iURTKUNwLTpus+0J6+R8ujC+fxbABjabhNxuZB2VfbzhZTa1a1iT
+         aSpA==
+X-Gm-Message-State: APjAAAWv/FVqN1L50J6gfHuEkayD5kAr9+kAFPwK0hG/1jLrDBJEdV8J
+        nRoVT/CrmsRMSzuphFL7zAJHZAo=
+X-Google-Smtp-Source: APXvYqy/buEH2irQzHZ7iB8zOrFJTgu/RpXFmiyIgGAQ/cqqf+k0u1vTUvftpZN1fotzOGFfgb9/EA==
+X-Received: by 2002:aca:5490:: with SMTP id i138mr7622913oib.69.1579712394590;
+        Wed, 22 Jan 2020 08:59:54 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e21sm13187177oib.16.2020.01.22.08.59.14
+        by smtp.gmail.com with ESMTPSA id j186sm13213861oih.55.2020.01.22.08.59.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 08:59:15 -0800 (PST)
-Received: (nullmailer pid 6651 invoked by uid 1000);
-        Wed, 22 Jan 2020 16:59:14 -0000
-Date:   Wed, 22 Jan 2020 10:59:14 -0600
+        Wed, 22 Jan 2020 08:59:54 -0800 (PST)
+Received: (nullmailer pid 8001 invoked by uid 1000);
+        Wed, 22 Jan 2020 16:59:53 -0000
+Date:   Wed, 22 Jan 2020 10:59:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7] dt-bindings: regulator: add document bindings for
- mpq7920
-Message-ID: <20200122165914.GA3900@bogus>
-References: <20200121192405.25382-1-sravanhome@gmail.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 1/3] dt: bindings: brcmnand: Add support for flash-edu
+Message-ID: <20200122165953.GA7321@bogus>
+References: <20200121200011.32296-1-kdasu.kdev@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121192405.25382-1-sravanhome@gmail.com>
+In-Reply-To: <20200121200011.32296-1-kdasu.kdev@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Jan 2020 20:24:05 +0100, Saravanan Sekar wrote:
-> Add device tree binding information for mpq7920 regulator driver.
-> Example bindings for mpq7920 are added.
+On Tue, 21 Jan 2020 15:00:06 -0500, Kamal Dasu wrote:
+> Adding support for EBI DMA unit (EDU).
 > 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 > ---
-> 
-> Notes:
->     Changes on v7 :
->       - added regualtors child-node under patternProperties, added required
->       - mps,buck-ovp-disable is not common property, regulator subsystem provides
->         only over current protection support.
-> 
->  .../bindings/regulator/mps,mpq7920.yaml       | 118 ++++++++++++++++++
->  1 file changed, 118 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+>  .../devicetree/bindings/mtd/brcm,brcmnand.txt          | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-warning: no schema found in file: Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: ignoring, error in schema: properties: regulators: properties: mps,switch-freq
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq: {'$ref': '/schemas/types.yaml#/definitions/uint8', 'enum': [0, 1, 2, 3], 'default': 2, 'description': 'switching frequency must be one of following corresponding value\n1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz\n'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq: 'not' is a required property
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq:enum:0: 0 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq:enum:1: 1 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq:enum:2: 2 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:properties:mps,switch-freq:enum:3: 3 is not of type 'string'
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart: {'$ref': '/schemas/types.yaml#/definitions/uint8', 'enum': [0, 1, 2, 3], 'description': 'defines the soft start time of this buck, must be one of the following\ncorresponding values 150us, 300us, 610us, 920us\n'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart: 'not' is a required property
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart:enum:0: 0 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart:enum:1: 1 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart:enum:2: 2 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-softstart:enum:3: 3 is not of type 'string'
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay: {'$ref': '/schemas/types.yaml#/definitions/uint8', 'enum': [0, 1, 2, 3], 'description': 'defines the phase delay of this buck, must be one of the following\ncorresponding values 0deg, 90deg, 180deg, 270deg\n'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay: 'not' is a required property
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay:enum:0: 0 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay:enum:1: 1 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay:enum:2: 2 is not of type 'string'
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml: properties:regulators:patternProperties:^buck[1-4]$:properties:mps,buck-phase-delay:enum:3: 3 is not of type 'string'
-
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/regulator/mps,mpq7920.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/regulator/mps,mpq7920.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1226717
-Please check and re-submit.
-
-
-The errors are too helpful here. The problem appears to be that '$ref' 
-has to be under an 'allOf' if there are other constraints.
-
-Rob
+If a tag was not added on purpose, please state why and what changed.
