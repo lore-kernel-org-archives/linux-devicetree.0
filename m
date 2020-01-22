@@ -2,163 +2,137 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF7FC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 17:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15E0C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8F724656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 17:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579714942;
-	bh=ZwK1GS5yK1MyB/aRUXx77+g9jMMXlUdwoNTp+7I4lYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XUgxjkh/9LLb7JFBp1VSlER+CQHIzdJ84knsgrhMt56b6K2Ue7zdBMyCT8hASrVVA
-	 4UOsf4oWy9pqEwm+X+anEjjgHAvuBIE7ZVCSqpbvzCzEypWpWLmVtOQsu88XZrAE16
-	 9CRT3JWhvHCkrr8/bQecgk3mSsgIHxzL4Z0ChW/M=
+	by mail.kernel.org (Postfix) with ESMTP id BAFD621734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:00:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QSnkPW9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725924AbgAVRmW (ORCPT
+        id S1726049AbgAVSAz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:42:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgAVRmW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:42:22 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C76924125;
-        Wed, 22 Jan 2020 17:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579714940;
-        bh=ZwK1GS5yK1MyB/aRUXx77+g9jMMXlUdwoNTp+7I4lYU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zVcgfL6eiwVI0Le6A/KPOCt79RTF0cN03WNDgsZYCmlGbhwhv5b1pCEdlOipyxjGE
-         /8FjjTMoUP79g6eMxcItXsMa7GgKfh6UGuSHWEmsRNE/Jj8Xrw3vStTdXFTgWyqx2x
-         dELl4mOFA0XMYrXyzkkCXF0mWhRTsbYh/fA1xMGk=
-Date:   Wed, 22 Jan 2020 18:42:18 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: allwinner: h6: tanix-tx6: enable emmc
-Message-ID: <20200122174218.g4aan24f2pihjkpw@gilmour.lan>
-References: <20200115193441.172902-1-jernej.skrabec@siol.net>
- <20200117181427.hy7qsyxwomsl3v2q@gilmour.lan>
- <3332569.R56niFO833@jernej-laptop>
+        Wed, 22 Jan 2020 13:00:55 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16218 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725802AbgAVSAz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jan 2020 13:00:55 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MI0I9Z015380;
+        Wed, 22 Jan 2020 19:00:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=FD3TOxxOgAtCMT+1BxBtntOt5Z7oR4wttkJhsEbfDwY=;
+ b=QSnkPW9EQAL047il27ei1fTP2oMQjoFJPVoppePLs5mUE+D/Wu9jQ4DnvP/0jzwponSP
+ LC0GftePNu91R42x9cQpb2ejYdi3DMQM8xt9K13XTXfYlOQxp/6/nU5rU2yPFQvAj7Vk
+ QiPV00jZHj5Al3TMe4LTZVmlisryZsmpYdnVHqJCBI+I4mD4RPpKSb4YNEqI6hwrLjP1
+ OSae02ppyQdFSAi+V1bueMdhHWx1XVNWaL8zO5Py/8OPlr0ELqD0NKbq+so0FwcAT/da
+ s4ub8DhaReZnhA88dESmwvKko8PS3srlJY6LuzwPIoR7kewMNFB91wYhYZxqDZQIYmWX Ug== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkr1e5wn3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jan 2020 19:00:25 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AC8CE10002A;
+        Wed, 22 Jan 2020 19:00:19 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 93D422A52DC;
+        Wed, 22 Jan 2020 19:00:19 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 Jan
+ 2020 19:00:18 +0100
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+To:     Steve McIntyre <steve.mcintyre@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Frank Rowand <frowand.list@gmail.com>, <ian@freebsd.org>
+CC:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Simon Glass <sjg@chromium.org>, <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com>
+ <20200116005741.GB54439@umbus> <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
+ <20200117090937.GU54439@umbus>
+ <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+ <20200120181708.GN3697@linaro.org>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <9d83a36c-78c5-3452-bb48-209d68c46038@st.com>
+Date:   Wed, 22 Jan 2020 19:00:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2y2zbwn5zkttwz5b"
-Content-Disposition: inline
-In-Reply-To: <3332569.R56niFO833@jernej-laptop>
+In-Reply-To: <20200120181708.GN3697@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-22_07:2020-01-22,2020-01-22 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi
 
---2y2zbwn5zkttwz5b
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 1/20/20 7:17 PM, Steve McIntyre wrote:
+> On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
+>> On Fri, Jan 17, 2020 at 6:26 AM David Gibson
+>> <david@gibson.dropbear.id.au> wrote:
+> 
+> ...
+> 
+>>> What might be better would be to have a dtc option which force appends
+>>> an extra .dts to the mail .dts compiled.  You can then put an overlay
+>>> template in that file, something like:
+>>>
+>>> &{/} {
+>>>          linux,build-info = /incbin/ "build-info.txt;
+>>> }
+>>
+>> I like this suggestion either as an include another dts file or an
+>> overlay. The latter could be useful as a way to maintain current dtb
+>> files while splitting the source files into base and overlay dts
+>> files.
+> 
+> ACK, that sounds like it could be helpful.
+> 
+>> But no, let's not prepend this with 'linux'. It's not a property
+>> specific for Linux to consume.
+> 
+> Right. We might be seeing the data coming through from U-Boot (or any
+> other random bootloader) too.
+> 
+> Cheers,
+> 
 
-Hi,
+Thanks for reviews. I gonna prepare a V2 with David proposition (to use 
+overlay format) by keeping in mind not to modify existing dts(i) files.
 
-On Fri, Jan 17, 2020 at 07:18:58PM +0100, Jernej =C5=A0krabec wrote:
-> Dne petek, 17. januar 2020 ob 19:14:27 CET je Maxime Ripard napisal(a):
-> > On Wed, Jan 15, 2020 at 08:34:41PM +0100, Jernej Skrabec wrote:
-> > > Tanix TX6 has 32 GiB eMMC. Add a node for it.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > ---
-> > >
-> > >  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     | 20 +++++++++++++++++=
-++
-> > >  1 file changed, 20 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > > b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts index
-> > > 83e6cb0e59ce..8cbf4e4a761e 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > > @@ -31,6 +31,13 @@ hdmi_con_in: endpoint {
-> > >
-> > >  		};
-> > >
-> > >  	};
-> > >
-> > > +	reg_vcc1v8: vcc1v8 {
-> > > +		compatible =3D "regulator-fixed";
-> > > +		regulator-name =3D "vcc1v8";
-> > > +		regulator-min-microvolt =3D <1800000>;
-> > > +		regulator-max-microvolt =3D <1800000>;
-> > > +	};
-> > > +
-> > >
-> > >  	reg_vcc3v3: vcc3v3 {
-> > >
-> > >  		compatible =3D "regulator-fixed";
-> > >  		regulator-name =3D "vcc3v3";
-> > >
-> > > @@ -78,6 +85,15 @@ &mmc0 {
-> > >
-> > >  	status =3D "okay";
-> > >
-> > >  };
-> > >
-> > > +&mmc2 {
-> > > +	vmmc-supply =3D <&reg_vcc3v3>;
-> > > +	vqmmc-supply =3D <&reg_vcc1v8>;
-> > > +	non-removable;
-> > > +	cap-mmc-hw-reset;
-> > > +	bus-width =3D <8>;
-> > > +	status =3D "okay";
-> > > +};
-> > > +
-> > >
-> > >  &ohci0 {
-> > >
-> > >  	status =3D "okay";
-> > >
-> > >  };
-> > >
-> > > @@ -86,6 +102,10 @@ &ohci3 {
-> > >
-> > >  	status =3D "okay";
-> > >
-> > >  };
-> > >
-> > > +&pio {
-> > > +	vcc-pc-supply =3D <&reg_vcc1v8>;
-> > > +};
-> > > +
-> >
-> > Can you list all of the regulators for the H6 while you're at it (in a
-> > preliminary patch, ideally)?
->
-> Not sure what you mean. This box has only fixed regulators. I deducted ab=
-ove
-> from the fact that port C is mostly dedicated to eMMC, so it has to use s=
-ame
-> regulator as vqmmc. Other than that, I don't know.
+Remaining questions are:
 
-If you don't really know, then setting all of them to 3.3v makes the
-most sense. It should be described anyway.
+1- "build-info" or "linux,build-info"? IMO, If information is "generic" 
+then first one should be used.
 
-Maxime
+2- Looking at Franck proposition[1] some years ago and objections on it, 
+do you think that this one could accepted ?
 
---2y2zbwn5zkttwz5b
-Content-Type: application/pgp-signature; name="signature.asc"
+regards
+Alex
 
------BEGIN PGP SIGNATURE-----
+[1] https://lore.kernel.org/linux-arm-kernel/550A42AC.8060104@gmail.com/
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiiJegAKCRDj7w1vZxhR
-xcAZAP4vv4yjYsoEsxEn+hYjAeStYl6dLzr0TziDbUtV7pwXYQD/Z1zx4f5U7HAb
-Jnn7ma32yEkphTh/TgQGVeWHaRuDjQM=
-=1iAL
------END PGP SIGNATURE-----
 
---2y2zbwn5zkttwz5b--
+
+
