@@ -2,230 +2,202 @@ Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776A0C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FFEC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42CFB21734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7D124125
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 18:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ve9q30/t"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hdEtixhH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgAVSFV (ORCPT
+        id S1728765AbgAVS2S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:05:21 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55466 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbgAVSFV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:05:21 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579716320; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=WxyUq/fOXMoja6H80ccUY0Bk7aZe/VMF8qFNHaq2Rv0=;
- b=ve9q30/tyM4Q546EsXVF7T+qGhZkkmr4dHNyOvMiXBY+lxuJiYTl6xCNbuFuuILqlCeo5xNn
- new5olPlGkCJrJWL9UdQWIEl1QdOqyWm4dj8qT2s1QH6tvF7h9KfLwc/K+Ii5qGFq435Q3sz
- hZj5tARxblS92jKGldeitxnVgO4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e288ed8.7f9dcec340d8-smtp-out-n01;
- Wed, 22 Jan 2020 18:05:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C740FC4479C; Wed, 22 Jan 2020 18:05:12 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA1D9C433CB;
-        Wed, 22 Jan 2020 18:05:11 +0000 (UTC)
+        Wed, 22 Jan 2020 13:28:18 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37440 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVS2P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 13:28:15 -0500
+Received: by mail-oi1-f195.google.com with SMTP id z64so343792oia.4
+        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 10:28:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/nmCPb+XXCVt5KhfGb/8H7zZgYObjRj8769ul8BOa2o=;
+        b=hdEtixhHfOZuWMp0/X6AY8Ms4a/2ls0PXttrGni4Z/DBE8LLDiXkABZ0PJ58/gV3Au
+         /H0Vjqh2uiHmAwmKNvHB15NHTXKz5eQ1qKrd9tYQvGzi+a+kjDkILD3xOWwcjoG5Zn2F
+         mUSZ7B5yHXHdC3euPJ5fOXA1O6ILZ8Qvf4v3/TSKND60QxAmvIE2w2uLIquwDjxWPZD7
+         9AIp/qQcEJDRQPYzU5F/lhOgJCi5Lc7w4EQjdRgCfEGDu0m/mgZAzQO3fcY9AQ0+NpXA
+         H6wwuQKh5/qXBUB4sW5JgHSqkbsChQBpEsh+TgajyWylfp6QxvaI213QqIEgTYUE6kES
+         GgkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/nmCPb+XXCVt5KhfGb/8H7zZgYObjRj8769ul8BOa2o=;
+        b=nlithPMFhQ9MVaQdUkJsCeMuIa1SdEuCCNa3Uq8NuDaueMRgZxqycnN1s+nUdxbDY3
+         3xG3g2AjIl93mjhwJ4nIv4OehWPzp7lpLvOaasEAe72VDOk0cbkFdzMu03Ox5b7TDQBE
+         W9+ITKXGYYOPi+itIkAfA9aamn3ZMAnIlzmizJzJwyFLg78SzyfV666dzrGIm72WOdrL
+         joUHBiZ/G8dZCauynMZ6l9TXNxvv362ZHHgsiFalXSlgM0ppi7EB4yzyEAFjT6e13jmk
+         qhiGRNsL8gdT8MiRrjEG4/hsssGnWvyqqrMFG0/ttU0OLLEwiolK007Y4UvhdpBpyqEk
+         A0yg==
+X-Gm-Message-State: APjAAAVBki/mCOf1B/Nlx0wphfgm1TDWdyHNTQ+snejxu7SMQ2cUgMRd
+        VD2HG6Sz1JnJUfROVzaKX+/3JjSS10ppsY4yiBXq1Q==
+X-Google-Smtp-Source: APXvYqzSW3nTaM3W/BugRvoJ65EPdnrE0AXnH4fjjOZ+G8Qyw5uBexwDzoPs/jd+hW+LN2XWrUZOYIeT7Ac7gpkLWDE=
+X-Received: by 2002:aca:c551:: with SMTP id v78mr7775111oif.161.1579717694073;
+ Wed, 22 Jan 2020 10:28:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jan 2020 23:35:11 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+References: <20191212014233.32799-1-john.stultz@linaro.org>
+ <20191212014233.32799-8-john.stultz@linaro.org> <20191218163738.GA12358@bogus>
+ <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com> <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 22 Jan 2020 10:28:03 -0800
+Message-ID: <CALAqxLVgyyDmoKAxrKp-GvkBZ4hfbMgEBThPeVmJ7EZ6GzLjFw@mail.gmail.com>
+Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
+ hub and data role switch functionality on HiKey960
+To:     Rob Herring <robh@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 2/4] interconnect: qcom: Add OSM L3 interconnect
- provider support
-In-Reply-To: <CAE=gft6NMD7+Bt0ab8tnb8r2DjPkb2si7+0-R+f=SYk2YMCX0A@mail.gmail.com>
-References: <20200109211215.18930-1-sibis@codeaurora.org>
- <20200109211215.18930-3-sibis@codeaurora.org>
- <CAE=gft7ZUTiGrvsaqfrVv-bH3w75as7G1UJRn3aJs3ECqodpQg@mail.gmail.com>
- <dad8936ba4444c3377d777cbbb879dc3@codeaurora.org>
- <03f83755-bdcc-dc39-0eae-08414751be57@linaro.org>
- <CAE=gft6NMD7+Bt0ab8tnb8r2DjPkb2si7+0-R+f=SYk2YMCX0A@mail.gmail.com>
-Message-ID: <169aa5fbe68fb7163166d1789bbf1761@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-01-22 22:18, Evan Green wrote:
-> On Wed, Jan 22, 2020 at 12:20 AM Georgi Djakov 
-> <georgi.djakov@linaro.org> wrote:
->> 
->> On 1/22/20 08:45, Sibi Sankar wrote:
->> > Hey Evan,
->> >
->> > Thanks for the review!
->> >
->> > On 2020-01-22 03:03, Evan Green wrote:
->> >> On Thu, Jan 9, 2020 at 1:12 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->> >>>
->> >>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
->> >>> resources of scaling L3 caches. Add a driver to handle bandwidth
->> >>> requests to OSM L3 from CPU on SDM845 SoCs.
->> >>>
->> >>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> >>> ---
->> >>>  drivers/interconnect/qcom/Kconfig  |   7 +
->> >>>  drivers/interconnect/qcom/Makefile |   2 +
->> >>>  drivers/interconnect/qcom/osm-l3.c | 267 +++++++++++++++++++++++++++++
->> >>>  3 files changed, 276 insertions(+)
->> >>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
->> >>>
->> >>> diff --git a/drivers/interconnect/qcom/Kconfig
->> >>> b/drivers/interconnect/qcom/Kconfig
->> >>> index a9bbbdf7400f9..b94d28e7bf700 100644
->> >>> --- a/drivers/interconnect/qcom/Kconfig
->> >>> +++ b/drivers/interconnect/qcom/Kconfig
->> >>> @@ -14,6 +14,13 @@ config INTERCONNECT_QCOM_MSM8974
->> >>>          This is a driver for the Qualcomm Network-on-Chip on msm8974-based
->> >>>          platforms.
->> >>>
->> >>> +config INTERCONNECT_QCOM_OSM_L3
->> >>> +       tristate "Qualcomm OSM L3 interconnect driver"
->> >>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
->> >>> +       help
->> >>> +         Say y here to support the Operating State Manager (OSM) interconnect
->> >>> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
->> >>> +
->> >>>  config INTERCONNECT_QCOM_QCS404
->> >>>         tristate "Qualcomm QCS404 interconnect driver"
->> >>>         depends on INTERCONNECT_QCOM
->> >>> diff --git a/drivers/interconnect/qcom/Makefile
->> >>> b/drivers/interconnect/qcom/Makefile
->> >>> index 55ec3c5c89dbd..89fecbd1257c7 100644
->> >>> --- a/drivers/interconnect/qcom/Makefile
->> >>> +++ b/drivers/interconnect/qcom/Makefile
->> >>> @@ -1,5 +1,6 @@
->> >>>  # SPDX-License-Identifier: GPL-2.0
->> >>>
->> >>> +icc-osm-l3-objs                                := osm-l3.o
->> >>>  qnoc-msm8974-objs                      := msm8974.o
->> >>>  qnoc-qcs404-objs                       := qcs404.o
->> >>>  qnoc-sc7180-objs                       := sc7180.o
->> >>> @@ -12,6 +13,7 @@ icc-smd-rpm-objs                      := smd-rpm.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_BCM_VOTER) += icc-bcm-voter.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
->> >>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
->> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
->> >>> diff --git a/drivers/interconnect/qcom/osm-l3.c
->> >>> b/drivers/interconnect/qcom/osm-l3.c
->> >>> new file mode 100644
->> >>> index 0000000000000..7fde53c70081e
->> >>> --- /dev/null
->> >>> +++ b/drivers/interconnect/qcom/osm-l3.c
->> >>> @@ -0,0 +1,267 @@
->> >>> +// SPDX-License-Identifier: GPL-2.0
->> >>> +/*
->> >>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> >>> + *
->> >>> + */
->> >>> +
->> >>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
->> >>> +#include <linux/bitfield.h>
->> >>> +#include <linux/clk.h>
->> >>> +#include <linux/interconnect-provider.h>
->> >>> +#include <linux/io.h>
->> >>> +#include <linux/kernel.h>
->> >>> +#include <linux/module.h>
->> >>> +#include <linux/of_device.h>
->> >>> +#include <linux/of_platform.h>
->> >>> +#include <linux/platform_device.h>
->> >>> +
->> >>> +#define LUT_MAX_ENTRIES                        40U
->> >>> +#define LUT_SRC                                GENMASK(31, 30)
->> >>> +#define LUT_L_VAL                      GENMASK(7, 0)
->> >>> +#define LUT_ROW_SIZE                   32
->> >>> +#define CLK_HW_DIV                     2
->> >>> +
->> >>> +/* Register offsets */
->> >>> +#define REG_ENABLE                     0x0
->> >>> +#define REG_FREQ_LUT                   0x110
->> >>> +#define REG_PERF_STATE                 0x920
->> >>> +
->> >>> +#define OSM_L3_MAX_LINKS               1
->> >>> +#define SDM845_MAX_RSC_NODES           130
->> >>
->> >> I'm nervous this define is going to fall out of date with
->> >> qcom,sdm845.h. I'm worried someone will end up adding a few more nodes
->> >> that were always there but previously hidden from Linux. Can we put
->> >> this define in include/dt-bindings/interconnect/qcom,sdm845.h, so at
->> >> least when that happens they'll come face to face with this define?
->> >> The same comment goes for the SC7180 define in patch 4.
->> >
->> > Yeah both solution require manual
->> > intervention how about we just go
->> > with what I proposed below.
->> >
->> >>
->> >> On second thought, this trick only works once. Are we sure there
->> >> aren't going to be other drivers that might want to tag on
->> >> interconnect nodes as well? How about instead we just add the enum
->> >> values below in qcom,sdm845.h as defines?
->> >
->> > Georgi/Evan,
->> > Since qcom,sdm845.h is specific to
->> > bindings shouldn't I just create a
->> > .h file with all the enums so that
->> > it can used across all icc providers
->> > on SDM845?
->> 
->> This sounds good to me, unless Evan has any objections.
-> 
-> So is this a new .h file with all the node numbers from qcom,sdm845.h
-> and your new couple of nodes here? That would be fine with me.
-> 
-> Or is it a .h file with only your two new node numbers? My worry there
-> is when there are two or three other drivers like this one, it will be
-> difficult to follow the total order of nodes as "base provider', "L3
-> driver", "new driver 1", "new driver 2".... any thoughts on how we
-> might address that?
+(Sorry for the slow reply. The holidays and other priorities struck
+and I'm only now just getting back to this!)
 
-the relative provider numbers from
-qcom,sdm845.h have no useful meaning
-for other icc providers. However the
-enum defined in the sdm845.c which are
-the node ids are needed and should be
-sufficient to add/link to any icc node
-across icc providers. So introducing a
-sdm845.h with all the enumbs global node
-ids is what I am proposing to do.
+On Wed, Dec 18, 2019 at 11:57 AM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Dec 18, 2019 at 11:21 AM John Stultz <john.stultz@linaro.org> wrote:
+> > On Wed, Dec 18, 2019 at 8:37 AM Rob Herring <robh@kernel.org> wrote:
+> > > As a whole this is HiSilicon specific, but really it is not. It's really
+> > > just a hub, a mux, and connectors for which we have bindings for. I
+> > > think you need to model the actual hub in DT. We have 2 ways already to
+> > > describe hubs in DT: a I2C device or USB device.
+> > >
+> > > AIUI, the board looks something like this:
+> > >
+> > > ctrl -> mux --> hub -> type-a connector
+> > >             +-> type-c connector
+> > >
+> > > If the hub I2C is not used, then you could do something like this:
+> > >
+> > > ctrl {
+> > >     mux-controls = <&usb_gpio_mux>;
+> > >     connector@0 {
+> > >         // type C connector binding
+> > >     };
+> > >     hub@1 {
+> > >         // USB device binding
+> > >     };
+> > > };
+> >
+> > I can't say I totally grok all this, but I'll go digging to try to
+> > better understand it.
+> > I don't believe there is any I2C involved here, so I'll try the
+> > approach you outline above.
+>
+> Well, it is there in the schematics.
 
-> -Evan
+Fair point. Though at least for the USB5734 hub, I don't believe we've
+made use of the i2c on it (at least that I can see).  From the
+existing driver, the control is basically just 3 GPIOs:  type-c power,
+hub power, and the mux/switch.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Trying to get my head around your suggestion:
+ctrl {
+    mux-controls = <&usb_gpio_mux>;
+    connector@0 {
+        // type C connector binding
+    };
+    hub@1 {
+        // USB device binding
+    };
+};
+
+The usb_gpio_mux would be the gpio mux switch.
+
+For the "type C connector binding", that would probably be the rt1711h
+type-c chip.
+
+For the "USB device binding" that would be a yet to be implemented
+USB5734 hub driver, I'm guessing?
+
+Though I'm not sure I understand how the hub driver gets a signal to
+power-on/power-off its gpio-regulator from the mux state?  I'm maybe
+still missing some details on the mux infrastructure.
+
+> > > The only new bindings you really need are adding 'mux-controls' to the
+> > > USB host controller and the hub binding (we already have a few).
+
+So this is a little confusing to me. Why is the host controller
+involved?  It seems to me all of this is down-stream of the
+controller, and it's just taking whatever the switch gives it.
+
+I think the switch needs to be signalled from the rt1711h type-c
+connector (when it detects the cable and determines the role). That
+said, I'm not sure how it would think to control the mux in that case
+(as that's pretty special case for this specific hardware). That's why
+we're using the role notifier intermediary trick in the current code.
+
+So I guess we could still have the roll notifier intermediary driver
+which then controls the mux?
+
+I know that's more a driver implementation detail and not really
+hardware description, :) but I'm just trying to figure out how it's
+going to come together and actually work.
+
+> > Is the idea to extend the rt1711h and
+> > dwc3 drivers further to support the mux/hub bit (this part is fairly
+> > foggy to me), completely removing the need for the misc driver?
+>
+> I imagine that you need some driver to determine the state of the mux.
+> Perhaps a usb-mux driver which is instantiated by the host controller
+> driver when it sees a mux-controls property. Sorry, haven't looked at
+> the driver side of this at all.
+>
+> > I did take an attempt at something similar with an earlier iteration
+> > of the patch set, where I was trying to move the vbus-gpio as a
+> > gpio-regulator to be controlled by the rt1711h/tpcm core, but that
+> > approach didn't work properly and Hans suggested I just go back to the
+> > approach submitted here:
+> >   https://lkml.org/lkml/2019/10/22/42
+>
+> I don't see why that would matter. If you need to sense the Vbus
+> state, then you do need a GPIO typically. But for an enable line, it's
+> just another level of abstraction.
+
+My concern is that I suspect the issue we had then was that the order
+and the timing that we switch the 3 GPIOs ends up being important. In
+the current implementation we can adjust them linearly together, where
+as when I took a stab at having the vbus gpio was modeled as a
+regulator and controlled independently by the rt1711h, the typec state
+machine would get confused as I'm guessing the mux/switch wasn't where
+it expected it to be when it wanted to change the state of the type-c
+vbus.
+
+Thoughts?
+
+Thanks again for the review and feedback. And sorry to let so much
+time (and mental context) pass.
+-john
