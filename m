@@ -2,114 +2,201 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BCEC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 01:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C485CC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 02:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACE124673
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 01:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907B024676
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 02:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="qsshw+6M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DN6OGW/S"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="P3uGGNiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgAWBxx (ORCPT
+        id S1725933AbgAWCaC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 20:53:53 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:36509 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725911AbgAWBxw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 20:53:52 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D8A6A6D87;
-        Wed, 22 Jan 2020 20:53:51 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 22 Jan 2020 20:53:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=ujZkvtF9majEmku/Gxs4rZoUakuhfzp
-        hD8ol/URHilo=; b=qsshw+6MxBNBzlpsVfUQJvzPlg1mYf034IOSuoePEBVtHNN
-        ehE++KC/RbpuXEATKpEmSmmnCDp1WFqj7zSqqmQaLd1P/XsqZQpuulLziDntGcEi
-        Zl24Kqe7K5broi96LBy5wFhNHIwNwXyEvvLMp9EqS/6nsF/A1gBvZHTJSR+ZCTq8
-        jWvOnveizc8TEi4FFYrl6/b6ptzaBi4KjnepiyPNrzEAfiFHFKqfnudBBcXcd+Vl
-        1Q6FBERhKPJL2nFTyOkGQPs5b8QvcnoAzkZn2Br4y2nAbo2Du0g3lZgqPa6+xHCl
-        fQ1vp8LM4m3v8l5So9ZZ5kwWz2cHB6+LstSxB/A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ujZkvt
-        F9majEmku/Gxs4rZoUakuhfzphD8ol/URHilo=; b=DN6OGW/SMqdXSI8jjtOzO2
-        pGGVbrE9JRzGYsU3PcIOiobOZj1lO91DbwO31coNzfzM79yWYDsfaH1z/FrE4pOw
-        K1cSpis2xl8x04ImWo4vZfPpa6T2R2jbu6OXfyod2Hi9b39uZVhOzKR8R0hG5A/N
-        pUc9U3pDRSgmijNImgE+OK81Ohewqo/E9GWP5dUvTYMhLzWSWl9uJyv9P6EMFbBA
-        g9nO1fp1IBXJUNrvbSrHxWw/xir2jOWs+Mub7vIioYbyUbYPRtBaAkBrcb7BhOTB
-        fSY/RMQ+yIIyPB8wd9BHAvboR+hwUPsKTXljq72DPmDKDp0NAzJYOwmNdvlrtwAA
-        ==
-X-ME-Sender: <xms:rvwoXnPmSRFRoFSuOm7H2Q4DecD6HAwCBDdiFFGSAvJj6zxaqmvceQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvddugdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:rvwoXvx-psYu7LL5r4lFE6gYjRtdJY7jDu8sCdwsxIUqEXwemxeeCg>
-    <xmx:rvwoXguvi3BjUj3AREX18fnbuZnb3eAzM5mUb7BWgebWP_w_zFRS2A>
-    <xmx:rvwoXo63d6GAWwmGVoM4TP7Mnn-5xB2vKVnbwUhGjRvT8NIoJVAvjw>
-    <xmx:r_woXnavh1Sem4tw8dB6XhIxw3Uv0cmbKNPj4_UAE9VF6956A8QC-w>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 7543AE00A2; Wed, 22 Jan 2020 20:53:50 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-754-g09d1619-fmstable-20200113v1
-Mime-Version: 1.0
-Message-Id: <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
-In-Reply-To: <4446ffb694c7742ca9492c7360856789@neuralgames.com>
-References: <20200120150113.2565-1-linux@neuralgames.com>
- <CACPK8XfuVN3Q=npEoOP-amQS0-wemxcx6LKaHHZEsBAHzq1wzA@mail.gmail.com>
- <4446ffb694c7742ca9492c7360856789@neuralgames.com>
-Date:   Thu, 23 Jan 2020 12:23:29 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Oscar A Perez" <linux@neuralgames.com>,
-        "Joel Stanley" <joel@jms.id.au>
-Cc:     "Matt Mackall" <mpm@selenic.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
-Content-Type: text/plain
+        Wed, 22 Jan 2020 21:30:02 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:59054 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgAWCaB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 21:30:01 -0500
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8A76D9C0;
+        Thu, 23 Jan 2020 03:29:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1579746600;
+        bh=yBCkLp92+5KwPTskxS0PfoCNjTmvVsFbeszvrFKvxnI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P3uGGNiCtvYk4+1gN13FqhKCzyWqJlG2vkoqTfvEOvYi2ze6zfQ8Klg3hhwG0hNt3
+         21Qro+Pv4R9RhNRmj4ntC+xTSz+YYCt5Z/rvnRaNbGHpNXyw6bIultZoeUPHw4UjFr
+         pmf8mRerUTAnGN3exRpKX8KBjymjPoWQc2iiaRSg=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     dmaengine@vger.kernel.org
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 1/6] dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA
+Date:   Thu, 23 Jan 2020 04:29:34 +0200
+Message-Id: <20200123022939.9739-2-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200123022939.9739-1-laurent.pinchart@ideasonboard.com>
+References: <20200123022939.9739-1-laurent.pinchart@ideasonboard.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The ZynqMP includes the DisplayPort subsystem with its own DMA engine
+called DPDMA. The DPDMA IP comes with 6 individual channels
+(4 for display, 2 for audio). This documentation describes DT bindings
+of DPDMA.
 
-> Thanks for reviewing the patch.
-> 
-> The RNG on Aspeed hardware allows eight different modes for combining 
-> its four internal Ring Oscillators that together generate a stream of 
-> random bits. However, the timeriomem-rng driver does not allow for mode 
-> selection so, the Aspeed RNG with this generic driver runs always on 
-> mode 'seven' (The default value for mode according to the AspeedTech 
-> datasheets).
-> 
-> I've performed some testings on this Aspeed RNG using the NIST 
-> Statistical Test Suite (NIST 800-22r1a) and, the results I got show that 
-> the default mode 'seven' isn't producing the best entropy and linear 
-> rank when compared against the other modes available on these SOCs.  On 
-> the other hand, the driver that I'm proposing here allows for mode 
-> selection which would help improve the random output for those looking 
-> to get the best out of this Aspeed RNG.
+Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes since v2:
 
-Have you published the data and results of this study somewhere? This
-really should be mentioned in the commit message as justification for
-not using timeriomem-rng.
+- Fix id URL
+- Fix path to dma-controller.yaml
+- Update license to GPL-2.0-only OR BSD-2-Clause
 
-Andrew
+Changes since v1:
+
+- Convert the DT bindings to YAML
+- Drop the DT child nodes
+---
+ .../dma/xilinx/xlnx,zynqmp-dpdma.yaml         | 68 +++++++++++++++++++
+ MAINTAINERS                                   |  8 +++
+ include/dt-bindings/dma/xlnx-zynqmp-dpdma.h   | 16 +++++
+ 3 files changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+ create mode 100644 include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+new file mode 100644
+index 000000000000..5de510f8c88c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/xilinx/xlnx,zynqmp-dpdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx ZynqMP DisplayPort DMA Controller Device Tree Bindings
++
++description: |
++  These bindings describe the DMA engine included in the Xilinx ZynqMP
++  DisplayPort Subsystem. The DMA engine supports up to 6 DMA channels (3
++  channels for a video stream, 1 channel for a graphics stream, and 2 channels
++  for an audio stream).
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++
++allOf:
++  - $ref: "../dma-controller.yaml#"
++
++properties:
++  "#dma-cells":
++    const: 1
++    description: |
++      The cell is the DMA channel ID (see dt-bindings/dma/xlnx-zynqmp-dpdma.h
++      for a list of channel IDs).
++
++  compatible:
++    const: xlnx,zynqmp-dpdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description: The AXI clock
++    maxItems: 1
++
++  clock-names:
++    const: axi_clk
++
++required:
++  - "#dma-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    dma: dma-controller@fd4c0000 {
++      compatible = "xlnx,zynqmp-dpdma";
++      reg = <0x0 0xfd4c0000 0x0 0x1000>;
++      interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-parent = <&gic>;
++      clocks = <&dpdma_clk>;
++      clock-names = "axi_clk";
++      #dma-cells = <1>;
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cc0a4a8ae06a..c7a011837102 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18182,6 +18182,14 @@ F:	drivers/misc/Kconfig
+ F:	drivers/misc/Makefile
+ F:	include/uapi/misc/xilinx_sdfec.h
+ 
++XILINX ZYNQMP DPDMA DRIVER
++M:	Hyun Kwon <hyun.kwon@xilinx.com>
++M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++L:	dmaengine@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
++F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
++
+ XILLYBUS DRIVER
+ M:	Eli Billauer <eli.billauer@gmail.com>
+ L:	linux-kernel@vger.kernel.org
+diff --git a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+new file mode 100644
+index 000000000000..3719cda5679d
+--- /dev/null
++++ b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
++/*
++ * Copyright 2019 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++ */
++
++#ifndef __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
++#define __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
++
++#define ZYNQMP_DPDMA_VIDEO0		0
++#define ZYNQMP_DPDMA_VIDEO1		1
++#define ZYNQMP_DPDMA_VIDEO2		2
++#define ZYNQMP_DPDMA_GRAPHICS		3
++#define ZYNQMP_DPDMA_AUDIO0		4
++#define ZYNQMP_DPDMA_AUDIO1		5
++
++#endif /* __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__ */
+-- 
+Regards,
+
+Laurent Pinchart
+
