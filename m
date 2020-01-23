@@ -6,120 +6,179 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3661C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF02C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989832467B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF2F24676
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579787351;
-	bh=FoxHytvieeiMR5w2vCjs+iRWN/xe1IbjBrRYYeIbBXI=;
+	s=default; t=1579787520;
+	bh=vLvMBfKBDUNVaF/aoU4PfN2HEsbDc54gpbCoCV6eEbk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ByU7ylTITSp8yt79a/HMybG/tXrb7V/mCdTfDPmWEP431wQr9oQ80vJCCBe6gNvQN
-	 Sxtj/tQBShDMlCi2hywrUuZqZhFXjnrUfBe6u0SWUeK687OkccLlvyLBadv3r3N6m+
-	 eHHtWykYilNvM74bbmqv2KUSAK6qDtYY2N3tP0VY=
+	b=q3qLqanddOrhFMmBBgHCFbq7M5byjzvN9z9JIU+4oFbU8RsDm3lF+r7XbsPjjEkyD
+	 gOKJn78TcduFuahxfqSHZAYDDHQGu0J04LWj43RqsyeyWy1euD/7saIHb0EbexbQUK
+	 sbyHPs46MGgdmpQH3MGtrdq/mdFsOt823CBJW0E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgAWNsY (ORCPT
+        id S1729140AbgAWNvz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:48:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 08:51:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbgAWNsX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:48:23 -0500
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        id S1726792AbgAWNvw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 08:51:52 -0500
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BB2A24688;
-        Thu, 23 Jan 2020 13:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7902467E;
+        Thu, 23 Jan 2020 13:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579787302;
-        bh=FoxHytvieeiMR5w2vCjs+iRWN/xe1IbjBrRYYeIbBXI=;
+        s=default; t=1579787511;
+        bh=vLvMBfKBDUNVaF/aoU4PfN2HEsbDc54gpbCoCV6eEbk=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1AS+dHLPP5rAH9T5VHs73GXahPyDACd7SwtCJD7VthNa8rx17bY8byQrbZdLVw6st
-         /McONvPTX31f0ZJEautzgUfWGlos9MYkPATUg7nOUBZrdeGgNfy+FlwtBpEwdmxnNE
-         u2QibjRJJeoNrPtP39MgM13THZKJCOfzOCTNaVJU=
-Received: by mail-qt1-f174.google.com with SMTP id c24so2475643qtp.5;
-        Thu, 23 Jan 2020 05:48:22 -0800 (PST)
-X-Gm-Message-State: APjAAAXKuxRZTOQmoiUrYjuSIMALCSfn0oJa/JIzrfJF4SonCBnu6tTp
-        WTRRDGH6j0aih2zQ5+4bWp7VoeInTfYxWSjUig==
-X-Google-Smtp-Source: APXvYqzeZnbmbU5C7iKeSjGcGtjCWg8yrdnvL6IUNbFeEnrmCjkbaCvNa0W8VIm6gLl/nyiVJznT6alXW1omCkLRUg0=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr15914499qtp.224.1579787301560;
- Thu, 23 Jan 2020 05:48:21 -0800 (PST)
+        b=b1iJ2GrWbJ6sOxtCE6X6YZSNhYFzNIpM/kQYgA7f2/wGJ1koX74CO1m1w/MCm5No0
+         BPLG4NXoQP5wOgn4QhptHUFzhR6166fKfS6Kxce1LEQd9yrrm3KsQU88+1pGGo0Au7
+         LREyoiAW0bRXR/meubXNdV6fucp7AraKrvthmWK0=
+Received: by mail-qk1-f171.google.com with SMTP id d10so3470716qke.1;
+        Thu, 23 Jan 2020 05:51:51 -0800 (PST)
+X-Gm-Message-State: APjAAAWtw3Red/ht3cdA8QN6luNT0Uj5cczoElWDB42a0jS4cHNLWSdV
+        bS0ZbErdlCANEm2Grher6dMU8XN/gz5pdItuHQ==
+X-Google-Smtp-Source: APXvYqwfO87Q0/W6AzS8yzHZDgljp8mtFonCDEPSQx1uYWjdYoPARCRWT3YmVbhrRhH7b66Aa6HwT9mSNtLWLu4ZXEM=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr14856515qkl.119.1579787510715;
+ Thu, 23 Jan 2020 05:51:50 -0800 (PST)
 MIME-Version: 1.0
-References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
-In-Reply-To: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+References: <20200123012317.14808-1-chris.packham@alliedtelesis.co.nz> <20200123012317.14808-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200123012317.14808-2-chris.packham@alliedtelesis.co.nz>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jan 2020 07:48:09 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKvFt=BM2BD9HXSEZOAzEnDwAzj7f8pGRnApA8Mp7qxBg@mail.gmail.com>
-Message-ID: <CAL_JsqKvFt=BM2BD9HXSEZOAzEnDwAzj7f8pGRnApA8Mp7qxBg@mail.gmail.com>
-Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
-To:     Shiping Ji <shiping.linux@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+Date:   Thu, 23 Jan 2020 07:51:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com>
+Message-ID: <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Document binding for generic SPI multiplexer
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Mark Brown <broonie@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
-        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 6:31 PM Shiping Ji <shiping.linux@gmail.com> wrote:
+On Wed, Jan 22, 2020 at 7:24 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
 >
-> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+> Add binding documentation for the spi-mux driver. This allows a generic
+> multiplexer to be used to provide access to multiple SPI devices.
 >
-> From: Lei Wang <leiwang_git@outlook.com>
->
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
->
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
->      Changes in v10:
->          - Convert to the YAML format for binding description
 >
-> ---
->  .../devicetree/bindings/edac/dmc-520.yaml     | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
+> Notes:
+>     Changes in v2:
+>     - update license
+>     - make dt_binding_check clean
+
+Sure about that?
+
 >
-> diff --git a/Documentation/devicetree/bindings/edac/dmc-520.yaml b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+>  .../devicetree/bindings/spi/spi-mux.yaml      | 84 +++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documentation/devicetree/bindings/spi/spi-mux.yaml
 > new file mode 100644
-> index 000000000000..dd5982b227b2
+> index 000000000000..4bdb31e2257e
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/dmc-520.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> +++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/edac/dmc-520.yaml#
+> +$id: http://devicetree.org/schemas/spi/spi-mux.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ARM DMC-520 EDAC bindings
+> +title: Generic SPI Multiplexer
+> +
+> +description: |
+> +  This binding describes a SPI bus multiplexer to route the SPI chip select
+> +  signals. This can be used when you need more devices than the SPI controller
+> +  has chip selects available. An example setup is shown in ASCII art; the actual
+> +  setting of the multiplexer to a channel needs to be done by a specific SPI mux
+> +  driver.
+> +
+> +        MOSI /--------------------------------+--------+--------+--------\
+> +        MISO |/------------------------------+|-------+|-------+|-------\|
+> +         SCL ||/----------------------------+||------+||------+||------\||
+> +             |||                            |||      |||      |||      |||
+> +      +------------+                        |||      |||      |||      |||
+> +      | SoC  |||   |                      +-+++-+  +-+++-+  +-+++-+  +-+++-+
+> +      |      |||   |                      | dev |  | dev |  | dev |  | dev |
+> +      |   +--+++-+ | CS-X  +------+\      +--+--+  +--+--+  +--+--+  +--+--+
+> +      |   | SPI  +-|-------+ Mux  |\\   CS-0 |        |        |        |
+> +      |   +------+ |       +--+---+\\\-------/   CS-1 |        |        |
+> +      |            |          |    \\\----------------/   CS-2 |        |
+> +      |   +------+ |          |     \\-------------------------/   CS-3 |
+> +      |   | ?    +-|----------/      \----------------------------------/
+> +      |   +------+ |
+> +      +------------+
+> +
+> +allOf:
+> +  - $ref: "/schemas/spi/spi-controller.yaml#"
 > +
 > +maintainers:
-> +  - Lei Wang <lewan@microsoft.com>
-> +
-> +description: |+
-> +  DMC-520 node is defined to describe DRAM error detection and correction.
-> +
-> +  https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
+> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
 > +
 > +properties:
 > +  compatible:
-> +    items:
-> +      - const: brcm,dmc-520
-> +      - const: arm,dmc-520
+> +    const: spi-mux
 > +
-> +  reg:
+> +  mux-controls:
 > +    maxItems: 1
 > +
-> +  interrupts:
-> +    minItems: 1
+> +required:
+> +   - compatible
+> +   - reg
+> +   - spi-max-frequency
+> +   - mux-controls
+> +
+> +examples:
+> +   - |
+> +     mux: mux-controller {
+> +       compatible = "gpio-mux";
+> +       #mux-control-cells = <0>;
+> +
+> +       mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+> +     };
+> +
+> +     spi {
+> +       spi-mux@0 {
+> +         compatible = "spi-mux";
+> +         #address-cells = <1>;
+> +         #size-cells = <0>;
+> +         reg = <0>;
+> +         spi-max-frequency = <100000000>;
+> +
+> +         mux-controls = <&mux>
 
-You also need 'maxItems: 10' here.
+Missing semicolon.
+
+> +
+> +         spi-flash@0 {
+> +           compatible = "jedec,spi-nor";
+> +           #address-cells = <1>;
+> +           #size-cells = <1>;
+> +           reg = <0>;
+> +           spi-max-frequency = <40000000>;
+> +         };
+> +
+> +         spi-device@1 {
+> +           compatible = "lineartechnology,ltc2488";
+> +           reg = <1>;
+> +           spi-max-frequency = <10000000>;
+> +         };
+> +       };
+> +     };
+> --
+> 2.25.0
+>
