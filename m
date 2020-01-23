@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11278C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85A4C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76452253D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F4E21D7E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579820330;
-	bh=Ma7mr84NfXsNfnp/ICmqGQRnXoWqBHa1vhN/R+arV44=;
+	s=default; t=1579820339;
+	bh=iaSKJUdnVS5DO31uxhva3S6lRFXmYS2CVq5c3333vxA=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=azjjwkvBUy73gdLpIUGx+GPUiuKwzNNqYfs5BrEcnDSXab7X8j6zOoevHbk/PIkbp
-	 lEflWIpz3pqrsiAzI8KtX3wWwWhUXgvVrOyJDBlwOlbRVo5RuRC02yKPXoPliqk6KC
-	 3HQxLt7cXg0fBOjuht32Z+Opcr6webyzZJYgurDE=
+	b=K3TwmzMm1cEemKVs1BcSJSy7pVj6aSiGs1gxwa4Q5pDqFg2kTCHfRbJ31/IcYFh05
+	 F8Us3GCGjlR5iHR/nf/3iKliF3Hg47riJIVmQvvRF8P9FosEiIn466s2lC7Qncm0/+
+	 r0GTwQfx9hH2h1pMl1LTpF0TPKvGcyJeFu9xbs9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgAWW6u (ORCPT
+        id S1729641AbgAWW6z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:58:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 17:58:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729149AbgAWW6u (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:58:50 -0500
+        id S1729149AbgAWW6z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 17:58:55 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64FF422522;
-        Thu, 23 Jan 2020 22:58:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D91902253D;
+        Thu, 23 Jan 2020 22:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579820329;
-        bh=Ma7mr84NfXsNfnp/ICmqGQRnXoWqBHa1vhN/R+arV44=;
+        s=default; t=1579820335;
+        bh=iaSKJUdnVS5DO31uxhva3S6lRFXmYS2CVq5c3333vxA=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=iKtw1ctzjapyoZ9ydaYq5z4fUuJODkHiwCgh++gqBmXnc0ScjOy0FHH26IbuBf6dY
-         tzWcyVNyTRVwyNSZ79S08oUfRMXzqx9V9ZyqOwscJUW0pHwsH8K9LiKjJZRNCAQwoy
-         uezSQDbWZ7Vb2rFaur+8jd5yyLDsIk2ptmssdUUk=
+        b=i0KgZcpzE8WlpqzGjZ1nKrq7dQNxAxuwF3XEEAH68aY0TmBu2CFX/jjEVHNIGmgUy
+         z0nZnqt8MVhfZxaQRwbGuZ+gNMH7/+9KswJs4yqpg3jCEMwm8NRb0KC7JsdnR5eqi2
+         L4MHNkoeKOhoba6snvhUMXA33FnOd6ws2sTK5bnY=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1575527759-26452-4-git-send-email-rajan.vaja@xilinx.com>
-References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com> <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com> <1575527759-26452-4-git-send-email-rajan.vaja@xilinx.com>
-Subject: Re: [PATCH v3 3/6] clk: zynqmp: Warn user if clock user are more than allowed
+In-Reply-To: <1575527759-26452-5-git-send-email-rajan.vaja@xilinx.com>
+References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com> <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com> <1575527759-26452-5-git-send-email-rajan.vaja@xilinx.com>
+Subject: Re: [PATCH v3 4/6] clk: zynqmp: Add support for get max divider
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -54,23 +54,19 @@ To:     Rajan Vaja <rajan.vaja@xilinx.com>, gustavo@embeddedor.com,
         mturquette@baylibre.com, nava.manne@xilinx.com, robh+dt@kernel.org,
         tejas.patel@xilinx.com
 User-Agent: alot/0.8.1
-Date:   Thu, 23 Jan 2020 14:58:48 -0800
-Message-Id: <20200123225849.64FF422522@mail.kernel.org>
+Date:   Thu, 23 Jan 2020 14:58:54 -0800
+Message-Id: <20200123225854.D91902253D@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Rajan Vaja (2019-12-04 22:35:56)
-> Warn user if clock is used by more than allowed devices.
-> This check is done by firmware and returns respective
-> error code. Upon receiving error code for excessive user,
-> warn user for the same.
+Quoting Rajan Vaja (2019-12-04 22:35:57)
+> To achieve best possible rate, maximum limit of divider is required
+> while computation. Get maximum supported divisor from firmware. To
+> maintain backward compatibility assign maximum possible value(0xFFFF)
+> if query for max divisor is not successful.
 >=20
-> This change is done to restrict VPLL use count. It is
-> assumed that VPLL is used by one user only.
->=20
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
 > ---
 
