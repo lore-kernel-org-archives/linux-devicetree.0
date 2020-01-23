@@ -2,201 +2,128 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21495C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 16:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9286BC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 16:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA23022522
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 16:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F4F24125
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 16:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aJcUKlUw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fr/exgfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAWQNd (ORCPT
+        id S1728708AbgAWQre (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 11:13:33 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21420 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727847AbgAWQNc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 11:13:32 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NGCTX7000776;
-        Thu, 23 Jan 2020 17:13:19 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=JTPct5LXQA3mJqzeacuXKjIY3sMmY9QNN0YZLD+ZEtM=;
- b=aJcUKlUwf2HwFFMQY2VHifs0MxGqv1BKr4F//QKKToFss5sjmQkP0KXXHPfCcWTlaika
- 3f0qvXtMD61qW50TjkHKWjknZ7BOfQaSYNayjnHxN5AKg5aWW6FMX6bqlJ643SsOt/Vg
- c8IYePwcOziA8Bkgd17O3ULrzID4Rxm8k7cPF4bycNXxyWUJvG3QHZRGcRBITgNx2202
- +gl7hza7K5uKZj48fPl/8wccj7Rvcku/0eba3PPKiMs2cGb0Uy4QYFoNsAeX6UYw+g7z
- eFxExpBkArNWrDEvte8NawBBAGmiQPM5cKE89cg3p7KNN0QOouoftJfYTR26s0YpFL2M TA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkr1ebay8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jan 2020 17:13:19 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 98B9F100040;
-        Thu, 23 Jan 2020 17:13:17 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8868F2BC7D6;
-        Thu, 23 Jan 2020 17:13:17 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Jan 2020 17:13:17
- +0100
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH 3/5] i2c: i2c-stm32f7: add a new st,stm32mp15-i2c compatible
-Date:   Thu, 23 Jan 2020 17:12:48 +0100
-Message-ID: <1579795970-22319-4-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579795970-22319-1-git-send-email-alain.volmat@st.com>
-References: <1579795970-22319-1-git-send-email-alain.volmat@st.com>
+        Thu, 23 Jan 2020 11:47:34 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43594 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgAWQrd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 11:47:33 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u131so1639534pgc.10;
+        Thu, 23 Jan 2020 08:47:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BnpsU6StHPAIstw2JpFgpCJVlQcTQuWju7U53QdQrnE=;
+        b=Fr/exgfHRSXeszkt7vWrJOJ2Sw6g4HEa60n79E5aaUrt2D0zH2kfcXLFqICWsIkP5D
+         oRLAm1xSKgGmjiJRhHXMuegRtQjWKeLbgTItkAbxAwOAIAqT01xhXE6TJrd+lD7Gb1Qh
+         zlQzNJqTpuk7YODsJHjQRvJkPCjskaxSdiklkNq3MHY1QrIY+fE1naLNaspl7L6q70qD
+         0iJwLjy0+NfIXYXXyEyQGytMxG2A+TQuuTbh8oWhfi6U40S+0OX1v2cYtCYEi50BxkDs
+         sPP7VvBVMZLcMDMf3gX3t5rMzqRX8JjXBi7MbpuIV47/6VDhP2atBOcpsLoqfbAs528b
+         Yvow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BnpsU6StHPAIstw2JpFgpCJVlQcTQuWju7U53QdQrnE=;
+        b=ei5R/39zXl8HKDTZdQEEDhfFn0MSFV83uRpbWuwdvxhtSR+GJX8oFq30q6VxIlw6Cf
+         w3tJkWYk95q0cFeuoTlqlFub2cHf1xgi794f/GVhq7QvUzmhGF6u6kmFnIvI1vu9KkdY
+         DXv55EFow6WqP5Ypit23vk78FjjF60Uxls8jy6Taf3kkzCnk4D+OuBcahdWjGWoCe9Vg
+         PZzQ7j7jXlFimHq7HhZsAD7iEup1vVEgDXEIp1DwtPmEXu+QR5EKa0D4PrsNQThzbRHD
+         xcJ5/pbElgomT5I1dVij2h7dnY4nXGLBDsjJCADMDA8YsJyhTfhtxM+31Ic+xjWJKG/g
+         24Fg==
+X-Gm-Message-State: APjAAAUDqBgJGRyTuX482fWw6OGTRX7Sj+HXmte8aGUNtsw1jXhA04eV
+        n7nBJO07vhnGx7oi6qoeqmc=
+X-Google-Smtp-Source: APXvYqyzFRPW1W5MSOcz5elsS1/zgpJTEP1GHlsITj9vbpwWAg1eKE9Kf6/CCL4dmRPBHY1JfBp41g==
+X-Received: by 2002:aa7:9aa5:: with SMTP id x5mr8259716pfi.131.1579798052959;
+        Thu, 23 Jan 2020 08:47:32 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:140e:bf9b:65a6:dd72? ([2001:4898:80e8:8:941d:bf9b:65a6:dd72])
+        by smtp.gmail.com with ESMTPSA id d4sm3421232pjz.12.2020.01.23.08.47.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 08:47:32 -0800 (PST)
+Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+ <20200123082322.GB10328@zn.tnic>
+From:   Shiping Ji <shiping.linux@gmail.com>
+Message-ID: <4165bb52-6dda-60e9-c248-428822167476@gmail.com>
+Date:   Thu, 23 Jan 2020 08:47:31 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-23_08:2020-01-23,2020-01-23 signatures=0
+In-Reply-To: <20200123082322.GB10328@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a new stm32mp15 specific compatible to handle FastMode+
-registers handling which is different on the stm32mp15 compared
-to the stm32f7 or stm32h7.
-Indeed, on the stm32mp15, the FastMode+ set and clear registers
-are separated while on the other platforms (F7 or H7) the control
-is done in a unique register.
+On 1/23/2020 12:23 AM, Borislav Petkov wrote:
+> On Wed, Jan 22, 2020 at 04:31:07PM -0800, Shiping Ji wrote:
+>> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>>
+>> From: Lei Wang <leiwang_git@outlook.com>
+>>
+>> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+>> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+>> Reviewed-by: James Morse <james.morse@arm.com>
+>>
+>> ---
+>>      Changes in v10:
+>>          - Convert to the YAML format for binding description
+> 
+> So you've changed this patch considerably. If you do so, you cannot keep
+> Reviewed-by tags.
+> 
+> Also, AFAICT, you've written a completely *new* patch which would mean
+> that this time you're the author. Correct?
+> 
+> If so, you don't need to keep Lei's From.
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- drivers/i2c/busses/i2c-stm32f7.c | 41 +++++++++++++++++++++++++++++++++-------
- 1 file changed, 34 insertions(+), 7 deletions(-)
+Boris, we'd still like to keep her as the author since this patch is just updating to a new documentation format where the content being documented was still designed by Lei. I hope this is OK.
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 1a3b3fa582ff..6bee9eca789f 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -223,6 +223,7 @@ struct stm32f7_i2c_spec {
-  * @fall_time: Fall time (ns)
-  * @dnf: Digital filter coefficient (0-16)
-  * @analog_filter: Analog filter delay (On/Off)
-+ * @fmp_clr_offset: Fast Mode Plus clear register offset from set register
-  */
- struct stm32f7_i2c_setup {
- 	enum stm32_i2c_speed speed;
-@@ -232,6 +233,7 @@ struct stm32f7_i2c_setup {
- 	u32 fall_time;
- 	u8 dnf;
- 	bool analog_filter;
-+	u32 fmp_clr_offset;
- };
- 
- /**
-@@ -303,8 +305,9 @@ struct stm32f7_i2c_msg {
-  * @dma: dma data
-  * @use_dma: boolean to know if dma is used in the current transfer
-  * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
-- * @regmap_reg: register address for setting Fast Mode Plus bits
-- * @regmap_mask: mask for Fast Mode Plus bits in set register
-+ * @regmap_sreg: register address for setting Fast Mode Plus bits
-+ * @regmap_creg: register address for clearing Fast Mode Plus bits
-+ * @regmap_mask: mask for Fast Mode Plus bits
-  * @wakeup_src: boolean to know if the device is a wakeup source
-  */
- struct stm32f7_i2c_dev {
-@@ -328,7 +331,8 @@ struct stm32f7_i2c_dev {
- 	struct stm32_i2c_dma *dma;
- 	bool use_dma;
- 	struct regmap *regmap;
--	u32 regmap_reg;
-+	u32 regmap_sreg;
-+	u32 regmap_creg;
- 	u32 regmap_mask;
- 	bool wakeup_src;
- };
-@@ -386,6 +390,14 @@ static const struct stm32f7_i2c_setup stm32f7_setup = {
- 	.analog_filter = STM32F7_I2C_ANALOG_FILTER_ENABLE,
- };
- 
-+static const struct stm32f7_i2c_setup stm32mp15_setup = {
-+	.rise_time = STM32F7_I2C_RISE_TIME_DEFAULT,
-+	.fall_time = STM32F7_I2C_FALL_TIME_DEFAULT,
-+	.dnf = STM32F7_I2C_DNF_DEFAULT,
-+	.analog_filter = STM32F7_I2C_ANALOG_FILTER_ENABLE,
-+	.fmp_clr_offset = 0x40,
-+};
-+
- static inline void stm32f7_i2c_set_bits(void __iomem *reg, u32 mask)
- {
- 	writel_relaxed(readl_relaxed(reg) | mask, reg);
-@@ -1822,15 +1834,26 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
- static int stm32f7_i2c_write_fm_plus_bits(struct stm32f7_i2c_dev *i2c_dev,
- 					  bool enable)
- {
-+	int ret;
-+
- 	if (i2c_dev->speed != STM32_I2C_SPEED_FAST_PLUS ||
- 	    IS_ERR_OR_NULL(i2c_dev->regmap)) {
- 		/* Optional */
- 		return 0;
- 	}
- 
--	return regmap_update_bits(i2c_dev->regmap, i2c_dev->regmap_reg,
--				  i2c_dev->regmap_mask,
--				  enable ? i2c_dev->regmap_mask : 0);
-+	if (i2c_dev->regmap_sreg == i2c_dev->regmap_creg)
-+		ret = regmap_update_bits(i2c_dev->regmap,
-+					 i2c_dev->regmap_sreg,
-+					 i2c_dev->regmap_mask,
-+					 enable ? i2c_dev->regmap_mask : 0);
-+	else
-+		ret = regmap_write(i2c_dev->regmap,
-+				   enable ? i2c_dev->regmap_sreg :
-+					    i2c_dev->regmap_creg,
-+				   i2c_dev->regmap_mask);
-+
-+	return ret;
- }
- 
- static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
-@@ -1846,10 +1869,13 @@ static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
- 	}
- 
- 	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 1,
--					 &i2c_dev->regmap_reg);
-+					 &i2c_dev->regmap_sreg);
- 	if (ret)
- 		return ret;
- 
-+	i2c_dev->regmap_creg = i2c_dev->regmap_sreg +
-+			       i2c_dev->setup.fmp_clr_offset;
-+
- 	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 2,
- 					 &i2c_dev->regmap_mask);
- 	if (ret)
-@@ -2271,6 +2297,7 @@ static const struct dev_pm_ops stm32f7_i2c_pm_ops = {
- 
- static const struct of_device_id stm32f7_i2c_match[] = {
- 	{ .compatible = "st,stm32f7-i2c", .data = &stm32f7_setup},
-+	{ .compatible = "st,stm32mp15-i2c", .data = &stm32mp15_setup},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, stm32f7_i2c_match);
+> In any case, please take some time to read this:
+> 
+> https://www.kernel.org/doc/html/latest/process/index.html
+> 
+> It is a lot so do concentrate on the whole process, i.e., this:
+> 
+> https://www.kernel.org/doc/html/latest/process/development-process.html
+> 
+> so that you have a basic idea.
+> 
+> If you have questions, I'm sure Sasha would be willing to answer them
+> even if he's away now.
+
+Thanks! I'll certainly read this.
+
 -- 
-2.7.4
-
+Best regards,
+Shiping Ji
