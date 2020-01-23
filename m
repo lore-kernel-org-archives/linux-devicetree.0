@@ -2,78 +2,146 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5994FC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 06:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2D6C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 07:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A932467F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 06:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579761976;
-	bh=T3vIGKZC1bfw3mu1T/uU0TZlAZMQ/9TbOrBDWxrgMfE=;
-	h=In-Reply-To:References:To:From:Subject:Date:List-ID:From;
-	b=df9BnXa9Ei3CROCpCXKuKd+VSfGrKMVVE6G1k2XBpaHhNRQXcx0FUWbfzOh/kZILL
-	 of6sBx4ucg/rWMJmywkBNP0E4SR45hOAg254/q6kD7mzlkqX3QfwWwWcRxA7c+Ql/Q
-	 +2N+zvGmGwsEBvscWULuVzUbi6cTt6hqxOs4fesA=
+	by mail.kernel.org (Postfix) with ESMTP id 29BF024673
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 07:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgAWGqP (ORCPT
+        id S1726026AbgAWHYi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 01:46:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAWGqP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 01:46:15 -0500
-Received: from kernel.org (unknown [104.132.0.74])
+        Thu, 23 Jan 2020 02:24:38 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:34668 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAWHYi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 02:24:38 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78346217F4;
-        Thu, 23 Jan 2020 06:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579761974;
-        bh=T3vIGKZC1bfw3mu1T/uU0TZlAZMQ/9TbOrBDWxrgMfE=;
-        h=In-Reply-To:References:To:From:Subject:Date:From;
-        b=hsoi5gkWuNCLOIdDRxnpJEm08tN6cjSyI1suOqT/8ebYNe3ltG6ctwlRHSTwAlZKG
-         pN6p/6qWbUCHUthBWt6PCWBCNuk+qQQGyXanRUtqD3QBZaZPqmG1Deu0j83DUSAXla
-         VyOPHlN4gc/lIdAsagkBJ0NBjsPS7I69Oq0JzNns=
-Content-Type: text/plain; charset="utf-8"
+        by asavdk4.altibox.net (Postfix) with ESMTPS id CDE0680487;
+        Thu, 23 Jan 2020 08:24:30 +0100 (CET)
+Date:   Thu, 23 Jan 2020 08:24:29 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     David Lechner <david@lechnology.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
+Message-ID: <20200123072429.GA11848@ravnborg.org>
+References: <20200115124548.3951-1-geert+renesas@glider.be>
+ <20200115124548.3951-2-geert+renesas@glider.be>
+ <ba21d2c8-ccc6-2704-fa1f-d28239700547@lechnology.com>
+ <20200120190249.GA9619@ravnborg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1579217994-22219-3-git-send-email-vnkgutta@codeaurora.org>
-References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org> <1579217994-22219-3-git-send-email-vnkgutta@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, jshriram@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, psodagud@codeaurora.org,
-        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
-        vinod.koul@linaro.org, vnkgutta@codeaurora.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/7] clk: qcom: rpmh: Add support for RPMH clocks on SM8250
-User-Agent: alot/0.8.1
-Date:   Wed, 22 Jan 2020 22:46:13 -0800
-Message-Id: <20200123064614.78346217F4@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120190249.GA9619@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=WZHNqt2aAAAA:8 a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8 a=hiXH8xowJhRCH_7nMvoA:9
+        a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=PrHl9onO2p7xFKlKy1af:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Venkata Narendra Kumar Gutta (2020-01-16 15:39:49)
-> @@ -490,6 +512,7 @@ static int clk_rpmh_probe(struct platform_device *pde=
-v)
->         { .compatible =3D "qcom,sdm845-rpmh-clk", .data =3D &clk_rpmh_sdm=
-845},
->         { .compatible =3D "qcom,sm8150-rpmh-clk", .data =3D &clk_rpmh_sm8=
-150},
->         { .compatible =3D "qcom,sc7180-rpmh-clk", .data =3D &clk_rpmh_sc7=
-180},
-> +       { .compatible =3D "qcom,sm8250-rpmh-clk",  .data =3D &clk_rpmh_sm=
-8250},
+On Mon, Jan 20, 2020 at 08:02:49PM +0100, Sam Ravnborg wrote:
+> Hi David.
+> 
+> > > +allOf:
+> > > +  - $ref: panel/panel-common.yaml#
+> > 
+> > not all of these properties are applicable.
+> > 
+> 
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - dc-gpios
+> > > +  - reset-gpios
+> > 
+> > Missing optional rotation and backlight properties.
+> 
+> Thanks for catching this. I have written a little .yaml files
+> since I applied this - and learned a little more of the syntax.
+> 
+> See attached patch for my attempt to fix this.
+> Please review.
 
-We should sort this on compatible.
+Hi David, Geert.
 
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
+Any feedback on this patch?
+
+	Sam
+
+> 
+> 	Sam
+> 
+> >From 6b54fb0a071c0732cd4bd5b88f456b5a85bcf4f2 Mon Sep 17 00:00:00 2001
+> From: Sam Ravnborg <sam@ravnborg.org>
+> Date: Mon, 20 Jan 2020 19:55:04 +0100
+> Subject: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
+> 
+> David Lechner noticed (paraphrased):
+> - not all properties from panel-common are applicable.
+> - missing optional rotation and backlight properties
+> 
+> Fix this by listing all allowed properties, and do not allow other properties.
+> 
+> Fixes: abdd9e3705c8 ("dt-bindings: display: sitronix,st7735r: Convert to DT schema")
+> Reported-by: David Lechner <david@lechnology.com>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: David Lechner <david@lechnology.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: dri-devel@lists.freedesktop.org
+> ---
+>  .../devicetree/bindings/display/sitronix,st7735r.yaml      | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> index 8892d79e6e10..0cebaaefda03 100644
+> --- a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> @@ -39,12 +39,19 @@ properties:
+>      maxItems: 1
+>      description: Display data/command selection (D/CX)
+>  
+> +  backlight: true
+> +  reg: true
+> +  reset-gpios: true
+> +  rotation: true
+> +
+>  required:
+>    - compatible
+>    - reg
+>    - dc-gpios
+>    - reset-gpios
+>  
+> +additionalProperties: false
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/gpio/gpio.h>
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
