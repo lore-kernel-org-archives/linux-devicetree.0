@@ -2,175 +2,119 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89174C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 15:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDA9C33CB8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 15:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C33721835
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 15:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD5422464
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 15:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1DKaRxv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jOo1+tg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAWPQH (ORCPT
+        id S1729045AbgAWPSk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:16:07 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33650 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgAWPQG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 10:16:06 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y6so3892706lji.0;
-        Thu, 23 Jan 2020 07:16:04 -0800 (PST)
+        Thu, 23 Jan 2020 10:18:40 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46886 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729049AbgAWPSh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 10:18:37 -0500
+Received: by mail-lj1-f193.google.com with SMTP id m26so3809320ljc.13
+        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 07:18:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yfgpWVliAB55UTtNyKcSVyCqGSUJiB1fMDMcAEJZeJ4=;
-        b=b1DKaRxvy5UqCTHxcEUKFSXo97Y9/2RMbOwH/t4jG/2WcuRn8uTUVfwF9C38fjjQEw
-         dpOeDm+b4Qi/j/byQlHDO/4JcxfyxZUP6sjF/GnQDjkxPj60QcZfD8RrGM0qZ3aiYK4P
-         goke2QqnkMRogN/2mvILn8YYOV5ZciFxPAH+BQg9Qs5YVpuck8R1lEJOWBsxxFZ/xlTW
-         5Q31csM3tqvc/kDLg9ElOCZCBAkiQW8tVHOneHo2bRH/XkqMaY+47wRzWoyJo+/4+L+U
-         mNVUrLUpg2e2+SGfj3dBSrfbOh6RzXtRTTaSlgx6hV0W4irRTlT5rAa/7HaxWL5TNsUS
-         F8RQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mCFNwhKyUI4S3r26cfgULDrw3EJWqsF8R9tqqcBvSXA=;
+        b=jOo1+tg+YOASCAdm2mEQZmYmerWuu4htxLzxplyg2I+p/zeRB/2Cc0tch7urATps8B
+         UlV+0mLYJcjxCWVIHaLOIbjgvbLZfWnALAyNX4tTygAHh2tgNdKyeiP19Udf4sVie3q+
+         jMV0CqQTgWay3Y086QrGLB+ypQ0xLmFG40mxJ30Mvyrw/HZ7SgA2CCnDxa9eXTOn05xK
+         KmyQ4jnJ25+hCr/RRYPOAfJl139AYJRpSPtNpyQGjL+a5HfOns62PvpEcaWrTXf8qmo1
+         WUZ6mheVhmkxXXjBxVhOAEe8EeHikrWHlzmMihgy4xHHjLPShVjQzTwzHnFV7PmkUKdc
+         Txew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yfgpWVliAB55UTtNyKcSVyCqGSUJiB1fMDMcAEJZeJ4=;
-        b=J9V+029ZpyBXrbDnS8KAKt+BmmrdL5n43pysomcH54GZVV0+6vRWBgfXift9HpssN4
-         0qZ3HbtvYZWo3HB9Zq2apL1J76cJhJ0RxaM04bNQY90nCsGYKAstrVOMP39ppyQvejiT
-         R+ZvHuXksZs7hr1D4+31YS9AMkprXEH7l5OwUa0JSoXPV+hERk1hA0E6oOKHWVo7rBpf
-         4Py62B3OPlCkFP+XC1IL5O1RSYFM1fHvhLfU3DEhXbGMwJHin/aCFoxFTInRwjlIYN8/
-         j58OtkskYfxwe8Z3PUMmCfnY9HTR65z2PL4YtgW1OBBBBIPR9KtM2agtnPy4hd1rRJ4v
-         4KYQ==
-X-Gm-Message-State: APjAAAVaOBAs0cHTryrWzk3rdRPqs+bBlSQ04n/A9GqnVKUJvmVJgZyj
-        Ju+rPeRwGxZ164/ykEJorU4=
-X-Google-Smtp-Source: APXvYqwmxF98dYl23Cu+/uDH5g3hUS8mq5X/ld/eN62rkh6ei3M1OAGSxl9nV/npy89xEb/8gjTeVg==
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr23929879ljc.39.1579792563481;
-        Thu, 23 Jan 2020 07:16:03 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r10sm484836ljk.99.2020.01.23.07.16.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 07:16:02 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
- driver
-To:     Sameer Pujar <spujar@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>
-Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, viswanathl@nvidia.com, sharadg@nvidia.com,
-        broonie@kernel.org, thierry.reding@gmail.com,
-        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
-        mkumard@nvidia.com, dramesh@nvidia.com
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-5-git-send-email-spujar@nvidia.com>
- <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
- <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
- <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
- <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
- <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
- <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
- <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
- <1a84b393-938f-8bed-d08e-cc3bb6ed4844@gmail.com>
- <0fc814c2-0dc6-7741-b954-463381ff7fb9@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b5c581b9-17af-d004-33fb-2cc782ab820a@gmail.com>
-Date:   Thu, 23 Jan 2020 18:16:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mCFNwhKyUI4S3r26cfgULDrw3EJWqsF8R9tqqcBvSXA=;
+        b=jdUKJRJv8LqXMsZ3M7zhJnp7lYyMr9pmO6yAugt7ZuSFvARg1GgvJYpQ2AcsW3G8hU
+         aKtCyEOjuaYsy5B5xNxrMjIoq/RxDk3A/JjcHWbA5EKqtkxnfzLw74mvBWCyvsy+gIvW
+         gWwrxDQCWMTdTcosOqWYxWQvYPmPrzA1jprk+s/lPcHtQVo21fH73XVIQR8piWiVjB9D
+         QJZmtC4NaUMtgjqEQOjaW+FCtThmQeVs41aqmSoihaIbb6NxucP/W0eh9LEAu35v6zKH
+         zURV56WJ7XdKz4892EloH0GXwdiwPInqitg5lPiDT9AwnkETqBajHoOdg+oeCslKlrWr
+         mN6A==
+X-Gm-Message-State: APjAAAWcaHR+XGA5OY6QByg4C5dR1neCPx6aBlZ1//ghoFl68pp+uion
+        o10kBptgYLwUW9BW83QBain4Bxzx0/5huA3t4tITZw==
+X-Google-Smtp-Source: APXvYqwxOS3uccWns345t1Pc28bC+N8TaVTRa/IwkWxxj8DKKJcCwl+5B3q5OOArxG8Kn0UP3937k+GW4ED2Ip6Qexc=
+X-Received: by 2002:a2e:9143:: with SMTP id q3mr23227353ljg.199.1579792715062;
+ Thu, 23 Jan 2020 07:18:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <0fc814c2-0dc6-7741-b954-463381ff7fb9@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200117102127.GD15507@dell>
+In-Reply-To: <20200117102127.GD15507@dell>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Jan 2020 16:18:23 +0100
+Message-ID: <CACRpkdbj-yjuqc+=nCKRiAANjGFFHxk_ZprO8zztpRKhmXQtDw@mail.gmail.com>
+Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM BD71828
+ PMIC GPIOs
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-23.01.2020 12:22, Sameer Pujar пишет:
-> 
-> 
-> On 1/22/2020 9:57 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 22.01.2020 14:52, Jon Hunter пишет:
->>> On 22/01/2020 07:16, Sameer Pujar wrote:
->>>
->>> ...
->>>
->>>>>>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
->>>>>>>>>> +{
->>>>>>>>>> +     pm_runtime_disable(&pdev->dev);
->>>>>>>>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
->>>>>>>>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
->>>>>>>>> This breaks device's RPM refcounting if it was disabled in the
->>>>>>>>> active
->>>>>>>>> state. This code should be removed. At most you could warn
->>>>>>>>> about the
->>>>>>>>> unxpected RPM state here, but it shouldn't be necessary.
->>>>>>>> I guess this was added for safety and explicit suspend keeps clock
->>>>>>>> disabled.
->>>>>>>> Not sure if ref-counting of the device matters when runtime PM is
->>>>>>>> disabled and device is removed.
->>>>>>>> I see few drivers using this way.
->>>>>>> It should matter (if I'm not missing something) because RPM should
->>>>>>> be in
->>>>>>> a wrecked state once you'll try to re-load the driver's module.
->>>>>>> Likely
->>>>>>> that those few other drivers are wrong.
->>>>>>>
->>>>>>> [snip]
->>>>>> Once the driver is re-loaded and RPM is enabled, I don't think it
->>>>>> would use
->>>>>> the same 'dev' and the corresponding ref count. Doesn't it use the
->>>>>> new
->>>>>> counters?
->>>>>> If RPM is not working for some reason, most likely it would be the
->>>>>> case
->>>>>> for other
->>>>>> devices. What best driver can do is probably do a force suspend
->>>>>> during
->>>>>> removal if
->>>>>> already not done. I would prefer to keep, since multiple drivers
->>>>>> still
->>>>>> have it,
->>>>>> unless there is a real harm in doing so.
->>>>> I took a closer look and looks like the counter actually should be
->>>>> reset. Still I don't think that it's a good practice to make changes
->>>>> underneath of RPM, it may strike back.
->>>> If RPM is broken, it probably would have been caught during device
->>>> usage.
->>>> I will remove explicit suspend here if no any concerns from other
->>>> folks.
->>>> Thanks.
->>> I recall that this was the preferred way of doing this from the RPM
->>> folks. Tegra30 I2S driver does the same and Stephen had pointed me to
->>> this as a reference.
->>> I believe that this is meant to ensure that the
->>> device is always powered-off regardless of it RPM is enabled or not and
->>> what the current state is.
->> Yes, it was kinda actual for the case of unavailable RPM.
-> 
->> Anyways, /I think/ variant like this should have been more preferred:
->>
->> if (!pm_runtime_enabled(&pdev->dev))
->>          tegra210_i2s_runtime_suspend(&pdev->dev);
->> else
->>          pm_runtime_disable(&pdev->dev);
-> 
-> I think it looks to be similar to what is there already.
-> 
-> pm_runtime_disable(&pdev->dev); // it would turn out to be a dummy call
-> if !RPM
-> if (!pm_runtime_status_suspended(&pdev->dev)) // it is true always if !RPM
->         tegra210_i2s_runtime_suspend(&pdev->dev);
+On Fri, Jan 17, 2020 at 11:21 AM Lee Jones <lee.jones@linaro.org> wrote:
+> On Fri, 17 Jan 2020, Matti Vaittinen wrote:
+>
+> > ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+> > to be used for general purposes. First 3 can be used as outputs
+> > and 4.th pin can be used as input. Allow them to be controlled
+> > via GPIO framework.
+> >
+> > The driver assumes all of the pins are configured as GPIOs and
+> > trusts that the reserved pins in other OTP configurations are
+> > excluded from control using "gpio-reserved-ranges" device tree
+> > property (or left untouched by GPIO users).
+> >
+> > Typical use for 4.th pin (input) is to use it as HALL sensor
+> > input so that this pin state is toggled when HALL sensor detects
+> > LID position change (from close to open or open to close). PMIC
+> > HW implements some extra logic which allows PMIC to power-up the
+> > system when this pin is toggled. Please see the data sheet for
+> > details of GPIO options which can be selected by OTP settings.
+> >
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Linus, Is that an Ack?
 
-Maybe this is fine for !RPM, but not really fine in a case of enabled
-RPM. Device could be in resumed state after pm_runtime_disable() if it
-wasn't suspended before the disabling.
+Yes! Feel free to merge this.
+
+Yours,
+Linus Walleij
