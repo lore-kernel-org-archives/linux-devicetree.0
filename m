@@ -4,65 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22A7C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5E9C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB0322522
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91102253D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zuKKKPIc"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sFQpUvrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgAWJsg (ORCPT
+        id S1728139AbgAWJvR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:48:36 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34630 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWJsf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 04:48:35 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so2350085wrr.1
-        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 01:48:34 -0800 (PST)
+        Thu, 23 Jan 2020 04:51:17 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33270 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgAWJvQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 04:51:16 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b6so2369914wrq.0
+        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 01:51:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Kn81JYc9N9F0sdKy+Q2CIEDl23p6b50Wt6+KCmJKWVY=;
-        b=zuKKKPIcS/4Bjo0Jbt3+sNV5+A7pgTKEHneuYtSBIrLh+MvanIbBfGGgGIUa0a19k0
-         ilJzgzQmbJSj7gFNYn697kd6v/5MVwnJvc4o3MScZhfJVyOqXaeHbw99BOM1yo9IZcbq
-         J+F92jpPcs+AUprJtZvtfyGbcINy3d75e18zFZuN01dAL54E7H/y/biP20x0u9ypv982
-         CAIVjJ/4uCi/EM7ABcbWc8dsjTCIAn8vokF4rW/AYf0D/ryzy8T9UHBtpJcKVzYIjXh6
-         siercVQ6l/gP4HDkcRFJ+DWljvcNs0/DEYGMjEBFfph/Oc7/yhaIhJXmdAXRbNo4dreC
-         QkMw==
+        bh=Qu4I3AVgny6e+kBg6XVbE5DiJ/kTZqGcxHAYvR7aT6U=;
+        b=sFQpUvrx5L4D+rzNcZfUze1u/tH/03hiIHgZ0SdTYE+q1hllX6GhLIkYLiiNfidK7n
+         vCRxhozaQBZsogs0Yo1kKeW3VbbGs57p4nUFIBrWcUy29R7XoAC/LnIlnXANW78CWM8C
+         Us750OWnHxU1PSSn1SATPLvQIFdxS8sZP6xSYIA1UXEnhJGlXzbuV2YndiyoDX0aQlmm
+         Lo2Na4agvcnopWq1il+lPhpQknOBBOO91oBJOkyB2OulrzkBJxPbydMbStTLCRtE6ZS/
+         NTzXGepgCl3Hc++M+md+PWIh69uHx50XKh1u66XNf74EltAkZ8ylIoDB3CACAd44JvWY
+         VKzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Kn81JYc9N9F0sdKy+Q2CIEDl23p6b50Wt6+KCmJKWVY=;
-        b=sgQQiLaydG6OdVx7wI7hX4pdnoiWN4SQIBFQU3cm0m5qpzCI7zE+xniriOJUM3c6BA
-         eLSmmlsOsbwVlQB3Rjcw8D221jZBwxzyaTZPW45U3s4J5ql9ySIfs3gdqU1z1rY9v8Yz
-         6Uoiy6679rIWa7otX8SeELQwQT8LOwxK8ELBNLVdaoA+zddsqQBzdqGpbL+JDt+5EeFz
-         ObeYIQXvlAdpiQzSxfdEy6NYG3L/c/gh9JtOnGgLxiNKn46DN9hvQVMPMA9LKg0wNxnV
-         put5J0hjaz+UOFEfWeiJX3yXyWMhUd4PyIAhUr8Zp3S2bvQn16kFAtLk2QrBvpQB2jx1
-         Xlng==
-X-Gm-Message-State: APjAAAUxsVndFW2wPgk3SG7xm3pmcZWLjigWf8amgxqjP3VHDqbltjad
-        d3RP+BzttDdHc45OwnwLOvrESA==
-X-Google-Smtp-Source: APXvYqwR4np2yZ97TsG3h9ujDbTjFSuo+wgRA7T1wq50MAXa9EGMzF8Pd8Bjk8QqTLm07BqpfAARHw==
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr17363058wrn.124.1579772913571;
-        Thu, 23 Jan 2020 01:48:33 -0800 (PST)
+        bh=Qu4I3AVgny6e+kBg6XVbE5DiJ/kTZqGcxHAYvR7aT6U=;
+        b=rzajV+JbU0xWWkOfdmJfGygcT/SBffXxvubPlHo+p3U67k0GHsMqdhodILAKhI6hlQ
+         rK+5Tn67hN0vNt6p91sLtM05DvBSVed9+fx6vse4gXI80j6NIVcewCXpuZHgLIImeDc3
+         MNzaCJZrPzDMq+zWjKmmzeNlzIXumioxu3wsNTHtEWgm3e1OFpD8/aJDEjiecq7Nu30L
+         69+r0PnSLYFl6DSjZjg49SFoOjMNbec4hsJKfiYK6mYHzwsiimuSO3f4PVjeKeeszki8
+         OjPi4Z2jbJ8uHrpJiOgRlBTa/KrhUPm2nJjUSTpOCEnuhv5eQgQL8d6zmTBFtM74Y5B8
+         lAOw==
+X-Gm-Message-State: APjAAAW+DJ1QSRzOSWGTyBgf119S7AeYNjnl87+zthzXtCvisT9/LIj6
+        9+6Ge21ZYuXn2PxEqxxIl9aAwan9dJ+rVw==
+X-Google-Smtp-Source: APXvYqwx+BqSMunwvzabpXTxh5Mw1w3Y++TMveiGQeOhfp5cv1eX4zRuI8Nax5avc3cm4cW/TEfd6w==
+X-Received: by 2002:adf:ebd0:: with SMTP id v16mr15654244wrn.146.1579773073506;
+        Thu, 23 Jan 2020 01:51:13 -0800 (PST)
 Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o187sm2261256wme.36.2020.01.23.01.48.32
+        by smtp.gmail.com with ESMTPSA id x18sm2314251wrr.75.2020.01.23.01.51.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 01:48:33 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: meson-sm1-sei610: add missing interrupt-names
-To:     Guillaume La Roque <glaroque@baylibre.com>, khilman@baylibre.com,
+        Thu, 23 Jan 2020 01:51:13 -0800 (PST)
+Subject: Re: [PATCH] dt-bindings: reset: meson: add gxl internal dac reset
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200117133423.22602-1-glaroque@baylibre.com>
+References: <20200122092526.2436421-1-jbrunet@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -114,12 +115,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <42e82841-067d-245b-6196-183503da389b@baylibre.com>
-Date:   Thu, 23 Jan 2020 10:48:32 +0100
+Message-ID: <541757d2-8bf3-95b3-1838-d06ee145509c@baylibre.com>
+Date:   Thu, 23 Jan 2020 10:51:12 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200117133423.22602-1-glaroque@baylibre.com>
+In-Reply-To: <20200122092526.2436421-1-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -128,28 +129,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17/01/2020 14:34, Guillaume La Roque wrote:
-> add missing "host-wakeup interrupt names
+On 22/01/2020 10:25, Jerome Brunet wrote:
+> Add the reset line of the internal DAC found on the amlogic gxl SoC family
 > 
-> Fixes: 30388cc07572 ("arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt")
-> 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts | 1 +
->  1 file changed, 1 insertion(+)
+>  include/dt-bindings/reset/amlogic,meson-gxbb-reset.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-> index a8bb3fa9fec9..cb1b48f5b8b1 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-> @@ -593,6 +593,7 @@
->  		compatible = "brcm,bcm43438-bt";
->  		interrupt-parent = <&gpio_intc>;
->  		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "host-wakeup";
->  		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
->  		max-speed = <2000000>;
->  		clocks = <&wifi32k>;
+> diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+> index ea5058618863..883bfd3bcbad 100644
+> --- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+> +++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+> @@ -69,7 +69,7 @@
+>  #define RESET_SYS_CPU_L2		58
+>  #define RESET_SYS_CPU_P			59
+>  #define RESET_SYS_CPU_MBIST		60
+> -/*					61	*/
+> +#define RESET_ACODEC			61
+>  /*					62	*/
+>  /*					63	*/
+>  /*	RESET2					*/
 > 
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
