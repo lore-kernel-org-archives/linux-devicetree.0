@@ -2,158 +2,110 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E11C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F372C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574DA20661
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:44:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579787087;
-	bh=ehtW9l9ACdNUpNo6gsMIkwoNpfOA6s3D+OSmNLbylzQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q92nDl6GadSJzwZUoBDMe2iDvzDmUG0rmPNXVom5ufMNiu8zZWxyCjmKIqLu0rtC3
-	 5LjEZL2NiSLGwRsAvK+b11txBCFEDCO+AebGlaoABW+CY50UcM7GdD8Ch9u7QIr1rJ
-	 lMEnjTlFbkCb05MVkdUbSMOZvr98rZWh6sNOZ8Sc=
+	by mail.kernel.org (Postfix) with ESMTP id 1BD6320661
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:46:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hZX9mIAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgAWNoq (ORCPT
+        id S1726968AbgAWNq4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:44:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbgAWNoq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:44:46 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C9E024688;
-        Thu, 23 Jan 2020 13:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579787085;
-        bh=ehtW9l9ACdNUpNo6gsMIkwoNpfOA6s3D+OSmNLbylzQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f6itICyEccPeU2EkmbAw44eFVsEnQiCvVRTYc3RMmfw1f5V5rghHrFdF6dnC+r1wV
-         LW0nDwCzxH/GTTtVFZtYGJLOP+nJu1VWepUnkNyHvE63DC36JQuxG/BFcyxUuYXolx
-         hnkuLUgk7s2DCpWGgBq76zQCpyZ5Of2xjyCLBDDQ=
-Received: by mail-qk1-f169.google.com with SMTP id c17so3403985qkg.7;
-        Thu, 23 Jan 2020 05:44:45 -0800 (PST)
-X-Gm-Message-State: APjAAAVGqpIIeB5KV3T+3vZXkfcRfIR9lYyS07oqlxR+975ItnwWTjCS
-        hGYipOYanfuv1/Pzjs8/SQjtSXIWl9u92Es0lQ==
-X-Google-Smtp-Source: APXvYqwj1kYyeJq3Ccl1DyDpR3KLsILueUjym2UJmfupNznTqTkOSej7+FQVm2ExBXPWgHI5dXhLnNyU9f/PKwvhq6E=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr16326677qkn.254.1579787084251;
- Thu, 23 Jan 2020 05:44:44 -0800 (PST)
+        Thu, 23 Jan 2020 08:46:56 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37944 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgAWNq4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 08:46:56 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x185so1576173pfc.5
+        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 05:46:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9msSGB05EOD+TA6th1Q6DasshXuxXMHpgfWWmoqkjG0=;
+        b=hZX9mIAIy9GMqX4umkBL4JNLBU+ujofWPQPTjEzBxMgbIXIeaOfAKSsdtbeZnrdA0k
+         F5BDTO12rEh1yXXRYUf5lsWCuv2k2ccVWkLwJj4BwoZR2KwX8X/ldOW/lMkvGcIDwI53
+         0vwA/U7bw6xb90SZXS9aghijC1mR8gmMGzmqo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9msSGB05EOD+TA6th1Q6DasshXuxXMHpgfWWmoqkjG0=;
+        b=NN0krf/YCFCGQ7j87RY3l9PFk9w0vpryPhQIfGqbVBtRxwm4BwC8mr24QNMI2PzlRW
+         Xk5ItpK6i18ExwD+hOsNrBcu/85/KnyQ0aw1sclEEtrbr7Wu88NDdirYPTMhz+FujSIm
+         3HqUW18HGBh8xQWsT78tI+9cHZhwDV69COcxTBBfr2xacmQSUq514qtP/NiPtPCtz1+Y
+         Mo00QCQhz3y4o0shxtAiF66ufDo2o9bmkhAL3JNefSNlB7n0CTU5D+8HrFoZT/IbU3j0
+         YiLUZyDveie8pwOL1dP7bunoz8tWPEVp6455st0BiJyaeB8FAtfXGb7592IKLmKcE37M
+         5GoQ==
+X-Gm-Message-State: APjAAAVJMgalygwoAZ1FzbDW6aKQjmWVMlFu2oty6gKhJ39vEq0NcJUL
+        E4vn/znnIpDEgXTy9I8Uook6WA==
+X-Google-Smtp-Source: APXvYqwu4dqBx94o0ANFySalOciPvjf6FEO1N1R3Ni57uQ4X5UqK6ImkHDTPh2JeP71b7f82/fpnUw==
+X-Received: by 2002:a65:645a:: with SMTP id s26mr3928042pgv.321.1579787215201;
+        Thu, 23 Jan 2020 05:46:55 -0800 (PST)
+Received: from localhost.localdomain ([49.206.202.109])
+        by smtp.gmail.com with ESMTPSA id a10sm3119275pgm.81.2020.01.23.05.46.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 05:46:54 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 1/3] ARM: dts: rockchip: Fix vcc10_lcd name and voltage for rk3288-vyasa
+Date:   Thu, 23 Jan 2020 19:16:39 +0530
+Message-Id: <20200123134641.30720-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
-In-Reply-To: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jan 2020 07:44:32 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
-Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
-To:     Shiping Ji <shiping.linux@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
-        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 6:31 PM Shiping Ji <shiping.linux@gmail.com> wrote:
->
-> This is the device tree bindings for new EDAC driver dmc520_edac.c.
->
-> From: Lei Wang <leiwang_git@outlook.com>
->
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
->
-> ---
->      Changes in v10:
->          - Convert to the YAML format for binding description
->
-> ---
->  .../devicetree/bindings/edac/dmc-520.yaml     | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
->
-> diff --git a/Documentation/devicetree/bindings/edac/dmc-520.yaml b/Documentation/devicetree/bindings/edac/dmc-520.yaml
-> new file mode 100644
-> index 000000000000..dd5982b227b2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/dmc-520.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
+According to hardware schematics of Vyasa RK3288 the
+actual name used for vcc10_lcd is vdd10_lcd.
 
-Dual license new bindings please:
+regulator suspend voltage can rail upto 1.0V not 1.8V.
 
-(GPL-2.0-only OR BSD-2-Clause)
+Fix the name and suspend voltage for vcc10_lcd regulator.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/edac/dmc-520.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM DMC-520 EDAC bindings
-> +
-> +maintainers:
-> +  - Lei Wang <lewan@microsoft.com>
-> +
-> +description: |+
-> +  DMC-520 node is defined to describe DRAM error detection and correction.
-> +
-> +  https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: brcm,dmc-520
-> +      - const: arm,dmc-520
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    items:
-> +      - const: ram_ecc_errc
-> +      - const: ram_ecc_errd
-> +      - const: dram_ecc_errc
-> +      - const: dram_ecc_errd
-> +      - const: failed_access
-> +      - const: failed_prog
-> +      - const: link_err
-> +      - const: temperature_event
-> +      - const: arch_fsm
-> +      - const: phy_request
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ arch/arm/boot/dts/rk3288-vyasa.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-This defines not just the names, but the index they must be at which I
-don't think you want.
+diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+index ba06e9f97ddc..d2f79e5bee87 100644
+--- a/arch/arm/boot/dts/rk3288-vyasa.dts
++++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+@@ -286,15 +286,15 @@
+ 				};
+ 			};
+ 
+-			vcc10_lcd: LDO_REG6 {
+-				regulator-name = "vcc10_lcd";
++			vdd10_lcd: LDO_REG6 {
++				regulator-name = "vdd10_lcd";
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+-					regulator-suspend-microvolt = <1800000>;
++					regulator-suspend-microvolt = <1000000>;
+ 				};
+ 			};
+ 
+-- 
+2.18.0.321.gffc6fa0e3
 
-minItems: 1
-maxItems: 10
-items:
-  enum:
-    - ram_ecc_errc
-    - ram_ecc_errd
-    ...
-
-Note the lack of '-' under 'items' making it a schema that applies to all items.
-
-Run 'make dt_binding_check' as that would have caught this issue on the example.
-
-Rob
