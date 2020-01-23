@@ -2,230 +2,131 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD4AC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 05:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BD1C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 05:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987112467B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 05:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91B124676
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 05:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="Urb2nN2j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kgDZ3Ev4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgAWFNZ (ORCPT
+        id S1726029AbgAWFiQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 00:13:25 -0500
-Received: from ozlabs.org ([203.11.71.1]:53647 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAWFNZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 00:13:25 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 4839Qp1wQBz9sSL; Thu, 23 Jan 2020 16:13:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1579756402;
-        bh=EndBGkPODenb5XpA0SDzQL0qO6AOtb8zZmjrL1qSQkk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Urb2nN2jTgJpLIgiBgErMo0isifQ5rrFdnx6dTAXMhpVjfzi4umWLayu+/LtEAEoa
-         3XsZlrL0ItA+MlR1Kk4KuW42yuqMXcyXdCWYDkvIgdXj5WFQLKooRPRBVTYgMayQno
-         a6402Djr5CHoQFc5NIgLYX0Gn8I5xQ1w1vk14rMU=
-Date:   Thu, 23 Jan 2020 16:13:16 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Steve McIntyre <steve.mcintyre@linaro.org>
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-Message-ID: <20200123051316.GP2347@umbus.fritz.box>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com>
- <20200116005741.GB54439@umbus>
- <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
- <20200117090937.GU54439@umbus>
- <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
- <20200119063916.GD54439@umbus>
- <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
+        Thu, 23 Jan 2020 00:38:16 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36005 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgAWFiP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 00:38:15 -0500
+Received: by mail-pj1-f67.google.com with SMTP id n59so722612pjb.1
+        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 21:38:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u59zjSXS/XTq3y/VRi/ypiF6GVPni5LqrGm7pUdf9CE=;
+        b=kgDZ3Ev4YhI8UWauD6wYC6ui+jiErE23+nYrenotZ35rNra4h+mVoeirGvXwdx6CKN
+         77TGlhJY8iEJ62/2FuGOovMklg+H6b/iyel7P8It95jvfZBwE07PU3D9vxjmtSO6U53N
+         LJpCPFfXIfHIGX30wrWCr6YhnnEescqs/XOwciVchmTCme+RjcrcDcmasWJ0EcVsgGqV
+         9Yk5mBDbsKPzz81AT+jdVrmll9S6543DWkRp9I99ZpVJTp5xNT1TA5/mNzmxUKRuXPDT
+         8aMdky9w8+/piEPQ2MqwrfQ8g2/Sg2OlgndjMBs33uaKlNOUnbVVIQ8VPtz/y+PmODbB
+         XsVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u59zjSXS/XTq3y/VRi/ypiF6GVPni5LqrGm7pUdf9CE=;
+        b=nEsdNm7lCmdXGk1BjlFmxN5pN9WyQvcVRavIO1fcG+gFUXzHfOmP9UYbzIEM7+Dbwm
+         L8WUUds3lSxSIYQtl8TRHzeshH+RhQC/TptP+UtKHRFcrlvS2G3Koj6jj4ey7Dbt4U4k
+         4Ue/PPt6LuWeovb/Kl6dRAVC/sMJu5MOUo0DV09Bsj3kTKxgNoF9fuyln+YIOgPL/pU2
+         lHEofqUod2rQSX/7xX+9C3YhI1h+xpqQeUNUwzSWyqITlIDZ+3wkl//DZ6RhmkSTerVU
+         hQ48a4pexoLRMVBN4kD2sssEoS9hP6JEupcikg780t3yWw7cm78svQ1oNQUI+G/SoykY
+         t4xQ==
+X-Gm-Message-State: APjAAAVmQCslkPnSc8LDjVr8z+TFiOCnwjpV7fvYY1//vr+uIQA9REYk
+        dGSP0/tgshQJva3DmFACtBCi4A==
+X-Google-Smtp-Source: APXvYqxLeiUeWrnNMNt1yazM9GWw8JOan3GgSFOGMok29IKmjwN2od/hMqiGhQuqC29PZady7Iz9Bg==
+X-Received: by 2002:a17:902:528:: with SMTP id 37mr15071319plf.322.1579757894919;
+        Wed, 22 Jan 2020 21:38:14 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f8sm788874pfn.2.2020.01.22.21.38.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 21:38:14 -0800 (PST)
+Date:   Wed, 22 Jan 2020 21:38:11 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     rishabhb@codeaurora.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
+ info in IMEM
+Message-ID: <20200123053811.GU1511@yoga>
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-3-bjorn.andersson@linaro.org>
+ <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
+ <20200122230849.GC3261042@ripper>
+ <2ffeff6b57e6bb4567f00c09e5b82131@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b5sSX5qSQrSInIHt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
+In-Reply-To: <2ffeff6b57e6bb4567f00c09e5b82131@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed 22 Jan 15:58 PST 2020, rishabhb@codeaurora.org wrote:
 
---b5sSX5qSQrSInIHt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 2020-01-22 15:08, Bjorn Andersson wrote:
+> > On Wed 22 Jan 14:56 PST 2020, rishabhb@codeaurora.org wrote:
+> > > On 2019-12-26 21:32, Bjorn Andersson wrote:
+> > > > diff --git a/drivers/remoteproc/qcom_pil_info.c
+> > [..]
+> > > > +static int pil_reloc_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +	struct pil_reloc *reloc;
+> > > > +
+> > > > +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
+> > > > +	if (!reloc)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	reloc->dev = &pdev->dev;
+> > > > +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> > > If there are multiple entries like "pil-reloc" in the imem node
+> > > mapping the entire imem multiple times may not work. Is there a way
+> > > we can somehow just iomap the required region for pil?
+> > 
+> > With the entire imem being represented as a syscon this will be
+> > ioremapped once and all callers of syscon_node_to_regmap() (or one of
+> > the other syscon getters) will get a regmap back that reference this one
+> > mapping.
+> > 
+> > So doing it this way allow us to "map" sections of imem that is smaller
+> > than PAGE_SIZE.
+> > 
+> > 
+> > That said, it means that all imem users/clients should access imem
+> > through this syscon regmap.
+> > 
+> > Regards,
+> > Bjorn
+> Yes, the clients are spread around in different drivers currently.
+> So accessing same regmap is not possible.
 
-On Tue, Jan 21, 2020 at 09:59:44AM -0600, Rob Herring wrote:
-> On Sun, Jan 19, 2020 at 12:41 AM David Gibson
-> <david@gibson.dropbear.id.au> wrote:
-> >
-> > On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
-> > > On Fri, Jan 17, 2020 at 6:26 AM David Gibson
-> > > <david@gibson.dropbear.id.au> wrote:
-> > > >
-> > > > On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
-> > > > > Hi David
-> > > > >
-> > > > > On 1/16/20 1:57 AM, David Gibson wrote:
-> > > > > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrot=
-e:
-> > > > > > > This commit adds the possibility to add build information for=
- a DTB.
-> > > > > > > Build information can be: build date, DTS version, "who built=
- the DTB"
-> > > > > > > (same kind of information that we get in Linux with the Linux=
- banner).
-> > > > > > >
-> > > > > > > To do this, an extra option "-B" using an information file as=
- argument
-> > > > > > > has been added. If this option is used, input device tree is =
-appended with
-> > > > > > > a new string property "Build-info". This property is built wi=
-th information
-> > > > > > > found in information file given as argument. This file has to=
- be generated
-> > > > > > > by user and shouldn't exceed 256 bytes.
-> > > > > > >
-> > > > > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> > > > > >
-> > > > > > At the very least, this patch of the series will need to be sen=
-t to
-> > > > > > upstream dtc first.
-> > > > >
-> > > > > Ok sorry. I thought that sending all the series would give more
-> > > > > information.
-> > > >
-> > > > That's fair enough, but in order to merge, you'll need to post agai=
-nst
-> > > > upstream dtc.
-> > > >
-> > > > > > I'm also not terribly clear on what you're trying to accomplish=
- here,
-> > > > > > and why it's useful.
-> > > > >
-> > > > > Let's take Kernel boot at example (but could be extend to other D=
-TB "users"
-> > > > > like U-Boot). When Linux kernel booting we get a log that gives u=
-seful
-> > > > > information about kernel image: source version, build date, peopl=
-e who built
-> > > > > the kernel image, compiler version. This information is useful fo=
-r debug and
-> > > > > support. The aim is to get same kind of information but for the D=
-TB.
-> > > > >
-> > > > > > Since you're doing this specifically for use with dtbs built in=
- the
-> > > > > > kernel build, could you just use a:
-> > > > > >     Build-info =3D /incbin/ "build-info.txt";
-> > > > > > in each of the in-kernel .dts files?
-> > > > >
-> > > > > My first idea was to not modify all existing .dts files. Adding a=
-n extra
-> > > > > option in dtc is (for me) the softer way to do it. I mean, compile
-> > > > > information should come through compiler without modify .dts file=
-s outside
-> > > > > from dtc. In this way it will be easy to everybody using dtc (ins=
-ide our
-> > > > > outside Linux tree) to add dtb build info (even if they don't how=
- to write a
-> > > > > dts file).
-> > > >
-> > > > But you're not really having this information coming from the
-> > > > compiler.  Instead you're adding a compiler option that just force
-> > > > includes another file into the generated tree, and it's up to your
-> > > > build scripts to put something useful into that file.
-> > > >
-> > > > I don't really see that as preferable to modifying the .dts files.
-> > > >
-> > > > I also dislike the fact that the option as proposed is much more
-> > > > general than the name suggests, but also very similar too, but much
-> > > > more specific than the existing /incbin/ option.
-> > > >
-> > > > What might be better would be to have a dtc option which force appe=
-nds
-> > > > an extra .dts to the mail .dts compiled.  You can then put an overl=
-ay
-> > > > template in that file, something like:
-> > > >
-> > > > &{/} {
-> > > >         linux,build-info =3D /incbin/ "build-info.txt;
-> > > > }
-> > >
-> > > I like this suggestion either as an include another dts file or an
-> > > overlay.
-> >
-> > Sorry, to be clear what I'm talking about here is just including
-> > another dts file, and using the compile-type overlay syntax.  This is
-> > not the same as .dtbo style runtime overlays (though the final result
-> > is about the same in this case).
->=20
-> Ah, okay. That's probably easier to implement.
->=20
-> > > The latter could be useful as a way to maintain current dtb
-> > > files while splitting the source files into base and overlay dts
-> > > files.
-> > >
-> > > But no, let's not prepend this with 'linux'. It's not a property
-> > > specific for Linux to consume.
-> >
-> > It's not really about who consumes it.  It's about defining a
-> > namespace for the new property to exist in, since it's not part of a
-> > relevant standard (if we wanted to make it such, we should pin down
-> > what goes in there with much more precision).
->=20
-> I can't think of any cases of the 'linux' prefix not being about who
-> consumes it. And we often end up dropping 'linux' because it turns out
-> to not be Linux specific. I don't care to see u-boot,build-info,
-> freebsd,build-info, etc. when a given dtb can only have 1 of those.
+The few examples upstream are children of the imem simple-mfd/syscon and
+will thereby naturally request the regmap of the parent syscon.
 
-But all other vendor prefixes are about who generated or specified the
-information, not who consumes it, e.g. "ibm,XXX", "fsl,YYY", etc.
+For driver that doesn't fit this model (I don't find one right now), or
+if you have downstream drivers that are designed differently you could
+use syscon_regmap_lookup_by_phandle() to acquire the imem regmap from
+any device in the system.
 
-> My intent is this property name is added to the DT spec, but I don't
-> agree we should define what's in it beyond a string. It is information
-> that is useful for humans identifying what the dtb was built from.
->=20
-> Rob
->=20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---b5sSX5qSQrSInIHt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4pK2wACgkQbDjKyiDZ
-s5LRthAAvnFwh1/QPJTb0Pk4hrdDgI4GYCc5H1CNQDjh9ROoEpnEJD2wOfkq7aGK
-qt0MyXulz6qZDYfmK19gCU+FSP76kij4OfX9aqh0C9gpnMRrqu9Shye0mbFT5iwR
-0DFHxmnwyc9xG6HGtVSi3i85yAOYOKubQ95uwgrj5jdXtONhCmYlnC6UeXd4ATDd
-ykta/FyqAR7lLOJz+9Mdu6lsWoeqOoKe4RWr5fGnQ9PFviJtxr0HCYGpwwuZ4+tQ
-sPzjBUZ8gJu5btg39Zok883IZi4iK148EpZH/9l+zlHfpMKzajx48cKrjgZO5Va4
-Rp0f6NOm8jBQZQ2DnuvN3BDR0WjAcGtUpyczxIf7LEPuLGd3e+LiAVrT7esbx2qc
-bi31Ci2IYed1YmtjfJLmaPmqtBU4/5f/IiYFD87c5JHJjTO33gp0eIELOG9FeQFF
-Yrgm1QknHecNd3BODgk8CObZnYGISy7d4hu1JY3/BMe1v2LCUZfahlyPIHF5qipK
-p98NCmbkzOjoE3C6J5RU7ewALKxauLJq1n1eUMBk8nR+TdsaxEIGkDVRA2upK0+U
-EgygPrWIu7LFp5cxMNEmZVXIHdzW+ZcCfOBxaO9Bp7zea5HTCLXS1HSFQbrc86wj
-nmcZjyWAqxtuxgjPOKdhEKLo0gO0c5jCnWQvecghxdNR7aFO/hs=
-=bV2o
------END PGP SIGNATURE-----
-
---b5sSX5qSQrSInIHt--
+Regards,
+Bjorn.
