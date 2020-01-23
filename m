@@ -2,333 +2,169 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7776FC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14011C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CD522522
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D583322522
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:45:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lPm3yog7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W5031Zc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgAWJor (ORCPT
+        id S1726231AbgAWJpx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:44:47 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53597 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWJor (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 04:44:47 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m24so1813061wmc.3
-        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 01:44:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Puy0zvPoy+smX6jP38nlXJMKhbfeim2bcE9YEw+E3AY=;
-        b=lPm3yog7rQtPNo3GpWUesOwI4uKEzIKyWW0vwWGanwC7fJvAd1JOQLmc5p0zzyZy8S
-         5ICEUN0QYB/Mq38qn9mhe/yIkLm9QG0HY7dfBtU1pdSXXPiFsqvy1ksFqWaMf4/7aC5h
-         VqV7I7GrsvyZoUSOl5iBEfd/SxG2QseIwpzuYWxzgljRpPJDRNBAglwWForNW+W5XKDl
-         eBjQFuBwY3RlioChiCDNVYH4/nwfz1YCqi/+Y8giTipw9lAp44yFIjTw2cqQdDnZAIkq
-         IozwcSHwjxEXqpNSzt9VHUwcgC0m5wsW8M1MMQfjiTMy4Q7/ZR8QS2GFsL1twoy/pO6t
-         1o+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Puy0zvPoy+smX6jP38nlXJMKhbfeim2bcE9YEw+E3AY=;
-        b=q9Xi8q3n9vegxzrO8anf3fAuJO3rfiOUDB3ks2yAGbjTm6j0CJs8xaqj5opmHUotkn
-         yW7mw9Gps9qyI2xnidePl2+hHvxmAZMxzPowRSF7BdnS0Q5DG5gd+ZKPqj5NJ+vnyC+O
-         hqL6xOgrTMCyikpKO61g4YI/ddjXQM+us/1hHKC6kyVM5ChX7cHpB6aagbzWlRx1VKYL
-         nZt/cWrKy3JPyUOmcIkK1fl0xQz330c77PZ3SZHPngusmTYZAwToegK3QqXXHGlkKyX5
-         jYKXRFBbY8AhANfr3jdXfjweIpDn1rERb7dBY6ICpJrHb5HVZ/nuDYIYil6K3N6xQLle
-         /HCg==
-X-Gm-Message-State: APjAAAWfmVK99NtpBy3bvNWq03GERabuKA1IBigFqdtAh/Q/0U6GV9ZN
-        Lvu4rH3/dfOqNzt4q4rcweyjGg==
-X-Google-Smtp-Source: APXvYqxg7CP1QcOkc92UyGep9EIBYT60gxG40dqcUbf9VCCoT7OV6hXfAjtpaIqp8ZuFpCmUav06XA==
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr3109977wma.159.1579772684453;
-        Thu, 23 Jan 2020 01:44:44 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q6sm2467847wrx.72.2020.01.23.01.44.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 01:44:43 -0800 (PST)
-References: <20200116111850.23690-1-repk@triplefau.lt> <20200116111850.23690-7-repk@triplefau.lt>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Remi Pommarel <repk@triplefau.lt>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-In-reply-to: <20200116111850.23690-7-repk@triplefau.lt>
-Date:   Thu, 23 Jan 2020 10:44:43 +0100
-Message-ID: <1jzheev75g.fsf@starbuckisacylon.baylibre.com>
+        Thu, 23 Jan 2020 04:45:53 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45162 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgAWJpx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 04:45:53 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00N9jbZ5117672;
+        Thu, 23 Jan 2020 03:45:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579772738;
+        bh=0OarRbl/p4h9x83lCORIsIyAzrGcOjoV4wCt5Jo9hQk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=W5031Zc7aA8LS+kXhKpqvHJVX28BU3duSOdx5GzHp29UVHDE3ziLjnAiwgUStCEmZ
+         pbNhhVhIziO45KZ/lSxGMPY8nXMbUwo80IXOWlyO3yY/UYsCuMpf32tvM3hOi+vFGR
+         MC293yeKgWwZorXSnm+Ai9DA/nLYEBSQohiheXSk=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00N9jb6S013992
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Jan 2020 03:45:37 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
+ Jan 2020 03:45:37 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 23 Jan 2020 03:45:37 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00N9jZPV115897;
+        Thu, 23 Jan 2020 03:45:35 -0600
+Subject: Re: [PATCH v2 1/9] arm64: dts: ti: k3-am65-main: Correct main NAVSS
+ representation
+To:     Lokesh Vutla <lokeshvutla@ti.com>, <t-kristo@ti.com>, <nm@ti.com>
+CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200122082621.4974-1-peter.ujfalusi@ti.com>
+ <20200122082621.4974-2-peter.ujfalusi@ti.com>
+ <600df214-620b-fa41-82ef-01132d9bdfae@ti.com>
+ <04a1bb97-f308-f866-ad4f-907cd7fb3515@ti.com>
+ <469a35b0-9b60-7faf-2b1b-a77f9f502a50@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <52078b70-b5dd-103a-45ea-55fd36cba480@ti.com>
+Date:   Thu, 23 Jan 2020 11:46:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <469a35b0-9b60-7faf-2b1b-a77f9f502a50@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On Thu 16 Jan 2020 at 12:18, Remi Pommarel <repk@triplefau.lt> wrote:
 
-> This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
-> This will allow to mutualize code in pci-meson.c between AXG and G12A
-> SoC.
->
-> This PHY can chain and use an optional analog PHY, which is used on
-> AXG platform to have reliable PCIe communication.
->
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  drivers/phy/amlogic/Kconfig              |  11 ++
->  drivers/phy/amlogic/Makefile             |   1 +
->  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
->  3 files changed, 204 insertions(+)
->  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
->
-> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> index 8c9cf2403591..71801e30d601 100644
-> --- a/drivers/phy/amlogic/Kconfig
-> +++ b/drivers/phy/amlogic/Kconfig
-> @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
->  	  in Meson G12A SoCs.
->  	  If unsure, say N.
->  
-> +config PHY_MESON_AXG_PCIE
-> +	tristate "Meson AXG PCIE PHY driver"
-> +	default ARCH_MESON
-> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	select REGMAP_MMIO
-> +	help
-> +	  Enable this to support the Meson MIPI + PCIE PHY found
-> +	  in Meson AXG SoCs.
-> +	  If unsure, say N.
-> +
->  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
->  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
->  	default ARCH_MESON
-> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> index 0aecf92d796a..e2baa133f7af 100644
-> --- a/drivers/phy/amlogic/Makefile
-> +++ b/drivers/phy/amlogic/Makefile
-> @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
->  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
->  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
->  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
-> +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
->  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
-> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> new file mode 100644
-> index 000000000000..0c5d0732cd1c
-> --- /dev/null
-> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> @@ -0,0 +1,192 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Amlogic AXG PCIE PHY driver
-> + *
-> + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
-> + */
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/bitfield.h>
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +#define MESON_PCIE_REG0 0x00
-> +#define		MESON_PCIE_COMMON_CLK	BIT(4)
-> +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
-> +#define		MESON_PCIE_CLK		BIT(1)
-> +#define		MESON_PCIE_POWERDOWN	BIT(0)
-> +
-> +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
-> +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
-> +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
-> +					 MESON_PCIE_COMMON_REF_CLK)
-> +#define MESON_PCIE_RESET_DELAY		500
-> +
-> +struct phy_axg_pcie_priv {
-> +	struct phy *phy;
-> +	struct phy *analog;
-> +	struct regmap *regmap;
-> +	struct reset_control *reset;
-> +};
-> +
-> +static const struct regmap_config phy_axg_pcie_regmap_conf = {
-> +	.reg_bits = 8,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.max_register = MESON_PCIE_REG0,
-> +};
-> +
-> +static int phy_axg_pcie_power_on(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = phy_power_on(priv->analog);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
-> +			   MESON_PCIE_POWERDOWN, 0);
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_pcie_power_off(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = phy_power_off(priv->analog);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
-> +			   MESON_PCIE_POWERDOWN, 1);
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_pcie_init(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = phy_init(priv->analog);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
-> +	return reset_control_reset(priv->reset);
-> +}
-> +
-> +static int phy_axg_pcie_exit(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = phy_exit(priv->analog);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	return reset_control_reset(priv->reset);
-> +}
-> +
-> +static int phy_axg_pcie_reset(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret = 0;
-> +
-> +	ret = phy_reset(priv->analog);
-> +	if (ret != 0)
-> +		goto out;
-> +
-> +	ret = reset_control_assert(priv->reset);
-> +	if (ret != 0)
-> +		goto out;
-> +	udelay(MESON_PCIE_RESET_DELAY);
-> +
-> +	ret = reset_control_deassert(priv->reset);
-> +	if (ret != 0)
-> +		goto out;
-> +	udelay(MESON_PCIE_RESET_DELAY);
-> +
-> +out:
-> +	return ret;
-> +}
-> +
-> +static const struct phy_ops phy_axg_pcie_ops = {
-> +	.init = phy_axg_pcie_init,
-> +	.exit = phy_axg_pcie_exit,
-> +	.power_on = phy_axg_pcie_power_on,
-> +	.power_off = phy_axg_pcie_power_off,
-> +	.reset = phy_axg_pcie_reset,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int phy_axg_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *pphy;
-> +	struct device *dev = &pdev->dev;
-> +	struct phy_axg_pcie_priv *priv;
-> +	struct device_node *np = dev->of_node;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
-> +	if (IS_ERR(priv->phy)) {
-> +		ret = PTR_ERR(priv->phy);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to create PHY\n");
-> +		return ret;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	priv->regmap = devm_regmap_init_mmio(dev, base,
-> +					     &phy_axg_pcie_regmap_conf);
-> +	if (IS_ERR(priv->regmap))
-> +		return PTR_ERR(priv->regmap);
-> +
-> +	priv->reset = devm_reset_control_array_get(dev, false, false);
-> +	if (IS_ERR(priv->reset))
-> +		return PTR_ERR(priv->reset);
-> +
-> +	priv->analog = devm_phy_optional_get(dev, "analog");
-> +	if (IS_ERR(priv->analog))
-> +		return PTR_ERR(priv->analog);
+On 23/01/2020 10.32, Lokesh Vutla wrote:
+> 
+> 
+> On 22/01/20 5:09 PM, Peter Ujfalusi wrote:
+>>
+>>
+>> On 22/01/2020 13.03, Lokesh Vutla wrote:
+>>>
+>>>
+>>> On 22/01/20 1:56 PM, Peter Ujfalusi wrote:
+>>>> NAVSS is a subsystem containing different IPs, it is not really a bus.
+>>>> Change the compatible from "simple-bus" to "simple-mfd" to reflect that.
+>>>>
+>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
+>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>>>> index efb24579922c..e40f7acbec42 100644
+>>>> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>>>> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>>>> @@ -385,8 +385,8 @@ intr_main_gpio: interrupt-controller0 {
+>>>>  		ti,sci-rm-range-girq = <0x1>;
+>>>>  	};
+>>>>  
+>>>> -	cbass_main_navss: interconnect0 {
+>>>> -		compatible = "simple-bus";
+>>>> +	cbass_main_navss: navss@30800000 {
+>>>
+>>> This introduces below dtc warning when built with W=1
+>>>
+>>> arch/arm64/boot/dts/ti/k3-am65-main.dtsi:388.35-530.4: Warning
+>>> (unit_address_vs_reg): /interconnect@100000/navss@30800000: node has a unit
+>>> name, but no reg property
+>>
+>> Interesting, the example in
+>> Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+>>
+>> is basically the same and dt_binding_check is happy about it:
+>> DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
+>> CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
+>>
+>> but it screamed when I had the simple-bus in there (copied from the
+>> existing dtsi file).
+>>
+>> The node name for simple-bus _must_ be
+>> '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+>>
+>> I would not use any of these to NAVSS node...
+>>
+>>> this is representing cbass inside main_navss, just like cbass_main. You can drop
+>>> this patch and the similar mcu version.
+>>
+>> According to Documentation/devicetree/bindings/mfd/mfd.txt:
+>> - compatible : "simple-mfd" - this signifies that the operating system
+>>   should consider all subnodes of the MFD device as separate devices
+>>   akin to how "simple-bus" indicates when to see subnodes as children
+>>   for a simple memory-mapped bus.
+>>
+>> NAVSS is falling into simple-mfd as the devices under it are independent
+>> devices.
+> 
+> okay, may be rename cbass_main_navss to main_navss.
 
-Isn't required for on the axg platform for the pcie to work reliably ?
-Does this driver support another SoC ?
+Actually we don't even need label for any of the NAVSS nodes.
 
-> +
-> +	phy_set_drvdata(priv->phy, priv);
-> +	dev_set_drvdata(dev, priv);
-> +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(pphy);
-> +}
-> +
-> +static const struct of_device_id phy_axg_pcie_of_match[] = {
-> +	{
-> +		.compatible = "amlogic,axg-pcie-phy",
-> +	},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
-> +
-> +static struct platform_driver phy_axg_pcie_driver = {
-> +	.probe = phy_axg_pcie_probe,
-> +	.driver = {
-> +		.name = "phy-axg-pcie",
-> +		.of_match_table = phy_axg_pcie_of_match,
-> +	},
-> +};
-> +module_platform_driver(phy_axg_pcie_driver);
-> +
-> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
-> +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
-> +MODULE_LICENSE("GPL v2");
+> 
+> Thanks and regards,
+> Lokesh
+> 
+>>
+>>>
+>>> Thanks and regards,
+>>> Lokesh
+>>>
+>>>> +		compatible = "simple-mfd";
+>>>>  		#address-cells = <2>;
+>>>>  		#size-cells = <2>;
+>>>>  		ranges;
+>>>>
+>>
+>> - Péter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
 
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
