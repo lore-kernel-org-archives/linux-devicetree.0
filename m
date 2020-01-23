@@ -2,274 +2,190 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058BAC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFD3C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D441F20684
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DC4214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579788354;
+	bh=yMFNzJNF/4sW2nNaZae8U/wjx+DbUIIZD8qAaJgXcsY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qDZzL9EJUDq1DAuIluppvEz3Bq0d9d8r7IReK3o8FTiO3fNRrPnolTb93VMjIGY9v
+	 RyxzqJ+Ey9zep1Y2rYHfJwIrvuZalqQgcQovJZ3w04Cl6fqTeWMXl70unJzT5GLEQ4
+	 eQ3ebBVWlS7XtMJxryH+zw6Mu1uQjE0WmqeMDcw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAWOCE (ORCPT
+        id S1729425AbgAWOFx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:02:04 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:12702 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726771AbgAWOCE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:02:04 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Jan 2020 19:32:01 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Jan 2020 19:31:41 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 1332A286A; Thu, 23 Jan 2020 19:31:39 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v2] arm64: dts: sc7180: add display dt nodes
-Date:   Thu, 23 Jan 2020 19:31:38 +0530
-Message-Id: <1579788098-22565-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 23 Jan 2020 09:05:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726729AbgAWOFx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 09:05:53 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C54ED24688;
+        Thu, 23 Jan 2020 14:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579788351;
+        bh=yMFNzJNF/4sW2nNaZae8U/wjx+DbUIIZD8qAaJgXcsY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uRkqZxdBXBEkgIt91s8TWAdA86vIwrmSrefM2fbHb54R7W5qHtz++inZLWHlTFpVr
+         6sEoQYCi5v5oIbi8BnrB+77FeZYC/Mu6NZV9Brf9Htu95pNOP/XSCaB5S8AbDFaL1h
+         4Vp0mgXUvFbQu+xlZiH5QApaHLuacqb8oDC2lNhU=
+Received: by mail-qk1-f174.google.com with SMTP id q15so3474465qke.9;
+        Thu, 23 Jan 2020 06:05:51 -0800 (PST)
+X-Gm-Message-State: APjAAAU8HvG7iwdJuEmcikUZqhUBB5StyaGR2iOxq9cw68agf1RaUysu
+        5N43hWN7gsFFX0wAf9HJ5rDryMbc1T83Ga90HQ==
+X-Google-Smtp-Source: APXvYqwbgEAH65sabTQxES/HbJmECYpQRkx9xYoC5qcjGDVVhFppqX3ib5087Q/LTYZQk+6j8KKKLdGgLzCVfS5tlTs=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr14930647qkl.119.1579788350906;
+ Thu, 23 Jan 2020 06:05:50 -0800 (PST)
+MIME-Version: 1.0
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com> <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com> <20200117090937.GU54439@umbus>
+ <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+ <20200119063916.GD54439@umbus> <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
+ <20200123051316.GP2347@umbus.fritz.box>
+In-Reply-To: <20200123051316.GP2347@umbus.fritz.box>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 23 Jan 2020 08:05:39 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKkz7joO_AigKcp6ucLwnwqbLWZMWVXrWdxd9HZjQqJwA@mail.gmail.com>
+Message-ID: <CAL_JsqKkz7joO_AigKcp6ucLwnwqbLWZMWVXrWdxd9HZjQqJwA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Steve McIntyre <steve.mcintyre@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add display, DSI hardware DT nodes for sc7180.
+On Wed, Jan 22, 2020 at 11:13 PM David Gibson
+<david@gibson.dropbear.id.au> wrote:
+>
+> On Tue, Jan 21, 2020 at 09:59:44AM -0600, Rob Herring wrote:
+> > On Sun, Jan 19, 2020 at 12:41 AM David Gibson
+> > <david@gibson.dropbear.id.au> wrote:
+> > >
+> > > On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
+> > > > On Fri, Jan 17, 2020 at 6:26 AM David Gibson
+> > > > <david@gibson.dropbear.id.au> wrote:
+> > > > >
+> > > > > On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
+> > > > > > Hi David
+> > > > > >
+> > > > > > On 1/16/20 1:57 AM, David Gibson wrote:
+> > > > > > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
+> > > > > > > > This commit adds the possibility to add build information for a DTB.
+> > > > > > > > Build information can be: build date, DTS version, "who built the DTB"
+> > > > > > > > (same kind of information that we get in Linux with the Linux banner).
+> > > > > > > >
+> > > > > > > > To do this, an extra option "-B" using an information file as argument
+> > > > > > > > has been added. If this option is used, input device tree is appended with
+> > > > > > > > a new string property "Build-info". This property is built with information
+> > > > > > > > found in information file given as argument. This file has to be generated
+> > > > > > > > by user and shouldn't exceed 256 bytes.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> > > > > > >
+> > > > > > > At the very least, this patch of the series will need to be sent to
+> > > > > > > upstream dtc first.
+> > > > > >
+> > > > > > Ok sorry. I thought that sending all the series would give more
+> > > > > > information.
+> > > > >
+> > > > > That's fair enough, but in order to merge, you'll need to post against
+> > > > > upstream dtc.
+> > > > >
+> > > > > > > I'm also not terribly clear on what you're trying to accomplish here,
+> > > > > > > and why it's useful.
+> > > > > >
+> > > > > > Let's take Kernel boot at example (but could be extend to other DTB "users"
+> > > > > > like U-Boot). When Linux kernel booting we get a log that gives useful
+> > > > > > information about kernel image: source version, build date, people who built
+> > > > > > the kernel image, compiler version. This information is useful for debug and
+> > > > > > support. The aim is to get same kind of information but for the DTB.
+> > > > > >
+> > > > > > > Since you're doing this specifically for use with dtbs built in the
+> > > > > > > kernel build, could you just use a:
+> > > > > > >     Build-info = /incbin/ "build-info.txt";
+> > > > > > > in each of the in-kernel .dts files?
+> > > > > >
+> > > > > > My first idea was to not modify all existing .dts files. Adding an extra
+> > > > > > option in dtc is (for me) the softer way to do it. I mean, compile
+> > > > > > information should come through compiler without modify .dts files outside
+> > > > > > from dtc. In this way it will be easy to everybody using dtc (inside our
+> > > > > > outside Linux tree) to add dtb build info (even if they don't how to write a
+> > > > > > dts file).
+> > > > >
+> > > > > But you're not really having this information coming from the
+> > > > > compiler.  Instead you're adding a compiler option that just force
+> > > > > includes another file into the generated tree, and it's up to your
+> > > > > build scripts to put something useful into that file.
+> > > > >
+> > > > > I don't really see that as preferable to modifying the .dts files.
+> > > > >
+> > > > > I also dislike the fact that the option as proposed is much more
+> > > > > general than the name suggests, but also very similar too, but much
+> > > > > more specific than the existing /incbin/ option.
+> > > > >
+> > > > > What might be better would be to have a dtc option which force appends
+> > > > > an extra .dts to the mail .dts compiled.  You can then put an overlay
+> > > > > template in that file, something like:
+> > > > >
+> > > > > &{/} {
+> > > > >         linux,build-info = /incbin/ "build-info.txt;
+> > > > > }
+> > > >
+> > > > I like this suggestion either as an include another dts file or an
+> > > > overlay.
+> > >
+> > > Sorry, to be clear what I'm talking about here is just including
+> > > another dts file, and using the compile-type overlay syntax.  This is
+> > > not the same as .dtbo style runtime overlays (though the final result
+> > > is about the same in this case).
+> >
+> > Ah, okay. That's probably easier to implement.
+> >
+> > > > The latter could be useful as a way to maintain current dtb
+> > > > files while splitting the source files into base and overlay dts
+> > > > files.
+> > > >
+> > > > But no, let's not prepend this with 'linux'. It's not a property
+> > > > specific for Linux to consume.
+> > >
+> > > It's not really about who consumes it.  It's about defining a
+> > > namespace for the new property to exist in, since it's not part of a
+> > > relevant standard (if we wanted to make it such, we should pin down
+> > > what goes in there with much more precision).
+> >
+> > I can't think of any cases of the 'linux' prefix not being about who
+> > consumes it. And we often end up dropping 'linux' because it turns out
+> > to not be Linux specific. I don't care to see u-boot,build-info,
+> > freebsd,build-info, etc. when a given dtb can only have 1 of those.
+>
+> But all other vendor prefixes are about who generated or specified the
+> information, not who consumes it, e.g. "ibm,XXX", "fsl,YYY", etc.
 
-Changes in v1:
-	-Added display DT nodes for sc7180
-Changes in v2:
-	-Renamed node names
-	-Corrected code alignments
-	-Removed extra new line
-	-Added DISP AHB clock for register access
-	under display_subsystem node for global settings
+I'd say those are both typically. Those are consumed by IBM and FSL
+specific drivers.
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  57 +++++++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 125 ++++++++++++++++++++++++++++++++
- 2 files changed, 182 insertions(+)
+But I think the better argument is what Frank said. If the
+firmware/bootloader provides the dtb that it built, we'd still want
+the information printed.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50a..f410614 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -232,6 +232,50 @@
- 	};
- };
- 
-+&dsi_controller {
-+	status = "okay";
-+
-+	vdda-supply = <&vreg_l3c_1p2>;
-+
-+	panel@0 {
-+		compatible = "visionox,rm69299-1080p-display";
-+		reg = <0>;
-+
-+		vdda-supply = <&vreg_l8c_1p8>;
-+		vdd3p3-supply = <&vreg_l18a_2p8>;
-+
-+		pinctrl-names = "default", "suspend";
-+		pinctrl-0 = <&disp_pins_default>;
-+		pinctrl-1 = <&disp_pins_default>;
-+
-+		reset-gpios = <&pm6150l_gpio 3 0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				panel0_in: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&panel0_in>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi_phy {
-+	status = "okay";
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -289,6 +333,19 @@
- 
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
-+&pm6150l_gpio {
-+	disp_pins {
-+		disp_pins_default: disp_pins_default{
-+			pins = "gpio3";
-+			function = "func1";
-+			qcom,drive-strength = <2>;
-+			power-source = <0>;
-+			bias-disable;
-+			output-low;
-+		};
-+	};
-+};
-+
- &qspi_clk {
- 	pinconf {
- 		pins = "gpio63";
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 3bc3f64..81c3aab 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1184,6 +1184,131 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		display_subsystem: mdss@ae00000 {
-+			compatible = "qcom,sc7180-mdss";
-+			reg = <0 0x0ae00000 0 0x1000>;
-+			reg-names = "mdss";
-+
-+			power-domains = <&dispcc MDSS_GDSC>;
-+
-+			clocks = <&gcc GCC_DISP_AHB_CLK>,
-+				 <&gcc GCC_DISP_HF_AXI_CLK>,
-+				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+			clock-names = "iface", "gcc_bus", "ahb", "core";
-+
-+			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+			assigned-clock-rates = <300000000>;
-+
-+			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			iommus = <&apps_smmu 0x800 0x2>;
-+
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			display_controller: mdp@ae00000 {
-+				compatible = "qcom,sc7180-dpu";
-+				reg = <0 0x0ae00000 0 0x1000>,
-+				      <0 0x0ae01000 0 0x8f000>,
-+				      <0 0x0aeb0000 0 0x2008>,
-+				      <0 0x0af03000 0 0x16>;
-+				reg-names = "mdss", "mdp", "vbif", "disp_cc";
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
-+					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
-+					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
-+					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+				clock-names = "iface", "rot", "lut", "core",
-+					      "vsync";
-+				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
-+						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+				assigned-clock-rates = <300000000>,
-+						       <19200000>;
-+
-+				interrupt-parent = <&display_subsystem>;
-+				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dpu_intf1_out: endpoint {
-+							remote-endpoint = <&dsi0_in>;
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi_controller: qcom,mdss_dsi_ctrl0@ae94000 {
-+				compatible = "qcom,mdss-dsi-ctrl";
-+				reg = <0 0x0ae94000 0 0x400>;
-+				reg-names = "dsi_ctrl";
-+
-+				interrupt-parent = <&display_subsystem>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
-+					 <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_ESC0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					 <&gcc GCC_DISP_HF_AXI_CLK>;
-+				clock-names = "byte",
-+					      "byte_intf",
-+					      "pixel",
-+					      "core",
-+					      "iface",
-+					      "bus";
-+
-+				phys = <&dsi_phy>;
-+				phy-names = "dsi";
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dsi0_in: endpoint {
-+							remote-endpoint = <&dpu_intf1_out>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						dsi0_out: endpoint {
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi_phy: dsi-phy0@ae94400 {
-+				compatible = "qcom,dsi-phy-10nm";
-+				reg = <0 0x0ae94400 0 0x200>,
-+				      <0 0x0ae94600 0 0x280>,
-+				      <0 0x0ae94a00 0 0x1e0>;
-+				reg-names = "dsi_phy",
-+					    "dsi_phy_lane",
-+					    "dsi_pll";
-+
-+				#clock-cells = <1>;
-+				#phy-cells = <0>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
-+				clock-names = "iface";
-+			};
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
--- 
-2.7.4
-
+Rob
