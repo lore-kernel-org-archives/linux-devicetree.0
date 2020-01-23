@@ -2,154 +2,190 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E99C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 11:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA0FC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 11:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC2524683
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 11:12:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="i6KS5hEH"
+	by mail.kernel.org (Postfix) with ESMTP id B27B8206D4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 11:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgAWLMh (ORCPT
+        id S1726219AbgAWLSU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 06:12:37 -0500
-Received: from mail-mw2nam12on2046.outbound.protection.outlook.com ([40.107.244.46]:6232
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729012AbgAWLMh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 06:12:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h5Ea8IqwlapU6uwT3Rd3zHZbOEiGLzQy7uOXuuM8OfdKDULD0MdJ9gERut/kTJGih59f66YG89l9w092Yl3n6qOqiYE9M78Hy3QwUKPjjEjr4RC5sgTLcy0WLovj0JjwWz5jARNQ23aRWEkFAIA+qpAVmdlVdvadvP2yWeC89S8AJiagOy6Ab4d/Gkvi1dVqYiWdpwhnXNxPo4QtEcG/GaVfsyQxIGwPCBipFek5ZJhfHqV2Qcra/HbIzPjGsG2wQauL64d9XUugBca1olEOkgEoYAqWUv8Az+Z7R3MUorseU1cudqvDU0OdmitwPprID7V8BCOCDT7ECocRwR6YJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L1bM0EYu5TyW0Xfnl54FBQ/xod4oyrMnC4TJCUFLFYU=;
- b=UbXvJKN0gV++pI6+TluV0tkzPqOmaLOQVM8vokCsxVhqk9ylCowZhYsax0+gKus9a3P5q8fPr9ITkTojLHqUoLukIR5KfrbfsHkzx35xUtkp4Ec+++50M+iBc86WSZDp7bBruQwtVjGygnlCEYesS99OIkfhO0GhnMT0buJxAp32sth6LLGIzK027qZA4qRftwZK5HR6Rc37vLPtU9xodWf9U4IlwdMkrgrjKJEXvXmT6xQKrWzmF88RneYyCR1QFehCy6uip4lopU7tdb7xvJP7bDOl7chKdsXJIcx9wPBNveKaDp1y+jJ9pzHzidzXykLdU+ZUa6uEjZpKJ592rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=davemloft.net smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L1bM0EYu5TyW0Xfnl54FBQ/xod4oyrMnC4TJCUFLFYU=;
- b=i6KS5hEHORt82pUPC90nA7XabszvW80IbkfH41VqKahJzfrBOu7h023nqP+VG6FinYCWQUuv5rBBfebhMS5x17/U+fcVqTKAJI1CAtcXhqoqqlIHCBy9TLxjCnYmGaQ7/l2GgbQ1MuG/xjeoI/s1/0AIaFv2QbRDUz142enKPVo=
-Received: from MN2PR02CA0008.namprd02.prod.outlook.com (2603:10b6:208:fc::21)
- by BN7PR02MB5348.namprd02.prod.outlook.com (2603:10b6:408:2c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19; Thu, 23 Jan
- 2020 11:12:34 +0000
-Received: from BL2NAM02FT022.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by MN2PR02CA0008.outlook.office365.com
- (2603:10b6:208:fc::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend
- Transport; Thu, 23 Jan 2020 11:12:34 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT022.mail.protection.outlook.com (10.152.77.153) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2665.18
- via Frontend Transport; Thu, 23 Jan 2020 11:12:33 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1iuaPZ-0007hk-40; Thu, 23 Jan 2020 03:12:33 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1iuaPU-0007gf-0O; Thu, 23 Jan 2020 03:12:28 -0800
-Received: from [172.23.155.80] (helo=xhdengvm155080.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <kalyania@xilinx.com>)
-        id 1iuaPL-0007fL-Ih; Thu, 23 Jan 2020 03:12:19 -0800
-Received: by xhdengvm155080.xilinx.com (Postfix, from userid 23151)
-        id 1E47C800C7; Thu, 23 Jan 2020 16:41:26 +0530 (IST)
-From:   Kalyani Akula <kalyani.akula@xilinx.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        git-dev <git-dev@xilinx.com>,
-        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Harsh Jain <harshj@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Kalyani Akula <kalyania@xilinx.com>,
-        Kalyani Akula <kalyani.akula@xilinx.com>
-Subject: [PATCH V5 4/4] arm64: zynqmp: Add Xilinx AES node.
-Date:   Thu, 23 Jan 2020 16:41:17 +0530
-Message-Id: <1579777877-10553-5-git-send-email-kalyani.akula@xilinx.com>
-X-Mailer: git-send-email 1.9.5
-In-Reply-To: <1579777877-10553-1-git-send-email-kalyani.akula@xilinx.com>
-References: <1579777877-10553-1-git-send-email-kalyani.akula@xilinx.com>
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(376002)(346002)(199004)(189003)(81156014)(26005)(81166006)(36756003)(8676002)(4744005)(107886003)(2906002)(316002)(5660300002)(336012)(70586007)(70206006)(356004)(6266002)(6666004)(54906003)(2616005)(478600001)(44832011)(426003)(186003)(4326008)(42186006)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB5348;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        Thu, 23 Jan 2020 06:18:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43495 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgAWLSU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 06:18:20 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1iuaUt-0002lI-UB; Thu, 23 Jan 2020 12:18:04 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:197e:2d9b:882c:b51d] (unknown [IPv6:2a03:f580:87bc:d400:197e:2d9b:882c:b51d])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 897304A8DB2;
+        Thu, 23 Jan 2020 11:17:56 +0000 (UTC)
+Subject: Re: [PATCH 0/3] Add Support for MCAN in AM654x-idk
+To:     Faiz Abbas <faiz_abbas@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org
+Cc:     catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        davem@davemloft.net, wg@grandegger.com, sriram.dash@samsung.com,
+        dmurphy@ti.com, nm@ti.com, t-kristo@ti.com
+References: <20200122080310.24653-1-faiz_abbas@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e3025ab6-04b5-3eba-5e0d-70caabee26fb@pengutronix.de>
+Date:   Thu, 23 Jan 2020 12:17:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0dbda26b-bcfc-4a39-0d32-08d79ff52564
-X-MS-TrafficTypeDiagnostic: BN7PR02MB5348:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB53483362B4FDA292FB8107A7AF0F0@BN7PR02MB5348.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 029174C036
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DioHXt3j88T2TcrzNCoSZ220A6hNcQdnio/Do8GIPrB0Qh1DTNxJJQeAp5c0g8Li7QSKY0aNVAR7BON6P0Syv0LCL73wKsKtSk727j0rbwJQ6sgGV2MN/Ph0D2WBoIlCTkU/LFjJr4SjRsbBJlCoIHv91mIVZt0LG5ZKb3NJpcIlhY40A3v0Y8xya4VEWD7YNsRhAqvstEPVLcEYhqVsJomLxQTiu+J9qfPloFpcmLFSwm2jQyJgWPi1Ns3GtBb6tbgEcW5HHyyWT38QT6VgnXu6RReKKoAwNuK3TZ9wMEPomWTIa4/Q29N2jkH+3IqJ+Juz+RJxF+ypxeV/DfgWyGUVXUYl7SVaStvNSk0B7ccrkiuR/4jIKWiv3L5F9yh5sh+uPVhVa7MVF/wTUBlBqeYn5UaD12yS1JlzoWljdSkoSrY8DEMF7OXU27g6GitK
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2020 11:12:33.7552
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dbda26b-bcfc-4a39-0d32-08d79ff52564
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB5348
+In-Reply-To: <20200122080310.24653-1-faiz_abbas@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="NYPXrD8dZpuBhFWGBbPAmL2QzBA7ljtTf"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds a AES DT node for Xilinx ZynqMP SoC.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--NYPXrD8dZpuBhFWGBbPAmL2QzBA7ljtTf
+Content-Type: multipart/mixed; boundary="QyFCGrPkezEuEBS1nbpXxyDGG5wrx8uVJ";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ netdev@vger.kernel.org, linux-can@vger.kernel.org
+Cc: catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org,
+ davem@davemloft.net, wg@grandegger.com, sriram.dash@samsung.com,
+ dmurphy@ti.com, nm@ti.com, t-kristo@ti.com
+Message-ID: <e3025ab6-04b5-3eba-5e0d-70caabee26fb@pengutronix.de>
+Subject: Re: [PATCH 0/3] Add Support for MCAN in AM654x-idk
+References: <20200122080310.24653-1-faiz_abbas@ti.com>
+In-Reply-To: <20200122080310.24653-1-faiz_abbas@ti.com>
 
-Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
----
+--QyFCGrPkezEuEBS1nbpXxyDGG5wrx8uVJ
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-V5 Changes:
-- Moved arm64: zynqmp: Add Xilinx AES node patch from 2/4 to 4/4
-- Corrected typo in the subject.
-- Updated zynqmp-aes node to correct location.
+On 1/22/20 9:03 AM, Faiz Abbas wrote:
+> This series adds driver patches to support MCAN in TI's AM654x-idk.
+>=20
+> Faiz Abbas (3):
+>   dt-bindings: net: can: m_can: Add Documentation for stb-gpios
+>   can: m_can: m_can_platform: Add support for enabling transceiver
+>     through the STB line
+>   arm64: defconfig: Add Support for Bosch M_CAN controllers
+>=20
+>  Documentation/devicetree/bindings/net/can/m_can.txt |  2 ++
+>  arch/arm64/configs/defconfig                        |  3 +++
+>  drivers/net/can/m_can/m_can_platform.c              | 12 ++++++++++++
+>  3 files changed, 17 insertions(+)
+
+What about adding support for xceiver-supply as done in several other
+drivers (ti_hecc.c, flexcan.c, mcp251x.c)? And using this for the stb lin=
+e?
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
 
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+--QyFCGrPkezEuEBS1nbpXxyDGG5wrx8uVJ--
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 3c731e7..e9fbbe1 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -133,6 +133,10 @@
- 			zynqmp_pcap: pcap {
- 				compatible = "xlnx,zynqmp-pcap-fpga";
- 			};
-+
-+			xlnx_aes: zynqmp-aes {
-+				compatible = "xlnx,zynqmp-aes";
-+			};
- 		};
- 	};
- 
--- 
-1.9.5
+--NYPXrD8dZpuBhFWGBbPAmL2QzBA7ljtTf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl4pgOAACgkQWsYho5Hk
+nSC/egf/eNjB8/lL8muUSORGL2cgcDJIY77iCCdmjkPckQ0gG//AAseZ6T8y/rph
+I66pOuysdn2ON8V1N5aeFefGwxF9T9bNvjJe1vsSHqIdLNUmpstuHMKs7jgKQxPE
+ublvNPRh/XtrQ2/ERSFApv55CqA2+9VwSSKAPFKmhrmyUHuZCVlPPWCF06AkuLac
+sZaFffTh0ZCNuq5XoGiZPJWDJ8IjLN//nH/eBrCZpd9omTqC84EUFBW8aV7F2gZa
+quhtzwoufrEFUUAqdkQlFHvTOeiMnHmJhSx0PLetoscDBc7dVoajELf9pUmaAGBt
+/fa70dou1CkvLPpdYxpUUrrzi/3qRw==
+=0YB1
+-----END PGP SIGNATURE-----
+
+--NYPXrD8dZpuBhFWGBbPAmL2QzBA7ljtTf--
