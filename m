@@ -2,86 +2,131 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F34C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BE5C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF40D2077C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B198217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579789595;
-	bh=tIH9kVRmgiCYBq9n+Cjnfq7nueNr9o74AznFkX77aT4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=txSMiUjjO9iOBVXELmO257jf5tPm1dLbOmKkBaITVZUOeXjIHp4ogHVep1Hwg6Y+v
-	 hXcCJrvmiGa73jeBPLqlfVGEGA4bG1rIvnnmlIBrfKywApQfh8oEaVN5GcPGdZ8W+q
-	 3MCui1c99e/1xO/7zTDwK+de693mY7GfpGxEO3R4=
+	s=default; t=1579790521;
+	bh=BLfTIIaNkuDfViyoiMC/57m9FStmctpzWllEfHfPU/Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ujBYPnElK4ZUBny6emhbQuUBQRspSmd0UvPaulJHetigYeGZkpSS+OD66KYW6jCUf
+	 V0B/0B3yirk6a9zELrSeaskkPcXBBng23SgIIGdrkqTHlupUNYA9mZJ6YVi71Pbq/i
+	 0kBBqTsICRj4qp/VAJH7i4nerURP2pFvwia/F8Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgAWO0c (ORCPT
+        id S1728925AbgAWOl6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:26:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgAWO0b (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:26:31 -0500
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB12F214AF;
-        Thu, 23 Jan 2020 14:26:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579789590;
-        bh=tIH9kVRmgiCYBq9n+Cjnfq7nueNr9o74AznFkX77aT4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2p4yKzn+otgAbcdUHW6Kv9RnLk/uAfkbpbQIsBtd5yGQgND7M/frK+w3C7D1rw+G1
-         BRlBGHkY9MfnDt4TeorwfZ6Eznq9/sU0oPOWAOAYDiNdkH//EdFOBN2Y2i1D7uGTnk
-         LC9ZsE7FLtaIUZll34KhW+GKFuZVbRhOzGJRuu6Q=
-Received: by mail-qk1-f177.google.com with SMTP id c17so3547913qkg.7;
-        Thu, 23 Jan 2020 06:26:30 -0800 (PST)
-X-Gm-Message-State: APjAAAV0fuFfP0FYyySTSg9hxBM1iWn7O6HadRGBvVqaE63l8A59TgBk
-        jMKEJffERTNeReRqtRrqdX1ZNrT4bpRChxfAsg==
-X-Google-Smtp-Source: APXvYqxbguRq1iMCSZT45I7kt/wqfNAl2jdrS71ZmilC4ian7XhK+X38BybkHT5YPoQ7j39q2+2CCOdSWxcAgD8tFxU=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr16251977qkg.152.1579789590015;
- Thu, 23 Jan 2020 06:26:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20200122135741.12123-1-dafna.hirschfeld@collabora.com>
-In-Reply-To: <20200122135741.12123-1-dafna.hirschfeld@collabora.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jan 2020 08:26:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJKX3fFQCtH0+Hfkfx09Oz72TJFNm6FRdtGu4P4W0gjTQ@mail.gmail.com>
-Message-ID: <CAL_JsqJKX3fFQCtH0+Hfkfx09Oz72TJFNm6FRdtGu4P4W0gjTQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: fix warnings in validation of qcom,gcc.yaml
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        Thu, 23 Jan 2020 09:41:58 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33050 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgAWOl5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 09:41:57 -0500
+Received: by mail-oi1-f194.google.com with SMTP id q81so3127466oig.0;
+        Thu, 23 Jan 2020 06:41:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XyyEYmd6rzPdE4SjzNvt9zLoM4bcWk4jZl+F6inRdac=;
+        b=F/1+xwwP/Y/0+1RrHcYRcVgMnQohCYtrTwnvPU+cmHRezE4bR0TZ9xlL7wjSo9st75
+         rwrgILMWbx4eNcfOOIXbmlHhZ2J81PszH+UC9Nqyp8gEy0jQm3Uq2VhZMxF6DQ3wFg9m
+         Q3WarnfP42ZPq13cZeQ76/CYaFnl5XXLyINPYBrn6owZT5zXXk5gHVVACZ1rrz7hJFC0
+         BVvjQofzM4aozLzsQ91bmr0K8E+H9RrbEdZu5c7MEw7baJZiDjt0+ATlzHe+jy4AU7z9
+         pXmcH6f9tgIIAQsrRjis2pAdKWjO0Q9H2AsaanfKWELI6DGO/eBUON5C1OVwDw/8DiWq
+         uF+w==
+X-Gm-Message-State: APjAAAWYOVEh3meDRPVso2PO9HhQzjNlIWgCesdfDY3EIuQWFg9SWmK9
+        6ljRyJ2ax3/OjtsjgMgO9w==
+X-Google-Smtp-Source: APXvYqzBkE5Rv9HPj5Qd04PviHLLr7khBD4hO9ohPV1CuplqS7AN8jQmX3T8AbcYgjI08E1/d+keNA==
+X-Received: by 2002:aca:2118:: with SMTP id 24mr10597649oiz.28.1579790517079;
+        Thu, 23 Jan 2020 06:41:57 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k17sm846309otl.45.2020.01.23.06.41.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 06:41:56 -0800 (PST)
+Received: (nullmailer pid 8536 invoked by uid 1000);
+        Thu, 23 Jan 2020 14:41:55 -0000
+Date:   Thu, 23 Jan 2020 08:41:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Lechner <david@lechnology.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Chris Brandt <chris.brandt@renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
+Message-ID: <20200123144155.GA29553@bogus>
+References: <20200115124548.3951-1-geert+renesas@glider.be>
+ <20200115124548.3951-2-geert+renesas@glider.be>
+ <ba21d2c8-ccc6-2704-fa1f-d28239700547@lechnology.com>
+ <20200120190249.GA9619@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120190249.GA9619@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 7:57 AM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
->
-> The last example in qcom,gcc.yaml set 'sleep' as the second
-> value of 'clock-names'. According to the schema is should
-> be 'sleep_clk'. Fix the example to conform the schema.
-> This fixes a warning when validating the schema:
-> "clock-names:  ... is not valid under any of the given schemas"
->
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+On Mon, Jan 20, 2020 at 08:02:49PM +0100, Sam Ravnborg wrote:
+> Hi David.
+> 
+> > > +allOf:
+> > > +  - $ref: panel/panel-common.yaml#
+> > 
+> > not all of these properties are applicable.
+> > 
+> 
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - dc-gpios
+> > > +  - reset-gpios
+> > 
+> > Missing optional rotation and backlight properties.
+> 
+> Thanks for catching this. I have written a little .yaml files
+> since I applied this - and learned a little more of the syntax.
+> 
+> See attached patch for my attempt to fix this.
+> Please review.
+> 
+> 	Sam
+> 
+> From 6b54fb0a071c0732cd4bd5b88f456b5a85bcf4f2 Mon Sep 17 00:00:00 2001
+> From: Sam Ravnborg <sam@ravnborg.org>
+> Date: Mon, 20 Jan 2020 19:55:04 +0100
+> Subject: [PATCH] dt-bindings: restrict properties for sitronix,st7735r
+> 
+> David Lechner noticed (paraphrased):
+> - not all properties from panel-common are applicable.
+> - missing optional rotation and backlight properties
+> 
+> Fix this by listing all allowed properties, and do not allow other properties.
+> 
+> Fixes: abdd9e3705c8 ("dt-bindings: display: sitronix,st7735r: Convert to DT schema")
+> Reported-by: David Lechner <david@lechnology.com>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: David Lechner <david@lechnology.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: dri-devel@lists.freedesktop.org
+> ---
+>  .../devicetree/bindings/display/sitronix,st7735r.yaml      | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-Fixes: d109ea0970cf ("dt-bindings: clock: Document external clocks for
-MSM8998 gcc")
 Acked-by: Rob Herring <robh@kernel.org>
