@@ -2,272 +2,82 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AC5C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 12:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D97C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 12:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBC3206A2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 12:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0D224655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 12:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgAWMP1 (ORCPT
+        id S1726232AbgAWMWM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:15:27 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:59371 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726026AbgAWMP1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 07:15:27 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Jan 2020 17:45:23 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Jan 2020 17:45:03 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 1F4032673; Thu, 23 Jan 2020 17:45:02 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v2] arm64: dts: sc7180: add display dt nodes
-Date:   Thu, 23 Jan 2020 17:45:00 +0530
-Message-Id: <1579781700-7253-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 23 Jan 2020 07:22:12 -0500
+Received: from mga07.intel.com ([134.134.136.100]:44063 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbgAWMWM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 07:22:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jan 2020 04:22:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,353,1574150400"; 
+   d="scan'208";a="220650513"
+Received: from wkalinsk-mobl.ger.corp.intel.com ([10.252.23.16])
+  by orsmga008.jf.intel.com with ESMTP; 23 Jan 2020 04:22:06 -0800
+Message-ID: <0effdeeeccdb9544cc69f185fd23cd06828ae8fc.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: tpm-tis-mmio: add compatible string
+ for SynQuacer TPM
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, masahisa.kojima@linaro.org,
+        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
+        peterhuewe@gmx.de, jgg@ziepe.ca, Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 23 Jan 2020 14:22:05 +0200
+In-Reply-To: <20200114141647.109347-2-ardb@kernel.org>
+References: <20200114141647.109347-1-ardb@kernel.org>
+         <20200114141647.109347-2-ardb@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add display, DSI hardware DT nodes for sc7180.
+On Tue, 2020-01-14 at 15:16 +0100, Ard Biesheuvel wrote:
+> Add a compatible string for the SynQuacer TPM to the binding for a
+> TPM exposed via a memory mapped TIS frame. The MMIO window behaves
+> slightly differently on this hardware, so it requires its own
+> identifier.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> index 7c6304426da1..b604c8688dc8 100644
+> --- a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> +++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>  - compatible: should contain a string below for the chip, followed by
+>                "tcg,tpm-tis-mmio". Valid chip strings are:
+>  	          * "atmel,at97sc3204"
+> +		  * "socionext,synquacer-tpm-mmio"
+>  - reg: The location of the MMIO registers, should be at least 0x5000 bytes
+>  - interrupts: An optional interrupt indicating command completion.
+>  
 
-Changes in v1:
-	-Added display DT nodes for sc7180
-Changes in v2:
-	-Renamed node names
-	-Corrected code alignments
-	-Removed extra new line
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  57 +++++++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 125 ++++++++++++++++++++++++++++++++
- 2 files changed, 182 insertions(+)
+Someone else needs to give reviewed-by as I am not expert on DT bindings.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50a..f410614 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -232,6 +232,50 @@
- 	};
- };
- 
-+&dsi_controller {
-+	status = "okay";
-+
-+	vdda-supply = <&vreg_l3c_1p2>;
-+
-+	panel@0 {
-+		compatible = "visionox,rm69299-1080p-display";
-+		reg = <0>;
-+
-+		vdda-supply = <&vreg_l8c_1p8>;
-+		vdd3p3-supply = <&vreg_l18a_2p8>;
-+
-+		pinctrl-names = "default", "suspend";
-+		pinctrl-0 = <&disp_pins_default>;
-+		pinctrl-1 = <&disp_pins_default>;
-+
-+		reset-gpios = <&pm6150l_gpio 3 0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				panel0_in: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&panel0_in>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi_phy {
-+	status = "okay";
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -289,6 +333,19 @@
- 
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
-+&pm6150l_gpio {
-+	disp_pins {
-+		disp_pins_default: disp_pins_default {
-+			pins = "gpio3";
-+			function = "func1";
-+			qcom,drive-strength = <2>;
-+			power-source = <0>;
-+			bias-disable;
-+			output-low;
-+		};
-+	};
-+};
-+
- &qspi_clk {
- 	pinconf {
- 		pins = "gpio63";
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 3bc3f64..81c3aab 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1184,6 +1184,131 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		display_subsystem: mdss@ae00000 {
-+			compatible = "qcom,sc7180-mdss";
-+			reg = <0 0x0ae00000 0 0x1000>;
-+			reg-names = "mdss";
-+
-+			power-domains = <&dispcc MDSS_GDSC>;
-+
-+			clocks = <&gcc GCC_DISP_AHB_CLK>,
-+				 <&gcc GCC_DISP_HF_AXI_CLK>,
-+				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+			clock-names = "iface", "gcc_bus", "ahb", "core";
-+
-+			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+			assigned-clock-rates = <300000000>;
-+
-+			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			iommus = <&apps_smmu 0x800 0x2>;
-+
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			display_controller: mdp@ae00000 {
-+				compatible = "qcom,sc7180-dpu";
-+				reg = <0 0x0ae00000 0 0x1000>,
-+				      <0 0x0ae01000 0 0x8f000>,
-+				      <0 0x0aeb0000 0 0x2008>,
-+				      <0 0x0af03000 0 0x16>;
-+				reg-names = "mdss", "mdp", "vbif", "disp_cc";
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
-+					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
-+					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
-+					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+				clock-names = "iface", "rot", "lut", "core",
-+					      "vsync";
-+				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
-+						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+				assigned-clock-rates = <300000000>,
-+						       <19200000>;
-+
-+				interrupt-parent = <&display_subsystem>;
-+				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dpu_intf1_out: endpoint {
-+							remote-endpoint = <&dsi0_in>;
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi_controller: qcom,mdss_dsi_ctrl0@ae94000 {
-+				compatible = "qcom,mdss-dsi-ctrl";
-+				reg = <0 0x0ae94000 0 0x400>;
-+				reg-names = "dsi_ctrl";
-+
-+				interrupt-parent = <&display_subsystem>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
-+					 <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_ESC0_CLK>,
-+					 <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					 <&gcc GCC_DISP_HF_AXI_CLK>;
-+				clock-names = "byte",
-+					      "byte_intf",
-+					      "pixel",
-+					      "core",
-+					      "iface",
-+					      "bus";
-+
-+				phys = <&dsi_phy>;
-+				phy-names = "dsi";
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dsi0_in: endpoint {
-+							remote-endpoint = <&dpu_intf1_out>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						dsi0_out: endpoint {
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi_phy: dsi-phy0@ae94400 {
-+				compatible = "qcom,dsi-phy-10nm";
-+				reg = <0 0x0ae94400 0 0x200>,
-+				      <0 0x0ae94600 0 0x280>,
-+				      <0 0x0ae94a00 0 0x1e0>;
-+				reg-names = "dsi_phy",
-+					    "dsi_phy_lane",
-+					    "dsi_pll";
-+
-+				#clock-cells = <1>;
-+				#phy-cells = <0>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
-+				clock-names = "iface";
-+			};
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
--- 
-2.7.4
+/Jarkko
 
