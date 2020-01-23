@@ -2,314 +2,186 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD71C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 10:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0E9C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 11:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACB324125
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 10:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9530F2467F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 11:11:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="IM26DjR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbgAWKrl (ORCPT
+        id S1726260AbgAWLLt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 05:47:41 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:51239 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgAWKrl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 05:47:41 -0500
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 88472C0005;
-        Thu, 23 Jan 2020 10:47:35 +0000 (UTC)
-Date:   Thu, 23 Jan 2020 11:56:01 +0100
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-Message-ID: <20200123105601.GR1803@voidbox>
-References: <20200116111850.23690-1-repk@triplefau.lt>
- <20200116111850.23690-7-repk@triplefau.lt>
- <1jzheev75g.fsf@starbuckisacylon.baylibre.com>
+        Thu, 23 Jan 2020 06:11:49 -0500
+Received: from mail-bn8nam12on2060.outbound.protection.outlook.com ([40.107.237.60]:5601
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726194AbgAWLLt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 06:11:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ic5Wv+Atqbbx56WRW8F0EIbUg6EzKkCQ/xS7l4j90EhbTZgtqqicwaDZ1ieT6j9XB0oQOC18YDQOnA7KTnXKbzfZkjPhz6KzXECysDd8eKmnmRSY4y1Z7Tdb2m7Y19OQNaZUJ1gu6XQQEquoEUBuDXqy81/ODzrZEFUkfi5ANAHRDpVs0MtGYkOi8/oFR4IQXm2+v8MeULX1L66vG53cuFz2jABD115Xu75EBDMgnr3MwNfxqk8jKCeqsOvt43JGuKmAQIR/7WUgKuqsIOL2tnqfeTn/+0f7IlwGAd8qdlmmLPfKP3u+T3GF+a1Vi4ubBVXT8rOqwDEF3Yf6bsP/zA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lX5ukczZrJGk/Z0LXvsuGStYE5lceFsvHv/SczbRGS8=;
+ b=gU2AL/2hotHErsfHgVDtuwRqQXMNZFJl6T6g51MiEJfHVyDajSWJU8rTv/iVb5XdGObCO8qnnPnD3NreGzqgb2Clp3N1U/wq1cUfn3U9frGwW4q0VJaidYBtpNKY/DqoXFk/XzZaX6+MfEkTCDXSZBh7qRLyiRhtFtxfW7YEhPNcCmOnFlzqYQ5zwXsHeq+MA13YwiLYDBdXJYat3wXi8exmSVdHk2+lp/9P+cTpbcS4zJKVY9Br2bWnKu8ikQeT0PJ9NyKBcI6I+7NX0IgzkJE87VSILjhqHSPWuSDkaC6je2CI2ZAcA03Em/tK0L1mfnJbNEE8ro7E+YQocreHjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=davemloft.net smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lX5ukczZrJGk/Z0LXvsuGStYE5lceFsvHv/SczbRGS8=;
+ b=IM26DjR4vb/5iCbUHrrqHHO4OhWy3QmhLwMhRFVUAIK9eu86Vokb0MmIRAKE0V7+rPUeQFdpEozP2SFg3p6NMHl0IA2KpRcWTkr/Rd7so6TBJDjObuhECNV+aE8ArSiQWPMVbq/frCmVxh+syD7pHZNiz6sxTyRgzrWdK333PUU=
+Received: from CY4PR02CA0030.namprd02.prod.outlook.com (2603:10b6:903:117::16)
+ by MWHPR02MB2221.namprd02.prod.outlook.com (2603:10b6:300:5a::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.25; Thu, 23 Jan
+ 2020 11:11:44 +0000
+Received: from BL2NAM02FT014.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::202) by CY4PR02CA0030.outlook.office365.com
+ (2603:10b6:903:117::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend
+ Transport; Thu, 23 Jan 2020 11:11:44 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT014.mail.protection.outlook.com (10.152.76.154) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2665.18
+ via Frontend Transport; Thu, 23 Jan 2020 11:11:43 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <kalyani.akula@xilinx.com>)
+        id 1iuaOk-0007hK-Gz; Thu, 23 Jan 2020 03:11:42 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <kalyani.akula@xilinx.com>)
+        id 1iuaOf-0007S2-DB; Thu, 23 Jan 2020 03:11:37 -0800
+Received: from [172.23.155.80] (helo=xhdengvm155080.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <kalyania@xilinx.com>)
+        id 1iuaOU-0007Ob-QR; Thu, 23 Jan 2020 03:11:27 -0800
+Received: by xhdengvm155080.xilinx.com (Postfix, from userid 23151)
+        id 0B5C4800B8; Thu, 23 Jan 2020 16:41:26 +0530 (IST)
+From:   Kalyani Akula <kalyani.akula@xilinx.com>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        git-dev <git-dev@xilinx.com>,
+        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
+        Sarat Chand Savitala <saratcha@xilinx.com>,
+        Harsh Jain <harshj@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Kalyani Akula <kalyania@xilinx.com>,
+        Kalyani Akula <kalyani.akula@xilinx.com>
+Subject: [PATCH V5 0/4] Add Xilinx's ZynqMP AES-GCM driver support
+Date:   Thu, 23 Jan 2020 16:41:13 +0530
+Message-Id: <1579777877-10553-1-git-send-email-kalyani.akula@xilinx.com>
+X-Mailer: git-send-email 1.9.5
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(396003)(346002)(199004)(189003)(478600001)(26005)(336012)(966005)(316002)(2616005)(44832011)(426003)(186003)(42186006)(6266002)(81156014)(8676002)(81166006)(8936002)(107886003)(4326008)(5660300002)(2906002)(70206006)(70586007)(36756003)(54906003)(6666004)(356004);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2221;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1jzheev75g.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7ac33d93-5592-4e41-3ea5-08d79ff50772
+X-MS-TrafficTypeDiagnostic: MWHPR02MB2221:
+X-Microsoft-Antispam-PRVS: <MWHPR02MB2221FF17F43BE14382E30336AF0F0@MWHPR02MB2221.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:873;
+X-Forefront-PRVS: 029174C036
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4Iac/qm7/gYVhv5Zq6KVjfpLcVX44vT1m+LTZGf435FkVb/Odlly5tes14p3Rr3nc5JPuTq4pecy6ohaAmcZPM4tX/hbml2FMU152gfF51j8/CuHxS3N9sElT/BB0hIV1LHyYanEcE0s4gbX3XjQRfNnSIH83wSFKN9tPapWBMxgHAiOHJFru4l+3CT3zsOdQqFtZm5h20NiJaQGqhiIZwErESn50vAn+ExoBeqPCK48MJUR4z95Up3ow0xjb86Rtq/nfuHsxbX7MDQQMEWyrH2I5CYTnlnKMLQljL+8nxL2iHzH9xwi+2uZEeUkxUiqei/LaO1/sKronS67EFzn9aBK5xLJoKpKm/65RCKkGO2vLGOHBoOWcSewiGQU/s0QJ3mrFYWzn2k0qPUJXz+UCCT5zB0o0i8/SgYEY40pVX0DGRyGIrG7JvkSYKzh5WwBDHu52hGz1PIxpjtS9XlnvTHTkD0N5iyPeiJu6TJddXo=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2020 11:11:43.4496
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ac33d93-5592-4e41-3ea5-08d79ff50772
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2221
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 10:44:43AM +0100, Jerome Brunet wrote:
-> 
-> On Thu 16 Jan 2020 at 12:18, Remi Pommarel <repk@triplefau.lt> wrote:
-> 
-> > This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
-> > This will allow to mutualize code in pci-meson.c between AXG and G12A
-> > SoC.
-> >
-> > This PHY can chain and use an optional analog PHY, which is used on
-> > AXG platform to have reliable PCIe communication.
-> >
-> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > ---
-> >  drivers/phy/amlogic/Kconfig              |  11 ++
-> >  drivers/phy/amlogic/Makefile             |   1 +
-> >  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
-> >  3 files changed, 204 insertions(+)
-> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
-> >
-> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> > index 8c9cf2403591..71801e30d601 100644
-> > --- a/drivers/phy/amlogic/Kconfig
-> > +++ b/drivers/phy/amlogic/Kconfig
-> > @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
-> >  	  in Meson G12A SoCs.
-> >  	  If unsure, say N.
-> >  
-> > +config PHY_MESON_AXG_PCIE
-> > +	tristate "Meson AXG PCIE PHY driver"
-> > +	default ARCH_MESON
-> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> > +	select GENERIC_PHY
-> > +	select REGMAP_MMIO
-> > +	help
-> > +	  Enable this to support the Meson MIPI + PCIE PHY found
-> > +	  in Meson AXG SoCs.
-> > +	  If unsure, say N.
-> > +
-> >  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
-> >  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
-> >  	default ARCH_MESON
-> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> > index 0aecf92d796a..e2baa133f7af 100644
-> > --- a/drivers/phy/amlogic/Makefile
-> > +++ b/drivers/phy/amlogic/Makefile
-> > @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
-> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
-> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
-> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
-> > +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
-> >  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
-> > diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> > new file mode 100644
-> > index 000000000000..0c5d0732cd1c
-> > --- /dev/null
-> > +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> > @@ -0,0 +1,192 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Amlogic AXG PCIE PHY driver
-> > + *
-> > + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
-> > + */
-> > +#include <linux/module.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/reset.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/bitfield.h>
-> > +#include <dt-bindings/phy/phy.h>
-> > +
-> > +#define MESON_PCIE_REG0 0x00
-> > +#define		MESON_PCIE_COMMON_CLK	BIT(4)
-> > +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
-> > +#define		MESON_PCIE_CLK		BIT(1)
-> > +#define		MESON_PCIE_POWERDOWN	BIT(0)
-> > +
-> > +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
-> > +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
-> > +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
-> > +					 MESON_PCIE_COMMON_REF_CLK)
-> > +#define MESON_PCIE_RESET_DELAY		500
-> > +
-> > +struct phy_axg_pcie_priv {
-> > +	struct phy *phy;
-> > +	struct phy *analog;
-> > +	struct regmap *regmap;
-> > +	struct reset_control *reset;
-> > +};
-> > +
-> > +static const struct regmap_config phy_axg_pcie_regmap_conf = {
-> > +	.reg_bits = 8,
-> > +	.val_bits = 32,
-> > +	.reg_stride = 4,
-> > +	.max_register = MESON_PCIE_REG0,
-> > +};
-> > +
-> > +static int phy_axg_pcie_power_on(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = phy_power_on(priv->analog);
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
-> > +			   MESON_PCIE_POWERDOWN, 0);
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_pcie_power_off(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = phy_power_off(priv->analog);
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
-> > +			   MESON_PCIE_POWERDOWN, 1);
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_pcie_init(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = phy_init(priv->analog);
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
-> > +	return reset_control_reset(priv->reset);
-> > +}
-> > +
-> > +static int phy_axg_pcie_exit(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = phy_exit(priv->analog);
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	return reset_control_reset(priv->reset);
-> > +}
-> > +
-> > +static int phy_axg_pcie_reset(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret = 0;
-> > +
-> > +	ret = phy_reset(priv->analog);
-> > +	if (ret != 0)
-> > +		goto out;
-> > +
-> > +	ret = reset_control_assert(priv->reset);
-> > +	if (ret != 0)
-> > +		goto out;
-> > +	udelay(MESON_PCIE_RESET_DELAY);
-> > +
-> > +	ret = reset_control_deassert(priv->reset);
-> > +	if (ret != 0)
-> > +		goto out;
-> > +	udelay(MESON_PCIE_RESET_DELAY);
-> > +
-> > +out:
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct phy_ops phy_axg_pcie_ops = {
-> > +	.init = phy_axg_pcie_init,
-> > +	.exit = phy_axg_pcie_exit,
-> > +	.power_on = phy_axg_pcie_power_on,
-> > +	.power_off = phy_axg_pcie_power_off,
-> > +	.reset = phy_axg_pcie_reset,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static int phy_axg_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct phy_provider *pphy;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct phy_axg_pcie_priv *priv;
-> > +	struct device_node *np = dev->of_node;
-> > +	struct resource *res;
-> > +	void __iomem *base;
-> > +	int ret;
-> > +
-> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
-> > +	if (IS_ERR(priv->phy)) {
-> > +		ret = PTR_ERR(priv->phy);
-> > +		if (ret != -EPROBE_DEFER)
-> > +			dev_err(dev, "failed to create PHY\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	base = devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(base))
-> > +		return PTR_ERR(base);
-> > +
-> > +	priv->regmap = devm_regmap_init_mmio(dev, base,
-> > +					     &phy_axg_pcie_regmap_conf);
-> > +	if (IS_ERR(priv->regmap))
-> > +		return PTR_ERR(priv->regmap);
-> > +
-> > +	priv->reset = devm_reset_control_array_get(dev, false, false);
-> > +	if (IS_ERR(priv->reset))
-> > +		return PTR_ERR(priv->reset);
-> > +
-> > +	priv->analog = devm_phy_optional_get(dev, "analog");
-> > +	if (IS_ERR(priv->analog))
-> > +		return PTR_ERR(priv->analog);
-> 
-> Isn't required for on the axg platform for the pcie to work reliably ?
-> Does this driver support another SoC ?
-> 
+This patch set adds support for
+- dt-binding docs for Xilinx ZynqMP AES driver
+- Adds device tree node for ZynqMP AES driver
+- Adds communication layer support for aes in zynqmp.c
+- Adds Xilinx ZynqMP driver for AES Algorithm
 
-That is just me being overly cautious here. It is indeed required on AXG
-SoC to have pcie working reliably.
+NOTE: This patchset is based on Michal's branch
+https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=arm/drivers
+because of possible merge conflict for 1/4 patch with below commit
+commit 461011b1e1ab ("drivers: firmware: xilinx: Add support for feature check")
 
-Will change that in next patchset version.
+V5 Changes :
+- Moved arm64: zynqmp: Add Xilinx AES node from 2/4 to 4/4.
+- Moved crypto: Add Xilinx AES driver patch from 4/4 to 3/4.
+- Moved dt-bindings patch from 1/4 to 2/4
+- Moved firmware: xilinx: Add ZynqMP aes API for AES patch from 3/4 to 1/4
+- Converted dt-bindings from .txt to .yaml format.
+- Corrected typo in the subject.
+- Updated zynqmp-aes node to correct location.
+- Replaced ARCH_ZYNQMP with ZYNQMP_FIRMWARE in Kconfig
+- Removed extra new lines and added wherever necessary. 
+- Updated Signed-off-by sequence.
+- Ran checkpatch for all patches in the series.
 
-Thanks.
+V4 Changes :
+- Addressed review comments.
 
-> > +
-> > +	phy_set_drvdata(priv->phy, priv);
-> > +	dev_set_drvdata(dev, priv);
-> > +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> > +
-> > +	return PTR_ERR_OR_ZERO(pphy);
-> > +}
-> > +
-> > +static const struct of_device_id phy_axg_pcie_of_match[] = {
-> > +	{
-> > +		.compatible = "amlogic,axg-pcie-phy",
-> > +	},
-> > +	{ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
-> > +
-> > +static struct platform_driver phy_axg_pcie_driver = {
-> > +	.probe = phy_axg_pcie_probe,
-> > +	.driver = {
-> > +		.name = "phy-axg-pcie",
-> > +		.of_match_table = phy_axg_pcie_of_match,
-> > +	},
-> > +};
-> > +module_platform_driver(phy_axg_pcie_driver);
-> > +
-> > +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
-> > +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
-> > +MODULE_LICENSE("GPL v2");
-> 
+V3 Changes :
+- Added software fallback in cases where Hardware doesn't have
+  the capability to handle the request.
+- Removed use of global variable for storing the driver data.
+- Enabled CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y and executed all
+  the kernel selftests. Also covered tests with tcrypt module.
+
+V2 Changes :
+- Converted RFC PATCH to PATCH
+- Removed ALG_SET_KEY_TYPE that was added to support keytype
+  attribute. Taken using setkey interface.
+- Removed deprecated BLKCIPHER in Kconfig
+- Erased Key/IV from the buffer.
+- Renamed zynqmp-aes driver to zynqmp-aes-gcm.
+- Addressed few other review comments
+
+
+Kalyani Akula (4):
+  firmware: xilinx: Add ZynqMP aes API for AES functionality
+  dt-bindings: crypto: Add bindings for ZynqMP AES-GCM driver
+  crypto: Add Xilinx AES driver
+  arm64: zynqmp: Add Xilinx AES node.
+
+ .../bindings/crypto/xlnx,zynqmp-aes.yaml           |  37 ++
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   4 +
+ drivers/crypto/Kconfig                             |  12 +
+ drivers/crypto/Makefile                            |   1 +
+ drivers/crypto/xilinx/Makefile                     |   2 +
+ drivers/crypto/xilinx/zynqmp-aes-gcm.c             | 466 +++++++++++++++++++++
+ drivers/firmware/xilinx/zynqmp.c                   |  25 ++
+ include/linux/firmware/xlnx-zynqmp.h               |   2 +
+ 8 files changed, 549 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
+ create mode 100644 drivers/crypto/xilinx/Makefile
+ create mode 100644 drivers/crypto/xilinx/zynqmp-aes-gcm.c
+
+-- 
+1.9.5
+
