@@ -2,103 +2,96 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC0C35242
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 23:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1F5C35240
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 23:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D60218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 23:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F1A20718
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 23:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1vPMQgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbgAWXWc (ORCPT
+        id S1729476AbgAWXh0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:22:32 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:21241 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729851AbgAWXW2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 18:22:28 -0500
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BDB04240004;
-        Thu, 23 Jan 2020 23:22:24 +0000 (UTC)
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH v6 4/7] arm64: dts: meson-axg: Add PCIE PHY nodes
-Date:   Fri, 24 Jan 2020 00:29:40 +0100
-Message-Id: <20200123232943.10229-5-repk@triplefau.lt>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200123232943.10229-1-repk@triplefau.lt>
-References: <20200123232943.10229-1-repk@triplefau.lt>
+        Thu, 23 Jan 2020 18:37:26 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44047 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729288AbgAWXh0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 18:37:26 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 62so158666pfu.11;
+        Thu, 23 Jan 2020 15:37:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AnAOgh110uKPc3d8VRtFP1cCUwjRHhenRNDU4AcKph8=;
+        b=K1vPMQgl/Yg+46UKknCjnjFG34twgu8GDgt+p5hRGEbg5j/8DXs0FedhC0j4h/53Vm
+         r9HDbAatrCio+h9dR8/itKPROddqjz+l6/cpJlJ/goja6xaF7PmSF4k4BdfTSMXkjGwm
+         3NMFtEPenDER9X7HM9w0a7sNEurnEcSojTlKBN87DC/te47lDw/wkZCSrTC05QP/p8yW
+         lD7eEh5qASYejJRLu4FS16CYrMRG/ymjIXPwtgTBkXVk/McJ/67jK8v6sNX82eahfReq
+         Vm1eFyHtM9MKOCDVW76a9jtDg9qEeWKR5XoAhdqnAeBNbZ0rY5g053dolcKC2yoQCc3l
+         ejaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AnAOgh110uKPc3d8VRtFP1cCUwjRHhenRNDU4AcKph8=;
+        b=FxLMByBWZ/rdQHQp+9go9qsQRE5PluTWQhEZffT6a8t5djHXUpYx+tE6R1wuG3LKCk
+         xK37ZgNp9V8mXIwgpUZrG8cLotiTgJKRWz3cXWXMW2uZrZ0rteCfrQsZ5XPXL9yhmwcr
+         yrtojXMKrkZ3kVj2uSg8Q5+QSnZ5C2eyhSNYGOxWNN79R8zQQq0OeqHI64FbElZ0IP06
+         KD/5DOmmQU35BiO5H1pjmEMFlKfXxNhEVjJ3dZnld5YpKAaIolUvzv+DrwXpAC7Pd1Ud
+         SQ7yFebalpVIGOgCg5rkHIcmbuPyVRKYcKevz5/DFD0NYJSNwdhebfyBPUPY6m8YhDCg
+         PW3g==
+X-Gm-Message-State: APjAAAV/9cq2Y6Pk8td5YqVIBtJzMu4Giu4bZrkHsH+4vp7p/CxlNxoN
+        ZjZdlupTL/zmm3Heax8Jml6+Nwey
+X-Google-Smtp-Source: APXvYqx2Oz2x7aK2w2WY7H8GZslB2DP/lDmHVrC4VNx9P3gFaCAHqPF3LBhJCNPpT/oPHOgxMJR+ow==
+X-Received: by 2002:a63:2e07:: with SMTP id u7mr877200pgu.295.1579822645505;
+        Thu, 23 Jan 2020 15:37:25 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:140e:bf9b:65a6:dd72? ([2001:4898:80e8:0:9425:bf9b:65a6:dd72])
+        by smtp.gmail.com with ESMTPSA id z30sm4042494pfq.154.2020.01.23.15.37.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 15:37:24 -0800 (PST)
+Subject: Re: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+References: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+ <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
+From:   Shiping Ji <shiping.linux@gmail.com>
+Message-ID: <e0bab7de-1308-409c-febc-608a812592e3@gmail.com>
+Date:   Thu, 23 Jan 2020 15:37:22 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_Jsq+1S=mOS0-eb0=ibSn81ReDmDjrA9=bHpKC16w8B6Aq3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable both PCIE and shared MIPI/PCIE PHY nodes in order to make PCIE
-reliable on AXG SoC.
+On 1/23/2020 5:44 AM, Rob Herring wrote:
 
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> Run 'make dt_binding_check' as that would have caught this issue on the example.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 04803c3bccfa..08a178aa0133 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -12,6 +12,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
- #include <dt-bindings/reset/amlogic,meson-axg-reset.h>
-+#include <dt-bindings/phy/phy.h>
- 
- / {
- 	compatible = "amlogic,meson-axg";
-@@ -1104,6 +1105,12 @@ hiubus: bus@ff63c000 {
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1c00>;
- 
-+			mipi_analog_phy: phy@0 {
-+				compatible = "amlogic,axg-mipi-pcie-analog-phy";
-+				reg = <0x0 0x0 0x0 0xc>;
-+				#phy-cells = <1>;
-+			};
-+
- 			sysctrl: system-controller@0 {
- 				compatible = "amlogic,meson-axg-hhi-sysctrl",
- 					     "simple-mfd", "syscon";
-@@ -1356,6 +1363,15 @@ tdmout_c: audio-controller@580 {
- 			};
- 		};
- 
-+		pcie_phy: bus@ff644000 {
-+			compatible = "amlogic,axg-pcie-phy";
-+			reg = <0x0 0xff644000 0x0 0x1c>;
-+			resets = <&reset RESET_PCIE_PHY>;
-+			phys = <&mipi_analog_phy PHY_TYPE_PCIE>;
-+			phy-names = "analog";
-+			#phy-cells = <0>;
-+		};
-+
- 		aobus: bus@ff800000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xff800000 0x0 0x100000>;
+Eventually I have the dtc with yaml output built and resolved issues reported by "make dt_binding_check". Shall I submit a new v11 patch for the dt-bindings only or I should add driver code patch into v11 too?
+
+Thanks!
+
 -- 
-2.24.1
-
+Best regards,
+Shiping Ji
