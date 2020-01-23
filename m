@@ -2,86 +2,101 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0C5C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60730C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7FE20704
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579790653;
-	bh=cxbXL06983e8Lwy6P74qWpIuHgWDUSYOwcDHhk/R+JE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e/Ji2iT4EOhaG//y72cD3Ni6lTyA/lg6wkP2UBLx98xA6e04LBA2V06dfBLzve6su
-	 fSXf9M2cvHWVPPn9mVyDUakMKVKGZ5DgwKvVf+Ua2dA1AFpHrw9isl7wDKJhOX4wOk
-	 XPon7brNuX1guuQIT9j0lg7ILrXCrqUtdIJFxaEk=
+	by mail.kernel.org (Postfix) with ESMTP id 36F872073A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mrGCJles"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgAWOoN (ORCPT
+        id S1728792AbgAWOtK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:44:13 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39794 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgAWOoN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 09:44:13 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 77so2937779oty.6
-        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 06:44:12 -0800 (PST)
+        Thu, 23 Jan 2020 09:49:10 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45239 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728665AbgAWOtK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 09:49:10 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 203so2459417lfa.12
+        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 06:49:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BPPW9IU+ruAV1uOimTrGBs92WdNG36xmqhTz53FGFdY=;
+        b=mrGCJles1c7f58DkPrSG6gSnjtp08QKxaeou5MDQFp9ZwRSjQ2cb36mHC/aMna475B
+         a5JV6HMjF9u/6McqYd2t4tJqDpogKUq4BEwcERUaDcCQISLlkwKBK80W/XNvST7IK/mV
+         bsYZJLqBEQVGDCva4J5hT3OYJqSkEJsTeqvGrja/0WYmmQ4z2spTq3/SdOc0wJtA761p
+         UB+pYRTSmONEJoMt1rCoPqindyXeSYUUIhG6l8yvhvVK5oD7h4fF7RUXiMyJn6AS7D3p
+         DNxkQthVpAqnV3SfxeQiT3Zl5r6NoTSyoyLdic80YG0GOOTUUiOv6Cp+b5CBp0SoUqTA
+         bK0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h4oHzrFYKqp+VGW1bsUiQD/W3J5scTqNZ8AL4zNgxc0=;
-        b=NPxpHgnUBFp4hhHy6AxM6kxQmN2WCkn/V7S/pyemq/g2mv0liQYJ/35Y3s+Th8otSL
-         uetXCxoxy+cIzOYryH0EeaJJWHLHHZlrumy7utz+EJJr9hQNsaris15jLY13GoxPswBi
-         BbtLljGzih2Kq5LxlQqV8qkGfBLInWl0NnHYO7NY0pA5/OUxZsUzX0JrAdJQCbcYp0Yp
-         CCHXJJLQSZiaA57OiPC/xnRqnsZxPpfqFlvudYxTB536GYXCG/dd1hqrVrpseum3z5xr
-         PQazvCu0V2KXHXJf07YvrUsX1GzjfTFZWbFG32zlxLToQSPytxbhUDwrtOft2vCdEoWZ
-         aSqg==
-X-Gm-Message-State: APjAAAXlcuwJECOQ2mZRwocXW0CCB0uSBZ/IG76pX4w9mFy0LI/i4Awi
-        rZy2kpT8E/R3YjNy3ROwOA==
-X-Google-Smtp-Source: APXvYqznkYyQ82Iaq8fFB0N1PdBN29CchqSiaNIZ4ovIW3gdQxYo3Z67i87qruav9akbSEbbJRCETA==
-X-Received: by 2002:a05:6830:1d91:: with SMTP id y17mr11150667oti.276.1579790652164;
-        Thu, 23 Jan 2020 06:44:12 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p24sm851505oth.28.2020.01.23.06.44.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 06:44:11 -0800 (PST)
-Received: (nullmailer pid 13653 invoked by uid 1000);
-        Thu, 23 Jan 2020 14:44:11 -0000
-Date:   Thu, 23 Jan 2020 08:44:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH 1/3] dt-bindings: iommu: Add Allwinner H6 IOMMU bindings
-Message-ID: <20200123144411.GA13589@bogus>
-References: <cover.b2a9e1507135d81e726fcbb65137665a7f0ab74f.1579696927.git-series.maxime@cerno.tech>
- <3022a8d9d60f35db072b39313ec46708a567a9c5.1579696927.git-series.maxime@cerno.tech>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BPPW9IU+ruAV1uOimTrGBs92WdNG36xmqhTz53FGFdY=;
+        b=jYPxamtzGHUN89lFHCCUKDn821BOXrlOKytz9H/Rx6sFVoj2MeVXV069G7aDMuzgjY
+         OowjMcb97GEsGEKkh5V9lWsFNq2CRKvDiRAjGZKk3wxZudmQw1RZw7fi63bYXfbvi91R
+         Fu1YyPqDfTXkyim7zNwfw+eaZxswj5/H1LFylVu+PCFGY9Ey8p2609bC9Z89loTk5CXn
+         M/etJRG1lx/+DoypJ1q4SxndNVItZ70b8FcXQAXHpmY/yhv+AmaI8Y4sv/PBOsKWx1md
+         WJ5m0eKpVK1F5D/qNchrng45+g3RxKJYSgi8LlepIM7YBJfzCR18D/eS2la+hXyxhg9K
+         Q7Uw==
+X-Gm-Message-State: APjAAAWnLVGxy/1oyXTViGAnfisyqUg31I/sZdaGlaQ/nwVv1/Xunh1v
+        VVXjWJNOumhoZuRCiyKpL8jR0YIgrPG0Y1rNdVxNKQ==
+X-Google-Smtp-Source: APXvYqwviesfBDZBeKob892qIy6qBAac09CjXqBfPvQ19xi38mTIEOFcWe9pDLJSINtpV6mS8x6bctvvmZYw+cMcqCs=
+X-Received: by 2002:ac2:4909:: with SMTP id n9mr4796395lfi.21.1579790948052;
+ Thu, 23 Jan 2020 06:49:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3022a8d9d60f35db072b39313ec46708a567a9c5.1579696927.git-series.maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Jan 2020 15:48:57 +0100
+Message-ID: <CACRpkdaX9amSA88=L7VSF9VDKxD_ed1gN4whJ3FriUwW1EB7jw@mail.gmail.com>
+Subject: Re: [PATCH V9 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MP
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Olof Johansson <olof@lixom.net>, maxime@cerno.tech,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Jan 2020 13:44:07 +0100, Maxime Ripard wrote:
-> The Allwinner H6 has introduced an IOMMU. Let's add a device tree binding
-> for it.
-> 
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml
-> 
+On Wed, Jan 15, 2020 at 2:43 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> Add binding doc for i.MX8MP pinctrl driver.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since V8:
+>         - the lisence should be GPL-2.0
+
+Patch applied.
+
+Yours,
+Linus Walleij
