@@ -2,130 +2,111 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6CFC33CAA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7650C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C7921569
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579817276;
-	bh=QlwrFB/8SQuEz72x5eJ/IwwmULMw3LNCA6dsBx7N75U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oLCB/N+Bg4UI8lKoGZezKqIwB+EQxN9blQDnxPeT35lQ0VbWBeAMa7s0yoOLPwzSY
-	 R+i25MM7z4dQzoohcF4b9RoIsm5d0NCDMTcUrWwNv4ZyXWAVO49Fsr9yRqZKZu//WB
-	 fjMQ9koytmQ0u2zB1rUUagazRsbSfm8kG5N5YX6c=
+	by mail.kernel.org (Postfix) with ESMTP id B00DD21569
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZnvLkcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgAWWHw (ORCPT
+        id S1726232AbgAWWZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:07:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgAWWHw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:07:52 -0500
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 792EB21734;
-        Thu, 23 Jan 2020 22:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579817270;
-        bh=QlwrFB/8SQuEz72x5eJ/IwwmULMw3LNCA6dsBx7N75U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JLUm1d1nZ3Ot8n7cZT2wO+oEqAb8ecDHj+2YmMHmDw461svQo2lhvJ8Uie/M/2Ehu
-         +Y3C5f3ghUA5lmBaBkWnqUrJX1zjMmBmygXBa4uk6NeZgnanX2J0A4u+9eLTLJ1dbJ
-         XVTjHfUYxMyDGpA8yfTM9lNlWLjr1lGuHwZxSzd4=
-Received: by mail-qt1-f182.google.com with SMTP id e12so22326qto.2;
-        Thu, 23 Jan 2020 14:07:50 -0800 (PST)
-X-Gm-Message-State: APjAAAXC71H3286DlFJoP8L+yz9WmJl21/aiFDKE47olirPLj933HVxe
-        v+nS8TU9T9ukTSDxyGqDklCi0rwaJeJ4EXib9Q==
-X-Google-Smtp-Source: APXvYqxzfWxfFKwXzKXbl8qhH8ZiP9eveL4Sd9dFSyn/yz3xnENA89DFYjvHnIiSUkXEweXnfPoeCbjrCT3FHrpjlZI=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr419976qtg.110.1579817269622;
- Thu, 23 Jan 2020 14:07:49 -0800 (PST)
+        Thu, 23 Jan 2020 17:25:12 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37069 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728931AbgAWWZM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 17:25:12 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so77374pfn.4;
+        Thu, 23 Jan 2020 14:25:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=loMc8VqBmx96y24K3dR4+FpJ+qOyalpiFFIQ1tI6zRk=;
+        b=QZnvLkcu0C2F1y9GuVWAqcKXcdxMtUyPulNNVse0MRx4I1+6mGgufJAiuDIfhVL8M2
+         i2pcjMeT2KA7+1EtRDZa6JssAar2rv3em2MVjk45rJaHHqQx7scv9b+5zgXA4LSCL0Ax
+         MvVr/8hQtaHvbslmZUtOsFuWQ3OK7ZXaYjSsnO3IT5upNAJhMn2k6rEpL8hcweDDLDwR
+         f7pJY+RxqVM0sHfAUSjh4wnEsTgWkNTscENtvkYD8V/U9zmVd/7rrB8eMEv8YU9mn//S
+         YUV2B3W/PwVPIOK98AuycK/HrYHBE6lCBYHSqxgpT98Ug+vdiaGRrWiTWJ1xkAsJ5Ys5
+         XDcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=loMc8VqBmx96y24K3dR4+FpJ+qOyalpiFFIQ1tI6zRk=;
+        b=NN3oPyZQBf8zELAd4oDphSGwF92kH1OLTZOKmVpm340cQSH7tC2jnBRTB7ne1hzEqf
+         CGU3cLlkMwMHdHlATTrW6WBkMdx+iEbmurb7VZ/oKiD4lC+dh6IE9zu6iCXavaQSA0ID
+         bDJWoyy+bDXKMiR0ogv3LMNT+JXv6xgpG3JblMywnvl2C+wwosp/YJ8L6TF9dcUDJkFj
+         cpnirfhdVvx+hqMuzLygpaUYRnhVy0hhsTpH2atnRnmCioIDELoMu+UneBFQleiONgFe
+         FOWB4fXu45tIMqZbOLryAvmn0zYS0D7h9NKpl36memL2CNZ5G33XRfjrNNTpdPBQ13PW
+         1hgQ==
+X-Gm-Message-State: APjAAAXndzON5cIu4m7YRqa2rAhib6zLRirEZl3hnRLcgl9T5pWX/IZp
+        d7rCThlXqPTQp0VxHpZAzeA=
+X-Google-Smtp-Source: APXvYqzjFBeb248poaTBr/EAxCzVQf6JxkdU9X1xW36FGfStJml/QnU5kcVmNAI5UHOQbZmrdujtrA==
+X-Received: by 2002:a62:5547:: with SMTP id j68mr461724pfb.6.1579818311387;
+        Thu, 23 Jan 2020 14:25:11 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id t65sm3612857pfd.178.2020.01.23.14.25.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 14:25:10 -0800 (PST)
+Date:   Thu, 23 Jan 2020 14:25:08 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: input: Convert gpio-keys bindings to schema
+Message-ID: <20200123222508.GB184237@dtor-ws>
+References: <20200123214222.17897-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-2-bjorn.andersson@linaro.org> <20200104213804.GA30385@bogus>
- <20200104221752.GW549437@yoga>
-In-Reply-To: <20200104221752.GW549437@yoga>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 23 Jan 2020 16:07:38 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJEq-eX-LoRiHHot8De4RbRS4-Np+hisTk4TWpehqsRwg@mail.gmail.com>
-Message-ID: <CAL_JsqJEq-eX-LoRiHHot8De4RbRS4-Np+hisTk4TWpehqsRwg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: remoteproc: Add Qualcomm PIL info binding
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123214222.17897-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jan 4, 2020 at 3:17 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Sat 04 Jan 13:38 PST 2020, Rob Herring wrote:
->
-> > On Thu, Dec 26, 2019 at 09:32:08PM -0800, Bjorn Andersson wrote:
-> > > Add a devicetree binding for the Qualcomm periperal image loader
-> > > relocation info region found in the IMEM.
-> > >
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > ---
-> > >
-> > > Changes since v1:
-> > > - New patch
-> > >
-> > >  .../bindings/remoteproc/qcom,pil-info.yaml    | 35 +++++++++++++++++++
-> > >  1 file changed, 35 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> > > new file mode 100644
-> > > index 000000000000..715945c683ed
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> > > @@ -0,0 +1,35 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: "http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#"
-> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > > +
-> > > +title: Qualcomm peripheral image loader relocation info binding
-> > > +
-> > > +description:
-> > > +  This document defines the binding for describing the Qualcomm peripheral
-> > > +  image loader relocation memory region, in IMEM, which is used for post mortem
-> > > +  debugging of remoteprocs.
-> > > +
-> > > +maintainers:
-> > > +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: qcom,pil-reloc-info
-> > > +
-> > > +  offset:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: Offset in the register map for the memory region
-> >
-> > Why not use 'reg' instead?
-> >
->
-> Because we have one prior example of subdevice of "imem", which is
-> compatible "syscon-reboot-mode" and that binding uses "offset".
+Hi Rob,
 
-Not that I'm proposing this, but nothing should prevent both from coexisting.
+On Thu, Jan 23, 2020 at 03:42:22PM -0600, Rob Herring wrote:
+> Convert the gpio-keys and gpio-keys-polled bindings to a DT schema. As
+> both bindings are almost the same, combine them into a single schema.
+> 
+> The binding said 'interrupts' was required, but testing on dts files
+> showed that it isn't required.
+> 
+> 'linux,input-value' was only documented for gpio-keys-polled, but there
+> doesn't seem to be any reason for it to be specific to that.
 
-Rob
+Actually, there is: with gpio-keys-polled we take a "snapshot" of the
+entire device state, so we know when to generate a 0 event (the example
+we have a device with several GPIOs with values assigned 1, 2, 3, 4, 5..
+values, when one of the gpios is active we generate event with given
+value, when all are inactive we generate 0 event). This does not work
+for interrupt-only driven device.
+
+> +
+> +      properties:
+> +        gpios:
+> +          maxItems: 1
+> +
+> +        interrupts:
+> +          maxItems: 1
+
+We support "interrupt-only" mode where we do not have GPIO, so for
+"gpio-keys" we need either interrupts or gpios or both, and for polled
+we must have gpios (and I guess we simply ignore interrupts if they are
+specified).
+
+Does this binding manages to enforce this?
+
+Thanks.
+
+-- 
+Dmitry
