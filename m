@@ -2,111 +2,72 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7650C33CAA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E821C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00DD21569
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:25:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZnvLkcu"
+	by mail.kernel.org (Postfix) with ESMTP id 683BC22522
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579820319;
+	bh=+vO8N90FVF3xL+pii7NOSq2FtfZu7Erby6E+v2V6kuQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=fx4Exfsnzaeu3fVrh92Bxg8woslHiyP2eEIh5Pvfs4pBXWvVqbrv3H1BFSPPI+p5y
+	 Vui3ACugYR4d28vE/BrUkrrDdxIasrv5MWoXx5FAC56c6+5oNtChGo/YN5Y65isNn6
+	 RkH/oe6deYapjDWHVFlYnsG335/zEAUaDORmdnVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgAWWZM (ORCPT
+        id S1729509AbgAWW6i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:25:12 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37069 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbgAWWZM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 17:25:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id p14so77374pfn.4;
-        Thu, 23 Jan 2020 14:25:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=loMc8VqBmx96y24K3dR4+FpJ+qOyalpiFFIQ1tI6zRk=;
-        b=QZnvLkcu0C2F1y9GuVWAqcKXcdxMtUyPulNNVse0MRx4I1+6mGgufJAiuDIfhVL8M2
-         i2pcjMeT2KA7+1EtRDZa6JssAar2rv3em2MVjk45rJaHHqQx7scv9b+5zgXA4LSCL0Ax
-         MvVr/8hQtaHvbslmZUtOsFuWQ3OK7ZXaYjSsnO3IT5upNAJhMn2k6rEpL8hcweDDLDwR
-         f7pJY+RxqVM0sHfAUSjh4wnEsTgWkNTscENtvkYD8V/U9zmVd/7rrB8eMEv8YU9mn//S
-         YUV2B3W/PwVPIOK98AuycK/HrYHBE6lCBYHSqxgpT98Ug+vdiaGRrWiTWJ1xkAsJ5Ys5
-         XDcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=loMc8VqBmx96y24K3dR4+FpJ+qOyalpiFFIQ1tI6zRk=;
-        b=NN3oPyZQBf8zELAd4oDphSGwF92kH1OLTZOKmVpm340cQSH7tC2jnBRTB7ne1hzEqf
-         CGU3cLlkMwMHdHlATTrW6WBkMdx+iEbmurb7VZ/oKiD4lC+dh6IE9zu6iCXavaQSA0ID
-         bDJWoyy+bDXKMiR0ogv3LMNT+JXv6xgpG3JblMywnvl2C+wwosp/YJ8L6TF9dcUDJkFj
-         cpnirfhdVvx+hqMuzLygpaUYRnhVy0hhsTpH2atnRnmCioIDELoMu+UneBFQleiONgFe
-         FOWB4fXu45tIMqZbOLryAvmn0zYS0D7h9NKpl36memL2CNZ5G33XRfjrNNTpdPBQ13PW
-         1hgQ==
-X-Gm-Message-State: APjAAAXndzON5cIu4m7YRqa2rAhib6zLRirEZl3hnRLcgl9T5pWX/IZp
-        d7rCThlXqPTQp0VxHpZAzeA=
-X-Google-Smtp-Source: APXvYqzjFBeb248poaTBr/EAxCzVQf6JxkdU9X1xW36FGfStJml/QnU5kcVmNAI5UHOQbZmrdujtrA==
-X-Received: by 2002:a62:5547:: with SMTP id j68mr461724pfb.6.1579818311387;
-        Thu, 23 Jan 2020 14:25:11 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id t65sm3612857pfd.178.2020.01.23.14.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 14:25:10 -0800 (PST)
-Date:   Thu, 23 Jan 2020 14:25:08 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: input: Convert gpio-keys bindings to schema
-Message-ID: <20200123222508.GB184237@dtor-ws>
-References: <20200123214222.17897-1-robh@kernel.org>
+        Thu, 23 Jan 2020 17:58:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729149AbgAWW6i (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 17:58:38 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2EEC20718;
+        Thu, 23 Jan 2020 22:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579820317;
+        bh=+vO8N90FVF3xL+pii7NOSq2FtfZu7Erby6E+v2V6kuQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=2Zns5AlZe0m8NGkGX2ryWE8GWo44d309PozzHP/DAv5lMlw3goyDdq1WwrzUdjnOE
+         TPQa27nTpE7YHTFCdOj54Y55C9SUqf+9qGKRBd52neO9DK7/VXIamyGiHvmJTQ9Gro
+         UX1/GxHwEpg83VQ64d70xfk4XQhnfKXWmQ2iM6S8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123214222.17897-1-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1575527759-26452-2-git-send-email-rajan.vaja@xilinx.com>
+References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com> <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com> <1575527759-26452-2-git-send-email-rajan.vaja@xilinx.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: clock: Add bindings for versal clock driver
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rajan Vaja <rajan.vaja@xilinx.com>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>, gustavo@embeddedor.com,
+        jolly.shah@xilinx.com, m.tretter@pengutronix.de,
+        mark.rutland@arm.com, mdf@kernel.org, michal.simek@xilinx.com,
+        mturquette@baylibre.com, nava.manne@xilinx.com, robh+dt@kernel.org,
+        tejas.patel@xilinx.com
+User-Agent: alot/0.8.1
+Date:   Thu, 23 Jan 2020 14:58:37 -0800
+Message-Id: <20200123225837.D2EEC20718@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Quoting Rajan Vaja (2019-12-04 22:35:54)
+> Add documentation to describe Xilinx Versal clock driver
+> bindings.
+>=20
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
 
-On Thu, Jan 23, 2020 at 03:42:22PM -0600, Rob Herring wrote:
-> Convert the gpio-keys and gpio-keys-polled bindings to a DT schema. As
-> both bindings are almost the same, combine them into a single schema.
-> 
-> The binding said 'interrupts' was required, but testing on dts files
-> showed that it isn't required.
-> 
-> 'linux,input-value' was only documented for gpio-keys-polled, but there
-> doesn't seem to be any reason for it to be specific to that.
+Applied to clk-next
 
-Actually, there is: with gpio-keys-polled we take a "snapshot" of the
-entire device state, so we know when to generate a 0 event (the example
-we have a device with several GPIOs with values assigned 1, 2, 3, 4, 5..
-values, when one of the gpios is active we generate event with given
-value, when all are inactive we generate 0 event). This does not work
-for interrupt-only driven device.
-
-> +
-> +      properties:
-> +        gpios:
-> +          maxItems: 1
-> +
-> +        interrupts:
-> +          maxItems: 1
-
-We support "interrupt-only" mode where we do not have GPIO, so for
-"gpio-keys" we need either interrupts or gpios or both, and for polled
-we must have gpios (and I guess we simply ignore interrupts if they are
-specified).
-
-Does this binding manages to enforce this?
-
-Thanks.
-
--- 
-Dmitry
