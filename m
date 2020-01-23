@@ -6,87 +6,82 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D565C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0C5C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1D021835
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7FE20704
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579790609;
-	bh=JcgtoUqsESmD3A/2bsSCDPMCrO/wp97Z1NQPgshb+po=;
+	s=default; t=1579790653;
+	bh=cxbXL06983e8Lwy6P74qWpIuHgWDUSYOwcDHhk/R+JE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oZpsBEwVYPveGOR7NESfeHZtcCgMReOwKWQlXpBuWVoS0hxf8psNX6VxEpQkkEZnv
-	 GzHBjtIJVgZRitEoiSM1yTcAQ1NE7UxMgP1WXxtKGeZm/t/886joho8G8LODu+PeI5
-	 +qAzhL7k3NuyX8VVLRGzGDaN2/J4ur0vnHTqnbxw=
+	b=e/Ji2iT4EOhaG//y72cD3Ni6lTyA/lg6wkP2UBLx98xA6e04LBA2V06dfBLzve6su
+	 fSXf9M2cvHWVPPn9mVyDUakMKVKGZ5DgwKvVf+Ua2dA1AFpHrw9isl7wDKJhOX4wOk
+	 XPon7brNuX1guuQIT9j0lg7ILrXCrqUtdIJFxaEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgAWOn2 (ORCPT
+        id S1728665AbgAWOoN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:43:28 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42844 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgAWOn2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 09:43:28 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so3072570oin.9;
-        Thu, 23 Jan 2020 06:43:28 -0800 (PST)
+        Thu, 23 Jan 2020 09:44:13 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39794 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgAWOoN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 09:44:13 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so2937779oty.6
+        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 06:44:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7SayZJgIXHjCdU3TAFI8Ocs5cvmGh8wgxSjfDXiqUmU=;
-        b=cxSDvpbUKLOtBOI3fGsin6p2Q1mBdA9arjtDLfwIuwW3GiBSM+SDY4OwZvljpg5H8n
-         QuuKr24wIPsoqYa0t5sX+gVoonfx0slv1/6bWbbu2ktRh+BznRTyx6PLan0BaTReLvS8
-         +pjgOgzHaflBREHkRQKtI2FP70hF18tj2esYrIRam9KNyU5DOlXqZTxJy10pXSqhYTlo
-         g05JsHpg7srKGRoQua+mhC8VcuagSmXtBJUPcDFltTwKIQfSKZ5QD8U/nx2A7XOXxLJp
-         dUPgiHaRWNf1Z7B7dCeV0pG5/QV44Fsm+KNHZzKNJZ9d9iWLevSHS51Lh1n0tUsSeWIs
-         Of9w==
-X-Gm-Message-State: APjAAAWF44DtPLu43ev6DdfGEQfoUzFIi/fodDW0cZFdOvyEpDqh6Go9
-        Th7EWnqonW48lLVmvEJKLw==
-X-Google-Smtp-Source: APXvYqzGbdY9oCHH7SiwtERsp5ylmchXaof2S8Eo3kpOm01m82P1WOVc0ecY+Jf3C0L3OyPvAH5Kzg==
-X-Received: by 2002:aca:1c1a:: with SMTP id c26mr10845348oic.75.1579790607604;
-        Thu, 23 Jan 2020 06:43:27 -0800 (PST)
+        bh=h4oHzrFYKqp+VGW1bsUiQD/W3J5scTqNZ8AL4zNgxc0=;
+        b=NPxpHgnUBFp4hhHy6AxM6kxQmN2WCkn/V7S/pyemq/g2mv0liQYJ/35Y3s+Th8otSL
+         uetXCxoxy+cIzOYryH0EeaJJWHLHHZlrumy7utz+EJJr9hQNsaris15jLY13GoxPswBi
+         BbtLljGzih2Kq5LxlQqV8qkGfBLInWl0NnHYO7NY0pA5/OUxZsUzX0JrAdJQCbcYp0Yp
+         CCHXJJLQSZiaA57OiPC/xnRqnsZxPpfqFlvudYxTB536GYXCG/dd1hqrVrpseum3z5xr
+         PQazvCu0V2KXHXJf07YvrUsX1GzjfTFZWbFG32zlxLToQSPytxbhUDwrtOft2vCdEoWZ
+         aSqg==
+X-Gm-Message-State: APjAAAXlcuwJECOQ2mZRwocXW0CCB0uSBZ/IG76pX4w9mFy0LI/i4Awi
+        rZy2kpT8E/R3YjNy3ROwOA==
+X-Google-Smtp-Source: APXvYqznkYyQ82Iaq8fFB0N1PdBN29CchqSiaNIZ4ovIW3gdQxYo3Z67i87qruav9akbSEbbJRCETA==
+X-Received: by 2002:a05:6830:1d91:: with SMTP id y17mr11150667oti.276.1579790652164;
+        Thu, 23 Jan 2020 06:44:12 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s6sm849207otd.72.2020.01.23.06.43.26
+        by smtp.gmail.com with ESMTPSA id p24sm851505oth.28.2020.01.23.06.44.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 06:43:26 -0800 (PST)
-Received: (nullmailer pid 12444 invoked by uid 1000);
-        Thu, 23 Jan 2020 14:43:26 -0000
-Date:   Thu, 23 Jan 2020 08:43:26 -0600
+        Thu, 23 Jan 2020 06:44:11 -0800 (PST)
+Received: (nullmailer pid 13653 invoked by uid 1000);
+        Thu, 23 Jan 2020 14:44:11 -0000
+Date:   Thu, 23 Jan 2020 08:44:11 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com,
-        erwan.leray@st.com, Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: serial: Convert STM32 UART to
- json-schema
-Message-ID: <20200123144326.GA12392@bogus>
-References: <20200122095558.22553-1-benjamin.gaignard@st.com>
- <20200122095558.22553-3-benjamin.gaignard@st.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH 1/3] dt-bindings: iommu: Add Allwinner H6 IOMMU bindings
+Message-ID: <20200123144411.GA13589@bogus>
+References: <cover.b2a9e1507135d81e726fcbb65137665a7f0ab74f.1579696927.git-series.maxime@cerno.tech>
+ <3022a8d9d60f35db072b39313ec46708a567a9c5.1579696927.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200122095558.22553-3-benjamin.gaignard@st.com>
+In-Reply-To: <3022a8d9d60f35db072b39313ec46708a567a9c5.1579696927.git-series.maxime@cerno.tech>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Jan 2020 10:55:58 +0100, Benjamin Gaignard wrote:
-> Convert STM32 UART bindings to json-schema.
+On Wed, 22 Jan 2020 13:44:07 +0100, Maxime Ripard wrote:
+> The Allwinner H6 has introduced an IOMMU. Let's add a device tree binding
+> for it.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
->  .../devicetree/bindings/serial/st,stm32-uart.yaml  | 80 ++++++++++++++++++++++
->  .../devicetree/bindings/serial/st,stm32-usart.txt  | 57 ---------------
->  2 files changed, 80 insertions(+), 57 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
->  delete mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+>  Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
