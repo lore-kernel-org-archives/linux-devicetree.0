@@ -2,182 +2,162 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBA3C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 21:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE367C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 21:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D70921835
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 21:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2B024676
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 21:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tdIhn9qa"
+	dkim=pass (1024-bit key) header.d=trafsysas.onmicrosoft.com header.i=@trafsysas.onmicrosoft.com header.b="KygwPBGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgAWVJe (ORCPT
+        id S1729154AbgAWVTQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 16:09:34 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34572 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbgAWVJd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 16:09:33 -0500
-Received: by mail-ed1-f67.google.com with SMTP id r18so2718781edl.1;
-        Thu, 23 Jan 2020 13:09:32 -0800 (PST)
+        Thu, 23 Jan 2020 16:19:16 -0500
+Received: from mail-eopbgr20102.outbound.protection.outlook.com ([40.107.2.102]:12418
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728992AbgAWVTQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 16:19:16 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d2z6Zk/wyTVFe6/DezFqNKrgIR8Kbcw721JYAzMhe2LMFiLZqX0IuYi7XeVD/m3vjtABZjRmI3hhfqjcckzAurOTBpp++8dAxSfx/PdS8WjQE9UVGvSQq+4P0khEnu7b8elP1eLEk+DkuRPgCU6XwdhNBKpJsxMEgFVr4LTsibhGUCT3srGhb0cAiBsbQuJW963u5uRjgkzs79KdVedoK5uMgc6xMthKAQ/ErQxAxf2+9pRNeAvZUD4JG0OgZEJO+qlO62s4Unl5zsIuFqUP1LTOKuocERdV+UTDbQqGHxJYFQPuBA6h5UAo1Xlh4dEgLrqCs43r+BfaSuVLSwcyKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q47/32MEvb3Zl/hKIzeSkSXOypWGf/w+kXdLDAgrsT4=;
+ b=Oe3sYIH80K92E9i+0XBV6F9xadrykyLHd0m4Emqv9Urbj3aOOmwpFxDV0/eBoQT6lxLLKIGs2k3T5pRwVZkB7MvMtiIf18ubi/aAqGeXJckSD70GGBndl4CB5J+Msop4qfhbEnU//0zm0otJFrbx44NIuRPKTbqMTpWUsP+jg+YoBKthwTNC8W0u6788Z0/XwDHspt8Zq/WP++sV4fqg3UYIMKw6yKRLhjyUfzC7R8f3pXJS84xy52LLTwK6KWRaXvB3PvspWXjGtKnbUie3rR7v0XmH3MQ2Ifus+Kdhj9kFAn86vDNfxhVqTk/z5GUdKa4+Uq74k4prw7kkxyPDag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=norphonic.com; dmarc=pass action=none
+ header.from=norphonic.com; dkim=pass header.d=norphonic.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hEBAG4fDTiHb1CUuqH1+YkiWEoF+8TQHC0fCvFmUfu4=;
-        b=tdIhn9qaGhTlHuk3+ArU3kcIjWXALBTRlgZnVlF/uu4/Pjy2KZYdc8oZDSupCviyr6
-         5SU9zwGSEBFI0B62Zxndgc9H6q3uQwu+m9Gyw3g4ZeX85fNlaOx5lForMaJJLXlCJl0p
-         +Geq75e8cag+JOXLGf5lKlnM6Q870IpRvs2lQB5Xw/g/hK9KleIqbKX9hNgqwQkkOepk
-         LBaRTPcY+lIQ36dryZvizsA4Gq/jjnzLugh+ZsElC0NrisHGwMsq6AhY5nuhzPFpuy+i
-         HPiPIEvQtBuOFuikdRydPFa0EEuiCuzY5pc6vgFIMso6LQQzZzfPKzQr8jJOgop3qfa3
-         ee5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=hEBAG4fDTiHb1CUuqH1+YkiWEoF+8TQHC0fCvFmUfu4=;
-        b=sDTzhIIsZB02iWmWDpLHRucUAZ7uBkp+kbWK7rrLwNPtKVsSG/3XJEvmiJOKXw3ztx
-         jFDa0dsZi7lHEJu6Lf3RmQPD+i02kG8VvAxxbeCMipWt3bwFvos+eBxsrGQPkJpeNSl+
-         mCHBaNf5XxoEtx6af9QpRXLqeShm88Ftabr3pqNw/oFsgNAtMufWIpCZHfnmzbFNuvdV
-         MEE0hV25Q2inbdqjNju7x+I/2XgDgiy7ULshPih7ZFEIyyfHWBjVZvbXMAoSBlXx9yLk
-         cDeRNfxA1ciQnus71EJB0lo/f/QrFqkIFr49IItgVf1YX55oMw5Jnz5c9fkGCzNjSYs5
-         jJgQ==
-X-Gm-Message-State: APjAAAV7d183T38RrETsyxtbWxO6Uqq1Fw0TGYoMIv4gsDOt+dyvgxY4
-        Pq0tXjFqmSV/7vmpr30wPO7Qq9QR
-X-Google-Smtp-Source: APXvYqxetYngxa5SNTC99OZGe8MMb9THxAMqY8VKJcASmUZJ5t7CtduX0SsiSZuIvy1sf23MdCkZoQ==
-X-Received: by 2002:aa7:db55:: with SMTP id n21mr8566350edt.31.1579813771222;
-        Thu, 23 Jan 2020 13:09:31 -0800 (PST)
-Received: from [10.67.50.115] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id dc5sm52750edb.61.2020.01.23.13.09.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 13:09:30 -0800 (PST)
-Subject: Re: [PATCH net 0/3] net: fsl/fman: address erratum A011043
-To:     madalin.bucur@oss.nxp.com, davem@davemloft.net,
-        netdev@vger.kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-References: <1579699229-5948-1-git-send-email-madalin.bucur@oss.nxp.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <34f22df7-409a-43d1-3c59-52e6a32fbf17@gmail.com>
-Date:   Thu, 23 Jan 2020 13:09:22 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <1579699229-5948-1-git-send-email-madalin.bucur@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
+ d=trafsysas.onmicrosoft.com; s=selector2-trafsysas-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q47/32MEvb3Zl/hKIzeSkSXOypWGf/w+kXdLDAgrsT4=;
+ b=KygwPBGvXp4xmT/Qn9Eg1z0Sk5qbfQfI26RQ2HxGdSLdiPZPDbioSP/nWnK7UHqswHK8bh666QJVFW+6H+TPUaAqblCjcbc+IIkTM9RknV06uY1kGaS4xahcj2IpVBeRUCuVcnbDDzVdUJSyqfDRcb4pN0pyrwcc2RWBU2J8Hgc=
+Received: from DB6PR06MB3048.eurprd06.prod.outlook.com (10.170.210.140) by
+ DB6PR06MB3128.eurprd06.prod.outlook.com (10.170.215.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.20; Thu, 23 Jan 2020 21:19:12 +0000
+Received: from DB6PR06MB3048.eurprd06.prod.outlook.com
+ ([fe80::8d7e:fadb:f6c5:a504]) by DB6PR06MB3048.eurprd06.prod.outlook.com
+ ([fe80::8d7e:fadb:f6c5:a504%7]) with mapi id 15.20.2644.028; Thu, 23 Jan 2020
+ 21:19:12 +0000
+From:   Eugene Zalkonnikov <ez@norphonic.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "development@norphonic.com" <development@norphonic.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: [PATCH v4 2/2] Device tree bindings for TI HDC20x0 humidity and
+ temperature sensors
+Thread-Topic: [PATCH v4 2/2] Device tree bindings for TI HDC20x0 humidity and
+ temperature sensors
+Thread-Index: AQHV0jLCjmO64vUcc0qMeUKOVOnC1Q==
+Date:   Thu, 23 Jan 2020 21:19:12 +0000
+Message-ID: <23805E09-AF91-4984-BF5D-29D989C2E48A@norphonic.com>
+References: <101D4944-A6B0-4CF7-AF6E-A6196619E3CF@norphonic.com>
+In-Reply-To: <101D4944-A6B0-4CF7-AF6E-A6196619E3CF@norphonic.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ez@norphonic.com; 
+x-originating-ip: [62.97.226.122]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f1c39a59-abe8-4e4f-7ac5-08d7a049e498
+x-ms-traffictypediagnostic: DB6PR06MB3128:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR06MB3128803C1695258033659C28CA0F0@DB6PR06MB3128.eurprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(39830400003)(346002)(396003)(136003)(199004)(189003)(4326008)(8936002)(6506007)(81156014)(81166006)(966005)(54906003)(110136005)(66476007)(66446008)(66946007)(66556008)(91956017)(64756008)(86362001)(76116006)(6512007)(5660300002)(6486002)(2616005)(33656002)(8676002)(316002)(186003)(71200400001)(2906002)(26005)(36756003)(508600001);DIR:OUT;SFP:1102;SCL:1;SRVR:DB6PR06MB3128;H:DB6PR06MB3048.eurprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: norphonic.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eHusSy1G5eYuNnRHdflxiC1/G11yQJB3IXpSHBn36ypuX1OAl83hJrzjHHIOVviM/4auVbOLddWynIyhfBcEwu5llhM9evDzmGt8fxiEpPYc0zNrxGNCzyoCmGNSJrXr1i6Mvxgb+dRYUMcBrWe4jpAjnr9L+WuGRTAPRmWvnAc8VenIf1kW5m0l8rrRnNSpnJHXeylb6y/7CRdybiiOTx2gvPlmjsI5Y/5SV6ieiHC72J5YZEbwaBWyJsp8cGl96DphMCwqqY9Pz5KQp1nPUSbg8n0CDH7m+1OM+JQ38wL2fEs9M60FEGxKokwoazYkqAmf+PUqivY8m5/PWJ7npKXjbogmzS7t10maPIZDHdplIpVhsrrkgwUImTo7yqHc8+xLh8MPgXXVN34+IiB7TPz/rRE3lm11kNVvvEefQPWpJ4kSYassXdHyuEpaTPpHMTmKyO85HvrMFvZ0SiDB7GOoD1cDAXtD+3lyOSBDDwI=
+x-ms-exchange-antispam-messagedata: tiG/6mlVhyEbcQvoqf9IZrzPrsvDmmzQijfUNAx/Aye0vIaa+c3BeCRBdg7v/gGEP5tqiDw5mmNv+AP0tmYvvrovxYVOjO7iSmiYZk3TYlLov3pjJ+3Y/Kdr7kaEnh7LKEb64XuUvaERsdQl1y/20g==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7AF3C8F63646AA4795D13A75590204F6@eurprd06.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: norphonic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1c39a59-abe8-4e4f-7ac5-08d7a049e498
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 21:19:12.3380
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: cbf3f496-45ad-415e-97cb-4e62d6cd974f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cVT/8UUi7C3CXMMAAX6q4mqWmxJmt71u1qCySBMyMIndmn+4/8JcEp6mjkxg5O9l7N5ipr6ZUDVw6Z1nAiN1Gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR06MB3128
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/22/20 5:20 AM, Madalin Bucur wrote:
-> This addresses a HW erratum on some QorIQ DPAA devices.
-> 
-> MDIO reads to internal PCS registers may result in having
-> the MDIO_CFG[MDIO_RD_ER] bit set, even when there is no
-> error and read data (MDIO_DATA[MDIO_DATA]) is correct.
-> Software may get false read error when reading internal
-> PCS registers through MDIO. As a workaround, all internal
-> MDIO accesses should ignore the MDIO_CFG[MDIO_RD_ER] bit.
-> When the issue was present, one could see such errors
-> during boot:
-> 
->   mdio_bus ffe4e5000: Error while reading PHY0 reg at 3.3
+Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
 
-Did you consider using the standard broken-turn-around property/support
-and set your mii_bus::phy_ignore_ta_mask to all relevant bits?
+diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/hdc20=
+10.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/hdc=
+2010.yaml
+--- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/hdc2010.yaml=
+	1970-01-01 01:00:00.000000000 +0100
++++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/hdc2010=
+.yaml	2020-01-23 17:13:51.573766898 +0100
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: HDC2010/HDC2080 humidity and temperature iio sensors
++
++maintainers:
++  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
++
++description: |
++  Relative humidity and tempereature sensors on I2C bus
++
++  Datasheets are available at:
++    http://www.ti.com/product/HDC2010/datasheet
++    http://www.ti.com/product/HDC2080/datasheet
++
++properties:
++  compatible:
++    enum:
++      - ti,hdc2010
++      - ti,hdc2080
++
++  vddd-supply:
++    description:
++      digital voltage regulator (see regulator/regulator.txt)
++    maxItems: 1
++
++  interrupts:
++    description:
++      interrupt mapping for IRQ
++    maxItems: 1
++
++required:
++  - compatible
++
++examples:
++  - |
++    i2c0 {
++      #address-cells =3D <1>;
++      #size-cells =3D <0>;
++
++      hdc200x@40 {
++          compatible =3D "ti,hdc2010";
++          reg =3D <0x40>;
++      };
++    };
 
-
-> 
-> Madalin Bucur (3):
->   dt-bindings: net: add fsl,erratum-a011043
->   powerpc/fsl/dts: add fsl,erratum-a011043
->   net/fsl: treat fsl,erratum-a011043
-> 
->  Documentation/devicetree/bindings/net/fsl-fman.txt          | 13 +++++++++++++
->  .../boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi       |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi          |  1 +
->  .../boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi       |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi          |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi          |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi          |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi           |  1 +
->  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi           |  1 +
->  drivers/net/ethernet/freescale/xgmac_mdio.c                 |  7 ++++++-
->  20 files changed, 37 insertions(+), 1 deletion(-)
-> 
-
-
--- 
-Florian
