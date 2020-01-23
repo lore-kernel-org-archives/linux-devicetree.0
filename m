@@ -2,96 +2,131 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68392C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 12:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D45C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 12:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38AB824655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 12:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A2324673
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 12:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iPWd6aqZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g268vZIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgAWMaI (ORCPT
+        id S1726204AbgAWMgX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 07:30:08 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52944 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWMaI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 07:30:08 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so2373028wmc.2
-        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 04:30:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fGSddkn2oPOfmTp45og+40fbCbT5YOVg/hcLGMG+SRk=;
-        b=iPWd6aqZDSVrowqY+yXr1t9T8eaRJ1u9DG41qvU1O/8NZKaepvdruPPR1G72He/3ab
-         DgGnv0WNIMRDUFPC+37qhVZjcINw1xTizwvb6gP5948KHncNbjO03x2lN7Kyr27i9Pux
-         I63pzRi/28bAVU0gr1Aa1lXXrvT+KZH5r3zB7YYjqctolvbmW3nCsYXepFsDnwxloaMU
-         uzWlqF2sjgPrSFenojEg1eDKzz81bJYbYP6WWoDs0QtB+1ImRZOeUmVT1snmvSDlLq0Q
-         kyKoS6w4efa6VYEQKGe5MOuYkO8HEOe8VJL28Lj7v9eWiUjXMNkwqZ8oFEl54l/aGAPg
-         5n/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fGSddkn2oPOfmTp45og+40fbCbT5YOVg/hcLGMG+SRk=;
-        b=p2u4+Tcu9K6CNxnhKbIUMZEW80wvLTKfVRxKh1fayJeF+iBiiRA1AVX2KkAgfh0tHN
-         GFpIV/XSL1/YP1zT2omp5i1j+6C/Ir6hIGyVO8yuhOAcDtpWHImSAeYJM8wtFvs5SXy3
-         fHAujkmSRRD3fUDsFqg9KFTNePbd9CUebYMwsEeIO4WDISazknNqukEw4mJ0gvsFFiWV
-         xPaWB/EaNcwkqokWvcf+3NuT1/1iiSgeFJqdwIwjqVeSWF6uq3o5MN4KV5nNjprIIS5x
-         edvo+7hDoljVTp8Cb2cW62azumJDyczLHjwmsgsCUX6hRD5ApACwyCBGNvqvpOeguN7F
-         khig==
-X-Gm-Message-State: APjAAAVrI19I8+DoltZ/kWUwRwLbbyWNOjfLpL9WTrDIh+RbzFshlZat
-        nElOnW1OEmxoV9FOWzti3VuLXB4G6eUcCpreQ0V+8w==
-X-Google-Smtp-Source: APXvYqwRdDw6IKpVxqtsb6wHOmHsoYFzKFkd0ur/MlxkxDjV/8oc+nyjFNKke74ZHCyQ/IDGPGm8XXZQ+xfwl2i5HHk=
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr2273208wmj.1.1579782606500;
- Thu, 23 Jan 2020 04:30:06 -0800 (PST)
+        Thu, 23 Jan 2020 07:36:23 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55956 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgAWMgX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 07:36:23 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00NCaGxm109845;
+        Thu, 23 Jan 2020 06:36:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579782976;
+        bh=IkR/GADZB2jJ/si7sIhU8tzPE9tlQ6+SnBIdU/caiXQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=g268vZIOeiS+P7SMSmdYyI/s0tMl8DMdhp8Ax99oM/P1TRIKGF+lIv8buw21OUcsh
+         Lhj786PA3Wt6WvGQfXUElMTeK4gKFVsuMb0S02OIOp6aoAxAgbLEzlRRSSo4pqSxVV
+         xvbsLi+jbUt5f0CbvF53L9IUslP4vmF13nOK5rcA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00NCaFLd039644
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Jan 2020 06:36:16 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
+ Jan 2020 06:36:15 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 23 Jan 2020 06:36:15 -0600
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00NCaCxp130706;
+        Thu, 23 Jan 2020 06:36:13 -0600
+Subject: Re: [PATCH v3 0/9] arm64: dts: ti: UDMAP and McASP support
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <t-kristo@ti.com>,
+        <nm@ti.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200123114528.26552-1-peter.ujfalusi@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <7a34dbfa-426d-061e-cbf6-3da1d8bada65@ti.com>
+Date:   Thu, 23 Jan 2020 18:05:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20200114141647.109347-1-ardb@kernel.org> <20200114141647.109347-3-ardb@kernel.org>
- <ada03416b1b362fa255feb45257414655d8ab023.camel@linux.intel.com>
-In-Reply-To: <ada03416b1b362fa255feb45257414655d8ab023.camel@linux.intel.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 23 Jan 2020 13:29:55 +0100
-Message-ID: <CAKv+Gu-9KvzLEcNQnRfsOkU=5oc1otY_NS15fR5Oi4Z4UVvurw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] tpm: tis: add support for MMIO TPM on SynQuacer
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200123114528.26552-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Jan 2020 at 13:27, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Tue, 2020-01-14 at 15:16 +0100, Ard Biesheuvel wrote:
-> > When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
-> > window that is backed by the SPI command sequencer in the SPI bus
-> > controller. This arrangement has the limitation that only byte size
-> > accesses are supported, and so we'll need to provide a separate set
-> > of read and write accessors that take this into account.
->
-> What is SynQuacer platform?
->
 
-It is an arm64 SoC manufactured by Socionext.
 
-> I'm also missing a resolution why tpm_tis.c is extended to handle both
-> and not add tpm_tis_something.c instead. It does not follow the pattern
-> we have in place (e.g. look up tpm_tis_spi.c).
->
+On 23/01/20 5:15 PM, Peter Ujfalusi wrote:
+> Hi,
+> 
+> Changes since v2:
+> - Correct unit addresses for the McASP nodes
+> - Remove unit address and label for MAIN and MCU NAVSS
+> 
+> Changes since v1:
+> - rebased on ti-k3-next
+> - Corrected j721e mcu_udma node: s/udmap/dma-controller
+> - Moved the two McASP node patch at the end of the series
+> 
+> The ringacc and UDMA documentation and drivers are in next-20200122.
+> 
+> While adding the DMA support I have noticed few issues which is also fixed by
+> this series.
 
-We could easily do that instead, if preferred. It's just that it would
-duplicate a bit of code.
+
+Entire series looks good to me.
+
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+Thanks and regards,
+Lokesh
+
+> 
+> Tero: I have included the McASP nodes as well to have examples for other
+> peripherals on how he binding should be used.
+> The patches for the McASP driver is not in next, but they are only internal
+> driver changes (and Kconfig), not adding new DT dependencies.
+> Since the McASP is disabled in SoC dtsi due to board level configuration needs
+> it is not going to erroneously probe drivers.
+> 
+> It is up to you if you pick them or not, but I believe they serve a safe and
+> nice example how the dma binding should be used for UDMA.
+> 
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (9):
+>   arm64: dts: ti: k3-am65-main: Correct main NAVSS representation
+>   arm64: dts: ti: k3-am65-main: Move secure proxy under cbass_main_navss
+>   arm64: dts: ti: k3-am65: DMA support
+>   arm64: dts: ti: k3-j721e: Correct the address for MAIN NAVSS
+>   arm64: dts: ti: k3-j721e-main: Correct main NAVSS representation
+>   arm64: dts: ti: k3-j721e-main: Move secure proxy and smmu under
+>     main_navss
+>   arm64: dts: ti: k3-j721e: DMA support
+>   arm64: dts: ti: k3-am654-main: Add McASP nodes
+>   arm64: dts: ti: k3-j721e-main: Add McASP nodes
+> 
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 122 ++++++-
+>  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  46 +++
+>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 313 ++++++++++++++++--
+>  .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  45 +++
+>  arch/arm64/boot/dts/ti/k3-j721e.dtsi          |   2 +-
+>  5 files changed, 491 insertions(+), 37 deletions(-)
+> 
