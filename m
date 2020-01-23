@@ -2,181 +2,93 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A55FC32771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 00:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057F6C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 01:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0567021569
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 00:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7372467B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 01:24:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tbz+Fbae"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="rZi5EOPr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgAWAqY (ORCPT
+        id S1725943AbgAWBYI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 19:46:24 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:44832 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAWAqY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 19:46:24 -0500
-Received: by mail-vs1-f66.google.com with SMTP id p6so658443vsj.11
-        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 16:46:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ydoFuPBpljdhU9GYVBrNTG5g2giEqOv99/BVh0AaZXo=;
-        b=Tbz+FbaetQ32xHZ6PWyG6G0OmqFJ8BHY0F/6O31f6IvQ8yPJwOHzZiJOL25y9Osj9j
-         XRvXFU2wBes9O64ewdXon5rfpfGxnHfNNfk50vWx3S2FU9enPTgCEftB8qaFnJJiI0Bm
-         I2PJQpxqzSKVQW5KECSFNYXs4Sf6mmMOe7V1M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ydoFuPBpljdhU9GYVBrNTG5g2giEqOv99/BVh0AaZXo=;
-        b=H8pmm5Qo3ksCgWcCX6gUqfA/bvTjqhZW7hqDwOlpo3cHScWLzB/uO18psCxbkIY5z+
-         dquXi0QK7W1Qp79Dy6UCChWO/yQHYfMKg8clCwXz3Ir8xwcpxINedbOSFbFjOlo31kMe
-         Fitrj97a3VihN2XVPiFlpvtx6oCktMuQqo1qEeGv1xanIpBCXrg7pGWc1hBEydOOZITp
-         nExAT0EVaCSRfRUWfKAdw5tZzBvkobD4ul0vRg3rxR9pyXa/qjcn7L7hbFXmAFOdGoMk
-         Fn8t1fWUKBhAZUkpkjWCQNE69ChBeYLPsmi5Ue819EMfa3FhtRnr4bu3uKpVi5ACQbWG
-         fkyA==
-X-Gm-Message-State: APjAAAVEWlQbkEoiZOtToYjURDfQ+0Z/HEgXuRF9YR8uQCrNobGlauBC
-        cHf9JhzhHoje4k6cVcnWJRv3BywUp/k=
-X-Google-Smtp-Source: APXvYqza6bDbI87eWwnco8E0TpZ6X/g4PqqQ6oAvasjVpBdz39w/cb7lezIeMQIK5ZtWzMIWno/UOA==
-X-Received: by 2002:a05:6102:675:: with SMTP id z21mr4487485vsf.46.1579740382525;
-        Wed, 22 Jan 2020 16:46:22 -0800 (PST)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id y7sm177850vkd.38.2020.01.22.16.46.21
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 16:46:21 -0800 (PST)
-Received: by mail-vs1-f43.google.com with SMTP id y125so683958vsb.6
-        for <devicetree@vger.kernel.org>; Wed, 22 Jan 2020 16:46:21 -0800 (PST)
-X-Received: by 2002:a67:ec4a:: with SMTP id z10mr4383812vso.73.1579740381186;
- Wed, 22 Jan 2020 16:46:21 -0800 (PST)
+        Wed, 22 Jan 2020 20:24:08 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:36138 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgAWBYH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 20:24:07 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 56BF083640;
+        Thu, 23 Jan 2020 14:24:03 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1579742643;
+        bh=EQZqOLnUuKakn1KmMPjNCgsEbo3zAAhg/fJw/2TVSeo=;
+        h=From:To:Cc:Subject:Date;
+        b=rZi5EOPrmaNR52Z9ZM1ZiubQGFlryAtcQGa0A5hkTMfBMgxAmVWCQWU/qHobbeaCF
+         67A7tHq3OtO6izuGOm+t9UcBsWOJneYpMQE7wyyqDer2tAXqO6eOLsNKH1Z0RVmtYF
+         5zKofospWdfZznOc1qqKhKUvcdghZvYSxRMA8E3ZBCM4c3t+I3+Vc3xHWSvmbycPYo
+         d3h96NtBTWYO4e9uiUL5eKo3o8FlOPrDWxAMVeCGm4C5PSABPLMmz7sE1Zph+Me14a
+         Mx+AsUnZP+2i9s+HO9y+YOsUQs60jVbIR91daUF0anBjhAWzjpPL2eJlI/JsXh0idw
+         jm26O1VwmtOtg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e28f58c0000>; Thu, 23 Jan 2020 14:23:28 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 1BA4813EEB9;
+        Thu, 23 Jan 2020 14:23:23 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 78F16280071; Thu, 23 Jan 2020 14:23:24 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/2] SPI bus multiplexing
+Date:   Thu, 23 Jan 2020 14:23:15 +1300
+Message-Id: <20200123012317.14808-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <1577435867-32254-1-git-send-email-tdas@codeaurora.org>
-In-Reply-To: <1577435867-32254-1-git-send-email-tdas@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 22 Jan 2020 16:46:08 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=X4gW3cpFPTL7KmocP1z7fK1fSRjg7BYjA7D_Uu7p5gnQ@mail.gmail.com>
-Message-ID: <CAD=FV=X4gW3cpFPTL7KmocP1z7fK1fSRjg7BYjA7D_Uu7p5gnQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: sc7180: Add clock controller nodes
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        inux-arm-msm@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+This is a revisit of two earlier efforts to add more complex mutliplexing=
+ to
+SPI busses.
 
-On Fri, Dec 27, 2019 at 12:38 AM Taniya Das <tdas@codeaurora.org> wrote:
->
-> Add the display, video & graphics clock controller nodes supported on
-> SC7180.
->
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
+https://patchwork.kernel.org/patch/2706151/
+https://patchwork.kernel.org/patch/10897255/
 
-Can you add these to your patch?
+This version makes use of the general purpose mux controller which simpli=
+fies
+things greatly.
 
-#include <dt-bindings/clock/qcom,dispcc-sc7180.h>
-#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+One outstanding problem is the need for the spi-max-frequency on the mux
+device. This is not used for anything and is just needed to satisfy the s=
+pi
+driver infrastructure which expects all spi devices to have this property=
+.
 
-...otherwise the first user of each of the clocks will need to add the
-#include and depending on what order patches landed things can get
-weird.  I think it's cleaner to assume that there will soon be a user
-and proactively add the #includes.
+Chris Packham (2):
+  dt-bindings: spi: Document binding for generic SPI multiplexer
+  spi: Add generic SPI multiplexer
 
-NOTE: at least one user of your patch can be found at
-<https://lore.kernel.org/r/1579621928-18619-1-git-send-email-harigovi@codeaurora.org>.
-They don't add the #includes which means they don't compile atop your
-patch.
+ .../devicetree/bindings/spi/spi-mux.yaml      |  84 ++++++++
+ drivers/spi/Kconfig                           |  12 ++
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-mux.c                         | 189 ++++++++++++++++++
+ 4 files changed, 286 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
+ create mode 100644 drivers/spi/spi-mux.c
 
+--=20
+2.25.0
 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 3676bfd..3bb7b65 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -931,6 +931,18 @@
->                         };
->                 };
->
-> +               gpucc: clock-controller@5090000 {
-> +                       compatible = "qcom,sc7180-gpucc";
-> +                       reg = <0 0x05090000 0 0x9000>;
-> +                       clocks = <&rpmhcc RPMH_CXO_CLK>,
-> +                                <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-> +                                <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-> +                       clock-names = "bi_tcxo", "gpll0_main", "gpll0_div";
-> +                       #clock-cells = <1>;
-> +                       #reset-cells = <1>;
-> +                       #power-domain-cells = <1>;
-> +               };
-> +
->                 qspi: spi@88dc000 {
->                         compatible = "qcom,qspi-v1";
->                         reg = <0 0x088dc000 0 0x600>;
-> @@ -1043,6 +1055,27 @@
->                         };
->                 };
->
-> +               videocc: clock-controller@ab00000 {
-> +                       compatible = "qcom,sc7180-videocc";
-> +                       reg = <0 0x0ab00000 0 0x10000>;
-> +                       clocks = <&rpmhcc RPMH_CXO_CLK>;
-> +                       clock-names = "bi_tcxo";
-> +                       #clock-cells = <1>;
-> +                       #reset-cells = <1>;
-> +                       #power-domain-cells = <1>;
-> +               };
-> +
-> +               dispcc: clock-controller@af00000 {
-> +                       compatible = "qcom,sc7180-dispcc";
-> +                       reg = <0 0x0af00000 0 0x200000>;
-> +                       clocks = <&rpmhcc RPMH_CXO_CLK>,
-> +                                <&gcc GCC_DISP_GPLL0_CLK_SRC>;
-> +                       clock-names = "bi_tcxo", "gpll0";
-
-The above doesn't match your code unless I'm missing a patch
-somewhere.  Specifically I find that if I use your dts patch together
-with the upstream code I get a nice crash at bootup.  I tracked it
-down to the fact that the code uses the name "gcc_disp_gpll0_clk_src"
-but your dts uses the name "gpll0".  Specifically this bit of code:
-
-static const struct clk_parent_data disp_cc_parent_data_3[] = {
-        { .fw_name = "bi_tcxo" },
-        { .hw = &disp_cc_pll0.clkr.hw },
-        { .fw_name = "gcc_disp_gpll0_clk_src" },
-        { .hw = &disp_cc_pll0_out_even.clkr.hw },
-        { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-};
-
-static const struct clk_parent_data disp_cc_parent_data_4[] = {
-        { .fw_name = "bi_tcxo" },
-        { .fw_name = "gcc_disp_gpll0_clk_src" },
-        { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-};
-
-If I either change the code to use "gpll0" or change your dts to use
-"gcc_disp_gpll0_clk_src" I can avoid the crash.
-
-I believe there is a similar problem with the gpucc with
-"gcc_gpu_gpll0_div_clk_src" / "gpll0_div".
-
-
--Doug
