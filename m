@@ -2,183 +2,89 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF02C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937D2C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF2F24676
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5873B217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579787520;
-	bh=vLvMBfKBDUNVaF/aoU4PfN2HEsbDc54gpbCoCV6eEbk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=q3qLqanddOrhFMmBBgHCFbq7M5byjzvN9z9JIU+4oFbU8RsDm3lF+r7XbsPjjEkyD
-	 gOKJn78TcduFuahxfqSHZAYDDHQGu0J04LWj43RqsyeyWy1euD/7saIHb0EbexbQUK
-	 sbyHPs46MGgdmpQH3MGtrdq/mdFsOt823CBJW0E0=
+	s=default; t=1579787646;
+	bh=x9M6eavIAvvEGrUwxYKyP2DGivVJnbwadKIHya2ucWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YoRpsnQupRNsxNR2abDkAxIrBKBZsyTAdnvRkWJEs6uabsybQPnAddD9F7vXSbRQa
+	 GzrSi8YonVqpCks+0qBHK58EawmG7j191zIqaIrgq5CZo/I8w2/ByBXcrTDHULafBC
+	 IKaNbdVHxrbRUrg3WYOBsqrHLdQvcM2dN0+hbuOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgAWNvz (ORCPT
+        id S1729267AbgAWNyF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:51:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgAWNvw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:51:52 -0500
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B7902467E;
-        Thu, 23 Jan 2020 13:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579787511;
-        bh=vLvMBfKBDUNVaF/aoU4PfN2HEsbDc54gpbCoCV6eEbk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=b1iJ2GrWbJ6sOxtCE6X6YZSNhYFzNIpM/kQYgA7f2/wGJ1koX74CO1m1w/MCm5No0
-         BPLG4NXoQP5wOgn4QhptHUFzhR6166fKfS6Kxce1LEQd9yrrm3KsQU88+1pGGo0Au7
-         LREyoiAW0bRXR/meubXNdV6fucp7AraKrvthmWK0=
-Received: by mail-qk1-f171.google.com with SMTP id d10so3470716qke.1;
-        Thu, 23 Jan 2020 05:51:51 -0800 (PST)
-X-Gm-Message-State: APjAAAWtw3Red/ht3cdA8QN6luNT0Uj5cczoElWDB42a0jS4cHNLWSdV
-        bS0ZbErdlCANEm2Grher6dMU8XN/gz5pdItuHQ==
-X-Google-Smtp-Source: APXvYqwfO87Q0/W6AzS8yzHZDgljp8mtFonCDEPSQx1uYWjdYoPARCRWT3YmVbhrRhH7b66Aa6HwT9mSNtLWLu4ZXEM=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr14856515qkl.119.1579787510715;
- Thu, 23 Jan 2020 05:51:50 -0800 (PST)
+        Thu, 23 Jan 2020 08:54:05 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35079 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729256AbgAWNyF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 08:54:05 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k4so2967510oik.2;
+        Thu, 23 Jan 2020 05:54:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R/qM3etQQpBSLTEqBLeVd9eY87SXmbEFDzRP+5up0C8=;
+        b=E385wjK+G12yazTclPY7ZOl88Tk4da5PqvLPOjo3KkXIe4BSXxaC0PILlA1RFCcYez
+         481NYK0bpigIzfWbVZCEAHqDTHCIvbmygfneG5V4qAe2mLrp86AiY3yyWBHP5H5aEIHI
+         UXD0BQt1JeqvdwIa+Nbfm2iJXfTCrdrzoA2z7q+gi4ezpgV4Q94EqeCoGKDtyw77lykn
+         0SBDcm7i4D21p3TCHP679ogWWyLv9oTrsqBokaZ1FCDuwu7HZKleJavbxrGX0Dltr4yl
+         O0n0j8iwMqRpCvJD4yg4pDFqusbMRRD4NUKQ/Sg5EskD7s89Qjd+7HwuEVYzQVTbV5EK
+         VM3Q==
+X-Gm-Message-State: APjAAAVl8c4nm0a9Yz+HZ2Xr5H6cMvNUZsLPFl+gBlV0LreYBckFK5fy
+        Ukx9uiHnR6qP8PNOQT+qdNgXkR8=
+X-Google-Smtp-Source: APXvYqxbmVw4pPuJNM4zzDBdpevfcNsr9BgaGlQWY114ibeMBYPE5XKl4w2rJlu5/DKjrG/8rQ80/Q==
+X-Received: by 2002:a05:6808:1c6:: with SMTP id x6mr10556492oic.49.1579787643963;
+        Thu, 23 Jan 2020 05:54:03 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 17sm808746oty.48.2020.01.23.05.54.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 05:54:03 -0800 (PST)
+Received: (nullmailer pid 4960 invoked by uid 1000);
+        Thu, 23 Jan 2020 13:54:02 -0000
+Date:   Thu, 23 Jan 2020 07:54:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] dt: bindings: brcmnand: Add support for flash-edu
+Message-ID: <20200123135402.GA4763@bogus>
+References: <20200122204111.47554-1-kdasu.kdev@gmail.com>
 MIME-Version: 1.0
-References: <20200123012317.14808-1-chris.packham@alliedtelesis.co.nz> <20200123012317.14808-2-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200123012317.14808-2-chris.packham@alliedtelesis.co.nz>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jan 2020 07:51:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com>
-Message-ID: <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Document binding for generic SPI multiplexer
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122204111.47554-1-kdasu.kdev@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 7:24 PM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
->
-> Add binding documentation for the spi-mux driver. This allows a generic
-> multiplexer to be used to provide access to multiple SPI devices.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+On Wed, 22 Jan 2020 15:41:09 -0500, Kamal Dasu wrote:
+> Adding support for EBI DMA unit (EDU).
+> 
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 > ---
->
-> Notes:
->     Changes in v2:
->     - update license
->     - make dt_binding_check clean
+>  .../devicetree/bindings/mtd/brcm,brcmnand.txt          | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
 
-Sure about that?
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
->
->  .../devicetree/bindings/spi/spi-mux.yaml      | 84 +++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documentation/devicetree/bindings/spi/spi-mux.yaml
-> new file mode 100644
-> index 000000000000..4bdb31e2257e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/spi-mux.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic SPI Multiplexer
-> +
-> +description: |
-> +  This binding describes a SPI bus multiplexer to route the SPI chip select
-> +  signals. This can be used when you need more devices than the SPI controller
-> +  has chip selects available. An example setup is shown in ASCII art; the actual
-> +  setting of the multiplexer to a channel needs to be done by a specific SPI mux
-> +  driver.
-> +
-> +        MOSI /--------------------------------+--------+--------+--------\
-> +        MISO |/------------------------------+|-------+|-------+|-------\|
-> +         SCL ||/----------------------------+||------+||------+||------\||
-> +             |||                            |||      |||      |||      |||
-> +      +------------+                        |||      |||      |||      |||
-> +      | SoC  |||   |                      +-+++-+  +-+++-+  +-+++-+  +-+++-+
-> +      |      |||   |                      | dev |  | dev |  | dev |  | dev |
-> +      |   +--+++-+ | CS-X  +------+\      +--+--+  +--+--+  +--+--+  +--+--+
-> +      |   | SPI  +-|-------+ Mux  |\\   CS-0 |        |        |        |
-> +      |   +------+ |       +--+---+\\\-------/   CS-1 |        |        |
-> +      |            |          |    \\\----------------/   CS-2 |        |
-> +      |   +------+ |          |     \\-------------------------/   CS-3 |
-> +      |   | ?    +-|----------/      \----------------------------------/
-> +      |   +------+ |
-> +      +------------+
-> +
-> +allOf:
-> +  - $ref: "/schemas/spi/spi-controller.yaml#"
-> +
-> +maintainers:
-> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-> +
-> +properties:
-> +  compatible:
-> +    const: spi-mux
-> +
-> +  mux-controls:
-> +    maxItems: 1
-> +
-> +required:
-> +   - compatible
-> +   - reg
-> +   - spi-max-frequency
-> +   - mux-controls
-> +
-> +examples:
-> +   - |
-> +     mux: mux-controller {
-> +       compatible = "gpio-mux";
-> +       #mux-control-cells = <0>;
-> +
-> +       mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
-> +     };
-> +
-> +     spi {
-> +       spi-mux@0 {
-> +         compatible = "spi-mux";
-> +         #address-cells = <1>;
-> +         #size-cells = <0>;
-> +         reg = <0>;
-> +         spi-max-frequency = <100000000>;
-> +
-> +         mux-controls = <&mux>
-
-Missing semicolon.
-
-> +
-> +         spi-flash@0 {
-> +           compatible = "jedec,spi-nor";
-> +           #address-cells = <1>;
-> +           #size-cells = <1>;
-> +           reg = <0>;
-> +           spi-max-frequency = <40000000>;
-> +         };
-> +
-> +         spi-device@1 {
-> +           compatible = "lineartechnology,ltc2488";
-> +           reg = <1>;
-> +           spi-max-frequency = <10000000>;
-> +         };
-> +       };
-> +     };
-> --
-> 2.25.0
->
+If a tag was not added on purpose, please state why and what changed.
