@@ -2,332 +2,121 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34537C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9B3C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17F522522
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uPSyNfe/"
+	by mail.kernel.org (Postfix) with ESMTP id EBA6E22522
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 09:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgAWJwL (ORCPT
+        id S1728900AbgAWJxk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 04:52:11 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33375 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgAWJwL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 04:52:11 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b6so2373243wrq.0
-        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 01:52:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Pe5Rsg965fXFIVcO925e+LyvSUF+nmybt0TNNTcsyVw=;
-        b=uPSyNfe/0xeA/qXiTcmG3RXI3AIZygm1++lzzIem3KlnWC/UzUARLQOWFRsDsdO5Qo
-         KiLGofookzvRESLJ+sRPyplTi6sAffDpWMsPfVoyH8V/U2PtbXe2jXBknIkB9LTqQvGr
-         tuN2cW7DlH8ObMw97Nj8ZrekgFAcSV2ddx57FqggGxTV0eV+PZPJ+CtoYUJXkvajnQfd
-         vpcFE9e4v2hrKWwMZI/9MaxZt0jpbt7N9IHWED/5lNOUOXcDaIDu5PKVU2uVoh+DYths
-         kTTmaCDQy/OdYnDfUkL2Sy4XQeGfiahDo6bEsFvupMMWXoSKGC6v/x/u6NMcp6ggtUjp
-         vF6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Pe5Rsg965fXFIVcO925e+LyvSUF+nmybt0TNNTcsyVw=;
-        b=kwW74FAL0bpYiGUqc7tvN6PZhoy6HBoAaCaNHzeuWGekk+vrrVf3GZBwaOA6ACD8iC
-         FercZT36VOwMIcKiey9vtKeO4+Vcql85p/hp72/BH7PsARtnEE1xon1PehOT0EGJ531v
-         2+3w/ZKf6AdhFCaz47RcjpTJyirijgI2/xQgGCp1vLz5jP68xJVvWAvZuWA2RZMHGN4+
-         FX1TiMECxgy8hXnW/Y8VoDc8x9WWecabgoO4aXQ/eKqK+vARaYcf1bYAMZMR6t7Ao3PT
-         nWX6GPiaeJnXrMu0Je99jHT4NgsVo81H6hvutzO7yRhePiBL3XVAOUM2vyDPn8t7aKmo
-         HKkQ==
-X-Gm-Message-State: APjAAAVCbR4Kv8yIeQfFb9oNObL2Vjv+Oj0XsygMtqi/tfg3UrV/QQtH
-        BZ38lUGGsmL12K/x5phMPtrxJQ==
-X-Google-Smtp-Source: APXvYqwZwrqdt3zOKkehDNPgAuzvRs+Y++wPfZWKhZLkuBHMMzAE5La3vJ7ohaAZBPKEr8qujgpaYg==
-X-Received: by 2002:a5d:4d0e:: with SMTP id z14mr16778098wrt.208.1579773128590;
-        Thu, 23 Jan 2020 01:52:08 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l3sm2346985wrt.29.2020.01.23.01.52.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2020 01:52:08 -0800 (PST)
-References: <20200116111850.23690-1-repk@triplefau.lt> <20200116111850.23690-8-repk@triplefau.lt>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Remi Pommarel <repk@triplefau.lt>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Thu, 23 Jan 2020 04:53:40 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43798 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbgAWJxk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 04:53:40 -0500
+Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 14B79283C3D;
+        Thu, 23 Jan 2020 09:53:37 +0000 (GMT)
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 7/7] PCI: amlogic: Use AXG PCIE
-In-reply-to: <20200116111850.23690-8-repk@triplefau.lt>
-Date:   Thu, 23 Jan 2020 10:52:07 +0100
-Message-ID: <1jy2tyv6t4.fsf@starbuckisacylon.baylibre.com>
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, intel-gfx-trybot@lists.freedesktop.org,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH v8 00/12] drm: Add support for bus-format negotiation
+Date:   Thu, 23 Jan 2020 10:53:21 +0100
+Message-Id: <20200123095333.2085810-1-boris.brezillon@collabora.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello,
 
-On Thu 16 Jan 2020 at 12:18, Remi Pommarel <repk@triplefau.lt> wrote:
+This patch series aims at adding support for runtime bus-format
+negotiation between all elements of the
+'encoder -> bridges -> connector/display' section of the pipeline.
 
-> Now that PCIE PHY has been introduced for AXG, the whole has_shared_phy
-> logic can be mutualized between AXG and G12A platforms.
+In order to support that, we need drm bridges to fully take part in the
+atomic state validation process, which requires adding a
+drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
+Once those basic building blocks are in place, we can add new hooks to
+allow bus format negotiation (those are called just before
+->atomic_check()). The bus format selection is done at runtime by
+testing all possible combinations across the whole bridge chain until
+one is reported to work.
 
-This simply the driver and make it a lot easier to follow ! Thanks !
+Two new fixes in this v8, one moving functions out of a ifdef
+CONFIG_DEBUGFS section and another fixing a check in
+drm_atomic_bridge_chain_select_bus_fmts(). A more detailed changelog
+is provided in each patch.
 
->
-> This new PHY makes use of the optional shared MIPI/PCIE analog PHY
-> found on AXG platforms, which need to be used in order to have reliable
-> PCIE communications.
+This patch series is also available here [1].
 
-I'm a bit confused by the optional part ... from the probe of this
-driver, it does not seems optional ?
+Thanks,
 
->
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  drivers/pci/controller/dwc/pci-meson.c | 116 +++++--------------------
->  1 file changed, 22 insertions(+), 94 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index 3772b02a5c55..3715dceca1bf 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -66,7 +66,6 @@
->  #define PORT_CLK_RATE			100000000UL
->  #define MAX_PAYLOAD_SIZE		256
->  #define MAX_READ_REQ_SIZE		256
-> -#define MESON_PCIE_PHY_POWERUP		0x1c
->  #define PCIE_RESET_DELAY		500
->  #define PCIE_SHARED_RESET		1
->  #define PCIE_NORMAL_RESET		0
-> @@ -81,26 +80,19 @@ enum pcie_data_rate {
->  struct meson_pcie_mem_res {
->  	void __iomem *elbi_base;
->  	void __iomem *cfg_base;
-> -	void __iomem *phy_base;
->  };
->  
->  struct meson_pcie_clk_res {
->  	struct clk *clk;
-> -	struct clk *mipi_gate;
->  	struct clk *port_clk;
->  	struct clk *general_clk;
->  };
->  
->  struct meson_pcie_rc_reset {
-> -	struct reset_control *phy;
->  	struct reset_control *port;
->  	struct reset_control *apb;
->  };
->  
-> -struct meson_pcie_param {
-> -	bool has_shared_phy;
-> -};
-> -
->  struct meson_pcie {
->  	struct dw_pcie pci;
->  	struct meson_pcie_mem_res mem_res;
-> @@ -108,7 +100,6 @@ struct meson_pcie {
->  	struct meson_pcie_rc_reset mrst;
->  	struct gpio_desc *reset_gpio;
->  	struct phy *phy;
-> -	const struct meson_pcie_param *param;
->  };
->  
->  static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
-> @@ -130,13 +121,6 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
->  {
->  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
->  
-> -	if (!mp->param->has_shared_phy) {
-> -		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
-> -		if (IS_ERR(mrst->phy))
-> -			return PTR_ERR(mrst->phy);
-> -		reset_control_deassert(mrst->phy);
-> -	}
-> -
->  	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
->  	if (IS_ERR(mrst->port))
->  		return PTR_ERR(mrst->port);
-> @@ -162,22 +146,6 @@ static void __iomem *meson_pcie_get_mem(struct platform_device *pdev,
->  	return devm_ioremap_resource(dev, res);
->  }
->  
-> -static void __iomem *meson_pcie_get_mem_shared(struct platform_device *pdev,
-> -					       struct meson_pcie *mp,
-> -					       const char *id)
-> -{
-> -	struct device *dev = mp->pci.dev;
-> -	struct resource *res;
-> -
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, id);
-> -	if (!res) {
-> -		dev_err(dev, "No REG resource %s\n", id);
-> -		return ERR_PTR(-ENXIO);
-> -	}
-> -
-> -	return devm_ioremap(dev, res->start, resource_size(res));
-> -}
-> -
->  static int meson_pcie_get_mems(struct platform_device *pdev,
->  			       struct meson_pcie *mp)
->  {
-> @@ -189,14 +157,6 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
->  	if (IS_ERR(mp->mem_res.cfg_base))
->  		return PTR_ERR(mp->mem_res.cfg_base);
->  
-> -	/* Meson AXG SoC has two PCI controllers use same phy register */
-> -	if (!mp->param->has_shared_phy) {
-> -		mp->mem_res.phy_base =
-> -			meson_pcie_get_mem_shared(pdev, mp, "phy");
-> -		if (IS_ERR(mp->mem_res.phy_base))
-> -			return PTR_ERR(mp->mem_res.phy_base);
-> -	}
-> -
->  	return 0;
->  }
->  
-> @@ -204,37 +164,33 @@ static int meson_pcie_power_on(struct meson_pcie *mp)
->  {
->  	int ret = 0;
->  
-> -	if (mp->param->has_shared_phy) {
-> -		ret = phy_init(mp->phy);
-> -		if (ret)
-> -			return ret;
-> +	ret = phy_init(mp->phy);
-> +	if (ret)
-> +		return ret;
->  
-> -		ret = phy_power_on(mp->phy);
-> -		if (ret) {
-> -			phy_exit(mp->phy);
-> -			return ret;
-> -		}
-> -	} else
-> -		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
-> +	ret = phy_power_on(mp->phy);
-> +	if (ret) {
-> +		phy_exit(mp->phy);
-> +		return ret;
-> +	}
->  
->  	return 0;
->  }
->  
-> +static void meson_pcie_power_off(struct meson_pcie *mp)
-> +{
-> +	phy_power_off(mp->phy);
-> +	phy_exit(mp->phy);
-> +}
-> +
->  static int meson_pcie_reset(struct meson_pcie *mp)
->  {
->  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
->  	int ret = 0;
->  
-> -	if (mp->param->has_shared_phy) {
-> -		ret = phy_reset(mp->phy);
-> -		if (ret)
-> -			return ret;
-> -	} else {
-> -		reset_control_assert(mrst->phy);
-> -		udelay(PCIE_RESET_DELAY);
-> -		reset_control_deassert(mrst->phy);
-> -		udelay(PCIE_RESET_DELAY);
-> -	}
-> +	ret = phy_reset(mp->phy);
-> +	if (ret)
-> +		return ret;
->  
->  	reset_control_assert(mrst->port);
->  	reset_control_assert(mrst->apb);
-> @@ -286,12 +242,6 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
->  	if (IS_ERR(res->port_clk))
->  		return PTR_ERR(res->port_clk);
->  
-> -	if (!mp->param->has_shared_phy) {
-> -		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
-> -		if (IS_ERR(res->mipi_gate))
-> -			return PTR_ERR(res->mipi_gate);
-> -	}
-> -
->  	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
->  	if (IS_ERR(res->general_clk))
->  		return PTR_ERR(res->general_clk);
-> @@ -562,7 +512,6 @@ static const struct dw_pcie_ops dw_pcie_ops = {
->  
->  static int meson_pcie_probe(struct platform_device *pdev)
->  {
-> -	const struct meson_pcie_param *match_data;
->  	struct device *dev = &pdev->dev;
->  	struct dw_pcie *pci;
->  	struct meson_pcie *mp;
-> @@ -576,17 +525,10 @@ static int meson_pcie_probe(struct platform_device *pdev)
->  	pci->dev = dev;
->  	pci->ops = &dw_pcie_ops;
->  
-> -	match_data = of_device_get_match_data(dev);
-> -	if (!match_data) {
-> -		dev_err(dev, "failed to get match data\n");
-> -		return -ENODEV;
-> -	}
-> -	mp->param = match_data;
-> -
-> -	if (mp->param->has_shared_phy) {
-> -		mp->phy = devm_phy_get(dev, "pcie");
-> -		if (IS_ERR(mp->phy))
-> -			return PTR_ERR(mp->phy);
-> +	mp->phy = devm_phy_get(dev, "pcie");
-> +	if (IS_ERR(mp->phy)) {
-> +		dev_err(dev, "get phy failed, %ld\n", PTR_ERR(mp->phy));
-> +		return PTR_ERR(mp->phy);
->  	}
->  
->  	mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> @@ -636,30 +578,16 @@ static int meson_pcie_probe(struct platform_device *pdev)
->  	return 0;
->  
->  err_phy:
-> -	if (mp->param->has_shared_phy) {
-> -		phy_power_off(mp->phy);
-> -		phy_exit(mp->phy);
-> -	}
-> -
-> +	meson_pcie_power_off(mp);
->  	return ret;
->  }
->  
-> -static struct meson_pcie_param meson_pcie_axg_param = {
-> -	.has_shared_phy = false,
-> -};
-> -
-> -static struct meson_pcie_param meson_pcie_g12a_param = {
-> -	.has_shared_phy = true,
-> -};
-> -
->  static const struct of_device_id meson_pcie_of_match[] = {
->  	{
->  		.compatible = "amlogic,axg-pcie",
-> -		.data = &meson_pcie_axg_param,
->  	},
->  	{
->  		.compatible = "amlogic,g12a-pcie",
-> -		.data = &meson_pcie_g12a_param,
->  	},
->  	{},
->  };
+Boris
+
+[1]https://github.com/bbrezillon/linux-0day/commits/drm-bridge-busfmt-v8
+
+Boris Brezillon (12):
+  drm/bridge: Add a drm_bridge_state object
+  drm/bridge: Patch atomic hooks to take a drm_bridge_state
+  drm/rcar-du: Plug atomic state hooks to the default implementation
+  drm/bridge: analogix: Plug atomic state hooks to the default
+    implementation
+  drm/bridge: Add an ->atomic_check() hook
+  drm/bridge: Add the necessary bits to support bus format negotiation
+  drm/imx: pd: Use bus format/flags provided by the bridge when
+    available
+  drm/bridge: lvds-codec: Implement basic bus format negotiation
+  dt-bindings: display: bridge: lvds-codec: Add new bus-width prop
+  drm/bridge: panel: Propage bus format/flags
+  drm/panel: simple: Fix the lt089ac29000 bus_format
+  ARM: dts: imx: imx51-zii-rdu1: Fix the display pipeline definition
+
+ .../bindings/display/bridge/lvds-codec.yaml   |   8 +
+ arch/arm/boot/dts/imx51-zii-rdu1.dts          |  24 +-
+ .../drm/bridge/analogix/analogix_dp_core.c    |  44 +-
+ drivers/gpu/drm/bridge/lvds-codec.c           |  64 ++-
+ drivers/gpu/drm/bridge/panel.c                |   4 +
+ drivers/gpu/drm/drm_atomic.c                  | 116 +++++
+ drivers/gpu/drm/drm_atomic_helper.c           |  73 +++-
+ drivers/gpu/drm/drm_atomic_state_helper.c     | 131 ++++++
+ drivers/gpu/drm/drm_bridge.c                  | 407 +++++++++++++++++-
+ drivers/gpu/drm/imx/parallel-display.c        | 176 ++++++--
+ drivers/gpu/drm/panel/panel-simple.c          |   2 +-
+ drivers/gpu/drm/rcar-du/rcar_lvds.c           |  11 +-
+ include/drm/drm_atomic.h                      |  76 ++++
+ include/drm/drm_atomic_helper.h               |   8 +
+ include/drm/drm_atomic_state_helper.h         |  13 +
+ include/drm/drm_bridge.h                      | 172 +++++++-
+ 16 files changed, 1248 insertions(+), 81 deletions(-)
+
+-- 
+2.24.1
 
