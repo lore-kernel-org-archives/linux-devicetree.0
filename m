@@ -2,103 +2,62 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59393C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 18:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DF6C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 20:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7C424125
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 18:49:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r/+wEX2s"
+	by mail.kernel.org (Postfix) with ESMTP id 2D5712253D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 20:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgAWStB (ORCPT
+        id S1726232AbgAWURg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:49:01 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54274 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbgAWStB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 13:49:01 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so3653891wmj.4;
-        Thu, 23 Jan 2020 10:49:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=yh9nHowTnaSL47uvaYVVI7m+jnVxsZ/MKQRfRY8pD64=;
-        b=r/+wEX2sGMhxBivDFH6tLvn76xPqD6EJ77Z5JtUVYxe1XwkWOgRpxy4XGCt6utVBc9
-         jvPQlz6XyGa/k6uadaduIsa6SgSx+OYVoGQKNV1+Ymi+itNbdDTHaEyE2nqp3AGTMEWd
-         140ypqgfm6iHna39SyP76RoI9KcQa+6PT+i3oklISTj2o05hH0ces9bZsqGYq/f9cXfC
-         tzMY/84kf0a6OdZLYjjYH9G9DYWNH64sl3hHR+RGgpScUOz5Y+0n46qiAeN0X7OyKi0C
-         d9cM9SZg1xxRq17QweH4rQcp+RjFvOSZ65ZfUCw5SflDDq3rFsHVA3mMqTa/11eVg0bn
-         aAOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=yh9nHowTnaSL47uvaYVVI7m+jnVxsZ/MKQRfRY8pD64=;
-        b=rnFuQYzw5Xj+nGv8fAiALqf+kB7TL+C3tONt2NQmVDACO9aS8bSBEDUbrGl0m4/kQQ
-         /9PVyqshYd29GzrgcawNlsWAJwgT5Ld8hQ+ZB/XHq97xtmZAAln3dDkxTl30qCC16j1L
-         jrqYmVkLFUtBqhjaeQj5Z288FklyiU1zwCRBTbjUXlpxKGydbsNNa571N6baEHjx9fOU
-         FaANkp4q1aBsptAC8D/YTvpPQgbF2nhRyTh6OcZ1DGSwfS5yjg9RoqHBnpNHT3ju/5kW
-         NETUCFnTD3jRrbCX/D/j74A6vUrJj2WaAlBJiHaJZ+oPob0aQ4CtgnJ28bPTKt27PlaY
-         CpqA==
-X-Gm-Message-State: APjAAAW7954AetOSEWi0a7vphRYUfwdavkxB/VZ/jvGjgZee0/pWNMWL
-        z0GiDrqsOYaRnSyZOwda37V1gx6K
-X-Google-Smtp-Source: APXvYqwALRz1ZVvn8odzLEaelMFb0G2tlfq1y9vSXNCZ3Fn+vvguhzaJeCepEwgfTF78hiTLBr5nvg==
-X-Received: by 2002:a1c:9602:: with SMTP id y2mr5385058wmd.23.1579805339789;
-        Thu, 23 Jan 2020 10:48:59 -0800 (PST)
-Received: from [192.168.0.104] (p5B3F68EB.dip0.t-ipconnect.de. [91.63.104.235])
-        by smtp.gmail.com with ESMTPSA id q3sm4167784wrn.33.2020.01.23.10.48.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 10:48:59 -0800 (PST)
-Subject: Re: [PATCH v8] dt-bindings: regulator: add document bindings for
- mpq7920
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200122174005.17257-1-sravanhome@gmail.com>
- <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <01c2d052-5e98-6fa6-dc66-08de194c491f@gmail.com>
-Date:   Thu, 23 Jan 2020 19:48:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Thu, 23 Jan 2020 15:17:36 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:33726 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgAWURg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 15:17:36 -0500
+Received: from localhost (unknown [62.209.224.147])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B536E14EA97FD;
+        Thu, 23 Jan 2020 12:17:34 -0800 (PST)
+Date:   Thu, 23 Jan 2020 21:17:33 +0100 (CET)
+Message-Id: <20200123.211733.1373762254655962948.davem@davemloft.net>
+To:     madalin.bucur@oss.nxp.com
+Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH net 0/3] net: fsl/fman: address erratum A011043
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1579699229-5948-1-git-send-email-madalin.bucur@oss.nxp.com>
+References: <1579699229-5948-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 23 Jan 2020 12:17:35 -0800 (PST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Date: Wed, 22 Jan 2020 15:20:26 +0200
 
-On 22/01/20 11:16 pm, Rob Herring wrote:
-> On Wed, Jan 22, 2020 at 11:40 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->> Add device tree binding information for mpq7920 regulator driver.
->> Example bindings for mpq7920 are added.
->>
->> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
->> ---
->>
->> Notes:
->>      Changes on v8 :
->>        - fixed error reported by dt_binding_check
-> Still broken. :(
+> This addresses a HW erratum on some QorIQ DPAA devices.
+> 
+> MDIO reads to internal PCS registers may result in having
+> the MDIO_CFG[MDIO_RD_ER] bit set, even when there is no
+> error and read data (MDIO_DATA[MDIO_DATA]) is correct.
+> Software may get false read error when reading internal
+> PCS registers through MDIO. As a workaround, all internal
+> MDIO accesses should ignore the MDIO_CFG[MDIO_RD_ER] bit.
+> When the issue was present, one could see such errors
+> during boot:
+> 
+>   mdio_bus ffe4e5000: Error while reading PHY0 reg at 3.3
 
-
-Sorry I cannot reproduce any error, yaml is parsed and 
-mps,mpq7920.example.dts is generated
-   CHKDT Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-Please help me giving more detail
-
-> Rob
+Series applied.
