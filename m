@@ -2,231 +2,174 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5DCC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 18:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277D9C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 18:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3EA21569
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 18:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0147322522
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 18:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXNEFTP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgAWScr (ORCPT
+        id S1728816AbgAWSld (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 13:32:47 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:47974 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgAWScq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 13:32:46 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 5C32120031;
-        Thu, 23 Jan 2020 19:32:42 +0100 (CET)
-Date:   Thu, 23 Jan 2020 19:32:40 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        yamonkar@cadence.com, praneeth@ti.com, sjakhade@cadence.com,
-        peter.ujfalusi@ti.com, tomi.valkeinen@ti.com,
-        laurent.pinchart@ideasonboard.com, subhajit_paul@ti.com
-Subject: Re: [PATCH v8 1/5] dt-bindings: display: ti, k2g-dss: Add dt-schema
- yaml binding
-Message-ID: <20200123183240.GD17233@ravnborg.org>
-References: <cover.1579553817.git.jsarha@ti.com>
- <048190779ef056f407e812f85e955b6eecdf6cef.1579553817.git.jsarha@ti.com>
+        Thu, 23 Jan 2020 13:41:33 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45119 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727590AbgAWSld (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 13:41:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so1922906pfg.12
+        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 10:41:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j0uL3hKYvtloUNrrY22cT3PaCoUxzpbH8NZr/Q8o0KA=;
+        b=CXNEFTP2R4F8SHBCz2/5Zzdx0sFdYTih2TDfK4G9t9F6FHZEmAQKe0jRZsvWKlCcZm
+         GsCdp4VMOvYqWBylaMYFz3jK3aq5yW7KLIk9EOW1a+lhEGwwJc5UTxUJw4vSEFwE3swT
+         5fpKlAPcs1LsnegZtNxXem+dbUFnvIaJ2Yw4bNrTE5ryTxqMyHEiBhBrmnGjzJulXbM4
+         pU2tl6X779VkXBEvQvwcJO9VT38bD2quKReEXD+esMMg1qNlTCjuwBlnXoboXpi5UAJd
+         1Sp1m/j9HlOv1HBL4587gw6zAFpwao4JsPMNwWlunVSVhcrE8gzHY1z0Q8W5h1bl5RYV
+         Av7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j0uL3hKYvtloUNrrY22cT3PaCoUxzpbH8NZr/Q8o0KA=;
+        b=JTT+Os4BvHE4tHv8GxFLYSrADbgzfv/wgScqDjzoO/8dT53IOmVr2NNdE7mC8X88lC
+         A9Um++VrtgRwA+Z8M9n9vPTo2v6el4xwrJOh4q8IpXlzblctzD73OU9Nni94nkmUnqEF
+         0llxBY7DDQieB0ZNF3ydngt0vnPDdssuPDy0IoZa1aLQJca9xgK9XqCOxN73Y+XvKUrU
+         EJS/n56ESlt3drBj5GpTnpHArVkBYD7n7WFpeOBhXQ15CLTmWpkrPARl0uyJXvWZgCLV
+         GNKzjNNexIkD6uD/LkC8rDYyTuN2Xp3N4uNb4wjFmTtCXtaXYe3eGHpWr+tieNn+ppCo
+         sLUg==
+X-Gm-Message-State: APjAAAUZFZxzwuFHrWMtRtBK8kuOTiLvAtsoCMQc6ra/x5FSul6FU/cy
+        dmXjac2BM5/Z1qyx/0H90hHgeQ==
+X-Google-Smtp-Source: APXvYqx+qa1v2W0iU2GnJArGqft14UWP8j2yatf2YzptCIB13C6YZQGrwUgPc9NPu/VFtVapmAU0PA==
+X-Received: by 2002:a63:1807:: with SMTP id y7mr182102pgl.94.1579804892350;
+        Thu, 23 Jan 2020 10:41:32 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g24sm3547441pfk.92.2020.01.23.10.41.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 10:41:31 -0800 (PST)
+Date:   Thu, 23 Jan 2020 10:41:29 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v2] arm64: dts: sc7180: add display dt nodes
+Message-ID: <20200123184129.GW1511@yoga>
+References: <1579781700-7253-1-git-send-email-harigovi@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <048190779ef056f407e812f85e955b6eecdf6cef.1579553817.git.jsarha@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
-        a=sozttTNsAAAA:8 a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8 a=yvRlycOsFd3cc9s2ybcA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=aeg5Gbbo78KNqacMgKqU:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
+In-Reply-To: <1579781700-7253-1-git-send-email-harigovi@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jyri.
+On Thu 23 Jan 04:15 PST 2020, Harigovindan P wrote:
 
-dt_binding_check gives following warning:
- CHECK   Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dt.yaml
-Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dt.yaml: dss@02540000: 'ports' does not match any of the regexes: 'pinctrl-[0-9]+'
-Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dt.yaml: dss@02540000: 'port' is a required property
+> Add display, DSI hardware DT nodes for sc7180.
+> 
+> Changes in v1:
+> 	-Added display DT nodes for sc7180
+> Changes in v2:
+> 	-Renamed node names
+> 	-Corrected code alignments
+> 	-Removed extra new line
 
-The ports definition in the yaml file does not looks like
-what you have in the other yaml files.
+Please keep the changelist after the '---' for the dts patches.
 
-The rest was fine - not other warnings in my build testing.
-
-When you have the above warning fixed then I suggest you apply
-the driver to drm-misc-next.
-And then handle eventual updates in-tree.
-
-If you lack commit-access I can commit the driver, but you should apply
-for commit access theni, allowing you to maintain the driver in the future.
-
-	Sam
-
-On Mon, Jan 20, 2020 at 11:02:20PM +0200, Jyri Sarha wrote:
-> Add dt-schema yaml bindig for K2G DSS, an ultra-light version of TI
-> Keystone Display SubSystem.
 > 
-> Version history:
-> 
-> v2: no change
-> 
-> v3: - Add ports node
->     - Add includes to dts example
->     - reindent dts example
-> 
-> v4: - Add descriptions to reg and clocks properties
->     - Remove minItems when its value is the same as maxItems value
->     - Remove ports node
-> 
-> v5: - itemize reg and clocks properties' descriptions
-> 
-> v6: - Add Reviewed-by: from Rob Herring <robh@kernel.org> and
->       Benoit Parrot <bparrot@ti.com>
-> 
-> v7: no change
-> 
-> v8: no change
-> 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Benoit Parrot <bparrot@ti.com>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
->  .../bindings/display/ti/ti,k2g-dss.yaml       | 109 ++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  57 +++++++++++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 125 ++++++++++++++++++++++++++++++++
+>  2 files changed, 182 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-> new file mode 100644
-> index 000000000000..532bb4794968
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-> @@ -0,0 +1,109 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/ti/ti,k2g-dss.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..f410614 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -232,6 +232,50 @@
+>  	};
+>  };
+>  
+> +&dsi_controller {
+> +	status = "okay";
 > +
-> +title: Texas Instruments K2G Display Subsystem
+> +	vdda-supply = <&vreg_l3c_1p2>;
 > +
-> +maintainers:
-> +  - Jyri Sarha <jsarha@ti.com>
-> +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
+> +	panel@0 {
+> +		compatible = "visionox,rm69299-1080p-display";
+> +		reg = <0>;
 > +
-> +description: |
-> +  The K2G DSS is an ultra-light version of TI Keystone Display
-> +  SubSystem. It has only one output port and video plane. The
-> +  output is DPI.
+> +		vdda-supply = <&vreg_l8c_1p8>;
+> +		vdd3p3-supply = <&vreg_l18a_2p8>;
 > +
-> +properties:
-> +  compatible:
-> +    const: ti,k2g-dss
+> +		pinctrl-names = "default", "suspend";
+> +		pinctrl-0 = <&disp_pins_default>;
+> +		pinctrl-1 = <&disp_pins_default>;
 > +
-> +  reg:
-> +    items:
-> +      - description: cfg DSS top level
-> +      - description: common DISPC common
-> +      - description: VID1 video plane 1
-> +      - description: OVR1 overlay manager for vp1
-> +      - description: VP1 video port 1
+> +		reset-gpios = <&pm6150l_gpio 3 0>;
+
+Please replace the 0 here with GPIO_ACTIVE_HIGH
+
 > +
-> +  reg-names:
-> +    items:
-> +      - const: cfg
-> +      - const: common
-> +      - const: vid1
-> +      - const: ovr1
-> +      - const: vp1
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +				panel0_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+[..]
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3bc3f64..81c3aab 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1184,6 +1184,131 @@
+>  			#power-domain-cells = <1>;
+>  		};
+>  
+> +		display_subsystem: mdss@ae00000 {
+
+It was the name, not the label, that Stephen asked you to make generic.
+
+> +			compatible = "qcom,sc7180-mdss";
+> +			reg = <0 0x0ae00000 0 0x1000>;
+> +			reg-names = "mdss";
 > +
-> +  clocks:
-> +    items:
-> +      - description: fck DSS functional clock
-> +      - description: vp1 Video Port 1 pixel clock
+[..]
+> +			display_controller: mdp@ae00000 {
+
+mdp: display-controller@ae00000 {
+
+[..]
+> +			};
 > +
-> +  clock-names:
-> +    items:
-> +      - const: fck
-> +      - const: vp1
+> +			dsi_controller: qcom,mdss_dsi_ctrl0@ae94000 {
+
+In particular you shouldn't have qcom, in the node name.
+
+[..]
 > +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +    description: phandle to the associated power domain
-> +
-> +  port:
-> +    type: object
-> +    description:
-> +      Port as described in Documentation/devictree/bindings/graph.txt.
-> +      The DSS DPI output port node
-> +
-> +  max-memory-bandwidth:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Input memory (from main memory to dispc) bandwidth limit in
-> +      bytes per second
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    dss: dss@02540000 {
-> +            compatible = "ti,k2g-dss";
-> +            reg =   <0x02540000 0x400>,
-> +                    <0x02550000 0x1000>,
-> +                    <0x02557000 0x1000>,
-> +                    <0x0255a800 0x100>,
-> +                    <0x0255ac00 0x100>;
-> +            reg-names = "cfg", "common", "vid1", "ovr1", "vp1";
-> +            clocks =        <&k2g_clks 0x2 0>,
-> +                            <&k2g_clks 0x2 1>;
-> +            clock-names = "fck", "vp1";
-> +            interrupts = <GIC_SPI 247 IRQ_TYPE_EDGE_RISING>;
-> +
-> +            power-domains = <&k2g_pds 0x2>;
-> +
-> +            max-memory-bandwidth = <230000000>;
-> +            ports {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +                    port@0 {
-> +                            dpi_out: endpoint {
-> +                                    remote-endpoint = <&sii9022_in>;
-> +                            };
-> +                    };
-> +            };
-> +    };
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> +			dsi_phy: dsi-phy0@ae94400 {
+
+phy@ae94400
+
+Regards,
+Bjorn
