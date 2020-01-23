@@ -2,119 +2,108 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDA9C33CB8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 15:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879DBC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD5422464
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 15:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jOo1+tg+"
+	by mail.kernel.org (Postfix) with ESMTP id 5B3D02064C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 15:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579793406;
+	bh=/z3i8WitLNlWahmY5dE/I3JGerQilohr4h5y/bZjPTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o9GkHbYENilNRflBbRC3gqNPF7LCRikfTM1Gc8h4g6ygUVZXZsQ9ws1lEfFeeb2pr
+	 vkiMBELLv+wUrCrt/FCbHO7Md794xb6/XJ0Nb6Z2RB3J+XxWuA1aEFbspJt0CgSjbF
+	 pdl4cILWoUa5kTf5gVmemH2QlWCL5wrKqufZQ+4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbgAWPSk (ORCPT
+        id S1728911AbgAWPaF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 10:18:40 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46886 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729049AbgAWPSh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 10:18:37 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m26so3809320ljc.13
-        for <devicetree@vger.kernel.org>; Thu, 23 Jan 2020 07:18:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mCFNwhKyUI4S3r26cfgULDrw3EJWqsF8R9tqqcBvSXA=;
-        b=jOo1+tg+YOASCAdm2mEQZmYmerWuu4htxLzxplyg2I+p/zeRB/2Cc0tch7urATps8B
-         UlV+0mLYJcjxCWVIHaLOIbjgvbLZfWnALAyNX4tTygAHh2tgNdKyeiP19Udf4sVie3q+
-         jMV0CqQTgWay3Y086QrGLB+ypQ0xLmFG40mxJ30Mvyrw/HZ7SgA2CCnDxa9eXTOn05xK
-         KmyQ4jnJ25+hCr/RRYPOAfJl139AYJRpSPtNpyQGjL+a5HfOns62PvpEcaWrTXf8qmo1
-         WUZ6mheVhmkxXXjBxVhOAEe8EeHikrWHlzmMihgy4xHHjLPShVjQzTwzHnFV7PmkUKdc
-         Txew==
+        Thu, 23 Jan 2020 10:30:05 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44868 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgAWPaF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 10:30:05 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so3055890otj.11;
+        Thu, 23 Jan 2020 07:30:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mCFNwhKyUI4S3r26cfgULDrw3EJWqsF8R9tqqcBvSXA=;
-        b=jdUKJRJv8LqXMsZ3M7zhJnp7lYyMr9pmO6yAugt7ZuSFvARg1GgvJYpQ2AcsW3G8hU
-         aKtCyEOjuaYsy5B5xNxrMjIoq/RxDk3A/JjcHWbA5EKqtkxnfzLw74mvBWCyvsy+gIvW
-         gWwrxDQCWMTdTcosOqWYxWQvYPmPrzA1jprk+s/lPcHtQVo21fH73XVIQR8piWiVjB9D
-         QJZmtC4NaUMtgjqEQOjaW+FCtThmQeVs41aqmSoihaIbb6NxucP/W0eh9LEAu35v6zKH
-         zURV56WJ7XdKz4892EloH0GXwdiwPInqitg5lPiDT9AwnkETqBajHoOdg+oeCslKlrWr
-         mN6A==
-X-Gm-Message-State: APjAAAWcaHR+XGA5OY6QByg4C5dR1neCPx6aBlZ1//ghoFl68pp+uion
-        o10kBptgYLwUW9BW83QBain4Bxzx0/5huA3t4tITZw==
-X-Google-Smtp-Source: APXvYqwxOS3uccWns345t1Pc28bC+N8TaVTRa/IwkWxxj8DKKJcCwl+5B3q5OOArxG8Kn0UP3937k+GW4ED2Ip6Qexc=
-X-Received: by 2002:a2e:9143:: with SMTP id q3mr23227353ljg.199.1579792715062;
- Thu, 23 Jan 2020 07:18:35 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YHqBGj/ukTPkl69zvdBgkmcYaLWB1N0Qj6YD43sxU/8=;
+        b=QiVdXJGObleBcBNIEaA1pbFxONW2u86/MusGQU6g9mImTAT2BHsg4IIKpWCm/cYBEa
+         uwIGutMcaFCxfphsVV/vUdFuAcYPjwsAwuYgQr9wcY+orXQs2BGfE1AJuzKtoVIfX6ic
+         8Pa88apJ6B+7vX/Qxl2MbGzBYpOVzt+GyLq20Ew2aWzYLDR7mU+VPnLaaozfd+kb0Qjb
+         Gg9swqYG5Eg9LYmQ7g2vH/SSovebmkjwQjwp2n4N4JGUt2qYcHSXhpZ89By+RUOtweKO
+         +w7PbKq7ECW+YFUVNxsJh+4n16aW/rXB+Cw/M30Y7RMRIRuNv7W+WUCLI//qM7gBq4vS
+         560w==
+X-Gm-Message-State: APjAAAVHvriC6GwCTb89rN40GmuKGhlH1BUs8xjWRjrdmXiQpx3P5pN5
+        i9DEvxWjdABzl2TNzSqVyQ==
+X-Google-Smtp-Source: APXvYqxkWG8AeF8EXXnGTWZ4IdGe6xCc6yw9d5YQpXCkxvBsnWb6O8ACMvnxGdINcohg5IvNyDKtDQ==
+X-Received: by 2002:a05:6830:4ca:: with SMTP id s10mr11737763otd.268.1579793404638;
+        Thu, 23 Jan 2020 07:30:04 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p24sm891368oth.28.2020.01.23.07.30.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 07:30:04 -0800 (PST)
+Received: (nullmailer pid 12956 invoked by uid 1000);
+        Thu, 23 Jan 2020 15:30:02 -0000
+Date:   Thu, 23 Jan 2020 09:30:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     jic23@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de,
+        fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: stm32: convert dfsdm to json-schema
+Message-ID: <20200123153002.GA14241@bogus>
+References: <20200123083432.21997-1-olivier.moysan@st.com>
 MIME-Version: 1.0
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <20200117102127.GD15507@dell>
-In-Reply-To: <20200117102127.GD15507@dell>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jan 2020 16:18:23 +0100
-Message-ID: <CACRpkdbj-yjuqc+=nCKRiAANjGFFHxk_ZprO8zztpRKhmXQtDw@mail.gmail.com>
-Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM BD71828
- PMIC GPIOs
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123083432.21997-1-olivier.moysan@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 11:21 AM Lee Jones <lee.jones@linaro.org> wrote:
-> On Fri, 17 Jan 2020, Matti Vaittinen wrote:
->
-> > ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
-> > to be used for general purposes. First 3 can be used as outputs
-> > and 4.th pin can be used as input. Allow them to be controlled
-> > via GPIO framework.
-> >
-> > The driver assumes all of the pins are configured as GPIOs and
-> > trusts that the reserved pins in other OTP configurations are
-> > excluded from control using "gpio-reserved-ranges" device tree
-> > property (or left untouched by GPIO users).
-> >
-> > Typical use for 4.th pin (input) is to use it as HALL sensor
-> > input so that this pin state is toggled when HALL sensor detects
-> > LID position change (from close to open or open to close). PMIC
-> > HW implements some extra logic which allows PMIC to power-up the
-> > system when this pin is toggled. Please see the data sheet for
-> > details of GPIO options which can be selected by OTP settings.
-> >
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Linus, Is that an Ack?
+On Thu, Jan 23, 2020 at 09:34:31AM +0100, Olivier Moysan wrote:
+> Convert the STM32 DFSDM bindings to DT schema format
+> using json-schema.
+> 
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> ---
+> The DT check still returns some warnings on this bindings:
+> dfsdm@4400d000: filter@4: 'st,adc-channels' is a required property
+> dfsdm@4400d000: filter@5: 'st,adc-channels' is a required property ...
+> 
+> These warnings occur because some disabled nodes do not provides the
+> required properties. These nodes are included from SoC DT,
+> and do not provides by default the properties which are board dependent.
 
-Yes! Feel free to merge this.
+We handle disabled nodes, but not when they are child nodes.
 
-Yours,
-Linus Walleij
+> As workaround in DFSDM yaml bindings, the properties
+> (like st,adc-channels) could be defined as required,
+> only for the nodes which are in enabled state.
+
+We should handle this in the tooling, not the schemas. I entered an 
+issue to track this[1].
+
+> ---
+>  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt   | 135 -------
+>  .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  | 332 ++++++++++++++++++
+>  2 files changed, 332 insertions(+), 135 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+
+Applied.
+
+[1] https://github.com/devicetree-org/dt-schema/issues/32
