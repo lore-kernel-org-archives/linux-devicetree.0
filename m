@@ -2,225 +2,274 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A7FC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058BAC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A6520684
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 13:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Pj0qq3RP"
+	by mail.kernel.org (Postfix) with ESMTP id D441F20684
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgAWN7r (ORCPT
+        id S1728900AbgAWOCE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 08:59:47 -0500
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:53681 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726240AbgAWN7q (ORCPT
+        Thu, 23 Jan 2020 09:02:04 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:12702 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726771AbgAWOCE (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:59:46 -0500
-Received: from [IPv6:2001:983:e9a7:1:1bd:458:b834:7f13]
- ([IPv6:2001:983:e9a7:1:1bd:458:b834:7f13])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id ud1GiMhyrpLtbud1HiQmGT; Thu, 23 Jan 2020 14:59:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1579787984; bh=QMJEymLawOLXetjmUApu8pD98GsGg9QmPDT6OQP12HI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Pj0qq3RPWTXnW81gSSId/7TqNxzdAaal+ojwUfoDH+gIwcuRF7fez3cdaby3gets+
-         JqY6T57OH0bwfNis/KUjyFJEBWI9tdxlBZYPWKkW5v1pT5jlD6bY6hNxMjQX1dlbLA
-         2LfZqz73iwivrE8indM+jRUezRIsiMP8NkWKrdiHp5mH3C34wvhiJyyDzU8G+RbdWz
-         LtAVF7n3Xg3oIuCAfpf6IqB26WuIfRDoUvADjihUT9UaZSJB/6QzbjbhgVY3tbpEpA
-         WwYHP9S9J6VGLN89xLCT6a61LXt0Q7aEv2W9rJAeczj9V4woIZtUKCFgXl7tHTX7RE
-         t6b5zMCvpJsdQ==
-Subject: Re: [v6, 5/5] media: platform: Add Mediatek ISP P1 V4L2 device driver
-To:     Jungo Lin <jungo.lin@mediatek.com>, tfiga@chromium.org,
-        laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com,
-        mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        srv_heupstream@mediatek.com, ddavenport@chromium.org,
-        robh@kernel.org, Sean.Cheng@mediatek.com, sj.huang@mediatek.com,
-        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
-        frankie.chiu@mediatek.com, ryan.yu@mediatek.com,
-        Rynn.Wu@mediatek.com, yuzhao@chromium.org, zwisler@chromium.org,
-        shik@chromium.org, suleiman@chromium.org,
-        Pi-Hsun Shih <pihsun@chromium.org>
-References: <Jungo Lin <jungo.lin@mediatek.com>
- <20191219054930.29513-1-jungo.lin@mediatek.com>
- <20191219054930.29513-6-jungo.lin@mediatek.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <c481734a-c706-2ea9-3888-ab2fb9c805ef@xs4all.nl>
-Date:   Thu, 23 Jan 2020 14:59:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191219054930.29513-6-jungo.lin@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHmimHHTwlo1o0FCcYiUsnwhPqcAkb48Vy7zKrjhr6BOI8+sGCR4zzat8J4pe1h0dNghXVwNG0ZXNUxuDoGYbBYLmpPSsBnYkLqEwZAF+UydZByWDCxU
- G4zvgTfaj1jIuiW/1CE2RhVxsLWAfyPUedRYEbYegq4BBYOiLVg5VizUDIfI9MwgYO2y5bPeRPjU2WCZOaxyzHduPWHZthMUrz0zk3vbXMpN92sZwXTkfg+L
- BLh/f+77Q2Z6CeCH23/CG5AV5nm2EbwnN5JKdgoQxwVUk5UtaFxiJ3qFT6e5qx1/U7O6ewvHfeGUkeqsJzjZP2FQctiaARNxXvnztJUUYcNUOS/5K8Gynkbm
- DQyIkvw67V6JAFDLD0EnO/CcVOJ2rD7BfnQc1Vptkj/HT7sUKVjRrv66elzqwAvnp5a+gVBlqDhCUpaQWuzlqCB0lVZxAvmBm6FwN8RN/9LxF1WGfL1hfELH
- vptYSzCYCuogg5EYcs5YYK7XMb4DbjRs4HfkRgr4t+eUS7vLRY/LUVzTAqLrJV9dt+KywWERXFhTThadaappv53sXbAa4cxj3umRbV2nyu1rASp0S5Vja6fO
- nDg1BNIpTN94Gtb5KYMjj9CfN0PDDNdBbFWTTY7AKQNrFrZT4zYgdpCIpg6qMd19LcnsaaUHgX7SHKg5h0aPx/Pu6ki8GpaiBdZzv6Rt8Hv+klF5O4UgubX3
- BJWBGG+VVombldflQr5RitCluIGiiFYqt98ppFqigM9NS+vQxDOwferkDxlVFo+FFAXZ1BNtFwM29xUuqF/cBctpLj53h+Dx9syu9TGyDO/q7iKIikQ4Hkmr
- 5cnOJMoCzI2fXiiOCTsnqzjOmMb7NHsB6jyHClwyx/FeRkPlYoGpEAlRMmXLvIH5SDemavdblN0MEOLNgqkPJityhHn7QYEIWnxpE01prQ+1cculJQc2CbkR
- 5nQrrvpPOqlIFAo9ebTbp3bPiCziqod8y8GuRq2MkjGWfEE44QW4LlE4n6H/tsRBA/0jag32P6253tBVsGAZSZYBsyiP6QuJHdj5n3GesELTEb9RfOoMI9qX
- /yG9JoFsS5Wm/58wzoKUPiyFLkZQzeyua/A=
+        Thu, 23 Jan 2020 09:02:04 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Jan 2020 19:32:01 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Jan 2020 19:31:41 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 1332A286A; Thu, 23 Jan 2020 19:31:39 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: [v2] arm64: dts: sc7180: add display dt nodes
+Date:   Thu, 23 Jan 2020 19:31:38 +0530
+Message-Id: <1579788098-22565-1-git-send-email-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jungo,
+Add display, DSI hardware DT nodes for sc7180.
 
-On 12/19/19 6:49 AM, Jungo Lin wrote:
-> This patch adds the Mediatek ISP P1 HW control device driver.
-> It handles the ISP HW configuration, provides interrupt handling and
-> initializes the V4L2 device nodes and other V4L2 functions. Moreover,
-> implement standard V4L2 video driver that utilizes V4L2 and media
-> framework APIs. It supports one media device, one sub-device and
-> several video devices during initialization. Moreover, it also connects
-> with sensor and seninf drivers with V4L2 async APIs. Communicate with
-> co-process via SCP communication to compose ISP registers in the
-> firmware.
-> 
-> (The current metadata interface used in meta input and partial
-> meta nodes is only a temporary solution to kick off the driver
-> development and is not ready to be reviewed yet.)
-> 
-> Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> ---
-> Changes from v6:
->  - Revise help description for VIDEO_MEDIATEK_ISP_PASS1
->  - Apply SCP v21 change in P1 driver by Pi-Hsun Shih
->  - Correct auto suspend timer value for suspend/resume issue
->  - Increase IPI guard timer to 1 second to avoid false alarm command timeout event
->  - Fix KE due to no sen-inf sub-device
-> ---
->  drivers/media/platform/mtk-isp/Kconfig        |   20 +
->  .../media/platform/mtk-isp/isp_50/Makefile    |    3 +
->  .../platform/mtk-isp/isp_50/cam/Makefile      |    6 +
->  .../platform/mtk-isp/isp_50/cam/mtk_cam-hw.c  |  636 +++++
->  .../platform/mtk-isp/isp_50/cam/mtk_cam-hw.h  |   64 +
->  .../platform/mtk-isp/isp_50/cam/mtk_cam-ipi.h |  222 ++
->  .../mtk-isp/isp_50/cam/mtk_cam-regs.h         |   95 +
->  .../platform/mtk-isp/isp_50/cam/mtk_cam.c     | 2087 +++++++++++++++++
->  .../platform/mtk-isp/isp_50/cam/mtk_cam.h     |  244 ++
->  9 files changed, 3377 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-isp/Kconfig
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-hw.c
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-hw.h
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ipi.h
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-regs.h
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam.c
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam.h
+Changes in v1:
+	-Added display DT nodes for sc7180
+Changes in v2:
+	-Renamed node names
+	-Corrected code alignments
+	-Removed extra new line
+	-Added DISP AHB clock for register access
+	under display_subsystem node for global settings
 
-<snip>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  57 +++++++++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 125 ++++++++++++++++++++++++++++++++
+ 2 files changed, 182 insertions(+)
 
-> +static void isp_tx_frame_worker(struct work_struct *work)
-> +{
-> +	struct mtk_cam_dev_request *req =
-> +		container_of(work, struct mtk_cam_dev_request, frame_work);
-> +	struct mtk_cam_dev *cam =
-> +		container_of(req->req.mdev, struct mtk_cam_dev, media_dev);
-> +	struct mtk_isp_p1_device *p1_dev = dev_get_drvdata(cam->dev);
-> +
-> +	scp_ipi_send(p1_dev->scp, SCP_IPI_ISP_FRAME, &req->frame_params,
-> +		     sizeof(req->frame_params), MTK_ISP_IPI_SEND_TIMEOUT);
-> +}
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50a..f410614 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -232,6 +232,50 @@
+ 	};
+ };
+ 
++&dsi_controller {
++	status = "okay";
++
++	vdda-supply = <&vreg_l3c_1p2>;
++
++	panel@0 {
++		compatible = "visionox,rm69299-1080p-display";
++		reg = <0>;
++
++		vdda-supply = <&vreg_l8c_1p8>;
++		vdd3p3-supply = <&vreg_l18a_2p8>;
++
++		pinctrl-names = "default", "suspend";
++		pinctrl-0 = <&disp_pins_default>;
++		pinctrl-1 = <&disp_pins_default>;
++
++		reset-gpios = <&pm6150l_gpio 3 0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				panel0_in: endpoint {
++					remote-endpoint = <&dsi0_out>;
++				};
++			};
++		};
++	};
++
++	ports {
++		port@1 {
++			endpoint {
++				remote-endpoint = <&panel0_in>;
++				data-lanes = <0 1 2 3>;
++			};
++		};
++	};
++};
++
++&dsi_phy {
++	status = "okay";
++};
++
+ &qspi {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+@@ -289,6 +333,19 @@
+ 
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+ 
++&pm6150l_gpio {
++	disp_pins {
++		disp_pins_default: disp_pins_default{
++			pins = "gpio3";
++			function = "func1";
++			qcom,drive-strength = <2>;
++			power-source = <0>;
++			bias-disable;
++			output-low;
++		};
++	};
++};
++
+ &qspi_clk {
+ 	pinconf {
+ 		pins = "gpio63";
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 3bc3f64..81c3aab 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1184,6 +1184,131 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		display_subsystem: mdss@ae00000 {
++			compatible = "qcom,sc7180-mdss";
++			reg = <0 0x0ae00000 0 0x1000>;
++			reg-names = "mdss";
++
++			power-domains = <&dispcc MDSS_GDSC>;
++
++			clocks = <&gcc GCC_DISP_AHB_CLK>,
++				 <&gcc GCC_DISP_HF_AXI_CLK>,
++				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
++				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
++			clock-names = "iface", "gcc_bus", "ahb", "core";
++
++			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
++			assigned-clock-rates = <300000000>;
++
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++
++			iommus = <&apps_smmu 0x800 0x2>;
++
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			display_controller: mdp@ae00000 {
++				compatible = "qcom,sc7180-dpu";
++				reg = <0 0x0ae00000 0 0x1000>,
++				      <0 0x0ae01000 0 0x8f000>,
++				      <0 0x0aeb0000 0 0x2008>,
++				      <0 0x0af03000 0 0x16>;
++				reg-names = "mdss", "mdp", "vbif", "disp_cc";
++
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
++					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
++					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
++					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
++				clock-names = "iface", "rot", "lut", "core",
++					      "vsync";
++				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
++						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
++				assigned-clock-rates = <300000000>,
++						       <19200000>;
++
++				interrupt-parent = <&display_subsystem>;
++				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						dpu_intf1_out: endpoint {
++							remote-endpoint = <&dsi0_in>;
++						};
++					};
++				};
++			};
++
++			dsi_controller: qcom,mdss_dsi_ctrl0@ae94000 {
++				compatible = "qcom,mdss-dsi-ctrl";
++				reg = <0 0x0ae94000 0 0x400>;
++				reg-names = "dsi_ctrl";
++
++				interrupt-parent = <&display_subsystem>;
++				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++
++				clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
++					 <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
++					 <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
++					 <&dispcc DISP_CC_MDSS_ESC0_CLK>,
++					 <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&gcc GCC_DISP_HF_AXI_CLK>;
++				clock-names = "byte",
++					      "byte_intf",
++					      "pixel",
++					      "core",
++					      "iface",
++					      "bus";
++
++				phys = <&dsi_phy>;
++				phy-names = "dsi";
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						dsi0_in: endpoint {
++							remote-endpoint = <&dpu_intf1_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						dsi0_out: endpoint {
++						};
++					};
++				};
++			};
++
++			dsi_phy: dsi-phy0@ae94400 {
++				compatible = "qcom,dsi-phy-10nm";
++				reg = <0 0x0ae94400 0 0x200>,
++				      <0 0x0ae94600 0 0x280>,
++				      <0 0x0ae94a00 0 0x1e0>;
++				reg-names = "dsi_phy",
++					    "dsi_phy_lane",
++					    "dsi_pll";
++
++				#clock-cells = <1>;
++				#phy-cells = <0>;
++
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
++				clock-names = "iface";
++			};
++		};
++
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
+-- 
+2.7.4
 
-<snip>
-
-> +void mtk_isp_req_enqueue(struct mtk_cam_dev *cam,
-> +			 struct mtk_cam_dev_request *req)
-> +{
-> +	struct mtk_isp_p1_device *p1_dev = dev_get_drvdata(cam->dev);
-> +
-> +	/* Accumulated frame sequence number */
-> +	req->frame_params.frame_seq_no = ++p1_dev->enqueued_frame_seq_no;
-> +
-> +	INIT_WORK(&req->frame_work, isp_tx_frame_worker);
-> +	queue_work(p1_dev->composer_wq, &req->frame_work);
-> +	dev_dbg(cam->dev, "enqueue fd:%s frame_seq_no:%d job cnt:%d\n",
-> +		req->req.debug_str, req->frame_params.frame_seq_no,
-> +		cam->running_job_count);
-> +}
-
-<snip>
-
-> +/*
-> + * struct dma_buffer - DMA buffer address information
-> + *
-> + * @iova: DMA address for ISP DMA device
-> + * @scp_addr: SCP address for external co-process unit
-> + *
-> + */
-> +struct dma_buffer {
-> +	u32 iova;
-> +	u32 scp_addr;
-> +} __packed;
-
-<snip>
-
-> +static void mtk_cam_vb2_buf_queue(struct vb2_buffer *vb)
-> +{
-> +	struct mtk_cam_dev *cam = vb2_get_drv_priv(vb->vb2_queue);
-> +	struct mtk_cam_dev_buffer *buf = mtk_cam_vb2_buf_to_dev_buf(vb);
-> +	struct mtk_cam_dev_request *req = mtk_cam_req_to_dev_req(vb->request);
-> +	struct mtk_cam_video_device *node = mtk_cam_vbq_to_vdev(vb->vb2_queue);
-> +	struct device *dev = cam->dev;
-> +	unsigned long flags;
-> +
-> +	dev_dbg(dev, "%s: node:%d fd:%d idx:%d\n", __func__,
-> +		node->id, buf->vbb.request_fd, buf->vbb.vb2_buf.index);
-> +
-> +	/* added the buffer into the tracking list */
-> +	spin_lock_irqsave(&node->buf_list_lock, flags);
-> +	list_add_tail(&buf->list, &node->buf_list);
-> +	spin_unlock_irqrestore(&node->buf_list_lock, flags);
-> +
-> +	/* update buffer internal address */
-> +	req->frame_params.dma_bufs[buf->node_id].iova = buf->daddr;
-> +	req->frame_params.dma_bufs[buf->node_id].scp_addr = buf->scp_addr;
-> +}
-> +
-
-<snip>
-
-> +/*
-> + * struct mtk_p1_frame_param - MTK ISP P1 driver frame parameters.
-> + *
-> + * @frame_seq_no: The frame sequence of frame in driver layer.
-> + * @dma_bufs: The DMA buffer address information of enabled DMA nodes.
-> + *
-> + */
-> +struct mtk_p1_frame_param {
-> +	unsigned int frame_seq_no;
-> +	struct dma_buffer dma_bufs[MTK_CAM_P1_TOTAL_NODES];
-> +} __packed;
-
-So if I understand this correctly, to set the ISP frame parameters userspace
-provides an array of pointers to other memory areas that are magically created
-somewhere and containing magic, undocumented data.
-
-I know you said that this is 'not ready to be reviewed yet', but I just wanted
-to mention that this is of course not acceptable and needs to be replaced with
-a documented metadata structure that userspace can pass in the metadata buffer.
-
-Just ignore this email if you were already planning on doing that. I just wanted
-to make sure that it is clear that the current approach won't fly.
-
-Regards,
-
-	Hans
