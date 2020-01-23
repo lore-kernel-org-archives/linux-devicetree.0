@@ -2,158 +2,579 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA07C33CAA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 08:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E7BC33CAA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 08:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB81024673
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 08:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564022073A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 08:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T2oRHE6e"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="urfITx1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgAWIdq (ORCPT
+        id S1726099AbgAWIgJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 03:33:46 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37116 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgAWIdq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 03:33:46 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00N8XdES099404;
-        Thu, 23 Jan 2020 02:33:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579768419;
-        bh=EXVW/TtzQc961AukemstUi0Ud91p3tlNYKlSlMlNi54=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=T2oRHE6ekaf7IMKlnUJetLw8/zNlhuNlaHc+OeP8QGRnCmO8ENs7VC8xehJyYkxOD
-         CJor9gh2C3MPrBNAlG1YRCYwFveU1JYD6scTbSGjIdTRPIcYxWli0I+t7fUWn/QmxK
-         HE+k9Vi6bvhTWK5XLLAS4feWdql6mCo7Z7/M/k/Y=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00N8XdLF088327
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jan 2020 02:33:39 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 23
- Jan 2020 02:33:38 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 23 Jan 2020 02:33:38 -0600
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00N8XZ1M011906;
-        Thu, 23 Jan 2020 02:33:36 -0600
-Subject: Re: [PATCH v2 1/9] arm64: dts: ti: k3-am65-main: Correct main NAVSS
- representation
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <t-kristo@ti.com>,
-        <nm@ti.com>
-CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        Thu, 23 Jan 2020 03:36:09 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43885 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726061AbgAWIgI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 03:36:08 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00N8SNPm018468;
+        Thu, 23 Jan 2020 09:34:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=apHFLuLu3YXS+5uUuou1zCoK9krUcCjBR9YdOSKYOpE=;
+ b=urfITx1uBk6CLUO/+Z4Md156405PuiKU0hd4owehru0R+ibjjwv1+Ic1oZnx09mBepAc
+ KWw24hGuiuVWiFQPyaEp7IBixTiJCHFfOJSnAAhvCj299GM2A72UvpCyo29XPGWpIhYZ
+ G8p82V4fOEa1vw2EnDEXQpg+BNm0SF5MwOhess6j+1VYEE7ptwgcnmHfE2M7o+9bhGQK
+ fcH8D39KpUy9n6UBPvH666+AEtBpj0k01VAHr8o2fOp9n4L5q8CHvMwokILie1AWIS2X
+ R1TvUax8dOg18nROtvOCNXy2eIHaJ4g0yRiPZodTqX47dtPqhceOuF10mdgxvGc0KFIV HQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkrp2h24h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jan 2020 09:34:44 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D87A310002A;
+        Thu, 23 Jan 2020 09:34:43 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7B69920EDCB;
+        Thu, 23 Jan 2020 09:34:43 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Jan 2020 09:34:42
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <jic23@kernel.org>, <robh+dt@kernel.org>, <olivier.moysan@st.com>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <alsa-devel@alsa-project.org>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <lars@metafoo.de>, <devicetree@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <pmeerw@pmeerw.net>, <knaack.h@gmx.de>, <fabrice.gasnier@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>
-References: <20200122082621.4974-1-peter.ujfalusi@ti.com>
- <20200122082621.4974-2-peter.ujfalusi@ti.com>
- <600df214-620b-fa41-82ef-01132d9bdfae@ti.com>
- <04a1bb97-f308-f866-ad4f-907cd7fb3515@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <469a35b0-9b60-7faf-2b1b-a77f9f502a50@ti.com>
-Date:   Thu, 23 Jan 2020 14:02:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+Subject: [PATCH] dt-bindings: stm32: convert dfsdm to json-schema
+Date:   Thu, 23 Jan 2020 09:34:31 +0100
+Message-ID: <20200123083432.21997-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <04a1bb97-f308-f866-ad4f-907cd7fb3515@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-22_08:2020-01-22,2020-01-22 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the STM32 DFSDM bindings to DT schema format
+using json-schema.
 
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+The DT check still returns some warnings on this bindings:
+dfsdm@4400d000: filter@4: 'st,adc-channels' is a required property
+dfsdm@4400d000: filter@5: 'st,adc-channels' is a required property ...
 
-On 22/01/20 5:09 PM, Peter Ujfalusi wrote:
-> 
-> 
-> On 22/01/2020 13.03, Lokesh Vutla wrote:
->>
->>
->> On 22/01/20 1:56 PM, Peter Ujfalusi wrote:
->>> NAVSS is a subsystem containing different IPs, it is not really a bus.
->>> Change the compatible from "simple-bus" to "simple-mfd" to reflect that.
->>>
->>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> ---
->>>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->>> index efb24579922c..e40f7acbec42 100644
->>> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->>> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
->>> @@ -385,8 +385,8 @@ intr_main_gpio: interrupt-controller0 {
->>>  		ti,sci-rm-range-girq = <0x1>;
->>>  	};
->>>  
->>> -	cbass_main_navss: interconnect0 {
->>> -		compatible = "simple-bus";
->>> +	cbass_main_navss: navss@30800000 {
->>
->> This introduces below dtc warning when built with W=1
->>
->> arch/arm64/boot/dts/ti/k3-am65-main.dtsi:388.35-530.4: Warning
->> (unit_address_vs_reg): /interconnect@100000/navss@30800000: node has a unit
->> name, but no reg property
-> 
-> Interesting, the example in
-> Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-> 
-> is basically the same and dt_binding_check is happy about it:
-> DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
-> CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
-> 
-> but it screamed when I had the simple-bus in there (copied from the
-> existing dtsi file).
-> 
-> The node name for simple-bus _must_ be
-> '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> 
-> I would not use any of these to NAVSS node...
-> 
->> this is representing cbass inside main_navss, just like cbass_main. You can drop
->> this patch and the similar mcu version.
-> 
-> According to Documentation/devicetree/bindings/mfd/mfd.txt:
-> - compatible : "simple-mfd" - this signifies that the operating system
->   should consider all subnodes of the MFD device as separate devices
->   akin to how "simple-bus" indicates when to see subnodes as children
->   for a simple memory-mapped bus.
-> 
-> NAVSS is falling into simple-mfd as the devices under it are independent
-> devices.
+These warnings occur because some disabled nodes do not provides the
+required properties. These nodes are included from SoC DT,
+and do not provides by default the properties which are board dependent.
 
-okay, may be rename cbass_main_navss to main_navss.
+As workaround in DFSDM yaml bindings, the properties
+(like st,adc-channels) could be defined as required,
+only for the nodes which are in enabled state.
+---
+ .../bindings/iio/adc/st,stm32-dfsdm-adc.txt   | 135 -------
+ .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  | 332 ++++++++++++++++++
+ 2 files changed, 332 insertions(+), 135 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
 
-Thanks and regards,
-Lokesh
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
+deleted file mode 100644
+index 75ba25d062e1..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
++++ /dev/null
+@@ -1,135 +0,0 @@
+-STMicroelectronics STM32 DFSDM ADC device driver
+-
+-
+-STM32 DFSDM ADC is a sigma delta analog-to-digital converter dedicated to
+-interface external sigma delta modulators to STM32 micro controllers.
+-It is mainly targeted for:
+-- Sigma delta modulators (motor control, metering...)
+-- PDM microphones (audio digital microphone)
+-
+-It features up to 8 serial digital interfaces (SPI or Manchester) and
+-up to 4 filters on stm32h7 or 6 filters on stm32mp1.
+-
+-Each child node match with a filter instance.
+-
+-Contents of a STM32 DFSDM root node:
+-------------------------------------
+-Required properties:
+-- compatible: Should be one of:
+-  "st,stm32h7-dfsdm"
+-  "st,stm32mp1-dfsdm"
+-- reg: Offset and length of the DFSDM block register set.
+-- clocks: IP and serial interfaces clocking. Should be set according
+-		to rcc clock ID and "clock-names".
+-- clock-names: Input clock name "dfsdm" must be defined,
+-		"audio" is optional. If defined CLKOUT is based on the audio
+-		clock, else "dfsdm" is used.
+-- #interrupt-cells = <1>;
+-- #address-cells = <1>;
+-- #size-cells = <0>;
+-
+-Optional properties:
+-- spi-max-frequency: Requested only for SPI master mode.
+-		  SPI clock OUT frequency (Hz). This clock must be set according
+-		  to "clock" property. Frequency must be a multiple of the rcc
+-		  clock frequency. If not, SPI CLKOUT frequency will not be
+-		  accurate.
+-- pinctrl-names:	Set to "default".
+-- pinctrl-0:		List of phandles pointing to pin configuration
+-			nodes to set pins in mode of operation for dfsdm
+-			on external pin.
+-
+-Contents of a STM32 DFSDM child nodes:
+---------------------------------------
+-
+-Required properties:
+-- compatible: Must be:
+-	"st,stm32-dfsdm-adc" for sigma delta ADCs
+-	"st,stm32-dfsdm-dmic" for audio digital microphone.
+-- reg: Specifies the DFSDM filter instance used.
+-	Valid values are from 0 to 3 on stm32h7, 0 to 5 on stm32mp1.
+-- interrupts: IRQ lines connected to each DFSDM filter instance.
+-- st,adc-channels:	List of single-ended channels muxed for this ADC.
+-			valid values:
+-				"st,stm32h7-dfsdm" compatibility: 0 to 7.
+-- st,adc-channel-names:	List of single-ended channel names.
+-- st,filter-order:  SinC filter order from 0 to 5.
+-			0: FastSinC
+-			[1-5]: order 1 to 5.
+-			For audio purpose it is recommended to use order 3 to 5.
+-- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
+-
+-Required properties for "st,stm32-dfsdm-adc" compatibility:
+-- io-channels: From common IIO binding. Used to pipe external sigma delta
+-		modulator or internal ADC output to DFSDM channel.
+-		This is not required for "st,stm32-dfsdm-pdm" compatibility as
+-		PDM microphone is binded in Audio DT node.
+-
+-Required properties for "st,stm32-dfsdm-pdm" compatibility:
+-- #sound-dai-cells: Must be set to 0.
+-- dma: DMA controller phandle and DMA request line associated to the
+-		filter instance (specified by the field "reg")
+-- dma-names: Must be "rx"
+-
+-Optional properties:
+-- st,adc-channel-types:	Single-ended channel input type.
+-			- "SPI_R": SPI with data on rising edge (default)
+-			- "SPI_F": SPI with data on falling edge
+-			- "MANCH_R": manchester codec, rising edge = logic 0, falling edge = logic 1
+-			- "MANCH_F": manchester codec, rising edge = logic 1, falling edge = logic 0
+-- st,adc-channel-clk-src: Conversion clock source.
+-			  - "CLKIN": external SPI clock (CLKIN x)
+-			  - "CLKOUT": internal SPI clock (CLKOUT) (default)
+-			  - "CLKOUT_F": internal SPI clock divided by 2 (falling edge).
+-			  - "CLKOUT_R": internal SPI clock divided by 2 (rising edge).
+-
+-- st,adc-alt-channel: Must be defined if two sigma delta modulator are
+-			  connected on same SPI input.
+-			  If not set, channel n is connected to SPI input n.
+-			  If set, channel n is connected to SPI input n + 1.
+-
+-- st,filter0-sync: Set to 1 to synchronize with DFSDM filter instance 0.
+-		   Used for multi microphones synchronization.
+-
+-Example of a sigma delta adc connected on DFSDM SPI port 0
+-and a pdm microphone connected on DFSDM SPI port 1:
+-
+-	ads1202: simple_sd_adc@0 {
+-		compatible = "ads1202";
+-		#io-channel-cells = <1>;
+-	};
+-
+-	dfsdm: dfsdm@40017000 {
+-		compatible = "st,stm32h7-dfsdm";
+-		reg = <0x40017000 0x400>;
+-		clocks = <&rcc DFSDM1_CK>;
+-		clock-names = "dfsdm";
+-		#interrupt-cells = <1>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		dfsdm_adc0: filter@0 {
+-			compatible = "st,stm32-dfsdm-adc";
+-			#io-channel-cells = <1>;
+-			reg = <0>;
+-			interrupts = <110>;
+-			st,adc-channels = <0>;
+-			st,adc-channel-names = "sd_adc0";
+-			st,adc-channel-types = "SPI_F";
+-			st,adc-channel-clk-src = "CLKOUT";
+-			io-channels = <&ads1202 0>;
+-			st,filter-order = <3>;
+-		};
+-		dfsdm_pdm1: filter@1 {
+-			compatible = "st,stm32-dfsdm-dmic";
+-			reg = <1>;
+-			interrupts = <111>;
+-			dmas = <&dmamux1 102 0x400 0x00>;
+-			dma-names = "rx";
+-			st,adc-channels = <1>;
+-			st,adc-channel-names = "dmic1";
+-			st,adc-channel-types = "SPI_R";
+-			st,adc-channel-clk-src = "CLKOUT";
+-			st,filter-order = <5>;
+-		};
+-	}
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+new file mode 100644
+index 000000000000..c91407081aa5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+@@ -0,0 +1,332 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/st,stm32-dfsdm-adc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 DFSDM ADC device driver
++
++maintainers:
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++  - Olivier Moysan <olivier.moysan@st.com>
++
++description: |
++  STM32 DFSDM ADC is a sigma delta analog-to-digital converter dedicated to
++  interface external sigma delta modulators to STM32 micro controllers.
++  It is mainly targeted for:
++  - Sigma delta modulators (motor control, metering...)
++  - PDM microphones (audio digital microphone)
++
++  It features up to 8 serial digital interfaces (SPI or Manchester) and
++  up to 4 filters on stm32h7 or 6 filters on stm32mp1.
++
++  Each child node matches with a filter instance.
++
++properties:
++  compatible:
++    enum:
++      - st,stm32h7-dfsdm
++      - st,stm32mp1-dfsdm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description:
++          Internal clock used for DFSDM digital processing and control blocks.
++          dfsdm clock can also feed CLKOUT, when CLKOUT is used.
++      - description: audio clock can be used as an alternate to feed CLKOUT.
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: dfsdm
++      - const: audio
++    minItems: 1
++    maxItems: 2
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  spi-max-frequency:
++    description:
++      SPI clock OUT frequency (Hz). Requested only for SPI master mode.
++      This clock must be set according to the "clock" property.
++      Frequency must be a multiple of the rcc clock frequency.
++      If not, SPI CLKOUT frequency will not be accurate.
++    maximum: 20000000
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - "#address-cells"
++  - "#size-cells"
++
++patternProperties:
++  "^filter@[0-9]+$":
++    type: object
++    description: child node
++
++    properties:
++      compatible:
++        enum:
++          - st,stm32-dfsdm-adc
++          - st,stm32-dfsdm-dmic
++
++      reg:
++        description: Specifies the DFSDM filter instance used.
++        maxItems: 1
++
++      interrupts:
++        maxItems: 1
++
++      st,adc-channels:
++        description: |
++          List of single-ended channels muxed for this ADC.
++          On stm32h7 and stm32mp1:
++          - For st,stm32-dfsdm-adc: up to 8 channels numbered from 0 to 7.
++          - For st,stm32-dfsdm-dmic: 1 channel numbered from 0 to 7.
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++          - items:
++              minimum: 0
++              maximum: 7
++
++      st,adc-channel-names:
++        description: List of single-ended channel names.
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/string-array
++
++      st,filter-order:
++        description: |
++          SinC filter order from 0 to 5.
++          - 0: FastSinC
++          - [1-5]: order 1 to 5.
++          For audio purpose it is recommended to use order 3 to 5.
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32
++          - items:
++              minimum: 0
++              maximum: 5
++
++      "#io-channel-cells":
++        const: 1
++
++      st,adc-channel-types:
++        description: |
++          Single-ended channel input type.
++          - "SPI_R": SPI with data on rising edge (default)
++          - "SPI_F": SPI with data on falling edge
++          - "MANCH_R": manchester codec, rising edge = logic 0, falling edge = logic 1
++          - "MANCH_F": manchester codec, rising edge = logic 1, falling edge = logic 0
++        items:
++          enum: [ SPI_R, SPI_F, MANCH_R, MANCH_F ]
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++
++      st,adc-channel-clk-src:
++        description: |
++          Conversion clock source.
++          - "CLKIN": external SPI clock (CLKIN x)
++          - "CLKOUT": internal SPI clock (CLKOUT) (default)
++          - "CLKOUT_F": internal SPI clock divided by 2 (falling edge).
++          - "CLKOUT_R": internal SPI clock divided by 2 (rising edge).
++        items:
++          enum: [ CLKIN, CLKOUT, CLKOUT_F, CLKOUT_R ]
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++
++      st,adc-alt-channel:
++        description:
++          Must be defined if two sigma delta modulators are
++          connected on same SPI input.
++          If not set, channel n is connected to SPI input n.
++          If set, channel n is connected to SPI input n + 1.
++        type: boolean
++
++      st,filter0-sync:
++        description:
++          Set to 1 to synchronize with DFSDM filter instance 0.
++          Used for multi microphones synchronization.
++        type: boolean
++
++      dmas:
++        maxItems: 1
++
++      dma-names:
++        items:
++          - const: rx
++
++    required:
++      - compatible
++      - reg
++      - interrupts
++      - st,adc-channels
++      - st,adc-channel-names
++      - st,filter-order
++      - "#io-channel-cells"
++
++    allOf:
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: st,stm32-dfsdm-adc
++
++      - then:
++          properties:
++            st,adc-channels:
++              minItems: 1
++              maxItems: 8
++
++            st,adc-channel-names:
++              minItems: 1
++              maxItems: 8
++
++            st,adc-channel-types:
++              minItems: 1
++              maxItems: 8
++
++            st,adc-channel-clk-src:
++              minItems: 1
++              maxItems: 8
++
++            io-channels:
++              description:
++                From common IIO binding. Used to pipe external sigma delta
++                modulator or internal ADC output to DFSDM channel.
++                This is not required for "st,stm32-dfsdm-pdm" compatibility as
++                PDM microphone is binded in Audio DT node.
++
++          required:
++            - io-channels
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: st,stm32-dfsdm-dmic
++
++      - then:
++          properties:
++            st,adc-channels:
++              maxItems: 1
++
++            st,adc-channel-names:
++              maxItems: 1
++
++            st,adc-channel-types:
++              maxItems: 1
++
++            st,adc-channel-clk-src:
++              maxItems: 1
++
++          required:
++            - dmas
++            - dma-names
++
++          patternProperties:
++            "^dfsdm-dai+$":
++              type: object
++              description: child node
++
++              properties:
++                "#sound-dai-cells":
++                  const: 0
++
++                io-channels:
++                  description:
++                    From common IIO binding. Used to pipe external sigma delta
++                    modulator or internal ADC output to DFSDM channel.
++
++              required:
++                - "#sound-dai-cells"
++                - io-channels
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32h7-dfsdm
++
++  - then:
++      patternProperties:
++        "^filter@[0-9]+$":
++          properties:
++            reg:
++              items:
++                minimum: 0
++                maximum: 3
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32mp1-dfsdm
++
++  - then:
++      patternProperties:
++        "^filter@[0-9]+$":
++          properties:
++            reg:
++              items:
++                minimum: 0
++                maximum: 5
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    dfsdm: dfsdm@4400d000 {
++      compatible = "st,stm32mp1-dfsdm";
++      reg = <0x4400d000 0x800>;
++      clocks = <&rcc DFSDM_K>, <&rcc ADFSDM_K>;
++      clock-names = "dfsdm", "audio";
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dfsdm0: filter@0 {
++        compatible = "st,stm32-dfsdm-dmic";
++        reg = <0>;
++        interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&dmamux1 101 0x400 0x01>;
++        dma-names = "rx";
++        #io-channel-cells = <1>;
++        st,adc-channels = <1>;
++        st,adc-channel-names = "dmic0";
++        st,adc-channel-types = "SPI_R";
++        st,adc-channel-clk-src = "CLKOUT";
++        st,filter-order = <5>;
++
++        asoc_pdm0: dfsdm-dai {
++          compatible = "st,stm32h7-dfsdm-dai";
++          #sound-dai-cells = <0>;
++          io-channels = <&dfsdm0 0>;
++        };
++      };
++
++      dfsdm_pdm1: filter@1 {
++        compatible = "st,stm32-dfsdm-adc";
++        reg = <1>;
++        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&dmamux1 102 0x400 0x01>;
++        dma-names = "rx";
++        #io-channel-cells = <1>;
++        st,adc-channels = <2 3>;
++        st,adc-channel-names = "in2", "in3";
++        st,adc-channel-types = "SPI_R", "SPI_R";
++        st,adc-channel-clk-src = "CLKOUT_F", "CLKOUT_F";
++        io-channels = <&sd_adc2 &sd_adc3>;
++        st,filter-order = <1>;
++      };
++    };
++
++...
+-- 
+2.17.1
 
-> 
->>
->> Thanks and regards,
->> Lokesh
->>
->>> +		compatible = "simple-mfd";
->>>  		#address-cells = <2>;
->>>  		#size-cells = <2>;
->>>  		ranges;
->>>
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
