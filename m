@@ -2,80 +2,102 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BF6C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1680C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 23:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678752467B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 22:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579820347;
-	bh=2Zezl1LGfgQM4NxOR/cg+DnBZ7P8wOVJXTA1zOGyLNM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=EmYNdHNGLZzNzfwMEd3yKkakqsOjKt6lutV0Zmd7bPcaT8owoCNhhU5t6i3ihKKyv
-	 y34i+LxQIBtclUTtt65tGUGRZMHaOd0g1vbnMKPWh32x+UvYOxhk1D2LQxbcbdtcAZ
-	 VYBxVEX8GIwR5muc52wl2FEPVEOTJkgmmPKqCJWY=
+	by mail.kernel.org (Postfix) with ESMTP id 8800D21835
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 23:09:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuhRVJ24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgAWW7G (ORCPT
+        id S1729639AbgAWXJU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 17:59:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgAWW7G (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 17:59:06 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF26322522;
-        Thu, 23 Jan 2020 22:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579820345;
-        bh=2Zezl1LGfgQM4NxOR/cg+DnBZ7P8wOVJXTA1zOGyLNM=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=k9v1dJ/mHYBr4Yx69rbcudReeoRPngGNDHU4uWb8uNegwXXh0tV885FCLJoySkqTC
-         mJ5SlVRIcNFST4swnU/ez+WtLgA9L1/Puu8DnhBKaq4NyqsYHFDg8+Myzd/Azn8GWM
-         QFOxxnqYHgg2OfxifDwOVIR0Y7FVXhhdx8xrLW3Y=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Thu, 23 Jan 2020 18:09:20 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33042 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgAWXJT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 18:09:19 -0500
+Received: by mail-qk1-f193.google.com with SMTP id h23so300640qkh.0;
+        Thu, 23 Jan 2020 15:09:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=7uiCjSSCZSVUod21B2H/Tkjx2WrBUx9BhkTEN2ChC/c=;
+        b=kuhRVJ24fzDCQU8OMIx4yhwrEdkZwh5BU3SnGSKbJ7KxNgbH3ux2s60q8rmlq7TSbn
+         rSg+nekjAfzXabrUPbndI/iVYIfMQtwwhBRLH1nJMPedTGbwNaBAYAHRqaS4mxgCtn/i
+         qBUYWJozt2GYIx7JsiYYSnb56H505kaNxg1Ftd+KiAKs/QMKZhE77EM+17l6LTF9EvK8
+         ubJHirmNyQzJaEpubQsuO7GF2h98RabdsF5HSKVFm83MEhpbHJvF0D5504bFRsZqWqcF
+         SmIILEmSsCqAbc+zZzJvlHQQI0QQBjEKLz60gbd5vfy3fwcuUx2c5cjFpu7g1GJkJDnZ
+         6i4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=7uiCjSSCZSVUod21B2H/Tkjx2WrBUx9BhkTEN2ChC/c=;
+        b=EV/iXYdaJEk8/r4/qtXtaXb75U24Y2rLbCDNBegU95nGu7M7Eb4Xb/N+NppnMP+q3a
+         kTM/jTyltvdIgk8dHDEyf/rVF0l2vH/3ZhBRslY8C/gyEGBxwfdHHq/Y+LnmwerxAP6X
+         Pl6+AE2rto5pHwmEB6nF68ZnU/C7Pk3yzNwIp7wX0E+FuWRS9tAVDj++WbpGZjcfbH0p
+         9O/tJBi6r+43iJv1L3PSQ2BwsuHEzW4uM2pxWBkjI53OcyS9tbRBN7uy/ALftNBlM/Te
+         9cIUupVWNLh1NCKPzza1qAUFErZOIvCU8JhMXsgAgg4TVbh4A32DrSxQPU0AaP7eMJId
+         8tGQ==
+X-Gm-Message-State: APjAAAVDXL7SM9vacKAXKnWlazmp6BZihVnJOZ7ErTZ1BvezulleWC8q
+        YlbIdDdXK3jRyfGXW9D9wa4auoV5
+X-Google-Smtp-Source: APXvYqxZSfz8uO5tyQlMAmcfiy8fkZlxzITlIcOQZft/gJKR6LkI7UzQPTD1whTiZCJSkP1xZyCJRQ==
+X-Received: by 2002:ae9:edc8:: with SMTP id c191mr638340qkg.227.1579820958674;
+        Thu, 23 Jan 2020 15:09:18 -0800 (PST)
+Received: from [10.0.0.29] (pool-98-118-94-114.bstnma.fios.verizon.net. [98.118.94.114])
+        by smtp.gmail.com with ESMTPSA id m23sm2110648qtp.6.2020.01.23.15.09.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 15:09:18 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1575527759-26452-7-git-send-email-rajan.vaja@xilinx.com>
-References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com> <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com> <1575527759-26452-7-git-send-email-rajan.vaja@xilinx.com>
-Subject: Re: [PATCH v3 6/6] clk: zynqmp: Add support for clock with CLK_DIVIDER_POWER_OF_TWO flag
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>
-To:     Rajan Vaja <rajan.vaja@xilinx.com>, gustavo@embeddedor.com,
-        jolly.shah@xilinx.com, m.tretter@pengutronix.de,
-        mark.rutland@arm.com, mdf@kernel.org, michal.simek@xilinx.com,
-        mturquette@baylibre.com, nava.manne@xilinx.com, robh+dt@kernel.org,
-        tejas.patel@xilinx.com
-User-Agent: alot/0.8.1
-Date:   Thu, 23 Jan 2020 14:59:05 -0800
-Message-Id: <20200123225905.BF26322522@mail.kernel.org>
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V3 1/3] dt: bindings: brcmnand: Add support for flash-edu
+Date:   Thu, 23 Jan 2020 18:09:17 -0500
+Message-Id: <1F43C9DF-7176-4173-972B-99584E99C7E0@gmail.com>
+References: <20200123135402.GA4763@bogus>
+Cc:     linux-kernel@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20200123135402.GA4763@bogus>
+To:     Rob Herring <robh@kernel.org>
+X-Mailer: iPhone Mail (17C54)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Rajan Vaja (2019-12-04 22:35:59)
-> From: Tejas Patel <tejas.patel@xilinx.com>
->=20
-> Existing clock divider functions is not checking for
-> base of divider. So, if any clock divider is power of 2
-> then clock rate calculation will be wrong.
->=20
-> Add support to calculate divider value for the clocks
-> with CLK_DIVIDER_POWER_OF_TWO flag.
->=20
-> Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> ---
+Rob,=20
 
-Applied to clk-next
+Added tags to  latest v4 patch set.
 
+Thank You
+Kamal
+
+> On Jan 23, 2020, at 8:54 AM, Rob Herring <robh@kernel.org> wrote:
+>=20
+> =EF=BB=BFOn Wed, 22 Jan 2020 15:41:09 -0500, Kamal Dasu wrote:
+>> Adding support for EBI DMA unit (EDU).
+>>=20
+>> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+>> ---
+>> .../devicetree/bindings/mtd/brcm,brcmnand.txt          | 10 +++++-----
+>> 1 file changed, 5 insertions(+), 5 deletions(-)
+>>=20
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>=20
+> If a tag was not added on purpose, please state why and what changed.
