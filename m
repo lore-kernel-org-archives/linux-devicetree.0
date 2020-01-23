@@ -2,94 +2,110 @@ Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B95EC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194D4C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23508217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF68F2077C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 14:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579789173;
-	bh=7Ehhr3RcKJp5rNbXCW0vgv3MFQ61Ixyk+/w7br8QJmQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q8Ax47MtMGrBtKKAXL9rUC34cEre/OhTpQYNHYvGL/UqSycqVryy+0EyqwrIVM9hl
-	 XqueelGUuA4uPBVxQL+G3NC/a9GVWzmZEDTi2sxuh45QNcehAa7ILq7eNA36YPQl7H
-	 RgDfi6R3xJJ38USJDZ8gQ3U/MCDY6/MxehMxrg8g=
+	s=default; t=1579789527;
+	bh=Mid7wwxrormhKshzFlUiug8dVX89zkFmDSctaANPz6s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=R7ztQjdeuaVmR8zla6RuhlUyf6AVvps0uuqAasMbWlTUSofZ8LmTHJ4HMNFFTGYAb
+	 B7somIyHKWYAytVrfnTIj2cDQBqcV1Fm+3tDNQ/paFohz4hMDXY9tLJLXzia9yn9bz
+	 WHNLDzBXIclMdTB6bkyaLpCMeXYNQmvJgo4FaQdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgAWOTc (ORCPT
+        id S1728655AbgAWOZ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 09:19:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53526 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 09:25:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgAWOTc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 09:19:32 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727307AbgAWOZ1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 09:25:27 -0500
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E94720718;
-        Thu, 23 Jan 2020 14:19:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8CFD21734;
+        Thu, 23 Jan 2020 14:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579789171;
-        bh=7Ehhr3RcKJp5rNbXCW0vgv3MFQ61Ixyk+/w7br8QJmQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ck30PxMR219a4zqfvKd4pZH/W0pXpeM6HsUMaSYrapQJaqTeQ74QBD6nwm7Cx6YTj
-         vffmkdId3V46x6gVqqZsYjuA8Gg84SIiF/EpOErte7d8xjV0Qce8UKgD7FSYUKaXj7
-         Lkcta7GlBVGkGWU6j1FiBYhe4TisWB9piXZMdSz0=
-Date:   Thu, 23 Jan 2020 09:19:30 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Biju Das <biju.das@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 104/671] ARM: dts: r8a7743: Fix sorting of
- rwdt node
-Message-ID: <20200123141930.GD1706@sasha-vm>
-References: <20200116165502.8838-1-sashal@kernel.org>
- <20200116165502.8838-104-sashal@kernel.org>
- <3a84e4dc-1d2a-3809-ffac-33d75eb73351@cogentembedded.com>
+        s=default; t=1579789526;
+        bh=Mid7wwxrormhKshzFlUiug8dVX89zkFmDSctaANPz6s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mN+Yg1bkK8s9gy4zwqCBJ33ZQ/2FjNwIuadnHyXJd8EBzcYrU4T7iJE9oDgiWWSdn
+         JJ6zaeEi+gI+JiO5S/IpiYjHHGQzkhAVyMwEkAmdf1coHTLHEIfOy+jQuOADUS48/7
+         djKZvBdGyBCNh14jPLQfv6YqC2y1fFrCkzZxez8A=
+Received: by mail-qv1-f54.google.com with SMTP id z3so1578806qvn.0;
+        Thu, 23 Jan 2020 06:25:26 -0800 (PST)
+X-Gm-Message-State: APjAAAXr/dGaz/gMLQz48da6CfzV+Rl2fuJFssU7e9ts96UVt0sfbEzl
+        0Ya0dbBB3NKwSAiS7Kihmd3U1Zqdoa+wfdtjow==
+X-Google-Smtp-Source: APXvYqzyQ+SPWtLpn5s7OjjaW4VKnEaZWKD3iKQxa66ZmFcjyh5Fzw122sdqbgqFER2YlH8IqdmgJFsQ4Ryo7VOstC4=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr15908067qvo.20.1579789525873;
+ Thu, 23 Jan 2020 06:25:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <3a84e4dc-1d2a-3809-ffac-33d75eb73351@cogentembedded.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200122134639.11735-1-dafna.hirschfeld@collabora.com>
+In-Reply-To: <20200122134639.11735-1-dafna.hirschfeld@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 23 Jan 2020 08:25:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLbXr77VmNPWSN7jMt-309_YYuRp=nYV2cp=3SPihcC+w@mail.gmail.com>
+Message-ID: <CAL_JsqLbXr77VmNPWSN7jMt-309_YYuRp=nYV2cp=3SPihcC+w@mail.gmail.com>
+Subject: Re: [PATCH] dt-binding: fix compilation error of the example in qcom,gcc.yaml
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 12:32:21PM +0300, Sergei Shtylyov wrote:
->Hello!
+On Wed, Jan 22, 2020 at 7:46 AM Dafna Hirschfeld
+<dafna.hirschfeld@collabora.com> wrote:
 >
->On 16.01.2020 19:45, Sasha Levin wrote:
+> Running `make dt_binging_check`, gives the error:
 >
->>From: Biju Das <biju.das@bp.renesas.com>
->>
->>[ Upstream commit 383f6024981d32425fa453bf2e66b546fdbc1314 ]
->>
->>Watchdog node is incorrectly placed on r8a7743 SoC dtsi. This patch fixes
->>the sorting order.
->>
->>Fixes: b5beb5d4c81c358f50a8310108 ("ARM: dts: r8a7743: Add watchdog support to SoC dtsi")
->>
->>Signed-off-by: Biju Das <biju.das@bp.renesas.com>
->>Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
->>Signed-off-by: Sasha Levin <sashal@kernel.org>
->>---
->>  arch/arm/boot/dts/r8a7743.dtsi | 20 ++++++++++----------
->>  1 file changed, 10 insertions(+), 10 deletions(-)
+> DTC     Documentation/devicetree/bindings/clock/qcom,gcc.example.dt.yaml
+> Error: Documentation/devicetree/bindings/clock/qcom,gcc.example.dts:111.28-29 syntax error
+> FATAL ERROR: Unable to parse input tree
 >
->   I doubt that the DT node reordering is worth merging into the 
->-stable kernels...
+> This is because the last example uses the macro RPM_SMD_XO_CLK_SRC which
+> is defined in qcom,rpmcc.h but the include of this header is missing.
+> Add the include to fix the error.
+>
 
-You're right, I'll drop it. Thanks!
+Fixes: d109ea0970cf ("dt-bindings: clock: Document external clocks for
+MSM8998 gcc")
+Acked-by: Rob Herring <robh@kernel.org>
 
--- 
-Thanks,
-Sasha
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
+>  Documentation/devicetree/bindings/clock/qcom,gcc.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> index 19d00794fe7d..50ff07f80acb 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> @@ -220,6 +220,7 @@ examples:
+>
+>    # Example of MSM8998 GCC:
+>    - |
+> +    #include <dt-bindings/clock/qcom,rpmcc.h>
+>      clock-controller@100000 {
+>        compatible = "qcom,gcc-msm8998";
+>        #clock-cells = <1>;
+> --
+> 2.17.1
+>
