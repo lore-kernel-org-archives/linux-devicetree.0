@@ -1,108 +1,166 @@
-Return-Path: <SRS0=6ipe=3L=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71735C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 23:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CE9C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 00:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC7E205C9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jan 2020 23:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3ED2467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 00:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pxSOx/Py"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQz+kC3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgAVX6R (ORCPT
+        id S1726004AbgAWAbJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:58:17 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:62182 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726099AbgAVX6R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:58:17 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579737496; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=OH8pQcd+TxVTrS6N0gsCUveKud21QjiYBYSAEiMRoEM=;
- b=pxSOx/Py9jc/OezHund367lWa7cbdyQL2wFco55I1gJ2fW2DAzWFL5xl/fpiJO+o/zkYbKOc
- joUl+QENhyyX8GtIP+oV5anEEVpwlwpVaWGrMWJKrWXHKO4eQfsDPXQ1FiUGNY6JI7kst+r8
- 2XEFB1+Fx/pqE/eb7OahdkmUJb4=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e28e198.7fdff35e6228-smtp-out-n03;
- Wed, 22 Jan 2020 23:58:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EEECDC433A2; Wed, 22 Jan 2020 23:58:15 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F33BC43383;
-        Wed, 22 Jan 2020 23:58:15 +0000 (UTC)
+        Wed, 22 Jan 2020 19:31:09 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33608 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAWAbJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jan 2020 19:31:09 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 6so440882pgk.0;
+        Wed, 22 Jan 2020 16:31:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=I1NWWVIHGXoG7VFbe2feJQfdiQOYXTHsoIp2sJtnPI8=;
+        b=HQz+kC3Xpm6aWDCXfQNE4n+bC+wKNzsli7HoknufUNIKNIAMtFf3rT2088xdYHgbYD
+         03oAN39sE5tPfE5/zXqzta4ekmSXp1WySkdNtzyeMpb6HOkVfqoBC8xKREkUfO5P4iyE
+         TFMWqU55yjJ4s16fHQN/6tCvqjvm6GO+qUyuJI/x1UVc27K+/6PB6gSqqpBTwg7xVTxj
+         HPGv+yzFzmhoqAnIvnceFk+DN97r9XrLxsBCrFpErh2m7Et+S9irgQO/WSId+RbAPOZB
+         mL/gvWQO2/YbY0TgwoRUiJR9PR3DDfqdKiVMDagKXPeRq+ctGq491uRUB37H86ELK064
+         +9/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=I1NWWVIHGXoG7VFbe2feJQfdiQOYXTHsoIp2sJtnPI8=;
+        b=mJdGMBZZYZ1Q345tzohFabbjk4nN2zF5XTtaIKifz4V+FOAKKo2rMGARriAtJvy1Gz
+         5XNmd+y4IneBEbJU55lZ1gL5c+Jr6Hz3uTyYIrppAOFU2Khcdfbgh4Ofi/5Ui4u0MJr5
+         7EJzVaibw8pmvNL+JUVez9eYFAVgvd9EAW8Zkmf5CVCx66pjgXwsnrYLfGFg1H7HR1qt
+         /kQDQrDlM/Fyc/9QzHOJ1oNyQ+NgCBsQdSU7H+AfIFmhOzoJwa03ycESjGk62Pvg/6qO
+         uhHaBbI+usd7CgoyUy7EPpxmUnaQu//0S6fRmH0PjxBINHVgdaiuBnsHnbQWUXdAd2cN
+         MU3g==
+X-Gm-Message-State: APjAAAUfhZNV8rwbVy8/5UuKQ65AprOjIttcTPxhABeY2VWSHnPTeMZ6
+        PZcuffOLdJmByzzYFfSrcFM=
+X-Google-Smtp-Source: APXvYqx1qO1eGORTmIN0owFT8xYr45XG8x/ePyvdZj93OO1vfLtYaPpqyeCTYgKB4CUl7DF4DYGVeQ==
+X-Received: by 2002:aa7:820d:: with SMTP id k13mr5213655pfi.10.1579739468778;
+        Wed, 22 Jan 2020 16:31:08 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:140e:bf9b:65a6:dd72? ([2001:4898:80e8:a:941b:bf9b:65a6:dd72])
+        by smtp.gmail.com with ESMTPSA id s24sm94177pfd.161.2020.01.22.16.31.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 16:31:08 -0800 (PST)
+From:   Shiping Ji <shiping.linux@gmail.com>
+Subject: [PATCH v10 1/2] dt-bindings: edac: dmc-520.yaml
+To:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+Message-ID: <09a2fe69-842f-01cf-1cfa-d5fc639b158a@gmail.com>
+Date:   Wed, 22 Jan 2020 16:31:07 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jan 2020 15:58:15 -0800
-From:   rishabhb@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
- info in IMEM
-In-Reply-To: <20200122230849.GC3261042@ripper>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-3-bjorn.andersson@linaro.org>
- <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
- <20200122230849.GC3261042@ripper>
-Message-ID: <2ffeff6b57e6bb4567f00c09e5b82131@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-01-22 15:08, Bjorn Andersson wrote:
-> On Wed 22 Jan 14:56 PST 2020, rishabhb@codeaurora.org wrote:
->> On 2019-12-26 21:32, Bjorn Andersson wrote:
->> > diff --git a/drivers/remoteproc/qcom_pil_info.c
-> [..]
->> > +static int pil_reloc_probe(struct platform_device *pdev)
->> > +{
->> > +	struct pil_reloc *reloc;
->> > +
->> > +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
->> > +	if (!reloc)
->> > +		return -ENOMEM;
->> > +
->> > +	reloc->dev = &pdev->dev;
->> > +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
->> If there are multiple entries like "pil-reloc" in the imem node
->> mapping the entire imem multiple times may not work. Is there a way
->> we can somehow just iomap the required region for pil?
-> 
-> With the entire imem being represented as a syscon this will be
-> ioremapped once and all callers of syscon_node_to_regmap() (or one of
-> the other syscon getters) will get a regmap back that reference this 
-> one
-> mapping.
-> 
-> So doing it this way allow us to "map" sections of imem that is smaller
-> than PAGE_SIZE.
-> 
-> 
-> That said, it means that all imem users/clients should access imem
-> through this syscon regmap.
-> 
-> Regards,
-> Bjorn
-Yes, the clients are spread around in different drivers currently.
-So accessing same regmap is not possible.
+This is the device tree bindings for new EDAC driver dmc520_edac.c.
+
+From: Lei Wang <leiwang_git@outlook.com>
+
+Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+
+---
+     Changes in v10:
+         - Convert to the YAML format for binding description
+
+---
+ .../devicetree/bindings/edac/dmc-520.yaml     | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/dmc-520.yaml
+
+diff --git a/Documentation/devicetree/bindings/edac/dmc-520.yaml b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+new file mode 100644
+index 000000000000..dd5982b227b2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/dmc-520.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/edac/dmc-520.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARM DMC-520 EDAC bindings
++
++maintainers:
++  - Lei Wang <lewan@microsoft.com>
++
++description: |+
++  DMC-520 node is defined to describe DRAM error detection and correction.
++
++  https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
++
++properties:
++  compatible:
++    items:
++      - const: brcm,dmc-520
++      - const: arm,dmc-520
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++
++  interrupt-names:
++    minItems: 1
++    items:
++      - const: ram_ecc_errc
++      - const: ram_ecc_errd
++      - const: dram_ecc_errc
++      - const: dram_ecc_errd
++      - const: failed_access
++      - const: failed_prog
++      - const: link_err
++      - const: temperature_event
++      - const: arch_fsm
++      - const: phy_request
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++
++examples:
++  - |
++    dmc0: dmc@200000 {
++        compatible = "brcm,dmc-520", "arm,dmc-520";
++        reg = <0x200000 0x80000>;
++        interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
++        interrupt-names = "dram_ecc_errc", "dram_ecc_errd";
++    };
+-- 
+2.17.1
+
+
