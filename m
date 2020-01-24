@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DFBC32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB08C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDCDE20704
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6110621556
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876795;
-	bh=57FOBy08qBEXlKgCxiaToUjk/k0ohn9GFat1iPhq1H0=;
+	s=default; t=1579876798;
+	bh=dUHXIG6MtZiAEHdpM8ABRLLmWi1FRJw9J1lJsLzRkpA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kl6y0x3Jt8TG7fl5iT+FxC4w2rzfqaMq9Y9rUjc/D67BBgD0zm7jxdBXmArohOTJN
-	 8NujB9CFuoRu3WpCLbc/zD6TGggBub/xbGkFxzte6WeXPWfQQcbKbnNHJbZUJC0EZj
-	 1udjRh4MGnqfrWy/4uzbfdykzQTVczTR4dLU3UIo=
+	b=xqe52m8afxd92YcQH35iXm7OmPbuXLOLtgcunQgfBf7WqLgZuCjQlI29jdxcFnvCU
+	 uqWb7oqZ3aWLqXrUvLsLdsWoxFjfGxIr9pyu8E5vEttvObGzHy9wwaduzR5x4am23l
+	 +98/lT5ygvFDOZl6UYUldiePRRkLNIOSSCPGWvvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390549AbgAXOSZ (ORCPT
+        id S2390484AbgAXOSW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:18:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390511AbgAXOSY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:24 -0500
+        id S2388527AbgAXOSW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 197D021556;
-        Fri, 24 Jan 2020 14:18:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D15F42087E;
+        Fri, 24 Jan 2020 14:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875503;
-        bh=57FOBy08qBEXlKgCxiaToUjk/k0ohn9GFat1iPhq1H0=;
+        s=default; t=1579875501;
+        bh=dUHXIG6MtZiAEHdpM8ABRLLmWi1FRJw9J1lJsLzRkpA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a1UmPzfAk4DFfv5pZgrb9tDHTQEOYPK9FVf9bvDDOLiH5AC7sSCXv2xIyNOMbv4Hm
-         CjW9r6ndUYdwtDEsA+IJzOxvAT1ql1pGC7JuK5o5AewL/7gp0im7h6O6KkzTO93+7L
-         bUj3PPl2A14cIAhcYwmun+jv0ln7BlVXIByLrPes=
+        b=0Lxw9QeM1KY0qjR6LqFUXoAzhApDXwVR86iE/ZYtP5535dz+jJ5MQcmmWqiz1lMmN
+         dVV/QQuxKh8c9PjlEqcjY7WjCPW972bQAHEeJmyfGO3J/34GTovE1RZQses8k673j+
+         2Qqm9qoylzU+lW1sPT2/jQ8ZLyYT1gvXpZw+mKCs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guillaume La Roque <glaroque@baylibre.com>,
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 005/107] arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt
-Date:   Fri, 24 Jan 2020 09:16:35 -0500
-Message-Id: <20200124141817.28793-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 003/107] ARM: dts: meson8: fix the size of the PMU registers
+Date:   Fri, 24 Jan 2020 09:16:33 -0500
+Message-Id: <20200124141817.28793-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,32 +60,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Guillaume La Roque <glaroque@baylibre.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 30388cc075720aa0af4f2cb5933afa1f8f39d313 ]
+[ Upstream commit 46c9585ed4af688ff1be6d4e76d7ed2f04de4fba ]
 
-add gpio irq to support interrupt trigger mode.
+The PMU registers are at least 0x18 bytes wide. Meson8b already uses a
+size of 0x18. The structure of the PMU registers on Meson8 and Meson8b
+is similar but not identical.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Meson8 and Meson8b have the following registers in common (starting at
+AOBUS + 0xe0):
+  #define AO_RTI_PWR_A9_CNTL0 0xe0 (0x38 << 2)
+  #define AO_RTI_PWR_A9_CNTL1 0xe4 (0x39 << 2)
+  #define AO_RTI_GEN_PWR_SLEEP0 0xe8 (0x3a << 2)
+  #define AO_RTI_GEN_PWR_ISO0 0x4c (0x3b << 2)
+
+Meson8b additionally has these three registers:
+  #define AO_RTI_GEN_PWR_ACK0 0xf0 (0x3c << 2)
+  #define AO_RTI_PWR_A9_MEM_PD0 0xf4 (0x3d << 2)
+  #define AO_RTI_PWR_A9_MEM_PD1 0xf8 (0x3e << 2)
+
+Thus we can assume that the register size of the PMU IP blocks is
+identical on both SoCs (and Meson8 just contains some reserved registers
+in that area) because the CEC registers start right after the PMU
+(AO_RTI_*) registers at AOBUS + 0x100 (0x40 << 2).
+
+The upcoming power domain driver will need to read and write the
+AO_RTI_GEN_PWR_SLEEP0 and AO_RTI_GEN_PWR_ISO0 registers, so the updated
+size is needed for that driver to work.
+
+Fixes: 4a5a27116b447d ("ARM: dts: meson8: add support for booting the secondary CPU cores")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/meson8.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-index 3435aaa4e8db5..5d6a8dafe8dc0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-@@ -361,6 +361,8 @@
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 5a7e3e5caebe2..3c534cd50ee3b 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -253,7 +253,7 @@
+ &aobus {
+ 	pmu: pmu@e0 {
+ 		compatible = "amlogic,meson8-pmu", "syscon";
+-		reg = <0xe0 0x8>;
++		reg = <0xe0 0x18>;
+ 	};
  
- 	bluetooth {
- 		compatible = "brcm,bcm43438-bt";
-+		interrupt-parent = <&gpio_intc>;
-+		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
- 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
- 		max-speed = <2000000>;
- 		clocks = <&wifi32k>;
+ 	pinctrl_aobus: pinctrl@84 {
 -- 
 2.20.1
 
