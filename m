@@ -2,91 +2,94 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8788C32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 13:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3B0C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 13:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA31D20718
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 13:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gins8z7J"
+	by mail.kernel.org (Postfix) with ESMTP id B4F612072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 13:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579873584;
+	bh=KLpwb0cHRV4sk/IwW2TXJDIyT3N4XsENIvU1qFoTRGE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DpoxmElUskIP7bmiwc8UpIDtm6twjW1Lpddl98t9xiP06uy60u4R9Y/1zYlXADk5x
+	 Ov9cb/saHooZCsOFlYTT0gAip6bJcv1RdtNFum/pFaHwJ7JVNSgyVoesiAl46yDe1R
+	 bqKKV4WMIW0N7shI8NG599gcjcXnrL/qqDikVqWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389454AbgAXNUS (ORCPT
+        id S2389910AbgAXNqY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 08:20:18 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:42485 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387550AbgAXNUR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 08:20:17 -0500
-Received: by mail-vs1-f67.google.com with SMTP id b79so1161587vsd.9
-        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 05:20:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t65RoraJ97XSNifH3nJWhcpZY1lN6qjNaU0+rNtB6VA=;
-        b=gins8z7JzejJQal9gDEbPpdg5XvecgftPkBOzZDn61Udldh3usgTviD1RSeTs/khVg
-         P6QL2wdgjepWpZPu2K07a0Gi2j30WxCH8luSM9XeXKn2a0tOlWNsCiBvesNyFuoRTa2l
-         l+vIULJyGGwlTBlM48w/mQcMBP9WP2/M/8BvfKaietFwyHD4quO4EfSzZuZDebmtJUKO
-         N78p+V3i2PTQYXQaBm9DxrHQdcBOrL5nyx5ZvfkLk7TND7MMNM/kXvpRBQCuqtQn+Mxh
-         S+P6c2mXdalbk8iIrd+uIIUDrn+lJsAfuy8AVqcNxmXZb29qZ7+MytSuK9cABHt20/c6
-         vbnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t65RoraJ97XSNifH3nJWhcpZY1lN6qjNaU0+rNtB6VA=;
-        b=YrvIWlPKkB0WBB5pIV5yjWxL8gxhV4cH7BCRfSR4UroATb9jxVtq69aK1uGPk06KzR
-         oIiXw0fgKl+I3R+DgXRx72XMwxXJ2q/oZP82e5hyH0lByP8C3CREOgj/Q8EhFz8t1CG2
-         qVft6xh+nhMNBRt9VscIgE/McNJX10jQewI07ksC03u4yG0jgHatoO+4GCr9KyRDH2Ul
-         bjWBL8zIfjt82Y0/s8fzdXRa/6Oq8lheF2dRl01mLHDN3eepszmb5XXnRV3QY1rKwGmt
-         7q7PRw7/5sCZmE4gXpvAW7ZkYzesNkKzkgngNmpXOsx4bJjOAD3tMljq1LuvUR1sWJPH
-         P0wA==
-X-Gm-Message-State: APjAAAU3FmXHfuWGHOS62EiHC+5HWVoKLnqf1gSZ/XRhJ5q/sYGb1yMT
-        2J9vTzMjiPKprrZWHRspaULYvkpRsIPbstLkpqBixQ==
-X-Google-Smtp-Source: APXvYqwPiZbZvXR+rHIvNUYilWv/U2EOOXMt8apmM26fWaq/fAZpxuaFlhAeSj98ruAwNOVdB6HsKU61mDEy2b2ThPA=
-X-Received: by 2002:a67:cc3:: with SMTP id 186mr2203033vsm.200.1579872016966;
- Fri, 24 Jan 2020 05:20:16 -0800 (PST)
+        Fri, 24 Jan 2020 08:46:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389902AbgAXNqY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 08:46:24 -0500
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2950B2075D;
+        Fri, 24 Jan 2020 13:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579873583;
+        bh=KLpwb0cHRV4sk/IwW2TXJDIyT3N4XsENIvU1qFoTRGE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O1GP1BxYpp54Nt4liVaZlOhUCxE1pUlClmM9USCIqTxIs6hNVf6yDv8GKFRCEiRuT
+         PbdR5GUv0FTRsRtK4c0n6DPyYii2D1tF0PP16lmEKyNKjWwZNqg7zZLxqQuAS4oBcE
+         Wnpb/9QSMaRNH8sYe0k4H8ptXj+hbeYhyJfoo/U8=
+Received: by mail-qt1-f172.google.com with SMTP id e12so1528427qto.2;
+        Fri, 24 Jan 2020 05:46:23 -0800 (PST)
+X-Gm-Message-State: APjAAAXmjo6/OjDuy1i8lMPYEAEbUrgzbBGL8rk3tVPhd8aR3RFGcKBb
+        zqG2oO5Y6IKeBN5roHP4bV5j9GDZTK31RSQcfw==
+X-Google-Smtp-Source: APXvYqzExpwnerHFJD/jD56xNTg8eiIGvUGUJMrpuZsJaUoRombACvXxhWGjj1SnA0rab+5N4LfdFrK/dCILGlrjhGE=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr2159563qtp.224.1579873582277;
+ Fri, 24 Jan 2020 05:46:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20200110134823.14882-1-ludovic.barre@st.com> <6d859def-351e-abd7-0d5f-962ad935dff2@st.com>
-In-Reply-To: <6d859def-351e-abd7-0d5f-962ad935dff2@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 24 Jan 2020 14:19:40 +0100
-Message-ID: <CAPDyKFo+4qTZbE=4Zgj3VN9BPYUHGskPSnYEJRo1TpARzg5zJg@mail.gmail.com>
-Subject: Re: [PATCH 0/9] mmc: mmci: sdmmc: add sdr104 support
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+References: <3319036bb29e0b25fc3b85293301e32aee0540dc.1576833842.git.eswara.kota@linux.intel.com>
+ <20200108142242.GA8585@bogus>
+In-Reply-To: <20200108142242.GA8585@bogus>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 24 Jan 2020 07:46:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKvMvTAtwR73ookz-_F72j-Q9j5s1uDipka+bQ3CL7Hsw@mail.gmail.com>
+Message-ID: <CAL_JsqKvMvTAtwR73ookz-_F72j-Q9j5s1uDipka+bQ3CL7Hsw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] dt-bindings: PCI: intel: Fix dt_binding_check
+ compilation failure
+To:     Dilip Kota <eswara.kota@linux.intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Jan 2020 at 13:55, Ludovic BARRE <ludovic.barre@st.com> wrote:
+On Wed, Jan 8, 2020 at 8:22 AM Rob Herring <robh@kernel.org> wrote:
 >
-> hi Ulf
+> On Fri, 20 Dec 2019 17:53:24 +0800, Dilip Kota wrote:
+> > Remove <dt-bindings/clock/intel,lgm-clk.h> dependency as
+> > it is not present in the mainline tree. Use numeric value
+> > instead of LGM_GCLK_PCIE10 macro.
+> >
+> > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
 >
-> Just a "gentleman ping" on this series
-> https://lkml.org/lkml/2020/1/10/392
+> Acked-by: Rob Herring <robh@kernel.org>
 
-I was just reviewing :-) Thanks for pinging!
+Ping.
 
-One overall comment is that I think you can try to work a bit on the
-changelogs. In some cases you described what the patch does, which is
-good, but it may lack information about *why* the change is wanted.
+Bjorn or Lorenzo, can you please apply this. linux-next has be broken
+for some time now.
 
-Overall, the series looks nice.
-
-Kind regards
-Uffe
+Rob
