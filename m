@@ -2,402 +2,183 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5559BC32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEACC35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1860C20708
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 11:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25653206F0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 11:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ELgej1en"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j2HbyfiE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391164AbgAXLj2 (ORCPT
+        id S2391294AbgAXLkV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:39:28 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35903 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403891AbgAXLZ5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 06:25:57 -0500
-Received: by mail-vs1-f67.google.com with SMTP id e188so762316vse.3
-        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 03:25:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F2jETx1K2QROvuqY65KaH9YzpqUlnDhQy9Jrb9ahM4g=;
-        b=ELgej1eneLjocmxUcRdNNa2G/bM/1I8WD3QAC7JMAowuwaxD23XyMiM6P2ctm0FjCM
-         0Zkx0NZGHUJPrpd5uzytEy7RI7KKVfJQRdVOkoOhZlwxht5LtvCu+mRqSW5ficRC+2uX
-         Wtavp5xOUQaXM1LfU2NC/DShfBYWpt/YtZPwev53cop08KRrfwejMRwBrqGrR7eWdln0
-         FYISyd7Hg94AGWvojH2V8gZ0H9taOIPnBnQaLCQ/28G+xpPAY8U1oeG/kWi/zBIkniaj
-         0vxSaKnsgOYfJLoC0Xw0iTFldsHiXFpbFAfGk7Ru+GZhFm4DM9blzBfFFGl0L2bJoBVd
-         Br1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F2jETx1K2QROvuqY65KaH9YzpqUlnDhQy9Jrb9ahM4g=;
-        b=PRqO2pFvAs/P4/34PU14cPBSOwZpMdJkba4CC/s5UDCaofvDlQisErAWvfh0xVs78b
-         hQD3tvN1puG6lDofiB54DW/39lUXGeC2YdcTir1JBk8vpx/Gv/bNl8D9wLtBidbs6hMy
-         +t6/J2vRvjrjQRLQAPKi9APhJF6MB/hfXOkogcbpHwUmBpJcuAQQpLQy6whXOTjDTQOW
-         kQYhrco8vIs0IIpey5/ovqE2G6zkn/Vl50ioY/y47bKd8j3jPpvKaVKaN91C3o1Fr7wd
-         LQNoOTqmfmozWs/8p5XTC/CG6Rev8f4awvvPJCTMv+hnutdX7VzAqugscItR53PQSMa3
-         aPew==
-X-Gm-Message-State: APjAAAUX/AxM2H4p3QACd00PeaxECaLt7BKm1HZupWCtG0+GiVuokxHy
-        YBWKQeIezULA65AoFhwZl2cUnqYzAOLV9RqQYr3ot8ge
-X-Google-Smtp-Source: APXvYqxM6zYamgN6EVeKj7kVi1fOSzFudc87cWzGYD3HJobgEqJgawyNx4yUZWp27wRfHgwmoNQU5Nvwm+RSd45hGqo=
-X-Received: by 2002:a67:de15:: with SMTP id q21mr1800776vsk.165.1579865156235;
- Fri, 24 Jan 2020 03:25:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20200116152230.29831-1-jbx6244@gmail.com>
-In-Reply-To: <20200116152230.29831-1-jbx6244@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 24 Jan 2020 12:25:19 +0100
-Message-ID: <CAPDyKFoGCs5ZoYfzPN1D6KZN+bQkuTa+iAWhwkan1noBdfu0CQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: convert synopsys dw-mshc
- bindings to yaml
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 24 Jan 2020 06:40:21 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52814 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391198AbgAXLWZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 06:22:25 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200124112223euoutp02f27582aaee39aca2b434e7b08d37f1fc~szsvLiYiO1664216642euoutp02h
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 11:22:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200124112223euoutp02f27582aaee39aca2b434e7b08d37f1fc~szsvLiYiO1664216642euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579864944;
+        bh=7gGcPJwJd/puSj7LZi16us9UvxlBRcOghdJ+QKXKrdE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=j2HbyfiEpJlWfcLa4htJuVkGu00LorD0r61DzhxI2ALm/0uJEhh7+smjerjEDBAxn
+         k27cOlmJmzjMOHdH8h5tb8lGVu/9qRDS4fgulO8+Aob2q3JM4SdmTyT1puTCpmQH5x
+         4qn3ZdRNvhXmaxM8kfg113XMgbjcN/uKioXGKYWc=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200124112223eucas1p12ce3c0b8be44a47331317961f80efc9f~szsu5wh0u3241032410eucas1p1C;
+        Fri, 24 Jan 2020 11:22:23 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id C9.A8.60698.F63DA2E5; Fri, 24
+        Jan 2020 11:22:23 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200124112223eucas1p1ff581c051a056b7517655a3eb9ec68de~szsuZclkv2709327093eucas1p1w;
+        Fri, 24 Jan 2020 11:22:23 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200124112223eusmtrp1e4b8f1c165f594e10570ca50f4a6e1a1~szsuYtXfM0086800868eusmtrp1f;
+        Fri, 24 Jan 2020 11:22:23 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-9c-5e2ad36f1c56
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 87.FC.08375.F63DA2E5; Fri, 24
+        Jan 2020 11:22:23 +0000 (GMT)
+Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200124112222eusmtip2758daabb6f8219629e4888f27bc2e161~szstqcurH1453014530eusmtip2O;
+        Fri, 24 Jan 2020 11:22:22 +0000 (GMT)
+Message-ID: <669f89cddb185db7412a4012427fb5ccbaae2652.camel@samsung.com>
+Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
+ for Exynos4412
+From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com, krzk@kernel.org
+Date:   Fri, 24 Jan 2020 12:22:22 +0100
+In-Reply-To: <747a1c94-8eee-f46a-fcc7-d111cd9df70d@linaro.org>
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm27nsuNz6mlFvFl1WEUlpocGBLrMLcggiRQzp6sqDRm7WTkvn
+        j9IsSy01JTIVL2Flq1BXhlmayVDRdMhEK7VR64LW7OK16LZ5FvbveZ73ed7ne+FjCGUn5csc
+        1h3n9TpNnIqWkQ+av1tXx9v89q/58mIZW51fSbG9ox8otsTSSbHdY59p9kq9mWZz7Tkka7VW
+        SdmKga8Ua3b0UKytrohmRy5aEJtvbZCwdy0DUrYvpYJm8/MG6eCZnNmUTnP9PY9pzp7ZIuHu
+        lZ/iqodrJVzWfRPiRswLQ6W7ZRui+bjDJ3h9wKYoWazNMkkeLcOJbxwrktEZeQbyYgAHQX3K
+        ZSIDyRglrkBg7y2WiGQUwdhLGxLJCIKSohH6X2SiK9szuIkg91OpVCTvXa6fZ5HbJcccWNNt
+        UwkfvBcKJu1SN6axGjr6xqc6ZuNvCDrKC6dWEdiC4OP4W9LtIvFyaM6rIdzYC2+CoeI+qdi9
+        CpxtWS4P42qYBb9qfdwygRdBak3h1BWAnVLIyXYSon8btBWlSkTsA0Mt9z17FkB73gVSxAK8
+        e2inxHAyAvMNiye8Hvo7f9DuMgKvhMq6AFHeDDUTmRK3DFgBz52zxDcoIPfBFUKU5XA+TSlC
+        FdRdVYhBgNO3ezy7OegqT6dy0JKC6VsK/rulYLq1FBEmNJc3CNoYXgjU8Qn+gkYrGHQx/ofi
+        tWbk+mXtv1vGalHDz4NNCDNI5S1vzFi5X0lpTghGbRMChlDNlqNdLkkerTEm8fr4A3pDHC80
+        ofkMqZorD7w2uE+JYzTH+SM8f5TX/5tKGC/fZBR5qdGKXiqeRnyY0R8WscfvTag1cfuh891R
+        T0Kc2leBrVWjscHzfw0b6qJ3SBM3PvKtjnz2J7P9k3XRrVJSgXTPjoU6Ux2OrcFo7bjJGWZ8
+        nW3D19PWBekTTMacO8sg5BLhrZ53uTVhTtnJgInwxfXrz4XvUS/daZSpJxu3JDnfqkghVrPW
+        j9ALmr9Pu97MYQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xe7r5l7XiDOZcZLXYOGM9q8X1L89Z
+        LeYfOcdqceXrezaL6Xs3sVlMuj+BxeL8+Q3sFivufmS12PT4GqvF5V1z2Cw+9x5htJhxfh+T
+        xdojd9ktbjeuYLOYMfklmwO/x6ZVnWwed67tYfO4332cyWPzknqPje92MHn0bVnF6PF5k1wA
+        e5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexuUj
+        P1gKFgpUPHqs3sDYwtvFyMkhIWAi8f1iP2MXIxeHkMBSRomfU9ayQiQkJD6uvwFlC0v8udbF
+        BlH0hFHi26apjCAJXgEPifOdl9lAbGGBGIlZP+6zg9hsAvYSZ29/YwJpEBH4zChxeNEnFhCH
+        WeAoo8SzExBVLAKqEscmb2UGsTkF7CRezbvNDrHiE6PE3/l3mUASzAKaEq3bf7ND3KEj8fZU
+        H9AkDqDVghJ/dwhDlMhLNG+dzTyBUXAWko5ZCFWzkFQtYGRexSiSWlqcm55bbKhXnJhbXJqX
+        rpecn7uJERin24793LyD8dLG4EOMAhyMSjy8Er2acUKsiWXFlbmHGCU4mJVEeBnDgEK8KYmV
+        ValF+fFFpTmpxYcYTYH+mcgsJZqcD0wheSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1Kz
+        U1MLUotg+pg4OKUaGCVWL7+stiLm/LNlh0KSAir8bIv8L/8yfBJisa5Uz6Nx+nUtyfvuGjsa
+        LmZnyk24Iv+7a2Gsw8bVnIveXV7AnDT9Y1incJmMoGTKXLkLsR+MF8VvfzD90lTPNt9k2ZlW
+        xc+dtvav3xGuxGbraO56PfK7q17IPAGpux0/UrNseA//vz69suZZlRJLcUaioRZzUXEiAMAO
+        xRfpAgAA
+X-CMS-MailID: 20200124112223eucas1p1ff581c051a056b7517655a3eb9ec68de
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9
+References: <20191220115653.6487-1-a.swigon@samsung.com>
+        <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
+        <20191220115653.6487-5-a.swigon@samsung.com>
+        <747a1c94-8eee-f46a-fcc7-d111cd9df70d@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Jan 2020 at 16:22, Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Current dts files with 'dwmmc' nodes are manually verified.
-> In order to automate this process synopsys-dw-mshc.txt
-> has to be converted to yaml. In the new setup
-> synopsys-dw-mshc.yaml will inherit properties from
-> mmc-controller.yaml and synopsys-dw-mshc-common.yaml.
-> 'dwmmc' will no longer be a valid name for a node and
-> should be changed to 'mmc'.
->
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Hi,
 
-Applied for next, thanks!
+On Wed, 2020-01-22 at 18:54 +0200, Georgi Djakov wrote:
+> Hi Artur,
+> 
+> Thank you for your continuous work on this.
+> 
+> On 12/20/19 13:56, Artur Świgoń wrote:
+> > This patch adds the following properties to the Exynos4412 DT:
+> >   - exynos,interconnect-parent-node: to declare connections between
+> >     nodes in order to guarantee PM QoS requirements between nodes;
+> 
+> Is this DT property documented somewhere? I believe that there should be a patch
+> to document it somewhere in Documentation/devicetree/bindings/ before using it.
 
-Kind regards
-Uffe
+It will be documented in Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+in the next version.
+
+> >   - #interconnect-cells: required by the interconnect framework.
+> > 
+> > Note that #interconnect-cells is always zero and node IDs are not
+> > hardcoded anywhere.
+> > 
+> > Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> > ---
+> >  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > index 4ce3d77a6704..d9d70eacfcaf 100644
+> > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > @@ -90,6 +90,7 @@
+> >  &bus_dmc {
+> >  	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+> >  	vdd-supply = <&buck1_reg>;
+> > +	#interconnect-cells = <0>;
+> >  	status = "okay";
+> >  };
+> >  
+> > @@ -106,6 +107,8 @@
+> >  &bus_leftbus {
+> >  	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+> >  	vdd-supply = <&buck3_reg>;
+> > +	exynos,interconnect-parent-node = <&bus_dmc>;
+> > +	#interconnect-cells = <0>;
+> >  	status = "okay";
+> >  };
+> >  
+> > @@ -116,6 +119,8 @@
+> >  
+> >  &bus_display {
+> >  	exynos,parent-bus = <&bus_leftbus>;
+> > +	exynos,interconnect-parent-node = <&bus_leftbus>;
+> > +	#interconnect-cells = <0>;
+> >  	status = "okay";
+> >  };
+
+-- 
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
 
 
-> ---
->  .../bindings/mmc/synopsys-dw-mshc-common.yaml      |  68 ++++++++++
->  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   | 141 ---------------------
->  .../devicetree/bindings/mmc/synopsys-dw-mshc.yaml  |  70 ++++++++++
->  3 files changed, 138 insertions(+), 141 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
-> new file mode 100644
-> index 000000000..890d47a87
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/synopsys-dw-mshc-common.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys Designware Mobile Storage Host Controller Common Properties
-> +
-> +allOf:
-> +  - $ref: "mmc-controller.yaml#"
-> +
-> +maintainers:
-> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> +
-> +# Everything else is described in the common file
-> +properties:
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    const: reset
-> +
-> +  clock-frequency:
-> +    description:
-> +      Should be the frequency (in Hz) of the ciu clock.  If this
-> +      is specified and the ciu clock is specified then we'll try to set the ciu
-> +      clock to this at probe time.
-> +
-> +  fifo-depth:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      The maximum size of the tx/rx fifo's. If this property is not
-> +      specified, the default value of the fifo size is determined from the
-> +      controller registers.
-> +
-> +  card-detect-delay:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - default: 0
-> +    description:
-> +      Delay in milli-seconds before detecting card after card
-> +      insert event. The default value is 0.
-> +
-> +  data-addr:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Override fifo address with value provided by DT. The default FIFO reg
-> +      offset is assumed as 0x100 (version < 0x240A) and 0x200(version >= 0x240A)
-> +      by driver. If the controller does not follow this rule, please use
-> +      this property to set fifo address in device tree.
-> +
-> +  fifo-watermark-aligned:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Data done irq is expected if data length is less than
-> +      watermark in PIO mode. But fifo watermark is requested to be aligned
-> +      with data length in some SoC so that TX/RX irq can be generated with
-> +      data done irq. Add this watermark quirk to mark this requirement and
-> +      force fifo watermark setting accordingly.
-> +
-> +  dmas:
-> +    maxItems: 1
-> +
-> +  dma-names:
-> +    const: rx-tx
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> deleted file mode 100644
-> index 7e5e427a2..000000000
-> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> +++ /dev/null
-> @@ -1,141 +0,0 @@
-> -* Synopsys Designware Mobile Storage Host Controller
-> -
-> -The Synopsys designware mobile storage host controller is used to interface
-> -a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-> -differences between the core mmc properties described by mmc.txt and the
-> -properties used by the Synopsys Designware Mobile Storage Host Controller.
-> -
-> -Required Properties:
-> -
-> -* compatible: should be
-> -       - snps,dw-mshc: for controllers compliant with synopsys dw-mshc.
-> -* #address-cells: should be 1.
-> -* #size-cells: should be 0.
-> -
-> -# Slots (DEPRECATED): The slot specific information are contained within
-> -  child-nodes with each child-node representing a supported slot. There should
-> -  be atleast one child node representing a card slot. The name of the child node
-> -  representing the slot is recommended to be slot@n where n is the unique number
-> -  of the slot connected to the controller. The following are optional properties
-> -  which can be included in the slot child node.
-> -
-> -       * reg: specifies the physical slot number. The valid values of this
-> -         property is 0 to (num-slots -1), where num-slots is the value
-> -         specified by the num-slots property.
-> -
-> -       * bus-width: as documented in mmc core bindings.
-> -
-> -       * wp-gpios: specifies the write protect gpio line. The format of the
-> -         gpio specifier depends on the gpio controller. If a GPIO is not used
-> -         for write-protect, this property is optional.
-> -
-> -       * disable-wp: If the wp-gpios property isn't present then (by default)
-> -         we'd assume that the write protect is hooked up directly to the
-> -         controller's special purpose write protect line (accessible via
-> -         the WRTPRT register).  However, it's possible that we simply don't
-> -         want write protect.  In that case specify 'disable-wp'.
-> -         NOTE: This property is not required for slots known to always
-> -         connect to eMMC or SDIO cards.
-> -
-> -Optional properties:
-> -
-> -* resets: phandle + reset specifier pair, intended to represent hardware
-> -  reset signal present internally in some host controller IC designs.
-> -  See Documentation/devicetree/bindings/reset/reset.txt for details.
-> -
-> -* reset-names: request name for using "resets" property. Must be "reset".
-> -       (It will be used together with "resets" property.)
-> -
-> -* clocks: from common clock binding: handle to biu and ciu clocks for the
-> -  bus interface unit clock and the card interface unit clock.
-> -
-> -* clock-names: from common clock binding: Shall be "biu" and "ciu".
-> -  If the biu clock is missing we'll simply skip enabling it.  If the
-> -  ciu clock is missing we'll just assume that the clock is running at
-> -  clock-frequency.  It is an error to omit both the ciu clock and the
-> -  clock-frequency.
-> -
-> -* clock-frequency: should be the frequency (in Hz) of the ciu clock.  If this
-> -  is specified and the ciu clock is specified then we'll try to set the ciu
-> -  clock to this at probe time.
-> -
-> -* fifo-depth: The maximum size of the tx/rx fifo's. If this property is not
-> -  specified, the default value of the fifo size is determined from the
-> -  controller registers.
-> -
-> -* card-detect-delay: Delay in milli-seconds before detecting card after card
-> -  insert event. The default value is 0.
-> -
-> -* data-addr: Override fifo address with value provided by DT. The default FIFO reg
-> -  offset is assumed as 0x100 (version < 0x240A) and 0x200(version >= 0x240A) by
-> -  driver. If the controller does not follow this rule, please use this property
-> -  to set fifo address in device tree.
-> -
-> -* fifo-watermark-aligned: Data done irq is expected if data length is less than
-> -  watermark in PIO mode. But fifo watermark is requested to be aligned with data
-> -  length in some SoC so that TX/RX irq can be generated with data done irq. Add this
-> -  watermark quirk to mark this requirement and force fifo watermark setting
-> -  accordingly.
-> -
-> -* vmmc-supply: The phandle to the regulator to use for vmmc.  If this is
-> -  specified we'll defer probe until we can find this regulator.
-> -
-> -* dmas: List of DMA specifiers with the controller specific format as described
-> -  in the generic DMA client binding. Refer to dma.txt for details.
-> -
-> -* dma-names: request names for generic DMA client binding. Must be "rx-tx".
-> -  Refer to dma.txt for details.
-> -
-> -Aliases:
-> -
-> -- All the MSHC controller nodes should be represented in the aliases node using
-> -  the following format 'mshc{n}' where n is a unique number for the alias.
-> -
-> -Example:
-> -
-> -The MSHC controller node can be split into two portions, SoC specific and
-> -board specific portions as listed below.
-> -
-> -       dwmmc0@12200000 {
-> -               compatible = "snps,dw-mshc";
-> -               clocks = <&clock 351>, <&clock 132>;
-> -               clock-names = "biu", "ciu";
-> -               reg = <0x12200000 0x1000>;
-> -               interrupts = <0 75 0>;
-> -               #address-cells = <1>;
-> -               #size-cells = <0>;
-> -               data-addr = <0x200>;
-> -               fifo-watermark-aligned;
-> -               resets = <&rst 20>;
-> -               reset-names = "reset";
-> -       };
-> -
-> -[board specific internal DMA resources]
-> -
-> -       dwmmc0@12200000 {
-> -               clock-frequency = <400000000>;
-> -               clock-freq-min-max = <400000 200000000>;
-> -               broken-cd;
-> -               fifo-depth = <0x80>;
-> -               card-detect-delay = <200>;
-> -               vmmc-supply = <&buck8>;
-> -               bus-width = <8>;
-> -               cap-mmc-highspeed;
-> -               cap-sd-highspeed;
-> -       };
-> -
-> -[board specific generic DMA request binding]
-> -
-> -       dwmmc0@12200000 {
-> -               clock-frequency = <400000000>;
-> -               clock-freq-min-max = <400000 200000000>;
-> -               broken-cd;
-> -               fifo-depth = <0x80>;
-> -               card-detect-delay = <200>;
-> -               vmmc-supply = <&buck8>;
-> -               bus-width = <8>;
-> -               cap-mmc-highspeed;
-> -               cap-sd-highspeed;
-> -               dmas = <&pdma 12>;
-> -               dma-names = "rx-tx";
-> -       };
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-> new file mode 100644
-> index 000000000..05f9f36dc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/synopsys-dw-mshc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys Designware Mobile Storage Host Controller Binding
-> +
-> +allOf:
-> +  - $ref: "synopsys-dw-mshc-common.yaml#"
-> +
-> +maintainers:
-> +  - Ulf Hansson <ulf.hansson@linaro.org>
-> +
-> +# Everything else is described in the common file
-> +properties:
-> +  compatible:
-> +    const: snps,dw-mshc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 2
-> +    maxItems: 2
-> +    description:
-> +      Handle to "biu" and "ciu" clocks for the
-> +      bus interface unit clock and the card interface unit clock.
-> +
-> +  clock-names:
-> +    items:
-> +      - const: biu
-> +      - const: ciu
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    mmc@12200000 {
-> +      compatible = "snps,dw-mshc";
-> +      reg = <0x12200000 0x1000>;
-> +      interrupts = <0 75 0>;
-> +      clocks = <&clock 351>, <&clock 132>;
-> +      clock-names = "biu", "ciu";
-> +      dmas = <&pdma 12>;
-> +      dma-names = "rx-tx";
-> +      resets = <&rst 20>;
-> +      reset-names = "reset";
-> +      vmmc-supply = <&buck8>;
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      broken-cd;
-> +      bus-width = <8>;
-> +      cap-mmc-highspeed;
-> +      cap-sd-highspeed;
-> +      card-detect-delay = <200>;
-> +      clock-freq-min-max = <400000 200000000>;
-> +      clock-frequency = <400000000>;
-> +      data-addr = <0x200>;
-> +      fifo-depth = <0x80>;
-> +      fifo-watermark-aligned;
-> +    };
-> --
-> 2.11.0
->
