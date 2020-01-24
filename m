@@ -1,149 +1,110 @@
-Return-Path: <SRS0=+P9T=3M=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E514C35242
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 23:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9AAC35240
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 00:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB3624655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jan 2020 23:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3994F206D3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 00:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqdOAPHf"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="akn7Mw2c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pnloxcf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbgAWX4w (ORCPT
+        id S1729388AbgAXABx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 18:56:52 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41254 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729277AbgAWX4w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 18:56:52 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so353215ljc.8;
-        Thu, 23 Jan 2020 15:56:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GBpSA+S70IveCTtKIGEFtQpKccngEqKX7VJI5QTlR44=;
-        b=gqdOAPHfQJs7X0ZXIxK83uE8YRY1mng4HqdwWXVTp8ByvyNa6ZheKj2RHCguW3xOwZ
-         PUmnNIdiPmp1TjkbXzo4bwZ21v8NE7OR0rDTqT9O9iEZXXL3EeCNmepJpMkkLj+lNpYn
-         CQ7ZTNuFfLU3mLP1kjo5813jL7L7BEakXcMcWSmqmSrMMDSWau3h0+JuO/z7/fxIARFz
-         Gxho2oK8ZnU+aweBDeR8YBIB01ggNKfDr+9S2Xwfc0/R4iOCDAeWFTxyampSwIweBf3g
-         ylJKbNGhspngo3OUllSFtZxk0fQ6RgE64tZVOJOXmIcNo6z2VE3UZM5OXmDXIEE23tpJ
-         6L0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GBpSA+S70IveCTtKIGEFtQpKccngEqKX7VJI5QTlR44=;
-        b=ThwgBCnCAaZxwT9cifvUcUMiNz5K5z+XDDaSFK23ZKUmljC0f7s4446PA/nNTyb+2g
-         DiuAVLRrHc/gBbYOfI7d4OTF3EXUiMr3mtPr5xsw3WZsPE1nxVte57o41AdOyB3SMzmf
-         5h0ZZ6VMCDtd3NjgDoxXEzO64HO2H8VtLsMKhcYOd6rZEswuJc4b5obSgHo9VqhVb4vY
-         Xa9qxKmvl+mutP8AaYPH/+AnvCZLWiDmh2pNfX2gw0mtlN7sQmAp2klavPxPDEPqWIPs
-         a3DvcTZcUh4f9xoZrgNWpV9i6auF8HJNZF1PuZfaOziNX15OBM+mG7Mu1csH2+ykFmfW
-         Dvvw==
-X-Gm-Message-State: APjAAAWNkP8SPsvYxVcP2pPY+LPrDPakpYBO3EGWI1RF2hZxMD7qdTUS
-        LP22RPfSoG1mn9VcltVoCBDPQkBB
-X-Google-Smtp-Source: APXvYqxoTeKZ48pGOHQTsLFqutvtN4hgoSviLPAKKeyV9HeVxPD93R0HyzG+SjwU+HzCapUUY5PaPQ==
-X-Received: by 2002:a2e:3619:: with SMTP id d25mr481791lja.231.1579823809203;
-        Thu, 23 Jan 2020 15:56:49 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id y2sm188582ljm.28.2020.01.23.15.56.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 15:56:48 -0800 (PST)
-Subject: Re: [PATCH v8 11/22] ASoC: tegra: Add fallback implementation for
- audio mclk
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
- <1578986667-16041-12-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <aef36b46-789a-c44e-4cd1-9d4183435ba9@gmail.com>
-Date:   Fri, 24 Jan 2020 02:56:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <1578986667-16041-12-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Jan 2020 19:01:53 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:34833 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729149AbgAXABx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jan 2020 19:01:53 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6CE7A5320;
+        Thu, 23 Jan 2020 19:01:52 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 23 Jan 2020 19:01:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=d+Z+lRDYQ/W7oZGZYumKD/oOi9irKSG
+        dCEoUinh8nf4=; b=akn7Mw2cYLTiNi7myRpKCK5NSXpmWiZLpHogjGFIsXSAZe+
+        +4FMSVFBbnrJjua/GuzvAz/j2AATo1DTwX/lqtn8B2X7mhofEZae9nLLlS4tD5qY
+        rKKE/481DLkrGj2VbTKENBWCVa62W/uPgC85XtClyjI8U7w34iCxifwRsa9iXC5R
+        53WWA9KapVNo+xjKOvXn7qfRMaLJllyoI5645Y7AtzwKMjh+kEGLkw2VOfwkkRys
+        krl3BaT262tF66rntd3tUlB1rXAJWggK02nzFoNGtpQZRAUEWuoXeDkIBMFasuZG
+        1oM6fBnoh/Q3VXZ0KWJeviHaWAmfZZrHyK+EK1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=d+Z+lR
+        DYQ/W7oZGZYumKD/oOi9irKSGdCEoUinh8nf4=; b=Pnloxcf61F/oWAq/EcjBsI
+        d+OYokWefGcd/06Mku4YDBN9lkw+afK8wtCALzcGIZN3QWZ4mHWOCS4sydr8cs6S
+        oapXoSDWW0YkYoNv9lz20Rz/fjJkdqjV3xGnM0+pBoauN/VFXRcF+IddhJubozjj
+        LxuXYaGbMopJeJU9oy8PTGAGrCfMDTqqtPHSkVHzQ5ZmvBiy1oEMtyn+65ZoREMu
+        ICJUlDaY1xm7NDdNPdWqYQIU8QoYZJZCoLkrx+xc6paB9c53wnx+kCEs5BFR95HW
+        FMTRLSqxDokjZB/8U+1bC+gBvXScqJaFODxooAiL1Wd0pMDxOWgM54Zik8EOS0xg
+        ==
+X-ME-Sender: <xms:7zMqXk_FlYCU5KicE-kJMrxK-9FxmSihK9HomFxVaHUx-Unj3z7fDQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvdefgddtiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
+    rdhiugdrrghu
+X-ME-Proxy: <xmx:7zMqXn1fSD2EQ_b_lEI7ZFAnibLg-os68L9a5wX-IsFBROhBvaXvFQ>
+    <xmx:7zMqXpY6sN8zAO06Q9OhPm55LVgrcHxIINw7cDD74IVo0ClkAhH9KA>
+    <xmx:7zMqXjukhZ88lvksiO6kTNAnaLKgpQ3uM0woayjYr-3sT-eLVs_HXw>
+    <xmx:8DMqXkk_zP_bR8ts8WK4mvZlAsia1fN9rel87NvpbIzqJlK0YitjZw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 25625E00A2; Thu, 23 Jan 2020 19:01:51 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-777-gdb93371-fmstable-20200123v1
+Mime-Version: 1.0
+Message-Id: <1c13de6c-3bee-4afc-8a03-691222b07ebe@www.fastmail.com>
+In-Reply-To: <20200123085112.8371-1-pengms1@lenovo.com>
+References: <20200123085112.8371-1-pengms1@lenovo.com>
+Date:   Fri, 24 Jan 2020 10:31:30 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Andrew Peng" <pengms1@lenovo.com>,
+        "Benjamin Fair" <benjaminfair@google.com>,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, "Rob Herring" <robh+dt@kernel.org>
+Cc:     openbmc@lists.ozlabs.org, "Derek Lin" <dlin23@lenovo.com>,
+        "Harry Sung1" <hsung1@lenovo.com>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: update Hr855xg2 device tree
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-14.01.2020 10:24, Sowjanya Komatineni пишет:
-> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
-> are moved to Tegra PMC driver with pmc as clock provider and using pmc
-> clock ids.
-> 
-> New device tree uses clk_out_1 from pmc clock provider as audio mclk.
-> 
-> So, this patch adds implementation for mclk fallback to extern1 when
-> retrieving mclk returns -ENOENT to be backward compatible of new device
-> tree with older kernels.
-> 
-> Fixes: 110147c8c513 ("ASoC: tegra: always use clk_get() in utility code")
-> 
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  sound/soc/tegra/tegra_asoc_utils.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
-> index 536a578e9512..74d3ffe7e603 100644
-> --- a/sound/soc/tegra/tegra_asoc_utils.c
-> +++ b/sound/soc/tegra/tegra_asoc_utils.c
-> @@ -191,9 +191,21 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
->  
->  	data->clk_cdev1 = clk_get(dev, "mclk");
->  	if (IS_ERR(data->clk_cdev1)) {
-> -		dev_err(data->dev, "Can't retrieve clk cdev1\n");
-> -		ret = PTR_ERR(data->clk_cdev1);
-> -		goto err_put_pll_a_out0;
-> +		if (PTR_ERR(data->clk_cdev1) != -ENOENT) {
-> +			dev_err(data->dev, "Can't retrieve clk cdev1\n");
-> +			ret = PTR_ERR(data->clk_cdev1);
-> +			goto err_put_pll_a_out0;
-> +		}
-> +
-> +		/* Fall back to extern1 */
-> +		data->clk_cdev1 = clk_get(dev, "extern1");
-> +		if (IS_ERR(data->clk_cdev1)) {
-> +			dev_err(data->dev, "Can't retrieve clk extern1\n");
-> +			ret = PTR_ERR(data->clk_cdev1);
-> +			goto err_put_pll_a_out0;
-> +		}
-> +
-> +		dev_info(data->dev, "Falling back to extern1\n");
->  	}
->  
->  	ret = tegra_asoc_utils_set_rate(data, 44100, 256 * 44100);
-> 
 
-I tried to double-check if audio works using the updated DT works with
-this fallback and unfortunately it is not (maybe I actually missed to
-test this case before).. the driver doesn't probe at all because of the
-assigned-clocks presence, which makes clk core to fail finding the MCLK
-and thus assigned-clocks configuration fails, preventing the driver's
-loading.
 
-I'm not sure what could be done about it. Perhaps just to give up on the
-compatibility of older kernels with the new DTs, missing audio isn't
-really that critical (perhaps).
+On Thu, 23 Jan 2020, at 19:21, Andrew Peng wrote:
+> Update i2c aliases.
+> Change flash_memory mapping address and size.
+> Add in a gpio-keys section.
+> Add in a peci0 section.
+> Update i2c0,i2c0 and i2c11 section.
+> Enable vhub, vuart, spi1 and spi2.
+> Remove gpio from gpio section since it controlled by user space.
+
+These seem like largely independent items. I'd prefer that you have
+one commit for each item in the list, that way it's easier to review
+and understand the relationships between the bits of affected code.
+Basically, don't give people reasons to say no to your patches :) The
+smaller and more coherent the change, the easier it is to give it a
+Reviewed-by or Acked-by tag.
+
+Also commit messages should say _why_ you're making the changes
+not _what_ changes you're making. The diff tells us _what_, but nothing
+besides comments and the commit message can tell us why. It's much
+more convincing if you explain why your patch must be applied.
+
+Andrew
