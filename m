@@ -2,186 +2,121 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F82C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 03:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA4C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1695921D7E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 03:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C67021556
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:25:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lsVorQu1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yqgm/L6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgAXDjS (ORCPT
+        id S1730322AbgAXEZO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 22:39:18 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11501 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729690AbgAXDjS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 22:39:18 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2a66d60000>; Thu, 23 Jan 2020 19:39:02 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Jan 2020 19:39:17 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Jan 2020 19:39:17 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jan
- 2020 03:39:12 +0000
-CC:     <spujar@nvidia.com>, <devicetree@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <atalambedu@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <jonathanh@nvidia.com>, <viswanathl@nvidia.com>,
-        <sharadg@nvidia.com>, <broonie@kernel.org>,
-        <thierry.reding@gmail.com>, <linux-tegra@vger.kernel.org>,
-        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
-Subject: Re: [alsa-devel] [PATCH 5/9] ASoC: tegra: add Tegra210 based AHUB
+        Thu, 23 Jan 2020 23:25:14 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40241 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730314AbgAXEZO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 23:25:14 -0500
+Received: by mail-lf1-f65.google.com with SMTP id c23so289119lfi.7;
+        Thu, 23 Jan 2020 20:25:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nqvrrfgH50F3heDUQV2TPxvyGIm9jjs0IGrVe+RwimE=;
+        b=Yqgm/L6R0clKVYrscixlwYJrmLydO6eTZXRSwbpSsJkZRcKp28C3d7HqPnhXE8vqbH
+         9VdqiMw/4NEz4lxzg9g1A42L97lUsDUtkTs++ZjGiv/9mjFmGPsmezm7L5YrcZ7J7zNi
+         SNZQwMmcFdpRp9XNelnkzmBRgDQU3K10FIKouhjNx01IweB+AvH7YZGLomp67wp5V5KR
+         V1o9EcoAUzA28Q+wzAt43MypyA3faknk8Lp9HDE0raVbiy/DqAzutS+E/Cdm5LhWucoB
+         5AZ2SuyKr+7/6x+uDIg6v3vszDyYk8tq1/kw86qyWf/5VrEDXmifItnWblE2nraMF4ii
+         pkGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nqvrrfgH50F3heDUQV2TPxvyGIm9jjs0IGrVe+RwimE=;
+        b=pWp2svEHcSJ7jtDuslQCy9tbBz5Md+XLabCWhL3rIC4EF4CiCxOpPR2jlomPZ+g01+
+         S3ppLxEAbw+MLAUXoneqeb0U8TTtE/esJjodav6OO8Zx/bVk2CqJ4/QbIBvEfqUvDam8
+         lJ+/VWs2AwDMOJVd8vK61yCNEyGiebf4uaiha8RhxPZt61XIaq+nLC8nIPHq3h/liomW
+         DPJ5TpMJES3GrN60vzv1g85gA8MN2gxJBmLJ28zm5B15gh6ICkesbEp9lXapRGLNCIjN
+         aeZVuq1xrXJ1q1/X1LVhOfVAr9OuSROZgiwb4Nl+Hw6/cau/RWsN8x/sLIPwNXw8DRHh
+         7SHA==
+X-Gm-Message-State: APjAAAWjCFnDP85/eT2q9/SF9HB1tdqlb3tzIlK4rgihvxQ0i8mmpoGu
+        MG3Iwv3xskW60NIzioHD4nFAoMwN
+X-Google-Smtp-Source: APXvYqz9HRXIowhnShk3uHeDO/07QPAIONMd8ODEb7ccArNqgO+S9/aB3Jd/HegdKDhotT/9ZK1LTw==
+X-Received: by 2002:ac2:523c:: with SMTP id i28mr487778lfl.104.1579839912004;
+        Thu, 23 Jan 2020 20:25:12 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f30sm2282977ljp.31.2020.01.23.20.25.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2020 20:25:11 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 7/9] ASoC: tegra: add Tegra210 based ADMAIF
  driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh+dt@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
 References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-6-git-send-email-spujar@nvidia.com>
- <5ed7482e-e874-9e11-c84e-7418e4b5162e@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <d160fa01-27d0-6290-cb16-07d159d6fbb2@nvidia.com>
-Date:   Fri, 24 Jan 2020 09:09:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ <1579530198-13431-8-git-send-email-spujar@nvidia.com>
+ <743d6d7d-f29c-191a-853b-414250ca38df@gmail.com>
+ <3759aa0b-9e56-0fb4-27b7-4f98898d4e22@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8a3259b7-6875-236a-b16c-cd8e023cc8b2@gmail.com>
+Date:   Fri, 24 Jan 2020 07:25:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <5ed7482e-e874-9e11-c84e-7418e4b5162e@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579837143; bh=dwNhjKvOnSDAczFsSdVJn+pMv7d1FeCSRweCtsZHiEk=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=lsVorQu1QfVVzW1W+cWsKDSidbRRqkEOkjjo0tcNH4auM8OAaxv7VFfnOxpDFT8tc
-         t5fXBqNsXyYpSGSvq2gZMG2x2fwBuwEHY/Slsn64XzDBb88g63T2d434jbbwFkZLZw
-         ebpOC/x6jYR4dyIEhNmyK1a2ubIR68Zt5zhPFDyd+vzLyGBbapdxZrNM/twk5WfI9w
-         FRZnrpySgcYfEoRktNkz/DKv8yEpzUYA5ALJucf3SOTSUS5IZuJyKuz7sUXccczZiS
-         MbwmdEAkFCuYHz+fxwHm6QKuNChtPvUr7J5XcMwcbJfF4+W3bBHmVgE+LrtjrJDPRU
-         AtFzNuXWec5ag==
+In-Reply-To: <3759aa0b-9e56-0fb4-27b7-4f98898d4e22@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+24.01.2020 06:27, Sameer Pujar пишет:
+> 
+> 
+> On 1/24/2020 6:58 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 20.01.2020 17:23, Sameer Pujar пишет:
+>> [snip]
+>>> +static bool tegra_admaif_wr_reg(struct device *dev, unsigned int reg)
+>>> +{
+>>> +     struct tegra_admaif *admaif = dev_get_drvdata(dev);
+>>> +     unsigned int ch_stride = TEGRA_ADMAIF_CHANNEL_REG_STRIDE;
+>>> +     unsigned int num_ch = admaif->soc_data->num_ch;
+>>> +     unsigned int rx_base = admaif->soc_data->rx_base;
+>>> +     unsigned int tx_base = admaif->soc_data->tx_base;
+>>> +     unsigned int global_base = admaif->soc_data->global_base;
+>>> +     unsigned int reg_max =
+>>> admaif->soc_data->regmap_conf->max_register;
+>>> +     unsigned int rx_max = rx_base + (num_ch * ch_stride);
+>>> +     unsigned int tx_max = tx_base + (num_ch * ch_stride);
+>>> +
+>>> +     if ((reg >= rx_base) && (reg < rx_max)) {
+>> The braces are not needed around the comparisons because they precede
+>> the AND. Same for all other similar occurrences in the code.
+> 
+> While that is true, some prefer to use explicit braces to make it more
+> readable.
+> In the past I was told to use explicitly in such cases.
 
-
-On 1/24/2020 6:48 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 20.01.2020 17:23, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> [snip]
->> +static int tegra_ahub_get_value_enum(struct snd_kcontrol *kctl,
->> +                                  struct snd_ctl_elem_value *uctl)
->> +{
->> +     struct snd_soc_component *cmpnt =3D snd_soc_dapm_kcontrol_componen=
-t(kctl);
->> +     struct tegra_ahub *ahub =3D snd_soc_component_get_drvdata(cmpnt);
->> +     struct soc_enum *e =3D (struct soc_enum *)kctl->private_value;
->> +     unsigned int reg, i, bit_pos =3D 0;
->> +
->> +     /*
->> +      * Find the bit position of current MUX input.
->> +      * If nothing is set, position would be 0 and it corresponds to 'N=
-one'.
->> +      */
->> +     for (i =3D 0; i < ahub->soc_data->reg_count; i++) {
->> +             unsigned int reg_val;
->> +
->> +             reg =3D e->reg + (TEGRA210_XBAR_PART1_RX * i);
->> +             snd_soc_component_read(cmpnt, reg, &reg_val);
->> +             reg_val &=3D ahub->soc_data->mask[i];
->> +
->> +             if (reg_val) {
->> +                     bit_pos =3D ffs(reg_val) +
->> +                               (8 * cmpnt->val_bytes * i);
-> Multiplication takes precedence, braces are not needed. Same for all
-> other occurrences in the code.
->
-> [snip]
->> +                     break;
->> +             }
->> +     }
->> +
->> +     /* Find index related to the item in array *_ahub_mux_texts[] */
->> +     for (i =3D 0; i < e->items; i++) {
->> +             if (bit_pos =3D=3D e->values[i]) {
->> +                     uctl->value.enumerated.item[0] =3D i;
->> +                     break;
->> +             }
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int tegra_ahub_put_value_enum(struct snd_kcontrol *kctl,
->> +                                  struct snd_ctl_elem_value *uctl)
->> +{
->> +     struct snd_soc_component *cmpnt =3D snd_soc_dapm_kcontrol_componen=
-t(kctl);
->> +     struct tegra_ahub *ahub =3D snd_soc_component_get_drvdata(cmpnt);
->> +     struct snd_soc_dapm_context *dapm =3D snd_soc_dapm_kcontrol_dapm(k=
-ctl);
->> +     struct soc_enum *e =3D (struct soc_enum *)kctl->private_value;
->> +     struct snd_soc_dapm_update update[TEGRA_XBAR_UPDATE_MAX_REG] =3D {=
- };
-> Shouldn't this be {0} to make array zero'ed?
-
-Isn't it the same with empty braces?
->
-> [snip]
->> +static int tegra_ahub_probe(struct platform_device *pdev)
->> +{
->> +     const struct of_device_id *match;
->> +     struct tegra_ahub *ahub;
->> +     struct tegra_ahub_soc_data *soc_data;
->> +     void __iomem *regs;
->> +     struct resource *res;
->> +     int ret;
->> +
->> +     match =3D of_match_device(tegra_ahub_of_match, &pdev->dev);
->> +     if (!match) {
->> +             dev_err(&pdev->dev, "error: no device match found\n");
->> +             return -ENODEV;
->> +     }
->> +
->> +     soc_data =3D (struct tegra_ahub_soc_data *)match->data;
-> soc_data =3D device_get_match_data(&pdev->dev);
-
-will update
->> +     ahub =3D devm_kcalloc(&pdev->dev, 1, sizeof(*ahub), GFP_KERNEL);
->> +     if (!ahub)
->> +             return -ENOMEM;
->> +
->> +     ahub->soc_data =3D soc_data;
->> +
->> +     platform_set_drvdata(pdev, ahub);
->> +
->> +     ahub->clk =3D devm_clk_get(&pdev->dev, "ahub");
->> +     if (IS_ERR(ahub->clk)) {
->> +             dev_err(&pdev->dev, "can't retrieve AHUB clock\n");
->> +             return PTR_ERR(ahub->clk);
->> +     }
->> +
->> +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +
->> +     regs =3D devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(regs))
->> +             return PTR_ERR(regs);
-> regs =3D devm_platform_ioremap_resource(pdev, 0);
-
-will update
-
+At least most of code in kernel (I've seen) doesn't have superfluous
+parens (the curvy thingies actually should be the braces). Readability
+is arguable in this case, I'm finding such code a bit more difficult to
+read, although in some cases parens and spacing may help to read more
+complex constructions.
