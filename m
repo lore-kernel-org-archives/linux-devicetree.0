@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C305C35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F41C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA08208C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2FD2075D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876297;
-	bh=Rw6tVfC2c6QLdOPEUQ6KBAa5nQZ0ZZvMUWY3ziIiaFo=;
+	s=default; t=1579876308;
+	bh=NrobwdqGaNU0yOau8EcxQ97LyAVOpcmmB++1rcAI2n4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kgzDYSVK+pPVXeW6hMp5lAD4hBVpeLH/k+EpyDi8GYvQpS/aYrubTCQJVMvh/1GD0
-	 +NT9EgT2YZW6J6Z1DB2otk4M9coFxqOLWEzcp1R9NJ0qqTd1ty/HxednCKJKqGEq45
-	 g4Vr+vrna8DL6YrhGfNRScRBG6IXah3cgrV1Kz+0=
+	b=K4hqScXaBHzjTQbwArlkAIAY3cBEFZdQA5TBXDZ/wzaqU3LLMAny03iP+nMXBs29g
+	 SDvPHh6BWNTPMXzFMguPm1xHuXG2CWZ2z0gejFeBNqKYkm5Rvl69lU/D0eEQJaQvQK
+	 p8mD6lxylOc2q6pLmpr8c5gG+AKwQQCFtA9L6v/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391696AbgAXOb1 (ORCPT
+        id S2391859AbgAXObl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:31:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41462 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:31:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730086AbgAXOUZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:25 -0500
+        id S2404734AbgAXOUU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFFD024682;
-        Fri, 24 Jan 2020 14:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F1CE21569;
+        Fri, 24 Jan 2020 14:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875625;
-        bh=Rw6tVfC2c6QLdOPEUQ6KBAa5nQZ0ZZvMUWY3ziIiaFo=;
+        s=default; t=1579875620;
+        bh=NrobwdqGaNU0yOau8EcxQ97LyAVOpcmmB++1rcAI2n4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lWohjO3Cb/KydxuMy3cmZPxOMFTeC04Nnr7YAxFdHeTSx3wgQ5LkHcztgfvkCtIiv
-         NdUPS3NWFTquMzdscfuNVUcEWh5LX9r0THnP5B5RCHLFoB9h2FsWFd1y/RD1TgibCv
-         JspS53O/zXK8tLnGJqd5AtZog9fqxTCvInBx7X7M=
+        b=zdVUufX9DJT1Z4I18buVOtzHr3l3tzDfB5DAPhdSEh8UQDq8WOW1D22HZnt6oxd4t
+         TgRmnBRUAtAXXMpn2oDE6Yc2yY+3+owqOS3KheKq52MKOW0O6UOsVU+pL6MS6HfUFA
+         1FugVEDAZI5NPemhcZ8+2hGskVxWnDwd/VUx82BI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>, Fabio Estevam <festevam@gmail.com>,
-        Ludwig Zenz <lzenz@dh-electronics.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 10/56] ARM: dts: imx6q-dhcom: Fix SGTL5000 VDDIO regulator connection
-Date:   Fri, 24 Jan 2020 09:19:26 -0500
-Message-Id: <20200124142012.29752-10-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 06/56] ARM: dts: beagle-x15-common: Model 5V0 regulator
+Date:   Fri, 24 Jan 2020 09:19:22 -0500
+Message-Id: <20200124142012.29752-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -62,38 +60,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit fe6a6689d1815b63528796886853890d8ee7f021 ]
+[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
 
-The SGTL5000 VDDIO is connected to the PMIC SW2 output, not to
-a fixed 3V3 rail. Describe this correctly in the DT.
+On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
+connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
+which is connected to the COMQ port. Model 5V0 regulator here in order
+for it to be used in am57xx-evm to model 3V6 regulator.
 
-Fixes: 52c7a088badd ("ARM: dts: imx6q: Add support for the DHCOM iMX6 SoM and PDK2")
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Ludwig Zenz <lzenz@dh-electronics.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-To: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6q-dhcom-pdk2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
-index 9c61e3be2d9a3..1c46df6827f50 100644
---- a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
-+++ b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
-@@ -55,7 +55,7 @@
- 		#sound-dai-cells = <0>;
- 		clocks = <&clk_ext_audio_codec>;
- 		VDDA-supply = <&reg_3p3v>;
--		VDDIO-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&sw2_reg>;
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index 872382bd043f8..0051b2e05c2d5 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -32,6 +32,27 @@
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
  	};
- };
  
++	main_12v0: fixedregulator-main_12v0 {
++		/* main supply */
++		compatible = "regulator-fixed";
++		regulator-name = "main_12v0";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	evm_5v0: fixedregulator-evm_5v0 {
++		/* Output of TPS54531D */
++		compatible = "regulator-fixed";
++		regulator-name = "evm_5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&main_12v0>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	vdd_3v3: fixedregulator-vdd_3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vdd_3v3";
 -- 
 2.20.1
 
