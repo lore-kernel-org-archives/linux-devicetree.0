@@ -2,51 +2,54 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D206C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52372C32771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE403206F0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7052071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876674;
-	bh=p15qlSrX4MSE+uvLmDfK5MDFqi5FTYf1+81CX+yZpo8=;
+	s=default; t=1579876683;
+	bh=35PqxrhcLrX9VzS1hdl7C2Dav0keXPvG391q/Zwl5dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWgDq4MV16knNOLKGX8322bPqPltP8P8C75an3vqYTw6SsoXfpKADkx1yXXymfTOB
-	 Yot2ZD/SSCQL/LqKt/68tAPGoz3+celEvnfl1z9Hwzkk2B5zljcPCj01tNG3FS0Y0X
-	 Okkm2MvWJBLIGge+S5EDOz2hdO/Ujv8vf1uVUMz4=
+	b=2N0Iy++lCFhqdLe7tvdi0tNEudGBZmjkMt1E6BnQoqUJk7KkvZsu/nBP04Xo514cl
+	 tln2aZHdjjJt2gKlelPhuPdoG2+vjERs/l3L/Rr6rPqTKQGHr5beP7fgbcBf0WGQXJ
+	 vMJyAPhi/JSj3BbIk1Zw95GgPaZv+9F0wW+2yZuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387716AbgAXOht (ORCPT
+        id S2388162AbgAXOhy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:37:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38918 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:37:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391172AbgAXOS5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:57 -0500
+        id S2403793AbgAXOSx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95CD922527;
-        Fri, 24 Jan 2020 14:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA7F0222D9;
+        Fri, 24 Jan 2020 14:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875536;
-        bh=p15qlSrX4MSE+uvLmDfK5MDFqi5FTYf1+81CX+yZpo8=;
+        s=default; t=1579875532;
+        bh=35PqxrhcLrX9VzS1hdl7C2Dav0keXPvG391q/Zwl5dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C4QSC8OjuymZ9wEJhAvgfYFEH1+Suds72DgUaPsUYVPtxPK5DJXntRBKczMcn9TEw
-         EQBTnsAY0Od/kae+Oue4hosNfm7bFQdqzDNUsuSIfQlz4jKNgm5cJ8y+LWtg6OhQyG
-         dygv3WqkrfXrf/7LJbNCXsz6DSSsxp8lA2Q3m74Y=
+        b=KZGkLBg5jEN88Mp4uDOBr8aQMIoclfEeqX2k7F+GrYqzHW/0VQcKnnj+v4cobCd+7
+         0NF+BpM7XjEyF+xCV7ctwl0VJBbq83y5eJJIWUg/RD+d083NGF2yAn5n32S85dXlbO
+         GfnzKlK3+ZK2E0plYZLuTBgsudBw1qYGRyFLqnto=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Jagan Teki <jagan@amarulasolutions.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 033/107] ARM: dts: imx6sl-evk: Remove incorrect power supply assignment
-Date:   Fri, 24 Jan 2020 09:17:03 -0500
-Message-Id: <20200124141817.28793-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 030/107] ARM: dts: imx6q-icore-mipi: Use 1.5 version of i.Core MX6DL
+Date:   Fri, 24 Jan 2020 09:17:00 -0500
+Message-Id: <20200124141817.28793-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -59,41 +62,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-[ Upstream commit b4eb9ef0e29cd28c6fd684e0ab77bda824acb20e ]
+[ Upstream commit 4a132f60808ae3a751e107a373f8572012352d3c ]
 
-The vdd3p0 LDO's input should be from external USB VBUS directly, NOT
-PMIC's power supply, the vdd3p0 LDO's target output voltage can be
-controlled by SW, and it requires input voltage to be high enough, with
-incorrect power supply assigned, if the power supply's voltage is lower
-than the LDO target output voltage, it will return fail and skip the LDO
-voltage adjustment, so remove the power supply assignment for vdd3p0 to
-avoid such scenario.
+The EDIMM STARTER KIT i.Core 1.5 MIPI Evaluation is based on
+the 1.5 version of the i.Core MX6 cpu module. The 1.5 version
+differs from the original one for a few details, including the
+ethernet PHY interface clock provider.
 
-Fixes: 3feea8805d6f ("ARM: dts: imx6sl-evk: Assign corresponding power supply for LDOs")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+With this commit, the ethernet interface works properly:
+SMSC LAN8710/LAN8720 2188000.ethernet-1:00: attached PHY driver
+
+While before using the 1.5 version, ethernet failed to startup
+do to un-clocked PHY interface:
+fec 2188000.ethernet eth0: could not attach to PHY
+
+Similar fix has merged for i.Core MX6Q but missed to update for DL.
+
+Fixes: a8039f2dd089 ("ARM: dts: imx6dl: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit support")
+Cc: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sl-evk.dts | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/boot/dts/imx6dl-icore-mipi.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
-index 4829aa682aeb0..bc86cfaaa9c27 100644
---- a/arch/arm/boot/dts/imx6sl-evk.dts
-+++ b/arch/arm/boot/dts/imx6sl-evk.dts
-@@ -584,10 +584,6 @@
- 	vin-supply = <&sw2_reg>;
- };
+diff --git a/arch/arm/boot/dts/imx6dl-icore-mipi.dts b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
+index e43bccb78ab2b..d8f3821a0ffdc 100644
+--- a/arch/arm/boot/dts/imx6dl-icore-mipi.dts
++++ b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
+@@ -8,7 +8,7 @@
+ /dts-v1/;
  
--&reg_vdd3p0 {
--	vin-supply = <&sw2_reg>;
--};
--
- &reg_vdd2p5 {
- 	vin-supply = <&sw2_reg>;
- };
+ #include "imx6dl.dtsi"
+-#include "imx6qdl-icore.dtsi"
++#include "imx6qdl-icore-1.5.dtsi"
+ 
+ / {
+ 	model = "Engicam i.CoreM6 DualLite/Solo MIPI Starter Kit";
 -- 
 2.20.1
 
