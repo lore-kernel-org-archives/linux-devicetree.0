@@ -2,51 +2,53 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC7FC35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FDAC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679C420838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3143B20838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876683;
-	bh=M1XJdYuI26x5zhD3lYCIl85IT2am0Ic/TF32xNAwtnQ=;
+	s=default; t=1579876728;
+	bh=TDxPorzrIJGs1ZqB7kiIUwv25RiRwUZ8gQeU5ZGA0Yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=axK+jPLQY4adspnYCexeDxfCXGuAJRCcEYuIiQMjyHiwh1OV9k0y+9FUwVjvEbOSI
-	 zRZdD3vR8pSyt525W2wW7qnnSjbaL/P8JUCrdVX8m3VTt6s3kjErhawsZ19WT4d1ty
-	 RLSsUJnVaS0WWMSLyU9h8gA/jDuISFgmVrT5BMKY=
+	b=NxmGTPAmkB6yfRQyPkIe/g420jo3wnNNOylleGImmDwnM/11kb8PGMsCQJAHd1yjM
+	 YDnGK0OG0qZwQwcoIZNoA1oTx8pLx3IRS0/ImaOyQ4z0RkQ81FExlxUHays1exTDv2
+	 5H4gfaTlaHIYXiTDyyEd3/aj0MPAnPqLCsRUARfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388121AbgAXOhy (ORCPT
+        id S2388691AbgAXOim (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:37:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38896 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:38:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403838AbgAXOSz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:55 -0500
+        id S2390932AbgAXOSj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79E34214AF;
-        Fri, 24 Jan 2020 14:18:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF94F208C4;
+        Fri, 24 Jan 2020 14:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875535;
-        bh=M1XJdYuI26x5zhD3lYCIl85IT2am0Ic/TF32xNAwtnQ=;
+        s=default; t=1579875518;
+        bh=TDxPorzrIJGs1ZqB7kiIUwv25RiRwUZ8gQeU5ZGA0Yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=onVvVI2VWj+oAc2BUYaXqYGA+Pw8tF84U8mhHLzbMp0Mj955wPfPjmXNieEbRVhgi
-         tJgrXTTMTP/sZQvO8X5Zuw/SUy4G2/KW/nId8bNgE5WAT57lbICOU9JAzBjvwS1Ux0
-         vwhjQTn0GEMhNOkD57IMBUwwo3TFu4PPWXxtPRRk=
+        b=r0fV1D/da4A/2mpzyJpC950PQ2V/861yc9+JBLLk5ULwQcs49yUvC8CtDkAiN4MEG
+         7CORZZHhFFiy3XWGQT0H4D//0fUOGapTgqBB1ooHK0kampU0e8rAW/kukr+9gYjsoC
+         2TRdR+Jh1dpDimQuq7Ye9i3HUBakBZix9CfDTE6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 032/107] ARM: dts: imx6sx-sdb: Remove incorrect power supply assignment
-Date:   Fri, 24 Jan 2020 09:17:02 -0500
-Message-Id: <20200124141817.28793-32-sashal@kernel.org>
+Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 018/107] arm64: dts: imx8mq-librem5-devkit: use correct interrupt for the magnetometer
+Date:   Fri, 24 Jan 2020 09:16:48 -0500
+Message-Id: <20200124141817.28793-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -59,57 +61,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-[ Upstream commit d4918ebb5c256d26696a13e78ac68c146111191a ]
+[ Upstream commit 106f7b3bf943d267eb657f34616adcaadb2ab07f ]
 
-The vdd3p0 LDO's input should be from external USB VBUS directly, NOT
-PMIC's power supply, the vdd3p0 LDO's target output voltage can be
-controlled by SW, and it requires input voltage to be high enough, with
-incorrect power supply assigned, if the power supply's voltage is lower
-than the LDO target output voltage, it will return fail and skip the LDO
-voltage adjustment, so remove the power supply assignment for vdd3p0 to
-avoid such scenario.
+The LSM9DS1 uses a high level interrupt.
 
-Fixes: 37a4bdead109 ("ARM: dts: imx6sx-sdb: Assign corresponding power supply for LDOs")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sx-sdb-reva.dts | 4 ----
- arch/arm/boot/dts/imx6sx-sdb.dts      | 4 ----
- 2 files changed, 8 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-index f1830ed387a55..91a7548fdb8db 100644
---- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-@@ -159,10 +159,6 @@
- 	vin-supply = <&vgen6_reg>;
- };
- 
--&reg_vdd3p0 {
--	vin-supply = <&sw2_reg>;
--};
--
- &reg_vdd2p5 {
- 	vin-supply = <&vgen6_reg>;
- };
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
-index a8ee7087af5a5..5a63ca6157229 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dts
-@@ -141,10 +141,6 @@
- 	vin-supply = <&vgen6_reg>;
- };
- 
--&reg_vdd3p0 {
--	vin-supply = <&sw2_reg>;
--};
--
- &reg_vdd2p5 {
- 	vin-supply = <&vgen6_reg>;
- };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index 683a110356431..98cfe67b7db7b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -421,7 +421,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_imu>;
+ 		interrupt-parent = <&gpio3>;
+-		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
+ 		vdd-supply = <&reg_3v3_p>;
+ 		vddio-supply = <&reg_3v3_p>;
+ 	};
 -- 
 2.20.1
 
