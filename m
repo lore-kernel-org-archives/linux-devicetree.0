@@ -2,105 +2,107 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02AAC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 19:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BFCC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 20:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975CB20702
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 19:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0312081E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 20:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i11zhh4E"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="eqqiUcBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391745AbgAXTxT (ORCPT
+        id S2388730AbgAXUXp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 14:53:19 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33234 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391581AbgAXTxT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 14:53:19 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OJrCoA082355;
-        Fri, 24 Jan 2020 13:53:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579895592;
-        bh=vG3tvGD/QRBqdgtOXjx5zOUsGHCK/ABAITDFK51OWYc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=i11zhh4EApu8nwWvLZH7bsEx134pNpg6OXOl7i64JLV/NRj9qIz7qcSgc02tmyWOD
-         DNPRTrWkaz0dGxoq1jvYVMwkhj4mcqh16wGhmxcUAck/L3wRso7+v+XI1s10nWbGGb
-         VlWO6CUV/tRJo44ctePh7SliyIxuyvhwy40VEWXc=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00OJrCCX090059
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Jan 2020 13:53:12 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
- Jan 2020 13:53:12 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 24 Jan 2020 13:53:12 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OJrCv1053018;
-        Fri, 24 Jan 2020 13:53:12 -0600
-Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
- config
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191210163204.28225-1-dmurphy@ti.com>
- <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <3a67743b-aec6-ba4e-14a6-c2ab327e1eae@ti.com>
-Date:   Fri, 24 Jan 2020 13:50:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jan 2020 15:23:45 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38763 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387480AbgAXUXo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 15:23:44 -0500
+Received: by mail-lf1-f65.google.com with SMTP id r14so2025205lfm.5
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 12:23:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YNUNzci7Ki+kYYCPvb39XVTgjfk5mcI92JUtukf799o=;
+        b=eqqiUcBNVVH+UrA+DM3vLI5nS815gkneczHy+NGnuiq3u2HqT3jXnATb3eUDRR0GQO
+         4vhlHlDPiiL772CNPAMzt7U0uuZgh0C0WRdblM4zctdf4R4P5COJNKEnppD+cgWFjWuG
+         UhNX+3otnjoeMnIk8Eu5aV39oo0SUmgI6x4FHrQsttiGslEol8mXa5msrnfUOfthAt9F
+         2SWMdciNoyytzAofnwUOrpSyBSMD2gBICMpHgqW4xFKp1daMjuC7pJgBS3xGq+yh0SYx
+         1nzPpy9kkj4R/xCGmgN7cfKKIKqH2cDL/1L5gcnO5n9yN3WfJmDaqL02PD69OmM6KGNi
+         2P2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YNUNzci7Ki+kYYCPvb39XVTgjfk5mcI92JUtukf799o=;
+        b=r/0/BbbhehKuq5FfpDrRSJfhlS1vw7CsbxStapwy4QanEgsjjvmV8t15/Y9ub/Ibjw
+         88bJC3XCn+K95SOVj5oe2dOsM5BC4T44ZS9HqHxidERSBlk9hUJ2DKlMY5ZMiW6f5U7R
+         1LI9aJdNzAlubkKOQS022Sw7HbNeTj+kG6TAhDR4GSAQfi+r7HrPAwo+JpTLDLX3zTCV
+         KEeG4TkhlxolW9V4YQj8sBVgasuIoB3SYtrK8GUCRmgsr0R3vnLQmmHh2ufV60zmniSy
+         4kWKuIwqIrJieT/4BzXj8/yibcsEnezqe5Vzo09qn5/41L+tBrWP4+esYWDlAu7tlhq/
+         zdFA==
+X-Gm-Message-State: APjAAAVAlqy1JXJqSGhPd1MtF4jTHDt55COBUZSnigpX8P1AWvW6lrlp
+        O0ya7O26PEqFEvGXvyYznNXzRg==
+X-Google-Smtp-Source: APXvYqwKZYJUPJeYgEpmrE/NTzuIH587Zpaxvsd190XRkzqqSgxGbHOlCFcDOcIq6d06uBMsG0OmNA==
+X-Received: by 2002:a19:3f16:: with SMTP id m22mr2266907lfa.116.1579897422600;
+        Fri, 24 Jan 2020 12:23:42 -0800 (PST)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id d11sm3386928lfj.3.2020.01.24.12.23.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jan 2020 12:23:41 -0800 (PST)
+Date:   Fri, 24 Jan 2020 12:11:40 -0800
+From:   Olof Johansson <olof@lixom.net>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>, soc@kernel.org,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+Subject: Re: [PATCH] dt-bindings: fix compilation error of the example in
+ marvell,mmp3-hsic-phy.yaml
+Message-ID: <20200124201140.oczzqz2xplbq3abe@localhost>
+References: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
+ <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Marc
+On Fri, Jan 24, 2020 at 08:08:58AM -0600, Rob Herring wrote:
+> On Fri, Jan 24, 2020 at 4:58 AM Dafna Hirschfeld
+> <dafna.hirschfeld@collabora.com> wrote:
+> >
+> > Running `make dt_binging_check`, gives the error:
+> >
+> > DTC     Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dt.yaml
+> > Error: Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dts:20.41-42 syntax error
+> > FATAL ERROR: Unable to parse input tree
+> >
+> > This is because the example uses the macro GPIO_ACTIVE_HIGH which
+> > is defined in gpio.h but the include of this header is missing.
+> > Add the include to fix the error.
+> >
+> > Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> 
+> Fixes: f6f149604eef ("dt-bindings: phy: Add binding for marvell,mmp3-hsic-phy")
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> Arnd, Olof, The above commit is in your tree. Please apply this.
 
-On 1/2/20 6:38 AM, Marc Kleine-Budde wrote:
-> On 12/10/19 5:32 PM, Dan Murphy wrote:
->> The parse config function now performs action on the device either
->> reading or writing and a reset.  If the regulator is managed it needs
->> to be turned on.  So turn on the regulator if available if the parsing
->> fails then turn off the regulator.
-> Another BTW:
-> Consider converting the switching of the vsup to runtime_pm.
->
-> Yet another one:
-> Why do you disable the clocks in the error path of tcan4x5x_can_probe(),
-> but never enable them?
->
->> out_clk:
->> 	if (!IS_ERR(mcan_class->cclk)) {
->> 		clk_disable_unprepare(mcan_class->cclk);
->> 		clk_disable_unprepare(mcan_class->hclk);
->> 	}
-> - please move the clock handling from the m_can.c to the individual
->    driver
-> - please move the clock handling to runtime_pm in the individual driver
-> - remove the obsolete m_can_class_get_clocks()
-> - make runtime_pm mandatory
-
-Ack to the above I have made these changes locally.  Will submit next week.
-
-Dan
+Applied.
 
 
-> regards,
-> Marc
->
+Thanks,
+
+-Olof
