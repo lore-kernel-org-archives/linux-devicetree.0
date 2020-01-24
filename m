@@ -2,774 +2,410 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779C0C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 12:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92BDC35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 12:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3383B206D4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 12:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98ED1222D9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 12:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="iuM3ri7C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QcqxNJa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgAXMR6 (ORCPT
+        id S1732686AbgAXMcU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:17:58 -0500
-Received: from forward101o.mail.yandex.net ([37.140.190.181]:47013 "EHLO
-        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730037AbgAXMR6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:17:58 -0500
-Received: from mxback4g.mail.yandex.net (mxback4g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:165])
-        by forward101o.mail.yandex.net (Yandex) with ESMTP id 702EE3C02141;
-        Fri, 24 Jan 2020 15:17:49 +0300 (MSK)
-Received: from myt4-07bed427b9db.qloud-c.yandex.net (myt4-07bed427b9db.qloud-c.yandex.net [2a02:6b8:c00:887:0:640:7be:d427])
-        by mxback4g.mail.yandex.net (mxback/Yandex) with ESMTP id 8clbfvkAQJ-HlMumOnm;
-        Fri, 24 Jan 2020 15:17:49 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579868269;
-        bh=SkQRh3tt4zAWBa4JBX6TRbor9WaPmaTtHy84dsdVgYI=;
-        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
-        b=iuM3ri7C7COHJb0bcIBVviN+bnygndk9G+tRatFguvxXSVau9r94Cl2p3/RdDhbhc
-         ZdL7N4Xm+wvHLr3gJ/H6Nsvl/imlopkbS5CB7ddeZ/Qo8FkgVUZlFW/ZfjXfcJpYPU
-         iRfr3rsRb6GKTsGR3LJOcePUvR9/GhfgFu5ORMd4=
-Authentication-Results: mxback4g.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by myt4-07bed427b9db.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id oYazNvl0FA-HiUuXZrM;
-        Fri, 24 Jan 2020 15:17:44 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Date:   Fri, 24 Jan 2020 20:17:35 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1579867508-81499-3-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1579867508-81499-1-git-send-email-zhouyanjie@wanyeetech.com> <1579867508-81499-3-git-send-email-zhouyanjie@wanyeetech.com>
+        Fri, 24 Jan 2020 07:32:20 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34348 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729774AbgAXMcT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 07:32:19 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so1787964wrr.1
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 04:32:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2DvfRhHynNvctGDhIqeR+A7ckBUP/GgKqU+ftyJEj8E=;
+        b=QcqxNJa4FJnDj4SpaEVyp4D2B2IPaYqBMGC/maq+JnQRzhU+NEBZ0pf95egBsFNbBL
+         J17y6kLTgygg5I9NbLrTchWHd0fqhQUIxqUYDKH3tm4NdEeydVGoOe7fv3mbbfRtaLmz
+         NARCH2NodNr+ar1IIC+GVuwTKcXknaDWjgZkVjHmgOxdCG7HXKNq0Fz+3QehMXKKwtRy
+         k1NWeE/Y4qW3i1uaq8YwWRJRt1lOFRa6+IP9U6pPUVKOrhsSCB4yK9yrN2PBGGeVSfkI
+         UH829eXz53LcIGiUvvMabQ391A0YnIl2J9FYoUHaU2Af6rq6v632/d9MUsh4RBbon99H
+         b6og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2DvfRhHynNvctGDhIqeR+A7ckBUP/GgKqU+ftyJEj8E=;
+        b=QBcJQXuzXtXyaZHPBhJLyLFbKxOv6ZflNYf0gf4p53hey3RUWeqmdS7f8thMoZ49dc
+         4QnsprzfrMh0NmhsUPl0qxnsv6k1SHfDg4jOMNLf7nOtdZ8VfgZ+hMReqjktaFtiIX5M
+         +KcjwreddWB2iHVld7GKrs6+VjyPWpza9QaJqf2Mq2EDSVocJyuYdkwrpvg8ELWWzmcq
+         ivp5eglnoekaYo7DjqH0b7wpKqP5xt1Al99PVpgyHIikkSyia3ajSzdrnXlcJ/acjxrL
+         lKXSh4vyIhyYCiDyywRu89j/cOm6gMdwCXBV7gMiBiQsq3hc/H/3MHausaUU9YBtP0Kk
+         0AjQ==
+X-Gm-Message-State: APjAAAWpu4b5N1ld6Fv12b/4JHi80/qlOtRA/dqKNZqKifQR+dYUZAmN
+        +25TAIDjoNiT25rW1DENRjAclQ==
+X-Google-Smtp-Source: APXvYqzDAdDLZuyqLkswFIwJJPxGUAZE5C98kj6jNyQtTG2iqwxJUaeWHUIDU3//WV6i1/A3Ttkyzg==
+X-Received: by 2002:adf:ef92:: with SMTP id d18mr3961599wro.234.1579869136650;
+        Fri, 24 Jan 2020 04:32:16 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id n3sm6982315wrs.8.2020.01.24.04.32.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Jan 2020 04:32:15 -0800 (PST)
+Subject: Re: [RFC PATCH v3 5/7] devfreq: exynos-bus: Add interconnect
+ functionality to exynos-bus
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com, krzk@kernel.org
+References: <20191220115653.6487-1-a.swigon@samsung.com>
+ <CGME20191220120145eucas1p295af63eed7b23982d8c49fcf875cec8c@eucas1p2.samsung.com>
+ <20191220115653.6487-6-a.swigon@samsung.com>
+ <15795421-db12-8466-bb7e-688e6625cf4a@linaro.org>
+ <0de33b1ae7c52270d11c606ecccc9af5f44d0421.camel@samsung.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <58060878-c08d-dc40-7367-ae6e4391245b@linaro.org>
+Date:   Fri, 24 Jan 2020 14:32:14 +0200
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/6] MIPS: JZ4780: Introduce SMP support.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org
-CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        jhogan@kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org,
-        shawnguo@kernel.org, mark.rutland@arm.com, syq@debian.org,
-        ralf@linux-mips.org, miquel.raynal@bootlin.com,
-        keescook@chromium.org, ebiederm@xmission.com, krzk@kernel.org,
-        geert+renesas@glider.be, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
-        chenhc@lemote.com, paul@boddie.org.uk, hns@goldelico.com,
-        mips-creator-ci20-dev@googlegroups.com, rick.tyliu@ingenic.com
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <F90879F9-1CA8-4292-AC4D-B0E8E9D01AF2@flygoat.com>
+In-Reply-To: <0de33b1ae7c52270d11c606ecccc9af5f44d0421.camel@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Artur,
 
+On 1/24/20 13:22, Artur Świgoń wrote:
+> Hi Georgi,
+> 
+> On Wed, 2020-01-22 at 19:02 +0200, Georgi Djakov wrote:
+>> Hi Artur,
+>>
+>> On 12/20/19 13:56, Artur Świgoń wrote:
+>>> This patch adds interconnect functionality to the exynos-bus devfreq
+>>> driver.
+>>>
+>>> The SoC topology is a graph (or, more specifically, a tree) and its
+>>> edges are specified using the 'exynos,interconnect-parent-node' in the
+>>> DT. Due to unspecified relative probing order, -EPROBE_DEFER may be
+>>> propagated to ensure that the parent is probed before its children.
+>>>
+>>> Each bus is now an interconnect provider and an interconnect node as well
+>>> (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
+>>> itself as a node. Node IDs are not hardcoded but rather assigned at
+>>
+>> Just to note that usually the provider consists of multiple nodes and each node
+>> represents a single master or slave port on the AXI bus for example. I am not
+>> sure whether this represents correctly the Exynos hardware, so it's up to
+>> you.
+>>
+>>> runtime, in probing order (subject to the above-mentioned exception
+>>> regarding relative order). This approach allows for using this driver with
+>>> various Exynos SoCs.
+>>
+>> This sounds good. I am wondering whether such dynamic probing would be useful
+>> for other platforms too. Then maybe it would make sense to even have a common DT
+>> property, but we will see.
+>>
+>> Is this going to be used only together with devfreq?
+> 
+> Yes, this functions solely as an extension to devfreq, hence the slightly
+> unusual architecture (one icc_provider/icc_node per devfreq).
 
-=E4=BA=8E 2020=E5=B9=B41=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888=
-:05:03, "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)" <zhouyanjie@wanyeetech=
-=2Ecom> =E5=86=99=E5=88=B0:
->Forward port smp support from kernel 3=2E18=2E3 of CI20_linux
->to upstream kernel 5=2E5=2E
->
->Tested-by: H=2E Nikolaus Schaller <hns@goldelico=2Ecom>
->Tested-by: Paul Boddie <paul@boddie=2Eorg=2Euk>
->Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech=2Ecom>
+Ok, thanks for clarifying.
 
-Happy Chinese Newyear!
+> (Compared to a singleton icc_provider, this approach yields less code with
+> a very simple xlate()).
+> 
+> With exactly one icc_node for every devfreq device, I think I will actually
+> reuse the devfreq ID (as seen in the device name, e.g. the "3" in "devfreq3")
+> for the node ID. The devfreq framework already does the dynamic numbering
+> thing that I do in this patch using IDR.
+> 
 
-Reviewed-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+Sounds good.
 
+>>> Frequencies requested via the interconnect API for a given node are
+>>> propagated to devfreq using dev_pm_qos_update_request(). Please note that
+>>> it is not an error when CONFIG_INTERCONNECT is 'n', in which case all
+>>> interconnect API functions are no-op.
+>>
+>> How about the case where CONFIG_INTERCONNECT=m. Looks like the build will fail
+>> if CONFIG_ARM_EXYNOS_BUS_DEVFREQ=y, so this dependency should be expressed in
+>> Kconfig.
+> 
+> I think adding:
+> 	depends on INTERCONNECT || !INTERCONNECT
 
->---
->
->Notes:
->    v1-v2:
->    1=2ERemove unnecessary "plat_irq_dispatch(void)" in irq-ingenic=2Ec=
-=2E
->2=2EAdd a timeout check for "jz4780_boot_secondary()" to avoid a dead
->loop=2E
->    3=2EReplace hard code in smp=2Ec with macro=2E
->   =20
->    v2->v3:
-> 1=2ERemove unnecessary "extern void (*r4k_blast_dcache)(void)" in smp=2E=
-c=2E
->2=2EUse "for_each_of_cpu_node" instead "for_each_compatible_node" in
->smp=2Ec=2E
->3=2EUse "of_cpu_node_to_id" instead "of_property_read_u32_index" in
->smp=2Ec=2E
->    4=2EMove LCR related operations to jz4780-cgu=2Ec=2E
->
-> arch/mips/include/asm/mach-jz4740/jz4780-smp=2Eh |  91 ++++++++
-> arch/mips/jz4740/Kconfig                       |   3 +
-> arch/mips/jz4740/Makefile                      |   5 +
-> arch/mips/jz4740/prom=2Ec                        |   4 +
-> arch/mips/jz4740/smp-entry=2ES                   |  57 +++++
->arch/mips/jz4740/smp=2Ec                         | 286
->+++++++++++++++++++++++++
-> arch/mips/kernel/idle=2Ec                        |  14 +-
-> drivers/clk/ingenic/jz4780-cgu=2Ec               |  58 ++++-
-> 8 files changed, 512 insertions(+), 6 deletions(-)
-> create mode 100644 arch/mips/include/asm/mach-jz4740/jz4780-smp=2Eh
-> create mode 100644 arch/mips/jz4740/smp-entry=2ES
-> create mode 100644 arch/mips/jz4740/smp=2Ec
->
->diff --git a/arch/mips/include/asm/mach-jz4740/jz4780-smp=2Eh
->b/arch/mips/include/asm/mach-jz4740/jz4780-smp=2Eh
->new file mode 100644
->index 00000000=2E=2E3f592ce
->--- /dev/null
->+++ b/arch/mips/include/asm/mach-jz4740/jz4780-smp=2Eh
->@@ -0,0 +1,91 @@
->+/* SPDX-License-Identifier: GPL-2=2E0-or-later */
->+/*
->+ *  Copyright (C) 2013, Paul Burton <paul=2Eburton@imgtec=2Ecom>
->+ *  JZ4780 SMP definitions
->+ */
->+
->+#ifndef __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
->+#define __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
->+
->+#define read_c0_corectrl()		__read_32bit_c0_register($12, 2)
->+#define write_c0_corectrl(val)		__write_32bit_c0_register($12, 2, val)
->+
->+#define read_c0_corestatus()		__read_32bit_c0_register($12, 3)
->+#define write_c0_corestatus(val)	__write_32bit_c0_register($12, 3,
->val)
->+
->+#define read_c0_reim()			__read_32bit_c0_register($12, 4)
->+#define write_c0_reim(val)		__write_32bit_c0_register($12, 4, val)
->+
->+#define read_c0_mailbox0()		__read_32bit_c0_register($20, 0)
->+#define write_c0_mailbox0(val)		__write_32bit_c0_register($20, 0, val)
->+
->+#define read_c0_mailbox1()		__read_32bit_c0_register($20, 1)
->+#define write_c0_mailbox1(val)		__write_32bit_c0_register($20, 1, val)
->+
->+#define smp_clr_pending(mask) do {		\
->+		unsigned int stat;		\
->+		stat =3D read_c0_corestatus();	\
->+		stat &=3D ~((mask) & 0xff);	\
->+		write_c0_corestatus(stat);	\
->+	} while (0)
->+
->+/*
->+ * Core Control register
->+ */
->+#define CORECTRL_SLEEP1M_SHIFT	17
->+#define CORECTRL_SLEEP1M	(_ULCAST_(0x1) << CORECTRL_SLEEP1M_SHIFT)
->+#define CORECTRL_SLEEP0M_SHIFT	16
->+#define CORECTRL_SLEEP0M	(_ULCAST_(0x1) << CORECTRL_SLEEP0M_SHIFT)
->+#define CORECTRL_RPC1_SHIFT	9
->+#define CORECTRL_RPC1		(_ULCAST_(0x1) << CORECTRL_RPC1_SHIFT)
->+#define CORECTRL_RPC0_SHIFT	8
->+#define CORECTRL_RPC0		(_ULCAST_(0x1) << CORECTRL_RPC0_SHIFT)
->+#define CORECTRL_SWRST1_SHIFT	1
->+#define CORECTRL_SWRST1		(_ULCAST_(0x1) << CORECTRL_SWRST1_SHIFT)
->+#define CORECTRL_SWRST0_SHIFT	0
->+#define CORECTRL_SWRST0		(_ULCAST_(0x1) << CORECTRL_SWRST0_SHIFT)
->+
->+/*
->+ * Core Status register
->+ */
->+#define CORESTATUS_SLEEP1_SHIFT	17
->+#define CORESTATUS_SLEEP1	(_ULCAST_(0x1) << CORESTATUS_SLEEP1_SHIFT)
->+#define CORESTATUS_SLEEP0_SHIFT	16
->+#define CORESTATUS_SLEEP0	(_ULCAST_(0x1) << CORESTATUS_SLEEP0_SHIFT)
->+#define CORESTATUS_IRQ1P_SHIFT	9
->+#define CORESTATUS_IRQ1P	(_ULCAST_(0x1) << CORESTATUS_IRQ1P_SHIFT)
->+#define CORESTATUS_IRQ0P_SHIFT	8
->+#define CORESTATUS_IRQ0P	(_ULCAST_(0x1) << CORESTATUS_IRQ8P_SHIFT)
->+#define CORESTATUS_MIRQ1P_SHIFT	1
->+#define CORESTATUS_MIRQ1P	(_ULCAST_(0x1) << CORESTATUS_MIRQ1P_SHIFT)
->+#define CORESTATUS_MIRQ0P_SHIFT	0
->+#define CORESTATUS_MIRQ0P	(_ULCAST_(0x1) << CORESTATUS_MIRQ0P_SHIFT)
->+
->+/*
->+ * Reset Entry & IRQ Mask register
->+ */
->+#define REIM_ENTRY_SHIFT	16
->+#define REIM_ENTRY		(_ULCAST_(0xffff) << REIM_ENTRY_SHIFT)
->+#define REIM_IRQ1M_SHIFT	9
->+#define REIM_IRQ1M		(_ULCAST_(0x1) << REIM_IRQ1M_SHIFT)
->+#define REIM_IRQ0M_SHIFT	8
->+#define REIM_IRQ0M		(_ULCAST_(0x1) << REIM_IRQ0M_SHIFT)
->+#define REIM_MBOXIRQ1M_SHIFT	1
->+#define REIM_MBOXIRQ1M		(_ULCAST_(0x1) << REIM_MBOXIRQ1M_SHIFT)
->+#define REIM_MBOXIRQ0M_SHIFT	0
->+#define REIM_MBOXIRQ0M		(_ULCAST_(0x1) << REIM_MBOXIRQ0M_SHIFT)
->+
->+#ifdef CONFIG_SMP
->+
->+extern void jz4780_smp_wait_irqoff(void);
->+
->+extern void jz4780_smp_init(void);
->+extern void jz4780_secondary_cpu_entry(void);
->+
->+#else /* !CONFIG_SMP */
->+
->+static inline void jz4780_smp_init(void) { }
->+
->+#endif /* !CONFIG_SMP */
->+
->+#endif /* __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__ */
->diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
->index 412d2fa=2E=2E0239597 100644
->--- a/arch/mips/jz4740/Kconfig
->+++ b/arch/mips/jz4740/Kconfig
->@@ -34,9 +34,12 @@ config MACH_JZ4770
->=20
-> config MACH_JZ4780
-> 	bool
->+	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
-> 	select MIPS_CPU_SCACHE
->+	select NR_CPUS_DEFAULT_2
-> 	select SYS_HAS_CPU_MIPS32_R2
-> 	select SYS_SUPPORTS_HIGHMEM
->+	select SYS_SUPPORTS_SMP
->=20
-> config MACH_X1000
-> 	bool
->diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
->index 6de14c0=2E=2E0a0f024 100644
->--- a/arch/mips/jz4740/Makefile
->+++ b/arch/mips/jz4740/Makefile
->@@ -12,3 +12,8 @@ CFLAGS_setup=2Eo =3D -I$(src)/=2E=2E/=2E=2E/=2E=2E/scri=
-pts/dtc/libfdt
-> # PM support
->=20
-> obj-$(CONFIG_PM) +=3D pm=2Eo
->+
->+# SMP support
->+
->+obj-$(CONFIG_SMP) +=3D smp=2Eo
->+obj-$(CONFIG_SMP) +=3D smp-entry=2Eo
->diff --git a/arch/mips/jz4740/prom=2Ec b/arch/mips/jz4740/prom=2Ec
->index ff4555c=2E=2Ea79159e 100644
->--- a/arch/mips/jz4740/prom=2Ec
->+++ b/arch/mips/jz4740/prom=2Ec
->@@ -8,10 +8,14 @@
->=20
-> #include <asm/bootinfo=2Eh>
-> #include <asm/fw/fw=2Eh>
->+#include <asm/mach-jz4740/jz4780-smp=2Eh>
->=20
-> void __init prom_init(void)
-> {
-> 	fw_init_cmdline();
->+#if defined(CONFIG_MACH_JZ4780) && defined(CONFIG_SMP)
->+	jz4780_smp_init();
->+#endif
-> }
->=20
-> void __init prom_free_prom_memory(void)
->diff --git a/arch/mips/jz4740/smp-entry=2ES
->b/arch/mips/jz4740/smp-entry=2ES
->new file mode 100644
->index 00000000=2E=2E20049a3
->--- /dev/null
->+++ b/arch/mips/jz4740/smp-entry=2ES
->@@ -0,0 +1,57 @@
->+/* SPDX-License-Identifier: GPL-2=2E0-or-later */
->+/*
->+ *  Copyright (C) 2013, Paul Burton <paul=2Eburton@imgtec=2Ecom>
->+ *  JZ4780 SMP entry point
->+ */
->+
->+#include <asm/addrspace=2Eh>
->+#include <asm/asm=2Eh>
->+#include <asm/asmmacro=2Eh>
->+#include <asm/cacheops=2Eh>
->+#include <asm/mipsregs=2Eh>
->+
->+#define CACHE_SIZE (32 * 1024)
->+#define CACHE_LINESIZE 32
->+
->+=2Eextern jz4780_cpu_entry_sp
->+=2Eextern jz4780_cpu_entry_gp
->+
->+=2Esection =2Etext=2Esmp-entry
->+=2Ebalign 0x10000
->+=2Eset noreorder
->+LEAF(jz4780_secondary_cpu_entry)
->+	mtc0	zero, CP0_CAUSE
->+
->+	li	t0, ST0_CU0
->+	mtc0	t0, CP0_STATUS
->+
->+	/* cache setup */
->+	li	t0, KSEG0
->+	ori	t1, t0, CACHE_SIZE
->+	mtc0	zero, CP0_TAGLO, 0
->+1:	cache	Index_Store_Tag_I, 0(t0)
->+	cache	Index_Store_Tag_D, 0(t0)
->+	bne	t0, t1, 1b
->+	 addiu	t0, t0, CACHE_LINESIZE
->+
->+	/* kseg0 cache attribute */
->+	mfc0	t0, CP0_CONFIG, 0
->+	ori	t0, t0, CONF_CM_CACHABLE_NONCOHERENT
->+	mtc0	t0, CP0_CONFIG, 0
->+
->+	/* pagemask */
->+	mtc0	zero, CP0_PAGEMASK, 0
->+
->+	/* retrieve sp */
->+	la	t0, jz4780_cpu_entry_sp
->+	lw	sp, 0(t0)
->+
->+	/* retrieve gp */
->+	la	t0, jz4780_cpu_entry_gp
->+	lw	gp, 0(t0)
->+
->+	/* jump to the kernel in kseg0 */
->+	la	t0, smp_bootstrap
->+	jr	t0
->+	 nop
->+	END(jz4780_secondary_cpu_entry)
->diff --git a/arch/mips/jz4740/smp=2Ec b/arch/mips/jz4740/smp=2Ec
->new file mode 100644
->index 00000000=2E=2E19b75c2
->--- /dev/null
->+++ b/arch/mips/jz4740/smp=2Ec
->@@ -0,0 +1,286 @@
->+// SPDX-License-Identifier: GPL-2=2E0
->+/*
->+ *  Copyright (C) 2013, Paul Burton <paul=2Eburton@imgtec=2Ecom>
->+ *  JZ4780 SMP
->+ */
->+
->+#include <linux/clk=2Eh>
->+#include <linux/delay=2Eh>
->+#include <linux/interrupt=2Eh>
->+#include <linux/of=2Eh>
->+#include <linux/sched=2Eh>
->+#include <linux/sched/task_stack=2Eh>
->+#include <linux/smp=2Eh>
->+#include <linux/tick=2Eh>
->+#include <asm/mach-jz4740/jz4780-smp=2Eh>
->+#include <asm/r4kcache=2Eh>
->+#include <asm/smp-ops=2Eh>
->+
->+static struct clk *cpu_clock_gates[CONFIG_NR_CPUS] =3D { NULL };
->+
->+u32 jz4780_cpu_entry_sp;
->+u32 jz4780_cpu_entry_gp;
->+
->+static struct cpumask cpu_running;
->+
->+static DEFINE_SPINLOCK(smp_lock);
->+
->+/*
->+ * The Ingenic jz4780 SMP variant has to write back dirty cache lines
->before
->+ * executing wait=2E The CPU & cache clock will be gated until we return
->from
->+ * the wait, and if another core attempts to access data from our data
->cache
->+ * during this time then it will lock up=2E
->+ */
->+void jz4780_smp_wait_irqoff(void)
->+{
->+	unsigned long pending =3D read_c0_cause() & read_c0_status() &
->CAUSEF_IP;
->+
->+	/*
->+	 * Going to idle has a significant overhead due to the cache flush so
->+	 * try to avoid it if we'll immediately be woken again due to an IRQ=2E
->+	 */
->+	if (!need_resched() && !pending) {
->+		r4k_blast_dcache();
->+
->+		__asm__(
->+		"	=2Eset push	\n"
->+		"	=2Eset mips3	\n"
->+		"	sync		\n"
->+		"	wait		\n"
->+		"	=2Eset pop	\n");
->+	}
->+
->+	local_irq_enable();
->+}
->+
->+static irqreturn_t mbox_handler(int irq, void *dev_id)
->+{
->+	int cpu =3D smp_processor_id();
->+	u32 action, status;
->+
->+	spin_lock(&smp_lock);
->+
->+	switch (cpu) {
->+	case 0:
->+		action =3D read_c0_mailbox0();
->+		write_c0_mailbox0(0);
->+		break;
->+	case 1:
->+		action =3D read_c0_mailbox1();
->+		write_c0_mailbox1(0);
->+		break;
->+	default:
->+		panic("unhandled cpu %d!", cpu);
->+	}
->+
->+	/* clear pending mailbox interrupt */
->+	status =3D read_c0_corestatus();
->+	status &=3D ~(CORESTATUS_MIRQ0P << cpu);
->+	write_c0_corestatus(status);
->+
->+	spin_unlock(&smp_lock);
->+
->+	if (action & SMP_RESCHEDULE_YOURSELF)
->+		scheduler_ipi();
->+	if (action & SMP_CALL_FUNCTION)
->+		generic_smp_call_function_interrupt();
->+
->+	return IRQ_HANDLED;
->+}
->+
->+static struct irqaction mbox_action =3D {
->+	=2Ehandler =3D mbox_handler,
->+	=2Ename =3D "core mailbox",
->+	=2Eflags =3D IRQF_PERCPU | IRQF_NO_THREAD,
->+};
->+
->+static void jz4780_smp_setup(void)
->+{
->+	u32 addr, reim;
->+	int cpu;
->+
->+	reim =3D read_c0_reim();
->+
->+	for (cpu =3D 0; cpu < NR_CPUS; cpu++) {
->+		__cpu_number_map[cpu] =3D cpu;
->+		__cpu_logical_map[cpu] =3D cpu;
->+		set_cpu_possible(cpu, true);
->+	}
->+
->+	/* mask mailbox interrupts for this core */
->+	reim &=3D ~REIM_MBOXIRQ0M;
->+	write_c0_reim(reim);
->+
->+	/* clear mailboxes & pending mailbox IRQs */
->+	write_c0_mailbox0(0);
->+	write_c0_mailbox1(0);
->+	write_c0_corestatus(0);
->+
->+	/* set reset entry point */
->+	addr =3D KSEG1ADDR((u32)&jz4780_secondary_cpu_entry);
->+	WARN_ON(addr & ~REIM_ENTRY);
->+	reim &=3D ~REIM_ENTRY;
->+	reim |=3D addr & REIM_ENTRY;
->+
->+	/* unmask mailbox interrupts for this core */
->+	reim |=3D REIM_MBOXIRQ0M;
->+	write_c0_reim(reim);
->+	set_c0_status(STATUSF_IP3);
->+	irq_enable_hazard();
->+
->+	cpumask_set_cpu(cpu, &cpu_running);
->+}
->+
->+static void jz4780_smp_prepare_cpus(unsigned int max_cpus)
->+{
->+	struct device_node *cpu_node;
->+	unsigned cpu, ctrl;
->+	int err;
->+
->+	/* setup the mailbox IRQ */
->+	setup_irq(MIPS_CPU_IRQ_BASE + 3, &mbox_action);
->+
->+	init_cpu_present(cpu_possible_mask);
->+
->+	ctrl =3D read_c0_corectrl();
->+
->+	for (cpu =3D 0; cpu < max_cpus; cpu++) {
->+		/* use reset entry point from REIM register */
->+		ctrl |=3D CORECTRL_RPC0 << cpu;
->+	}
->+
->+	for_each_of_cpu_node(cpu_node) {
->+		cpu =3D of_cpu_node_to_id(cpu_node);
->+		if (cpu < 0) {
->+			pr_err("Failed to read index of %s\n",
->+			       cpu_node->full_name);
->+			continue;
->+		}
->+
->+		cpu_clock_gates[cpu] =3D of_clk_get(cpu_node, 0);
->+		if (IS_ERR(cpu_clock_gates[cpu])) {
->+			cpu_clock_gates[cpu] =3D NULL;
->+			continue;
->+		}
->+
->+		err =3D clk_prepare(cpu_clock_gates[cpu]);
->+		if (err)
->+			pr_err("Failed to prepare CPU clock gate\n");
->+	}
->+
->+	write_c0_corectrl(ctrl);
->+}
->+
->+static int jz4780_boot_secondary(int cpu, struct task_struct *idle)
->+{
->+	unsigned long flags;
->+	u32 ctrl;
->+
->+	spin_lock_irqsave(&smp_lock, flags);
->+
->+	/* ensure the core is in reset */
->+	ctrl =3D read_c0_corectrl();
->+	ctrl |=3D CORECTRL_SWRST0 << cpu;
->+	write_c0_corectrl(ctrl);
->+
->+	/* ungate core clock */
->+	if (cpu_clock_gates[cpu])
->+		clk_enable(cpu_clock_gates[cpu]);
->+
->+	/* set entry sp/gp register values */
->+	jz4780_cpu_entry_sp =3D __KSTK_TOS(idle);
->+	jz4780_cpu_entry_gp =3D (u32)task_thread_info(idle);
->+	smp_wmb();
->+
->+	/* take the core out of reset */
->+	ctrl &=3D ~(CORECTRL_SWRST0 << cpu);
->+	write_c0_corectrl(ctrl);
->+
->+	cpumask_set_cpu(cpu, &cpu_running);
->+
->+	spin_unlock_irqrestore(&smp_lock, flags);
->+
->+	return 0;
->+}
->+
->+static void jz4780_init_secondary(void)
->+{
->+}
->+
->+static void jz4780_smp_finish(void)
->+{
->+	u32 reim;
->+
->+	spin_lock(&smp_lock);
->+
->+	/* unmask mailbox interrupts for this core */
->+	reim =3D read_c0_reim();
->+	reim |=3D REIM_MBOXIRQ0M << smp_processor_id();
->+	write_c0_reim(reim);
->+
->+	spin_unlock(&smp_lock);
->+
->+	/* unmask interrupts for this core */
->+	change_c0_status(ST0_IM, STATUSF_IP3 | STATUSF_IP2 |
->+			 STATUSF_IP1 | STATUSF_IP0);
->+	irq_enable_hazard();
->+
->+	/* force broadcast timer */
->+	tick_broadcast_force();
->+}
->+
->+static void jz4780_send_ipi_single_locked(int cpu, unsigned int
->action)
->+{
->+	u32 mbox;
->+
->+	switch (cpu) {
->+	case 0:
->+		mbox =3D read_c0_mailbox0();
->+		write_c0_mailbox0(mbox | action);
->+		break;
->+	case 1:
->+		mbox =3D read_c0_mailbox1();
->+		write_c0_mailbox1(mbox | action);
->+		break;
->+	default:
->+		panic("unhandled cpu %d!", cpu);
->+	}
->+}
->+
->+static void jz4780_send_ipi_single(int cpu, unsigned int action)
->+{
->+	unsigned long flags;
->+
->+	spin_lock_irqsave(&smp_lock, flags);
->+	jz4780_send_ipi_single_locked(cpu, action);
->+	spin_unlock_irqrestore(&smp_lock, flags);
->+}
->+
->+static void jz4780_send_ipi_mask(const struct cpumask *mask,
->+				 unsigned int action)
->+{
->+	unsigned long flags;
->+	int cpu;
->+
->+	spin_lock_irqsave(&smp_lock, flags);
->+
->+	for_each_cpu(cpu, mask)
->+		jz4780_send_ipi_single_locked(cpu, action);
->+
->+	spin_unlock_irqrestore(&smp_lock, flags);
->+}
->+
->+static struct plat_smp_ops jz4780_smp_ops =3D {
->+	=2Esend_ipi_single =3D jz4780_send_ipi_single,
->+	=2Esend_ipi_mask =3D jz4780_send_ipi_mask,
->+	=2Einit_secondary =3D jz4780_init_secondary,
->+	=2Esmp_finish =3D jz4780_smp_finish,
->+	=2Eboot_secondary =3D jz4780_boot_secondary,
->+	=2Esmp_setup =3D jz4780_smp_setup,
->+	=2Eprepare_cpus =3D jz4780_smp_prepare_cpus,
->+};
->+
->+void jz4780_smp_init(void)
->+{
->+	register_smp_ops(&jz4780_smp_ops);
->+}
->diff --git a/arch/mips/kernel/idle=2Ec b/arch/mips/kernel/idle=2Ec
->index 37f8e78=2E=2Ea406de3 100644
->--- a/arch/mips/kernel/idle=2Ec
->+++ b/arch/mips/kernel/idle=2Ec
->@@ -19,6 +19,10 @@
-> #include <asm/idle=2Eh>
-> #include <asm/mipsregs=2Eh>
->=20
->+#ifdef CONFIG_MACH_JZ4780
->+# include <asm/mach-jz4740/jz4780-smp=2Eh>
->+#endif
->+
-> /*
->* Not all of the MIPS CPUs have the "wait" instruction available=2E
->Moreover,
->* the implementation of the "wait" feature differs between CPU
->families=2E This
->@@ -172,7 +176,6 @@ void __init check_wait(void)
-> 	case CPU_CAVIUM_OCTEON_PLUS:
-> 	case CPU_CAVIUM_OCTEON2:
-> 	case CPU_CAVIUM_OCTEON3:
->-	case CPU_XBURST:
-> 	case CPU_LOONGSON32:
-> 	case CPU_XLR:
-> 	case CPU_XLP:
->@@ -246,6 +249,15 @@ void __init check_wait(void)
-> 		   cpu_wait =3D r4k_wait;
-> 		 */
-> 		break;
->+	case CPU_XBURST:
->+#if defined(CONFIG_MACH_JZ4780) && defined(CONFIG_SMP)
->+		if (NR_CPUS > 1)
->+			cpu_wait =3D jz4780_smp_wait_irqoff;
->+		else
->+			cpu_wait =3D r4k_wait;
->+#else
->+		cpu_wait =3D r4k_wait;
->+#endif
-> 	default:
-> 		break;
-> 	}
->diff --git a/drivers/clk/ingenic/jz4780-cgu=2Ec
->b/drivers/clk/ingenic/jz4780-cgu=2Ec
->index ea905ff=2E=2Ef3eb795 100644
->--- a/drivers/clk/ingenic/jz4780-cgu=2Ec
->+++ b/drivers/clk/ingenic/jz4780-cgu=2Ec
->@@ -16,7 +16,7 @@
->=20
-> /* CGU register offsets */
-> #define CGU_REG_CLOCKCONTROL	0x00
->-#define CGU_REG_PLLCONTROL	0x0c
->+#define CGU_REG_LCR			0x04
-> #define CGU_REG_APLL		0x10
-> #define CGU_REG_MPLL		0x14
-> #define CGU_REG_EPLL		0x18
->@@ -46,8 +46,8 @@
-> #define CGU_REG_CLOCKSTATUS	0xd4
->=20
-> /* bits within the OPCR register */
->-#define OPCR_SPENDN0		(1 << 7)
->-#define OPCR_SPENDN1		(1 << 6)
->+#define OPCR_SPENDN0		BIT(7)
->+#define OPCR_SPENDN1		BIT(6)
->=20
-> /* bits within the USBPCR register */
-> #define USBPCR_USB_MODE		BIT(31)
->@@ -88,6 +88,13 @@
-> #define USBVBFIL_IDDIGFIL_MASK	(0xffff << USBVBFIL_IDDIGFIL_SHIFT)
-> #define USBVBFIL_USBVBFIL_MASK	(0xffff)
->=20
->+/* bits within the LCR register */
->+#define LCR_PD_SCPU			BIT(31)
->+#define LCR_SCPUS			BIT(27)
->+
->+/* bits within the CLKGR1 register */
->+#define CLKGR1_CORE1		BIT(15)
->+
-> static struct ingenic_cgu *cgu;
->=20
-> static u8 jz4780_otg_phy_get_parent(struct clk_hw *hw)
->@@ -205,6 +212,47 @@ static const struct clk_ops jz4780_otg_phy_ops =3D {
-> 	=2Eset_rate =3D jz4780_otg_phy_set_rate,
-> };
->=20
->+static int jz4780_core1_enable(struct clk_hw *hw)
->+{
->+	struct ingenic_clk *ingenic_clk =3D to_ingenic_clk(hw);
->+	struct ingenic_cgu *cgu =3D ingenic_clk->cgu;
->+	const unsigned int timeout =3D 100;
->+	unsigned long flags;
->+	unsigned int i;
->+	u32 lcr, clkgr1;
->+
->+	spin_lock_irqsave(&cgu->lock, flags);
->+
->+	lcr =3D readl(cgu->base + CGU_REG_LCR);
->+	lcr &=3D ~LCR_PD_SCPU;
->+	writel(lcr, cgu->base + CGU_REG_LCR);
->+
->+	clkgr1 =3D readl(cgu->base + CGU_REG_CLKGR1);
->+	clkgr1 &=3D ~CLKGR1_CORE1;
->+	writel(clkgr1, cgu->base + CGU_REG_CLKGR1);
->+
->+	spin_unlock_irqrestore(&cgu->lock, flags);
->+
->+	/* wait for the CPU to be powered up */
->+	for (i =3D 0; i < timeout; i++) {
->+		lcr =3D readl(cgu->base + CGU_REG_LCR);
->+		if (!(lcr & LCR_SCPUS))
->+			break;
->+		mdelay(1);
->+	}
->+
->+	if (i =3D=3D timeout) {
->+		pr_err("%s: Wait for power up core1 timeout\n", __func__);
->+		return -EBUSY;
->+	}
->+
->+	return 0;
->+}
->+
->+static const struct clk_ops jz4780_core1_ops =3D {
->+	=2Eenable =3D jz4780_core1_enable,
->+};
->+
-> static const s8 pll_od_encoding[16] =3D {
-> 	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
-> 	0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
->@@ -699,9 +747,9 @@ static const struct ingenic_cgu_clk_info
->jz4780_cgu_clocks[] =3D {
-> 	},
->=20
-> 	[JZ4780_CLK_CORE1] =3D {
->-		"core1", CGU_CLK_GATE,
->+		"core1", CGU_CLK_CUSTOM,
-> 		=2Eparents =3D { JZ4780_CLK_CPU, -1, -1, -1 },
->-		=2Egate =3D { CGU_REG_CLKGR1, 15 },
->+		=2Ecustom =3D { &jz4780_core1_ops },
-> 	},
->=20
-> };
+Yes, exactly.
 
---=20
-Jiaxun Yang
+> under ARM_EXYNOS_BUS_DEVFREQ does the trick.
+> 
+>>>
+>>> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+>>> ---
+>>>  drivers/devfreq/exynos-bus.c | 144 +++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 144 insertions(+)
+>>>
+>>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>>> index 9fdb188915e8..694a9581dcdb 100644
+>>> --- a/drivers/devfreq/exynos-bus.c
+>>> +++ b/drivers/devfreq/exynos-bus.c
+>>> @@ -14,14 +14,19 @@
+>>>  #include <linux/devfreq-event.h>
+>>>  #include <linux/device.h>
+>>>  #include <linux/export.h>
+>>> +#include <linux/idr.h>
+>>> +#include <linux/interconnect-provider.h>
+>>>  #include <linux/module.h>
+>>>  #include <linux/of.h>
+>>>  #include <linux/pm_opp.h>
+>>> +#include <linux/pm_qos.h>
+>>>  #include <linux/platform_device.h>
+>>>  #include <linux/regulator/consumer.h>
+>>>  
+>>>  #define DEFAULT_SATURATION_RATIO	40
+>>>  
+>>> +#define kbps_to_khz(x) ((x) / 8)
+>>> +
+>>>  struct exynos_bus {
+>>>  	struct device *dev;
+>>>  
+>>> @@ -35,6 +40,12 @@ struct exynos_bus {
+>>>  	struct opp_table *opp_table;
+>>>  	struct clk *clk;
+>>>  	unsigned int ratio;
+>>> +
+>>> +	/* One provider per bus, one node per provider */
+>>> +	struct icc_provider provider;
+>>> +	struct icc_node *node;
+>>> +
+>>> +	struct dev_pm_qos_request qos_req;
+>>>  };
+>>>  
+>>>  /*
+>>> @@ -205,6 +216,39 @@ static void exynos_bus_passive_exit(struct device *dev)
+>>>  	clk_disable_unprepare(bus->clk);
+>>>  }
+>>>  
+>>> +static int exynos_bus_icc_set(struct icc_node *src, struct icc_node *dst)
+>>> +{
+>>> +	struct exynos_bus *src_bus = src->data, *dst_bus = dst->data;
+>>> +	s32 src_freq = kbps_to_khz(src->avg_bw);
+>>> +	s32 dst_freq = kbps_to_khz(dst->avg_bw);
+>>> +	int ret;
+>>> +
+>>> +	ret = dev_pm_qos_update_request(&src_bus->qos_req, src_freq);
+>>> +	if (ret < 0) {
+>>> +		dev_err(src_bus->dev, "failed to update PM QoS request");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ret = dev_pm_qos_update_request(&dst_bus->qos_req, dst_freq);
+>>> +	if (ret < 0) {
+>>> +		dev_err(dst_bus->dev, "failed to update PM QoS request");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static struct icc_node *exynos_bus_icc_xlate(struct of_phandle_args *spec,
+>>> +					     void *data)
+>>> +{
+>>> +	struct exynos_bus *bus = data;
+>>> +
+>>> +	if (spec->np != bus->dev->of_node)
+>>> +		return ERR_PTR(-EINVAL);
+>>> +
+>>> +	return bus->node;
+>>> +}
+>>> +
+>>>  static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>  					struct exynos_bus *bus)
+>>>  {
+>>> @@ -419,6 +463,96 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static struct icc_node *exynos_bus_icc_get_parent(struct exynos_bus *bus)
+>>> +{
+>>> +	struct device_node *np = bus->dev->of_node;
+>>> +	struct of_phandle_args args;
+>>> +	int num, ret;
+>>> +
+>>> +	num = of_count_phandle_with_args(np, "exynos,interconnect-parent-node",
+>>> +					"#interconnect-cells");
+>>> +	if (num != 1)
+>>> +		return NULL; /* parent nodes are optional */
+>>> +
+>>> +	ret = of_parse_phandle_with_args(np, "exynos,interconnect-parent-node",
+>>> +					"#interconnect-cells", 0, &args);
+>>> +	if (ret < 0)
+>>> +		return ERR_PTR(ret);
+>>> +
+>>> +	of_node_put(args.np);
+>>> +
+>>> +	return of_icc_get_from_provider(&args);
+>>> +}
+>>> +
+>>> +static int exynos_bus_icc_init(struct exynos_bus *bus)
+>>> +{
+>>> +	static DEFINE_IDA(ida);
+>>> +
+>>> +	struct device *dev = bus->dev;
+>>> +	struct icc_provider *provider = &bus->provider;
+>>> +	struct icc_node *node, *parent_node;
+>>> +	int id, ret;
+>>> +
+>>> +	/* Initialize the interconnect provider */
+>>> +	provider->set = exynos_bus_icc_set;
+>>> +	provider->aggregate = icc_std_aggregate;
+>>> +	provider->xlate = exynos_bus_icc_xlate;
+>>> +	provider->dev = dev;
+>>> +	provider->inter_set = true;
+>>> +	provider->data = bus;
+>>> +
+>>> +	ret = icc_provider_add(provider);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +
+>>> +	ret = id = ida_alloc(&ida, GFP_KERNEL);
+>>> +	if (ret < 0)
+>>> +		goto err_id;
+>>> +
+>>> +	node = icc_node_create(id);
+>>> +	if (IS_ERR(node)) {
+>>> +		ret = PTR_ERR(node);
+>>> +		goto err_node;
+>>> +	}
+>>> +
+>>> +	bus->node = node;
+>>> +	node->name = dev->of_node->name;
+>>> +	node->data = bus;
+>>> +	icc_node_add(node, provider);
+>>> +
+>>> +	parent_node = exynos_bus_icc_get_parent(bus);
+>>> +	if (IS_ERR(parent_node)) {
+>>> +		ret = PTR_ERR(parent_node);
+>>> +		goto err_parent;
+>>> +	}
+>>> +
+>>> +	if (parent_node) {
+>>> +		ret = icc_link_create(node, parent_node->id);
+>>> +		if (ret < 0)
+>>> +			goto err_parent;
+>>> +	}
+>>> +
+>>> +	ret = dev_pm_qos_add_request(bus->devfreq->dev.parent, &bus->qos_req,
+>>> +					DEV_PM_QOS_MIN_FREQUENCY, 0);
+>>> +	if (ret < 0)
+>>> +		goto err_request;
+>>> +
+>>> +	return 0;
+>>> +
+>>> +err_request:
+>>> +	if (parent_node)
+>>> +		icc_link_destroy(node, parent_node);
+>>> +err_parent:
+>>> +	icc_node_del(node);
+>>> +	icc_node_destroy(id);
+>>> +err_node:
+>>> +	ida_free(&ida, id);
+>>> +err_id:
+>>> +	icc_provider_del(provider);
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>>  static int exynos_bus_probe(struct platform_device *pdev)
+>>>  {
+>>>  	struct device *dev = &pdev->dev;
+>>> @@ -468,6 +602,16 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>  	if (ret < 0)
+>>>  		goto err;
+>>>  
+>>> +	/*
+>>> +	 * Initialize interconnect provider. A return value of -ENOTSUPP means
+>>> +	 * that CONFIG_INTERCONNECT is disabled.
+>>> +	 */
+>>> +	ret = exynos_bus_icc_init(bus);
+>>> +	if (ret < 0 && ret != -ENOTSUPP) {
+
+I have been also thinking that all the code that you add in this patch would fit
+nicely into a separate interconnect provider driver. Then instead of the above
+icc_init() you can create a sub-device (platform_device_register_data() maybe?).
+The separate driver will be handling just the interconnect functionality and
+could be enabled on top of this devfreq driver.
+
+Thanks,
+Georgi
+
+P.S. I think that grouping all the related patches into a single patch-set would
+make reviewing them easier. Then we can decide about the merge path of each.
+
+>>> +		dev_err(dev, "failed to initialize the interconnect provider");
+>>> +		goto err;
+>>> +	}
+>>> +
+>>>  	max_state = bus->devfreq->profile->max_state;
+>>>  	min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
+>>>  	max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
+>>>
+>>
+>>
