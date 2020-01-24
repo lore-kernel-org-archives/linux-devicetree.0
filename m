@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9DAC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C305C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E6C20838
+	by mail.kernel.org (Postfix) with ESMTP id DDA08208C4
 	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876296;
-	bh=0BOlGA6oAYqfl/yKYGzKEd6mTq0cA3rq4GlXDVgJxYY=;
+	s=default; t=1579876297;
+	bh=Rw6tVfC2c6QLdOPEUQ6KBAa5nQZ0ZZvMUWY3ziIiaFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=beWzUWcvWabNnx5okRGU5K1QjlfmwThX1d7tjAWUitisbzD1DAR/fWlgJ/AuyOshp
-	 kaR4htn6CJzcE93IobbLVw5Edxias/l/19caTvj7UWmRtFEoy97kGIznWFm+9MhNUh
-	 UWefb4SK1wRqXK2szxP6CBorM+doxbqCzNm6JtJY=
+	b=kgzDYSVK+pPVXeW6hMp5lAD4hBVpeLH/k+EpyDi8GYvQpS/aYrubTCQJVMvh/1GD0
+	 +NT9EgT2YZW6J6Z1DB2otk4M9coFxqOLWEzcp1R9NJ0qqTd1ty/HxednCKJKqGEq45
+	 g4Vr+vrna8DL6YrhGfNRScRBG6IXah3cgrV1Kz+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404163AbgAXOb3 (ORCPT
+        id S2391696AbgAXOb1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:31:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:31:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404834AbgAXOUY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:24 -0500
+        id S1730086AbgAXOUZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62A32087E;
-        Fri, 24 Jan 2020 14:20:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFFD024682;
+        Fri, 24 Jan 2020 14:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875623;
-        bh=0BOlGA6oAYqfl/yKYGzKEd6mTq0cA3rq4GlXDVgJxYY=;
+        s=default; t=1579875625;
+        bh=Rw6tVfC2c6QLdOPEUQ6KBAa5nQZ0ZZvMUWY3ziIiaFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=prX+HvpxusXF+QzioMf6b4y0R73NvkW+1zrbuq2kCZeCQ3FUcv0Y/FWTU8SR0vsoU
-         VyZ/6MLfFpw1xmzJU1IPAGrsLhtAYwqLG13KSVXb4XgD2doD5D8beoR0L0JnSuO/f9
-         HFqqpYeXOsHHSYGSHoaaXH9PxzmhqezaRgROSAUo=
+        b=lWohjO3Cb/KydxuMy3cmZPxOMFTeC04Nnr7YAxFdHeTSx3wgQ5LkHcztgfvkCtIiv
+         NdUPS3NWFTquMzdscfuNVUcEWh5LX9r0THnP5B5RCHLFoB9h2FsWFd1y/RD1TgibCv
+         JspS53O/zXK8tLnGJqd5AtZog9fqxTCvInBx7X7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc:     Marek Vasut <marex@denx.de>, Fabio Estevam <festevam@gmail.com>,
+        Ludwig Zenz <lzenz@dh-electronics.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/56] ARM: dts: imx6q-dhcom: fix rtc compatible
-Date:   Fri, 24 Jan 2020 09:19:25 -0500
-Message-Id: <20200124142012.29752-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/56] ARM: dts: imx6q-dhcom: Fix SGTL5000 VDDIO regulator connection
+Date:   Fri, 24 Jan 2020 09:19:26 -0500
+Message-Id: <20200124142012.29752-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -60,34 +62,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 7d7778b1396bc9e2a3875009af522beb4ea9355a ]
+[ Upstream commit fe6a6689d1815b63528796886853890d8ee7f021 ]
 
-The only correct and documented compatible string for the rv3029 is
-microcrystal,rv3029. Fix it up.
+The SGTL5000 VDDIO is connected to the PMIC SW2 output, not to
+a fixed 3V3 rail. Describe this correctly in the DT.
 
 Fixes: 52c7a088badd ("ARM: dts: imx6q: Add support for the DHCOM iMX6 SoM and PDK2")
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Ludwig Zenz <lzenz@dh-electronics.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+To: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6q-dhcom-som.dtsi | 2 +-
+ arch/arm/boot/dts/imx6q-dhcom-pdk2.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6q-dhcom-som.dtsi b/arch/arm/boot/dts/imx6q-dhcom-som.dtsi
-index bbba0671f0f41..5b4d78999f809 100644
---- a/arch/arm/boot/dts/imx6q-dhcom-som.dtsi
-+++ b/arch/arm/boot/dts/imx6q-dhcom-som.dtsi
-@@ -205,7 +205,7 @@
+diff --git a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
+index 9c61e3be2d9a3..1c46df6827f50 100644
+--- a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
++++ b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
+@@ -55,7 +55,7 @@
+ 		#sound-dai-cells = <0>;
+ 		clocks = <&clk_ext_audio_codec>;
+ 		VDDA-supply = <&reg_3p3v>;
+-		VDDIO-supply = <&reg_3p3v>;
++		VDDIO-supply = <&sw2_reg>;
  	};
+ };
  
- 	rtc@56 {
--		compatible = "rv3029c2";
-+		compatible = "microcrystal,rv3029";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_rtc_hw300>;
- 		reg = <0x56>;
 -- 
 2.20.1
 
