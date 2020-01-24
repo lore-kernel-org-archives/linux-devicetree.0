@@ -2,112 +2,106 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2B4C35240
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 01:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD503C35240
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 03:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 359CE21835
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 01:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579829721;
-	bh=lUsFFBFubN7Kqpvdox2ZHVN9k/+SRSmDmco21YUHlT0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PeB2zDtXTkBbofOXdRZsii1v0wPI/zjxPlf7NFR3Y1JTouvDY2gJ9wbWllSTNgimV
-	 xTOsRQxVT/8KY5VRNCsBK+7LgnnjI6zDh2omTl70QihVBylprFe4Nzlya2X+NfdHEb
-	 R6rjJ4Bz+jQ5Gr+LEjeFb++iFu8su4GpmZNquDjI=
+	by mail.kernel.org (Postfix) with ESMTP id 8B83622522
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 03:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sEiQb0pL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAXBfU (ORCPT
+        id S1729316AbgAXD1t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:35:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729232AbgAXBfU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:35:20 -0500
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12A6621835;
-        Fri, 24 Jan 2020 01:35:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579829720;
-        bh=lUsFFBFubN7Kqpvdox2ZHVN9k/+SRSmDmco21YUHlT0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fJGIqwnm+83w9/Z3tvCVyJw/iIoQ3IyH0LMQ0AjizzV1aRCUHlJRjLuU4/elr0Z66
-         AqaKafVNr/c0yDqSYUO3DtNB7uCmGEpnejoE7J0P8SVZe+2AnChRyuAS7tmAmHaEq4
-         tds06GLUmekYADSWHjttwVLyqK5TQvkR/Y/bhRi0=
-Received: by mail-qk1-f180.google.com with SMTP id d10so593081qke.1;
-        Thu, 23 Jan 2020 17:35:20 -0800 (PST)
-X-Gm-Message-State: APjAAAWhhnus1HuF51ukuPrjwydNWk1xKpi3xk+hg7z1k1hQ9qqWJvLQ
-        5ftCRqtK5kCZSfLzfccriRJrNgDUcYzQR5s2Sg==
-X-Google-Smtp-Source: APXvYqxRHpYVFGcIL4i71kh6oc0W0k4a0comvWJnL6kSgDqnS2kTF9WUsAbtJyhtQ0hO3c3qE5aWPmYJxDTVfrFdT9o=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr336288qkl.119.1579829719256;
- Thu, 23 Jan 2020 17:35:19 -0800 (PST)
+        Thu, 23 Jan 2020 22:27:49 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11201 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbgAXD1t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 22:27:49 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2a64260000>; Thu, 23 Jan 2020 19:27:34 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 23 Jan 2020 19:27:48 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 23 Jan 2020 19:27:48 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jan
+ 2020 03:27:43 +0000
+CC:     <spujar@nvidia.com>, <devicetree@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <atalambedu@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <jonathanh@nvidia.com>, <viswanathl@nvidia.com>,
+        <sharadg@nvidia.com>, <broonie@kernel.org>,
+        <thierry.reding@gmail.com>, <linux-tegra@vger.kernel.org>,
+        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
+Subject: Re: [alsa-devel] [PATCH 7/9] ASoC: tegra: add Tegra210 based ADMAIF
+ driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-8-git-send-email-spujar@nvidia.com>
+ <743d6d7d-f29c-191a-853b-414250ca38df@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <3759aa0b-9e56-0fb4-27b7-4f98898d4e22@nvidia.com>
+Date:   Fri, 24 Jan 2020 08:57:40 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200123214222.17897-1-robh@kernel.org> <20200123222508.GB184237@dtor-ws>
-In-Reply-To: <20200123222508.GB184237@dtor-ws>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 23 Jan 2020 19:35:06 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLNG0i9QbRiueXAZ6LjAGN7Mx0vaoUM43np8Jn4qOuiZg@mail.gmail.com>
-Message-ID: <CAL_JsqLNG0i9QbRiueXAZ6LjAGN7Mx0vaoUM43np8Jn4qOuiZg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: input: Convert gpio-keys bindings to schema
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <743d6d7d-f29c-191a-853b-414250ca38df@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579836454; bh=/uQyjMlog0EEeGCpQdgZ8NEtOXVI02tvF1e/kfKTnrw=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=sEiQb0pLX+BpSOAzxH6fhgVWwQCGYaac7UNqj2/iT9KWSfL/lLbL1cYKxNTL5Su9n
+         jVnzqfyD6BquPKUbyt4eZ7xEputbu/V7DM1DeQ1i6ykizK10qMSqOxkZ7KkL5lqu7M
+         Sqw0nIvrhGI/XI1tXO2GiPKi1zISexdF2jjSTXml4uUXTLF+BLRzd9bBnYi9uhGkRR
+         qJJwgZD6APTXzj85AbJdM0AYs0HrmHihgX41l+nBo78QynBQ2l1qo/UmlLgkwbIce8
+         ww3E5qS1uL9MZftcDu8ys4OqM20tt0exJN9WxhL97EvKsEdQ4G3bLtddszOHmyHQSQ
+         gDnIoar7Q+G8Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 4:25 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+
+
+On 1/24/2020 6:58 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
 >
-> Hi Rob,
 >
-> On Thu, Jan 23, 2020 at 03:42:22PM -0600, Rob Herring wrote:
-> > Convert the gpio-keys and gpio-keys-polled bindings to a DT schema. As
-> > both bindings are almost the same, combine them into a single schema.
-> >
-> > The binding said 'interrupts' was required, but testing on dts files
-> > showed that it isn't required.
-> >
-> > 'linux,input-value' was only documented for gpio-keys-polled, but there
-> > doesn't seem to be any reason for it to be specific to that.
->
-> Actually, there is: with gpio-keys-polled we take a "snapshot" of the
-> entire device state, so we know when to generate a 0 event (the example
-> we have a device with several GPIOs with values assigned 1, 2, 3, 4, 5..
-> values, when one of the gpios is active we generate event with given
-> value, when all are inactive we generate 0 event). This does not work
-> for interrupt-only driven device.
+> 20.01.2020 17:23, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> [snip]
+>> +static bool tegra_admaif_wr_reg(struct device *dev, unsigned int reg)
+>> +{
+>> +     struct tegra_admaif *admaif =3D dev_get_drvdata(dev);
+>> +     unsigned int ch_stride =3D TEGRA_ADMAIF_CHANNEL_REG_STRIDE;
+>> +     unsigned int num_ch =3D admaif->soc_data->num_ch;
+>> +     unsigned int rx_base =3D admaif->soc_data->rx_base;
+>> +     unsigned int tx_base =3D admaif->soc_data->tx_base;
+>> +     unsigned int global_base =3D admaif->soc_data->global_base;
+>> +     unsigned int reg_max =3D admaif->soc_data->regmap_conf->max_regist=
+er;
+>> +     unsigned int rx_max =3D rx_base + (num_ch * ch_stride);
+>> +     unsigned int tx_max =3D tx_base + (num_ch * ch_stride);
+>> +
+>> +     if ((reg >=3D rx_base) && (reg < rx_max)) {
+> The braces are not needed around the comparisons because they precede
+> the AND. Same for all other similar occurrences in the code.
 
-Okay, it wasn't clear to me reading the binding doc. I'll make it conditional.
+While that is true, some prefer to use explicit braces to make it more=20
+readable.
+In the past I was told to use explicitly in such cases.
 
-
-> > +      properties:
-> > +        gpios:
-> > +          maxItems: 1
-
-> > +
-> > +        interrupts:
-> > +          maxItems: 1
->
-> We support "interrupt-only" mode where we do not have GPIO, so for
-> "gpio-keys" we need either interrupts or gpios or both, and for polled
-> we must have gpios (and I guess we simply ignore interrupts if they are
-> specified).
->
-> Does this binding manages to enforce this?
-
-Yes, this hunk does that:
-
-+      anyOf:
-+        - required:
-+            - interrupts
-+        - required:
-+            - gpios
-
-Rob
