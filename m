@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2621C32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890DDC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F3620709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDBC20709
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttoW4FJX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XO6PPX2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388861AbgAXQaQ (ORCPT
+        id S2388803AbgAXQaQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Fri, 24 Jan 2020 11:30:16 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36118 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388341AbgAXQaQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 11:30:16 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so2723829wru.3;
-        Fri, 24 Jan 2020 08:30:14 -0800 (PST)
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35730 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387603AbgAXQaO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 11:30:14 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so72433wmb.0;
+        Fri, 24 Jan 2020 08:30:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hYFbabH/1+eJ5tgZu8gLApj2AMrLFA7PILlgYylYfww=;
-        b=ttoW4FJX0uyIo4LvuzYHHh6Q2hKvvZTOmQ1R9vyPsn8wHAhh4UrcWnvxbYR6M8Lw5O
-         VnfCpwIO34bxDsK2hKHXo/dc+uANQ3V76q0PsA0QV6N9/wTbxci2fcBVupoItf1DH9xb
-         08R1vxFYvluoAXgpJjLElER8668aFhH+gda3dQe+uUOvjvIMWNzEqPHbWxNBl/5G/9uT
-         6CdZahcOpZG2SlVgZqUGrXL16FPRdM6wNgimndjOqiwO9OxmPoC0TMvbWSwAdJJrGZnG
-         rm1RxYAtmNzQNVKQKAVxuFdGYQ7m+4JyGQpo9UhZRqhPjkFVMQhAq0DU3S6fq4cjPgzy
-         Nz0Q==
+        bh=uJoeltGGhmQKQoFJipSF7NJGrgp+ESh1SyyRe6anT6U=;
+        b=XO6PPX2pWqnpKnGovVWZfIR79tFHTFU2R3vop4kZP4gw9HGbYbZY0S7Qh5vf+Mu2DG
+         a27PRLxbXCESnbT1uxnPCwpd26mpy2DvPV2pExJyERgMsM77q5aCZYQ6Lwb05J2jCqVa
+         bNtr5cmcKFZOHyqZjFY9qPQCj9AJqCcI9oUcx1+oIOOtFtEG2eOWzm7QKVAvxvIX/MQM
+         QaI2RvIo1p+EXBB7TlyuBu+c9A0mumMXWy1l5X2zq0QifLdu9p1cu5iIorMOYQnIk3bl
+         3ctPkflh/W0nmz412KOz1oDYI+Me5Jg+dgkLwb3aHkLIsPrLGLT37EZRrn5XTlv+kfjH
+         hLzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=hYFbabH/1+eJ5tgZu8gLApj2AMrLFA7PILlgYylYfww=;
-        b=s4aVJ/1RiiR9spMu8ELteomu0xE8hpY+x3kSxMl1MgNMd0m2S3C7jmuco5xrUbzjOZ
-         GSPhrgAMsHxlCxhBooaogcugmtmmgsbGG1YvJlw1rsbS5B0l9cM5Rpp820hogde/4esi
-         lQjpmTrcKfId+Vwy5VK2gN/cdrHaOH4ltewfuI22zea2TXTaBt9Dj06TSIt3BrgyU/HB
-         yg7VDwExKXGcQyiO50xz4lowqm0W2fJ6RWkPtbxUcd13Ex8gBMQtAsoJ8AUWZaQrAkhM
-         8GUMWAN7mZ2qUT5sXNsyXbw1Uv2vtLYmlpdPacsBIWeJtyGTUBkMYA8gcAHzs+1wUcQ7
-         sjgw==
-X-Gm-Message-State: APjAAAW4QUp8E4bxSEa19VWr7RMLreLGQnaQbGyrMBs7eSPxEvPzyuKy
-        LKp6ZBEB1CuYbCyuxi6u4Ic=
-X-Google-Smtp-Source: APXvYqykWcME/KmUDZrrd7CGyy/O95zP9Xfvvz6gjuR9vTr6EyI82sKy8dHM95zTWTcR0vjltX6/ng==
-X-Received: by 2002:adf:f288:: with SMTP id k8mr5516067wro.301.1579883414238;
-        Fri, 24 Jan 2020 08:30:14 -0800 (PST)
+        bh=uJoeltGGhmQKQoFJipSF7NJGrgp+ESh1SyyRe6anT6U=;
+        b=YIrlW1z4eYOpeT3kV3qgTOwH/lyIesy0w26VUrWLRtUHK6V/lrJrJFOK/FmXM2ccXR
+         ZdfKImQFripZ0E7DD43k0k96QfL9tuGS4Y0OuPEreF0F/294pZqZBYmwnmyhBUamEfRX
+         si/HF+l88hHex6nox719Nc7g/K6FmLWR/lhPu5kRKrLZLndome73GtBzHCEOduyvISE+
+         kNrjd4B4QkFlodMxDKlraR5g61UmYtW0KJf7yrxN8K1b2hl6twOjaZT6VJq2Xa61x6Ld
+         b+W66IVrMxdPhUExFcflpgvnOY6Lu8z4BBkKUP+JqrbdO22tRAQsz5FEF7EE6OxNRX4M
+         cEag==
+X-Gm-Message-State: APjAAAWq6FoYbUjizDyQ0H/bAGQPQESosePRY8WXYzYSiuujFzTYq3f+
+        Z9sGBvZXnFDer3K0OykK5wg=
+X-Google-Smtp-Source: APXvYqy3mk7rwTNk9qGgqbzMeEjnTVID618sKjWfbjGW+VxAoMrQQ9N9uv2TnvdBzWt4d8bgabEuHw==
+X-Received: by 2002:a1c:2902:: with SMTP id p2mr44736wmp.19.1579883411139;
+        Fri, 24 Jan 2020 08:30:11 -0800 (PST)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 205sm1977304wmd.42.2020.01.24.08.30.13
+        by smtp.gmail.com with ESMTPSA id 205sm1977304wmd.42.2020.01.24.08.30.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Jan 2020 08:30:13 -0800 (PST)
+        Fri, 24 Jan 2020 08:30:10 -0800 (PST)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     miquel.raynal@bootlin.com
 Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
@@ -63,9 +63,9 @@ Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         shawn.lin@rock-chips.com, yifeng.zhao@rock-chips.com
-Subject: [RFC PATCH v2 03/10] ARM: dts: rockchip: add nandc node for rk3066a/rk3188
-Date:   Fri, 24 Jan 2020 17:29:54 +0100
-Message-Id: <20200124163001.28910-4-jbx6244@gmail.com>
+Subject: [RFC PATCH v2 01/10] dt-bindings: mtd: add rockchip nand controller bindings
+Date:   Fri, 24 Jan 2020 17:29:52 +0100
+Message-Id: <20200124163001.28910-2-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200124163001.28910-1-jbx6244@gmail.com>
 References: <20200124163001.28910-1-jbx6244@gmail.com>
@@ -74,36 +74,112 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chris Zhong <zyw@rock-chips.com>
+Add the Rockchip NAND controller bindings.
 
-Add nandc node for rk3066a/rk3188.
-
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm/boot/dts/rk3xxx.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../bindings/mtd/rockchip,nand-controller.yaml     | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
 
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 97307a405..221c30314 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -273,6 +273,15 @@
- 		status = "disabled";
- 	};
- 
-+	nandc: nand-controller@10500000 {
-+		compatible = "rockchip,rk3066-nand-controller";
-+		reg = <0x10500000 0x4000>;
-+		interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_NANDC0>;
-+		clock-names = "hclk_nandc";
-+		status = "disabled";
-+	};
+diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+new file mode 100644
+index 000000000..5c725f972
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mtd/rockchip,nand-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	pmu: pmu@20004000 {
- 		compatible = "rockchip,rk3066-pmu", "syscon", "simple-mfd";
- 		reg = <0x20004000 0x100>;
++title: Rockchip NAND Controller Device Tree Bindings
++
++allOf:
++  - $ref: "nand-controller.yaml#"
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    enum:
++      - rockchip,px30-nand-controller
++      - rockchip,rk3066-nand-controller
++      - rockchip,rk3228-nand-controller
++      - rockchip,rk3288-nand-controller
++      - rockchip,rk3308-nand-controller
++      - rockchip,rk3368-nand-controller
++      - rockchip,rv1108-nand-controller
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    items:
++      - const: hclk_nandc
++      - const: clk_nandc
++
++patternProperties:
++  "^nand@[a-f0-9]+$":
++    type: object
++    properties:
++      reg:
++        minimum: 0
++        maximum: 3
++
++      nand-is-boot-medium: true
++
++      rockchip,idb-res-blk-num:
++        minimum: 2
++        default: 16
++        allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        description:
++          For legacy devices where the bootrom can only handle 24 bit BCH/ECC.
++          If specified it indicates the number of erase blocks in use by
++          the bootloader that need a lower BCH/ECC setting.
++          Only used in combination with 'nand-is-boot-medium'.
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3188-cru-common.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    nandc: nand-controller@10500000 {
++      compatible = "rockchip,rk3066-nand-controller";
++      reg = <0x10500000 0x4000>;
++      interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru HCLK_NANDC0>;
++      clock-names = "hclk_nandc";
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      nand@0 {
++        reg = <0>;
++        nand-is-boot-medium;
++      };
++    };
++
++...
 -- 
 2.11.0
 
