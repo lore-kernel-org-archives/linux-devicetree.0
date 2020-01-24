@@ -2,208 +2,105 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3F5C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 18:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02AAC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 19:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78AF2075D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 18:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975CB20702
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 19:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUkSU5BA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i11zhh4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391476AbgAXSoN (ORCPT
+        id S2391745AbgAXTxT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:44:13 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37534 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390379AbgAXSoM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 13:44:12 -0500
-Received: by mail-il1-f196.google.com with SMTP id u14so2407953ilj.4
-        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 10:44:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2JH3g8dh1GU5H/sR8ZGM8+SPJang7iCUnM35EHBf4U0=;
-        b=sUkSU5BA0VaUZ1EqVvXDp51LYwWh8WYDrTrgFbKo+7QPyswRoDgFoi1glh31ryC55F
-         joWVg7mLUImUZ4Aid7XBHsWeIuDHvsgy3aDseDuFQtApK7qwAcr9c5yEYP6/M5X1dIrS
-         1kPS+k7s42fZJrSBm3SHTA10KKfJ8Pg2qmSaHlRYe4ROGkS19U3MgA7WeKhMI62PuQQc
-         278elf6xZJ6AFO46/kc11Jup6m9V36bx6zA7dB0csGj0AODlywdtqP3CxRPcg8zuU99j
-         YB8IysZfqhUl8CWnQYf/hrW0+IxYvuG1L+t3ddU798J28xwtHQBnFY2CCtUpsQC2GPDb
-         7gPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2JH3g8dh1GU5H/sR8ZGM8+SPJang7iCUnM35EHBf4U0=;
-        b=lzso033nEXqngbaHrBUvdgu0m8PSchc8JzuqGVo9adSTb11F0Xy3S61yluu6SYpdFm
-         ibybBkFEBrRji9guwhG39d5CWeRY5IsF32bqYRhioVKADyJUzoASxejC9wcsQa3LClfL
-         0nIe8zwwNHZ+PCuFTcb6iWNdM7cG1eeC8oFLp4k7vZv6rXGmjro/Hgy9RgPeS7V/w6Tg
-         BFhYQ9AHPAZ7A3rkDEwQuDN6zyH6TrhHJvsQWKQvrETSufP7k1YfvEMjbVD2wIeh+znH
-         EHSrjLFTiJii4I3fK+jMa99p6Cg2/Kd5/txftFMkDsJUxijO8E1Pj4U+j58cL4LkwDMw
-         zkzA==
-X-Gm-Message-State: APjAAAVYDhJipAXmjmwyZyMhMzsZL4N3+Hgt9nQ2y2FlSrNMv5r1SB1S
-        DQcBA3I88WW57wAoROqpU6xaNdm1ylNBBopIYSDz/Q==
-X-Google-Smtp-Source: APXvYqzcz7qW8iCmlEijtCdDmXnM/4jHbABwlE7vzpx8FPgzBZy4Ux5rA5eM0SAF78/80UKHi7OLzdscbESCeOArY74=
-X-Received: by 2002:a92:2907:: with SMTP id l7mr4349749ilg.140.1579891451965;
- Fri, 24 Jan 2020 10:44:11 -0800 (PST)
+        Fri, 24 Jan 2020 14:53:19 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33234 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391581AbgAXTxT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 14:53:19 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OJrCoA082355;
+        Fri, 24 Jan 2020 13:53:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579895592;
+        bh=vG3tvGD/QRBqdgtOXjx5zOUsGHCK/ABAITDFK51OWYc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=i11zhh4EApu8nwWvLZH7bsEx134pNpg6OXOl7i64JLV/NRj9qIz7qcSgc02tmyWOD
+         DNPRTrWkaz0dGxoq1jvYVMwkhj4mcqh16wGhmxcUAck/L3wRso7+v+XI1s10nWbGGb
+         VlWO6CUV/tRJo44ctePh7SliyIxuyvhwy40VEWXc=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00OJrCCX090059
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jan 2020 13:53:12 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
+ Jan 2020 13:53:12 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 24 Jan 2020 13:53:12 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OJrCv1053018;
+        Fri, 24 Jan 2020 13:53:12 -0600
+Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
+ config
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191210163204.28225-1-dmurphy@ti.com>
+ <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <3a67743b-aec6-ba4e-14a6-c2ab327e1eae@ti.com>
+Date:   Fri, 24 Jan 2020 13:50:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-8-bjorn.andersson@linaro.org> <20200110212806.GD11555@xps15>
- <20200122193936.GB3261042@ripper> <CANLsYkx-C9U4W3R3Xo6t3BJBM4UK_i3zuwzhnXMMEQ0-ur+8Kg@mail.gmail.com>
- <20200123171524.GV1511@yoga> <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
-In-Reply-To: <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 24 Jan 2020 11:44:01 -0700
-Message-ID: <CANLsYkyhGjrxGiYqtCijwQiMOnvGdpXNKJ0XpxXsFYe=XEY0ZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Jan 2020 at 10:49, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+Marc
+
+On 1/2/20 6:38 AM, Marc Kleine-Budde wrote:
+> On 12/10/19 5:32 PM, Dan Murphy wrote:
+>> The parse config function now performs action on the device either
+>> reading or writing and a reset.  If the regulator is managed it needs
+>> to be turned on.  So turn on the regulator if available if the parsing
+>> fails then turn off the regulator.
+> Another BTW:
+> Consider converting the switching of the vsup to runtime_pm.
 >
-> Hi Bjorn, Mathieu
+> Yet another one:
+> Why do you disable the clocks in the error path of tcan4x5x_can_probe(),
+> but never enable them?
 >
-> On 1/23/20 6:15 PM, Bjorn Andersson wrote:
-> > On Thu 23 Jan 09:01 PST 2020, Mathieu Poirier wrote:
-> >
-> >> On Wed, 22 Jan 2020 at 12:40, Bjorn Andersson
-> >> <bjorn.andersson@linaro.org> wrote:
-> >>>
-> >>> On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
-> >>>
-> >>>> On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
-> >>>>> Add a common panic handler that invokes a stop request and sleep enough
-> >>>>> to let the remoteproc flush it's caches etc in order to aid post mortem
-> >>>>> debugging.
-> >>>>>
-> >>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >>>>> ---
-> >>>>>
-> >>>>> Changes since v1:
-> >>>>> - None
-> >>>>>
-> >>>>>  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
-> >>>>>  drivers/remoteproc/qcom_q6v5.h |  1 +
-> >>>>>  2 files changed, 20 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
-> >>>>> index cb0f4a0be032..17167c980e02 100644
-> >>>>> --- a/drivers/remoteproc/qcom_q6v5.c
-> >>>>> +++ b/drivers/remoteproc/qcom_q6v5.c
-> >>>>> @@ -6,6 +6,7 @@
-> >>>>>   * Copyright (C) 2014 Sony Mobile Communications AB
-> >>>>>   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-> >>>>>   */
-> >>>>> +#include <linux/delay.h>
-> >>>>>  #include <linux/kernel.h>
-> >>>>>  #include <linux/platform_device.h>
-> >>>>>  #include <linux/interrupt.h>
-> >>>>> @@ -15,6 +16,8 @@
-> >>>>>  #include <linux/remoteproc.h>
-> >>>>>  #include "qcom_q6v5.h"
-> >>>>>
-> >>>>> +#define Q6V5_PANIC_DELAY_MS        200
-> >>>>> +
-> >>>>>  /**
-> >>>>>   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
-> >>>>>   * @q6v5:  reference to qcom_q6v5 context to be reinitialized
-> >>>>> @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
-> >>>>>  }
-> >>>>>  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
-> >>>>>
-> >>>>> +/**
-> >>>>> + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
-> >>>>> + * @q6v5:  reference to qcom_q6v5 context
-> >>>>> + *
-> >>>>> + * Set the stop bit and sleep in order to allow the remote processor to flush
-> >>>>> + * its caches etc for post mortem debugging.
-> >>>>> + */
-> >>>>> +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
-> >>>>> +{
-> >>>>> +   qcom_smem_state_update_bits(q6v5->state,
-> >>>>> +                               BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
-> >>>>> +
-> >>>>> +   mdelay(Q6V5_PANIC_DELAY_MS);
-> >>>>
-> >>>> I really wonder if the delay should be part of the remoteproc core and
-> >>>> configurable via device tree.  Wanting the remote processor to flush its caches
-> >>>> is likely something other vendors will want when dealing with a kernel panic.
-> >>>> It would be nice to see if other people have an opinion on this topic.  If not
-> >>>> then we can keep the delay here and move it to the core if need be.
-> >>>>
-> >>>
-> >>> I gave this some more thought and what we're trying to achieve is to
-> >>> signal the remote processors about the panic and then give them time to
-> >>> react, but per the proposal (and Qualcomm downstream iirc) we will do
-> >>> this for each remote processor, one by one.
-> >>>
-> >>> So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
-> >>> end up giving the first one a whole second to react and the last one
-> >>> "only" 200ms.
-> >>>
-> >>> Moving the delay to the core by iterating over rproc_list calling
-> >>> panic() and then delaying would be cleaner imo.
-> >>
-> >> I agree.
-> >>
-> >>>
-> >>> It might be nice to make this configurable in DT, but I agree that it
-> >>> would be nice to hear from others if this would be useful.
-> >>
-> >> I think the delay has to be configurable via DT if we move this to the
-> >> core.  The binding can be optional and default to 200ms if not
-> >> present.
-> >>
-> >
-> > How about I make the panic() return the required delay and then we let
-> > the core sleep for MAX() of the returned durations?
+>> out_clk:
+>> 	if (!IS_ERR(mcan_class->cclk)) {
+>> 		clk_disable_unprepare(mcan_class->cclk);
+>> 		clk_disable_unprepare(mcan_class->hclk);
+>> 	}
+> - please move the clock handling from the m_can.c to the individual
+>    driver
+> - please move the clock handling to runtime_pm in the individual driver
+> - remove the obsolete m_can_class_get_clocks()
+> - make runtime_pm mandatory
 
-I like it.
+Ack to the above I have made these changes locally.  Will submit next week.
 
-> That way the default
-> > is still a property of the remoteproc drivers - and 200ms seems rather
-> > arbitrary to put in the core, even as a default.
+Dan
+
+
+> regards,
+> Marc
 >
-> I agree with Bjorn, the delay should be provided by the platform.
-> But in this case i wonder if it is simpler to just let the platform take care it?
-
-If I understand you correctly, that is what Bjorn's original
-implementation was doing and it had drawbacks.
-
-> For instance for stm32mp1 the stop corresponds to the reset on the remote processor core. To inform the coprocessor about an imminent shutdown we use a signal relying on a mailbox (cf. stm32_rproc_stop).
-> In this case we would need a delay between the signal and the reset, but not after (no cache management).
-
-Here I believe you are referring to the upper limit of 500ms that is
-needed for the mbox_send_message() in stm32_rproc_stop() to complete.
-Since that is a blocking call I think it would fit with Bjorn's
-proposal above if a value of '0' is returned by rproc->ops->panic().
-That would mean no further delays are needed (because the blocking
-mbox_send_message() would have done the job already).  Let me know if
-I'm in the weeds.
-
->
-> Regards,
-> Arnaud
-> >
-> > Regards,
-> > Bjorn
-> >
