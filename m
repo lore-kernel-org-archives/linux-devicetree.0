@@ -2,81 +2,85 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFD9C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EE2C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 095762072C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7CD2071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7VL69Al"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLeNoJj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbgAXE25 (ORCPT
+        id S1729437AbgAXEe3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 23:28:57 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37398 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729760AbgAXE25 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 23:28:57 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so301339lfc.4;
-        Thu, 23 Jan 2020 20:28:55 -0800 (PST)
+        Thu, 23 Jan 2020 23:34:29 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39414 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728799AbgAXEe3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 23:34:29 -0500
+Received: by mail-lf1-f66.google.com with SMTP id t23so300396lfk.6;
+        Thu, 23 Jan 2020 20:34:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VLtJqd9n8iEGWWWwFYJk44IhKuekuFlbjkOOSjbK4Ug=;
-        b=b7VL69Al4Q3TfIx5Glo4Lk/mg/RMvnYyJKH/l2Yzy5Oex07mnDpixdToqeCBQaoAWK
-         B9nzH8IJcDmQd26XXA66TJkZfV7/u9aW1PcLZlg43tTjKlDt7O6av3JfuZa8oW+kOZbT
-         PiSjuNcQh+X8/rsAroz+7FMrjT+mrpQBUdUGUxR4QvetWX9Z5OW+6b0vIZoky9V0BvZh
-         14IHMkUS21cds/eS9GcYG3UndNtA+LoWyAnB9lw4IHvNJDW188GKTHaJ58/0Z8bY4J0L
-         7o1xo3iI45c56/LRLxwcXsTcoo1Ys0YXF9MmCgeQ7+KWP+9bvL8b0DK0NiUxUKPRubbG
-         5ONw==
+        bh=iRMdTlWpB/i07RpBQjACVTfdEIqwZ2lTL+v769LcM3k=;
+        b=ZLeNoJj9lm0TqcCEmDTQPBhM4MiG15+CetdBuDpzpbSxShkmzI5SwGqj59jyQFvOlU
+         pRT57mMmEo1vymIWW78BJm0TDGiHlSEQp1SPfjt7isJp6VHa5PMa9hhr0IArUZPAiKnd
+         qrb/4pmjor6Nu/yDJ3YHmaD0gjH+Ch6PM/JoXoVhT0x4z2HP/dRluVtMESb5dTfNIU36
+         /BO/L6or0QUemYBYVDEHyq3S1+7G6BxcdiCRCNfl9SPcsqahMkXJjsiX+70vOKxIanYz
+         nf2Ntft1yg40iZ/6/QzgSmAE9vCRqwWQoUQsopiNXS5KQ3XqtMSzmg1Ghv1dW4cR/Sjk
+         hVJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=VLtJqd9n8iEGWWWwFYJk44IhKuekuFlbjkOOSjbK4Ug=;
-        b=Q7B39cVfS0vwCx3Zntnn9BBFMyxR1B1juIpJ4xUzEfbZ563cPVsZVGPsBU2zhWIjAR
-         sXQ0yGC5fGKz+R1Q1wvpCQFOix7NqoGwUaJ2WQYzYx+zYuoJ4+Q8GTBGCjHzer3cJA22
-         Nk484F0dnOSnTYvdMLSid/CA/li+FYyXtxGad+9r21ev5Y5en6p7ivvm6lS+ZOeVd8Oy
-         +RdQc3ndutZVb3URswFPv+fziYtfwhCqTK1UG6zNmBG+5xUeZB4NqXaXSIzuj/9VfzMh
-         lTXEN32eplOKZ1efFIA7oXSK212Sp/Dl4m697HfSbzyLvA0FDCLpvkN8YNrEuB0JrAEj
-         ZbEw==
-X-Gm-Message-State: APjAAAVI2J4CO2RC+RXU+5Ci8wrvzKB9onVUVsdAmrlxpRn214QkFQZa
-        kbB+dWRpMKhw5nweZ8S/gkA=
-X-Google-Smtp-Source: APXvYqyRExhBqqvbAcTEoPhTfbxzuj7kgwI599mLqXvMCeAtJ/7luyFkKBpeGBOzIDDLGas1DcH8rw==
-X-Received: by 2002:a05:6512:3ac:: with SMTP id v12mr496446lfp.205.1579840134560;
-        Thu, 23 Jan 2020 20:28:54 -0800 (PST)
+        bh=iRMdTlWpB/i07RpBQjACVTfdEIqwZ2lTL+v769LcM3k=;
+        b=Y1V4VFzudyDxd1L6da9QUfvWdsZhHvDbLaUrCi1+NxQ9C/u5DINQ1Xrmg0nDWUxv1D
+         UwgFeRE6rZ0+MsTAR75YTOFcFfMG71wQ1McSczG3rr1w8v6XWhlKktegGqTpLdEAjB6M
+         IGMcP/luoza1wh6rqYqQwAEkj22AYc2ywCW7YFw9Ao1O4MlQ8PCaOIcW19QYhMDRzGbN
+         0wSKnYKkXy6RiyY2UobanQ7jDVj8vbo8IpNziR+nno8j4krWKhWKUdHGrnIputh7FGIm
+         6KCbuhWNWRXidX7NaBwMlSKKWkxEX31ylBvmrSVXyixq60WN3R3PS4V9JM9dJHSNCw80
+         nwwQ==
+X-Gm-Message-State: APjAAAV7RnBimkRwwTZauEoqu4DwQ0CXwphnBGp5FYKi5jFtv/a8I5ru
+        Yqp1ScCDeWrlm3i6JGJoe3TX6jUr
+X-Google-Smtp-Source: APXvYqwj3uUlHz/aP9yCFgv4v7F5Xp4Uwp0yDO0OIk5+TdT9VBsVV6BI/tG2l19oYhPq/DM988vGGg==
+X-Received: by 2002:ac2:544f:: with SMTP id d15mr529764lfn.126.1579840465779;
+        Thu, 23 Jan 2020 20:34:25 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id e20sm2302728ljl.59.2020.01.23.20.28.52
+        by smtp.googlemail.com with ESMTPSA id y5sm2069884lfl.6.2020.01.23.20.34.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 20:28:54 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH 5/9] ASoC: tegra: add Tegra210 based AHUB
- driver
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
-        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
-        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
-        mkumard@nvidia.com, dramesh@nvidia.com
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-6-git-send-email-spujar@nvidia.com>
- <5ed7482e-e874-9e11-c84e-7418e4b5162e@gmail.com>
- <d160fa01-27d0-6290-cb16-07d159d6fbb2@nvidia.com>
+        Thu, 23 Jan 2020 20:34:25 -0800 (PST)
+Subject: Re: [PATCH v8 22/22] clk: tegra: Remove audio clocks configuration
+ from clock driver
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <37669247-daaf-c6cb-0ef2-464e61db9838@gmail.com>
-Date:   Fri, 24 Jan 2020 07:28:52 +0300
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
+ <1578986667-16041-23-git-send-email-skomatineni@nvidia.com>
+ <d69fe7a8-71cc-c560-a567-f89b936753ad@gmail.com>
+ <9765b723-33af-9863-72c9-8094203c8cb8@nvidia.com>
+ <f2506b91-0199-f2a5-ea8c-ace7b651b443@gmail.com>
+Message-ID: <e6013c72-4ceb-aa3f-50bf-187794f85b66@gmail.com>
+Date:   Fri, 24 Jan 2020 07:34:24 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <d160fa01-27d0-6290-cb16-07d159d6fbb2@nvidia.com>
+In-Reply-To: <f2506b91-0199-f2a5-ea8c-ace7b651b443@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,21 +89,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-24.01.2020 06:39, Sameer Pujar пишет:
->>> +static int tegra_ahub_put_value_enum(struct snd_kcontrol *kctl,
->>> +                                  struct snd_ctl_elem_value *uctl)
->>> +{
->>> +     struct snd_soc_component *cmpnt =
->>> snd_soc_dapm_kcontrol_component(kctl);
->>> +     struct tegra_ahub *ahub = snd_soc_component_get_drvdata(cmpnt);
->>> +     struct snd_soc_dapm_context *dapm =
->>> snd_soc_dapm_kcontrol_dapm(kctl);
->>> +     struct soc_enum *e = (struct soc_enum *)kctl->private_value;
->>> +     struct snd_soc_dapm_update update[TEGRA_XBAR_UPDATE_MAX_REG] =
->>> { };
->> Shouldn't this be {0} to make array zero'ed?
+21.01.2020 19:57, Dmitry Osipenko пишет:
+> 21.01.2020 19:19, Sowjanya Komatineni пишет:
+>>
+>> On 1/19/20 7:04 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 14.01.2020 10:24, Sowjanya Komatineni пишет:
+>>>
+>>> [snip]
+>>>
+>>>> diff --git a/drivers/clk/tegra/clk-tegra30.c
+>>>> b/drivers/clk/tegra/clk-tegra30.c
+>>>> index 5732fdbe20db..53d1c48532ae 100644
+>>>> --- a/drivers/clk/tegra/clk-tegra30.c
+>>>> +++ b/drivers/clk/tegra/clk-tegra30.c
+>>>> @@ -1221,9 +1221,8 @@ static struct tegra_clk_init_table init_table[]
+>>>> __initdata = {
+>>>>        { TEGRA30_CLK_UARTC, TEGRA30_CLK_PLL_P, 408000000, 0 },
+>>>>        { TEGRA30_CLK_UARTD, TEGRA30_CLK_PLL_P, 408000000, 0 },
+>>>>        { TEGRA30_CLK_UARTE, TEGRA30_CLK_PLL_P, 408000000, 0 },
+>>>> -     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
+>>>> -     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
+>>>> -     { TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
+>>>> +     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 0 },
+>>>> +     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 0 },
+>>>>        { TEGRA30_CLK_I2S0, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+>>>>        { TEGRA30_CLK_I2S1, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+>>>>        { TEGRA30_CLK_I2S2, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+>>>>
+>>> What about to use the assigned-clock-rates in device-tree and thus to
+>>> remove those PLL_A entries?
+>>
+>> Yes clock rates can be used and also PLL rate is set based on sample
+>> rate during hw_params. So this can be removed.
+>>
+>> But PLLA clock rates are not related to this patch series and also
+>> changing this needs audio function testing across all platforms and
+>> currently we don't have audio functional tests in place for older
+>> platforms.
+>>
+>> All audio clocks proper fixes and cleanup b/w clock driver and audio
+>> driver will be done separately.
 > 
-> Isn't it the same with empty braces?
+> If there are real plans to make sound driver to drive the PLLA rate,
+> then indeed should be fine to keep it as-is for now.
 
-Looks like is should be the same because turns out GCC has an extension
-for that.
+Looking at tegra_asoc_utils_set_rate(), it already sets the PLLA rate.
+Maybe those table entries are not needed already?
