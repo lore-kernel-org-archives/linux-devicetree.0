@@ -2,184 +2,141 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890DDC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC68C32771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 17:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDBC20709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XO6PPX2p"
+	by mail.kernel.org (Postfix) with ESMTP id 902632081E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 17:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388803AbgAXQaQ (ORCPT
+        id S1731667AbgAXRR5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:30:16 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35730 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387603AbgAXQaO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 11:30:14 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so72433wmb.0;
-        Fri, 24 Jan 2020 08:30:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uJoeltGGhmQKQoFJipSF7NJGrgp+ESh1SyyRe6anT6U=;
-        b=XO6PPX2pWqnpKnGovVWZfIR79tFHTFU2R3vop4kZP4gw9HGbYbZY0S7Qh5vf+Mu2DG
-         a27PRLxbXCESnbT1uxnPCwpd26mpy2DvPV2pExJyERgMsM77q5aCZYQ6Lwb05J2jCqVa
-         bNtr5cmcKFZOHyqZjFY9qPQCj9AJqCcI9oUcx1+oIOOtFtEG2eOWzm7QKVAvxvIX/MQM
-         QaI2RvIo1p+EXBB7TlyuBu+c9A0mumMXWy1l5X2zq0QifLdu9p1cu5iIorMOYQnIk3bl
-         3ctPkflh/W0nmz412KOz1oDYI+Me5Jg+dgkLwb3aHkLIsPrLGLT37EZRrn5XTlv+kfjH
-         hLzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=uJoeltGGhmQKQoFJipSF7NJGrgp+ESh1SyyRe6anT6U=;
-        b=YIrlW1z4eYOpeT3kV3qgTOwH/lyIesy0w26VUrWLRtUHK6V/lrJrJFOK/FmXM2ccXR
-         ZdfKImQFripZ0E7DD43k0k96QfL9tuGS4Y0OuPEreF0F/294pZqZBYmwnmyhBUamEfRX
-         si/HF+l88hHex6nox719Nc7g/K6FmLWR/lhPu5kRKrLZLndome73GtBzHCEOduyvISE+
-         kNrjd4B4QkFlodMxDKlraR5g61UmYtW0KJf7yrxN8K1b2hl6twOjaZT6VJq2Xa61x6Ld
-         b+W66IVrMxdPhUExFcflpgvnOY6Lu8z4BBkKUP+JqrbdO22tRAQsz5FEF7EE6OxNRX4M
-         cEag==
-X-Gm-Message-State: APjAAAWq6FoYbUjizDyQ0H/bAGQPQESosePRY8WXYzYSiuujFzTYq3f+
-        Z9sGBvZXnFDer3K0OykK5wg=
-X-Google-Smtp-Source: APXvYqy3mk7rwTNk9qGgqbzMeEjnTVID618sKjWfbjGW+VxAoMrQQ9N9uv2TnvdBzWt4d8bgabEuHw==
-X-Received: by 2002:a1c:2902:: with SMTP id p2mr44736wmp.19.1579883411139;
-        Fri, 24 Jan 2020 08:30:11 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 205sm1977304wmd.42.2020.01.24.08.30.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Jan 2020 08:30:10 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     miquel.raynal@bootlin.com
+        Fri, 24 Jan 2020 12:17:57 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:55193 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730514AbgAXRR5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 12:17:57 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 04F64E0003;
+        Fri, 24 Jan 2020 17:17:52 +0000 (UTC)
+Date:   Fri, 24 Jan 2020 18:17:51 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Johan Jonker <jbx6244@gmail.com>
 Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
         mark.rutland@arm.com, heiko@sntech.de,
         linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         shawn.lin@rock-chips.com, yifeng.zhao@rock-chips.com
-Subject: [RFC PATCH v2 01/10] dt-bindings: mtd: add rockchip nand controller bindings
-Date:   Fri, 24 Jan 2020 17:29:52 +0100
-Message-Id: <20200124163001.28910-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+Subject: Re: [RFC PATCH v2 00/10] Enable RK3066 NANDC for MK808
+Message-ID: <20200124181751.721aa428@xps13>
 In-Reply-To: <20200124163001.28910-1-jbx6244@gmail.com>
 References: <20200124163001.28910-1-jbx6244@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the Rockchip NAND controller bindings.
+Hi Johan,
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- .../bindings/mtd/rockchip,nand-controller.yaml     | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+Johan Jonker <jbx6244@gmail.com> wrote on Fri, 24 Jan 2020 17:29:51
++0100:
 
-diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-new file mode 100644
-index 000000000..5c725f972
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/rockchip,nand-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip NAND Controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "nand-controller.yaml#"
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,px30-nand-controller
-+      - rockchip,rk3066-nand-controller
-+      - rockchip,rk3228-nand-controller
-+      - rockchip,rk3288-nand-controller
-+      - rockchip,rk3308-nand-controller
-+      - rockchip,rk3368-nand-controller
-+      - rockchip,rv1108-nand-controller
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    items:
-+      - const: hclk_nandc
-+      - const: clk_nandc
-+
-+patternProperties:
-+  "^nand@[a-f0-9]+$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 3
-+
-+      nand-is-boot-medium: true
-+
-+      rockchip,idb-res-blk-num:
-+        minimum: 2
-+        default: 16
-+        allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          For legacy devices where the bootrom can only handle 24 bit BCH/ECC.
-+          If specified it indicates the number of erase blocks in use by
-+          the bootloader that need a lower BCH/ECC setting.
-+          Only used in combination with 'nand-is-boot-medium'.
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3188-cru-common.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    nandc: nand-controller@10500000 {
-+      compatible = "rockchip,rk3066-nand-controller";
-+      reg = <0x10500000 0x4000>;
-+      interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru HCLK_NANDC0>;
-+      clock-names = "hclk_nandc";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      nand@0 {
-+        reg = <0>;
-+        nand-is-boot-medium;
-+      };
-+    };
-+
-+...
--- 
-2.11.0
+> DISCLAIMER: Use at your own risk.
+> Status: For testing only!
+> 
+> Version: V2
+> 
+> Title: Enable RK3066 NANDC for MK808.
+> 
+> The majority of Rockchip devices use a closed source FTL driver
+> to reduce wear leveling. This patch serie proposes
+> an experimental raw NAND controller driver for basic tasks
+> in order to get the bindings and the nodes accepted for in the dts files.
+> 
+> What does it do:
+> 
+> On module load this driver will reserve its resources.
+> After initialization the MTD framework will then try to detect
+> the type and number of NAND chips. When all conditions are met,
+> it registers it self as MTD device.
+> This driver is then ready to receive user commands
+> such as to read and write NAND pages.
+> 
+> Test examples:
+> 
+> # dd if=/dev/mtd0 of=dd.bin bs=8192 count=4
+> 
+> # nanddump -a -l 32768 -f nanddump.bin /dev/mtd0
+> 
+> Not tested:
+> 
+> NANDC version 9.
+> NAND raw write.
 
+nandbiterrs -i /dev/mtd<x> to validate it works!
+
+> RK3066 still has no support for Uboot.
+> Any write command would interfere with data structures made by the boot loader.
+> 
+> Etc.
+> 
+> Problems:
+> 
+> No bad block support. Most devices use a FTL bad block map with tags
+> that must be located on specific page locations which is outside
+> the scope of the raw MTD framework.
+
+I don't understand this story of bad block map. Are you comparing with
+a vendor kernel?
+
+If vendors invent new ways to handle MTD blocks it's sad but they will
+never be compatible with mainline. It's a fact. However for an upstream
+version, I don't get if there is any real issue? The location of the
+BBM is not related to your controller driver but depends on the NAND
+chip and as you say below we know provide three possible positions in
+a block.
+
+What you refer as the FTL is the equivalent of UBI in Linux, which
+indeed offers to the user a linear logical view of all the valid blocks
+while physically the data is spread across all the available
+eraseblocks.
+
+> 
+> hynix_nand_init() add extra option NAND_BBM_LASTPAGE for H27UCG8T2ATR-BC.
+> 
+> No partition support. A FTL driver will store at random locations and
+> a linear user specific layout does not fit within
+> the generic character of this basic driver.
+> 
+> Driver assumes that IO pins are correctly set by the boot loader.
+
+Which pins are you talking about? Are you missing a pinctrl driver?
+
+> 
+> Fixed timing setting.
+> 
+> RK3228A/RK3228B compatibility version 701 unknown
+> RV1108 nand version unknown
+> 
+> Etc.
+> 
+> Todo:
+> 
+> MLC ?
+
+This is not related to your NAND controller driver neither.
+
+
+Cheers,
+Miquèl
