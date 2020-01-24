@@ -2,54 +2,47 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3294C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD44CC32771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E9B20704
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C9E20704
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387668AbgAXQ2o (ORCPT
+        id S2388467AbgAXQ3M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:28:44 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60550 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388341AbgAXQ2o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 11:28:44 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 246CF294C97;
-        Fri, 24 Jan 2020 16:28:42 +0000 (GMT)
-Date:   Fri, 24 Jan 2020 17:28:38 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        intel-gfx-trybot@lists.freedesktop.org, kernel@collabora.com,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH v8 10/12] drm/bridge: panel: Propage bus format/flags
-Message-ID: <20200124172838.11e250bd@collabora.com>
-In-Reply-To: <20200124162550.GA5835@ravnborg.org>
-References: <20200123095333.2085810-1-boris.brezillon@collabora.com>
-        <20200123095333.2085810-11-boris.brezillon@collabora.com>
-        <20200124162550.GA5835@ravnborg.org>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 24 Jan 2020 11:29:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:54364 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388341AbgAXQ3M (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 11:29:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F20621FB;
+        Fri, 24 Jan 2020 08:29:10 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A13323F6C4;
+        Fri, 24 Jan 2020 08:29:09 -0800 (PST)
+Date:   Fri, 24 Jan 2020 16:29:03 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 14/14] net: axienet: Update devicetree binding
+ documentation
+Message-ID: <20200124162903.722468f1@donnerap.cambridge.arm.com>
+In-Reply-To: <20200121215109.GA26808@bogus>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+        <20200110115415.75683-15-andre.przywara@arm.com>
+        <20200121215109.GA26808@bogus>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -58,19 +51,91 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Jan 2020 17:25:50 +0100
-Sam Ravnborg <sam@ravnborg.org> wrote:
+On Tue, 21 Jan 2020 15:51:09 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-> On Thu, Jan 23, 2020 at 10:53:31AM +0100, Boris Brezillon wrote:
-> > So that the previous bridge element in the chain knows which input
-> > format the panel bridge expects.
+Hi Rob,
+
+thanks for having a look!
+
+> On Fri, Jan 10, 2020 at 11:54:15AM +0000, Andre Przywara wrote:
+> > This adds documentation about the newly introduced, optional
+> > "xlnx,addrwidth" property to the binding documentation.
 > > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>  
+> > While at it, clarify the wording on some properties, replace obsolete
+> > .txt file references with their new .yaml counterparts, and add a more
+> > modern example, using the axistream-connected property.
+> > 
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > ---
+> >  .../bindings/net/xilinx_axienet.txt           | 57 ++++++++++++++++---
+> >  1 file changed, 50 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/xilinx_axienet.txt b/Documentation/devicetree/bindings/net/xilinx_axienet.txt
+> > index 7360617cdedb..78c278c5200f 100644
+> > --- a/Documentation/devicetree/bindings/net/xilinx_axienet.txt
+> > +++ b/Documentation/devicetree/bindings/net/xilinx_axienet.txt
+> > @@ -12,7 +12,8 @@ sent and received through means of an AXI DMA controller. This driver
+> >  includes the DMA driver code, so this driver is incompatible with AXI DMA
+> >  driver.
+> >  
+> > -For more details about mdio please refer phy.txt file in the same directory.
+> > +For more details about mdio please refer to the ethernet-phy.yaml file in
+> > +the same directory.
+> >  
+> >  Required properties:
+> >  - compatible	: Must be one of "xlnx,axi-ethernet-1.00.a",
+> > @@ -27,14 +28,14 @@ Required properties:
+> >  		  instead, and only the Ethernet core interrupt is optionally
+> >  		  specified here.
+> >  - phy-handle	: Should point to the external phy device.
+> > -		  See ethernet.txt file in the same directory.
+> > -- xlnx,rxmem	: Set to allocated memory buffer for Rx/Tx in the hardware
+> > +		  See the ethernet-controller.yaml file in the same directory.
+> > +- xlnx,rxmem	: Size of the RXMEM buffer in the hardware, in bytes.
+> >  
+> >  Optional properties:
+> > -- phy-mode	: See ethernet.txt
+> > +- phy-mode	: See ethernet-controller.yaml.
+> >  - xlnx,phy-type	: Deprecated, do not use, but still accepted in preference
+> >  		  to phy-mode.
+> > -- xlnx,txcsum	: 0 or empty for disabling TX checksum offload,
+> > +- xlnx,txcsum	: 0 for disabling TX checksum offload (default if omitted),
+> >  		  1 to enable partial TX checksum offload,
+> >  		  2 to enable full TX checksum offload
+> >  - xlnx,rxcsum	: Same values as xlnx,txcsum but for RX checksum offload
+> > @@ -48,10 +49,20 @@ Optional properties:
+> >  		       If this is specified, the DMA-related resources from that
+> >  		       device (DMA registers and DMA TX/RX interrupts) rather
+> >  		       than this one will be used.
+> > - - mdio		: Child node for MDIO bus. Must be defined if PHY access is
+> > +- mdio		: Child node for MDIO bus. Must be defined if PHY access is
+> >  		  required through the core's MDIO interface (i.e. always,
+> >  		  unless the PHY is accessed through a different bus).
+> >  
+> > +Required properties for axistream-connected subnode:
+> > +- reg		: Address and length of the AXI DMA controller MMIO space.
+> > +- interrupts	: A list of 2 interrupts: TX DMA and RX DMA, in that order.
+> > +
+> > +Optional properties for axistream-connected subnode:
+> > +- xlnx,addrwidth: Specifies the configured address width of the DMA. Newer
+> > +		  versions of the IP allow setting this to a value between
+> > +		  32 and 64. Defaults to 32 bits if not specified.  
 > 
-> Subject: [PATCH v8 10/12] drm/bridge: panel: Propage bus format/flags
-> s/Propage/Propagate/
-> ?
-> 
+> I think this should be expressed using dma-ranges. This is exactly the 
+> purpose of dma-ranges and we shouldn't need a device specific property 
+> for this sort of thing.
 
-Oops. I'll fix it when applying, unless there are other things to fix in
-the v8.
+OK, after talking to Robin about it, I think I will indeed drop the whole usage of xlnx,addrwidth altogether.
+Some thoughts:
+- An integrator would choose the addrwidth value in the IP to be big enough for the whole bus. In our case it's actually 40 bits, because this is the max address size the interconnect supports. So any possible physical address the kernel could come up with would be valid for the DMA IP.
+- Because of this we set the DMA mask to either 64-bit or 32-bit, depending on the auto detection of the MSB registers.
+- If some integrator screws this up anyway, they can always set dma-ranges in the parent to limit the address range. IIUC, no further code would be needed in the Ethernet driver, as this would be handled by some (DMA?) framework?
+
+Does that make sense?
+
+Cheers,
+Andre
