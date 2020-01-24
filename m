@@ -2,121 +2,88 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA20FC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4B2C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7FD2071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:04:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NjWDZDDu"
+	by mail.kernel.org (Postfix) with ESMTP id D7BDA20838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579874952;
+	bh=QFpulhqs7BhwPzn6uhHuG/g25Qlt5GhN8GB8XRQmIbE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EessNqXLgKrOyysh7LJv9GOW8Vqwg5MqscY/1YpOvQFkk36bLPkAghwyAvDr2XOVS
+	 MR6vWoHOzaZk1zDTPmppBGoCv/64RVuhKUcYeL8jnew/CZL3Znbl8jLDUKBZTZWRw3
+	 UKoMwH25CzMra/UxwVgFP4xwPjvSHNAle4ql+Z7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389356AbgAXOE6 (ORCPT
+        id S2388016AbgAXOJL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:04:58 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40077 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387698AbgAXOE5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:04:57 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579874697; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ajqMb8UmIys1+mfIKmm/Eull7lVgeNOgev7uRgfOCXQ=;
- b=NjWDZDDuiFZ7hJEKfZyIdpdSOdzUcY27pGGjwaQzKnX+TehdHjz6+Kq0+sQAfddXgYaPoGvN
- 6KtEQ8V+STDRwyYvkY02TA8Xl87T9O8J0UPjx7jnlmBCxlstV6aMmGl+wpei53b7G4452+Zz
- JhOa0KSEGOAK3Qz6pGiGHTyJqhc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2af983.7fb04d188068-smtp-out-n02;
- Fri, 24 Jan 2020 14:04:51 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C96C6C447A3; Fri, 24 Jan 2020 14:04:51 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 24 Jan 2020 09:09:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387412AbgAXOJL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:09:11 -0500
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E961C43383;
-        Fri, 24 Jan 2020 14:04:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 906E92087E;
+        Fri, 24 Jan 2020 14:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579874950;
+        bh=QFpulhqs7BhwPzn6uhHuG/g25Qlt5GhN8GB8XRQmIbE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=x+9GRFEDe/CZ5Egno7tT03tafQdhrpnnkDgdVXXLr4AA0itgSS5o+siUXhSdqU5t0
+         CD4NTq5Mi/LTDl00BpdEocKXMMX5Hgg+pIgt0zm9kE76O0w4h0omAJNwgqto1v3iJs
+         /PK289bU1BuH8u3OEHTzDhep/38Sub4qdQRG9VX8=
+Received: by mail-qt1-f178.google.com with SMTP id d9so1542189qte.12;
+        Fri, 24 Jan 2020 06:09:10 -0800 (PST)
+X-Gm-Message-State: APjAAAV4jCgCmINVmie57kE2BY4ce+LxhuI31EqO/VzvgynnO6UvmoOs
+        UDsNwiWiH/Fr8g7os3dhZq4NymtWadTMEip0Kg==
+X-Google-Smtp-Source: APXvYqw9emwqw3XGNWzol/n1tHMUux0BStqaxT8MOP10X+Z7I4obcUr5hYArd029o57NsAJ4M/xzBjV3YF57vgHToNM=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr2279317qtg.110.1579874949719;
+ Fri, 24 Jan 2020 06:09:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 24 Jan 2020 19:34:51 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     James Morse <james.morse@arm.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+References: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
+In-Reply-To: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 24 Jan 2020 08:08:58 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
+Message-ID: <CAL_Jsq+7E6B181hYn_6yNE53Mf+jiQ+o6pGDotwGX=m+GysW4A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: fix compilation error of the example in marvell,mmp3-hsic-phy.yaml
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>, soc@kernel.org
+Cc:     devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, tsoni@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, psodagud@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org, baicar@os.amperecomputing.com
-Subject: Re: [PATCH 0/2] Add EDAC support for Kryo CPU core caches
-In-Reply-To: <0769b7cb-4e01-eb83-8ad4-b29b4fafafd4@arm.com>
-References: <0101016ed57a10a8-bd8fbdb9-a5cd-4460-bae6-c5c35f0eed88-000000@us-west-2.amazonses.com>
- <0769b7cb-4e01-eb83-8ad4-b29b4fafafd4@arm.com>
-Message-ID: <4bd9d0f34ff06aa0185616066158349a@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello James,
+On Fri, Jan 24, 2020 at 4:58 AM Dafna Hirschfeld
+<dafna.hirschfeld@collabora.com> wrote:
+>
+> Running `make dt_binging_check`, gives the error:
+>
+> DTC     Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dt.yaml
+> Error: Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dts:20.41-42 syntax error
+> FATAL ERROR: Unable to parse input tree
+>
+> This is because the example uses the macro GPIO_ACTIVE_HIGH which
+> is defined in gpio.h but the include of this header is missing.
+> Add the include to fix the error.
+>
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-On 2020-01-16 00:16, James Morse wrote:
-> Hi Sai,
-> 
-> (CC: +Tyler)
-> 
-> On 05/12/2019 09:52, Sai Prakash Ranjan wrote:
->> This series implements EDAC support for error reporting on
->> Kryo{3,4}XX CPU caches L1,L2, L3-SCU. All the cores(big.LITTLE)
->> in Kryo{3,4}XX CPUs implement RAS extensions and use interrupt
->> based ECC mechanism to report errors.
->> 
->> This series has been tested on SC7180, SDM845, SM8150 SoCs with
->> Kryo{3,4}XX CPU cores based on ARM Cortex-A55, Cortex-A75 and
->> Cortex-A76.
->> 
->> This implementation is platform specific in contrast to the
->> patch posted last time for generic error reporting on arm cortex
->> implementations with RAS extensions by Kyle Yan.
->>  - https://patchwork.kernel.org/patch/10161955/
-> 
-> I think that series was dropped because it was too soc-specific and
-> overlaps with the v8.2
-> kernel first support. That series was superseded by:
-> lore.kernel.org/r/1562086280-5351-1-git-send-email-baicar@os.amperecomputing.com
-> 
-> Can you work with Tyler on a combined series? The combined support may
-> need to look quite
-> different. (DT and big/little being the obvious differences).
-> 
-> I'm afraid this is the tip of the kernel-first-RAS iceberg.
-> 
+Fixes: f6f149604eef ("dt-bindings: phy: Add binding for marvell,mmp3-hsic-phy")
+Acked-by: Rob Herring <robh@kernel.org>
 
-Sorry for the delayed response. Sure, I will take a look at the series 
-posted by Tyler.
-It might take some time to come up with that but should be doable with 
-your review :)
+Arnd, Olof, The above commit is in your tree. Please apply this.
 
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Rob
