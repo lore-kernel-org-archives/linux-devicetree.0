@@ -2,354 +2,713 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024DCC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 15:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42043C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4AC2206D6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 15:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE2B20702
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="POqUkIjb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rTYsLc6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389454AbgAXP4G (ORCPT
+        id S2387976AbgAXQPJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:56:06 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48946 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389209AbgAXP4G (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:56:06 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00OFsA3K021731;
-        Fri, 24 Jan 2020 16:55:48 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=RIPX9tQ6Lx1BfiUExNjFXUscs7twuO2vNYhbgRvSd8U=;
- b=POqUkIjbaAIZKnAXw27HwWxHmjXMk5M6Pg4DQW2WacPV7XVy9iUvsurAVVJLYALPIzcY
- RNBNcKF0ENVJsLh8UTQSn8zhk+5HiuNOshc3gBm++YicbOx//trDoFbNThtqrbFAvhQM
- lJ85TbLOd3MyCCXdursG097wN3wQ6wToLEaCpd6UQGZdx3OQpUP3JKQ/OXh/4quxpdVG
- Gd7dWWHx5CyUqitEnHrabQrIto/IeQhF0M07f/xS5Swsn1QHc98y1EGehOrZtrEztJWm
- q7NgNjgBtkltPwEWDHOEBNacHz9x1s7Nw2HlHDH3OW5pnTZqAnj9lonTz6On0q+rkwEH lw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xksspgksj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jan 2020 16:55:48 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4936910002A;
-        Fri, 24 Jan 2020 16:55:45 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E8D702B1867;
-        Fri, 24 Jan 2020 16:55:44 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jan 2020 16:55:44
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sriram.dash@samsung.com>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: net: can: Convert M_CAN to json-schema
-Date:   Fri, 24 Jan 2020 16:55:42 +0100
-Message-ID: <20200124155542.2053-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 24 Jan 2020 11:15:09 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38250 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387515AbgAXQPJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 11:15:09 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so2651971wrh.5
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 08:15:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dIoMhAUvhafLiibTXc16ThIdRD+A0hQT59O1DhGhxlg=;
+        b=rTYsLc6OEq99GZ8j9n+TUc/ZwfeAga00BZhYS0eFnFvaA20vyVCAiB5QX9M2u5d7nb
+         X+tFuk2IgJlghfSQklPbUlbJJFgTbandlwDIWGk37zLLD5pssSObxqxDHRWKBCLU4s9+
+         NafT46iWe1uQA0da8mafNVFCqGv/RFdsjeM/j3WI0lbGtt9UyQnEkiEcpFYLNYgxg+IX
+         fSkS3b2LBO3x/tYqUShKuhBskGdd3vKIHwB7Bbtfl+CcPchSdt1MN8An10Q7jBjcpDm2
+         O9PkDLKQ7nszXJsjtUhJTwSQ1PGleHqU/PHIRRb1u+3jYEqR69rIMuu6QpecHRCBR1n9
+         U1qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dIoMhAUvhafLiibTXc16ThIdRD+A0hQT59O1DhGhxlg=;
+        b=TG7F9P6SFTKpCoYxnT/JX6/ynfN2DWibba9Df+zW0Krx3Paf/ALLutY4XtxzLMgLfk
+         RplqWxAnMmc8C/El9XpXcM4N+Av9Ra9lc4wzhwkGtmyHbOB1sC+WHHDTSD2xEwFUA2aa
+         0ETSePIpYtgGYBWC023q3SLGvCdGntcsXiow/y8US5IFeowpYXvkzVmoBM4WU+8yxMzo
+         snbeC6C5SKXYqDeMC/yh5nXVJe1Zq+VbtNYwZUI5pGgBtN3SapXwCr1PrRc2pw60NlUl
+         qgJKPOZEeOdbzUfPSCldAz0LSHu2LqOtceZ3qhiHkFlJ2ZebTSgt91eZBBdFxEdY8KyX
+         q7KQ==
+X-Gm-Message-State: APjAAAXLuuZHomvcE/b88cbnRZaKR6jvIdeD/qTTauXGMgRJYzdmyGi8
+        5u1w2WBLSlagHb1hPzmZRc9eUQ==
+X-Google-Smtp-Source: APXvYqzKqayd2+2sOYvXVmYeGGcsN8Klse9f/QH8xbzldm3ndEl5cKe9jacgCeYxkAflSEaT1NzXgA==
+X-Received: by 2002:adf:df0e:: with SMTP id y14mr4943062wrl.377.1579882504288;
+        Fri, 24 Jan 2020 08:15:04 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id k13sm7649722wrx.59.2020.01.24.08.15.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 08:15:03 -0800 (PST)
+Subject: Re: [PATCH v8 01/12] drm/bridge: Add a drm_bridge_state object
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, intel-gfx-trybot@lists.freedesktop.org
+References: <20200123095333.2085810-1-boris.brezillon@collabora.com>
+ <20200123095333.2085810-2-boris.brezillon@collabora.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <4a03bc5c-9d6c-cfb6-6dc0-71568408999e@baylibre.com>
+Date:   Fri, 24 Jan 2020 17:15:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-24_05:2020-01-24,2020-01-24 signatures=0
+In-Reply-To: <20200123095333.2085810-2-boris.brezillon@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert M_CAN bindings to json-schema
+On 23/01/2020 10:53, Boris Brezillon wrote:
+> One of the last remaining objects to not have its atomic state.
+> 
+> This is being motivated by our attempt to support runtime bus-format
+> negotiation between elements of the bridge chain.
+> This patch just paves the road for such a feature by adding a new
+> drm_bridge_state object inheriting from drm_private_obj so we can
+> re-use some of the existing state initialization/tracking logic.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+> Changes in v8:
+> * Move bridge state helpers out of the CONFIG_DEBUGFS section
+> 
+> Changes in v7:
+> * Move helpers, struct-defs, ... to atomic helper files to avoid the
+>   drm -> drm_kms_helper -> drm circular dep
+> * Stop providing default implementation for atomic state reset,
+>   duplicate and destroy hooks (has to do with the helper/core split)
+> * Drop all R-b/T-b as helpers have now be moved to other places
+> ---
+>  drivers/gpu/drm/drm_atomic.c              | 116 +++++++++++++++++++
+>  drivers/gpu/drm/drm_atomic_helper.c       |  20 ++++
+>  drivers/gpu/drm/drm_atomic_state_helper.c | 131 ++++++++++++++++++++++
+>  drivers/gpu/drm/drm_bridge.c              |  29 ++++-
+>  include/drm/drm_atomic.h                  |  34 ++++++
+>  include/drm/drm_atomic_state_helper.h     |  13 +++
+>  include/drm/drm_bridge.h                  |  53 +++++++++
+>  7 files changed, 391 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
+> index d33691512a8e..85f8d2218a94 100644
+> --- a/drivers/gpu/drm/drm_atomic.c
+> +++ b/drivers/gpu/drm/drm_atomic.c
+> @@ -30,6 +30,7 @@
+>  
+>  #include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_uapi.h>
+> +#include <drm/drm_bridge.h>
+>  #include <drm/drm_debugfs.h>
+>  #include <drm/drm_device.h>
+>  #include <drm/drm_drv.h>
+> @@ -1017,6 +1018,121 @@ static void drm_atomic_connector_print_state(struct drm_printer *p,
+>  		connector->funcs->atomic_print_state(p, state);
+>  }
+>  
+> +/**
+> + * drm_atomic_get_bridge_state - get bridge state
+> + * @state: global atomic state object
+> + * @bridge: bridge to get state object for
+> + *
+> + * This function returns the bridge state for the given bridge, allocating it
+> + * if needed. It will also grab the relevant bridge lock to make sure that the
+> + * state is consistent.
+> + *
+> + * Returns:
+> + *
+> + * Either the allocated state or the error code encoded into the pointer. When
+> + * the error is EDEADLK then the w/w mutex code has detected a deadlock and the
+> + * entire atomic sequence must be restarted.
+> + */
+> +struct drm_bridge_state *
+> +drm_atomic_get_bridge_state(struct drm_atomic_state *state,
+> +			    struct drm_bridge *bridge)
+> +{
+> +	struct drm_private_state *obj_state;
+> +
+> +	obj_state = drm_atomic_get_private_obj_state(state, &bridge->base);
+> +	if (IS_ERR(obj_state))
+> +		return ERR_CAST(obj_state);
+> +
+> +	return drm_priv_to_bridge_state(obj_state);
+> +}
+> +EXPORT_SYMBOL(drm_atomic_get_bridge_state);
+> +
+> +/**
+> + * drm_atomic_get_old_bridge_state - get old bridge state, if it exists
+> + * @state: global atomic state object
+> + * @bridge: bridge to grab
+> + *
+> + * This function returns the old bridge state for the given bridge, or NULL if
+> + * the bridge is not part of the global atomic state.
+> + */
+> +struct drm_bridge_state *
+> +drm_atomic_get_old_bridge_state(struct drm_atomic_state *state,
+> +				struct drm_bridge *bridge)
+> +{
+> +	struct drm_private_state *obj_state;
+> +
+> +	obj_state = drm_atomic_get_old_private_obj_state(state, &bridge->base);
+> +	if (!obj_state)
+> +		return NULL;
+> +
+> +	return drm_priv_to_bridge_state(obj_state);
+> +}
+> +EXPORT_SYMBOL(drm_atomic_get_old_bridge_state);
+> +
+> +/**
+> + * drm_atomic_get_new_bridge_state - get new bridge state, if it exists
+> + * @state: global atomic state object
+> + * @bridge: bridge to grab
+> + *
+> + * This function returns the new bridge state for the given bridge, or NULL if
+> + * the bridge is not part of the global atomic state.
+> + */
+> +struct drm_bridge_state *
+> +drm_atomic_get_new_bridge_state(struct drm_atomic_state *state,
+> +				struct drm_bridge *bridge)
+> +{
+> +	struct drm_private_state *obj_state;
+> +
+> +	obj_state = drm_atomic_get_new_private_obj_state(state, &bridge->base);
+> +	if (!obj_state)
+> +		return NULL;
+> +
+> +	return drm_priv_to_bridge_state(obj_state);
+> +}
+> +EXPORT_SYMBOL(drm_atomic_get_new_bridge_state);
+> +
+> +/**
+> + * drm_atomic_add_encoder_bridges - add bridges attached to an encoder
+> + * @state: atomic state
+> + * @encoder: DRM encoder
+> + *
+> + * This function adds all bridges attached to @encoder. This is needed to add
+> + * bridge states to @state and make them available when
+> + * &bridge_funcs.atomic_{check,pre_enable,enable,disable_post_disable}() are
+> + * called
+> + *
+> + * Returns:
+> + * 0 on success or can fail with -EDEADLK or -ENOMEM. When the error is EDEADLK
+> + * then the w/w mutex code has detected a deadlock and the entire atomic
+> + * sequence must be restarted. All other errors are fatal.
+> + */
+> +int
+> +drm_atomic_add_encoder_bridges(struct drm_atomic_state *state,
+> +			       struct drm_encoder *encoder)
+> +{
+> +	struct drm_bridge_state *bridge_state;
+> +	struct drm_bridge *bridge;
+> +
+> +	if (!encoder)
+> +		return 0;
+> +
+> +	DRM_DEBUG_ATOMIC("Adding all bridges for [encoder:%d:%s] to %p\n",
+> +			 encoder->base.id, encoder->name, state);
+> +
+> +	drm_for_each_bridge_in_chain(encoder, bridge) {
+> +		/* Skip bridges that don't implement the atomic state hooks. */
+> +		if (!bridge->funcs->atomic_reset)
+> +			continue;
+> +
+> +		bridge_state = drm_atomic_get_bridge_state(state, bridge);
+> +		if (IS_ERR(bridge_state))
+> +			return PTR_ERR(bridge_state);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(drm_atomic_add_encoder_bridges);
+> +
+>  /**
+>   * drm_atomic_add_affected_connectors - add connectors for CRTC
+>   * @state: atomic state
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 4511c2e07bb9..ad8eae98d9e8 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -730,6 +730,26 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
+>  			return ret;
+>  	}
+>  
+> +	/*
+> +	 * Iterate over all connectors again, and add all affected bridges to
+> +	 * the state.
+> +	 */
+> +	for_each_oldnew_connector_in_state(state, connector,
+> +					   old_connector_state,
+> +					   new_connector_state, i) {
+> +		struct drm_encoder *encoder;
+> +
+> +		encoder = old_connector_state->best_encoder;
+> +		ret = drm_atomic_add_encoder_bridges(state, encoder);
+> +		if (ret)
+> +			return ret;
+> +
+> +		encoder = new_connector_state->best_encoder;
+> +		ret = drm_atomic_add_encoder_bridges(state, encoder);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	ret = mode_valid(state);
+>  	if (ret)
+>  		return ret;
+> diff --git a/drivers/gpu/drm/drm_atomic_state_helper.c b/drivers/gpu/drm/drm_atomic_state_helper.c
+> index 7cf3cf936547..dcd0592aa48c 100644
+> --- a/drivers/gpu/drm/drm_atomic_state_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_state_helper.c
+> @@ -26,6 +26,7 @@
+>  
+>  #include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_state_helper.h>
+> +#include <drm/drm_bridge.h>
+>  #include <drm/drm_connector.h>
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_device.h>
+> @@ -551,3 +552,133 @@ void __drm_atomic_helper_private_obj_duplicate_state(struct drm_private_obj *obj
+>  	memcpy(state, obj->state, sizeof(*state));
+>  }
+>  EXPORT_SYMBOL(__drm_atomic_helper_private_obj_duplicate_state);
+> +
+> +/**
+> + * __drm_atomic_helper_bridge_duplicate_state() - Copy atomic bridge state
+> + * @bridge: bridge object
+> + * @state: atomic bridge state
+> + *
+> + * Copies atomic state from a bridge's current state and resets inferred values.
+> + * This is useful for drivers that subclass the bridge state.
+> + */
+> +void __drm_atomic_helper_bridge_duplicate_state(struct drm_bridge *bridge,
+> +						struct drm_bridge_state *state)
+> +{
+> +	__drm_atomic_helper_private_obj_duplicate_state(&bridge->base,
+> +							&state->base);
+> +	state->bridge = bridge;
+> +}
+> +EXPORT_SYMBOL(__drm_atomic_helper_bridge_duplicate_state);
+> +
+> +/**
+> + * drm_atomic_helper_bridge_destroy_state() - Duplicate a bridge state object
+> + * @bridge: bridge object
+> + *
+> + * Allocates a new bridge state and initializes it with the current bridge
+> + * state values. This helper is meant to be used as a bridge
+> + * &drm_plane_funcs.duplicate_state hook for bridges that don't subclass
+> + * the bridge state.
+> + */
+> +struct drm_bridge_state *
+> +drm_atomic_helper_bridge_duplicate_state(struct drm_bridge *bridge)
+> +{
+> +	struct drm_bridge_state *new;
+> +
+> +	if (WARN_ON(!bridge->base.state))
+> +		return NULL;
+> +
+> +	new = kzalloc(sizeof(*new), GFP_KERNEL);
+> +	if (new)
+> +		__drm_atomic_helper_bridge_duplicate_state(bridge, new);
+> +
+> +	return new;
+> +}
+> +EXPORT_SYMBOL(drm_atomic_helper_bridge_duplicate_state);
+> +
+> +/**
+> + * drm_atomic_helper_bridge_destroy_state() - Destroy a bridge state object
+> + * @bridge: the bridge this state refers to
+> + * @state: bridge state to destroy
+> + *
+> + * Destroys a bridge state previously created by
+> + * &drm_atomic_helper_bridge_reset() or
+> + * &drm_atomic_helper_bridge_duplicate_state(). This helper is meant to be
+> + * used as a bridge &drm_plane_funcs.reset hook for bridges that don't subclass
+> + * the bridge state.
+> + */
+> +void drm_atomic_helper_bridge_destroy_state(struct drm_bridge *bridge,
+> +					    struct drm_bridge_state *state)
+> +{
+> +	kfree(state);
+> +}
+> +EXPORT_SYMBOL(drm_atomic_helper_bridge_destroy_state);
+> +
+> +static struct drm_private_state *
+> +drm_bridge_atomic_duplicate_priv_state(struct drm_private_obj *obj)
+> +{
+> +	struct drm_bridge *bridge = drm_priv_to_bridge(obj);
+> +	struct drm_bridge_state *state;
+> +
+> +	state = bridge->funcs->atomic_duplicate_state(bridge);
+> +	return state ? &state->base : NULL;
+> +}
+> +
+> +static void
+> +drm_bridge_atomic_destroy_priv_state(struct drm_private_obj *obj,
+> +				     struct drm_private_state *s)
+> +{
+> +	struct drm_bridge_state *state = drm_priv_to_bridge_state(s);
+> +	struct drm_bridge *bridge = drm_priv_to_bridge(obj);
+> +
+> +	bridge->funcs->atomic_destroy_state(bridge, state);
+> +}
+> +
+> +static const struct drm_private_state_funcs drm_bridge_priv_state_funcs = {
+> +	.atomic_duplicate_state = drm_bridge_atomic_duplicate_priv_state,
+> +	.atomic_destroy_state = drm_bridge_atomic_destroy_priv_state,
+> +};
+> +
+> +/**
+> + * __drm_atomic_helper_bridge_reset() - Initialize a bridge state to its
+> + *					default
+> + * @bridge: the bridge this state refers to
+> + * @state: bridge state to initialize
+> + *
+> + * Initializes the bridge state to default values. This is meant to be called
+> + * by the bridge &drm_plane_funcs.reset hook for bridges that subclass the
+> + * bridge state.
+> + */
+> +void __drm_atomic_helper_bridge_reset(struct drm_bridge *bridge,
+> +				      struct drm_bridge_state *state)
+> +{
+> +	memset(state, 0, sizeof(*state));
+> +	state->bridge = bridge;
+> +	drm_atomic_private_obj_init(bridge->dev, &bridge->base,
+> +				    &state->base,
+> +				    &drm_bridge_priv_state_funcs);
+> +}
+> +EXPORT_SYMBOL(__drm_atomic_helper_bridge_reset);
+> +
+> +/**
+> + * drm_atomic_helper_bridge_reset() - Allocate and initialize a bridge state
+> + *				      to its default
+> + * @bridge: the bridge this state refers to
+> + * @state: bridge state to initialize
+> + *
+> + * Allocates the bridge state and initializes it to default values. This helper
+> + * is meant to be used as a bridge &drm_plane_funcs.reset hook for bridges that
+> + * don't subclass the bridge state.
+> + */
+> +struct drm_bridge_state *
+> +drm_atomic_helper_bridge_reset(struct drm_bridge *bridge)
+> +{
+> +	struct drm_bridge_state *bridge_state;
+> +
+> +	bridge_state = kzalloc(sizeof(*bridge_state), GFP_KERNEL);
+> +	if (!bridge_state)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	__drm_atomic_helper_bridge_reset(bridge, bridge_state);
+> +	return bridge_state;
+> +}
+> +EXPORT_SYMBOL(drm_atomic_helper_bridge_reset);
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index c2cf0c90fa26..31d658f7312f 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  
+> +#include <drm/drm_atomic_state_helper.h>
+>  #include <drm/drm_bridge.h>
+>  #include <drm/drm_encoder.h>
+>  
+> @@ -135,15 +136,31 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+>  
+>  	if (bridge->funcs->attach) {
+>  		ret = bridge->funcs->attach(bridge);
+> -		if (ret < 0) {
+> -			list_del(&bridge->chain_node);
+> -			bridge->dev = NULL;
+> -			bridge->encoder = NULL;
+> -			return ret;
+> +		if (ret < 0)
+> +			goto err_reset_bridge;
+> +	}
+> +
+> +	if (bridge->funcs->atomic_reset) {
+> +		struct drm_bridge_state *state;
+> +
+> +		state = bridge->funcs->atomic_reset(bridge);
+> +		if (IS_ERR(state)) {
+> +			ret = PTR_ERR(state);
+> +			goto err_detach_bridge;
+>  		}
+>  	}
+>  
+>  	return 0;
+> +
+> +err_detach_bridge:
+> +	if (bridge->funcs->detach)
+> +		bridge->funcs->detach(bridge);
+> +
+> +err_reset_bridge:
+> +	bridge->dev = NULL;
+> +	bridge->encoder = NULL;
+> +	list_del(&bridge->chain_node);
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(drm_bridge_attach);
+>  
+> @@ -155,6 +172,8 @@ void drm_bridge_detach(struct drm_bridge *bridge)
+>  	if (WARN_ON(!bridge->dev))
+>  		return;
+>  
+> +	drm_atomic_private_obj_fini(&bridge->base);
+> +
+>  	if (bridge->funcs->detach)
+>  		bridge->funcs->detach(bridge);
+>  
+> diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
+> index 951dfb15c27b..82a888769b3d 100644
+> --- a/include/drm/drm_atomic.h
+> +++ b/include/drm/drm_atomic.h
+> @@ -669,6 +669,9 @@ __drm_atomic_get_current_plane_state(struct drm_atomic_state *state,
+>  	return plane->state;
+>  }
+>  
+> +int __must_check
+> +drm_atomic_add_encoder_bridges(struct drm_atomic_state *state,
+> +			       struct drm_encoder *encoder);
+>  int __must_check
+>  drm_atomic_add_affected_connectors(struct drm_atomic_state *state,
+>  				   struct drm_crtc *crtc);
+> @@ -992,4 +995,35 @@ drm_atomic_crtc_effectively_active(const struct drm_crtc_state *state)
+>  	return state->active || state->self_refresh_active;
+>  }
+>  
+> +/**
+> + * struct drm_bridge_state - Atomic bridge state object
+> + */
+> +struct drm_bridge_state {
+> +	/**
+> +	 * @base: inherit from &drm_private_state
+> +	 */
+> +	struct drm_private_state base;
+> +
+> +	/**
+> +	 * @bridge: the bridge this state refers to
+> +	 */
+> +	struct drm_bridge *bridge;
+> +};
+> +
+> +static inline struct drm_bridge_state *
+> +drm_priv_to_bridge_state(struct drm_private_state *priv)
+> +{
+> +	return container_of(priv, struct drm_bridge_state, base);
+> +}
+> +
+> +struct drm_bridge_state *
+> +drm_atomic_get_bridge_state(struct drm_atomic_state *state,
+> +			    struct drm_bridge *bridge);
+> +struct drm_bridge_state *
+> +drm_atomic_get_old_bridge_state(struct drm_atomic_state *state,
+> +				struct drm_bridge *bridge);
+> +struct drm_bridge_state *
+> +drm_atomic_get_new_bridge_state(struct drm_atomic_state *state,
+> +				struct drm_bridge *bridge);
+> +
+>  #endif /* DRM_ATOMIC_H_ */
+> diff --git a/include/drm/drm_atomic_state_helper.h b/include/drm/drm_atomic_state_helper.h
+> index 8171dea4cc22..3f8f1d627f7c 100644
+> --- a/include/drm/drm_atomic_state_helper.h
+> +++ b/include/drm/drm_atomic_state_helper.h
+> @@ -26,6 +26,8 @@
+>  
+>  #include <linux/types.h>
+>  
+> +struct drm_bridge;
+> +struct drm_bridge_state;
+>  struct drm_crtc;
+>  struct drm_crtc_state;
+>  struct drm_plane;
+> @@ -80,3 +82,14 @@ void drm_atomic_helper_connector_destroy_state(struct drm_connector *connector,
+>  					  struct drm_connector_state *state);
+>  void __drm_atomic_helper_private_obj_duplicate_state(struct drm_private_obj *obj,
+>  						     struct drm_private_state *state);
+> +
+> +void __drm_atomic_helper_bridge_duplicate_state(struct drm_bridge *bridge,
+> +						struct drm_bridge_state *state);
+> +struct drm_bridge_state *
+> +drm_atomic_helper_bridge_duplicate_state(struct drm_bridge *bridge);
+> +void drm_atomic_helper_bridge_destroy_state(struct drm_bridge *bridge,
+> +					    struct drm_bridge_state *state);
+> +void __drm_atomic_helper_bridge_reset(struct drm_bridge *bridge,
+> +				      struct drm_bridge_state *state);
+> +struct drm_bridge_state *
+> +drm_atomic_helper_bridge_reset(struct drm_bridge *bridge);
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 694e153a7531..3ec37f6d4dff 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -25,6 +25,8 @@
+>  
+>  #include <linux/list.h>
+>  #include <linux/ctype.h>
+> +
+> +#include <drm/drm_atomic.h>
+>  #include <drm/drm_encoder.h>
+>  #include <drm/drm_mode_object.h>
+>  #include <drm/drm_modes.h>
+> @@ -338,6 +340,49 @@ struct drm_bridge_funcs {
+>  	 */
+>  	void (*atomic_post_disable)(struct drm_bridge *bridge,
+>  				    struct drm_atomic_state *old_state);
+> +
+> +	/**
+> +	 * @atomic_duplicate_state:
+> +	 *
+> +	 * Duplicate the current bridge state object (which is guaranteed to be
+> +	 * non-NULL).
+> +	 *
+> +	 * The atomic_duplicate_state() is optional. When not implemented the
+> +	 * core allocates a drm_bridge_state object and calls
+> +	 * &__drm_atomic_helper_bridge_duplicate_state() to initialize it.
+> +	 *
+> +	 * RETURNS:
+> +	 * A valid drm_bridge_state object or NULL if the allocation fails.
+> +	 */
+> +	struct drm_bridge_state *(*atomic_duplicate_state)(struct drm_bridge *bridge);
+> +
+> +	/**
+> +	 * @atomic_destroy_state:
+> +	 *
+> +	 * Destroy a bridge state object previously allocated by
+> +	 * &drm_bridge_funcs.atomic_duplicate_state().
+> +	 *
+> +	 * The atomic_destroy_state hook is optional. When not implemented the
+> +	 * core calls kfree() on the state.
+> +	 */
+> +	void (*atomic_destroy_state)(struct drm_bridge *bridge,
+> +				     struct drm_bridge_state *state);
+> +
+> +	/**
+> +	 * @atomic_reset:
+> +	 *
+> +	 * Reset the bridge to a predefined state (or retrieve its current
+> +	 * state) and return a &drm_bridge_state object matching this state.
+> +	 * This function is called at attach time.
+> +	 *
+> +	 * The atomic_reset hook is optional. When not implemented the core
+> +	 * allocates a new state and calls &__drm_atomic_helper_bridge_reset().
+> +	 *
+> +	 * RETURNS:
+> +	 * A valid drm_bridge_state object in case of success, an ERR_PTR()
+> +	 * giving the reason of the failure otherwise.
+> +	 */
+> +	struct drm_bridge_state *(*atomic_reset)(struct drm_bridge *bridge);
+>  };
+>  
+>  /**
+> @@ -380,6 +425,8 @@ struct drm_bridge_timings {
+>   * struct drm_bridge - central DRM bridge control structure
+>   */
+>  struct drm_bridge {
+> +	/** @base: inherit from &drm_private_object */
+> +	struct drm_private_obj base;
+>  	/** @dev: DRM device this bridge belongs to */
+>  	struct drm_device *dev;
+>  	/** @encoder: encoder to which this bridge is connected */
+> @@ -404,6 +451,12 @@ struct drm_bridge {
+>  	void *driver_private;
+>  };
+>  
+> +static inline struct drm_bridge *
+> +drm_priv_to_bridge(struct drm_private_obj *priv)
+> +{
+> +	return container_of(priv, struct drm_bridge, base);
+> +}
+> +
+>  void drm_bridge_add(struct drm_bridge *bridge);
+>  void drm_bridge_remove(struct drm_bridge *bridge);
+>  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+> 
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../bindings/net/can/can-transceiver.txt           |  24 ----
- .../devicetree/bindings/net/can/m_can.txt          |  75 ----------
- .../devicetree/bindings/net/can/m_can.yaml         | 151 +++++++++++++++++++++
- 3 files changed, 151 insertions(+), 99 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
- delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
- create mode 100644 Documentation/devicetree/bindings/net/can/m_can.yaml
+Thanks for solving this !
 
-diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.txt b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-deleted file mode 100644
-index 0011f53ff159..000000000000
---- a/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Generic CAN transceiver Device Tree binding
--------------------------------
--
--CAN transceiver typically limits the max speed in standard CAN and CAN FD
--modes. Typically these limitations are static and the transceivers themselves
--provide no way to detect this limitation at runtime. For this situation,
--the "can-transceiver" node can be used.
--
--Required Properties:
-- max-bitrate:	a positive non 0 value that determines the max
--		speed that CAN/CAN-FD can run. Any other value
--		will be ignored.
--
--Examples:
--
--Based on Texas Instrument's TCAN1042HGV CAN Transceiver
--
--m_can0 {
--	....
--	can-transceiver {
--		max-bitrate = <5000000>;
--	};
--	...
--};
-diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-deleted file mode 100644
-index ed614383af9c..000000000000
---- a/Documentation/devicetree/bindings/net/can/m_can.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--Bosch MCAN controller Device Tree Bindings
---------------------------------------------------
--
--Required properties:
--- compatible		: Should be "bosch,m_can" for M_CAN controllers
--- reg			: physical base address and size of the M_CAN
--			  registers map and Message RAM
--- reg-names		: Should be "m_can" and "message_ram"
--- interrupts		: Should be the interrupt number of M_CAN interrupt
--			  line 0 and line 1, could be same if sharing
--			  the same interrupt.
--- interrupt-names	: Should contain "int0" and "int1"
--- clocks		: Clocks used by controller, should be host clock
--			  and CAN clock.
--- clock-names		: Should contain "hclk" and "cclk"
--- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
--- pinctrl-names 	: Names corresponding to the numbered pinctrl states
--- bosch,mram-cfg	: Message RAM configuration data.
--			  Multiple M_CAN instances can share the same Message
--			  RAM and each element(e.g Rx FIFO or Tx Buffer and etc)
--			  number in Message RAM is also configurable,
--			  so this property is telling driver how the shared or
--			  private Message RAM are used by this M_CAN controller.
--
--			  The format should be as follows:
--			  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems
--			   rxb_elems txe_elems txb_elems>
--			  The 'offset' is an address offset of the Message RAM
--			  where the following elements start from. This is
--			  usually set to 0x0 if you're using a private Message
--			  RAM. The remain cells are used to specify how many
--			  elements are used for each FIFO/Buffer.
--
--			  M_CAN includes the following elements according to user manual:
--			  11-bit Filter	0-128 elements / 0-128 words
--			  29-bit Filter	0-64 elements / 0-128 words
--			  Rx FIFO 0	0-64 elements / 0-1152 words
--			  Rx FIFO 1	0-64 elements / 0-1152 words
--			  Rx Buffers	0-64 elements / 0-1152 words
--			  Tx Event FIFO	0-32 elements / 0-64 words
--			  Tx Buffers	0-32 elements / 0-576 words
--
--			  Please refer to 2.4.1 Message RAM Configuration in
--			  Bosch M_CAN user manual for details.
--
--Optional Subnode:
--- can-transceiver	: Can-transceiver subnode describing maximum speed
--			  that can be used for CAN/CAN-FD modes. See
--			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
--			  for details.
--Example:
--SoC dtsi:
--m_can1: can@20e8000 {
--	compatible = "bosch,m_can";
--	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
--	reg-names = "m_can", "message_ram";
--	interrupts = <0 114 0x04>,
--		     <0 114 0x04>;
--	interrupt-names = "int0", "int1";
--	clocks = <&clks IMX6SX_CLK_CANFD>,
--		 <&clks IMX6SX_CLK_CANFD>;
--	clock-names = "hclk", "cclk";
--	bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
--};
--
--Board dts:
--&m_can1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_m_can1>;
--	status = "enabled";
--
--	can-transceiver {
--		max-bitrate = <5000000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/net/can/m_can.yaml b/Documentation/devicetree/bindings/net/can/m_can.yaml
-new file mode 100644
-index 000000000000..efdbed81af29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/m_can.yaml
-@@ -0,0 +1,151 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/can/m_can.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bosch MCAN controller Bindings
-+
-+description: Bosch MCAN controller for CAN bus
-+
-+maintainers:
-+  -  Sriram Dash <sriram.dash@samsung.com>
-+
-+properties:
-+  compatible:
-+    const: bosch,m_can
-+
-+  reg:
-+    items:
-+      - description: M_CAN registers map
-+      - description: message RAM
-+
-+  reg-names:
-+    items:
-+      - const: m_can
-+      - const: message_ram
-+
-+  interrupts:
-+    items:
-+      - description: interrupt line0
-+      - description: interrupt line1
-+    minItems: 1
-+    maxItems: 2
-+
-+  interrupt-names:
-+    items:
-+      - const: int0
-+      - const: int1
-+    minItems: 1
-+    maxItems: 2
-+
-+  clocks:
-+    items:
-+      - description: peripheral clock
-+      - description: bus clock
-+
-+  clock-names:
-+    items:
-+      - const: hclk
-+      - const: cclk
-+
-+  bosch,mram-cfg:
-+    description: |
-+                 Message RAM configuration data.
-+                 Multiple M_CAN instances can share the same Message RAM
-+                 and each element(e.g Rx FIFO or Tx Buffer and etc) number
-+                 in Message RAM is also configurable, so this property is
-+                 telling driver how the shared or private Message RAM are
-+                 used by this M_CAN controller.
-+
-+                 The format should be as follows:
-+                 <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems txe_elems txb_elems>
-+                 The 'offset' is an address offset of the Message RAM where
-+                 the following elements start from. This is usually set to
-+                 0x0 if you're using a private Message RAM. The remain cells
-+                 are used to specify how many elements are used for each FIFO/Buffer.
-+
-+                 M_CAN includes the following elements according to user manual:
-+                 11-bit Filter	0-128 elements / 0-128 words
-+                 29-bit Filter	0-64 elements / 0-128 words
-+                 Rx FIFO 0	0-64 elements / 0-1152 words
-+                 Rx FIFO 1	0-64 elements / 0-1152 words
-+                 Rx Buffers	0-64 elements / 0-1152 words
-+                 Tx Event FIFO	0-32 elements / 0-64 words
-+                 Tx Buffers	0-32 elements / 0-576 words
-+
-+                 Please refer to 2.4.1 Message RAM Configuration in Bosch
-+                 M_CAN user manual for details.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/int32-matrix
-+      - items:
-+         items:
-+           - description: The 'offset' is an address offset of the Message RAM
-+                          where the following elements start from. This is usually
-+                          set to 0x0 if you're using a private Message RAM.
-+             default: 0
-+           - description: 11-bit Filter 0-128 elements / 0-128 words
-+             minimum: 0
-+             maximum: 128
-+           - description: 29-bit Filter 0-64 elements / 0-128 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx FIFO 0 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx FIFO 1 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx Buffers 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Tx Event FIFO 0-32 elements / 0-64 words
-+             minimum: 0
-+             maximum: 32
-+           - description: Tx Buffers 0-32 elements / 0-576 words
-+             minimum: 0
-+             maximum: 32
-+        maxItems: 1
-+
-+  can-transceiver:
-+    type: object
-+
-+    properties:
-+      max-bitrate:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: a positive non 0 value that determines the max speed that
-+                     CAN/CAN-FD can run.
-+        minimum: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+  - bosch,mram-cfg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6sx-clock.h>
-+    can@20e8000 {
-+      compatible = "bosch,m_can";
-+      reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
-+      reg-names = "m_can", "message_ram";
-+      interrupts = <0 114 0x04>, <0 114 0x04>;
-+      interrupt-names = "int0", "int1";
-+      clocks = <&clks IMX6SX_CLK_CANFD>,
-+               <&clks IMX6SX_CLK_CANFD>;
-+      clock-names = "hclk", "cclk";
-+      bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
-+
-+      can-transceiver {
-+        max-bitrate = <5000000>;
-+      };
-+    };
-+
-+...
--- 
-2.15.0
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
+Neil
