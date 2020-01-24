@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600C9C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93438C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370A8206F0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FD5208C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876312;
-	bh=P4zl6VgXUyjKwIgpzBo1I+kQ4xYgQbJdKQlwOSGS0mI=;
+	s=default; t=1579876316;
+	bh=Xag/+4m7N0qWYD7YsGFTJwGzTV+QBeQCq3Bkph11IF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yzBF28DrydDfsRp+X8TLN5j9LaeHe+3vqBMTPSZTARSAlbCNqQaOQ2tAnUI7rMccA
-	 kAaSxPT8PJeF2M+CXCFNYVVAQbXWzXy3QGsd/c3sHLl8mfRqgTMK6tva332XewtR2E
-	 eG9pCbLT8V0G340fp4ggDyUvO0tRtksi1REMYx78=
+	b=CbBX9oxM7IeucYkgnnOTFS8kPbroLOkvOU6HGX5FWOcjbr1A3vhwEuiFA6J/Pv9i1
+	 8Qv7Pnh6fes2ZhCX3sCHbLozU15O1Co6X8R0hUAoGjwEzHGjUu9ia90B98jNKWoFpE
+	 WdpsFGVTg8RtmNZppWorOzaq+YTC8YqwWL3zAtWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392602AbgAXObu (ORCPT
+        id S2392597AbgAXObu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Fri, 24 Jan 2020 09:31:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41166 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:41254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404643AbgAXOUQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:16 -0500
+        id S2404724AbgAXOUT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2B7B2087E;
-        Fri, 24 Jan 2020 14:20:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 168082087E;
+        Fri, 24 Jan 2020 14:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875615;
-        bh=P4zl6VgXUyjKwIgpzBo1I+kQ4xYgQbJdKQlwOSGS0mI=;
+        s=default; t=1579875618;
+        bh=Xag/+4m7N0qWYD7YsGFTJwGzTV+QBeQCq3Bkph11IF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mg1XbiSwms/Kc/RZR0it9tpRZSc8qrp9V0u1o7pXwQJxlr8rA2x0h1hkVEPSKapYI
-         RaKbun9e2/N4RUDTf7Q0pzeYssgpxSBTzmzQkbdGAr7mxxU0ef/r7h6p/3Sf4E9zDi
-         vsqLdLvuAZsnsYj80QRd/OQ4eX8/bb0VzE5xetSM=
+        b=f6BsaWrpGnCccb2unpHU126GJPiJMaSlI5FTn7qWIbN+Fq0wb2OL6B4HP38mCvvac
+         dyg7SYr+7/U1XaTuGIsWCOD0E9dxKjEbJH3joYkpTK2s/pUywAVpqgJMY8gT5qBcmr
+         wNtL+AEGVZ35PulotdnMiSUuzXgpSEG5sSunMXWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 02/56] ARM: dts: meson8: fix the size of the PMU registers
-Date:   Fri, 24 Jan 2020 09:19:18 -0500
-Message-Id: <20200124142012.29752-2-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 05/56] ARM: dts: am57xx-beagle-x15/am57xx-idk: Remove "gpios" for  endpoint dt nodes
+Date:   Fri, 24 Jan 2020 09:19:21 -0500
+Message-Id: <20200124142012.29752-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -60,56 +60,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 46c9585ed4af688ff1be6d4e76d7ed2f04de4fba ]
+[ Upstream commit 81cc0877840f72210e809bbedd6346d686560fc1 ]
 
-The PMU registers are at least 0x18 bytes wide. Meson8b already uses a
-size of 0x18. The structure of the PMU registers on Meson8 and Meson8b
-is similar but not identical.
+PERST# line in the PCIE connector is driven by the host mode and not
+EP mode. The gpios property here is used for driving the PERST# line.
+Remove gpios property from all endpoint device tree nodes.
 
-Meson8 and Meson8b have the following registers in common (starting at
-AOBUS + 0xe0):
-  #define AO_RTI_PWR_A9_CNTL0 0xe0 (0x38 << 2)
-  #define AO_RTI_PWR_A9_CNTL1 0xe4 (0x39 << 2)
-  #define AO_RTI_GEN_PWR_SLEEP0 0xe8 (0x3a << 2)
-  #define AO_RTI_GEN_PWR_ISO0 0x4c (0x3b << 2)
-
-Meson8b additionally has these three registers:
-  #define AO_RTI_GEN_PWR_ACK0 0xf0 (0x3c << 2)
-  #define AO_RTI_PWR_A9_MEM_PD0 0xf4 (0x3d << 2)
-  #define AO_RTI_PWR_A9_MEM_PD1 0xf8 (0x3e << 2)
-
-Thus we can assume that the register size of the PMU IP blocks is
-identical on both SoCs (and Meson8 just contains some reserved registers
-in that area) because the CEC registers start right after the PMU
-(AO_RTI_*) registers at AOBUS + 0x100 (0x40 << 2).
-
-The upcoming power domain driver will need to read and write the
-AO_RTI_GEN_PWR_SLEEP0 and AO_RTI_GEN_PWR_ISO0 registers, so the updated
-size is needed for that driver to work.
-
-Fixes: 4a5a27116b447d ("ARM: dts: meson8: add support for booting the secondary CPU cores")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/am571x-idk.dts                | 4 ----
+ arch/arm/boot/dts/am572x-idk-common.dtsi        | 4 ----
+ arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 4 ----
+ 3 files changed, 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 7162e0ca05b0a..ba78170e70274 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -139,7 +139,7 @@
- &aobus {
- 	pmu: pmu@e0 {
- 		compatible = "amlogic,meson8-pmu", "syscon";
--		reg = <0xe0 0x8>;
-+		reg = <0xe0 0x18>;
- 	};
+diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
+index 6bebedfc0f35a..9f99ecc6890cd 100644
+--- a/arch/arm/boot/dts/am571x-idk.dts
++++ b/arch/arm/boot/dts/am571x-idk.dts
+@@ -93,10 +93,6 @@
+ 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+ };
  
- 	pinctrl_aobus: pinctrl@84 {
+-&pcie1_ep {
+-	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+-};
+-
+ &mmc1 {
+ 	pinctrl-names = "default", "hs";
+ 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
+diff --git a/arch/arm/boot/dts/am572x-idk-common.dtsi b/arch/arm/boot/dts/am572x-idk-common.dtsi
+index 784639ddf4513..8a7d34c8ae115 100644
+--- a/arch/arm/boot/dts/am572x-idk-common.dtsi
++++ b/arch/arm/boot/dts/am572x-idk-common.dtsi
+@@ -71,10 +71,6 @@
+ 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+ };
+ 
+-&pcie1_ep {
+-	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+-};
+-
+ &mailbox5 {
+ 	status = "okay";
+ 	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index d53532b479475..872382bd043f8 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -550,10 +550,6 @@
+ 	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
+ };
+ 
+-&pcie1_ep {
+-	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
+-};
+-
+ &mcasp3 {
+ 	#sound-dai-cells = <0>;
+ 	assigned-clocks = <&l4per_clkctrl DRA7_MCASP3_CLKCTRL 24>;
 -- 
 2.20.1
 
