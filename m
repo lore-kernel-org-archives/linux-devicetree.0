@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA4C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFD9C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C67021556
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095762072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 04:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yqgm/L6R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7VL69Al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgAXEZO (ORCPT
+        id S1730242AbgAXE25 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jan 2020 23:25:14 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40241 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730314AbgAXEZO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 23:25:14 -0500
-Received: by mail-lf1-f65.google.com with SMTP id c23so289119lfi.7;
-        Thu, 23 Jan 2020 20:25:12 -0800 (PST)
+        Thu, 23 Jan 2020 23:28:57 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37398 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729760AbgAXE25 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jan 2020 23:28:57 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so301339lfc.4;
+        Thu, 23 Jan 2020 20:28:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nqvrrfgH50F3heDUQV2TPxvyGIm9jjs0IGrVe+RwimE=;
-        b=Yqgm/L6R0clKVYrscixlwYJrmLydO6eTZXRSwbpSsJkZRcKp28C3d7HqPnhXE8vqbH
-         9VdqiMw/4NEz4lxzg9g1A42L97lUsDUtkTs++ZjGiv/9mjFmGPsmezm7L5YrcZ7J7zNi
-         SNZQwMmcFdpRp9XNelnkzmBRgDQU3K10FIKouhjNx01IweB+AvH7YZGLomp67wp5V5KR
-         V1o9EcoAUzA28Q+wzAt43MypyA3faknk8Lp9HDE0raVbiy/DqAzutS+E/Cdm5LhWucoB
-         5AZ2SuyKr+7/6x+uDIg6v3vszDyYk8tq1/kw86qyWf/5VrEDXmifItnWblE2nraMF4ii
-         pkGw==
+        bh=VLtJqd9n8iEGWWWwFYJk44IhKuekuFlbjkOOSjbK4Ug=;
+        b=b7VL69Al4Q3TfIx5Glo4Lk/mg/RMvnYyJKH/l2Yzy5Oex07mnDpixdToqeCBQaoAWK
+         B9nzH8IJcDmQd26XXA66TJkZfV7/u9aW1PcLZlg43tTjKlDt7O6av3JfuZa8oW+kOZbT
+         PiSjuNcQh+X8/rsAroz+7FMrjT+mrpQBUdUGUxR4QvetWX9Z5OW+6b0vIZoky9V0BvZh
+         14IHMkUS21cds/eS9GcYG3UndNtA+LoWyAnB9lw4IHvNJDW188GKTHaJ58/0Z8bY4J0L
+         7o1xo3iI45c56/LRLxwcXsTcoo1Ys0YXF9MmCgeQ7+KWP+9bvL8b0DK0NiUxUKPRubbG
+         5ONw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=nqvrrfgH50F3heDUQV2TPxvyGIm9jjs0IGrVe+RwimE=;
-        b=pWp2svEHcSJ7jtDuslQCy9tbBz5Md+XLabCWhL3rIC4EF4CiCxOpPR2jlomPZ+g01+
-         S3ppLxEAbw+MLAUXoneqeb0U8TTtE/esJjodav6OO8Zx/bVk2CqJ4/QbIBvEfqUvDam8
-         lJ+/VWs2AwDMOJVd8vK61yCNEyGiebf4uaiha8RhxPZt61XIaq+nLC8nIPHq3h/liomW
-         DPJ5TpMJES3GrN60vzv1g85gA8MN2gxJBmLJ28zm5B15gh6ICkesbEp9lXapRGLNCIjN
-         aeZVuq1xrXJ1q1/X1LVhOfVAr9OuSROZgiwb4Nl+Hw6/cau/RWsN8x/sLIPwNXw8DRHh
-         7SHA==
-X-Gm-Message-State: APjAAAWjCFnDP85/eT2q9/SF9HB1tdqlb3tzIlK4rgihvxQ0i8mmpoGu
-        MG3Iwv3xskW60NIzioHD4nFAoMwN
-X-Google-Smtp-Source: APXvYqz9HRXIowhnShk3uHeDO/07QPAIONMd8ODEb7ccArNqgO+S9/aB3Jd/HegdKDhotT/9ZK1LTw==
-X-Received: by 2002:ac2:523c:: with SMTP id i28mr487778lfl.104.1579839912004;
-        Thu, 23 Jan 2020 20:25:12 -0800 (PST)
+        bh=VLtJqd9n8iEGWWWwFYJk44IhKuekuFlbjkOOSjbK4Ug=;
+        b=Q7B39cVfS0vwCx3Zntnn9BBFMyxR1B1juIpJ4xUzEfbZ563cPVsZVGPsBU2zhWIjAR
+         sXQ0yGC5fGKz+R1Q1wvpCQFOix7NqoGwUaJ2WQYzYx+zYuoJ4+Q8GTBGCjHzer3cJA22
+         Nk484F0dnOSnTYvdMLSid/CA/li+FYyXtxGad+9r21ev5Y5en6p7ivvm6lS+ZOeVd8Oy
+         +RdQc3ndutZVb3URswFPv+fziYtfwhCqTK1UG6zNmBG+5xUeZB4NqXaXSIzuj/9VfzMh
+         lTXEN32eplOKZ1efFIA7oXSK212Sp/Dl4m697HfSbzyLvA0FDCLpvkN8YNrEuB0JrAEj
+         ZbEw==
+X-Gm-Message-State: APjAAAVI2J4CO2RC+RXU+5Ci8wrvzKB9onVUVsdAmrlxpRn214QkFQZa
+        kbB+dWRpMKhw5nweZ8S/gkA=
+X-Google-Smtp-Source: APXvYqyRExhBqqvbAcTEoPhTfbxzuj7kgwI599mLqXvMCeAtJ/7luyFkKBpeGBOzIDDLGas1DcH8rw==
+X-Received: by 2002:a05:6512:3ac:: with SMTP id v12mr496446lfp.205.1579840134560;
+        Thu, 23 Jan 2020 20:28:54 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id f30sm2282977ljp.31.2020.01.23.20.25.10
+        by smtp.googlemail.com with ESMTPSA id e20sm2302728ljl.59.2020.01.23.20.28.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2020 20:25:11 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH 7/9] ASoC: tegra: add Tegra210 based ADMAIF
+        Thu, 23 Jan 2020 20:28:54 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 5/9] ASoC: tegra: add Tegra210 based AHUB
  driver
 To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
         robh+dt@kernel.org
@@ -67,16 +67,16 @@ Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
         mkumard@nvidia.com, dramesh@nvidia.com
 References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-8-git-send-email-spujar@nvidia.com>
- <743d6d7d-f29c-191a-853b-414250ca38df@gmail.com>
- <3759aa0b-9e56-0fb4-27b7-4f98898d4e22@nvidia.com>
+ <1579530198-13431-6-git-send-email-spujar@nvidia.com>
+ <5ed7482e-e874-9e11-c84e-7418e4b5162e@gmail.com>
+ <d160fa01-27d0-6290-cb16-07d159d6fbb2@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8a3259b7-6875-236a-b16c-cd8e023cc8b2@gmail.com>
-Date:   Fri, 24 Jan 2020 07:25:08 +0300
+Message-ID: <37669247-daaf-c6cb-0ef2-464e61db9838@gmail.com>
+Date:   Fri, 24 Jan 2020 07:28:52 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <3759aa0b-9e56-0fb4-27b7-4f98898d4e22@nvidia.com>
+In-Reply-To: <d160fa01-27d0-6290-cb16-07d159d6fbb2@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,38 +85,21 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-24.01.2020 06:27, Sameer Pujar пишет:
-> 
-> 
-> On 1/24/2020 6:58 AM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 20.01.2020 17:23, Sameer Pujar пишет:
->> [snip]
->>> +static bool tegra_admaif_wr_reg(struct device *dev, unsigned int reg)
+24.01.2020 06:39, Sameer Pujar пишет:
+>>> +static int tegra_ahub_put_value_enum(struct snd_kcontrol *kctl,
+>>> +                                  struct snd_ctl_elem_value *uctl)
 >>> +{
->>> +     struct tegra_admaif *admaif = dev_get_drvdata(dev);
->>> +     unsigned int ch_stride = TEGRA_ADMAIF_CHANNEL_REG_STRIDE;
->>> +     unsigned int num_ch = admaif->soc_data->num_ch;
->>> +     unsigned int rx_base = admaif->soc_data->rx_base;
->>> +     unsigned int tx_base = admaif->soc_data->tx_base;
->>> +     unsigned int global_base = admaif->soc_data->global_base;
->>> +     unsigned int reg_max =
->>> admaif->soc_data->regmap_conf->max_register;
->>> +     unsigned int rx_max = rx_base + (num_ch * ch_stride);
->>> +     unsigned int tx_max = tx_base + (num_ch * ch_stride);
->>> +
->>> +     if ((reg >= rx_base) && (reg < rx_max)) {
->> The braces are not needed around the comparisons because they precede
->> the AND. Same for all other similar occurrences in the code.
+>>> +     struct snd_soc_component *cmpnt =
+>>> snd_soc_dapm_kcontrol_component(kctl);
+>>> +     struct tegra_ahub *ahub = snd_soc_component_get_drvdata(cmpnt);
+>>> +     struct snd_soc_dapm_context *dapm =
+>>> snd_soc_dapm_kcontrol_dapm(kctl);
+>>> +     struct soc_enum *e = (struct soc_enum *)kctl->private_value;
+>>> +     struct snd_soc_dapm_update update[TEGRA_XBAR_UPDATE_MAX_REG] =
+>>> { };
+>> Shouldn't this be {0} to make array zero'ed?
 > 
-> While that is true, some prefer to use explicit braces to make it more
-> readable.
-> In the past I was told to use explicitly in such cases.
+> Isn't it the same with empty braces?
 
-At least most of code in kernel (I've seen) doesn't have superfluous
-parens (the curvy thingies actually should be the braces). Readability
-is arguable in this case, I'm finding such code a bit more difficult to
-read, although in some cases parens and spacing may help to read more
-complex constructions.
+Looks like is should be the same because turns out GCC has an extension
+for that.
