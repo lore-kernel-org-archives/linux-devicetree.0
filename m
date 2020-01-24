@@ -2,205 +2,112 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD09C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29642C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4466524682
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:25:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vmwOvENq"
+	by mail.kernel.org (Postfix) with ESMTP id EA896206F0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579876039;
+	bh=4BulwQtBrg3DU3XdrFtI9JrA+USSSeddWgbxypc0wxk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tJfoBNruM2E7DP5Vu8h/P+uzjMvHTH9pRA8Jwd0v++UhmP79lUHlt3ayeqhpTGVHS
+	 vr16VdxVY7++194x9eSqj5Omz0qOIZzKNKuJ452wU5PuNiHBVbkcM1PcZtGLXHz/oV
+	 PsSxNKVyb11bxyjBdI25UlSOqJ9PU5gK2UQ/dKgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388358AbgAXOZG (ORCPT
+        id S2390398AbgAXO1R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:25:06 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:24845 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392269AbgAXOV4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:56 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579875715; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=jiI1uJZF61zF9q0RLqAiLf10/keLiT+nvZg6ovSERgc=;
- b=vmwOvENqWARmdti1kone5nwgmAy8aViTfRjoFjDHZj+2iR9YLn/o/u+IywVFzs+6JxRYe05Z
- ek+i3pJTaS/D1gA4vErzAyVa6ppD1zNUQ5M8pIZIVQC2DitZGitSgp6ypVwkIjKN7/rpeIxZ
- AVU9aDcq6l+95grZCi4PRJi02Pw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2afd81.7f97f26c5c00-smtp-out-n03;
- Fri, 24 Jan 2020 14:21:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D6752C447B1; Fri, 24 Jan 2020 14:21:51 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 24 Jan 2020 09:27:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387457AbgAXOVZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:25 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B7F4C433CB;
-        Fri, 24 Jan 2020 14:21:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A3C921556;
+        Fri, 24 Jan 2020 14:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579875684;
+        bh=4BulwQtBrg3DU3XdrFtI9JrA+USSSeddWgbxypc0wxk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J5Q/0LgRMUDjUH0Hv0Mj6VHg9Uj1rx9C45AqsaVmSxyrxr4SUQxL1CFCDe5lpq0Dg
+         9MmzMf3g24iF63+E2sHfA63igdVN4VLDirGI/qCrhqEZya/C1q6OV0jhjU2ilXCfmQ
+         30FbjgdYuJB8AYybTqxzoUm8xBQCzAyrYl493l/4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 04/32] ARM: dts: beagle-x15-common: Model 5V0 regulator
+Date:   Fri, 24 Jan 2020 09:20:51 -0500
+Message-Id: <20200124142119.30484-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
+References: <20200124142119.30484-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 24 Jan 2020 19:51:49 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     James Morse <james.morse@arm.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, baicar@os.amperecomputing.com
-Subject: Re: [PATCH 1/2] dt-bindings: edac: Add DT bindings for Kryo EDAC
-In-Reply-To: <312fc8b8-7019-0c74-6a92-c6740cab5dad@arm.com>
-References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
- <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
- <312fc8b8-7019-0c74-6a92-c6740cab5dad@arm.com>
-Message-ID: <3c3b1d8107a26bbbf8daca3a6c43caca@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-On 2020-01-16 00:18, James Morse wrote:
-> Hi Sai,
-> 
-> (CC: +Tyler)
-> 
-> On 05/12/2019 09:53, Sai Prakash Ranjan wrote:
->> This adds DT bindings for Kryo EDAC implemented with RAS
->> extensions on KRYO{3,4}XX CPU cores for reporting of cache
->> errors.
-> 
-> KRYO{3,4}XX isn't the only SoC with the RAS extensions. The DT needs
-> to convey the range
-> of ways this armv8 RAS extensions stuff can be wired up.
-> 
+[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
 
-Right, but I was going for Kryo specific implementation and hence the 
-binding as such.
+On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
+connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
+which is connected to the COMQ port. Model 5V0 regulator here in order
+for it to be used in am57xx-evm to model 3V6 regulator.
 
-> The folk who look after the ACPI specs have made a start:
-> https://static.docs.arm.com/den0085/a/DEN0085_RAS_ACPI_1.0_BETA_1.pdf
-> 
-> (I suspect that isn't the latest version, I'll try and find out)
-> 
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-That would be helpful, thanks.
-
-> I'd like the ACPI table and DT to convey the same information so that
-> we don't need to
-> convert or infer things in the driver. If something is missing, we
-> should get it added!
-> 
-
-Sure, I think it is decided now that kernel first RAS implementation 
-will be generic.
-
-> 
->> diff --git 
->> a/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml 
->> b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
->> new file mode 100644
->> index 000000000000..1a39429a73b4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
->> @@ -0,0 +1,67 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/edac/qcom-kryo-edac.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Kryo Error Detection and Correction(EDAC)
->> +
->> +maintainers:
->> +  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> +
->> +description: |
->> +  Kryo EDAC is defined to describe on-chip error detection and 
->> correction
->> +  for the Kryo CPU cores which implement RAS extensions.
-> 
-> Please don't make this Kryo specific, otherwise this binding becomes
-> an extra thing we
-> need to support with a 'v8.2 RAS' driver.
-> 
-> What I'd like is a single 'armv82_ras' edac driver that handles faults
-> and errors reported
-> by interrupts, and interacts with the arch code's handling of
-> 'external aborts'. This
-> should work for all platforms using v8.2 RAS and later.
-> 
-> 
-
-Ok sure.
-
->> +  It will report
->> +  all Single Bit Errors and Double Bit Errors found in L1/L2 caches 
->> in
->> +  in two registers ERXSTATUS_EL1 and ERXMISC0_EL1. L3-SCU cache 
->> errors
->> +  are reported in ERR1STATUS and ERR1MISC0 registers.
->> +    ERXSTATUS_EL1 - Selected Error Record Primary Status Register, 
->> EL1
->> +    ERXMISC0_EL1 - Selected Error Record Miscellaneous Register 0, 
->> EL1
->> +    ERR1STATUS - Error Record Primary Status Register
->> +    ERR1MISC0 - Error Record Miscellaneous Register 0
->> +  Current implementation of Kryo ECC(Error Correcting Code) mechanism 
->> is
->> +  based on interrupts.
-> 
-> Your SoC picked the system registers as the interface to these
-> component's registers.
-> The binding would need to specify which index the 'l1-l2' records
-> start at, and how many
-> there are. The same for the 'l3-scu'. You can't hard code these, they
-> are different on
-> other platforms.
-> 
-
-Ok will keep this in mind for the next version.
-
-> There is also an MMIO interface which needs a base address, along with
-> the index and
-> ranges. (which may be different). The same component may use both the
-> system register and
-> the MMIO interface.
-> 
-
-I have some doubts here, Where do I get this info? Will this be 
-implementation specific?
-
-> This stuff is likely to vary on big/little systems, so you need a way
-> of describing which
-> CPUs the settings refer to. This probably isn't something the ACPI
-> tables capture as ACPI
-> machines are typically homogenous.
-> 
-
-Our SoCs are based on big.LITTLE arch, so this will be needed.
-
-Thanks,
-Sai
-
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index 49aeecd312b4b..d578a9f7e1a0e 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -32,6 +32,27 @@
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
+ 	};
+ 
++	main_12v0: fixedregulator-main_12v0 {
++		/* main supply */
++		compatible = "regulator-fixed";
++		regulator-name = "main_12v0";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	evm_5v0: fixedregulator-evm_5v0 {
++		/* Output of TPS54531D */
++		compatible = "regulator-fixed";
++		regulator-name = "evm_5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&main_12v0>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	vdd_3v3: fixedregulator-vdd_3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vdd_3v3";
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1
+
