@@ -2,141 +2,172 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD0DC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 20:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CD7C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 21:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419092081E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 20:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90D92071E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 21:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzPWHzc+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpCxTbGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgAXUy1 (ORCPT
+        id S1725887AbgAXV57 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 15:54:27 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39162 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgAXUy1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 15:54:27 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c84so766798wme.4
-        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 12:54:26 -0800 (PST)
+        Fri, 24 Jan 2020 16:57:59 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:35644 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAXV57 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 16:57:59 -0500
+Received: by mail-yb1-f196.google.com with SMTP id q190so1717441ybq.2;
+        Fri, 24 Jan 2020 13:57:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=opkZhz5duR9Fq5DdteTxdcCMw2LLGvVz5ld2quduWCU=;
-        b=VzPWHzc+9AwICXQCpK8UFlEJx29WP+RQDUYAl4ZuwJ4ZT2A1UF6z8gLniJgwqwpbOw
-         mjdDBi8NAMffhnJUnyYsUVgUwChGfGltqilmpPejqCf+h83mrdgSWvL7Se4glrFWRFR/
-         doPYqnQeAZnV9WfOru4+U9kJXiy2clVjczUdvZn30tbpMvRsiPTolySL1t5YBrctpOnG
-         zKn31xaqN0vUCHaKvLzbJRm2KWdYiscbmpwAowj21krQ8duow1MsxMLaUIYPuSSekHx/
-         ucmcbeLyHgqan4yp1/soISTooRIzL6shEsDtfCxNNRVgjESDIlMYp3kdHvYKHWXqQy0x
-         BPJQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FAgORkqjjQWplSt9zJQeczIU9aNbThp1xcMsMJfyq+Y=;
+        b=VpCxTbGcQ0V0/R3sS4OeSE6EGkbPL0lOUOIzs42gE48xq633Q1/8Tnf4c35lP/BQGK
+         pasXqcFCk7obZOD8f5MLzdSZ6GrKGkXJjSfNSxxi0DPwtXyIUXKDpz0nbq3xxL+/h7TV
+         59KHVYvQGAhY1u44szVqcpvsr/k43DABswn5ipfFXiWtRjnjBNneIosq3POD0l59rSWA
+         gDWMNI7byCHb5kGgvuvJgCXXkTXYpIWqP+JfHQ8StWJZzyLCRyqN8VBdXi3ow57w9m57
+         Q/Ne5VUTkno/kRIM7qeEgx0Wklq2KnsHUoypgkY249y+spvoMcOauYJPwn2HZHdHN2GN
+         Felg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=opkZhz5duR9Fq5DdteTxdcCMw2LLGvVz5ld2quduWCU=;
-        b=kmhqMWSk+WsP8FvjTviMKsAvnyIty5VYSXUPROEombYMvdeeK1WLSg/1dLyq/E57kt
-         vS9Ezl7X6vBm4ulPZOkYsBNrBaBVv4K9qEioaOLO7vnw1QjowFcOAaM+UZxj5OlQ+WkK
-         3N8KH1jtBk70tm12WtYrEfXLu1bZG1vLsN0XbdFnH4XtZvqFYAOuxpaACkRS7CZR85I+
-         e8hrI5rYsuPfQr/29yfdbU69JmECSTUOw/fQb73sI0QIMz3gAAcwV+4/2DDFVF65IR+4
-         8cwPwxo3Ay+vm0kT11fqmk8L4X6rRkr8p8jjyL5/DMBELSlMFmI2ExldMmwcY8sZ2Hww
-         s93Q==
-X-Gm-Message-State: APjAAAWtc3e+9vkk4RtxghoUF5ZnpfIUoOwGr/pthpXJjANzZEbKbQWq
-        Cw2BCeyIWUSTcQHvYc71S98=
-X-Google-Smtp-Source: APXvYqxM4IdIrgE2Yh8Co6XoPZAg6AxqlyYVfJQBW2cGptnFKjuymJgPm0Zl+D27Czd2RqPrFOMCVA==
-X-Received: by 2002:a1c:80d4:: with SMTP id b203mr957857wmd.102.1579899266075;
-        Fri, 24 Jan 2020 12:54:26 -0800 (PST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
-        by smtp.gmail.com with ESMTPSA id h8sm9812977wrx.63.2020.01.24.12.54.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 12:54:25 -0800 (PST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FAgORkqjjQWplSt9zJQeczIU9aNbThp1xcMsMJfyq+Y=;
+        b=N8kJm/t5PofOGQaU/wfM/ah2+4lhnjNBts5mNdgZs0P05eXffprOWAf3mImKTTcoZo
+         tXroWh8yUduOD/ycm9XMWE3iQ1oVtU3coYEJdBDz++dVGzp9ercZWrNeo2xkRZLpHKXd
+         C8ZYzwhkH+uZ2X/wBmexKh6epWv2AgIQn8+MGzhk2hIo8cM8UjoH7MNXOsMQ8dL9tbij
+         SzTw5JacvPMaEyno4p2O0kCoozS6KjevXjltXo9cDzBWahLcHCNcjT8l+uAg8DZhcnCD
+         GMyxvAzwcDTSkI0nf4ACPELmasSe7uEseCukO1i+LT+yTgWUx5wQVdxUilh+xXyWFVSe
+         JwAQ==
+X-Gm-Message-State: APjAAAUMixYV5xDQRTcTCmlI9KYLng70am1kq5IbC6C9eNdxHPI/E+zI
+        4IX5EqxRwMClZKHam2C9pLQ=
+X-Google-Smtp-Source: APXvYqzVbEeZtHr5DuKQ0VnGjzr5Ff6DvzTWn142G41ZVqDxUi8S4qU+GYb2P4b40NsfZ0LeXkx0kw==
+X-Received: by 2002:a25:e696:: with SMTP id d144mr4150569ybh.316.1579903077801;
+        Fri, 24 Jan 2020 13:57:57 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a12sm2935604ywa.95.2020.01.24.13.57.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Jan 2020 13:57:57 -0800 (PST)
+Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Maxime Ripard <maxime@cerno.tech>,
-        linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: h6: Add IOMMU
-Date:   Fri, 24 Jan 2020 21:54:23 +0100
-Message-ID: <5320339.DvuYhMxLoT@jernej-laptop>
-In-Reply-To: <54e22e25c2c13cb1b73cc7ecb645b5d62f325b63.1579696927.git-series.maxime@cerno.tech>
-References: <cover.b2a9e1507135d81e726fcbb65137665a7f0ab74f.1579696927.git-series.maxime@cerno.tech> <54e22e25c2c13cb1b73cc7ecb645b5d62f325b63.1579696927.git-series.maxime@cerno.tech>
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191230133852.5890-1-geert+renesas@glider.be>
+ <20191230133852.5890-3-geert+renesas@glider.be>
+ <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
+ <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com>
+ <CAMuHMdUQbRqyv1FK5JTbL-XL_YPZx8Sf9tQfU-eCozCNyDXYBA@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <a58d8d75-00b3-dcbf-8cdf-0b774bbf5be0@gmail.com>
+Date:   Fri, 24 Jan 2020 15:57:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <CAMuHMdUQbRqyv1FK5JTbL-XL_YPZx8Sf9tQfU-eCozCNyDXYBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi!
-
-Dne sreda, 22. januar 2020 ob 13:44:09 CET je Maxime Ripard napisal(a):
-> Now that we have a driver for the IOMMU, let's start using it.
+On 1/7/20 2:11 AM, Geert Uytterhoeven wrote:
+> Hi Frank,
 > 
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> On Tue, Jan 7, 2020 at 8:10 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 1/6/20 5:34 PM, Frank Rowand wrote:
+>>> On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
+>>>> As GPIO hogs are configured at GPIO controller initialization time,
+>>>> adding/removing GPIO hogs in DT overlays does not work.
+>>>>
+>>>> Add support for GPIO hogs described in DT overlays by registering an OF
+>>>> reconfiguration notifier, to handle the addition and removal of GPIO hog
+>>>> subnodes to/from a GPIO controller device node.
+>>>>
+>>>> Note that when a GPIO hog device node is being removed, its "gpios"
+>>>> properties is no longer available, so we have to keep track of which
+>>>> node a hog belongs to, which is done by adding a pointer to the hog's
+>>>> device node to struct gpio_desc.
+>>>
+>>> If I have read the patches and the existing overlay source correctly,
+>>> then some observations:
+>>>
+>>> - A gpio hog node added in an overlay will be properly processed.
+>>>
+>>> - A gpio hog node already existing in the live devicetree, but with a
+>>>   non-active status will be properly processed if the status of the
+>>>   gpio hog node is changed to "ok" in the overlay.
+
+Verified by testing.
+
+
+>>> - If a gpio hog node already exists in the live devicetree with an
+>>>   active status, then any updated or added properties in that gpio
+>>>   hog node in the overlay will have no effect.
+
+Should be documented.
+
+
+>>>   There is a scenario where the updated property would have an effect:
+>>>   apply a second overlay that sets the status to inactive, then apply
+>>>   a third overlay that sets the status back to active.  This is a
+>>>   rather contrived example and I think it should be documented as
+>>>   not supported and the result undefined.
+
+I was wrong in this case.
+
+of_reconfig_get_state_change() does not simply report whether a node
+is added or removed, which confused me because it returns
+OF_RECONFIG_CHANGE_ADD and OF_RECONFIG_CHANGE_REMOVE (as well as
+no change), which I was incorrectly translating to node added or
+node removed.   OF_RECONFIG_CHANGE_ADD and OF_RECONFIG_CHANGE_REMOVE
+properly report a node becoming available or available due to changes
+in the "status" property, as well as accounting for a node being
+added or removed.
+
+So the case that I was worried about is handled correctly.
+
+
+>> I went back and double checked the related code.  For gpio hog nodes
+>> that are in a non-overlay, the status property is checked because
+>> of_gpiochip_scan_gpios() uses for_each_available_child_of_node()
+>> to search for gpio hog nodes, and for_each_available_child_of_node()
+>> checks the status property.  But in the case of a gpio hog node
+>> added by an overlay, of_gpio_notify() does not check the status
+>> property in the gpio hog node.  The check for the status property
+>> should be added to of_gpio_notify().
 > 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
-> 29824081b43b..8608bcf1c52c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -53,6 +53,7 @@
->  	de: display-engine {
->  		compatible = "allwinner,sun50i-h6-display-engine";
->  		allwinner,pipelines = <&mixer0>;
-> +		iommus = <&iommu 0>;
->  		status = "disabled";
->  	};
+> Right.  of_device_is_available() should be called to check this.
+> Note that of_i2c_notify() and of_spi_notify() also lack such a check.
+> of_platform_notify() calls of_platform_device_create_pdata(), which does
+> have the check.
 
-Isn't iommu property of the mixer node? After all, mixer is the one which 
-reads one or more framebuffers. Once second mixer is defined, would you put 
-another iommu phandle here?
-
-Best regards,
-Jernej
+And thus I was wrong about this also, so of_gpio_notify() does not need to
+check the status property, since of_reconfig_get_state_change() already
+implicitly incorporates this check.
 
 > 
-> @@ -122,6 +123,7 @@
->  				clock-names = "bus",
->  					      "mod";
->  				resets = <&display_clocks 
-RST_MIXER0>;
-> +				iommus = <&iommu 0>;
+> Gr{oetje,eeting}s,
 > 
->  				ports {
->  					#address-cells = <1>;
-> @@ -345,6 +347,15 @@
->  			#interrupt-cells = <3>;
->  		};
+>                         Geert
 > 
-> +		iommu: iommu@30f0000 {
-> +			compatible = "allwinner,sun50i-h6-iommu";
-> +			reg = <0x030f0000 0x10000>;
-> +			interrupts = <GIC_SPI 57 
-IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_IOMMU>;
-> +			resets = <&ccu RST_BUS_IOMMU>;
-> +			#iommu-cells = <1>;
-> +		};
-> +
->  		mmc0: mmc@4020000 {
->  			compatible = "allwinner,sun50i-h6-mmc",
->  				     "allwinner,sun50i-a64-mmc";
-
-
-
 
