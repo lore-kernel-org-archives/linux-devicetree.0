@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E22C32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FBEC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A5D24658
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F02E2071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876741;
-	bh=rFxetqqAGgGIApkXEQ4TCZBigV4FicIGqLM3MuDnDD8=;
+	s=default; t=1579876780;
+	bh=+5JA2poJMjR7STyvd8Wt5wYwpE8j6WD4wo/41oMHMv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WIo/up7rKNREXV/rzeWlc7G36fgkdBipp3CzWOe17OVmYPxYv80dEcI85sGNKkxoC
-	 JApAGXcWM04RqPaVmfrLwqmIfWf7zNqDsDe5mhlagkvhrpQDNrTWw2YaJ+wuBOxe7o
-	 /h8rofgoxgr6iyMLYSc+BeaTJFMpF1lRb+u7XW6w=
+	b=KuqxQTpm72RuKz/dTZVqs+JvpVg1weiVcXtlOM1YBqAOYn8t9GMaUrVOsm7vFa9GK
+	 MCPq86RW+lRuNxknYCFMF9ygh1A7mTznZ/F6jhssI1Af7Lw3mLQI+rXC5YU27xp/yy
+	 tPwNQiy++w4gz3to9B05AgHZhVf/s810ST4WYiNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388022AbgAXOiw (ORCPT
+        id S2388989AbgAXOje (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:38:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38036 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:39:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388946AbgAXOSe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:34 -0500
+        id S2390723AbgAXOS3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20BBB2077C;
-        Fri, 24 Jan 2020 14:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71C8821569;
+        Fri, 24 Jan 2020 14:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875514;
-        bh=rFxetqqAGgGIApkXEQ4TCZBigV4FicIGqLM3MuDnDD8=;
+        s=default; t=1579875509;
+        bh=+5JA2poJMjR7STyvd8Wt5wYwpE8j6WD4wo/41oMHMv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cui+bZaybZZ/vVA6Zh+rG1xTrH4n5B2E819CVv3nhtga/WN7MeUzMMl76iXo7IHBX
-         tmjDQDVuYH2xkb+bquIhD5x057OmsktmK9m3Ib8yuMavvjFYuQXSUwIBvjs0qyCNfd
-         gCPYWAlZ/vyo0RKT6P2lip1/xS9inK+aDsecaung=
+        b=BS2nQ4hNrQlgVR2ecFcVX8RH6dhsuF4vTc19szhufT1NGT+Bi82pd8QCznZQhqSYr
+         cGLkhPM8yn+g1JRhSK+qxZaVZ8adaGNwnYPcI97NJvF8TVjN0/j0pICnbxpgOKl9Ri
+         9erIoJXm8lLGTZuIwTWJ+nfAfnfQBQ3KqJgKop+I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yinbo Zhu <yinbo.zhu@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 014/107] arm64: dts: ls1028a: fix endian setting for dcfg
-Date:   Fri, 24 Jan 2020 09:16:44 -0500
-Message-Id: <20200124141817.28793-14-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 010/107] ARM: dts: beagle-x15-common: Model 5V0 regulator
+Date:   Fri, 24 Jan 2020 09:16:40 -0500
+Message-Id: <20200124141817.28793-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,35 +60,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 33eae7fb2e593fdbaac15d843e2558379c6d1149 ]
+[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
 
-DCFG block uses little endian.  Fix it so that register access becomes
-correct.
+On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
+connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
+which is connected to the COMQ port. Model 5V0 regulator here in order
+for it to be used in am57xx-evm to model 3V6 regulator.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Acked-by: Yangbo Lu <yangbo.lu@nxp.com>
-Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index bb960fe2bb64c..9589b15693d6e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -158,7 +158,7 @@
- 		dcfg: syscon@1e00000 {
- 			compatible = "fsl,ls1028a-dcfg", "syscon";
- 			reg = <0x0 0x1e00000 0x0 0x10000>;
--			big-endian;
-+			little-endian;
- 		};
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index 9a94c96b0350e..a813a0cf3ff39 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -29,6 +29,27 @@
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
+ 	};
  
- 		rst: syscon@1e60000 {
++	main_12v0: fixedregulator-main_12v0 {
++		/* main supply */
++		compatible = "regulator-fixed";
++		regulator-name = "main_12v0";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	evm_5v0: fixedregulator-evm_5v0 {
++		/* Output of TPS54531D */
++		compatible = "regulator-fixed";
++		regulator-name = "evm_5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&main_12v0>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	vdd_3v3: fixedregulator-vdd_3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vdd_3v3";
 -- 
 2.20.1
 
