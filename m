@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93438C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6AFC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FD5208C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACD820838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876316;
-	bh=Xag/+4m7N0qWYD7YsGFTJwGzTV+QBeQCq3Bkph11IF8=;
+	s=default; t=1579876318;
+	bh=T/jzZ2ogRvUw89rxkC5bNFbY9f/guSXh75QqfLjQDUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CbBX9oxM7IeucYkgnnOTFS8kPbroLOkvOU6HGX5FWOcjbr1A3vhwEuiFA6J/Pv9i1
-	 8Qv7Pnh6fes2ZhCX3sCHbLozU15O1Co6X8R0hUAoGjwEzHGjUu9ia90B98jNKWoFpE
-	 WdpsFGVTg8RtmNZppWorOzaq+YTC8YqwWL3zAtWY=
+	b=fZbXagFS2LwPZEf+nnCGImkc1cg6NN5ShJ3cUGHSffdy1vasgDNdzeIa2vH+XOLks
+	 A6R+dSdTZPpIDjeqOj8EsAXFuSoRRhDCL/Lh4a18+AiH7Sr0y3KgucROHoDKdRBo7/
+	 kjJvlnNIAGYx8E8/TeHFwNqexdG0hc/ntMe7COr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392597AbgAXObu (ORCPT
+        id S2391592AbgAXObt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:31:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41254 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:31:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404724AbgAXOUT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:19 -0500
+        id S2404688AbgAXOUS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 168082087E;
-        Fri, 24 Jan 2020 14:20:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB68322522;
+        Fri, 24 Jan 2020 14:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875618;
-        bh=Xag/+4m7N0qWYD7YsGFTJwGzTV+QBeQCq3Bkph11IF8=;
+        s=default; t=1579875617;
+        bh=T/jzZ2ogRvUw89rxkC5bNFbY9f/guSXh75QqfLjQDUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6BsaWrpGnCccb2unpHU126GJPiJMaSlI5FTn7qWIbN+Fq0wb2OL6B4HP38mCvvac
-         dyg7SYr+7/U1XaTuGIsWCOD0E9dxKjEbJH3joYkpTK2s/pUywAVpqgJMY8gT5qBcmr
-         wNtL+AEGVZ35PulotdnMiSUuzXgpSEG5sSunMXWw=
+        b=0hBn1moQZM9Lq3s+NreJQBbv5gzy15CK0K053JvicCTd1r+Qcr6P9sqW1U9phmSd2
+         Nmc24kFFM08nmDKi/OwLJOvfUBHKJYjl6l4denaaGyCWQA8nJrILZBTc8bXra6CALD
+         xfwdYWJjrdyz6O28xjNtJ543RndNnXPZ1VC3iYzg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 05/56] ARM: dts: am57xx-beagle-x15/am57xx-idk: Remove "gpios" for  endpoint dt nodes
-Date:   Fri, 24 Jan 2020 09:19:21 -0500
-Message-Id: <20200124142012.29752-5-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 04/56] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
+Date:   Fri, 24 Jan 2020 09:19:20 -0500
+Message-Id: <20200124142012.29752-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -60,68 +60,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 81cc0877840f72210e809bbedd6346d686560fc1 ]
+[ Upstream commit 1c226017d3ec93547b58082bdf778d9db7401c95 ]
 
-PERST# line in the PCIE connector is driven by the host mode and not
-EP mode. The gpios property here is used for driving the PERST# line.
-Remove gpios property from all endpoint device tree nodes.
+Current USB3503 driver ignores GPIO polarity and always operates as if the
+GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
+USB3503 chip applications to match the chip specification and common
+convention for naming the pins. The only pin, which has to be ACTIVE_LOW
+is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
+to fix the USB3503 driver to properly use generic GPIO bindings and read
+polarity from DT.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am571x-idk.dts                | 4 ----
- arch/arm/boot/dts/am572x-idk-common.dtsi        | 4 ----
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 4 ----
- 3 files changed, 12 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-index 6bebedfc0f35a..9f99ecc6890cd 100644
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -93,10 +93,6 @@
- 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
- };
- 
--&pcie1_ep {
--	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
--};
--
- &mmc1 {
- 	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
-diff --git a/arch/arm/boot/dts/am572x-idk-common.dtsi b/arch/arm/boot/dts/am572x-idk-common.dtsi
-index 784639ddf4513..8a7d34c8ae115 100644
---- a/arch/arm/boot/dts/am572x-idk-common.dtsi
-+++ b/arch/arm/boot/dts/am572x-idk-common.dtsi
-@@ -71,10 +71,6 @@
- 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
- };
- 
--&pcie1_ep {
--	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
--};
--
- &mailbox5 {
- 	status = "okay";
- 	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index d53532b479475..872382bd043f8 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -550,10 +550,6 @@
- 	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
- };
- 
--&pcie1_ep {
--	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
--};
--
- &mcasp3 {
- 	#sound-dai-cells = <0>;
- 	assigned-clocks = <&l4per_clkctrl DRA7_MCASP3_CLKCTRL 24>;
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index e5f0645e53a7b..7e74ba83f8095 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -90,7 +90,7 @@
+ 		initial-mode = <1>; /* initialize in HUB mode */
+ 		disabled-ports = <1>;
+ 		intn-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+-		reset-gpios = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
++		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
+ 		connect-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
+ 		refclk-frequency = <19200000>;
+ 	};
 -- 
 2.20.1
 
