@@ -2,248 +2,71 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9EDC35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 10:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25356C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 10:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 646D12071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 10:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q0KWYOzj"
+	by mail.kernel.org (Postfix) with ESMTP id 027612077C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 10:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731553AbgAXKzW (ORCPT
+        id S1729021AbgAXK6D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:55:22 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51132 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgAXKzV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 05:55:21 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00OAt08m071790;
-        Fri, 24 Jan 2020 04:55:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579863300;
-        bh=bSzMhNpfR2tSQKzeTTnZQyCy3i+6+xWTPWNXD5SYymo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=q0KWYOzjQiVGxU9NVW8skzdO5v5IjVqWqjTJeV7MfT2M7Yp8zPpdQOOioycUpM/Zu
-         yK78o/9WNtGwXuCa9gIF6BffDumpu1KxwnYblN0dZc/1hqFef+frdH2u9dm8xoQwXa
-         l3UqM3tzPZ0PYnIrljVj8kWdPxBpMJnjDE/+H1/0=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OAt0Ru023748;
-        Fri, 24 Jan 2020 04:55:00 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
- Jan 2020 04:55:00 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 24 Jan 2020 04:55:00 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00OAsrHq078085;
-        Fri, 24 Jan 2020 04:54:57 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>
-CC:     <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@siol.net>
-Subject: [PATCH v2 1/2] dt-bindings: display: bridge: Add documentation for Toshiba tc358768
-Date:   Fri, 24 Jan 2020 12:55:36 +0200
-Message-ID: <20200124105537.21651-2-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124105537.21651-1-peter.ujfalusi@ti.com>
-References: <20200124105537.21651-1-peter.ujfalusi@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 24 Jan 2020 05:58:03 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57392 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgAXK6D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 05:58:03 -0500
+Received: from localhost.localdomain (p200300CB87166A009DA8F7B8A96C6547.dip0.t-ipconnect.de [IPv6:2003:cb:8716:6a00:9da8:f7b8:a96c:6547])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8D520293601;
+        Fri, 24 Jan 2020 10:58:01 +0000 (GMT)
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     devicetree@vger.kernel.org
+Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, dafna.hirschfeld@collabora.com,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+Subject: [PATCH] dt-bindings: fix compilation error of the example in marvell,mmp3-hsic-phy.yaml
+Date:   Fri, 24 Jan 2020 11:57:53 +0100
+Message-Id: <20200124105753.15976-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TC358768/TC358778 is a Parallel RGB to MIPI DSI bridge.
+Running `make dt_binging_check`, gives the error:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+DTC     Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dt.yaml
+Error: Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.example.dts:20.41-42 syntax error
+FATAL ERROR: Unable to parse input tree
+
+This is because the example uses the macro GPIO_ACTIVE_HIGH which
+is defined in gpio.h but the include of this header is missing.
+Add the include to fix the error.
+
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 ---
- .../display/bridge/toshiba,tc358768.yaml      | 158 ++++++++++++++++++
- 1 file changed, 158 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+ Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
-new file mode 100644
-index 000000000000..8dd8cca39a77
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
-@@ -0,0 +1,158 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358768.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Toschiba TC358768/TC358778 Parallel RGB to MIPI DSI bridge
-+
-+maintainers:
-+  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-+
-+description: |
-+  The TC358768/TC358778 is bridge device which converts RGB to DSI.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - toshiba,tc358768
-+      - toshiba,tc358778
-+
-+  reg:
-+    maxItems: 1
-+    description: base I2C address of the device
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active low RESX pin
-+
-+  vddc-supply:
-+    description: Regulator for 1.2V internal core power.
-+
-+  vddmipi-supply:
-+    description: Regulator for 1.2V for the MIPI.
-+
-+  vddio-supply:
-+    description: Regulator for 1.8V - 3.3V IO power.
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: refclk
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        additionalProperties: false
-+
-+        description: |
-+          Video port for RGB input
-+
-+        properties:
-+          reg:
-+            const: 0
-+
-+        patternProperties:
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              data-lines:
-+                enum: [ 16, 18, 24 ]
-+
-+              remote-endpoint: true
-+
-+        required:
-+          - reg
-+
-+      port@1:
-+        type: object
-+        additionalProperties: false
-+
-+        description: |
-+          Video port for DSI output (panel or connector).
-+
-+        properties:
-+          reg:
-+            const: 1
-+
-+        patternProperties:
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint: true
-+
-+        required:
-+          - reg
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - vddc-supply
-+  - vddmipi-supply
-+  - vddio-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c1 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      dsi_bridge: tc358768@0e {
-+        compatible = "toshiba,tc358768";
-+        reg = <0x0e>;
-+
-+        clocks = <&tc358768_refclk>;
-+        clock-names = "refclk";
-+
-+        /* GPIO line is inverted before going to the bridge */
-+        reset-gpios = <&pcf_display_board 0 1 /* GPIO_ACTIVE_LOW */>;
-+
-+        vddc-supply = <&v1_2d>;
-+        vddmipi-supply = <&v1_2d>;
-+        vddio-supply = <&v3_3d>;
-+
-+        dsi_bridge_ports: ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+            rgb_in: endpoint {
-+              remote-endpoint = <&dpi_out>;
-+              data-lines = <24>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+            dsi_out: endpoint {
-+              remote-endpoint = <&lcd_in>;
-+            };
-+          };
-+        };
-+      };
-+    };
-+    
+diff --git a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+index 7917a95cda78..5ab436189f3b 100644
+--- a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+@@ -33,6 +33,7 @@ required:
+ 
+ examples:
+   - |
++    #include <dt-bindings/gpio/gpio.h>
+     hsic-phy@f0001800 {
+             compatible = "marvell,mmp3-hsic-phy";
+             reg = <0xf0001800 0x40>;
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
 
