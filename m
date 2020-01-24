@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB7EC35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB523C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7102087E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BAC20704
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 16:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="koXgOTaS"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RXw4kSul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389209AbgAXQPT (ORCPT
+        id S1729946AbgAXQQw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 11:15:19 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41300 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387515AbgAXQPT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 11:15:19 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so2641904wrw.8
-        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 08:15:17 -0800 (PST)
+        Fri, 24 Jan 2020 11:16:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35212 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbgAXQQw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 11:16:52 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g17so2657848wro.2
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 08:16:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=AVrpBO0wM6PJZyKmeW7Oe50GH3QGjDS0AA9Zq5wGB9c=;
-        b=koXgOTaSB7EZDZVcCjz29oB/lGV9BVlwYTJE5RQk+g2jwYM6KaYUqQY1hItK5A05m+
-         8AAaKAk100no2BUJLoGbV7DlaGLJrVOSnjnvHY6Dh5/mQ8xwvkJPJLKNmw80+5CtttRp
-         FcUrjwKM7ZdpsAJ0n1wi4Nap9c7zZ7w8lh5XhEkHj1SN0dZhi805+ILHlzy87eI1h8AJ
-         1EycPij79D5d8QTdJ9m69f0StEXa6sgxAvn+Gsh6Arz8AaCl7gaKHOMKrRQVjee2TIXm
-         R3/k7a81DFYqgw9zqmMIIA+MGMxM55ZAnO9Y0b6/MTlRiwD42izk26k/GRVIvThKNL+Q
-         HylQ==
+        bh=fF7N/MCM8zw/b0CsqgWcwDf5NtOvWVCbSBSqw3wDGIs=;
+        b=RXw4kSulN3AuUgSgybjCjcJfW8G+s8LpH0Mee7skAedUu8VGRQhq75iweYbHtMC9DB
+         9RZRnP396U2TTb7KRflKVDuAhnQh07C8fflL16WgMURX8XIaHGtcRKdHQBs8KC0J/NnA
+         uPlguFX+mJpG/DQsqZ/3ZSYGe3Z5o7g0dMdo5e7u7+IUjaynsYLo9GZBuh7zq6tt1Pqi
+         cbYlf/EMh+VpLn5HInLi153PymjoS0s5ar3EfzfTf9u5g5Z6yXMcu4ZL+9VBoFvR8YaT
+         +2JfXcQ6+jaEQP2HsDD5/1zoEub29UWwTh+ic6NSAYEuxTkAxCyZREWdN2JVY/wZrfie
+         mFIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=AVrpBO0wM6PJZyKmeW7Oe50GH3QGjDS0AA9Zq5wGB9c=;
-        b=AxrNlEfL69XO74Q4oImZ/rfp97G+caDkHoPcu1++8FAANbJj5eEEhYWSPIPSq+cKt5
-         EksPFkZnmJ17+0bgdsaLS+cv8oTf0tTmZ0Dv4ZE5F0Lc+rIjTl4stCwQSS5JqS0+N5DQ
-         9o6zbmO2CJuyaO9ElC4dPjfHUxGN1OS4XKrLtCYSb01BvCxoS5ilsufC/HiEQBSNRoN5
-         bbLeR0yYR+uG36PTYfk1sMh8qWOvz7Bnxph8f0c3hE+jp4CNQfAkOuNLVX+JpUMZE0Vt
-         rLJhTOKH0hF5m3foJbuYuevIsfl0yGa3z32hQZbTCmt3UGn888FBLDyVqjU03ySvH8wi
-         bW9A==
-X-Gm-Message-State: APjAAAVxNzVZo6kd/Y6mc3QL6n8AIcRKSszaQLfZdWD3qbn03bPRI14V
-        QJy4NFg3Ns6Oco4TR3TzQo6Ibg==
-X-Google-Smtp-Source: APXvYqzbJ6at3E8kPzipEmpN7SlhxO1q5rYzcvPEEnZ/28OYSNQnqddTmqttAI/Ry2X8zXYUqrMtdg==
-X-Received: by 2002:adf:ef0b:: with SMTP id e11mr5431375wro.128.1579882516794;
-        Fri, 24 Jan 2020 08:15:16 -0800 (PST)
+        bh=fF7N/MCM8zw/b0CsqgWcwDf5NtOvWVCbSBSqw3wDGIs=;
+        b=pjkpYIc1pEWx6//AaS6Oi2CqFfojSMNRVdriCgTTxu/4pF1t48oorOJJFlbCzGfE0X
+         wDtPNaf5SLueVGDi3j6x1tLkyBnjTrwahF+NdXi/P97MONoD7TuZiszwC8WwwodQ7Wcd
+         c7sCFO6mUd3JW6bAfWtlnnDfJZWiP1rmL6O8AkY6mL2KFijVcnFK0fehWFQjXe9wYyuv
+         3zCyoraBt/MCJlPqBMFBTQoFyjvnQysHB6uZkKCZ0FeWfpWpqKmMMayiFF9+LGS2Iw6J
+         AcjMCDMzlCbJZ03UwW2RT2EUi1v8fGZBkHGwSigBGRaLj1WqHO9+7c4aIKhrodIMUBvx
+         1b6w==
+X-Gm-Message-State: APjAAAWIxZ0znWc0TDjDjfzIhRe7IVisEPL1Q8eYOpU2rcbaGrTsXvdO
+        f4QZsfbqKUxsSWogbgWzTxg8pw==
+X-Google-Smtp-Source: APXvYqxvf45vNf/lFHy2oN+ojxsuLnLxWt9S35ZiunDnsTdpKgeHB69OSntqrw7cI4qpE/uXKsJYEQ==
+X-Received: by 2002:adf:e5ca:: with SMTP id a10mr5523300wrn.347.1579882609216;
+        Fri, 24 Jan 2020 08:16:49 -0800 (PST)
 Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id i8sm8231389wro.47.2020.01.24.08.15.15
+        by smtp.gmail.com with ESMTPSA id b10sm8562404wrt.90.2020.01.24.08.16.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jan 2020 08:15:16 -0800 (PST)
-Subject: Re: [PATCH v8 04/12] drm/bridge: analogix: Plug atomic state hooks to
- the default implementation
+        Fri, 24 Jan 2020 08:16:48 -0800 (PST)
+Subject: Re: [PATCH v8 10/12] drm/bridge: panel: Propage bus format/flags
 To:     Boris Brezillon <boris.brezillon@collabora.com>,
         dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -77,7 +76,7 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, intel-gfx-trybot@lists.freedesktop.org
 References: <20200123095333.2085810-1-boris.brezillon@collabora.com>
- <20200123095333.2085810-5-boris.brezillon@collabora.com>
+ <20200123095333.2085810-11-boris.brezillon@collabora.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -129,12 +128,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <bc1add6b-3b87-e65e-3d9e-27e8e6890278@baylibre.com>
-Date:   Fri, 24 Jan 2020 17:15:15 +0100
+Message-ID: <6138b625-fe5a-6529-af49-8cae383e1b42@baylibre.com>
+Date:   Fri, 24 Jan 2020 17:16:47 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200123095333.2085810-5-boris.brezillon@collabora.com>
+In-Reply-To: <20200123095333.2085810-11-boris.brezillon@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -144,31 +143,41 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 23/01/2020 10:53, Boris Brezillon wrote:
-> This is needed to pass a bridge state to all atomic hooks, if we don't
-> do that, the core can't duplicate/create bridge states.
+> So that the previous bridge element in the chain knows which input
+> format the panel bridge expects.
 > 
 > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 > ---
 > Changes in v7:
-> * New patch
-> ---
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 3 +++
->  1 file changed, 3 insertions(+)
+> * Set atomic state hooks explicitly
 > 
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> index 6fab71985cd4..dfb59a5fefea 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> @@ -1570,6 +1570,9 @@ static void analogix_dp_bridge_mode_set(struct drm_bridge *bridge,
->  }
->  
->  static const struct drm_bridge_funcs analogix_dp_bridge_funcs = {
+> Changes in v3:
+> * Adjust things to match the new bus-format negotiation approach
+> * Use drm_atomic_helper_bridge_propagate_bus_fmt
+> * Don't implement ->atomic_check() (the core now takes care of bus
+>   flags propagation)
+> 
+> Changes in v2:
+> * Adjust things to match the new bus-format negotiation approach
+> ---
+>  drivers/gpu/drm/bridge/panel.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+> index f66777e24968..dcc72bd7df30 100644
+> --- a/drivers/gpu/drm/bridge/panel.c
+> +++ b/drivers/gpu/drm/bridge/panel.c
+> @@ -127,6 +127,10 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
+>  	.enable = panel_bridge_enable,
+>  	.disable = panel_bridge_disable,
+>  	.post_disable = panel_bridge_post_disable,
+> +	.atomic_reset = drm_atomic_helper_bridge_reset,
 > +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
 > +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-> +	.atomic_reset = drm_atomic_helper_bridge_reset,
->  	.atomic_pre_enable = analogix_dp_bridge_atomic_pre_enable,
->  	.atomic_enable = analogix_dp_bridge_atomic_enable,
->  	.atomic_disable = analogix_dp_bridge_atomic_disable,
+> +	.atomic_get_input_bus_fmts = drm_atomic_helper_bridge_propagate_bus_fmt,
+>  };
+>  
+>  /**
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
