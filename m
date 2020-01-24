@@ -2,91 +2,208 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4DEC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 18:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3F5C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 18:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693A920702
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 18:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78AF2075D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 18:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F4lzXVrg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUkSU5BA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390098AbgAXSgB (ORCPT
+        id S2391476AbgAXSoN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:36:01 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40201 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388517AbgAXSgA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 13:36:00 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k25so1546178pgt.7
-        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 10:36:00 -0800 (PST)
+        Fri, 24 Jan 2020 13:44:13 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37534 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390379AbgAXSoM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 13:44:12 -0500
+Received: by mail-il1-f196.google.com with SMTP id u14so2407953ilj.4
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 10:44:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=es1HFNP6d6J1y5y/BvGmobJ434uBsiCpqm6vXNISPn0=;
-        b=F4lzXVrgB4GLH0Wx65kAQwaCgiW6sjXdx58Iy++TzFNPCqcEeBHxdTdycsDj96gd2e
-         ODtZa+0B7jHpEmmC9rOWzRAmaoYXQUaluaDLPrSYdvRt6twmx+aFANssaYFX8USJ8O1q
-         jHqMICwCBm6KrxdpHgmqPb+s4+cW/AKZfN3lpVeb0aQ30fldmbIgRPxAcM8oGc8fUKtc
-         5VYhs3fe9TT/lcv4a+1UHWTwPa1tgEURdpsM0Rmnp/37LMuBP4iJ0LXYwOC/8NIR7esZ
-         btfiTdB81qwL5SMZ15aB0lOBuNyOw2iw/Mqg4t61s3dY3+1T7rjwpsMD0z+SuE8I0/Zo
-         IKHw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2JH3g8dh1GU5H/sR8ZGM8+SPJang7iCUnM35EHBf4U0=;
+        b=sUkSU5BA0VaUZ1EqVvXDp51LYwWh8WYDrTrgFbKo+7QPyswRoDgFoi1glh31ryC55F
+         joWVg7mLUImUZ4Aid7XBHsWeIuDHvsgy3aDseDuFQtApK7qwAcr9c5yEYP6/M5X1dIrS
+         1kPS+k7s42fZJrSBm3SHTA10KKfJ8Pg2qmSaHlRYe4ROGkS19U3MgA7WeKhMI62PuQQc
+         278elf6xZJ6AFO46/kc11Jup6m9V36bx6zA7dB0csGj0AODlywdtqP3CxRPcg8zuU99j
+         YB8IysZfqhUl8CWnQYf/hrW0+IxYvuG1L+t3ddU798J28xwtHQBnFY2CCtUpsQC2GPDb
+         7gPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=es1HFNP6d6J1y5y/BvGmobJ434uBsiCpqm6vXNISPn0=;
-        b=o9GChWbGooIF/xqfn805wHNaCVANp61qrjhgFQP/U00Zs7RuNJpzE+j+jar4I/WC//
-         ToDsDYhxN7xLuNJtrjHyHTNQYTJ2iMR306rSNUcQAb+IPExk5cHrSZ41trsyEvuIM85P
-         RWM8efYRJ2HHpciv8OANr513kAxlYWhy7s+lYlvaHgtQTrT0EaoI3litMuR57+/RXl0D
-         +UZQk3RKFdBTwGfv1tjRKPkpniB7106wY/PHSerGXADGwvSi3RR1FsGR2SlouUuWpFEs
-         Q3YC8ZRbjlyHRL9qS5m2/paXE4gye1bN9f6eikib4luCNtbDRxdWFzJNCF+kXzmI1LvF
-         ebMg==
-X-Gm-Message-State: APjAAAXJWhhnpshN2hdYpsprbLP71bo4QuzvZNNhuVxNIpSYnn1GlEaX
-        fiptngGCLmUswBdlzhchOydgJA==
-X-Google-Smtp-Source: APXvYqzMOQHT09l7caq1Rvn0weEhJy6amGhPNutUjMkBLG23pZB1sA/YLN84wwJicpAW62xfe81APA==
-X-Received: by 2002:a63:5924:: with SMTP id n36mr5569946pgb.43.1579890960126;
-        Fri, 24 Jan 2020 10:36:00 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b1sm7162421pjw.4.2020.01.24.10.35.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 10:35:59 -0800 (PST)
-Date:   Fri, 24 Jan 2020 10:35:25 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, vinod.koul@linaro.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, tdas@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] clk: qcom: gcc: Add global clock controller driver
- for SM8250
-Message-ID: <20200124183525.GW1908628@ripper>
-References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
- <1579217994-22219-7-git-send-email-vnkgutta@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2JH3g8dh1GU5H/sR8ZGM8+SPJang7iCUnM35EHBf4U0=;
+        b=lzso033nEXqngbaHrBUvdgu0m8PSchc8JzuqGVo9adSTb11F0Xy3S61yluu6SYpdFm
+         ibybBkFEBrRji9guwhG39d5CWeRY5IsF32bqYRhioVKADyJUzoASxejC9wcsQa3LClfL
+         0nIe8zwwNHZ+PCuFTcb6iWNdM7cG1eeC8oFLp4k7vZv6rXGmjro/Hgy9RgPeS7V/w6Tg
+         BFhYQ9AHPAZ7A3rkDEwQuDN6zyH6TrhHJvsQWKQvrETSufP7k1YfvEMjbVD2wIeh+znH
+         EHSrjLFTiJii4I3fK+jMa99p6Cg2/Kd5/txftFMkDsJUxijO8E1Pj4U+j58cL4LkwDMw
+         zkzA==
+X-Gm-Message-State: APjAAAVYDhJipAXmjmwyZyMhMzsZL4N3+Hgt9nQ2y2FlSrNMv5r1SB1S
+        DQcBA3I88WW57wAoROqpU6xaNdm1ylNBBopIYSDz/Q==
+X-Google-Smtp-Source: APXvYqzcz7qW8iCmlEijtCdDmXnM/4jHbABwlE7vzpx8FPgzBZy4Ux5rA5eM0SAF78/80UKHi7OLzdscbESCeOArY74=
+X-Received: by 2002:a92:2907:: with SMTP id l7mr4349749ilg.140.1579891451965;
+ Fri, 24 Jan 2020 10:44:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579217994-22219-7-git-send-email-vnkgutta@codeaurora.org>
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-8-bjorn.andersson@linaro.org> <20200110212806.GD11555@xps15>
+ <20200122193936.GB3261042@ripper> <CANLsYkx-C9U4W3R3Xo6t3BJBM4UK_i3zuwzhnXMMEQ0-ur+8Kg@mail.gmail.com>
+ <20200123171524.GV1511@yoga> <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
+In-Reply-To: <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 24 Jan 2020 11:44:01 -0700
+Message-ID: <CANLsYkyhGjrxGiYqtCijwQiMOnvGdpXNKJ0XpxXsFYe=XEY0ZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 16 Jan 15:39 PST 2020, Venkata Narendra Kumar Gutta wrote:
+On Thu, 23 Jan 2020 at 10:49, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+>
+> Hi Bjorn, Mathieu
+>
+> On 1/23/20 6:15 PM, Bjorn Andersson wrote:
+> > On Thu 23 Jan 09:01 PST 2020, Mathieu Poirier wrote:
+> >
+> >> On Wed, 22 Jan 2020 at 12:40, Bjorn Andersson
+> >> <bjorn.andersson@linaro.org> wrote:
+> >>>
+> >>> On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
+> >>>
+> >>>> On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
+> >>>>> Add a common panic handler that invokes a stop request and sleep enough
+> >>>>> to let the remoteproc flush it's caches etc in order to aid post mortem
+> >>>>> debugging.
+> >>>>>
+> >>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >>>>> ---
+> >>>>>
+> >>>>> Changes since v1:
+> >>>>> - None
+> >>>>>
+> >>>>>  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
+> >>>>>  drivers/remoteproc/qcom_q6v5.h |  1 +
+> >>>>>  2 files changed, 20 insertions(+)
+> >>>>>
+> >>>>> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
+> >>>>> index cb0f4a0be032..17167c980e02 100644
+> >>>>> --- a/drivers/remoteproc/qcom_q6v5.c
+> >>>>> +++ b/drivers/remoteproc/qcom_q6v5.c
+> >>>>> @@ -6,6 +6,7 @@
+> >>>>>   * Copyright (C) 2014 Sony Mobile Communications AB
+> >>>>>   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+> >>>>>   */
+> >>>>> +#include <linux/delay.h>
+> >>>>>  #include <linux/kernel.h>
+> >>>>>  #include <linux/platform_device.h>
+> >>>>>  #include <linux/interrupt.h>
+> >>>>> @@ -15,6 +16,8 @@
+> >>>>>  #include <linux/remoteproc.h>
+> >>>>>  #include "qcom_q6v5.h"
+> >>>>>
+> >>>>> +#define Q6V5_PANIC_DELAY_MS        200
+> >>>>> +
+> >>>>>  /**
+> >>>>>   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
+> >>>>>   * @q6v5:  reference to qcom_q6v5 context to be reinitialized
+> >>>>> @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
+> >>>>>  }
+> >>>>>  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
+> >>>>>
+> >>>>> +/**
+> >>>>> + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
+> >>>>> + * @q6v5:  reference to qcom_q6v5 context
+> >>>>> + *
+> >>>>> + * Set the stop bit and sleep in order to allow the remote processor to flush
+> >>>>> + * its caches etc for post mortem debugging.
+> >>>>> + */
+> >>>>> +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
+> >>>>> +{
+> >>>>> +   qcom_smem_state_update_bits(q6v5->state,
+> >>>>> +                               BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
+> >>>>> +
+> >>>>> +   mdelay(Q6V5_PANIC_DELAY_MS);
+> >>>>
+> >>>> I really wonder if the delay should be part of the remoteproc core and
+> >>>> configurable via device tree.  Wanting the remote processor to flush its caches
+> >>>> is likely something other vendors will want when dealing with a kernel panic.
+> >>>> It would be nice to see if other people have an opinion on this topic.  If not
+> >>>> then we can keep the delay here and move it to the core if need be.
+> >>>>
+> >>>
+> >>> I gave this some more thought and what we're trying to achieve is to
+> >>> signal the remote processors about the panic and then give them time to
+> >>> react, but per the proposal (and Qualcomm downstream iirc) we will do
+> >>> this for each remote processor, one by one.
+> >>>
+> >>> So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
+> >>> end up giving the first one a whole second to react and the last one
+> >>> "only" 200ms.
+> >>>
+> >>> Moving the delay to the core by iterating over rproc_list calling
+> >>> panic() and then delaying would be cleaner imo.
+> >>
+> >> I agree.
+> >>
+> >>>
+> >>> It might be nice to make this configurable in DT, but I agree that it
+> >>> would be nice to hear from others if this would be useful.
+> >>
+> >> I think the delay has to be configurable via DT if we move this to the
+> >> core.  The binding can be optional and default to 200ms if not
+> >> present.
+> >>
+> >
+> > How about I make the panic() return the required delay and then we let
+> > the core sleep for MAX() of the returned durations?
 
-> From: Taniya Das <tdas@codeaurora.org>
-> 
-> Add the clocks supported in global clock controller, which clock the
-> peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
-> to the clock framework for the clients to be able to request for them.
-> 
+I like it.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> That way the default
+> > is still a property of the remoteproc drivers - and 200ms seems rather
+> > arbitrary to put in the core, even as a default.
+>
+> I agree with Bjorn, the delay should be provided by the platform.
+> But in this case i wonder if it is simpler to just let the platform take care it?
 
-Regards,
-Bjorn
+If I understand you correctly, that is what Bjorn's original
+implementation was doing and it had drawbacks.
+
+> For instance for stm32mp1 the stop corresponds to the reset on the remote processor core. To inform the coprocessor about an imminent shutdown we use a signal relying on a mailbox (cf. stm32_rproc_stop).
+> In this case we would need a delay between the signal and the reset, but not after (no cache management).
+
+Here I believe you are referring to the upper limit of 500ms that is
+needed for the mbox_send_message() in stm32_rproc_stop() to complete.
+Since that is a blocking call I think it would fit with Bjorn's
+proposal above if a value of '0' is returned by rproc->ops->panic().
+That would mean no further delays are needed (because the blocking
+mbox_send_message() would have done the job already).  Let me know if
+I'm in the weeds.
+
+>
+> Regards,
+> Arnaud
+> >
+> > Regards,
+> > Bjorn
+> >
