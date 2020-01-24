@@ -2,201 +2,268 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCEAC35243
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2736BC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3042072C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11D82071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 23:21:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eZcDQrVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgAXXU3 (ORCPT
+        id S2387661AbgAXXVd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:20:29 -0500
-Received: from mailoutvs52.siol.net ([185.57.226.243]:37329 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729147AbgAXXU3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 18:20:29 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id D21A95227DD;
-        Sat, 25 Jan 2020 00:20:25 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 9kCMi8KzJ6Ui; Sat, 25 Jan 2020 00:20:25 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 46B585227E3;
-        Sat, 25 Jan 2020 00:20:25 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Zimbra) with ESMTPSA id 15DBD5227DD;
-        Sat, 25 Jan 2020 00:20:21 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 0/8] media: sunxi: Add DE2 rotate driver
-Date:   Sat, 25 Jan 2020 00:20:06 +0100
-Message-Id: <20200124232014.574989-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.0
+        Fri, 24 Jan 2020 18:21:33 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:38277 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387660AbgAXXV3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 18:21:29 -0500
+Received: by mail-vs1-f65.google.com with SMTP id r18so2337429vso.5
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 15:21:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SRJ461+G7MgpwUQU9s+T4wtNvR/tD3NyDdbo7eqA7AI=;
+        b=eZcDQrVRmmgUua8irA6uwUmZChO1NI87dboSLB2KeMzZ7JR5gsRbghI4LgN0exPQaG
+         wHHGvu0c0RiHR1HnL/WKGm1NRBd7MGYwLUPDYXttvh8VvVu0+YYWqCxhGxwiU7uPt9Jy
+         3VN3tqCAta+mZolHhOTXrqvhq69f6dnCWbGt0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SRJ461+G7MgpwUQU9s+T4wtNvR/tD3NyDdbo7eqA7AI=;
+        b=GBciZyLmjk9SiwqdNQ+IcDV0hGDAU3zv20AlQG8TgKiSpA8fNda3FKeUqSrEorCf7C
+         0Ei+pxM4CEVTjxLnBk8P9KoKx0lK+bGqEbsRIv/vcedzygdj1AtRJ8HA1mSlzSddaQDp
+         L+wmr7fhXXt7XmLjQSfu65Je/vS//L8t99H/DqeoZ78A/CGcRMePCb0gvAc6ZGW/pY1Y
+         gb5LmfIX4YrMDfFSHMPGzKHjr/eKk4Us8bsOoj7xhwHeKFYzx9GmwiqO0WofeWXccIxb
+         B2BDhZXfDdKXf3NjsiPDUaDUkATYudqVy3ASW/WdL8EHz96h5v8IZ6pHRwGV0EU9pAm2
+         myZw==
+X-Gm-Message-State: APjAAAXOBHbwYtMgtN8//LV0XX0eGCMeL83aVDGM68Y7W+OsMDmariCW
+        J5wh/WIRJYdSDoeGrQ3HGoRPkdqApCA=
+X-Google-Smtp-Source: APXvYqzp5RToTGiuoEHP4UgbMt/n4xMdTUv/F3d2kod1PzUbm7viiwOU4atI3AGz5qOpy/9W0uhhJg==
+X-Received: by 2002:a67:6842:: with SMTP id d63mr3960256vsc.171.1579908087684;
+        Fri, 24 Jan 2020 15:21:27 -0800 (PST)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id k6sm1738393vsc.26.2020.01.24.15.21.26
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 15:21:26 -0800 (PST)
+Received: by mail-vs1-f42.google.com with SMTP id n27so2357422vsa.0
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 15:21:26 -0800 (PST)
+X-Received: by 2002:a05:6102:2d8:: with SMTP id h24mr4063725vsh.169.1579908086214;
+ Fri, 24 Jan 2020 15:21:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <1579867572-17188-1-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1579867572-17188-1-git-send-email-harigovi@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 24 Jan 2020 15:21:14 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WKVGq+x1XFvZQvBcKVPdcVxQWJJmsqpAxY3t4dorvMYg@mail.gmail.com>
+Message-ID: <CAD=FV=WKVGq+x1XFvZQvBcKVPdcVxQWJJmsqpAxY3t4dorvMYg@mail.gmail.com>
+Subject: Re: [v3] arm64: dts: sc7180: add display dt nodes
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some of Allwinner SoCs like A83T and A64 SoCs contain DE2 rotate core
-which can flip image horizontal and vertical and rotate it in 90 deg.
-steps. It support a lot of output formats, but a bit less capture
-formats. All YUV input formats get converted to yuv420p, while RGB
-formats are preserved.
+Hi,
 
-Patches 1-2 fix few issues with DE2 clocks.
+On Fri, Jan 24, 2020 at 4:07 AM Harigovindan P <harigovi@codeaurora.org> wrote:
+>
+> Add display, DSI hardware DT nodes for sc7180.
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>
+> Changes in v1:
+>         -Added display DT nodes for sc7180
+> Changes in v2:
+>         -Renamed node names
+>         -Corrected code alignments
+>         -Removed extra new line
+>         -Added DISP AHB clock for register access
+>         under display_subsystem node for global settings
+> Changes in v3:
+>         -Modified node names
+>         -Modified hard coded values
+>         -Removed mdss reg entry
+>
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  58 +++++++++++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 124 ++++++++++++++++++++++++++++++++
+>  2 files changed, 182 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..c77aab7 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -7,6 +7,7 @@
+>
+>  /dts-v1/;
+>
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>  #include "sc7180.dtsi"
+>  #include "pm6150.dtsi"
+> @@ -232,6 +233,50 @@
+>         };
+>  };
+>
+> +&dsi_controller {
+> +       status = "okay";
+> +
+> +       vdda-supply = <&vreg_l3c_1p2>;
+> +
+> +       panel@0 {
+> +               compatible = "visionox,rm69299-1080p-display";
 
-Patches 3-4 fix register range of DE2 clocks (it would overlap with
-rotate driver)
+I don't think the bindings for this panel have landed anywhere, have
+they?  Maybe keep the IDP patch separate from the main sc7180 patch so
+that we can land the main sc7180 patch even if the idp patch isn't
+quite ready?  ...and maybe ping whoever is supposed to add support for
+this panel to tell them to get working on it.
 
-Patches 5-8 provide binding, implement driver and add nodes.
 
-v4l2-compliance SHA: ec55a961487b449bedbe07650674b4965814cf07, 32 bits, 3=
-2-bit time_t
+> +               reg = <0>;
+> +
+> +               vdda-supply = <&vreg_l8c_1p8>;
+> +               vdd3p3-supply = <&vreg_l18a_2p8>;
+> +
+> +               pinctrl-names = "default", "suspend";
+> +               pinctrl-0 = <&disp_pins_default>;
+> +               pinctrl-1 = <&disp_pins_default>;
+> +
+> +               reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               panel0_in: endpoint {
+> +                                       remote-endpoint = <&dsi0_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       ports {
+> +               port@1 {
+> +                       endpoint {
+> +                               remote-endpoint = <&panel0_in>;
+> +                               data-lanes = <0 1 2 3>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&dsi_phy {
+> +       status = "okay";
 
-Compliance test for sun8i-rotate device /dev/video0:
+The above doesn't do anything because the dsi_phy you add to
+sc7180.dtsi doesn't have a
+  status = "disabled";
 
-Driver Info:
-        Driver name      : sun8i-rotate
-        Card type        : sun8i-rotate
-        Bus info         : platform:sun8i-rotate
-        Driver version   : 5.5.0
-        Capabilities     : 0x84208000
-                Video Memory-to-Memory
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps      : 0x04208000
-                Video Memory-to-Memory
-                Streaming
-                Extended Pix Format
+...but probably it (and most of the other components that you're
+adding) should.  The idea is that if it ever makes sense that a board
+might be built with this SoC but _not_ hook up a given component that
+it should start out "disabled" in the main SoC dtsi file.
 
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
+> +};
+> +
+>  &qspi {
+>         status = "okay";
+>         pinctrl-names = "default";
+> @@ -289,6 +334,19 @@
+>
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>
+> +&pm6150l_gpio {
+> +       disp_pins {
+> +               disp_pins_default: disp_pins_default{
 
-Allow for multiple opens:
-        test second /dev/video0 open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
+As Bjorn mentioned, node name should use "-" instead of "_".  Also add
+a space before your "{"
 
-        test invalid ioctls: OK
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK
 
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3bc3f64..3ebc45b 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1184,6 +1184,130 @@
+>                         #power-domain-cells = <1>;
+>                 };
+>
+> +               mdss: display_subsystem@ae00000 {
+> +                       compatible = "qcom,sc7180-mdss";
+> +                       reg = <0 0x0ae00000 0 0x1000>;
+> +                       reg-names = "mdss";
+> +
+> +                       power-domains = <&dispcc MDSS_GDSC>;
 
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
+You definitely can't land your patch until the "dispcc" node is added,
+but it's not.  You should be mentioning somewhere (after the cut?)
+that you depend on the series to add dispcc.
 
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
+...speaking of which, I just posted up a v2 of that.  See:
 
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 4 Private Controls: 0
+https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid
 
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK
-        test VIDIOC_TRY_FMT: OK
-        test VIDIOC_S_FMT: OK
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
+...speaking of which, can you please change your patch to replace the
+bogus <0> in the dispcc for the DSI PHY, providing the clocks for
+"dsi_phy_pll_byte" and "dsi_phy_pll_pixel"?  See
+<https://crrev.com/c/2017974/3>
 
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
 
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-        test VIDIOC_EXPBUF: OK
-        test Requests: OK (Not Supported)
+> +
+> +                       clocks = <&gcc GCC_DISP_AHB_CLK>,
+> +                                <&gcc GCC_DISP_HF_AXI_CLK>,
+> +                                <&dispcc DISP_CC_MDSS_AHB_CLK>,
+> +                                <&dispcc DISP_CC_MDSS_MDP_CLK>;
+> +                       clock-names = "iface", "gcc_bus", "ahb", "core";
+> +
+> +                       assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
+> +                       assigned-clock-rates = <300000000>;
+> +
+> +                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <1>;
+> +
+> +                       iommus = <&apps_smmu 0x800 0x2>;
+> +
+> +                       #address-cells = <2>;
+> +                       #size-cells = <2>;
+> +                       ranges;
+> +
+> +                       mdp: display_controller@ae01000 {
 
-Total for sun8i-rotate device /dev/video0: 45, Succeeded: 45, Failed: 0, =
-Warnings: 0
+Did you test this?  As far I can tell this change between v2 and v3
+broke things because the node name "mdp" is magic.  In
+"drivers/gpu/drm/msm/msm_drv.c" you can find the function:
 
-Best regards,
-Jernej
+static int compare_name_mdp(struct device *dev, void *data)
+{
+  return (strstr(dev_name(dev), "mdp") != NULL);
+}
 
-Jernej Skrabec (8):
-  clk: sunxi-ng: sun8i-de2: Swap A64 and H6 definitions
-  clk: sunxi-ng: sun8i-de2: Fix A83T clocks and reset
-  ARM: dts: sunxi: Fix DE2 clocks register range
-  arm64: dts: allwinner: a64: Fix display clock register range
-  media: dt-bindings: media: Add Allwinner A83T Rotate driver
-  media: sun8i: Add Allwinner A83T Rotate driver
-  ARM: dts: sun8i: a83t: Add device node for rotation core
-  arm64: dts: allwinner: a64: add node for rotation core
+...so unless that function changes your device tree won't work.  Maybe
+Bjorn can comment since I think he's the one that suggested you change
+this, but IMO change it back to "mdp@ae01000" for now and then start a
+separate patch series about transitioning this if people still want
+it.  See <https://crrev.com/c/2020395/1>.
 
- .../allwinner,sun8i-a83t-de2-rotate.yaml      |  70 ++
- MAINTAINERS                                   |   8 +
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  13 +-
- arch/arm/boot/dts/sun8i-r40.dtsi              |   2 +-
- arch/arm/boot/dts/sun8i-v3s.dtsi              |   2 +-
- arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  14 +-
- drivers/clk/sunxi-ng/ccu-sun8i-de2.c          |  49 +-
- drivers/media/platform/Kconfig                |  12 +
- drivers/media/platform/sunxi/Makefile         |   1 +
- .../platform/sunxi/sun8i-rotate/Makefile      |   2 +
- .../sunxi/sun8i-rotate/sun8i-formats.c        | 273 ++++++
- .../sunxi/sun8i-rotate/sun8i-formats.h        |  25 +
- .../sunxi/sun8i-rotate/sun8i-rotate.c         | 924 ++++++++++++++++++
- .../sunxi/sun8i-rotate/sun8i-rotate.h         | 135 +++
- 15 files changed, 1512 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun=
-8i-a83t-de2-rotate.yaml
- create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/Makefile
- create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-forma=
-ts.c
- create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-forma=
-ts.h
- create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-rotat=
-e.c
- create mode 100644 drivers/media/platform/sunxi/sun8i-rotate/sun8i-rotat=
-e.h
-
---=20
-2.25.0
-
+-Doug
