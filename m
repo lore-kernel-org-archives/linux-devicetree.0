@@ -2,81 +2,91 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789DCC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A77C35243
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF392077C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D12E20661
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579876256;
+	bh=yYkdvZfWRqRnTJkQxbICX9j233kcKaHvQHhe2M4H1gs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JVXgNNzNnbfkmzR0w4S+YJT+HIFEwTql6qByhL29xaa9APgFLrA630zacoCtQj8uj
+	 s7JzkwTSy8mkmEkECn3m33RXuX5ALNeLeXQW2ERao0hV09tvMwZ4e8H5kvegqffv9u
+	 19+WJj3I94pSWqPpp/9X5Kx9msm/YGK8byV+wJ2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgAXO3P (ORCPT
+        id S2404923AbgAXOUg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:29:15 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59378 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391272AbgAXO3M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 09:29:12 -0500
-Received: from [IPv6:2003:cb:8716:6a00:9da8:f7b8:a96c:6547] (p200300CB87166A009DA8F7B8A96C6547.dip0.t-ipconnect.de [IPv6:2003:cb:8716:6a00:9da8:f7b8:a96c:6547])
+        Fri, 24 Jan 2020 09:20:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392149AbgAXOUf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:35 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: dafna)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 55C57294BBA;
-        Fri, 24 Jan 2020 14:29:10 +0000 (GMT)
-Subject: Re: [PATCH] dt-bindings: fix compilation error of the example in
- intel,lgm-emmc-phy.yaml
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
-References: <20200124114914.27065-1-dafna.hirschfeld@collabora.com>
- <CAL_JsqKgNzY=KF8XzuGjw2NogBawfi0gh9ytrk_nw_Ewg2QDdg@mail.gmail.com>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <9c4a971f-6a65-594e-4a79-9e2aa16e58cb@collabora.com>
-Date:   Fri, 24 Jan 2020 15:29:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FE121569;
+        Fri, 24 Jan 2020 14:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579875635;
+        bh=yYkdvZfWRqRnTJkQxbICX9j233kcKaHvQHhe2M4H1gs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=V7Fcwnh6bn+jPMi0/5RlL7+UG9/V9gqq4m1tRjrAa5JfwoLRDO9krM7JQb2xGtLqA
+         sXKq0sb/MWAeK1AEhkABI5kGovc6CkoCd+CPhlkbACNWlsW2pAH/Ju1Zp4efQQcI48
+         Fsd5h8GFAwC8/5jRUR4bjxcqIuompgMo+TCdbqaY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/56] ARM: dts: imx7: Fix Toradex Colibri iMX7S 256MB NAND flash support
+Date:   Fri, 24 Jan 2020 09:19:35 -0500
+Message-Id: <20200124142012.29752-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
+References: <20200124142012.29752-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKgNzY=KF8XzuGjw2NogBawfi0gh9ytrk_nw_Ewg2QDdg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
+[ Upstream commit 4b0b97e651ecf29f20248420b52b6864fbd40bc2 ]
 
-On 24.01.20 15:03, Rob Herring wrote:
-> On Fri, Jan 24, 2020 at 5:49 AM Dafna Hirschfeld
-> <dafna.hirschfeld@collabora.com> wrote:
->>
->> Running:
->> export DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> 'make dt_binding_check'
->>
->> gives a compilation error. This is because in the example there
->> is the label 'emmc-phy' but labels are not allowed to have '-' sing.
->> Replace the '-' with '_' to fix the error.
->>
->> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> 
-> There's a fix from the author, but you're first to get the fix correct, so:
-Oh, sorry, I was not aware of that.
-Dafna
+Turns out when introducing the eMMC version the gpmi node required for
+NAND flash support got enabled exclusively on Colibri iMX7D 512MB.
 
-> 
-> Fixes: 5bc999108025 ("dt-bindings: phy: intel-emmc-phy: Add YAML
-> schema for LGM eMMC PHY")
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> Kishon, Please apply these soon as linux-next is broken.
-> 
-> Rob
-> 
+Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx7s-colibri.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx7s-colibri.dtsi b/arch/arm/boot/dts/imx7s-colibri.dtsi
+index 1fb1ec5d3d707..6d16e32aed899 100644
+--- a/arch/arm/boot/dts/imx7s-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7s-colibri.dtsi
+@@ -49,3 +49,7 @@
+ 		reg = <0x80000000 0x10000000>;
+ 	};
+ };
++
++&gpmi {
++	status = "okay";
++};
+-- 
+2.20.1
+
