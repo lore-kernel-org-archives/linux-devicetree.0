@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF60C32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DFBC32771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C21206F0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCDE20704
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876792;
-	bh=8q1Jas/q+s5IaRxGYxL9jFMJFjlPUTIRXcKAPTYK13U=;
+	s=default; t=1579876795;
+	bh=57FOBy08qBEXlKgCxiaToUjk/k0ohn9GFat1iPhq1H0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZcaADNzVb1iwPN6qY8xhIlL/x8ZMGYOXr6uIKVBe4BL+YNAuC33JNjR5vt8ob7Z1a
-	 8aLQphESL+9iXMiCwReKnhrghmFxmvokJMa42iD17/DLX15sFiW+9m1OCfnnAhfY7V
-	 yF498S1dEh65ztc4jSZv/6WrneiEJEj5dTB7cka4=
+	b=kl6y0x3Jt8TG7fl5iT+FxC4w2rzfqaMq9Y9rUjc/D67BBgD0zm7jxdBXmArohOTJN
+	 8NujB9CFuoRu3WpCLbc/zD6TGggBub/xbGkFxzte6WeXPWfQQcbKbnNHJbZUJC0EZj
+	 1udjRh4MGnqfrWy/4uzbfdykzQTVczTR4dLU3UIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389426AbgAXOjo (ORCPT
+        id S2390549AbgAXOSZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:39:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37776 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390631AbgAXOS1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:27 -0500
+        id S2390511AbgAXOSY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB2A208C4;
-        Fri, 24 Jan 2020 14:18:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 197D021556;
+        Fri, 24 Jan 2020 14:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875506;
-        bh=8q1Jas/q+s5IaRxGYxL9jFMJFjlPUTIRXcKAPTYK13U=;
+        s=default; t=1579875503;
+        bh=57FOBy08qBEXlKgCxiaToUjk/k0ohn9GFat1iPhq1H0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FdANWs9lue4ZKnuGHKGwQBAXbAWXwD6x+rJw+872BdsXQhJV8lNfMUR5EUF9WiJpR
-         a1dmmyajLxdQsc4XfRIZrT9tKk7oy/Ul2CnDRUOFCX63ctsXTQyndjE379V/Z/hLPZ
-         lDnwmWnvu1bAm5OIMbPgpMg2dSS7z2qsQa+6zWAo=
+        b=a1UmPzfAk4DFfv5pZgrb9tDHTQEOYPK9FVf9bvDDOLiH5AC7sSCXv2xIyNOMbv4Hm
+         CjW9r6ndUYdwtDEsA+IJzOxvAT1ql1pGC7JuK5o5AewL/7gp0im7h6O6KkzTO93+7L
+         bUj3PPl2A14cIAhcYwmun+jv0ln7BlVXIByLrPes=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+Cc:     Guillaume La Roque <glaroque@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 008/107] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
-Date:   Fri, 24 Jan 2020 09:16:38 -0500
-Message-Id: <20200124141817.28793-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 005/107] arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt
+Date:   Fri, 24 Jan 2020 09:16:35 -0500
+Message-Id: <20200124141817.28793-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,38 +60,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Guillaume La Roque <glaroque@baylibre.com>
 
-[ Upstream commit 1c226017d3ec93547b58082bdf778d9db7401c95 ]
+[ Upstream commit 30388cc075720aa0af4f2cb5933afa1f8f39d313 ]
 
-Current USB3503 driver ignores GPIO polarity and always operates as if the
-GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
-USB3503 chip applications to match the chip specification and common
-convention for naming the pins. The only pin, which has to be ACTIVE_LOW
-is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
-to fix the USB3503 driver to properly use generic GPIO bindings and read
-polarity from DT.
+add gpio irq to support interrupt trigger mode.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-index fb928503ad45d..d9be511f054f0 100644
---- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-@@ -101,7 +101,7 @@
- 		initial-mode = <1>; /* initialize in HUB mode */
- 		disabled-ports = <1>;
- 		intn-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
--		reset-gpios = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
-+		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
- 		connect-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
- 		refclk-frequency = <19200000>;
- 	};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+index 3435aaa4e8db5..5d6a8dafe8dc0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+@@ -361,6 +361,8 @@
+ 
+ 	bluetooth {
+ 		compatible = "brcm,bcm43438-bt";
++		interrupt-parent = <&gpio_intc>;
++		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
+ 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+ 		max-speed = <2000000>;
+ 		clocks = <&wifi32k>;
 -- 
 2.20.1
 
