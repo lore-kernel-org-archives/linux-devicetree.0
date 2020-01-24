@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FDAC2D0DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9971AC35242
 	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3143B20838
+	by mail.kernel.org (Postfix) with ESMTP id 663D32087E
 	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1579876728;
-	bh=TDxPorzrIJGs1ZqB7kiIUwv25RiRwUZ8gQeU5ZGA0Yc=;
+	bh=Rw6tVfC2c6QLdOPEUQ6KBAa5nQZ0ZZvMUWY3ziIiaFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NxmGTPAmkB6yfRQyPkIe/g420jo3wnNNOylleGImmDwnM/11kb8PGMsCQJAHd1yjM
-	 YDnGK0OG0qZwQwcoIZNoA1oTx8pLx3IRS0/ImaOyQ4z0RkQ81FExlxUHays1exTDv2
-	 5H4gfaTlaHIYXiTDyyEd3/aj0MPAnPqLCsRUARfw=
+	b=OdSMtVblGgcsJvaFlG/fj4WRnbiZKliQCyIms/X9YpAUMd2AXX5q8KtSytu9k7QKT
+	 BzbFMlxvyftp7bUOTy0dYuPxj48H6MEV4dDr6XdN81ORVI9bxrfuxP63imuJYMX8qf
+	 fxnMuyjG8d33aevppuq8ggy9EjJK/7/yIOHZm2D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388691AbgAXOim (ORCPT
+        id S2390941AbgAXOSj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:38:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390932AbgAXOSj (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Fri, 24 Jan 2020 09:18:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390918AbgAXOSi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF94F208C4;
-        Fri, 24 Jan 2020 14:18:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB32214DB;
+        Fri, 24 Jan 2020 14:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875518;
-        bh=TDxPorzrIJGs1ZqB7kiIUwv25RiRwUZ8gQeU5ZGA0Yc=;
+        s=default; t=1579875517;
+        bh=Rw6tVfC2c6QLdOPEUQ6KBAa5nQZ0ZZvMUWY3ziIiaFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r0fV1D/da4A/2mpzyJpC950PQ2V/861yc9+JBLLk5ULwQcs49yUvC8CtDkAiN4MEG
-         7CORZZHhFFiy3XWGQT0H4D//0fUOGapTgqBB1ooHK0kampU0e8rAW/kukr+9gYjsoC
-         2TRdR+Jh1dpDimQuq7Ye9i3HUBakBZix9CfDTE6M=
+        b=VFEsRlAE8ivstaHVipUa0VT3IObPqddh7o4ixE/SDV0wALvKWKbUIw8tDOFoNczl1
+         cULqk5iPZ3HbnOTtXynxo0lxVivIV51FhdsvtYqDU8nLpPYWLehs0sdRwWi8unAkh0
+         o4tMVGn+SEXW58knwmGDN86jJqpxh+sXAabEUOy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
+Cc:     Marek Vasut <marex@denx.de>, Fabio Estevam <festevam@gmail.com>,
+        Ludwig Zenz <lzenz@dh-electronics.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
         Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 018/107] arm64: dts: imx8mq-librem5-devkit: use correct interrupt for the magnetometer
-Date:   Fri, 24 Jan 2020 09:16:48 -0500
-Message-Id: <20200124141817.28793-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 017/107] ARM: dts: imx6q-dhcom: Fix SGTL5000 VDDIO regulator connection
+Date:   Fri, 24 Jan 2020 09:16:47 -0500
+Message-Id: <20200124141817.28793-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -61,34 +62,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 106f7b3bf943d267eb657f34616adcaadb2ab07f ]
+[ Upstream commit fe6a6689d1815b63528796886853890d8ee7f021 ]
 
-The LSM9DS1 uses a high level interrupt.
+The SGTL5000 VDDIO is connected to the PMIC SW2 output, not to
+a fixed 3V3 rail. Describe this correctly in the DT.
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
+Fixes: 52c7a088badd ("ARM: dts: imx6q: Add support for the DHCOM iMX6 SoM and PDK2")
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Ludwig Zenz <lzenz@dh-electronics.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+To: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 2 +-
+ arch/arm/boot/dts/imx6q-dhcom-pdk2.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 683a110356431..98cfe67b7db7b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -421,7 +421,7 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_imu>;
- 		interrupt-parent = <&gpio3>;
--		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
- 		vdd-supply = <&reg_3v3_p>;
- 		vddio-supply = <&reg_3v3_p>;
+diff --git a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
+index 9c61e3be2d9a3..1c46df6827f50 100644
+--- a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
++++ b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
+@@ -55,7 +55,7 @@
+ 		#sound-dai-cells = <0>;
+ 		clocks = <&clk_ext_audio_codec>;
+ 		VDDA-supply = <&reg_3p3v>;
+-		VDDIO-supply = <&reg_3p3v>;
++		VDDIO-supply = <&sw2_reg>;
  	};
+ };
+ 
 -- 
 2.20.1
 
