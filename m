@@ -2,63 +2,62 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44E1C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 13:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8788C32771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 13:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB0E214DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 13:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA31D20718
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 13:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e9RWc7TA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gins8z7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387791AbgAXNRM (ORCPT
+        id S2389454AbgAXNUS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 08:17:12 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:42269 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387788AbgAXNRL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 08:17:11 -0500
-Received: by mail-vs1-f68.google.com with SMTP id b79so1155445vsd.9
-        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 05:17:10 -0800 (PST)
+        Fri, 24 Jan 2020 08:20:18 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:42485 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387550AbgAXNUR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 08:20:17 -0500
+Received: by mail-vs1-f67.google.com with SMTP id b79so1161587vsd.9
+        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 05:20:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CY7ltUl+oKffieFB5UMThEtSPwanbFsXqyW/QH4Ukh0=;
-        b=e9RWc7TAC74AHptTQcr8hXxfjxpt3Z0iET5zEidjYPqHYng8MtDugSWQvHKeBShScB
-         l6F6DVcE6itNBO5dTXEyCYIfAVhN1GUphQxrbM+HQQ1AZM9Ux6fIPYPoEm8cno+PCdHM
-         ywFYIdhzHaHkJb1RvQ21xmiMRinXHLswPI1c5LPyYNEEeq9qdLhEjGE2VnozomaoTw4w
-         /N+NeLRtuOvmaAAWa2oqq5efgDFjwsh7yeAgIFg3BF/bfUF9AkwLqx1s/b9ao84vQphT
-         H3SzbTiol/MbELYfxNcjJx5ZBft9+XrklMQ07BCznmvRb2ufC1wZSC8dY9hurMidqeZ+
-         p6Qg==
+        bh=t65RoraJ97XSNifH3nJWhcpZY1lN6qjNaU0+rNtB6VA=;
+        b=gins8z7JzejJQal9gDEbPpdg5XvecgftPkBOzZDn61Udldh3usgTviD1RSeTs/khVg
+         P6QL2wdgjepWpZPu2K07a0Gi2j30WxCH8luSM9XeXKn2a0tOlWNsCiBvesNyFuoRTa2l
+         l+vIULJyGGwlTBlM48w/mQcMBP9WP2/M/8BvfKaietFwyHD4quO4EfSzZuZDebmtJUKO
+         N78p+V3i2PTQYXQaBm9DxrHQdcBOrL5nyx5ZvfkLk7TND7MMNM/kXvpRBQCuqtQn+Mxh
+         S+P6c2mXdalbk8iIrd+uIIUDrn+lJsAfuy8AVqcNxmXZb29qZ7+MytSuK9cABHt20/c6
+         vbnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CY7ltUl+oKffieFB5UMThEtSPwanbFsXqyW/QH4Ukh0=;
-        b=EaTRY4j0IPeOgVQuCgTqn2EctHyTZMHY4MjCTJrlOffk8qMpP1uCE4dLPronrZmvcG
-         qqkmaTjaNfHLMF721/SRw3lKBqR3FRq8EfJdIjAjvFPYJiGx9/fLtCD0XL04a9D69smg
-         4Sj2uqaEp/RB9xr4tvVkeghDwsx+tZ9IwvWYqIaFaOZW2vnOngR9XtPOpQV9Fl996+x6
-         xx9+hzWapKZRGxwdVjzaXgmKsYOlQQQoC33DcJ/MNn/d5iIJrKUMV5yxBJCT8W+0qMun
-         rbFrcLPRklDXpvAHRkHvDgI0lG4y1nUa0khPYfTWrXapJy6Xlr4JxrX1HcssYglUQK2j
-         wlkg==
-X-Gm-Message-State: APjAAAXgRI5jznBIz5Gq9ih2nMNs6tPj78fKFSt3QXX03KsKgugEL46k
-        6lrxrmcmeRaLOMTK/5R6gyG++L7l7Mf6Re2Z5ZKeFg==
-X-Google-Smtp-Source: APXvYqxuazxpyOLmT7wp2Bb5Qs3z0UkG3lAUPzIzMHC3yzutOc4zmH0KV20Nsdhmyiq1SYfbmAs1J3r1bPtSYgQDFEE=
-X-Received: by 2002:a67:314e:: with SMTP id x75mr1897330vsx.35.1579871830131;
- Fri, 24 Jan 2020 05:17:10 -0800 (PST)
+        bh=t65RoraJ97XSNifH3nJWhcpZY1lN6qjNaU0+rNtB6VA=;
+        b=YrvIWlPKkB0WBB5pIV5yjWxL8gxhV4cH7BCRfSR4UroATb9jxVtq69aK1uGPk06KzR
+         oIiXw0fgKl+I3R+DgXRx72XMwxXJ2q/oZP82e5hyH0lByP8C3CREOgj/Q8EhFz8t1CG2
+         qVft6xh+nhMNBRt9VscIgE/McNJX10jQewI07ksC03u4yG0jgHatoO+4GCr9KyRDH2Ul
+         bjWBL8zIfjt82Y0/s8fzdXRa/6Oq8lheF2dRl01mLHDN3eepszmb5XXnRV3QY1rKwGmt
+         7q7PRw7/5sCZmE4gXpvAW7ZkYzesNkKzkgngNmpXOsx4bJjOAD3tMljq1LuvUR1sWJPH
+         P0wA==
+X-Gm-Message-State: APjAAAU3FmXHfuWGHOS62EiHC+5HWVoKLnqf1gSZ/XRhJ5q/sYGb1yMT
+        2J9vTzMjiPKprrZWHRspaULYvkpRsIPbstLkpqBixQ==
+X-Google-Smtp-Source: APXvYqwPiZbZvXR+rHIvNUYilWv/U2EOOXMt8apmM26fWaq/fAZpxuaFlhAeSj98ruAwNOVdB6HsKU61mDEy2b2ThPA=
+X-Received: by 2002:a67:cc3:: with SMTP id 186mr2203033vsm.200.1579872016966;
+ Fri, 24 Jan 2020 05:20:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20200110134823.14882-1-ludovic.barre@st.com> <20200110134823.14882-9-ludovic.barre@st.com>
-In-Reply-To: <20200110134823.14882-9-ludovic.barre@st.com>
+References: <20200110134823.14882-1-ludovic.barre@st.com> <6d859def-351e-abd7-0d5f-962ad935dff2@st.com>
+In-Reply-To: <6d859def-351e-abd7-0d5f-962ad935dff2@st.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 24 Jan 2020 14:16:34 +0100
-Message-ID: <CAPDyKFp1Qsb3yCoTJevHF+SEt5thVVriLfL-4UZSYsNTc0rdMQ@mail.gmail.com>
-Subject: Re: [PATCH 8/9] mmc: mmci: sdmmc: add voltage switch functions
-To:     Ludovic Barre <ludovic.barre@st.com>
+Date:   Fri, 24 Jan 2020 14:19:40 +0100
+Message-ID: <CAPDyKFo+4qTZbE=4Zgj3VN9BPYUHGskPSnYEJRo1TpARzg5zJg@mail.gmail.com>
+Subject: Re: [PATCH 0/9] mmc: mmci: sdmmc: add sdr104 support
+To:     Ludovic BARRE <ludovic.barre@st.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -74,114 +73,20 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Jan 2020 at 14:49, Ludovic Barre <ludovic.barre@st.com> wrote:
+On Fri, 24 Jan 2020 at 13:55, Ludovic BARRE <ludovic.barre@st.com> wrote:
 >
-> To prepare the voltage switch procedure, the VSWITCHEN bit must be
-> set before sending the cmd11.
-> To confirm completion of voltage switch, the VSWEND flag must be
-> checked.
+> hi Ulf
 >
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.h             |  4 +++
->  drivers/mmc/host/mmci_stm32_sdmmc.c | 40 ++++++++++++++++++++++++++++-
->  2 files changed, 43 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index c04a144259a2..3634f98ad2d8 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -165,6 +165,7 @@
->  /* Extended status bits for the STM32 variants */
->  #define MCI_STM32_BUSYD0       BIT(20)
->  #define MCI_STM32_BUSYD0END    BIT(21)
-> +#define MCI_STM32_VSWEND       BIT(25)
->
->  #define MMCICLEAR              0x038
->  #define MCI_CMDCRCFAILCLR      (1 << 0)
-> @@ -182,6 +183,9 @@
->  #define MCI_ST_SDIOITC         (1 << 22)
->  #define MCI_ST_CEATAENDC       (1 << 23)
->  #define MCI_ST_BUSYENDC                (1 << 24)
-> +/* Extended clear bits for the STM32 variants */
-> +#define MCI_STM32_VSWENDC      BIT(25)
-> +#define MCI_STM32_CKSTOPC      BIT(26)
->
->  #define MMCIMASK0              0x03c
->  #define MCI_CMDCRCFAILMASK     (1 << 0)
-> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-> index 10059fa19f4a..9f43cf947c5f 100644
-> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-> @@ -263,7 +263,9 @@ static void mmci_sdmmc_set_pwrreg(struct mmci_host *host, unsigned int pwr)
->         struct mmc_ios ios = host->mmc->ios;
->         struct sdmmc_dlyb *dlyb = host->variant_priv;
->
-> -       pwr = host->pwr_reg_add;
-> +       /* adds OF options and preserves voltage switch bits */
-> +       pwr = host->pwr_reg_add |
-> +               (host->pwr_reg & (MCI_STM32_VSWITCHEN | MCI_STM32_VSWITCH));
->
->         sdmmc_dlyb_input_ck(dlyb);
->
-> @@ -454,6 +456,40 @@ static int sdmmc_execute_tuning(struct mmc_host *mmc, u32 opcode)
->         return sdmmc_dlyb_phase_tuning(host, opcode);
->  }
->
-> +static void sdmmc_prep_vswitch(struct mmci_host *host)
-> +{
-> +       /* clear the voltage switch completion flag */
-> +       writel_relaxed(MCI_STM32_VSWENDC, host->base + MMCICLEAR);
-> +       /* enable Voltage switch procedure */
-> +       mmci_write_pwrreg(host, host->pwr_reg | MCI_STM32_VSWITCHEN);
-> +}
-> +
-> +static int sdmmc_vswitch(struct mmci_host *host, struct mmc_ios *ios)
-> +{
-> +       unsigned long flags;
-> +       u32 status;
-> +       int ret = 0;
-> +
-> +       if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
-> +               spin_lock_irqsave(&host->lock, flags);
-> +               mmci_write_pwrreg(host, host->pwr_reg | MCI_STM32_VSWITCH);
-> +               spin_unlock_irqrestore(&host->lock, flags);
-> +
-> +               /* wait voltage switch completion while 10ms */
-> +               ret = readl_relaxed_poll_timeout(host->base + MMCISTATUS,
-> +                                                status,
-> +                                                (status & MCI_STM32_VSWEND),
-> +                                                10, 10000);
-> +
-> +               writel_relaxed(MCI_STM32_VSWENDC | MCI_STM32_CKSTOPC,
-> +                              host->base + MMCICLEAR);
-> +               mmci_write_pwrreg(host, host->pwr_reg &
-> +                                 ~(MCI_STM32_VSWITCHEN | MCI_STM32_VSWITCH));
-> +       }
+> Just a "gentleman ping" on this series
+> https://lkml.org/lkml/2020/1/10/392
 
-Don't you need to manage things when resetting to
-MMC_SIGNAL_VOLTAGE_330, which for example happens during a card
-removal or at system suspend/resume?
+I was just reviewing :-) Thanks for pinging!
 
-> +
-> +       return ret;
-> +}
-> +
->  static struct mmci_host_ops sdmmc_variant_ops = {
->         .validate_data = sdmmc_idma_validate_data,
->         .prep_data = sdmmc_idma_prep_data,
-> @@ -465,6 +501,8 @@ static struct mmci_host_ops sdmmc_variant_ops = {
->         .set_clkreg = mmci_sdmmc_set_clkreg,
->         .set_pwrreg = mmci_sdmmc_set_pwrreg,
->         .busy_complete = sdmmc_busy_complete,
-> +       .prep_volt_switch = sdmmc_prep_vswitch,
-> +       .volt_switch = sdmmc_vswitch,
->  };
->
->  void sdmmc_variant_init(struct mmci_host *host)
-> --
-> 2.17.1
->
+One overall comment is that I think you can try to work a bit on the
+changelogs. In some cases you described what the patch does, which is
+good, but it may lack information about *why* the change is wanted.
+
+Overall, the series looks nice.
 
 Kind regards
 Uffe
