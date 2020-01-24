@@ -2,84 +2,98 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC05C32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 05:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B57C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 07:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A1C2071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 05:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579845453;
-	bh=d13N34bVaaygDttZHRsAhaFsR+ujxdgNFmF4x8KTHug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F0AFMhCL3cGOn0nrsDThxHuxYek3JIQM5m7BMYp3la5030XKF+PiYc5gratkJiwX5
-	 xx4mtQOsG0Ym+mliobAbom829ZIuTz7RzLY+Uairwb67vVsdGXKJom9QCYFY9mtvpX
-	 F2uK/3JT2OAgnv6BETDOSRyNO2j8rdRub5LpNW7c=
+	by mail.kernel.org (Postfix) with ESMTP id 05B7620709
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 07:22:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QiwhuVMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbgAXF52 (ORCPT
+        id S1730487AbgAXHWE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 00:57:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgAXF52 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 00:57:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 178352075D;
-        Fri, 24 Jan 2020 05:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579845447;
-        bh=d13N34bVaaygDttZHRsAhaFsR+ujxdgNFmF4x8KTHug=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JstUQYOqFRos8+s1IX9HFtocD6tJQ7/gYMDtqqLKzFJiiG6luPj54X2TgFX1b7r4Q
-         7r5G96zquz+mfrPF2Vq/2GqhiqZ0BfbJ9ibTIAcNPupJroTq4DgitgGs5K8XSLpd/v
-         u1t4bforHQl0s9lVIyUbg1QXDxLbOWrIe1884+4E=
-Date:   Fri, 24 Jan 2020 06:57:24 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
-Cc:     Prakruthi Deepak Heragu <pheragu@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ckadabi@codeaurora.org, tsoni@codeaurora.org,
-        bryanh@codeaurora.org, psodagud@codeaurora.org,
-        rnayak@codeaurora.org,
-        Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] Embedded USB Debugger (EUD) driver
-Message-ID: <20200124055724.GA2906795@kroah.com>
-References: <1542310374-18474-1-git-send-email-pheragu@codeaurora.org>
- <1542310374-18474-3-git-send-email-pheragu@codeaurora.org>
- <20181115230618.GB26568@kroah.com>
- <2c599a3f-ee1c-63d9-5f88-d2a610e6d357@codeaurora.org>
+        Fri, 24 Jan 2020 02:22:04 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52876 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgAXHWE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 02:22:04 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00O7M0Ei114290;
+        Fri, 24 Jan 2020 01:22:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579850520;
+        bh=/+wlp8NWszHu9hwI5xbto1zIaBFloKdl6UogH/4mwhU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QiwhuVMUi/aTOpIug3SzDNZSwMB3gfgLc7V4ovistaSez/3RKNNue9MTbvUpxXJhY
+         jjhJAoqfiDELievWnkBOlJy+Jbjcx3jP2j5ANoPvVmIykvOW5M/qoXGYhMqPSey+Lx
+         qnD+K31pH9JqmMkEUyG1Hn2SlOwE9ZA7CEHVEXpE=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00O7LxS9129366
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jan 2020 01:21:59 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
+ Jan 2020 01:21:59 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 24 Jan 2020 01:21:59 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00O7Lu22064904;
+        Fri, 24 Jan 2020 01:21:57 -0600
+Subject: Re: [Patch v4 00/10] ARM: dts: dra7: add cal nodes
+To:     Tony Lindgren <tony@atomide.com>, Benoit Parrot <bparrot@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191211140558.10407-1-bparrot@ti.com>
+ <20200123171737.GB5885@atomide.com> <20200123172624.GE5885@atomide.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <668be3a7-d9be-6a2e-71ba-5631bf99dfae@ti.com>
+Date:   Fri, 24 Jan 2020 09:21:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2c599a3f-ee1c-63d9-5f88-d2a610e6d357@codeaurora.org>
+In-Reply-To: <20200123172624.GE5885@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 03:11:29AM +0530, Dwivedi, Avaneesh Kumar (avani) wrote:
+On 23/01/2020 19:26, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [200123 17:18]:
+>> * Benoit Parrot <bparrot@ti.com> [191211 06:03]:
+>>> This patch series adds the needed clkctrl and ty-sysc nodes for CAL module.
+>>> It also adds support for the module in related dtsi and dts for DRA72,
+>>> DRA76 and AM654 SoC.
+>>
+>> Applying these into omap-for-v5.6/ti-sysc-dt-cam on top of Tero's
+>> for-5.6-ti-clk branch. It might be too later for v5.6, but we'll
+>> see.
 > 
-> On 11/16/2018 4:36 AM, Greg KH wrote:
-> > On Thu, Nov 15, 2018 at 11:32:54AM -0800, Prakruthi Deepak Heragu wrote:
-> > > Add support for control peripheral of EUD (Embedded USB Debugger) to
-> > > listen to events such as USB attach/detach, charger enable/disable, pet
-> > > EUD to indicate software is functional. Reusing the platform device kobj,
-> > > sysfs entry 'enable' is created to enable or disable EUD.
-> > If you add/remove/change a sysfs file, you need to also have a
-> > Documentation/ABI/ file update as well.  Please do that here.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+> Actually I'll leave out the k3-am65 dts changes as I don't see
+> acks for those. Tero can pick up those later.
 > 
-> Thank you very much Greg for your time to review, Shall i go ahead posting
-> next patch set v4 addressing your comments?
+> Regards,
+> 
+> Tony
+> 
 
-Why wouldn't you?  :)
+Right, I think I also missed the cal clkctrl patch in this series. This 
+series is imho applying against too many different trees (three if I am 
+not mistaken) and should be split up to avoid confusion / not to get 
+lost in mailboxes.
 
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
