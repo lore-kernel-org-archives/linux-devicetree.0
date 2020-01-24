@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A77C35243
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9DAC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D12E20661
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E6C20838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876256;
-	bh=yYkdvZfWRqRnTJkQxbICX9j233kcKaHvQHhe2M4H1gs=;
+	s=default; t=1579876296;
+	bh=0BOlGA6oAYqfl/yKYGzKEd6mTq0cA3rq4GlXDVgJxYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JVXgNNzNnbfkmzR0w4S+YJT+HIFEwTql6qByhL29xaa9APgFLrA630zacoCtQj8uj
-	 s7JzkwTSy8mkmEkECn3m33RXuX5ALNeLeXQW2ERao0hV09tvMwZ4e8H5kvegqffv9u
-	 19+WJj3I94pSWqPpp/9X5Kx9msm/YGK8byV+wJ2o=
+	b=beWzUWcvWabNnx5okRGU5K1QjlfmwThX1d7tjAWUitisbzD1DAR/fWlgJ/AuyOshp
+	 kaR4htn6CJzcE93IobbLVw5Edxias/l/19caTvj7UWmRtFEoy97kGIznWFm+9MhNUh
+	 UWefb4SK1wRqXK2szxP6CBorM+doxbqCzNm6JtJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404923AbgAXOUg (ORCPT
+        id S2404163AbgAXOb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:31:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392149AbgAXOUf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:35 -0500
+        id S2404834AbgAXOUY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62FE121569;
-        Fri, 24 Jan 2020 14:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C62A32087E;
+        Fri, 24 Jan 2020 14:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875635;
-        bh=yYkdvZfWRqRnTJkQxbICX9j233kcKaHvQHhe2M4H1gs=;
+        s=default; t=1579875623;
+        bh=0BOlGA6oAYqfl/yKYGzKEd6mTq0cA3rq4GlXDVgJxYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V7Fcwnh6bn+jPMi0/5RlL7+UG9/V9gqq4m1tRjrAa5JfwoLRDO9krM7JQb2xGtLqA
-         sXKq0sb/MWAeK1AEhkABI5kGovc6CkoCd+CPhlkbACNWlsW2pAH/Ju1Zp4efQQcI48
-         Fsd5h8GFAwC8/5jRUR4bjxcqIuompgMo+TCdbqaY=
+        b=prX+HvpxusXF+QzioMf6b4y0R73NvkW+1zrbuq2kCZeCQ3FUcv0Y/FWTU8SR0vsoU
+         VyZ/6MLfFpw1xmzJU1IPAGrsLhtAYwqLG13KSVXb4XgD2doD5D8beoR0L0JnSuO/f9
+         HFqqpYeXOsHHSYGSHoaaXH9PxzmhqezaRgROSAUo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/56] ARM: dts: imx7: Fix Toradex Colibri iMX7S 256MB NAND flash support
-Date:   Fri, 24 Jan 2020 09:19:35 -0500
-Message-Id: <20200124142012.29752-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 09/56] ARM: dts: imx6q-dhcom: fix rtc compatible
+Date:   Fri, 24 Jan 2020 09:19:25 -0500
+Message-Id: <20200124142012.29752-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -60,33 +60,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 4b0b97e651ecf29f20248420b52b6864fbd40bc2 ]
+[ Upstream commit 7d7778b1396bc9e2a3875009af522beb4ea9355a ]
 
-Turns out when introducing the eMMC version the gpmi node required for
-NAND flash support got enabled exclusively on Colibri iMX7D 512MB.
+The only correct and documented compatible string for the rv3029 is
+microcrystal,rv3029. Fix it up.
 
-Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Fixes: 52c7a088badd ("ARM: dts: imx6q: Add support for the DHCOM iMX6 SoM and PDK2")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7s-colibri.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx6q-dhcom-som.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7s-colibri.dtsi b/arch/arm/boot/dts/imx7s-colibri.dtsi
-index 1fb1ec5d3d707..6d16e32aed899 100644
---- a/arch/arm/boot/dts/imx7s-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7s-colibri.dtsi
-@@ -49,3 +49,7 @@
- 		reg = <0x80000000 0x10000000>;
+diff --git a/arch/arm/boot/dts/imx6q-dhcom-som.dtsi b/arch/arm/boot/dts/imx6q-dhcom-som.dtsi
+index bbba0671f0f41..5b4d78999f809 100644
+--- a/arch/arm/boot/dts/imx6q-dhcom-som.dtsi
++++ b/arch/arm/boot/dts/imx6q-dhcom-som.dtsi
+@@ -205,7 +205,7 @@
  	};
- };
-+
-+&gpmi {
-+	status = "okay";
-+};
+ 
+ 	rtc@56 {
+-		compatible = "rv3029c2";
++		compatible = "microcrystal,rv3029";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_rtc_hw300>;
+ 		reg = <0x56>;
 -- 
 2.20.1
 
