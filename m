@@ -2,250 +2,194 @@ Return-Path: <SRS0=u7up=3N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EE7C35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D016C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 09:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A6D20709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 09:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858840;
-	bh=m3PiA4eOlYD/JMenRGCtmDRxVjyUho6w+RWUFmixReU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yN9N99j3nvmQn2PWh/qpjjzIKOlAsdY5eqhQrmIE5aQmb9YGbynw6BcBa3XtTlz3E
-	 TIuAn/41zGxlfjuHAt9BAG2aNhbGzn9YQovLXu0LCIUQ/OhPqcc+bFGplaPf/M+7A6
-	 jA0DSd6MQZpqbTkzSa1yrpm5LTP9J5tldVzJHxK0=
+	by mail.kernel.org (Postfix) with ESMTP id 7142120709
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jan 2020 09:52:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Bk1vimbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgAXJkj (ORCPT
+        id S2388046AbgAXJva (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:40:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732473AbgAXJkh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:40:37 -0500
-Received: from localhost (unknown [145.15.244.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F577208C4;
-        Fri, 24 Jan 2020 09:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858836;
-        bh=m3PiA4eOlYD/JMenRGCtmDRxVjyUho6w+RWUFmixReU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZKiEyKKiIQ9cWPWYhv+mKSqM46Y/oIilb9IL5+rEc35VwP1q93UdEGGsvv9sZ0TK
-         wR2ixdp5a1Kkjp3sqebEhajaX2UEo7zyCuhvPeh9I5Z7Ah9mXtTC15ReSH+xwwvkZk
-         kyLHcRkRNYWWdGbAKUYAu06utW2G/jkumicTLc1A=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, devicetree@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/102] hwrng: omap3-rom - Fix missing clock by probing with device tree
-Date:   Fri, 24 Jan 2020 10:30:55 +0100
-Message-Id: <20200124092814.500566562@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
-References: <20200124092806.004582306@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 24 Jan 2020 04:51:30 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8038 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388038AbgAXJva (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 04:51:30 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2abe130000>; Fri, 24 Jan 2020 01:51:15 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 24 Jan 2020 01:51:29 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 24 Jan 2020 01:51:29 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jan
+ 2020 09:51:26 +0000
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Sameer Pujar <spujar@nvidia.com>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <broonie@kernel.org>, <atalambedu@nvidia.com>, <tiwai@suse.com>,
+        <viswanathl@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <mkumard@nvidia.com>,
+        <dramesh@nvidia.com>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+ <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+ <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
+ <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
+ <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
+ <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
+ <1a84b393-938f-8bed-d08e-cc3bb6ed4844@gmail.com>
+ <0fc814c2-0dc6-7741-b954-463381ff7fb9@nvidia.com>
+ <b5c581b9-17af-d004-33fb-2cc782ab820a@gmail.com>
+ <9f73afdf-1e9a-cdbd-f972-a022d503ef51@nvidia.com>
+Message-ID: <264d3354-8a2e-ee12-44ae-aff69213d551@nvidia.com>
+Date:   Fri, 24 Jan 2020 09:51:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9f73afdf-1e9a-cdbd-f972-a022d503ef51@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579859475; bh=BhDleast9LuvQxUZx9yNqe9Bj3o/7udKwCoxfMF5oWM=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Bk1vimbW6xL2jVwyO3bsS9EMmPp9GMv3D0o09KKBs/88NO9R/NTNvb2y0qQVeobI5
+         nT9rCtDZgysjY5JjLfrce5yczLEqXQzXXLuYXTCdQN6s/Xa5/PpBE58P72HpZlBhHz
+         SpuYYN7iG1Uo6ftnK5RWM2ZZwyt47IJUj9ppG5mX3qV7ewtGuJlVqdGxkL+VScZ4En
+         y1J6NHo07k8AStlbILkvphRCSRhTp1hQz8OWz53WaFpQBiYCvR3i03yPGETTDrfr3/
+         4yPKm/H4MVIyVE3Biq7oTocZPOAO6SKojFfO3REoQt9HLy4ESP9OH19TJmEE/bI54J
+         Of8r+Dj7uOBHA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 0c0ef9ea6f3f0d5979dc7b094b0a184c1a94716b ]
+On 24/01/2020 09:07, Jon Hunter wrote:
+>=20
+> On 23/01/2020 15:16, Dmitry Osipenko wrote:
+>> 23.01.2020 12:22, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>
+>>>
+>>> On 1/22/2020 9:57 PM, Dmitry Osipenko wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> 22.01.2020 14:52, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> On 22/01/2020 07:16, Sameer Pujar wrote:
+>>>>>
+>>>>> ...
+>>>>>
+>>>>>>>>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
+>>>>>>>>>>>> +{
+>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(&pdev->dev);
+>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (!pm_runtime_status_suspended(&pd=
+ev->dev))
+>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 tegra210_i2s_runtime_suspend(&pdev->dev);
+>>>>>>>>>>> This breaks device's RPM refcounting if it was disabled in the
+>>>>>>>>>>> active
+>>>>>>>>>>> state. This code should be removed. At most you could warn
+>>>>>>>>>>> about the
+>>>>>>>>>>> unxpected RPM state here, but it shouldn't be necessary.
+>>>>>>>>>> I guess this was added for safety and explicit suspend keeps clo=
+ck
+>>>>>>>>>> disabled.
+>>>>>>>>>> Not sure if ref-counting of the device matters when runtime PM i=
+s
+>>>>>>>>>> disabled and device is removed.
+>>>>>>>>>> I see few drivers using this way.
+>>>>>>>>> It should matter (if I'm not missing something) because RPM shoul=
+d
+>>>>>>>>> be in
+>>>>>>>>> a wrecked state once you'll try to re-load the driver's module.
+>>>>>>>>> Likely
+>>>>>>>>> that those few other drivers are wrong.
+>>>>>>>>>
+>>>>>>>>> [snip]
+>>>>>>>> Once the driver is re-loaded and RPM is enabled, I don't think it
+>>>>>>>> would use
+>>>>>>>> the same 'dev' and the corresponding ref count. Doesn't it use the
+>>>>>>>> new
+>>>>>>>> counters?
+>>>>>>>> If RPM is not working for some reason, most likely it would be the
+>>>>>>>> case
+>>>>>>>> for other
+>>>>>>>> devices. What best driver can do is probably do a force suspend
+>>>>>>>> during
+>>>>>>>> removal if
+>>>>>>>> already not done. I would prefer to keep, since multiple drivers
+>>>>>>>> still
+>>>>>>>> have it,
+>>>>>>>> unless there is a real harm in doing so.
+>>>>>>> I took a closer look and looks like the counter actually should be
+>>>>>>> reset. Still I don't think that it's a good practice to make change=
+s
+>>>>>>> underneath of RPM, it may strike back.
+>>>>>> If RPM is broken, it probably would have been caught during device
+>>>>>> usage.
+>>>>>> I will remove explicit suspend here if no any concerns from other
+>>>>>> folks.
+>>>>>> Thanks.
+>>>>> I recall that this was the preferred way of doing this from the RPM
+>>>>> folks. Tegra30 I2S driver does the same and Stephen had pointed me to
+>>>>> this as a reference.
+>>>>> I believe that this is meant to ensure that the
+>>>>> device is always powered-off regardless of it RPM is enabled or not a=
+nd
+>>>>> what the current state is.
+>>>> Yes, it was kinda actual for the case of unavailable RPM.
+>>>
+>>>> Anyways, /I think/ variant like this should have been more preferred:
+>>>>
+>>>> if (!pm_runtime_enabled(&pdev->dev))
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_i2s_runtime_=
+suspend(&pdev->dev);
+>>>> else
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(&p=
+dev->dev);
+>>>
+>>> I think it looks to be similar to what is there already.
+>>>
+>>> pm_runtime_disable(&pdev->dev); // it would turn out to be a dummy call
+>>> if !RPM
+>>> if (!pm_runtime_status_suspended(&pdev->dev)) // it is true always if !=
+RPM
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_i2s_runtime_suspend=
+(&pdev->dev);
+>>
+>> Maybe this is fine for !RPM, but not really fine in a case of enabled
+>> RPM. Device could be in resumed state after pm_runtime_disable() if it
+>> wasn't suspended before the disabling.
+>=20
+> I don't see any problem with this for the !RPM case.
 
-Commit 0ed266d7ae5e ("clk: ti: omap3: cleanup unnecessary clock aliases")
-removed old omap3 clock framework aliases but caused omap3-rom-rng to
-stop working with clock not found error.
+Sorry I meant the RPM case. In other words, I don't see a problem for
+neither the RPM case of the !RPM case.
 
-Based on discussions on the mailing list it was requested by Tero Kristo
-that it would be best to fix this issue by probing omap3-rom-rng using
-device tree to provide a proper clk property. The other option would be
-to add back the missing clock alias, but that does not help moving things
-forward with removing old legacy platform_data.
+Jon
 
-Let's also add a proper device tree binding and keep it together with
-the fix.
-
-Cc: devicetree@vger.kernel.org
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Pali Rohár <pali.rohar@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Fixes: 0ed266d7ae5e ("clk: ti: omap3: cleanup unnecessary clock aliases")
-Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../devicetree/bindings/rng/omap3_rom_rng.txt | 27 +++++++++++++++++++
- arch/arm/boot/dts/omap3-n900.dts              |  6 +++++
- arch/arm/mach-omap2/pdata-quirks.c            | 12 +--------
- drivers/char/hw_random/omap3-rom-rng.c        | 17 ++++++++++--
- 4 files changed, 49 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
-
-diff --git a/Documentation/devicetree/bindings/rng/omap3_rom_rng.txt b/Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
-new file mode 100644
-index 0000000000000..f315c9723bd2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
-@@ -0,0 +1,27 @@
-+OMAP ROM RNG driver binding
-+
-+Secure SoCs may provide RNG via secure ROM calls like Nokia N900 does. The
-+implementation can depend on the SoC secure ROM used.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "nokia,n900-rom-rng"
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the the RNG interface clock
-+
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "ick"
-+
-+Example:
-+
-+	rom_rng: rng {
-+		compatible = "nokia,n900-rom-rng";
-+		clocks = <&rng_ick>;
-+		clock-names = "ick";
-+	};
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 84a5ade1e865b..63659880eeb3f 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -155,6 +155,12 @@
- 		pwms = <&pwm9 0 26316 0>; /* 38000 Hz */
- 	};
- 
-+	rom_rng: rng {
-+		compatible = "nokia,n900-rom-rng";
-+		clocks = <&rng_ick>;
-+		clock-names = "ick";
-+	};
-+
- 	/* controlled (enabled/disabled) directly by bcm2048 and wl1251 */
- 	vctcxo: vctcxo {
- 		compatible = "fixed-clock";
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 33688e1d9acf9..247e3f8acffe6 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -268,14 +268,6 @@ static void __init am3517_evm_legacy_init(void)
- 	am35xx_emac_reset();
- }
- 
--static struct platform_device omap3_rom_rng_device = {
--	.name		= "omap3-rom-rng",
--	.id		= -1,
--	.dev	= {
--		.platform_data	= rx51_secure_rng_call,
--	},
--};
--
- static void __init nokia_n900_legacy_init(void)
- {
- 	hsmmc2_internal_input_clk();
-@@ -291,9 +283,6 @@ static void __init nokia_n900_legacy_init(void)
- 			pr_warn("RX-51: Not enabling ARM errata 430973 workaround\n");
- 			pr_warn("Thumb binaries may crash randomly without this workaround\n");
- 		}
--
--		pr_info("RX-51: Registering OMAP3 HWRNG device\n");
--		platform_device_register(&omap3_rom_rng_device);
- 	}
- }
- 
-@@ -538,6 +527,7 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
- 	OF_DEV_AUXDATA("ti,davinci_mdio", 0x5c030000, "davinci_mdio.0", NULL),
- 	OF_DEV_AUXDATA("ti,am3517-emac", 0x5c000000, "davinci_emac.0",
- 		       &am35xx_emac_pdata),
-+	OF_DEV_AUXDATA("nokia,n900-rom-rng", 0, NULL, rx51_secure_rng_call),
- 	/* McBSP modules with sidetone core */
- #if IS_ENABLED(CONFIG_SND_SOC_OMAP_MCBSP)
- 	OF_DEV_AUXDATA("ti,omap3-mcbsp", 0x49022000, "49022000.mcbsp", &mcbsp_pdata),
-diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
-index 648e39ce6bd95..8df3cad7c97ae 100644
---- a/drivers/char/hw_random/omap3-rom-rng.c
-+++ b/drivers/char/hw_random/omap3-rom-rng.c
-@@ -20,6 +20,8 @@
- #include <linux/workqueue.h>
- #include <linux/clk.h>
- #include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- 
- #define RNG_RESET			0x01
-@@ -86,14 +88,18 @@ static int omap3_rom_rng_read(struct hwrng *rng, void *data, size_t max, bool w)
- 
- static struct hwrng omap3_rom_rng_ops = {
- 	.name		= "omap3-rom",
--	.read		= omap3_rom_rng_read,
- };
- 
- static int omap3_rom_rng_probe(struct platform_device *pdev)
- {
- 	int ret = 0;
- 
--	pr_info("initializing\n");
-+	omap3_rom_rng_ops.read = of_device_get_match_data(&pdev->dev);
-+	if (!omap3_rom_rng_ops.read) {
-+		dev_err(&pdev->dev, "missing rom code handler\n");
-+
-+		return -ENODEV;
-+	}
- 
- 	omap3_rom_rng_call = pdev->dev.platform_data;
- 	if (!omap3_rom_rng_call) {
-@@ -126,9 +132,16 @@ static int omap3_rom_rng_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id omap_rom_rng_match[] = {
-+	{ .compatible = "nokia,n900-rom-rng", .data = omap3_rom_rng_read, },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, omap_rom_rng_match);
-+
- static struct platform_driver omap3_rom_rng_driver = {
- 	.driver = {
- 		.name		= "omap3-rom-rng",
-+		.of_match_table = omap_rom_rng_match,
- 	},
- 	.probe		= omap3_rom_rng_probe,
- 	.remove		= omap3_rom_rng_remove,
--- 
-2.20.1
-
-
-
+--=20
+nvpublic
