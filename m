@@ -2,127 +2,249 @@ Return-Path: <SRS0=DFaX=3O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E254BC35244
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 11:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDCAC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 15:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80812075E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 11:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE27820704
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 15:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gM9Yxu1p"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kpnZEPwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgAYLYh (ORCPT
+        id S1726030AbgAYPjh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jan 2020 06:24:37 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40948 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgAYLYh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jan 2020 06:24:37 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c14so5161766wrn.7;
-        Sat, 25 Jan 2020 03:24:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bNk/OspMeZjlVC/SKfI3L+0oFPUb+GRq74FvOVEc3HQ=;
-        b=gM9Yxu1p0Nsi4Zctq5wvCXsMYRrDBm/Vjiqmt/eGl8COnQMgWdfFUfDB3XdbgThdmj
-         NIDlR5Hh4eTMZQjI0hhLZ3T5oyP25FetCvAoeeR3vVXaixcESuqjeHYXQBq1ZxMazQUv
-         EED3txDawm+AoD9BYnHgBzFhO2ixy7WBXUmZqodqGBA+F/61lIWvOFHAf8WGeGrN+S/6
-         EUh5nR99OQiYJNynws8yIw7OvFb6eHFieq8WTEIjONRZK0ogBWVEi8tzyypZW2gMoWPh
-         hQxPbj1Q3NotEc/m5T+JXSaH+8NPHEYRdEZELI72NTWFSVmIMT0O9IJP6FCzpKD2qgY4
-         hBuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bNk/OspMeZjlVC/SKfI3L+0oFPUb+GRq74FvOVEc3HQ=;
-        b=nGtx/6Q6RtAl/5ztzoY4HUArad8czgMWcRFzDGNs0jKtPgdOTIdZZN3dneCSB4pFDb
-         iMKsHgAApBhoOng34OBkwPZNeb49bSZt+wbg/e94oxmQ8YEv6Wl1sUbmadpIzBovknBg
-         xxcRRyPtrZ3Xj2hCB18ApNvqHm7OPqXOsvP3NBeBrfxzll33Z+PnQVlp7WPtFbBw8GnY
-         0L2CN7ShaxnxLJvdwr5cxQdzUwPsSUNVI2lmX0/JpVhhC60c8ueahrMeN/vweh8Qlfi6
-         mn8m0aNBKbMWFd5Lvk0UObgNf3Hb/gbV8w3joUE9xYkmiQhXN7S3a8g+danylQeoIGte
-         Be9g==
-X-Gm-Message-State: APjAAAXtnQVCH3h9NqeLi9ZxTZu9PQ0YC2FUQG17pTE7GBmPuRk2/hbq
-        JHOnj2uJMiSsPoCucz1qIdw=
-X-Google-Smtp-Source: APXvYqwSRB4GnMc8wYHmDCrrOC5fRc3uwvimip3VqhEtndLxWL6dxHIkp/VsDwcDVobhpqSxrQUiNg==
-X-Received: by 2002:a5d:4a8c:: with SMTP id o12mr9736485wrq.43.1579951474523;
-        Sat, 25 Jan 2020 03:24:34 -0800 (PST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
-        by smtp.gmail.com with ESMTPSA id a62sm1604452wmh.33.2020.01.25.03.24.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jan 2020 03:24:33 -0800 (PST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        jernej.skrabec@siol.net
-Subject: Re: [linux-sunxi] [PATCH 1/8] clk: sunxi-ng: sun8i-de2: Swap A64 and H6 definitions
-Date:   Sat, 25 Jan 2020 12:24:31 +0100
-Message-ID: <2701584.e9J7NaK4W3@jernej-laptop>
-In-Reply-To: <2008374.irdbgypaU6@jernej-laptop>
-References: <20200124232014.574989-1-jernej.skrabec@siol.net> <CAGb2v6680yWT8KtjK0uKM00+6ed4NoPpsMaDyfYERwOXgb8Vbg@mail.gmail.com> <2008374.irdbgypaU6@jernej-laptop>
+        Sat, 25 Jan 2020 10:39:37 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:30085 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726191AbgAYPjh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Jan 2020 10:39:37 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579966776; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=skCcqIIjztoVbtXxG3qEzRzmN8kZaLooAbtOL8xQJ9A=; b=kpnZEPwOQx38FNJKMC6URdVsJllzmRp6TvBuYKcpGhhflcqTr1kPHmQPavDa2BmyzzOIyNEV
+ WUauuccAv1FhViaMG1AlXZZudADEk9vBUAJ0KDb3bgN04wxmG58iDWBWu3MluuPoyMoJFyZw
+ roOCnGJujKpveYHqezp2lt7AMgU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2c6134.7f0607d6db20-smtp-out-n01;
+ Sat, 25 Jan 2020 15:39:32 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CCB22C433A2; Sat, 25 Jan 2020 15:39:32 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.209.170.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36334C43383;
+        Sat, 25 Jan 2020 15:39:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36334C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add cpuidle low power states
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        devicetree@vger.kernel.org
+References: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
+ <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
+ <20200121234452.GW89495@google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <948c046a-5e95-104c-0bc0-f3615edddeca@codeaurora.org>
+Date:   Sat, 25 Jan 2020 21:09:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200121234452.GW89495@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dne sobota, 25. januar 2020 ob 12:20:18 CET je Jernej =C5=A0krabec napisal(=
-a):
-> Hi!
->=20
-> Dne sobota, 25. januar 2020 ob 04:05:33 CET je Chen-Yu Tsai napisal(a):
-> > On Sat, Jan 25, 2020 at 7:20 AM Jernej Skrabec <jernej.skrabec@siol.net>
->=20
-> wrote:
-> > > For some reason, A64 and H6 have swapped clocks and resets definition=
-s.
-> > > H6 doesn't have rotation unit while A64 has. Swap around to correct t=
-he
-> > > issue.
-> > >=20
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >=20
-> > Could you add Fixes tags for this one?
->=20
-> I'm not sure which commit to reference. H6 one? or also initial A64 one?
->=20
-> I just found out that H5 compatible uses A64 structure, which is not
-> correct. H5 doesn't contain rotate core.
->=20
-> Do you have any better idea how to nicely solve this mess? I'm thinking t=
-hat
-> for v2 I would first decouple some compatibles, like this for H5 and R40
-> and V3s from A83T (as it can be seen in the next patch). After that, rath=
-er
-> than switching definitions I would fix each compatible one by one. At the
-> end, if any entry is duplicated, I can add one commit to merge same
-> structures.
+Hi Matthias,
 
-This could also be a separate series of patches on which rotate driver seri=
-es=20
-depends on.
-=20
-Best regards,
-Jernej
+Yes, i will post new version very soon.
+
+Thanks,
+
+Maulik
 
 
-
-
+On 1/22/2020 5:14 AM, Matthias Kaehlcke wrote:
+> Hi Maulik,
+>
+> what is the state of this patch? Sudeep and Stephen had comments requesting
+> minor changes, do you plan to send a v2 soon?
+>
+> Thanks
+>
+> Matthias
+>
+> On Wed, Oct 30, 2019 at 09:35:18AM +0530, Maulik Shah wrote:
+>> Add device bindings for cpuidle states for cpu devices.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 78 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index fceac50..69d5e2c 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -70,6 +70,9 @@
+>>   			compatible = "arm,armv8";
+>>   			reg = <0x0 0x0>;
+>>   			enable-method = "psci";
+>> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+>> +					   &LITTLE_CPU_SLEEP_1
+>> +					   &CLUSTER_SLEEP_0>;
+>>   			next-level-cache = <&L2_0>;
+>>   			L2_0: l2-cache {
+>>   				compatible = "cache";
+>> @@ -85,6 +88,9 @@
+>>   			compatible = "arm,armv8";
+>>   			reg = <0x0 0x100>;
+>>   			enable-method = "psci";
+>> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+>> +					   &LITTLE_CPU_SLEEP_1
+>> +					   &CLUSTER_SLEEP_0>;
+>>   			next-level-cache = <&L2_100>;
+>>   			L2_100: l2-cache {
+>>   				compatible = "cache";
+>> @@ -97,6 +103,9 @@
+>>   			compatible = "arm,armv8";
+>>   			reg = <0x0 0x200>;
+>>   			enable-method = "psci";
+>> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+>> +					   &LITTLE_CPU_SLEEP_1
+>> +					   &CLUSTER_SLEEP_0>;
+>>   			next-level-cache = <&L2_200>;
+>>   			L2_200: l2-cache {
+>>   				compatible = "cache";
+>> @@ -109,6 +118,9 @@
+>>   			compatible = "arm,armv8";
+>>   			reg = <0x0 0x300>;
+>>   			enable-method = "psci";
+>> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+>> +					   &LITTLE_CPU_SLEEP_1
+>> +					   &CLUSTER_SLEEP_0>;
+>>   			next-level-cache = <&L2_300>;
+>>   			L2_300: l2-cache {
+>>   				compatible = "cache";
+>> @@ -121,6 +133,9 @@
+>>   			compatible = "arm,armv8";
+>>   			reg = <0x0 0x400>;
+>>   			enable-method = "psci";
+>> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+>> +					   &LITTLE_CPU_SLEEP_1
+>> +					   &CLUSTER_SLEEP_0>;
+>>   			next-level-cache = <&L2_400>;
+>>   			L2_400: l2-cache {
+>>   				compatible = "cache";
+>> @@ -133,6 +148,9 @@
+>>   			compatible = "arm,armv8";
+>>   			reg = <0x0 0x500>;
+>>   			enable-method = "psci";
+>> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+>> +					   &LITTLE_CPU_SLEEP_1
+>> +					   &CLUSTER_SLEEP_0>;
+>>   			next-level-cache = <&L2_500>;
+>>   			L2_500: l2-cache {
+>>   				compatible = "cache";
+>> @@ -145,6 +163,9 @@
+>>   			compatible = "arm,armv8";
+>>   			reg = <0x0 0x600>;
+>>   			enable-method = "psci";
+>> +			cpu-idle-states = <&BIG_CPU_SLEEP_0
+>> +					   &BIG_CPU_SLEEP_1
+>> +					   &CLUSTER_SLEEP_0>;
+>>   			next-level-cache = <&L2_600>;
+>>   			L2_600: l2-cache {
+>>   				compatible = "cache";
+>> @@ -157,12 +178,69 @@
+>>   			compatible = "arm,armv8";
+>>   			reg = <0x0 0x700>;
+>>   			enable-method = "psci";
+>> +			cpu-idle-states = <&BIG_CPU_SLEEP_0
+>> +					   &BIG_CPU_SLEEP_1
+>> +					   &CLUSTER_SLEEP_0>;
+>>   			next-level-cache = <&L2_700>;
+>>   			L2_700: l2-cache {
+>>   				compatible = "cache";
+>>   				next-level-cache = <&L3_0>;
+>>   			};
+>>   		};
+>> +
+>> +		idle-states {
+>> +			entry-method = "psci";
+>> +
+>> +			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
+>> +				compatible = "arm,idle-state";
+>> +				idle-state-name = "little-power-down";
+>> +				arm,psci-suspend-param = <0x40000003>;
+>> +				entry-latency-us = <350>;
+>> +				exit-latency-us = <461>;
+>> +				min-residency-us = <1890>;
+>> +				local-timer-stop;
+>> +			};
+>> +
+>> +			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
+>> +				compatible = "arm,idle-state";
+>> +				idle-state-name = "little-rail-power-down";
+>> +				arm,psci-suspend-param = <0x40000004>;
+>> +				entry-latency-us = <360>;
+>> +				exit-latency-us = <531>;
+>> +				min-residency-us = <3934>;
+>> +				local-timer-stop;
+>> +			};
+>> +
+>> +			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
+>> +				compatible = "arm,idle-state";
+>> +				idle-state-name = "big-power-down";
+>> +				arm,psci-suspend-param = <0x40000003>;
+>> +				entry-latency-us = <264>;
+>> +				exit-latency-us = <621>;
+>> +				min-residency-us = <952>;
+>> +				local-timer-stop;
+>> +			};
+>> +
+>> +			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
+>> +				compatible = "arm,idle-state";
+>> +				idle-state-name = "big-rail-power-down";
+>> +				arm,psci-suspend-param = <0x40000004>;
+>> +				entry-latency-us = <702>;
+>> +				exit-latency-us = <1061>;
+>> +				min-residency-us = <4488>;
+>> +				local-timer-stop;
+>> +			};
+>> +
+>> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
+>> +				compatible = "arm,idle-state";
+>> +				idle-state-name = "cluster-power-down";
+>> +				arm,psci-suspend-param = <0x400000F4>;
+>> +				entry-latency-us = <3263>;
+>> +				exit-latency-us = <6562>;
+>> +				min-residency-us = <9987>;
+>> +				local-timer-stop;
+>> +			};
+>> +		};
+>>   	};
+>>   
+>>   	memory@80000000 {
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
