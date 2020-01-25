@@ -2,141 +2,119 @@ Return-Path: <SRS0=DFaX=3O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5995FC35244
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 19:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E2EC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 20:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3760420708
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 19:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558A620708
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 20:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Czn3kAjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgAYTjL (ORCPT
+        id S1726690AbgAYUfL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jan 2020 14:39:11 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:42904 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAYTjL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jan 2020 14:39:11 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 356AC2002B;
-        Sat, 25 Jan 2020 20:39:07 +0100 (CET)
-Date:   Sat, 25 Jan 2020 20:39:05 +0100
+        Sat, 25 Jan 2020 15:35:11 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35174 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbgAYUfK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jan 2020 15:35:10 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so2405117ljb.2
+        for <devicetree@vger.kernel.org>; Sat, 25 Jan 2020 12:35:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=18PPmbY6hPiGovJ5z5goIi7VokDaAvZuAdkPLRQyUjI=;
+        b=Czn3kAjRf2v/csMfGRAjKgqpM7hw9JzVjU5ktPmxuz/R9pDPKXAuFpOdryQYgYJow0
+         8brrI3pc5+tQoCbz1tNq0OSB7k8xlp1ZP32saK6uxpF8NQv2NkfS88Iq/7tDNT2LExHg
+         Q4GeAnOtTAMwglVH0cpIOzxHp8kq/8x/2+YcEwxRP88z7UDJhM07NNu0xauTDU4Hi4zc
+         HOavhgdU9mBO1tp2HR/0E/rczQV85r4V6q+OyFZozCBqPyM7LhoSA9/Zf5gAVFu77WK+
+         CuL/dD7lJnuSLySM+bSBvCbgWXUux1jduYDuBI89rPUt0GB0Nuf9y56QiAgfuqOmFM1G
+         BnSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=18PPmbY6hPiGovJ5z5goIi7VokDaAvZuAdkPLRQyUjI=;
+        b=E6v9YlsW3US0RM+qHR5E+8A526FVmERIciQ0ORfh5R7QjryLOAfkkgkfyZ+awpc5jY
+         no0asdOEsiHVj0QIGRibwm/7dQT1izrXjeSe/mnsDHhFGSXt6+51Cmy5V7tlGEA2NxSx
+         c+kFWVOK0ApWeh49T2H+DxEpQ2QPYDiOU18uYwTXieRXY1x5UKRaX2hdnoZt7t9U/nGc
+         cYQ5hU7LgFQ8+ObVifu0O4ohMV5tVFXtYhj5911DqUzlTqKmbBN60knW4/89rm0/9fSE
+         Ek9syfllQN/80g67skQZwopJqxS+LXMyS5vc9fY6UNsxtjllulw8Y7OO9rlvIMjEfwKG
+         cBmg==
+X-Gm-Message-State: APjAAAUJZVRghorvUhpZuPMphughV0i33F2hbKQVLCxDb+eO5BQXlug2
+        LcoGMBmxFCekT6cGNo46Z3U=
+X-Google-Smtp-Source: APXvYqwLhPKl9twree9pXIPVv83eRpZtn00E6hqeV5l31ik+OJQkcaEEBeZR7/Ae46t/+EAe0uZvyg==
+X-Received: by 2002:a2e:804b:: with SMTP id p11mr935608ljg.235.1579984508529;
+        Sat, 25 Jan 2020 12:35:08 -0800 (PST)
+Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
+        by smtp.gmail.com with ESMTPSA id u17sm5393937ljk.62.2020.01.25.12.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jan 2020 12:35:07 -0800 (PST)
 From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Maxime Ripard <mripard@kernel.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v1 3/3] dt-bindings: display: convert panel-dpi to DT
- schema
-Message-ID: <20200125193905.GC31645@ravnborg.org>
-References: <20200120200641.15047-1-sam@ravnborg.org>
- <20200120200641.15047-4-sam@ravnborg.org>
- <CAL_JsqJz+aG-_AkY2nOn3mSMowhAHHHGGxYSvZyxzevkpjhRjw@mail.gmail.com>
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v2 0/3] dt-bindings: convert timing + panel-dpi to DT schema
+Date:   Sat, 25 Jan 2020 21:34:51 +0100
+Message-Id: <20200125203454.7450-1-sam@ravnborg.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJz+aG-_AkY2nOn3mSMowhAHHHGGxYSvZyxzevkpjhRjw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=P1BnusSwAAAA:8 a=gEfo2CItAAAA:8
-        a=wKNdQRUzjenphSg_WccA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=D0XLA9XvdZm18NrgonBM:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob.
+This set of patches convert display-timing.txt to DT schema.
+To do that add a panel-timing.yaml file that include all the
+panel-timing properties and use this in panel-common and in display-timings.
 
-On Tue, Jan 21, 2020 at 08:50:25AM -0600, Rob Herring wrote:
-> On Mon, Jan 20, 2020 at 2:07 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > With panel-timing converted, now convert the single
-> > remaining .txt user in panel/ of panel-timing to DT schema.
-> >
-> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: Maxime Ripard <mripard@kernel.org>
-> > ---
-> >  .../bindings/display/panel/panel-dpi.txt      | 50 -------------
-> >  .../bindings/display/panel/panel-dpi.yaml     | 71 +++++++++++++++++++
-> >  2 files changed, 71 insertions(+), 50 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> 
-> [...]
-> 
-> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> > new file mode 100644
-> > index 000000000000..4e19c1fd52c3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> > @@ -0,0 +1,71 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/panel-dpi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Generic MIPI DPI Panel
-> > +
-> > +maintainers:
-> > +  - Sam Ravnborg <sam@ravnborg.org>
-> > +  - Thierry Reding <thierry.reding@gmail.com>
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    contains:
-> > +      const: panel-dpi
-> > +    description:
-> > +      Shall contain "panel-dpi" in addition to a mandatory panel-specific
-> > +      compatible string defined in individual panel bindings. The "panel-dpi"
-> > +      value shall never be used on its own.
-> 
-> Yet we have 3 cases where it is...
-> 
-> A 'minItems: 2' should be enough to catch these. Or do:
+panel-dpi was also converted so we have no .txt users left of panel-timing
+in panel/
 
-The above was a verbatim copy from another binding.
-Thinking more about this I went with this:
+Everything passed dt_binding_check - and the trivial errors I tried in
+the examples was all catched during validation.
 
-  compatible:
-    contains:
-      const: panel-dpi
-    description:
-      Shall contain "panel-dpi" in addition to an optional panel-specific
-      compatible string defined in individual panel bindings.
-      "panel-dpi" can be used alone, thus no dedicated binding file
-      is required for each and every panel.
+This work was triggered by a patch-set from Oleksandr Suvorov aiming
+at updating panel-lvds to support panel-dpi too.
+This will make it simple to add additional properties to panel-dpi.
 
-So a DT file with:
-panel@0 {
-      compatible = "panel-dpi";
-      ...
-      panel-timing {
-        ...
-      };
+Thanks for the quick responses on v2 and likewise the quick
+feedback on the request for the license change!
 
-Is in many cases enough - and then people do not have
-to either cheat or wait until their panel is included in the kernel.
-The panel market i big, and there are new panels each and every day.
-With panel-dpi we can support the dumb panels that
-do not require any special delays etc.
+Highlights from v2 - see individual patches for details.
+- Got acks for the license change
+- Simplfied panel-timings bindings
+- panel-dpi can now be used without a panel specific compatible
+  So panel-dpi can be used as a generic binding for dumb panels
+
+
+Feedback welcome!
 
 	Sam
+
+Sam Ravnborg (3):
+      dt-bindings: display: add panel-timing.yaml
+      dt-bindings: display: convert display-timings to DT schema
+      dt-bindings: display: convert panel-dpi to DT schema
+
+ .../bindings/display/panel/display-timing.txt      | 124 +----------
+ .../bindings/display/panel/display-timings.yaml    |  68 ++++++
+ .../bindings/display/panel/panel-common.yaml       |   7 +-
+ .../bindings/display/panel/panel-dpi.txt           |  50 -----
+ .../bindings/display/panel/panel-dpi.yaml          |  71 +++++++
+ .../bindings/display/panel/panel-timing.yaml       | 227 +++++++++++++++++++++
+ 6 files changed, 370 insertions(+), 177 deletions(-)
+
+
