@@ -2,89 +2,93 @@ Return-Path: <SRS0=DFaX=3O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF753C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 11:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63BCC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 11:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25F120704
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 11:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86B32070A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 11:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAYLEO (ORCPT
+        id S1726571AbgAYLUW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jan 2020 06:04:14 -0500
-Received: from mailoutvs25.siol.net ([185.57.226.216]:55223 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726485AbgAYLEJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jan 2020 06:04:09 -0500
+        Sat, 25 Jan 2020 06:20:22 -0500
+Received: from mailoutvs4.siol.net ([185.57.226.195]:34697 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725767AbgAYLUW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Jan 2020 06:20:22 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 45619520F99;
-        Sat, 25 Jan 2020 12:04:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+        by mail.siol.net (Postfix) with ESMTP id 7DE3B520C74;
+        Sat, 25 Jan 2020 12:20:19 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
 Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id EefBMFvBfySl; Sat, 25 Jan 2020 12:04:07 +0100 (CET)
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ydjZDDwb9wfv; Sat, 25 Jan 2020 12:20:19 +0100 (CET)
 Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 004BE520EEE;
-        Sat, 25 Jan 2020 12:04:07 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id AC158520F72;
-        Sat, 25 Jan 2020 12:04:04 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 3/5] arm64: dts: allwinner: a64: Add MBUS controller node
-Date:   Sat, 25 Jan 2020 12:03:51 +0100
-Message-Id: <20200125110353.591658-4-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200125110353.591658-1-jernej.skrabec@siol.net>
-References: <20200125110353.591658-1-jernej.skrabec@siol.net>
+        by mail.siol.net (Postfix) with ESMTPS id 2BF84520C7E;
+        Sat, 25 Jan 2020 12:20:19 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id AF879520C74;
+        Sat, 25 Jan 2020 12:20:18 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] [PATCH 1/8] clk: sunxi-ng: sun8i-de2: Swap A64 and H6 definitions
+Date:   Sat, 25 Jan 2020 12:20:18 +0100
+Message-ID: <2008374.irdbgypaU6@jernej-laptop>
+In-Reply-To: <CAGb2v6680yWT8KtjK0uKM00+6ed4NoPpsMaDyfYERwOXgb8Vbg@mail.gmail.com>
+References: <20200124232014.574989-1-jernej.skrabec@siol.net> <20200124232014.574989-2-jernej.skrabec@siol.net> <CAGb2v6680yWT8KtjK0uKM00+6ed4NoPpsMaDyfYERwOXgb8Vbg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A64 contains MBUS, which is the bus used by DMA devices to access
-system memory.
+Hi!
 
-MBUS controller is responsible for arbitration between channels based
-on set priority and can do some other things as well, like report
-bandwidth used. It also maps RAM region to different address than CPU.
+Dne sobota, 25. januar 2020 ob 04:05:33 CET je Chen-Yu Tsai napisal(a):
+> On Sat, Jan 25, 2020 at 7:20 AM Jernej Skrabec <jernej.skrabec@siol.net> 
+wrote:
+> > For some reason, A64 and H6 have swapped clocks and resets definitions.
+> > H6 doesn't have rotation unit while A64 has. Swap around to correct the
+> > issue.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> Could you add Fixes tags for this one?
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I'm not sure which commit to reference. H6 one? or also initial A64 one?
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-a64.dtsi
-index 862b47dc9dc9..d225ea1f3b87 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -1061,6 +1061,14 @@ pwm: pwm@1c21400 {
- 			status =3D "disabled";
- 		};
-=20
-+		mbus: dram-controller@1c62000 {
-+			compatible =3D "allwinner,sun50i-a64-mbus";
-+			reg =3D <0x01c62000 0x1000>;
-+			clocks =3D <&ccu CLK_MBUS>;
-+			dma-ranges =3D <0x00000000 0x40000000 0xc0000000>;
-+			#interconnect-cells =3D <1>;
-+		};
-+
- 		csi: csi@1cb0000 {
- 			compatible =3D "allwinner,sun50i-a64-csi";
- 			reg =3D <0x01cb0000 0x1000>;
---=20
-2.25.0
+I just found out that H5 compatible uses A64 structure, which is not correct. 
+H5 doesn't contain rotate core.
+
+Do you have any better idea how to nicely solve this mess? I'm thinking that 
+for v2 I would first decouple some compatibles, like this for H5 and R40 and 
+V3s from A83T (as it can be seen in the next patch). After that, rather than 
+switching definitions I would fix each compatible one by one. At the end, if any 
+entry is duplicated, I can add one commit to merge same structures.
+
+What do you think?
+
+Best regards,
+Jernej
+
+
 
