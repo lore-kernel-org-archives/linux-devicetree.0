@@ -2,154 +2,126 @@ Return-Path: <SRS0=DFaX=3O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7836EC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 00:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC28DC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 01:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470BA2071E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 00:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774CE2070A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jan 2020 01:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZdPzzyLr"
+	dkim=pass (1024-bit key) header.d=neuralgames.com header.i=@neuralgames.com header.b="g1w1f5kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgAYANa (ORCPT
+        id S2387566AbgAYBKG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jan 2020 19:13:30 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38430 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729563AbgAYANa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 19:13:30 -0500
-Received: by mail-pg1-f196.google.com with SMTP id a33so1950253pgm.5
-        for <devicetree@vger.kernel.org>; Fri, 24 Jan 2020 16:13:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZQFMTxiNgAgnz1mNYc286/lpApTLDKm8nfS5t4xRGVQ=;
-        b=ZdPzzyLrulvX84FmYk6lsY9KOu6xBA6x7gnH3/2Qd1Dd618dAgooxJg2C6/RggRPH8
-         YF76CL9KxybJgPwiHAz6wmbZ9LUVoqX1GxJMsQvVKq03ntc34SDSZGTUizaapPsWNBJm
-         F6RHFi2vkt7awrI1Ub7ZsI/zpzgsjGBmGF/1Z1rb01Qt5AfFg4G411crVS4lDp/juuXZ
-         KtmB+9AQ8Yk/L1xP51oMkfxDxO8yAhYxYhZLM5+o728dF+NL1WhlzjQiLEWqu48lJ7Oh
-         p1O71HCXl8MuBihZgD4fcMM0+IEUTMUH9m7W9YKYgtlCjkvr5M3oVM9+8iWJ15qeLyED
-         Txfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZQFMTxiNgAgnz1mNYc286/lpApTLDKm8nfS5t4xRGVQ=;
-        b=o0EMgF2Oix5WPi0ZSHjJky3vNJpwTiBxLexoLmxBuSzvU0FJenDjWd8sSH7kaDKteY
-         iUejd13E/I6kIQh650mpy0g+e0JfMxWSZ9ix8YSA6g8ocIsFhCOb9kTlla6WwDB0NxWu
-         U6OzHVOLw69TuRB6z2Ceqv/nFe2IRGh8ncqzPsEvhUYqLB0dPHQkcB+YynmMeZGcttsf
-         zNnOMJ0jAFNtxVceVR8K+NFbxiWAGaCLauEp5uIrxJolXR8sfoCA5f86mOaUWtkUSz4o
-         2UtTX4AFuyvbUvyR0whAIZ1j+9SLPLkUl9BTeuheuEe9HZZQNwiGhmqFcDTKdODPyV7v
-         z6fg==
-X-Gm-Message-State: APjAAAVWGphEmDMWUO3mj/B2Yegy3+xASC857FrWSEVint1e59ZxmVOr
-        b1rN6mt6450OPhAxSS8SYYdVNQ==
-X-Google-Smtp-Source: APXvYqwyxBFc6HeLCoHjBbDosTlm+VwZ7yjixgLlOB3waOs9pwiyvAfqnA6s76uFYVX/JVCnglRvgA==
-X-Received: by 2002:a63:941:: with SMTP id 62mr7304358pgj.203.1579911210111;
-        Fri, 24 Jan 2020 16:13:30 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a185sm8063323pge.15.2020.01.24.16.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 16:13:29 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] arm64: dts: qcom: msm8996: Use generic QMP driver for UFS
-Date:   Fri, 24 Jan 2020 16:12:34 -0800
-Message-Id: <20200125001234.435384-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Fri, 24 Jan 2020 20:10:06 -0500
+Received: from kross.rwserver.com ([69.13.37.146]:43868 "EHLO
+        kross2019.rwserver.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387564AbgAYBKG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jan 2020 20:10:06 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by kross2019.rwserver.com (Postfix) with ESMTP id ADA55B3DC2;
+        Fri, 24 Jan 2020 19:10:05 -0600 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neuralgames.com;
+         h=user-agent:message-id:references:in-reply-to:subject:subject
+        :from:from:date:date:content-transfer-encoding:content-type
+        :content-type:mime-version; s=default; t=1579914605; x=
+        1581729006; bh=oobQmrNrtMrH5ic0QlZWtjmXlS2bin04onbQAnRpyJI=; b=g
+        1w1f5kv5ixK4UfVj48ni8bD3RCw1DXYJy8+YnATBfjEGqB7+wMPBm5d3kIcsaOBS
+        MEeRZDujLnNQIP/QVcKRCPUD1fIf260MmOsEJUlzojaejtbETzjCLfHYU/ISy84P
+        KyvzeG7ldpFXIES2zkKUcV/P7FgNrAGQnQH+zEr3es=
+X-Virus-Scanned: Debian amavisd-new at kross2019.rwserver.com
+Received: from kross2019.rwserver.com ([127.0.0.1])
+        by localhost (kross2019.rwserver.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id yE5rXoj6bgXT; Fri, 24 Jan 2020 19:10:05 -0600 (CST)
+Received: from rwserver.com (localhost [IPv6:::1])
+        (Authenticated sender: linux@neuralgames.com)
+        by kross2019.rwserver.com (Postfix) with ESMTPA id 30E46B3DC1;
+        Fri, 24 Jan 2020 19:10:05 -0600 (CST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 24 Jan 2020 19:10:05 -0600
+From:   linux@neuralgames.com
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Joel Stanley <joel@jms.id.au>, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
+In-Reply-To: <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
+References: <20200120150113.2565-1-linux@neuralgames.com>
+ <CACPK8XfuVN3Q=npEoOP-amQS0-wemxcx6LKaHHZEsBAHzq1wzA@mail.gmail.com>
+ <4446ffb694c7742ca9492c7360856789@neuralgames.com>
+ <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
+Message-ID: <136bbab84d13d8d56a5ac297e415975e@neuralgames.com>
+X-Sender: linux@neuralgames.com
+User-Agent: Roundcube Webmail/1.3.8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With support for the MSM8996 UFS PHY added to the common QMP driver,
-migrate the DTS to use the common QMP binding.
+On 2020-01-22 19:53, Andrew Jeffery wrote:
+>> Thanks for reviewing the patch.
+>> 
+>> The RNG on Aspeed hardware allows eight different modes for combining
+>> its four internal Ring Oscillators that together generate a stream of
+>> random bits. However, the timeriomem-rng driver does not allow for 
+>> mode
+>> selection so, the Aspeed RNG with this generic driver runs always on
+>> mode 'seven' (The default value for mode according to the AspeedTech
+>> datasheets).
+>> 
+>> I've performed some testings on this Aspeed RNG using the NIST
+>> Statistical Test Suite (NIST 800-22r1a) and, the results I got show 
+>> that
+>> the default mode 'seven' isn't producing the best entropy and linear
+>> rank when compared against the other modes available on these SOCs.  
+>> On
+>> the other hand, the driver that I'm proposing here allows for mode
+>> selection which would help improve the random output for those looking
+>> to get the best out of this Aspeed RNG.
+> 
+> Have you published the data and results of this study somewhere? This
+> really should be mentioned in the commit message as justification for
+> not using timeriomem-rng.
+> 
+> Andrew
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Hi Andrew,
 
-Depends on https://lore.kernel.org/linux-arm-msm/20200125000803.435264-1-bjorn.andersson@linaro.org/
+I have uploaded the results of my tests to my GitHub, along with all the 
+binaries
+containing the random bits that I collected from this Aspeed RNG using 
+all 8 modes.
+You can also find in this repository a patch for the hw_random core 
+driver that
+I've been using to collect this data. Here is the link:
+   https://github.com/operezmuena/aspeed-rng-testing
 
-Changes since v2:
-- Rebased patch
+You can see in the reports that when using large enough samples (40Mb in 
+size)
+this Aspeed RNG consistently fails the linear rank and entropy tests, no 
+matter
+what RNG mode is selected. However, modes 2, 4 and 6 produce better 
+entropy than
+the rest.
+I'm now collecting rng data from 2 other AST2520 SOCs that I have in 
+order to
+compare results.
 
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi |  6 -----
- arch/arm64/boot/dts/qcom/msm8996.dtsi        | 25 +++++++++++++-------
- 2 files changed, 17 insertions(+), 14 deletions(-)
+Regards,
+Oscar
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index fff6115f2670..af87350b5547 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -999,13 +999,7 @@ &ufsphy {
- 
- 	vdda-phy-supply = <&vreg_l28a_0p925>;
- 	vdda-pll-supply = <&vreg_l12a_1p8>;
--
--	vdda-phy-max-microamp = <18380>;
--	vdda-pll-max-microamp = <9440>;
--
- 	vddp-ref-clk-supply = <&vreg_l25a_1p2>;
--	vddp-ref-clk-max-microamp = <100>;
--	vddp-ref-clk-always-on;
- };
- 
- &ufshc {
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 30cdbbe43d6c..a599761228a7 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -885,7 +885,7 @@ ufshc: ufshc@624000 {
- 			reg = <0x00624000 0x2500>;
- 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
- 
--			phys = <&ufsphy>;
-+			phys = <&ufsphy_lane>;
- 			phy-names = "ufsphy";
- 
- 			power-domains = <&gcc UFS_GDSC>;
-@@ -937,16 +937,25 @@ ufs_variant {
- 		};
- 
- 		ufsphy: phy@627000 {
--			compatible = "qcom,msm8996-ufs-phy-qmp-14nm";
--			reg = <0x00627000 0xda8>;
--			reg-names = "phy_mem";
--			#phy-cells = <0>;
-+			compatible = "qcom,msm8996-qmp-ufs-phy";
-+			reg = <0x00627000 0x1c4>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_UFS_CLKREF_CLK>;
-+			clock-names = "ref";
- 
--			clock-names = "ref_clk_src", "ref_clk";
--			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
--				 <&gcc GCC_UFS_CLKREF_CLK>;
- 			resets = <&ufshc 0>;
-+			reset-names = "ufsphy";
- 			status = "disabled";
-+
-+			ufsphy_lane: lanes@627400 {
-+				reg = <0x627400 0x12c>,
-+				      <0x627600 0x200>,
-+				      <0x627c00 0x1b4>;
-+				#phy-cells = <0>;
-+			};
- 		};
- 
- 		camss: camss@a00000 {
--- 
-2.24.0
+
 
