@@ -2,209 +2,99 @@ Return-Path: <SRS0=8cl9=3P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D792C35246
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 15:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2F3C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 15:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155C420720
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 15:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509142071A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 15:31:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nDfWJs/D"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aGX4N0Pe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725838AbgAZPFz (ORCPT
+        id S1726240AbgAZPb1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:05:55 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39498 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgAZPFz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 10:05:55 -0500
-Received: by mail-lf1-f68.google.com with SMTP id t23so4406863lfk.6
-        for <devicetree@vger.kernel.org>; Sun, 26 Jan 2020 07:05:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+RHTE3nUb5dfPevjsWD1iLezxvXfZXjeHjK9RsRGLMU=;
-        b=nDfWJs/DHHcdQ78FJWwCKFIzFckSaf1JdgHXG5c7veYmpNleLMzAsxp/rn7tJm2ie0
-         jPy9ku4xKj2itbbOvHvrL3Eals8SMZid0kjvrKqqmWta8yrp0gqYHJLpJfHAlXKz2wLZ
-         jE/qtnjDfClb8o7nXGHdDlA/TrRkaWJTRIlHQkXRlIFN0M717I91I80niUr2dSNp6xOr
-         2QhncGWKA5zlg/gnzjxSvHB7gHFxSSOnSywbbcNdRa8fC1aBEV/KC13Vqjnc4AZUFjeK
-         XKQCEqBny+RWYvLEhDphLTrh2uJSpfEP+eFO3/67apS44GOLjlHd3pCRdPArvjFVCLpq
-         icPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+RHTE3nUb5dfPevjsWD1iLezxvXfZXjeHjK9RsRGLMU=;
-        b=HDeF5Xs3ge/H3jwhj5/T/u0Vpkx5aI5q+Z4tKKEuZQBlUKYdWrWvtps/D0GqptlqwV
-         /nyKTn3dRQKCtYPuMXjS1Se7qEYhxYfe19AXZqNNiOEUlw86peZkHScc3e88W5oZvvUc
-         fA9Twlg2LJGJbsVmJj306hzBsKIM3ykFhOUf4rT4u38mHSWkqdOTotpXnhYQywJGfm4z
-         K3c3HqAsNMG8yj6dv8mpeP2Xa/4BAks6u50oMWslddnsHQeZSGz4ihtggjcqf9avw38J
-         FSrd+s1l93iizqBPH0rdCzwnIrQHiUZWfbOPJnfIo9LbUqxSJLvxKEd9mZNlhBFANXI6
-         v2ow==
-X-Gm-Message-State: APjAAAUivLcnZKIjsbz/KjuAhit5LIJPHo/x04LNvV1MfvdKtF+ha2y+
-        9T4q43h2UtDz2g86716e0iTLQw==
-X-Google-Smtp-Source: APXvYqxg6PLPDQ9mjIyqvHGAgo2AyQkQ7ZmShfE1zgLEnjgc2RLw7tCmB4qFkRsL6xY6Kn/2LN7/xA==
-X-Received: by 2002:a19:3f51:: with SMTP id m78mr5726542lfa.70.1580051152251;
-        Sun, 26 Jan 2020 07:05:52 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id l12sm6635870lji.52.2020.01.26.07.05.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2020 07:05:51 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-input@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Minkyu Kang <mk7.kang@samsung.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Oskar Andero <oskar.andero@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/2 v6] iio: light: Add DT bindings for GP2AP002
-Date:   Sun, 26 Jan 2020 16:05:47 +0100
-Message-Id: <20200126150548.9168-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.1
+        Sun, 26 Jan 2020 10:31:27 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:48970 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726339AbgAZPb0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 26 Jan 2020 10:31:26 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580052686; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=bO52typVteT+dUc0mpKNPXbpFZmLnOhBYL05cpNAgdY=;
+ b=aGX4N0Pe4WT67Q9HEjwmkDMlrvCvWdGctDCbVLh/5JxASyb07I3M7qM7sg/dJYv6XfhD6sH/
+ jglMNVBRhiUjshR4urKtjWpJad43N8MZoMIBIcEigWAw+Y+JkqHg+KJ7DfWKg73gS+9XQxPc
+ mt3CgI/oi7zCfx3xpvNjpzeiklM=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2db0c4.7f4b9dbef650-smtp-out-n02;
+ Sun, 26 Jan 2020 15:31:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A1C26C4479F; Sun, 26 Jan 2020 15:31:16 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96579C433CB;
+        Sun, 26 Jan 2020 15:31:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96579C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,
+ power-gpio as optional
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
+References: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200126153116.A1C26C4479F@smtp.codeaurora.org>
+Date:   Sun, 26 Jan 2020 15:31:16 +0000 (UTC)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the GP2AP002 light
-and proximity sensor.
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-As with other early proximity sensors (~2010) the light
-sensor and proximity sensors were combined into a single
-component.
+> It is now only useful for SPI interface.
+> Power control of SDIO mode is done through mmc core.
+> 
+> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-Cc: Stephan Gerhold <stephan@gerhold.net>
-Cc: Minkyu Kang <mk7.kang@samsung.com>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Jonathan Bakker <xc-racer2@live.ca>
-Cc: Oskar Andero <oskar.andero@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v5->v6:
-- Resending with v6 of the driver.
-ChangeLog v4->v5:
-- Collected Rob's Reviewed-by tag.
-ChangeLog v3->v4:
-- Resend with the changes in the main patch.
-ChangeLog v1->v3:
-- Drop the maxitems on the supplies, it is already 1
-- Drop quotes around "alsout"
-- Limit the sharp hysteresis to 8 bits as it should be
-- Use /bits/ 8 in the example so it is correct
----
- .../bindings/iio/light/sharp,gp2ap002.yaml    | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
+Failed to apply to wireless-drivers-next, please rebase and resend.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-new file mode 100644
-index 000000000000..12aa16f24772
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/sharp,gp2ap002.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sharp GP2AP002A00F and GP2AP002S00F proximity and ambient light sensors
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  Proximity and ambient light sensor with IR LED for the proximity
-+  sensing and an analog output for light intensity. The ambient light
-+  sensor output is not available on the GP2AP002S00F variant.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sharp,gp2ap002a00f
-+      - sharp,gp2ap002s00f
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: an interrupt for proximity, usually a GPIO line
-+
-+  vdd-supply:
-+    description: VDD power supply a phandle to a regulator
-+
-+  vio-supply:
-+    description: VIO power supply a phandle to a regulator
-+
-+  io-channels:
-+    maxItems: 1
-+    description: ALSOUT ADC channel to read the ambient light
-+
-+  io-channel-names:
-+    const: alsout
-+
-+  sharp,proximity-far-hysteresis:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description: |
-+      Hysteresis setting for "far" object detection, this setting is
-+      device-unique and adjust the optical setting for proximity detection
-+      of a "far away" object in front of the sensor.
-+
-+  sharp,proximity-close-hysteresis:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description: |
-+      Hysteresis setting for "close" object detection, this setting is
-+      device-unique and adjust the optical setting for proximity detection
-+      of a "close" object in front of the sensor.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - sharp,proximity-far-hysteresis
-+  - sharp,proximity-close-hysteresis
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      light-sensor@44 {
-+        compatible = "sharp,gp2ap002a00f";
-+        reg = <0x44>;
-+        interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-+        vdd-supply = <&vdd_regulator>;
-+        vio-supply = <&vio_regulator>;
-+        io-channels = <&adc_channel>;
-+        io-channel-names = "alsout";
-+        sharp,proximity-far-hysteresis = /bits/ 8 <0x2f>;
-+        sharp,proximity-close-hysteresis = /bits/ 8 <0x0f>;
-+      };
-+    };
-+
-+...
+fatal: sha1 information is lacking or useless (drivers/net/wireless/ti/wl1251/sdio.c).
+error: could not build fake ancestor
+Applying: wl1251: remove ti,power-gpio for SDIO mode
+Patch failed at 0001 wl1251: remove ti,power-gpio for SDIO mode
+The copy of the patch that failed is found in: .git/rebase-apply/patch
+
+2 patches set to Changes Requested.
+
+11298403 [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,power-gpio as optional
+11298399 [v2,2/2] wl1251: remove ti,power-gpio for SDIO mode
+
 -- 
-2.21.1
+https://patchwork.kernel.org/patch/11298403/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
