@@ -2,127 +2,126 @@ Return-Path: <SRS0=8cl9=3P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39B5C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 11:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C73FC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 13:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24732083E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 11:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1756D20708
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 13:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="f0lLJ+wL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZH5ARQbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387398AbgAZLxC (ORCPT
+        id S1729317AbgAZNBN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 06:53:02 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43863 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgAZLxB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Jan 2020 06:53:01 -0500
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 485B8W5j9qz9sPW; Sun, 26 Jan 2020 22:52:59 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1580039579;
-        bh=p07F/CpplD8xOEUuHxcTkyl+DVWiH+CxasxVO4NeadU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=f0lLJ+wLPW9T1W+7sHA+E5bDTsZsJ1vHmX7yonomPYiVeX08NU5hnJyC+nmEz4Lrv
-         OI+MH+IJOKqsv6jg23Pj2xK2JLw72iMuh/wn+JMBTZExkTJnN2YqvttlMOjTkTbOoO
-         k1OuEUsvpZfEXqmphdbcLZ6RsG+5z4s1w65dRCkvkwJeNTvIFEuEKOcBmlcaRrCtcM
-         B0N/mA0vyZz1CNBrbUFXEAmhRA7H2z5M8yB1EJrr7gf3Oz/YxCswVH5aLxVZavMxxc
-         lF8I+hPprrvKPfL8vTPKRHoPL1JINI3Lrkdf4aG7lX+//IpLqya8QKMLasni6pc48j
-         nbrn11jxgdp6A==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@lst.de, ulf.hansson@linaro.org, chzigotzky@xenosoft.de,
-        linuxppc-dev@ozlabs.org
-Subject: [PATCH] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-Date:   Sun, 26 Jan 2020 22:52:47 +1100
-Message-Id: <20200126115247.13402-1-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.21.1
+        Sun, 26 Jan 2020 08:01:13 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46089 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgAZNBN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 08:01:13 -0500
+Received: by mail-io1-f65.google.com with SMTP id t26so6963328ioi.13;
+        Sun, 26 Jan 2020 05:01:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Fe5qGJHJCsCWl/2D934wNBGowgZdtUVYwms1aiiozFs=;
+        b=ZH5ARQbuwphpaNvpY1SuKWAtvlC8o3UbaoAE44Le2OJ81OSV/Qq26Di8bqzNIwBBxE
+         Git7+VXnwWAkscpL67zZoKZPaasamLylqFNoDq3FDqNLnA5q/Towoczso2enBoycHCrX
+         QmOiKUpFOT6dIugN0CH+rfAbO9OCQRUcXLBo7w2nhcSLJEXCtTHIWVfIE4sKGRZPhw7w
+         VrkezRzvs2aErk7YilVcRp0mIF94Yws/arNip8htJPJfsdvpe0HoJ1serYvk71brxhIA
+         oWoys2RxWf0LSLUW4kZyqZutzLk5c5rQOfnxBcqyD9eD/DawnnJAD9q3kLPmQdRHo92Q
+         EaaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Fe5qGJHJCsCWl/2D934wNBGowgZdtUVYwms1aiiozFs=;
+        b=ZhFd/CB9WWKWbyscZHAlRbLlq6HNw7rlg2CZTbdHcDjwWyFIY1d++M5qWpjcgdDr0E
+         9/AYabDS9tbeejblW2fdJRW95b1m45T1odIJUvE86raOnvSm2hon0ginVCRraAAiaSPV
+         tQHzhIvpMbgs9uU2+KQpGT54ujaeDrkFOp8zh9L6M/+wyhxeOSHjrxEjvU0ZfLHaFIO/
+         RvNAfOyJ6fY/mTF3eLs9inHIsQHiQeaeAs6ZdjX1pH+xqmfiJy6XL38SVn9iQeCU+glC
+         OYnvM2/LUzBvkv7t67uEaGjeHFbUTu2oyIsm7kW0riOTAgUA9rgwH0CMsNlOOYfknbJA
+         ZzkA==
+X-Gm-Message-State: APjAAAWE8J5VTbZcwALhfEzC0nzLO7Xfw7p9QccwhK16DrrPfHhEIxXT
+        lYX3nvxm+dLIM/zIskHkTvQz3sO75hIHZuzsO24=
+X-Google-Smtp-Source: APXvYqyV82IjtOYASKBL3wF70Jmh/kknf2/qksjOk8uUTMPBEV9amI0E9t9oY9cHqJaM3MXS2O302LhyM7Mfn/lXjFc=
+X-Received: by 2002:a05:6638:538:: with SMTP id j24mr9294229jar.12.1580043672461;
+ Sun, 26 Jan 2020 05:01:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200106174639.20862-1-tiny.windzz@gmail.com> <20200106174639.20862-2-tiny.windzz@gmail.com>
+ <20200107075816.ly6exfd4qtvfxxua@gilmour.lan> <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
+ <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan> <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
+In-Reply-To: <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Sun, 26 Jan 2020 21:01:01 +0800
+Message-ID: <CAEExFWtmUtzBje-DKt71W46rs3PTF_Di_x3YQCz+tg8+W1kyAA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
+ thermal zones
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There's an OF helper called of_dma_is_coherent(), which checks if a
-device has a "dma-coherent" property to see if the device is coherent
-for DMA.
+HI Chen-Yu and Maxime,
 
-But on some platforms devices are coherent by default, and on some
-platforms it's not possible to update existing device trees to add the
-"dma-coherent" property.
+Can you pick this up again?
 
-So add a Kconfig symbol to allow arch code to tell
-of_dma_is_coherent() that devices are coherent by default, regardless
-of the presence of the property.
+Yangtao
 
-Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
-when the system has a coherent cache.
-
-Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
-Cc: stable@vger.kernel.org # v3.16+
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
----
- arch/powerpc/Kconfig | 1 +
- drivers/of/Kconfig   | 4 ++++
- drivers/of/address.c | 6 +++++-
- 3 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1ec34e16ed65..19f5aa8ac9a3 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -238,6 +238,7 @@ config PPC
- 	select NEED_DMA_MAP_STATE		if PPC64 || NOT_COHERENT_CACHE
- 	select NEED_SG_DMA_LENGTH
- 	select OF
-+	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
- 	select OF_EARLY_FLATTREE
- 	select OLD_SIGACTION			if PPC32
- 	select OLD_SIGSUSPEND
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 37c2ccbefecd..d91618641be6 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -103,4 +103,8 @@ config OF_OVERLAY
- config OF_NUMA
- 	bool
- 
-+config OF_DMA_DEFAULT_COHERENT
-+	# arches should select this if DMA is coherent by default for OF devices
-+	bool
-+
- endif # OF
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 99c1b8058559..e8a39c3ec4d4 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -995,12 +995,16 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
-  * @np:	device node
-  *
-  * It returns true if "dma-coherent" property was found
-- * for this device in DT.
-+ * for this device in the DT, or if DMA is coherent by
-+ * default for OF devices on the current platform.
-  */
- bool of_dma_is_coherent(struct device_node *np)
- {
- 	struct device_node *node = of_node_get(np);
- 
-+	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
-+		return true;
-+
- 	while (node) {
- 		if (of_property_read_bool(node, "dma-coherent")) {
- 			of_node_put(node);
--- 
-2.21.1
-
+On Fri, Jan 10, 2020 at 4:08 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 09/01/2020 14:13, Maxime Ripard wrote:
+> > Hi Daniel,
+> >
+> > On Thu, Jan 09, 2020 at 12:51:27PM +0100, Daniel Lezcano wrote:
+> >> On 07/01/2020 08:58, Maxime Ripard wrote:
+> >>> On Mon, Jan 06, 2020 at 05:46:39PM +0000, Yangtao Li wrote:
+> >>>> There are two sensors, sensor0 for CPU, sensor1 for GPU.
+> >>>>
+> >>>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> >>>> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> >>>> Tested-on: sun8i-r40-bananapi-m2-ultra
+> >>>
+> >>> As far as I know, tested-on is not documented anywhere (and isn't
+> >>> really used either). I've removed it and applied, thanks!
+> >>
+> >> I think this patch should go through my tree as it refers to a commit =
+in
+> >> my branch.
+> >
+> > I'm not quite sure to get why. Even though that patch depends on the
+> > one affecting the driver to be functional, it doesn't break anything
+> > when merged through arm-soc, and similarly yours doesn't affect any
+> > other tree if it's merged through your tree, so there's no dependency?
+>
+> Sorry, I puzzled myself, I thought you meant you applied patch 1/2
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
