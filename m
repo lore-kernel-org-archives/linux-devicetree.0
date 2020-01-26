@@ -6,84 +6,80 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD78C35240
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 10:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CF2C35240
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 10:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0B92071A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 10:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898A62071E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 10:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wRGqMTL9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e6u5LWlO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgAZKgX (ORCPT
+        id S1729255AbgAZKgu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 05:36:23 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:56067 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726571AbgAZKgX (ORCPT
+        Sun, 26 Jan 2020 05:36:50 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:23995 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726571AbgAZKgu (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Jan 2020 05:36:23 -0500
+        Sun, 26 Jan 2020 05:36:50 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580034983; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1580035009; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=0ODxYEpthZoVUaWLihId/bFGPfX3PA2tr9ipVMmLvpw=;
- b=wRGqMTL9vRp9y33G8X5vWYxwiuMQFBSONpgriDscSOv55RWDThcMnd3wNBtd86dhrEYLugyP
- D85/klOM4u/MfpuAJsV6qLqO6PpLEcISw6o2zqQWdD9MTdhNoDsZ76HDWYPHMsUsgLGUqa7w
- CrteiEwfKWQTjn1+ddEinUMfg2U=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ Content-Type: Sender; bh=ehBLlDDkn7L0JU9M7qVI14AauqrT7TnPN/+3/cb9EYI=;
+ b=e6u5LWlOJv6v4iO6lG5I6bBntHgfeSNr1Yr7cHjaW59MdR94pHql+noFXVQrqkqnSsbcURLv
+ ybmxGpMQE0FKCn9jboR485iL80jIEh8AFSJOzhEl7O41FYFsAlU72a3Ovlsntwfit0ST9ePb
+ ze7bLGIGnoHHQ3REX5hsG4OUmB0=
+X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2d6912.7fe6e1c59d18-smtp-out-n02;
- Sun, 26 Jan 2020 10:25:22 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e2d6bbd.7f9dd0834298-smtp-out-n01;
+ Sun, 26 Jan 2020 10:36:45 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BFE7AC447A2; Sun, 26 Jan 2020 10:25:21 +0000 (UTC)
+        id 9E2D4C4479F; Sun, 26 Jan 2020 10:36:45 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C4CF4C433CB;
-        Sun, 26 Jan 2020 10:25:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C4CF4C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C371DC433CB;
+        Sun, 26 Jan 2020 10:36:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C371DC433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/2] ath10k: Add optional qdss clk
+Subject: Re: [PATCH v3 1/2] dt: bindings: add dt entry flag to skip SCM call
+ for msa region
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191223054855.3020665-2-bjorn.andersson@linaro.org>
-References: <20191223054855.3020665-2-bjorn.andersson@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        ath10k@lists.infradead.org
+In-Reply-To: <20200103134414.15457-2-govinds@codeaurora.org>
+References: <20200103134414.15457-2-govinds@codeaurora.org>
+To:     Govind Singh <govinds@codeaurora.org>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        Govind Singh <govinds@codeaurora.org>
 User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200126102521.BFE7AC447A2@smtp.codeaurora.org>
-Date:   Sun, 26 Jan 2020 10:25:21 +0000 (UTC)
+Message-Id: <20200126103645.9E2D4C4479F@smtp.codeaurora.org>
+Date:   Sun, 26 Jan 2020 10:36:45 +0000 (UTC)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+Govind Singh <govinds@codeaurora.org> wrote:
 
-> The WiFi firmware found on sm8150 requires that the QDSS clock is
-> ticking in order to operate, so add an optional clock to the binding to
-> allow this to be specified in the sm8150 dts and add the clock to the
-> list of clocks in the driver.
+> Add boolean context flag to disable SCM call for statically
+> mapped msa region.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
 > Acked-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Patch applied to ath-next branch of ath.git, thanks.
+2 patches applied to ath-next branch of ath.git, thanks.
 
-57a3b60ddbfa ath10k: Add optional qdss clk
+6ca71a10aee8 dt: bindings: add dt entry flag to skip SCM call for msa region
+ab000ea6a393 ath10k: Don't call SCM interface for statically mapped msa region
 
 -- 
-https://patchwork.kernel.org/patch/11307779/
+https://patchwork.kernel.org/patch/11316913/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
