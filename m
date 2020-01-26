@@ -2,126 +2,130 @@ Return-Path: <SRS0=8cl9=3P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C73FC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 13:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27045C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 14:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1756D20708
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 13:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49282075D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 14:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZH5ARQbu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mk4oCwNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgAZNBN (ORCPT
+        id S1729160AbgAZOJc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 08:01:13 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46089 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728689AbgAZNBN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 08:01:13 -0500
-Received: by mail-io1-f65.google.com with SMTP id t26so6963328ioi.13;
-        Sun, 26 Jan 2020 05:01:12 -0800 (PST)
+        Sun, 26 Jan 2020 09:09:32 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:43333 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgAZOJc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 09:09:32 -0500
+Received: by mail-yw1-f67.google.com with SMTP id v126so3469747ywc.10;
+        Sun, 26 Jan 2020 06:09:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Fe5qGJHJCsCWl/2D934wNBGowgZdtUVYwms1aiiozFs=;
-        b=ZH5ARQbuwphpaNvpY1SuKWAtvlC8o3UbaoAE44Le2OJ81OSV/Qq26Di8bqzNIwBBxE
-         Git7+VXnwWAkscpL67zZoKZPaasamLylqFNoDq3FDqNLnA5q/Towoczso2enBoycHCrX
-         QmOiKUpFOT6dIugN0CH+rfAbO9OCQRUcXLBo7w2nhcSLJEXCtTHIWVfIE4sKGRZPhw7w
-         VrkezRzvs2aErk7YilVcRp0mIF94Yws/arNip8htJPJfsdvpe0HoJ1serYvk71brxhIA
-         oWoys2RxWf0LSLUW4kZyqZutzLk5c5rQOfnxBcqyD9eD/DawnnJAD9q3kLPmQdRHo92Q
-         EaaA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AIBXGruVtXLWGDKFA1TCcvHJQqqB8GBIh9kNTOb/fuk=;
+        b=Mk4oCwNGg6HxZOtQSZFkfJHL9c2GyiV2XZSrCjIZLjVPjFswi+0SA3YyY735R1464d
+         GdbjNQpbIy74Y7/IXA+Zxf1q761kzZujmIa9tQOA9zWjNBXcXlp4aoTi2RjczfRToK7j
+         g7xN+PI9jYpjf27CWaDNgToDXfzJ0/fTnu0wC8ZjWfvaX5pl6isPQ+xlQz18JttWgltn
+         15X8obeoJYk10blNGh+jlccabPGO06rOfqIXQdieCaOmLN3RfczNKpsSYOE2S+Q0oopx
+         Hi/OOdbuNjJCajIGkP9AF1xHcjRZ2yB8MrN/WWwDf+7q3pTM54XQf89HTIufhSiYPRkU
+         o4UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Fe5qGJHJCsCWl/2D934wNBGowgZdtUVYwms1aiiozFs=;
-        b=ZhFd/CB9WWKWbyscZHAlRbLlq6HNw7rlg2CZTbdHcDjwWyFIY1d++M5qWpjcgdDr0E
-         9/AYabDS9tbeejblW2fdJRW95b1m45T1odIJUvE86raOnvSm2hon0ginVCRraAAiaSPV
-         tQHzhIvpMbgs9uU2+KQpGT54ujaeDrkFOp8zh9L6M/+wyhxeOSHjrxEjvU0ZfLHaFIO/
-         RvNAfOyJ6fY/mTF3eLs9inHIsQHiQeaeAs6ZdjX1pH+xqmfiJy6XL38SVn9iQeCU+glC
-         OYnvM2/LUzBvkv7t67uEaGjeHFbUTu2oyIsm7kW0riOTAgUA9rgwH0CMsNlOOYfknbJA
-         ZzkA==
-X-Gm-Message-State: APjAAAWE8J5VTbZcwALhfEzC0nzLO7Xfw7p9QccwhK16DrrPfHhEIxXT
-        lYX3nvxm+dLIM/zIskHkTvQz3sO75hIHZuzsO24=
-X-Google-Smtp-Source: APXvYqyV82IjtOYASKBL3wF70Jmh/kknf2/qksjOk8uUTMPBEV9amI0E9t9oY9cHqJaM3MXS2O302LhyM7Mfn/lXjFc=
-X-Received: by 2002:a05:6638:538:: with SMTP id j24mr9294229jar.12.1580043672461;
- Sun, 26 Jan 2020 05:01:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20200106174639.20862-1-tiny.windzz@gmail.com> <20200106174639.20862-2-tiny.windzz@gmail.com>
- <20200107075816.ly6exfd4qtvfxxua@gilmour.lan> <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
- <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan> <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
-In-Reply-To: <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sun, 26 Jan 2020 21:01:01 +0800
-Message-ID: <CAEExFWtmUtzBje-DKt71W46rs3PTF_Di_x3YQCz+tg8+W1kyAA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
- thermal zones
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AIBXGruVtXLWGDKFA1TCcvHJQqqB8GBIh9kNTOb/fuk=;
+        b=PcqR3A+wfO3lYb/pN15qqYHTBEJTLBL77Tm50YFhLUp4LdUS41UJJHame7JVN7oiNQ
+         wZ49DgvCmejQcQky9WYgNP0H9hRkifZvUNah9CZGOPVCVeh+FrC3Z6Km1paN6IQ96lOZ
+         kiwnomg+MVUOcWs8hRfdCNL1OZa/q+c9HO7UCBJElMmKTcWnjipUcfawU6Lw+tb8L0a2
+         vQxTcwxc+4nHVNVoOcOZgFnLBUoAZAxq6mh8FFRNb+CXFvu9We4+ayN8Qemzm/Vx4/0m
+         53citMoSo+1bl4HYz+7mxNG83NSrxyCBsDzl2Y6nubGPfUeSiwqOt3fZUg1BJ5Er7Erd
+         HmTw==
+X-Gm-Message-State: APjAAAVYlimlLmZWf6++sOjE01Ut9DGhxtk+K4XVums5RLQLWHjtwHMO
+        gTeW4GoXq4TH7vjuLurIfbfmpfI4JkY=
+X-Google-Smtp-Source: APXvYqzDzxEFyqha9UjT6YyU/ysiOH2LW1TWq1QPbgfRd5yEbDaYb4T5n+BpcGks0XD8Em3+6O8+YQ==
+X-Received: by 2002:a0d:ccd2:: with SMTP id o201mr8773523ywd.492.1580047770669;
+        Sun, 26 Jan 2020 06:09:30 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id a12sm5237214ywa.95.2020.01.26.06.09.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jan 2020 06:09:30 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     han.xu@nxp.com, Adam Ford <aford173@gmail.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/5] spi: fspi: enable fspi on imx8qxp and imx8mm
+Date:   Sun, 26 Jan 2020 08:09:08 -0600
+Message-Id: <20200126140913.2139260-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-HI Chen-Yu and Maxime,
+From: Han Xu <han.xu@nxp.com>
 
-Can you pick this up again?
+Pull in this patch from NXP's upstream repo to
+enable fspi on imx8qxp and imx8mm
 
-Yangtao
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Han Xu <han.xu@nxp.com>
 
-On Fri, Jan 10, 2020 at 4:08 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 09/01/2020 14:13, Maxime Ripard wrote:
-> > Hi Daniel,
-> >
-> > On Thu, Jan 09, 2020 at 12:51:27PM +0100, Daniel Lezcano wrote:
-> >> On 07/01/2020 08:58, Maxime Ripard wrote:
-> >>> On Mon, Jan 06, 2020 at 05:46:39PM +0000, Yangtao Li wrote:
-> >>>> There are two sensors, sensor0 for CPU, sensor1 for GPU.
-> >>>>
-> >>>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> >>>> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> >>>> Tested-on: sun8i-r40-bananapi-m2-ultra
-> >>>
-> >>> As far as I know, tested-on is not documented anywhere (and isn't
-> >>> really used either). I've removed it and applied, thanks!
-> >>
-> >> I think this patch should go through my tree as it refers to a commit =
-in
-> >> my branch.
-> >
-> > I'm not quite sure to get why. Even though that patch depends on the
-> > one affecting the driver to be functional, it doesn't break anything
-> > when merged through arm-soc, and similarly yours doesn't affect any
-> > other tree if it's merged through your tree, so there's no dependency?
->
-> Sorry, I puzzled myself, I thought you meant you applied patch 1/2
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+index 8c5084a3a617..00c7899428a1 100644
+--- a/drivers/spi/spi-nxp-fspi.c
++++ b/drivers/spi/spi-nxp-fspi.c
+@@ -324,6 +324,22 @@ static const struct nxp_fspi_devtype_data lx2160a_data = {
+ 	.little_endian = true,  /* little-endian    */
+ };
+ 
++static const struct nxp_fspi_devtype_data imx8mm_data = {
++	.rxfifo = SZ_512,       /* (64  * 64 bits)  */
++	.txfifo = SZ_1K,        /* (128 * 64 bits)  */
++	.ahb_buf_size = SZ_2K,  /* (256 * 64 bits)  */
++	.quirks = 0,
++	.little_endian = true,  /* little-endian    */
++};
++
++static const struct nxp_fspi_devtype_data imx8qxp_data = {
++	.rxfifo = SZ_512,       /* (64  * 64 bits)  */
++	.txfifo = SZ_1K,        /* (128 * 64 bits)  */
++	.ahb_buf_size = SZ_2K,  /* (256 * 64 bits)  */
++	.quirks = 0,
++	.little_endian = true,  /* little-endian    */
++};
++
+ struct nxp_fspi {
+ 	void __iomem *iobase;
+ 	void __iomem *ahb_addr;
+@@ -1076,6 +1092,8 @@ static int nxp_fspi_resume(struct device *dev)
+ 
+ static const struct of_device_id nxp_fspi_dt_ids[] = {
+ 	{ .compatible = "nxp,lx2160a-fspi", .data = (void *)&lx2160a_data, },
++	{ .compatible = "nxp,imx8mm-fspi", .data = (void *)&imx8mm_data, },
++	{ .compatible = "nxp,imx8qxp-fspi", .data = (void *)&imx8qxp_data, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
+-- 
+2.24.0
+
