@@ -2,117 +2,106 @@ Return-Path: <SRS0=8cl9=3P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D88C35247
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 19:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DB4C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 19:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7871F2070A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 19:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0362920716
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 19:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUPl+Vtr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="NUwScCdM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgAZTuM (ORCPT
+        id S1726145AbgAZT7s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 14:50:12 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45276 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgAZTuM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 14:50:12 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so8360027wrj.12;
-        Sun, 26 Jan 2020 11:50:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=IzokdTn8xHJq417mKTUutSBXkWIrdbd8a0vBGM9PALk=;
-        b=tUPl+VtrH1Pl/A4cENMw5jkqUIZaLlSp5ydlxs2eEZZYc0n/n4fR4W4bE4nBs2A8pP
-         Eq/VlMeWDee0oCrFbAG7gD1v886V1jwQtLuks601G9XeR3ZTk7lNhJ/99ZhkMG+NsXCK
-         ysP8CUIZEnJGxYeIU2SZhWv88j2lt91x07GGd8vA24i5BGLLg+H7T0g/QPPrDCwvObEb
-         OquqVrA10a9s100NTWjoa/2flZM3aaMSajkhidYsw6WFl98LGMNiH9PJCCyvME/e3z7L
-         3OJc5x5ES8uEK01+odOH9ZpOe+YibQtCzJDWkbsFSEuujhaASncos/am4Ad8vsEf0YeT
-         U43g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IzokdTn8xHJq417mKTUutSBXkWIrdbd8a0vBGM9PALk=;
-        b=P1biF30aLcEtih7TsYISdY4oILC5dZ99p+HxhImf92cSruMW4r6h1M6ncyJjbR5lJZ
-         jYY8RW0a8YmdOWE5DuSu4gLuuzcHtcr6m3wl3DeE1FLy1Rde8nLVgCxVaY68b2RDUab8
-         5kOsXWczhEd8BI10t5jq4Tfk32yJQxSOssgQFvUrIWg1aNzWJfaJ9+Jc7/UB1qJp3tmk
-         BYVGj4Jzbl4KcZea8yxa9IbaiFFtJxqr7DQg9QWaaqMH9lsJIZbUvBnvsF1kzGprZsrK
-         BISrGi6Bfu59o6C2DtmvDqRNZMqaFOPhOedgoioclGfQzs3ti6LQWDrzvPPVPvkLYje0
-         2lqw==
-X-Gm-Message-State: APjAAAVFFKb+asat9bl3SzEElKXlVaDUhDnM1ZMLbAZIsdMAqOqox1GZ
-        ZkT+5Ncj9dxqhYpk4JE8suI=
-X-Google-Smtp-Source: APXvYqyhEHf2NIuKRy19vEIN59z5o3oawzaNdznPSkQo8rWN9kw2aTBuGC9d37PH10pj80bWiOQUmQ==
-X-Received: by 2002:a5d:4b45:: with SMTP id w5mr16918742wrs.224.1580068209319;
-        Sun, 26 Jan 2020 11:50:09 -0800 (PST)
-Received: from localhost.localdomain ([188.25.254.226])
-        by smtp.gmail.com with ESMTPSA id v22sm15313301wml.11.2020.01.26.11.50.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2020 11:50:08 -0800 (PST)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     shawnguo@kernel.org, devicetree@vger.kernel.org
-Cc:     leoyang.li@nxp.com, claudiu.manoil@nxp.com, robh+dt@kernel.org,
-        pavel@denx.de, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH] ARM: dts: ls1021a: Restore MDIO compatible to gianfar
-Date:   Sun, 26 Jan 2020 21:49:50 +0200
-Message-Id: <20200126194950.31699-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 26 Jan 2020 14:59:48 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:23807 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgAZT7s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 14:59:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1580068786;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=7eEvDm1iNo2636JssuRLJw4y+Cbk2kdvSN2z9mnSGN4=;
+        b=NUwScCdM2vibQTdhvfrAxu045vpk5lLCJvH4BL/HZFo+Ei+fI+IsExGoQ8+ivXwbg/
+        8RnWOW4qsRkD8I3ySfgmiv9SskYBsYewuc2DzLt81sY1K8/tF+jnFpcvr0YJzw3wY3o+
+        VgwnQGlvQgv4XmAbENOxFcRS2dfYcUS+mhHuibkL8MdheqwUpYoc1I7eenpD3fTOZw5p
+        oDGhi5dCOkxlc2DLvOKbeuMGBxqBFnw22amt3iNXgJYTPaImGYgoAd19FdNU4ugfNXlc
+        Q5+iJQbXX5zRaJYl4DOLCrHYv9urpbDzZNQ6ZEhHwShzS5GAuYdMqFaF4F3JDn+ZrxKm
+        DFtA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrrwDuiNA=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.7 DYNA|AUTH)
+        with ESMTPSA id k0645aw0QJxYF28
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sun, 26 Jan 2020 20:59:34 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: ***UNCHECKED*** Re: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti, power-gpio as optional
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <87ftg2chwh.fsf@kamboji.qca.qualcomm.com>
+Date:   Sun, 26 Jan 2020 20:59:34 +0100
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <74D71976-B2C8-4B4A-AF9A-F32A42BA72D8@goldelico.com>
+References: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com> <20200126153116.2E6E8C433A2@smtp.codeaurora.org> <8FB64063-5DE1-4C13-8647-F3C5B0D3E999@goldelico.com> <87ftg2chwh.fsf@kamboji.qca.qualcomm.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The difference between "fsl,etsec2-mdio" and "gianfar" has to do with
-the .get_tbipa function, which calculates the address of the TBIPA
-register automatically, if not explicitly specified. [ see
-drivers/net/ethernet/freescale/fsl_pq_mdio.c ]. On LS1021A, the TBIPA
-register is at offset 0x30 within the port register block, which is what
-the "gianfar" method of calculating addresses actually does.
+Hi Kalle,
 
-Luckily, the bad "compatible" is inconsequential for ls1021a.dtsi,
-because the TBIPA register is explicitly specified via the second "reg"
-(<0x0 0x2d10030 0x0 0x4>), so the "get_tbipa" function is dead code.
-Nonetheless it's good to restore it to its correct value.
+> Am 26.01.2020 um 17:16 schrieb Kalle Valo <kvalo@codeaurora.org>:
+>=20
+> "H. Nikolaus Schaller" <hns@goldelico.com> writes:
+>=20
+>> Hi,
+>>=20
+>>> Am 26.01.2020 um 16:31 schrieb Kalle Valo <kvalo@codeaurora.org>:
+>>>=20
+>>> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>>>=20
+>>>> It is now only useful for SPI interface.
+>>>> Power control of SDIO mode is done through mmc core.
+>>>>=20
+>>>> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
+>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>=20
+>>> Failed to apply to wireless-drivers-next, please rebase and resend.
+>>=20
+>> On which commit and/or tree do you want to apply it?
+>=20
+> I said it above, wireless-drivers-next:
+>=20
+> =
+https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-nex=
+t.git/
 
-Background discussion:
-https://www.spinics.net/lists/stable/msg361156.html
+Ah, sorry. I did overlook it.
 
-Fixes: c7861adbe37f ("ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect")
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- arch/arm/boot/dts/ls1021a.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I could easily cherry pick it so I think that the guard lines of the =
+original submission did not match.
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 2f6977ada447..63d9f4a066e3 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -728,7 +728,7 @@
- 		};
- 
- 		mdio0: mdio@2d24000 {
--			compatible = "fsl,etsec2-mdio";
-+			compatible = "gianfar";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -737,7 +737,7 @@
- 		};
- 
- 		mdio1: mdio@2d64000 {
--			compatible = "fsl,etsec2-mdio";
-+			compatible = "gianfar";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.17.1
+v3 (rebased on tag wireless-drivers-next-2020-01-26) coming immediately.
+
+BR and thanks,
+Nikolaus
 
