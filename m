@@ -6,95 +6,102 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2F3C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 15:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C3DC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 16:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509142071A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 15:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E3320708
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 16:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aGX4N0Pe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aRTRqD92"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgAZPb1 (ORCPT
+        id S1725908AbgAZQDx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:31:27 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:48970 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726339AbgAZPb0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:31:26 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580052686; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=bO52typVteT+dUc0mpKNPXbpFZmLnOhBYL05cpNAgdY=;
- b=aGX4N0Pe4WT67Q9HEjwmkDMlrvCvWdGctDCbVLh/5JxASyb07I3M7qM7sg/dJYv6XfhD6sH/
- jglMNVBRhiUjshR4urKtjWpJad43N8MZoMIBIcEigWAw+Y+JkqHg+KJ7DfWKg73gS+9XQxPc
- mt3CgI/oi7zCfx3xpvNjpzeiklM=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2db0c4.7f4b9dbef650-smtp-out-n02;
- Sun, 26 Jan 2020 15:31:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A1C26C4479F; Sun, 26 Jan 2020 15:31:16 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96579C433CB;
-        Sun, 26 Jan 2020 15:31:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96579C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,
- power-gpio as optional
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
-References: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+        Sun, 26 Jan 2020 11:03:53 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:13734 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgAZQDx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 11:03:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1580054628;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=2PNO1/c46RHFtyhHk/O9HQMuWsUZHHEAaOB0sL7r4Pw=;
+        b=aRTRqD92HPjzkZ/TiMD0b5BsIvhqVPmo/g19reIU8agO73xmXNS2XcJkqEhDi3/nUE
+        YNHKuBhv3Zs/TJlj/uYZEnQQQS+UudFMyb/gmt/ufLLmOQDuUVJkPpMzosZuPQ47FXoD
+        4965sJJDBP2zMlywonqNuuYeS7lFa6glNiRAKxNk3OqHtONEVamj8Tq4s7U446SddqPZ
+        Cwx2VdkUzK2WSlT4sIzDMch7x/MvhJtJCxvb63qSsE7Ku6PTqWOWH0uribxuvkkR7Krh
+        /HjIvkOb4t6W9LHRorBs2UF7NijSbiJLu5NE3BQxJLPULfRYnwcuiuweFE4GXWzQeNLC
+        /u8g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrrwDuiNA=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.7 DYNA|AUTH)
+        with ESMTPSA id k0645aw0QG3bETx
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sun, 26 Jan 2020 17:03:37 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: ***UNCHECKED*** Re: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti, power-gpio as optional
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200126153116.2E6E8C433A2@smtp.codeaurora.org>
+Date:   Sun, 26 Jan 2020 17:03:36 +0100
 Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Alexios Zavras <alexios.zavras@intel.com>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200126153116.A1C26C4479F@smtp.codeaurora.org>
-Date:   Sun, 26 Jan 2020 15:31:16 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8FB64063-5DE1-4C13-8647-F3C5B0D3E999@goldelico.com>
+References: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com> <20200126153116.2E6E8C433A2@smtp.codeaurora.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+Hi,
 
-> It is now only useful for SPI interface.
-> Power control of SDIO mode is done through mmc core.
-> 
-> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Am 26.01.2020 um 16:31 schrieb Kalle Valo <kvalo@codeaurora.org>:
+>=20
+> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>=20
+>> It is now only useful for SPI interface.
+>> Power control of SDIO mode is done through mmc core.
+>>=20
+>> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>=20
+> Failed to apply to wireless-drivers-next, please rebase and resend.
 
-Failed to apply to wireless-drivers-next, please rebase and resend.
+On which commit and/or tree do you want to apply it?
 
-fatal: sha1 information is lacking or useless (drivers/net/wireless/ti/wl1251/sdio.c).
-error: could not build fake ancestor
-Applying: wl1251: remove ti,power-gpio for SDIO mode
-Patch failed at 0001 wl1251: remove ti,power-gpio for SDIO mode
-The copy of the patch that failed is found in: .git/rebase-apply/patch
+> fatal: sha1 information is lacking or useless =
+(drivers/net/wireless/ti/wl1251/sdio.c).
+> error: could not build fake ancestor
+> Applying: wl1251: remove ti,power-gpio for SDIO mode
+> Patch failed at 0001 wl1251: remove ti,power-gpio for SDIO mode
+> The copy of the patch that failed is found in: .git/rebase-apply/patch
+>=20
+> 2 patches set to Changes Requested.
+>=20
+> 11298403 [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,power-gpio as =
+optional
+> 11298399 [v2,2/2] wl1251: remove ti,power-gpio for SDIO mode
+>=20
+> --=20
+> https://patchwork.kernel.org/patch/11298403/
+>=20
+> =
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpat=
+ches
 
-2 patches set to Changes Requested.
+BR and thanks,
+Nikolaus Schaller
 
-11298403 [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,power-gpio as optional
-11298399 [v2,2/2] wl1251: remove ti,power-gpio for SDIO mode
-
--- 
-https://patchwork.kernel.org/patch/11298403/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
