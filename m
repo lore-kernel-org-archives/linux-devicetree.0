@@ -2,186 +2,209 @@ Return-Path: <SRS0=8cl9=3P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29F5C35246
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 14:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D792C35246
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 15:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D0C21569
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 14:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155C420720
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jan 2020 15:05:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4GqoCH0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nDfWJs/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgAZOJe (ORCPT
+        id S1725838AbgAZPFz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 09:09:34 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:43038 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgAZOJe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 09:09:34 -0500
-Received: by mail-yb1-f194.google.com with SMTP id k15so3619731ybd.10;
-        Sun, 26 Jan 2020 06:09:33 -0800 (PST)
+        Sun, 26 Jan 2020 10:05:55 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39498 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgAZPFz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 10:05:55 -0500
+Received: by mail-lf1-f68.google.com with SMTP id t23so4406863lfk.6
+        for <devicetree@vger.kernel.org>; Sun, 26 Jan 2020 07:05:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0znyjyYbiAbfIQWL1oHWminydK6nnqolmIPai4FHJsc=;
-        b=R4GqoCH0iaDMWEwxpz1GR5oUF1M/PE+kqz3xfrZFKD3jO36TKruKc+faOYkaorNk/D
-         DeQeNy5D9BzFVEmzmhmt7ldcFyWlbkECndL6WYGi+2dHcJmOTM5hphD7ATLRFTHy0Clv
-         6qug8RknOAOytZhosq2Mj6lbC7hNAdXnvnb/SZKEd6FrVJpcReBRiXvxv4VFKSalqBaI
-         2AHJWwykNlWagqtgLAPvXb+ELm74R8e314A3RWKmipUwoPfEt2/fq1rHwUZH3v8E/Kcq
-         YZkCH887Srp+xO+17qyxEA6A/5aUKdXRIu8TH+J9BVYQsb9e8Ax8qDRDur1Vawvob5vT
-         QyBg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+RHTE3nUb5dfPevjsWD1iLezxvXfZXjeHjK9RsRGLMU=;
+        b=nDfWJs/DHHcdQ78FJWwCKFIzFckSaf1JdgHXG5c7veYmpNleLMzAsxp/rn7tJm2ie0
+         jPy9ku4xKj2itbbOvHvrL3Eals8SMZid0kjvrKqqmWta8yrp0gqYHJLpJfHAlXKz2wLZ
+         jE/qtnjDfClb8o7nXGHdDlA/TrRkaWJTRIlHQkXRlIFN0M717I91I80niUr2dSNp6xOr
+         2QhncGWKA5zlg/gnzjxSvHB7gHFxSSOnSywbbcNdRa8fC1aBEV/KC13Vqjnc4AZUFjeK
+         XKQCEqBny+RWYvLEhDphLTrh2uJSpfEP+eFO3/67apS44GOLjlHd3pCRdPArvjFVCLpq
+         icPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0znyjyYbiAbfIQWL1oHWminydK6nnqolmIPai4FHJsc=;
-        b=gqOHYWPovDrVY05xbcdWqvufiN+viaHawL6tDK3jbn/75uVvbf4Ql8FNwfnLPPPmYw
-         K7dw1ya/yVx19WX0rSpWW2Jj9sA43DOF0rTu1Rj+03Yo89xN05zilk8pSfa6rkAp4V27
-         ba15+M8wDWOb6WOhu8dtVs4XlJop7IUPD6ozaCh5dw/hkFHHtbgYqRo8Nl8/4yNMPIvt
-         WcULZarmaQ8j4UAZgqovceVqW6QxynDANZf0XW1QyhkqIMczEjltBVhyKXJwnMuT1sbx
-         yOhkMDlPsV+4pBhJphBwJFUkdi/s2+9BRM0O9RClH4XLdFeICOY05Y/mCnmz4vHOFThK
-         V40A==
-X-Gm-Message-State: APjAAAU9P5SI1NYNwSC+b/YCbim1H7T5l3gAmEuwRthNhUI2FxRpjxbU
-        /mKOtjz7CGXuZ/BtBMaN2FBayJbDSN0=
-X-Google-Smtp-Source: APXvYqyZvLUQmp2PTyVD65ywAO78sFlydfcTzGCK8FC8Fn/wQl9dllTay7iP+Tj7BKw2LabEC8Xomw==
-X-Received: by 2002:a25:d252:: with SMTP id j79mr9269996ybg.311.1580047772582;
-        Sun, 26 Jan 2020 06:09:32 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id a12sm5237214ywa.95.2020.01.26.06.09.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+RHTE3nUb5dfPevjsWD1iLezxvXfZXjeHjK9RsRGLMU=;
+        b=HDeF5Xs3ge/H3jwhj5/T/u0Vpkx5aI5q+Z4tKKEuZQBlUKYdWrWvtps/D0GqptlqwV
+         /nyKTn3dRQKCtYPuMXjS1Se7qEYhxYfe19AXZqNNiOEUlw86peZkHScc3e88W5oZvvUc
+         fA9Twlg2LJGJbsVmJj306hzBsKIM3ykFhOUf4rT4u38mHSWkqdOTotpXnhYQywJGfm4z
+         K3c3HqAsNMG8yj6dv8mpeP2Xa/4BAks6u50oMWslddnsHQeZSGz4ihtggjcqf9avw38J
+         FSrd+s1l93iizqBPH0rdCzwnIrQHiUZWfbOPJnfIo9LbUqxSJLvxKEd9mZNlhBFANXI6
+         v2ow==
+X-Gm-Message-State: APjAAAUivLcnZKIjsbz/KjuAhit5LIJPHo/x04LNvV1MfvdKtF+ha2y+
+        9T4q43h2UtDz2g86716e0iTLQw==
+X-Google-Smtp-Source: APXvYqxg6PLPDQ9mjIyqvHGAgo2AyQkQ7ZmShfE1zgLEnjgc2RLw7tCmB4qFkRsL6xY6Kn/2LN7/xA==
+X-Received: by 2002:a19:3f51:: with SMTP id m78mr5726542lfa.70.1580051152251;
+        Sun, 26 Jan 2020 07:05:52 -0800 (PST)
+Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
+        by smtp.gmail.com with ESMTPSA id l12sm6635870lji.52.2020.01.26.07.05.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2020 06:09:32 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-spi@vger.kernel.org
-Cc:     han.xu@nxp.com, Adam Ford <aford173@gmail.com>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/5] spi: fspi: dynamically alloc AHB memory
-Date:   Sun, 26 Jan 2020 08:09:09 -0600
-Message-Id: <20200126140913.2139260-2-aford173@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200126140913.2139260-1-aford173@gmail.com>
-References: <20200126140913.2139260-1-aford173@gmail.com>
+        Sun, 26 Jan 2020 07:05:51 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-input@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Minkyu Kang <mk7.kang@samsung.com>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Oskar Andero <oskar.andero@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/2 v6] iio: light: Add DT bindings for GP2AP002
+Date:   Sun, 26 Jan 2020 16:05:47 +0100
+Message-Id: <20200126150548.9168-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Han Xu <han.xu@nxp.com>
+This adds device tree bindings for the GP2AP002 light
+and proximity sensor.
 
-Apply patch from NXP upstream repo to
-dynamically allocate AHB memory as needed.
+As with other early proximity sensors (~2010) the light
+sensor and proximity sensors were combined into a single
+component.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Han Xu <han.xu@nxp.com>
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Cc: Minkyu Kang <mk7.kang@samsung.com>
+Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: Jonathan Bakker <xc-racer2@live.ca>
+Cc: Oskar Andero <oskar.andero@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v5->v6:
+- Resending with v6 of the driver.
+ChangeLog v4->v5:
+- Collected Rob's Reviewed-by tag.
+ChangeLog v3->v4:
+- Resend with the changes in the main patch.
+ChangeLog v1->v3:
+- Drop the maxitems on the supplies, it is already 1
+- Drop quotes around "alsout"
+- Limit the sharp hysteresis to 8 bits as it should be
+- Use /bits/ 8 in the example so it is correct
+---
+ .../bindings/iio/light/sharp,gp2ap002.yaml    | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
 
-diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
-index 00c7899428a1..23abf5ae318e 100644
---- a/drivers/spi/spi-nxp-fspi.c
-+++ b/drivers/spi/spi-nxp-fspi.c
-@@ -307,6 +307,7 @@
- 
- #define POLL_TOUT		5000
- #define NXP_FSPI_MAX_CHIPSELECT		4
-+#define NXP_FSPI_MIN_IOMAP	SZ_4M
- 
- struct nxp_fspi_devtype_data {
- 	unsigned int rxfifo;
-@@ -345,6 +346,8 @@ struct nxp_fspi {
- 	void __iomem *ahb_addr;
- 	u32 memmap_phy;
- 	u32 memmap_phy_size;
-+	u32 memmap_start;
-+	u32 memmap_len;
- 	struct clk *clk, *clk_en;
- 	struct device *dev;
- 	struct completion c;
-@@ -657,12 +660,35 @@ static void nxp_fspi_select_mem(struct nxp_fspi *f, struct spi_device *spi)
- 	f->selected = spi->chip_select;
- }
- 
--static void nxp_fspi_read_ahb(struct nxp_fspi *f, const struct spi_mem_op *op)
-+static int nxp_fspi_read_ahb(struct nxp_fspi *f, const struct spi_mem_op *op)
- {
-+	u32 start = op->addr.val;
- 	u32 len = op->data.nbytes;
- 
-+	/* if necessary, ioremap before AHB read */
-+	if ((!f->ahb_addr) || start < f->memmap_start ||
-+	     start + len > f->memmap_start + f->memmap_len) {
-+		if (f->ahb_addr)
-+			iounmap(f->ahb_addr);
+diff --git a/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
+new file mode 100644
+index 000000000000..12aa16f24772
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/sharp,gp2ap002.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		f->memmap_start = start;
-+		f->memmap_len = len > NXP_FSPI_MIN_IOMAP ?
-+				len : NXP_FSPI_MIN_IOMAP;
++title: Sharp GP2AP002A00F and GP2AP002S00F proximity and ambient light sensors
 +
-+		f->ahb_addr = ioremap_wc(f->memmap_phy + f->memmap_start,
-+					 f->memmap_len);
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
 +
-+		if (!f->ahb_addr) {
-+			dev_err(f->dev, "failed to alloc memory\n");
-+			return -ENOMEM;
-+		}
-+	}
++description: |
++  Proximity and ambient light sensor with IR LED for the proximity
++  sensing and an analog output for light intensity. The ambient light
++  sensor output is not available on the GP2AP002S00F variant.
 +
- 	/* Read out the data directly from the AHB buffer. */
--	memcpy_fromio(op->data.buf.in, (f->ahb_addr + op->addr.val), len);
-+	memcpy_fromio(op->data.buf.in,
-+		      f->ahb_addr + start - f->memmap_start, len);
++properties:
++  compatible:
++    enum:
++      - sharp,gp2ap002a00f
++      - sharp,gp2ap002s00f
 +
-+	return 0;
- }
- 
- static void nxp_fspi_fill_txfifo(struct nxp_fspi *f,
-@@ -822,7 +848,7 @@ static int nxp_fspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
- 	 */
- 	if (op->data.nbytes > (f->devtype_data->rxfifo - 4) &&
- 	    op->data.dir == SPI_MEM_DATA_IN) {
--		nxp_fspi_read_ahb(f, op);
-+		err = nxp_fspi_read_ahb(f, op);
- 	} else {
- 		if (op->data.nbytes && op->data.dir == SPI_MEM_DATA_OUT)
- 			nxp_fspi_fill_txfifo(f, op);
-@@ -992,9 +1018,8 @@ static int nxp_fspi_probe(struct platform_device *pdev)
- 
- 	/* find the resources - controller memory mapped space */
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "fspi_mmap");
--	f->ahb_addr = devm_ioremap_resource(dev, res);
--	if (IS_ERR(f->ahb_addr)) {
--		ret = PTR_ERR(f->ahb_addr);
-+	if (IS_ERR(res)) {
-+		ret = PTR_ERR(res);
- 		goto err_put_ctrl;
- 	}
- 
-@@ -1073,6 +1098,9 @@ static int nxp_fspi_remove(struct platform_device *pdev)
- 
- 	mutex_destroy(&f->lock);
- 
-+	if (f->ahb_addr)
-+		iounmap(f->ahb_addr);
++  reg:
++    maxItems: 1
 +
- 	return 0;
- }
- 
++  interrupts:
++    maxItems: 1
++    description: an interrupt for proximity, usually a GPIO line
++
++  vdd-supply:
++    description: VDD power supply a phandle to a regulator
++
++  vio-supply:
++    description: VIO power supply a phandle to a regulator
++
++  io-channels:
++    maxItems: 1
++    description: ALSOUT ADC channel to read the ambient light
++
++  io-channel-names:
++    const: alsout
++
++  sharp,proximity-far-hysteresis:
++    $ref: /schemas/types.yaml#/definitions/uint8
++    description: |
++      Hysteresis setting for "far" object detection, this setting is
++      device-unique and adjust the optical setting for proximity detection
++      of a "far away" object in front of the sensor.
++
++  sharp,proximity-close-hysteresis:
++    $ref: /schemas/types.yaml#/definitions/uint8
++    description: |
++      Hysteresis setting for "close" object detection, this setting is
++      device-unique and adjust the optical setting for proximity detection
++      of a "close" object in front of the sensor.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - sharp,proximity-far-hysteresis
++  - sharp,proximity-close-hysteresis
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      light-sensor@44 {
++        compatible = "sharp,gp2ap002a00f";
++        reg = <0x44>;
++        interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++        vdd-supply = <&vdd_regulator>;
++        vio-supply = <&vio_regulator>;
++        io-channels = <&adc_channel>;
++        io-channel-names = "alsout";
++        sharp,proximity-far-hysteresis = /bits/ 8 <0x2f>;
++        sharp,proximity-close-hysteresis = /bits/ 8 <0x0f>;
++      };
++    };
++
++...
 -- 
-2.24.0
+2.21.1
 
