@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404B0C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 11:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D3CC35249
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 11:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FBB208CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 11:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1719920661
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 11:00:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgA0LAx (ORCPT
+        id S1730021AbgA0LAy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:00:53 -0500
+        Mon, 27 Jan 2020 06:00:54 -0500
 Received: from bhuna.collabora.co.uk ([46.235.227.227]:58128 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729912AbgA0LAw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 06:00:52 -0500
+        with ESMTP id S1730187AbgA0LAy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 06:00:54 -0500
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C3157293454;
-        Mon, 27 Jan 2020 11:00:50 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9D69729346B;
+        Mon, 27 Jan 2020 11:00:52 +0000 (GMT)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -43,11 +43,10 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, intel-gfx-trybot@lists.freedesktop.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v9 05/12] drm/bridge: Add an ->atomic_check() hook
-Date:   Mon, 27 Jan 2020 12:00:36 +0100
-Message-Id: <20200127110043.2731697-6-boris.brezillon@collabora.com>
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH v9 08/12] drm/bridge: lvds-codec: Implement basic bus format negotiation
+Date:   Mon, 27 Jan 2020 12:00:39 +0100
+Message-Id: <20200127110043.2731697-9-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200127110043.2731697-1-boris.brezillon@collabora.com>
 References: <20200127110043.2731697-1-boris.brezillon@collabora.com>
@@ -58,182 +57,147 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-So that bridge drivers have a way to check/reject an atomic operation.
-The drm_atomic_bridge_chain_check() (which is just a wrapper around
-the ->atomic_check() hook) is called in place of
-drm_bridge_chain_mode_fixup() (when ->atomic_check() is not implemented,
-the core falls back on ->mode_fixup(), so the behavior should stay
-the same for existing bridge drivers).
+Some DPI -> LVDS encoders might support several input bus width. Add a
+DT property to describe the bus width used on a specific design.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed by: Jernej Skrabec <jernej.skrabec@siol.net>
-Tested-by: Jonas Karlman <jonas@kwiboo.se>
 ---
 Changes in v7:
-* Fix a NULL pointer dereference
----
- drivers/gpu/drm/drm_atomic_helper.c | 12 +++---
- drivers/gpu/drm/drm_bridge.c        | 66 +++++++++++++++++++++++++++++
- include/drm/drm_bridge.h            | 29 ++++++++++++-
- 3 files changed, 100 insertions(+), 7 deletions(-)
+* Fix a use-after-release problem
+* Get rid of the data-mapping parsing
+* Use kmalloc instead of kcalloc.
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index ad8eae98d9e8..afe14f72a824 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -437,12 +437,12 @@ mode_fixup(struct drm_atomic_state *state)
- 		funcs = encoder->helper_private;
+Changes in v3:
+* Use bus-width for the rgb24/rgb18 distinction
+* Adjust code to match core changes
+* Get rid of of_get_data_mapping()
+* Don't implement ->atomic_check() (the core now takes care of bus
+  flags propagation)
+
+Changes in v2:
+* Make the bus-format negotiation logic more generic
+---
+ drivers/gpu/drm/bridge/lvds-codec.c | 64 ++++++++++++++++++++++++++---
+ 1 file changed, 58 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
+index 5f04cc11227e..f4fd8472c335 100644
+--- a/drivers/gpu/drm/bridge/lvds-codec.c
++++ b/drivers/gpu/drm/bridge/lvds-codec.c
+@@ -11,6 +11,7 @@
+ #include <linux/of_graph.h>
+ #include <linux/platform_device.h>
  
- 		bridge = drm_bridge_chain_get_first_bridge(encoder);
--		ret = drm_bridge_chain_mode_fixup(bridge,
--					&new_crtc_state->mode,
--					&new_crtc_state->adjusted_mode);
--		if (!ret) {
--			DRM_DEBUG_ATOMIC("Bridge fixup failed\n");
--			return -EINVAL;
-+		ret = drm_atomic_bridge_chain_check(bridge,
-+						    new_crtc_state,
-+						    new_conn_state);
-+		if (ret) {
-+			DRM_DEBUG_ATOMIC("Bridge atomic check failed\n");
-+			return ret;
- 		}
++#include <drm/drm_atomic_helper.h>
+ #include <drm/drm_bridge.h>
+ #include <drm/drm_panel.h>
  
- 		if (funcs && funcs->atomic_check) {
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index f6206e655da4..c8beb1385771 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -602,6 +602,72 @@ void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
+@@ -19,6 +20,7 @@ struct lvds_codec {
+ 	struct drm_bridge *panel_bridge;
+ 	struct gpio_desc *powerdown_gpio;
+ 	u32 connector_type;
++	u32 input_fmt;
+ };
+ 
+ static int lvds_codec_attach(struct drm_bridge *bridge)
+@@ -48,18 +50,47 @@ static void lvds_codec_disable(struct drm_bridge *bridge)
+ 		gpiod_set_value_cansleep(lvds_codec->powerdown_gpio, 1);
  }
- EXPORT_SYMBOL(drm_atomic_bridge_chain_enable);
  
-+static int drm_atomic_bridge_check(struct drm_bridge *bridge,
-+				   struct drm_crtc_state *crtc_state,
-+				   struct drm_connector_state *conn_state)
++static u32 *
++lvds_codec_atomic_get_input_bus_fmts(struct drm_bridge *bridge,
++				     struct drm_bridge_state *bridge_state,
++				     struct drm_crtc_state *crtc_state,
++				     struct drm_connector_state *conn_state,
++				     u32 output_fmt,
++				     unsigned int *num_input_fmts)
 +{
-+	if (bridge->funcs->atomic_check) {
-+		struct drm_bridge_state *bridge_state;
-+		int ret;
++	struct lvds_codec *lvds_codec = container_of(bridge,
++						     struct lvds_codec, bridge);
++	u32 *input_fmts;
 +
-+		bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
-+							       bridge);
-+		if (WARN_ON(!bridge_state))
-+			return -EINVAL;
-+
-+		ret = bridge->funcs->atomic_check(bridge, bridge_state,
-+						  crtc_state, conn_state);
-+		if (ret)
-+			return ret;
-+	} else if (bridge->funcs->mode_fixup) {
-+		if (!bridge->funcs->mode_fixup(bridge, &crtc_state->mode,
-+					       &crtc_state->adjusted_mode))
-+			return -EINVAL;
++	input_fmts = kmalloc(sizeof(*input_fmts), GFP_KERNEL);
++	if (!input_fmts) {
++		*num_input_fmts = 0;
++		return NULL;
 +	}
 +
-+	return 0;
++	*num_input_fmts = 1;
++	input_fmts[0] = lvds_codec->input_fmt;
++	return input_fmts;
 +}
 +
-+/**
-+ * drm_atomic_bridge_chain_check() - Do an atomic check on the bridge chain
-+ * @bridge: bridge control structure
-+ * @crtc_state: new CRTC state
-+ * @conn_state: new connector state
-+ *
-+ * Calls &drm_bridge_funcs.atomic_check() (falls back on
-+ * &drm_bridge_funcs.mode_fixup()) op for all the bridges in the encoder chain,
-+ * starting from the last bridge to the first. These are called before calling
-+ * &drm_encoder_helper_funcs.atomic_check()
-+ *
-+ * RETURNS:
-+ * 0 on success, a negative error code on failure
-+ */
-+int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
-+				  struct drm_crtc_state *crtc_state,
-+				  struct drm_connector_state *conn_state)
-+{
-+	struct drm_encoder *encoder;
-+	struct drm_bridge *iter;
-+
-+	if (!bridge)
-+		return 0;
-+
-+	encoder = bridge->encoder;
-+	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-+		int ret;
-+
-+		ret = drm_atomic_bridge_check(iter, crtc_state, conn_state);
-+		if (ret)
-+			return ret;
-+
-+		if (iter == bridge)
-+			break;
+ static struct drm_bridge_funcs funcs = {
+ 	.attach = lvds_codec_attach,
+ 	.enable = lvds_codec_enable,
+ 	.disable = lvds_codec_disable,
++	.atomic_reset = drm_atomic_helper_bridge_reset,
++	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
++	.atomic_get_input_bus_fmts = lvds_codec_atomic_get_input_bus_fmts,
+ };
+ 
+ static int lvds_codec_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *panel_node;
++	struct device_node *np;
+ 	struct drm_panel *panel;
+ 	struct lvds_codec *lvds_codec;
++	u32 input_bus_width;
++	int err;
+ 
+ 	lvds_codec = devm_kzalloc(dev, sizeof(*lvds_codec), GFP_KERNEL);
+ 	if (!lvds_codec)
+@@ -69,22 +100,43 @@ static int lvds_codec_probe(struct platform_device *pdev)
+ 	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
+ 							     GPIOD_OUT_HIGH);
+ 	if (IS_ERR(lvds_codec->powerdown_gpio)) {
+-		int err = PTR_ERR(lvds_codec->powerdown_gpio);
++		err = PTR_ERR(lvds_codec->powerdown_gpio);
+ 
+ 		if (err != -EPROBE_DEFER)
+ 			dev_err(dev, "powerdown GPIO failure: %d\n", err);
+ 		return err;
+ 	}
+ 
++	np = of_graph_get_port_by_id(dev->of_node, 0);
++	if (!np) {
++		dev_dbg(dev, "port 0 not found\n");
++		return -ENXIO;
 +	}
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_chain_check);
++	err = of_property_read_u32(np, "bus-width", &input_bus_width);
++	of_node_put(np);
 +
- #ifdef CONFIG_OF
- /**
-  * of_drm_find_bridge - find the bridge corresponding to the device node in
-diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index df22f909141f..ff4df6eb2689 100644
---- a/include/drm/drm_bridge.h
-+++ b/include/drm/drm_bridge.h
-@@ -111,7 +111,9 @@ struct drm_bridge_funcs {
- 	 * this function passes all other callbacks must succeed for this
- 	 * configuration.
- 	 *
--	 * The @mode_fixup callback is optional.
-+	 * The mode_fixup callback is optional. &drm_bridge_funcs.mode_fixup()
-+	 * is not called when &drm_bridge_funcs.atomic_check() is implemented,
-+	 * so only one of them should be provided.
- 	 *
- 	 * NOTE:
- 	 *
-@@ -368,6 +370,28 @@ struct drm_bridge_funcs {
- 	void (*atomic_destroy_state)(struct drm_bridge *bridge,
- 				     struct drm_bridge_state *state);
- 
-+	/**
-+	 * @atomic_check:
-+	 *
-+	 * This method is responsible for checking bridge state correctness.
-+	 * It can also check the state of the surrounding components in chain
-+	 * to make sure the whole pipeline can work properly.
-+	 *
-+	 * &drm_bridge_funcs.atomic_check() hooks are called in reverse
-+	 * order (from the last to the first bridge).
-+	 *
-+	 * This method is optional. &drm_bridge_funcs.mode_fixup() is not
-+	 * called when &drm_bridge_funcs.atomic_check() is implemented, so only
-+	 * one of them should be provided.
-+	 *
-+	 * RETURNS:
-+	 * zero if the check passed, a negative error code otherwise.
-+	 */
-+	int (*atomic_check)(struct drm_bridge *bridge,
-+			    struct drm_bridge_state *bridge_state,
-+			    struct drm_crtc_state *crtc_state,
-+			    struct drm_connector_state *conn_state);
++	if (err) {
++		lvds_codec->input_fmt = MEDIA_BUS_FMT_FIXED;
++	} else if (input_bus_width == 18) {
++		lvds_codec->input_fmt = MEDIA_BUS_FMT_RGB666_1X18;
++	} else if (input_bus_width == 24) {
++		lvds_codec->input_fmt = MEDIA_BUS_FMT_RGB888_1X24;
++	} else {
++		dev_dbg(dev, "unsupported bus-width value %u on port 0\n",
++			input_bus_width);
++		return -ENOTSUPP;
++	}
 +
- 	/**
- 	 * @atomic_reset:
- 	 *
-@@ -542,6 +566,9 @@ void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
- void drm_bridge_chain_pre_enable(struct drm_bridge *bridge);
- void drm_bridge_chain_enable(struct drm_bridge *bridge);
+ 	/* Locate the panel DT node. */
+-	panel_node = of_graph_get_remote_node(dev->of_node, 1, 0);
+-	if (!panel_node) {
++	np = of_graph_get_remote_node(dev->of_node, 1, 0);
++	if (!np) {
+ 		dev_dbg(dev, "panel DT node not found\n");
+ 		return -ENXIO;
+ 	}
  
-+int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
-+				  struct drm_crtc_state *crtc_state,
-+				  struct drm_connector_state *conn_state);
- void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
- 				     struct drm_atomic_state *state);
- void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
+-	panel = of_drm_find_panel(panel_node);
+-	of_node_put(panel_node);
++	panel = of_drm_find_panel(np);
++	of_node_put(np);
+ 	if (IS_ERR(panel)) {
+ 		dev_dbg(dev, "panel not found, deferring probe\n");
+ 		return PTR_ERR(panel);
 -- 
 2.24.1
 
