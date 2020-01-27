@@ -7,203 +7,102 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBEBC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6768C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FD522527
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672142465B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580140087;
-	bh=yETsAyqvV6uSq9CHgjbudxsP1n7benId3zzzsdhb/Sk=;
+	s=default; t=1580140225;
+	bh=yuIIMVFgehN2evVkHN1c5oRnLCR4k9TmqG/yb2ag9Lw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R1N6iXKBljbKGb7ANyFubMnSALR7mHBDV0RZTBML7+AHQCp5BeWIF8fJ/tJkVFL2y
-	 gtc9E95KHLv8jmPVb6hYIhYEgxctLVrRKXE5SxfdpgUuVmWbbSYijufz1+6TtO5DzT
-	 +cEqLcqwSsSpbndHlYwnS6Gr3HggYSqsuk34BRC4=
+	b=Dkm1cjObx2lmzwBADvvWQ+TgFUH21O+xXMff3S6HajDP+OFG2tLIK5Az+pSYZMp5r
+	 gZRdC/wk9kz4fvHWz9u/z0ZYWVoN6OMST2cV89ydY6jGNDa2G9rfPnvHDJxGUiSml8
+	 G30FZyOU34iC7+WuX5BLIwTffNSWjgfS8RidprSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbgA0PsD (ORCPT
+        id S1729488AbgA0PuY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:48:03 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44008 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbgA0PsD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 10:48:03 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so7043168oif.10;
-        Mon, 27 Jan 2020 07:48:02 -0800 (PST)
+        Mon, 27 Jan 2020 10:50:24 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34618 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728783AbgA0PuY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 10:50:24 -0500
+Received: by mail-ot1-f68.google.com with SMTP id a15so8806053otf.1;
+        Mon, 27 Jan 2020 07:50:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UYR7sqxNx0kFfvk4lLW7ItpSc33p5wasYWW+LyIn5lM=;
-        b=Q+Um07aGAf06wo6Rg2/mjt35oFBwgfJ04V5/wVxqkAguH2r/R0Mk6y5FGfBesjBUys
-         FgL9OJqntBO9iFG/8J4y7afWeK5SllAvvICKEp9GeyqknmvPzldcFhfTWnKYt8K9M9pE
-         t3sTr8ZsejF4EfHCaSAsNWlzyGqlkbeYugSIcqO/TPIX9gpibXo8VoTnnumXVg0S7ZCg
-         ij8FUB8VT4BbhKc+R12iECoyDAmo4iDS/wyOgyhDQM8wS3N87cqiRmXPIXneuIRvNeH/
-         WmZTFmnlDIQZIj3qe1crIaIHOy75uA+dVREE9AxeZoKZdLkVlFZa7nCaURHYlRlWwZhn
-         ZHeA==
-X-Gm-Message-State: APjAAAWnKEmHbdvKuATizkMfMJEE4LwmRxeltPh1/lWf9EUcP8flpXSE
-        VSOn8nFri6NkEMiAVvIUJ6VYCa8=
-X-Google-Smtp-Source: APXvYqyAqfTjBhJSs8fb6ApXqnQsZdS4ObYsTxvZoMsNLCtJeCtCW0J0K1gBw3llFafOgZvIKKwDCA==
-X-Received: by 2002:aca:dc8b:: with SMTP id t133mr7969662oig.98.1580140082458;
-        Mon, 27 Jan 2020 07:48:02 -0800 (PST)
+        bh=beqY/DCoJ59EhwodDnm/pkcRiaCO+zbELfu5AXa7uk4=;
+        b=TXXFCw9+jMWKAavB9RkhUdFuk+bN5PCWEGWja2zUXCZv/PDRdNaOeRbaH0ojgWUitF
+         4uL11ZiaP/VFkCjWRuzAVP7DG0pmtcBhFkut2CmX8R8N1xPG51CKHmL39KN4/ZAyD8iQ
+         2dKx0CBEC7C+YBcN9iE67c9+n0N1j08GKGjcr2a6qCvJtzjk5SAIW7mMj3g3O/UXNJAU
+         ZTr1drABsZ1d7C9OQLhsQMZJWDwYvQ2vPgZ4J8WisEom+8LyVoCtnS7Iaz241+cRhcuV
+         R/wv0OrTd41yGy62almCt6ZIHQC+2hEOiHhNeAv4H1f3Lh1tM2Hm3nFENBvU3gztD9yR
+         C3BQ==
+X-Gm-Message-State: APjAAAUZmUbo6f7Fq7tyxheyyDwsxkokK3qiOi49nJjLXx8G6wp5oK1a
+        EptXgoaUs9/J85CqHWCE2Q==
+X-Google-Smtp-Source: APXvYqyn0BH6mGOr5Sh0ZRs/MHfVUVRkxZjQe26RelsSGtz2sJEWvA4FuKGh6M47f/plr8u4qbEHcg==
+X-Received: by 2002:a05:6830:1094:: with SMTP id y20mr5291444oto.12.1580140223624;
+        Mon, 27 Jan 2020 07:50:23 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c12sm4934322oic.27.2020.01.27.07.48.01
+        by smtp.gmail.com with ESMTPSA id t203sm4894791oig.39.2020.01.27.07.50.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 07:48:01 -0800 (PST)
-Received: (nullmailer pid 16178 invoked by uid 1000);
-        Mon, 27 Jan 2020 15:48:00 -0000
-Date:   Mon, 27 Jan 2020 09:48:00 -0600
+        Mon, 27 Jan 2020 07:50:22 -0800 (PST)
+Received: (nullmailer pid 19844 invoked by uid 1000);
+        Mon, 27 Jan 2020 15:50:21 -0000
+Date:   Mon, 27 Jan 2020 09:50:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-Cc:     linux@roeck-us.net, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Joshua.Scott@alliedtelesis.co.nz, Chris.Packham@alliedtelesis.co.nz
-Subject: Re: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
- adt7475 documentation
-Message-ID: <20200127154800.GA7023@bogus>
-References: <20200126221014.2978-1-logan.shaw@alliedtelesis.co.nz>
- <20200126221014.2978-3-logan.shaw@alliedtelesis.co.nz>
+To:     Kalyani Akula <kalyani.akula@xilinx.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, git-dev <git-dev@xilinx.com>,
+        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
+        Sarat Chand Savitala <saratcha@xilinx.com>,
+        Harsh Jain <harshj@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Kalyani Akula <kalyania@xilinx.com>
+Subject: Re: [PATCH V5 2/4] dt-bindings: crypto: Add bindings for ZynqMP
+ AES-GCM driver
+Message-ID: <20200127155021.GA16897@bogus>
+References: <1579777877-10553-1-git-send-email-kalyani.akula@xilinx.com>
+ <1579777877-10553-3-git-send-email-kalyani.akula@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200126221014.2978-3-logan.shaw@alliedtelesis.co.nz>
+In-Reply-To: <1579777877-10553-3-git-send-email-kalyani.akula@xilinx.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 11:10:14AM +1300, Logan Shaw wrote:
-> Added a new file documenting the adt7475 devicetree and added the four
-> new properties to it.
+On Thu, Jan 23, 2020 at 04:41:15PM +0530, Kalyani Akula wrote:
+> Add documentation to describe Xilinx ZynqMP AES-GCM driver bindings.
 > 
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+> Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
 > ---
-> ---
->  .../devicetree/bindings/hwmon/adt7475.yaml    | 95 +++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> V5 Changes:
+> - Moved dt-bindings patch from 1/4 to 2/4
+> - Converted dt-bindings from .txt to .yaml format.
+> 
+>  .../bindings/crypto/xlnx,zynqmp-aes.yaml           | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml b/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
 > new file mode 100644
-> index 000000000000..450da5e66e07
+> index 0000000..b2bca4b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> @@ -0,0 +1,95 @@
+> +++ b/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
+> @@ -0,0 +1,37 @@
 > +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings please:
+Dual license new bindings:
 
 (GPL-2.0-only OR BSD-2-Clause)
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/adt7475.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ADT7475 hwmon sensor
-> +
-> +maintainers:
-> +  - Jean Delvare <jdelvare@suse.com>
-> +
-> +description: |
-> +  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors and multiple
-> +  PWN fan controllers.
-> +
-> +  They support monitoring and controlling up to four fans (the ADT7490 can only
-> +  control up to three). They support reading a single on chip temperature
-> +  sensor and two off chip temperature sensors (the ADT7490 additionally
-> +  supports measuring up to three current external temperature sensors with
-> +  series resistance cancellation (SRC)).
-> +
-> +  Datasheets:
-> +  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
-> +  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
-> +  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
-> +  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
-> +
-> +  Description taken from omsemiconductors specification sheets, with minor
+With that,
 
-omsemi?
- ^
-
-> +  rephrasing.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adt7473
-> +      - adi,adt7475
-> +      - adi,adt7476
-> +      - adi,adt7490
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  bypass-attenuator-in0:
-
-Needs a vendor prefix and a type ref. 
-
-> +    description: |
-> +      Configures bypassing the individual voltage input
-> +      attenuator, on in0. This is supported on the ADT7476 and ADT7490.
-> +      If set to a non-zero integer the attenuator is bypassed, if set to
-> +      zero the attenuator is not bypassed. If the property is absent then
-> +      the config register is not modified.
-
-Sounds like this could be boolean? If not, define a schema for what are 
-valid values.
-
-> +    maxItems: 1
-> +
-> +  bypass-attenuator-in1:
-> +    description: |
-> +      Configures bypassing the individual voltage input
-> +      attenuator, on in1. This is supported on the ADT7473, ADT7475,
-> +      ADT7476 and ADT7490. If set to a non-zero integer the attenuator
-> +      is bypassed, if set to zero the attenuator is not bypassed. If the
-> +      property is absent then the config register is not modified.
-> +    maxItems: 1
-> +
-> +  bypass-attenuator-in3:
-> +    description: |
-> +      Configures bypassing the individual voltage input
-> +      attenuator, on in3. This is supported on the ADT7476 and ADT7490.
-> +      If set to a non-zero integer the attenuator is bypassed, if set to
-> +      zero the attenuator is not bypassed. If the property is absent then
-> +      the config register is not modified.
-> +    maxItems: 1
-> +
-> +  bypass-attenuator-in4:
-
-These 4 could be a single entry under patternProperties.
-
-
-> +    description: |
-> +      Configures bypassing the individual voltage input
-> +      attenuator, on in4. This is supported on the ADT7476 and ADT7490.
-> +      If set to a non-zero integer the attenuator is bypassed, if set to
-> +      zero the attenuator is not bypassed. If the property is absent then
-> +      the config register is not modified.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      hwmon@2e {
-> +        compatible = "adi,adt7476";
-> +        reg = <0x2e>;
-> +        bypass-attenuator-in0 = <1>;
-> +        bypass-attenuator-in1 = <0>;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.25.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
