@@ -4,94 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2E8C33CB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42455C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A4220716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A5320716
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580139420;
-	bh=EDC5uPZJENNu4JtSqEXX9ZUnkH8qt9vHPrefOcegXB0=;
+	s=default; t=1580139523;
+	bh=H5ecfObaOj39NYVk7bFX2pFmHEDTFae2ahQ1eA+TDDU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0fGVva/cdZFmvtSxeP2balwA/TEFnsValc/Be73yEU1aeM6iFurSQHbiONCGbk7Dj
-	 n1jBdTiaNyDS969DMo2jxaZNVwAm8e+jIjGCvpNoqnxFjuCA9ZwnrWwttPQRV8K3SV
-	 W93Ibv0vtYki5Q5ZOz/uixA4MyvuqcDeHKT3Hm0I=
+	b=HreeEBOIxACe5yjeYOuqlloAVm9Lf1Zr88Aznie3RKNkrVovEdNtVCP9HJdyW2dP8
+	 JAxsDP3EtG0IA9NT6O+zd8JK/hFKm4ynSl6YLbJ88GRkVH7fAUUFk31Bljnmdr+WfJ
+	 8pBBgSJTbRJ242Q+2pkd262uK37bzJ8gghAazFDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbgA0Pgz (ORCPT
+        id S1729203AbgA0Pim (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:36:55 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43417 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbgA0Pgz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 10:36:55 -0500
-Received: by mail-oi1-f196.google.com with SMTP id p125so7006890oif.10;
-        Mon, 27 Jan 2020 07:36:54 -0800 (PST)
+        Mon, 27 Jan 2020 10:38:42 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41255 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbgA0Pim (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 10:38:42 -0500
+Received: by mail-oi1-f195.google.com with SMTP id i1so7019547oie.8;
+        Mon, 27 Jan 2020 07:38:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RTwkN+1nsK3Tbd6o0pbrLO1yGQq+UJG41x5hJujk/8A=;
-        b=WU+dimbV5pvEKQM7QR6lgBxCvou6rPpDpsHtokCaUoOXlhODLpu8QPscK5lY1qEHfW
-         XB0IAekwWLvMLeWW6AuAKT6SI0/p8dzkz8ndFE6HUreyh66tSnE68TP91A7KZiExic+X
-         Fhkj3aFYi9hb3YZmNxd/DrVebMjdIGACkEliFog4Hb6qkMC5XL+0rmnmyUA9OXccNIQr
-         5e0L/lN6mFHRPa2FM+JngG+lVEGx2ZZIJj60EuPPVMifeaX9jft3a0d2KDfw0oiP47X8
-         xV69lZ21oV04RUipcckS1J8nmwn2ijoL/MiPB5ASYPwOGEu9lgllMRsD8hgNoPSCnnED
-         HSXA==
-X-Gm-Message-State: APjAAAV0xFlaZ7SUHKJ1V/UpoU5o+ZSIsMokRbxvgS61BXWMKVpbGA+G
-        ZcAgNQhY8wcHMp/kQPmrhw==
-X-Google-Smtp-Source: APXvYqx5tKEVzlvNIbjMUMTAI82thP8Ra2rKVGkItgc9MD6ZFnXKNKE7x5hPgxINh4EsrLRo3aEoRg==
-X-Received: by 2002:aca:cf58:: with SMTP id f85mr7934927oig.6.1580139413880;
-        Mon, 27 Jan 2020 07:36:53 -0800 (PST)
+        bh=tSCV1WjGl/2W1fWEr2TPCKxNJyQTI/EanIQPnOBPvO0=;
+        b=c3+94B5KzDLH1TrOQJ2BA6p9leX21BZ0Yxbkrt4JbsEiVTmLY1Ti34Qpi8StQZuKOx
+         TbNtZd6/ZJxTYdvvzC4LM/DznKeen7R9oeLrFnUxuR+l5i3O3wxEO6l6rH/AoMKKNLnm
+         NDBEQl9cDVRjC+ZbWX7Y3BKsynvByke/WfTDJvkJnuc4+uT0TF3ymcf6but+ywtuexL7
+         M3VIKZbyDIXBTtoGd48XNoyaHkWjUgq+Z2S77m9YguhoRg8QSiGJBwJTXCdF9CYl9JVu
+         w7iRa6Jku4A4plBa+ceol40CzdVL1Jr82ivuJCGfjT8Ur7v7rOudPHDTqdPHWGN2+ned
+         O9Tw==
+X-Gm-Message-State: APjAAAUVqHtX/qBctgtEtEZNKPijd5V4wV0DIDfcxXCzvyW6iCVAI7hX
+        Vt8BUMeqK8wBUe7TIJMdUlsepK0=
+X-Google-Smtp-Source: APXvYqxCxHVqds2nhytw8FvqFrpimnc1pe7m+Oyedj20WiRGfk+AjmrAJ39D/dEMmNs4RK+V7gKv6Q==
+X-Received: by 2002:aca:4ad8:: with SMTP id x207mr4060086oia.55.1580139521816;
+        Mon, 27 Jan 2020 07:38:41 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k17sm4925460oic.45.2020.01.27.07.36.52
+        by smtp.gmail.com with ESMTPSA id y14sm1327774oih.23.2020.01.27.07.38.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 07:36:53 -0800 (PST)
-Received: (nullmailer pid 32751 invoked by uid 1000);
-        Mon, 27 Jan 2020 15:36:52 -0000
-Date:   Mon, 27 Jan 2020 09:36:52 -0600
+        Mon, 27 Jan 2020 07:38:41 -0800 (PST)
+Received: (nullmailer pid 3123 invoked by uid 1000);
+        Mon, 27 Jan 2020 15:38:40 -0000
+Date:   Mon, 27 Jan 2020 09:38:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: Re: [PATCH v3 1/2] DTS: bindings: wl1251: mark ti,power-gpio as
- optional
-Message-ID: <20200127153652.GA32638@bogus>
-References: <cover.1580068813.git.hns@goldelico.com>
- <d34183026b1a46a082f73ab3d0888c92cf6286ec.1580068813.git.hns@goldelico.com>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9] dt-bindings: regulator: add document bindings for
+ mpq7920
+Message-ID: <20200127153840.GA2987@bogus>
+References: <20200123215338.11109-1-sravanhome@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d34183026b1a46a082f73ab3d0888c92cf6286ec.1580068813.git.hns@goldelico.com>
+In-Reply-To: <20200123215338.11109-1-sravanhome@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 26 Jan 2020 21:00:13 +0100, "H. Nikolaus Schaller" wrote:
-> It is now only useful for SPI interface.
-> Power control of SDIO mode is done through mmc core.
+On Thu, 23 Jan 2020 22:53:38 +0100, Saravanan Sekar wrote:
+> Add device tree binding information for mpq7920 regulator driver.
+> Example bindings for mpq7920 are added.
 > 
-> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 > ---
->  Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> Notes:
+>     Changes on v9 :
+>       - fixed error reported by dt_binding_check
+>          "pmic@69: regulators:mps,switch-freq: missing size tag in [[1]]"
+>     
+>     Changes on v8 :
+>       - fixed error reported by dt_binding_check
+>     
+>     Changes on v7 :
+>       - added regualtors child-node under patternProperties, added required
+>       - mps,buck-ovp-disable is not common property, regulator subsystem provides
+>         only over current protection support.
+> 
+>  .../bindings/regulator/mps,mpq7920.yaml       | 121 ++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Reviewed-by: Rob Herring <robh@kernel.org>
