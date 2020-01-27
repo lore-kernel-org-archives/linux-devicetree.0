@@ -2,56 +2,56 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99901C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E019C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629AF206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E746421739
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580143359;
-	bh=DY8WFoZA7MSE6nKl9tDtfP3EGUiWhKiGOAxwLOR8mpc=;
+	s=default; t=1580143542;
+	bh=DJ0wb8syXehawTeHzEXtbOF6zwtZlqOz8iTkcLtSie4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mR82o2WDBRSBPCnvs4isu2dkfl4DwTgvyv5TaIp6OFcc2YHJdCV5dAsK9WSoeDCdf
-	 vEVTXf3Aw79INdZNlrF+HEUGEhdVOp6qK2gw5nnJy3uCPrS97SrUSMaCYyhSPM21OB
-	 OLHdfMJp2cEJbXjQ/pVmwfwNXWtV9Y7hwao7BAro=
+	b=pwlyV2u4JKHJFykYMHIHU0NmWfyRm2Q5LaDG17i0JKIQwi7fQG0fg9csumcu5jzwB
+	 dWPA2rDwOhjJTGAkk3CUsrh7TCqWUuaa8fQCufzqIsSV1yUjyWavAuC8WES47Z44hJ
+	 qhfczZ8zEN0SG9HRWf9bkXwWCKSxKh/rfIBrX1zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgA0Qmi (ORCPT
+        id S1725908AbgA0Qpl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:42:38 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34829 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0Qmi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 11:42:38 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r16so9004098otd.2;
-        Mon, 27 Jan 2020 08:42:37 -0800 (PST)
+        Mon, 27 Jan 2020 11:45:41 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37092 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0Qpl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 11:45:41 -0500
+Received: by mail-oi1-f196.google.com with SMTP id z64so7282015oia.4;
+        Mon, 27 Jan 2020 08:45:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mjwje25YGXfPaqp/tzkaEu5Nx6YRWwHej2DPtGS41lw=;
-        b=BTI7TnRHpVgnbFkOg2oO3ltT9pqavXgMMMR0wsLVD/KmgZEjmCe7KGABrTRx8A6pus
-         3bBDaAjTYtYr2ccvUnxEc2KaCeUycwgOePVVad+cU4I6JBUyIcO/dcQ3hhMa9vdj8VJr
-         tn4JDgp1oLdMNf8GdrgGIBlfAYBLostQJiLZWBwdkHMUrNEJgP/1sGPZF1U+s2LIhOgX
-         2lVZ5QrVbo6Gm2lYvMk4TX0mZw6Wpi12Jgm5FDkiJj97r6AVAPWZuPsu+YgH9Fu/+4Rt
-         BWXLOur3EuyAU6+wenBW48fKLefWLZwcYBMrrP0jf8uRW4rGy3BDIHaOcdzSPEHaGQul
-         eZ6g==
-X-Gm-Message-State: APjAAAWbU4UCuJ0RvmPKgB/cOFRHFIoOAbOjZlBEtAPspiG4xT6EZ0tK
-        H6oXtll5T2Mk2fXAq2108Q==
-X-Google-Smtp-Source: APXvYqxGZhO7r8DiGp3X+Vn9HS4tyNWXgafm1cLU/PZXPm9i5tFCHq4dyh74QUhHWIcE2n8bDhZqOQ==
-X-Received: by 2002:a9d:6e98:: with SMTP id a24mr5421375otr.53.1580143357057;
-        Mon, 27 Jan 2020 08:42:37 -0800 (PST)
+        bh=qjocpJAxA81IVt1bUmufDITg+GzjDlPdLwgQfGnaP7c=;
+        b=l2NrnwXB9Sw+uhjIEGB5+rkj9YDeI+zCBE30oDBsfXoF7tNAUmRqcoJ38G7kpqalgp
+         hIeyRG/A0OmH4Owo/fkk8qGZh9pT+8XzZ8ea3+nREuNj+RGRPts9jp0ALG3G4EIA6IYc
+         L3Up3fuGeE2g4diTBZJndqvkRVdjdgOMIRDXznWoz5QrOPzA/3X4H+yrrpN0sk9WmcZr
+         7gDXrWEJjGFO7E15P7uyIRYK2d8PKKARlO13U/J4OsQdDdAG7ngKnwE2YZvOaE53vD5S
+         RDXXlXTxjl6xm0OIWuwllBH1umKla/uazXDX0449gVgkEQYD50b6lDvmoNn+6KL6fYka
+         nzPA==
+X-Gm-Message-State: APjAAAWvipP81ViXNiHKl+3zR51ZlJTVwFlIQ8/7JBuAtycPtgv486sR
+        7FTxfPhtABdP6PDrnUifDQ==
+X-Google-Smtp-Source: APXvYqwz9akG8oXLqrPsCNC1PhlGDchvLiGOlcKR5KH6Pud9QkCqtorHesxJwSnXfGprXw/Lb4yibQ==
+X-Received: by 2002:a54:4e8d:: with SMTP id c13mr7972010oiy.27.1580143540313;
+        Mon, 27 Jan 2020 08:45:40 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 5sm3598718otr.13.2020.01.27.08.42.36
+        by smtp.gmail.com with ESMTPSA id n27sm2316807oie.18.2020.01.27.08.45.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 08:42:36 -0800 (PST)
-Received: (nullmailer pid 27943 invoked by uid 1000);
-        Mon, 27 Jan 2020 16:42:35 -0000
-Date:   Mon, 27 Jan 2020 10:42:35 -0600
+        Mon, 27 Jan 2020 08:45:39 -0800 (PST)
+Received: (nullmailer pid 32076 invoked by uid 1000);
+        Mon, 27 Jan 2020 16:45:38 -0000
+Date:   Mon, 27 Jan 2020 10:45:38 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Yuti Amonkar <yamonkar@cadence.com>
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
@@ -60,7 +60,7 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         mparab@cadence.com, sjakhade@cadence.com
 Subject: Re: [PATCH v3 13/14] dt-bindings: phy: phy-cadence-torrent: Add
  subnode bindings.
-Message-ID: <20200127164235.GA7662@bogus>
+Message-ID: <20200127164538.GB7662@bogus>
 References: <1579689918-7181-1-git-send-email-yamonkar@cadence.com>
  <1579689918-7181-14-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
@@ -78,180 +78,10 @@ On Wed, Jan 22, 2020 at 11:45:17AM +0100, Yuti Amonkar wrote:
 > 
 > Add sub-node bindings for each group of PHY lanes based on PHY
 > type. Only PHY_TYPE_DP is supported currently. Each sub-node
-
-What the driver supports is not relevant to the binding. Define all 
-modes.
-
 > includes properties such as master lane number, link reset, phy
 > type, number of lanes etc.
-
-Given the conversion and this have no compatibility, just make the 
-commits delete the old binding and add this new binding. I'd rather not 
-have reviewed what just gets deleted here.
-
 > 
 > Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> ---
->  .../bindings/phy/phy-cadence-torrent.yaml          | 90 ++++++++++++++++++----
->  1 file changed, 73 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> index dbb8aa5..eb21615 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> @@ -19,6 +19,12 @@ properties:
->        - cdns,torrent-phy
->        - ti,j721e-serdes-10g
->  
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
->    clocks:
->      maxItems: 1
->      description:
-> @@ -41,44 +47,94 @@ properties:
->        - const: torrent_phy
->        - const: dptx_phy
->  
-> -  "#phy-cells":
-> -    const: 0
-> +  resets:
-> +    description:
-> +      Must contain an entry for each in reset-names.
-> +      See Documentation/devicetree/bindings/reset/reset.txt
 
-How many reset entries? Needs a 'maxItems: 1' or an 'items' list if more 
-than 1.
-
->  
-> -  num_lanes:
-> +  reset-names:
->      description:
-> -      Number of DisplayPort lanes.
-> -    allOf:
-> -      - $ref: /schemas/types.yaml#/definitions/uint32
-> -      - enum: [1, 2, 4]
-> +      Must be "torrent_reset". It controls the reset to the
-
-Should be a schema, not freeform text. However, not really a useful name 
-as there's only 1, so I'd just remove 'reset-names'.
-
-> +      torrent PHY.
->  
-> -  max_bit_rate:
-> +patternProperties:
-> +  '^torrent-phy@[0-7]+$':
-> +    type: object
->      description:
-> -      Maximum DisplayPort link bit rate to use, in Mbps
-> -    allOf:
-> -      - $ref: /schemas/types.yaml#/definitions/uint32
-> -      - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
-> +      Each group of PHY lanes with a single master lane should be represented as a sub-node.
-> +    properties:
-> +      reg:
-> +        description:
-> +          The master lane number. This is the lowest numbered lane in the lane group.
-
-Why not make it the list of lane numbers. Then you don't need num-lanes.
-
-> +
-> +      resets:
-> +        description:
-> +          Contains list of resets to get all the link lanes out of reset.
-
-Needs a schema for how many? 1 per lane?
-
-> +
-> +      "#phy-cells":
-> +        description:
-> +          Generic PHY binding.
-
-Not a useful description. Remove.
-
-> +        const: 0
-> +
-> +      cdns,phy-type:
-> +        description:
-> +          Should be PHY_TYPE_DP.
-
-Sounds like a constraint.
-
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +      cdns,num-lanes:
-> +        description:
-> +          Number of DisplayPort lanes.
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [1, 2, 4]
-> +
-> +      cdns,max-bit-rate:
-> +        description:
-> +          Maximum DisplayPort link bit rate to use, in Mbps
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
-> +
-> +    required:
-> +      - reg
-> +      - resets
-> +      - "#phy-cells"
-> +      - cdns,phy-type
-
-Add (for the child nodes):
-
-       addtionalProperties: false
-
->  
->  required:
->    - compatible
-> +  - "#address-cells"
-> +  - "#size-cells"
->    - clocks
->    - clock-names
->    - reg
->    - reg-names
-> -  - "#phy-cells"
-> +  - resets
-> +  - reset-names
->  
->  additionalProperties: false
->  
->  examples:
->    - |
-> -    dp_phy: phy@f0fb500000 {
-> +    #include <dt-bindings/phy/phy.h>
-> +    torrent_phy: phy@f0fb500000 {
->            compatible = "cdns,torrent-phy";
->            reg = <0xf0 0xfb500000 0x0 0x00100000>,
->                  <0xf0 0xfb030a00 0x0 0x00000040>;
->            reg-names = "torrent_phy", "dptx_phy";
-> -          num_lanes = <4>;
-> -          max_bit_rate = <8100>;
-> -          #phy-cells = <0>;
-> +          resets = <&phyrst 0>;
-> +          reset-names = "torrent_reset";
->            clocks = <&ref_clk>;
->            clock-names = "refclk";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          torrent_phy_dp: torrent-phy@0 {
-
-Just 'phy@...'
-
-> +                    reg = <0>;
-> +                    resets = <&phyrst 1>;
-> +                    #phy-cells = <0>;
-> +                    cdns,phy-type = <PHY_TYPE_DP>;
-> +                    cdns,num-lanes = <4>;
-> +                    cdns,max-bit-rate = <8100>;
-> +          };
->      };
->  ...
-> -- 
-> 2.4.5
-> 
+Also, if you send patches from another author, your S-o-b should also be 
+present.
