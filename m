@@ -2,224 +2,216 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B02C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 18:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DD1C33CB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 18:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BF12467F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 18:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDD6214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 18:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580149878;
-	bh=OSnR0c1UCFu8uMj4x/xuLPY3jKCvX4upsRiqBeBl7GI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=sap79l1z/J0o9yRseTU0OSRehx4Qzf3sC/ng3NK2iP1oK+SCvu3Pn/VbqgbisXZDP
-	 IVwbhm6tJ80qjb1YwuyLal9taSPbSELmzmG7E+wlgCA3gb7vUQwjyMDfhOJzGwhK/+
-	 +Et0t2BwAL3FsTfC3j6nV6+TO8u0Oy1T7lx+D0a8=
+	s=default; t=1580150231;
+	bh=F65eIowIedAVh6EVjhBcwXTlKeZij5mINtFHooO5Iq4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZjwCmaKKaV0zV1IYWeFntoLFV1abBAqQkrkJmiofuwjaCUjDAqcWfJPFDHL91U2lU
+	 CbbO/Ih2qX5n04r1Px93ZgvdtIg8luhTqbMDt7RRQE7WNOO+3+TqFVdaOTtLkfQKs/
+	 jCkzT4GSvE4veQxxAu43JjJkiwwvgtjnP9Q/1edk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgA0SbS (ORCPT
+        id S1725955AbgA0ShK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:31:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:48120 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgA0SbR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:31:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFC5930E;
-        Mon, 27 Jan 2020 10:31:16 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C58A3F67D;
-        Mon, 27 Jan 2020 10:31:16 -0800 (PST)
-Date:   Mon, 27 Jan 2020 18:31:14 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     broonie@kernel.org, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        robh+dt@kernel.org, sravanhome@gmail.com
-Subject: Applied "dt-bindings: regulator: add document bindings for mpq7920" to the regulator tree
-In-Reply-To: <20200123215338.11109-1-sravanhome@gmail.com>
-Message-Id: <applied-20200123215338.11109-1-sravanhome@gmail.com>
-X-Patchwork-Hint: ignore
+        Mon, 27 Jan 2020 13:37:10 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33551 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgA0ShK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 13:37:10 -0500
+Received: by mail-ot1-f67.google.com with SMTP id b18so9435917otp.0;
+        Mon, 27 Jan 2020 10:37:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ICbHNu8A8bhtHhbDmOEUiiPxJXfKbGBYxDSRbSQX0RY=;
+        b=YnhwovSt6nMZcfBIAlSB/OOvkCQpvZ6uCfXBz9p2YZWKrJNIgvy8hpudxyDNlzpWgY
+         +5iInSP2a3TpJph476NzZHbNJCLeQbwCJCLdi4ZQCQWaH9QfMykrVIdAklyIgB72aibr
+         FGHwxIfqTL0WanfBiulyo4tgDSu54JMcJJgl0oQh//ZEmIwOu1hWpXVm0QuqcocBInOj
+         8gt4VL1s9EB9xjry4jf3nEYkRO40nE3BUbuQJkaY1aOQP3QR0Whypk1uboTlUAX39iQt
+         0avjLD6TX1HhrN86IBXejOGp2O9K+c3xyrKOWZ+LXkLLwlFhJ6SJQ8ESx4jBfSUUBCtg
+         lw5g==
+X-Gm-Message-State: APjAAAUehnzP09OEm4NWtsw44tGj094U26DvDuW+q6BEVpVXKmFLxeGR
+        8Oa1dF0cX8tV311uD0WKyA==
+X-Google-Smtp-Source: APXvYqwSDqquahahc9sOyi2lephhmCMoBVLnIhn0uYN4vGwsUQ+3EqQqmFeOu1agpR051zgktNiaNA==
+X-Received: by 2002:a05:6830:124b:: with SMTP id s11mr13094651otp.333.1580150227768;
+        Mon, 27 Jan 2020 10:37:07 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d11sm5793736otl.31.2020.01.27.10.37.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 10:37:06 -0800 (PST)
+Received: (nullmailer pid 26821 invoked by uid 1000);
+        Mon, 27 Jan 2020 18:37:05 -0000
+Date:   Mon, 27 Jan 2020 12:37:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 04/19] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Message-ID: <20200127183705.GA30702@bogus>
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+ <20200122185610.131930-5-bryan.odonoghue@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122185610.131930-5-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+On Wed, Jan 22, 2020 at 06:55:55PM +0000, Bryan O'Donoghue wrote:
+> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> 
+> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed phy
+> controller embedded in QCS404.
+> 
+> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+> definitions.
+> 
+> [bod: converted to yaml format]
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  .../bindings/phy/intel,lgm-emmc-phy.yaml      | 56 --------------
 
-   dt-bindings: regulator: add document bindings for mpq7920
+Working around errors? Should be fixed now, but not yet in linux-next.
 
-has been applied to the regulator tree at
+>  .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 75 +++++++++++++++++++
+>  2 files changed, 75 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.6
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+> new file mode 100644
+> index 000000000000..3325b2f2e6a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,usb-ss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Synopsys 1.0.0 SuperSpeed USB PHY
+> +
+> +maintainers:
+> +  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> +
+> +description: |
+> +  Qualcomm Synopsys 1.0.0 SuperSpeed USB PHY
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,usb-ssphy
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Should be SoC specific.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: USB PHY base address and length of the register map.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Can drop this. Doesn't really add anything.
 
-Thanks,
-Mark
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +    description: Should be 0. See phy/phy-bindings.txt for details.
 
-From 44e9b3446423164dd04f58a5f9efd988c4d5e84b Mon Sep 17 00:00:00 2001
-From: Saravanan Sekar <sravanhome@gmail.com>
-Date: Thu, 23 Jan 2020 22:53:38 +0100
-Subject: [PATCH] dt-bindings: regulator: add document bindings for mpq7920
+'Should be 0' is already expressed by the schema. The remaining 
+reference isn't needed.
 
-Add device tree binding information for mpq7920 regulator driver.
-Example bindings for mpq7920 are added.
+> +
+> +  clocks:
+> +    maxItems: 3
+> +    minItems: 3
+> +    description: phandles for rpmcc clock, PHY AHB clock, SuperSpeed pipe clock.
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200123215338.11109-1-sravanhome@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/regulator/mps,mpq7920.yaml       | 121 ++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+Split the description into 3 entries of 'items'. With that, 
+minItems/maxItems is implicit.
 
-diff --git a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-new file mode 100644
-index 000000000000..a682af0dc67e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-@@ -0,0 +1,121 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/mps,mpq7920.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Monolithic Power System MPQ7920 PMIC
-+
-+maintainers:
-+  - Saravanan Sekar <sravanhome@gmail.com>
-+
-+properties:
-+  $nodename:
-+    pattern: "pmic@[0-9a-f]{1,2}"
-+  compatible:
-+    enum:
-+      - mps,mpq7920
-+
-+  reg:
-+    maxItems: 1
-+
-+  regulators:
-+    type: object
-+    allOf:
-+      - $ref: regulator.yaml#
-+    description: |
-+      list of regulators provided by this controller, must be named
-+      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
-+
-+    properties:
-+      mps,switch-freq:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint8"
-+        enum: [ 0, 1, 2, 3 ]
-+        default: 2
-+        description: |
-+          switching frequency must be one of following corresponding value
-+          1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
-+
-+    patternProperties:
-+      "^ldo[1-4]$":
-+        type: object
-+        allOf:
-+          - $ref: regulator.yaml#
-+
-+      "^ldortc$":
-+        type: object
-+        allOf:
-+          - $ref: regulator.yaml#
-+
-+      "^buck[1-4]$":
-+        type: object
-+        allOf:
-+          - $ref: regulator.yaml#
-+
-+        properties:
-+          mps,buck-softstart:
-+            allOf:
-+              - $ref: "/schemas/types.yaml#/definitions/uint8"
-+            enum: [ 0, 1, 2, 3 ]
-+            description: |
-+              defines the soft start time of this buck, must be one of the following
-+              corresponding values 150us, 300us, 610us, 920us
-+
-+          mps,buck-phase-delay:
-+            allOf:
-+              - $ref: "/schemas/types.yaml#/definitions/uint8"
-+            enum: [ 0, 1, 2, 3 ]
-+            description: |
-+              defines the phase delay of this buck, must be one of the following
-+              corresponding values 0deg, 90deg, 180deg, 270deg
-+
-+          mps,buck-ovp-disable:
-+            type: boolean
-+            description: |
-+              disables over voltage protection of this buck
-+
-+      additionalProperties: false
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@69 {
-+          compatible = "mps,mpq7920";
-+          reg = <0x69>;
-+
-+          regulators {
-+            mps,switch-freq = /bits/ 8 <1>;
-+
-+            buck1 {
-+             regulator-name = "buck1";
-+             regulator-min-microvolt = <400000>;
-+             regulator-max-microvolt = <3587500>;
-+             regulator-min-microamp  = <460000>;
-+             regulator-max-microamp  = <7600000>;
-+             regulator-boot-on;
-+             mps,buck-ovp-disable;
-+             mps,buck-phase-delay = /bits/ 8 <2>;
-+             mps,buck-softstart = /bits/ 8 <1>;
-+            };
-+
-+            ldo2 {
-+             regulator-name = "ldo2";
-+             regulator-min-microvolt = <650000>;
-+             regulator-max-microvolt = <3587500>;
-+            };
-+         };
-+       };
-+     };
-+...
--- 
-2.20.1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: phy
 
+'ahb' seems like a better name.
+
+> +      - const: pipe
+> +
+> +  vdd-supply:
+> +    maxItems: 1
+
+Drop.
+
+> +    description: phandle to the regulator VDD supply node.
+> +
+> +  vdda1p8-supply:
+> +    maxItems: 1
+
+Drop.
+
+> +    description: phandle to the regulator 1.8V supply node.
+> +
+> +  resets:
+> +    items:
+> +      - description: COM reset
+> +      - description: PHY reset line
+> +
+> +  reset-names:
+> +    items:
+> +      - const: com
+> +      - const: phy
+
+required and additionalProperties needed.
+
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+> +    #include <dt-bindings/clock/qcom,rpmcc.h>
+> +    usb3_phy: usb3-phy@78000 {
+> +        compatible = "qcom,usb-ssphy";
+> +        reg = <0x78000 0x400>;
+> +        #phy-cells = <0>;
+> +        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+> +                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+> +                 <&gcc GCC_USB3_PHY_PIPE_CLK>;
+> +        clock-names = "ref", "phy", "pipe";
+> +        resets = <&gcc GCC_USB3_PHY_BCR>,
+> +                 <&gcc GCC_USB3PHY_PHY_BCR>;
+> +        reset-names = "com", "phy";
+> +        vdd-supply = <&vreg_l3_1p05>;
+> +        vdda1p8-supply = <&vreg_l5_1p8>;
+> +    };
+> +...
+> -- 
+> 2.25.0
+> 
