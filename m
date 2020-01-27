@@ -2,121 +2,240 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00B5C33CB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5288C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824F0206A2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uiIosQsj"
+	by mail.kernel.org (Postfix) with ESMTP id 7C79122522
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:05:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580141133;
+	bh=28v/o+uq+cfCZhDfX45dW9eZxBleo7bMSTpra+3Wd+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dF2pMXdGRxvM/BRgSlAwBc8drwO1Zs0O/LMc9r+romxlnseiUbvsUZYufJF6c6C7f
+	 dTKtC9+2sVJJo9898Bhmr4g4Qkc530UJafRHJb11uUgZOYG9COfg6IrlzB33jQeta2
+	 VkNITHNCSpjk4GLgD8eaRdBFxvrO2UofWUJTZVc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgA0QA6 (ORCPT
+        id S1729707AbgA0QFc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:00:58 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59136 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729667AbgA0QA6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 11:00:58 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RG0oHN064935;
-        Mon, 27 Jan 2020 10:00:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580140850;
-        bh=X9SnwIJpKpy6b31kFfxJzxW8I7lTxF0O//d2AW3QcBo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uiIosQsj7fYw3RV0c18GWKBEPIe3S1+8qMpscJYTs48D1aMPvlScgPnGxcJRf+B6E
-         ltCYhjcVUzaTLL/hAySTHfi2fEG8ZOhBS1IjeQu81B9aZ1v0HyR5vc5Ldvarcu1KSm
-         +C/hoWE1QpIFZmmYtP/Qap+V75gjIqEjw/USQf/w=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00RG0o0F108455
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jan 2020 10:00:50 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
- Jan 2020 10:00:49 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 27 Jan 2020 10:00:49 -0600
-Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RG0XSM056344;
-        Mon, 27 Jan 2020 10:00:47 -0600
-From:   Jyri Sarha <jsarha@ti.com>
-To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
-        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <subhajit_paul@ti.com>,
-        <praneeth@ti.com>, <yamonkar@cadence.com>, <sjakhade@cadence.com>,
-        <sam@ravnborg.org>, <jsarha@ti.com>
-Subject: [PATCH v9 5/5] MAINTAINERS: add entry for tidss
-Date:   Mon, 27 Jan 2020 18:00:32 +0200
-Message-ID: <c22f7aa31af09cd4adcca6b1a6b0721d9429f055.1580129724.git.jsarha@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1580129724.git.jsarha@ti.com>
-References: <cover.1580129724.git.jsarha@ti.com>
+        Mon, 27 Jan 2020 11:05:32 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36871 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729583AbgA0QFc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 11:05:32 -0500
+Received: by mail-oi1-f193.google.com with SMTP id z64so7140176oia.4;
+        Mon, 27 Jan 2020 08:05:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tnHQjnYrmFz0tbYvOfYCLbTvLa+9l1AP/RJAXijvqrk=;
+        b=IKxXUKHf9mEnX6c6RieFywfOJcyd7kctQI/qJlT51kD96+VdfJF0WS7mYfO+5mWifw
+         QlrSKJ0QdRGdJcnQurBs4uVKhqNmZiUTFC/9mbKLau0KLgSfz+izPNtL/7jedp2LPqXN
+         qOitZZF23af9G1KxLEdDGX4vRbKBzeVTClIAXbOC7z+kf28jIQJfFvLGbM1LLdLbbIx1
+         BiIR1kcIbVbjCf/X0IA4O3Ekkr2dTv0PgX8IbRQZ4Cn/hop3mMvW7Pv1hHpLgcUwKKSj
+         FDlmvPRUir6AZUUKyr39BwTbR0XUh59d5J0vqT9D9geAbHjpDCxWW9GslxS1rzVHg4rz
+         oXxA==
+X-Gm-Message-State: APjAAAVNcwJx+umiBW+4aOkQqNoSme2xYrQClgLidBZWP+Pp+nY/epWy
+        uE+YLbe4+QOf9p//EuGq3Q==
+X-Google-Smtp-Source: APXvYqy44XSUdwnIIrnFAycEN/rReWxePvuFDn1uyMAxmbWChcJiTQEPH0UghmFg3xzhZ4tiZnyCfg==
+X-Received: by 2002:aca:a997:: with SMTP id s145mr7983028oie.71.1580141131513;
+        Mon, 27 Jan 2020 08:05:31 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i20sm5673129otp.14.2020.01.27.08.05.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 08:05:30 -0800 (PST)
+Received: (nullmailer pid 8855 invoked by uid 1000);
+        Mon, 27 Jan 2020 16:05:29 -0000
+Date:   Mon, 27 Jan 2020 10:05:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert ChromeOS EC bindings to
+ json-schema
+Message-ID: <20200127160529.GA30843@bogus>
+References: <20200114021934.178057-1-ikjn@chromium.org>
+ <20200121074727.35893-1-ikjn@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121074727.35893-1-ikjn@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add entry for tidss DRM driver.
+On Tue, Jan 21, 2020 at 03:47:27PM +0800, Ikjoon Jang wrote:
+> Convert the ChromeOS EC bindings to json-schema.
+> 
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> ---
+> v3: node name changed in rpmsg example
+> v2: cleanup description, fix typos, remove LPC, add add RPMSG example
+> ---
+>  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ------------
+>  .../devicetree/bindings/mfd/cros-ec.yaml      | 111 ++++++++++++++++++
+>  2 files changed, 111 insertions(+), 76 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
 
-Version history:
+> -Required properties (LPC):
+> -- compatible: "google,cros-ec-lpc"
+> -- reg: List of (IO address, size) pairs defining the interface uses
 
-v2: no change
+Where did this go?
 
-v3: - Move tidss entry after omapdrm
-    - Add "T:     git git://anongit.freedesktop.org/drm/drm-misc"
 
-v4: no change
+> diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.yaml b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
+> new file mode 100644
+> index 000000000000..6a5b87cebcfa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
+> @@ -0,0 +1,111 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/cros-ec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ChromeOS Embedded Controller
+> +
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> +  - Guenter Roeck <groeck@chromium.org>
+> +
+> +description: |
+> +  Google's ChromeOS EC is a microcontroller which talks to the AP and
+> +  implements various functions such as keyboard and battery charging.
+> +  The EC can be connected through various interfaces (I2C, SPI, and others)
+> +  and the compatible string specifies which interface is being used.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - description:
+> +          For implementations of the EC is connected through I2C.
+> +        const: google,cros-ec-i2c
+> +      - description:
+> +          For implementations of the EC is connected through SPI.
+> +        const: google,cros-ec-spi
+> +      - description:
+> +          For implementations of the EC is connected through RPMSG.
+> +        const: google,cros-ec-rpmsg
+> +
+> +  google,has-vbc-nvram:
+> +    description: |
 
-v5: no change
+You can drop '|' if there's no formatting to maintain. And you should 
+reflow this.
 
-v6: no change
+> +      Some implementations of the EC include a small
+> +      nvram space used to store verified boot context data.
+> +      This boolean flag is used to specify whether this nvram is
+> +      present or not.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          const: google,cros-ec-i2c
+> +    then:
+> +      properties:
+> +        reg:
+> +          description: I2C slave address
+> +          maxItems: 1
+> +      required:
+> +        - reg
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          const: google,cros-ec-spi
+> +    then:
+> +      properties:
+> +        reg:
+> +          description: SPI chip select
+> +          maxItems: 1
+> +        google,cros-ec-spi-pre-delay:
+> +          description: |
+> +            This property specifies the delay in usecs between the
+> +            assertion of the CS and the first clock pulse.
 
-v7: no change
+Needs a type reference at a minumum and ideally some constraints.
 
-v8: - Add Reviewed-by: Benoit Parrot <bparrot@ti.com>
+> +        google,cros-ec-spi-msg-delay:
+> +          description: |
+> +            This property specifies the delay in usecs between messages.
 
-v9: - Add Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Same here.
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
-Reviewed-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> +      required:
+> +        - reg
+> +
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa9add598b7d..d8f65dc1dde8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5630,6 +5630,17 @@ S:	Maintained
- F:	drivers/gpu/drm/omapdrm/
- F:	Documentation/devicetree/bindings/display/ti/
- 
-+DRM DRIVERS FOR TI KEYSTONE
-+M:	Jyri Sarha <jsarha@ti.com>
-+M:	Tomi Valkeinen <tomi.valkeinen@ti.com>
-+L:	dri-devel@lists.freedesktop.org
-+S:	Maintained
-+F:	drivers/gpu/drm/tidss/
-+F:	Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-+F:	Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+F:	Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-+T:	git git://anongit.freedesktop.org/drm/drm-misc
-+
- DRM DRIVERS FOR V3D
- M:	Eric Anholt <eric@anholt.net>
- S:	Supported
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Add:
+additionalProperties: false
 
+> +examples:
+> +  # Example for I2C
+> +  - |
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        cros-ec@1e {
+> +            compatible = "google,cros-ec-i2c";
+> +            reg = <0x1e>;
+> +            interrupts = <6 0>;
+
+Not documented.
+
+> +            interrupt-parent = <&gpx1>;
+> +        };
+> +    };
+> +  # Example for SPI
+> +  - |
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        cros-ec@0 {
+> +            compatible = "google,cros-ec-spi";
+> +            reg = <0x0>;
+> +            google,cros-ec-spi-msg-delay = <30>;
+> +            interrupts = <99 0>;
+> +            interrupt-parent = <&gpio7>;
+> +            spi-max-frequency = <5000000>;
+> +        };
+> +    };
+> +  # Example for RPMSG
+> +  - |
+> +    scp0 {
+> +        cros-ec@0 {
+> +            compatible = "google,cros-ec-rpmsg";
+> +        };
+> +    };
+> +...
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
