@@ -2,102 +2,201 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4B4C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D74C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4323A206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529A4206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580142336;
+	bh=evQNgGRkP2bhS+Ih9eqfBSFXi0ycJwx9Xl7siCJVyQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h9bQrLB968Rhfhn9Bsb31A+ugYh7BhlhG30zwkZjymS5DLxjpwoRI39rQSgl7C/KN
+	 UUpn23AAVLG5tIb2B29iAHsZ9gpZVNVvE+JeK7eSeh2wRrcaELz+u4skBsrTZixP4g
+	 ZTAHiFN+TBzTMjxxyVqUKyupfFzwi1McGH2HaMgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgA0QZd (ORCPT
+        id S1726327AbgA0QZg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:25:33 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33646 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgA0QZd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 11:25:33 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 4B80F29146A
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert ChromeOS EC bindings to
- json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Ikjoon Jang <ikjn@chromium.org>, devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org
-References: <20200114021934.178057-1-ikjn@chromium.org>
- <20200121074727.35893-1-ikjn@chromium.org>
- <6739cc32-9beb-ac0a-f500-db2d70bb8e22@collabora.com>
- <20200127161206.GB30843@bogus>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <ef653218-4a59-73e1-186e-9b62b8ed6dae@collabora.com>
-Date:   Mon, 27 Jan 2020 17:25:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 27 Jan 2020 11:25:36 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34954 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgA0QZf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 11:25:35 -0500
+Received: by mail-oi1-f194.google.com with SMTP id b18so3255020oie.2;
+        Mon, 27 Jan 2020 08:25:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OJucG96FhGoPAsq3RuvwmFtMjR8zGUwV0tQ5FFG1jKc=;
+        b=BGFdiG35FSOnzlYq+tJT5yEg8TfLaQW06+rVlAonYE03kjCcakpZx3ZrhkVOx25Mvh
+         h0a/n7Q4Noib4nLg/tML4oGrGKbfwDoli6IUChb/bVObJ/S3vvnwiOJwNmXbSNCDedXH
+         Vk21KTkTVVv1L0YblHwXL6Dup3qZZIur/wChZosIY0MFvtytiL+0FLn98GYgk+3Fw4rv
+         ATx3yeW7nRV5ean675ASgKdDYZprEQ478oZ2tBJk4jxU697+Dg4du5PmmVzWsayDZCcG
+         gxaphlTCx7SaiXrQX+9MWWjjkV5GXvs+yeb20Z641TwpLQPjCIobvJjbXCTIe+aPuS6F
+         N2DQ==
+X-Gm-Message-State: APjAAAXPcdNwizD7eN9cWax+qRpWf0Nz7/AKxoeIb1YLYuS6HexiciCB
+        62Q4bgKTzvvglx+np3PMaw==
+X-Google-Smtp-Source: APXvYqw6dy/abosD5vhi2iH+JS6Mc0uw4qRSNJcVSFxxqV870nhHwoqdtCZhMnH8PG0ugCojlXjS6g==
+X-Received: by 2002:aca:4dd6:: with SMTP id a205mr7732517oib.43.1580142335070;
+        Mon, 27 Jan 2020 08:25:35 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 15sm5719271otv.20.2020.01.27.08.25.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 08:25:34 -0800 (PST)
+Received: (nullmailer pid 4529 invoked by uid 1000);
+        Mon, 27 Jan 2020 16:25:33 -0000
+Date:   Mon, 27 Jan 2020 10:25:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, mark.rutland@arm.com, maxime@cerno.tech,
+        jsarha@ti.com, tomi.valkeinen@ti.com, praneeth@ti.com,
+        mparab@cadence.com, sjakhade@cadence.com
+Subject: Re: [PATCH v3 01/14] dt-bindings: phy: Convert Cadence MHDP PHY
+ bindings to YAML.
+Message-ID: <20200127162533.GA20343@bogus>
+References: <1579689918-7181-1-git-send-email-yamonkar@cadence.com>
+ <1579689918-7181-2-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <20200127161206.GB30843@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579689918-7181-2-git-send-email-yamonkar@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 27/1/20 17:12, Rob Herring wrote:
-> On Mon, Jan 27, 2020 at 04:57:13PM +0100, Enric Balletbo i Serra wrote:
->> Hi Ikjoon,
->>
->> On 21/1/20 8:47, Ikjoon Jang wrote:
->>> Convert the ChromeOS EC bindings to json-schema.
->>>
->>> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
->>> ---
->>> v3: node name changed in rpmsg example
->>> v2: cleanup description, fix typos, remove LPC, add add RPMSG example
->>> ---
->>>  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ------------
->>>  .../devicetree/bindings/mfd/cros-ec.yaml      | 111 ++++++++++++++++++
->>>  2 files changed, 111 insertions(+), 76 deletions(-)
->>>  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
->>>  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
->>>
->>
->> Still in mfd directory, this is not a MFD driver, please move to chrome/cros-ec.yaml
+On Wed, Jan 22, 2020 at 11:45:05AM +0100, Yuti Amonkar wrote:
+> - Convert the MHDP PHY devicetree bindings to yaml schemas.
+> - Rename DP PHY to have generic Torrent PHY nomrnclature.
+> - Add Torrent PHY reference clock bindings.
+> - Rename compatible string from "cdns,dp-phy" to "cdns,torrent-phy".
+>   This will not affect ABI as the driver has never been functional,
+>   and therefore do not exist in any active use case
 > 
-> Please don't. Looks to me like the chrome EC has multiple functions and 
-> is a device.
-> 
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> ---
+>  .../devicetree/bindings/phy/phy-cadence-dp.txt     | 30 --------
+>  .../bindings/phy/phy-cadence-torrent.yaml          | 82 ++++++++++++++++++++++
+>  2 files changed, 82 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
 
-This binding is part of the Chrome EC core and we explicitly moved all this out
-from mfd subsytem in the past because wasn't really fit as mfd driver.
+> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> new file mode 100644
+> index 0000000..eb633d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> @@ -0,0 +1,82 @@
 
-We still have one device driver (cros_ec_dev) in mfd, this is the one that
-instantiates all the subdevices but the above binding is not related to this
-one. All the core/bus part is in platform/chrome, looks to me more coherent have
-the binding accordingly.
+Missing SPDX tag.
 
-Anyway I'll let you the final decision, nothing that worries me too much.
+As Cadence is the only contributor to the old doc, please relicense to 
+dual license:
 
-Thanks,
- Enric
+(GPL-2.0-only OR BSD-2-Clause)
 
-> Bindings directories are often 1:1 with kernel driver directories, but 
-> not always.
-> 
-> Rob
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/phy-cadence-torrent.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence Torrent SD0801 PHY binding for DisplayPort
+> +
+> +description:
+> +  This binding describes the Cadence SD0801 PHY (also known as Torrent PHY)
+> +  hardware included with the Cadence MHDP DisplayPort controller.
+> +
+> +maintainers:
+> +  - Swapnil Jakhade <sjakhade@cadence.com>
+> +  - Yuti Amonkar <yamonkar@cadence.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: cdns,torrent-phy
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      PHY reference clock. Must contain an entry in clock-names.
+> +
+> +  clock-names:
+> +    const: refclk
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: Offset of the Torrent PHY configuration registers.
+> +      - description: Offset of the DPTX PHY configuration registers.
+> +
+> +  reg-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: torrent_phy
+> +      - const: dptx_phy
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  num_lanes:
+
+Given you don't care about compatibility, please make this 'num-lanes'.
+
+> +    description:
+> +      Number of DisplayPort lanes.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [1, 2, 4]
+
+If optional, then define a default.
+
+> +
+> +  max_bit_rate:
+
+And this 'max-bit-rate-mbps'.
+
+> +    description:
+> +      Maximum DisplayPort link bit rate to use, in Mbps
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+
+default?
+
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - reg
+> +  - reg-names
+> +  - "#phy-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dp_phy: phy@f0fb500000 {
+> +          compatible = "cdns,torrent-phy";
+> +          reg = <0xf0 0xfb500000 0x0 0x00100000>,
+> +                <0xf0 0xfb030a00 0x0 0x00000040>;
+> +          reg-names = "torrent_phy", "dptx_phy";
+> +          num_lanes = <4>;
+> +          max_bit_rate = <8100>;
+> +          #phy-cells = <0>;
+> +          clocks = <&ref_clk>;
+> +          clock-names = "refclk";
+> +    };
+> +...
+> -- 
+> 2.4.5
 > 
