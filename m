@@ -2,213 +2,130 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90E9C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 19:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FF9C33CB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 20:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919A822527
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 19:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F8E24681
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 20:04:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vvFLH7KZ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vzEk6tah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgA0TT0 (ORCPT
+        id S1726210AbgA0UEM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 14:19:26 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:29014 "EHLO
+        Mon, 27 Jan 2020 15:04:12 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:51737 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbgA0TTZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726205AbgA0UEJ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jan 2020 14:19:25 -0500
+        Mon, 27 Jan 2020 15:04:09 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580152765; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=SBxmIcskq7u6o43vWY8w27wO0NL30R6/MIFBwXQVI+U=; b=vvFLH7KZXR3LSCnJsJeZT15UVMwAiv0lU66k52mK7X+Mx76GLR7O5Ej3nhOLw4PAL20m6QVx
- JJEcNNwCUmPheUojzaw1I/UU7vTOlAEu5rElfGKCm1lHCdbOUiX3HreWcXeCiZvtHD0Ez2cS
- R2do3o334LQfQ0m8Qkat33boECg=
+ s=smtp; t=1580155448; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=QQkEgPnxmrptI1lZyJpzKW7DPznWJqntmF4wRA+2Cmo=; b=vzEk6tahfjsHg8lwd7M3m2NkQQ4PjUjt02fBqfTP1iBOeXHCpHG3um4MjMeKEG026RaVdM8S
+ vGhcv9iqdDBCwUPhkuG7yhFQUhVgoqkrdGWKbefo5X0aHScTvK9PVWapyFdrUNX27vPQLjRk
+ M3I8Dg5aEXXJFEhfZHo2wq9pbxc=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2f37b5.7fc8f719f9d0-smtp-out-n03;
- Mon, 27 Jan 2020 19:19:17 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e2f4235.7fc27dbecf80-smtp-out-n03;
+ Mon, 27 Jan 2020 20:04:05 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2A5E7C43383; Mon, 27 Jan 2020 19:19:16 +0000 (UTC)
-Received: from cheath10p342229-lin.qca.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        id 65019C447A3; Mon, 27 Jan 2020 20:04:05 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: tamizhr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E540C4479C;
-        Mon, 27 Jan 2020 19:19:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6E540C4479C
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 88E2DC433CB;
+        Mon, 27 Jan 2020 20:03:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 88E2DC433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tamizhr@codeaurora.org
-From:   Tamizh Chelvam <tamizhr@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Tamizh Chelvam <tamizhr@codeaurora.org>
-Subject: [PATCHv2 2/2] ath10k: Add support to read btcoex related data from DT
-Date:   Tue, 28 Jan 2020 00:48:56 +0530
-Message-Id: <1580152736-18654-2-git-send-email-tamizhr@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1580152736-18654-1-git-send-email-tamizhr@codeaurora.org>
-References: <1580152736-18654-1-git-send-email-tamizhr@codeaurora.org>
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com
+Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+Date:   Tue, 28 Jan 2020 01:33:40 +0530
+Message-Id: <20200127200350.24465-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BTCOEX feature is not supported by all QCA4019 chipsets.
-Since btcoex enabled by default in firmware, host needs to
-enable COEX support depends on the hardware. Enabling it
-by default in unsupported hardware will cause some
-feature disabled in hardware.
-This patch will read btcoex_support flag and
-wlan priority gpio pin number from DT. Depends on the
-btcoex_support flag value host will expose BTCOEX support
-and wlan priority gpio pin number to target.
+This RFC series aims to extend cpu based scaling support to L3/DDR on
+SDM845 and SC7180 SoCs.
 
-Testing:
-	* Tested HW : QCA4019
-	* Tested FW : 10.4-3.2.1.1-00017
+Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+Patches [5-7] - Hack in a way to add/remove multiple opp tables to
+                a single device. I am yet to fix the debugfs to
+		support multiple opp_tables per device but wanted to
+		send what was working upstream to get an idea if multiple
+		opp tables per device is a feature that will be useful
+		upstream.
+Patches [9-10] - Add the cpu/cpu-ddr/cpu-l3 opp tables for SDM845
+                 and SC7180 SoCs.
 
-Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
----
+v3:
+ * Migrated to using Saravana's opp-kBps bindings [1]
+ * Fixed some misc comments from Rajendra
+ * Added support for SC7180
+
 v2:
-  * Changed coex_support to bool type
+ * Incorporated Viresh's comments from:
+ https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+ https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+ * Dropped cpufreq-map passive governor
 
- drivers/net/wireless/ath/ath10k/core.c  | 44 ++++++++++++++++++++++++++++++++-
- drivers/net/wireless/ath/ath10k/core.h  |  3 +++
- drivers/net/wireless/ath/ath10k/debug.c |  3 +++
- drivers/net/wireless/ath/ath10k/mac.c   |  3 ++-
- drivers/net/wireless/ath/ath10k/wmi.c   |  2 +-
- 5 files changed, 52 insertions(+), 3 deletions(-)
+Git-branch: https://github.com/QuinAsura/linux/tree/lnext-012420
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-index 5ec16ce..5712e28 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -2119,6 +2119,40 @@ static int ath10k_download_cal_data(struct ath10k *ar)
- 	return 0;
- }
- 
-+static void ath10k_core_fetch_btcoex_dt(struct ath10k *ar)
-+{
-+	struct device_node *node;
-+	u8 coex_support = 0;
-+	int ret;
-+
-+	node = ar->dev->of_node;
-+	if (!node)
-+		goto out;
-+
-+	ret = of_property_read_u8(node, "qcom,coexist-support", &coex_support);
-+	if (ret) {
-+		ar->coex_support = true;
-+		goto out;
-+	}
-+
-+	if (coex_support) {
-+		ar->coex_support = true;
-+	} else {
-+		ar->coex_support = false;
-+		ar->coex_gpio_pin = -1;
-+		goto out;
-+	}
-+
-+	ret = of_property_read_u32(node, "qcom,coexist-gpio-pin",
-+				   &ar->coex_gpio_pin);
-+	if (ret)
-+		ar->coex_gpio_pin = -1;
-+
-+out:
-+	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot coex_support %d coex_gpio_pin %d\n",
-+		   ar->coex_support, ar->coex_gpio_pin);
-+}
-+
- static int ath10k_init_uart(struct ath10k *ar)
- {
- 	int ret;
-@@ -2696,14 +2730,22 @@ int ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode mode,
- 		if (test_bit(WMI_SERVICE_BSS_CHANNEL_INFO_64, ar->wmi.svc_map))
- 			val |= WMI_10_4_BSS_CHANNEL_INFO_64;
- 
-+		ath10k_core_fetch_btcoex_dt(ar);
-+
- 		/* 10.4 firmware supports BT-Coex without reloading firmware
- 		 * via pdev param. To support Bluetooth coexistence pdev param,
- 		 * WMI_COEX_GPIO_SUPPORT of extended resource config should be
- 		 * enabled always.
-+		 *
-+		 * We can still enable BTCOEX if firmware has the support
-+		 * eventhough btceox_support value is
-+		 * ATH10K_DT_BTCOEX_NOT_FOUND
- 		 */
-+
- 		if (test_bit(WMI_SERVICE_COEX_GPIO, ar->wmi.svc_map) &&
- 		    test_bit(ATH10K_FW_FEATURE_BTCOEX_PARAM,
--			     ar->running_fw->fw_file.fw_features))
-+			     ar->running_fw->fw_file.fw_features) &&
-+		    ar->coex_support)
- 			val |= WMI_10_4_COEX_GPIO_SUPPORT;
- 
- 		if (test_bit(WMI_SERVICE_TDLS_EXPLICIT_MODE_ONLY,
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 5101bf2..edf314e 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -1222,6 +1222,9 @@ struct ath10k {
- 	struct ath10k_bus_params bus_param;
- 	struct completion peer_delete_done;
- 
-+	bool coex_support;
-+	int coex_gpio_pin;
-+
- 	/* must be last */
- 	u8 drv_priv[0] __aligned(sizeof(void *));
- };
-diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
-index e000677..3894b77 100644
---- a/drivers/net/wireless/ath/ath10k/debug.c
-+++ b/drivers/net/wireless/ath/ath10k/debug.c
-@@ -1978,6 +1978,9 @@ static ssize_t ath10k_write_btcoex(struct file *file,
- 	if (strtobool(buf, &val) != 0)
- 		return -EINVAL;
- 
-+	if (!ar->coex_support)
-+		return -EOPNOTSUPP;
-+
- 	mutex_lock(&ar->conf_mutex);
- 
- 	if (ar->state != ATH10K_STATE_ON &&
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 7fee35f..ac3ad5c 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -4982,7 +4982,8 @@ static int ath10k_start(struct ieee80211_hw *hw)
- 	param = ar->wmi.pdev_param->enable_btcoex;
- 	if (test_bit(WMI_SERVICE_COEX_GPIO, ar->wmi.svc_map) &&
- 	    test_bit(ATH10K_FW_FEATURE_BTCOEX_PARAM,
--		     ar->running_fw->fw_file.fw_features)) {
-+		     ar->running_fw->fw_file.fw_features) &&
-+	    ar->coex_support) {
- 		ret = ath10k_wmi_pdev_set_param(ar, param, 0);
- 		if (ret) {
- 			ath10k_warn(ar,
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index 61885d4..e76e365 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -8787,7 +8787,7 @@ static int ath10k_wmi_10_4_op_get_vdev_subtype(struct ath10k *ar,
- 	cmd = (struct wmi_ext_resource_config_10_4_cmd *)skb->data;
- 	cmd->host_platform_config = __cpu_to_le32(type);
- 	cmd->fw_feature_bitmap = __cpu_to_le32(fw_feature_bitmap);
--	cmd->wlan_gpio_priority = __cpu_to_le32(-1);
-+	cmd->wlan_gpio_priority = __cpu_to_le32(ar->coex_gpio_pin);
- 	cmd->coex_version = __cpu_to_le32(WMI_NO_COEX_VERSION_SUPPORT);
- 	cmd->coex_gpio_pin1 = __cpu_to_le32(-1);
- 	cmd->coex_gpio_pin2 = __cpu_to_le32(-1);
+Some alternate ways of hosting the opp-tables:
+https://github.com/QuinAsura/linux/commit/50b92bfaadc8f9a0d1e12249646e018bd6d1a9d3
+https://github.com/QuinAsura/linux/commit/3d23d1eefd16ae6d9e3ef91e93e78749d8844e98
+Viresh didn't really like ^^ bindings and they dont really scale well. Just
+including them here for completeness.
+
+Depends on the following series:
+[1] https://patchwork.kernel.org/cover/11277199/
+[2] https://patchwork.kernel.org/cover/11055499/ 
+[3] https://patchwork.kernel.org/cover/11326381/
+
+Sibi Sankar (10):
+  arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+  cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+  cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+  OPP: Add and export helper to update voltage
+  opp: of: export _opp_of_get_opp_desc_node
+  opp: Allow multiple opp_tables to be mapped to a single device
+  opp: Remove multiple attached opp tables from a device
+  cpufreq: qcom: Update the bandwidth levels on frequency change
+  arm64: dts: qcom: sdm845: Add cpu OPP tables
+  arm64: dts: qcom: sc7180: Add cpu OPP tables
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 287 +++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi    | 453 ++++++++++++++++++++++++
+ drivers/cpufreq/cpufreq-dt-platdev.c    |   2 +
+ drivers/cpufreq/qcom-cpufreq-hw.c       | 246 +++++++++++--
+ drivers/opp/core.c                      | 111 +++++-
+ drivers/opp/of.c                        |   3 +-
+ drivers/opp/opp.h                       |   2 +
+ include/linux/pm_opp.h                  |  10 +
+ 9 files changed, 1083 insertions(+), 33 deletions(-)
+
 -- 
-1.9.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
