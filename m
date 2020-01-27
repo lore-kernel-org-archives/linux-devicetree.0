@@ -2,180 +2,123 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4350AC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618ABC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152FD20716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSMEE1B5"
+	by mail.kernel.org (Postfix) with ESMTP id 378BA217BA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580135185;
+	bh=V+RtYx4rDRwVt97bmBt6XB44quPwdv8d3Z9dwT7Tjb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V3FtB+uGSeO9WW2jTsB3g1/jm59FLfRqDLPwqJ+R7CkXJgSU2au4RiqCvAeEIhJmJ
+	 nVdBcpEnDJ2bVgnpbjHPKSqcgJaZHI7A5xacYeq4OoNABlMcTMPSbxe1kMHd4f2Lqd
+	 qdEIXkb85t6kfFFGzHZNnRRhwqgkMB8Y0WMtWCUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgA0O0V (ORCPT
+        id S1727235AbgA0O0Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:26:21 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:51166 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0O0V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 09:26:21 -0500
-Received: by mail-pj1-f67.google.com with SMTP id r67so3026337pjb.0
-        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 06:26:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xzArnJ4nbXkSs60iOFR6uhKTS+Tvj4YygIxD9MfWiRA=;
-        b=hSMEE1B5iSa+2xKjYf4EB30SIERgx+rjJJ9WMZIvQgxhWxgasCg25yxXD1CPr/u/93
-         uhoe/8m5NcL0C/4YDPDoETvfZU1kenKFT+3sPA8/JnKw64umkTW7CvAlgppOdGGTs9ve
-         KqWw7zWpSRxMkefoulqmobc7focOHlG+tr2HnwCVQ1mU1IHzM85Tfu/CPrmW3H9QJ+o5
-         BHC5VfCWw2a3dB7J3uthnD97W7uc29Jv9lowuIP53fpMwAnKQDP+AzvMjeBhwqnjFR6y
-         Z5jzZMt0G9atPj8QkFhmyh9QtbMMyI+sw+LYl0YK0WiWfOeDJ18d2zcuibpkio8mAl5T
-         IJVw==
+        Mon, 27 Jan 2020 09:26:24 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41721 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0O0Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 09:26:24 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so8481740otc.8;
+        Mon, 27 Jan 2020 06:26:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xzArnJ4nbXkSs60iOFR6uhKTS+Tvj4YygIxD9MfWiRA=;
-        b=WmbvzfjlULj1Q/fEHPJ8A7lzj/DHc0iA5CLu482T6fMCtjaJM2qxAVJtlfHQ0iAHta
-         8bWyCidQXzv+3zen9HMkmGOowOqTrUz1aPkUfK35PV/wmNasgM2EJSSgF8G0L/kEvXqv
-         EqyVmx7opBdLSFKkPS4r0ltRwTQURXb6cOuur9db31q8jCj0dlNZyYjFT0Ui7//p4xvR
-         JHFZLiIa/sRUqEdbVxiU3en/boctKifib/OOr085llBAbjlnw9Qje90DhZ5/Vl63oqRa
-         3BVyI89WlWb1MqrzQn0GywMB/Ja3Vh81MveSXAk5vmgsuI3EuVuznc3ND2yZu2BitymZ
-         UtwQ==
-X-Gm-Message-State: APjAAAX8Na/n81NWe14+kFVG0k3kHrKJCAE5fAaJufjWRRMR7THlE3dr
-        VaixssRhqkJaQWd9uXsQ5N8=
-X-Google-Smtp-Source: APXvYqyTcIXitQoWpeemzRjVONjwGn1dlh/73PwPJXsBE8iCjmuflUK9yssu8BE53heR85oV9RCdJA==
-X-Received: by 2002:a17:902:a416:: with SMTP id p22mr18067830plq.107.1580135180945;
-        Mon, 27 Jan 2020 06:26:20 -0800 (PST)
-Received: from localhost.localdomain ([2405:201:d809:ffa6:583:2633:933c:f34d])
-        by smtp.gmail.com with ESMTPSA id y23sm4725690pfn.101.2020.01.27.06.26.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 Jan 2020 06:26:20 -0800 (PST)
-From:   Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-To:     noralf@tronnes.org, Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-Subject: [PATCH v4 2/3] dt-bindings: add binding for tft displays based on ilitek,ili9486
-Date:   Mon, 27 Jan 2020 19:56:14 +0530
-Message-Id: <a37d95cbfc9603265ed15916cdd2fb69e8c5f041.1580134320.git.kamlesh.gurudasani@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1580134320.git.kamlesh.gurudasani@gmail.com>
-References: <cover.1580134320.git.kamlesh.gurudasani@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Nxt//FHypijseal0ghIbraBsi2lnDnz+2r9nMCuOYJI=;
+        b=eZAPI5FnyZz44CPp9IGSQEvBWwCn4DXi/Guo5baZ6bhVjt3fMCNXuA0yI4ATjE3iOF
+         3JHzBL1/mRiXV167pLJR7kcRza4t3Kga6EOUX7lygX3pqtpzmcVDUXpTyRyPij/U6wgl
+         nofLvaxUBmmpHNLerroiPVg+6gka9k/87YklZ1HJ35zSZL3zf84mSwCJzeu9Z4Cd25oD
+         fRFfj/JsO9CGTL59ZlYE1noNwg+/8OfSokTfah+Nez4wV0sk9p/swDNIaZuzuL1yUGlz
+         9gJ5MVy5EvrZe9QcoQqFDzEFmJJOgoh7MXQuBfcNv/bfX/t1IvMDzvReTkVlkvipE4z+
+         CPDA==
+X-Gm-Message-State: APjAAAVQf7mrKRbOgOROMG32VePv32vgJ7BmvnFlv7Re/q4oPR+kS0Gm
+        YRJF2wsT0n9gmPUsYY+MdQ==
+X-Google-Smtp-Source: APXvYqyBPH3RWTQHiqmN/lkBJBZUFhrE+9jZVDWpGBXqHJYibAu4HcUdQ/ttp2aqxhjJ+ejTuvj9gg==
+X-Received: by 2002:a9d:2028:: with SMTP id n37mr13077692ota.127.1580135183616;
+        Mon, 27 Jan 2020 06:26:23 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t7sm2606437oth.79.2020.01.27.06.26.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 06:26:22 -0800 (PST)
+Received: (nullmailer pid 29798 invoked by uid 1000);
+        Mon, 27 Jan 2020 14:26:20 -0000
+Date:   Mon, 27 Jan 2020 08:26:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        tglx@linutronix.de, daniel.lezcano@linaro.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        miquel.raynal@bootlin.com, keescook@chromium.org,
+        ebiederm@xmission.com, krzk@kernel.org, geert+renesas@glider.be,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        mturquette@baylibre.com, sboyd@kernel.org, chenhc@lemote.com,
+        jiaxun.yang@flygoat.com, paul@boddie.org.uk, hns@goldelico.com,
+        mips-creator-ci20-dev@googlegroups.com, rick.tyliu@ingenic.com
+Subject: Re: [PATCH v3 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Message-ID: <20200127142620.GA29108@bogus>
+References: <1579867508-81499-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1579867508-81499-5-git-send-email-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1579867508-81499-5-git-send-email-zhouyanjie@wanyeetech.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This binding is for the tft displays based on ilitek,ili9486.
-ozzmaker,piscreen and waveshare,rpi-lcd-35 are such displays
+On Fri, 24 Jan 2020 20:05:05 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= wrote:
+> Document the available properties for the SoC root node and the
+> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+> 
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Tested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     Change the two Document from txt to yaml.
+>     
+>     v2->v3:
+>     Fix formatting errors.
+> 
+>  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
+>  .../bindings/mips/ingenic/ingenic,soc,yaml         | 35 ++++++++++++++
+>  2 files changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
+> 
 
-Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
----
+My bot found errors running 'make dt_binding_check' on your patch:
 
-v2 changes:
-* Changing file from txt to yaml format
-* removed ilitek,ili9486 from compatible string
+warning: no schema found in file: Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: ignoring, error in schema: properties: compatible: oneOf: 0
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: properties:compatible:oneOf:0: 'ingenic,xburst' is not of type 'object', 'boolean'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: properties:compatible:oneOf:1: 'ingenic,xburst2' is not of type 'object', 'boolean'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: Additional properties are not allowed ('Example' was unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: Additional properties are not allowed ('Example' was unexpected)
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-v3 changes:
-* no changes
-
-v4 changes:
-* no changes
----
- .../bindings/display/ilitek,ili9486.yaml           | 79 ++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/ilitek,ili9486.yaml b/Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
-new file mode 100644
-index 0000000..dd306c88
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/ilitek,ili9486.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ilitek ILI9486 display panels device tree bindings
-+
-+maintainers:
-+  - Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-+
-+description:
-+  This binding is for display panels using an Ilitek ILI9486 controller in SPI
-+  mode.
-+
-+allOf:
-+  - $ref: panel/panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description:
-+          Waveshare 3.5" 320x480 Color TFT LCD
-+        items:
-+          - enum:
-+              - waveshare,rpi-lcd-35
-+          - const: ilitek,ili9486
-+      - description:
-+          Ozzmaker 3.5" 320x480 Color TFT LCD
-+        items:
-+          - enum:
-+              - ozzmaker,piscreen
-+          - const: ilitek,ili9486
-+
-+  spi-max-frequency:
-+    maximum: 32000000
-+
-+  dc-gpios:
-+    maxItems: 1
-+    description: Display data/command selection (D/CX)
-+
-+  backlight: true
-+  reg: true
-+  reset-gpios: true
-+  rotation: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - dc-gpios
-+  - reset-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    backlight: backlight {
-+            compatible = "gpio-backlight";
-+            gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
-+    };
-+    spi {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+
-+            display@0{
-+                    compatible = "waveshare,rpi-lcd-35";
-+                    reg = <0>;
-+                    spi-max-frequency = <32000000>;
-+                    dc-gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
-+                    reset-gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
-+                    rotation = <180>;
-+                    backlight = <&backlight>;
-+            };
-+    };
-+
-+...
--- 
-2.7.4
-
+See https://patchwork.ozlabs.org/patch/1228796
+Please check and re-submit.
