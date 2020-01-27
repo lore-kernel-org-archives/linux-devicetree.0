@@ -2,90 +2,96 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0523C33CB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 17:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6937C33CB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 17:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F05214AF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 17:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F68022522
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 17:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580144703;
+	bh=Ya/WRnQH2u3rLockj93TPKOSkCdFP07bsj3EgPDYbHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NumX0m0Xb3sdEnkh+TBJYsdfikxZNhusT0ZHkvFNHpMcOqMpqnDCd+DgOxzaygH3v
+	 PnXxz75sa2+cs/P2M4FCq1FhT6WBmnnGNb30b9oR5z9jj82N5UaSVjDZAAn1EdH+Rr
+	 dag4FRPPISJq9ponhZWiU4XR950rlQ5RfcflUejY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgA0RDh convert rfc822-to-8bit (ORCPT
+        id S1726485AbgA0RFC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:03:37 -0500
-Received: from unicorn.mansr.com ([81.2.72.234]:34980 "EHLO unicorn.mansr.com"
+        Mon, 27 Jan 2020 12:05:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgA0RDf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:03:35 -0500
-X-Greylist: delayed 437 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Jan 2020 12:03:34 EST
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id EB3581B0D9; Mon, 27 Jan 2020 16:56:15 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
-References: <20200124152504.23411-1-mans@mansr.com>
-        <20200127153506.GA4589@bogus>
-Date:   Mon, 27 Jan 2020 16:56:15 +0000
-In-Reply-To: <20200127153506.GA4589@bogus> (Rob Herring's message of "Mon, 27
-        Jan 2020 09:35:06 -0600")
-Message-ID: <yw1xy2tsvnww.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1725845AbgA0RFC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:05:02 -0500
+Received: from localhost (unknown [122.181.201.159])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE8B6214AF;
+        Mon, 27 Jan 2020 17:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580144701;
+        bh=Ya/WRnQH2u3rLockj93TPKOSkCdFP07bsj3EgPDYbHE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wXEesJl+Vy0HGnw/LDcKNUbWVJh1JS7CrjMWazZYB+Ux9ikTAmZBbBl3GyFJJnUwK
+         IbdOVcf3VQNaUWdWUbNaqYKuOX3a/vr1yp85xj/T1Lrs4eZufdqCaPiWxpKxuDD0Uj
+         wCp8xcn7kGIxEKAfgmM0aBID+fahQibKwKJ0FFEQ=
+Date:   Mon, 27 Jan 2020 22:34:57 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>, mka@chromium.org,
+        vbadigan@codeaurora.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Fix sdhci compat string
+Message-ID: <20200127170457.GK2841@vkoul-mobl>
+References: <20200127082331.1.I402470e4a162d69fde47ee2ea708b15bde9751f9@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127082331.1.I402470e4a162d69fde47ee2ea708b15bde9751f9@changeid>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
+On 27-01-20, 08:23, Douglas Anderson wrote:
+> As per the bindings, the SDHCI controller should have a SoC-specific
+> compatible string in addition to the generic version-based one.  Add
+> it.
 
-> On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
->> Add a non-removable-ports property that lists the hardwired downstream
->> ports of a hub.  Although hubs can provide this information, they are
->> not always configured correctly.  An alternate means of indicating this
->> for built-in USB devices is thus useful.
->> 
->> Signed-off-by: Mans Rullgard <mans@mansr.com>
->
-> I reviewed this already, but since you didn't add my reviewed-by, I'm 
-> looking at it again and having 2nd thoughts.
->
->> ---
->>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
->>  1 file changed, 4 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
->> index 036be172b1ae..92d863cc96b6 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
->> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
->>  - #size-cells: shall be 0
->>  
->>  
->> +Optional properties for hub and host-controller nodes:
->> +- non-removable-ports: list of hardwired downstream ports
->
-> If you have a hardwired device and need to know that, doesn't that imply 
-> there's some other stuff you need to describe beyond what a standard USB 
-> device has. Such as a power supply that's not Vbus from the hub.
+Thanks for spotting it Doug, Btw did some script catch it or manual
+inspection?
 
-I suppose there could be, but there isn't in my actual situation.
 
-> At a minimum, I think this should be a per port property.
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-That's what I suggested first.  Greg told me to do it like this instead.
-
-> Though really, I think this should just be implied by describing the
-> device in DT. I'm not sure if there's a case for hotpluggable devices
-> described in DT.  Maybe with overlays.
-
-That's also an option.  Greg, what do you think?
+> Fixes: 7241ab944da3 ("arm64: dts: qcom: qcs404: Add sdcc1 node")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index 4ee1e3d5f123..1eea06435779 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -685,7 +685,7 @@ pcie_phy: phy@7786000 {
+>  		};
+>  
+>  		sdcc1: sdcc@7804000 {
+> -			compatible = "qcom,sdhci-msm-v5";
+> +			compatible = "qcom,qcs404-sdhci", "qcom,sdhci-msm-v5";
+>  			reg = <0x07804000 0x1000>, <0x7805000 0x1000>;
+>  			reg-names = "hc_mem", "cmdq_mem";
+>  
+> -- 
+> 2.25.0.341.g760bfbb309-goog
 
 -- 
-Måns Rullgård
+~Vinod
