@@ -2,141 +2,105 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49E6C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 14:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893C7C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 14:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A791920716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 14:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC0820716
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 14:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jSd+KVp0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D7EzLR7l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbYUcND0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgA0OXm (ORCPT
+        id S1729066AbgA0OZH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:23:42 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:37077 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729091AbgA0OXm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:23:42 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7F3D6220E4;
-        Mon, 27 Jan 2020 09:23:41 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 27 Jan 2020 09:23:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=6nVE0kCyNJt9qWBWbOEKXHwSwow
-        EKCywtD9brS7Cseg=; b=jSd+KVp02RKwQqPOorW+yQlhQtgIyI5GqkLKAEGj54b
-        VPHJNyxapcInzFerkE3dJs2dhmszb/mrNDbHIS6y5614b+yH9VnDC8T0ksTehpjz
-        Lkgjt8RVRotnnu8kQBagY3uugjb+JSY1/YRn18NbsdNI8n/b6/Un3G6feKx5pN9z
-        XVuvLYxRk0/H+olW0rAHD87ANjdCgUrkDb/qDdXPPGRV8WHZVV6oUPSQURmba+8Y
-        h1MOaAY7+0+ur0G4Y5TTGMrtyN3GXW8ey9bmjvDna6Gamdk93UeDMy3G5x+EVe+s
-        t6J6rONmRjNahF57o1GyH4vod4rCP+HCmzFs/ZuP6VA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=6nVE0k
-        CyNJt9qWBWbOEKXHwSwowEKCywtD9brS7Cseg=; b=D7EzLR7lxn0OcIw0cH2BLp
-        7CXRBRI4NSjaUx6TlrGbgMaRbt9MnAtKKTg5hBclY8hI3j64++fNEieLivCCtzte
-        3mSLvHOD6e/bBp3ZayhVRAZNgSZl9oTATcQhssdFw+b5xTgSbAWKV+/DEIgf2P89
-        yTi1OA4hhsaaR+I79LeLQebUaMzLuF+IBuNiHrPOcmWtFYf+UQUL9qH3WjRrvHCS
-        +/1AMx7SM7sdJYB8ODYCjFpM7tYlvW0QQnljqBRlHKwik/cT5C9wigVue3wzuiHt
-        IHncMW1BS8aqxRlc3RVJmGX9NeDRvpapzSeL3wbSxA8L6TRpc7cCe8nGUbdIexBw
-        ==
-X-ME-Sender: <xms:bfIuXjumlbnjk2u_C1w6XJ4Se3pJzIY_US3xcycy-6jZxRRfIWrWvw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfedvgdeifecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:bfIuXm3v5sNBERXLPgckY-tKb8uutWlW7awBLTWTxLP3ddnzDrKpfg>
-    <xmx:bfIuXgDhfhzfoCbgX8lQt1FhbIAwnqCW72eXZ-vamuB8CasVo17M0g>
-    <xmx:bfIuXlV47Bf5kEkVqvIb-RYhddj7ukYQufeEBYKGImnVsWezO-GTBw>
-    <xmx:bfIuXucAErhGZsMH9hHPsXAmB1UPZzfwU75CZN9C2DRmlWahFJHGew>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 313263069F0E;
-        Mon, 27 Jan 2020 09:23:41 -0500 (EST)
-Date:   Mon, 27 Jan 2020 15:23:39 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: h6: Add IOMMU
-Message-ID: <20200127142339.crxsuunzec5drfe2@gilmour.lan>
-References: <cover.b2a9e1507135d81e726fcbb65137665a7f0ab74f.1579696927.git-series.maxime@cerno.tech>
- <54e22e25c2c13cb1b73cc7ecb645b5d62f325b63.1579696927.git-series.maxime@cerno.tech>
- <5320339.DvuYhMxLoT@jernej-laptop>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="23dys2vkg5qz4fja"
-Content-Disposition: inline
-In-Reply-To: <5320339.DvuYhMxLoT@jernej-laptop>
+        Mon, 27 Jan 2020 09:25:07 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34610 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729050AbgA0OZG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 09:25:06 -0500
+Received: by mail-pg1-f194.google.com with SMTP id r11so5244473pgf.1
+        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 06:25:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xgGQ8U3A5kqg0C8/HdgwH0P9Ql14HnR66HG6y+CNuN8=;
+        b=AbYUcND03t3MKu1VE1KLUJh1WdqEUUP/jq2b6vOAWi0OZiKqMJOtil1427yDhU+X1k
+         t8Mos5yP3y8b+pMYSl8JCkjP2i6viSAuxCCC7pWwSX6GTj4fpjzmAtF93QhPZkdbJZQZ
+         XX+Far7zf3a63NU7MP6l2w64FldhkrCskR6sU/pzRikY4vsdcx+ZQ3hkqIop6gpTBp8r
+         hpVZl2IfqK5D3KA+Er8NqeKeEo/IYv2vJksl5S33RpATbkvK2X2DpoV4bIUwFAY69Q6R
+         iyh2vbOr98qOws4QWQ6kkpD9+3Oguy8Cp/dl76h8YFfegw9kF2BjSzmNipGHIJc38muE
+         6RyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xgGQ8U3A5kqg0C8/HdgwH0P9Ql14HnR66HG6y+CNuN8=;
+        b=Z8w+RaitVYbk+P/iZzfrGuCiuPIAo164KiuMq7Gapv3mYKm32w1696BlEHCTt1nkbz
+         pKbpvdmaefD/cws7y8D+ulyparo5LqZjw0rcQ5FSjP4pIXxCGXU7MO2CyBjKI8Fj7l5W
+         ZJ+ltzp6ZAhuL7qFi/I6VIMHeks2UrNN9D05hSZEdGBtbg8WbzQm0T7v/StPqHuv5CuF
+         OpTyEzb66v5XcYlC4ZadUQFgQAWqUf+ur3SxZklyzomuDBkjIdniUQgHeqibXGloHw0O
+         wWohyiGqw6BNiB4UqfUeTjZMPzliXqIH13lncUXlNjrAyFjcXgqaE6nHopDUpD4CqDJb
+         q6yA==
+X-Gm-Message-State: APjAAAWz4/vn4Ssn/+ZifTVCD9qGOjDv0rD7qZugEnWflgUIDxbTdK/Z
+        vMBFXsn/IQU2OS3rarBE0K+ak7z69kT46A==
+X-Google-Smtp-Source: APXvYqwUG2E5ZQLmyu1s55pWcNljK1w+OwcR8s0+RtG9/HECgiJtj+d7FGvnmCBC3OlB6GWQiV9ZTg==
+X-Received: by 2002:a63:2842:: with SMTP id o63mr20203056pgo.317.1580135106370;
+        Mon, 27 Jan 2020 06:25:06 -0800 (PST)
+Received: from localhost.localdomain ([2405:201:d809:ffa6:583:2633:933c:f34d])
+        by smtp.gmail.com with ESMTPSA id u11sm15963603pjn.2.2020.01.27.06.25.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 27 Jan 2020 06:25:05 -0800 (PST)
+From:   Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+To:     noralf@tronnes.org, Rob Herring <robh+dt@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+Subject: [PATCH v4 0/3] Support for tft displays based on ilitek,ili9486
+Date:   Mon, 27 Jan 2020 19:54:49 +0530
+Message-Id: <cover.1580134320.git.kamlesh.gurudasani@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The goal of this series is to get the displays based on ilitek,ili9486
+working.
+Ozzmaker, Piscreen and waveshare,rpi-lcd-35 are such displays.
 
---23dys2vkg5qz4fja
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v2 changes:
+* Changing file from txt to yaml format
+* removed ilitek,ili9486 from compatible string
+* assignment of dbi_command before registration
+* made dc and reset gpio compulsory
+* typos and unwanted comments removed
+* changed the name of function which were display specific
+* arranged the Makefile entries in alphabetical order
 
-Hi Jernej,
+v3 changes:
+* added vendor prefix patch to this series instead of separate patch
 
-On Fri, Jan 24, 2020 at 09:54:23PM +0100, Jernej =C5=A0krabec wrote:
-> Dne sreda, 22. januar 2020 ob 13:44:09 CET je Maxime Ripard napisal(a):
-> > Now that we have a driver for the IOMMU, let's start using it.
-> >
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
-> > 29824081b43b..8608bcf1c52c 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -53,6 +53,7 @@
-> >  	de: display-engine {
-> >  		compatible =3D "allwinner,sun50i-h6-display-engine";
-> >  		allwinner,pipelines =3D <&mixer0>;
-> > +		iommus =3D <&iommu 0>;
-> >  		status =3D "disabled";
-> >  	};
->
-> Isn't iommu property of the mixer node? After all, mixer is the one which
-> reads one or more framebuffers. Once second mixer is defined, would you p=
-ut
-> another iommu phandle here?
+v4 changes:
+* removing checkpatch warnings
 
-You're right. I added it during the early dev, and forgot to remove
-it. Thanks!
+Kamlesh Gurudasani (3):
+  dt-bindings: add vendor prefix for OzzMaker and Waveshare Electronics
+  dt-bindings: add binding for tft displays based on ilitek,ili9486
+  drm/tinydrm: add support for tft displays based on ilitek,ili9486
 
-Maxime
+ .../bindings/display/ilitek,ili9486.yaml           |  79 ++++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   4 +
+ MAINTAINERS                                        |   7 +
+ drivers/gpu/drm/tiny/Kconfig                       |  14 +
+ drivers/gpu/drm/tiny/Makefile                      |   1 +
+ drivers/gpu/drm/tiny/ili9486.c                     | 283 +++++++++++++++++++++
+ 6 files changed, 388 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
+ create mode 100644 drivers/gpu/drm/tiny/ili9486.c
 
---23dys2vkg5qz4fja
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXi7yawAKCRDj7w1vZxhR
-xeztAP9pfvFOvLl0WNETETdOGyGO/pBPPZtOCEHsIaOgcIfqCwEA61DgtSFMFRSM
-4UmZO6xgB73HVB6s09UFT59ZuHSWMgg=
-=/MfB
------END PGP SIGNATURE-----
-
---23dys2vkg5qz4fja--
