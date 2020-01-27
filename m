@@ -2,164 +2,91 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5DDC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 20:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7421C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 21:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6702467B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 20:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B717024656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 21:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580156168;
-	bh=zcqkL2X1+5RZ6RD91lcWz4KcZ3RzkxAM2y0dev3Kxhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uI2px6+zycRdAWLgI98Wwed7TvTfgPxhu/XSYJpV9oI66m7ScOiY1IbZqwGZNIGLq
-	 pkKRhzfCnonazmkmtNykNDyeRzj7gZlaDeR8Y5TcAfQ/RR23kZla7R1wyOf1EroSis
-	 cGBQd6kssma7JfO9is24xLExyWHC4s5nVsMP0pQ8=
+	s=default; t=1580159001;
+	bh=FWwkAkZVEiuu+tHM/k6I8TrILIdJNPPExXRlkBK6BtY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LAiDGIkRQ/3XnjselbHPjH58MSAb7R6jaKOX4fD4q4W/nnzzSkH3BhLa4oELsGlAa
+	 gs5rQWqfCqRYNJ6Qp3Mbfo1mQMKJu1jhOp8m3UcF7x2SqccQGXp5hArtqnS2ZZDFTY
+	 KHAjqIfeCHj21cBh/Lu34sh/Ncui8ZulnLWRTz7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgA0UQH (ORCPT
+        id S1726080AbgA0VDV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 15:16:07 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35812 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgA0UQH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 15:16:07 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r16so9731903otd.2;
-        Mon, 27 Jan 2020 12:16:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kP3meVHpRUwC+Lg41T7kI+wm6FYiDtOOiXX2HrvTBww=;
-        b=BTktUi3fcS0ZkN+Kf42104r1tioKWgNlQBJG5HTd/EVu7FC9+X0MxzY1rCl+5n5gQF
-         Y2tzwTGdQJBWgE7QLyIeKTxMFAaS3oJ8qqJokmIjvLfLL1LiPbp7azai86bYV4SoYTRO
-         289f2h5bMC1S+BHmUODeezZW7bgt0AS3ItZz011HdV+4mjSS/Ao4SHRfVIsB/WqePVeR
-         V1Y2H1cLU5AnJ1pKHFvTZ5Rv4JrDG92St1mhcwuURTuJZ2ZlZtCNZxFgtkN7fI/BDXkQ
-         U4bNVtr4+GTd9SZfHwYgZAoKud8C0472hnVACNCQx8NLq6qjMbSjfBoAgLXEHlOSSAEH
-         9+xg==
-X-Gm-Message-State: APjAAAWiqlA7A8ISBRgt4x5Es4xSz5xoTMZtTSBBIUCKzrTu7CgjPNUq
-        MtWaDK4RK63pNC3OGPKAfuL+7Yc=
-X-Google-Smtp-Source: APXvYqx8cBU9dlCzp2qsiRzvx9t6DQ1OIpfXuWYpi0exeUekVr56E9j4fYVOZ8DSsuYy1LtC8Xa6xw==
-X-Received: by 2002:a9d:1b26:: with SMTP id l35mr13904866otl.307.1580156166836;
-        Mon, 27 Jan 2020 12:16:06 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m19sm5942050otn.47.2020.01.27.12.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 12:16:06 -0800 (PST)
-Received: (nullmailer pid 3695 invoked by uid 1000);
-        Mon, 27 Jan 2020 20:16:05 -0000
-Date:   Mon, 27 Jan 2020 14:16:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, biabeniamin@outlook.com,
-        knaack.h@gmx.de, mark.rutland@arm.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: amplifiers: Add docs for
- HMC425A Step Attenuator
-Message-ID: <20200127201605.GA9131@bogus>
-References: <20200122121702.30494-1-beniamin.bia@analog.com>
- <20200122121702.30494-2-beniamin.bia@analog.com>
+        Mon, 27 Jan 2020 16:03:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbgA0VDV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jan 2020 16:03:21 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D08620CC7
+        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 21:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580159000;
+        bh=FWwkAkZVEiuu+tHM/k6I8TrILIdJNPPExXRlkBK6BtY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KVEzgSc4osdt+EjJUZ36Zw4Yij8/16j5gb2wci6rHNDms5eSXaJgdyprcrc7kdfpU
+         4WB2aYvXoOyiRnVn6zpwjkzVCTVegYZ0fuJtJzCvo/+OY2LYW83AKiBBmHn142Dqsa
+         xgS0BTLVGxEtxcDBovkmQWeSODlKHaSN2kiyOtUs=
+Received: by mail-qk1-f174.google.com with SMTP id x1so11101777qkl.12
+        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 13:03:20 -0800 (PST)
+X-Gm-Message-State: APjAAAUWxjR5nWjyPKhgg/P2qivo6/0NHSQC9KQaMR5o85GuxE73JM5X
+        ChXsyTeoyt74imgTz4dDYhHCNa7V9iPKYGs8ow==
+X-Google-Smtp-Source: APXvYqwUkjwVHJDnk2TcEVcHVmAW978NwymYsuodgKSNOTWoc57/SMk6z75ttQ/IrFjO8YTmTwSozspKyyvXwSpD1xw=
+X-Received: by 2002:a05:620a:9c7:: with SMTP id y7mr18482453qky.393.1580158999658;
+ Mon, 27 Jan 2020 13:03:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122121702.30494-2-beniamin.bia@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cc60bccb-883f-2efd-ead1-4dd1af10c3fa@linaro.org>
+In-Reply-To: <cc60bccb-883f-2efd-ead1-4dd1af10c3fa@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 27 Jan 2020 15:03:08 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+vw2-xfNzFSt1HWqzZ4jObJgs-VNK6N4vnpZAgN4NVYQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+vw2-xfNzFSt1HWqzZ4jObJgs-VNK6N4vnpZAgN4NVYQ@mail.gmail.com>
+Subject: Re: Splitting the thermal.txt file into different schema
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 02:17:01PM +0200, Beniamin Bia wrote:
-> From: Michael Hennerich <michael.hennerich@analog.com>
-> 
-> Document support for Analog Devices MC425A Step Attenuator.
-> 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
->  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> new file mode 100644
-> index 000000000000..a0afa661f4ac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
+On Mon, Jan 27, 2020 at 12:46 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+>
+> Hi Rob,
+>
+> while reading the documentation to convert the thermal.txt [1] into a
+> yaml schema, the documentation says "Generally, there is one binding
+> defined per file.".
+>
+> Shall I split the thermal.txt file into smaller one-binding based file like:
+>
+>  - thermal-sensor.yaml
+>
+>  - thermal-zone.yaml
+>
+>  - cooling-device.yaml
+>
+>
+> ?
 
-Dual license new bindings:
+I think that looks right. The bulk of it would be thermal-zone.yaml.
+For cases of provider/consumer bindings like thermal-sensor, those are
+sometimes split between consumer and provider too. It depends if we
+include the common provider schema in each provider. We probably don't
+here given it's just #thermal-sensor-cells and we have to define that
+in each provider anyways.
 
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HMC425A 6-bit Digital Step Attenuator
-> +
-> +maintainers:
-> +- Michael Hennerich <michael.hennerich@analog.com>
-> +- Beniamin Bia <beniamin.bia@analog.com>
-> +
-> +description: |
-> +  Digital Step Attenuator IIO device with gpio interface.
-> +  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,hmc425a
-> +
-> +  vcc-supply:
-> +    description:
-> +      Digital voltage regulator (see regulator/regulator.txt)
-> +    maxItems: 1
-
-All supplies are a single entry, so drop this. Really, 
-'vcc-supply: true' is sufficient.
-
-> +
-> +  ctrl-gpios:
-> +    description:
-> +      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
-> +      connected to the control pins V1-V6.
-> +    maxItems: 6
-> +
-> +required:
-> +  - compatible
-> +  - ctrl-gpios
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    gpio {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-
-GPIO clients are not child nodes of GPIO controllers, so you can remove 
-this node.
-
-> +      gpio_hmc425a: hmc425a {
-> +        compatible = "adi,hmc425a";
-> +        ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 39 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 38 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 37 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 36 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 35 GPIO_ACTIVE_HIGH>;
-> +
-> +        vcc-supply = <&foo>;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.17.1
-> 
+Rob
