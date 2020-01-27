@@ -2,144 +2,255 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6D7C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 12:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DB0C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 12:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014AF2071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 12:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFC72087F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 12:55:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGjaS27V"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tmgGe7xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbgA0MwU (ORCPT
+        id S1726294AbgA0Mz0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:52:20 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:39498 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729501AbgA0MwU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 07:52:20 -0500
-Received: by mail-wr1-f41.google.com with SMTP id y11so11132915wrt.6;
-        Mon, 27 Jan 2020 04:52:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gE5t1/vnlTHQ6N2H2BaBlhcPCilvP7pyb0dIUFQV9Fc=;
-        b=aGjaS27VSnF8F8IQ49CEQiX8QYy++l02kxPcH6xUsV8RqAWDjrj4UU3bTRmPtQLYbH
-         DobHQohZIEKEzomRaB4R82MVbrLtoF2FhzeabCOzP0ZcYGLQLIfRuDA5x53qLpoTdakh
-         1W+A8o1jg2889jwCa4HWvtMJoX8r+hOwZvFpzwfnF1AlUSOkwypmIN+LiRRyBJ2xL6jJ
-         J/bJr6s/XvcInq2ou6CPHF5uvk5Vci3PVDtJ2xwjDPobj2XGmNE1QRlKTEDzmObHJY0K
-         9mmw7CjnMqarWYp2ZQg7NoxWO4XYoJp2jlgWfkBTuABd0bbRNTuNEpQBOdYEanabHhJI
-         zrgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gE5t1/vnlTHQ6N2H2BaBlhcPCilvP7pyb0dIUFQV9Fc=;
-        b=sLatIvqESa7VVEr+q9FZeo8aLGuDI95Onc7kSfySuC7riaN6WKK3F5bzRFxecuR6Z2
-         vz3+lMHdERbDPZnLTwnv6exObTnslqKgCwbGyM954Dv2dGsHOM5AZzgChQcv4DT56UaK
-         t+GD7GX1FNF0IXi0tIxruMx67QHwcos4p+xs2Yhrdhq20JBEIPndjjcVv/eS+rHaZR8F
-         hdHON0tBJsZkcJgMXPR0DHZCAwDW1DkbpJNWwHmAV2QBFJm4NcJmjAMOhe4sMzGaSBdv
-         svsl1+cYU19HWTx98+uys9LZB5+dkDQPK+VQ498LLLCyOOVTtopMFbVGTESzKed2pnNt
-         u9fw==
-X-Gm-Message-State: APjAAAUn4nGnHrHekqyd8Xdw/wHyV0tgCpQs6o491sqOTcACUimcivrw
-        ZfDj5pEDK5o1krBLIqHfdkw=
-X-Google-Smtp-Source: APXvYqyGy8fWThkG+JLbgm1XQNvxZGemG3znV+0H0LxZa5OOViXoFr4VnlU4N/XLjS5s62PyAIa6LQ==
-X-Received: by 2002:adf:a41c:: with SMTP id d28mr22772868wra.410.1580129538327;
-        Mon, 27 Jan 2020 04:52:18 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id t5sm20268329wrr.35.2020.01.27.04.52.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 04:52:17 -0800 (PST)
-Date:   Mon, 27 Jan 2020 13:52:16 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 2/2] dt-bindings: firmware: tegra186-bpmp: Document
- interconnects property
-Message-ID: <20200127125216.GC2117209@ulmo>
-References: <20200114181519.3402385-2-thierry.reding@gmail.com>
- <7aefac6c-092c-b5a6-2fa6-e283d2147fc3@linaro.org>
- <20200120150605.GA712203@ulmo>
- <57c37b3c-1473-d444-db59-8c6650241188@gmail.com>
- <20200121141027.GE899558@ulmo>
- <83d94918-bc01-131b-924c-9750767d3b29@linaro.org>
- <20200121155432.GA912205@ulmo>
- <ffc22502-0e7e-522c-543d-0e74cc25f4b1@gmail.com>
- <853bb7bd-8e04-38ac-d0d6-a958135a49be@gmail.com>
- <f915949a-b46e-26fe-f103-fbc8d1fa3bb1@gmail.com>
+        Mon, 27 Jan 2020 07:55:26 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1924 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726210AbgA0Mz0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jan 2020 07:55:26 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RCrMMq032677;
+        Mon, 27 Jan 2020 13:54:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=BQqFihzOu6OsZNMVZCsZXlFqbDZYuOBiwOANKZ7+MbA=;
+ b=tmgGe7xcCO1B+kOEgBvUyuPew3fEovjC9Ghjj7iKB+1Oc4eJbOM5TPGivLKppyoawE6R
+ 2Uu73m8iEKK3P5Dce3Xf00Rf4UH43avHkhvbuLS8Gf3NccxHLtnWjT4Zrtp9bkzRv2qJ
+ +g7yOvjh6jQNmngcoqOV08QpoeAFHGuPc+HgigdRI+hUuMN4XrKONape3YDVGMdT5e7i
+ QGMc/sf05LHykqBPzlLBlQHw31zBzNOZUulYTQmXd1Ff/wCg3kKXnOfHSN41Tt5wj15r
+ IvANcas2/S7SZ+w7PPuoy+oIb3NwJXCT22ZlpMBE9CRgX40G74aLo5UHfm6LZhfMNCuc dg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrbpas3p3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jan 2020 13:54:29 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5CEA0100034;
+        Mon, 27 Jan 2020 13:54:28 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 14E542AD147;
+        Mon, 27 Jan 2020 13:54:27 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 13:54:26
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <robh@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
+Subject: [PATCH] ASoC: dt-bindings: stm32: convert i2s to json-schema
+Date:   Mon, 27 Jan 2020 13:54:20 +0100
+Message-ID: <20200127125420.29827-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
-Content-Disposition: inline
-In-Reply-To: <f915949a-b46e-26fe-f103-fbc8d1fa3bb1@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the STM32 I2S bindings to DT schema format using json-schema.
 
---Pk6IbRAofICFmK5e
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+The items for dma-names and clock-names properties are all
+mandatory, but may be provided in any order.
+The syntax used for these properties allows to avoid order constraint.
+---
+ .../bindings/sound/st,stm32-i2s.txt           | 62 -------------
+ .../bindings/sound/st,stm32-i2s.yaml          | 91 +++++++++++++++++++
+ 2 files changed, 91 insertions(+), 62 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
 
-On Mon, Jan 27, 2020 at 01:03:57AM +0300, Dmitry Osipenko wrote:
-> 27.01.2020 00:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> [snip]
-> > Thinking a bit more about how to define the ICC, I'm now leaning to a
-> > variant like this:
-> >=20
-> > interconnects =3D
-> >     <&mc TEGRA186_MEMORY_CLIENT_BPMP &emc TEGRA_ICC_EMEM>,
->=20
-> >     <&mc TEGRA186_MEMORY_CLIENT_BPMPR>,
-> >     <&mc TEGRA186_MEMORY_CLIENT_BPMPW>,
-> >     <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAR>,
-> >     <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW>;
->=20
-> I forgot that each ICC path should have SRC and DST, but you got the idea.
->=20
-> This should be a more correct variant:
->=20
-> 	<&mc TEGRA186_MEMORY_CLIENT_BPMPR &mc TEGRA_ICC_MC>,
-> 	<&mc TEGRA186_MEMORY_CLIENT_BPMPW &mc TEGRA_ICC_MC>,
-> 	<&mc TEGRA186_MEMORY_CLIENT_BPMPDMAR &mc TEGRA_ICC_MC>,
-> 	<&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &mc TEGRA_ICC_MC>;
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+deleted file mode 100644
+index cbf24bcd1b8d..000000000000
+--- a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
++++ /dev/null
+@@ -1,62 +0,0 @@
+-STMicroelectronics STM32 SPI/I2S Controller
+-
+-The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
+-Only some SPI instances support I2S.
+-
+-Required properties:
+-  - compatible: Must be "st,stm32h7-i2s"
+-  - reg: Offset and length of the device's register set.
+-  - interrupts: Must contain the interrupt line id.
+-  - clocks: Must contain phandle and clock specifier pairs for each entry
+-	in clock-names.
+-  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
+-	"i2sclk": clock which feeds the internal clock generator
+-	"pclk": clock which feeds the peripheral bus interface
+-	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
+-	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
+-  - dmas: DMA specifiers for tx and rx dma.
+-    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
+-  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
+-  - pinctrl-names: should contain only value "default"
+-  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+-
+-Optional properties:
+-  - resets: Reference to a reset controller asserting the reset controller
+-
+-The device node should contain one 'port' child node with one child 'endpoint'
+-node, according to the bindings defined in Documentation/devicetree/bindings/
+-graph.txt.
+-
+-Example:
+-sound_card {
+-	compatible = "audio-graph-card";
+-	dais = <&i2s2_port>;
+-};
+-
+-i2s2: audio-controller@40003800 {
+-	compatible = "st,stm32h7-i2s";
+-	reg = <0x40003800 0x400>;
+-	interrupts = <36>;
+-	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
+-	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
+-	dmas = <&dmamux2 2 39 0x400 0x1>,
+-           <&dmamux2 3 40 0x400 0x1>;
+-	dma-names = "rx", "tx";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_i2s2>;
+-
+-	i2s2_port: port@0 {
+-		cpu_endpoint: endpoint {
+-			remote-endpoint = <&codec_endpoint>;
+-			format = "i2s";
+-		};
+-	};
+-};
+-
+-audio-codec {
+-	codec_port: port@0 {
+-		codec_endpoint: endpoint {
+-			remote-endpoint = <&cpu_endpoint>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+new file mode 100644
+index 000000000000..cdfb375c7a14
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/st,stm32-i2s.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 SPI/I2S Controller
++
++maintainers:
++  - Olivier Moysan <olivier.moysan@st.com>
++
++description:
++  The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
++  Only some SPI instances support I2S.
++
++properties:
++  compatible:
++    enum:
++      - st,stm32h7-i2s
++
++  "#sound-dai-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: clock feeding the peripheral bus interface.
++      - description: clock feeding the internal clock generator.
++      - description: I2S parent clock for sampling rates multiple of 8kHz.
++      - description: I2S parent clock for sampling rates multiple of 11.025kHz.
++
++  clock-names:
++    items:
++      - enum: [ pclk, i2sclk, x8k, x11k ]
++      - enum: [ pclk, i2sclk, x8k, x11k ]
++      - enum: [ pclk, i2sclk, x8k, x11k ]
++      - enum: [ pclk, i2sclk, x8k, x11k ]
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string-array
++
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: audio capture DMA.
++      - description: audio playback DMA.
++
++  dma-names:
++    items:
++      - enum: [ rx, tx ]
++      - enum: [ rx, tx ]
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string-array
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - "#sound-dai-cells"
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    i2s2: audio-controller@4000b000 {
++        compatible = "st,stm32h7-i2s";
++        #sound-dai-cells = <0>;
++        reg = <0x4000b000 0x400>;
++        clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
++        clock-names = "pclk", "i2sclk", "x8k", "x11k";
++        interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&dmamux1 39 0x400 0x01>,
++               <&dmamux1 40 0x400 0x01>;
++        dma-names = "rx", "tx";
++        pinctrl-names = "default";
++        pinctrl-0 = <&i2s2_pins_a>;
++    };
++
++...
+-- 
+2.17.1
 
-This seems wrong again, because now we need to make up this TEGRA_ICC_MC
-ID that doesn't exist anywhere in the hardware. So we're no longer
-providing a hardware description, but instead are building hints for a
-use by a Linux-specific framework into the DT.
-
-Thierry
-
---Pk6IbRAofICFmK5e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4u3QAACgkQ3SOs138+
-s6Ey4A//Ravurx17XVBLLytw2Ez2J5uO0PFw2M1G3FfEIq0n1cT2oye0vO1RhI2a
-tvtP+tKkicx9DDJVCDEni3cAl/uoyIHJNCA8jHj5yaXQVdZSxsGai1dsiWzRk0Ff
-aI3lazLfkCVWlGpXvtZG9bf2GOvFS6Y1mOxs/5OMhewSFp/iWCR6y/2yOk9+bJo6
-zpZ41SnOFgg/BaDrn1eAApNm5Y3dxXdJ1y5+iDs4ZgdXA/gGJ2WRAbse1PoglmTB
-wdL6p4ieSXbAaHiB38rQP7Xs9Mv5gZoaw+p9HOAiP2fsvSAol5S2rMq+MJuj9Bbc
-zoVRnmFYAYDwKLRfj8opRhHp0CLN1v7nQaYuqRJXfSIPsawm7kgzf9c++etQD4H9
-9rpDnQceLrORDUQxZUc6pjMAAWsRsxJtT04C4bodtTeT7shUZk9rs1SA8R6YvFf9
-Ubb/PEa6tv1RF08a6rfaloEybZw0cnwe52Q/5ye0T5VyN2F6gM+sr66EyxG2CNDD
-l/mlVkTz8f9k+Vil0KoBjyUAOx2pY8w3pATiLUA6ST5NjkPa3YMZVhAKuQVFEM4S
-tygXspNRL9ZvhfJZR2pRfyO+pKUsBtOeXNCGaEtfw7kKKhrvab4ZnghA9vjsWMSu
-AzeYasSvKdSAqo9SUHdT8aIAhCBr3AjRNxEwO5hB8xjOejejeeU=
-=fese
------END PGP SIGNATURE-----
-
---Pk6IbRAofICFmK5e--
