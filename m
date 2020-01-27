@@ -2,60 +2,63 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87427C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E3EC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558DF24125
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E18D206A2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 16:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eP3mp4wv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NHXDw0ID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgA0QAw (ORCPT
+        id S1729678AbgA0QA4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:00:52 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59118 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbgA0QAv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 11:00:51 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RG0aQN064846;
-        Mon, 27 Jan 2020 10:00:36 -0600
+        Mon, 27 Jan 2020 11:00:56 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34096 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729667AbgA0QA4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 11:00:56 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RG0iw4089663;
+        Mon, 27 Jan 2020 10:00:44 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580140836;
-        bh=HnaK0x5Opg2qb71AxxWiwicuX950NVQmTMm37y+XDXM=;
-        h=From:To:CC:Subject:Date;
-        b=eP3mp4wv7X+9C8hGI9SQ06fa56nr5BK1FvPxKnkRAi7aPWcnD/vbZEFx/VOAnAvEt
-         BNsDO0JeJMulIflZCVH/omW6cP+83edg+imNejmagXyCSvarDmdP6BORdL0e4spSYy
-         LcER0qUmic1IHagqqwroO3hP21A5aADmiN6LWEO4=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RG0aoj099620;
-        Mon, 27 Jan 2020 10:00:36 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1580140844;
+        bh=bnPuloQjKWuewJdb3XKCAjf/rQRq5GiWro7S9oPJk6M=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=NHXDw0IDaFDfEBZgJI7bFMhyFVHeDkzfNXlJUri2jIJwqcoJA7HXNnIym5pyjoIGE
+         WmMOSvZfQL8LhFoudTH3A0CR4u/r/Wbt74elYMlFYKSrsRJfPtEyzeTYLFi5Uum/wC
+         MV8unqUBx02KC1OXwFVHqValq5SPPuKdSRNrA3FQ=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00RG0iEh077498
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jan 2020 10:00:44 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
- Jan 2020 10:00:35 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 10:00:42 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 27 Jan 2020 10:00:35 -0600
+ Frontend Transport; Mon, 27 Jan 2020 10:00:42 -0600
 Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RG0XSH056344;
-        Mon, 27 Jan 2020 10:00:33 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RG0XSK056344;
+        Mon, 27 Jan 2020 10:00:40 -0600
 From:   Jyri Sarha <jsarha@ti.com>
 To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
 CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
         <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <subhajit_paul@ti.com>,
         <praneeth@ti.com>, <yamonkar@cadence.com>, <sjakhade@cadence.com>,
         <sam@ravnborg.org>, <jsarha@ti.com>
-Subject: [PATCH v9 0/5] drm/tidss: New driver for TI Keystone platform Display SubSystem
-Date:   Mon, 27 Jan 2020 18:00:27 +0200
-Message-ID: <cover.1580129724.git.jsarha@ti.com>
+Subject: [PATCH v9 3/5] dt-bindings: display: ti,j721e-dss: Add dt-schema yaml binding
+Date:   Mon, 27 Jan 2020 18:00:30 +0200
+Message-ID: <fcba52837808853a4b2bf729bd33bd986cbdadf4.1580129724.git.jsarha@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1580129724.git.jsarha@ti.com>
+References: <cover.1580129724.git.jsarha@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -64,148 +67,255 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is intended to be the last patch series. I'll apply these trough
-drm-misc-next tomorrow.
+Add dt-schema yaml bindig for J721E DSS, J721E version TI Keystone
+Display SubSystem.
 
-Changes since v8:
-- "dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding"
-  - Remove ports-node from the dts example in 
-- "drm/tidss: New driver for TI Keystone platform Display SubSystem"
-  - Rename dispc_write_irqenable() to dispc_set_irqenable() to avoid
-    conflict exported omapfb function with same name.
-  - Add Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-- "MAINTAINERS: add entry for tidss" 
-  - Add Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Version history:
 
-Changes since v7:
-- "drm/tidss: New driver for TI Keystone platform Display SubSystem"
-  - Remove idle debug prints from dispc_init()
-  - Add Reviewed-by: Benoit Parrot <bparrot@ti.com>
-- "MAINTAINERS: add entry for tidss"
-  - Add Reviewed-by: Benoit Parrot <bparrot@ti.com>
+v2: no change
 
-Changes since v6:
-- Rebase on top of drm-misc-next-2020-01-10
-- Fix all checkpatch.pl -q --emacs --strict --show-types issues
-  - all issues but these have been fixed:
-    - over 80 char lines in scale coefficients found in tidss_scale_coefs.c
-    - Co-developed-by and Signed-off-by: name/email do not match
-    - added, moved or deleted file(s), does MAINTAINERS need updating
-- Add Acked-by: Sam Ravnborg <sam@ravnborg.org> to "drm/tidss: New driver ..."
+v3: - reg-names: "wp" -> "wb"
+    - Add ports node
+    - Add includes to dts example
+    - reindent dts example
 
-Changes since v5:
-- Add Add Reviewed-by: from Rob Herring <robh@kernel.org> and
-  Benoit Parrot <bparrot@ti.com> to binding patches
-- Color property changes and fixes to the driver implementation patch
-  - Check CTM and gamma support from dispc_features when creating crtc
-  - Implement CTM support for k2g and fix k3 CTM implementation
-  - Remove gamma property persistence and always write color properties
-    in a new modeset
+v4: - Add descriptions to reg, clocks, and interrupts properties
+    - Remove minItems when its value is the same as maxItems value
 
-Changes since v4:
-- itemize named resource property descriptions in dt binding
-- fix wp to wb in the ti,j721e-dss reg property description
-- remove fifo underflow irq handling, it is not an error and
-  it should be used for debug purposes only
-- memory tuning, prefetch plane fifo up to high-threshold value to
-  minimize possibility of underflows.
+v5: - itemize reg, clocks and interrupts properties' descriptions
+    - there is no "vp" reg-name, only "wb" for write back
 
-Changes since v3:
-- Add descriptions some yaml binding properites
-- Remove redundant minItems directives from yaml bindings
-- Remove ports node from ti,k2g-dss yaml binding
-- no change to MAINTAINERS or to the driver code
+v6: - Add Reviewed-by: from Rob Herring <robh@kernel.org> and
+      Benoit Parrot <bparrot@ti.com>
 
-Changes since v2:
-- Add version history to commit messages
-- Fix yaml bindings now that got dt_binding_check dtbs_check working property
-- Move tidss entry in MAINTAINERS after omapdrm and add "T: git
-  git://anongit.freedesktop.org/drm/drm-misc"
-- no change to driver code
+v7: no change
 
-Changes since the first version of the patch series [2]:
-- "drm/tidss: New driver for TI Keystone platform Display SubSystem"
- - rebased on top of drm-next-2019-11-27
- - sort all include lines in all files
- - remove all include <drm/drmP.h>
- - remove select "select VIDEOMODE_HELPERS"
- - call dispc_vp_setup() later in tidss_crtc_atomic_flush() (there is no
-   to call it in new modeset case as it is also called in vp_enable())
- - change probe sequence and drm_device allocation (follow example in drm_drv.c)
- - use __maybe_unused instead of #ifdef for pm functions
- - remove "struct drm_fbdev_cma *fbdev;" from driver data
- - check panel connector type before connecting it
-- No change to binding or MAINTAINERS patches
+v8: no change
 
-There was couple of attempts upstream an earlier version of this
-driver about a year ago [1]. Back then I needed to stop my efforts to
-implement support for next Keystone DSS version, so now the driver
-supports three different Keystone DSS version on three different SoCs.
+v9: no change
 
-I am starting the patch series versioning from the beginning because it
-has been over a year since the previous patch set and the structure of
-the driver has evolved quite a bit. However, all the earlier comments
-should be addressed in this series.
-
-[1] https://patchwork.freedesktop.org/series/44947/
-[2] https://lists.freedesktop.org/archives/dri-devel/2019-November/246542.html
-
-Jyri Sarha (5):
-  dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding
-  dt-bindings: display: ti,am65x-dss: Add dt-schema yaml binding
-  dt-bindings: display: ti,j721e-dss: Add dt-schema yaml binding
-  drm/tidss: New driver for TI Keystone platform Display SubSystem
-  MAINTAINERS: add entry for tidss
-
- .../bindings/display/ti/ti,am65x-dss.yaml     |  152 +
- .../bindings/display/ti/ti,j721e-dss.yaml     |  208 ++
- .../bindings/display/ti/ti,k2g-dss.yaml       |  106 +
- MAINTAINERS                                   |   11 +
- drivers/gpu/drm/Kconfig                       |    2 +
- drivers/gpu/drm/Makefile                      |    1 +
- drivers/gpu/drm/tidss/Kconfig                 |   14 +
- drivers/gpu/drm/tidss/Makefile                |   12 +
- drivers/gpu/drm/tidss/tidss_crtc.c            |  377 +++
- drivers/gpu/drm/tidss/tidss_crtc.h            |   46 +
- drivers/gpu/drm/tidss/tidss_dispc.c           | 2768 +++++++++++++++++
- drivers/gpu/drm/tidss/tidss_dispc.h           |  132 +
- drivers/gpu/drm/tidss/tidss_dispc_regs.h      |  243 ++
- drivers/gpu/drm/tidss/tidss_drv.c             |  285 ++
- drivers/gpu/drm/tidss/tidss_drv.h             |   39 +
- drivers/gpu/drm/tidss/tidss_encoder.c         |   88 +
- drivers/gpu/drm/tidss/tidss_encoder.h         |   17 +
- drivers/gpu/drm/tidss/tidss_irq.c             |  146 +
- drivers/gpu/drm/tidss/tidss_irq.h             |   77 +
- drivers/gpu/drm/tidss/tidss_kms.c             |  249 ++
- drivers/gpu/drm/tidss/tidss_kms.h             |   15 +
- drivers/gpu/drm/tidss/tidss_plane.c           |  217 ++
- drivers/gpu/drm/tidss/tidss_plane.h           |   25 +
- drivers/gpu/drm/tidss/tidss_scale_coefs.c     |  202 ++
- drivers/gpu/drm/tidss/tidss_scale_coefs.h     |   22 +
- 25 files changed, 5454 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Benoit Parrot <bparrot@ti.com>
+---
+ .../bindings/display/ti/ti,j721e-dss.yaml     | 208 ++++++++++++++++++
+ 1 file changed, 208 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
- create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
- create mode 100644 drivers/gpu/drm/tidss/Kconfig
- create mode 100644 drivers/gpu/drm/tidss/Makefile
- create mode 100644 drivers/gpu/drm/tidss/tidss_crtc.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_crtc.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_dispc.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_dispc.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_dispc_regs.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_drv.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_drv.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_encoder.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_encoder.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_irq.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_irq.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_kms.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_kms.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_plane.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_plane.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_scale_coefs.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_scale_coefs.h
 
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+new file mode 100644
+index 000000000000..ade9b2f513f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+@@ -0,0 +1,208 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/ti/ti,j721e-dss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments J721E Display Subsystem
++
++maintainers:
++  - Jyri Sarha <jsarha@ti.com>
++  - Tomi Valkeinen <tomi.valkeinen@ti.com>
++
++description: |
++  The J721E TI Keystone Display SubSystem with four output ports and
++  four video planes. There is two full video planes and two "lite
++  planes" without scaling support. The video ports can be connected to
++  the SoC's DPI pins or to integrated display bridges on the SoC.
++
++properties:
++  compatible:
++    const: ti,j721e-dss
++
++  reg:
++    items:
++      - description: common_m DSS Master common
++      - description: common_s0 DSS Shared common 0
++      - description: common_s1 DSS Shared common 1
++      - description: common_s2 DSS Shared common 2
++      - description: VIDL1 light video plane 1
++      - description: VIDL2 light video plane 2
++      - description: VID1 video plane 1
++      - description: VID1 video plane 2
++      - description: OVR1 overlay manager for vp1
++      - description: OVR2 overlay manager for vp2
++      - description: OVR3 overlay manager for vp3
++      - description: OVR4 overlay manager for vp4
++      - description: VP1 video port 1
++      - description: VP2 video port 2
++      - description: VP3 video port 3
++      - description: VP4 video port 4
++      - description: WB Write Back
++
++  reg-names:
++    items:
++      - const: common_m
++      - const: common_s0
++      - const: common_s1
++      - const: common_s2
++      - const: vidl1
++      - const: vidl2
++      - const: vid1
++      - const: vid2
++      - const: ovr1
++      - const: ovr2
++      - const: ovr3
++      - const: ovr4
++      - const: vp1
++      - const: vp2
++      - const: vp3
++      - const: vp4
++      - const: wb
++
++  clocks:
++    items:
++      - description: fck DSS functional clock
++      - description: vp1 Video Port 1 pixel clock
++      - description: vp2 Video Port 2 pixel clock
++      - description: vp3 Video Port 3 pixel clock
++      - description: vp4 Video Port 4 pixel clock
++
++  clock-names:
++    items:
++      - const: fck
++      - const: vp1
++      - const: vp2
++      - const: vp3
++      - const: vp4
++
++  interrupts:
++     items:
++      - description: common_m DSS Master common
++      - description: common_s0 DSS Shared common 0
++      - description: common_s1 DSS Shared common 1
++      - description: common_s2 DSS Shared common 2
++
++  interrupt-names:
++    items:
++      - const: common_m
++      - const: common_s0
++      - const: common_s1
++      - const: common_s2
++
++  power-domains:
++    maxItems: 1
++    description: phandle to the associated power domain
++
++  ports:
++    type: object
++    description:
++      Ports as described in Documentation/devictree/bindings/graph.txt
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description:
++          The output port node form video port 1
++
++      port@1:
++        type: object
++        description:
++          The output port node from video port 2
++
++      port@2:
++        type: object
++        description:
++          The output port node from video port 3
++
++      port@3:
++        type: object
++        description:
++          The output port node from video port 4
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++
++  max-memory-bandwidth:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Input memory (from main memory to dispc) bandwidth limit in
++      bytes per second
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++  - interrupt-names
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++
++    dss: dss@04a00000 {
++            compatible = "ti,j721e-dss";
++            reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
++                    <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
++                    <0x00 0x04b00000 0x00 0x10000>, /* common_s1*/
++                    <0x00 0x04b10000 0x00 0x10000>, /* common_s2*/
++                    <0x00 0x04a20000 0x00 0x10000>, /* vidl1 */
++                    <0x00 0x04a30000 0x00 0x10000>, /* vidl2 */
++                    <0x00 0x04a50000 0x00 0x10000>, /* vid1 */
++                    <0x00 0x04a60000 0x00 0x10000>, /* vid2 */
++                    <0x00 0x04a70000 0x00 0x10000>, /* ovr1 */
++                    <0x00 0x04a90000 0x00 0x10000>, /* ovr2 */
++                    <0x00 0x04ab0000 0x00 0x10000>, /* ovr3 */
++                    <0x00 0x04ad0000 0x00 0x10000>, /* ovr4 */
++                    <0x00 0x04a80000 0x00 0x10000>, /* vp1 */
++                    <0x00 0x04aa0000 0x00 0x10000>, /* vp2 */
++                    <0x00 0x04ac0000 0x00 0x10000>, /* vp3 */
++                    <0x00 0x04ae0000 0x00 0x10000>, /* vp4 */
++                    <0x00 0x04af0000 0x00 0x10000>; /* wb */
++            reg-names = "common_m", "common_s0",
++                    "common_s1", "common_s2",
++                    "vidl1", "vidl2","vid1","vid2",
++                    "ovr1", "ovr2", "ovr3", "ovr4",
++                    "vp1", "vp2", "vp3", "vp4",
++                    "wb";
++            clocks =        <&k3_clks 152 0>,
++                            <&k3_clks 152 1>,
++                            <&k3_clks 152 4>,
++                            <&k3_clks 152 9>,
++                            <&k3_clks 152 13>;
++            clock-names = "fck", "vp1", "vp2", "vp3", "vp4";
++            power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
++            interrupts =    <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
++                            <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>,
++                            <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
++                            <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names =       "common_m",
++                                    "common_s0",
++                                    "common_s1",
++                                    "common_s2";
++            ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    port@0 {
++                            reg = <0>;
++
++                            dpi_out_0: endpoint {
++                                    remote-endpoint = <&dp_bridge_input>;
++                            };
++                    };
++            };
++    };
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
