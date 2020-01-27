@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D3CC35249
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 11:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548E3C3524B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 11:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1719920661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 11:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A49624658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 11:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbgA0LAy (ORCPT
+        id S1729912AbgA0LA4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:00:54 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58128 "EHLO
+        Mon, 27 Jan 2020 06:00:56 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58162 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730187AbgA0LAy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 06:00:54 -0500
+        with ESMTP id S1730129AbgA0LA4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 06:00:56 -0500
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9D69729346B;
-        Mon, 27 Jan 2020 11:00:52 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C429F293452;
+        Mon, 27 Jan 2020 11:00:53 +0000 (GMT)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -44,9 +44,9 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, intel-gfx-trybot@lists.freedesktop.org,
         Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH v9 08/12] drm/bridge: lvds-codec: Implement basic bus format negotiation
-Date:   Mon, 27 Jan 2020 12:00:39 +0100
-Message-Id: <20200127110043.2731697-9-boris.brezillon@collabora.com>
+Subject: [PATCH v9 10/12] drm/bridge: panel: Propage bus format/flags
+Date:   Mon, 27 Jan 2020 12:00:41 +0100
+Message-Id: <20200127110043.2731697-11-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200127110043.2731697-1-boris.brezillon@collabora.com>
 References: <20200127110043.2731697-1-boris.brezillon@collabora.com>
@@ -57,147 +57,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some DPI -> LVDS encoders might support several input bus width. Add a
-DT property to describe the bus width used on a specific design.
+So that the previous bridge element in the chain knows which input
+format the panel bridge expects.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
 Changes in v7:
-* Fix a use-after-release problem
-* Get rid of the data-mapping parsing
-* Use kmalloc instead of kcalloc.
+* Set atomic state hooks explicitly
 
 Changes in v3:
-* Use bus-width for the rgb24/rgb18 distinction
-* Adjust code to match core changes
-* Get rid of of_get_data_mapping()
+* Adjust things to match the new bus-format negotiation approach
+* Use drm_atomic_helper_bridge_propagate_bus_fmt
 * Don't implement ->atomic_check() (the core now takes care of bus
   flags propagation)
 
 Changes in v2:
-* Make the bus-format negotiation logic more generic
+* Adjust things to match the new bus-format negotiation approach
 ---
- drivers/gpu/drm/bridge/lvds-codec.c | 64 ++++++++++++++++++++++++++---
- 1 file changed, 58 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/bridge/panel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
-index 5f04cc11227e..f4fd8472c335 100644
---- a/drivers/gpu/drm/bridge/lvds-codec.c
-+++ b/drivers/gpu/drm/bridge/lvds-codec.c
-@@ -11,6 +11,7 @@
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
- 
-+#include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
- #include <drm/drm_panel.h>
- 
-@@ -19,6 +20,7 @@ struct lvds_codec {
- 	struct drm_bridge *panel_bridge;
- 	struct gpio_desc *powerdown_gpio;
- 	u32 connector_type;
-+	u32 input_fmt;
- };
- 
- static int lvds_codec_attach(struct drm_bridge *bridge)
-@@ -48,18 +50,47 @@ static void lvds_codec_disable(struct drm_bridge *bridge)
- 		gpiod_set_value_cansleep(lvds_codec->powerdown_gpio, 1);
- }
- 
-+static u32 *
-+lvds_codec_atomic_get_input_bus_fmts(struct drm_bridge *bridge,
-+				     struct drm_bridge_state *bridge_state,
-+				     struct drm_crtc_state *crtc_state,
-+				     struct drm_connector_state *conn_state,
-+				     u32 output_fmt,
-+				     unsigned int *num_input_fmts)
-+{
-+	struct lvds_codec *lvds_codec = container_of(bridge,
-+						     struct lvds_codec, bridge);
-+	u32 *input_fmts;
-+
-+	input_fmts = kmalloc(sizeof(*input_fmts), GFP_KERNEL);
-+	if (!input_fmts) {
-+		*num_input_fmts = 0;
-+		return NULL;
-+	}
-+
-+	*num_input_fmts = 1;
-+	input_fmts[0] = lvds_codec->input_fmt;
-+	return input_fmts;
-+}
-+
- static struct drm_bridge_funcs funcs = {
- 	.attach = lvds_codec_attach,
- 	.enable = lvds_codec_enable,
- 	.disable = lvds_codec_disable,
+diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+index f66777e24968..dcc72bd7df30 100644
+--- a/drivers/gpu/drm/bridge/panel.c
++++ b/drivers/gpu/drm/bridge/panel.c
+@@ -127,6 +127,10 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
+ 	.enable = panel_bridge_enable,
+ 	.disable = panel_bridge_disable,
+ 	.post_disable = panel_bridge_post_disable,
 +	.atomic_reset = drm_atomic_helper_bridge_reset,
 +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
 +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-+	.atomic_get_input_bus_fmts = lvds_codec_atomic_get_input_bus_fmts,
++	.atomic_get_input_bus_fmts = drm_atomic_helper_bridge_propagate_bus_fmt,
  };
  
- static int lvds_codec_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *panel_node;
-+	struct device_node *np;
- 	struct drm_panel *panel;
- 	struct lvds_codec *lvds_codec;
-+	u32 input_bus_width;
-+	int err;
- 
- 	lvds_codec = devm_kzalloc(dev, sizeof(*lvds_codec), GFP_KERNEL);
- 	if (!lvds_codec)
-@@ -69,22 +100,43 @@ static int lvds_codec_probe(struct platform_device *pdev)
- 	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
- 							     GPIOD_OUT_HIGH);
- 	if (IS_ERR(lvds_codec->powerdown_gpio)) {
--		int err = PTR_ERR(lvds_codec->powerdown_gpio);
-+		err = PTR_ERR(lvds_codec->powerdown_gpio);
- 
- 		if (err != -EPROBE_DEFER)
- 			dev_err(dev, "powerdown GPIO failure: %d\n", err);
- 		return err;
- 	}
- 
-+	np = of_graph_get_port_by_id(dev->of_node, 0);
-+	if (!np) {
-+		dev_dbg(dev, "port 0 not found\n");
-+		return -ENXIO;
-+	}
-+
-+	err = of_property_read_u32(np, "bus-width", &input_bus_width);
-+	of_node_put(np);
-+
-+	if (err) {
-+		lvds_codec->input_fmt = MEDIA_BUS_FMT_FIXED;
-+	} else if (input_bus_width == 18) {
-+		lvds_codec->input_fmt = MEDIA_BUS_FMT_RGB666_1X18;
-+	} else if (input_bus_width == 24) {
-+		lvds_codec->input_fmt = MEDIA_BUS_FMT_RGB888_1X24;
-+	} else {
-+		dev_dbg(dev, "unsupported bus-width value %u on port 0\n",
-+			input_bus_width);
-+		return -ENOTSUPP;
-+	}
-+
- 	/* Locate the panel DT node. */
--	panel_node = of_graph_get_remote_node(dev->of_node, 1, 0);
--	if (!panel_node) {
-+	np = of_graph_get_remote_node(dev->of_node, 1, 0);
-+	if (!np) {
- 		dev_dbg(dev, "panel DT node not found\n");
- 		return -ENXIO;
- 	}
- 
--	panel = of_drm_find_panel(panel_node);
--	of_node_put(panel_node);
-+	panel = of_drm_find_panel(np);
-+	of_node_put(np);
- 	if (IS_ERR(panel)) {
- 		dev_dbg(dev, "panel not found, deferring probe\n");
- 		return PTR_ERR(panel);
+ /**
 -- 
 2.24.1
 
