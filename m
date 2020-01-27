@@ -2,271 +2,175 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C0AC32771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 08:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49939C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 09:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296E020702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 08:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F4521569
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 09:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgA0I5j (ORCPT
+        id S1727306AbgA0JSR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:57:39 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:28405 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgA0I5j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 03:57:39 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: K2HpuAX1lJwLcZZ1nQENPHKYQRDC8e57kLJv7crngMecfqh0ely0hk5xhGRw4S6/CoSL/M11Ks
- Av/AC9Eh3CkCMowfPYqF6S2bWa7tLzQE75xLxM9dESFLZsC8AZtyPwmX1A6izU9I/H7pJNXxyc
- imLCVIgSuWX1D9Otfx+bYrNTUOG9/I6vBHq313ZY0I0RRTOjShZIRsiJlhVO6k05c/IfSzsZKK
- Qc0mvmMCb0ABPmGa0ez9vU5981tM9knbAJJDPzG1qibH9WNApyZYcBvc6bO7A3lk/f5Q7+iGSX
- nBs=
-X-IronPort-AV: E=Sophos;i="5.70,369,1574146800"; 
-   d="scan'208";a="64593857"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2020 01:57:38 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 27 Jan 2020 01:57:38 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 27 Jan 2020 01:57:39 -0700
-Date:   Mon, 27 Jan 2020 09:57:13 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kamel.bouhara@bootlin.com>,
-        <wsa@the-dreams.de>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <robh@kernel.org>,
-        <peda@axentia.se>, <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 6/6] ARM: at91/dt: sama5d2: add i2c gpio pinctrl
-Message-ID: <20200127085713.ykinu5owrxaoly3y@M43218.corp.atmel.com>
-Mail-Followup-To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kamel.bouhara@bootlin.com, wsa@the-dreams.de,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        robh@kernel.org, peda@axentia.se, linux@armlinux.org.uk
-References: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
- <20200115115422.17097-7-codrin.ciubotariu@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200115115422.17097-7-codrin.ciubotariu@microchip.com>
+        Mon, 27 Jan 2020 04:18:17 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56666 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA0JSR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 04:18:17 -0500
+Received: from localhost.localdomain (p200300CB87166A002102C4F03A4721D7.dip0.t-ipconnect.de [IPv6:2003:cb:8716:6a00:2102:c4f0:3a47:21d7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 561FB29142A;
+        Mon, 27 Jan 2020 09:18:15 +0000 (GMT)
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     alsa-devel@alsa-project.org
+Cc:     cychiang@chromium.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, dafna.hirschfeld@collabora.com,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com, devicetree@vger.kernel.org,
+        groeck@chromium.org, enric.balletbo@collabora.com,
+        broonie@kernel.org, lgirdwood@gmail.com, bleung@chromium.org
+Subject: [PATCH] dt-bindings: Convert the binding file google,cros-ec-codec.txt to yaml format.
+Date:   Mon, 27 Jan 2020 10:18:06 +0100
+Message-Id: <20200127091806.11403-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 01:54:22PM +0200, Codrin Ciubotariu wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> 
-> Add the i2c gpio pinctrls to support the i2c bus recovery
-> 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> [codrin.ciubotariu@microchip.com: removed gpio pull-ups]
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+This was tested and verified with:
+make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
 
-> ---
-> 
-> Changes in v3:
->  - removed gpio pull-ups;
-> 
-> Changes in v2:
->  - new patch;
-> 
->  arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts   | 33 +++++++++++++++++++--
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 33 +++++++++++++++++++--
->  2 files changed, 60 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-> index ba7f3e646c26..1c24ac8019ba 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-> @@ -180,8 +180,11 @@
->  
->  			i2c0: i2c@f8028000 {
->  				dmas = <0>, <0>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "gpio";
->  				pinctrl-0 = <&pinctrl_i2c0_default>;
-> +				pinctrl-1 = <&pinctrl_i2c0_gpio>;
-> +				sda-gpios = <&pioA PIN_PD21 GPIO_ACTIVE_HIGH>;
-> +				scl-gpios = <&pioA PIN_PD22 GPIO_ACTIVE_HIGH>;
->  				status = "okay";
->  			};
->  
-> @@ -198,8 +201,11 @@
->  					#address-cells = <1>;
->  					#size-cells = <0>;
->  					clocks = <&pmc PMC_TYPE_PERIPHERAL 19>;
-> -					pinctrl-names = "default";
-> +					pinctrl-names = "default", "gpio";
->  					pinctrl-0 = <&pinctrl_flx0_default>;
-> +					pinctrl-1 = <&pinctrl_flx0_gpio>;
-> +					sda-gpios = <&pioA PIN_PB28 GPIO_ACTIVE_HIGH>;
-> +					scl-gpios = <&pioA PIN_PB29 GPIO_ACTIVE_HIGH>;
->  					atmel,fifo-size = <16>;
->  					status = "okay";
->  				};
-> @@ -226,8 +232,11 @@
->  
->  			i2c1: i2c@fc028000 {
->  				dmas = <0>, <0>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "gpio";
->  				pinctrl-0 = <&pinctrl_i2c1_default>;
-> +				pinctrl-1 = <&pinctrl_i2c1_gpio>;
-> +				sda-gpios = <&pioA PIN_PC6 GPIO_ACTIVE_HIGH>;
-> +				scl-gpios = <&pioA PIN_PC7 GPIO_ACTIVE_HIGH>;
->  				status = "okay";
->  
->  				at24@50 {
-> @@ -244,18 +253,36 @@
->  					bias-disable;
->  				};
->  
-> +				pinctrl_flx0_gpio: flx0_gpio {
-> +					pinmux = <PIN_PB28__GPIO>,
-> +						 <PIN_PB29__GPIO>;
-> +					bias-disable;
-> +				};
-> +
->  				pinctrl_i2c0_default: i2c0_default {
->  					pinmux = <PIN_PD21__TWD0>,
->  						 <PIN_PD22__TWCK0>;
->  					bias-disable;
->  				};
->  
-> +				pinctrl_i2c0_gpio: i2c0_gpio {
-> +					pinmux = <PIN_PD21__GPIO>,
-> +						 <PIN_PD22__GPIO>;
-> +					bias-disable;
-> +				};
-> +
->  				pinctrl_i2c1_default: i2c1_default {
->  					pinmux = <PIN_PC6__TWD1>,
->  						 <PIN_PC7__TWCK1>;
->  					bias-disable;
->  				};
->  
-> +				pinctrl_i2c1_gpio: i2c1_gpio {
-> +					pinmux = <PIN_PC6__GPIO>,
-> +						 <PIN_PC7__GPIO>;
-> +					bias-disable;
-> +				};
-> +
->  				pinctrl_key_gpio_default: key_gpio_default {
->  					pinmux = <PIN_PA10__GPIO>;
->  					bias-pull-up;
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> index 9d0a7fbea725..055ee53e4773 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> @@ -129,8 +129,11 @@
->  
->  			i2c0: i2c@f8028000 {
->  				dmas = <0>, <0>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "gpio";
->  				pinctrl-0 = <&pinctrl_i2c0_default>;
-> +				pinctrl-1 = <&pinctrl_i2c0_gpio>;
-> +				sda-gpios = <&pioA PIN_PD21 GPIO_ACTIVE_HIGH>;
-> +				scl-gpios = <&pioA PIN_PD22 GPIO_ACTIVE_HIGH>;
->  				i2c-sda-hold-time-ns = <350>;
->  				status = "okay";
->  
-> @@ -331,8 +334,11 @@
->  					#address-cells = <1>;
->  					#size-cells = <0>;
->  					clocks = <&pmc PMC_TYPE_PERIPHERAL 23>;
-> -					pinctrl-names = "default";
-> +					pinctrl-names = "default", "gpio";
->  					pinctrl-0 = <&pinctrl_flx4_default>;
-> +					pinctrl-1 = <&pinctrl_flx4_gpio>;
-> +					sda-gpios = <&pioA PIN_PD12 GPIO_ACTIVE_HIGH>;
-> +					scl-gpios = <&pioA PIN_PD13 GPIO_ACTIVE_HIGH>;
->  					atmel,fifo-size = <16>;
->  					i2c-analog-filter;
->  					i2c-digital-filter;
-> @@ -343,11 +349,14 @@
->  
->  			i2c1: i2c@fc028000 {
->  				dmas = <0>, <0>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "gpio";
->  				pinctrl-0 = <&pinctrl_i2c1_default>;
->  				i2c-analog-filter;
->  				i2c-digital-filter;
->  				i2c-digital-filter-width-ns = <35>;
-> +				pinctrl-1 = <&pinctrl_i2c1_gpio>;
-> +				sda-gpios = <&pioA PIN_PD4 GPIO_ACTIVE_HIGH>;
-> +				scl-gpios = <&pioA PIN_PD5 GPIO_ACTIVE_HIGH>;
->  				status = "okay";
->  
->  				at24@54 {
-> @@ -441,18 +450,36 @@
->  					bias-disable;
->  				};
->  
-> +				pinctrl_flx4_gpio: flx4_gpio {
-> +					pinmux = <PIN_PD12__GPIO>,
-> +						 <PIN_PD13__GPIO>;
-> +					bias-disable;
-> +				};
-> +
->  				pinctrl_i2c0_default: i2c0_default {
->  					pinmux = <PIN_PD21__TWD0>,
->  						 <PIN_PD22__TWCK0>;
->  					bias-disable;
->  				};
->  
-> +				pinctrl_i2c0_gpio: i2c0_gpio {
-> +					pinmux = <PIN_PD21__GPIO>,
-> +						 <PIN_PD22__GPIO>;
-> +					bias-disable;
-> +				};
-> +
->  				pinctrl_i2c1_default: i2c1_default {
->  					pinmux = <PIN_PD4__TWD1>,
->  						 <PIN_PD5__TWCK1>;
->  					bias-disable;
->  				};
->  
-> +				pinctrl_i2c1_gpio: i2c1_gpio {
-> +					pinmux = <PIN_PD4__GPIO>,
-> +						 <PIN_PD5__GPIO>;
-> +					bias-disable;
-> +				};
-> +
->  				pinctrl_i2s0_default: i2s0_default {
->  					pinmux = <PIN_PC1__I2SC0_CK>,
->  						 <PIN_PC2__I2SC0_MCK>,
-> -- 
-> 2.20.1
-> 
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+---
+ .../bindings/sound/google,cros-ec-codec.txt   | 44 -------------
+ .../bindings/sound/google,cros-ec-codec.yaml  | 62 +++++++++++++++++++
+ 2 files changed, 62 insertions(+), 44 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
+deleted file mode 100644
+index 8ca52dcc5572..000000000000
+--- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
++++ /dev/null
+@@ -1,44 +0,0 @@
+-Audio codec controlled by ChromeOS EC
+-
+-Google's ChromeOS EC codec is a digital mic codec provided by the
+-Embedded Controller (EC) and is controlled via a host-command interface.
+-
+-An EC codec node should only be found as a sub-node of the EC node (see
+-Documentation/devicetree/bindings/mfd/cros-ec.txt).
+-
+-Required properties:
+-- compatible: Must contain "google,cros-ec-codec"
+-- #sound-dai-cells: Should be 1. The cell specifies number of DAIs.
+-
+-Optional properties:
+-- reg: Pysical base address and length of shared memory region from EC.
+-       It contains 3 unsigned 32-bit integer.  The first 2 integers
+-       combine to become an unsigned 64-bit physical address.  The last
+-       one integer is length of the shared memory.
+-- memory-region: Shared memory region to EC.  A "shared-dma-pool".  See
+-                 ../reserved-memory/reserved-memory.txt for details.
+-
+-Example:
+-
+-{
+-	...
+-
+-	reserved_mem: reserved_mem {
+-		compatible = "shared-dma-pool";
+-		reg = <0 0x52800000 0 0x100000>;
+-		no-map;
+-	};
+-}
+-
+-cros-ec@0 {
+-	compatible = "google,cros-ec-spi";
+-
+-	...
+-
+-	cros_ec_codec: ec-codec {
+-		compatible = "google,cros-ec-codec";
+-		#sound-dai-cells = <1>;
+-		reg = <0x0 0x10500000 0x80000>;
+-		memory-region = <&reserved_mem>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+new file mode 100644
+index 000000000000..94a85d0cbf43
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/google,cros-ec-codec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Audio codec controlled by ChromeOS EC
++
++maintainers:
++  - Cheng-Yi Chiang <cychiang@chromium.org>
++
++description: |
++  Google's ChromeOS EC codec is a digital mic codec provided by the
++  Embedded Controller (EC) and is controlled via a host-command interface.
++  An EC codec node should only be found as a sub-node of the EC node (see
++  Documentation/devicetree/bindings/mfd/cros-ec.txt).
++
++properties:
++  compatible:
++    const: google,cros-ec-codec
++
++  "#sound-dai-cells":
++    const: 1
++
++  reg:
++    items:
++      - description: |
++          Physical base address and length of shared memory region from EC.
++          It contains 3 unsigned 32-bit integer. The first 2 integers
++          combine to become an unsigned 64-bit physical address.
++          The last one integer is the length of the shared memory.
++
++  memory-region:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Shared memory region to EC.  A "shared-dma-pool".
++      See ../reserved-memory/reserved-memory.txt for details.
++
++required:
++  - compatible
++  - '#sound-dai-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    reserved_mem: reserved_mem {
++        compatible = "shared-dma-pool";
++        reg = <0 0x52800000 0 0x100000>;
++        no-map;
++    };
++    cros-ec@0 {
++        compatible = "google,cros-ec-spi";
++        #address-cells = <2>;
++        #size-cells = <1>;
++        cros_ec_codec: ec-codec {
++            compatible = "google,cros-ec-codec";
++            #sound-dai-cells = <1>;
++            reg = <0x0 0x10500000 0x80000>;
++            memory-region = <&reserved_mem>;
++        };
++    };
+-- 
+2.17.1
+
