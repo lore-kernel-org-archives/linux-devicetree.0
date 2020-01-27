@@ -2,140 +2,157 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034B8C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 18:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1CFC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 18:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA026214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 18:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580150630;
-	bh=gETwfsz7U5pwhHydGA4x38MtoWqILp4Gnwnzy9bDSto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g8bRhmic6Jt8eSvKOhUniQ1lO3e4a9rIgV32z6g2DMh/l18JxekLFS17XJKRTX4sW
-	 gNc3Na84QUA7hx87VfgQBlpJn7fD8yUVbSWugC6Snl3L5bFqHazo47UxyrW3yDX2U8
-	 vZvwxzSpvZ0Y+bVvVEMkEvh+NmD/fobSdtB+LitM=
+	by mail.kernel.org (Postfix) with ESMTP id A58EB2467E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 18:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q+9PNUCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgA0Snu (ORCPT
+        id S1725972AbgA0Sqd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:43:50 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38904 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0Snu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 13:43:50 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l9so7664757oii.5;
-        Mon, 27 Jan 2020 10:43:49 -0800 (PST)
+        Mon, 27 Jan 2020 13:46:33 -0500
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:34840 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA0Sqd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 13:46:33 -0500
+Received: by mail-wr1-f54.google.com with SMTP id g17so12729056wro.2
+        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 10:46:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=to:cc:from:subject:autocrypt:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=EoEPl6obmlLJFWZM/a3pY7QHA9ny3aEKwm5DF195H+E=;
+        b=q+9PNUCpTWCHu0+igcShet8XdJrSEZ9Ix9HoTS/a0cOuKPIESltqFt3y4X/2h9uC/h
+         E/7nPyOlMtlDKKrax9J2DuBpr4PNxMj6KtzI7eXNqv5Fm9v6FtUiNIfb3S66gXDahAmE
+         PPgOUEZiT7w4UfJCuSfZDbxLvxznbdbsWOe8BhY44JMwDtk2kA6/0NSMGa+tx8ouWDtB
+         JPOB4pzzAewMvzuB5smLzkVVU1kBt7Fqo2htrLQBdjkTLiAtJll6Un3fnX5tGb9hoDYg
+         gJGC/KUk/uZGlw/Gi1+K0L/4H4NCMFdcqyOR2AorttiN6kcNloV+8fOjG1y5tD7DKkG4
+         LqJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kuhUPMd+zYAgWz6fKJAfj/zyuyEErCMf41bcAyXMeG8=;
-        b=GvO/IGeMEQ/n6o1TDVcm7TOkp9xkm6akeyOZuxAnzMZT1NTci+tftLDBp3efhM9Wm1
-         yCSDN7gOptxoRjPjFUbCk2MdcNB9tG+AexGSrddHULfMuwXeSy8Ey9OmvXQxt+d65EU7
-         Sm9uXUhVwsk6cSeOPd9Yr4dwnXzwHAo5nse/ef1qUTjxs5es/HJTUI5V3MNnKPeiF0NT
-         JblVvtqVC2yN+dCSL5VUOpnqbtzuYqJtl/c77iI5J2vCk4CkRD2+zH3cc3nlmv1F0rwq
-         pCtnF3+uSENCR3cR760yD9UdNGV4OBpnxS8WfM229cJh/Ik9ptYtDDQDpss0g9mirZ0u
-         Gxgg==
-X-Gm-Message-State: APjAAAUGShexsL4LAkPwZqY8pLxcPHU4xRbOi5KHtF5jAFGSak7zx6uG
-        Ht7bMGMM3xslshOJvZJdDjIemyk=
-X-Google-Smtp-Source: APXvYqwIL62yTsib7ww0bYJgMGDd0XRUETmkoyWk4Mw/rwMUqd3hSP/eIsHvDGeYCHovkA1uBnb0dQ==
-X-Received: by 2002:a05:6808:9ba:: with SMTP id e26mr295469oig.81.1580150629151;
-        Mon, 27 Jan 2020 10:43:49 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t21sm4326765otr.42.2020.01.27.10.43.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 10:43:48 -0800 (PST)
-Received: (nullmailer pid 3867 invoked by uid 1000);
-        Mon, 27 Jan 2020 18:43:47 -0000
-Date:   Mon, 27 Jan 2020 12:43:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 06/19] dt-bindings: usb: dwc3: Add a
- gpio-usb-connector description
-Message-ID: <20200127184347.GA27080@bogus>
-References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
- <20200122185610.131930-7-bryan.odonoghue@linaro.org>
+        h=x-gm-message-state:to:cc:from:subject:autocrypt:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=EoEPl6obmlLJFWZM/a3pY7QHA9ny3aEKwm5DF195H+E=;
+        b=PCSMH2PhZVfbQSyTnLVu8RlnD/D3Fptlm4bcNaBpJOcyH9IFwk53THejhuhPDVqA+p
+         8xmUwFzD2gYtjp0MOBLeLZfvfSbswSD/hnJvRaD0inBgqt6S6+E0OG2rhH/v2wRs1r30
+         2+Cw796j0E1UBH+KMJ8fLWDTREMNG4srX1BCmjZiX0GJsdOKa57bFmJesM+TcGjI1pNb
+         szljy+39sKODf1PqwgoNDN6TbXusba+ImXavl19jWS1nwV9h4gLXFU245gKE3DNksqpV
+         fS126sjII19duTLihzrCl6JH4pAfcr7ypgse1v98B4N6jgMo6EwWMtDwN3YG6GJGP/GZ
+         6GnA==
+X-Gm-Message-State: APjAAAW1FHrLYI6+6e2jmPWJJOEU3DE94w6Lhl3va56VNf1iUPA8BnAP
+        HysCnm0jM28PaczYh4UOUlJ5f1TaiJjxZA==
+X-Google-Smtp-Source: APXvYqyV7DzynO1JVQaSL+zjFtWu4C1gV95JevfWvBZuJW/UyfDkwJGbxxRhO1cK1awVwvp9bTfERQ==
+X-Received: by 2002:adf:8b4f:: with SMTP id v15mr22690727wra.231.1580150790029;
+        Mon, 27 Jan 2020 10:46:30 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:25cd:3fb1:37ba:f055? ([2a01:e34:ed2f:f020:25cd:3fb1:37ba:f055])
+        by smtp.googlemail.com with ESMTPSA id 4sm19400535wmg.22.2020.01.27.10.46.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 10:46:29 -0800 (PST)
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Splitting the thermal.txt file into different schema
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <cc60bccb-883f-2efd-ead1-4dd1af10c3fa@linaro.org>
+Date:   Mon, 27 Jan 2020 19:46:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122185610.131930-7-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 06:55:57PM +0000, Bryan O'Donoghue wrote:
-> A USB connector should be a child node of the USB controller
-> connector/usb-connector.txt. This patch adds a property
-> "gpio_usb_connector" which declares a connector child device. Code in the
-> DWC3 driver will then
-> 
-> - Search for "gpio_usb_controller"
-> - Do an of_platform_populate() if found
-> 
-> This will have the effect of making the declared node a child of the USB
-> controller and will make sure that USB role-switch events detected with the
-> gpio_usb_controller driver propagate into the DWC3 controller code
-> appropriately.
 
-This is all driver specifics. This is a binding patch.
+Hi Rob,
 
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 66780a47ad85..b019bd472f83 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -108,6 +108,9 @@ Optional properties:
->  			When just one value, which means INCRX burst mode enabled. When
->  			more than one value, which means undefined length INCR burst type
->  			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
-> + - gpio_usb_connector: Declares a USB connector named 'gpio_usb_connector' as a
-> +		       child node of the DWC3 block. Use when modelling a USB
-> +		       connector based on the gpio-usb-b-connector driver.
+while reading the documentation to convert the thermal.txt [1] into a
+yaml schema, the documentation says "Generally, there is one binding
+defined per file.".
 
-Should be just 'connector'. That's already implicitly allowed for any 
-USB controller, so you don't really need a binding change. And the 
-specific type of connector is outside the scope of the DWC3 binding.
+Shall I split the thermal.txt file into smaller one-binding based file like:
 
->  
->   - in addition all properties from usb-xhci.txt from the current directory are
->     supported as well
-> @@ -121,4 +124,12 @@ dwc3@4a030000 {
->  	interrupts = <0 92 4>
->  	usb-phy = <&usb2_phy>, <&usb3,phy>;
->  	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-> +	usb_con: gpio_usb_connector {
-> +		compatible = "gpio-usb-b-connector";
-> +		id-gpio = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-> +		vbus-gpio = <&pms405_gpios 12 GPIO_ACTIVE_HIGH>;
+ - thermal-sensor.yaml
 
-*-gpios is the preferred form and should be what's documented.
+ - thermal-zone.yaml
 
-> +		vbus-supply = <&usb3_vbus_reg>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb3_id_pin>, <&usb3_vbus_pin>;
-> +	};
->  };
-> -- 
-> 2.25.0
-> 
+ - cooling-device.yaml
+
+
+?
+
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/tree/Documentation/devicetree/bindings/thermal/thermal.txt
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
