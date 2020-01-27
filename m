@@ -2,105 +2,310 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92326C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 22:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F660C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B032465B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 22:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0142822527
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+UKg4id"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NUqqrs7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgA0WHl (ORCPT
+        id S1726164AbgA0WaM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 17:07:41 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46032 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgA0WHl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 17:07:41 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so5840868pgk.12;
-        Mon, 27 Jan 2020 14:07:41 -0800 (PST)
+        Mon, 27 Jan 2020 17:30:12 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:40266 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgA0WaM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 17:30:12 -0500
+Received: by mail-vk1-f194.google.com with SMTP id c129so3073184vkh.7
+        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 14:30:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5RnacDdNt1j9C0tH28o+7IuLp5MiNQ8v6jYQ1H0H8Wg=;
-        b=A+UKg4idIjIGGRab8Vjdakl3B5IBL8qFVpd9/0o+1tszgM46abx7KZWdIZp5GV17O9
-         KnXtAgfmXhEDSSDOxi+5vcIZ+nWcftoJahBse+RKORy6MpGD1I4Ob9lm+w5KBkijOJg2
-         DRlmpIsTJSTBwzEfULps/NhB2BZqI8b8mB6dYt0pTV1ZyGqpnfb89BeEKx1VXydSrn4s
-         WkojNpcH9n5un08Gi7zOIIqD6oBmCk/vpZZznA6YmcAmsl/dMPrfLXMB2VyrsxQQwlAf
-         iOCXKjNY18XTi/0KfjjqjCkWWg8LNMa0TjNUe34SfU5l9XeOcwikGcb4HK/uM0aHcPZw
-         up4Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OkNUIHe+JYKTBEW9K2q9Taed66d4fQFMxRvOrRh8Cd0=;
+        b=NUqqrs7HXhFSJFsiNrXJm0ONYmionCm3iYaOyFIe4L6NBxV8KGLwKqmdNsdd1bizOG
+         oXerz+XKVLKfxf0zbLskquZlA3QPICBEPW1gib9XIsd2nFErH3ZKV4v19aqguZuFqxH7
+         8IHt1s2WYt5gtQA/uZLlFZcgGA+g8HyMRwbfo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5RnacDdNt1j9C0tH28o+7IuLp5MiNQ8v6jYQ1H0H8Wg=;
-        b=E/aEM+xvCyYOQSfbEVe4zmQtPCDJCJXpctbsNNZvIsElmUy+jzE97OE6NpXLHuCRm1
-         VPTztij7ZUJGAkOOSp7wYaZTTKtue75hDZ2fnK1eKna+8f4t6om1drCoRr6KpJcm9bWq
-         YiGEMgzVz8gKqltTQEVWnamfYjozJKYXv4dulZWWTnEjNYBj2pI5ti86DZds4rbPgiWE
-         JeSPzXqWOag4G3Dmt7IcQ7UYkqXAo1d9GHKRX3jhnjDkq05FIzlHRp5GQVyKHFJr3cai
-         YZgN7SlBfm69aa9SZ25VvJe/WTCFGtZetsaUUuBzOgcYnC+jW5ncgA25w0xHh/s/uxFq
-         TudQ==
-X-Gm-Message-State: APjAAAWYk/wGvWK1Yt5Kw+6+EvoSa8mCQQxLJ6ebfqHUjJhct5OhygPV
-        jd60UV5tgTFADTZD8O5Obpw=
-X-Google-Smtp-Source: APXvYqzTq9gDcQDDx3LuPmugyD2tUjvpEgywZN0YYXTGKkgBw4QR7UfIOB24j3aBXLvZJA+d8/NZSg==
-X-Received: by 2002:a63:ea4c:: with SMTP id l12mr20486565pgk.29.1580162860954;
-        Mon, 27 Jan 2020 14:07:40 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id y6sm17451937pgc.10.2020.01.27.14.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 14:07:40 -0800 (PST)
-Date:   Mon, 27 Jan 2020 14:07:38 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, hadess@hadess.net,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yannick.fertre@st.com
-Subject: Re: [PATCH v2 2/2] dt-bindings: touchscreen: Convert Goodix
- touchscreen to json-schema
-Message-ID: <20200127220738.GF184237@dtor-ws>
-References: <20200108091118.5130-1-benjamin.gaignard@st.com>
- <20200108091118.5130-3-benjamin.gaignard@st.com>
- <20200114233134.GA23810@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OkNUIHe+JYKTBEW9K2q9Taed66d4fQFMxRvOrRh8Cd0=;
+        b=SNjNgfvfwP6RiOKIlYfWjcRYZZOQKvwldEEqVnFBuBBoTtlJSXsm8cdzsYcGMIGrPn
+         H+e0Q05Tra+mn9sM6RhRr01OA6+Vsu/qExvaHDy/grgUwZb3vBR58+c57lyRGTMkxMdz
+         6wu3l7g/x5nGhVY/FVfPJ/4cqizDeHpnLJGbvidHHZ7ZjGUlG8KY6oYwj2I95YKyi4FK
+         zsAW35Sh5G5ZmV/s/CKxs0IC1SBWqj4L5O6o38mkBAR+DR6hQsaZOtGURZ6T8R5iVWXN
+         whA8Pdl2MZMxvKpbuLMgS0y4wXyE3/Mu4TxtPXjEhvOn2WknX2BTHq6Xysjw9FNuo5vW
+         MKeQ==
+X-Gm-Message-State: APjAAAVBIzV48CtiedQ874jD+67nAas/WgoWpgqOthIjibwTEKykiOd0
+        yZsIJ08mhLpMTh5g4XL/1VMEDIc+GYk=
+X-Google-Smtp-Source: APXvYqzVZDNNwaAN3ktGQ8OhmC2gh7uGTlrvrplDY60/LYVZrN4xtikLI1dKQu3Y9uwUZaWXKZdzMQ==
+X-Received: by 2002:a1f:3fcd:: with SMTP id m196mr11688921vka.28.1580164206260;
+        Mon, 27 Jan 2020 14:30:06 -0800 (PST)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id c197sm4757412vkc.33.2020.01.27.14.30.04
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 14:30:05 -0800 (PST)
+Received: by mail-vs1-f44.google.com with SMTP id k188so6791835vsc.8
+        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 14:30:04 -0800 (PST)
+X-Received: by 2002:a67:1ec5:: with SMTP id e188mr5904944vse.169.1580164204376;
+ Mon, 27 Jan 2020 14:30:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114233134.GA23810@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
+In-Reply-To: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 27 Jan 2020 14:29:53 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
+Message-ID: <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Clark <robdclark@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 05:31:34PM -0600, Rob Herring wrote:
-> On Wed, 8 Jan 2020 10:11:18 +0100, Benjamin Gaignard wrote:
-> > Convert the Goodix binding to DT schema format using json-schema
-> > 
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > ---
-> > version 2:
-> > - enumerate goodix's I2C adresses
-> > - add description for irq-gpio property
-> > - reference the common properties used by goodix
-> > 
-> >  .../bindings/input/touchscreen/goodix.txt          | 50 --------------
-> >  .../bindings/input/touchscreen/goodix.yaml         | 78 ++++++++++++++++++++++
-> >  2 files changed, 78 insertions(+), 50 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> > 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hi,
 
-Applied, thank you.
+On Mon, Jan 27, 2020 at 1:30 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>
+> This patch adds the required dt nodes and properties
+> to enabled A618 GPU.
+>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 103 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 103 insertions(+)
+
+Note that +Matthias Kaehlcke commented on v1 your patch:
+
+https://lore.kernel.org/r/20191204220033.GH228856@google.com/
+
+...so he should have been CCed on v2.  I would also note that some of
+the comments below are echos of what Matthias already said in the
+previous version but just weren't addressed.
 
 
--- 
-Dmitry
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index b859431..277d84d 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -7,6 +7,7 @@
+>
+>  #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+> +#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+
+Header files should be sorted alphabetically.  ...or, even better,
+base your patch atop mine:
+
+https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid/
+
+...which adds the gpucc header file so you don't have to.  ...and when
+you do so, email out a Reviewed-by and/or Tested-by for my patch.  ;-)
+
+
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interconnect/qcom,sc7180.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> @@ -1619,6 +1620,108 @@
+>                         #interconnect-cells = <1>;
+>                         qcom,bcm-voters = <&apps_bcm_voter>;
+>                 };
+> +
+> +               gpu: gpu@5000000 {
+> +                       compatible = "qcom,adreno-618.0", "qcom,adreno";
+
+Though it's not controversial, please send a patch to:
+
+Documentation/devicetree/bindings/display/msm/gmu.txt
+
+...to add 'qcom,adreno-618.0', like:
+
+    for example:
+      "qcom,adreno-gmu-618.0", "qcom,adreno-gmu"
+      "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
+
+Probably as part of this you will be asked to convert this file to
+yaml.  IMO we don't need to block landing this patch on the effort to
+convert it to yaml, but you should still work on it.  ...or maybe
+Jordan wants to work on it?
+
+
+> +                       #stream-id-cells = <16>;
+> +                       reg = <0 0x05000000 0 0x40000>, <0 0x0509e000 0 0x1000>,
+> +                               <0 0x05061000 0 0x800>;
+> +                       reg-names = "kgsl_3d0_reg_memory", "cx_mem", "cx_dbgc";
+> +                       interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
+> +                       iommus = <&adreno_smmu 0>;
+> +                       operating-points-v2 = <&gpu_opp_table>;
+> +                       interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
+
+Running:
+$ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git
+for-next
+$ git grep gem_noc FETCH_HEAD
+$ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git
+arm64-for-5.7-to-be-rebased
+$ git grep gem_noc FETCH_HEAD
+
+...shows no hits.  That's because the interconnect patches haven't
+landed in the tree that you're targeting.  In the very least you
+should mention somewhere in your email that your patch depends on the
+interconnect patches landing, perhaps pointing at:
+
+https://lore.kernel.org/r/1577782737-32068-4-git-send-email-okukatla@codeaurora.org
+
+...but even better would be to split your patch into two parts.  The
+first patch would be exactly like your patch except without the
+"interconnects" line.  The 2nd patch would add the interconnects line.
+This would allow Bjorn/Andy to land the first patch now and then land
+the second patch when the interconnect series is ready.  I can confirm
+that you can still get basic GPU functionality even without the
+interconnects bit so it would be worth landing earlier.
+
+
+I will also note that by basing on a tree that has private patches to
+the same file you're touching you make it very hard for a maintainer
+to apply.  When I try this:
+
+$ curl https://patchwork.kernel.org/patch/11352261/mbox/ | git am -3
+
+I get:
+
+error: sha1 information is lacking or useless
+(arch/arm64/boot/dts/qcom/sc7180.dtsi).
+error: could not build fake ancestor
+Patch failed at 0001 arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+
+...yes, I can apply it with 'git am --show-current-patch | patch -p1'
+but it's ugly (and it ends up making things sort in the wrong order).
+
+
+> +               adreno_smmu: iommu@5040000 {
+> +                       compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
+
+Please send a patch to:
+
+Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+
+...adding 'qcom,sc7180-smmu-v2'.  If you do this it will point out
+that you've added a new clock: "mem_iface_clk".  Is this truly a new
+clock in sc7180 compared to previous IOMMUs?  ...or is it not really
+needed?
+
+
+> +                       reg = <0 0x05040000 0 0x10000>;
+> +                       #iommu-cells = <1>;
+> +                       #global-interrupts = <2>;
+> +                       interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
+> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
+> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
+> +
+> +                       clock-names = "bus", "iface", "mem_iface_clk";
+
+nit: keep clocks and clock-names next to each other (no blank line).
+If you really feel like it needs more space add it between the
+clock-names and power-domains.
+
+> +                       power-domains = <&gpucc CX_GDSC>;
+
+Similar to interconnects, gpucc hasn't landed yet.  Somewhere you
+should point out this fact and ideally point to:
+
+https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid/
+
+...unlike interconnects, your patch can't land without gpucc, so you
+should point this out as a hard dependency.
+
+
+> +               };
+> +
+> +               gmu: gmu@506a000 {
+> +                       compatible="qcom,adreno-gmu-618", "qcom,adreno-gmu";
+
+As per the bindings, "qcom,adreno-gmu-618" should be
+"qcom,adreno-gmu-618.0", right?
+
+...and I bet you'd never have guessed that I'll request that you add
+"qcom,adreno-gmu-618" to:
+
+Documentation/devicetree/bindings/display/msm/gmu.txt
+
+...and that you'll probably be asked to convert to yaml.  Again, maybe
+Jordan wants to attempt this?
+
+
+> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000 0 0x10000>,
+> +                               <0 0x0b490000 0 0x10000>;
+> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
+> +                       interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
+> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "hfi", "gmu";
+> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+> +                              <&gpucc GPU_CC_CXO_CLK>,
+> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
+> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
+> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
+> +                       power-domains = <&gpucc CX_GDSC>;
+
+Bindings claim that you need both CX and GC.  Is sc7180 somehow
+different?  Bindings also claim that you should be providing
+power-domain-names.
+
+
+
+> +                       iommus = <&adreno_smmu 5>;
+> +                       operating-points-v2 = <&gmu_opp_table>;
+> +
+> +                       gmu_opp_table: opp-table {
+> +                               compatible = "operating-points-v2";
+> +
+> +                               opp-200000000 {
+> +                                       opp-hz = /bits/ 64 <200000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
+> +                               };
+> +                       };
+> +               };
+>         };
+>
+>         thermal-zones {
+
+Using the "thermal-zones" as context, it looks as if you're asserting
+that your new nodes belong at the very end of the pile of nodes with
+addresses.  This is not true.  Looking at the branch
+'arm64-for-5.7-to-be-rebased' on the Qualcomm tree, I see:
+
+cpufreq_hw: cpufreq@18323000
+
+...which has a larger address than your 0x0506a000.  Please sort your
+nodes numerically.
+
+
+-Doug
