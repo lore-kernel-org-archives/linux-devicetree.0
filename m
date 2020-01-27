@@ -2,112 +2,204 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951B7C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 17:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC9FC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 17:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72AAF214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 17:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B91A20CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 17:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580147617;
+	bh=JfR7Lv/JrxeMJWae3NrBaXTX31m23SXkho2CItW4d5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rn/EAjTwmkBEBR+/jtR9Jlv+OAHmY2obUNpMXSGTewwT2sxUAxATdPskHcx7jCLVI
+	 ACSfsBc4zV6WmgTLCKwCe0l2sGtiIVrwUkGCDIv54a2CnV2QRffiixVM9XSpAsxdpQ
+	 ofTwLlof1MzKqsr1h+Gm8qSjFJ2UvxrxqWK0A2Oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725908AbgA0RtY (ORCPT
+        id S1725955AbgA0Rxh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:49:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34442 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgA0RtY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 12:49:24 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B25BB28C174;
-        Mon, 27 Jan 2020 17:49:21 +0000 (GMT)
-Date:   Mon, 27 Jan 2020 18:49:18 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 27 Jan 2020 12:53:37 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46964 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0Rxg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 12:53:36 -0500
+Received: by mail-ot1-f66.google.com with SMTP id g64so9228083otb.13;
+        Mon, 27 Jan 2020 09:53:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZwdeJdNohgFWX1mFD2UjbBw/HXmaaN29rT20q0J8HBI=;
+        b=o7j6tNstDjVdxALJYsnH829D1SY/1ZujhSjShSls0By67cFDORF72V233vGpe0KGnc
+         1dS1EM+OdQJ0v2dG1AGYAZcfFdJbsvaLGTagtCoBGmTMvr/CmRsezXuEAywfckMRcjZ8
+         yhkwkWiIPRS6qmu0pFb4nXSxMZkh5of+HCIXBfY+pKb2vMjMgES+/y9xHukxI2ADOM7R
+         BwvE85tbvy6KoFn74oPf3u9CSPVTZrYeNK1rA3PF2yHH43zyPmyKzVymlJfqd4gVfRPT
+         8PJfw1SI5eQptPK+KQO02v4eq6/3O5UfYsuN6kieOA5vWXzAac0FcnX61Ev6adFoHVWR
+         g4mw==
+X-Gm-Message-State: APjAAAWErxZASChI2BlTdkuLPtz3kxihB/7j3VyXuPKq507h83vy3PNo
+        nfK7XHvoRz1qhv9Ao736PBoaCns=
+X-Google-Smtp-Source: APXvYqwdUCJv6mpkyNlq5MZ9t+xypOOB3E8o5xFdi8iB2ko7UaxiRDFXUY5FgcV40zfXH9dcLvJ12Q==
+X-Received: by 2002:a9d:53c2:: with SMTP id i2mr12346342oth.43.1580147616069;
+        Mon, 27 Jan 2020 09:53:36 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n64sm4379460otn.35.2020.01.27.09.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 09:53:35 -0800 (PST)
+Received: (nullmailer pid 30258 invoked by uid 1000);
+        Mon, 27 Jan 2020 17:53:34 -0000
+Date:   Mon, 27 Jan 2020 11:53:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Anu Ramanathan <anur@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, intel-gfx-trybot@lists.freedesktop.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH v9 01/12] drm/bridge: Add a drm_bridge_state object
-Message-ID: <20200127184918.60b3cdf3@collabora.com>
-In-Reply-To: <20200127172652.GB43062@phenom.ffwll.local>
-References: <20200127110043.2731697-1-boris.brezillon@collabora.com>
-        <20200127110043.2731697-2-boris.brezillon@collabora.com>
-        <20200127172652.GB43062@phenom.ffwll.local>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 02/19] dt-bindings: phy: Add Qualcomm Synopsys
+ Hi-Speed USB PHY binding
+Message-ID: <20200127175334.GA12315@bogus>
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+ <20200122185610.131930-3-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122185610.131930-3-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Jan 2020 18:26:52 +0100
-Daniel Vetter <daniel@ffwll.ch> wrote:
-
-> On Mon, Jan 27, 2020 at 12:00:32PM +0100, Boris Brezillon wrote:
-> > One of the last remaining objects to not have its atomic state.
-> > 
-> > This is being motivated by our attempt to support runtime bus-format
-> > negotiation between elements of the bridge chain.
-> > This patch just paves the road for such a feature by adding a new
-> > drm_bridge_state object inheriting from drm_private_obj so we can
-> > re-use some of the existing state initialization/tracking logic.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > ---
-> > Changes in v9:
-> > * Clarify the fact that the bridge->atomic_reset() and
-> >   {connector,plane,crtc,...}->reset() semantics are different
-> > * Move the drm_atomic_private_obj_init() call back to
-> >   drm_bridge_attach()
-> > * Check the presence of ->atomic_duplicate_state instead of  
-> >   ->atomic_reset in drm_atomic_add_encoder_bridges()  
-> > * Fix copy&paste errors in the atomic bridge state helpers doc
-> > * Add A-b/R-b tags
-> > 
-> > Changes in v8:
-> > * Move bridge state helpers out of the CONFIG_DEBUGFS section
-> > 
-> > Changes in v7:
-> > * Move helpers, struct-defs, ... to atomic helper files to avoid the
-> >   drm -> drm_kms_helper -> drm circular dep
-> > * Stop providing default implementation for atomic state reset,
-> >   duplicate and destroy hooks (has to do with the helper/core split)
-> > * Drop all R-b/T-b as helpers have now be moved to other places  
+On Wed, Jan 22, 2020 at 06:55:53PM +0000, Bryan O'Donoghue wrote:
+> From: Sriharsha Allenki <sallenki@codeaurora.org>
 > 
-> ^^ we generally keep the changelog when committing in drm, since it
-> contains useful stuff.
+> Adds bindings for QCS404 USB PHY supporting Low-Speed, Full-Speed and
+> Hi-Speed USB connectivity on Qualcomm chipsets.
+> 
+> [bod: Converted to YAML. Changed name dropping snps, 28nm components]
+> 
+> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  .../bindings/phy/qcom,qcs404-usb-hs.yaml      | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+> new file mode 100644
+> index 000000000000..d71beb822ae2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,qcs404-usb-hs.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Synopsys QCS-404 High-Speed PHY
+> +
+> +maintainers:
+> +  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> +
+> +description: |
+> +  Qualcomm QCS-404 Low-Speed, Full-Speed, Hi-Speed USB PHY
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,qcs404-usb-hsphy
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: USB PHY base address and length of the register map.
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +    description: Should be 0. See phy/phy-bindings.txt for details.
+> +
+> +  clocks:
+> +    minItems: 3
+> +    maxItems: 3
+> +    description: phandles to rpmcc ref clock, PHY AHB clock, rentention clock.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: phy
+> +      - const: sleep
+> +
+> +  resets:
+> +    items:
+> +      - description: PHY core reset
+> +      - description: POR reset
+> +
+> +  reset-names:
+> +    items:
+> +      - const: phy
+> +      - const: por
+> +
+> +  vdd-supply:
+> +    maxItems: 1
 
-Alright (I tend to forget that drm does things differently). I find it a
-bit redundant given the final commit also contains a patchwork link
-which contains all revisions + the discussion that happened on each
-version.
+Supplies are always 1 entry, so drop this.
 
-> If you don't want to do that, then at least update
-> the commit message to make sure all the design discussion is reflected in
-> there somewhere. Which atm it definitely isn't.
+> +    description: phandle to the regulator VDD supply node.
+> +
+> +  vdda1p8-supply:
+> +    maxItems: 1
+> +    description: phandle to the regulator 1.8V supply node.
+> +
+> +  vdda3p3-supply:
+> +    maxItems: 1
+> +    description: phandle to the regulator 3.3V supply node.
 
-I'll update the commit messages to add those changelogs.
+No required properties?
+
+Add:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+> +    #include <dt-bindings/clock/qcom,rpmcc.h>
+> +    usb2_phy_prim: phy@7a000 {
+> +        compatible = "qcom,qcs404-usb-hsphy";
+> +        reg = <0x0007a000 0x200>;
+> +        #phy-cells = <0>;
+> +        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+> +                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+> +                 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
+> +        clock-names = "ref", "phy", "sleep";
+> +        resets = <&gcc GCC_USB_HS_PHY_CFG_AHB_BCR>,
+> +                 <&gcc GCC_USB2A_PHY_BCR>;
+> +        reset-names = "phy", "por";
+> +    };
+> +...
+> -- 
+> 2.25.0
+> 
