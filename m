@@ -2,111 +2,111 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DBAC35247
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 02:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F57C35240
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 02:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0A820720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 02:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B952083E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 02:30:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y98BhlfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgA0CUf (ORCPT
+        id S1726670AbgA0CaX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 21:20:35 -0500
-Received: from mail-out.m-online.net ([212.18.0.9]:58556 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgA0CUf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 21:20:35 -0500
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 485YPY3pw9z1qqlB;
-        Mon, 27 Jan 2020 03:20:33 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 485YPY3N6Lz1qwXd;
-        Mon, 27 Jan 2020 03:20:33 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id PW3gTicwPtcf; Mon, 27 Jan 2020 03:20:32 +0100 (CET)
-X-Auth-Info: xzYvJNuWmKe4Het0iJHLWjiEDyhDjKIpikfMwvn4dEw=
-Received: from desktop.lan (ip-86-49-35-8.net.upcbroadband.cz [86.49.35.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 27 Jan 2020 03:20:32 +0100 (CET)
-From:   Marek Vasut <marex@denx.de>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Marek Vasut <marex@denx.de>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>, Sean Cross <xobs@kosagi.com>,
+        Sun, 26 Jan 2020 21:30:23 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38562 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgA0CaX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jan 2020 21:30:23 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so4187649pfc.5;
+        Sun, 26 Jan 2020 18:30:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w5Xw3EKEbqNBNmrKWt/CTp/k6lti3wtCtoGq3QSZhTo=;
+        b=Y98BhlfLvsW7RKEPcFzvbPbG/yffnmdVuE0gXNSTDp/q38bUIMq3VOn3IrB6a7rHOe
+         kLDo+FZnBIy2iS520tTTdMfUYVyzX8p71a4R41RmmldCWyDukBm7ePh5S+DnMzgKwdqE
+         lC0SghAMv7Jn+fEu7tbhnU+o4D+RxgsKuwyjaFj9G84W1DpjMNUt0dDbOruFu1PxlJgU
+         v9SlZViDBnGttSlGyWguELo/QjQFy96Dxn/qC1zBo0TjYTDnbADPRISKHOMs1mnpGzGk
+         45+h8VsGia0cA1nFcsnVuuqKTTj9WluiTlOub0HTd939hPbW8suXv/qg8hFy1ePc07b0
+         ZE0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w5Xw3EKEbqNBNmrKWt/CTp/k6lti3wtCtoGq3QSZhTo=;
+        b=df9wgye3wvVTZi41tcFjQLmSQORxzJWIsho1xBnIZfYWmbUNhK5b9yE4vQVQWY6LuW
+         YNCJIW6WcJji0cLCWq7iYKQdv/qKUSZ5XunD7qFaqsMJfdhIvZPigYrTuxWWVW9GuqoN
+         49iK3Wr5fqd9FG0/QEkHAyQKgqp1G10jRTWyuvTNuxqyDs1KgwVwZW2wXQOM0M34msx/
+         QmOmVOVFfwh8KaUBdwE51PobjiEw3FhLAd73hpXStUrZlhvveX+CCNGgh4rCdA/Mm4lg
+         w5+yPkDWf+md7MG+p01opkp93JhOHLaqzaGWAnD/q2A+5GnAv1xlLSFFwl7RhVFgIE2U
+         +70Q==
+X-Gm-Message-State: APjAAAU0ZHEksiZT3R/Vm2ocDpWwqOj+XOFH2/KFVhLMNpOmiNMYPXw8
+        vFYCK2+WkZ9+iWIRf/I5n8kL3PCJ
+X-Google-Smtp-Source: APXvYqxQAVkVPtZlboJwPrEyrh1/zM//7vfMSYoMQby264TDJGJMaMchJFSGYZtuTNEJgBbkPVpc9Q==
+X-Received: by 2002:a63:184d:: with SMTP id 13mr16888243pgy.132.1580092222214;
+        Sun, 26 Jan 2020 18:30:22 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id k12sm13122188pgm.65.2020.01.26.18.30.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jan 2020 18:30:21 -0800 (PST)
+Date:   Sun, 26 Jan 2020 18:30:19 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linux Input <linux-input@vger.kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH 2/3] dt-bindings: it6251: add bindings for IT6251 LVDS-to-eDP bridge
-Date:   Mon, 27 Jan 2020 03:20:22 +0100
-Message-Id: <20200127022023.379080-2-marex@denx.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200127022023.379080-1-marex@denx.de>
-References: <20200127022023.379080-1-marex@denx.de>
+Subject: Re: [PATCH] dt-bindings: input: Convert gpio-keys bindings to schema
+Message-ID: <20200127023019.GD184237@dtor-ws>
+References: <20200123214222.17897-1-robh@kernel.org>
+ <20200123222508.GB184237@dtor-ws>
+ <CAL_JsqLNG0i9QbRiueXAZ6LjAGN7Mx0vaoUM43np8Jn4qOuiZg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLNG0i9QbRiueXAZ6LjAGN7Mx0vaoUM43np8Jn4qOuiZg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
+On Thu, Jan 23, 2020 at 07:35:06PM -0600, Rob Herring wrote:
+> On Thu, Jan 23, 2020 at 4:25 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Thu, Jan 23, 2020 at 03:42:22PM -0600, Rob Herring wrote:
+> > > Convert the gpio-keys and gpio-keys-polled bindings to a DT schema. As
+> > > both bindings are almost the same, combine them into a single schema.
+> > >
+> > > The binding said 'interrupts' was required, but testing on dts files
+> > > showed that it isn't required.
+> > >
+> > > 'linux,input-value' was only documented for gpio-keys-polled, but there
+> > > doesn't seem to be any reason for it to be specific to that.
+> >
+> > Actually, there is: with gpio-keys-polled we take a "snapshot" of the
+> > entire device state, so we know when to generate a 0 event (the example
+> > we have a device with several GPIOs with values assigned 1, 2, 3, 4, 5..
+> > values, when one of the gpios is active we generate event with given
+> > value, when all are inactive we generate 0 event). This does not work
+> > for interrupt-only driven device.
+> 
+> Okay, it wasn't clear to me reading the binding doc. I'll make it conditional.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Sean Cross <xobs@kosagi.com>
-Cc: devicetree@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
----
- .../bindings/display/bridge/ite,it6251.txt    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
+Actually, I think we can make it usable in interrupt-driver driver. For
+EV_REL events we do not need to "go back to 0", and for EV_ABS, if
+desired, we could allow specifying an option to scan all GPIOs
+on any interrupt. This obviously will not work for pure interrupt
+devices (where we do not have GPIOs).
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
-new file mode 100644
-index 000000000000..c5db82cfe8ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.txt
-@@ -0,0 +1,35 @@
-+ITE IT6251 LVDS-to-eDP bridge bindings
-+
-+Required properties:
-+- compatible:		Should be "ite,it6251"
-+- reg:			i2c address of the bridge, i2c address of the LVDS part
-+- reg-names:		Should be "bridge", "lvds"
-+- power-supply:		Regulator to provide the supply voltage
-+- video interfaces:	Device node can contain video interface port nodes
-+			for panel according to [1].
-+
-+[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
-+
-+	it6251@5c {
-+		compatible = "ite,it6251";
-+		reg = <0x5c>, <0x5e>;
-+		reg-names = "bridge", "lvds";
-+		power-supply = <&reg_display>;
-+
-+		ports {
-+			port@0 {
-+				bridge_out_edp0: endpoint {
-+					remote-endpoint = <&panel_in_edp0>;
-+				};
-+			};
-+
-+			port@1 {
-+				bridge_in_lvds0: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+		};
-+	};
-+
+Thanks.
+
 -- 
-2.24.1
-
+Dmitry
