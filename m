@@ -2,107 +2,123 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C003C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 13:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3B2C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 13:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6207A214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 13:52:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="X/iiA29C"
+	by mail.kernel.org (Postfix) with ESMTP id C4192205F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 13:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580133388;
+	bh=KFdI1sxRWI/2dtuDU11fPSoWr08vmKPYeU9ITQQ9ZIk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E0kx5ToVTE+0JTt2rPwAmz07T3D++/PHRwGkXWzl3orIhOwsfANX1dupQ5jgFFmt2
+	 Y89BDcYb1kcT5ltcpT+getNQvqskz52DjQjfwP0Mvx2MMC6bIQyjaIf7qmF8bqXUkq
+	 je1108agN+ZRjwZXuEui/lrmLrgAaMV8fHyJb++I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgA0Nwr (ORCPT
+        id S1728604AbgA0N4Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:52:47 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54272 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726303AbgA0Nwq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:52:46 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RDqbnt009301;
-        Mon, 27 Jan 2020 14:52:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=O6+dl2h2jXKNX+fyEpk/L/rLP8vjpdo1SJpvyPqDs8o=;
- b=X/iiA29CNOrjDNNUARjzkyJpC1jddl3AsBxKBhiHW+SWoftFjY8Gi4idGPQEkJG5183x
- krj9qylWMsE8A6gNOBlZqR6kDZrYQxmgYytDDj5hc2gFbkwdeZXnicL6BmcgfKUmlkS6
- 48/Ua5wooQ/Z1K5UN5otgsaMIwZSvUyBejfnvh2CuMlSiLWsNZLH0Cue+aWsDbs2G+xe
- AqvY1Wu2uxfxnMhZ+I30pSzC53NG16S6S8pYprESRWtO5t6nIIDl1SFxMtvJIWY4ugk4
- qa1FE1Yehgv2YPYf1ZJdHV3obXWB/iF8jmS4pOEK97Bk4ybbfI35+Hs/KWOhFRNnm3vu Zw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdek90x4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jan 2020 14:52:37 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 15257100038;
-        Mon, 27 Jan 2020 14:52:30 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 00C312B2F22;
-        Mon, 27 Jan 2020 14:52:29 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.49) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
- 2020 14:52:29 +0100
-Subject: Re: [PATCH 0/9] mmc: mmci: sdmmc: add sdr104 support
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200110134823.14882-1-ludovic.barre@st.com>
- <6d859def-351e-abd7-0d5f-962ad935dff2@st.com>
- <CAPDyKFo+4qTZbE=4Zgj3VN9BPYUHGskPSnYEJRo1TpARzg5zJg@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <cdc08d8d-ffb1-0fe9-377d-a1e5faf089ce@st.com>
-Date:   Mon, 27 Jan 2020 14:52:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 27 Jan 2020 08:56:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbgA0N4Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jan 2020 08:56:24 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E581214DB;
+        Mon, 27 Jan 2020 13:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580133384;
+        bh=KFdI1sxRWI/2dtuDU11fPSoWr08vmKPYeU9ITQQ9ZIk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hmMAFYI47H7UB2oHw1uvUHdzYfFag5mnHsqxphBqSAxmL8StKnfVnAzwCDe4jPdp3
+         eqZQu1TiReU0t6WKHz5YGXumNxqwetImsY2BOuCRhbQmigjuJt81RO/vExa54m1UBV
+         vI60xLhAVYD+SkZmse5ohM2knL1HLrJnKq5Mi6vM=
+Received: by mail-qk1-f181.google.com with SMTP id s187so9624210qke.8;
+        Mon, 27 Jan 2020 05:56:24 -0800 (PST)
+X-Gm-Message-State: APjAAAXJYQKGdvoU9TnNbjpEA5ETMbElJnFqQloj6plmHCw4tUcNmRmn
+        K3yHW0hcxaFf0gtgVSkGTZw+3dqL0+lrOhoyWw==
+X-Google-Smtp-Source: APXvYqzIhu1/LOnm7n6ODE3yUi0ivUKcaHREkhij1unVeO3mXUrUJz8/Fh93k2W+bAJvuLutueErXRU/tajZTDUPFs8=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr16781000qkg.152.1580133383359;
+ Mon, 27 Jan 2020 05:56:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFo+4qTZbE=4Zgj3VN9BPYUHGskPSnYEJRo1TpARzg5zJg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
+References: <20200123012317.14808-1-chris.packham@alliedtelesis.co.nz>
+ <20200123012317.14808-2-chris.packham@alliedtelesis.co.nz>
+ <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com> <651803fbdea412ecde7cd352b080d41d9f0a2a33.camel@alliedtelesis.co.nz>
+In-Reply-To: <651803fbdea412ecde7cd352b080d41d9f0a2a33.camel@alliedtelesis.co.nz>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 27 Jan 2020 07:56:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJHYwH28jkg4h0GivOz=GywxFkGpxLywt9HEqKy3pdVRQ@mail.gmail.com>
+Message-ID: <CAL_JsqJHYwH28jkg4h0GivOz=GywxFkGpxLywt9HEqKy3pdVRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Document binding for generic SPI multiplexer
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-hi Ulf
+On Sun, Jan 26, 2020 at 2:24 PM Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
+>
+> On Thu, 2020-01-23 at 07:51 -0600, Rob Herring wrote:
+> > On Wed, Jan 22, 2020 at 7:24 PM Chris Packham
+> > <chris.packham@alliedtelesis.co.nz> wrote:
+> > >
+> > > Add binding documentation for the spi-mux driver. This allows a generic
+> > > multiplexer to be used to provide access to multiple SPI devices.
+> > >
+> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > ---
+> > >
+> > > Notes:
+> > >     Changes in v2:
+> > >     - update license
+> > >     - make dt_binding_check clean
+> >
+> > Sure about that?
+> >
+>
+> I was when I wrote that, but now I think I need to consult my spell
+> book.
+>
+> It appears the incantation I should be using is
+>
+>   make ARCH=arm defconfig
+>   make ARCH=arm dt_binding_check \
+>      DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-mux.yaml
 
-Le 1/24/20 à 2:19 PM, Ulf Hansson a écrit :
-> On Fri, 24 Jan 2020 at 13:55, Ludovic BARRE <ludovic.barre@st.com> wrote:
->>
->> hi Ulf
->>
->> Just a "gentleman ping" on this series
->> https://lkml.org/lkml/2020/1/10/392
-> 
-> I was just reviewing :-) Thanks for pinging!
-> 
-> One overall comment is that I think you can try to work a bit on the
-> changelogs. In some cases you described what the patch does, which is
-> good, but it may lack information about *why* the change is wanted.
+Note that you need to run this also without DT_SCHEMA_FILES set so the
+example is checked against all schema. With that, the 'spi' node is
+going to need #address-cells and #size-cells.
 
-Ok, I try to add a comment to *why*
+>
+> I can see the simple failures (not sure how I missed them). But one
+> that remains is:
+>
+> Warning (spi_bus_bridge): /example-0/spi/spi-mux@0: node name for SPI
+> buses should be 'spi'
+>
+> I could fix that by having
+>
+>  spi {
+>     spi@0 {
+>        compatible = "spi-mux";
+>     };
+>  };
+>
+> Is that what we want? Or should I be adding awareness of spi-muxes to
+> dtc?
 
-> 
-> Overall, the series looks nice.
-> 
-> Kind regards
-> Uffe
-> 
+We should probably relax dtc, but for now I'd just use 'spi'.
+
+Rob
