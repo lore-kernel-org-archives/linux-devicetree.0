@@ -2,433 +2,164 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F76C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 20:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5DDC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 20:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E85E24682
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 20:05:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pgtsrUaU"
+	by mail.kernel.org (Postfix) with ESMTP id 3C6702467B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 20:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580156168;
+	bh=zcqkL2X1+5RZ6RD91lcWz4KcZ3RzkxAM2y0dev3Kxhs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uI2px6+zycRdAWLgI98Wwed7TvTfgPxhu/XSYJpV9oI66m7ScOiY1IbZqwGZNIGLq
+	 pkKRhzfCnonazmkmtNykNDyeRzj7gZlaDeR8Y5TcAfQ/RR23kZla7R1wyOf1EroSis
+	 cGBQd6kssma7JfO9is24xLExyWHC4s5nVsMP0pQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgA0UFV (ORCPT
+        id S1726099AbgA0UQH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 15:05:21 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:32249 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725990AbgA0UFU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jan 2020 15:05:20 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580155520; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=5wyN+cpMYJy8Yjfg6FK3pFo+RE0EMy8KLiRdbwdcM3s=; b=pgtsrUaUj3p+ysCGrmOehB7fxlLogTnMBpd/SSkcKE0o691GGMcvlusuJ52gm5P84VByC4Ws
- LdYHxyQWBhFFMJuXyyyl4idMc431DGhgPgwDOQJb+8PD1rsdeVHQAuVPP7eQ3zV0dJHLNOob
- 3JbqHkIwhxx92QjwJlyjegFukRM=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2f427d.7feba3336490-smtp-out-n02;
- Mon, 27 Jan 2020 20:05:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7E22C433CB; Mon, 27 Jan 2020 20:05:15 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA089C433CB;
-        Mon, 27 Jan 2020 20:05:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EA089C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com
-Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [RFC v3 10/10] arm64: dts: qcom: sc7180: Add cpu OPP tables
-Date:   Tue, 28 Jan 2020 01:33:50 +0530
-Message-Id: <20200127200350.24465-11-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20200127200350.24465-1-sibis@codeaurora.org>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
+        Mon, 27 Jan 2020 15:16:07 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35812 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgA0UQH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 15:16:07 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r16so9731903otd.2;
+        Mon, 27 Jan 2020 12:16:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kP3meVHpRUwC+Lg41T7kI+wm6FYiDtOOiXX2HrvTBww=;
+        b=BTktUi3fcS0ZkN+Kf42104r1tioKWgNlQBJG5HTd/EVu7FC9+X0MxzY1rCl+5n5gQF
+         Y2tzwTGdQJBWgE7QLyIeKTxMFAaS3oJ8qqJokmIjvLfLL1LiPbp7azai86bYV4SoYTRO
+         289f2h5bMC1S+BHmUODeezZW7bgt0AS3ItZz011HdV+4mjSS/Ao4SHRfVIsB/WqePVeR
+         V1Y2H1cLU5AnJ1pKHFvTZ5Rv4JrDG92St1mhcwuURTuJZ2ZlZtCNZxFgtkN7fI/BDXkQ
+         U4bNVtr4+GTd9SZfHwYgZAoKud8C0472hnVACNCQx8NLq6qjMbSjfBoAgLXEHlOSSAEH
+         9+xg==
+X-Gm-Message-State: APjAAAWiqlA7A8ISBRgt4x5Es4xSz5xoTMZtTSBBIUCKzrTu7CgjPNUq
+        MtWaDK4RK63pNC3OGPKAfuL+7Yc=
+X-Google-Smtp-Source: APXvYqx8cBU9dlCzp2qsiRzvx9t6DQ1OIpfXuWYpi0exeUekVr56E9j4fYVOZ8DSsuYy1LtC8Xa6xw==
+X-Received: by 2002:a9d:1b26:: with SMTP id l35mr13904866otl.307.1580156166836;
+        Mon, 27 Jan 2020 12:16:06 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m19sm5942050otn.47.2020.01.27.12.16.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 12:16:06 -0800 (PST)
+Received: (nullmailer pid 3695 invoked by uid 1000);
+        Mon, 27 Jan 2020 20:16:05 -0000
+Date:   Mon, 27 Jan 2020 14:16:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, biabeniamin@outlook.com,
+        knaack.h@gmx.de, mark.rutland@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: amplifiers: Add docs for
+ HMC425A Step Attenuator
+Message-ID: <20200127201605.GA9131@bogus>
+References: <20200122121702.30494-1-beniamin.bia@analog.com>
+ <20200122121702.30494-2-beniamin.bia@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122121702.30494-2-beniamin.bia@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add OPP tables required to scale DDR/L3 per freq-domain on SC7180 SoCs.
+On Wed, Jan 22, 2020 at 02:17:01PM +0200, Beniamin Bia wrote:
+> From: Michael Hennerich <michael.hennerich@analog.com>
+> 
+> Document support for Analog Devices MC425A Step Attenuator.
+> 
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> ---
+>  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> new file mode 100644
+> index 000000000000..a0afa661f4ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 287 +++++++++++++++++++++++++++
- 1 file changed, 287 insertions(+)
+Dual license new bindings:
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index ba53ddf17ee3a..699cafc1a727d 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -109,6 +109,12 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
-+			operating-points-v2 = <&cpu0_opp_table>,
-+					      <&cpu0_ddr_bw_opp_table>,
-+					      <&cpu0_l3_bw_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-names = "cpu-ddr", "cpu-l3";
- 			next-level-cache = <&L2_0>;
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-@@ -129,6 +135,12 @@
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_100>;
-+			operating-points-v2 = <&cpu0_opp_table>,
-+					      <&cpu0_ddr_bw_opp_table>,
-+					      <&cpu0_l3_bw_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-names = "cpu-ddr", "cpu-l3";
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_100: l2-cache {
-@@ -145,6 +157,12 @@
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_200>;
-+			operating-points-v2 = <&cpu0_opp_table>,
-+					      <&cpu0_ddr_bw_opp_table>,
-+					      <&cpu0_l3_bw_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-names = "cpu-ddr", "cpu-l3";
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_200: l2-cache {
-@@ -161,6 +179,12 @@
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_300>;
-+			operating-points-v2 = <&cpu0_opp_table>,
-+					      <&cpu0_ddr_bw_opp_table>,
-+					      <&cpu0_l3_bw_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-names = "cpu-ddr", "cpu-l3";
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_300: l2-cache {
-@@ -177,6 +201,12 @@
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_400>;
-+			operating-points-v2 = <&cpu0_opp_table>,
-+					      <&cpu0_ddr_bw_opp_table>,
-+					      <&cpu0_l3_bw_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-names = "cpu-ddr", "cpu-l3";
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_400: l2-cache {
-@@ -193,6 +223,12 @@
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_500>;
-+			operating-points-v2 = <&cpu0_opp_table>,
-+					      <&cpu0_ddr_bw_opp_table>,
-+					      <&cpu0_l3_bw_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-names = "cpu-ddr", "cpu-l3";
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_500: l2-cache {
-@@ -209,6 +245,12 @@
- 			capacity-dmips-mhz = <1740>;
- 			dynamic-power-coefficient = <405>;
- 			next-level-cache = <&L2_600>;
-+			operating-points-v2 = <&cpu6_opp_table>,
-+					      <&cpu6_ddr_bw_opp_table>,
-+					      <&cpu6_l3_bw_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-names = "cpu-ddr", "cpu-l3";
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_600: l2-cache {
-@@ -225,6 +267,12 @@
- 			capacity-dmips-mhz = <1740>;
- 			dynamic-power-coefficient = <405>;
- 			next-level-cache = <&L2_700>;
-+			operating-points-v2 = <&cpu6_opp_table>,
-+					      <&cpu6_ddr_bw_opp_table>,
-+					      <&cpu6_l3_bw_opp_table>;
-+			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-+			interconnect-names = "cpu-ddr", "cpu-l3";
- 			#cooling-cells = <2>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_700: l2-cache {
-@@ -270,6 +318,245 @@
- 		};
- 	};
- 
-+	cpu0_opp_table: cpu0_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu0_opp1: opp-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			required-opps = <&cpu0_ddr_bw_opp1>, <&cpu0_l3_bw_opp1>;
-+		};
-+
-+		cpu0_opp2: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			required-opps = <&cpu0_ddr_bw_opp1>, <&cpu0_l3_bw_opp1>;
-+		};
-+
-+		cpu0_opp3: opp-768000000 {
-+			opp-hz = /bits/ 64 <768000000>;
-+			required-opps = <&cpu0_ddr_bw_opp1>, <&cpu0_l3_bw_opp1>;
-+		};
-+
-+		cpu0_opp4: opp-1017600000 {
-+			opp-hz = /bits/ 64 <1017600000>;
-+			required-opps = <&cpu0_ddr_bw_opp2>, <&cpu0_l3_bw_opp2>;
-+		};
-+
-+		cpu0_opp5: opp-1248000000 {
-+			opp-hz = /bits/ 64 <1248000000>;
-+			required-opps = <&cpu0_ddr_bw_opp3>, <&cpu0_l3_bw_opp3>;
-+		};
-+
-+		cpu0_opp6: opp-1324800000 {
-+			opp-hz = /bits/ 64 <1324800000>;
-+			required-opps = <&cpu0_ddr_bw_opp3>, <&cpu0_l3_bw_opp3>;
-+		};
-+
-+		cpu0_opp7: opp-1516800000 {
-+			opp-hz = /bits/ 64 <1516800000>;
-+			required-opps = <&cpu0_ddr_bw_opp4>, <&cpu0_l3_bw_opp4>;
-+		};
-+
-+		cpu0_opp8: opp-1612800000 {
-+			opp-hz = /bits/ 64 <1612800000>;
-+			required-opps = <&cpu0_ddr_bw_opp4>, <&cpu0_l3_bw_opp4>;
-+		};
-+
-+		cpu0_opp9: opp-1708800000 {
-+			opp-hz = /bits/ 64 <1708800000>;
-+			required-opps = <&cpu0_ddr_bw_opp4>, <&cpu0_l3_bw_opp4>;
-+		};
-+
-+		cpu0_opp10: opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			required-opps = <&cpu0_ddr_bw_opp5>, <&cpu0_l3_bw_opp5>;
-+		};
-+	};
-+
-+	cpu6_opp_table: cpu6_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu6_opp1: opp-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			required-opps = <&cpu6_ddr_bw_opp1>, <&cpu6_l3_bw_opp1>;
-+		};
-+
-+		cpu6_opp2: opp-652800000 {
-+			opp-hz = /bits/ 64 <652800000>;
-+			required-opps = <&cpu6_ddr_bw_opp1>, <&cpu6_l3_bw_opp1>;
-+		};
-+
-+		cpu6_opp3: opp-825600000 {
-+			opp-hz = /bits/ 64 <825600000>;
-+			required-opps = <&cpu6_ddr_bw_opp1>, <&cpu6_l3_bw_opp1>;
-+		};
-+
-+		cpu6_opp4: opp-979200000 {
-+			opp-hz = /bits/ 64 <979200000>;
-+			required-opps = <&cpu6_ddr_bw_opp1>, <&cpu6_l3_bw_opp1>;
-+		};
-+
-+		cpu6_opp5: opp-1113600000 {
-+			opp-hz = /bits/ 64 <1113600000>;
-+			required-opps = <&cpu6_ddr_bw_opp1>, <&cpu6_l3_bw_opp1>;
-+		};
-+
-+		cpu6_opp6: opp-1267200000 {
-+			opp-hz = /bits/ 64 <1267200000>;
-+			required-opps = <&cpu6_ddr_bw_opp2>, <&cpu6_l3_bw_opp2>;
-+		};
-+
-+		cpu6_opp7: opp-1555200000 {
-+			opp-hz = /bits/ 64 <1555200000>;
-+			required-opps = <&cpu6_ddr_bw_opp2>, <&cpu6_l3_bw_opp3>;
-+		};
-+
-+		cpu6_opp8: opp-1708800000 {
-+			opp-hz = /bits/ 64 <1708800000>;
-+			required-opps = <&cpu6_ddr_bw_opp3>, <&cpu6_l3_bw_opp4>;
-+		};
-+
-+		cpu6_opp9: opp-1843200000 {
-+			opp-hz = /bits/ 64 <1843200000>;
-+			required-opps = <&cpu6_ddr_bw_opp3>, <&cpu6_l3_bw_opp4>;
-+		};
-+
-+		cpu6_opp10: opp-1900800000 {
-+			opp-hz = /bits/ 64 <1900800000>;
-+			required-opps = <&cpu6_ddr_bw_opp3>, <&cpu6_l3_bw_opp5>;
-+		};
-+
-+		cpu6_opp11: opp-1996800000 {
-+			opp-hz = /bits/ 64 <1996800000>;
-+			required-opps = <&cpu6_ddr_bw_opp3>, <&cpu6_l3_bw_opp5>;
-+		};
-+
-+		cpu6_opp12: opp-2112000000 {
-+			opp-hz = /bits/ 64 <2112000000>;
-+			required-opps = <&cpu6_ddr_bw_opp3>, <&cpu6_l3_bw_opp5>;
-+		};
-+
-+		cpu6_opp13: opp-2208000000 {
-+			opp-hz = /bits/ 64 <2208000000>;
-+			required-opps = <&cpu6_ddr_bw_opp4>, <&cpu6_l3_bw_opp5>;
-+		};
-+
-+		cpu6_opp14: opp-2323200000 {
-+			opp-hz = /bits/ 64 <2323200000>;
-+			required-opps = <&cpu6_ddr_bw_opp4>, <&cpu6_l3_bw_opp5>;
-+		};
-+
-+		cpu6_opp15: opp-2400000000 {
-+			opp-hz = /bits/ 64 <2400000000>;
-+			required-opps = <&cpu6_ddr_bw_opp5>, <&cpu6_l3_bw_opp6>;
-+		};
-+	};
-+
-+	cpu0_ddr_bw_opp_table: cpu0-ddr-bw-opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu0_ddr_bw_opp1: opp-300000000  {
-+			opp-peak-kBps =/bits/ 32 <1200000>;
-+		};
-+
-+		cpu0_ddr_bw_opp2: opp-451000000  {
-+			opp-peak-kBps =/bits/ 32 <1804000>;
-+		};
-+
-+		cpu0_ddr_bw_opp3: opp-547000000  {
-+			opp-peak-kBps =/bits/ 32 <2188000>;
-+		};
-+
-+		cpu0_ddr_bw_opp4: opp-768000000  {
-+			opp-peak-kBps =/bits/ 32 <3072000>;
-+		};
-+
-+		cpu0_ddr_bw_opp5: opp-1017000000  {
-+			opp-peak-kBps =/bits/ 32 <4068000>;
-+		};
-+	};
-+
-+	cpu0_l3_bw_opp_table: cpu0-l3-bw-opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu0_l3_bw_opp1: opp-300000000 {
-+			opp-peak-kBps = /bits/ 32 <4800000>;
-+		};
-+
-+		cpu0_l3_bw_opp2: opp-556800000 {
-+			opp-peak-kBps = /bits/ 32 <8908800>;
-+		};
-+
-+		cpu0_l3_bw_opp3: opp-806400000 {
-+			opp-peak-kBps = /bits/ 32 <12902400>;
-+		};
-+
-+		cpu0_l3_bw_opp4: opp-940800000 {
-+			opp-peak-kBps = /bits/ 32 <15052800>;
-+		};
-+
-+		cpu0_l3_bw_opp5: opp-1401000000 {
-+			opp-peak-kBps = /bits/ 32 <22425600>;
-+		};
-+	};
-+
-+	cpu6_ddr_bw_opp_table: cpu6-ddr-bw-opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu6_ddr_bw_opp1: opp-547000000  {
-+			opp-peak-kBps =/bits/ 32 <2188000>;
-+		};
-+
-+		cpu6_ddr_bw_opp2: opp-1017000000  {
-+			opp-peak-kBps =/bits/ 32 <4068000>;
-+		};
-+
-+		cpu6_ddr_bw_opp3: opp-1555000000  {
-+			opp-peak-kBps =/bits/ 32 <6220000>;
-+		};
-+
-+		cpu6_ddr_bw_opp4: opp-1804000000  {
-+			opp-peak-kBps =/bits/ 32 <7216000>;
-+		};
-+
-+		cpu6_ddr_bw_opp5: opp-2133000000  {
-+			opp-peak-kBps =/bits/ 32 <8532000>;
-+		};
-+	};
-+
-+	cpu6_l3_bw_opp_table: cpu6-l3-bw-opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu6_l3_bw_opp1: opp-556800000 {
-+			opp-peak-kBps = /bits/ 32 <8908800>;
-+		};
-+
-+		cpu6_l3_bw_opp2: opp-806400000 {
-+			opp-peak-kBps = /bits/ 32 <12902400>;
-+		};
-+
-+		cpu6_l3_bw_opp3: opp-940800000 {
-+			opp-peak-kBps = /bits/ 32 <15052800>;
-+		};
-+
-+		cpu6_l3_bw_opp4: opp-1209600000 {
-+			opp-peak-kBps = /bits/ 32 <19353600>;
-+		};
-+
-+		cpu6_l3_bw_opp5: opp-1401000000 {
-+			opp-peak-kBps = /bits/ 32 <22425600>;
-+		};
-+
-+		cpu6_l3_bw_opp6: opp-1459000000 {
-+			opp-peak-kBps = /bits/ 32 <23347200>;
-+		};
-+	};
-+
- 	memory@80000000 {
- 		device_type = "memory";
- 		/* We expect the bootloader to fill in the size */
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HMC425A 6-bit Digital Step Attenuator
+> +
+> +maintainers:
+> +- Michael Hennerich <michael.hennerich@analog.com>
+> +- Beniamin Bia <beniamin.bia@analog.com>
+> +
+> +description: |
+> +  Digital Step Attenuator IIO device with gpio interface.
+> +  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,hmc425a
+> +
+> +  vcc-supply:
+> +    description:
+> +      Digital voltage regulator (see regulator/regulator.txt)
+> +    maxItems: 1
+
+All supplies are a single entry, so drop this. Really, 
+'vcc-supply: true' is sufficient.
+
+> +
+> +  ctrl-gpios:
+> +    description:
+> +      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
+> +      connected to the control pins V1-V6.
+> +    maxItems: 6
+> +
+> +required:
+> +  - compatible
+> +  - ctrl-gpios
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    gpio {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+
+GPIO clients are not child nodes of GPIO controllers, so you can remove 
+this node.
+
+> +      gpio_hmc425a: hmc425a {
+> +        compatible = "adi,hmc425a";
+> +        ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
+> +          <&gpio 39 GPIO_ACTIVE_HIGH>,
+> +          <&gpio 38 GPIO_ACTIVE_HIGH>,
+> +          <&gpio 37 GPIO_ACTIVE_HIGH>,
+> +          <&gpio 36 GPIO_ACTIVE_HIGH>,
+> +          <&gpio 35 GPIO_ACTIVE_HIGH>;
+> +
+> +        vcc-supply = <&foo>;
+> +      };
+> +    };
+> +...
+> -- 
+> 2.17.1
+> 
