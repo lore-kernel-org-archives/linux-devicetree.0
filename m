@@ -2,158 +2,159 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E175C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 07:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6B5C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 07:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B4020702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 07:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C472B214AF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 07:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZkdUqd2z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kSO/uE+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgA0HXK (ORCPT
+        id S1726260AbgA0Hzr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 02:23:10 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:36294 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgA0HXJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 02:23:09 -0500
-Received: by mail-vk1-f193.google.com with SMTP id i4so2372081vkc.3
-        for <devicetree@vger.kernel.org>; Sun, 26 Jan 2020 23:23:07 -0800 (PST)
+        Mon, 27 Jan 2020 02:55:47 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45902 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgA0Hzr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 02:55:47 -0500
+Received: by mail-vs1-f67.google.com with SMTP id v141so1397530vsv.12
+        for <devicetree@vger.kernel.org>; Sun, 26 Jan 2020 23:55:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Zs7ordlPu6oLMie0ztw+ViABr97RTMvxSHDoSvg2y8=;
-        b=ZkdUqd2zKSeWdVR91y36SdzJKYZWn6y3ItuefmZXZQ65FE7TOnAneczRyXuYZ73Q09
-         dxyrhyivxIhtQcR2Niso9FYPdVIMx7MpX3rk2ZMJ0xzAOkFCuRZxaewbU0pVz0EnbFTf
-         RwBf8kQhz4qiuQMkW/EoW11SdohZV+sqIYsjjZXPVt4bwAZ+59aKtKpOT4x+mz3DATbJ
-         l8XSQjy40AFGHpBJmIXEwQ54J73jRsoZi6Gy68//Pw8gcbJwFQ77p8u1E4EGmL7UpgvB
-         JZ/1N0idA75Y+pP1l/5Pl9EJcLI54QRiC4BtLNNHuB7wI92mBOYSLhRXl9HWHp1fHViD
-         6DQg==
+         :cc:content-transfer-encoding;
+        bh=JisW5FdHqDfpueRuACrKxki3mS2+DqkIGJ6tqvYKBYg=;
+        b=kSO/uE+41usEvH7ebSjUhk6e1/GR1kdSgxZbiRxsCAhlZoPKgznwup/h/2aiurqXba
+         seFxgj3oUfrgEWcKa+G614+LeCAaTNBjCdbjJPXw0HZTQ7jIJIx56MVRyj5idy2Njihw
+         1lvg7u/sCsRI9lQAUgiE+1pj3eYt3mM8RKqpvOqGY4GoQ8WpnDC8loBTB3RIAdXpJd1t
+         uvhGn77x1mkhssxugQBP4QZX/BGJNtXHXbfds528PcECqhauXzE+uRrC+XgHw3VmoWxm
+         cfiAWEvIJOhatU7LA2qPT3/WwEw8MlcDjWSC/qZE6TC9IgUl8qSgQSK+hpv1LKGzU+vi
+         04YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Zs7ordlPu6oLMie0ztw+ViABr97RTMvxSHDoSvg2y8=;
-        b=PinzcFVdeaTDK1Da1yVSSHbTM05mAze89zHpVMXpjRRBbrZtfB1YNhXAoNBBcwOM/m
-         IqzSj/jfqvJnku7MdfM2m7Xoz7mHR+48yotSWHzGb4LYAVQFZR47g5/AVSebQWoTj4uU
-         Nzx3z+uGDkonIBXq/6mFYjqQma5wyUDel7LjNl1oWQneBJl2Gp35nQgu/l+qB4P2U8gU
-         GnwzxF3QWSRjxYrTYp+pnMovuvi13oiqKDlqkTH45Ujzcr7j0vaSMYFD3Vh/je2RYAiP
-         sJWUiqKHMloEffRrBcY1se8j+cAoWClBslO7qkdp+D6lWHDrgbWb6lIDkiQzOexjkJQW
-         xfjQ==
-X-Gm-Message-State: APjAAAUZH0YDTSJTabmzGn55fvog3ghL0r6B3GZ62C4PFj8wy8pIE2dh
-        dW4vFqXmH9Z+sYzdbflt5F9uqPHl8Xl1KLZagmAbLRNs
-X-Google-Smtp-Source: APXvYqz4OQZA/2kIUqEb6B2klRTdDoZkhD2PvmDkLDercb9w5oGLFffYnzmHjIgmSkCuBSvVCAvCAxfvm+k7OKQr2M8=
-X-Received: by 2002:a1f:434b:: with SMTP id q72mr8497371vka.53.1580109787392;
- Sun, 26 Jan 2020 23:23:07 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JisW5FdHqDfpueRuACrKxki3mS2+DqkIGJ6tqvYKBYg=;
+        b=rpiXh4gl61YD6vff+npwRpxZw3yG/4XQ/77ai+N2ramwH4Xsh+UzIKYHlf4QWql8Lg
+         a19riox9Mka6QyAUXHoN1AboltCtJ90NrMWZUINpqJZgIFWFqqpRWU7I68jBdgnbJL0K
+         5QjVHr+XvYRd112x5yns9MKMPCHHmhqc2L/mEZzZR484LwXyN6scK6QntJ5PKXPShMhT
+         OKxCVjRhk13R4h3zhfn24d7z5J+2CvDVjDp+oNyoPMTAkgLbdEyN0GETYTFzUQ6xIGKL
+         kIbEJas+PUgqkV2Fu+zFNTKvY5CgJoc51aD4U48N3cImLRItOIF1/6TPHP4KSJI3qnGh
+         W9BQ==
+X-Gm-Message-State: APjAAAXD2et/HGiq695l8P0WscpMj+TK9ZnDfotEbi1gWB79msoYAaVN
+        cNL5BAFj8uMjAfQvf8vFT8hxzKDrc1nyXYM/e+7naA==
+X-Google-Smtp-Source: APXvYqyL1TCg49AaeGX4CVUErd9kezem7knF5p9I+JWV1m4AIpmUm9yBXdiHxcp8rC0t9W4QBLYziKJLuXWuYii+iQs=
+X-Received: by 2002:a67:ee02:: with SMTP id f2mr584267vsp.165.1580111746386;
+ Sun, 26 Jan 2020 23:55:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20200126115247.13402-1-mpe@ellerman.id.au>
-In-Reply-To: <20200126115247.13402-1-mpe@ellerman.id.au>
+References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-6-drinkcat@chromium.org>
+ <b58a8cf9-3275-cf89-6dff-596aceeb8000@arm.com> <CANMq1KBcNr=1_poBHrA_SDo_h-5i3e5TMqASEVaDj5LevsRcOQ@mail.gmail.com>
+In-Reply-To: <CANMq1KBcNr=1_poBHrA_SDo_h-5i3e5TMqASEVaDj5LevsRcOQ@mail.gmail.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 27 Jan 2020 08:22:29 +0100
-Message-ID: <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
-Subject: Re: [PATCH] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        linuxppc-dev@ozlabs.org
+Date:   Mon, 27 Jan 2020 08:55:10 +0100
+Message-ID: <CAPDyKFr4Vz1ihuFQNnhDLEnOs=BZ1n2wzw3CATgPcDXs9g54uA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] drm/panfrost: Add support for multiple power
+ domain support
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Steven Price <steven.price@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 26 Jan 2020 at 12:53, Michael Ellerman <mpe@ellerman.id.au> wrote:
+On Fri, 10 Jan 2020 at 02:53, Nicolas Boichat <drinkcat@chromium.org> wrote=
+:
 >
-> There's an OF helper called of_dma_is_coherent(), which checks if a
-> device has a "dma-coherent" property to see if the device is coherent
-> for DMA.
+> +Ulf to keep me honest on the power domains
 >
-> But on some platforms devices are coherent by default, and on some
-> platforms it's not possible to update existing device trees to add the
-> "dma-coherent" property.
+> On Thu, Jan 9, 2020 at 10:08 PM Steven Price <steven.price@arm.com> wrote=
+:
+> >
+> > On 08/01/2020 05:23, Nicolas Boichat wrote:
+> > > When there is a single power domain per device, the core will
+> > > ensure the power domains are all switched on.
+> > >
+> > > However, when there are multiple ones, as in MT8183 Bifrost GPU,
+> > > we need to handle them in driver code.
+> > >
+> > >
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > ---
+> > >
+> > > The downstream driver we use on chromeos-4.19 currently uses 2
+> > > additional devices in device tree to accomodate for this [1], but
+> > > I believe this solution is cleaner.
+> >
+> > I'm not sure what is best, but it seems odd to encode this into the Pan=
+frost driver itself - it doesn't have any knowledge of what to do with thes=
+e power domains. The naming of the domains looks suspiciously like someone =
+thought that e.g. only half of the cores could be powered, but it doesn't l=
+ook like that was implemented in the chromeos driver linked and anyway that=
+ is *meant* to be automatic in the hardware! (I.e. if you only power up one=
+ cores in one core stack then the PDC should only enable the power domain f=
+or that set of cores).
 >
-> So add a Kconfig symbol to allow arch code to tell
-> of_dma_is_coherent() that devices are coherent by default, regardless
-> of the presence of the property.
+> This is actually implemented in the Chrome OS driver [1]. IMHO power
+> domains are a bit confusing [2]:
+>  i. If there's only 1 power domain in the device, then the core takes
+> care of power on the domain (based on pm_runtime)
+>  ii. If there's more than 1 power domain, then the device needs to
+> link the domains manually.
 >
-> Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
-> when the system has a coherent cache.
+> So the Chrome OS [1] driver takes approach (i), by creating 3 devices,
+> each with 1 power domain that is switched on/off automatically using
+> pm_runtime.
 >
-> Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
-> Cc: stable@vger.kernel.org # v3.16+
-> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> This patch takes approach (ii) with device links to handle the extra doma=
+ins.
+>
+> I believe the latter is more upstream-friendly, but, as always,
+> suggestions welcome.
 
-Thanks Michael for helping out fixing and this! The patch looks good to me.
+Apologies for the late reply. A few comments below.
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+If the device is partitioned across multiple PM domains (it may need
+several power rails), then that should be described with the "multi PM
+domain" approach in the DTS. As in (ii).
+
+Using "device links" is however optional, as it may depend on the use
+case. If all multiple PM domains needs to be powered on/off together,
+then it's certainly recommended to use device links.
+
+However, if the PM domains can be powered on/off independently (one
+can be on while another is off), then it's probably easier to operate
+directly with runtime PM, on the returned struct *device from
+dev_pm_domain_attach_by_id().
+
+Also note, there is dev_pm_domain_attach_by_name(), which allows us to
+specify a name for the PM domain in the DTS, rather than using an
+index. This may be more future proof to use.
+
+[...]
+
+Hope this helps.
 
 Kind regards
 Uffe
-
-> ---
->  arch/powerpc/Kconfig | 1 +
->  drivers/of/Kconfig   | 4 ++++
->  drivers/of/address.c | 6 +++++-
->  3 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 1ec34e16ed65..19f5aa8ac9a3 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -238,6 +238,7 @@ config PPC
->         select NEED_DMA_MAP_STATE               if PPC64 || NOT_COHERENT_CACHE
->         select NEED_SG_DMA_LENGTH
->         select OF
-> +       select OF_DMA_DEFAULT_COHERENT          if !NOT_COHERENT_CACHE
->         select OF_EARLY_FLATTREE
->         select OLD_SIGACTION                    if PPC32
->         select OLD_SIGSUSPEND
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 37c2ccbefecd..d91618641be6 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -103,4 +103,8 @@ config OF_OVERLAY
->  config OF_NUMA
->         bool
->
-> +config OF_DMA_DEFAULT_COHERENT
-> +       # arches should select this if DMA is coherent by default for OF devices
-> +       bool
-> +
->  endif # OF
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 99c1b8058559..e8a39c3ec4d4 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -995,12 +995,16 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->   * @np:        device node
->   *
->   * It returns true if "dma-coherent" property was found
-> - * for this device in DT.
-> + * for this device in the DT, or if DMA is coherent by
-> + * default for OF devices on the current platform.
->   */
->  bool of_dma_is_coherent(struct device_node *np)
->  {
->         struct device_node *node = of_node_get(np);
->
-> +       if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
-> +               return true;
-> +
->         while (node) {
->                 if (of_property_read_bool(node, "dma-coherent")) {
->                         of_node_put(node);
-> --
-> 2.21.1
->
