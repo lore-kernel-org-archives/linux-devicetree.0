@@ -2,84 +2,108 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836EDC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB342C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D1E20720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="jmNKNB2j"
+	by mail.kernel.org (Postfix) with ESMTP id AEA8A21739
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580139309;
+	bh=XlQkHY1fDUiPsQxLG2f4cm7hcqh48mk+Pd4GwyAnINM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ro70waIZhVQ8vLWleW+EolmD7v8OQpzETGusXhcxAFAmantw9jnVs+KnQbWHQdnhL
+	 6Lce0lHuyCUcZPvYGTCfdf/KofuWoSSQ1EcGJL3eLXFgiDtgvlts7zR5V47GChXc9w
+	 rSIindIQNKme410OyekgsKD+oGUyc4RercWeuZCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgA0PNS (ORCPT
+        id S1729473AbgA0PfJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:13:18 -0500
-Received: from smtp.domeneshop.no ([194.63.252.55]:54021 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbgA0PNR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 10:13:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AvcaQHsGf9q8P8sr76j5zYnoRvlA6Weltg5yBROc9io=; b=jmNKNB2jUmpStk2+x6J2mw3h3z
-        ifM19Ka74VaAik4/+Bm71A0xaC7h06D4VcvrdDd9HJzKc8/KsLaMV7ajTTQsViXBb3Juab5+vZ6LP
-        y+tlRh+2GBofOMtOrQ56Jc7y0BmqyQCi2pi9tgIkS07ek3CC6a3+NWdgZoQUt8ubwVbJ6RM5EW1AZ
-        MetEEI9wWbYDvgY3hWRcb59oX3rg0JeBKtcKLMpK3qV0sYOcax0mxX/Y+Uy45+pG9K+0yyg6VQ0JQ
-        yvuYi0khvPgxi+ECTbmACGc3fjYonc5m0CCQEGDIPmSsltDv2iupDRXdqGXgFlWS0M/awPBwNT1ZV
-        m2qQ1eEA==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:62464 helo=[192.168.10.61])
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1iw64h-0004LR-Ao; Mon, 27 Jan 2020 16:13:15 +0100
-Subject: Re: [PATCH v4 3/3] drm/tinydrm: add support for tft displays based on
- ilitek,ili9486
-To:     Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <cover.1580134320.git.kamlesh.gurudasani@gmail.com>
- <eb5672abbdb89d7018793c76d7193bfb78a2ea88.1580134320.git.kamlesh.gurudasani@gmail.com>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <79733e99-2c47-05e2-dbe8-5116001f44b4@tronnes.org>
-Date:   Mon, 27 Jan 2020 16:13:13 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 10:35:09 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35290 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729085AbgA0PfI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 10:35:08 -0500
+Received: by mail-oi1-f193.google.com with SMTP id b18so3077424oie.2;
+        Mon, 27 Jan 2020 07:35:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=omtnsWBjbVm/NZL/pqX4cwBZTFhWoiBZO939OVp2MOA=;
+        b=JlmgtMQp5lo1ph99hEYYeebBX4WCrk4C9Qzl3cHJZoYMMoHGy0kMDrzzLMPt8fDkMT
+         FsqsVGsGRjGCCU/a+txb4LAk64jRGNaM/82B4rXuPBwTKG9lbo65nr1teT+ZqCktQ2/w
+         GLAqLaxkV2C1FOKW7rIYeJGP0xr1YtvD4keRvFPB6MEhQnJf5c24vN2BWFv6T09o8EL9
+         cgxilNdqE+ApzW7SucgtGGBiUNLzNwaUHw8NSrRk3syzNfiITgpebaTedabV6xks/j8L
+         9gA5TbHPxMwuE/UURlf2CxQg0xfQUs/UAQGvnE8RsegBA2icPAdlQ8YPy4xznM12Cuv6
+         AIWQ==
+X-Gm-Message-State: APjAAAXR+JPoxmKBTeuA2OyAzfIWtVi78Zs8UZeZKlkfmHzj5UP5ad/Y
+        oqpL0bwX025ufsJ7ADj0kQ==
+X-Google-Smtp-Source: APXvYqyifQ9wAgKfHNoCNFNZQ8VQ+kHY+fZ5ztdZiqbY8OQhMgLbLTtW7aWY56EDCLmmEoxxJSqgHw==
+X-Received: by 2002:aca:e146:: with SMTP id y67mr7414091oig.93.1580139307777;
+        Mon, 27 Jan 2020 07:35:07 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l1sm4872297oic.22.2020.01.27.07.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 07:35:06 -0800 (PST)
+Received: (nullmailer pid 29568 invoked by uid 1000);
+        Mon, 27 Jan 2020 15:35:06 -0000
+Date:   Mon, 27 Jan 2020 09:35:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mans Rullgard <mans@mansr.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports
+ hub property
+Message-ID: <20200127153506.GA4589@bogus>
+References: <20200124152504.23411-1-mans@mansr.com>
 MIME-Version: 1.0
-In-Reply-To: <eb5672abbdb89d7018793c76d7193bfb78a2ea88.1580134320.git.kamlesh.gurudasani@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124152504.23411-1-mans@mansr.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-Den 27.01.2020 15.26, skrev Kamlesh Gurudasani:
-> This adds support fot ilitek,ili9486 based displays with shift register
-> in front of controller.
-> Ozzmaker,Piscreen and Waveshare,rpi-lcd-35 are such displays.
+On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+> Add a non-removable-ports property that lists the hardwired downstream
+> ports of a hub.  Although hubs can provide this information, they are
+> not always configured correctly.  An alternate means of indicating this
+> for built-in USB devices is thus useful.
 > 
-> Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
+
+I reviewed this already, but since you didn't add my reviewed-by, I'm 
+looking at it again and having 2nd thoughts.
+
 > ---
+>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> index 036be172b1ae..92d863cc96b6 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
+>  - #size-cells: shall be 0
+>  
+>  
+> +Optional properties for hub and host-controller nodes:
+> +- non-removable-ports: list of hardwired downstream ports
 
-Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
+If you have a hardwired device and need to know that, doesn't that imply 
+there's some other stuff you need to describe beyond what a standard USB 
+device has. Such as a power supply that's not Vbus from the hub.
 
-When you resend it's important that you add any r-b's or ack's you've
-already received. This prevents double work (some review a load of
-patches and can't be expected to remember them all) and it helps the
-maintainer getting confidence that the patch is solid when others have
-looked at it.
+At a minimum, I think this should be a per port property. Though really, 
+I think this should just be implied by describing the device in DT. I'm 
+not sure if there's a case for hotpluggable devices described in DT. 
+Maybe with overlays.
 
-No need to resend again just for this, but if you need another respin,
-remember to add my r-b.
-
-Noralf.
+Rob
