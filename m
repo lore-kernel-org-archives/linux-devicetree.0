@@ -2,182 +2,127 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32FBC32771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 03:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89932C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 05:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77F52067C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 03:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604A920716
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 05:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DBGWuN0k"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r7zqGfrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgA0D6m (ORCPT
+        id S1725840AbgA0FIv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jan 2020 22:58:42 -0500
-Received: from mail-db8eur05on2082.outbound.protection.outlook.com ([40.107.20.82]:32586
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726545AbgA0D6l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Jan 2020 22:58:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iDetR2aBvqvZotziqMPYSgd8tcm+yUFbCGiXgCz1QeX36B821E09akeL6rRIMHlgCnV4GZ+KGDdcCru3RaXK1FITTdmlqxjSyD9bGim5Ip5eLoZq12geSoxn+ylYMrmw8+XtrrFXH17YBySvRm6lw4H02byiCtF7Qtl9tD2kbMH8WtHgWpIYdSZTsIapzRhY3YjAiezxXORu4/iSN3W8e0HJ6IBb99uGgFvjdvT/kmqpDql3upqGtyyZuDT6yRYWcDAB6H1VDR52jIG9jJz3AQS5w7M5ENywjxCGEYpfIA1AHoC8DbOh3/oRNxRekDWcusF05lXqHsbVgbwDnKyCxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V6srGNlTOr1MGrDea/RMImTjWkNd4HAnJevtwK8GqS8=;
- b=MO9u5E0uFMVn6C8IfT/P4wABHVMhb+scKz3E+LZgliJdoEO19y3+DDwG57NcmnKi7OCDmTFyt620/T/gXtxP5kmL6zvRB1PpZgvINp1qHulzZ3A2zR9AUhlj/5+JjBmvktEC3lAsbp+z/fNRuOh+0e7YMRjEZsNxSSh35za0F6SeTKt3t4zXpDFqhn99EWExVkk2LAI74M+P7pLpBQIkiDZBhid+IzsDVfInU7EGS8stg1bjhynRklwnID+ZJithNO2brsShbLqBRzP+wWW/8pyOUK1UKAtgmA9IQ3UGubNfB/zJEWJCpt3oRTzy5tCcCembmrAuNEc3XlIdNm8geQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V6srGNlTOr1MGrDea/RMImTjWkNd4HAnJevtwK8GqS8=;
- b=DBGWuN0kNZJKHbbv21p5MG3k8jbF7jN+rda/c9P4YrK4olduTG1JDMzkMh+iJFsYBHhIYPNCSPvW8cM6gH+e+ODl94HSuqKNZvUaKEs7JgEOLWA39PlvY12rMbfFirmLFs2oUsIyr4/YUi7cl4vQBiasi0Ga0L/igDFkZIooIsM=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4260.eurprd04.prod.outlook.com (52.134.124.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.24; Mon, 27 Jan 2020 03:58:37 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2665.017; Mon, 27 Jan 2020
- 03:58:37 +0000
-Received: from localhost.localdomain (119.31.174.66) by HK2PR0401CA0009.apcprd04.prod.outlook.com (2603:1096:202:2::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2665.20 via Frontend Transport; Mon, 27 Jan 2020 03:58:34 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2] dt-bindings: soc: imx: add binding doc for aips bus
-Thread-Topic: [PATCH V2] dt-bindings: soc: imx: add binding doc for aips bus
-Thread-Index: AQHV1MYNqsV5ejfpvUOhCfy0vYYg4g==
-Date:   Mon, 27 Jan 2020 03:58:37 +0000
-Message-ID: <1580097227-4364-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR0401CA0009.apcprd04.prod.outlook.com
- (2603:1096:202:2::19) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 40618552-b452-4767-721a-08d7a2dd3010
-x-ms-traffictypediagnostic: AM0PR04MB4260:|AM0PR04MB4260:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB42606D66FF2519DEBEDDCA0B880B0@AM0PR04MB4260.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 02951C14DC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(376002)(346002)(396003)(199004)(189003)(52116002)(8936002)(478600001)(36756003)(8676002)(81156014)(81166006)(4326008)(2616005)(66446008)(6486002)(5660300002)(956004)(16526019)(44832011)(26005)(186003)(66946007)(66556008)(66476007)(64756008)(71200400001)(110136005)(54906003)(6506007)(69590400006)(316002)(86362001)(6512007)(966005)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4260;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6UsbYdyYUq4PIAk5i5lRPwaoqIUIk985DpeUXxSTtwKKSB8v2ubZIajtvOVoiet9iTV9neRt29xAUr335Dfr5PEXchlvGbqmZ0JEJ05pEsVOhteu12zeiKx0eapFCZR/YVcg4nEEVPiKKkGN8DZ9mcOosh2vxqd+st1xC9m8Sf7MMBjhxbxhonvMDM6a7NTYSXCwvqVBMNaUQJKe2SH+Fd6za4T38UsgtY5mw7RMbbbzaGYqjw/B0FgJkjlxh0CJBGHCjNZ585UcbQdlfaLHX405uBY3H8Ptyz4f1b4lwR5gP2QwQWkP6AGdmo8WpeGarpt8r70IZBKn95OHr1PvXh6KU/edjxFnA0vjiH6gxMrneXvjQ5n7Ukdom3Xt/eyr7mQnGfU8Pv2fTEPuYEj5a77cFiDFoq+If29MJC822emKZi3FBd1cluX55TE/CCBXCU/4+j29pgfUe8yXj8NDEvVj97UPXWN8aC54j4M6pA/aqwgFvqkM52PwioQpOi305mMy/jiIACTsjCAxtUkb4l/i+L63Pk7SmZKBl1qxx5A=
-x-ms-exchange-antispam-messagedata: wvy8GiAx4iK75dMM8w83YfjDgpOdDdoOmI9FxIr5klbDQuGhfJ2BsnxHhL2zZE6vcJnHu6Tmb0MvKwR8xnsiVzxoi0bT3CS9VnYU7T7kDg3NaReuj0c7mu11u+YBsfj0cBcM0OSbYBwX2bkEFkzBJg==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 Jan 2020 00:08:51 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6398 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgA0FIv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 00:08:51 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2e70310000>; Sun, 26 Jan 2020 21:08:01 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 26 Jan 2020 21:08:50 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 26 Jan 2020 21:08:50 -0800
+Received: from [10.25.73.144] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
+ 2020 05:08:43 +0000
+CC:     <spujar@nvidia.com>, <devicetree@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <atalambedu@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <jonathanh@nvidia.com>, <viswanathl@nvidia.com>,
+        <sharadg@nvidia.com>, <broonie@kernel.org>,
+        <thierry.reding@gmail.com>, <linux-tegra@vger.kernel.org>,
+        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
+Subject: Re: [alsa-devel] [PATCH 7/9] ASoC: tegra: add Tegra210 based ADMAIF
+ driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-8-git-send-email-spujar@nvidia.com>
+ <743d6d7d-f29c-191a-853b-414250ca38df@gmail.com>
+ <3759aa0b-9e56-0fb4-27b7-4f98898d4e22@nvidia.com>
+ <8a3259b7-6875-236a-b16c-cd8e023cc8b2@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <208e3f8b-75ca-9bb0-ad43-7489709fcae0@nvidia.com>
+Date:   Mon, 27 Jan 2020 10:38:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40618552-b452-4767-721a-08d7a2dd3010
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 03:58:37.5842
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7FmgMrwC24gRON7EBcZWXLhwSMOxmk/GY3z6f/SaFUaXLfgf1TahS5XXLDKc8z0LpssZsyDjcxGS3AncKggvkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4260
+In-Reply-To: <8a3259b7-6875-236a-b16c-cd8e023cc8b2@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580101682; bh=LUht9Gcr7wFh+xPtTMEK2tJj/GlzVeLgVO2GrvXpTH4=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=r7zqGfrHqTIn5gRQgSMV5IVO6t8pSqTq+WbiKenqxJleVMdN9fyya9NRYRtTKyHxG
+         MjhGVw8KTHShviWDQuvIHw7kj7ITLqH0Ccoz1XSSBZWj7hyJiskkKbshIES6xRtaFF
+         0KooO1eM4pJ7+6xk5oe1vMe8sdaN82o/HUJ/Nn5bSjWqDMoCHltLpdosFCatZYqykc
+         IESo6RZUY82fH8gMbywez8Tik4Ncpd47t62SsOPI3mmKAQNLWFxQsqqU7ptPscSJ+5
+         tgvh8/OsOa1nRy2vPdMMAMKyDb/OtKlA2cATOPEDzgRU9bu+FrSiPNvn5+kMK1aMxl
+         PDbr1F5GVIHhA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
 
-Add binding doc for fsl,aips-bus
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+On 1/24/2020 9:55 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 24.01.2020 06:27, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 1/24/2020 6:58 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 20.01.2020 17:23, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> [snip]
+>>>> +static bool tegra_admaif_wr_reg(struct device *dev, unsigned int reg)
+>>>> +{
+>>>> +     struct tegra_admaif *admaif =3D dev_get_drvdata(dev);
+>>>> +     unsigned int ch_stride =3D TEGRA_ADMAIF_CHANNEL_REG_STRIDE;
+>>>> +     unsigned int num_ch =3D admaif->soc_data->num_ch;
+>>>> +     unsigned int rx_base =3D admaif->soc_data->rx_base;
+>>>> +     unsigned int tx_base =3D admaif->soc_data->tx_base;
+>>>> +     unsigned int global_base =3D admaif->soc_data->global_base;
+>>>> +     unsigned int reg_max =3D
+>>>> admaif->soc_data->regmap_conf->max_register;
+>>>> +     unsigned int rx_max =3D rx_base + (num_ch * ch_stride);
+>>>> +     unsigned int tx_max =3D tx_base + (num_ch * ch_stride);
+>>>> +
+>>>> +     if ((reg >=3D rx_base) && (reg < rx_max)) {
+>>> The braces are not needed around the comparisons because they precede
+>>> the AND. Same for all other similar occurrences in the code.
+>> While that is true, some prefer to use explicit braces to make it more
+>> readable.
+>> In the past I was told to use explicitly in such cases.
+> At least most of code in kernel (I've seen) doesn't have superfluous
+> parens (the curvy thingies actually should be the braces). Readability
+> is arguable in this case, I'm finding such code a bit more difficult to
+> read, although in some cases parens and spacing may help to read more
+> complex constructions.
 
-V2:
- Add 'select' to pass dt_binding_check
-
- .../devicetree/bindings/soc/imx/fsl,aips-bus.yaml  | 47 ++++++++++++++++++=
-++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.=
-yaml
-
-diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml b/=
-Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
-new file mode 100644
-index 000000000000..3cbf2d28a188
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/imx/fsl,aips-bus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: i.MX AHB to IP Bridge
-+
-+maintainers:
-+  - Peng Fan <peng.fan@nxp.com>
-+
-+description: |
-+  This particular peripheral is designed as the bridge between
-+  AHB bus and peripherals with the lower bandwidth IP Slave (IPS)
-+  buses.
-+
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        const: fsl,aips-bus
-+  required:
-+    - compatible
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: fsl,aips-bus
-+      - const: simple-bus
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    bus@30000000 {
-+      compatible =3D "fsl,aips-bus", "simple-bus";
-+      reg =3D <0x30000000 0x400000>;
-+      #address-cells =3D <1>;
-+      #size-cells =3D <1>;
-+      ranges;
-+    };
-+...
---=20
-2.16.4
+Yes this is subjective and depends on the individual reading the code. It i=
+s
+confusing every time, for the sender, about which guideline to follow.=20
+Resending
+the patch/series for only this reason may not be really necessary. Since=20
+I need
+to fix couple of issues in this series I may consider removing the=20
+explicit braces.
 
