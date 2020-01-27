@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C644C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 10:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237B2C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 10:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4481B208CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 10:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D91207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 10:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BmqRpO6s"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MlCOmXau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgA0KYg (ORCPT
+        id S1729235AbgA0KYr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:24:36 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55519 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728386AbgA0KYg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 05:24:36 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so6195489wmj.5
-        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 02:24:35 -0800 (PST)
+        Mon, 27 Jan 2020 05:24:47 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43461 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729219AbgA0KYr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 05:24:47 -0500
+Received: by mail-wr1-f65.google.com with SMTP id d16so10489661wre.10
+        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 02:24:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=e8XiUJc48Ck9NgIQJouBn3+nOBIDdV61sKUPzsQLf54=;
-        b=BmqRpO6sb4v2SDvrnUg+hlV5F9vfEqgbms8598OgxEzg3cbz+muKBSwu/ET8bRAPRi
-         ljoAoVkY2ppehk1c5vnyIeDtR6fbi+bFbknkCyyFoegSkhTvQjrmVK6yGROq0p8YRdzR
-         y3mhcec1RHDDGtcn26/dBcynDQHYxK1x56xXBk0KklOBaUy3KUsRv59KOgps8+2TOj5u
-         37O7OdOAxiiyyfJlFjN1ODfuKt9fVS2ddX4YawLvTJPWsUvKZSimaBd31oH9WzfgFnLC
-         pGwplDkF6NEB1Aopoh4gDN0esVkI9/KunsZ90pou/fVxEuYYz3i54em47m3NGWYdRBuF
-         NCyA==
+        b=MlCOmXauYb1kKbyPyGIWGXau33+vQoWGZr1VKVpnqzLXLiSfr/teJFSLW/VhqnBLvF
+         KiZKrBrGlkEntQ+Z5NU6ulOlAfSs0eGIa9m2X9FCGa/OnySK1BsaPhOHD6r+7Sql6J8W
+         dUY5WRAfDdjJEnN/uTOlRGXYVy1IFKyO4KuNMbELKxta8q7N7GsGYxWjTUHf6q6gwqun
+         D3iRoWAHgnfU14+kWB7Kn0OBTRfPqVJvQe6aYAYo5BNMyUj5WmHfGWFYcOdNKcPiXF/5
+         Mi/9RkS7qEpz8ao3HkmxrhPQKezaZiUDJtYZsIyhIjp9z3tzWGv+BfhRfbTt6SfhWwEc
+         OXeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
         bh=e8XiUJc48Ck9NgIQJouBn3+nOBIDdV61sKUPzsQLf54=;
-        b=QWDSCrDiUZwfgQJh2c6VfbwNTMFLovW+ioFNBO4gxV4YfkGz8fRD8VFQRrcAMaR1BR
-         OWKFyJ4C6eA4+AzT+IwawLGyQcqg2aA/2++JjdGCNdbutt/vYiyjbjSIsQ4nQ3WhWePN
-         raX8AZr39hj6mvS7j17z0dbsiJYPT3hoeTDbfs/0gk/nabGIZPeKLJEE5DQmuC0RH+wA
-         pn+ZqFhAtSJV5G5wsVpiJix5b9U59unyK1vrd1sG069m0dZ7B3FvMg2Ci6rYuxW1A1kb
-         hyemOaALG00xiED2fUU6rgKQozv/NzLm5cti+Ll39DWWJf390AK4c4UX+3ObQG97fRYJ
-         NX0A==
-X-Gm-Message-State: APjAAAWAPyuBUg7RcjxmmjhlhxgA5/Ppi9KEs/oRvs+/UmC4O7B9HocX
-        7d6rj/M8OoNsnHUUtMojYMTwfg==
-X-Google-Smtp-Source: APXvYqyzqzQAnmr0mj+hEoh+osfnbWk4hgO7GexWVd3fXCAnVlxBSMagbBtz+wk6shLKRAf9WOJjhA==
-X-Received: by 2002:a1c:a4c3:: with SMTP id n186mr11172933wme.25.1580120674554;
-        Mon, 27 Jan 2020 02:24:34 -0800 (PST)
+        b=UKRfp/KZbQEOiHm5Sr5wBESEGp0wzw34+lqmTKc9wIo5+XzJi8KX1Uz55HbEZS7T2M
+         hXugosbBHem8YBAEjEeMvtvLqOzcs1MdzgDIXtbIcpXqp1CyU3/wMvXlFdhi5M4yjWtr
+         y69NG9X2tzvdtswejw6nZ/Agj8XD72YmxIWjGml3YfMNTzAaJGMHaVX3xlJmGfUwWOih
+         hLUBsppvD9ekZWVGMIoWA1CBDyHm1in9bI6bYuFtcM49FEhgvP8jl1IFfKv35HZd2EHt
+         F6AmBFYBOClTg01qQ1mgQq4cRC6OfuqVVJDFc47P8ZW4fl4YeccH/iwA0U7PKmkc9D31
+         vSSw==
+X-Gm-Message-State: APjAAAUpaEdO0R2aFKZR+LtDIy/iWzbhu9sreP2/pkr3y6OsfWRqC8kM
+        xGEU6ppki093Q15pN6OUTlzY9A==
+X-Google-Smtp-Source: APXvYqzjKd+9HlHj33dcQx0Uxo1PPTxZBbf6yJKeVlK5AzHKE33gUgu5dccY/7KN30YK2pqlLnloiA==
+X-Received: by 2002:adf:f28c:: with SMTP id k12mr21714681wro.360.1580120684924;
+        Mon, 27 Jan 2020 02:24:44 -0800 (PST)
 Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s8sm19696736wrt.57.2020.01.27.02.24.33
+        by smtp.gmail.com with ESMTPSA id t8sm20161992wrp.69.2020.01.27.02.24.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 02:24:34 -0800 (PST)
+        Mon, 27 Jan 2020 02:24:44 -0800 (PST)
 Subject: Re: [PATCH v8 03/12] drm/rcar-du: Plug atomic state hooks to the
  default implementation
 To:     Boris Brezillon <boris.brezillon@collabora.com>,
@@ -129,8 +129,8 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <ea3bcd67-bd4d-64ec-00aa-a9ee137aca1a@baylibre.com>
-Date:   Mon, 27 Jan 2020 11:24:33 +0100
+Message-ID: <3f0da385-f4c2-f7ed-c381-7993b2a641ca@baylibre.com>
+Date:   Mon, 27 Jan 2020 11:24:43 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
