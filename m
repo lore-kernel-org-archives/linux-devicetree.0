@@ -2,255 +2,108 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DB0C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 12:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA87CC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 12:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFC72087F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 12:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757A3214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 12:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tmgGe7xc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="lBKJCDDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgA0Mz0 (ORCPT
+        id S1729019AbgA0M47 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:55:26 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1924 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726210AbgA0Mz0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:55:26 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RCrMMq032677;
-        Mon, 27 Jan 2020 13:54:29 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=BQqFihzOu6OsZNMVZCsZXlFqbDZYuOBiwOANKZ7+MbA=;
- b=tmgGe7xcCO1B+kOEgBvUyuPew3fEovjC9Ghjj7iKB+1Oc4eJbOM5TPGivLKppyoawE6R
- 2Uu73m8iEKK3P5Dce3Xf00Rf4UH43avHkhvbuLS8Gf3NccxHLtnWjT4Zrtp9bkzRv2qJ
- +g7yOvjh6jQNmngcoqOV08QpoeAFHGuPc+HgigdRI+hUuMN4XrKONape3YDVGMdT5e7i
- QGMc/sf05LHykqBPzlLBlQHw31zBzNOZUulYTQmXd1Ff/wCg3kKXnOfHSN41Tt5wj15r
- IvANcas2/S7SZ+w7PPuoy+oIb3NwJXCT22ZlpMBE9CRgX40G74aLo5UHfm6LZhfMNCuc dg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrbpas3p3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jan 2020 13:54:29 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5CEA0100034;
-        Mon, 27 Jan 2020 13:54:28 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 14E542AD147;
-        Mon, 27 Jan 2020 13:54:27 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 13:54:26
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <robh@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
-Subject: [PATCH] ASoC: dt-bindings: stm32: convert i2s to json-schema
-Date:   Mon, 27 Jan 2020 13:54:20 +0100
-Message-ID: <20200127125420.29827-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Jan 2020 07:56:59 -0500
+Received: from smtp.domeneshop.no ([194.63.252.55]:35437 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgA0M47 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 07:56:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZeWR7CViWqnb4CaNMh0vmQplC3X3FUBRb5wLNRMeFFM=; b=lBKJCDDe+mS+si88xuE0CIQgMK
+        kMydrvnbUN8i7RU8PMmZMUDds5G3S8T0dAoKqwiHAg4EZ7o39YJacoZdapwZXDJ8Z9qbhMrLGZHFS
+        PzWODq0CeTbcTS1Ka6uf2QcHMKS2QRdjgDmjAeAfJApuiwgLdMeGgy+FGELvvOBxzbmOMBIKO/4Z6
+        WTYFwWjpoVeVvB43UsgLadCeoY6+dnamOQzLIx7p0qynygGAPYeMwHcDsEWGk3x8MUP/8JNzAE3wu
+        6c4hBnS193p4EBp94u6ZyRBluLY5m0g9HYx7s/8yNu1aaqJ3bPskiRiq+6aGpogOr5egSZdAc6LBN
+        CzoUxieA==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:62157 helo=[192.168.10.61])
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1iw3wn-0001AP-8J; Mon, 27 Jan 2020 13:56:57 +0100
+Subject: Re: [PATCH] dt-bindings: add vendor prefix for OzzMaker and Waveshare
+ Electronics
+To:     Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     devicetree@vger.kernel.org
+References: <1580059653-11320-1-git-send-email-kamlesh.gurudasani@gmail.com>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Message-ID: <8318aa0e-e744-f51f-678e-3f5bbf0eac21@tronnes.org>
+Date:   Mon, 27 Jan 2020 13:56:55 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
+In-Reply-To: <1580059653-11320-1-git-send-email-kamlesh.gurudasani@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 I2S bindings to DT schema format using json-schema.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
-The items for dma-names and clock-names properties are all
-mandatory, but may be provided in any order.
-The syntax used for these properties allows to avoid order constraint.
----
- .../bindings/sound/st,stm32-i2s.txt           | 62 -------------
- .../bindings/sound/st,stm32-i2s.yaml          | 91 +++++++++++++++++++
- 2 files changed, 91 insertions(+), 62 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
 
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-deleted file mode 100644
-index cbf24bcd1b8d..000000000000
---- a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-+++ /dev/null
-@@ -1,62 +0,0 @@
--STMicroelectronics STM32 SPI/I2S Controller
--
--The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
--Only some SPI instances support I2S.
--
--Required properties:
--  - compatible: Must be "st,stm32h7-i2s"
--  - reg: Offset and length of the device's register set.
--  - interrupts: Must contain the interrupt line id.
--  - clocks: Must contain phandle and clock specifier pairs for each entry
--	in clock-names.
--  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
--	"i2sclk": clock which feeds the internal clock generator
--	"pclk": clock which feeds the peripheral bus interface
--	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
--	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
--  - dmas: DMA specifiers for tx and rx dma.
--    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
--  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
--  - pinctrl-names: should contain only value "default"
--  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
--
--Optional properties:
--  - resets: Reference to a reset controller asserting the reset controller
--
--The device node should contain one 'port' child node with one child 'endpoint'
--node, according to the bindings defined in Documentation/devicetree/bindings/
--graph.txt.
--
--Example:
--sound_card {
--	compatible = "audio-graph-card";
--	dais = <&i2s2_port>;
--};
--
--i2s2: audio-controller@40003800 {
--	compatible = "st,stm32h7-i2s";
--	reg = <0x40003800 0x400>;
--	interrupts = <36>;
--	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
--	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
--	dmas = <&dmamux2 2 39 0x400 0x1>,
--           <&dmamux2 3 40 0x400 0x1>;
--	dma-names = "rx", "tx";
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_i2s2>;
--
--	i2s2_port: port@0 {
--		cpu_endpoint: endpoint {
--			remote-endpoint = <&codec_endpoint>;
--			format = "i2s";
--		};
--	};
--};
--
--audio-codec {
--	codec_port: port@0 {
--		codec_endpoint: endpoint {
--			remote-endpoint = <&cpu_endpoint>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
-new file mode 100644
-index 000000000000..cdfb375c7a14
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/st,stm32-i2s.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 SPI/I2S Controller
-+
-+maintainers:
-+  - Olivier Moysan <olivier.moysan@st.com>
-+
-+description:
-+  The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
-+  Only some SPI instances support I2S.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32h7-i2s
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock feeding the peripheral bus interface.
-+      - description: clock feeding the internal clock generator.
-+      - description: I2S parent clock for sampling rates multiple of 8kHz.
-+      - description: I2S parent clock for sampling rates multiple of 11.025kHz.
-+
-+  clock-names:
-+    items:
-+      - enum: [ pclk, i2sclk, x8k, x11k ]
-+      - enum: [ pclk, i2sclk, x8k, x11k ]
-+      - enum: [ pclk, i2sclk, x8k, x11k ]
-+      - enum: [ pclk, i2sclk, x8k, x11k ]
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string-array
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: audio capture DMA.
-+      - description: audio playback DMA.
-+
-+  dma-names:
-+    items:
-+      - enum: [ rx, tx ]
-+      - enum: [ rx, tx ]
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string-array
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - "#sound-dai-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    i2s2: audio-controller@4000b000 {
-+        compatible = "st,stm32h7-i2s";
-+        #sound-dai-cells = <0>;
-+        reg = <0x4000b000 0x400>;
-+        clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
-+        clock-names = "pclk", "i2sclk", "x8k", "x11k";
-+        interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&dmamux1 39 0x400 0x01>,
-+               <&dmamux1 40 0x400 0x01>;
-+        dma-names = "rx", "tx";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&i2s2_pins_a>;
-+    };
-+
-+...
--- 
-2.17.1
+Den 26.01.2020 18.27, skrev Kamlesh Gurudasani:
+> Add vendor prefix for OzzMaker [1] and Waveshare Electronics [2]
+> Both are display manufacturers
+> 
+> [1] https://ozzmaker.com/about/
+> [2] https://www.waveshare.com/contact_us
+> 
+> Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+> ---
 
+I see I wasn't very clear when I said that this should be a separate
+patch. I meant that prefixes shouldn't be part of the bindings patch,
+but a separate prefixes patch and still part of the series.
+Not a big deal, but it looks like you have to respin this, there's an
+automatic check that failed:
+https://patchwork.ozlabs.org/patch/1229397/
+
+Noralf.
+
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index ac4804d..dfb926d 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -721,6 +721,8 @@ patternProperties:
+>      description: OmniVision Technologies
+>    "^oxsemi,.*":
+>      description: Oxford Semiconductor, Ltd.
+> +  "^ozzmaker,.*":
+> +    description: OzzMaker
+>    "^panasonic,.*":
+>      description: Panasonic Corporation
+>    "^parade,.*":
+> @@ -1038,6 +1040,8 @@ patternProperties:
+>      description: Vision Optical Technology Co., Ltd.
+>    "^vxt,.*":
+>      description: VXT Ltd
+> +  "^waveshare,.*":
+> +    description: Waveshare Electronics
+>    "^wd,.*":
+>      description: Western Digital Corp.
+>    "^wetek,.*":
+> 
