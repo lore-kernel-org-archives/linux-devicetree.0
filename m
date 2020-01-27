@@ -2,91 +2,93 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7421C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 21:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C368AC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 21:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B717024656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 21:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580159001;
-	bh=FWwkAkZVEiuu+tHM/k6I8TrILIdJNPPExXRlkBK6BtY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LAiDGIkRQ/3XnjselbHPjH58MSAb7R6jaKOX4fD4q4W/nnzzSkH3BhLa4oELsGlAa
-	 gs5rQWqfCqRYNJ6Qp3Mbfo1mQMKJu1jhOp8m3UcF7x2SqccQGXp5hArtqnS2ZZDFTY
-	 KHAjqIfeCHj21cBh/Lu34sh/Ncui8ZulnLWRTz7c=
+	by mail.kernel.org (Postfix) with ESMTP id 829FC24656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 21:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="UYaETZAL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgA0VDV (ORCPT
+        id S1726323AbgA0VEa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 16:03:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbgA0VDV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jan 2020 16:03:21 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D08620CC7
-        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 21:03:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580159000;
-        bh=FWwkAkZVEiuu+tHM/k6I8TrILIdJNPPExXRlkBK6BtY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KVEzgSc4osdt+EjJUZ36Zw4Yij8/16j5gb2wci6rHNDms5eSXaJgdyprcrc7kdfpU
-         4WB2aYvXoOyiRnVn6zpwjkzVCTVegYZ0fuJtJzCvo/+OY2LYW83AKiBBmHn142Dqsa
-         xgS0BTLVGxEtxcDBovkmQWeSODlKHaSN2kiyOtUs=
-Received: by mail-qk1-f174.google.com with SMTP id x1so11101777qkl.12
-        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 13:03:20 -0800 (PST)
-X-Gm-Message-State: APjAAAUWxjR5nWjyPKhgg/P2qivo6/0NHSQC9KQaMR5o85GuxE73JM5X
-        ChXsyTeoyt74imgTz4dDYhHCNa7V9iPKYGs8ow==
-X-Google-Smtp-Source: APXvYqwUkjwVHJDnk2TcEVcHVmAW978NwymYsuodgKSNOTWoc57/SMk6z75ttQ/IrFjO8YTmTwSozspKyyvXwSpD1xw=
-X-Received: by 2002:a05:620a:9c7:: with SMTP id y7mr18482453qky.393.1580158999658;
- Mon, 27 Jan 2020 13:03:19 -0800 (PST)
+        Mon, 27 Jan 2020 16:04:30 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:41959 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgA0VEa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 16:04:30 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 42F078365B;
+        Tue, 28 Jan 2020 10:04:27 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1580159067;
+        bh=zObOk1gVPEvabf/4BaqStZTqrwbvqmmwomyYCQ/yN4g=;
+        h=From:To:Cc:Subject:Date;
+        b=UYaETZALE0H7ZSGG/Rn6jhVwjKzKAsshnEuTczDwb4IZbCu/cTL8KG4IHCpGXscCd
+         z7bFZ28yTtsCpKvBUnWIzl/7HSbv/1yRp4uZQ6pYN7CAYiHbRii0keDOjQA01mk3nr
+         Yg7ynGDSoKffdjGdqrNELZdV522vd3n1uXCIVoytjYj7ZcN+moHQg/YMNsmDSmU5dt
+         nHWUYVbCWFbrMwwfWJxEs+OGbr6dyZLBYv7y52IPH6Y5PmUy8WGOMcV/bS5QRJOhAB
+         HsIPrAQ1kQmOc/eQIA/WUAIKth/sIXYI7N02xwH4SW/R6o/10pSgGjCiZEarI0NRdE
+         iZrGVSVH0KuGg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e2f50560000>; Tue, 28 Jan 2020 10:04:27 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id B7AA313EEC9;
+        Tue, 28 Jan 2020 10:04:21 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id E318C280071; Tue, 28 Jan 2020 10:04:21 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v3 0/2] SPI bus multiplexing
+Date:   Tue, 28 Jan 2020 10:04:13 +1300
+Message-Id: <20200127210415.5708-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <cc60bccb-883f-2efd-ead1-4dd1af10c3fa@linaro.org>
-In-Reply-To: <cc60bccb-883f-2efd-ead1-4dd1af10c3fa@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 27 Jan 2020 15:03:08 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+vw2-xfNzFSt1HWqzZ4jObJgs-VNK6N4vnpZAgN4NVYQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+vw2-xfNzFSt1HWqzZ4jObJgs-VNK6N4vnpZAgN4NVYQ@mail.gmail.com>
-Subject: Re: Splitting the thermal.txt file into different schema
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 12:46 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
->
-> Hi Rob,
->
-> while reading the documentation to convert the thermal.txt [1] into a
-> yaml schema, the documentation says "Generally, there is one binding
-> defined per file.".
->
-> Shall I split the thermal.txt file into smaller one-binding based file like:
->
->  - thermal-sensor.yaml
->
->  - thermal-zone.yaml
->
->  - cooling-device.yaml
->
->
-> ?
+This is a revisit of two earlier efforts to add more complex mutliplexing=
+ to
+SPI busses.
 
-I think that looks right. The bulk of it would be thermal-zone.yaml.
-For cases of provider/consumer bindings like thermal-sensor, those are
-sometimes split between consumer and provider too. It depends if we
-include the common provider schema in each provider. We probably don't
-here given it's just #thermal-sensor-cells and we have to define that
-in each provider anyways.
+https://patchwork.kernel.org/patch/2706151/
+https://patchwork.kernel.org/patch/10897255/
 
-Rob
+This version makes use of the general purpose mux controller which simpli=
+fies
+things greatly.
+
+One outstanding problem is the need for the spi-max-frequency on the mux
+device. This is not used for anything and is just needed to satisfy the s=
+pi
+driver infrastructure which expects all spi devices to have this property=
+.
+
+Chris Packham (2):
+  dt-bindings: spi: Document binding for generic SPI multiplexer
+  spi: Add generic SPI multiplexer
+
+ .../devicetree/bindings/spi/spi-mux.yaml      |  89 +++++++++
+ drivers/spi/Kconfig                           |  12 ++
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-mux.c                         | 189 ++++++++++++++++++
+ 4 files changed, 291 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
+ create mode 100644 drivers/spi/spi-mux.c
+
+--=20
+2.25.0
+
