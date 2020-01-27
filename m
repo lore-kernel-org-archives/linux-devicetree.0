@@ -2,107 +2,142 @@ Return-Path: <SRS0=m/6z=3Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6768C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C434EC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672142465B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A51F24676
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jan 2020 15:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580140225;
-	bh=yuIIMVFgehN2evVkHN1c5oRnLCR4k9TmqG/yb2ag9Lw=;
+	s=default; t=1580140465;
+	bh=DBHwgTisTRZSY7MYKf4Yg7npupPF6ncJpV7pAJCVcP8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dkm1cjObx2lmzwBADvvWQ+TgFUH21O+xXMff3S6HajDP+OFG2tLIK5Az+pSYZMp5r
-	 gZRdC/wk9kz4fvHWz9u/z0ZYWVoN6OMST2cV89ydY6jGNDa2G9rfPnvHDJxGUiSml8
-	 G30FZyOU34iC7+WuX5BLIwTffNSWjgfS8RidprSs=
+	b=mI4tdBhVpu6M/u7uogYtXPWhrT+OcxViYz7o8yn0+KSSwsFsttaGhMhJTmM2aibIx
+	 wCioJz3Ua8E4l3rjj90fHU2688rx2KgWC6iFlP6BjCscoxkBLK2a3Q7qyy74AfCZYh
+	 ckDH1zONaX6zDk+aAqZPo+znOJ0SoDGtUVdS0ako=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbgA0PuY (ORCPT
+        id S1729347AbgA0PyZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:50:24 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34618 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbgA0PuY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 10:50:24 -0500
-Received: by mail-ot1-f68.google.com with SMTP id a15so8806053otf.1;
-        Mon, 27 Jan 2020 07:50:24 -0800 (PST)
+        Mon, 27 Jan 2020 10:54:25 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35149 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbgA0PyY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 10:54:24 -0500
+Received: by mail-oi1-f194.google.com with SMTP id b18so3142991oie.2;
+        Mon, 27 Jan 2020 07:54:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=beqY/DCoJ59EhwodDnm/pkcRiaCO+zbELfu5AXa7uk4=;
-        b=TXXFCw9+jMWKAavB9RkhUdFuk+bN5PCWEGWja2zUXCZv/PDRdNaOeRbaH0ojgWUitF
-         4uL11ZiaP/VFkCjWRuzAVP7DG0pmtcBhFkut2CmX8R8N1xPG51CKHmL39KN4/ZAyD8iQ
-         2dKx0CBEC7C+YBcN9iE67c9+n0N1j08GKGjcr2a6qCvJtzjk5SAIW7mMj3g3O/UXNJAU
-         ZTr1drABsZ1d7C9OQLhsQMZJWDwYvQ2vPgZ4J8WisEom+8LyVoCtnS7Iaz241+cRhcuV
-         R/wv0OrTd41yGy62almCt6ZIHQC+2hEOiHhNeAv4H1f3Lh1tM2Hm3nFENBvU3gztD9yR
-         C3BQ==
-X-Gm-Message-State: APjAAAUZmUbo6f7Fq7tyxheyyDwsxkokK3qiOi49nJjLXx8G6wp5oK1a
-        EptXgoaUs9/J85CqHWCE2Q==
-X-Google-Smtp-Source: APXvYqyn0BH6mGOr5Sh0ZRs/MHfVUVRkxZjQe26RelsSGtz2sJEWvA4FuKGh6M47f/plr8u4qbEHcg==
-X-Received: by 2002:a05:6830:1094:: with SMTP id y20mr5291444oto.12.1580140223624;
-        Mon, 27 Jan 2020 07:50:23 -0800 (PST)
+        bh=Tu9ZlBYkC6o1zbN6Prwgx0xQgg3OVVMzuDrAyUe9dwo=;
+        b=Lk5FWyL3MULbH0sDvBbGYzs6JidrBIuFv+11P95UOCzy0bHsEdtx8ifMi6q1ETO/L/
+         xTdnx0VtPrE0zUKWhnZ++qK2VRfVn8dRBj+sS4m7slGmGXq5GdclJBp5x4whP81xMVkc
+         bWjzNnn0KOkgnUFahL4QuYr2B8a2CTdHFtogbfEcCk38OU/16kEMiqpFV9iJ3U4dEG8n
+         VAWYlhoMlNNYpTfIAjxjCtQ1qd+6R9WpIgbDYzwvEgFaROeclFbDEfK0X5tAYx9ZpU8y
+         yWLC7o+Fjo96MZdC7C5Ee8Q0ThNMy/LUIZcouujJqaejgW/i9fZ0c4vOiGtC/dN93r/f
+         n50Q==
+X-Gm-Message-State: APjAAAXABCIjCWDXEB5k1zm5KnOc40AB1cBYR59+LR2X2NXc8KanerWY
+        vCyaX7YTSWjSb5XPNt6KVA==
+X-Google-Smtp-Source: APXvYqy5dQoTgHQWvCOWBsQEb02lntw0zQ/+al7/2pS20P4aUtSrP6rYXXWdtPasUTvJ51MfVHiL7A==
+X-Received: by 2002:a54:4896:: with SMTP id r22mr7924750oic.30.1580140463895;
+        Mon, 27 Jan 2020 07:54:23 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t203sm4894791oig.39.2020.01.27.07.50.22
+        by smtp.gmail.com with ESMTPSA id g61sm5658999otb.53.2020.01.27.07.54.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 07:50:22 -0800 (PST)
-Received: (nullmailer pid 19844 invoked by uid 1000);
-        Mon, 27 Jan 2020 15:50:21 -0000
-Date:   Mon, 27 Jan 2020 09:50:21 -0600
+        Mon, 27 Jan 2020 07:54:22 -0800 (PST)
+Received: (nullmailer pid 25360 invoked by uid 1000);
+        Mon, 27 Jan 2020 15:54:21 -0000
+Date:   Mon, 27 Jan 2020 09:54:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kalyani Akula <kalyani.akula@xilinx.com>
-Cc:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, git-dev <git-dev@xilinx.com>,
-        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Harsh Jain <harshj@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Kalyani Akula <kalyania@xilinx.com>
-Subject: Re: [PATCH V5 2/4] dt-bindings: crypto: Add bindings for ZynqMP
- AES-GCM driver
-Message-ID: <20200127155021.GA16897@bogus>
-References: <1579777877-10553-1-git-send-email-kalyani.akula@xilinx.com>
- <1579777877-10553-3-git-send-email-kalyani.akula@xilinx.com>
+To:     Eugene Zalkonnikov <ez@norphonic.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "development@norphonic.com" <development@norphonic.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] Device tree bindings for TI HDC20x0 humidity and
+ temperature sensors
+Message-ID: <20200127155421.GA21914@bogus>
+References: <101D4944-A6B0-4CF7-AF6E-A6196619E3CF@norphonic.com>
+ <23805E09-AF91-4984-BF5D-29D989C2E48A@norphonic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579777877-10553-3-git-send-email-kalyani.akula@xilinx.com>
+In-Reply-To: <23805E09-AF91-4984-BF5D-29D989C2E48A@norphonic.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 04:41:15PM +0530, Kalyani Akula wrote:
-> Add documentation to describe Xilinx ZynqMP AES-GCM driver bindings.
+On Thu, Jan 23, 2020 at 09:19:12PM +0000, Eugene Zalkonnikov wrote:
+> Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
 > 
-> Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
-> ---
+> diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/hdc2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/hdc2010.yaml
+> --- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/hdc2010.yaml	1970-01-01 01:00:00.000000000 +0100
+> +++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/hdc2010.yaml	2020-01-23 17:13:51.573766898 +0100
+
+Full compatible string for filename is preferred: ti,hdc2010.yaml
+
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HDC2010/HDC2080 humidity and temperature iio sensors
+> +
+> +maintainers:
+> +  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
+> +
+> +description: |
+> +  Relative humidity and tempereature sensors on I2C bus
+
+checkpatch.pl reports a typo.
+
+> +
+> +  Datasheets are available at:
+> +    http://www.ti.com/product/HDC2010/datasheet
+> +    http://www.ti.com/product/HDC2080/datasheet
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,hdc2010
+> +      - ti,hdc2080
+> +
+> +  vddd-supply:
+> +    description:
+> +      digital voltage regulator (see regulator/regulator.txt)
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      interrupt mapping for IRQ
+
+Drop this. Nothing specific here for this binding.
+
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      hdc200x@40 {
+> +          compatible = "ti,hdc2010";
+> +          reg = <0x40>;
+> +      };
+> +    };
 > 
-> V5 Changes:
-> - Moved dt-bindings patch from 1/4 to 2/4
-> - Converted dt-bindings from .txt to .yaml format.
-> 
->  .../bindings/crypto/xlnx,zynqmp-aes.yaml           | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml b/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
-> new file mode 100644
-> index 0000000..b2bca4b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
-> @@ -0,0 +1,37 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
