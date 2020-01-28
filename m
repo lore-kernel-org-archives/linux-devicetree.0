@@ -2,239 +2,324 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D568C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 12:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A1CC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 12:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CC924683
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 12:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4647A24683
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 12:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Fptf7Z+w"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="kn8X66po";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="AkaKmWVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgA1Mbc (ORCPT
+        id S1725926AbgA1Mnc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:31:32 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49440 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725951AbgA1Mbb (ORCPT
+        Tue, 28 Jan 2020 07:43:32 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:28644 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725852AbgA1Mnc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:31:31 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SCSsrV018852;
-        Tue, 28 Jan 2020 13:31:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=/37FRei0Z1UohV/hyi87tST2lxk8jgNzHx8+Q3Li7wA=;
- b=Fptf7Z+wzwLTU4ocKLqYtipMPn1CuV7XU7UdHyAD8czB0OmWFOIAXagfXya2xovdAAFY
- q8ZF89JnP5uL3EEWbIsWdFjEzoNugZmtj6XdIix0VdT51lm/hw/wcRNAny5tVeAs79tY
- dXarHfkoBRTjzGskldWEroPgg0QOJXclKYvmHrIr/z7FHbz5A7IdhxY1AgyVM270i6Bp
- DShuSVHk0E5kLFwI+aNeeNJhQIAg1d7DUaTluVS4K6NMlKosF8Fatgpt5KGDbkmKXDV6
- +DoqvxjFnAPZJQRJMBJ0BFfL7baV6Eszv+1Q8nUyYfY2e9tgU3gR6UxR0Dw6UaEhYa6c ZQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdekdrvq-1
+        Tue, 28 Jan 2020 07:43:32 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SCeSZ1017772;
+        Tue, 28 Jan 2020 04:43:27 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=7TH16w5/kGmAgaA4RxWzLdN/Lo4lQG3M9OZvMS11pew=;
+ b=kn8X66poYQpw1RMIERtfpuVTrRikYhrVr00HqErAUfb77+MTtXEd5ekcOr4G/fp7mPGm
+ glPqICrw+gF4jdM6QF0jenxCl65ixREC++QKDvnomFi0+IembuVw1T82fbbB2bX3rHe9
+ RHi/9o+NP/C+AFSdiPq6OiJw6ZmTaTXrkpB4wHiWNCMFtrrT3X0KX912R9DRCozzmwcx
+ w20G3CxnsbalLsWhhRTOCz0wkRCWNRCUrhSOYj+2cZ9Vm9Ny/0JSA8pJKAZLM2ma7XNf
+ 2qKoUsz5f+1p4gTUdJsl1/h/1O0r2YHasYEPnZPEfmlL1/9PFKvTWPxYs+6R0sLc4UMY qA== 
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2176.outbound.protection.outlook.com [104.47.56.176])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2xrj53b5ce-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 13:31:11 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 20A1210002A;
-        Tue, 28 Jan 2020 13:31:10 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF9482A902E;
-        Tue, 28 Jan 2020 13:31:09 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
- 2020 13:31:09 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Tue, 28 Jan 2020 13:31:09 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-CC:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux+etnaviv@armlinux.org.uk" <linux+etnaviv@armlinux.org.uk>,
-        "christian.gmeiner@gmail.com" <christian.gmeiner@gmail.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v2] dt-bindings: display: Convert etnaviv to json-schema
-Thread-Topic: [PATCH v2] dt-bindings: display: Convert etnaviv to json-schema
-Thread-Index: AQHV1bPEp8nzC2t1RkuTxNot9B0yK6f/6nAAgAAHBgA=
-Date:   Tue, 28 Jan 2020 12:31:09 +0000
-Message-ID: <a7fa1b43-a188-9d06-73ec-16bcd4012207@st.com>
-References: <20200128082013.15951-1-benjamin.gaignard@st.com>
- <20200128120600.oagnindklixjyieo@gilmour.lan>
-In-Reply-To: <20200128120600.oagnindklixjyieo@gilmour.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <85D1420D94CB564C9E261F6BA564D12C@st.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jan 2020 04:43:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L+23PX5bc7jo0c6DJbL1MmUeJLBAyviptcfqVBG4vS2kveAso904868ge0vzLpFMjYz62Cogx387bUdtFQ2NtUXkrNpnX+oHqG4Ln/kY3F1cyH2qWKLTEz73FzD9sPCSpTsaoNQHFaqxx9Yx1TlF97T02hjyN2ya8BGoEntIC3w1vffFibHqxnn8w4n+DtNRTfBmyKimGgCrPNl+rbxRY8Hi/yBM+cZiAJRvN7ObqhPTbIb7QO1KL61qkC+WJufPZMDznmbrgxjB2zb75SkfF04qLhK5IcFAxiS/u8u8F325BTY/AMtvlAZK8/uETuJQQxLM0ptmnJ9ytGMbkJP5Gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7TH16w5/kGmAgaA4RxWzLdN/Lo4lQG3M9OZvMS11pew=;
+ b=SrHSeqFjFi4Tv5xkwfrZZCFj/fYa8XjUVQzPFjUUqxvEzI2bhovZaQuSspMkEHdEurz1kUo10bp4MQ6hEbmaqiYVBatDbv1PU04+clk2/0JhFibLvU2m3p073h/6g8kTL0guvXiKsBoHt5fvC6YvEbJ1o8uxOCejEc+JiJimA6VDifaw8PW2Ld9No3khrbPk8ZM11H0shRr/QqqCUofeaBPNrgwvY1LO1M8nYM/NW486QJHgjANGYH+ogt/gWcUUywNXQ5pZa9OaF8y6N1U0q5GSkUxH47yfWZ706WTUUNptPVybm4zzaqgoGePeazD/FE8YaLhgx54UYBJzbo7GfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 158.140.1.28) smtp.rcpttodomain=arm.com smtp.mailfrom=cadence.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7TH16w5/kGmAgaA4RxWzLdN/Lo4lQG3M9OZvMS11pew=;
+ b=AkaKmWVv/RepgeRqv7+CwfFQ1jDDWtIs3A/49eVBgaDMuWToTSEsr3At8SmNdUdCbn+ZRauKrkz5jiiphSC+8J4aIOCnMTglk0kcF0uj5EU8Yck1tI7Zv6TgKB8kaszjk796TiFzNFxo1twwREwXF25LmlE3Bg/Jd/fH1qxHRu8=
+Received: from BN8PR07CA0034.namprd07.prod.outlook.com (2603:10b6:408:ac::47)
+ by BYAPR07MB6038.namprd07.prod.outlook.com (2603:10b6:a03:138::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20; Tue, 28 Jan
+ 2020 12:43:24 +0000
+Received: from BN8NAM12FT065.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5b::200) by BN8PR07CA0034.outlook.office365.com
+ (2603:10b6:408:ac::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.26 via Frontend
+ Transport; Tue, 28 Jan 2020 12:43:23 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 158.140.1.28 as permitted sender) receiver=protection.outlook.com;
+ client-ip=158.140.1.28; helo=sjmaillnx1.cadence.com;
+Received: from sjmaillnx1.cadence.com (158.140.1.28) by
+ BN8NAM12FT065.mail.protection.outlook.com (10.13.182.134) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.12 via Frontend Transport; Tue, 28 Jan 2020 12:43:23 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 00SChIp8011308
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 28 Jan 2020 04:43:20 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Tue, 28 Jan 2020 13:43:18 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 28 Jan 2020 13:43:18 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 00SChIC1013058;
+        Tue, 28 Jan 2020 13:43:18 +0100
+Received: (from konrad@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 00SChI2w013057;
+        Tue, 28 Jan 2020 13:43:18 +0100
+From:   Konrad Kociolek <konrad@cadence.com>
+CC:     Konrad Kociolek <konrad@cadence.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/2] Add dt-bindings for Cadence XSPI controller
+Date:   Tue, 28 Jan 2020 13:43:04 +0100
+Message-ID: <20200128124313.12837-1-konrad@cadence.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(396003)(36092001)(189003)(199004)(70586007)(70206006)(186003)(336012)(26005)(426003)(36756003)(42186006)(316002)(54906003)(109986005)(5660300002)(4326008)(478600001)(26826003)(86362001)(7636002)(356004)(6666004)(1076003)(2906002)(2616005)(246002)(8936002)(8676002)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB6038;H:sjmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:corp.Cadence.COM;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1154af8e-18b2-4292-3229-08d7a3efa99e
+X-MS-TrafficTypeDiagnostic: BYAPR07MB6038:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB60386CE3B8C1C967B8EFCE89C30A0@BYAPR07MB6038.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 029651C7A1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SRw+Jgs7T7BhbO4k0W1YkOg0nH756BFuLpBVxH2Jnb2j9p5fu92wvdRBFKjeQp9foTzDym3nLsP2LTrVRKaM3l6xhA87sutoVcFQkHEnQkysA8VGezNwJEqJ1wOSHi73j8kHh29H1xpnT8RSPE9+AjLxX3qaD8T7u8+17ndBd0qJ6JmrMX626iVoBW5jvrHlIcj62H/3SnAe84xFLqbEoNR6WPzvfKCeZFNECaIqj47itY+kef5AU0CjcW4EXerfLlXk+Fk1UxOcPwiNUuS+NjeEAdQZMDXzTv5406niqLkM/0UXxxMoZe+IXi9WarTyq4l9lyP8jvdSSrwI/8EzY6HJ5AkolU4GmX1bbjxFpKRvJX16I+BsXnP9bJoP95FiA20aTOFaud37nU4QulwI1w/hZg3plljm63+eRW6g9Zcq3l/z0FURJuhxn3CWoqLvWqNp1xiwciV/ed3TJ4181TxYgcWUBpcv/P00UYMJTX4SsH/6OOPGfYP+2ujkpYX3W8xQuKn1Qv9UNT0yX2zYM3MJO2z3PKSLlEMFHTn4V02P1LPvIPSQ2IPW8jYU+fz/2PgHRjlzzXPTm7iCPvebEw==
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2020 12:43:23.3043
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1154af8e-18b2-4292-3229-08d7a3efa99e
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB6038
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-28_03:2020-01-24,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001280103
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add dt-bindings documentation for Cadence XSPI controller to support
+SPI based flash memories.
 
-On 1/28/20 1:06 PM, Maxime Ripard wrote:
-> Hi Benjamin,
->
-> On Tue, Jan 28, 2020 at 09:20:13AM +0100, Benjamin Gaignard wrote:
->> Convert etnaviv bindings to yaml format.
->>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
->> ---
->>   .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
->>   .../devicetree/bindings/gpu/vivante,gc.yaml        | 72 ++++++++++++++=
-++++++++
->>   2 files changed, 72 insertions(+), 36 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/e=
-tnaviv-drm.txt
->>   create mode 100644 Documentation/devicetree/bindings/gpu/vivante,gc.ya=
-ml
->>
->> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-d=
-rm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
->> deleted file mode 100644
->> index 8def11b16a24..000000000000
->> --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
->> +++ /dev/null
->> @@ -1,36 +0,0 @@
->> -Vivante GPU core devices
->> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
->> -
->> -Required properties:
->> -- compatible: Should be "vivante,gc"
->> -  A more specific compatible is not needed, as the cores contain chip
->> -  identification registers at fixed locations, which provide all the
->> -  necessary information to the driver.
->> -- reg: should be register base and length as documented in the
->> -  datasheet
->> -- interrupts: Should contain the cores interrupt line
->> -- clocks: should contain one clock for entry in clock-names
->> -  see Documentation/devicetree/bindings/clock/clock-bindings.txt
->> -- clock-names:
->> -   - "bus":    AXI/master interface clock
->> -   - "reg":    AHB/slave interface clock
->> -               (only required if GPU can gate slave interface independe=
-ntly)
->> -   - "core":   GPU core clock
->> -   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
->> -
->> -Optional properties:
->> -- power-domains: a power domain consumer specifier according to
->> -  Documentation/devicetree/bindings/power/power_domain.txt
->> -
->> -example:
->> -
->> -gpu_3d: gpu@130000 {
->> -	compatible =3D "vivante,gc";
->> -	reg =3D <0x00130000 0x4000>;
->> -	interrupts =3D <0 9 IRQ_TYPE_LEVEL_HIGH>;
->> -	clocks =3D <&clks IMX6QDL_CLK_GPU3D_AXI>,
->> -	         <&clks IMX6QDL_CLK_GPU3D_CORE>,
->> -	         <&clks IMX6QDL_CLK_GPU3D_SHADER>;
->> -	clock-names =3D "bus", "core", "shader";
->> -	power-domains =3D <&gpc 1>;
->> -};
->> diff --git a/Documentation/devicetree/bindings/gpu/vivante,gc.yaml b/Doc=
-umentation/devicetree/bindings/gpu/vivante,gc.yaml
->> new file mode 100644
->> index 000000000000..c4f549c0d750
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
->> @@ -0,0 +1,72 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/gpu/vivante,gc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Vivante GPU Bindings
->> +
->> +description: Vivante GPU core devices
->> +
->> +maintainers:
->> +  -  Lucas Stach <l.stach@pengutronix.de>
->> +
->> +properties:
->> +  compatible:
->> +    const: vivante,gc
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    items:
->> +      - description: AXI/master interface clock
->> +      - description: GPU core clock
->> +      - description: Shader clock (only required if GPU has feature PIP=
-E_3D)
->> +      - description: AHB/slave interface clock (only required if GPU ca=
-n gate slave interface independently)
-> Can you have an AHB slave interface clock without a shader clock?
+Signed-off-by: Konrad Kociolek <konrad@cadence.com>
+---
+Changes between initial version and v2:
+  - renamed yaml file
+  - added missing include
 
-No because the items in the list are ordered so you need to have, in=20
-order: "bus", "core", "shader", "reg"
+ .../devicetree/bindings/spi/cdns,xspi.yaml         | 166 +++++++++++++++++++++
+ 1 file changed, 166 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,xspi.yaml
 
-If it is needed to allow any number of clock in any order I could write=20
-it like this:
+diff --git a/Documentation/devicetree/bindings/spi/cdns,xspi.yaml b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+new file mode 100644
+index 000000000000..e8c43957fd90
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+@@ -0,0 +1,166 @@
++# SPDX-License-Identifier: (GPL-2.0)
++# Copyright 2020 Cadence
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/spi/cdns,xspi.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence XSPI Controller
++
++maintainers:
++  - Konrad Kociolek <konrad@cadence.com>
++
++description: |
++  The XSPI controller allows SPI protocol communication in
++  single, dual, quad or octal wire transmission modes for
++  read/write access to slaves such as SPI-NOR flash.
++
++properties:
++  compatible:
++    const: cdns,xspi-nor-fpga
++
++  reg:
++    maxItems: 3
++    description: |
++      Contains three entries, each of which is a tuple consisting of a
++      physical address and length. The first entry is the address and
++      length of the controller register set. The second entry is the
++      address and length of the Slave DMA data port. The third entry is
++      the address and length of auxiliary registers.
++
++  interrupts:
++    maxItems: 1
++
++  cdns,dqs-last-data-drop:
++    type: boolean
++    description: |
++      This parameter should be set when the Flash Device being used
++      issues data on negative edge of Flash clock and returns them with
++      DQS and the PHY is configured to sample data in DQS mode.
++      If this param is set the controller internally requests this redundant
++      data at the end of the transfer cleaning up the PHY FIFO.
++
++  cdns,phy-data-select-oe-start:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Adjusts the starting point of the DQ pad output enable window.
++      Lower numbers pull the rising edge earlier in time and larger
++      numbers cause the rising edge to be delayed. Each bit changes
++      the output enable time by a 1/2 cycle resolution.
++
++  cdns,phy-data-select-oe-end:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Adjusts the ending point of the DQ pad output enable window.
++      Lower numbers pull the falling edge earlier in time and larger
++      numbers cause the falling edge to be delayed. Each bit changes
++      the output enable time by a 1/2 cycle resolution.
++
++  cdns,phy-dqs-select-oe-start:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Adjusts the starting point of the DQS pad output enable window.
++      Lower numbers pull the rising edge earlier in time and larger
++      numbers cause the rising edge to be delayed. Each bit changes
++      the output enable time by a 1/2 cycle resolution.
++
++  cdns,phy-dqs-select-oe-end:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Adjusts the ending point of the DQS pad output enable window.
++      Lower numbers pull the falling edge earlier in time and larger
++      numbers cause the falling edge to be delayed. Each bit changes
++      the output enable time by a 1/2 cycle resolution.
++
++  cdns,phy-gate-cfg-close:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Normally the gate is closing then all bits of dfi_cebar are high
++      or when dfi_rd_pre_post_amble and rebar_dfi are high. This parameter
++      allows to extend the closing of the DQS gate. Recommended zero.
++
++  cdns,phy-gate-cfg:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Coarse adjust of gate open time. This value is the number of cycles
++      to delay the dfi_rddata_en signal prior to opening the gate in
++      full cycle increments. Decreasing this value pulls the gate earlier
++      in time. This field should be programmed such that the gate signal
++      lands in the valid DQS gate window.
++
++  cdns,phy-rd-del-select:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Defines the read data delay. Holds the number of cycles to delay
++      the dfi_rddata_en signal prior to enabling the read FIFO.
++      After this delay, the read pointers begin incrementing the read FIFO.
++
++  cdns,phy-clk-wr-delay:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Controls the clk_wr delay line which adjusts the write DQ bit
++      timing in 1/256th steps of the clock period in normal DLL
++      locked mode. In bypass mode this field directly programs
++      the number of delay elements.
++
++  cdns,phy-use-lpbk-dqs:
++    type: boolean
++    description: |
++      This parameter chooses lpbk_dqs to capture data for reads.
++      Instead memory DQS will be used.
++
++  cdns,phy-use-ext-lpbk-dqs:
++    type: boolean
++    description: |
++      This parameter chooses external lpbk_dqs for data capture
++      (lpbk_dqs connected to the lpbk_dqs_IO pad). When not used
++      mem_rebar_pad is used for data read capture.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - cdns,phy-data-select-oe-start
++  - cdns,phy-data-select-oe-end
++  - cdns,phy-dqs-select-oe-start
++  - cdns,phy-dqs-select-oe-end
++  - cdns,phy-gate-cfg-close
++  - cdns,phy-gate-cfg
++  - cdns,phy-rd-del-select
++  - cdns,phy-clk-wr-delay
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    xspi: spi@a0010000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        compatible = "cdns,xspi-nor-fpga";
++        reg = <0x0 0xa0010000 0x0 0x10000>,
++              <0x0 0xb0000000 0x0 0x10000>,
++              <0x0 0xa0020000 0x0 0x10000>;
++        interrupts = <0 90 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-parent = <&gic>;
++        cdns,dqs-last-data-drop;
++        cdns,phy-data-select-oe-start = <0>;
++        cdns,phy-data-select-oe-end = <4>;
++        cdns,phy-dqs-select-oe-start = <0>;
++        cdns,phy-dqs-select-oe-end = <1>;
++        cdns,phy-gate-cfg-close = <3>;
++        cdns,phy-gate-cfg = <0>;
++        cdns,phy-rd-del-select = <5>;
++        cdns,phy-clk-wr-delay = <64>;
++        cdns,phy-use-lpbk-dqs;
++        cdns,phy-use-ext-lpbk-dqs;
++        mt35xu512@0 {
++            compatible = "spi-nor", "micron,mt35xu512";
++            spi-max-frequency = <75000000>;
++            reg = <0>;
++        };
++        mt35xu512@1 {
++            compatible = "spi-nor", "micron,mt35xu512";
++            spi-max-frequency = <75000000>;
++            reg = <1>;
++        };
++    };
+-- 
+2.15.0
 
-clocks:
-
- =A0 minItems: 1
-
- =A0 maxItems: 4
-
-clock-names:
-
- =A0 items:
-
- =A0=A0=A0 enum: [ bus, core, shader, reg]
-
- =A0 minItems: 1
-
- =A0 maxItems: 4
-
-Benjamin
-
->
->> +    minItems: 2
->> +    maxItems: 4
->> +
->> +  clock-names:
->> +    items:
->> +      - const: bus
->> +      - const: core
->> +      - const: shader
->> +      - const: reg
->> +    minItems: 2
->> +    maxItems: 4
-> If so, that check will fail, since it would expect a clock named
-> shader on the 3rd item.
->
-> It looks good otherwise, thanks!
-> Maxime=
