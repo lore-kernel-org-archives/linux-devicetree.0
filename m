@@ -2,216 +2,155 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB342C32771
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 00:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FEDC32771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 00:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36E824684
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 00:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020632467C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 00:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5egoETD"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="nSY7MuUg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="t+Sr/QmT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgA1Ai1 (ORCPT
+        id S1726101AbgA1Axo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:38:27 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:40528 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA1Ai0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 19:38:26 -0500
-Received: by mail-yb1-f194.google.com with SMTP id l197so5919520ybf.7;
-        Mon, 27 Jan 2020 16:38:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=uwHE2384+f6E6qrGI97uhlNjDcRkcruzPNFIU/quAFo=;
-        b=m5egoETD744VGmc+moHM25iFJ6RqvSbosi6paPzf4ezJ/ZHPqGLlxEBY26nU6hytDA
-         b/v4B5ys7vEUkVCJ77H2R03J4MLvETSU0PRgv1SU4H6mUxeOfBx3wgvdk1khUFjQd7GD
-         VAlHcWhc/r0qTx9sJUIY4sZzLo1irTrinZYkKivPjYzP3pCUliKF0CY/Hr6XQfrLyAMb
-         HJxnn7EcUXNcHUh/d1IpuGGp94n/F+GV2D4ZwPIUEWWzYUaqsbAJ7GmPnc7ygAkpcWOw
-         wgM/zrViyCMegZfJFbPVcjGwGeY0hyY2qBKVMhwGRSidaOlPRxnb7lY4Jrllev8RPjqs
-         5zug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uwHE2384+f6E6qrGI97uhlNjDcRkcruzPNFIU/quAFo=;
-        b=BzMxLMJBNlYrODn2sxlZWHe4gvuCl+J218ZYt9/8OI6pIh3wgzlqSfLsP2fUoTnt+N
-         BunVpEbiBsDr7WZ2Zpf0ZvMN1Ftg6HW8Ib5COHZO1Qd59KonZzg5F6sqohVPgNLhxQbg
-         h70hD/f17xB5kIWwEljZSYeq91f6eTvIoVvp+BG60nRBhjI8MgFulosI+Gn1tlZ87LO1
-         ltQ3Z3XJhnndPdA0A1R+Os7djxGBYAOXO2wyoG8LbSaTMAWPKCKMgMilZlL3NAziEVHG
-         hl/RPL7M8OZDpyxkuBftA0FT1qo8izD9oxaKP+39RB9eX1Vp5vUUf8gAHTgqhGyHsJwS
-         OC1w==
-X-Gm-Message-State: APjAAAWnHCGluRQUVTxYxaBrRNteVGw52dyICMR1qT4E3JHoe9sqG9iI
-        W9uny8bRBQqj77H4urvLIHwtPR3e
-X-Google-Smtp-Source: APXvYqxtT0WML5m6Xk2NSVeNWAx8mBGoxmosVg7LFZYZceP6nGBThUyy/8CI/aBnitiv1ekWAkU02w==
-X-Received: by 2002:a25:7601:: with SMTP id r1mr15454079ybc.187.1580171904945;
-        Mon, 27 Jan 2020 16:38:24 -0800 (PST)
-Received: from localhost.localdomain (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id q62sm7447436ywg.76.2020.01.27.16.38.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 Jan 2020 16:38:24 -0800 (PST)
-From:   frowand.list@gmail.com
-To:     Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alan Tull <atull@kernel.org>
-Subject: [PATCH v2] of: Documentation: change overlay example to use current syntax
-Date:   Mon, 27 Jan 2020 18:37:18 -0600
-Message-Id: <1580171838-1770-1-git-send-email-frowand.list@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Mon, 27 Jan 2020 19:53:44 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:45319 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726083AbgA1Axo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jan 2020 19:53:44 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id B2CFF352A;
+        Mon, 27 Jan 2020 19:53:40 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Mon, 27 Jan 2020 19:53:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=blHIYvtrRVAHoWVDNslQKxu+cyHHHav
+        Ikxh1pjfbb+M=; b=nSY7MuUgF727W/Fhydb46f9Kjw4h2UDlmUivqfrJI9+eefA
+        0wcEJfRsjrwI/ZX+DwpE83RpT0aHWB2z4S18+SdFu1Fjqba2FtnWFQ/VQ6rRD7mc
+        Dde6FgaeDaxjtKCpPdN5RaG5Jtvv51+VHPoAGafA/zBqPr/1shRSIebmZH+J/pCg
+        e4bHnf1mIzFAXaQfKYIKTxu+cDyDgicZJjXzbl0K5lGb6T6sTvOJfwOzDkVXpdu1
+        ewIJCy4vMbG0ryoihHtaxsoKrsZ2lqava55RtIkElXaW84M14r2RKEoOn6kry7bk
+        jwQZ2jMa7NYf5G2Vs1zn2kuyuighnTo5lzjcwOw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=blHIYv
+        trRVAHoWVDNslQKxu+cyHHHavIkxh1pjfbb+M=; b=t+Sr/QmTMXtyUEjl2/Ln1X
+        8eUU6Hj07lBbd+UlAS9UcPTnB/UfFWn+d84+J931HXfFh8/lNJACnKQIfwrEby7Q
+        avcfr9uw/1o952zTcD/lhoewiygRlYEBzg+ZeoxBLOmKkm5MTwCkNAn+2hbdr/yN
+        pf0GFjdiE3fm9nj+BbqDGjPKAqSSfALsaHFKUrSwCk1/L6PqAly/JDGwNqEVLsqp
+        0Y4ajP8O+w30UdxGepCfpnWzApS6iJSLUuqzKnhHhrJs7Ayp8nLxHpHjVEhmjTaI
+        Pd5kyXpJF6aGDkTiwFHZeiF+4HFxZ3vcMQZc5+2++e1gsReZaoa8hJ7aETq59yIA
+        ==
+X-ME-Sender: <xms:EIYvXlswTcnRWtTH_PvgM9OKYC0tzjmAELKVOOILJY4J07gNU2YNOw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeefgddviecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucffohhmrg
+    hinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:EIYvXgqG8IlDTgLTlMQmwIXN0z6Evqc7rRgNehPq_nQG5WquiBVndw>
+    <xmx:EIYvXrihR97tETVtxI3gVASNGNc58ud7y-TzAKjjmhDBKnSz_7ovsg>
+    <xmx:EIYvXnmrPn5UNelWW5gUNkbQUG7gkIw01qC7j-Z2U4108rVPXbJSkg>
+    <xmx:FIYvXnwIY2fypY7y9_Jey6LqBsx4t8_wmhIpeQmzF37v2z_3iQBsPw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 44E0EE00A2; Mon, 27 Jan 2020 19:53:36 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-781-gfc16016-fmstable-20200127v1
+Mime-Version: 1.0
+Message-Id: <b83f2a1f-e1be-433c-8dc8-c469cb38f423@www.fastmail.com>
+In-Reply-To: <136bbab84d13d8d56a5ac297e415975e@neuralgames.com>
+References: <20200120150113.2565-1-linux@neuralgames.com>
+ <CACPK8XfuVN3Q=npEoOP-amQS0-wemxcx6LKaHHZEsBAHzq1wzA@mail.gmail.com>
+ <4446ffb694c7742ca9492c7360856789@neuralgames.com>
+ <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
+ <136bbab84d13d8d56a5ac297e415975e@neuralgames.com>
+Date:   Tue, 28 Jan 2020 11:23:19 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Oscar A Perez" <linux@neuralgames.com>
+Cc:     "Joel Stanley" <joel@jms.id.au>, "Matt Mackall" <mpm@selenic.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
 
-The overlay implementation details in the compiled (DTB) file are
-now properly implemented by the dtc compiler and should no longer
-be hard coded in the source file.
 
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
+On Sat, 25 Jan 2020, at 11:40, linux@neuralgames.com wrote:
+> On 2020-01-22 19:53, Andrew Jeffery wrote:
+> >> Thanks for reviewing the patch.
+> >> 
+> >> The RNG on Aspeed hardware allows eight different modes for combining
+> >> its four internal Ring Oscillators that together generate a stream of
+> >> random bits. However, the timeriomem-rng driver does not allow for 
+> >> mode
+> >> selection so, the Aspeed RNG with this generic driver runs always on
+> >> mode 'seven' (The default value for mode according to the AspeedTech
+> >> datasheets).
+> >> 
+> >> I've performed some testings on this Aspeed RNG using the NIST
+> >> Statistical Test Suite (NIST 800-22r1a) and, the results I got show 
+> >> that
+> >> the default mode 'seven' isn't producing the best entropy and linear
+> >> rank when compared against the other modes available on these SOCs.  
+> >> On
+> >> the other hand, the driver that I'm proposing here allows for mode
+> >> selection which would help improve the random output for those looking
+> >> to get the best out of this Aspeed RNG.
+> > 
+> > Have you published the data and results of this study somewhere? This
+> > really should be mentioned in the commit message as justification for
+> > not using timeriomem-rng.
+> > 
+> > Andrew
+> 
+> Hi Andrew,
+> 
+> I have uploaded the results of my tests to my GitHub, along with all the 
+> binaries
+> containing the random bits that I collected from this Aspeed RNG using 
+> all 8 modes.
+> You can also find in this repository a patch for the hw_random core 
+> driver that
+> I've been using to collect this data. Here is the link:
+>    https://github.com/operezmuena/aspeed-rng-testing
+> 
+> You can see in the reports that when using large enough samples (40Mb in 
+> size)
+> this Aspeed RNG consistently fails the linear rank and entropy tests, no 
+> matter
+> what RNG mode is selected. However, modes 2, 4 and 6 produce better 
+> entropy than
+> the rest.
+> I'm now collecting rng data from 2 other AST2520 SOCs that I have in 
+> order to
+> compare results.
 
-changes since v1:
-  - fixed typo in patch comment (implementation)
+Nice work. Eyeballing the summaries, it seems mode 6 or mode 4 may be
+improvements over 7? What's your analysis? It would be nice to have the
+data from your other two SoCs to corroborate. Again, going forward, please
+point to your measurements in your commit message.
 
- Documentation/devicetree/overlay-notes.txt | 85 ++++++++++++------------------
- 1 file changed, 35 insertions(+), 50 deletions(-)
+Not that I've looked, but is it feasible to augment timeriomem-rng with
+the ability to configure the RNG rather than implement a new driver? Why
+didn't you go that route?
 
-diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
-index 725fb8d255c1..fddc63da7dba 100644
---- a/Documentation/devicetree/overlay-notes.txt
-+++ b/Documentation/devicetree/overlay-notes.txt
-@@ -19,6 +19,7 @@ Lets take an example where we have a foo board with the following base tree:
- 
- ---- foo.dts -----------------------------------------------------------------
- 	/* FOO platform */
-+	/dts-v1/;
- 	/ {
- 		compatible = "corp,foo";
- 
-@@ -30,30 +31,25 @@ Lets take an example where we have a foo board with the following base tree:
- 		ocp: ocp {
- 			/* peripherals that are always instantiated */
- 			peripheral1 { ... };
--		}
-+		};
- 	};
- ---- foo.dts -----------------------------------------------------------------
- 
--The overlay bar.dts, when loaded (and resolved as described in [1]) should
-+The overlay bar.dts,
- 
------ bar.dts -----------------------------------------------------------------
--/plugin/;	/* allow undefined label references and record them */
--/ {
--	....	/* various properties for loader use; i.e. part id etc. */
--	fragment@0 {
--		target = <&ocp>;
--		__overlay__ {
--			/* bar peripheral */
--			bar {
--				compatible = "corp,bar";
--				... /* various properties and child nodes */
--			}
-+---- bar.dts - overlay target location by label ------------------------------
-+	/dts-v1/;
-+	/plugin/;
-+	&ocp {
-+		/* bar peripheral */
-+		bar {
-+			compatible = "corp,bar";
-+			... /* various properties and child nodes */
- 		};
- 	};
--};
- ---- bar.dts -----------------------------------------------------------------
- 
--result in foo+bar.dts
-+when loaded (and resolved as described in [1]) should result in foo+bar.dts
- 
- ---- foo+bar.dts -------------------------------------------------------------
- 	/* FOO platform + bar peripheral */
-@@ -73,8 +69,8 @@ result in foo+bar.dts
- 			bar {
- 				compatible = "corp,bar";
- 				... /* various properties and child nodes */
--			}
--		}
-+			};
-+		};
- 	};
- ---- foo+bar.dts -------------------------------------------------------------
- 
-@@ -82,6 +78,27 @@ As a result of the overlay, a new device node (bar) has been created
- so a bar platform device will be registered and if a matching device driver
- is loaded the device will be created as expected.
- 
-+If the base DT was not compiled with the -@ option then the "&ocp" label
-+will not be available to resolve the overlay node(s) to the proper location
-+in the base DT. In this case, the target path can be provided. The target
-+location by label syntax is preferred because the overlay can be applied to
-+any base DT containing the label, no matter where the label occurs in the DT.
-+
-+The above bar.dts example modified to use target path syntax is:
-+
-+---- bar.dts - overlay target location by explicit path ----------------------
-+	/dts-v1/;
-+	/plugin/;
-+	&{/ocp} {
-+		/* bar peripheral */
-+		bar {
-+			compatible = "corp,bar";
-+			... /* various properties and child nodes */
-+		}
-+	};
-+---- bar.dts -----------------------------------------------------------------
-+
-+
- Overlay in-kernel API
- --------------------------------
- 
-@@ -105,35 +122,3 @@ enum of_overlay_notify_action for details.
- Note that a notifier callback is not supposed to store pointers to a device
- tree node or its content beyond OF_OVERLAY_POST_REMOVE corresponding to the
- respective node it received.
--
--Overlay DTS Format
--------------------
--
--The DTS of an overlay should have the following format:
--
--{
--	/* ignored properties by the overlay */
--
--	fragment@0 {	/* first child node */
--
--		target=<phandle>;	/* phandle target of the overlay */
--	or
--		target-path="/path";	/* target path of the overlay */
--
--		__overlay__ {
--			property-a;	/* add property-a to the target */
--			node-a {	/* add to an existing, or create a node-a */
--				...
--			};
--		};
--	}
--	fragment@1 {	/* second child node */
--		...
--	};
--	/* more fragments follow */
--}
--
--Using the non-phandle based target method allows one to use a base DT which does
--not contain a __symbols__ node, i.e. it was not compiled with the -@ option.
--The __symbols__ node is only required for the target=<phandle> method, since it
--contains the information required to map from a phandle to a tree location.
--- 
-Frank Rowand <frank.rowand@sony.com>
-
+Andrew
