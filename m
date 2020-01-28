@@ -2,209 +2,102 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EADAC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 06:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E87C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 06:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300E122522
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 06:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBA322522
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 06:38:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z9pA7Nvj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725810AbgA1Ggj (ORCPT
+        id S1725829AbgA1Giq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 01:36:39 -0500
-Received: from sauhun.de ([88.99.104.3]:50054 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbgA1Ggj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 01:36:39 -0500
-Received: from localhost (p54B33410.dip0.t-ipconnect.de [84.179.52.16])
-        by pokefinder.org (Postfix) with ESMTPSA id 5AE2D2C0718;
-        Tue, 28 Jan 2020 07:36:36 +0100 (CET)
-Date:   Tue, 28 Jan 2020 07:36:33 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c@vger.kernel.org, tfiga@chromium.org,
-        drinkcat@chromium.org, srv_heupstream@mediatek.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v10 4/4] i2c: core: support bus regulator controlling in
- adapter
-Message-ID: <20200128063633.GA1088@ninjato>
-References: <20200116025637.3524-1-bibby.hsieh@mediatek.com>
- <20200116025637.3524-5-bibby.hsieh@mediatek.com>
+        Tue, 28 Jan 2020 01:38:46 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57384 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgA1Giq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 01:38:46 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00S6cdHT003447;
+        Tue, 28 Jan 2020 00:38:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580193519;
+        bh=gEVthQKS3V2D77VkPWEZmXBXJIepylEjJYx7pMr/TPI=;
+        h=From:To:CC:Subject:Date;
+        b=Z9pA7Nvj9y5tJr9lQNSKqJL02UP9OjxwfnteMzSLI10UhaajJM5flGYU5RBrDzx5X
+         W3WLuDfIK6hhfFrzRhknk2tuK8bkudrnN7kUS/ymzMSTxM9zLHgjNbU5xAbU5+u5qv
+         y1uX5S7ixhK/rraxXsglarI4txjhL73oXKgj1ICI=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00S6cdgc019190
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jan 2020 00:38:39 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
+ Jan 2020 00:38:39 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 28 Jan 2020 00:38:38 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00S6cZch067750;
+        Tue, 28 Jan 2020 00:38:36 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+Date:   Tue, 28 Jan 2020 12:11:47 +0530
+Message-ID: <20200128064147.18276-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
-In-Reply-To: <20200116025637.3524-5-bibby.hsieh@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
+has RAM above 32-bit boundary (accessible with LPAE config) though the
+PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
+property in PCIe RC DT nodes to indicate the host bridge can access
+only 32 bits.
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Thu, Jan 16, 2020 at 10:56:37AM +0800, Bibby Hsieh wrote:
-> Although in the most platforms, the bus power of i2c
-> are alway on, some platforms disable the i2c bus power
-> in order to meet low power request.
->=20
-> We get and enable bulk regulator in i2c adapter device.
->=20
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 73e5011f531a..c5af7530be7c 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -184,6 +184,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -238,6 +239,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+-- 
+2.17.1
 
-=2E..
-
-> +#ifdef CONFIG_PM_SLEEP
-> +static int i2c_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client =3D i2c_verify_client(dev);
-> +	struct i2c_adapter *adap =3D client->adapter;
-> +	int err;
-> +
-> +	if (pm_runtime_status_suspended(&adap->dev)) {
-> +		err =3D regulator_enable(adap->bus_reg);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return pm_generic_resume(dev);
-> +}
-> +
-> +static int i2c_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client =3D i2c_verify_client(dev);
-> +	struct i2c_adapter *adap =3D client->adapter;
-> +	int err;
-> +
-> +	if (!pm_runtime_status_suspended(&adap->dev)) {
-> +		err =3D regulator_disable(adap->bus_reg);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return pm_generic_suspend(dev);
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_PM
-> +static int i2c_runtime_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client =3D i2c_verify_client(dev);
-> +	struct i2c_adapter *adap =3D client->adapter;
-> +	int err;
-> +
-> +	err =3D regulator_enable(adap->bus_reg);
-> +	if (err)
-> +		return err;
-> +
-> +	return pm_generic_runtime_resume(dev);
-> +}
-> +
-> +static int i2c_runtime_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client =3D i2c_verify_client(dev);
-> +	struct i2c_adapter *adap =3D client->adapter;
-> +	int err;
-> +
-> +	err =3D pm_generic_runtime_suspend(dev);
-> +	if (err)
-> +		return err;
-> +
-> +	return regulator_disable(adap->bus_reg);
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops i2c_device_pm =3D {
-> +	SET_SYSTEM_SLEEP_PM_OPS(i2c_suspend, i2c_resume)
-> +	SET_RUNTIME_PM_OPS(i2c_runtime_suspend, i2c_runtime_resume, NULL)
-> +};
-> +
-
-It looks good to me, yet I am not a PM expert. An ack from someone more
-into that topic would be great, if possible.
-
->  static void i2c_device_shutdown(struct device *dev)
->  {
->  	struct i2c_client *client =3D i2c_verify_client(dev);
-> @@ -488,6 +563,7 @@ struct bus_type i2c_bus_type =3D {
->  	.probe		=3D i2c_device_probe,
->  	.remove		=3D i2c_device_remove,
->  	.shutdown	=3D i2c_device_shutdown,
-> +	.pm		=3D &i2c_device_pm,
->  };
->  EXPORT_SYMBOL_GPL(i2c_bus_type);
-> =20
-> @@ -1351,6 +1427,11 @@ static int i2c_register_adapter(struct i2c_adapter=
- *adap)
->  		goto out_reg;
-> =20
->  	dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
-> +	adap->bus_reg =3D devm_regulator_get(&adap->dev, "bus");
-> +	if (IS_ERR(adap->bus_reg)) {
-> +		res =3D PTR_ERR(adap->bus_reg);
-> +		goto out_reg;
-> +	}
-> =20
->  	pm_runtime_no_callbacks(&adap->dev);
->  	pm_suspend_ignore_children(&adap->dev, true);
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index d2f786706657..833b81a680da 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -15,6 +15,7 @@
->  #include <linux/device.h>	/* for struct device */
->  #include <linux/sched.h>	/* for completion */
->  #include <linux/mutex.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/rtmutex.h>
->  #include <linux/irqdomain.h>		/* for Host Notify IRQ */
->  #include <linux/of.h>		/* for struct device_node */
-> @@ -330,6 +331,7 @@ struct i2c_client {
->  	int init_irq;			/* irq set at initialization	*/
->  	int irq;			/* irq issued by device		*/
->  	struct list_head detected;
-> +
->  #if IS_ENABLED(CONFIG_I2C_SLAVE)
->  	i2c_slave_cb_t slave_cb;	/* callback for slave mode	*/
->  #endif
-> @@ -723,6 +725,7 @@ struct i2c_adapter {
->  	const struct i2c_adapter_quirks *quirks;
-> =20
->  	struct irq_domain *host_notify_domain;
-> +	struct regulator *bus_reg;
-
-"bus_regulator" please. "reg" is ambigious with "register".
-
-And what Tomasz said, of course.
-
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4v1m0ACgkQFA3kzBSg
-KbagQA/+IZ8vQXOi/aW3viz1Ndl5IrlZMPUTUNNFPSJKpFCnkvKKDN7/xgLGbl7t
-3bjoDBkL3Eovtm1WIVNxWTJK5LMgrC0W/wARoHYn1Vwjnf6tAQ/eA5WNKwT4yBat
-caQuDjD5JqqN/2vCFxFNSCu8lTSKtTdyGryb8Ib8qU4bBSpekE7UdhXYjLLegEsi
-PZ60ja+N/Na6Uh7yWXexrj7QrR3FyxVT5fG5MySaRvHQ8BuGP89QbF7ggkB69sMq
-x5RZvzLke38kYz4QQIxGfRkxmrz+eZihn8Cg1ma+Ua+OfB4ohtRJrtcq85xSbe97
-7KvJAPSVWcYf8n/fxqN5+NAb/+WtCX/7E1YQKdS6YrNfj3v8PUzAHM2J0GTRnuUQ
-xBVVLcEoPlYxRfiq2Oos8KAOMHORERoxZX99SSQ48NAeQ2PfVfGeLod0eZXqAPQW
-Gi3jFj91vh41i7DzAa7cc44zUFigHfEfA97fL9Ogtod4GvvNJGZoVT8qJ556Y5nI
-gVo5uBRa5X2p4YlOihMbP8lmIRbZGta/qEaipAi355/dxZjr0b8NO+C4rtBmmW0t
-KwqTe4zFunJ6mkJ641k/UIoDMfOI5KCWENDRtvz9LyFlQuYLVJulaLToM2ubP1bo
-QeTlnDkEqTzz1HJen6d9ThGIFtTgCszf9ZIVNH2z5WL8+m5X1zo=
-=mJrs
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
