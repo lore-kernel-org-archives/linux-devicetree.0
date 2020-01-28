@@ -2,45 +2,48 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8227BC2D0DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE7CC3F68F
 	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7D724693
+	by mail.kernel.org (Postfix) with ESMTP id 7FB482468A
 	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgA1Njj (ORCPT
+        id S1726182AbgA1Njj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 28 Jan 2020 08:39:39 -0500
-Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:39216 "EHLO
+Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:39202 "EHLO
         ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgA1Njj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1725997AbgA1Njj (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Tue, 28 Jan 2020 08:39:39 -0500
+X-Greylist: delayed 492 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jan 2020 08:39:38 EST
 Received: from localhost.localdomain (227.146.230.94.awnet.cz [94.230.146.227])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ixit.cz (Postfix) with ESMTPSA id 70F5F251E0;
-        Tue, 28 Jan 2020 14:31:23 +0100 (CET)
+        by ixit.cz (Postfix) with ESMTPSA id 31541251E8;
+        Tue, 28 Jan 2020 14:32:21 +0100 (CET)
 From:   David Heidelberg <david@ixit.cz>
 To:     linux-iio@vger.kernel.org
 Cc:     David Heidelberg <david@ixit.cz>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 0/7] iio: light: AL3010 introduction
-Date:   Tue, 28 Jan 2020 14:30:45 +0100
-Message-Id: <20200128133052.201587-1-david@ixit.cz>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH v2 2/7] dt-bindings: iio: light: add support for Dyna-Image AL3010
+Date:   Tue, 28 Jan 2020 14:30:47 +0100
+Message-Id: <20200128133052.201587-3-david@ixit.cz>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128133052.201587-1-david@ixit.cz>
+References: <20200128133052.201587-1-david@ixit.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -49,37 +52,62 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These patches implement support for simple iio light sensor AL3010 and
-also improves and align formating of AL3320a which is origin of al3010
-driver.
+The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
+provides a multiple gain function with linear response over a dynamic
+range 1216/4863/19452/77806.
 
-AL3010 is used in many devices, mostly tegra2/3 based.
-This effort is aimed for reducing number of out-of-tree patches for
-tegra tablets and phones.
-
-This sensor is tested on Nexus 7 (2012, grouper/tilapia).
-
-David Heidelberg (7):
-  dt-bindings: iio: light: add support for Dyna-Image AL3320A
-  dt-bindings: iio: light: add support for Dyna-Image AL3010
-  iio: light: al3320a slightly improve code formatting
-  iio: light: add Dyna-Image AL3010 driver
-  iio: light: al3010 implement suspend support
-  iio: light: al3320a implement suspend support
-  iio: light: al3320a allow module autoload and polish
-
- .../devicetree/bindings/iio/light/al3010.yaml |  40 +++
- .../bindings/iio/light/al3320a.yaml           |  40 +++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- drivers/iio/light/Kconfig                     |  10 +
- drivers/iio/light/Makefile                    |   1 +
- drivers/iio/light/al3010.c                    | 237 ++++++++++++++++++
- drivers/iio/light/al3320a.c                   |  63 +++--
- 7 files changed, 379 insertions(+), 14 deletions(-)
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+ .../devicetree/bindings/iio/light/al3010.yaml | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/light/al3010.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
- create mode 100644 drivers/iio/light/al3010.c
 
+diff --git a/Documentation/devicetree/bindings/iio/light/al3010.yaml b/Documentation/devicetree/bindings/iio/light/al3010.yaml
+new file mode 100644
+index 000000000000..9cd1f34a6d63
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/al3010.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: (GPL-2.0-only)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/al3010.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Dyna-Image AL3010 sensor
++
++maintainers:
++  - David Heidelberg <david@ixit.cz>
++
++properties:
++  compatible:
++    const: dynaimage,al3010
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vdd-supply:
++    description: Regulator that provides power to the sensor
++
++required:
++  - compatible
++  - reg
++  - interrupt
++  - vdd-supply
++
++examples:
++  - |
++    i2c {
++        al3010@1c {
++            compatible = "dynaimage,al3010";
++            reg = <0x1c>;
++            vdd-supply = <&vdd_reg>;
++            interrupts = <0 99 4>;
++        };
++    };
 -- 
 2.25.0
 
