@@ -2,115 +2,75 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B16C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 10:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB26EC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 10:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72422468C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 10:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C197B24687
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 10:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgA1KeD (ORCPT
+        id S1725941AbgA1Kep (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:34:03 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:30986 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725901AbgA1KeC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:34:02 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Jan 2020 16:03:59 +0530
-Received: from pillair-linux.qualcomm.com ([10.204.116.193])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 28 Jan 2020 16:03:50 +0530
-Received: by pillair-linux.qualcomm.com (Postfix, from userid 452944)
-        id 65A5D392C; Tue, 28 Jan 2020 16:03:48 +0530 (IST)
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v4] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Tue, 28 Jan 2020 16:03:37 +0530
-Message-Id: <1580207617-818-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 Jan 2020 05:34:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45116 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgA1Kep (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 05:34:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 51BA8ACA3;
+        Tue, 28 Jan 2020 10:34:43 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
+Date:   Tue, 28 Jan 2020 11:17:17 +0100
+Cc:     <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <devicetree@vger.kernel.org>,
+        "Stefan Wahren" <stefan.wahren@i2se.com>
+Subject: Re: [RFC PATCH 0/4] pinctrl: bcm2835: Add support for all BCM2711
+ GPIOs
+From:   "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+To:     "Stefan Wahren" <stefan.wahren@i2se.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Ray Jui" <rjui@broadcom.com>,
+        "Scott Branden" <sbranden@broadcom.com>
+Message-Id: <C07CI3G3XJXI.3C8TI4AHX37K2@linux-9qgx>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device node for the ath10k SNOC platform driver probe
-and add resources required for WCN3990 on sc7180 soc.
+On Mon Jan 27, 2020 at 7:15 PM, Stefan Wahren wrote:
+> The BCM2711 supports 58 GPIOs [1] by using the existing BCM2835 GPIO
+> registers
+> completely. So there is no need to change the binding.
+>
+> Patch 1 and 2 prepare the pinctrl driver to be extended to 58 GPIOs in
+> Patch 3.
+> I didn't want to squash them in order to make review as easy as
+> possible.
+> The final patch 4 assigns all SoC GPIOs a label as we already did for
+> the older Raspberry Pi boards.
+>
+> [1] -
+> https://github.com/raspberrypi/linux/issues/3101#issuecomment-573092294
+>
+> Stefan Wahren (4):
+> pinctrl: bcm2835: Drop unused define
+> pinctrl: bcm2835: Refactor platform data
+> pinctrl: bcm2835: Add support for all GPIOs on BCM2711
+> ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
+>
+> arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 74 ++++++++++++++++++++++++
+> drivers/pinctrl/bcm/pinctrl-bcm2835.c | 106
+> ++++++++++++++++++++++++++--------
+> 2 files changed, 156 insertions(+), 24 deletions(-)
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 ++++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 189254f..151b489 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -248,6 +248,11 @@
- 	status = "okay";
- };
- 
-+&wifi {
-+	status = "okay";
-+	qcom,msa-fixed-perm;
-+};
-+
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
- &qup_i2c2_default {
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 666e9b9..7efb97f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -42,6 +42,12 @@
- 			compatible = "qcom,cmd-db";
- 			no-map;
- 		};
-+
-+		wlan_fw_mem: memory@93900000 {
-+			compatible = "removed-dma-pool";
-+			no-map;
-+			reg = <0 0x93900000 0 0x200000>;
-+		};
- 	};
- 
- 	cpus {
-@@ -1119,6 +1125,28 @@
- 				#clock-cells = <1>;
- 			};
- 		};
-+
-+		wifi: wifi@18800000 {
-+			compatible = "qcom,wcn3990-wifi";
-+			reg = <0 0x18800000 0 0x800000>;
-+			reg-names = "membase";
-+			iommus = <&apps_smmu 0xC0 0x1>;
-+			interrupts =
-+				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-+				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-+				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-+				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-+				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-+				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-+				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-+				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-+				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-+				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-+				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-+				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-+			memory-region = <&wlan_fw_mem>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	timer {
--- 
-2.7.4
-
+Apart from the review, I gave it a test on an RPi4 and RPi3b, looks good to=
+ me.
