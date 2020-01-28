@@ -2,253 +2,183 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B7DC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 19:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100E0C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 19:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CB424686
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 19:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VCuq4zNQ"
+	by mail.kernel.org (Postfix) with ESMTP id D3D37214D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 19:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580240149;
+	bh=Pr3DXFI8ViRGOKjh9h8Hz0BT7YyyVwuuTEjQR62AWt0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bdZz8mLBuGE2tpx/L3o0JzCBN5BOt7yPZOzCwaeeo5IXkEdZy9igDdso6BbhQ2o2/
+	 rK2NYVmaF1xI/16Ag2/A23Tv9YV9kwPOsMXcP1VPvgLLOvFqt4DAQhIK0ksELLwJ6V
+	 Fvz15HnR6teFyXbUBmV4L4wpNsVadVVl2shZQRwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgA1TcT (ORCPT
+        id S1726442AbgA1Tft (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:32:19 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:32917 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgA1TcS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 14:32:18 -0500
-Received: by mail-qk1-f194.google.com with SMTP id h23so14605560qkh.0
-        for <devicetree@vger.kernel.org>; Tue, 28 Jan 2020 11:32:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k16PGj1qUUwziMfMyn3s5qm2lit+ozL0yN14mkzck48=;
-        b=VCuq4zNQI3kDYT7a2bEUe7emt8NIOG2ziynarqCfccw/g+7AtujVoRAlWhtU6S6M1a
-         NV+pVh9dmzFPKybyCSQ5aS684JZkjevxgY6nX5F/aOosdYj5nlltq4EfLIZS4aONWGqC
-         3MuERsazOp//jGrl2k6VckYP5c/IO09HqrOXCHwH8INvTHTf3vdbCBHw5XhqTmf0Yv4y
-         1fpEVTrAx14NpqYWJPElYomJel2KlOMrouExyhNavBdJYTgf0K/Uq4kDjlr9evj/LqLy
-         wK1P3tLF9OitxoSEF9VCwru8N5lZZGYI4uXOCN0QaUNjS66pXwnAdioIsa+y9WPcAYBk
-         rVPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k16PGj1qUUwziMfMyn3s5qm2lit+ozL0yN14mkzck48=;
-        b=O44/peSKB2C3rH0L5rE/Nv2PNCSKgYmq5USXTC4dM/Xcx1uj+XjCVDpnuk4ZSeZv8y
-         xSfrQreC3DpD6xwORNTLelEorOT64QMDZxCLUXLtKo2XQBnp2+iFYDf9WXggAb6fW4As
-         cwNR4mTjpvH39aiixOTEHi5SKmWpfEnOQknmKarzU73a4jk/ZWE6U9U53Lr2z8Oi5GHd
-         mMs60kyw/r5gZZAVzS9/365CP+IDvZ3xiSsw6/YXoMHgJGaNXu/36T5zVxN3K8+iLntR
-         U0U5TunrMWo1CQsggFrBjGXp4y9cJdB+IXHjgaXajlxFg04OX3HI7NpSJSqSX3xLAiN/
-         EBEw==
-X-Gm-Message-State: APjAAAUrLcRtxBSJqALJFjqf0xUyjsVpNLtTdZkQZBP7o7f1o2BxJ/J6
-        XOqGqU18JMCyMApyN6pwgVzj3Tx9mGYj6RRyzTEu/g==
-X-Google-Smtp-Source: APXvYqzjFiCsOsyFZYRIARaX+Cxwp6joYRuRYTlShoJmbGYCjLP+Q9xdZCbgZRx/xiZxfmZYvodgjgU8Xat5WYUFZ3Y=
-X-Received: by 2002:a37:9c8a:: with SMTP id f132mr23481931qke.432.1580239937466;
- Tue, 28 Jan 2020 11:32:17 -0800 (PST)
+        Tue, 28 Jan 2020 14:35:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726234AbgA1Tfs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 14:35:48 -0500
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B3912064C;
+        Tue, 28 Jan 2020 19:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580240147;
+        bh=Pr3DXFI8ViRGOKjh9h8Hz0BT7YyyVwuuTEjQR62AWt0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WfvRLtX5hpTQMwySLxrZH8GpBe6ytT2T/lwnUPhmTFwO1NedUw8V0GQrveCaKQZ8P
+         ohCoeR/PjFUr4GK+xsjvr1e1Pq9c1LysBmb5DmJrFbUPl09WXUa+7W+Bu+UrBIQItp
+         rYcqUX1cq+HCR5fwJzxS2OI6cs7CxlP7xdhwju7I=
+Received: by mail-qv1-f54.google.com with SMTP id s7so1170028qvn.8;
+        Tue, 28 Jan 2020 11:35:47 -0800 (PST)
+X-Gm-Message-State: APjAAAWi/iv3AL6h+1kMqcNvV/Ea21f5xWgO+aJ1F+/VdYQR5uzE6sfU
+        KufMORa5aOOGo0lxCe13mPwyQYGbWOI7Q8j6WA==
+X-Google-Smtp-Source: APXvYqwkmWB2OfVLFMVNplRokJbj3S/E+jDUH5hAvg+SvFAjOQiYU7rRQIIH/C6cNNowZ+CtFMHj5h56SknQFBBd9ec=
+X-Received: by 2002:ad4:4511:: with SMTP id k17mr22775194qvu.135.1580240146421;
+ Tue, 28 Jan 2020 11:35:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20200113213149.25599-1-mike.leach@linaro.org> <20200113213149.25599-9-mike.leach@linaro.org>
- <396fc3a2-083b-29ef-2bb6-2fca066ea0ef@arm.com>
-In-Reply-To: <396fc3a2-083b-29ef-2bb6-2fca066ea0ef@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 28 Jan 2020 19:32:06 +0000
-Message-ID: <CAJ9a7VghcnAR7V9moPRAFRCTLvce-8qroZ23pG6Z9B3PSM4feQ@mail.gmail.com>
-Subject: Re: [PATCH v8 08/15] coresight: cti: Enable CTI associated with devices.
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
+References: <20200128082013.15951-1-benjamin.gaignard@st.com>
+ <20200128120600.oagnindklixjyieo@gilmour.lan> <a7fa1b43-a188-9d06-73ec-16bcd4012207@st.com>
+In-Reply-To: <a7fa1b43-a188-9d06-73ec-16bcd4012207@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 28 Jan 2020 13:35:34 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ80kSU7bHJt0_SeX5FVfxxjN5-ZKxt+tOfGy2cV62cbQ@mail.gmail.com>
+Message-ID: <CAL_JsqJ80kSU7bHJt0_SeX5FVfxxjN5-ZKxt+tOfGy2cV62cbQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: display: Convert etnaviv to json-schema
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux+etnaviv@armlinux.org.uk" <linux+etnaviv@armlinux.org.uk>,
+        "christian.gmeiner@gmail.com" <christian.gmeiner@gmail.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Suzuki,
+On Tue, Jan 28, 2020 at 6:31 AM Benjamin GAIGNARD
+<benjamin.gaignard@st.com> wrote:
+>
+>
+> On 1/28/20 1:06 PM, Maxime Ripard wrote:
+> > Hi Benjamin,
+> >
+> > On Tue, Jan 28, 2020 at 09:20:13AM +0100, Benjamin Gaignard wrote:
+> >> Convert etnaviv bindings to yaml format.
+> >>
+> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> ---
+> >>   .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
+> >>   .../devicetree/bindings/gpu/vivante,gc.yaml        | 72 ++++++++++++++++++++++
+> >>   2 files changed, 72 insertions(+), 36 deletions(-)
+> >>   delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+> >>   create mode 100644 Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+> >> deleted file mode 100644
+> >> index 8def11b16a24..000000000000
+> >> --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+> >> +++ /dev/null
+> >> @@ -1,36 +0,0 @@
+> >> -Vivante GPU core devices
+> >> -========================
+> >> -
+> >> -Required properties:
+> >> -- compatible: Should be "vivante,gc"
+> >> -  A more specific compatible is not needed, as the cores contain chip
+> >> -  identification registers at fixed locations, which provide all the
+> >> -  necessary information to the driver.
+> >> -- reg: should be register base and length as documented in the
+> >> -  datasheet
+> >> -- interrupts: Should contain the cores interrupt line
+> >> -- clocks: should contain one clock for entry in clock-names
+> >> -  see Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >> -- clock-names:
+> >> -   - "bus":    AXI/master interface clock
+> >> -   - "reg":    AHB/slave interface clock
+> >> -               (only required if GPU can gate slave interface independently)
+> >> -   - "core":   GPU core clock
+> >> -   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
+> >> -
+> >> -Optional properties:
+> >> -- power-domains: a power domain consumer specifier according to
+> >> -  Documentation/devicetree/bindings/power/power_domain.txt
+> >> -
+> >> -example:
+> >> -
+> >> -gpu_3d: gpu@130000 {
+> >> -    compatible = "vivante,gc";
+> >> -    reg = <0x00130000 0x4000>;
+> >> -    interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
+> >> -    clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
+> >> -             <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> >> -             <&clks IMX6QDL_CLK_GPU3D_SHADER>;
+> >> -    clock-names = "bus", "core", "shader";
+> >> -    power-domains = <&gpc 1>;
+> >> -};
+> >> diff --git a/Documentation/devicetree/bindings/gpu/vivante,gc.yaml b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+> >> new file mode 100644
+> >> index 000000000000..c4f549c0d750
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+> >> @@ -0,0 +1,72 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/gpu/vivante,gc.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Vivante GPU Bindings
+> >> +
+> >> +description: Vivante GPU core devices
+> >> +
+> >> +maintainers:
+> >> +  -  Lucas Stach <l.stach@pengutronix.de>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: vivante,gc
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+> >> +  clocks:
+> >> +    items:
+> >> +      - description: AXI/master interface clock
+> >> +      - description: GPU core clock
+> >> +      - description: Shader clock (only required if GPU has feature PIPE_3D)
+> >> +      - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
+> > Can you have an AHB slave interface clock without a shader clock?
+>
+> No because the items in the list are ordered so you need to have, in
+> order: "bus", "core", "shader", "reg"
+>
+> If it is needed to allow any number of clock in any order I could write
+> it like this:
 
-On Wed, 15 Jan 2020 at 11:14, Suzuki Kuruppassery Poulose
-<suzuki.poulose@arm.com> wrote:
->
-> On 13/01/2020 21:31, Mike Leach wrote:
-> > The CoreSight subsystem enables a path of devices from source to sink.
-> > Any CTI devices associated with the path devices must be enabled at the
-> > same time.
-> >
-> > This patch adds an associated coresight_device element to the main
-> > coresight device structure, and uses this to create associations between
-> > the CTI and other devices based on the device tree data. The associated
-> > device element is used to enable CTI in conjunction with the path elements.
-> >
-> > CTI devices are reference counted so where a single CTI is associated with
-> > multiple elements on the path, it will be enabled on the first associated
-> > device enable, and disabled with the last associated device disable.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > ---
-> >   drivers/hwtracing/coresight/coresight-cti.c   | 129 ++++++++++++++++++
-> >   drivers/hwtracing/coresight/coresight-cti.h   |   1 +
-> >   .../hwtracing/coresight/coresight-platform.c  |   1 +
-> >   drivers/hwtracing/coresight/coresight-priv.h  |  12 ++
-> >   drivers/hwtracing/coresight/coresight.c       |  71 +++++++++-
-> >   include/linux/coresight.h                     |   4 +
-> >   6 files changed, 213 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> > index 77c2af247917..2be1b310e854 100644
-> > --- a/drivers/hwtracing/coresight/coresight-cti.c
-> > +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> > @@ -4,6 +4,7 @@
-> >    * Author: Mike Leach <mike.leach@linaro.org>
-> >    */
-> >
-> > +#include <linux/property.h>
-> >   #include "coresight-cti.h"
-> >
-> >   /**
-> > @@ -440,6 +441,131 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
-> >       return err;
-> >   }
-> >
-> > +/*
-> > + * Look for a matching connection device name in the list of connections.
-> > + * If found then swap in the csdev name, set trig con association pointer
-> > + * and return found.
-> > + */
-> > +static bool
-> > +cti_match_fixup_csdev(struct cti_device *ctidev, const char *node_name,
-> > +                   struct coresight_device *csdev)
-> > +{
-> > +     struct cti_trig_con *trig_con;
->
-> super minor nit: Please use "struct cti_trig_con *tc;" consistent with
-> the naming everywhere else. Helps a lot in reading the code, especially
-> which has a lot of different structures.
->
-> > +     const char *csdev_name;
-> > +
-> > +     list_for_each_entry(trig_con, &ctidev->trig_cons, node) {
-> > +             if (trig_con->con_dev_name) {
->
-> This was allocated via devm_* and ...
->
-> > +                     if (!strcmp(node_name, trig_con->con_dev_name)) {
-> > +                             /* match: so swap in csdev name & dev */
-> > +                             kfree(trig_con->con_dev_name);
->
-> ... we free it here using kfree() without devm_ being aware. This could
-> cause double-free when the device is removed. This should either be
-> devm_kfree() or simply overwritten with the new string and leave
-> the device cleanup to free it.
->
+Yes, but I prefer we don't allow any order if we don't have to. Did
+you run this schema against dtbs_check or just audit the dts files
+with vivante?
 
-Agreed - fixed up in v9.
-
-> > +                             csdev_name = dev_name(&csdev->dev);
-> > +                             trig_con->con_dev_name =
-> > +                                     kstrdup(csdev_name, GFP_KERNEL);
->
-> Please use devm_kstrdup() here on the CTI device to have a consistent
-> allocation.
->
->
-> > +                             trig_con->con_dev = csdev;
-> > +                             return true;
-> > +                     }
-> > +             }
-> > +     }
-> > +     return false;
-> > +}
-> >
->
->
-> > +/*
-> > + * Removing the associated devices is easier.
-> > + * A CTI will not have a value for csdev->ect_dev.
-> > + */
-> > +void cti_remove_assoc_from_csdev(struct coresight_device *csdev)
-> > +{
-> > +     struct cti_drvdata *ctidrv;
-> > +     struct cti_trig_con *tc;
-> > +     struct cti_device *ctidev;
-> > +
-> > +     mutex_lock(&ect_mutex);
-> > +     if (csdev->ect_dev) {
-> > +             ctidrv = csdev_to_cti_drvdata(csdev->ect_dev);
-> > +             ctidev = &ctidrv->ctidev;
-> > +             list_for_each_entry(tc, &ctidev->trig_cons, node) {
-> > +                     if (tc->con_dev == csdev->ect_dev) {
-> > +                             tc->con_dev = NULL;
->
-> Should we clear/free the name too ?
->
-
-Not now devm_ allocation is being used.
-
-> > +                             break;
-> > +                     }
-> > +             }
-> > +             csdev->ect_dev = NULL;
-> > +     }
-> > +     mutex_unlock(&ect_mutex);
-> > +}
-> > +EXPORT_SYMBOL_GPL(cti_remove_assoc_from_csdev);
-> > +
->
-> ...
->
-> > diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
-> > index 469a06a1bb78..578d7e9ac67e 100644
-> > --- a/drivers/hwtracing/coresight/coresight-cti.h
-> > +++ b/drivers/hwtracing/coresight/coresight-cti.h
-> > @@ -216,6 +216,7 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
-> >                     u32 channel_idx);
-> >   struct coresight_platform_data *
-> >   coresight_cti_get_platform_data(struct device *dev);
-> > +const char *cti_plat_get_node_name(struct fwnode_handle *fwnode);
-> >
-> >   /* cti powered and enabled */
-> >   static inline bool cti_active(struct cti_config *cfg)
-> > diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> > index 43418a2126ff..421d4fc95f41 100644
-> > --- a/drivers/hwtracing/coresight/coresight-platform.c
-> > +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> > @@ -313,6 +313,7 @@ static int of_get_coresight_platform_data(struct device *dev,
-> >
-> >       return 0;
-> >   }
-> > +
->
-> nit : spurious hunk ?
->
-> >   #else
-> >   static inline int
-> >   of_get_coresight_platform_data(struct device *dev,
->
-> Otherwise looks good to me
->
-> Suzuki
-
-Thanks.
-
-Mike
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Rob
