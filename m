@@ -2,226 +2,98 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AD0C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 22:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8291FC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 22:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B9221739
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 22:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CDF24685
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 22:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yiq790IC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwcDQr5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgA1WiR (ORCPT
+        id S1726299AbgA1WkY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 17:38:17 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:45308 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgA1WiR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 17:38:17 -0500
-Received: by mail-yb1-f195.google.com with SMTP id x191so7700656ybg.12;
-        Tue, 28 Jan 2020 14:38:16 -0800 (PST)
+        Tue, 28 Jan 2020 17:40:24 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37380 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgA1WkY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 17:40:24 -0500
+Received: by mail-ed1-f68.google.com with SMTP id cy15so16514894edb.4;
+        Tue, 28 Jan 2020 14:40:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O7xmyb6jnfc9R0rnlYaXfp6JweLB2qZ0tv8ttYlZWaI=;
-        b=Yiq790ICVfflbmBDXCHx7fAc4AXn7gZOQVxxmPvSETYiqpIwJtHoKtOKJlBzGQbZh+
-         nAbVVlXW1/Z0b7Kx62QM+jtfZK2b7wUakUhAdUO8Ju/6yCHPcyXJZjHOG/m1e54jRMey
-         1zYzpfmk+OGJu7s7j8ZaZhPG43HaTm7OIHxWmpk8TgFS87M3Q/fZC6Y01tl5ncpBUylv
-         SB77DxrvstsPY4ViOGEWJuk9ar6DhlHzaYq1fjp5Sc5coxdJ1zMOe2neDes3IePiv21z
-         5f7zXxdoOCa76fG/0wqoThEj4AECpPSwcELceem0wvvPJEesO0Tyo2ctPIKOaZSRSaja
-         0n1A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2tfcV4CP2sbf7T/W7OGLDgrmyx/flLregwSFl0rBGJY=;
+        b=JwcDQr5HMLCngjCO/tSNT8Lj+zu3HvGpcfIH137EjhBwP51w0GaUzsAPchhJILO5Au
+         /gdzBxmfsLmWwGFz1zIG1LGjJERooWfIeI1WqrgTUEu/740ajDElLhCnLGm7u3lIqJDg
+         ZVAwkG474KZUGn1QvJRW2kM40mwaMW3Bq32UsN/hcQHI3p6lW0RurDDo7GN0SETJWfE/
+         cWs6cBAmFGUbZy0X7dAIcpQlnfHutghmz+Y3LG+DV8cANCU8s4umLl/KBobaDlXOvL+c
+         Ms4JlU7LYen8lc6dpihzPLDBP66noDG8nwZy6kT65f3fafxlqaPkVj7QD7eC9raJ7+Jm
+         TbXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O7xmyb6jnfc9R0rnlYaXfp6JweLB2qZ0tv8ttYlZWaI=;
-        b=NPKIPD2NjAdLAFed8ZKGDcfM+qccGQJRv529lxnba//6Ucqcd3jjRBobNtUEyTX/Mn
-         ELlbOw79qeeHIO90ncFa2GRjcmDeZtl0iaKKz6CAJAYDzacwOkA1kssiHw4Pc1q9jLE/
-         5PfJpU9gs8wEis5f6DD2guw8Yyi5UasHVaT+ICx/Tvpm+lcA4sLjaPmScMmgLkuhhkB/
-         xkKPC6x/F9LxASpMvjjxCd7fPYwC7RDAAkKUa8bpJluwKnm3vIDuI2XKYSbY9WU+Ame/
-         bbFwfrvEW11MaUgjEykoyN9JO6p34JsfhxP8nQc9RnAF9Y7X0baqYFJamoIsmxYj46Ud
-         oZjg==
-X-Gm-Message-State: APjAAAVbsCKPbdberHYoOnieGcxQiDSV2qToGygwnAzNbJtVOxpISwYl
-        hPrw9T0MEHYTq03Nv9RdD+PHke8x
-X-Google-Smtp-Source: APXvYqz97J5PR+zonI+J+7o3YKllvrHvngwUjs+tf74Q1y+Rba4nCk3X6WBMIXIC4jeDVilWrDinrA==
-X-Received: by 2002:a25:9b06:: with SMTP id y6mr18030659ybn.201.1580251096027;
-        Tue, 28 Jan 2020 14:38:16 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d137sm108571ywd.86.2020.01.28.14.38.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jan 2020 14:38:15 -0800 (PST)
-Date:   Tue, 28 Jan 2020 14:38:13 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Jones, Michael-A1" <Michael-A1.Jones@analog.com>
-Cc:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH 2/3] hwmon: (pmbus/ltc2978): Fix PMBus polling of
- MFR_COMMON definitions.
-Message-ID: <20200128223813.GA13354@roeck-us.net>
-References: <1580234400-2829-1-git-send-email-michael-a1.jones@analog.com>
- <1580234400-2829-2-git-send-email-michael-a1.jones@analog.com>
- <20200128191306.GA32672@roeck-us.net>
- <SN6PR03MB40329A1D480256447C4565CDF60A0@SN6PR03MB4032.namprd03.prod.outlook.com>
- <20200128213106.GA30571@roeck-us.net>
- <SN6PR03MB403294C0615C0FE2DF49F7DDF60A0@SN6PR03MB4032.namprd03.prod.outlook.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2tfcV4CP2sbf7T/W7OGLDgrmyx/flLregwSFl0rBGJY=;
+        b=AOdtLB3zCvzEr4Uf/WLqssaFhInZFad6O4wCTopjdFKPjUVxr9qeHqwWK8oGAeRMVX
+         pOqevVjO529qkRKx10tOTF8DZvoGS7MiDxxKBW/5povc9p3ah9pKHeBl7y18AC0VYnLR
+         lyrlOjfRIdQwz2Tn2JrCDerXnD1iyhM5zpX7C+FgpQ11YwEUwtwmVFvSdnghtkadOjpu
+         dgAUQ1CZCNAejNBLqEVuPL7JVoY2+KbpR2pzXBfQVy1h9RKtiWGhUiQ8yRiPDgQlPhjF
+         CQkb+dVD8C1DQz4Yp9IkV7S20NTToP71Lm82Q9M3bUEDmMiYJuIrcYpTiJ0r5nfXEvjD
+         8vTg==
+X-Gm-Message-State: APjAAAWYRBYsaubW81Ik/1cDGgkF7lHI5rS+Ax0iZwDLMJbFvUwo8jNU
+        hMdNqxhnDr2uzGvHjvbWVZY=
+X-Google-Smtp-Source: APXvYqwkTm6HP0VazhnHwh0Fs/tM30jSvUf0/TxYtGpxSY/EOEq2DlLHwxNWmLPEJeRuUY82vXlHdQ==
+X-Received: by 2002:a05:6402:153:: with SMTP id s19mr5393125edu.149.1580251222576;
+        Tue, 28 Jan 2020 14:40:22 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i19sm550907edy.46.2020.01.28.14.40.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 14:40:21 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 2/9] ASoC: tegra: add support for CIF
+ programming
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-3-git-send-email-spujar@nvidia.com>
+ <d01ed171-d949-19b2-3390-ee30eada2779@gmail.com>
+ <a8409b81-7c6b-37a9-81fd-772eb2eca185@nvidia.com>
+ <229def08-6bd4-30d7-056b-92329e48c699@gmail.com>
+ <34917b2d-064f-44a9-4548-ae857e8ea29b@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a3173927-30f7-3957-4dda-bbb662f1ce31@gmail.com>
+Date:   Wed, 29 Jan 2020 01:40:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR03MB403294C0615C0FE2DF49F7DDF60A0@SN6PR03MB4032.namprd03.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <34917b2d-064f-44a9-4548-ae857e8ea29b@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mike,
+27.01.2020 08:11, Sameer Pujar пишет:
+> Thanks Dmitry. However I plan to send Tegra30 related patch separately.
 
-On Tue, Jan 28, 2020 at 09:35:49PM +0000, Jones, Michael-A1 wrote:
-> Guentar,
-> 
-> Yes, LTC3883. Slip of the finger.
-> 
-> I am happy as is. If LTC3883 starts selling like hotcakes, I'll update it later.
-> 
-> This is my first attempt at doing things the linux way, so if you see something I should do different, let me know. I left off Tested-by, assuming that Signed-off-by was good enough. But I do test the changes using a DLN-2 and demo boards.
-> 
+Feel free to add me to the email's CC if you'll need to test or review
+anything related to the T20/30.
 
-Don't top post, and split your lines at 80 columns. Tested-by: only makes
-sense if someone else tested your code; that you have tested it yourself
-is (or should be) implied in the Signed-off-by: tag (that people sometimes
-send patches which don't even compile is no excuse).
+> In this series I will focus on Tegra210 and later.
 
-Thanks,
-Guenter
-
-> Mike
-> 
-> -----Original Message-----
-> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> Sent: Tuesday, January 28, 2020 2:31 PM
-> To: Jones, Michael-A1 <Michael-A1.Jones@analog.com>
-> Cc: linux-hwmon@vger.kernel.org; devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; jdelvare@suse.com; robh+dt@kernel.org; corbet@lwn.net
-> Subject: Re: [PATCH 2/3] hwmon: (pmbus/ltc2978): Fix PMBus polling of MFR_COMMON definitions.
-> 
-> [External]
-> 
-> On Tue, Jan 28, 2020 at 09:16:39PM +0000, Jones, Michael-A1 wrote:
-> > Guenter,
-> > 
-> > The decision to not poll PEND was based on some other non-driver code based on /dev/i2c that looked like this:
-> > 
-> > // Set to 0 for LTC3883 which does not support PEND
-> > #define USE_PEND        1
-> > 
-> > #define NOT_BUSY        1 << 6
-> > #define NOT_TRANS       1 << 4
-> > #if (USE_PEND)
-> > #define NOT_PENDING     1 << 5
-> > #else
-> > #define NOT_PENDING     0
-> > #endif
-> > 
-> > My recollection is that came from the datasheet, many years ago.
-> > 
-> > I talked to the designer, and if the above is correct, it has not been correct since 2012. The designer was not interested in researching artifacts that far back in history. So we know it has been in the part for at least 8 years.
-> > 
-> > There seems to be two choices:
-> > 
-> > A) Leave it as is
-> > B) Poll the PEND bit and possibly break compatibility on ancient 
-> > hardware
-> > 
-> > Generally, unused status bits in this kind are high when reserved or not used. That is good for polling.
-> > 
-> > The shipping volume of LTC3888 has always been very low compared to other parts, so exposure is very small, certainly Cisco/Juniper type companies would not be effected.
-> > 
-> I assume you mean LTC3883, not LTC3888.
-> 
-> > I would feel ok with polling PEND on this part. Let me know your opinion.
-> > 
-> > On a related matter, bit 4 is asserted low when the output is changing value. Hwmon cannot cause this because it only performs telemetry.
-> > 
-> > A user application could change VOUT and cause this to happen. Telemetry would reflect the last measured value from a 100ms internal polling loop, which may be a before, after, or during value. I have always judged that checking this bit has no value, and it can be problematic. If the part is set to have a very long transition rate, like 5 seconds, this would hang the call for a long time. That seemed bad to me, and is why I did not poll this bit.
-> > 
-> 
-> Your call, really. My major concern was that bit 5 is no longer polled on LTC3883. From the above, it looks like it actually _is_ the pending bit (5) that isn't supported on LTC3883. With that in mind, I'll apply the series as-is and add the Fixes: tag myself; no need to resend.
-> 
-> Thanks,
-> Guenter
-> 
-> > Mike
-> > 
-> > -----Original Message-----
-> > From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> > Sent: Tuesday, January 28, 2020 12:13 PM
-> > To: Jones, Michael-A1 <Michael-A1.Jones@analog.com>
-> > Cc: linux-hwmon@vger.kernel.org; devicetree@vger.kernel.org; 
-> > linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; 
-> > jdelvare@suse.com; robh+dt@kernel.org; corbet@lwn.net
-> > Subject: Re: [PATCH 2/3] hwmon: (pmbus/ltc2978): Fix PMBus polling of MFR_COMMON definitions.
-> > 
-> > [External]
-> > 
-> > On Tue, Jan 28, 2020 at 10:59:59AM -0700, Mike Jones wrote:
-> > > Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to 
-> > > bits 6/5. This fixs a LTC297X family bug where polling always 
-> > > returns not busy even when the part is busy. This fixes a LTC388X 
-> > > and LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY 
-> > > was not polled, which can lead to NACKing of commands. LTC388X and 
-> > > LTM467X modules now poll BUSY and PEND, increasing reliability by 
-> > > eliminating NACKing of commands.
-> > > 
-> > > Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
-> > 
-> > Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips 
-> > requiring it")
-> > 
-> > > ---
-> > >  drivers/hwmon/pmbus/ltc2978.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/hwmon/pmbus/ltc2978.c 
-> > > b/drivers/hwmon/pmbus/ltc2978.c index f01f488..a91ed01 100644
-> > > --- a/drivers/hwmon/pmbus/ltc2978.c
-> > > +++ b/drivers/hwmon/pmbus/ltc2978.c
-> > > @@ -82,8 +82,8 @@ enum chips { ltc2974, ltc2975, ltc2977, ltc2978, 
-> > > ltc2980, ltc3880, ltc3882,
-> > >  
-> > >  #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
-> > >  
-> > > -#define LTC_NOT_BUSY			BIT(5)
-> > > -#define LTC_NOT_PENDING			BIT(4)
-> > > +#define LTC_NOT_BUSY			BIT(6)
-> > > +#define LTC_NOT_PENDING			BIT(5)
-> > >  
-> > 
-> > In ltc_wait_ready(), we have:
-> > 
-> > 	/*
-> >          * LTC3883 does not support LTC_NOT_PENDING, even though
-> >          * the datasheet claims that it does.
-> >          */
-> >         mask = LTC_NOT_BUSY;
-> >         if (data->id != ltc3883)
-> >                 mask |= LTC_NOT_PENDING;
-> > 
-> > The semantics of this code is now different: It means that on
-> > LTC3883 only bit 6 is checked; previously, it was bit 5. I agree that the above change makes sense, but it doesn't seem correct to drop the check for bit 5 on LTC3883. Maybe remove the if() above and always check for bit 5 and 6 ? Or should bit 4 be checked on parts other than LTC3883 ?
-> > 
-> > #define LTC_NOT_TRANSITIONING		BIT(4)
-> > ...
-> >         mask = LTC_NOT_BUSY | LTC_NOT_PENDING;
-> >         if (data->id != ltc3883)
-> >                 mask |= LTC_NOT_TRANSITIONING;
-> > 
-> > Thanks,
-> > Guenter
+Please be more careful next time and try not to break the existing
+functionality, looking forward to v2 :)
