@@ -2,134 +2,84 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5182C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8227BC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76CDF24688
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7D724693
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgA1NhX (ORCPT
+        id S1726303AbgA1Njj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:37:23 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:65165 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725974AbgA1NhX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:37:23 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Jan 2020 19:07:19 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 28 Jan 2020 19:06:58 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 3F74E282F; Tue, 28 Jan 2020 19:06:58 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v1] arm64: dts: sc7180: add dsi controller and phy entries for idp dts
-Date:   Tue, 28 Jan 2020 19:06:57 +0530
-Message-Id: <1580218617-30293-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 Jan 2020 08:39:39 -0500
+Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:39216 "EHLO
+        ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbgA1Njj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:39:39 -0500
+Received: from localhost.localdomain (227.146.230.94.awnet.cz [94.230.146.227])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ixit.cz (Postfix) with ESMTPSA id 70F5F251E0;
+        Tue, 28 Jan 2020 14:31:23 +0100 (CET)
+From:   David Heidelberg <david@ixit.cz>
+To:     linux-iio@vger.kernel.org
+Cc:     David Heidelberg <david@ixit.cz>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH 0/7] iio: light: AL3010 introduction
+Date:   Tue, 28 Jan 2020 14:30:45 +0100
+Message-Id: <20200128133052.201587-1-david@ixit.cz>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adding dsi controller and phy entries for idp dt.
+These patches implement support for simple iio light sensor AL3010 and
+also improves and align formating of AL3320a which is origin of al3010
+driver.
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 56 +++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+AL3010 is used in many devices, mostly tegra2/3 based.
+This effort is aimed for reducing number of out-of-tree patches for
+tegra tablets and phones.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50a..9f42367 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -7,6 +7,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7180.dtsi"
- #include "pm6150.dtsi"
-@@ -232,6 +233,50 @@
- 	};
- };
- 
-+&dsi_controller {
-+	status = "okay";
-+
-+	vdda-supply = <&vreg_l3c_1p2>;
-+
-+	panel@0 {
-+		compatible = "visionox,rm69299-1080p-display";
-+		reg = <0>;
-+
-+		vdda-supply = <&vreg_l8c_1p8>;
-+		vdd3p3-supply = <&vreg_l18a_2p8>;
-+
-+		pinctrl-names = "default", "suspend";
-+		pinctrl-0 = <&disp_pins_default>;
-+		pinctrl-1 = <&disp_pins_default>;
-+
-+		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				panel0_in: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&panel0_in>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi_phy {
-+	status = "okay";
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -289,6 +334,17 @@
- 
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
-+&pm6150l_gpio {
-+	disp_pins_default: disp-pins-default{
-+		pins = "gpio3";
-+		function = "func1";
-+		qcom,drive-strength = <2>;
-+		power-source = <0>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
-+
- &qspi_clk {
- 	pinconf {
- 		pins = "gpio63";
+This sensor is tested on Nexus 7 (2012, grouper/tilapia).
+
+David Heidelberg (7):
+  dt-bindings: iio: light: add support for Dyna-Image AL3320A
+  dt-bindings: iio: light: add support for Dyna-Image AL3010
+  iio: light: al3320a slightly improve code formatting
+  iio: light: add Dyna-Image AL3010 driver
+  iio: light: al3010 implement suspend support
+  iio: light: al3320a implement suspend support
+  iio: light: al3320a allow module autoload and polish
+
+ .../devicetree/bindings/iio/light/al3010.yaml |  40 +++
+ .../bindings/iio/light/al3320a.yaml           |  40 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/iio/light/Kconfig                     |  10 +
+ drivers/iio/light/Makefile                    |   1 +
+ drivers/iio/light/al3010.c                    | 237 ++++++++++++++++++
+ drivers/iio/light/al3320a.c                   |  63 +++--
+ 7 files changed, 379 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/al3010.yaml
+ create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
+ create mode 100644 drivers/iio/light/al3010.c
+
 -- 
-2.7.4
+2.25.0
 
