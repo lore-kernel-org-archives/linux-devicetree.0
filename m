@@ -2,171 +2,103 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CA9C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 10:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B058C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 11:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F193F24687
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 10:49:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GGRf+pJA"
+	by mail.kernel.org (Postfix) with ESMTP id 300D321739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 11:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbgA1Kt6 (ORCPT
+        id S1725927AbgA1LK7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:49:58 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18568 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgA1Kt6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 05:49:58 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3011c20000>; Tue, 28 Jan 2020 02:49:38 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 Jan 2020 02:49:57 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 Jan 2020 02:49:57 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
- 2020 10:49:52 +0000
-CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH 0/9] add ASoC components for AHUB
-To:     <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <81db77b5-a65a-eafe-d42d-947c38ea1d3c@nvidia.com>
-Date:   Tue, 28 Jan 2020 16:19:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Jan 2020 06:10:59 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:38168 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgA1LK7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:10:59 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SBAl90021270;
+        Tue, 28 Jan 2020 06:10:47 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xrgdbrejb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 06:10:47 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00SBAk5J055721
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 28 Jan 2020 06:10:46 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 28 Jan
+ 2020 06:10:44 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 28 Jan 2020 06:10:44 -0500
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00SBAcpH004280;
+        Tue, 28 Jan 2020 06:10:42 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ekigwana@gmail.com>, <jic23@kernel.org>, <lars@metafoo.de>,
+        <robh+dt@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3 3/3] MAINTAINERS: add entry for ADF4360 PLL driver
+Date:   Tue, 28 Jan 2020 13:13:02 +0200
+Message-ID: <20200128111302.24359-3-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200128111302.24359-1-alexandru.ardelean@analog.com>
+References: <20200128111302.24359-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580208578; bh=YJZpPWHErsEBxHrNnw+7ltmiDCP3p5OqwD9FoVMZl8s=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=GGRf+pJA/37DUqeFZZ+QEJAPVLUqv0jNTBrKfmNf2YcNL+Plv90d/EUA2GyQ0WlkJ
-         2gBm2anH62Us1wy83XjvFWA3paGGD6+vvwTYy3ob0Z3lDvUzYXJgpi76hGZdstJLNY
-         TlKFdvAWxlEzRTniUUxcuCSqS5zxSpeb8YyacEN/j5YP6An8on6/mGvET9KigdUUuP
-         q4BJMP7gjbjFaBCIZpzBYvrVmW7vz50OVO0ESrYLWAa7y/spVPoDWQEnIyTNI5Kj2U
-         SWRXxbY3aplmFUi1+S/Q68oq281voufJaXEz3W7MYJgp4ADF6IIawhM3N3zf5eXnld
-         gn9sOBGfTPjnA==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_03:2020-01-24,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ clxscore=1015 phishscore=0 malwarescore=0 spamscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 suspectscore=0 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001280090
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Edward Kigwana <ekigwana@gmail.com>
 
+Add entry in the MAINTAINERS file for the ADF4360 PLL driver.
 
-On 1/20/2020 7:53 PM, Sameer Pujar wrote:
-> Overview
-> ========
-> The Audio Hub (AHUB) is part of the Audio Processing Engine (APE) which
-> comprises a collection of hardware accelerators for audio pre-processing
-> and post-processing. It also includes a programmable full crossbar for
-> routing audio data across these accelerators.
->
-> This series exposes some of these below mentioned HW devices as ASoC
-> components for Tegra platforms from Tegra210 onwards.
->   * ADMAIF : The interface between ADMA and AHUB
->   * XBAR   : Crossbar for routing audio samples across various modules
->   * I2S    : Inter-IC Sound Controller
->   * DMIC   : Digital Microphone
->   * DSPK   : Digital Speaker
->
-> Following is the summary of current series.
->   1. Add YAML DT binding documentation for above mentioned modules.
->   2. ACIF programming is same for Tegra generations and hence it is moved
->      to a common file.
->   3. Add ASoC driver components for each of the above modules.
->   4. Add DT entries for above components for Tegra210, Tegra186 and
->      Tegra194.
->   5. Enable these components for Jetson-Tx1, Jetson-Tx2 and
->      Jetson-Xavier.
->
-> Machine driver series will be sent separately.
->
-> Sameer Pujar (9):
->    dt-bindings: sound: tegra: add DT binding for AHUB
->    ASoC: tegra: add support for CIF programming
->    ASoC: tegra: add Tegra210 based DMIC driver
->    ASoC: tegra: add Tegra210 based I2S driver
->    ASoC: tegra: add Tegra210 based AHUB driver
->    ASoC: tegra: add Tegra186 based DSPK driver
->    ASoC: tegra: add Tegra210 based ADMAIF driver
->    arm64: tegra: add AHUB components for few Tegra chips
->    arm64: tegra: enable AHUB modules for few Tegra chips
+Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-If any comments on the series, please let me know.
-I am planning to publish v2 based on the discussion we had in v1.
-
-Thanks,
-Sameer.
->
->   .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++
->   .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 ++++
->   .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 +++
->   .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++
->   .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 +++
->   arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  48 ++
->   arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 231 ++++-
->   arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |  36 +
->   arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 239 +++++-
->   arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts |  40 +
->   arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 145 ++++
->   sound/soc/tegra/Kconfig                            |  56 ++
->   sound/soc/tegra/Makefile                           |  12 +
->   sound/soc/tegra/tegra186_dspk.c                    | 516 +++++++++++
->   sound/soc/tegra/tegra186_dspk.h                    |  73 ++
->   sound/soc/tegra/tegra210_admaif.c                  | 896 ++++++++++++++++++++
->   sound/soc/tegra/tegra210_admaif.h                  | 164 ++++
->   sound/soc/tegra/tegra210_ahub.c                    | 667 +++++++++++++++
->   sound/soc/tegra/tegra210_ahub.h                    | 125 +++
->   sound/soc/tegra/tegra210_dmic.c                    | 522 ++++++++++++
->   sound/soc/tegra/tegra210_dmic.h                    |  85 ++
->   sound/soc/tegra/tegra210_i2s.c                     | 941 +++++++++++++++++++++
->   sound/soc/tegra/tegra210_i2s.h                     | 132 +++
->   sound/soc/tegra/tegra30_ahub.c                     |  94 +-
->   sound/soc/tegra/tegra30_ahub.h                     | 129 ---
->   sound/soc/tegra/tegra30_i2s.c                      |  35 +-
->   sound/soc/tegra/tegra30_i2s.h                      |   7 -
->   sound/soc/tegra/tegra_cif.c                        |  34 +
->   sound/soc/tegra/tegra_cif.h                        |  50 ++
->   sound/soc/tegra/tegra_pcm.c                        | 224 ++++-
->   sound/soc/tegra/tegra_pcm.h                        |  23 +-
->   31 files changed, 5897 insertions(+), 244 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
->   create mode 100644 sound/soc/tegra/tegra186_dspk.c
->   create mode 100644 sound/soc/tegra/tegra186_dspk.h
->   create mode 100644 sound/soc/tegra/tegra210_admaif.c
->   create mode 100644 sound/soc/tegra/tegra210_admaif.h
->   create mode 100644 sound/soc/tegra/tegra210_ahub.c
->   create mode 100644 sound/soc/tegra/tegra210_ahub.h
->   create mode 100644 sound/soc/tegra/tegra210_dmic.c
->   create mode 100644 sound/soc/tegra/tegra210_dmic.h
->   create mode 100644 sound/soc/tegra/tegra210_i2s.c
->   create mode 100644 sound/soc/tegra/tegra210_i2s.h
->   create mode 100644 sound/soc/tegra/tegra_cif.c
->   create mode 100644 sound/soc/tegra/tegra_cif.h
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e699fe378e71..d7a404084ad9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -462,6 +462,14 @@ ADDRESS SPACE LAYOUT RANDOMIZATION (ASLR)
+ M:	Jiri Kosina <jikos@kernel.org>
+ S:	Maintained
+ 
++ADF4360 PLL DRIVER
++M:	Edward Kigwana <ekigwana@gmail.com>
++W:	http://ez.analog.com/community/linux-device-drivers
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
++F:	drivers/iio/frequency/adf4360.c
++
+ ADF7242 IEEE 802.15.4 RADIO DRIVER
+ M:	Michael Hennerich <michael.hennerich@analog.com>
+ W:	https://wiki.analog.com/ADF7242
+-- 
+2.20.1
 
