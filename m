@@ -2,203 +2,635 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339C0C32771
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 02:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7569C32771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 02:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAC92173E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 02:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F93824656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 02:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tweU/fVX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFjmvWLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgA1CN4 (ORCPT
+        id S1726164AbgA1Ce0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 21:13:56 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:6456 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726099AbgA1CN4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 21:13:56 -0500
-X-UUID: fbe9bf7276814657b47eecd443d0e5ae-20200128
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=p0nnIJ+ph00THpKCeQPEgq8IEXgYibuUyEVe40bgwLo=;
-        b=tweU/fVXTQAo6VX3cUKRcrPqoH3joTikGDwRk6ERECb30fZcp85+4Jnoa0QemtlMTk6j9oO5O/hgle1Q0NtqxqNfOHXOraLzLzKF1+8lrie2+0hwPhPDyGIOIjOV5gG25lwxLLzSATpZJa7YbPSeYj9ILx7ZsNAT4+zs5Io+xd8=;
-X-UUID: fbe9bf7276814657b47eecd443d0e5ae-20200128
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <jungo.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 98680820; Tue, 28 Jan 2020 10:13:49 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 28 Jan 2020 10:13:47 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 28 Jan 2020 10:14:00 +0800
-Message-ID: <1580177627.13350.8.camel@mtksdccf07>
-Subject: Re: [v6, 5/5] media: platform: Add Mediatek ISP P1 V4L2 device
- driver
-From:   Jungo Lin <jungo.lin@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-CC:     <tfiga@chromium.org>, <laurent.pinchart@ideasonboard.com>,
-        <matthias.bgg@gmail.com>, <mchehab@kernel.org>,
-        <shik@chromium.org>, <devicetree@vger.kernel.org>,
-        <Sean.Cheng@mediatek.com>, <suleiman@chromium.org>,
-        <Rynn.Wu@mediatek.com>, Pi-Hsun Shih <pihsun@chromium.org>,
-        <srv_heupstream@mediatek.com>, <robh@kernel.org>,
-        <ryan.yu@mediatek.com>, <Jerry-ch.Chen@mediatek.com>,
-        <frankie.chiu@mediatek.com>, <sj.huang@mediatek.com>,
-        <yuzhao@chromium.org>, <linux-mediatek@lists.infradead.org>,
-        <zwisler@chromium.org>, <ddavenport@chromium.org>,
-        <frederic.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-media@vger.kernel.org>
-Date:   Tue, 28 Jan 2020 10:13:47 +0800
-In-Reply-To: <c481734a-c706-2ea9-3888-ab2fb9c805ef@xs4all.nl>
-References: <Jungo Lin <jungo.lin@mediatek.com>
-         <20191219054930.29513-1-jungo.lin@mediatek.com>
-         <20191219054930.29513-6-jungo.lin@mediatek.com>
-         <c481734a-c706-2ea9-3888-ab2fb9c805ef@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 27 Jan 2020 21:34:26 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46353 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgA1Ce0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 21:34:26 -0500
+Received: by mail-yw1-f66.google.com with SMTP id u139so5816291ywf.13;
+        Mon, 27 Jan 2020 18:34:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BLZjKbQqw8/vSRAvqhbH57wjg371XNFVEXKJoHOqB1Q=;
+        b=VFjmvWLtMi2Fqocf1Hf6TR6EqnuQwonR5MHPvRo860vNpgJ4fxvqOBWUXu79Yggs4y
+         dSt8LZU9d9hXCDg5xzin5L6m96sNS6BXbhpz3OYGprcENlOESpxFBqHtRyPZLuJPdDIR
+         gkaMEJDdPBctlO/yqgfNFm9WBkP+K7K0kp2vtIkbSf9UQiUQlqwdT0q/loP7NTErPJlM
+         0vtWJT1fU4zk0BUuivgBy0dvHSMGC8CKVkj/xOxbuucwPjZTuIeD+Cb+Y9P5tGSY1FQP
+         Cx24KOBQXbX01muxOxQXE/gwYuK8LMzZOt3RNnNBQEwqBwXDMQoXOVMFOcGMV6iov77E
+         i/ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BLZjKbQqw8/vSRAvqhbH57wjg371XNFVEXKJoHOqB1Q=;
+        b=YZ9Ad2ZubDr+Kqvdz8SPMyIqzg4aH5UTwY/499ys0O6e2HtnGzFrzTnkEpEDqe+kVU
+         wg77ctQ1+XwXCkGhZbyFLDhjef2Jp1Bv3c2AdUnskMwrkclCKSkkqKswnea9m9f+KATd
+         dVxvAZ1aPP9avpLJ2PqB4+fb4xZoS/uUPjnqcKjj4ubluyJ1dOfc1uZR+IxXEXh9qcwU
+         uIB/hPcGBvAsSgp+Vr4j7Gaeza+jy+d+q39mXos652Wj+dMCx0LfV2cCRTtf5d5TFD06
+         lyAhSEa+h17Hh0GmtzrgQyWoVu9p/wvLqoZP1p6K3Q4gXfJB63+J3fqZz/GJeXnlmkp8
+         1JJg==
+X-Gm-Message-State: APjAAAWMH4Pu9UfopMZPa+IwES/Yqib83ArAN376NCeARfKJaFyZ/zNL
+        nWPdtLLV6pe92nZI+PKAeQ4=
+X-Google-Smtp-Source: APXvYqylFQxYAaGxx59fkWKNN1Jm72KLPV6wfBtWKL+MnUQzFHO9kWVUbYqZaveHVueXYdbtSAfIzQ==
+X-Received: by 2002:a81:780b:: with SMTP id t11mr14048540ywc.117.1580178863447;
+        Mon, 27 Jan 2020 18:34:23 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id s3sm7947576ywf.22.2020.01.27.18.34.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jan 2020 18:34:22 -0800 (PST)
+Subject: Re: [RFC PATCH 1/2] of: unittest: add overlay gpio test to catch gpio
+ hog problem
+To:     Rob Herring <robh@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        pantelis.antoniou@konsulko.com,
+        Pantelis Antoniou <panto@antoniou-consulting.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alan Tull <atull@kernel.org>
+References: <1579070828-18221-1-git-send-email-frowand.list@gmail.com>
+ <1579070828-18221-2-git-send-email-frowand.list@gmail.com>
+ <20200121230210.GA3193@bogus>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <f7bb7365-1664-7850-55b4-2dac11799c46@gmail.com>
+Date:   Mon, 27 Jan 2020 20:34:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200121230210.GA3193@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIEhhbnM6DQoNCk9uIFRodSwgMjAyMC0wMS0yMyBhdCAxNDo1OSArMDEwMCwgSGFucyBWZXJr
-dWlsIHdyb3RlOg0KPiBIaSBKdW5nbywNCj4gDQo+IE9uIDEyLzE5LzE5IDY6NDkgQU0sIEp1bmdv
-IExpbiB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIE1lZGlhdGVrIElTUCBQMSBIVyBj
-b250cm9sIGRldmljZSBkcml2ZXIuDQo+ID4gSXQgaGFuZGxlcyB0aGUgSVNQIEhXIGNvbmZpZ3Vy
-YXRpb24sIHByb3ZpZGVzIGludGVycnVwdCBoYW5kbGluZyBhbmQNCj4gPiBpbml0aWFsaXplcyB0
-aGUgVjRMMiBkZXZpY2Ugbm9kZXMgYW5kIG90aGVyIFY0TDIgZnVuY3Rpb25zLiBNb3Jlb3ZlciwN
-Cj4gPiBpbXBsZW1lbnQgc3RhbmRhcmQgVjRMMiB2aWRlbyBkcml2ZXIgdGhhdCB1dGlsaXplcyBW
-NEwyIGFuZCBtZWRpYQ0KPiA+IGZyYW1ld29yayBBUElzLiBJdCBzdXBwb3J0cyBvbmUgbWVkaWEg
-ZGV2aWNlLCBvbmUgc3ViLWRldmljZSBhbmQNCj4gPiBzZXZlcmFsIHZpZGVvIGRldmljZXMgZHVy
-aW5nIGluaXRpYWxpemF0aW9uLiBNb3Jlb3ZlciwgaXQgYWxzbyBjb25uZWN0cw0KPiA+IHdpdGgg
-c2Vuc29yIGFuZCBzZW5pbmYgZHJpdmVycyB3aXRoIFY0TDIgYXN5bmMgQVBJcy4gQ29tbXVuaWNh
-dGUgd2l0aA0KPiA+IGNvLXByb2Nlc3MgdmlhIFNDUCBjb21tdW5pY2F0aW9uIHRvIGNvbXBvc2Ug
-SVNQIHJlZ2lzdGVycyBpbiB0aGUNCj4gPiBmaXJtd2FyZS4NCj4gPiANCj4gPiAoVGhlIGN1cnJl
-bnQgbWV0YWRhdGEgaW50ZXJmYWNlIHVzZWQgaW4gbWV0YSBpbnB1dCBhbmQgcGFydGlhbA0KPiA+
-IG1ldGEgbm9kZXMgaXMgb25seSBhIHRlbXBvcmFyeSBzb2x1dGlvbiB0byBraWNrIG9mZiB0aGUg
-ZHJpdmVyDQo+ID4gZGV2ZWxvcG1lbnQgYW5kIGlzIG5vdCByZWFkeSB0byBiZSByZXZpZXdlZCB5
-ZXQuKQ0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEp1bmdvIExpbiA8anVuZ28ubGluQG1lZGlh
-dGVrLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0u
-b3JnPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBpLUhzdW4gU2hpaCA8cGloc3VuQGNocm9taXVtLm9y
-Zz4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIGZyb20gdjY6DQo+ID4gIC0gUmV2aXNlIGhlbHAgZGVz
-Y3JpcHRpb24gZm9yIFZJREVPX01FRElBVEVLX0lTUF9QQVNTMQ0KPiA+ICAtIEFwcGx5IFNDUCB2
-MjEgY2hhbmdlIGluIFAxIGRyaXZlciBieSBQaS1Ic3VuIFNoaWgNCj4gPiAgLSBDb3JyZWN0IGF1
-dG8gc3VzcGVuZCB0aW1lciB2YWx1ZSBmb3Igc3VzcGVuZC9yZXN1bWUgaXNzdWUNCj4gPiAgLSBJ
-bmNyZWFzZSBJUEkgZ3VhcmQgdGltZXIgdG8gMSBzZWNvbmQgdG8gYXZvaWQgZmFsc2UgYWxhcm0g
-Y29tbWFuZCB0aW1lb3V0IGV2ZW50DQo+ID4gIC0gRml4IEtFIGR1ZSB0byBubyBzZW4taW5mIHN1
-Yi1kZXZpY2UNCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstaXNwL0tj
-b25maWcgICAgICAgIHwgICAyMCArDQo+ID4gIC4uLi9tZWRpYS9wbGF0Zm9ybS9tdGstaXNwL2lz
-cF81MC9NYWtlZmlsZSAgICB8ICAgIDMgKw0KPiA+ICAuLi4vcGxhdGZvcm0vbXRrLWlzcC9pc3Bf
-NTAvY2FtL01ha2VmaWxlICAgICAgfCAgICA2ICsNCj4gPiAgLi4uL3BsYXRmb3JtL210ay1pc3Av
-aXNwXzUwL2NhbS9tdGtfY2FtLWh3LmMgIHwgIDYzNiArKysrKw0KPiA+ICAuLi4vcGxhdGZvcm0v
-bXRrLWlzcC9pc3BfNTAvY2FtL210a19jYW0taHcuaCAgfCAgIDY0ICsNCj4gPiAgLi4uL3BsYXRm
-b3JtL210ay1pc3AvaXNwXzUwL2NhbS9tdGtfY2FtLWlwaS5oIHwgIDIyMiArKw0KPiA+ICAuLi4v
-bXRrLWlzcC9pc3BfNTAvY2FtL210a19jYW0tcmVncy5oICAgICAgICAgfCAgIDk1ICsNCj4gPiAg
-Li4uL3BsYXRmb3JtL210ay1pc3AvaXNwXzUwL2NhbS9tdGtfY2FtLmMgICAgIHwgMjA4NyArKysr
-KysrKysrKysrKysrKw0KPiA+ICAuLi4vcGxhdGZvcm0vbXRrLWlzcC9pc3BfNTAvY2FtL210a19j
-YW0uaCAgICAgfCAgMjQ0ICsrDQo+ID4gIDkgZmlsZXMgY2hhbmdlZCwgMzM3NyBpbnNlcnRpb25z
-KCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1p
-c3AvS2NvbmZpZw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9wbGF0Zm9y
-bS9tdGstaXNwL2lzcF81MC9NYWtlZmlsZQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9tZWRpYS9wbGF0Zm9ybS9tdGstaXNwL2lzcF81MC9jYW0vTWFrZWZpbGUNCj4gPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWlzcC9pc3BfNTAvY2FtL210
-a19jYW0taHcuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9wbGF0Zm9y
-bS9tdGstaXNwL2lzcF81MC9jYW0vbXRrX2NhbS1ody5oDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1pc3AvaXNwXzUwL2NhbS9tdGtfY2FtLWlwaS5o
-DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1pc3Av
-aXNwXzUwL2NhbS9tdGtfY2FtLXJlZ3MuaA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9tZWRpYS9wbGF0Zm9ybS9tdGstaXNwL2lzcF81MC9jYW0vbXRrX2NhbS5jDQo+ID4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1pc3AvaXNwXzUwL2NhbS9t
-dGtfY2FtLmgNCj4gDQo+IDxzbmlwPg0KPiANCj4gPiArc3RhdGljIHZvaWQgaXNwX3R4X2ZyYW1l
-X3dvcmtlcihzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBt
-dGtfY2FtX2Rldl9yZXF1ZXN0ICpyZXEgPQ0KPiA+ICsJCWNvbnRhaW5lcl9vZih3b3JrLCBzdHJ1
-Y3QgbXRrX2NhbV9kZXZfcmVxdWVzdCwgZnJhbWVfd29yayk7DQo+ID4gKwlzdHJ1Y3QgbXRrX2Nh
-bV9kZXYgKmNhbSA9DQo+ID4gKwkJY29udGFpbmVyX29mKHJlcS0+cmVxLm1kZXYsIHN0cnVjdCBt
-dGtfY2FtX2RldiwgbWVkaWFfZGV2KTsNCj4gPiArCXN0cnVjdCBtdGtfaXNwX3AxX2RldmljZSAq
-cDFfZGV2ID0gZGV2X2dldF9kcnZkYXRhKGNhbS0+ZGV2KTsNCj4gPiArDQo+ID4gKwlzY3BfaXBp
-X3NlbmQocDFfZGV2LT5zY3AsIFNDUF9JUElfSVNQX0ZSQU1FLCAmcmVxLT5mcmFtZV9wYXJhbXMs
-DQo+ID4gKwkJICAgICBzaXplb2YocmVxLT5mcmFtZV9wYXJhbXMpLCBNVEtfSVNQX0lQSV9TRU5E
-X1RJTUVPVVQpOw0KPiA+ICt9DQo+IA0KPiA8c25pcD4NCj4gDQo+ID4gK3ZvaWQgbXRrX2lzcF9y
-ZXFfZW5xdWV1ZShzdHJ1Y3QgbXRrX2NhbV9kZXYgKmNhbSwNCj4gPiArCQkJIHN0cnVjdCBtdGtf
-Y2FtX2Rldl9yZXF1ZXN0ICpyZXEpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBtdGtfaXNwX3AxX2Rl
-dmljZSAqcDFfZGV2ID0gZGV2X2dldF9kcnZkYXRhKGNhbS0+ZGV2KTsNCj4gPiArDQo+ID4gKwkv
-KiBBY2N1bXVsYXRlZCBmcmFtZSBzZXF1ZW5jZSBudW1iZXIgKi8NCj4gPiArCXJlcS0+ZnJhbWVf
-cGFyYW1zLmZyYW1lX3NlcV9ubyA9ICsrcDFfZGV2LT5lbnF1ZXVlZF9mcmFtZV9zZXFfbm87DQo+
-ID4gKw0KPiA+ICsJSU5JVF9XT1JLKCZyZXEtPmZyYW1lX3dvcmssIGlzcF90eF9mcmFtZV93b3Jr
-ZXIpOw0KPiA+ICsJcXVldWVfd29yayhwMV9kZXYtPmNvbXBvc2VyX3dxLCAmcmVxLT5mcmFtZV93
-b3JrKTsNCj4gPiArCWRldl9kYmcoY2FtLT5kZXYsICJlbnF1ZXVlIGZkOiVzIGZyYW1lX3NlcV9u
-bzolZCBqb2IgY250OiVkXG4iLA0KPiA+ICsJCXJlcS0+cmVxLmRlYnVnX3N0ciwgcmVxLT5mcmFt
-ZV9wYXJhbXMuZnJhbWVfc2VxX25vLA0KPiA+ICsJCWNhbS0+cnVubmluZ19qb2JfY291bnQpOw0K
-PiA+ICt9DQo+IA0KPiA8c25pcD4NCj4gDQo+ID4gKy8qDQo+ID4gKyAqIHN0cnVjdCBkbWFfYnVm
-ZmVyIC0gRE1BIGJ1ZmZlciBhZGRyZXNzIGluZm9ybWF0aW9uDQo+ID4gKyAqDQo+ID4gKyAqIEBp
-b3ZhOiBETUEgYWRkcmVzcyBmb3IgSVNQIERNQSBkZXZpY2UNCj4gPiArICogQHNjcF9hZGRyOiBT
-Q1AgYWRkcmVzcyBmb3IgZXh0ZXJuYWwgY28tcHJvY2VzcyB1bml0DQo+ID4gKyAqDQo+ID4gKyAq
-Lw0KPiA+ICtzdHJ1Y3QgZG1hX2J1ZmZlciB7DQo+ID4gKwl1MzIgaW92YTsNCj4gPiArCXUzMiBz
-Y3BfYWRkcjsNCj4gPiArfSBfX3BhY2tlZDsNCj4gDQo+IDxzbmlwPg0KPiANCj4gPiArc3RhdGlj
-IHZvaWQgbXRrX2NhbV92YjJfYnVmX3F1ZXVlKHN0cnVjdCB2YjJfYnVmZmVyICp2YikNCj4gPiAr
-ew0KPiA+ICsJc3RydWN0IG10a19jYW1fZGV2ICpjYW0gPSB2YjJfZ2V0X2Rydl9wcml2KHZiLT52
-YjJfcXVldWUpOw0KPiA+ICsJc3RydWN0IG10a19jYW1fZGV2X2J1ZmZlciAqYnVmID0gbXRrX2Nh
-bV92YjJfYnVmX3RvX2Rldl9idWYodmIpOw0KPiA+ICsJc3RydWN0IG10a19jYW1fZGV2X3JlcXVl
-c3QgKnJlcSA9IG10a19jYW1fcmVxX3RvX2Rldl9yZXEodmItPnJlcXVlc3QpOw0KPiA+ICsJc3Ry
-dWN0IG10a19jYW1fdmlkZW9fZGV2aWNlICpub2RlID0gbXRrX2NhbV92YnFfdG9fdmRldih2Yi0+
-dmIyX3F1ZXVlKTsNCj4gPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9IGNhbS0+ZGV2Ow0KPiA+ICsJ
-dW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiArDQo+ID4gKwlkZXZfZGJnKGRldiwgIiVzOiBub2Rl
-OiVkIGZkOiVkIGlkeDolZFxuIiwgX19mdW5jX18sDQo+ID4gKwkJbm9kZS0+aWQsIGJ1Zi0+dmJi
-LnJlcXVlc3RfZmQsIGJ1Zi0+dmJiLnZiMl9idWYuaW5kZXgpOw0KPiA+ICsNCj4gPiArCS8qIGFk
-ZGVkIHRoZSBidWZmZXIgaW50byB0aGUgdHJhY2tpbmcgbGlzdCAqLw0KPiA+ICsJc3Bpbl9sb2Nr
-X2lycXNhdmUoJm5vZGUtPmJ1Zl9saXN0X2xvY2ssIGZsYWdzKTsNCj4gPiArCWxpc3RfYWRkX3Rh
-aWwoJmJ1Zi0+bGlzdCwgJm5vZGUtPmJ1Zl9saXN0KTsNCj4gPiArCXNwaW5fdW5sb2NrX2lycXJl
-c3RvcmUoJm5vZGUtPmJ1Zl9saXN0X2xvY2ssIGZsYWdzKTsNCj4gPiArDQo+ID4gKwkvKiB1cGRh
-dGUgYnVmZmVyIGludGVybmFsIGFkZHJlc3MgKi8NCj4gPiArCXJlcS0+ZnJhbWVfcGFyYW1zLmRt
-YV9idWZzW2J1Zi0+bm9kZV9pZF0uaW92YSA9IGJ1Zi0+ZGFkZHI7DQo+ID4gKwlyZXEtPmZyYW1l
-X3BhcmFtcy5kbWFfYnVmc1tidWYtPm5vZGVfaWRdLnNjcF9hZGRyID0gYnVmLT5zY3BfYWRkcjsN
-Cj4gPiArfQ0KPiA+ICsNCj4gDQo+IDxzbmlwPg0KPiANCj4gPiArLyoNCj4gPiArICogc3RydWN0
-IG10a19wMV9mcmFtZV9wYXJhbSAtIE1USyBJU1AgUDEgZHJpdmVyIGZyYW1lIHBhcmFtZXRlcnMu
-DQo+ID4gKyAqDQo+ID4gKyAqIEBmcmFtZV9zZXFfbm86IFRoZSBmcmFtZSBzZXF1ZW5jZSBvZiBm
-cmFtZSBpbiBkcml2ZXIgbGF5ZXIuDQo+ID4gKyAqIEBkbWFfYnVmczogVGhlIERNQSBidWZmZXIg
-YWRkcmVzcyBpbmZvcm1hdGlvbiBvZiBlbmFibGVkIERNQSBub2Rlcy4NCj4gPiArICoNCj4gPiAr
-ICovDQo+ID4gK3N0cnVjdCBtdGtfcDFfZnJhbWVfcGFyYW0gew0KPiA+ICsJdW5zaWduZWQgaW50
-IGZyYW1lX3NlcV9ubzsNCj4gPiArCXN0cnVjdCBkbWFfYnVmZmVyIGRtYV9idWZzW01US19DQU1f
-UDFfVE9UQUxfTk9ERVNdOw0KPiA+ICt9IF9fcGFja2VkOw0KPiANCj4gU28gaWYgSSB1bmRlcnN0
-YW5kIHRoaXMgY29ycmVjdGx5LCB0byBzZXQgdGhlIElTUCBmcmFtZSBwYXJhbWV0ZXJzIHVzZXJz
-cGFjZQ0KPiBwcm92aWRlcyBhbiBhcnJheSBvZiBwb2ludGVycyB0byBvdGhlciBtZW1vcnkgYXJl
-YXMgdGhhdCBhcmUgbWFnaWNhbGx5IGNyZWF0ZWQNCj4gc29tZXdoZXJlIGFuZCBjb250YWluaW5n
-IG1hZ2ljLCB1bmRvY3VtZW50ZWQgZGF0YS4NCj4gDQo+IEkga25vdyB5b3Ugc2FpZCB0aGF0IHRo
-aXMgaXMgJ25vdCByZWFkeSB0byBiZSByZXZpZXdlZCB5ZXQnLCBidXQgSSBqdXN0IHdhbnRlZA0K
-PiB0byBtZW50aW9uIHRoYXQgdGhpcyBpcyBvZiBjb3Vyc2Ugbm90IGFjY2VwdGFibGUgYW5kIG5l
-ZWRzIHRvIGJlIHJlcGxhY2VkIHdpdGgNCj4gYSBkb2N1bWVudGVkIG1ldGFkYXRhIHN0cnVjdHVy
-ZSB0aGF0IHVzZXJzcGFjZSBjYW4gcGFzcyBpbiB0aGUgbWV0YWRhdGEgYnVmZmVyLg0KPiANCj4g
-SnVzdCBpZ25vcmUgdGhpcyBlbWFpbCBpZiB5b3Ugd2VyZSBhbHJlYWR5IHBsYW5uaW5nIG9uIGRv
-aW5nIHRoYXQuIEkganVzdCB3YW50ZWQNCj4gdG8gbWFrZSBzdXJlIHRoYXQgaXQgaXMgY2xlYXIg
-dGhhdCB0aGUgY3VycmVudCBhcHByb2FjaCB3b24ndCBmbHkuDQo+IA0KPiBSZWdhcmRzLA0KPiAN
-Cj4gCUhhbnMNCj4gDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQpGaXJzdGx5LCBJIHRo
-aW5rIEkgbWlzcyBtZXRhIGRhdGEgdHlwZXMgZGVmaW5pdGlvbiBpbiB0aGlzIHNlcmllcy4NCmh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExMjYwNTUvDQppbmNsdWRlL3VhcGkv
-bGludXgvdmlkZW9kZXYyLmgNCisjZGVmaW5lIFY0TDJfTUVUQV9GTVRfTVRJU1BfM0EgICAgdjRs
-Ml9mb3VyY2MoJ00nLCAnVCcsICdmJywgJ2EnKSAvKg0KQUUvQVdCIGhpc3RvZ3JhbSAqLw0KKyNk
-ZWZpbmUgVjRMMl9NRVRBX0ZNVF9NVElTUF9BRiAgICB2NGwyX2ZvdXJjYygnTScsICdUJywgJ2Yn
-LCAnZicpIC8qIEFGDQpoaXN0b2dyYW0gKi8NCisjZGVmaW5lIFY0TDJfTUVUQV9GTVRfTVRJU1Bf
-TENTICAgdjRsMl9mb3VyY2MoJ00nLCAnVCcsICdmJywgJ2MnKSAvKg0KTG9jYWwgY29udHJhc3Qg
-ZW5oYW5jZWQgc3RhdGlzdGljcyAqLw0KKyNkZWZpbmUgVjRMMl9NRVRBX0ZNVF9NVElTUF9MTVYg
-ICB2NGwyX2ZvdXJjYygnTScsICdUJywgJ2YnLCAnbScpIC8qDQpMb2NhbCBtb3Rpb24gdmVjdG9y
-IGhpc3RvZ3JhbSAqLw0KKyNkZWZpbmUgVjRMMl9NRVRBX0ZNVF9NVElTUF9QQVJBTVMgdjRsMl9m
-b3VyY2MoJ00nLCAnVCcsICdmJywgJ3AnKSAvKg0KSVNQIHR1bmluZyBwYXJhbWV0ZXJzICovDQpX
-ZSB3aWxsIGNvcnJlY3QgdGhpcyBtaXNzaW5nIGVycm9yIGluIG5leHQgcGF0Y2ggc2V0Lg0KDQpT
-ZWNvbmRseSwgd2UgYXJlIHdvcmtpbmcgb24gdGhlIGRvY3VtZW50ZWQgbWV0YS1kYXRhIHN0cnVj
-dHVyZXMgZm9yDQp0aGVzZSBtZXRhIG5vZGVzLCBlc3BlY2lhbGx5IG9uIDRMMl9NRVRBX0ZNVF9N
-VElTUF9QQVJBTVMgd2hpY2ggaXMgdXNlZA0KZm9yIHR1bmluZyBwYXJhbWV0ZXJzICBmcm9tIHVz
-ZXIgc3BhY2UuDQoNClNpbmNlcmVseQ0KDQpKdW5nbw0KDQo+IF9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlz
-dA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsNCg0K
+On 1/21/20 5:02 PM, Rob Herring wrote:
+> On Wed, Jan 15, 2020 at 12:47:07AM -0600, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Geert reports that gpio hog nodes are not properly processed when
+>> the gpio hog node is added via an overlay reply and provides an
+>> RFC patch to fix the problem [1].
+>>
+>> Add a unittest that shows the problem.  Unittest will report "1 failed"
+>> test before applying Geert's RFC patch and "0 failed" after applying
+>> Geert's RFC patch.
+>>
+>> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>
+>> There are checkpatch warnings.
+>>   - The lines over 80 characters are consistent with unittest.c style
+>>   - The undocumented compatibles are restricted to use by unittest
+>>     and should not be documented under Documentation
+>>
+>> This unittest was also valuable in that it allowed me to explore
+>> possible issues related to the proposed solution to the gpio hog
+>> problem.
+>>
+>>  drivers/of/unittest-data/Makefile             |   8 +-
+>>  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
+>>  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
+>>  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
+>>  drivers/of/unittest.c                         | 257 ++++++++++++++++++++++++++
+>>  8 files changed, 374 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
+>>
+>> diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
+>> index 9b6807065827..009f4045c8e4 100644
+>> --- a/drivers/of/unittest-data/Makefile
+>> +++ b/drivers/of/unittest-data/Makefile
+>> @@ -21,7 +21,13 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtb.o \
+>>  			    overlay_bad_add_dup_prop.dtb.o \
+>>  			    overlay_bad_phandle.dtb.o \
+>>  			    overlay_bad_symbol.dtb.o \
+>> -			    overlay_base.dtb.o
+>> +			    overlay_base.dtb.o \
+>> +			    overlay_gpio_01.dtb.o \
+>> +			    overlay_gpio_02a.dtb.o \
+>> +			    overlay_gpio_02b.dtb.o \
+>> +			    overlay_gpio_03.dtb.o \
+>> +			    overlay_gpio_04a.dtb.o \
+>> +			    overlay_gpio_04b.dtb.o
+>>  
+>>  # enable creation of __symbols__ node
+>>  DTC_FLAGS_overlay += -@
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_01.dts b/drivers/of/unittest-data/overlay_gpio_01.dts
+>> new file mode 100644
+>> index 000000000000..f039e8bce3b6
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_01.dts
+>> @@ -0,0 +1,23 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_01 {
+> 
+> gpio@0
+> 
+>> +		compatible = "unittest-gpio";
+> 
+> There's a mock GPIO driver and I think there was a binding proposed at 
+> some point for some sort of GPIO testing device binding. Maybe that can 
+> save another test driver.
+
+I did not reply to this comment in my first reply.
+
+Thanks for pointing out that driver, I was not aware of it.
+
+The existing driver is way larger and more complicated than the one that
+is in this patch.
+
+I needed to add global (to unittest.c) variables to count how many times
+some gpio driver functions are called to be able to determine whether
+the gpio infrastructure was calling the specific functions as gpio and
+gpio hog nodes were being added.  It would be pretty ugly to put those
+counters in the more generic gpio test driver.
+
+-Frank
+
+> 
+>> +		reg = <0>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B";
+>> +
+>> +		line_b {
+> 
+> line-b
+> 
+>> +			gpio-hog;
+>> +			gpios = <2 0>;
+>> +			input;
+>> +			line-name = "line-B-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_02a.dts b/drivers/of/unittest-data/overlay_gpio_02a.dts
+>> new file mode 100644
+>> index 000000000000..cdafab604793
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_02a.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_02 {
+>> +		compatible = "unittest-gpio";
+>> +		reg = <1>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B";
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_02b.dts b/drivers/of/unittest-data/overlay_gpio_02b.dts
+>> new file mode 100644
+>> index 000000000000..0cea0dccafba
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_02b.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_02 {
+>> +		line_a {
+>> +			gpio-hog;
+>> +			gpios = <1 0>;
+>> +			input;
+>> +			line-name = "line-A-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_03.dts b/drivers/of/unittest-data/overlay_gpio_03.dts
+>> new file mode 100644
+>> index 000000000000..1d5c680fa254
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_03.dts
+>> @@ -0,0 +1,23 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_03 {
+>> +		compatible = "unittest-gpio";
+>> +		reg = <0>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B", "line-C", "line-D";
+>> +
+>> +		line_d {
+>> +			gpio-hog;
+>> +			gpios = <4 0>;
+>> +			input;
+>> +			line-name = "line-D-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_04a.dts b/drivers/of/unittest-data/overlay_gpio_04a.dts
+>> new file mode 100644
+>> index 000000000000..d2482cde310e
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_04a.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_04 {
+>> +		compatible = "unittest-gpio";
+>> +		reg = <1>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B", "line-C", "line-D";
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_04b.dts b/drivers/of/unittest-data/overlay_gpio_04b.dts
+>> new file mode 100644
+>> index 000000000000..70ad05d759f9
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_04b.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_04 {
+>> +		line_c {
+>> +			gpio-hog;
+>> +			gpios = <3 0>;
+>> +			input;
+>> +			line-name = "line-C-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+>> index 68b87587b2ef..db0a6f4103a4 100644
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+>> @@ -24,6 +24,7 @@
+>>  
+>>  #include <linux/i2c.h>
+>>  #include <linux/i2c-mux.h>
+>> +#include <linux/gpio/driver.h>
+>>  
+>>  #include <linux/bitops.h>
+>>  
+>> @@ -46,6 +47,101 @@
+>>  	failed; \
+>>  })
+>>  
+>> +/*
+>> + * Expected message may have a message level other than KERN_INFO.
+>> + * Print the expected message only if the current loglevel will allow
+>> + * the actual message to print.
+>> + */
+>> +#define EXPECT_BEGIN(level, fmt, ...) \
+>> +	printk(level pr_fmt("EXPECT \\ : ") fmt, ##__VA_ARGS__)
+>> +
+>> +#define EXPECT_END(level, fmt, ...) \
+>> +	printk(level pr_fmt("EXPECT / : ") fmt, ##__VA_ARGS__)
+> 
+> When I first saw this, I thought of kunit...
+> 
+> Just wondering if this is a standard way to express this, and if not, is 
+> there?
+> 
+>> +
+>> +struct unittest_gpio_dev {
+>> +	void __iomem *base;
+>> +	struct gpio_chip chip;
+>> +	spinlock_t gpio_lock;
+> 
+> base and gpio_lock aren't used.
+> 
+>> +};
+>> +
+>> +static int unittest_gpio_chip_request_count;
+>> +static int unittest_gpio_probe_count;
+>> +static int unittest_gpio_probe_pass_count;
+>> +
+>> +static int unittest_gpio_chip_request(struct gpio_chip *chip, unsigned int offset)
+>> +{
+>> +	unittest_gpio_chip_request_count++;
+>> +
+>> +	pr_debug("%s(): %s %d %d\n", __func__, chip->label, offset,
+>> +		 unittest_gpio_chip_request_count);
+>> +	return 0;
+>> +}
+>> +
+>> +static int unittest_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +	struct unittest_gpio_dev *devptr;
+>> +	int ret;
+>> +
+>> +	unittest_gpio_probe_count++;
+>> +
+>> +	devptr = kzalloc(sizeof(*devptr), GFP_KERNEL);
+>> +	if (!devptr)
+>> +		return -ENOMEM;
+>> +
+>> +	spin_lock_init(&devptr->gpio_lock);
+>> +
+>> +	platform_set_drvdata(pdev, devptr);
+>> +
+>> +	devptr->chip.of_node = pdev->dev.of_node;
+>> +	devptr->chip.label = "of-unittest-gpio";
+>> +	devptr->chip.base = -1; /* dynamic allocation */
+>> +	devptr->chip.ngpio = 5;
+>> +	devptr->chip.request = unittest_gpio_chip_request;
+>> +
+>> +	ret = gpiochip_add_data(&devptr->chip, NULL);
+>> +
+>> +	unittest(!ret,
+>> +		 "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
+>> +
+>> +	if (!ret)
+>> +		unittest_gpio_probe_pass_count++;
+>> +	return ret;
+>> +}
+>> +
+>> +static int unittest_gpio_remove(struct platform_device *pdev)
+>> +{
+>> +	struct unittest_gpio_dev *gdev = platform_get_drvdata(pdev);
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +
+>> +	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+>> +
+>> +	if (!gdev)
+>> +		return -EINVAL;
+>> +
+>> +	if (gdev->chip.base != -1)
+>> +		gpiochip_remove(&gdev->chip);
+>> +
+>> +	platform_set_drvdata(pdev, NULL);
+>> +	kfree(pdev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id unittest_gpio_id[] = {
+>> +	{ .compatible = "unittest-gpio", },
+>> +	{}
+>> +};
+>> +
+>> +static struct platform_driver unittest_gpio_driver = {
+>> +	.probe	= unittest_gpio_probe,
+>> +	.remove	= unittest_gpio_remove,
+>> +	.driver	= {
+>> +		.name		= "unittest-gpio",
+>> +		.of_match_table	= of_match_ptr(unittest_gpio_id),
+>> +	},
+>> +};
+>> +
+>>  static void __init of_unittest_find_node_by_name(void)
+>>  {
+>>  	struct device_node *np;
+>> @@ -2183,6 +2279,153 @@ static inline void of_unittest_overlay_i2c_15(void) { }
+>>  
+>>  #endif
+>>  
+>> +static void __init of_unittest_overlay_gpio(void)
+>> +{
+>> +	int chip_request_count;
+>> +	int probe_pass_count;
+>> +	int ret;
+>> +
+>> +	/*
+>> +	 * tests: apply overlays before registering driver
+>> +	 * Similar to installing a driver as a module, the
+>> +	 * driver is registered after applying the overlays.
+>> +	 *
+>> +	 * - apply overlay_gpio_01
+>> +	 * - apply overlay_gpio_02a
+>> +	 * - apply overlay_gpio_02b
+>> +	 * - register driver
+>> +	 *
+>> +	 * register driver will result in
+>> +	 *   - probe and processing gpio hog for overlay_gpio_01
+>> +	 *   - probe for overlay_gpio_02a
+>> +	 *   - processing gpio for overlay_gpio_02b
+>> +	 */
+>> +
+>> +	probe_pass_count = unittest_gpio_probe_pass_count;
+>> +	chip_request_count = unittest_gpio_chip_request_count;
+>> +
+>> +	/*
+>> +	 * overlay_gpio_01 contains gpio node and child gpio hog node
+>> +	 * overlay_gpio_02a contains gpio node
+>> +	 * overlay_gpio_02b contains child gpio hog node
+>> +	 */
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_01", NULL),
+>> +		 "Adding overlay 'overlay_gpio_01' failed\n");
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_02a", NULL),
+>> +		 "Adding overlay 'overlay_gpio_02a' failed\n");
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_02b", NULL),
+>> +		 "Adding overlay 'overlay_gpio_02b' failed\n");
+>> +
+>> +	/*
+>> +	 * messages are the result of the probes, after the
+>> +	 * driver is registered
+>> +	 */
+>> +
+>> +	EXPECT_BEGIN(KERN_INFO,
+>> +		     "GPIO line <<int>> (line-B-input) hogged as input\n");
+>> +
+>> +	EXPECT_BEGIN(KERN_INFO,
+>> +		     "GPIO line <<int>> (line-A-input) hogged as input\n");
+>> +
+>> +	ret = platform_driver_register(&unittest_gpio_driver);
+>> +	if (unittest(ret == 0, "could not register unittest gpio driver\n"))
+>> +		return;
+>> +
+>> +	EXPECT_END(KERN_INFO,
+>> +		   "GPIO line <<int>> (line-A-input) hogged as input\n");
+>> +	EXPECT_END(KERN_INFO,
+>> +		   "GPIO line <<int>> (line-B-input) hogged as input\n");
+>> +
+>> +	unittest(probe_pass_count + 2 == unittest_gpio_probe_pass_count,
+>> +		 "unittest_gpio_probe() failed or not called\n");
+>> +
+>> +	unittest(chip_request_count + 2 == unittest_gpio_chip_request_count,
+>> +		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
+>> +		 unittest_gpio_chip_request_count - chip_request_count);
+>> +
+>> +	/*
+>> +	 * tests: apply overlays after registering driver
+>> +	 *
+>> +	 * Similar to a driver built-in to the kernel, the
+>> +	 * driver is registered before applying the overlays.
+>> +	 *
+>> +	 * overlay_gpio_03 contains gpio node and child gpio hog node
+>> +	 *
+>> +	 * - apply overlay_gpio_03
+>> +	 *
+>> +	 * apply overlay will result in
+>> +	 *   - probe and processing gpio hog.
+>> +	 */
+>> +
+>> +	probe_pass_count = unittest_gpio_probe_pass_count;
+>> +	chip_request_count = unittest_gpio_chip_request_count;
+>> +
+>> +	EXPECT_BEGIN(KERN_INFO,
+>> +		     "GPIO line <<int>> (line-D-input) hogged as input\n");
+>> +
+>> +	/* overlay_gpio_03 contains gpio node and child gpio hog node */
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_03", NULL),
+>> +		 "Adding overlay 'overlay_gpio_03' failed\n");
+>> +
+>> +	EXPECT_END(KERN_INFO,
+>> +		   "GPIO line <<int>> (line-D-input) hogged as input\n");
+>> +
+>> +	unittest(probe_pass_count + 1 == unittest_gpio_probe_pass_count,
+>> +		 "unittest_gpio_probe() failed or not called\n");
+>> +
+>> +	unittest(chip_request_count + 1 == unittest_gpio_chip_request_count,
+>> +		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
+>> +		 unittest_gpio_chip_request_count - chip_request_count);
+>> +
+>> +	/*
+>> +	 * overlay_gpio_04a contains gpio node
+>> +	 *
+>> +	 * - apply overlay_gpio_04a
+>> +	 *
+>> +	 * apply the overlay will result in
+>> +	 *   - probe for overlay_gpio_04a
+>> +	 */
+>> +
+>> +	probe_pass_count = unittest_gpio_probe_pass_count;
+>> +	chip_request_count = unittest_gpio_chip_request_count;
+>> +
+>> +	/* overlay_gpio_04a contains gpio node */
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_04a", NULL),
+>> +		 "Adding overlay 'overlay_gpio_04a' failed\n");
+>> +
+>> +	unittest(probe_pass_count + 1 == unittest_gpio_probe_pass_count,
+>> +		 "unittest_gpio_probe() failed or not called\n");
+>> +
+>> +	/*
+>> +	 * overlay_gpio_04b contains child gpio hog node
+>> +	 *
+>> +	 * - apply overlay_gpio_04b
+>> +	 *
+>> +	 * apply the overlay will result in
+>> +	 *   - processing gpio for overlay_gpio_04b
+>> +	 */
+>> +
+>> +	EXPECT_BEGIN(KERN_INFO,
+>> +		     "GPIO line <<int>> (line-C-input) hogged as input\n");
+>> +
+>> +	/* overlay_gpio_04b contains child gpio hog node */
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_04b", NULL),
+>> +		 "Adding overlay 'overlay_gpio_04b' failed\n");
+>> +
+>> +	EXPECT_END(KERN_INFO,
+>> +		   "GPIO line <<int>> (line-C-input) hogged as input\n");
+>> +
+>> +	unittest(chip_request_count + 1 == unittest_gpio_chip_request_count,
+>> +		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
+>> +		 unittest_gpio_chip_request_count - chip_request_count);
+>> +}
+>> +
+>>  static void __init of_unittest_overlay(void)
+>>  {
+>>  	struct device_node *bus_np = NULL;
+>> @@ -2242,6 +2485,8 @@ static void __init of_unittest_overlay(void)
+>>  	of_unittest_overlay_i2c_cleanup();
+>>  #endif
+>>  
+>> +	of_unittest_overlay_gpio();
+>> +
+>>  	of_unittest_destroy_tracked_overlays();
+>>  
+>>  out:
+>> @@ -2295,6 +2540,12 @@ struct overlay_info {
+>>  OVERLAY_INFO_EXTERN(overlay_12);
+>>  OVERLAY_INFO_EXTERN(overlay_13);
+>>  OVERLAY_INFO_EXTERN(overlay_15);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_01);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_02a);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_02b);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_03);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_04a);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_04b);
+>>  OVERLAY_INFO_EXTERN(overlay_bad_add_dup_node);
+>>  OVERLAY_INFO_EXTERN(overlay_bad_add_dup_prop);
+>>  OVERLAY_INFO_EXTERN(overlay_bad_phandle);
+>> @@ -2319,6 +2570,12 @@ struct overlay_info {
+>>  	OVERLAY_INFO(overlay_12, 0),
+>>  	OVERLAY_INFO(overlay_13, 0),
+>>  	OVERLAY_INFO(overlay_15, 0),
+>> +	OVERLAY_INFO(overlay_gpio_01, 0),
+>> +	OVERLAY_INFO(overlay_gpio_02a, 0),
+>> +	OVERLAY_INFO(overlay_gpio_02b, 0),
+>> +	OVERLAY_INFO(overlay_gpio_03, 0),
+>> +	OVERLAY_INFO(overlay_gpio_04a, 0),
+>> +	OVERLAY_INFO(overlay_gpio_04b, 0),
+>>  	OVERLAY_INFO(overlay_bad_add_dup_node, -EINVAL),
+>>  	OVERLAY_INFO(overlay_bad_add_dup_prop, -EINVAL),
+>>  	OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
+>> -- 
+>> Frank Rowand <frank.rowand@sony.com>
+>>
+> 
 
