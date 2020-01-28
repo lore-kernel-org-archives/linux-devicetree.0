@@ -2,112 +2,157 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8551C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19593C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 15:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB23B24686
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580225301;
-	bh=PQHnL6aU/KfqN7PEUbK2n33KLsCnNyWL05OqeO6lBn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G3US395Je9FslNsKM8Y/5zyFWQQJf0ju7O3SFIe1THuTDoA0zk9EsTUGMArRDjarY
-	 AeDxg/tDsYBfAz5hANNoPexk8qqQr3bbnBYQ/MJyGAhxYmUVGA2VNiWfw81w6fPFBl
-	 PvGaoYO8aD2NWfROI4IpBmI/bvy9W8DNff/EaznQ=
+	by mail.kernel.org (Postfix) with ESMTP id DF4432467E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 15:35:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Pw/BfUjP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgA1P2V (ORCPT
+        id S1726697AbgA1Pfb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:28:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgA1P2V (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:28:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Jan 2020 10:35:31 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60132 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726437AbgA1Pfb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:35:31 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580225730; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=OAcEYdNBjmrheJryVcIbMHDRSTe55eH2xPjNsqjLvVM=; b=Pw/BfUjPH8T1Q3KyARBtSpffhInjN20LkTbe08/RxpEbgJN9bOynNG8lbRw1wV42206AmGYp
+ BkWDvNEWQFA9XiJ/mMw3kzVxHTIMZoMrmaHWow3dU1AAMgYrCMLcTsH6tqi20YB0VVb4t8Vb
+ v7hExEdyj4xajHFeg0935lGKQeM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3054c0.7f93edef7a40-smtp-out-n02;
+ Tue, 28 Jan 2020 15:35:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DD647C4479C; Tue, 28 Jan 2020 15:35:27 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46782207FD;
-        Tue, 28 Jan 2020 15:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580225300;
-        bh=PQHnL6aU/KfqN7PEUbK2n33KLsCnNyWL05OqeO6lBn4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jsskb7ILBAwlgTuG3MlnGlxigTi0HH8XpIm9EUmLnYeLRt0kXU0CghSGRnsDelofj
-         xnqTcH3sT9FYnvkdiD923daXUZVkcHTZhtBpMkdGy2QqviQGfsQW2Detu96t6ERoIT
-         /A3skskvqGAo+paVd5kg7TFGn8Mer7BbscVkmr54=
-Date:   Tue, 28 Jan 2020 16:28:18 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports
- hub property
-Message-ID: <20200128152818.GB3437093@kroah.com>
-References: <20200124152504.23411-1-mans@mansr.com>
- <20200127153506.GA4589@bogus>
- <yw1xy2tsvnww.fsf@mansr.com>
- <20200128134745.GA3048749@kroah.com>
- <yw1xpnf3vchs.fsf@mansr.com>
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 592F1C43383;
+        Tue, 28 Jan 2020 15:35:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 592F1C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Tue, 28 Jan 2020 08:35:24 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Clark <robdclark@chromium.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+Message-ID: <20200128153524.GA30489@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Doug Anderson <dianders@chromium.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Clark <robdclark@chromium.org>
+References: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
+ <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yw1xpnf3vchs.fsf@mansr.com>
+In-Reply-To: <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 03:15:11PM +0000, Måns Rullgård wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+On Mon, Jan 27, 2020 at 02:29:53PM -0800, Doug Anderson wrote:
+> Hi,
 > 
-> > On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
-> >> Rob Herring <robh@kernel.org> writes:
-> >> 
-> >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
-> >> >> Add a non-removable-ports property that lists the hardwired downstream
-> >> >> ports of a hub.  Although hubs can provide this information, they are
-> >> >> not always configured correctly.  An alternate means of indicating this
-> >> >> for built-in USB devices is thus useful.
-> >> >> 
-> >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> >> >
-> >> > I reviewed this already, but since you didn't add my reviewed-by, I'm 
-> >> > looking at it again and having 2nd thoughts.
-> >> >
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
-> >> >>  1 file changed, 4 insertions(+)
-> >> >> 
-> >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> >> >> index 036be172b1ae..92d863cc96b6 100644
-> >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
-> >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> >> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
-> >> >>  - #size-cells: shall be 0
-> >> >>  
-> >> >>  
-> >> >> +Optional properties for hub and host-controller nodes:
-> >> >> +- non-removable-ports: list of hardwired downstream ports
-> >> >
-> >> > If you have a hardwired device and need to know that, doesn't that imply 
-> >> > there's some other stuff you need to describe beyond what a standard USB 
-> >> > device has. Such as a power supply that's not Vbus from the hub.
-> >> 
-> >> I suppose there could be, but there isn't in my actual situation.
-> >> 
-> >> > At a minimum, I think this should be a per port property.
-> >> 
-> >> That's what I suggested first.  Greg told me to do it like this instead.
+> On Mon, Jan 27, 2020 at 1:30 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
 > >
-> > I said that?  I do not remember discussing this at all, when did that
-> > happen?
+> > This patch adds the required dt nodes and properties
+> > to enabled A618 GPU.
+> >
+> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 103 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 103 insertions(+)
 > 
-> https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
+> Note that +Matthias Kaehlcke commented on v1 your patch:
+> 
+> https://lore.kernel.org/r/20191204220033.GH228856@google.com/
+> 
+> ...so he should have been CCed on v2.  I would also note that some of
+> the comments below are echos of what Matthias already said in the
+> previous version but just weren't addressed.
+> 
+> 
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index b859431..277d84d 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -7,6 +7,7 @@
+> >
+> >  #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> >  #include <dt-bindings/clock/qcom,rpmh.h>
+> > +#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+> 
+> Header files should be sorted alphabetically.  ...or, even better,
+> base your patch atop mine:
+> 
+> https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid/
+> 
+> ...which adds the gpucc header file so you don't have to.  ...and when
+> you do so, email out a Reviewed-by and/or Tested-by for my patch.  ;-)
+> 
+> 
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >  #include <dt-bindings/interconnect/qcom,sc7180.h>
+> >  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> > @@ -1619,6 +1620,108 @@
+> >                         #interconnect-cells = <1>;
+> >                         qcom,bcm-voters = <&apps_bcm_voter>;
+> >                 };
+> > +
+> > +               gpu: gpu@5000000 {
+> > +                       compatible = "qcom,adreno-618.0", "qcom,adreno";
+> 
+> Though it's not controversial, please send a patch to:
+> 
+> Documentation/devicetree/bindings/display/msm/gmu.txt
+> 
+> ...to add 'qcom,adreno-618.0', like:
+> 
+>     for example:
+>       "qcom,adreno-gmu-618.0", "qcom,adreno-gmu"
+>       "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
+> 
+> Probably as part of this you will be asked to convert this file to
+> yaml.  IMO we don't need to block landing this patch on the effort to
+> convert it to yaml, but you should still work on it.  ...or maybe
+> Jordan wants to work on it?
 
-Almost a full year ago!  Hah, I can't remember what I wrote last week.
+I'll toss it on my to-do list. There always seems to be something more urgent
+but I should just bite the bullet and get it done.
+
+Jordan
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
