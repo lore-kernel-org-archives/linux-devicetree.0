@@ -2,102 +2,121 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD4DC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E423AC33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 14:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D669F2467E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221940;
-	bh=7zFgYrx2kQs7YTeBTl6NWP7mBMvH0VKxs7vaCOKBsPM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EbFB2WXBK9k26iOv6K5NLrrozmOHP8UCxXxCrGF4MzJnX93SNFYWlSMpifUV2pmIc
-	 byQ3m3csVGQSopjCU5NMsZ/hyubvUiTe5hQM/740g3Zj/sq/+gmcmMj7njKKD0sG8S
-	 DqH3EyXo8PmDA4XNWEM6GBDLUtLj/BOFbT3uZhJ4=
+	by mail.kernel.org (Postfix) with ESMTP id C1B9420716
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 14:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387432AbgA1OcQ (ORCPT
+        id S1730395AbgA1Ole (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:32:16 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34341 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733222AbgA1O0t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 09:26:49 -0500
-Received: by mail-ot1-f65.google.com with SMTP id a15so12128834otf.1;
-        Tue, 28 Jan 2020 06:26:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qQkCUlHSeSutqpYYYEuSpgaq1CGRr1gMxP5zgQMXFLE=;
-        b=Wq+obXxqJ9znep3ys52HEXDRa6pIXxgvGSmGG/a/Rbt+m/OqOaTsd36lI/jJwWickN
-         EiTSe2xFQyhIuJYESExZg+K6a1yli7B+RauIVWvatU81dv7PbkXL2DPuHChAIVKEe0ZO
-         UEM4WvdTSGufNlTmCMfNlVQtxWYyK8oZNFsO6ajMp25aAe6QfxUcMLGOgUdp2GYtcbCD
-         BYC21o8itI+MjFUthDEHwxm7oKg9onLm7XxJwNa9205U2EiApWIJ5v9ioPmp6vF1FpHI
-         95DHEbh9GWzM9PkOznPq+tOVfGl7eTwZO8s1zAR/smnWIf05UZjxWCDLokkY9VTlN8S0
-         Hj2g==
-X-Gm-Message-State: APjAAAWmY9f2+dSBL0q6dsDJ6oShPbHjHy/Fcp1y7/o1l2iKbq/bUjQ1
-        eST/082WKWO/mCrV2BYueg==
-X-Google-Smtp-Source: APXvYqwFJVk0FJAugT05thhhxD8ynpQt6Xxwj2dYD7xIOhRcGHbVx5Pc86KH1o6GE7zkGGtDMoAw+w==
-X-Received: by 2002:a05:6830:1116:: with SMTP id w22mr16929063otq.63.1580221607750;
-        Tue, 28 Jan 2020 06:26:47 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f37sm5770746otb.33.2020.01.28.06.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 06:26:46 -0800 (PST)
-Received: (nullmailer pid 18064 invoked by uid 1000);
-        Tue, 28 Jan 2020 14:26:46 -0000
-Date:   Tue, 28 Jan 2020 08:26:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hch@lst.de, ulf.hansson@linaro.org,
-        chzigotzky@xenosoft.de, linuxppc-dev@ozlabs.org
-Subject: Re: [PATCH] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-Message-ID: <20200128142646.GA17341@bogus>
-References: <20200126115247.13402-1-mpe@ellerman.id.au>
+        Tue, 28 Jan 2020 09:41:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:58616 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730154AbgA1Old (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:41:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4D8E31B;
+        Tue, 28 Jan 2020 06:41:32 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D6D33F68E;
+        Tue, 28 Jan 2020 06:41:23 -0800 (PST)
+Subject: Re: [PATCH 3/3] arm64: dts: allwinner: h6: Add IOMMU
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.b2a9e1507135d81e726fcbb65137665a7f0ab74f.1579696927.git-series.maxime@cerno.tech>
+ <5320339.DvuYhMxLoT@jernej-laptop>
+ <20200127142339.crxsuunzec5drfe2@gilmour.lan>
+ <2140600.ElGaqSPkdT@jernej-laptop>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5543595c-4ef9-b67e-5dff-042fb1991194@arm.com>
+Date:   Tue, 28 Jan 2020 14:41:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200126115247.13402-1-mpe@ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2140600.ElGaqSPkdT@jernej-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 26 Jan 2020 22:52:47 +1100, Michael Ellerman wrote:
-> There's an OF helper called of_dma_is_coherent(), which checks if a
-> device has a "dma-coherent" property to see if the device is coherent
-> for DMA.
+On 27/01/2020 7:04 pm, Jernej Škrabec wrote:
+> Hi!
 > 
-> But on some platforms devices are coherent by default, and on some
-> platforms it's not possible to update existing device trees to add the
-> "dma-coherent" property.
+> Dne ponedeljek, 27. januar 2020 ob 15:23:39 CET je Maxime Ripard napisal(a):
+>> Hi Jernej,
+>>
+>> On Fri, Jan 24, 2020 at 09:54:23PM +0100, Jernej Škrabec wrote:
+>>> Dne sreda, 22. januar 2020 ob 13:44:09 CET je Maxime Ripard napisal(a):
+>>>> Now that we have a driver for the IOMMU, let's start using it.
+>>>>
+>>>> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+>>>> ---
+>>>>
+>>>>   arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
+>>>>   1 file changed, 11 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>>>> b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
+>>>> 29824081b43b..8608bcf1c52c 100644
+>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>>>> @@ -53,6 +53,7 @@
+>>>>
+>>>>   	de: display-engine {
+>>>>   	
+>>>>   		compatible = "allwinner,sun50i-h6-display-engine";
+>>>>   		allwinner,pipelines = <&mixer0>;
+>>>>
+>>>> +		iommus = <&iommu 0>;
+>>>>
+>>>>   		status = "disabled";
+>>>>   	
+>>>>   	};
+>>>
+>>> Isn't iommu property of the mixer node? After all, mixer is the one which
+>>> reads one or more framebuffers. Once second mixer is defined, would you
+>>> put
+>>> another iommu phandle here?
+>>
+>> You're right. I added it during the early dev, and forgot to remove
+>> it. Thanks!
 > 
-> So add a Kconfig symbol to allow arch code to tell
-> of_dma_is_coherent() that devices are coherent by default, regardless
-> of the presence of the property.
-> 
-> Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
-> when the system has a coherent cache.
-> 
-> Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
-> Cc: stable@vger.kernel.org # v3.16+
-> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> ---
->  arch/powerpc/Kconfig | 1 +
->  drivers/of/Kconfig   | 4 ++++
->  drivers/of/address.c | 6 +++++-
->  3 files changed, 10 insertions(+), 1 deletion(-)
-> 
+> Remove it or move it? I guess enabling iommu support in each driver needs a
+> bit more work than just referencing iommu node, right? At least in such case
+> buffers don't need to be allocated by CMA, which sun4i-drm driver currently
+> use.
 
-Applied, thanks.
+Note that the DRM "CMA" helpers are somewhat misnamed, since they're in 
+fact based on the common DMA API, and thus transparent IOMMU-backed DMA 
+ops will "just work" without the drivers having to care. Since all the 
+display components behind the IOMMU will be in the same IOMMU group, 
+they're guaranteed to always operate in the same address space as each 
+other, so there should be no additional problems with buffer sharing 
+(assuming the code doesn't have bugs that it's currently just getting 
+away with).
 
-Rob
+> I just take another look at BSP kernel and it seems that only one channel is
+> used for whole display stack. That would mean that both mixers would have same
+> iommu phandle, right? Confusingly enough, DE2 iommu channel seems to be for
+> deinterlace core.
+
+That's also fine - as discussed on the driver thread there's no point 
+trying to expose a distinction between devices at the API level, so the 
+IDs are really only relevant to the driver internals touching the 
+various enable registers (and even then only if you wanted to refine the 
+current "just enable everything" approach).
+
+Robin.
