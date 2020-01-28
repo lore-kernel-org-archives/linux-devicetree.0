@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608A7C35240
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1D8C35246
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7E72467E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 126782467E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="e9PL7h5J"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eylPeeVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgA1JHE (ORCPT
+        id S1726190AbgA1JHC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:07:04 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6246 "EHLO
+        Tue, 28 Jan 2020 04:07:02 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8774 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726182AbgA1JHE (ORCPT
+        by vger.kernel.org with ESMTP id S1726066AbgA1JHB (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:07:04 -0500
+        Tue, 28 Jan 2020 04:07:01 -0500
 Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S93bqr014416;
-        Tue, 28 Jan 2020 10:06:52 +0100
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S93bqm014416;
+        Tue, 28 Jan 2020 10:06:51 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=KcQ1VJ9VyVuhQMCM59rAixh8H5s1dcn6fTo0KkBt7w0=;
- b=e9PL7h5Jm8zg/uktPwq+PrMYe2OPWSTqgiu0PbBPj4TYYdYwUWTRj7j19HPgDxDe1NCS
- CerYjaT5NsFcenMaj9Zwue9oPpgHwvsg9MYrVvEPUIPhhMtVDsR3VXA8d8AnM2/a1tSW
- wOBeAAg1Xtl73RP/mNqxnk5rBYZ+1f5634SJlGOPqfEO9ku/9CPtfb/qL7cHC5xmdMgH
- oX8HlfncNNrwJjMtoeKlfENVvSzgAMewBWzDU7gbmBZ3bjdEZ02mo4Xu0m92AHDviUBD
- 6c/OGonvQpiyLWo1GzmhhuY4c+S4kl6MxBoi8tRLN371mfKPoO0Nn5v3RUA/iwvRgwok Dg== 
+ bh=QftCa2QNdW6rIV5je6s8Ii1o876osqtCa/ZGy3adzdg=;
+ b=eylPeeVdxuO9MnFZu/EcJ2OZ/Jg63rvH+r7WaNa4/LIMc7dfZPaI9ZjE5xptrko2FKGT
+ jQUxz995mhMnB4biA4RSOVNOE0u6BlYQkudc7ZxLuMBTYmhMb49lLudfQKz818XvOSSV
+ YoOX163GH5KX6wQfvgA4Fh+/2uMh7LyzjIis6AhDY+15AWcHayRqPSVxMKfgxFHB2TAM
+ ZgF3FjtqXsXQ2SMN2bUKSfTlKxzI1+QtJTqT6KDVxlabrP+FDkOC+f9iLJsNFXOSJJ1L
+ RX27JHa6CMm8oopWpK858mPeSCzvD3d/xw7omSgl8H7OpVQtnNW15bSLyUxyZCGM8T0W oA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrbpaw4td-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xrbpaw4ta-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 10:06:52 +0100
+        Tue, 28 Jan 2020 10:06:51 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DAECB100034;
-        Tue, 28 Jan 2020 10:06:45 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 616A710005A;
+        Tue, 28 Jan 2020 10:06:49 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CD84E212A35;
-        Tue, 28 Jan 2020 10:06:45 +0100 (CET)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 536E1212A3A;
+        Tue, 28 Jan 2020 10:06:49 +0100 (CET)
 Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan 2020 10:06:45
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan 2020 10:06:48
  +0100
 From:   Ludovic Barre <ludovic.barre@st.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
@@ -59,16 +59,16 @@ CC:     <srinivas.kandagatla@linaro.org>,
         <linux-mmc@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V2 6/9] mmc: mmci: sdmmc: add execute tuning with delay block
-Date:   Tue, 28 Jan 2020 10:06:33 +0100
-Message-ID: <20200128090636.13689-7-ludovic.barre@st.com>
+Subject: [PATCH V2 9/9] mmc: mmci: add sdmmc variant revision 2.0
+Date:   Tue, 28 Jan 2020 10:06:36 +0100
+Message-ID: <20200128090636.13689-10-ludovic.barre@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200128090636.13689-1-ludovic.barre@st.com>
 References: <20200128090636.13689-1-ludovic.barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG6NODE1.st.com
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG6NODE1.st.com
  (10.75.127.16)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
@@ -77,222 +77,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The hardware delay block is used to align the sampling clock on
-the data received by SDMMC. It is mandatory for SDMMC to
-support the SDR104 mode. The delay block is used to generate
-an output clock which is dephased from the input clock.
-The phase of the output clock must be programmed by the execute
-tuning interface.
+This patch adds a sdmmc variant revision 2.0.
+This revision is backward compatible with 1.1, and adds dma
+link list support.
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- drivers/mmc/host/mmci_stm32_sdmmc.c | 149 ++++++++++++++++++++++++++++
- 1 file changed, 149 insertions(+)
+ drivers/mmc/host/mmci.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-index df08f6662431..fa875febcc85 100644
---- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-+++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-@@ -3,10 +3,13 @@
-  * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
-  * Author: Ludovic.barre@st.com for STMicroelectronics.
-  */
-+#include <linux/bitfield.h>
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
-+#include <linux/iopoll.h>
- #include <linux/mmc/host.h>
- #include <linux/mmc/card.h>
-+#include <linux/of_address.h>
- #include <linux/reset.h>
- #include <linux/scatterlist.h>
- #include "mmci.h"
-@@ -14,6 +17,22 @@
- #define SDMMC_LLI_BUF_LEN	PAGE_SIZE
- #define SDMMC_IDMA_BURST	BIT(MMCI_STM32_IDMABNDT_SHIFT)
- 
-+#define DLYB_CR			0x0
-+#define DLYB_CR_DEN		BIT(0)
-+#define DLYB_CR_SEN		BIT(1)
-+
-+#define DLYB_CFGR		0x4
-+#define DLYB_CFGR_SEL_MASK	GENMASK(3, 0)
-+#define DLYB_CFGR_UNIT_MASK	GENMASK(14, 8)
-+#define DLYB_CFGR_LNG_MASK	GENMASK(27, 16)
-+#define DLYB_CFGR_LNGF		BIT(31)
-+
-+#define DLYB_NB_DELAY		11
-+#define DLYB_CFGR_SEL_MAX	(DLYB_NB_DELAY + 1)
-+#define DLYB_CFGR_UNIT_MAX	127
-+
-+#define DLYB_LNG_TIMEOUT_US	1000
-+
- struct sdmmc_lli_desc {
- 	u32 idmalar;
- 	u32 idmabase;
-@@ -25,6 +44,12 @@ struct sdmmc_idma {
- 	void *sg_cpu;
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 24e630183ed4..a774c329c212 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -275,6 +275,31 @@ static struct variant_data variant_stm32_sdmmc = {
+ 	.init			= sdmmc_variant_init,
  };
  
-+struct sdmmc_dlyb {
-+	void __iomem *base;
-+	u32 unit;
-+	u32 max;
++static struct variant_data variant_stm32_sdmmcv2 = {
++	.fifosize		= 16 * 4,
++	.fifohalfsize		= 8 * 4,
++	.f_max			= 208000000,
++	.stm32_clkdiv		= true,
++	.cmdreg_cpsm_enable	= MCI_CPSM_STM32_ENABLE,
++	.cmdreg_lrsp_crc	= MCI_CPSM_STM32_LRSP_CRC,
++	.cmdreg_srsp_crc	= MCI_CPSM_STM32_SRSP_CRC,
++	.cmdreg_srsp		= MCI_CPSM_STM32_SRSP,
++	.cmdreg_stop		= MCI_CPSM_STM32_CMDSTOP,
++	.data_cmd_enable	= MCI_CPSM_STM32_CMDTRANS,
++	.irq_pio_mask		= MCI_IRQ_PIO_STM32_MASK,
++	.datactrl_first		= true,
++	.datacnt_useless	= true,
++	.datalength_bits	= 25,
++	.datactrl_blocksz	= 14,
++	.datactrl_any_blocksz	= true,
++	.stm32_idmabsize_mask	= GENMASK(16, 5),
++	.dma_lli		= true,
++	.busy_timeout		= true,
++	.busy_detect_flag	= MCI_STM32_BUSYD0,
++	.busy_detect_mask	= MCI_STM32_BUSYD0ENDMASK,
++	.init			= sdmmc_variant_init,
 +};
 +
- static int sdmmc_idma_validate_data(struct mmci_host *host,
- 				    struct mmc_data *data)
- {
-@@ -226,12 +251,24 @@ static void mmci_sdmmc_set_clkreg(struct mmci_host *host, unsigned int desired)
- 	mmci_write_clkreg(host, clk);
- }
- 
-+static void sdmmc_dlyb_input_ck(struct sdmmc_dlyb *dlyb)
-+{
-+	if (!dlyb || !dlyb->base)
-+		return;
-+
-+	/* Output clock = Input clock */
-+	writel_relaxed(0, dlyb->base + DLYB_CR);
-+}
-+
- static void mmci_sdmmc_set_pwrreg(struct mmci_host *host, unsigned int pwr)
- {
- 	struct mmc_ios ios = host->mmc->ios;
-+	struct sdmmc_dlyb *dlyb = host->variant_priv;
- 
- 	pwr = host->pwr_reg_add;
- 
-+	sdmmc_dlyb_input_ck(dlyb);
-+
- 	if (ios.power_mode == MMC_POWER_OFF) {
- 		/* Only a reset could power-off sdmmc */
- 		reset_control_assert(host->rst);
-@@ -323,6 +360,102 @@ static bool sdmmc_busy_complete(struct mmci_host *host, u32 status, u32 err_msk)
- 	return true;
- }
- 
-+static void sdmmc_dlyb_set_cfgr(struct sdmmc_dlyb *dlyb,
-+				int unit, int phase, bool sampler)
-+{
-+	u32 cfgr;
-+
-+	writel_relaxed(DLYB_CR_SEN | DLYB_CR_DEN, dlyb->base + DLYB_CR);
-+
-+	cfgr = FIELD_PREP(DLYB_CFGR_UNIT_MASK, unit) |
-+	       FIELD_PREP(DLYB_CFGR_SEL_MASK, phase);
-+	writel_relaxed(cfgr, dlyb->base + DLYB_CFGR);
-+
-+	if (!sampler)
-+		writel_relaxed(DLYB_CR_DEN, dlyb->base + DLYB_CR);
-+}
-+
-+static int sdmmc_dlyb_lng_tuning(struct mmci_host *host)
-+{
-+	struct sdmmc_dlyb *dlyb = host->variant_priv;
-+	u32 cfgr;
-+	int i, lng, ret;
-+
-+	for (i = 0; i <= DLYB_CFGR_UNIT_MAX; i++) {
-+		sdmmc_dlyb_set_cfgr(dlyb, i, DLYB_CFGR_SEL_MAX, true);
-+
-+		ret = readl_relaxed_poll_timeout(dlyb->base + DLYB_CFGR, cfgr,
-+						 (cfgr & DLYB_CFGR_LNGF),
-+						 1, DLYB_LNG_TIMEOUT_US);
-+		if (ret) {
-+			dev_warn(mmc_dev(host->mmc),
-+				 "delay line cfg timeout unit:%d cfgr:%d\n",
-+				 i, cfgr);
-+			continue;
-+		}
-+
-+		lng = FIELD_GET(DLYB_CFGR_LNG_MASK, cfgr);
-+		if (lng < BIT(DLYB_NB_DELAY) && lng > 0)
-+			break;
-+	}
-+
-+	if (i > DLYB_CFGR_UNIT_MAX)
-+		return -EINVAL;
-+
-+	dlyb->unit = i;
-+	dlyb->max = __fls(lng);
-+
-+	return 0;
-+}
-+
-+static int sdmmc_dlyb_phase_tuning(struct mmci_host *host, u32 opcode)
-+{
-+	struct sdmmc_dlyb *dlyb = host->variant_priv;
-+	int cur_len = 0, max_len = 0, end_of_len = 0;
-+	int phase;
-+
-+	for (phase = 0; phase <= dlyb->max; phase++) {
-+		sdmmc_dlyb_set_cfgr(dlyb, dlyb->unit, phase, false);
-+
-+		if (mmc_send_tuning(host->mmc, opcode, NULL)) {
-+			cur_len = 0;
-+		} else {
-+			cur_len++;
-+			if (cur_len > max_len) {
-+				max_len = cur_len;
-+				end_of_len = phase;
-+			}
-+		}
-+	}
-+
-+	if (!max_len) {
-+		dev_err(mmc_dev(host->mmc), "no tuning point found\n");
-+		return -EINVAL;
-+	}
-+
-+	phase = end_of_len - max_len / 2;
-+	sdmmc_dlyb_set_cfgr(dlyb, dlyb->unit, phase, false);
-+
-+	dev_dbg(mmc_dev(host->mmc), "unit:%d max_dly:%d phase:%d\n",
-+		dlyb->unit, dlyb->max, phase);
-+
-+	return 0;
-+}
-+
-+static int sdmmc_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+{
-+	struct mmci_host *host = mmc_priv(mmc);
-+	struct sdmmc_dlyb *dlyb = host->variant_priv;
-+
-+	if (!dlyb || !dlyb->base)
-+		return -EINVAL;
-+
-+	if (sdmmc_dlyb_lng_tuning(host))
-+		return -EINVAL;
-+
-+	return sdmmc_dlyb_phase_tuning(host, opcode);
-+}
-+
- static struct mmci_host_ops sdmmc_variant_ops = {
- 	.validate_data = sdmmc_idma_validate_data,
- 	.prep_data = sdmmc_idma_prep_data,
-@@ -338,5 +471,21 @@ static struct mmci_host_ops sdmmc_variant_ops = {
- 
- void sdmmc_variant_init(struct mmci_host *host)
- {
-+	struct device_node *np = host->mmc->parent->of_node;
-+	void __iomem *base_dlyb;
-+	struct sdmmc_dlyb *dlyb;
-+
- 	host->ops = &sdmmc_variant_ops;
-+
-+	base_dlyb = devm_of_iomap(mmc_dev(host->mmc), np, 1, NULL);
-+	if (IS_ERR(base_dlyb))
-+		return;
-+
-+	dlyb = devm_kzalloc(mmc_dev(host->mmc), sizeof(*dlyb), GFP_KERNEL);
-+	if (!dlyb)
-+		return;
-+
-+	dlyb->base = base_dlyb;
-+	host->variant_priv = dlyb;
-+	host->mmc_ops->execute_tuning = sdmmc_execute_tuning;
- }
+ static struct variant_data variant_qcom = {
+ 	.fifosize		= 16 * 4,
+ 	.fifohalfsize		= 8 * 4,
+@@ -2343,6 +2368,11 @@ static const struct amba_id mmci_ids[] = {
+ 		.mask	= 0xf0ffffff,
+ 		.data	= &variant_stm32_sdmmc,
+ 	},
++	{
++		.id     = 0x00253180,
++		.mask	= 0xf0ffffff,
++		.data	= &variant_stm32_sdmmcv2,
++	},
+ 	/* Qualcomm variants */
+ 	{
+ 		.id     = 0x00051180,
 -- 
 2.17.1
 
