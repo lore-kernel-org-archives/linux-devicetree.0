@@ -7,99 +7,125 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E0EC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 20:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB351C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 21:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84ACC24683
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 20:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C062322522
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 21:04:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lvsLAulh"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X0cccaee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgA1UpZ (ORCPT
+        id S1726234AbgA1VEM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 15:45:25 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35056 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgA1UpY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 15:45:24 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so5585239plt.2
-        for <devicetree@vger.kernel.org>; Tue, 28 Jan 2020 12:45:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q5Xif2KZlxqItit3sw6ycecM4cOFBN2t+5fxteCDrK8=;
-        b=lvsLAulhE7xtj+a4t9yoxvpe/kvn+YMj8o6UOLOucYmc3eJzopzxqhlatisRJT0HQ8
-         87JojLTO6qVJvhgZ8mFygTHptKMCk8Gzt7+FHu72+pmkldWZM8IccdP2PjN1R681lVVX
-         +x9FghhVKCTgIuxKgK9GMpQV4p7rZ8mazCWQY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q5Xif2KZlxqItit3sw6ycecM4cOFBN2t+5fxteCDrK8=;
-        b=F/6zkzYYKgjCyxYiwwklrLiUlMAAbQDF9g5YXrwCvdWEC0eB30Rflz7VhYG2LMzvQz
-         JgIxvcJFz8/29CEqr4DI4ToyOlk604ps6psnXQpTtEaELaCyqVM9syxIPbXd9aigI/R6
-         fJ0qopJvU9MhQFYKVZW6lSGtfrV8J5Zmnz2xkjUXfzi64w3LhLZ0o4cLe1bhgDHe7OOg
-         E+ZE6//HuvkM6LWE6nz9cD9BWqPJUcYOaqxrdAEL4QZ6NMFe5gylFi5+cC0CqmzL0F3y
-         XjSLmbULXkzQ0miJc+Wfkw2np4osuhMdLVnGCNnVOqOmKSkX3r0cQFMKlwlbP9gBMr4T
-         +2rA==
-X-Gm-Message-State: APjAAAUPZnmneNubSKDgk3CA8hjk9SGCDFaTsUy6ixoINp4Z0vcHNznf
-        +IQOFC6fQKc9NnWsOkkj4+rRLg==
-X-Google-Smtp-Source: APXvYqwUTBN9TmhGuD1UiwT6ZcOmPkm1axw7mAwi6JPAz2IO8gca1uGK48ZbZszQ8uLcqbmvsakqBQ==
-X-Received: by 2002:a17:90a:ba98:: with SMTP id t24mr6937143pjr.12.1580244324192;
-        Tue, 28 Jan 2020 12:45:24 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 72sm17034196pfw.7.2020.01.28.12.45.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 12:45:23 -0800 (PST)
-Date:   Tue, 28 Jan 2020 12:45:22 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-Subject: Re: [RFC v3 03/10] cpufreq: blacklist SC7180 in cpufreq-dt-platdev
-Message-ID: <20200128204522.GG46072@google.com>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-4-sibis@codeaurora.org>
+        Tue, 28 Jan 2020 16:04:12 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12793 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbgA1VEL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 16:04:11 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e30a1bc0000>; Tue, 28 Jan 2020 13:03:56 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 28 Jan 2020 13:04:10 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 28 Jan 2020 13:04:10 -0800
+Received: from [10.2.164.115] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
+ 2020 21:04:10 +0000
+Subject: Re: [RFC PATCH v1 3/5] dt-binding: tegra: Add VI and CSI bindings
+To:     Helen Koike <helen.koike@collabora.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <frankc@nvidia.com>, <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <1580235801-4129-4-git-send-email-skomatineni@nvidia.com>
+ <ee1e61bc-918d-8f9c-592d-f9e63322a1c0@collabora.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <00e429fa-05aa-e95d-05a4-e5a1be739796@nvidia.com>
+Date:   Tue, 28 Jan 2020 13:04:09 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200127200350.24465-4-sibis@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ee1e61bc-918d-8f9c-592d-f9e63322a1c0@collabora.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580245436; bh=6ucVfsoMKmLc2n1n78QOE62mD4eBar17gmTO8NpM2XI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=X0cccaeeBDusden5FgTVAvaIWyByM5aE+OMR1dm0hNHpmm4tLb/bAWbqQdmDw2Us5
+         NHeLTqpPIqKCcbWamKsNg22RPTvaBQBhBtMn0UY6gNmp4h6SRLXfCVPESaxKJ2nPJB
+         n22Wl6W9pbbPFZTER8MkhNtov+fWf5/E+LVOqXUo/F8QoniY+lBt4CcJJeWJW/UI4Z
+         juZ8kP2KGZ2z5tvkFspsBfdpv/hK5PXtRlQ+oPpjVQ5AHnPQYTifX99RsdHUSXerFY
+         ESLiuTfPBm5V4iMFDXN/nOQ+OxXOOe6w9Ea275ACgvRP/1KGegRpend25t5dx+8y19
+         7wjHCMTHk/4/Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:33:43AM +0530, Sibi Sankar wrote:
-> Add SC7180 to cpufreq-dt-platdev blacklist.
 
-nit: you could mention that cpufreq is handled by the
-'qcom-cpufreq-hw' driver.
-
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index 5492cf3c9dc18..580abc777d9d8 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -130,6 +130,7 @@ static const struct of_device_id blacklist[] __initconst = {
->  	{ .compatible = "qcom,apq8096", },
->  	{ .compatible = "qcom,msm8996", },
->  	{ .compatible = "qcom,qcs404", },
-> +	{ .compatible = "qcom,sc7180", },
->  	{ .compatible = "qcom,sdm845", },
->  
->  	{ .compatible = "st,stih407", },
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+On 1/28/20 12:32 PM, Helen Koike wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Hi,
+>
+> On 1/28/20 4:23 PM, Sowjanya Komatineni wrote:
+>> Tegra contains VI controller which can support up to 6 MIPI CSI
+>> camera sensors.
+>>
+>> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+>> VI channel and can capture from an external camera sensor or
+>> from built-in test pattern generator.
+>>
+>> This patch adds dt-bindings for Tegra VI and CSI.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   .../bindings/display/tegra/nvidia,tegra20-host1x.txt           | 10 +++++++++-
+>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> index 9999255ac5b6..47cd6532b7d3 100644
+>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> @@ -40,7 +40,7 @@ of the following host1x client modules:
+>>
+>>     Required properties:
+>>     - compatible: "nvidia,tegra<chip>-vi"
+>> -  - reg: Physical base address and length of the controller's registers.
+>> +  - reg: Physical base address and length of the controller registers.
+>>     - interrupts: The interrupt outputs from the controller.
+>>     - clocks: Must contain one entry, for the module clock.
+>>       See ../clocks/clock-bindings.txt for details.
+>> @@ -49,6 +49,14 @@ of the following host1x client modules:
+>>     - reset-names: Must include the following entries:
+>>       - vi
+>>
+>> +- csi: mipi csi interface to vi
+>> +
+>> +  Required properties:
+>> +  - compatible: "nvidia,tegra<chip>-csi"
+>> +  - reg: Physical base address and length of the controller registers.
+>> +  - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
+>> +    See ../clocks/clock-bindings.txt for details.
+>> +
+> I think it would be nice to add an example, in the Example section at the end of this file, same as other modules do.
+>
+> Regards,
+> Helen
+Thanks Helen. Will add in v2.
+>
+>>   - epp: encoder pre-processor
+>>
+>>     Required properties:
+>>
