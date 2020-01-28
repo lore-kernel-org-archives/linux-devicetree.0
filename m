@@ -2,110 +2,132 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB251C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 17:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9944DC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 17:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C9921739
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 17:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC92214AF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 17:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580232476;
+	bh=2r7YfbL9UUbs/P7wgljyb0t694akOrvI4j3adZdefA4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VEujpxpKfAtcVLRHmg1+Dy4KWxWGBlWH7b0Uphecv8cjHaUxusLh+iwykv7SGcqVR
+	 DmFp/lO0xdm6WEB+ojT7gNEhyqNfFBK1fez/m4ikMdtCi/NuIv+xXubQ7M1RJ9Dlil
+	 ihABEYjGja0Ebp6r7mbTXYjGiJFN/MZjUK0J6Bac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgA1RRp (ORCPT
+        id S1726295AbgA1R1w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:17:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:60876 "EHLO foss.arm.com"
+        Tue, 28 Jan 2020 12:27:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgA1RRp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:17:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E803328;
-        Tue, 28 Jan 2020 09:17:44 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E6273F52E;
-        Tue, 28 Jan 2020 09:17:42 -0800 (PST)
-Date:   Tue, 28 Jan 2020 17:17:36 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
-        "lkml@metux.net" <lkml@metux.net>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "system-dt@lists.openampproject.org" 
-        <system-dt@lists.openampproject.org>,
-        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
-Message-ID: <20200128171639.GA36496@bogus>
-References: <20200128153806.7780-1-benjamin.gaignard@st.com>
- <20200128163628.GB30489@bogus>
- <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
+        id S1726066AbgA1R1w (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:27:52 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42CE2467E;
+        Tue, 28 Jan 2020 17:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580232470;
+        bh=2r7YfbL9UUbs/P7wgljyb0t694akOrvI4j3adZdefA4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=W0wgul/caH/Yc+effaSlwkpSvk4pKuOoE2OHFoCUiNSrffgDE9XIgUNFVS0TSC+gD
+         M7EXVFuFbJYfPEjS6CkOh7J39YWxDe4lM1QBnpqOGexAUcHSvN1Qr54sU0t03/omCi
+         2oUXeUBIKZxIiGcRnljzNAzTL5x8fw9OUkv+PA7Y=
+Received: by mail-qk1-f174.google.com with SMTP id s187so14138996qke.8;
+        Tue, 28 Jan 2020 09:27:50 -0800 (PST)
+X-Gm-Message-State: APjAAAWJYROtQT+P+LQNQi3IZudd4GuQXWFOTIWM8Oka+FV56pWtrymR
+        nR1q3+Yjfpe1dNdpOzncUBzHhrxSQ/38S0RXgw==
+X-Google-Smtp-Source: APXvYqxWnBqpx/z38JlVgWNF4cQ9OxBTlrKB37T1Va9nNc30arKtXukF/RW57qRkfaYEVw9/c+JiqeGTUuaobBybgTI=
+X-Received: by 2002:a05:620a:9c7:: with SMTP id y7mr23200508qky.393.1580232469721;
+ Tue, 28 Jan 2020 09:27:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200124152504.23411-1-mans@mansr.com> <20200127153506.GA4589@bogus>
+ <yw1xy2tsvnww.fsf@mansr.com> <20200128134745.GA3048749@kroah.com>
+ <yw1xpnf3vchs.fsf@mansr.com> <20200128152818.GB3437093@kroah.com>
+In-Reply-To: <20200128152818.GB3437093@kroah.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 28 Jan 2020 11:27:38 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLiELcXaAJAaD5jk05ifjVvgrRqGtEQJmg5iKxptZi5dw@mail.gmail.com>
+Message-ID: <CAL_JsqLiELcXaAJAaD5jk05ifjVvgrRqGtEQJmg5iKxptZi5dw@mail.gmail.com>
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 04:46:41PM +0000, Benjamin GAIGNARD wrote:
+On Tue, Jan 28, 2020 at 9:28 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On 1/28/20 5:36 PM, Sudeep Holla wrote:
-> > On Tue, Jan 28, 2020 at 04:37:59PM +0100, Benjamin Gaignard wrote:
-> >> Bus firewall framework aims to provide a kernel API to set the configuration
-> >> of the harware blocks in charge of busses access control.
-> >>
-> >> Framework architecture is inspirated by pinctrl framework:
-> >> - a default configuration could be applied before bind the driver.
-> >>    If a configuration could not be applied the driver is not bind
-> >>    to avoid doing accesses on prohibited regions.
-> >> - configurations could be apllied dynamically by drivers.
-> >> - device node provides the bus firewall configurations.
-> >>
-> >> An example of bus firewall controller is STM32 ETZPC hardware block
-> >> which got 3 possible configurations:
-> >> - trust: hardware blocks are only accessible by software running on trust
-> >>    zone (i.e op-tee firmware).
-> >> - non-secure: hardware blocks are accessible by non-secure software (i.e.
-> >>    linux kernel).
-> >> - coprocessor: hardware blocks are only accessible by the coprocessor.
-> >> Up to 94 hardware blocks of the soc could be managed by ETZPC.
-> >>
-> > /me confused. Is ETZPC accessible from the non-secure kernel space to
-> > begin with ? If so, is it allowed to configure hardware blocks as secure
-> > or trusted ? I am failing to understand the overall design of a system
-> > with ETZPC controller.
+> On Tue, Jan 28, 2020 at 03:15:11PM +0000, M=C3=A5ns Rullg=C3=A5rd wrote:
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> >
+> > > On Mon, Jan 27, 2020 at 04:56:15PM +0000, M=C3=A5ns Rullg=C3=A5rd wro=
+te:
+> > >> Rob Herring <robh@kernel.org> writes:
+> > >>
+> > >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+> > >> >> Add a non-removable-ports property that lists the hardwired downs=
+tream
+> > >> >> ports of a hub.  Although hubs can provide this information, they=
+ are
+> > >> >> not always configured correctly.  An alternate means of indicatin=
+g this
+> > >> >> for built-in USB devices is thus useful.
+> > >> >>
+> > >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> > >> >
+> > >> > I reviewed this already, but since you didn't add my reviewed-by, =
+I'm
+> > >> > looking at it again and having 2nd thoughts.
+> > >> >
+> > >> >> ---
+> > >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+> > >> >>  1 file changed, 4 insertions(+)
+> > >> >>
+> > >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt=
+ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> index 036be172b1ae..92d863cc96b6 100644
+> > >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes =
+with device nodes:
+> > >> >>  - #size-cells: shall be 0
+> > >> >>
+> > >> >>
+> > >> >> +Optional properties for hub and host-controller nodes:
+> > >> >> +- non-removable-ports: list of hardwired downstream ports
+> > >> >
+> > >> > If you have a hardwired device and need to know that, doesn't that=
+ imply
+> > >> > there's some other stuff you need to describe beyond what a standa=
+rd USB
+> > >> > device has. Such as a power supply that's not Vbus from the hub.
+> > >>
+> > >> I suppose there could be, but there isn't in my actual situation.
+> > >>
+> > >> > At a minimum, I think this should be a per port property.
+> > >>
+> > >> That's what I suggested first.  Greg told me to do it like this inst=
+ead.
+> > >
+> > > I said that?  I do not remember discussing this at all, when did that
+> > > happen?
+> >
+> > https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
 >
-> Non-secure kernel could read the values set in ETZPC, if it doesn't match
-> with what is required by the device node the driver won't be probed.
->
+> Almost a full year ago!  Hah, I can't remember what I wrote last week.
 
-OK, but I was under the impression that it was made clear that Linux is
-not firmware validation suite. The firmware need to ensure all the devices
-that are not accessible in the Linux kernel are marked as disabled and
-this needs to happen before entering the kernel. So if this is what this
-patch series achieves, then there is no need for it. Please stop pursuing
-this any further or provide any other reasons(if any) to have it. Until
-you have other reasons, NACK for this series.
-
-Note you haven't cc-ed 2 people who has comments earlier[1][2]
---
-Regards,
-Sudeep
-
-[1] https://lkml.org/lkml/2018/2/27/512
-[2] https://lkml.org/lkml/2018/2/27/598
+I was typing up the same thing... :)
