@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FB0C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22851C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2EA24684
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E918F24684
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UBEY8dkf"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="POcqSICW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgA1JHY (ORCPT
+        id S1725853AbgA1JG7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:07:24 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55784 "EHLO
+        Tue, 28 Jan 2020 04:06:59 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8612 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726059AbgA1JHA (ORCPT
+        by vger.kernel.org with ESMTP id S1725959AbgA1JG6 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:07:00 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S92jMX021530;
-        Tue, 28 Jan 2020 10:06:51 +0100
+        Tue, 28 Jan 2020 04:06:58 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S93bVd014413;
+        Tue, 28 Jan 2020 10:06:49 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Huk5zIYk1Jr66peEpN7YfxHE+3Lw48xMpcF+1ILPSFg=;
- b=UBEY8dkfV9vYziGbMOlt2M2pP2Fy9RiXcODVGjwsW6RzEA76eQ+IV+J5tnT8sWpBgz+1
- DNfDrQKNsvYzY4U/KBXMrExjBzvji/0ZKTV+jkt3gzYR0+lw0qUwkk1L6ol+KbVc5xtT
- Gwo94TXbAPrY4mZdGwm9Wo9Uuz3j46KY2+We6TsV2ybBwRQcLeRqTI+U/r3Mc1N/JOsc
- RttPeq3YbbChkpEQTwpzIeuUapWo4i8hUsVdbmRHhQeJc+eIFWHHAzMq7hrZIiS2LWMr
- 8h+ME2diwl6tem4BIPzBcZQUxtmSa4XvHcpIc1MMAUN6vqVDI5au+ST5etmubO/CdwIQ ig== 
+ bh=uwVKjFIFlaDhQtYabxIoz0B6CJflTfSuEcRda3jxomk=;
+ b=POcqSICWxXBkWXwU3yLBQ4gMYEIjmvGMVpDFsQm0QJ1SuIRpDWyS8fTq2D41GMXsJXXh
+ ByPep/f8kaPqPvMxhXFxveXNTwOVN0yxXNR7W4EFCbDOW0cTnzZBkjmHLGiX6qDrhMQl
+ EfXz+2E3Z/StkbpnGnyZhWaqcAocPmgW6we8pQ7tyFIQof8DBOlj70ctqesWfP6mrQe1
+ efQQU5+mwgaYQ+jA7ahIOdGW1rc0ai+76/CsMNZoXeEoKMuOik63c+G1kXvRtNUPX2rI
+ x3CmD5fcoKghtVufNh4Yl4OZBtjTl/NzferOfwyuAOAqhN1oqEZC/exmP6itvHYvXAZ+ 1g== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdekcuhn-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xrbpaw4sv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 10:06:51 +0100
+        Tue, 28 Jan 2020 10:06:49 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C8307100053;
-        Tue, 28 Jan 2020 10:06:44 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 88D6B100044;
+        Tue, 28 Jan 2020 10:06:42 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B0F50212A38;
-        Tue, 28 Jan 2020 10:06:44 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan 2020 10:06:44
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7A0A4212A35;
+        Tue, 28 Jan 2020 10:06:42 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan 2020 10:06:42
  +0100
 From:   Ludovic Barre <ludovic.barre@st.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
@@ -59,16 +59,16 @@ CC:     <srinivas.kandagatla@linaro.org>,
         <linux-mmc@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V2 5/9] dt-bindings: mmc: mmci: add delay block base register for sdmmc
-Date:   Tue, 28 Jan 2020 10:06:32 +0100
-Message-ID: <20200128090636.13689-6-ludovic.barre@st.com>
+Subject: [PATCH V2 3/9] mmc: mmci: add a reference at mmc_host_ops in mmci struct
+Date:   Tue, 28 Jan 2020 10:06:30 +0100
+Message-ID: <20200128090636.13689-4-ludovic.barre@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200128090636.13689-1-ludovic.barre@st.com>
 References: <20200128090636.13689-1-ludovic.barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG6NODE1.st.com
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG6NODE1.st.com
  (10.75.127.16)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
@@ -77,31 +77,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-To support the sdr104 mode, the sdmmc variant has a
-hardware delay block to manage the clock phase when sampling
-data received by the card.
-
-This patch adds a second base register (optional) for
-sdmmc delay block.
+The variant init function may need to add a mmc_host_ops,
+for example to add the execute_tuning support if this feature
+is available.
+This patch adds mmc_host_ops pointer in mmci struct.
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/mmci.c | 4 ++--
+ drivers/mmc/host/mmci.h | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
-index 6d3c626e017d..4ec921e4bf34 100644
---- a/Documentation/devicetree/bindings/mmc/mmci.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmci.txt
-@@ -28,6 +28,8 @@ specific for ux500 variant:
- - st,sig-pin-fbclk       : feedback clock signal pin used.
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index e9ffce8d41ea..d0a041c9e6cd 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1933,6 +1933,8 @@ static int mmci_probe(struct amba_device *dev,
  
- specific for sdmmc variant:
-+- reg			 : a second base register may be defined if a delay
-+                           block is present and used for tuning.
- - st,sig-dir             : signal direction polarity used for cmd, dat0 dat123.
- - st,neg-edge            : data & command phase relation, generated on
-                            sd clock falling edge.
+ 	host = mmc_priv(mmc);
+ 	host->mmc = mmc;
++	host->mmc_ops = &mmci_ops;
++	mmc->ops = &mmci_ops;
+ 
+ 	/*
+ 	 * Some variant (STM32) doesn't have opendrain bit, nevertheless
+@@ -2072,8 +2074,6 @@ static int mmci_probe(struct amba_device *dev,
+ 	host->stop_abort.arg = 0;
+ 	host->stop_abort.flags = MMC_RSP_R1B | MMC_CMD_AC;
+ 
+-	mmc->ops = &mmci_ops;
+-
+ 	/* We support these PM capabilities. */
+ 	mmc->pm_caps |= MMC_PM_KEEP_POWER;
+ 
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index ea6a0b5779d4..55acc0971a44 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -407,6 +407,7 @@ struct mmci_host {
+ 	u32			mask1_reg;
+ 	u8			vqmmc_enabled:1;
+ 	struct mmci_platform_data *plat;
++	struct mmc_host_ops	*mmc_ops;
+ 	struct mmci_host_ops	*ops;
+ 	struct variant_data	*variant;
+ 	struct pinctrl		*pinctrl;
 -- 
 2.17.1
 
