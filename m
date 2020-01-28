@@ -2,120 +2,123 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4051C35246
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F55BC35246
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 10:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E1A24681
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 09:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1735524686
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 10:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgA1JKd (ORCPT
+        id S1725920AbgA1KBN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:10:33 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2314 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbgA1JKd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:10:33 -0500
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 0892BE338C1271D8C824;
-        Tue, 28 Jan 2020 09:10:31 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 09:10:14 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
- 2020 09:10:13 +0000
-Date:   Tue, 28 Jan 2020 09:10:01 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jeff LaBundy <jeff@labundy.com>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 5/7] iio: temperature: Add support for Azoteq
- IQS620AT temperature sensor
-Message-ID: <20200128091001.00001e1d@Huawei.com>
-In-Reply-To: <20200122032821.GA29969@labundy.com>
-References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
-        <1579228475-6681-6-git-send-email-jeff@labundy.com>
-        <20200122032821.GA29969@labundy.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml724-chm.china.huawei.com (10.201.108.75) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+        Tue, 28 Jan 2020 05:01:13 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52978 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725853AbgA1KBN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 05:01:13 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0DB87B122;
+        Tue, 28 Jan 2020 10:01:11 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <1580148908-4863-3-git-send-email-stefan.wahren@i2se.com>
+Date:   Tue, 28 Jan 2020 10:44:23 +0100
+From:   "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+To:     "Stefan Wahren" <stefan.wahren@i2se.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Ray Jui" <rjui@broadcom.com>,
+        "Scott Branden" <sbranden@broadcom.com>
+Cc:     <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <devicetree@vger.kernel.org>,
+        "Stefan Wahren" <stefan.wahren@i2se.com>
+Subject: Re: [RFC PATCH 2/4] pinctrl: bcm2835: Refactor platform data
+Message-Id: <C07BSWY2PTAT.1MNBWW503QTQ0@linux-9qgx>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Jan 2020 03:28:28 +0000
-Jeff LaBundy <jeff@labundy.com> wrote:
+Hi Stefan,
+thanks for the series!
 
-> Hi Jonathan,
-> 
-> I just wanted to give a heads up that I'm making a couple of very minor
-> changes to the lot of IIO patches in this series in response to changes
-> to include/linux/mfd/iqs62x.h for v5, namely:
-> 
-> - Replaced iqs62x->map with iqs62x->regmap
-> - Dropped #defines for platform_driver name and alias in favor of the
->   actual string names (e.g. IQS620_DRV_NAME_TEMP --> "iqs620at-temp")
-> 
-> For small changes like these, I plan to retain your Reviewed-by trailer
-> when I send out v5 even though the file would have changed slightly. If
-> you would prefer I let you re-review first, please let me know.
+On Mon Jan 27, 2020 at 7:15 PM, Stefan Wahren wrote:
+> This prepares the platform data to be easier to extend for more GPIOs.
+> Except of this there is no functional change.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
 
-I'm fine with you keeping it.  Thanks for checking though.
+[...]
 
-Jonathan
-> 
-> On Thu, Jan 16, 2020 at 08:36:08PM -0600, Jeff LaBundy wrote:
-> > This patch adds support for the Azoteq IQS620AT temperature sensor,
-> > capable of reporting its absolute die temperature.
-> > 
-> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > Changes in v4:
-> >   - None
-> > 
-> > Changes in v3:
-> >   - Added Reviewed-by trailer
-> > 
-> > Changes in v2:
-> >   - Moved the driver from hwmon to iio
-> >   - Merged 'Copyright' and 'Author' lines into one in introductory comments
-> >   - Replaced 'error' with 'ret' throughout
-> >   - Eliminated tabbed alignment of platform_driver struct members
-> >   - Changed Kconfig "depends on" logic to MFD_IQS62X || COMPILE_TEST
-> > 
-> >  drivers/iio/temperature/Kconfig         | 10 ++++
-> >  drivers/iio/temperature/Makefile        |  1 +
-> >  drivers/iio/temperature/iqs620at-temp.c | 97 +++++++++++++++++++++++++++++++++
-> >  3 files changed, 108 insertions(+)
-> >  create mode 100644 drivers/iio/temperature/iqs620at-temp.c
-> >   
-> 
-> Kind regards,
-> Jeff LaBundy
+> @@ -1083,6 +1112,7 @@ static int bcm2835_pinctrl_probe(struct
+> platform_device *pdev)
+> struct device *dev =3D &pdev->dev;
+> struct device_node *np =3D dev->of_node;
+> struct bcm2835_pinctrl *pc;
+> + struct bcm_plat_data *pdata;
 
+You could define pdata as const here...
+
+> struct gpio_irq_chip *girq;
+> struct resource iomem;
+> int err, i;
+> @@ -1108,7 +1138,13 @@ static int bcm2835_pinctrl_probe(struct
+> platform_device *pdev)
+> if (IS_ERR(pc->base))
+> return PTR_ERR(pc->base);
+> =20
+> - pc->gpio_chip =3D bcm2835_gpio_chip;
+> + match =3D of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
+> + if (!match)
+> + return -EINVAL;
+> +
+> + pdata =3D (struct bcm_plat_data *)match->data;
+
+...And avoid this cast.
+
+> +
+> + memcpy(&pc->gpio_chip, pdata->gpio_chip, sizeof(pc->gpio_chip));
+
+Here (and below) you could do:
+
+	pc->gpio_chip =3D *pdata->gpio_chip;
+
+IMO it's nicer, but it's a matter of taste.
+
+> pc->gpio_chip.parent =3D dev;
+> pc->gpio_chip.of_node =3D np;
+> =20
+> @@ -1159,19 +1195,14 @@ static int bcm2835_pinctrl_probe(struct
+> platform_device *pdev)
+> return err;
+> }
+> =20
+> - match =3D of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
+> - if (match) {
+> - bcm2835_pinctrl_desc.confops =3D
+> - (const struct pinconf_ops *)match->data;
+> - }
+> -
+> - pc->pctl_dev =3D devm_pinctrl_register(dev, &bcm2835_pinctrl_desc, pc);
+> + memcpy(&pc->pctl_desc, pdata->pctl_desc, sizeof(pc->pctl_desc));
+> + pc->pctl_dev =3D devm_pinctrl_register(dev, &pc->pctl_desc, pc);
+> if (IS_ERR(pc->pctl_dev)) {
+> gpiochip_remove(&pc->gpio_chip);
+> return PTR_ERR(pc->pctl_dev);
+> }
+> =20
+> - pc->gpio_range =3D bcm2835_pinctrl_gpio_range;
+> + memcpy(&pc->gpio_range, pdata->gpio_range, sizeof(pc->gpio_range));
+> pc->gpio_range.base =3D pc->gpio_chip.base;
+> pc->gpio_range.gc =3D &pc->gpio_chip;
+> pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+> --
+> 2.7.4
 
