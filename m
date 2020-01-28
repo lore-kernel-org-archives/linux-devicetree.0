@@ -2,73 +2,126 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FD7C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 16:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C43C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 16:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE57B24683
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 16:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F4024683
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 16:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580230387;
-	bh=Egb177sXO7akCBTlkGNQGMJsdBV4gBRid1LqlLGB2FE=;
+	s=default; t=1580230636;
+	bh=0zx2j6Lsa9HwzHF4AoAgg97MA5gTZ+rv9fANMAw8vc0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ba62MQltBPQpTzlXVsqd27HcllV6QdnwObfDbjoht+h35zDTXXvg/cLk2GcxJr2zW
-	 ifyL+MnonY3loMgBSezV9evACUnYcspjoQaamp6aMtClbR2YxSKO6PgjNUQOcM2/PB
-	 LC0OurD5zb6dh+ggCktEvCpRRaMhlNcNUyTIf8Jg=
+	b=DLJpOnRB9eITq9gFw0NQl74JfDIdzsB18l1Y8tVoZGUsNWIHt7LaRwSKtkQeO1IB3
+	 m2kd4UJeGT4axliQt846lepBe2DbTeTF8PiBjUMMjBBveHD5PkMvtIuFk58a1oOBMQ
+	 oK6LtxA0Kxqr635KYgMRT5hxJDW8tIkNXVNudCBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgA1QxH (ORCPT
+        id S1726645AbgA1Q5P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:53:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 11:57:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbgA1QxH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:53:07 -0500
+        id S1725881AbgA1Q5P (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 11:57:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D132214AF;
-        Tue, 28 Jan 2020 16:53:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CD16214AF;
+        Tue, 28 Jan 2020 16:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580230386;
-        bh=Egb177sXO7akCBTlkGNQGMJsdBV4gBRid1LqlLGB2FE=;
+        s=default; t=1580230634;
+        bh=0zx2j6Lsa9HwzHF4AoAgg97MA5gTZ+rv9fANMAw8vc0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xYWmgHaWWNvoGsWueIEfz1ndKnhab8f+nJat3lk9+OBhZgq4ZUfug8IjgS0kZ8uiy
-         wD2uzRyHkPkeA/Ib1rc7/WP9WPNlTXkN1Pmty7MtMZWHxaQilY+cpbEKenSIljC5Up
-         gwZpFo3FzQgJj2107uQ5t/mK1wASNbA0aKN/dgGM=
-Date:   Tue, 28 Jan 2020 17:53:04 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mans Rullgard <mans@mansr.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports
- hub property
-Message-ID: <20200128165304.GD3666045@kroah.com>
-References: <20200124152504.23411-1-mans@mansr.com>
+        b=fT54GEgub6xQ+dP1/kFc16jal8sv+sq/QzA3NbhbYxQo4EEtJbB311GkL0yZ1k6qL
+         2Qz0YeWv1OD6dQr7NdpT404ix2ZEcx7+mxIghu5p6kgJTQgVvZiFPC2LXrSB+2xBJ9
+         zMdfhIjclnj092JF68J3w0MHKFeYvqedJPNU9CMs=
+Date:   Tue, 28 Jan 2020 17:57:12 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "lkml@metux.net" <lkml@metux.net>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>
+Subject: Re: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Message-ID: <20200128165712.GA3667596@kroah.com>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128153806.7780-3-benjamin.gaignard@st.com>
+ <20200128155243.GC3438643@kroah.com>
+ <0dd9dc95-1329-0ad4-d03d-99899ea4f574@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200124152504.23411-1-mans@mansr.com>
+In-Reply-To: <0dd9dc95-1329-0ad4-d03d-99899ea4f574@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
-> Add a non-removable-ports property that lists the hardwired downstream
-> ports of a hub.  Although hubs can provide this information, they are
-> not always configured correctly.  An alternate means of indicating this
-> for built-in USB devices is thus useful.
+On Tue, Jan 28, 2020 at 04:41:29PM +0000, Benjamin GAIGNARD wrote:
 > 
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
->  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> On 1/28/20 4:52 PM, Greg KH wrote:
+> > On Tue, Jan 28, 2020 at 04:38:01PM +0100, Benjamin Gaignard wrote:
+> >> The goal of this framework is to offer an interface for the
+> >> hardware blocks controlling bus accesses rights.
+> >>
+> >> Bus firewall controllers are typically used to control if a
+> >> hardware block can perform read or write operations on bus.
+> > So put this in the bus-specific code that controls the bus that these
+> > devices live on.  Why put it in the driver core when this is only on one
+> > "bus" (i.e. the catch-all-and-a-bag-of-chips platform bus)?
+> 
+> It is really similar to what pin controller does, configuring an 
+> hardware block given DT information.
 
-Why is this a RESEND?  What changed from v1?
+Great, then use that instead :)
+
+> I could argue that firewalls are not bus themselves they only interact 
+> with it.
+
+They live on a bus, and do so in bus-specific ways, right?
+
+> Bus firewalls exist on other SoC, I hope some others could be added in 
+> this framework. ETZPC is only the first.
+
+Then put it on the bus it lives on, and the bus that the drivers for
+that device are being controlled with.  That sounds like the sane place
+to do so, right?
+
+> > And really, this should just be a totally new bus type, right?  And any
+> > devices on this bus should be changed to be on this new bus, and the
+> > drivers changed to support them, instead of trying to overload the
+> > platform bus with more stuff.
+> 
+> I have tried to use the bus notifier to avoid to add this code at probe 
+> time but without success:
+> 
+> https://lkml.org/lkml/2018/2/27/300
+
+Almost 2 years ago?  I can't remember something written 1 week ago...
+
+Yes, don't abuse the notifier chain.  I hate that thing as it is.
+
+> I have also tried to disable the nodes at runtime and Mark Rutland 
+> explain me why it was wrong.
+
+The bus controller should do this, right?  Why not just do it there?
 
 thanks,
 
