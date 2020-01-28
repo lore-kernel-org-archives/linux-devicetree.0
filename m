@@ -2,124 +2,94 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC4CC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF23EC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9E52469A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A696524686
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 13:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XZJWzv5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgA1Njk (ORCPT
+        id S1726097AbgA1Nq3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:39:40 -0500
-Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:39204 "EHLO
-        ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgA1Njj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:39:39 -0500
-Received: from localhost.localdomain (227.146.230.94.awnet.cz [94.230.146.227])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ixit.cz (Postfix) with ESMTPSA id 3B079251E7;
-        Tue, 28 Jan 2020 14:32:00 +0100 (CET)
-From:   David Heidelberg <david@ixit.cz>
-To:     linux-iio@vger.kernel.org
-Cc:     David Heidelberg <david@ixit.cz>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v2 1/7] dt-bindings: iio: light: add support for Dyna-Image AL3320A
-Date:   Tue, 28 Jan 2020 14:30:46 +0100
-Message-Id: <20200128133052.201587-2-david@ixit.cz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128133052.201587-1-david@ixit.cz>
-References: <20200128133052.201587-1-david@ixit.cz>
+        Tue, 28 Jan 2020 08:46:29 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44534 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgA1Nq2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 08:46:28 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00SDkMIW104215;
+        Tue, 28 Jan 2020 07:46:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580219182;
+        bh=nLQI+C5XwGclXFIKy6uZivmmFLD32zSmEnN6yUloQgs=;
+        h=From:To:CC:Subject:Date;
+        b=XZJWzv5zgniSL23TwtMZuJBrbsQAtf5ME6+uepG4CXXicciL+whMTpIVw/vddUKnt
+         luk8Lj1CAP4Jz1rME+OPw0iM6avXMxdJzbCX/Onv28Xm7Ow2UoP7WkXSoQZ6scAqb4
+         6NQDRKJXCvuAXcEjs13p8nAHC8ZjiEaVQDvQqOnM=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00SDkML2103119
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jan 2020 07:46:22 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
+ Jan 2020 07:46:21 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 28 Jan 2020 07:46:21 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00SDkIeO067211;
+        Tue, 28 Jan 2020 07:46:19 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <vigneshr@ti.com>, <j-keerthy@ti.com>, <lokeshvutla@ti.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
+        <bcousson@baylibre.com>
+Subject: [PATCH] arm: dts: dra76x: Fix mmc3 max-frequency
+Date:   Tue, 28 Jan 2020 19:17:59 +0530
+Message-ID: <20200128134759.21134-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit add dt-bindings support to al3320a driver and vendor-prefix
-dynaimage.
-Partly based on unmerged commit:
-"iio: Add Dyna-Image AP3223 ambient light and proximity driver"
+dra76x is not affected by i887 which requires mmc3 node to be limited to
+a max frequency of 64 MHz. Fix this by overwriting the correct value in
+the the dra76 specific dtsi.
 
-Signed-off-by: David Heidelberg <david@ixit.cz>
+Fixes: 895bd4b3e5ec ("ARM: dts: Add support for dra76-evm")
+Cc: stable@vger.kernel.org
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 ---
- .../bindings/iio/light/al3320a.yaml           | 40 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- 2 files changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
+ arch/arm/boot/dts/dra76x.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/light/al3320a.yaml b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
-new file mode 100644
-index 000000000000..05d01df069a7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: (GPL-2.0-only)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/al3320a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/dra76x.dtsi b/arch/arm/boot/dts/dra76x.dtsi
+index cdcba3f561c4..9f6fbe4c1fee 100644
+--- a/arch/arm/boot/dts/dra76x.dtsi
++++ b/arch/arm/boot/dts/dra76x.dtsi
+@@ -86,3 +86,8 @@
+ &usb4_tm {
+ 	status = "disabled";
+ };
 +
-+title: Dyna-Image AL3320A sensor
-+
-+maintainers:
-+  - David Heidelberg <david@ixit.cz>
-+
-+properties:
-+  compatible:
-+    const: dynaimage,al3320a
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Regulator that provides power to the sensor
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt
-+  - vdd-supply
-+
-+examples:
-+  - |
-+    i2c {
-+        al3320a@1c {
-+            compatible = "dynaimage,al3320a";
-+            reg = <0x1c>;
-+            vdd-supply = <&vdd_reg>;
-+            interrupts = <0 99 4>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9cd52d9e1f7f..8d2ebf3d0aa1 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -267,6 +267,8 @@ patternProperties:
-     description: Dragino Technology Co., Limited
-   "^dserve,.*":
-     description: dServe Technology B.V.
-+  "^dynaimage,.*":
-+    description: Dyna-Image
-   "^ea,.*":
-     description: Embedded Artists AB
-   "^ebs-systart,.*":
++&mmc3 {
++	/* dra76x is not affected by i887 */
++	max-frequency = <96000000>;
++};
 -- 
-2.25.0
+2.19.2
 
