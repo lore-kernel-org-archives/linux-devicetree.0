@@ -4,105 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85B0C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 16:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED5BC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 16:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9339524683
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 16:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A7E214AF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 16:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580230308;
-	bh=fl9jAAi0i/w9hVsplSShd6GlQeW4irEW3nyhOqlTgkI=;
+	s=default; t=1580230371;
+	bh=11nfZpFTzBungcUag+36gj1rk5Er6LZuKCOwr3HmQGA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zf/xIUCwMkQuAIrGs2d0pLiUlCB85hiT4eN7euCld8hcKSaXZmwP/FBa0zfw14HS1
-	 l6nWhy9ZdRBDA9CBAt3/e4c23Ms0QSXRyElGk2N1d2j1H9ow4TzqYJswe4nHWzivoF
-	 bOwSnJmjc0mR062B2xuMMipVk+8rU7QAmqQiPIYw=
+	b=CmV9p2EYJc1Y+n+5opv6q97oBlF0gCP1EUJZOufuvVoeiARMgKF8Y9AsqDHlofNLS
+	 s4T90GX/UKGu6OcSPYtfad++kOT/jtKpYlfuhzo2+hEUL53EEtemo6E+96FNxULssu
+	 gsYb08IN5G9egq0ROAbxeVyyWMwvMEdXJGZOMjsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgA1Qvs (ORCPT
+        id S1726659AbgA1Qwr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:51:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54160 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 11:52:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgA1Qvs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:51:48 -0500
+        id S1726007AbgA1Qwr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 11:52:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3CDD214AF;
-        Tue, 28 Jan 2020 16:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C17214AF;
+        Tue, 28 Jan 2020 16:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580230307;
-        bh=fl9jAAi0i/w9hVsplSShd6GlQeW4irEW3nyhOqlTgkI=;
+        s=default; t=1580230366;
+        bh=11nfZpFTzBungcUag+36gj1rk5Er6LZuKCOwr3HmQGA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OzzJ30W2qQYtp44dvdEFG1Fe9Ah97q3A5YxUW2FeeGVvnNOE5s17J41jHHD1K/fTm
-         muhfwRnArrE0x557swygqP2WKjnZLe09kpR2izXDDEM/CTYWQCWy9/oS+tlsj0sneH
-         TmlyTFV6iJpB6EHy0uNgb4cHCJX23sVAx/LFg8Jc=
-Date:   Tue, 28 Jan 2020 17:51:44 +0100
+        b=iUXCBszysh9fTC2IMfYy11fiUQdCJq8MzL0t+ECo6itXgMs0d1GsNDL4TNny8xn4L
+         4oEQOCLKJRcMiavs7CCyeJf17AH4Mk53IHCVap9PJfKMsnxRY5ovxILK8MEgcEPkLe
+         bEDd1dSQkcRI9BOsPL51venip8hFPSToPs9IPPoE=
+Date:   Tue, 28 Jan 2020 17:52:43 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mans Rullgard <mans@mansr.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH 2/2] usb: hub: use non-removable-ports DT property
-Message-ID: <20200128165144.GB3666045@kroah.com>
+To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports
+ hub property
+Message-ID: <20200128165243.GC3666045@kroah.com>
 References: <20200124152504.23411-1-mans@mansr.com>
- <20200124152504.23411-2-mans@mansr.com>
+ <20200127153506.GA4589@bogus>
+ <yw1xy2tsvnww.fsf@mansr.com>
+ <20200128134745.GA3048749@kroah.com>
+ <yw1xpnf3vchs.fsf@mansr.com>
+ <20200128152818.GB3437093@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200124152504.23411-2-mans@mansr.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200128152818.GB3437093@kroah.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 03:25:04PM +0000, Mans Rullgard wrote:
-> Mark any ports listed in the non-removable-ports DT property as
-> hardwired. This is useful for boards with built-in USB devices
-> that cannot be (or have not been) marked as fixed in hardware.
+On Tue, Jan 28, 2020 at 04:28:18PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Jan 28, 2020 at 03:15:11PM +0000, Måns Rullgård wrote:
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> > 
+> > > On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
+> > >> Rob Herring <robh@kernel.org> writes:
+> > >> 
+> > >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+> > >> >> Add a non-removable-ports property that lists the hardwired downstream
+> > >> >> ports of a hub.  Although hubs can provide this information, they are
+> > >> >> not always configured correctly.  An alternate means of indicating this
+> > >> >> for built-in USB devices is thus useful.
+> > >> >> 
+> > >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> > >> >
+> > >> > I reviewed this already, but since you didn't add my reviewed-by, I'm 
+> > >> > looking at it again and having 2nd thoughts.
+> > >> >
+> > >> >> ---
+> > >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+> > >> >>  1 file changed, 4 insertions(+)
+> > >> >> 
+> > >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> index 036be172b1ae..92d863cc96b6 100644
+> > >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
+> > >> >>  - #size-cells: shall be 0
+> > >> >>  
+> > >> >>  
+> > >> >> +Optional properties for hub and host-controller nodes:
+> > >> >> +- non-removable-ports: list of hardwired downstream ports
+> > >> >
+> > >> > If you have a hardwired device and need to know that, doesn't that imply 
+> > >> > there's some other stuff you need to describe beyond what a standard USB 
+> > >> > device has. Such as a power supply that's not Vbus from the hub.
+> > >> 
+> > >> I suppose there could be, but there isn't in my actual situation.
+> > >> 
+> > >> > At a minimum, I think this should be a per port property.
+> > >> 
+> > >> That's what I suggested first.  Greg told me to do it like this instead.
+> > >
+> > > I said that?  I do not remember discussing this at all, when did that
+> > > happen?
+> > 
+> > https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
 > 
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
->  drivers/usb/core/hub.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index 4ac74b354801..97f8f15fb632 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -1366,6 +1366,9 @@ static int hub_configure(struct usb_hub *hub,
->  	unsigned unit_load;
->  	unsigned full_load;
->  	unsigned maxchild;
-> +	struct property *prop;
-> +	const __be32 *cur;
-> +	u32 val;
->  
->  	hub->buffer = kmalloc(sizeof(*hub->buffer), GFP_KERNEL);
->  	if (!hub->buffer) {
-> @@ -1667,6 +1670,19 @@ static int hub_configure(struct usb_hub *hub,
->  		}
->  	}
->  
-> +	of_property_for_each_u32(hub_dev->of_node, "non-removable-ports",
-> +				 prop, cur, val) {
-> +		if (val < 1 || val > hdev->maxchild) {
-> +			dev_warn(hub_dev,
-> +				 "bad port number %u in non-removable-ports\n",
-> +				 val);
-> +			continue;
-> +		}
-> +
-> +		hub->ports[val - 1]->connect_type =
-> +			USB_PORT_CONNECT_TYPE_HARD_WIRED;
-> +	}
-> +
+> Almost a full year ago!  Hah, I can't remember what I wrote last week.
 
-Is this doing the same thing that ACPI does?  It doesn't seem like it,
-why not do this in usb_hub_adjust_deviceremovable()?  Or wherever ACPI
-does this...
+Ah, ok, all I said was "do what ACPI does here", as that's a model of
+what has already been agreed apon by a whole huge number of people and
+standardized.  No need for DT to come up with something totally
+different instead, making a mess of things :)
+
+If this is doing what ACPI does, fine, if not, it should.  It was here
+first.
 
 thanks,
 
