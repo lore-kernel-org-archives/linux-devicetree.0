@@ -2,271 +2,109 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5150C35240
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 03:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00B1C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 04:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790542173E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 03:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A8624681
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 04:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R7Z/E3ab"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uBKveEqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgA1D52 (ORCPT
+        id S1726548AbgA1Ehn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jan 2020 22:57:28 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36911 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgA1D51 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jan 2020 22:57:27 -0500
-Received: by mail-ed1-f68.google.com with SMTP id cy15so13210445edb.4
-        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 19:57:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gw24Y2AQXIAfbTJfxFOxt3WeUj63ebRND7ycY8ejxCQ=;
-        b=R7Z/E3abAEUwwpbYiKYcQGPTfvcGSf47GTGyW+G4yf3i5N/EPO5xeU7GfKro5nxI5k
-         SA0/U1TWwkcK/MnzK+WEBMELYof/bKNmsfsqZz3n9SMbT7aF4WzTjqhtappz+axMR8Ml
-         HTa1xzNFGfbaCGJqDWOtSmLzqpbhiMOmnJvlg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gw24Y2AQXIAfbTJfxFOxt3WeUj63ebRND7ycY8ejxCQ=;
-        b=X8Fi9SkIhp2W5LiW//1I1xmoqZsXtkvN33v4qZj3Qvun+nQM32LBrdtDavR6gXRnYw
-         HKsxwJAV7P+DAtHfukaNSS7kfGEercwaqwHLNCCpsDQbPeE0U3um/8vKnSaTBY6FZ0C8
-         RnWweu29AodTA5igJfqvqdVXvpYjXPWmZjZU6jkdU9/jNBC5xcUvqMe5g4qI8pDWLIE9
-         otq/ijkmfdvsR13qvU/beA0Y6h0QVjq6l+q1YZEgIvEFqGiva7t9OW6BX0g3VKaBYv2A
-         CEEad/wieKfursNx+7u7VhFn5YJcdQE7DsQ6/tpiLzAmEAZxOM2/FUic1o/bqQB6sqVG
-         2sgg==
-X-Gm-Message-State: APjAAAVuRY4n6aIOh3ApsEmSPxaLLdXNdp6A6tIXEyUmdZuM6BASd59o
-        XvpROwyLiKzZPFVHO+CHeJYqD0q57B2YJQ==
-X-Google-Smtp-Source: APXvYqxnYStk1Nd5ECeSqQDlGEtxAlqidxW0WlOzwcjEMj0tPA1rHsPGm1TE62KvDJw/KP5sXTu6Aw==
-X-Received: by 2002:a17:906:a3d5:: with SMTP id ca21mr1365548ejb.159.1580183844759;
-        Mon, 27 Jan 2020 19:57:24 -0800 (PST)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id i9sm377421edb.55.2020.01.27.19.57.23
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 19:57:24 -0800 (PST)
-Received: by mail-wr1-f42.google.com with SMTP id b6so14381110wrq.0
-        for <devicetree@vger.kernel.org>; Mon, 27 Jan 2020 19:57:23 -0800 (PST)
-X-Received: by 2002:adf:ee52:: with SMTP id w18mr25816371wro.415.1580183843131;
- Mon, 27 Jan 2020 19:57:23 -0800 (PST)
+        Mon, 27 Jan 2020 23:37:43 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:11136 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbgA1Ehn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jan 2020 23:37:43 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580186262; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=EMyuxGTBTqb30uThFFXytXZbzDR4BNQzD4LZIR4IaFo=; b=uBKveEqUAi3Ca6dMXo5pEmzi6FUbM1rfrH2KVlT2vhG5gLT+PGyxdJqkEMjiajs3mZyCPQ2t
+ xIncIITWgMamd2r2cQXRq+Bu0k85I+PJWVnIqz4T+scSzSDGKrwgEn/s+9aN0i4QSObYmZQ1
+ EdQacGwmlPwP6ymde/MUPyEQG4Q=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2fba96.7f32b04147d8-smtp-out-n03;
+ Tue, 28 Jan 2020 04:37:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 16A18C433CB; Tue, 28 Jan 2020 04:37:41 +0000 (UTC)
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 71116C43383;
+        Tue, 28 Jan 2020 04:37:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 71116C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH V6 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        sivaprak@codeaurora.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org>
+ <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
+ <20200127154113.GA6904@bogus>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <422e31d0-f67f-3b10-5d8f-ccc9d6f7dc70@codeaurora.org>
+Date:   Tue, 28 Jan 2020 10:07:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200116025637.3524-1-bibby.hsieh@mediatek.com> <20200116025637.3524-5-bibby.hsieh@mediatek.com>
-In-Reply-To: <20200116025637.3524-5-bibby.hsieh@mediatek.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 28 Jan 2020 12:57:12 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5DS0p8iyqfFuHQWnpX+WGd1bUEdFMHF_1inKMuSY_j_zA@mail.gmail.com>
-Message-ID: <CAAFQd5DS0p8iyqfFuHQWnpX+WGd1bUEdFMHF_1inKMuSY_j_zA@mail.gmail.com>
-Subject: Re: [PATCH v10 4/4] i2c: core: support bus regulator controlling in adapter
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200127154113.GA6904@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 11:56 AM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
->
-> Although in the most platforms, the bus power of i2c
-> are alway on, some platforms disable the i2c bus power
-> in order to meet low power request.
->
-> We get and enable bulk regulator in i2c adapter device.
->
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/i2c/i2c-core-base.c | 81 +++++++++++++++++++++++++++++++++++++
->  include/linux/i2c.h         |  3 ++
->  2 files changed, 84 insertions(+)
->
+Hi,
 
-Hi Bibby,
+On 1/27/2020 9:11 PM, Rob Herring wrote:
+> On Sun, 19 Jan 2020 18:43:17 +0530, Sricharan R wrote:
+>> Add device tree binding Documentation details for ipq6018
+>> pinctrl driver.
+>>
+>> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>> [V6] 
+>>   * Addressed review comments form Rob.
+>>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 153 +++++++++++++++++++++
+>>  1 file changed, 153 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+>>
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks Rob.
 
-Please see my comments inline.
+Hi Linus,
+   The pinctrl driver can now be pulled in.
 
-Hi Wolfram,
+Regards,
+ Sricharan
 
-Would you have some time to take a look and comment on the general
-approach? Thanks.
-
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 9333c865d4a9..9b9e96b094ca 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -306,6 +306,7 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
->  static int i2c_device_probe(struct device *dev)
->  {
->         struct i2c_client       *client = i2c_verify_client(dev);
-> +       struct i2c_adapter      *adap = client->adapter;
->         struct i2c_driver       *driver;
->         int status;
->
-> @@ -371,6 +372,12 @@ static int i2c_device_probe(struct device *dev)
->
->         dev_dbg(dev, "probe\n");
->
-> +       status = regulator_enable(adap->bus_reg);
-> +       if (status != 0) {
-> +               dev_err(&adap->dev, "Failed to enable power regulator\n");
-> +               goto err_clear_wakeup_irq;
-> +       }
-> +
->         status = of_clk_set_defaults(dev->of_node, false);
->         if (status < 0)
->                 goto err_clear_wakeup_irq;
-> @@ -407,6 +414,7 @@ static int i2c_device_probe(struct device *dev)
->  static int i2c_device_remove(struct device *dev)
->  {
->         struct i2c_client       *client = i2c_verify_client(dev);
-> +       struct i2c_adapter      *adap = client->adapter;
->         struct i2c_driver       *driver;
->         int status = 0;
->
-> @@ -420,6 +428,8 @@ static int i2c_device_remove(struct device *dev)
->         }
->
->         dev_pm_domain_detach(&client->dev, true);
-> +       if (!pm_runtime_status_suspended(&adap->dev))
-
-Why adap->dev? We control the regulator in bus-level runtime PM
-callbacks of the client->dev, right?
-
-> +               regulator_disable(adap->bus_reg);
->
->         dev_pm_clear_wake_irq(&client->dev);
->         device_init_wakeup(&client->dev, false);
-> @@ -431,6 +441,71 @@ static int i2c_device_remove(struct device *dev)
->         return status;
->  }
->
-> +#ifdef CONFIG_PM_SLEEP
-> +static int i2c_resume(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-> +       int err;
-> +
-> +       if (pm_runtime_status_suspended(&adap->dev)) {
-
-Ditto.
-
-> +               err = regulator_enable(adap->bus_reg);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       return pm_generic_resume(dev);
-> +}
-> +
-> +static int i2c_suspend(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-> +       int err;
-> +
-> +       if (!pm_runtime_status_suspended(&adap->dev)) {
-
-Ditto.
-
-> +               err = regulator_disable(adap->bus_reg);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       return pm_generic_suspend(dev);
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_PM
-> +static int i2c_runtime_resume(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-> +       int err;
-> +
-> +       err = regulator_enable(adap->bus_reg);
-> +       if (err)
-> +               return err;
-> +
-> +       return pm_generic_runtime_resume(dev);
-> +}
-> +
-> +static int i2c_runtime_suspend(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-> +       int err;
-> +
-> +       err = pm_generic_runtime_suspend(dev);
-> +       if (err)
-> +               return err;
-> +
-> +       return regulator_disable(adap->bus_reg);
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops i2c_device_pm = {
-> +       SET_SYSTEM_SLEEP_PM_OPS(i2c_suspend, i2c_resume)
-> +       SET_RUNTIME_PM_OPS(i2c_runtime_suspend, i2c_runtime_resume, NULL)
-> +};
-> +
->  static void i2c_device_shutdown(struct device *dev)
->  {
->         struct i2c_client *client = i2c_verify_client(dev);
-> @@ -488,6 +563,7 @@ struct bus_type i2c_bus_type = {
->         .probe          = i2c_device_probe,
->         .remove         = i2c_device_remove,
->         .shutdown       = i2c_device_shutdown,
-> +       .pm             = &i2c_device_pm,
->  };
->  EXPORT_SYMBOL_GPL(i2c_bus_type);
->
-> @@ -1351,6 +1427,11 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
->                 goto out_reg;
->
->         dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
-> +       adap->bus_reg = devm_regulator_get(&adap->dev, "bus");
-> +       if (IS_ERR(adap->bus_reg)) {
-> +               res = PTR_ERR(adap->bus_reg);
-> +               goto out_reg;
-> +       }
->
->         pm_runtime_no_callbacks(&adap->dev);
->         pm_suspend_ignore_children(&adap->dev, true);
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index d2f786706657..833b81a680da 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -15,6 +15,7 @@
->  #include <linux/device.h>      /* for struct device */
->  #include <linux/sched.h>       /* for completion */
->  #include <linux/mutex.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/rtmutex.h>
->  #include <linux/irqdomain.h>           /* for Host Notify IRQ */
->  #include <linux/of.h>          /* for struct device_node */
-> @@ -330,6 +331,7 @@ struct i2c_client {
->         int init_irq;                   /* irq set at initialization    */
->         int irq;                        /* irq issued by device         */
->         struct list_head detected;
-> +
-
-nit: Unnecessary change.
-
-Best regards,
-Tomasz
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
