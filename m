@@ -2,94 +2,186 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9ACC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 19:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F0AC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 19:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F365B24683
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 19:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306422173E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 19:53:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKedXVAV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VzBbyfrX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgA1TnO (ORCPT
+        id S1726346AbgA1Tx0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:43:14 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38521 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgA1TnO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 14:43:14 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so3901155wmj.3;
-        Tue, 28 Jan 2020 11:43:12 -0800 (PST)
+        Tue, 28 Jan 2020 14:53:26 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44775 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgA1Tx0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 14:53:26 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y5so4130801pfb.11
+        for <devicetree@vger.kernel.org>; Tue, 28 Jan 2020 11:53:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c9BMYuRcUesNngeOg5HQe/0BSagN54S3cksmusc/fyM=;
-        b=jKedXVAV/JUsBFLvF0o/qlBGsVP4yVmMXILdoVURfTa7Mi36/fbnsEpiS5DCkM6uqo
-         OWndF9yzZYexwsLTd+AnX+ql19wfwXjhTuxC2cKDibNFMCHeBynLIVRUo4t82lueQU+A
-         pOyVgUk5BcmFSkg1I1P/uVhsWVVrOQUfNJmCch8kPNuXHmLyJtoNorDNzeOezgAxT7he
-         pJuD9DjGtOk8wmpxQDUIT3raWQskBOTKdfiryqikN++18X1d7egs/6JZwv7+JNcswsTn
-         AzXjormmGXENn7g8+9jVgQrSaDGSXbnKMdRuu8w25hkUvIHWC+UpUV9xayYjP9iscWCl
-         n4WA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fd0Bf5ciOLDTzu4NvqY5lz18CA8ytAWcDkClCt4wOyA=;
+        b=VzBbyfrXVyTu7+qADXfLaD3EjrI4fRju5zzq6rggViLj1t/lQA5k01gHSHLjHTTFQD
+         1W4boLRmulXdcHOS3sn7t2I4ZwVPsNWq2uq9VvKzMNc/jboiF6Mml59qVjX5mB5mZQaL
+         ZOuCxQKhPWuI9boE0o/Y/80zNA7ioPQIGtPa4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c9BMYuRcUesNngeOg5HQe/0BSagN54S3cksmusc/fyM=;
-        b=UlL6OCwh2ysz2+aqbDGoUDmnO27ORyz5QwICwXV9prbqGNtuDIlCSowlCnP7YDtK/N
-         RMBQVSaL8sJaM4Xbw+toMULoukyzJXt9vYgZGtraH6BiJRU2gTCEejw8tCHy1bO/b2TB
-         HechjEWxIl5N5hnCtqHBDGRvmp5AFIQVtnaRQyzU3ABtvGwOv30JT+wqcLdatiYnPQ26
-         +Th0p5RXbmWAj4MVd3ZgLIJiNM/IyZkMSyIzkd6ku5zJ+jCLO21Hn6vaVwABB/co+hX/
-         7oNqHRF1lt7upgt7MBoDl1KiiAo2JCAcFshdUBzIYBC9yoLwZqrylEa/Nt488fmsVCN6
-         YD+A==
-X-Gm-Message-State: APjAAAXjy1zIgA52bc3OyY7814m/jBdAXGPVYkp1PzuysLS2V9lK8KRz
-        kITP/3HMGgpmFiNGPfyRbwmqbhKa
-X-Google-Smtp-Source: APXvYqyXHot0QERrSmQ2yzRfcMM5NwE8CiYT+S7S1vq7Q4+bnA7VdDMoOSctepR2IamcUgLoBAKWmw==
-X-Received: by 2002:a1c:6246:: with SMTP id w67mr6551890wmb.141.1580240592028;
-        Tue, 28 Jan 2020 11:43:12 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id g7sm26785250wrq.21.2020.01.28.11.43.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fd0Bf5ciOLDTzu4NvqY5lz18CA8ytAWcDkClCt4wOyA=;
+        b=TOet6fNdXkJCs52GtF/nDkIaZKO595pI2XUY2lMj7Atc+7KH+wqyxs58h6EU12HDAL
+         KmRMok1UsUc7GAPAdOnWcXdVpNBVwJqrvZhysi3+fx+wZCd0Gs4GEBNLtSvKJtmTH+zZ
+         28wYN9UxJ/nIge+g7bixX3UCbmaStGvE68Y5g9e82N41tYSEU4GfjrikTKMK/YFGsVlC
+         nTu9Mjd6j3gcCvM/tzBAF1nZXLvcA3MRtOyxqsUBTT/EWj9cjP9W2fEDikjkhvs5Mdch
+         4NZokg8donNygXBj4+KU2e5tbh0AC/eUDWzvR5/Q+VwvSfGMKXA1jrXzLDmd2p2aC36G
+         HBzQ==
+X-Gm-Message-State: APjAAAUjhKAhtjgQwM4+LGn0DiIyH+wJ5V/44jU3hleMYpkdhXKq3745
+        BNkROh8XANXITrkU2H1Nbsp88A==
+X-Google-Smtp-Source: APXvYqxnNBwdER95BEHw3GteU6AfO0/0iBE9siRHXhDTs3M6ALIsjR66bbcQH9s8Amw+OkFTtECJBw==
+X-Received: by 2002:a65:484d:: with SMTP id i13mr27036413pgs.32.1580241205473;
+        Tue, 28 Jan 2020 11:53:25 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w3sm20442356pgj.48.2020.01.28.11.53.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 11:43:11 -0800 (PST)
-Subject: Re: [PATCH v2 2/7] dt-bindings: iio: light: add support for
- Dyna-Image AL3010
-To:     David Heidelberg <david@ixit.cz>, linux-iio@vger.kernel.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20200128133052.201587-1-david@ixit.cz>
- <20200128133052.201587-3-david@ixit.cz>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <dc854734-ba4b-f558-dd6a-42da784de536@gmail.com>
-Date:   Tue, 28 Jan 2020 22:43:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 28 Jan 2020 11:53:24 -0800 (PST)
+Date:   Tue, 28 Jan 2020 11:53:23 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v1] arm64: dts: sc7180: add dsi controller and phy entries for
+ idp dts
+Message-ID: <20200128195323.GC46072@google.com>
+References: <1580218617-30293-1-git-send-email-harigovi@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200128133052.201587-3-david@ixit.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <1580218617-30293-1-git-send-email-harigovi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-28.01.2020 16:30, David Heidelberg пишет:
-> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
-> provides a multiple gain function with linear response over a dynamic
-> range 1216/4863/19452/77806.
-> 
-> Signed-off-by: David Heidelberg <david@ixit.cz>
-> ---
+Hi,
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+On Tue, Jan 28, 2020 at 07:06:57PM +0530, Harigovindan P wrote:
+> Adding dsi controller and phy entries for idp dt.
+> 
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 56 +++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..9f42367 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -7,6 +7,7 @@
+>  
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>  #include "sc7180.dtsi"
+>  #include "pm6150.dtsi"
+> @@ -232,6 +233,50 @@
+>  	};
+>  };
+>  
+> +&dsi_controller {
+> +	status = "okay";
+> +
+> +	vdda-supply = <&vreg_l3c_1p2>;
+> +
+> +	panel@0 {
+> +		compatible = "visionox,rm69299-1080p-display";
+
+This depends on the series "Add support for rm69299 Visionox panel
+driver and add devicetree bindings for visionox panel"
+(https://patchwork.kernel.org/cover/11320773/) which hasn't landed
+IIUC. This should be mentioned after '---'.
+
+> +		reg = <0>;
+> +
+> +		vdda-supply = <&vreg_l8c_1p8>;
+> +		vdd3p3-supply = <&vreg_l18a_2p8>;
+> +
+> +		pinctrl-names = "default", "suspend";
+> +		pinctrl-0 = <&disp_pins_default>;
+> +		pinctrl-1 = <&disp_pins_default>;
+
+Is there a point for listing a suspend configuration if it is the same
+as the default?
+
+> +		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +				panel0_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
+
+The 'dsi0_out' node is added by 'arm64: dts: sc7180: add display dt nodes'
+(https://patchwork.kernel.org/patch/11354253/), which has not landed. So
+either you should list it as dependency below the commit message, or
+(probably better) send the two patches in the same series.
+
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	ports {
+> +		port@1 {
+> +			endpoint {
+> +				remote-endpoint = <&panel0_in>;
+> +				data-lanes = <0 1 2 3>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&dsi_phy {
+
+Also this node does not exist yet, it also depends on the patch mentioned
+above.
+
+> +	status = "okay";
+> +};
+> +
+>  &qspi {
+>  	status = "okay";
+>  	pinctrl-names = "default";
+> @@ -289,6 +334,17 @@
+>  
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+> +&pm6150l_gpio {
+> +	disp_pins_default: disp-pins-default{
+
+nit: missing blank before curly brace
+
+If there is no suspend configuration you can get rid of the 'default'
+suffix.
+
+Since this is only a single pin I would suggest to use a name that
+describes the function of the pin or the name used in the schematic
+instead of 'disp-pins'.
+
+Thanks
+
+Matthias
