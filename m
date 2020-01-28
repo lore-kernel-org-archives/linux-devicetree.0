@@ -2,121 +2,121 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E423AC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 14:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCA9C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 15:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B9420716
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 14:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18347207FD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 15:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgA1Ole (ORCPT
+        id S1726182AbgA1PPN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:41:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:58616 "EHLO foss.arm.com"
+        Tue, 28 Jan 2020 10:15:13 -0500
+Received: from unicorn.mansr.com ([81.2.72.234]:39866 "EHLO unicorn.mansr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730154AbgA1Old (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:41:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4D8E31B;
-        Tue, 28 Jan 2020 06:41:32 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D6D33F68E;
-        Tue, 28 Jan 2020 06:41:23 -0800 (PST)
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: h6: Add IOMMU
-To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.b2a9e1507135d81e726fcbb65137665a7f0ab74f.1579696927.git-series.maxime@cerno.tech>
- <5320339.DvuYhMxLoT@jernej-laptop>
- <20200127142339.crxsuunzec5drfe2@gilmour.lan>
- <2140600.ElGaqSPkdT@jernej-laptop>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5543595c-4ef9-b67e-5dff-042fb1991194@arm.com>
-Date:   Tue, 28 Jan 2020 14:41:17 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726063AbgA1PPN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:15:13 -0500
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 321851B0DA; Tue, 28 Jan 2020 15:15:11 +0000 (GMT)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
+References: <20200124152504.23411-1-mans@mansr.com>
+        <20200127153506.GA4589@bogus> <yw1xy2tsvnww.fsf@mansr.com>
+        <20200128134745.GA3048749@kroah.com>
+Date:   Tue, 28 Jan 2020 15:15:11 +0000
+In-Reply-To: <20200128134745.GA3048749@kroah.com> (Greg Kroah-Hartman's
+        message of "Tue, 28 Jan 2020 14:47:45 +0100")
+Message-ID: <yw1xpnf3vchs.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <2140600.ElGaqSPkdT@jernej-laptop>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 27/01/2020 7:04 pm, Jernej Å krabec wrote:
-> Hi!
-> 
-> Dne ponedeljek, 27. januar 2020 ob 15:23:39 CET je Maxime Ripard napisal(a):
->> Hi Jernej,
->>
->> On Fri, Jan 24, 2020 at 09:54:23PM +0100, Jernej Å krabec wrote:
->>> Dne sreda, 22. januar 2020 ob 13:44:09 CET je Maxime Ripard napisal(a):
->>>> Now that we have a driver for the IOMMU, let's start using it.
->>>>
->>>> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
->>>> ---
->>>>
->>>>   arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
->>>>   1 file changed, 11 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->>>> b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
->>>> 29824081b43b..8608bcf1c52c 100644
->>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->>>> @@ -53,6 +53,7 @@
->>>>
->>>>   	de: display-engine {
->>>>   	
->>>>   		compatible = "allwinner,sun50i-h6-display-engine";
->>>>   		allwinner,pipelines = <&mixer0>;
->>>>
->>>> +		iommus = <&iommu 0>;
->>>>
->>>>   		status = "disabled";
->>>>   	
->>>>   	};
->>>
->>> Isn't iommu property of the mixer node? After all, mixer is the one which
->>> reads one or more framebuffers. Once second mixer is defined, would you
->>> put
->>> another iommu phandle here?
->>
->> You're right. I added it during the early dev, and forgot to remove
->> it. Thanks!
-> 
-> Remove it or move it? I guess enabling iommu support in each driver needs a
-> bit more work than just referencing iommu node, right? At least in such case
-> buffers don't need to be allocated by CMA, which sun4i-drm driver currently
-> use.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Note that the DRM "CMA" helpers are somewhat misnamed, since they're in 
-fact based on the common DMA API, and thus transparent IOMMU-backed DMA 
-ops will "just work" without the drivers having to care. Since all the 
-display components behind the IOMMU will be in the same IOMMU group, 
-they're guaranteed to always operate in the same address space as each 
-other, so there should be no additional problems with buffer sharing 
-(assuming the code doesn't have bugs that it's currently just getting 
-away with).
+> On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
+>> Rob Herring <robh@kernel.org> writes:
+>> 
+>> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+>> >> Add a non-removable-ports property that lists the hardwired downstream
+>> >> ports of a hub.  Although hubs can provide this information, they are
+>> >> not always configured correctly.  An alternate means of indicating this
+>> >> for built-in USB devices is thus useful.
+>> >> 
+>> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+>> >
+>> > I reviewed this already, but since you didn't add my reviewed-by, I'm 
+>> > looking at it again and having 2nd thoughts.
+>> >
+>> >> ---
+>> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+>> >>  1 file changed, 4 insertions(+)
+>> >> 
+>> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+>> >> index 036be172b1ae..92d863cc96b6 100644
+>> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+>> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+>> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
+>> >>  - #size-cells: shall be 0
+>> >>  
+>> >>  
+>> >> +Optional properties for hub and host-controller nodes:
+>> >> +- non-removable-ports: list of hardwired downstream ports
+>> >
+>> > If you have a hardwired device and need to know that, doesn't that imply 
+>> > there's some other stuff you need to describe beyond what a standard USB 
+>> > device has. Such as a power supply that's not Vbus from the hub.
+>> 
+>> I suppose there could be, but there isn't in my actual situation.
+>> 
+>> > At a minimum, I think this should be a per port property.
+>> 
+>> That's what I suggested first.  Greg told me to do it like this instead.
+>
+> I said that?  I do not remember discussing this at all, when did that
+> happen?
 
-> I just take another look at BSP kernel and it seems that only one channel is
-> used for whole display stack. That would mean that both mixers would have same
-> iommu phandle, right? Confusingly enough, DE2 iommu channel seems to be for
-> deinterlace core.
+https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
 
-That's also fine - as discussed on the driver thread there's no point 
-trying to expose a distinction between devices at the API level, so the 
-IDs are really only relevant to the driver internals touching the 
-various enable registers (and even then only if you wanted to refine the 
-current "just enable everything" approach).
+>> > Though really, I think this should just be implied by describing the
+>> > device in DT. I'm not sure if there's a case for hotpluggable devices
+>> > described in DT.  Maybe with overlays.
+>> 
+>> That's also an option.  Greg, what do you think?
+>
+> I have no idea, sorry, I'm totally lost here...
 
-Robin.
+Background: I need to differentiate between on-board and external USB
+devices on a few boards.  Although hubs can indicate the removable
+status of each port, the configuration options are often limited and may
+not be capable of describing the actual wiring.  Also, if a device is
+hard-wired directly to a host port, there is no way of indicating this.
+
+While I could match the full device path using per-board lists, I'd
+prefer a generic solution.  To this end, it is necessary to add the
+ability for DT to supply this information.  Three variants have been
+discussed:
+
+1. Add a "non-removable" property to the USB device node similar to how
+   it's done for MMC.
+
+2. Add a "non-removable-ports" property to the hub node.  Apparently
+   ACPI can supply the information in this manner.
+
+3. Make any USB device with a DT node implicitly non-removable.
+
+Either one will work for me.
+
+-- 
+Måns Rullgård
