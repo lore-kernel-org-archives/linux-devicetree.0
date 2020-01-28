@@ -2,160 +2,160 @@ Return-Path: <SRS0=5/ta=3R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD56C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BD5C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 18:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871A32467E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 18:10:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWYfWF6o"
+	by mail.kernel.org (Postfix) with ESMTP id 6C4DB22522
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jan 2020 18:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580235706;
+	bh=p//mWvbjUQWMz/yXfxYT49hHopuwkXyy57UEPZOG144=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=el3Hrluk/cZOkfpx7tsnI53GS4pQgwUR83c2WbYtt6qY/P0ULdw7XmvSh4rzA2uAS
+	 c5QxV0M8Dgg/mUB6AKR8U+4YxfWsxAzxbUMR6fqlu/X+F0Ilz8rc/rwYv3tyMvvb9+
+	 1ZwmzPR7HqDE7Y3lB4FuQWY1/L4lY5CaHjmSEmlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgA1SK0 (ORCPT
+        id S1726556AbgA1SVp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:10:26 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45596 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgA1SKZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jan 2020 13:10:25 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a6so2556080wrx.12;
-        Tue, 28 Jan 2020 10:10:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=THXIcxAQ+jRZ9p0oqCi3Nel8bF5n2Oj6LcOlDPsztjs=;
-        b=AWYfWF6oKD17pcdtJ5MPRnS4jNaFxgWz+hrGuMK8EveAfoNAkLX3ICr7Azw79XCVPO
-         G77K5lfouDTtVlRpWTG9Yx1ZYCSUNCU4dqeVlLsgriStyOEP1KzaG/Op3HEZskuEzoQd
-         7Eqy+B86FPY+cq/BrQ5NBc8iYm+UcQi9WLS/FW1DcBFM0lQrOQhuT6PSsNbZX3RhWXlR
-         RnLj5HoL9EN01j1aFVcJLzr5jF97WkJO2c3CUTML1ldStKQgJ4yNOiPkgsYt7bEBM/Rq
-         km2yigkmrASSnebhXhH5/HvkARTQsWKjRZ33OPPzRz7dgjbzemmX/SZj7GYssp9k8Vpg
-         UD7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=THXIcxAQ+jRZ9p0oqCi3Nel8bF5n2Oj6LcOlDPsztjs=;
-        b=fC2bjBpTvcmncLQATKC3IPV9pnGKam1enJ04LDmbgxsh65TT/pj9kjeJcL3qDbuXFw
-         wijT9bGpusP3ULwNLs4vNA06M2UUbR3EG6MpR94RReecUDE0h4LHCgeyxPWHd5Sb9dED
-         vHU42PS9GbVPKtdU5StQ0kGso5S1EPMrm2QFb1TF2Cvj3q/k980tmhKXi9/c7OLOGA3t
-         CF5KhCfW6ZzCEl7614BVWqu3UQOwylIZboYJ9H6gTq0iN2oCOBa93flYlOAHiMNIefo7
-         8fjRx8nLidBJAIJVRYDSXhcjwZe/aNE+IfSXIonEXtH1m4qictBqCd7kPss7IkZ3jVfk
-         OCcw==
-X-Gm-Message-State: APjAAAWpXFOiNoNBgM5uDawCOVOcalBqWeYQVZ0/JCgyGlG+bE4Ai896
-        0WWD6KNU259uWZiJ2F2H4os=
-X-Google-Smtp-Source: APXvYqxKqo1EPLOMRvFiZxIKnf+uw/hGtB+hSgdZoNS0pddIbQOsu66CPHcFIrm4EC3y5yr/lDD8Lg==
-X-Received: by 2002:adf:f3cd:: with SMTP id g13mr30628170wrp.54.1580235022924;
-        Tue, 28 Jan 2020 10:10:22 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id b67sm4206059wmc.38.2020.01.28.10.10.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 10:10:21 -0800 (PST)
-Date:   Tue, 28 Jan 2020 19:10:20 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V3 12/18] usb: gadget: tegra-xudc: support multiple
- device modes
-Message-ID: <20200128181020.GJ2293590@ulmo>
-References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
- <1577704195-2535-13-git-send-email-nkristam@nvidia.com>
+        Tue, 28 Jan 2020 13:21:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbgA1SVp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:21:45 -0500
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EC5722522;
+        Tue, 28 Jan 2020 18:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580235704;
+        bh=p//mWvbjUQWMz/yXfxYT49hHopuwkXyy57UEPZOG144=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=F8N1ih0hsfMcT1itiIdThXCa1Rq600KUposZhsvsGGkRADH9Mr14RKjkBrKdxIPgh
+         fLmQ2TFqTR5yrhTE3eEgn4+PREBXj2RSmhEGntwIx9eFu69dR+2SD5S/LM9ocWvE1N
+         hX6FsM0O94jMxtz1vwT+dPy2CvyKtPr8D04rrEX8=
+Received: by mail-qv1-f48.google.com with SMTP id dp13so6719082qvb.7;
+        Tue, 28 Jan 2020 10:21:44 -0800 (PST)
+X-Gm-Message-State: APjAAAUlhZojxlFoSgznpM6lUB5EihDoCRFYJwPQp0TVGByf0qf/B5PI
+        jyiOdNUtHE8zh5/YVK3EaHq+zvgvM/bmqGGAVg==
+X-Google-Smtp-Source: APXvYqwPpTr1MCUPd3qOHeLBf2H6pq4i35Dq4QnQtMfEtE0xTbpsF1vW77fxpZogY+7MgKbUv34lw2kPVCNgBOs8lJw=
+X-Received: by 2002:ad4:4511:: with SMTP id k17mr22463825qvu.135.1580235703715;
+ Tue, 28 Jan 2020 10:21:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="1ou9v+QBCNysIXaH"
-Content-Disposition: inline
-In-Reply-To: <1577704195-2535-13-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <20200124152504.23411-1-mans@mansr.com> <20200127153506.GA4589@bogus>
+ <yw1xy2tsvnww.fsf@mansr.com> <20200128134745.GA3048749@kroah.com>
+ <yw1xpnf3vchs.fsf@mansr.com> <20200128152818.GB3437093@kroah.com> <20200128165243.GC3666045@kroah.com>
+In-Reply-To: <20200128165243.GC3666045@kroah.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 28 Jan 2020 12:21:32 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK1fMCrbbMdRPqVjtS0D6p4AhqjcOGoivGbT2aKN7UJWw@mail.gmail.com>
+Message-ID: <CAL_JsqK1fMCrbbMdRPqVjtS0D6p4AhqjcOGoivGbT2aKN7UJWw@mail.gmail.com>
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+n Tue, Jan 28, 2020 at 10:52 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jan 28, 2020 at 04:28:18PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Jan 28, 2020 at 03:15:11PM +0000, M=C3=A5ns Rullg=C3=A5rd wrote=
+:
+> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> > >
+> > > > On Mon, Jan 27, 2020 at 04:56:15PM +0000, M=C3=A5ns Rullg=C3=A5rd w=
+rote:
+> > > >> Rob Herring <robh@kernel.org> writes:
+> > > >>
+> > > >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+> > > >> >> Add a non-removable-ports property that lists the hardwired dow=
+nstream
+> > > >> >> ports of a hub.  Although hubs can provide this information, th=
+ey are
+> > > >> >> not always configured correctly.  An alternate means of indicat=
+ing this
+> > > >> >> for built-in USB devices is thus useful.
+> > > >> >>
+> > > >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> > > >> >
+> > > >> > I reviewed this already, but since you didn't add my reviewed-by=
+, I'm
+> > > >> > looking at it again and having 2nd thoughts.
+> > > >> >
+> > > >> >> ---
+> > > >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+> > > >> >>  1 file changed, 4 insertions(+)
+> > > >> >>
+> > > >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.t=
+xt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > >> >> index 036be172b1ae..92d863cc96b6 100644
+> > > >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > >> >> @@ -66,6 +66,10 @@ Required properties for host-controller node=
+s with device nodes:
+> > > >> >>  - #size-cells: shall be 0
+> > > >> >>
+> > > >> >>
+> > > >> >> +Optional properties for hub and host-controller nodes:
+> > > >> >> +- non-removable-ports: list of hardwired downstream ports
+> > > >> >
+> > > >> > If you have a hardwired device and need to know that, doesn't th=
+at imply
+> > > >> > there's some other stuff you need to describe beyond what a stan=
+dard USB
+> > > >> > device has. Such as a power supply that's not Vbus from the hub.
+> > > >>
+> > > >> I suppose there could be, but there isn't in my actual situation.
+> > > >>
+> > > >> > At a minimum, I think this should be a per port property.
+> > > >>
+> > > >> That's what I suggested first.  Greg told me to do it like this in=
+stead.
+> > > >
+> > > > I said that?  I do not remember discussing this at all, when did th=
+at
+> > > > happen?
+> > >
+> > > https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
+> >
+> > Almost a full year ago!  Hah, I can't remember what I wrote last week.
+>
+> Ah, ok, all I said was "do what ACPI does here", as that's a model of
+> what has already been agreed apon by a whole huge number of people and
+> standardized.  No need for DT to come up with something totally
+> different instead, making a mess of things :)
+>
+> If this is doing what ACPI does, fine, if not, it should.  It was here
+> first.
 
---1ou9v+QBCNysIXaH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's not always possible as ACPI and DT work in different ways. The
+DT (Open Firmware) USB binding originated in 1998[1]. While ancient,
+that is what defines the node structure of USB hubs, ports, and
+devices that we use today.
 
-On Mon, Dec 30, 2019 at 04:39:49PM +0530, Nagarjuna Kristam wrote:
-> This change supports limited multiple device modes by:
-> - At most 4 ports contains OTG/Device capability.
-> - One port run as device mode at a time.
->=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> ---
-> V3:
->  - No changes in this version
-> ---
-> V2:
->  - Updated err variable on failure to get usbphy.
->  - Corrected identation after tegra_xudc_phy_get API call in tegra_xudc_p=
-robe.
-> ---
->  drivers/usb/gadget/udc/tegra-xudc.c | 228 ++++++++++++++++++++++++++----=
-------
->  1 file changed, 167 insertions(+), 61 deletions(-)
->=20
-> diff --git a/drivers/usb/gadget/udc/tegra-xudc.c b/drivers/usb/gadget/udc=
-/tegra-xudc.c
-> index 283c320..bf80fae 100644
-> --- a/drivers/usb/gadget/udc/tegra-xudc.c
-> +++ b/drivers/usb/gadget/udc/tegra-xudc.c
-> @@ -483,14 +483,15 @@ struct tegra_xudc {
->  	bool device_mode;
->  	struct work_struct usb_role_sw_work;
-> =20
-> -	struct phy *usb3_phy;
-> -	struct phy *utmi_phy;
-> +	struct phy **usb3_phy;
-> +	struct phy **utmi_phy;
-> =20
->  	struct tegra_xudc_save_regs saved_regs;
->  	bool suspended;
->  	bool powergated;
-> =20
-> -	struct usb_phy *usbphy;
-> +	struct usb_phy **usbphy;
-> +	int current_phy_index;
+However, after a quick read of ACPI sec 9.14, I'd say what I suggested
+is more aligned to ACPI than what's proposed here. Ports are child
+nodes ("Device" in ACPI terms) and the properties to determine all
+this are properties of the port node(s). Aligning beyond that isn't
+really possible. ACPI has a standard thing (not sure what the proper
+term is) called '_PLD' for describing device location which includes
+'user visible' among several other things. There is no such concept in
+DT to align with. What we have is the 'non-removable' property and IMO
+that's what we should use here.
 
-Can be unsigned int. It's also very long. It might be better to choose a
-shorter name so that when you use it, the lines don't get excessively
-long. Alternatively you could keep this field name and instead declare
-local variables to reference the current PHY to make lines shorter.
+Rob
 
-Actually, looking at this a bit more, I don't see current_phy_index ever
-used by itself (other than the assignment and one check to see if a PHY
-has been selected). So why not just store a pointer to the current PHY
-and avoid all the dereferencing?
-
-Thierry
-
---1ou9v+QBCNysIXaH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4weQwACgkQ3SOs138+
-s6FiDw/9FkKjqK/pE5MWAXa2YCYVvNyJ+tKDD6xQh1/co/QYHOLWNSNyrJL/ECmZ
-GRJpJYS/BTn+9WPnbOYWEiDVXhoQ+3evAEYFiir3DF23endG5IN5ZA58pLRP7vQD
-T0Z6z5JcltLVESbX3hitWHdJkPKfqJHLFqQYZXHQTUWmpUAVgOt2lNtiaew5bEmE
-yYOb/CPUHOeJfzespeepeCiJh9aNkVhW6bTX8vsmmdgnmAA7WJeNlZiR5tVXKumJ
-nCOk7bOUti9v3FGUJotCCYe1pB/YdVw9wQU3dHh12LBiOP7hUHfhQql6UqEkfkBj
-su0GpKqOo15/c6vXVlW5+JaJGSPdpQ52KrsAhh8ckfa5hJbkYkKn60CucJ+0X09k
-APKUjF4ZyTgx6aKTsWK8NfOUaaGUmpbtivtIhQJLobss5pA5Vd2KBPXn9BsU+X7o
-jQrgBhauACy3YceIosSYm7furIYwE87/zG0p6bGoKcq1TOvRmNXjsvB9AQywsbCQ
-UHXFM+PBi3n7w8hUldDvoLhCZgwKN/ivosMBfva/VOlWBKI15BBdv4Q6biu/ULGh
-Y+WpJPap/Rb2uhjQOccr2j7ERlQJw/0iT+lJUGRNgDxccmLTrRbCjhKPhbVNN/69
-+O7NOHvGHW9zu+aNHKFCKy7GLVVhNTBPocoOCSuk4gIaQeukQow=
-=nZc6
------END PGP SIGNATURE-----
-
---1ou9v+QBCNysIXaH--
+[1] https://www.devicetree.org/open-firmware/bindings/usb/usb-1_0.ps
