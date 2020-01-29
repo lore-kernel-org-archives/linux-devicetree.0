@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455D5C35246
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F071C35248
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1890320678
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C4820678
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgA2Nwg (ORCPT
+        id S1726808AbgA2Nwc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:52:36 -0500
+        Wed, 29 Jan 2020 08:52:32 -0500
 Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:11989 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726797AbgA2Nwe (ORCPT
+        by vger.kernel.org with ESMTP id S1726768AbgA2Nwc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:52:34 -0500
+        Wed, 29 Jan 2020 08:52:32 -0500
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Jan 2020 19:22:26 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 19:22:06 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 19:22:12 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id A4C66257F; Wed, 29 Jan 2020 19:22:04 +0530 (IST)
+        id 33B2F257F; Wed, 29 Jan 2020 19:22:11 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -39,9 +39,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v4 2/8] dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and SC7180
-Date:   Wed, 29 Jan 2020 19:21:53 +0530
-Message-Id: <1580305919-30946-3-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v4 8/8] arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP device
+Date:   Wed, 29 Jan 2020 19:21:59 +0530
+Message-Id: <1580305919-30946-9-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
 References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
@@ -50,40 +50,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add compatibles for generic QUSB2 V2 phy which can be used for
-sdm845 and sc7180.
+Overriding the QUSB2 V2 Phy tuning parameters for SC7180 IDP device.
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 ---
- Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-index 90b3cc6..43082c8 100644
---- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-@@ -15,10 +15,17 @@ description:
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50a..826cf02 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -276,9 +276,11 @@
+ 	vdda-pll-supply = <&vreg_l11a_1p8>;
+ 	vdda-phy-dpdm-supply = <&vreg_l17a_3p0>;
+ 	qcom,imp-res-offset-value = <8>;
+-	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
+-	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_15_PERCENT>;
+ 	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++	qcom,bias-ctrl-value = <0x22>;
++	qcom,charge-ctrl-value = <3>;
++	qcom,hsdisc-trim-value = <0>;
+ };
  
- properties:
-   compatible:
--    enum:
--      - qcom,msm8996-qusb2-phy
--      - qcom,msm8998-qusb2-phy
--      - qcom,sdm845-qusb2-phy
-+    oneOf:
-+      - items:
-+        - enum:
-+          - qcom,msm8996-qusb2-phy
-+          - qcom,msm8998-qusb2-phy
-+          - qcom,qusb2-v2-phy
-+      - items:
-+        - enum:
-+          - qcom,sc7180-qusb2-phy
-+          - qcom,sdm845-qusb2-phy
-+        - const: qcom,qusb2-v2-phy
-   reg:
-     maxItems: 1
- 
+ &usb_1_qmpphy {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
