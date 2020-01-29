@@ -2,151 +2,96 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244DDC35240
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25119C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE290206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QhyJlO9Z"
+	by mail.kernel.org (Postfix) with ESMTP id EF30320716
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgA2OF1 (ORCPT
+        id S1726648AbgA2OV3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:05:27 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:20869 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726240AbgA2OF1 (ORCPT
+        Wed, 29 Jan 2020 09:21:29 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:51806 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726339AbgA2OV3 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:05:27 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580306727; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=OYXu3ND/s2/4ySCf9M0xA490SGByupUTGY02AD+jy9Y=;
- b=QhyJlO9Zaw4gRAvu+1vaF7U/bCR7mGHaqL6Simc4gxCg3Eq3GAUZNMgLW1NPiUBwI5CQ724P
- ARKtoffqHrEvnLsyaNvNYi1jHrAVPqswh/MELQjND2l9vrpJAPR3ILceIbzsuFCJITa2cLVt
- FMjMQ8K6MQLNvbp5BWEeGAgu5jA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e319124.7fede9397650-smtp-out-n02;
- Wed, 29 Jan 2020 14:05:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 20A7AC447A4; Wed, 29 Jan 2020 14:05:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44569C433CB;
-        Wed, 29 Jan 2020 14:05:21 +0000 (UTC)
+        Wed, 29 Jan 2020 09:21:29 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TEDYPs012775;
+        Wed, 29 Jan 2020 09:21:06 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfam72s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jan 2020 09:21:06 -0500
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00TEL5b6039244
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 29 Jan 2020 09:21:05 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 29 Jan
+ 2020 09:21:03 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 29 Jan 2020 06:21:03 -0800
+Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00TEKwxe027599;
+        Wed, 29 Jan 2020 09:20:59 -0500
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v4 0/5] Add hmc425a support
+Date:   Wed, 29 Jan 2020 16:22:56 +0200
+Message-ID: <20200129142301.13918-1-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Jan 2020 19:35:21 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-Subject: Re: [RFC v3 09/10] arm64: dts: qcom: sdm845: Add cpu OPP tables
-In-Reply-To: <20200129012411.GI46072@google.com>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-10-sibis@codeaurora.org>
- <20200129012411.GI46072@google.com>
-Message-ID: <4f2b98a1dae3bc737a43a1e46255657b@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-29_03:2020-01-28,2020-01-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=1 mlxlogscore=613 clxscore=1015 phishscore=0 spamscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001290118
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Matthias,
+Changes in v4:
+-handle db patch was added
+-gpiod_set_array_value_cansleep call was updated
 
-Thanks for the review!
+Beniamin Bia (4):
+  iio: core: Handle 'dB' suffix in core
+  iio: amplifiers: ad8366: Add write_raw_get_fmt function
+  iio: amplifiers: hmc425a: Add support for HMC425A attenuator
+  MAINTAINERS: add entry for hmc425a driver.
 
-On 2020-01-29 06:54, Matthias Kaehlcke wrote:
-> Hi Sibi,
-> 
-> On Tue, Jan 28, 2020 at 01:33:49AM +0530, Sibi Sankar wrote:
->> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 
->> SoCs.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 453 
->> +++++++++++++++++++++++++++
->>  1 file changed, 453 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
->> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index c036bab49fc03..8cb976118407b 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -199,6 +199,12 @@
->>  			qcom,freq-domain = <&cpufreq_hw 0>;
->>  			#cooling-cells = <2>;
->>  			next-level-cache = <&L2_0>;
->> +			operating-points-v2 = <&cpu0_opp_table>,
->> +					      <&cpu0_ddr_bw_opp_table>,
->> +					      <&cpu0_l3_bw_opp_table>;
->> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
->> SLAVE_EBI1>,
->> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-> 
-> This apparently depends on the 'Split SDM845 interconnect nodes and
-> consolidate RPMh support' series
-> (https://patchwork.kernel.org/project/linux-arm-msm/list/?series=226281),
-> which isn't mentioned in the cover letter.
-> 
-> I also couldn't find a patch on the lists that adds the 'osm_l3'
-> interconnect node for SDM845. The same is true for SC7180 (next
-> patch of this series). These patches may be available in custom trees,
-> but that isn't really helpful for upstream review.
+Michael Hennerich (1):
+  dt-bindings: iio: amplifiers: Add docs for HMC425A Step Attenuator
 
-yeah I missed adding the interconnect
-refactor dependency and the nodes.
-
-> 
-> I would suggest to focus on landing the dependencies of this series,
-> before proceding with it (or at least most of them), there are plenty
-> and without the dependencies this series isn't going to land, it also
-> makes it hard for testers and reviewers to get all the pieces
-
-yes I understand but wanted the series
-out asap because since there are a few
-points where we still havn't reached
-a consensus on.
-
-> together. In particular the last post of the series 'Add
-> required-opps support to devfreq passive gov'
-> (https://patchwork.kernel.org/cover/11055499/) is from July 2019 ...
-
-https://lore.kernel.org/lkml/CAGTfZH37ALwUHd8SpRRrBzZ6x1-++YtzS60_yRQvN-TN6rOzaA@mail.gmail.com/
-
-The pending patch for lazy linking
-was posted a while back. Now that
-it has a tested-by, majority of the
-series should go in since the devfreq
-maintainers wanted the series pulled
-in.
-
-> 
-> Thanks
-> 
-> Matthias
+ .../bindings/iio/amplifiers/adi,hmc425a.yaml  |  48 ++++
+ MAINTAINERS                                   |   9 +
+ drivers/iio/amplifiers/Kconfig                |  10 +
+ drivers/iio/amplifiers/Makefile               |   1 +
+ drivers/iio/amplifiers/ad8366.c               |  13 +
+ drivers/iio/amplifiers/hmc425a.c              | 256 ++++++++++++++++++
+ drivers/iio/industrialio-core.c               |  35 ++-
+ 7 files changed, 369 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+ create mode 100644 drivers/iio/amplifiers/hmc425a.c
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.17.1
+
