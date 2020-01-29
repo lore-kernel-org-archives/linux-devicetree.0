@@ -2,105 +2,115 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2DCC47409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 06:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81F1C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 07:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048CE2070A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 06:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="olqhDNMt"
+	by mail.kernel.org (Postfix) with ESMTP id 84E812070E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 07:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgA2GsD (ORCPT
+        id S1726043AbgA2HAm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 01:48:03 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5368 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgA2GsD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 01:48:03 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e312a940000>; Tue, 28 Jan 2020 22:47:48 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 Jan 2020 22:48:02 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 Jan 2020 22:48:02 -0800
-Received: from [10.19.66.205] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
- 2020 06:47:59 +0000
-Subject: Re: [Patch V3 12/18] usb: gadget: tegra-xudc: support multiple device
- modes
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
- <1577704195-2535-13-git-send-email-nkristam@nvidia.com>
- <20200128181020.GJ2293590@ulmo>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <7478f53a-c236-5442-8abb-7531edb89b29@nvidia.com>
-Date:   Wed, 29 Jan 2020 12:20:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200128181020.GJ2293590@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580280468; bh=SxpQ+2UID9jajci3A897vLNxQKnwkVPs/AOSn1AC7/o=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=olqhDNMtxOWOZVnY1KK7ycv1a6jTfzXxFm2/ygjmqqZcuYj+lFqV8zLJREISIUs+W
-         aBUmtZYhXoYgGtCCVws/WGPSadaCq0LqfmqQjsd/JS3nNB4hdaVTIP0525ATl7sfzU
-         rzyjGSv3riqtIQD3QKjKfo9UHsn+0MKLM+qbWxemszmz1PC0ckJ0NPnbshIHlHv3rZ
-         et6CgdTMRLAk6s/3mpWAGwjPfKb3KCLXmqeGRiJCLhQZivDk0Hvfrg/dl4n3XOFqGY
-         xfdjoaeXy7zf0ij8XYijjnHNOt+9YL57WYtpFQ1Lbaq4z2T3H/wL8/MpdDwfy3Mda8
-         vGDTXXCOV9x4A==
+        Wed, 29 Jan 2020 02:00:42 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:61989 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726020AbgA2HAm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 02:00:42 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Jan 2020 12:30:39 +0530
+Received: from pillair-linux.qualcomm.com ([10.204.116.193])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 12:30:28 +0530
+Received: by pillair-linux.qualcomm.com (Postfix, from userid 452944)
+        id 892CA3930; Wed, 29 Jan 2020 12:30:27 +0530 (IST)
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH v5] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Wed, 29 Jan 2020 12:30:23 +0530
+Message-Id: <1580281223-2759-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add device node for the ath10k SNOC platform driver probe
+and add resources required for WCN3990 on sc7180 soc.
 
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-On 28-01-2020 23:40, Thierry Reding wrote:
->>   	struct tegra_xudc_save_regs saved_regs;
->>   	bool suspended;
->>   	bool powergated;
->>   
->> -	struct usb_phy *usbphy;
->> +	struct usb_phy **usbphy;
->> +	int current_phy_index;
-> Can be unsigned int. It's also very long. It might be better to choose a
-> shorter name so that when you use it, the lines don't get excessively
-> long. Alternatively you could keep this field name and instead declare
-> local variables to reference the current PHY to make lines shorter.
-> 
-> Actually, looking at this a bit more, I don't see current_phy_index ever
-> used by itself (other than the assignment and one check to see if a PHY
-> has been selected). So why not just store a pointer to the current PHY
-> and avoid all the dereferencing?
-> 
-> Thierry
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50a..167f68ac 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -287,6 +287,11 @@
+ 	vdda-pll-supply = <&vreg_l4a_0p8>;
+ };
+ 
++&wifi {
++	status = "okay";
++	qcom,msa-fixed-perm;
++};
++
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+ 
+ &qspi_clk {
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 8011c5f..0a00c94 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -75,6 +75,12 @@
+ 			reg = <0x0 0x80900000 0x0 0x200000>;
+ 			no-map;
+ 		};
++
++		wlan_fw_mem: memory@93900000 {
++			compatible = "removed-dma-pool";
++			no-map;
++			reg = <0 0x93900000 0 0x200000>;
++		};
+ 	};
+ 
+ 	cpus {
+@@ -1490,6 +1496,28 @@
+ 
+ 			#freq-domain-cells = <1>;
+ 		};
++
++		wifi: wifi@18800000 {
++			compatible = "qcom,wcn3990-wifi";
++			reg = <0 0x18800000 0 0x800000>;
++			reg-names = "membase";
++			iommus = <&apps_smmu 0xc0 0x1>;
++			interrupts =
++				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
++				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
++				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
++				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
++				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
++				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
++				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
++				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
++				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
++				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
++				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
++				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
++			memory-region = <&wlan_fw_mem>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	thermal-zones {
+-- 
+2.7.4
 
-current_phy_index main purpose is to quickly get which index for USB 2 
-and 3 phy's to be used. This is used at mulitple functions. Based on 
-your comment above, I believe its good to use 2 pointers for UTMI and 
-USB 3 phy's, which are points to current phy index. This ensures to keep 
-line length as less as possible.
-
-Thanks,
-Nagarjuna
