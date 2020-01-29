@@ -2,152 +2,178 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF60C47409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 15:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9C4C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 15:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344A720720
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 15:00:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jAOCJDy7"
+	by mail.kernel.org (Postfix) with ESMTP id 17E98206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 15:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgA2PAX (ORCPT
+        id S1726672AbgA2Prz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:00:23 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36916 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgA2PAW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 10:00:22 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so20587053wru.4
-        for <devicetree@vger.kernel.org>; Wed, 29 Jan 2020 07:00:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=izVbuVQfKjxlDiWpU3YFz1uZ6NyAhFYTQIwypULO3vE=;
-        b=jAOCJDy7b+3jbarX0d8qXICDRSDylbN3qzBXUI8v23ZGpTQVbn6DyL60cgqzP/sHRD
-         jHENIlTIZmK/3bANbEVuZjD519GTMC7EdKqOK7/jBPh2VK3lPyXLv4at1yR9S1YqsXnT
-         s9MmDg/bDWEr9Zg6zBfgON7qHLaoDf9T47ZNmGVLM3RaGDcPBDKQ3Nwu59ZUI36uLYly
-         CIP5g0MNuiIg9rOTNdLkXEkXddsnxaQf7gdgfZ+wqDFpFB2HCwfkL0axKLMHPpOAnaK8
-         mzU1EecrudoQCDTi6RNmkSVmWI2/fXACqKsi+oMSTLYvKJfGWHfympKi6x9fFzhJ38Id
-         AdZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=izVbuVQfKjxlDiWpU3YFz1uZ6NyAhFYTQIwypULO3vE=;
-        b=bOdmR7enpYTz8aY9T54t6FGuvpaxTmW/zDuTsLkgGMqX+I0BESkDvvKhL0BK5RVyhB
-         o+uUCvux49/7w6A4HG4nLbpK1N7sreoWhF36Wk2+AjqEOpLDKRQD3r2UTUcE3zE7X8aA
-         b+yl54GXWdv/8lYeXuUOSlty5FCB5M2Iyk7/KFG9vU8JwwDda2qhTZSiTGZ/82ZrmukZ
-         Kkic30Ab6IjItMAjtL9kRyNiWm3i5mZdit/d8eJMpzM0af/FrdsSKgLbfZH/QuOvdkSO
-         U4QByNZAubejzmW3zaZFX8xd/JRwkCQHS8HDo2h7kdkTmuSSYfUHhuyo5p2CCabCmtqy
-         E6Ow==
-X-Gm-Message-State: APjAAAWlX8e9TjGeQQaanN+R2Peee3ZUVXsa27aBTPhZxFcI22hoJK03
-        MubN6yQnY+4eTduECo4kmr1GVA==
-X-Google-Smtp-Source: APXvYqwb5lM57o59SrwocyymNrtibeNLU9G8DkQ5nCCDlcJxe1cbV84jEra110J+DHdFaEONXPuKYA==
-X-Received: by 2002:adf:dc8d:: with SMTP id r13mr37387337wrj.357.1580310020461;
-        Wed, 29 Jan 2020 07:00:20 -0800 (PST)
-Received: from localhost ([2a00:79e0:d:11:1da2:3fd4:a302:4fff])
-        by smtp.gmail.com with ESMTPSA id 18sm2492646wmf.1.2020.01.29.07.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 07:00:19 -0800 (PST)
-Date:   Wed, 29 Jan 2020 07:00:19 -0800 (PST)
-X-Google-Original-Date: Wed, 29 Jan 2020 15:00:18 GMT (+0000)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
-CC:     yash.shah@sifive.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net,
-        bmeng.cn@gmail.com, Atish Patra <Atish.Patra@wdc.com>,
-        sagar.kadam@sifive.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
-To:     maz@kernel.org
-In-Reply-To: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
-References: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
-  <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
-Message-ID: <mhng-cb360722-bdb6-4cf7-9fa7-1d92f6b6bbfa@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
+        Wed, 29 Jan 2020 10:47:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:42856 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbgA2Prz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 10:47:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CE1431B;
+        Wed, 29 Jan 2020 07:47:54 -0800 (PST)
+Received: from [10.37.12.80] (unknown [10.37.12.80])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D53613F52E;
+        Wed, 29 Jan 2020 07:47:44 -0800 (PST)
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, linux-arm-msm-owner@vger.kernel.org
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <88b3885a-5ddd-b942-c5a5-d560b2f196bd@arm.com>
+ <57f9a785d93193719ee0b91e43d0922f@codeaurora.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <a87feb0c-3a34-9070-0b4d-ce31a41136b4@arm.com>
+Date:   Wed, 29 Jan 2020 15:47:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <57f9a785d93193719ee0b91e43d0922f@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Jan 2020 09:09:51 GMT (+0000), maz@kernel.org wrote:
-> On 2019-12-10 12:11, Yash Shah wrote:
->> This patch series adds GPIO drivers, DT documentation and DT nodes for
->> HiFive Unleashed board. The gpio patches are mostly based on Wesley's
->> patch.
->> The patchset also adds hierarchy irq domain support as it is required
->> by this
->> gpio driver. It also includes the irqdomain patch to introduce
->> irq_domain_translate_onecell() and irq-nvic driver patch to use this
->> newly
->> introduced function.
->>
->> This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed
->> board
->>
->> Changes:
->> v4 vs v3:
->> - Rename the DT yaml document to more standard naming
->> (sifive,gpio.yaml)
->> - Drop "clock-names" property from yaml document
->> - Add "minItems" to "interrupts" node in yaml
->>
->> v3 vs v2:
->> - Include patch for irq-nvic driver to use irq_domain_translate_onecell
->> - Remove unnecessary inclusion of header files
->> - Use a single prefix for all symbols in this driver
->> - Rename the "enabled" field of struct sifive_gpio to "irq_state"
->> - Remove unused variables and locking from probe()
->> - Other minor changes
->>
->> v2 vs v1:
->> - Add patch to introduce irq_domain_translate_onecell() and use it in
->>   the sifive PLIC driver
->> - Drop the usage of own locks, instead use internal bgpio_locks
->> - Consistently use regmap for register access throughout the gpio code
->> - Convert the GPIO DT documentation into a json schema
->> - Other minor changes based upon feedback received on v1
->>
->> v1 vs RFC:
->> Incorporated below changes as suggested by Linus Walleij on RFC version
->> of this
->> patchset[0]
->> - Dropped PWM patches as they are already merged.
->> - Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
->> - Remove unwanted inclusion of header files
->> - Use regmap MMIO instead of customised sifive_assign_bit()
->> - Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
->> - Use hierarchical irqdomain
->>
->> [0]
->> https://lore.kernel.org/linux-riscv/20181010123519.RVexDppaPFpIWl7QU_hpP8tc5qqWPJgeuLYn0FaGbeQ@z/
->>
->> Yash Shah (6):
->>   genirq: introduce irq_domain_translate_onecell
->>   irqchip: nvic: Use irq_domain_translate_onecell instead of custom
->> func
->>   irqchip: sifive: Support hierarchy irq domain
->>   gpio: sifive: Add DT documentation for SiFive GPIO
->>   gpio: sifive: Add GPIO driver for SiFive SoCs
->>   riscv: dts: Add DT support for SiFive FU540 GPIO driver
->
-> I've queued the first 5 patches. The last one should go via the
-> corresponding platform tree.
 
-Thanks, I'd missed this one.
 
->
-> Thanks,
->
->          M.
+On 1/29/20 2:37 PM, Sibi Sankar wrote:
+> Hey Lukasz,
+> Thanks for taking time to review
+> the series!
+> 
+> On 2020-01-29 15:16, Lukasz Luba wrote:
+>> Hi Sibi,
+>>
+>> In my opinion this solution depends on not always true assumption that
+>> CPUFreq notification chain will be triggered when there is a frequency
+> 
+> This series does not create any
+> devfreq devices nor use the cpufreq
+> notification chain. It just relies
+> on the opening up of required-opps
+> from being exclusive to gen-pd using
+> patches 1,2,3 from patch series[1].
+> With the fast path disabled and
+> schedutil enabled, this series will
+> not miss any cpufreq changes.
+
+Thank you Sibi for clarifying this. I spotted in patch 08/10
+that the fast_switch is removed and the normal path is in use,
+which also triggers the notification chain in CPUFreq. Then maybe other
+machinery which you have put in your 'depends on' list accidentally
+works thanks to this.
+
+> 
+> [1] https://patchwork.kernel.org/cover/11055499/
+> 
+>> switch. Extending devfreq governor (as in one of the dependent patch
+>> series that you have referred) by attaching to this notification
+>> chain makes sense only when the SchedUtil and fast_switch is not in use.
+> 
+> fast_switch and cpu notifier chains
+> are mutually exclusive but schedutil
+> will still operate in the slow path
+> IIRC.
+
+True, SchedUtil would work in slow_path. The driver and SoC support
+'fast_switch', your solution when is properly initialized, disables it.
+I would suggest to put this information in the commit message.
+I don't know the side effects on the performance, though. The other
+side effect would be: the CPUFreq notifications will be triggered.
+
+The fast_switch is now the preferred way, any new ideas should
+consider also this path.
+
+> 
+>> The Schedutil CPUFreq governor might use the fast_switch from this
+>> driver and the notifications will not be triggered. I have also
+>> commented patch 08/10 which tries to disable it.
+>>
+>> Regards,
+>> Lukasz
+>>
+>> On 1/27/20 8:03 PM, Sibi Sankar wrote:
+>>> This RFC series aims to extend cpu based scaling support to L3/DDR on
+>>> SDM845 and SC7180 SoCs.
+>>>
+>>> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+>>> Patches [5-7] - Hack in a way to add/remove multiple opp tables to
+>>>                  a single device. I am yet to fix the debugfs to
+>>>         support multiple opp_tables per device but wanted to
+>>>         send what was working upstream to get an idea if multiple
+>>>         opp tables per device is a feature that will be useful
+>>>         upstream.
+>>> Patches [9-10] - Add the cpu/cpu-ddr/cpu-l3 opp tables for SDM845
+>>>                   and SC7180 SoCs.
+>>>
+>>> v3:
+>>>   * Migrated to using Saravana's opp-kBps bindings [1]
+>>>   * Fixed some misc comments from Rajendra
+>>>   * Added support for SC7180
+>>>
+>>> v2:
+>>>   * Incorporated Viresh's comments from:
+>>> https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+>>> https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+>>>   * Dropped cpufreq-map passive governor
+>>>
+>>> Git-branch: https://github.com/QuinAsura/linux/tree/lnext-012420
+>>>
+>>> Some alternate ways of hosting the opp-tables:
+>>> https://github.com/QuinAsura/linux/commit/50b92bfaadc8f9a0d1e12249646e018bd6d1a9d3 
+>>>
+>>> https://github.com/QuinAsura/linux/commit/3d23d1eefd16ae6d9e3ef91e93e78749d8844e98 
+>>>
+>>> Viresh didn't really like ^^ bindings and they dont really scale 
+>>> well. Just
+>>> including them here for completeness.
+>>>
+>>> Depends on the following series:
+>>> [1] https://patchwork.kernel.org/cover/11277199/
+>>> [2] https://patchwork.kernel.org/cover/11055499/
+>>> [3] https://patchwork.kernel.org/cover/11326381/
+>>>
+>>> Sibi Sankar (10):
+>>>    arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+>>>    cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+>>>    cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+>>>    OPP: Add and export helper to update voltage
+>>>    opp: of: export _opp_of_get_opp_desc_node
+>>>    opp: Allow multiple opp_tables to be mapped to a single device
+>>>    opp: Remove multiple attached opp tables from a device
+>>>    cpufreq: qcom: Update the bandwidth levels on frequency change
+>>>    arm64: dts: qcom: sdm845: Add cpu OPP tables
+>>>    arm64: dts: qcom: sc7180: Add cpu OPP tables
+>>>
+>>>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 287 +++++++++++++++
+>>>   arch/arm64/boot/dts/qcom/sdm845-mtp.dts |   2 +-
+>>>   arch/arm64/boot/dts/qcom/sdm845.dtsi    | 453 ++++++++++++++++++++++++
+>>>   drivers/cpufreq/cpufreq-dt-platdev.c    |   2 +
+>>>   drivers/cpufreq/qcom-cpufreq-hw.c       | 246 +++++++++++--
+>>>   drivers/opp/core.c                      | 111 +++++-
+>>>   drivers/opp/of.c                        |   3 +-
+>>>   drivers/opp/opp.h                       |   2 +
+>>>   include/linux/pm_opp.h                  |  10 +
+>>>   9 files changed, 1083 insertions(+), 33 deletions(-)
+>>>
+> 
