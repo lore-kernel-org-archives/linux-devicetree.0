@@ -2,510 +2,922 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B60C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 21:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C28EC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 21:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36A020674
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 21:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580332060;
-	bh=WuBr4j62R4RtqAJ7oEkkgLU+vr9WCHgo3tLNgX+j2B0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=wuvy6EOndqjMZrOJtDnTR8BJsuO8uzTwYx5IApWdSvSRn5bvCY4HEA5T6EI3Txrin
-	 sANbvIUvn77lnrOanOZkF4gf1Af/KZ60oJDxA+fTM6fYOFODn8o+bPVZQbGPlzdCBn
-	 /nF/DdyM0UTRAWS7ldozVEHPx41BfNjal2TeN+9I=
+	by mail.kernel.org (Postfix) with ESMTP id 5DCE220702
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 21:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W90e6FF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgA2VHj (ORCPT
+        id S1726528AbgA2VYA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 16:07:39 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34894 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbgA2VHj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 16:07:39 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so1034367otd.2;
-        Wed, 29 Jan 2020 13:07:38 -0800 (PST)
+        Wed, 29 Jan 2020 16:24:00 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33485 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgA2VX7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 16:23:59 -0500
+Received: by mail-pl1-f195.google.com with SMTP id ay11so461957plb.0
+        for <devicetree@vger.kernel.org>; Wed, 29 Jan 2020 13:23:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W5KC8Z7HMhK/E1CyRd5toGvARm6DXMH7VEhu4e6BzBA=;
+        b=W90e6FF6TB7mehBUfJ5IMLPpfaMokgEbytw5t+EgNsLr43YL1c+8uiGDtmGCHoJTVW
+         ZP+mKlckA9Ek6VCoQEetpPe1c9dml9mbvE6yoXy2DpZVW0Oges3G1tp+m6WUmlHS4u3q
+         Nj3pmghwNj6Pnuu1s3yR9QjFXcduSxwJ5pVRE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=p/QFZqeSMnnTowT5k3YUkmhQis3pKtJi2blNdxSsGL0=;
-        b=bTgvb9ijjqlauwtbwfYAf4J5isW/yeF/Tu9R+X91ZakHXnClQui8dOCvDrKRp28xIj
-         nVXlTBncmycACUzjsli7BZKjwE7B67rAwQ41J90WD/yayZXF0V8Owpc8SMcwp8yRKZSJ
-         trhP7FrwaTmiLlS19w6976orxMXzX0HtAz92YE9v4+Hij70e2ThIw7/W7DNpmBXn8R5r
-         T14g1DOYN98iFNJbGC4Rp3CEDlwENDTCpL73U8NCzPm1CE/fB5qmmDe3cNed06Z7SqLW
-         Re49j3GZSkbG0xn3L6zPjTcL32wa0SWqwJMK16asGp8hSDvgGUwnlddHkgNnbxaIg2AF
-         SbcQ==
-X-Gm-Message-State: APjAAAUC24i9N7ZyUAVRMC6UTd/ivntcRgLE1XeSXVj3frmmrcAKJXu/
-        ugdLl7VF5B3umnT1X7xFVw==
-X-Google-Smtp-Source: APXvYqy5YXZKY4FwiSK5gMZccrf5LZmUq6HZtRI01YBBvDo1CSJtYMF+WMPjDxcakYvX9KKtIM8gAw==
-X-Received: by 2002:a9d:23b5:: with SMTP id t50mr975245otb.122.1580332057331;
-        Wed, 29 Jan 2020 13:07:37 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m69sm1060402otc.78.2020.01.29.13.07.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W5KC8Z7HMhK/E1CyRd5toGvARm6DXMH7VEhu4e6BzBA=;
+        b=HR2Q3/K3i15ZXE0h9xiJqumaKzJhtV4jBMP2Oj9sQldUC2LDrMbLRHnCJuYbgyw4Vb
+         9kABWxCSLzikwoQQktoz96yJldgYRjufgjLbgyvZ1dO4qQG1kjOBl3YEsNezJFChruZm
+         8ajx0VbhqgR5zG2rVMf3PHqRwe8PR0NEiWgi0vn8EIW2vQ2+l1pfcwDkpII37lHwN+65
+         g2b7uC40Q0Qpx+C9mptDS13JDfREWRq1Jlv4EnF4TOvY10lkOwqWCx8IobMXeDr0jaRS
+         DEa480f1MAAiYiklKAvoQUZouY3zXSn8f3gAu/8bORBqdPWUlQGVf7pzpLP8iuysGvZE
+         Lu5w==
+X-Gm-Message-State: APjAAAU2P53XQzWEZODa8ZjoWej8kfOLPDnA9m/tdHSQwdz61qMiN2rp
+        zMAGZi38S+RzGNBajRehJq3o3w==
+X-Google-Smtp-Source: APXvYqzNxJX/Gn6pHqu1jXH52eLiiX+dgxhCxi2U7+s7VzSJSHWCrEkJ6fQMbUbJwWkM7KWv9eOZzQ==
+X-Received: by 2002:a17:90a:7784:: with SMTP id v4mr1903930pjk.134.1580333038399;
+        Wed, 29 Jan 2020 13:23:58 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id j38sm3728424pgj.27.2020.01.29.13.23.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 13:07:36 -0800 (PST)
-Received: (nullmailer pid 32355 invoked by uid 1000);
-        Wed, 29 Jan 2020 21:07:36 -0000
-Date:   Wed, 29 Jan 2020 15:07:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree updates for v5.6
-Message-ID: <20200129210736.GA29551@bogus>
+        Wed, 29 Jan 2020 13:23:57 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     tdas@codeaurora.org, jhugo@codeaurora.org, absahu@codeaurora.org,
+        sivaprak@codeaurora.org, anusharao@codeaurora.org,
+        sricharan@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
+Subject: [PATCH] dt-bindings: clk: qcom: Fix self-validation, split, and clean cruft
+Date:   Wed, 29 Jan 2020 13:23:25 -0800
+Message-Id: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Linus,
+The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
+because it required a property to be either (3 entries big),
+(3 entries big), or (7 entries big), but not more than one of those
+things.  That didn't make a ton of sense.
 
-Please pull Devicetree updates for 5.6. Details below.
+This patch splits all of the exceptional device trees (AKA those that
+would have needed if/then/else rules) from qcom,gcc.yaml.  It also
+cleans up some cruft found while doing that.
 
-Rob
+After this lands, this worked for me atop clk-next:
+  for f in \
+    Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
+    Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
+    Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
+    Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
+    Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
+    Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
+    Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
+    Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
+      ARCH=arm64 make dt_binding_check DT_SCHEMA_FILES=$f; \
+      ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
+  done
 
+Arbitrary decisions made (yell if you want changed):
+- Left all the older devices (where clocks / clock-names weren't
+  specified) in a single file.
+- Didn't make clocks "required" for msm8996/msm8998 but left them as
+  listed.  This seems a little weird but means I didn't need to open a
+  whole different can of worms.  It matches the old binding for
+  msm8996 and doesn't match the binding (but matches the dts) for
+  msm8998.
 
-The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+Misc cleanups as part of this patch:
+- sm8150 was claimed to be same set of clocks as sc7180, but driver
+  and dts appear to say that "bi_tcxo_ao" doesn't exist.  Fixed.
+- In "apq8064", "#thermal-sensor-cells" was missing the "#".
+- Got rid of "|" at the end of top description since spacing doesn't
+  matter.
+- Changed indentation to consistently 2 spaces (it was 3 in some
+  places).
+- Added period at the end of protected-clocks description.
+- No space before ":".
+- Updated sc7180/sm8150 example to use the 'qcom,rpmh.h' include.
+- Updated sc7180/sm8150 example to use larger address/size cells as
+  per reality.
+- Updated sc7180/sm8150 example to point to the sleep_clk rather than
+  <0>.
+- Made it so that gcc-ipq8074 didn't require #power-domain-cells since
+  actual dts didn't have it and I got no hits from:
+    git grep _GDSC include/dt-bindings/clock/qcom,gcc-ipq8074.h
+- Made it so that gcc-qcs404 didn't require #power-domain-cells since
+  actual dts didn't have it and I got no hits from:
+    git grep _GDSC include/dt-bindings/clock/qcom,gcc-qcs404.h
 
-  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+Noticed, but not done in this patch (volunteers needed):
+- Add "aud_ref_clk" to sm8150 bindings / dts even though I found a
+  reference to it in "gcc-sm8150.c".
+- Fix node name in actual ipq8074 to be "clock-controller" (it's gcc).
+- Since the example doesn't need phandes to exist, in msm8998 could
+  just make up places providing some of the clocks currently bogused
+  out with <0>.
 
-are available in the Git repository at:
+Fixes: ab91f72e018a ("clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.6
+ .../bindings/clock/qcom,gcc-apq8064.yaml      |  81 +++++++
+ .../bindings/clock/qcom,gcc-ipq8074.yaml      |  48 ++++
+ .../bindings/clock/qcom,gcc-msm8996.yaml      |  65 ++++++
+ .../bindings/clock/qcom,gcc-msm8998.yaml      |  88 ++++++++
+ .../bindings/clock/qcom,gcc-qcs404.yaml       |  48 ++++
+ .../bindings/clock/qcom,gcc-sc7180.yaml       |  72 ++++++
+ .../bindings/clock/qcom,gcc-sm8150.yaml       |  69 ++++++
+ .../devicetree/bindings/clock/qcom,gcc.yaml   | 212 ++----------------
+ 8 files changed, 489 insertions(+), 194 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
 
-for you to fetch changes up to e9a3bfe38e393e1d8bd74986cdc9b99b8f9d1efc:
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
+new file mode 100644
+index 000000000000..c09497881cd2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-apq8064.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Global Clock & Reset Controller Binding for APQ8064
++
++maintainers:
++  - Stephen Boyd <sboyd@kernel.org>
++  - Taniya Das <tdas@codeaurora.org>
++
++description:
++  Qualcomm global clock control module which supports the clocks, resets and
++  power domains on APQ8064.
++
++properties:
++  compatible:
++    const: qcom,gcc-apq8064
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  nvmem-cells:
++    minItems: 1
++    maxItems: 2
++    description:
++      Qualcomm TSENS (thermal sensor device) on some devices can
++      be part of GCC and hence the TSENS properties can also be part
++      of the GCC/clock-controller node.
++      For more details on the TSENS properties please refer
++      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
++
++  nvmem-cell-names:
++    minItems: 1
++    maxItems: 2
++    description:
++      Names for each nvmem-cells specified.
++    items:
++      - const: calib
++      - const: calib_backup
++
++  '#thermal-sensor-cells':
++    const: 1
++
++  protected-clocks:
++    description:
++      Protected clock specifier list as per common clock binding.
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++  - nvmem-cells
++  - nvmem-cell-names
++  - '#thermal-sensor-cells'
++
++examples:
++  - |
++    clock-controller@900000 {
++      compatible = "qcom,gcc-apq8064";
++      reg = <0x00900000 0x4000>;
++      nvmem-cells = <&tsens_calib>, <&tsens_backup>;
++      nvmem-cell-names = "calib", "calib_backup";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++      #thermal-sensor-cells = <1>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml
+new file mode 100644
+index 000000000000..1c6461c52a47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-ipq8074.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Global Clock & Reset Controller Bindingfor IPQ8074
++
++maintainers:
++  - Stephen Boyd <sboyd@kernel.org>
++  - Taniya Das <tdas@codeaurora.org>
++
++description:
++  Qualcomm global clock control module which supports the clocks, resets and
++  power domains on IPQ8074.
++
++properties:
++  compatible:
++    const: qcom,gcc-ipq8074
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  protected-clocks:
++    description:
++      Protected clock specifier list as per common clock binding.
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++
++examples:
++  - |
++    clock-controller@1800000 {
++      compatible = "qcom,gcc-ipq8074";
++      reg = <0x01800000 0x80000>;
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml
+new file mode 100644
+index 000000000000..32782e648c7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-msm8996.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Global Clock & Reset Controller Binding for MSM8996
++
++maintainers:
++  - Stephen Boyd <sboyd@kernel.org>
++  - Taniya Das <tdas@codeaurora.org>
++
++description:
++  Qualcomm global clock control module which supports the clocks, resets and
++  power domains on MSM8996.
++
++properties:
++  compatible:
++    const: qcom,gcc-msm8996
++
++  clocks:
++    items:
++      - description: XO source
++      - description: Second XO source
++      - description: Sleep clock source
++
++  clock-names:
++    items:
++      - const: cxo
++      - const: cxo2
++      - const: sleep_clk
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  protected-clocks:
++    description:
++      Protected clock specifier list as per common clock binding.
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  - |
++    clock-controller@300000 {
++      compatible = "qcom,gcc-msm8996";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++      reg = <0x300000 0x90000>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml
+new file mode 100644
+index 000000000000..75c0ee208965
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-msm8998.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Global Clock & Reset Controller Binding for MSM8998
++
++maintainers:
++  - Stephen Boyd <sboyd@kernel.org>
++  - Taniya Das <tdas@codeaurora.org>
++
++description:
++  Qualcomm global clock control module which supports the clocks, resets and
++  power domains on MSM8998.
++
++properties:
++  compatible:
++    const: qcom,gcc-msm8998
++
++  clocks:
++    items:
++      - description: Board XO source
++      - description: Sleep clock source
++      - description: USB 3.0 phy pipe clock
++      - description: UFS phy rx symbol clock for pipe 0
++      - description: UFS phy rx symbol clock for pipe 1
++      - description: UFS phy tx symbol clock
++      - description: PCIE phy pipe clock
++
++  clock-names:
++    items:
++      - const: xo
++      - const: sleep_clk
++      - const: usb3_pipe
++      - const: ufs_rx_symbol0
++      - const: ufs_rx_symbol1
++      - const: ufs_tx_symbol0
++      - const: pcie0_pipe
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  protected-clocks:
++    description:
++      Protected clock specifier list as per common clock binding.
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,rpmcc.h>
++    clock-controller@100000 {
++      compatible = "qcom,gcc-msm8998";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++      reg = <0x00100000 0xb0000>;
++      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
++               <&sleep>,
++               <0>,
++               <0>,
++               <0>,
++               <0>,
++               <0>;
++      clock-names = "xo",
++                    "sleep_clk",
++                    "usb3_pipe",
++                    "ufs_rx_symbol0",
++                    "ufs_rx_symbol1",
++                    "ufs_tx_symbol0",
++                    "pcie0_pipe";
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml
+new file mode 100644
+index 000000000000..f881cbeab594
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-qcs404.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Global Clock & Reset Controller Bindingfor QCS404
++
++maintainers:
++  - Stephen Boyd <sboyd@kernel.org>
++  - Taniya Das <tdas@codeaurora.org>
++
++description:
++  Qualcomm global clock control module which supports the clocks, resets and
++  power domains on QCS404.
++
++properties:
++  compatible:
++    const: qcom,gcc-qcs404
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  protected-clocks:
++    description:
++      Protected clock specifier list as per common clock binding.
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++
++examples:
++  - |
++    clock-controller@1800000 {
++      compatible = "qcom,gcc-qcs404";
++      reg = <0x01800000 0x80000>;
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml
+new file mode 100644
+index 000000000000..b6a27da0c9b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-sc7180.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Global Clock & Reset Controller Binding for SC7180
++
++maintainers:
++  - Stephen Boyd <sboyd@kernel.org>
++  - Taniya Das <tdas@codeaurora.org>
++
++description:
++  Qualcomm global clock control module which supports the clocks, resets and
++  power domains on SC7180.
++
++properties:
++  compatible:
++    const: qcom,gcc-sc7180
++
++  clocks:
++    items:
++      - description: Board XO source
++      - description: Board active XO source
++      - description: Sleep clock source
++
++  clock-names:
++    items:
++      - const: bi_tcxo
++      - const: bi_tcxo_ao
++      - const: sleep_clk
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  protected-clocks:
++    description:
++      Protected clock specifier list as per common clock binding.
++
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    clock-controller@100000 {
++      compatible = "qcom,gcc-sc7180";
++      reg = <0 0x00100000 0 0x1f0000>;
++      clocks = <&rpmhcc RPMH_CXO_CLK>,
++               <&rpmhcc RPMH_CXO_CLK_A>,
++               <&sleep_clk>;
++      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
+new file mode 100644
+index 000000000000..ca581b2e3286
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-sm8150.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Global Clock & Reset Controller Binding for SM8150
++
++maintainers:
++  - Stephen Boyd <sboyd@kernel.org>
++  - Taniya Das <tdas@codeaurora.org>
++
++description:
++  Qualcomm global clock control module which supports the clocks, resets and
++  power domains on SM8150.
++
++properties:
++  compatible:
++    const: qcom,gcc-sm8150
++
++  clocks:
++    items:
++      - description: Board XO source
++      - description: Sleep clock source
++
++  clock-names:
++    items:
++      - const: bi_tcxo
++      - const: sleep_clk
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  protected-clocks:
++    description:
++      Protected clock specifier list as per common clock binding.
++
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    clock-controller@100000 {
++      compatible = "qcom,gcc-sm8150";
++      reg = <0 0x00100000 0 0x1f0000>;
++      clocks = <&rpmhcc RPMH_CXO_CLK>,
++               <&sleep_clk>;
++      clock-names = "bi_tcxo", "sleep_clk";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+index cac1150c9292..a891e5a37369 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+@@ -10,81 +10,28 @@ maintainers:
+   - Stephen Boyd <sboyd@kernel.org>
+   - Taniya Das <tdas@codeaurora.org>
+ 
+-description: |
++description:
+   Qualcomm global clock control module which supports the clocks, resets and
+   power domains.
+ 
+ properties:
+-  compatible :
++  compatible:
+     enum:
+-       - qcom,gcc-apq8064
+-       - qcom,gcc-apq8084
+-       - qcom,gcc-ipq4019
+-       - qcom,gcc-ipq6018
+-       - qcom,gcc-ipq8064
+-       - qcom,gcc-ipq8074
+-       - qcom,gcc-msm8660
+-       - qcom,gcc-msm8916
+-       - qcom,gcc-msm8960
+-       - qcom,gcc-msm8974
+-       - qcom,gcc-msm8974pro
+-       - qcom,gcc-msm8974pro-ac
+-       - qcom,gcc-msm8994
+-       - qcom,gcc-msm8996
+-       - qcom,gcc-msm8998
+-       - qcom,gcc-mdm9615
+-       - qcom,gcc-qcs404
+-       - qcom,gcc-sc7180
+-       - qcom,gcc-sdm630
+-       - qcom,gcc-sdm660
+-       - qcom,gcc-sdm845
+-       - qcom,gcc-sm8150
+-
+-  clocks:
+-    oneOf:
+-      #qcom,gcc-sm8150
+-      #qcom,gcc-sc7180
+-      - items:
+-        - description: Board XO source
+-        - description: Board active XO source
+-        - description: Sleep clock source
+-      #qcom,gcc-msm8996
+-      - items:
+-        - description: XO source
+-        - description: Second XO source
+-        - description: Sleep clock source
+-      #qcom,gcc-msm8998
+-      - items:
+-        - description: Board XO source
+-        - description: Sleep clock source
+-        - description: USB 3.0 phy pipe clock
+-        - description: UFS phy rx symbol clock for pipe 0
+-        - description: UFS phy rx symbol clock for pipe 1
+-        - description: UFS phy tx symbol clock
+-        - description: PCIE phy pipe clock
+-
+-  clock-names:
+-    oneOf:
+-      #qcom,gcc-sm8150
+-      #qcom,gcc-sc7180
+-      - items:
+-        - const: bi_tcxo
+-        - const: bi_tcxo_ao
+-        - const: sleep_clk
+-      #qcom,gcc-msm8996
+-      - items:
+-        - const: cxo
+-        - const: cxo2
+-        - const: sleep_clk
+-      #qcom,gcc-msm8998
+-      - items:
+-        - const: xo
+-        - const: sleep_clk
+-        - const: usb3_pipe
+-        - const: ufs_rx_symbol0
+-        - const: ufs_rx_symbol1
+-        - const: ufs_tx_symbol0
+-        - const: pcie0_pipe
++      - qcom,gcc-apq8084
++      - qcom,gcc-ipq4019
++      - qcom,gcc-ipq6018
++      - qcom,gcc-ipq8064
++      - qcom,gcc-msm8660
++      - qcom,gcc-msm8916
++      - qcom,gcc-msm8960
++      - qcom,gcc-msm8974
++      - qcom,gcc-msm8974pro
++      - qcom,gcc-msm8974pro-ac
++      - qcom,gcc-msm8994
++      - qcom,gcc-mdm9615
++      - qcom,gcc-sdm630
++      - qcom,gcc-sdm660
++      - qcom,gcc-sdm845
+ 
+   '#clock-cells':
+     const: 1
+@@ -98,31 +45,9 @@ properties:
+   reg:
+     maxItems: 1
+ 
+-  nvmem-cells:
+-    minItems: 1
+-    maxItems: 2
+-    description:
+-      Qualcomm TSENS (thermal sensor device) on some devices can
+-      be part of GCC and hence the TSENS properties can also be part
+-      of the GCC/clock-controller node.
+-      For more details on the TSENS properties please refer
+-      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+-
+-  nvmem-cell-names:
+-    minItems: 1
+-    maxItems: 2
+-    description:
+-      Names for each nvmem-cells specified.
+-    items:
+-      - const: calib
+-      - const: calib_backup
+-
+-  'thermal-sensor-cells':
+-    const: 1
+-
+   protected-clocks:
+     description:
+-       Protected clock specifier list as per common clock binding
++      Protected clock specifier list as per common clock binding.
+ 
+ required:
+   - compatible
+@@ -131,33 +56,6 @@ required:
+   - '#reset-cells'
+   - '#power-domain-cells'
+ 
+-if:
+-  properties:
+-    compatible:
+-      contains:
+-        const: qcom,gcc-apq8064
+-
+-then:
+-  required:
+-    - nvmem-cells
+-    - nvmem-cell-names
+-    - '#thermal-sensor-cells'
+-
+-else:
+-  if:
+-    properties:
+-      compatible:
+-        contains:
+-          enum:
+-            - qcom,gcc-msm8998
+-            - qcom,gcc-sm8150
+-            - qcom,gcc-sc7180
+-  then:
+-    required:
+-       - clocks
+-       - clock-names
+-
+-
+ examples:
+   # Example for GCC for MSM8960:
+   - |
+@@ -168,78 +66,4 @@ examples:
+       #reset-cells = <1>;
+       #power-domain-cells = <1>;
+     };
+-
+-
+-  # Example of GCC with TSENS properties:
+-  - |
+-    clock-controller@900000 {
+-      compatible = "qcom,gcc-apq8064";
+-      reg = <0x00900000 0x4000>;
+-      nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+-      nvmem-cell-names = "calib", "calib_backup";
+-      #clock-cells = <1>;
+-      #reset-cells = <1>;
+-      #power-domain-cells = <1>;
+-      #thermal-sensor-cells = <1>;
+-    };
+-
+-  # Example of GCC with protected-clocks properties:
+-  - |
+-    clock-controller@100000 {
+-      compatible = "qcom,gcc-sdm845";
+-      reg = <0x100000 0x1f0000>;
+-      protected-clocks = <187>, <188>, <189>, <190>, <191>;
+-      #clock-cells = <1>;
+-      #reset-cells = <1>;
+-      #power-domain-cells = <1>;
+-    };
+-
+-  # Example of GCC with clock node properties for SM8150:
+-  - |
+-    clock-controller@100000 {
+-      compatible = "qcom,gcc-sm8150";
+-      reg = <0x00100000 0x1f0000>;
+-      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <&sleep_clk>;
+-      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+-      #clock-cells = <1>;
+-      #reset-cells = <1>;
+-      #power-domain-cells = <1>;
+-     };
+-
+-  # Example of GCC with clock nodes properties for SC7180:
+-  - |
+-    clock-controller@100000 {
+-      compatible = "qcom,gcc-sc7180";
+-      reg = <0x100000 0x1f0000>;
+-      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
+-      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+-      #clock-cells = <1>;
+-      #reset-cells = <1>;
+-      #power-domain-cells = <1>;
+-    };
+-
+-  # Example of MSM8998 GCC:
+-  - |
+-    #include <dt-bindings/clock/qcom,rpmcc.h>
+-    clock-controller@100000 {
+-      compatible = "qcom,gcc-msm8998";
+-      #clock-cells = <1>;
+-      #reset-cells = <1>;
+-      #power-domain-cells = <1>;
+-      reg = <0x00100000 0xb0000>;
+-      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
+-               <&sleep>,
+-               <0>,
+-               <0>,
+-               <0>,
+-               <0>,
+-               <0>;
+-      clock-names = "xo",
+-                    "sleep_clk",
+-                    "usb3_pipe",
+-                    "ufs_rx_symbol0",
+-                    "ufs_rx_symbol1",
+-                    "ufs_tx_symbol0",
+-                    "pcie0_pipe";
+-    };
+ ...
+-- 
+2.25.0.341.g760bfbb309-goog
 
-  scripts/dtc: Revert "yamltree: Ensure consistent bracketing of properties with phandles" (2020-01-28 10:21:47 -0600)
-
-----------------------------------------------------------------
-Devicetree updates for v5.6:
-
-- Update dtc to upstream v1.5.1-22-gc40aeb60b47a (plus 1 revert)
-
-- Fix for DMA coherent devices on Power
-
-- Rework and simplify the DT phandle cache code
-
-- DT schema conversions for LEDS, gpio-leds, STM32 dfsdm, STM32 UART,
-  STM32 ROMEM, STM32 watchdog, STM32 DMAs, STM32 mlahb, STM32 RTC,
-  STM32 RCC, STM32 syscon, rs485, Renesas rCar CSI2, Faraday FTIDE010,
-  DWC2, Arm idle-states, Allwinner legacy resets, PRCM and clocks,
-  Allwinner H6 OPP, Allwinner AHCI, Allwinner MBUS, Allwinner A31 CSI,
-  Allwinner h/w codec, Allwinner A10 system ctrl, Allwinner SRAM,
-  Allwinner USB PHY, Renesas CEU, generic PCI host, Arm Versatile PCI
-
-- New binding schemas for SATA and PATA controllers, TI and Infineon VR
-  controllers, MAX31730
-
-- New compatible strings for i.MX8QM, WCN3991, renesas,r8a77961-wdt,
-  renesas,etheravb-r8a77961
-
-- Add USB 'super-speed-plus' as a documented speed
-
-- Vendor prefixes for broadmobi, calaosystems, kam, and mps
-
-- Clean-up the multiple flavors of ST-Ericsson vendor prefixes
-
-----------------------------------------------------------------
-Alexandre Torgue (1):
-      dt-bindings: arm: stm32: Convert stm32-syscon to json-schema
-
-Angus Ainslie (Purism) (1):
-      dt-bindings: vendor-prefixes: Add a broadmobi entry
-
-Arnaud Pouliquen (1):
-      dt-bindings: stm32: convert mlahb to json-schema
-
-Beniamin Bia (1):
-      dt-bindings: iio: adc: ad7606: Fix wrong maxItems value
-
-Benjamin Gaignard (10):
-      dt-bindings: rtc: Convert stm32 rtc bindings to json-schema
-      dt-bindings: dma: Convert stm32 DMA bindings to json-schema
-      dt-bindings: dma: Convert stm32 MDMA bindings to json-schema
-      dt-bindings: dma: Convert stm32 DMAMUX bindings to json-schema
-      dt-bindings: watchdog: Convert stm32 watchdog bindings to json-schema
-      dt-bindings: usb: amlogic, meson-g12a-usb-ctrl: fix clock names
-      dt-bindings: nvmem: Convert STM32 ROMEM to json-schema
-      dt-bindings: usb: Convert DWC2 bindings to json-schema
-      dt-bindings: serial: Convert rs485 bindings to json-schema
-      dt-bindings: serial: Convert STM32 UART to json-schema
-
-Bruno Thomsen (1):
-      dt: bindings: add vendor prefix for Kamstrup A/S
-
-Dong Aisheng (3):
-      dt-bindings: mmc: fsl-imx-esdhc: add imx8qm compatible string
-      dt-bindings: serial: lpuart: add imx8qm compatible string
-      dt-bindings: i2c: lpi2c: add imx8qm compatible string
-
-Douglas Anderson (1):
-      dt-bindings: timer: Use non-empty ranges in example
-
-Gabriel Fernandez (1):
-      dt-bindings: rcc: Convert stm32mp1 rcc bindings to json-schema
-
-Geert Uytterhoeven (3):
-      dt-bindings: net: ravb: Document r8a77961 support
-      dt-bindings: watchdog: renesas-wdt: Document r8a77961 support
-      of: overlay: Remove blank line between assignment and check
-
-Guenter Roeck (1):
-      dt-bindings: Add MAX31730 as trivial device
-
-JC Kuo (1):
-      dt-binding: usb: add "super-speed-plus"
-
-Jacopo Mondi (1):
-      dt-bindings: media: renesas,ceu: Convert to yaml
-
-Johan Jonker (2):
-      dt-bindings: mmc: remove identical phrase in disable-wp text
-      dt-bindings: mmc: clarify disable-wp text
-
-Krzysztof Kozlowski (1):
-      dt-bindings: Rename Exynos to lowercase
-
-Linus Walleij (4):
-      dt-bindings: Create DT bindings for SATA controllers
-      dt-bindings: Create DT bindings for PATA controllers
-      dt-bindings: Convert Faraday FTIDE010 to DT schema
-      dt-bindings: Be explicit about installing deps
-
-Markus Reichl (1):
-      dt-bindings: add vendor Monolithic Power Systems
-
-Matthias Kaehlcke (1):
-      dt-bindings: net: bluetooth: Add compatible string for WCN3991
-
-Maxime Ripard (13):
-      dt-bindings: usb: Convert Allwinner USB PHY controller to a schema
-      dt-bindings: sram: Allow for the childs nodes to be called sections
-      dt-bindings: sram: Allow for more specific compatibles
-      dt-bindings: sram: Add Allwinner SRAM compatibles
-      dt-bindings: sram: Convert Allwinner A10 system controller to a schema
-      dt-bindings: media: Convert Allwinner hardware codec to a schema
-      dt-bindings: media: Convert Allwinner A31 CSI to a schema
-      dt-bindings: interconnect: Convert Allwinner MBUS controller to a schema
-      dt-bindings: ata: Convert Allwinner AHCI controller to a schema
-      dt-bindings: opp: Convert Allwinner H6 OPP to a schema
-      dt-bindings: clocks: Convert Allwinner legacy clocks to schemas
-      dt-bindings: mfd: Convert Allwinner legacy PRCM bindings to schemas
-      dt-bindings: resets: Convert Allwinner legacy resets to schemas
-
-Michael Ellerman (1):
-      of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-
-Miquel Raynal (1):
-      dt-bindings: phy: Fix the PX30 DSI PHY compatible in the example
-
-Mohana Datta Yelugoti (1):
-      Documentation: spi-ir-led: fix spelling mistake "balue"->"value"
-
-Niklas Söderlund (1):
-      dt-bindings: rcar-csi2: Convert bindings to json-schema
-
-Olivier Moysan (1):
-      dt-bindings: stm32: convert dfsdm to json-schema
-
-Peng Fan (1):
-      dt-bindings: arm-boards: typo fix
-
-Rob Herring (10):
-      dt-bindings: Add missing 'properties' keyword enclosing 'snps,tso'
-      of: Rework and simplify phandle cache to use a fixed size
-      scripts/dtc: Update to upstream version v1.5.1-22-gc40aeb60b47a
-      dt-bindings: arm: Convert arm,idle-state binding to DT schema
-      Merge branch 'dt/linus' into dt/next
-      dt-bindings: PCI: Convert Arm Versatile binding to DT schema
-      dt-bindings: PCI: Convert generic host binding to DT schema
-      dt-bindings: leds: Convert common LED binding to schema
-      dt-bindings: leds: Convert gpio-leds to DT schema
-      scripts/dtc: Revert "yamltree: Ensure consistent bracketing of properties with phandles"
-
-Stephan Gerhold (3):
-      dt-bindings: vendor-prefixes: Add yet another for ST-Ericsson
-      dt-bindings: vendor-prefixes: Deprecate "ste" and "st-ericsson"
-      dt-bindings: vendor-prefixes: Add "calaosystems" for CALAO Systems SAS
-
-Vadim Pasternak (1):
-      dt-bindings: Add TI and Infineon VR Controllers as trivial devices
-
- Documentation/devicetree/bindings/arm/arm-boards   |   2 +-
- .../devicetree/bindings/arm/idle-states.txt        | 706 ---------------------
- .../devicetree/bindings/arm/idle-states.yaml       | 661 +++++++++++++++++++
- .../devicetree/bindings/arm/stm32/mlahb.txt        |  37 --
- .../devicetree/bindings/arm/stm32/st,mlahb.yaml    |  70 ++
- .../bindings/arm/stm32/st,stm32-syscon.yaml        |  41 ++
- .../devicetree/bindings/arm/stm32/stm32-syscon.txt |  16 -
- .../arm/sunxi/allwinner,sun4i-a10-mbus.yaml        |  65 ++
- .../devicetree/bindings/arm/sunxi/sunxi-mbus.txt   |  37 --
- .../devicetree/bindings/ata/ahci-platform.txt      |  12 -
- .../bindings/ata/allwinner,sun4i-a10-ahci.yaml     |  47 ++
- .../bindings/ata/allwinner,sun8i-r40-ahci.yaml     |  67 ++
- .../devicetree/bindings/ata/faraday,ftide010.txt   |  38 --
- .../devicetree/bindings/ata/faraday,ftide010.yaml  |  89 +++
- .../devicetree/bindings/ata/pata-common.yaml       |  50 ++
- .../devicetree/bindings/ata/sata-common.yaml       |  50 ++
- .../clock/allwinner,sun4i-a10-ahb-clk.yaml         | 108 ++++
- .../clock/allwinner,sun4i-a10-apb0-clk.yaml        |  50 ++
- .../clock/allwinner,sun4i-a10-apb1-clk.yaml        |  52 ++
- .../clock/allwinner,sun4i-a10-axi-clk.yaml         |  61 ++
- .../clock/allwinner,sun4i-a10-cpu-clk.yaml         |  52 ++
- .../clock/allwinner,sun4i-a10-display-clk.yaml     |  57 ++
- .../clock/allwinner,sun4i-a10-gates-clk.yaml       | 152 +++++
- .../clock/allwinner,sun4i-a10-mbus-clk.yaml        |  63 ++
- .../clock/allwinner,sun4i-a10-mmc-clk.yaml         |  87 +++
- .../clock/allwinner,sun4i-a10-mod0-clk.yaml        |  80 +++
- .../clock/allwinner,sun4i-a10-mod1-clk.yaml        |  57 ++
- .../clock/allwinner,sun4i-a10-osc-clk.yaml         |  51 ++
- .../clock/allwinner,sun4i-a10-pll1-clk.yaml        |  71 +++
- .../clock/allwinner,sun4i-a10-pll3-clk.yaml        |  50 ++
- .../clock/allwinner,sun4i-a10-pll5-clk.yaml        |  53 ++
- .../clock/allwinner,sun4i-a10-pll6-clk.yaml        |  53 ++
- .../clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml    |  77 +++
- .../clock/allwinner,sun4i-a10-usb-clk.yaml         | 166 +++++
- .../bindings/clock/allwinner,sun4i-a10-ve-clk.yaml |  55 ++
- .../clock/allwinner,sun5i-a13-ahb-clk.yaml         |  52 ++
- .../clock/allwinner,sun6i-a31-pll6-clk.yaml        |  53 ++
- .../clock/allwinner,sun7i-a20-gmac-clk.yaml        |  51 ++
- .../clock/allwinner,sun7i-a20-out-clk.yaml         |  52 ++
- .../clock/allwinner,sun8i-h3-bus-gates-clk.yaml    | 103 +++
- .../clock/allwinner,sun9i-a80-ahb-clk.yaml         |  52 ++
- .../clock/allwinner,sun9i-a80-apb0-clk.yaml        |  63 ++
- .../clock/allwinner,sun9i-a80-cpus-clk.yaml        |  52 ++
- .../bindings/clock/allwinner,sun9i-a80-gt-clk.yaml |  52 ++
- .../clock/allwinner,sun9i-a80-mmc-config-clk.yaml  |  68 ++
- .../clock/allwinner,sun9i-a80-pll4-clk.yaml        |  50 ++
- .../clock/allwinner,sun9i-a80-usb-mod-clk.yaml     |  60 ++
- .../clock/allwinner,sun9i-a80-usb-phy-clk.yaml     |  60 ++
- .../devicetree/bindings/clock/st,stm32mp1-rcc.txt  |  60 --
- .../devicetree/bindings/clock/st,stm32mp1-rcc.yaml |  79 +++
- Documentation/devicetree/bindings/clock/sunxi.txt  | 225 -------
- .../devicetree/bindings/dma/st,stm32-dma.yaml      | 102 +++
- .../devicetree/bindings/dma/st,stm32-dmamux.yaml   |  52 ++
- .../devicetree/bindings/dma/st,stm32-mdma.yaml     | 105 +++
- .../devicetree/bindings/dma/stm32-dma.txt          |  83 ---
- .../devicetree/bindings/dma/stm32-dmamux.txt       |  84 ---
- .../devicetree/bindings/dma/stm32-mdma.txt         |  94 ---
- .../devicetree/bindings/i2c/i2c-imx-lpi2c.txt      |   1 +
- .../devicetree/bindings/iio/adc/adi,ad7606.yaml    |   8 +-
- .../bindings/iio/adc/st,stm32-dfsdm-adc.txt        | 135 ----
- .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml       | 332 ++++++++++
- Documentation/devicetree/bindings/leds/common.txt  | 174 +----
- Documentation/devicetree/bindings/leds/common.yaml | 228 +++++++
- .../devicetree/bindings/leds/irled/spi-ir-led.txt  |   2 +-
- .../devicetree/bindings/leds/leds-gpio.txt         |  75 ---
- .../devicetree/bindings/leds/leds-gpio.yaml        |  86 +++
- .../devicetree/bindings/leds/trigger-source.yaml   |  24 +
- .../media/allwinner,sun4i-a10-video-engine.yaml    |  83 +++
- .../bindings/media/allwinner,sun6i-a31-csi.yaml    | 115 ++++
- Documentation/devicetree/bindings/media/cedrus.txt |  57 --
- .../bindings/media/exynos-jpeg-codec.txt           |   2 +-
- .../devicetree/bindings/media/exynos5-gsc.txt      |   2 +-
- .../devicetree/bindings/media/renesas,ceu.txt      |  86 ---
- .../devicetree/bindings/media/renesas,ceu.yaml     |  78 +++
- .../devicetree/bindings/media/renesas,csi2.txt     | 107 ----
- .../devicetree/bindings/media/renesas,csi2.yaml    | 198 ++++++
- .../devicetree/bindings/media/samsung-fimc.txt     |   2 +-
- .../bindings/media/samsung-mipi-csis.txt           |   2 +-
- .../devicetree/bindings/media/sun6i-csi.txt        |  61 --
- .../bindings/mfd/allwinner,sun6i-a31-prcm.yaml     | 219 +++++++
- .../bindings/mfd/allwinner,sun8i-a23-prcm.yaml     | 200 ++++++
- .../devicetree/bindings/mfd/sun6i-prcm.txt         |  59 --
- .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |   1 +
- .../devicetree/bindings/mmc/mmc-controller.yaml    |   5 +-
- .../devicetree/bindings/net/qualcomm-bluetooth.txt |   1 +
- .../devicetree/bindings/net/renesas,ravb.txt       |   7 +-
- .../devicetree/bindings/net/snps,dwmac.yaml        |   1 +
- .../devicetree/bindings/nvmem/st,stm32-romem.txt   |  31 -
- .../devicetree/bindings/nvmem/st,stm32-romem.yaml  |  46 ++
- .../opp/allwinner,sun50i-h6-operating-points.yaml  | 129 ++++
- .../bindings/opp/sun50i-nvmem-cpufreq.txt          | 167 -----
- .../devicetree/bindings/pci/arm,juno-r1-pcie.txt   |  10 -
- .../bindings/pci/designware-pcie-ecam.txt          |  42 --
- .../devicetree/bindings/pci/hisilicon-pcie.txt     |  42 --
- .../devicetree/bindings/pci/host-generic-pci.txt   | 101 ---
- .../devicetree/bindings/pci/host-generic-pci.yaml  | 172 +++++
- .../devicetree/bindings/pci/pci-thunder-ecam.txt   |  30 -
- .../devicetree/bindings/pci/pci-thunder-pem.txt    |  43 --
- .../bindings/pci/plda,xpressrich3-axi.txt          |  12 -
- .../devicetree/bindings/pci/versatile.txt          |  59 --
- .../devicetree/bindings/pci/versatile.yaml         |  92 +++
- .../bindings/phy/allwinner,sun4i-a10-usb-phy.yaml  | 105 +++
- .../bindings/phy/allwinner,sun50i-a64-usb-phy.yaml | 106 ++++
- .../bindings/phy/allwinner,sun50i-h6-usb-phy.yaml  | 105 +++
- .../bindings/phy/allwinner,sun5i-a13-usb-phy.yaml  |  93 +++
- .../bindings/phy/allwinner,sun6i-a31-usb-phy.yaml  | 119 ++++
- .../bindings/phy/allwinner,sun8i-a23-usb-phy.yaml  | 102 +++
- .../bindings/phy/allwinner,sun8i-a83t-usb-phy.yaml | 122 ++++
- .../bindings/phy/allwinner,sun8i-h3-usb-phy.yaml   | 137 ++++
- .../bindings/phy/allwinner,sun8i-r40-usb-phy.yaml  | 119 ++++
- .../bindings/phy/allwinner,sun8i-v3s-usb-phy.yaml  |  86 +++
- .../bindings/phy/rockchip,px30-dsi-dphy.yaml       |   2 +-
- .../devicetree/bindings/phy/samsung-phy.txt        |   6 +-
- .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  68 --
- .../reset/allwinner,sun6i-a31-clock-reset.yaml     |  68 ++
- .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 -
- .../devicetree/bindings/rtc/st,stm32-rtc.txt       |  61 --
- .../devicetree/bindings/rtc/st,stm32-rtc.yaml      | 139 ++++
- .../devicetree/bindings/serial/fsl-lpuart.txt      |   2 +
- Documentation/devicetree/bindings/serial/rs485.txt |  32 +-
- .../devicetree/bindings/serial/rs485.yaml          |  45 ++
- .../devicetree/bindings/serial/st,stm32-uart.yaml  |  80 +++
- .../devicetree/bindings/serial/st,stm32-usart.txt  |  57 --
- .../sram/allwinner,sun4i-a10-system-control.yaml   | 140 ++++
- Documentation/devicetree/bindings/sram/sram.yaml   |  25 +-
- .../devicetree/bindings/sram/sunxi-sram.txt        | 113 ----
- .../bindings/timer/arm,arch_timer_mmio.yaml        |  12 +-
- .../devicetree/bindings/trivial-devices.yaml       |  10 +
- .../bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml  |   2 +-
- Documentation/devicetree/bindings/usb/dwc2.txt     |  64 --
- Documentation/devicetree/bindings/usb/dwc2.yaml    | 151 +++++
- Documentation/devicetree/bindings/usb/generic.txt  |   9 +-
- .../devicetree/bindings/vendor-prefixes.yaml       |  12 +
- .../devicetree/bindings/watchdog/renesas,wdt.txt   |   1 +
- .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  26 -
- .../bindings/watchdog/st,stm32-iwdg.yaml           |  57 ++
- Documentation/devicetree/writing-schema.rst        |   8 +-
- MAINTAINERS                                        |   8 +-
- arch/powerpc/Kconfig                               |   1 +
- drivers/of/Kconfig                                 |   4 +
- drivers/of/address.c                               |   6 +-
- drivers/of/base.c                                  | 130 +---
- drivers/of/dynamic.c                               |   2 +-
- drivers/of/of_private.h                            |   6 +-
- drivers/of/overlay.c                               |  11 -
- scripts/dtc/checks.c                               |   5 +
- scripts/dtc/dtc-parser.y                           |   4 +
- scripts/dtc/fstree.c                               |   2 +-
- scripts/dtc/libfdt/fdt.c                           |   9 +-
- scripts/dtc/libfdt/fdt_addresses.c                 |   8 +-
- scripts/dtc/libfdt/fdt_overlay.c                   |  28 +-
- scripts/dtc/libfdt/fdt_ro.c                        |  11 +-
- scripts/dtc/libfdt/libfdt.h                        |   4 +-
- scripts/dtc/libfdt/libfdt_internal.h               |  12 +-
- scripts/dtc/livetree.c                             |   3 +-
- scripts/dtc/util.c                                 |   3 +-
- scripts/dtc/util.h                                 |   4 +
- scripts/dtc/version_gen.h                          |   2 +-
- 158 files changed, 7603 insertions(+), 3327 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/idle-states.txt
- create mode 100644 Documentation/devicetree/bindings/arm/idle-states.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,stm32-syscon.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
- create mode 100644 Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
- create mode 100644 Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.yaml
- create mode 100644 Documentation/devicetree/bindings/ata/allwinner,sun8i-r40-ahci.yaml
- delete mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.txt
- create mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
- create mode 100644 Documentation/devicetree/bindings/ata/pata-common.yaml
- create mode 100644 Documentation/devicetree/bindings/ata/sata-common.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb0-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb1-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-axi-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-cpu-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-display-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-gates-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mbus-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mmc-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod0-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod1-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-osc-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll3-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll5-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll6-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-usb-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ve-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun5i-a13-ahb-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun6i-a31-pll6-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-gmac-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-out-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun8i-h3-bus-gates-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-ahb-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-apb0-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-cpus-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-gt-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-mmc-config-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-pll4-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-mod-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-phy-clk.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.txt
- create mode 100644 Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/sunxi.txt
- create mode 100644 Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
- create mode 100644 Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml
- create mode 100644 Documentation/devicetree/bindings/dma/st,stm32-mdma.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
- delete mode 100644 Documentation/devicetree/bindings/dma/stm32-dmamux.txt
- delete mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
- create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
- create mode 100644 Documentation/devicetree/bindings/leds/common.yaml
- delete mode 100644 Documentation/devicetree/bindings/leds/leds-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/leds/trigger-source.yaml
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-video-engine.yaml
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun6i-a31-csi.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/cedrus.txt
- delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
- create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/renesas,csi2.txt
- create mode 100644 Documentation/devicetree/bindings/media/renesas,csi2.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
- delete mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
- create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
- create mode 100644 Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
- delete mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
- delete mode 100644 Documentation/devicetree/bindings/pci/arm,juno-r1-pcie.txt
- delete mode 100644 Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
- delete mode 100644 Documentation/devicetree/bindings/pci/host-generic-pci.txt
- create mode 100644 Documentation/devicetree/bindings/pci/host-generic-pci.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt
- delete mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
- delete mode 100644 Documentation/devicetree/bindings/pci/plda,xpressrich3-axi.txt
- delete mode 100644 Documentation/devicetree/bindings/pci/versatile.txt
- create mode 100644 Documentation/devicetree/bindings/pci/versatile.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun5i-a13-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-a23-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-a83t-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-h3-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-r40-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-v3s-usb-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
- create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sun6i-a31-clock-reset.yaml
- delete mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
- delete mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
- create mode 100644 Documentation/devicetree/bindings/serial/rs485.yaml
- create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
- delete mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
- create mode 100644 Documentation/devicetree/bindings/sram/allwinner,sun4i-a10-system-control.yaml
- delete mode 100644 Documentation/devicetree/bindings/sram/sunxi-sram.txt
- delete mode 100644 Documentation/devicetree/bindings/usb/dwc2.txt
- create mode 100644 Documentation/devicetree/bindings/usb/dwc2.yaml
- delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
