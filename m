@@ -2,266 +2,121 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E093C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 09:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDB1C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 09:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421D920732
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 09:51:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQIew7Fm"
+	by mail.kernel.org (Postfix) with ESMTP id 9ADEA2071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 09:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580291564;
+	bh=pdUBb1VQFGtjiKTWA/mvQZEtWw7DqY38KlcazbW826Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QPRdcNaDxdYftXksVsOW7c+8TaCIt3XHVLmjwcyVN+zcr8cbEM6qDQgrcA3kPsTd0
+	 p8gg4q9DojoEEDhNJsXMj6E4wBCawehFO9Actf/HiIUDhwoi34QAsAMeQDtEUBpDbm
+	 ia502D/k0Qxthalpu3NrPN9dRvOoBrEMIx2ezf9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgA2JvM (ORCPT
+        id S1726068AbgA2Jwo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:51:12 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:45699 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgA2JvM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 04:51:12 -0500
-Received: by mail-yw1-f65.google.com with SMTP id a125so5238175ywe.12;
-        Wed, 29 Jan 2020 01:51:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=msGz2ESZ2UJRzLB9AUoHtHWgVt+qM5wQRkU7yMDJeOE=;
-        b=hQIew7FmRox4FI1ZZrV4uJ/4mjyprfw14dmA02jeqLrF7V2FE5hz/d+fJgDbCY9B62
-         s4sczrTp5GSMQg0qgDJFMWNtRq5OqMHXzDVxf0LW7r/ZHkxwgRGnaybR/psPe0jXkh9u
-         arEpL7nS61xI1wCA8F5oFN7I91s8/LSRlbH00nrOmXRz52qxXIqnH0K1X3ZJRlbiiCJ2
-         fk4P9AiGahIrmm1lnWrX/nRsmMu1uBgUEFS9/ogzv417Atxvlb37xEFev1k4pyTvbU9H
-         uscmz2+ZqYuWYNIDdpOFclIeS5/29ywGyYYO3L8sVVAUkSuz11uA3vKcOJIZPSmdnUI+
-         V3/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=msGz2ESZ2UJRzLB9AUoHtHWgVt+qM5wQRkU7yMDJeOE=;
-        b=Be4H0x9cto0ZADLa6YfgFh9YwmeSBD9m9jCJb5dPSxQBuWoxeKVmFpp8Yy+cgfCCOK
-         XDdDhgWhE2LXuYPafLf8tbflyi7faGXq65R1Pf3HR+JgPRBFq9AIILirOgWrcZWshpBx
-         6YnY59fnsbmfyu8wpzKtm1ezULGCQTi3iUgJfNNAKMvDK68l+Cve65sfidqn80atkHpT
-         5/2LQJ0C4hiZFOBts67sR05Mg0JIR49oeBACaeV6S6WrCrRjj0TOpUtU7Vs2vwrprEtW
-         mbl+9i4coY6cPuYsJ2tcrXLhFO16EG8dvuLoCPV7qI5vxPsbplHgY1g02UyEQMmrARRC
-         eGnA==
-X-Gm-Message-State: APjAAAULj6YZIvsDCs8h/cWpLaxHCzCBWlPDTLh5O9BoF5HnR1ayVVcw
-        rFapgZ8Nrofegi/AgeM2KVnUlEfI
-X-Google-Smtp-Source: APXvYqyqxnX2bQoHJDkHE1V7WT4xVJx7oZZpBgSCPEYZC38pu/OQxFsRgk86QikPTFhc0qganKqffg==
-X-Received: by 2002:a81:3888:: with SMTP id f130mr18461063ywa.138.1580291470885;
-        Wed, 29 Jan 2020 01:51:10 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m203sm733423ywc.10.2020.01.29.01.51.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 01:51:10 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
- adt7475 documentation
-To:     Logan Shaw <Logan.Shaw@alliedtelesis.co.nz>,
-        "robh@kernel.org" <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joshua Scott <Joshua.Scott@alliedtelesis.co.nz>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <20200126221014.2978-1-logan.shaw@alliedtelesis.co.nz>
- <20200126221014.2978-3-logan.shaw@alliedtelesis.co.nz>
- <20200127154800.GA7023@bogus>
- <b1d669567b5f9f00dfb5d6dab89262f68c5523f1.camel@alliedtelesis.co.nz>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <0849578b-c2aa-d62f-b236-7efab9489238@roeck-us.net>
-Date:   Wed, 29 Jan 2020 01:51:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 29 Jan 2020 04:52:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbgA2Jwo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 04:52:44 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D37B20708;
+        Wed, 29 Jan 2020 09:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580291562;
+        bh=pdUBb1VQFGtjiKTWA/mvQZEtWw7DqY38KlcazbW826Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QUK2LESONcolYBI3s5wOXXcjHaEJ8H1iR0J80W8KANmfFzfT0PW9vRtvDxXC9Cvoi
+         xR6FH51RcnUw429y18Ef34Rnlzqc5c2PVNuo0RvtR2gAPFjja/VVMeCXVNvIrBLEQo
+         r1w+UKXRgGsUfod5GOM7fD45CDRTOq5SZ3Rnwk+Y=
+Date:   Wed, 29 Jan 2020 10:52:40 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lkml@metux.net" <lkml@metux.net>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Message-ID: <20200129095240.GA3852081@kroah.com>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128153806.7780-3-benjamin.gaignard@st.com>
+ <20200128155243.GC3438643@kroah.com>
+ <0dd9dc95-1329-0ad4-d03d-99899ea4f574@st.com>
+ <20200128165712.GA3667596@kroah.com>
+ <62b38576-0e1a-e30e-a954-a8b6a7d8d897@st.com>
+ <CACRpkdY427EzpAt7f5wwqHpRS_SHM8Fvm+cFrwY8op0E_J+D9Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b1d669567b5f9f00dfb5d6dab89262f68c5523f1.camel@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY427EzpAt7f5wwqHpRS_SHM8Fvm+cFrwY8op0E_J+D9Q@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/28/20 8:30 PM, Logan Shaw wrote:
-> On Mon, 2020-01-27 at 09:48 -0600, Rob Herring wrote:
->> On Mon, Jan 27, 2020 at 11:10:14AM +1300, Logan Shaw wrote:
->>> Added a new file documenting the adt7475 devicetree and added the
->>> four
->>> new properties to it.
->>>
->>> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
->>> ---
->>> ---
->>>   .../devicetree/bindings/hwmon/adt7475.yaml    | 95
->>> +++++++++++++++++++
->>>   1 file changed, 95 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/hwmon/adt7475.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
->>> b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
->>> new file mode 100644
->>> index 000000000000..450da5e66e07
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
->>> @@ -0,0 +1,95 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>
->> Dual license new bindings please:
->>
->> (GPL-2.0-only OR BSD-2-Clause)
->>
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/adt7475.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: ADT7475 hwmon sensor
->>> +
->>> +maintainers:
->>> +  - Jean Delvare <jdelvare@suse.com>
->>> +
->>> +description: |
->>> +  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors
->>> and multiple
->>> +  PWN fan controllers.
->>> +
->>> +  They support monitoring and controlling up to four fans (the
->>> ADT7490 can only
->>> +  control up to three). They support reading a single on chip
->>> temperature
->>> +  sensor and two off chip temperature sensors (the ADT7490
->>> additionally
->>> +  supports measuring up to three current external temperature
->>> sensors with
->>> +  series resistance cancellation (SRC)).
->>> +
->>> +  Datasheets:
->>> +  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
->>> +  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
->>> +  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
->>> +  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
->>> +
->>> +  Description taken from omsemiconductors specification sheets,
->>> with minor
->>
->> omsemi?
->>   ^
->>
->>> +  rephrasing.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - adi,adt7473
->>> +      - adi,adt7475
->>> +      - adi,adt7476
->>> +      - adi,adt7490
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  bypass-attenuator-in0:
->>
->> Needs a vendor prefix and a type ref.
+On Wed, Jan 29, 2020 at 10:42:39AM +0100, Linus Walleij wrote:
+> On Tue, Jan 28, 2020 at 9:30 PM Benjamin GAIGNARD
+> <benjamin.gaignard@st.com> wrote:
+> > On 1/28/20 5:57 PM, Greg KH wrote:
+> > > On Tue, Jan 28, 2020 at 04:41:29PM +0000, Benjamin GAIGNARD wrote:
+> > >> On 1/28/20 4:52 PM, Greg KH wrote:
 > 
-> Adi (Analog Devices) sold the ADT product line (amongst other things)
-> to On Semiconductor. As changing the vendor of these chips (in code)
-> would break backwards compatibility should we keep the vendor as adi?
+> > >>> So put this in the bus-specific code that controls the bus that these
+> > >>> devices live on.  Why put it in the driver core when this is only on one
+> > >>> "bus" (i.e. the catch-all-and-a-bag-of-chips platform bus)?
 > 
-> To confirm, would this make the property "adi,adt7476,bypass-
-> attenuator-in0"?
+> > >> It is really similar to what pin controller does, configuring an
+> > >> hardware block given DT information.
 > 
-> So used in conjunction with patternProperties you would end up with
-> something like:
+> > > Great, then use that instead :)
 > 
-> "adi,(adt7473|adt7475|adt7476|adt7490),bypass-attenuator-in[0134]"
+> > I think that Linus W. will complain if I do that :)
 > 
+> So the similarity would be something like the way that pin control
+> states are configured in the device tree and the pin control
+> handles are taken before probe in drivers/base/pinctrl.c embedding
+> a hook into dd.c.
+> 
+> Not that it in any way controls any hardware even remotely
+> similar to pin control. Pin control is an electronic thing,
+> this firewalling is about bus access.
+> 
+> IIUC this framework wants to discover at kernel boot time
+> whether certain devices are accessible to it or not by inspecting
+> the state of the firewalling hardware and then avoid probing
+> those that are inaccessible.
+> 
+> It needs the same deep hooks into dd.c to achieve this
+> I believe.
 
-That seems highly unusual and would be quite messy to implement.
-I don't see the point of having the chip name in individual properties.
+It just needs to be part of the bus logic for the specific bus that this
+"firewall" is on.  Just like we do the same thing for USB or thunderbolt
+devices.  Put this in the bus-specific code please.
 
-Guenter
+thanks,
 
->>
->>> +    description: |
->>> +      Configures bypassing the individual voltage input
->>> +      attenuator, on in0. This is supported on the ADT7476 and
->>> ADT7490.
->>> +      If set to a non-zero integer the attenuator is bypassed, if
->>> set to
->>> +      zero the attenuator is not bypassed. If the property is
->>> absent then
->>> +      the config register is not modified.
->>
->> Sounds like this could be boolean? If not, define a schema for what
->> are
->> valid values.
->>
->>> +    maxItems: 1
->>> +
->>> +  bypass-attenuator-in1:
->>> +    description: |
->>> +      Configures bypassing the individual voltage input
->>> +      attenuator, on in1. This is supported on the ADT7473,
->>> ADT7475,
->>> +      ADT7476 and ADT7490. If set to a non-zero integer the
->>> attenuator
->>> +      is bypassed, if set to zero the attenuator is not bypassed.
->>> If the
->>> +      property is absent then the config register is not modified.
->>> +    maxItems: 1
->>> +
->>> +  bypass-attenuator-in3:
->>> +    description: |
->>> +      Configures bypassing the individual voltage input
->>> +      attenuator, on in3. This is supported on the ADT7476 and
->>> ADT7490.
->>> +      If set to a non-zero integer the attenuator is bypassed, if
->>> set to
->>> +      zero the attenuator is not bypassed. If the property is
->>> absent then
->>> +      the config register is not modified.
->>> +    maxItems: 1
->>> +
->>> +  bypass-attenuator-in4:
->>
->> These 4 could be a single entry under patternProperties.
->>
->>
->>> +    description: |
->>> +      Configures bypassing the individual voltage input
->>> +      attenuator, on in4. This is supported on the ADT7476 and
->>> ADT7490.
->>> +      If set to a non-zero integer the attenuator is bypassed, if
->>> set to
->>> +      zero the attenuator is not bypassed. If the property is
->>> absent then
->>> +      the config register is not modified.
->>> +    maxItems: 1
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +
->>> +examples:
->>> +  - |
->>> +    i2c {
->>> +      #address-cells = <1>;
->>> +      #size-cells = <0>;
->>> +
->>> +      hwmon@2e {
->>> +        compatible = "adi,adt7476";
->>> +        reg = <0x2e>;
->>> +        bypass-attenuator-in0 = <1>;
->>> +        bypass-attenuator-in1 = <0>;
->>> +      };
->>> +    };
->>> +...
->>> -- 
->>> 2.25.0
->>>
-
+greg k-h
