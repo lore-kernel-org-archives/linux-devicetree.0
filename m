@@ -2,158 +2,105 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BBDC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD40EC33CB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFE820732
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:27:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="knH7SXZ2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vURkPiIP"
+	by mail.kernel.org (Postfix) with ESMTP id B936B20720
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580318867;
+	bh=8s9VvgE+3sDB2RdmAB7O5W3I5IDKHZgTxCsErqXZhSM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uFR3Vxz8lpXDkbO+0dXMdIvg6I1BmP+/yLgDT43BpIOn73CPin7n0mj5bg3X0wnud
+	 tA7uInVDmI9QMBUdxp4QA+dzLVRTYb+IcVkF053CYKxhtlOkLHqXt4Fl5Nh9//UYHZ
+	 y85s4/x1DJ+4RiY3GptWM1YdSMQm97eO/x4YknlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgA2R1l (ORCPT
+        id S1727261AbgA2R1r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 12:27:41 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:56595 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726679AbgA2R1l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 12:27:41 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id BD78F21FA9;
-        Wed, 29 Jan 2020 12:27:40 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 29 Jan 2020 12:27:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=A
-        TygRAmR8d0jm0J6iRWxiOTnzUg+8li3NtuuF+gdI88=; b=knH7SXZ2Ky9/jgpjW
-        qsSyPhtCAzEVMXmtvWjHXObc465bJai1kiB+E8W5Aq/QUk3uKBHAkUH3V4atBYND
-        QjNnAHkFJwBPn/g4jMqMw+KP1wjJUM0JNowwrC9Mf7mhcJZAp8fuvEfoKKtUzTaO
-        nLWlwPKeAXGmhnOXdZcg5WGG78+PuqlS+U/RNDJxBP7ziObaKUJSKUnafs2mOLyy
-        RQIMgpqmWKzCiOn0fmxFNegTqBrJu1hspKKg1cqWu1E2KhDya79kZoxfxVyDPrHy
-        gKEBuxVDhMRcrlkmkMTtTjCu3S0FRnfi5PUT4Qp16FMSUa3gIJpSaPDdgcAl6uz8
-        mR6vw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=ATygRAmR8d0jm0J6iRWxiOTnzUg+8li3NtuuF+gdI
-        88=; b=vURkPiIP/F2udeKUc3p/VuDwL0RPeNtU5avUVS3mvad1nksQr/GMip53y
-        AHwWpxG0tCRgwo3xTHdvEt9pedN5jcHVnki8lts9xU/INm5LeoLFdKYL2S/JrHgB
-        KS53MvkfPe3K34+DfDbkEVIqW6qhUhzfxTZp6QmMyFPuMIWvkvzLWwkT5XnbHpUt
-        Ngok+eOiIdSQJQyzF46DueYr0hk7hIjyUyF9o+IHHmsiJzWMU6Awiropclsaq9As
-        LogLW3kVKjoMQvA2asNE4ui7xgd2u1hqSDSPvazBQbOAEc0WiSFwYCaXfS40+rOM
-        nbCgCoU7hozntAaEXzgiW++vKY6lg==
-X-ME-Sender: <xms:i8AxXmt5TzlnOWXJ3tqS7NdviWXw0A-TKshPlsjHp-ZG5iy1YM66ig>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeeigdellecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttdejnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:i8AxXtSiXAirVtD8MDZwBJYybRy1nsoaSa52025S95lxc9aqZpyzVg>
-    <xmx:i8AxXg7qMNQ4XXZcaqFpRtbLs-NmSYejulSIHRXCiNG_EqE0xmkDEg>
-    <xmx:i8AxXkjF3QcRjtQR_z11Zzb8RbOIVYgf2QTpfgmiOaIUIrZJOqaZxw>
-    <xmx:jMAxXrkr3wysvoBaE8BuFczY-AdOI0V2oEG5VbsBPv9ZRTdhuwNnIA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8346E3280059;
-        Wed, 29 Jan 2020 12:27:39 -0500 (EST)
-Date:   Wed, 29 Jan 2020 18:27:38 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: h6: Add IOMMU
-Message-ID: <20200129172738.c53f5du2byreze2n@gilmour.lan>
-References: <cover.b2a9e1507135d81e726fcbb65137665a7f0ab74f.1579696927.git-series.maxime@cerno.tech>
- <5320339.DvuYhMxLoT@jernej-laptop>
- <20200127142339.crxsuunzec5drfe2@gilmour.lan>
- <2140600.ElGaqSPkdT@jernej-laptop>
+        Wed, 29 Jan 2020 12:27:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbgA2R1r (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 12:27:47 -0500
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 465ED20720;
+        Wed, 29 Jan 2020 17:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580318866;
+        bh=8s9VvgE+3sDB2RdmAB7O5W3I5IDKHZgTxCsErqXZhSM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=10ezr15e4EFnIdqZW3oP3Fqkl8gaag+UDlzQcWWc9Je+DARdUBDAsXI4v2SXhoUp5
+         LrVg9YF/freePCz8tzsVEpWkernmrMuqyB5Yfxirq1OeT9lryAb0pxZR78BiJP279D
+         fhWJQ4Ltupl/CbKr3yoP0B8hmPlcf8xrxJz+CQqI=
+Received: by mail-qv1-f41.google.com with SMTP id dc14so38080qvb.9;
+        Wed, 29 Jan 2020 09:27:46 -0800 (PST)
+X-Gm-Message-State: APjAAAXIYkT6EiNBtpUiohBBhP9DW96aSjThq3sx2te54WnHYGux6J3F
+        qE54qpd4GGq0LrClBNtEXVBeoah+MiCS7Vk4ew==
+X-Google-Smtp-Source: APXvYqy7lz7tcOm3C7BBm+WdIc/S57kCUzAVoum0xd24HnI2yv7y4cWPvvqJoSeKtCptCj9v2G0XNP4qKg8IdftRxfU=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr42024qvn.79.1580318865421;
+ Wed, 29 Jan 2020 09:27:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2140600.ElGaqSPkdT@jernej-laptop>
+References: <20200126221014.2978-1-logan.shaw@alliedtelesis.co.nz>
+ <20200126221014.2978-3-logan.shaw@alliedtelesis.co.nz> <20200127154800.GA7023@bogus>
+ <b1d669567b5f9f00dfb5d6dab89262f68c5523f1.camel@alliedtelesis.co.nz>
+In-Reply-To: <b1d669567b5f9f00dfb5d6dab89262f68c5523f1.camel@alliedtelesis.co.nz>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 29 Jan 2020 11:27:33 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+UZvX-Avz7mA=RmhNU3hjKd2se1KODfGt9dfdbn_ACKQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+UZvX-Avz7mA=RmhNU3hjKd2se1KODfGt9dfdbn_ACKQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
+ adt7475 documentation
+To:     Logan Shaw <Logan.Shaw@alliedtelesis.co.nz>
+Cc:     "linux@roeck-us.net" <linux@roeck-us.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joshua Scott <Joshua.Scott@alliedtelesis.co.nz>,
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Jan 27, 2020 at 08:04:02PM +0100, Jernej =C5=A0krabec wrote:
-> Dne ponedeljek, 27. januar 2020 ob 15:23:39 CET je Maxime Ripard napisal(=
-a):
-> > Hi Jernej,
-> >
-> > On Fri, Jan 24, 2020 at 09:54:23PM +0100, Jernej =C5=A0krabec wrote:
-> > > Dne sreda, 22. januar 2020 ob 13:44:09 CET je Maxime Ripard napisal(a=
-):
-> > > > Now that we have a driver for the IOMMU, let's start using it.
-> > > >
-> > > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > > > ---
-> > > >
-> > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
-> > > >  1 file changed, 11 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
-> > > > 29824081b43b..8608bcf1c52c 100644
-> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > @@ -53,6 +53,7 @@
-> > > >
-> > > >  	de: display-engine {
-> > > >
-> > > >  		compatible =3D "allwinner,sun50i-h6-display-engine";
-> > > >  		allwinner,pipelines =3D <&mixer0>;
-> > > >
-> > > > +		iommus =3D <&iommu 0>;
-> > > >
-> > > >  		status =3D "disabled";
-> > > >
-> > > >  	};
+On Tue, Jan 28, 2020 at 10:30 PM Logan Shaw
+<Logan.Shaw@alliedtelesis.co.nz> wrote:
+>
+> On Mon, 2020-01-27 at 09:48 -0600, Rob Herring wrote:
+> > On Mon, Jan 27, 2020 at 11:10:14AM +1300, Logan Shaw wrote:
+> > > Added a new file documenting the adt7475 devicetree and added the
+> > > four
+> > > new properties to it.
 > > >
-> > > Isn't iommu property of the mixer node? After all, mixer is the one w=
-hich
-> > > reads one or more framebuffers. Once second mixer is defined, would y=
-ou
-> > > put
-> > > another iommu phandle here?
+> > > Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+> > > ---
+
+> > > +  bypass-attenuator-in0:
 > >
-> > You're right. I added it during the early dev, and forgot to remove
-> > it. Thanks!
+> > Needs a vendor prefix and a type ref.
 >
-> Remove it or move it? I guess enabling iommu support in each driver needs=
- a
-> bit more work than just referencing iommu node, right? At least in such c=
-ase
-> buffers don't need to be allocated by CMA, which sun4i-drm driver current=
-ly
-> use.
+> Adi (Analog Devices) sold the ADT product line (amongst other things)
+> to On Semiconductor. As changing the vendor of these chips (in code)
+> would break backwards compatibility should we keep the vendor as adi?
+
+Yes. It should match what's used in the compatible string(s).
+
+> To confirm, would this make the property "adi,adt7476,bypass-
+> attenuator-in0"?
 >
-> I just take another look at BSP kernel and it seems that only one channel=
- is
-> used for whole display stack. That would mean that both mixers would have=
- same
-> iommu phandle, right? Confusingly enough, DE2 iommu channel seems to be f=
-or
-> deinterlace core.
+> So used in conjunction with patternProperties you would end up with
+> something like:
+>
+> "adi,(adt7473|adt7475|adt7476|adt7490),bypass-attenuator-in[0134]"
 
-To add on Robin's answer, yeah, it looks like the display engine is
-called DE (and I've checked that this is indeed the master 0), while
-the deinterlace is called DE2 (and probably is the master 2).
+No for the part #'s. Just add 'adi,'. Maybe you thought for type ref
+that's what I meant? A type ref is:
 
-Maxime
+$ref: /schemas/types.yaml#/definitions/uint32
