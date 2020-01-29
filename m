@@ -2,169 +2,489 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E0FC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 22:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9FEC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 22:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E98F206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 22:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B672071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 22:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r9lVg0xz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgA2WWG (ORCPT
+        id S1726795AbgA2Wk5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:22:06 -0500
-Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:50690 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726222AbgA2WWG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:22:06 -0500
-X-Greylist: delayed 580 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jan 2020 17:22:06 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id 0CAE48124179;
-        Wed, 29 Jan 2020 22:12:26 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id E498918223245;
-        Wed, 29 Jan 2020 22:12:24 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sack18_895e316a0954a
-X-Filterd-Recvd-Size: 4818
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 29 Jan 2020 22:12:23 +0000 (UTC)
-Message-ID: <39042657067088e4ca960f630a7d222fc48f947a.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: check proper licensing of Devicetree
- bindings
-From:   Joe Perches <joe@perches.com>
-To:     Lubomir Rintel <lkundrak@v3.sk>, Andy Whitcroft <apw@canonical.com>
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 29 Jan 2020 14:11:17 -0800
-In-Reply-To: <20200129123334.388530-1-lkundrak@v3.sk>
-References: <20200129123334.388530-1-lkundrak@v3.sk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 29 Jan 2020 17:40:57 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13010 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgA2Wk5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 17:40:57 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3209c40000>; Wed, 29 Jan 2020 14:40:04 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Jan 2020 14:40:55 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Jan 2020 14:40:55 -0800
+Received: from [10.2.164.115] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
+ 2020 22:40:55 +0000
+Subject: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input driver for
+ Tegra210
+To:     Helen Koike <helen.koike@collabora.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <frankc@nvidia.com>, <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
+ <3cdea635-a9ca-7b9c-3c99-8f489f4d669a@collabora.com>
+ <162488d0-4e74-963a-3366-e4c1f7cf04ca@nvidia.com>
+ <017ca95e-7dd3-2d04-8d84-9047ac4e548b@nvidia.com>
+ <655b9a64-10d7-3fd3-f443-babf33e67b62@collabora.com>
+ <7265b661-de5a-b0f0-bcdc-1a1d2c03fe57@nvidia.com>
+ <4b443e7c-0866-ceea-938c-8ab71959fc89@collabora.com>
+ <b1e7168a-1f6f-c6bf-6320-7a6ee51880be@nvidia.com>
+ <01ab1cae-692d-3a31-39e6-a887bbb9b4e0@nvidia.com>
+ <b55e9492-4996-6716-f2c1-3b88fa0525ef@collabora.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <4b5c8d7a-c838-9693-8448-c38c22afc2b8@nvidia.com>
+Date:   Wed, 29 Jan 2020 14:40:54 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <b55e9492-4996-6716-f2c1-3b88fa0525ef@collabora.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580337604; bh=EO2jVDfXTwPcxSqv6JVOumgpTBoOHSdoQfiizvqsUU8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=r9lVg0xzBUv9lgi+RvjPvR0aZSx0YBXXy+q5CtiAHG2Vn6muu9aBwNDhTZ1LeD9dq
+         tMwGuA1moccdip5a5WS5Vvo6DQO64w1rMYyXyZHjyzIwm2QdqiVZ0fDqPhdLBYwdo5
+         dMACODt8E7lnzyw8aYjZYfllwr3JPhvDNMhTPBoTu32DeWjtCpkc3B9hj/T23WWCUo
+         V+KB5hV3MO/HXbWt/s0ecnTuz20unkXSZJ5WblRyOI/Ce9U5s3SQ/0681jNUoAUZDh
+         //2eXXqOmUxmONhtxNdx3L4vtnEstM7Ut9qGH7ZJQKo88uxvkFUF6FCyj56tLx7jTX
+         ahaBsK6EmnaQA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2020-01-29 at 13:33 +0100, Lubomir Rintel wrote:
-> According to Devicetree maintainers (see Link: below), the Devicetree
-> binding documents are preferrably licensed (GPL-2.0-only OR
-> BSD-2-Clause).
-> 
-> Let's check that. The actual check is a bit more relaxed, to allow more
-> liberal but compatible licensing (e.g. GPL-2.0-or-later OR
-> BSD-2-Clause).
-> 
-> Link: https://lore.kernel.org/lkml/20200108142132.GA4830@bogus/
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  scripts/checkpatch.pl | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index e2976c3fe5ff8..ac93e98cddcee 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -3111,6 +3111,11 @@ sub process {
->  						WARN("SPDX_LICENSE_TAG",
->  						     "'$spdx_license' is not supported in LICENSES/...\n" . $herecurr);
->  					}
-> +					if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
-> +					    not $spdx_license =~ /GPL-2\.0.*BSD-2-Clause/) {
-> +						WARN("SPDX_LICENSE_TAG",
-> +						     "DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)\n" . $herecurr);
 
-I think not unless the existing licenses already
-there are changed first.  Only about 1/3 are
-dual licensed BSD.
+On 1/29/20 10:46 AM, Helen Koike wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On 1/29/20 4:15 PM, Sowjanya Komatineni wrote:
+>> On 1/29/20 9:49 AM, Sowjanya Komatineni wrote:
+>>> On 1/29/20 2:31 AM, Helen Koike wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> On 1/29/20 12:11 AM, Sowjanya Komatineni wrote:
+>>>>> On 1/28/20 5:05 PM, Helen Koike wrote:
+>>>>>> External email: Use caution opening links or attachments
+>>>>>>
+>>>>>>
+>>>>>> On 1/28/20 10:49 PM, Sowjanya Komatineni wrote:
+>>>>>>> On 1/28/20 2:13 PM, Sowjanya Komatineni wrote:
+>>>>>>>> On 1/28/20 1:45 PM, Helen Koike wrote:
+>>>>>>>>> External email: Use caution opening links or attachments
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Hi Sowjanya,
+>>>>>>>>>
+>>>>>>>>> I just took a really quick look, I didn't check the driver in deep, so just some small comments below.
+>>>>>>>>>
+>>>>>>>>> On 1/28/20 4:23 PM, Sowjanya Komatineni wrote:
+>>>>>>>>>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>>>>>>>>>> which can support up to 6 MIPI CSI camera sensors.
+>>>>>>>>>>
+>>>>>>>>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>>>>>>>>>> capture from an external camera sensor connected to CSI or from
+>>>>>>>>>> built-in test pattern generator.
+>>>>>>>>>>
+>>>>>>>>>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>>>>>>>>>
+>>>>>>>>>> This patch adds a V4L2 media controller and capture driver support
+>>>>>>>>>> for Tegra210 built-in CSI to VI test pattern generator.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>> Could you send us the output of media-ctl --print-dot ? So we can view the media topology easily?
+>>>>>>>> root@tegra-ubuntu:/home/ubuntu# ./media-ctl --print-dot
+>>>>>>>> digraph board {
+>>>>>>>>            rankdir=TB
+>>>>>>>>            n00000001 [label="54080000.vi-output-0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
+>>>>>>>>            n00000005 [label="54080000.vi-output-1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
+>>>>>>>>            n00000009 [label="54080000.vi-output-2\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
+>>>>>>>>            n0000000d [label="54080000.vi-output-3\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
+>>>>>>>>            n00000011 [label="54080000.vi-output-4\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
+>>>>>>>>            n00000015 [label="54080000.vi-output-5\n/dev/video5", shape=box, style=filled, fillcolor=yellow]
+>>>>>>>>            n00000019 [label="{{} | tpg-0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>>>>>            n00000019:port0 -> n00000001
+>>>>>>>>            n0000001d [label="{{} | tpg-1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>>>>>            n0000001d:port0 -> n00000005
+>>>>>>>>            n00000021 [label="{{} | tpg-2 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>>>>>            n00000021:port0 -> n00000009
+>>>>>>>>            n00000025 [label="{{} | tpg-3 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>>>>>            n00000025:port0 -> n0000000d
+>>>>>>>>            n00000029 [label="{{} | tpg-4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>>>>>            n00000029:port0 -> n00000011
+>>>>>>>>            n0000002d [label="{{} | tpg-5 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+>>>>>>>>            n0000002d:port0 -> n00000015
+>>>>>>>> }
+>>>>>>>>
+>>>>>>>>>> --- diff --git a/drivers/staging/media/tegra/host1x-video.h b/drivers/staging/media/tegra/host1x-video.h
+>>>>>>>>>> new file mode 100644
+>>>>>>>>>> index 000000000000..84d28e6f4362
+>>>>>>>>>> --- /dev/null
+>>>>>>>>>> +++ b/drivers/staging/media/tegra/host1x-video.h
+>>>>>>>>>> @@ -0,0 +1,33 @@
+>>>>>>>>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>>>>>>>>> +/*
+>>>>>>>>>> + * Copyright (C) 2020 NVIDIA CORPORATION.  All rights reserved.
+>>>>>>>>>> + */
+>>>>>>>>>> +
+>>>>>>>>>> +#ifndef HOST1X_VIDEO_H
+>>>>>>>>>> +#define HOST1X_VIDEO_H 1
+>>>>>>>>>> +
+>>>>>>>>>> +#include <linux/host1x.h>
+>>>>>>>>>> +
+>>>>>>>>>> +#include <media/media-device.h>
+>>>>>>>>>> +#include <media/media-entity.h>
+>>>>>>>>>> +#include <media/v4l2-async.h>
+>>>>>>>>>> +#include <media/v4l2-ctrls.h>
+>>>>>>>>>> +#include <media/v4l2-device.h>
+>>>>>>>>>> +#include <media/v4l2-dev.h>
+>>>>>>>>>> +#include <media/videobuf2-v4l2.h>
+>>>>>>>>>> +
+>>>>>>>>>> +#include "tegra-vi.h"
+>>>>>>>>>> +#include "csi.h"
+>>>>>>>>>> +
+>>>>>>>>>> +struct tegra_camera {
+>>>>>>>>>> +     struct v4l2_device v4l2_dev;
+>>>>>>>>>> +     struct media_device media_dev;
+>>>>>>>>>> +     struct device *dev;
+>>>>>>>>> You can use cam->media_dev.dev instead of having this pointer.
+>>>>>>>>>
+>>>>>>> Will fix in v2
+>>>>>>>>>> +     struct tegra_vi *vi;
+>>>>>>>>>> +     struct tegra_csi_device *csi;
+>>>>>>>>>> +};
+>>>>>>>>>> +
+>>>>>>>>>> +
+>>>>>>>>>> +#define to_tegra_channel(vdev) \
+>>>>>>>>>> +     container_of(vdev, struct tegra_channel, video)
+>>>>>>>>> Why not inline instead of define. Inlines has the advantage of checking types.
+>>>>>>> Will change in v2
+>>>>>>>>>> +static int __tegra_channel_try_format(struct tegra_channel *chan,
+>>>>>>>>>> +                                   struct v4l2_pix_format *pix,
+>>>>>>>>>> +                                   const struct tegra_video_format **vfmt)
+>>>>>>>>>> +{
+>>>>>>>>>> +     const struct tegra_video_format *fmt_info;
+>>>>>>>>>> +     struct v4l2_subdev *subdev;
+>>>>>>>>>> +     struct v4l2_subdev_format fmt;
+>>>>>>>>>> +     struct v4l2_subdev_pad_config *pad_cfg;
+>>>>>>>>>> +
+>>>>>>>>>> +     subdev = tegra_channel_get_remote_subdev(chan);
+>>>>>>>>>> +     pad_cfg = v4l2_subdev_alloc_pad_config(subdev);
+>>>>>>>>>> +     if (!pad_cfg)
+>>>>>>>>>> +             return -ENOMEM;
+>>>>>>>>>> +
+>>>>>>>>>> +     /*
+>>>>>>>>>> +      * Retrieve format information and select the default format if the
+>>>>>>>>>> +      * requested format isn't supported.
+>>>>>>>>>> +      */
+>>>>>>>>>> +     fmt_info = tegra_core_get_format_by_fourcc(chan, pix->pixelformat);
+>>>>>>>>>> +     if (!fmt_info) {
+>>>>>>>>>> +             pix->pixelformat = chan->format.pixelformat;
+>>>>>>>>>> +             pix->colorspace = chan->format.colorspace;
+>>>>>>>>>> +             fmt_info = tegra_core_get_format_by_fourcc(chan,
+>>>>>>>>>> + pix->pixelformat);
+>>>>>>>>>> +     }
+>>>>>>>>>> +
+>>>>>>>>>> +     /* Change this when start adding interlace format support */
+>>>>>>>>>> +     pix->field = V4L2_FIELD_NONE;
+>>>>>>>>>> +     fmt.which = V4L2_SUBDEV_FORMAT_TRY;
+>>>>>>>>>> +     fmt.pad = 0;
+>>>>>>>>>> +     v4l2_fill_mbus_format(&fmt.format, pix, fmt_info->code);
+>>>>>>>>>> +     v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
+>>>>>>>>> As fas as I understand, entities formats should be independent, it is up to link_validate
+>>>>>>>>> to check formats between entities.
+>>>>>>>>> The capture shouldn't change the format of the subdevice.
+>>>>>>>>>
+>>>>>>> Tegra Built-in TPG on CSI accepts specific TPG sizes and CSI is source and VI is sink.
+>>>>>>>
+>>>>>>> link validation happens only for sink ends of the link.
+>>>>>> And what is the problem with it being on the sink end?
+>>>>>> You just need to implement custom link validation in tegra_csi_media_ops that also checks the format
+>>>>>> between the capture and the subdevice, no? Unless I missunderstood something here (which is quite possible).
+>>>>>>
+>>>>>> Examples:
+>>>>>> drivers/staging/media/rkisp1/rkisp1-capture.c - rkisp1_capture_link_validate()
+>>>>>> drivers/media/pci/intel/ipu3/ipu3-cio2.c - cio2_video_link_validate()
+>>>>>> drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c - sun6i_video_link_validate()
+>>>>>>
+>>>>>> Regards,
+>>>>>> Helen
+>>>>>>
+>>>>> But if we move subdevice side format/size check into its link_validation, any incorrect image size set thru set-fmt-video will be taken and get-fmt-video will also show same as it doesn't validate formats/sizes supported by CSI subdev during this time. link validation happens during pipeline start. So thought to prevent accepting incorrect format/size during set-fmt-video/get-fmt-video.
+>>>> This is how media API is designed, formats shouldn't propagate between entities, it is up to userspace to configure pads
+>>>> correctly. And if formats of the pads don't match, stream fails during pipeline start, and userspace receive -EPIPE error.
+>>>>
+>>>> According to the docs: https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/dev-subdev.html
+>>>>
+>>>> "Formats are not propagated across links, as that would involve propagating them from one sub-device file handle to another. Applications must then take care to configure both ends of every link explicitly with compatible formats. Identical formats on the two ends of a link are guaranteed to be compatible. Drivers are free to accept different formats matching device requirements as being compatible."
+>>>>
+>>>> Perhaps you want to add support of this driver in libcamera.org to make it easier to userspace.
+>>>>
+>>>> Regards,
+>>>> Helen
+>>> I see in doc, Format Negotiation says drivers can propagate formats inside sub-devices. When try/active format is set on pad, corresponding format on other pads of same subdevice can be modified by the driver as long as formats are propagated from Sink pads to source pads.
+>>>
+>>> When application configures front-end sink pad format, driver can propagate the format to front-end source pad.
+>>>
+>>> VI is Sink and CSI is source subdev here for TPG.
+>>>
+>>> Currently set_fmt/get_fmt from vi channel invokes Source subdevice set_fmt/get_fmt which is CSI in this case of TPG.
+>>>
+>> Also regarding link_validation, it seems like its called for every link in pipeline where both end of links are v4l2 subdevices.
+> This is not correct.
+>
+> See https://git.linuxtv.org/media_tree.git/tree/drivers/media/mc/mc-entity.c#n474
+>
+> The .link_validate() callback is called for all links without making a distinction if it is a subdevice or a video device.
+>
+>> Driver should take care of format validation between sub-device and video nodes.
+> This is true, in the sense that the default helper v4l2_subdev_link_validate() shouldn't be used, because the default helper
+> only validates between subdevices, driver should implement a custom function to plug in the .link_validate() callback inside
+> struct media_entity_operations for video nodes.
+>
+>> This driver TPG is b/w Tegra CSI (subdevice) and VI (video entity).
+>>
+>> So I don't think we can use link_validate for format validation/negotiation b/w video entity and subdevice.
+> Yes you can, and the drivers I pointed before do this:
+>
+> vimc-capture.c - https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/vimc/vimc-capture.c#n325
+> rkisp1-capture.c - https://git.linuxtv.org/media_tree.git/tree/drivers/staging/media/rkisp1/rkisp1-capture.c#n1292
+> ipu3-cio2.c - https://git.linuxtv.org/media_tree.git/tree/drivers/media/pci/intel/ipu3/ipu3-cio2.c#n1544
+> sun6i_video.c - https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c#n592
+>
+> Those are video nodes who implement custom .link_validate() callbacks, to validate a link between the video node and a subdevice.
+>
+> Regards,
+> Helen
 
-Do all the existing license holders agree?
+Will update to do format checks in link_validate.
 
-$ git grep -oh "SPDX.*$" Documentation/devicetree/bindings/ | \
-  sort |
-uniq -c | sort -rn
-    269 SPDX-License-Identifier: GPL-2.0
-     81 SPDX-
-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-     69 SPDX-License-
-Identifier: (GPL-2.0 OR BSD-2-Clause)
-     23 SPDX-License-Identifier:
-GPL-2.0-only
-      9 SPDX-License-Identifier: GPL-2.0+
-      5 SPDX-
-License-Identifier: GPL-2.0-or-later
-      3 SPDX-License-Identifier:
-(GPL-2.0+ OR X11)
-      3 SPDX-License-Identifier: (GPL-2.0 OR MIT)
-      
-3 SPDX-License-Identifier: (GPL-2.0)
-      2 SPDX-License-Identifier:
-GPL-2.0-or-later OR BSD-2-Clause
-      2 SPDX-License-Identifier: (GPL-
-2.0-or-later OR BSD-2-Clause)
-      2 SPDX-License-Identifier: GPL-2.0 OR
-BSD-2-Clause
-      1 SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
- 
-     1 SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+Currently I am not creating subdev nodes for TPG as subdevice formats 
+are invoked during channel format updates.
 
-There would be way too many false positives given
-the current licensing types in existing files.
+Will remove subdevice fmt calls from channel format callback 
+implementations and will create subdev nodes for TPG to allow subdev 
+set_fmt and get_fmt from user space.
 
-Also, the link seems to show just a desire for an
-OR BSD for this file not a desire for a treewide
-change.
-
-But:
-
-Documentation/devicetree/bindings/submitting-patches.txt does show:
-
- 3) DT binding files should be dual licensed. The preferred license tag is
-     (GPL-2.0-only OR BSD-2-Clause).
-
-So perhaps use code like:
-
-				my $msg_level = \&WARN;
-				$msg_level = \&CHK if ($file);
-				if (&{$msg_level}("SPDX_LICENSE_TAG",
-						  "The preferred bindings license is '(GPL-2.0-only OR BSD-2-Clause)'\n" . $herecurr)
-
-so that when checkpatch is run over existing files,
-this message is not emitted unless using --strict.
-
-Maybe something like:
----
- scripts/checkpatch.pl | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index f3b8434..1734c9b 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3124,6 +3124,17 @@ sub process {
- 					if (!is_SPDX_License_valid($spdx_license)) {
- 						WARN("SPDX_LICENSE_TAG",
- 						     "'$spdx_license' is not supported in LICENSES/...\n" . $herecurr);
-+					    }
-+					if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
-+					    $spdx_license !~ /\(GPL-2\.0-only OR BSD-2-Clause\)/) {
-+						my $msg_level = \&WARN;
-+						$msg_level = \&CHK if ($file);
-+						if (&{$msg_level}("SPDX_LICENSE_TAG",
-+
-+								  "DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)\n" . $herecurr) &&
-+						    $fix) {
-+							$fixed[$fixlinenr] =~ s/SPDX-License-Identifier: .*/SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)/;
-+						}
- 					}
- 				}
- 			}
-
-
+>> Currently driver follows propagating format sink pad (VI) to source pad and on CSI source subdev we update format to default if format size doesn't match one of the TPG format sizes.
+>>
+>> Please let me know if I am missing anything to understand your feedback.
+>>
+>>
+>>>>> Other than this I don't see any issue moving it to link_validation.
+>>>>>
+>>>>>
+>>>>>>> So with CSI subdev set_fmt sets width/height to default incase if width/height is not from one of the supported sizes.
+>>>>>>>
+>>>>>>>>>> +
+>>>>>>>>>> +     v4l2_fill_pix_format(pix, &fmt.format);
+>>>>>>>>>> +     tegra_channel_fmt_align(chan, &fmt_info->bpp, &pix->width, &pix->height,
+>>>>>>>>>> + &pix->bytesperline);
+>>>>>>>>>> +     pix->sizeimage = pix->bytesperline * pix->height;
+>>>>>>>>>> +
+>>>>>>>>>> +     if (vfmt)
+>>>>>>>>>> +             *vfmt = fmt_info;
+>>>>>>>>>> +
+>>>>>>>>>> +     v4l2_subdev_free_pad_config(pad_cfg);
+>>>>>>>>>> +
+>>>>>>>>>> +     return 0;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static int tegra_channel_try_format(struct file *file, void *fh,
+>>>>>>>>>> +                                 struct v4l2_format *format)
+>>>>>>>>>> +{
+>>>>>>>>>> +     struct v4l2_fh *vfh = file->private_data;
+>>>>>>>>>> +     struct tegra_channel *chan = to_tegra_channel(vfh->vdev);
+>>>>>>>>>> +
+>>>>>>>>>> +     return __tegra_channel_try_format(chan, &format->fmt.pix, NULL);
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static int tegra_channel_set_format(struct file *file, void *fh,
+>>>>>>>>>> +                                 struct v4l2_format *format)
+>>>>>>>>>> +{
+>>>>>>>>>> +     struct v4l2_fh *vfh = file->private_data;
+>>>>>>>>>> +     struct tegra_channel *chan = to_tegra_channel(vfh->vdev);
+>>>>>>>>>> +     const struct tegra_video_format *info;
+>>>>>>>>>> +     int ret;
+>>>>>>>>>> +     struct v4l2_subdev_format fmt;
+>>>>>>>>>> +     struct v4l2_subdev *subdev;
+>>>>>>>>>> +     struct v4l2_pix_format *pix = &format->fmt.pix;
+>>>>>>>>>> +
+>>>>>>>>>> +     if (vb2_is_busy(&chan->queue))
+>>>>>>>>>> +             return -EBUSY;
+>>>>>>>>>> +
+>>>>>>>>>> +     /* get supported format by try_fmt */
+>>>>>>>>>> +     ret = __tegra_channel_try_format(chan, pix, &info);
+>>>>>>>>>> +     if (ret)
+>>>>>>>>>> +             return ret;
+>>>>>>>>>> +
+>>>>>>>>>> +     subdev = tegra_channel_get_remote_subdev(chan);
+>>>>>>>>>> +
+>>>>>>>>>> +     fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+>>>>>>>>>> +     fmt.pad = 0;
+>>>>>>>>>> +     v4l2_fill_mbus_format(&fmt.format, pix, info->code);
+>>>>>>>>>> +     v4l2_subdev_call(subdev, pad, set_fmt, NULL, &fmt);
+>>>>>>>>> same here.
+>>>>>>>>>
+>>>>>>> Calling subdev set_fmt here for the same reason as explained above.
+>>>>>>>>>> +
+>>>>>>>>>> +     v4l2_fill_pix_format(pix, &fmt.format);
+>>>>>>>>>> +     chan->format = *pix;
+>>>>>>>>>> +     chan->fmtinfo = info;
+>>>>>>>>>> +     tegra_channel_update_format(chan, pix->width,
+>>>>>>>>>> +                                 pix->height, info->fourcc,
+>>>>>>>>>> +                                 &info->bpp,
+>>>>>>>>>> + pix->bytesperline);
+>>>>>>>>>> +     *pix = chan->format;
+>>>>>>>>>> +
+>>>>>>>>>> +     return 0;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static int tegra_channel_enum_input(struct file *file, void *fh,
+>>>>>>>>>> +                                 struct v4l2_input *inp)
+>>>>>>>>>> +{
+>>>>>>>>>> +     /* Currently driver supports internal TPG only */
+>>>>>>>>>> +     if (inp->index != 0)
+>>>>>>>>> just
+>>>>>>>>> if (inp->index)
+>>>>>>>>>
+>>>>>>> Will update in v2
+>>>>>>>>>> +             return -EINVAL;
+>>>>>>>>>> +
+>>>>>>>>>> +     inp->type = V4L2_INPUT_TYPE_CAMERA;
+>>>>>>>>>> +     strscpy(inp->name, "Tegra TPG", sizeof(inp->name));
+>>>>>>>>>> +
+>>>>>>>>>> +     return 0;
+>>>>>>>>>> +}
+>>>>>>>>>> +static const struct tegra_video_format tegra_default_format = {
+>>>>>>>>>> +     /* RAW 10 */
+>>>>>>>>>> +     TEGRA_VF_RAW10,
+>>>>>>>>>> +     10,
+>>>>>>>>>> +     MEDIA_BUS_FMT_SRGGB10_1X10,
+>>>>>>>>>> +     {2, 1},
+>>>>>>>>>> +     TEGRA_IMAGE_FORMAT_DEF,
+>>>>>>>>>> +     TEGRA_IMAGE_DT_RAW10,
+>>>>>>>>>> +     V4L2_PIX_FMT_SRGGB10,
+>>>>>>>>>> +     "RGRG.. GBGB..",
+>>>>>>>>> It would be more readable to do:
+>>>>>>>>>
+>>>>>>>>> .code = TEGRA_VF_RAW10,
+>>>>>>>>> .width = 10,
+>>>>>>>>> .code = MEDIA_BUS_FMT_SRGGB10_1X10,
+>>>>>>>>>
+>>>>>>>>> and so on
+>>>>>>> Will update in v2
+>>>>>>>>>> +};
+>>>>>>>>>> +
+>>>>>>>>>> +/*
+>>>>>>>>>> + * Helper functions
+>>>>>>>>>> + */
+>>>>>>>>>> +
+>>>>>>>>>> +/**
+>>>>>>>>>> + * tegra_core_get_default_format - Get default format
+>>>>>>>>>> + *
+>>>>>>>>>> + * Return: pointer to the format where the default format needs
+>>>>>>>>>> + * to be filled in.
+>>>>>>>>>> + */
+>>>>>>>>>> +const struct tegra_video_format *tegra_core_get_default_format(void)
+>>>>>>>>>> +{
+>>>>>>>>>> +     return &tegra_default_format;
+>>>>>>>>>> +}
+>>>>>>>>> This is only used in tegra-channel.c, why not to declare it there as static?
+>>>>>>>>>
+>>>>>>> Will move all video format retrieval helper functions to corresponding file as static in v2
+>>>>>>>>>> + +static struct v4l2_frmsize_discrete tegra_csi_tpg_sizes[] = {
+>>>>>>>>>> +     {1280, 720},
+>>>>>>>>>> +     {1920, 1080},
+>>>>>>>>>> +     {3840, 2160},
+>>>>>>>>>> +};
+>>>>>>>>>> +
+>>>>>>>>>> +/*
+>>>>>>>>>> + * V4L2 Subdevice Pad Operations
+>>>>>>>>>> + */
+>>>>>>>>>> +static int tegra_csi_get_format(struct v4l2_subdev *subdev,
+>>>>>>>>>> +                             struct v4l2_subdev_pad_config *cfg,
+>>>>>>>>>> +                             struct v4l2_subdev_format *fmt)
+>>>>>>>>>> +{
+>>>>>>>>>> +     struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
+>>>>>>>>>> +
+>>>>>>>>>> +     mutex_lock(&csi_chan->format_lock);
+>>>>>>>>> Do you need this lock? I think there is already a serialization in the ioctls in place (to be confirmed).
+>>>>>>>>>
+>>>>>>> This is on CSI v4l2 subdevice side during format updates
+>>>>>>>>>> +     memcpy(fmt, &csi_chan->ports->format,
+>>>>>>>>>> +            sizeof(struct v4l2_mbus_framefmt));
+>>>>>>>>> I would prefer just:
+>>>>>>>>> *fmt = *csi_chan->ports->format;
+>>>>>>>>>
+>>>>>>>>> I think it is easier to read IMHO.
+>>>>>>>>> same in tegra_csi_set_format().
+>>>>>>>>>
+>>>>>>> Will fix in v2
+>>>>>>>>>> + mutex_unlock(&csi_chan->format_lock);
+>>>>>>>>>> +
+>>>>>>>>>> +     return 0;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static void tegra_csi_try_mbus_fmt(struct v4l2_subdev *subdev,
+>>>>>>>>>> +                                struct v4l2_mbus_framefmt *mfmt)
+>>>>>>>>>> +{
+>>>>>>>>>> +     struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
+>>>>>>>>>> +     struct tegra_csi_device *csi = csi_chan->csi;
+>>>>>>>>>> +     const struct v4l2_frmsize_discrete *sizes;
+>>>>>>>>>> +     int i, j;
+>>>>>>>>> unsigned
+>>>>>>>>>
+>>>>>>> Will fix in v2
+>>>>>>>>>> +
+>>>>>>>>>> +     for (i = 0; i < ARRAY_SIZE(tegra_csi_tpg_fmts); i++) {
+>>>>>>>>>> +             struct v4l2_mbus_framefmt *mbus_fmt = &tegra_csi_tpg_fmts[i];
+>>>>>>>>>> +
+>>>>>>>>>> +             if (mfmt->code == mbus_fmt->code) {
+>>>>>>>>>> +                     for (j = 0; j < ARRAY_SIZE(tegra_csi_tpg_sizes); j++) {
+>>>>>>>>>> +                             sizes = &tegra_csi_tpg_sizes[j];
+>>>>>>>>>> +                             if (mfmt->width == sizes->width &&
+>>>>>>>>>> +                                 mfmt->height == sizes->height) {
+>>>>>>>>>> +                                     return;
+>>>>>>>>>> +                             }
+>>>>>>>>>> +                     }
+>>>>>>>>>> +             }
+>>>>>>>>>> +
+>>>>>>>>>> +             dev_info(csi->dev, "using Tegra default RAW10 video format\n");
+>>>>>>>>>> +     }
+>>>>>>>>>> +
+>>>>>>>>>> +     dev_info(csi->dev, "using Tegra default WIDTH X HEIGHT (1920x1080)\n");
+>>>>>>>>>> +     memcpy(mfmt, tegra_csi_tpg_fmts, sizeof(struct v4l2_mbus_framefmt));
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +
