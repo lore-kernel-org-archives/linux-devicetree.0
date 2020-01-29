@@ -2,106 +2,166 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2675EC33CB2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 08:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9156EC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 08:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0269E20702
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 08:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6733A20702
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 08:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ehcGedrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgA2In4 (ORCPT
+        id S1726487AbgA2Iz0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:43:56 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:7824 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726128AbgA2Inz (ORCPT
+        Wed, 29 Jan 2020 03:55:26 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:63033 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726068AbgA2Iz0 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 03:43:55 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00T8YbBe025109;
-        Wed, 29 Jan 2020 03:43:32 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xrgdbumu7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 03:43:32 -0500
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00T8hUDk053534
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 29 Jan 2020 03:43:30 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 29 Jan
- 2020 00:43:28 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 29 Jan 2020 03:43:28 -0500
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00T8h95R016705;
-        Wed, 29 Jan 2020 03:43:25 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v3 3/3] MAINTAINERS: add entry for hmc425a driver.
-Date:   Wed, 29 Jan 2020 10:45:09 +0200
-Message-ID: <20200129084509.20371-3-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200129084509.20371-1-beniamin.bia@analog.com>
-References: <20200129084509.20371-1-beniamin.bia@analog.com>
+        Wed, 29 Jan 2020 03:55:26 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580288125; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=m1aJ2Qp8X5dBwtzaU0ERZTgZJkpnmU03rRacyFrY9dI=;
+ b=ehcGedrQWTmUkOLmIfw0uKfzw6fFpPjgtyNVXDlc7rGTFq+9lgXwVByV/0u1r7Z7i6Rw2839
+ 4wZdCGjkqUroCNn+Oo7HZluQ77sUBI6RV5Q4cD1yXjW6KoEGzM74SAx0cBhZX3QOAosgglRA
+ pdVTzo3PHKrXRY93QeVctq7xO9o=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e31487b.7fbb18ae20a0-smtp-out-n03;
+ Wed, 29 Jan 2020 08:55:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3CB9DC4479F; Wed, 29 Jan 2020 08:55:23 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: harigovi)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 756B2C433CB;
+        Wed, 29 Jan 2020 08:55:22 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-29_01:2020-01-28,2020-01-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- clxscore=1015 phishscore=0 malwarescore=0 spamscore=0 adultscore=0
- priorityscore=1501 mlxlogscore=864 suspectscore=1 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001290071
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jan 2020 14:25:22 +0530
+From:   harigovi@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v4] arm64: dts: sc7180: add display dt nodes
+In-Reply-To: <20200128203222.GD46072@google.com>
+References: <1580217884-21932-1-git-send-email-harigovi@codeaurora.org>
+ <20200128203222.GD46072@google.com>
+Message-ID: <e9b02cfe89db7b8624bdce56c3f9ceef@codeaurora.org>
+X-Sender: harigovi@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Beniamin Bia and Michael Hennerich as maintainers for HMC425A
-attenuator.
+On 2020-01-29 02:02, Matthias Kaehlcke wrote:
+> Hi,
+> 
+> On Tue, Jan 28, 2020 at 06:54:44PM +0530, Harigovindan P wrote:
+>> Add display, DSI hardware DT nodes for sc7180.
+>> 
+>> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+>> ---
+>> 
+>> Changes in v1:
+>> 	-Added display DT nodes for sc7180
+>> Changes in v2:
+>> 	-Renamed node names
+>> 	-Corrected code alignments
+>> 	-Removed extra new line
+>> 	-Added DISP AHB clock for register access
+>> 	under display_subsystem node for global settings
+>> Changes in v3:
+>> 	-Modified node names
+>> 	-Modified hard coded values
+>> 	-Removed mdss reg entry
+>> Changes in v4:
+>> 	-Reverting mdp node name
+>> 	-Setting status to disabled in main SOC dtsi file
+>> 	-Replacing _ to - for node names
+>> 	-Adding clock dependency patch link
+>> 	-Splitting idp dt file to a separate patch
+>> 
+>> This patch has dependency on the below series
+>> https://lkml.org/lkml/2019/12/27/73
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 128 
+>> +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 128 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index 3bc3f64..c3883af 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -1184,6 +1184,134 @@
+>>  			#power-domain-cells = <1>;
+>>  		};
+>> 
+>> +		mdss: mdss@ae00000 {
+>> +			compatible = "qcom,sc7180-mdss";
+>> +			reg = <0 0x0ae00000 0 0x1000>;
+>> +			reg-names = "mdss";
+>> +
+>> +			power-domains = <&dispcc MDSS_GDSC>;
+>> +
+>> +			clocks = <&gcc GCC_DISP_AHB_CLK>,
+>> +				 <&gcc GCC_DISP_HF_AXI_CLK>,
+>> +				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
+>> +				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
+>> +			clock-names = "iface", "gcc_bus", "ahb", "core";
+>> +
+>> +			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
+>> +			assigned-clock-rates = <300000000>;
+>> +
+>> +			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <1>;
+>> +
+>> +			iommus = <&apps_smmu 0x800 0x2>;
+>> +
+>> +			#address-cells = <2>;
+>> +			#size-cells = <2>;
+>> +			ranges;
+>> +
+>> +			mdss_mdp: mdp@ae01000 {
+>> +				compatible = "qcom,sc7180-dpu";
+>> +				reg = <0 0x0ae01000 0 0x8f000>,
+>> +				      <0 0x0aeb0000 0 0x2008>,
+>> +				      <0 0x0af03000 0 0x16>;
+>> +				reg-names = "mdp", "vbif", "disp_cc";
+>> +
+>> +				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
+>> +					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
+>> +					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
+>> +					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
+>> +					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+>> +				clock-names = "iface", "rot", "lut", "core",
+>> +					      "vsync";
+>> +				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
+>> +						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+>> +				assigned-clock-rates = <300000000>,
+>> +						       <19200000>;
+> 
+> The clock rate for DISP_CC_MDSS_MDP_CLK is already specified in the
+> parent node, do we really want/need to specify it twice?
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
-Changes in v3:
--nothing changed
+Hi,
 
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ec05a06d7ddb..9ae436d67edf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1057,6 +1057,15 @@ F:	drivers/iio/adc/ltc249*
- X:	drivers/iio/*/adjd*
- F:	drivers/staging/iio/*/ad*
- 
-+ANALOG DEVICES INC HMC425A DRIVER
-+M:	Beniamin Bia <beniamin.bia@analog.com>
-+M:	Michael Hennerich <michael.hennerich@analog.com>
-+L:	linux-iio@vger.kernel.org
-+W:	http://ez.analog.com/community/linux-device-drivers
-+S:	Supported
-+F:	drivers/iio/amplifiers/hmc425a.c
-+F:	Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-+
- ANALOGBITS PLL LIBRARIES
- M:	Paul Walmsley <paul.walmsley@sifive.com>
- S:	Supported
--- 
-2.17.1
-
+The parent device ( MDSS ) configures global HW settings which needs MDP 
+CLK to be turned on with a default rate.
+mdp device handles the composition, and it will compute the frequency 
+needed as per the layer stack in the composition, hence we can have 
+multiple rates on the CLK.
