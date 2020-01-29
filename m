@@ -2,106 +2,151 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC45DC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244DDC35240
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EAB207FF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE290206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QhyJlO9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgA2N4S (ORCPT
+        id S1726623AbgA2OF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:56:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40766 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbgA2N4S (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:56:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 29963AD85;
-        Wed, 29 Jan 2020 13:56:16 +0000 (UTC)
-Message-ID: <1aca11e7f66c0ebfc9499097d7c40a1835a80224.camel@suse.de>
-Subject: Re: [RFC PATCH 0/4] pinctrl: bcm2835: Add support for all BCM2711
- GPIOs
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-Date:   Wed, 29 Jan 2020 14:56:14 +0100
-In-Reply-To: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
-References: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-paFAbKmIJx8fhqD6d+ZI"
-User-Agent: Evolution 3.34.3 
+        Wed, 29 Jan 2020 09:05:27 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:20869 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726240AbgA2OF1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 09:05:27 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580306727; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=OYXu3ND/s2/4ySCf9M0xA490SGByupUTGY02AD+jy9Y=;
+ b=QhyJlO9Zaw4gRAvu+1vaF7U/bCR7mGHaqL6Simc4gxCg3Eq3GAUZNMgLW1NPiUBwI5CQ724P
+ ARKtoffqHrEvnLsyaNvNYi1jHrAVPqswh/MELQjND2l9vrpJAPR3ILceIbzsuFCJITa2cLVt
+ FMjMQ8K6MQLNvbp5BWEeGAgu5jA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e319124.7fede9397650-smtp-out-n02;
+ Wed, 29 Jan 2020 14:05:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 20A7AC447A4; Wed, 29 Jan 2020 14:05:22 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44569C433CB;
+        Wed, 29 Jan 2020 14:05:21 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jan 2020 19:35:21 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+Subject: Re: [RFC v3 09/10] arm64: dts: qcom: sdm845: Add cpu OPP tables
+In-Reply-To: <20200129012411.GI46072@google.com>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <20200127200350.24465-10-sibis@codeaurora.org>
+ <20200129012411.GI46072@google.com>
+Message-ID: <4f2b98a1dae3bc737a43a1e46255657b@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hey Matthias,
 
---=-paFAbKmIJx8fhqD6d+ZI
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review!
 
-On Mon, 2020-01-27 at 19:15 +0100, Stefan Wahren wrote:
-> The BCM2711 supports 58 GPIOs [1] by using the existing BCM2835 GPIO regi=
-sters
-> completely. So there is no need to change the binding.
->=20
-> Patch 1 and 2 prepare the pinctrl driver to be extended to 58 GPIOs in Pa=
-tch
-> 3.
-> I didn't want to squash them in order to make review as easy as possible.
-> The final patch 4 assigns all SoC GPIOs a label as we already did for
-> the older Raspberry Pi boards.
->=20
-> [1] - https://github.com/raspberrypi/linux/issues/3101#issuecomment-57309=
-2294
->=20
-> Stefan Wahren (4):
->   pinctrl: bcm2835: Drop unused define
->   pinctrl: bcm2835: Refactor platform data
->   pinctrl: bcm2835: Add support for all GPIOs on BCM2711
->   ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
->=20
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  74 ++++++++++++++++++++++++
->  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 106 ++++++++++++++++++++++++++--=
------
-> -
->  2 files changed, 156 insertions(+), 24 deletions(-)
+On 2020-01-29 06:54, Matthias Kaehlcke wrote:
+> Hi Sibi,
+> 
+> On Tue, Jan 28, 2020 at 01:33:49AM +0530, Sibi Sankar wrote:
+>> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 
+>> SoCs.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 453 
+>> +++++++++++++++++++++++++++
+>>  1 file changed, 453 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index c036bab49fc03..8cb976118407b 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -199,6 +199,12 @@
+>>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>>  			#cooling-cells = <2>;
+>>  			next-level-cache = <&L2_0>;
+>> +			operating-points-v2 = <&cpu0_opp_table>,
+>> +					      <&cpu0_ddr_bw_opp_table>,
+>> +					      <&cpu0_l3_bw_opp_table>;
+>> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+>> SLAVE_EBI1>,
+>> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+> 
+> This apparently depends on the 'Split SDM845 interconnect nodes and
+> consolidate RPMh support' series
+> (https://patchwork.kernel.org/project/linux-arm-msm/list/?series=226281),
+> which isn't mentioned in the cover letter.
+> 
+> I also couldn't find a patch on the lists that adds the 'osm_l3'
+> interconnect node for SDM845. The same is true for SC7180 (next
+> patch of this series). These patches may be available in custom trees,
+> but that isn't really helpful for upstream review.
 
-Overall this looks good to me (modulo the small comments). I also gave it a=
- go
-on RPi4 and RPi3b without issues.
+yeah I missed adding the interconnect
+refactor dependency and the nodes.
 
-Regards,
-Nicolas
+> 
+> I would suggest to focus on landing the dependencies of this series,
+> before proceding with it (or at least most of them), there are plenty
+> and without the dependencies this series isn't going to land, it also
+> makes it hard for testers and reviewers to get all the pieces
 
+yes I understand but wanted the series
+out asap because since there are a few
+points where we still havn't reached
+a consensus on.
 
---=-paFAbKmIJx8fhqD6d+ZI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> together. In particular the last post of the series 'Add
+> required-opps support to devfreq passive gov'
+> (https://patchwork.kernel.org/cover/11055499/) is from July 2019 ...
 
------BEGIN PGP SIGNATURE-----
+https://lore.kernel.org/lkml/CAGTfZH37ALwUHd8SpRRrBzZ6x1-++YtzS60_yRQvN-TN6rOzaA@mail.gmail.com/
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4xjv4ACgkQlfZmHno8
-x/7yugf5AWxKTdxdP/JzIcOGAX2fJIvWc9lWYEAIxvcQqDsO5+HAuYMj9ehOQXrc
-HAI3r/UAS5EQGaotd2OuLj/UkkZRwyukoc4baF2xvARRWCyTFxbRX0XOdy0x7BOb
-e4ZeMCI12sb0xZXNzsC+qlIidQ5At66CIdrn64vrDvtyrtkjR4/bYW8M3evTj+4x
-CGIF+P8J9ZWVsbRyKohYnsj33Ggi6pwwHXzGAxbOgdJyToF9l10LnEW0WrmieKov
-84UleM5Exg4ic23NbxSBpTdQzM83ht0d5yLW/gZf7e4gaI/Hy3yn1Wnu8nEJwnHa
-xSUxIt7nyLcMLMHrwoKIi0QSvnSFqA==
-=pB/z
------END PGP SIGNATURE-----
+The pending patch for lazy linking
+was posted a while back. Now that
+it has a tested-by, majority of the
+series should go in since the devfreq
+maintainers wanted the series pulled
+in.
 
---=-paFAbKmIJx8fhqD6d+ZI--
+> 
+> Thanks
+> 
+> Matthias
 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
