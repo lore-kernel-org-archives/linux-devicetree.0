@@ -2,211 +2,350 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BCFC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06797C35240
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2002070E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75C5206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CMmjTmwH"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mZscfpoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgA2RDg (ORCPT
+        id S1727093AbgA2RGd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 12:03:36 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35398 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbgA2RDg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 12:03:36 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00TH3Bqx037702;
-        Wed, 29 Jan 2020 11:03:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580317391;
-        bh=pIyaS5ys8ohp+Z+ExkY5QFJRkuhfYRBSJTMw3mE1fgs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=CMmjTmwHYCC3YdcrH2d+0N9zXm2pDexoUrMQDo8xe0hvQev/zu/SasM2aMyc4/TUN
-         Cv5HZ65qSdfvbFozuUmbLdXnbqQIhcG2ynlY52HCT2+yQ+005OUa11XWRcdDc2xHKm
-         Qf78NtMKAdoNyp0FVNVnrP1hClKprUfpMxmvX1oU=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00TH3BNV001142
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jan 2020 11:03:11 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 29
- Jan 2020 11:03:10 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 29 Jan 2020 11:03:10 -0600
-Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00TH33Ix102348;
-        Wed, 29 Jan 2020 11:03:08 -0600
-From:   Jyri Sarha <jsarha@ti.com>
-To:     <tony@atomide.com>, <bcousson@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>
-CC:     <tomi.valkeinen@ti.com>, <peter.ujfalusi@ti.com>, <bparrot@ti.com>,
-        <praneeth@ti.com>
-Subject: [PATCH 2/2] ARM: dts: keystone-k2g-evm: add HDMI video support
-Date:   Wed, 29 Jan 2020 19:03:03 +0200
-Message-ID: <d8be8300e4a889e22c66900f0320175630cc233c.1580317147.git.jsarha@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1580317147.git.jsarha@ti.com>
-References: <cover.1580317147.git.jsarha@ti.com>
+        Wed, 29 Jan 2020 12:06:33 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51202 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726939AbgA2RGc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 12:06:32 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TGweMA008372;
+        Wed, 29 Jan 2020 18:06:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=qKe7KQ8mPrBzo9CA6IMu5Vx54UwaqqVmM3dUAMbQUSE=;
+ b=mZscfpoTz15hk6L1jaIsPFG5U3AVcNUdDAcyIWgd6RQCioeTwvoqg2kKnlpNarPJ0ZtO
+ Vx7YQFv4exVIJU6jNhCCG7H1ve+CnEGIvkgOLyxzV4ahQTelgMIzmGLT7GOBkl25zGhG
+ DS6hrznj0XBH21X4rJFvXP5e6poQRWoCz2BC4SXJoibBTYWP5tdrGs3hafFUGtK9cjz4
+ FxREb7O+epc0LTzjglK/GClgHvDiUCA/XUQcoSwUgE56Gf3PnGSa6/CE0G4GmDx0lNQ5
+ iZYKJdRgC5Vw1uJni4SG7Lt2Y8CMsuDrLE5Q/vOM1TiuLbLZgs101M0COexZ9UJCu9W1 aQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrdekm92w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jan 2020 18:06:17 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6EDCC10002A;
+        Wed, 29 Jan 2020 18:06:16 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 324B72C38CD;
+        Wed, 29 Jan 2020 18:06:16 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Jan 2020 18:06:15
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.co>, <alexandre.torgue@st.com>,
+        <linus.walleij@linaro.org>, <amelie.delaunay@st.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: mfd: Convert stmfx bindings to json-schema
+Date:   Wed, 29 Jan 2020 18:06:13 +0100
+Message-ID: <20200129170613.14155-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-29_04:2020-01-28,2020-01-29 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT nodes for HDMI video support for K2G EVM. The HDMI uses SiI9022
-DPI as HDMI encoder. The DSS DPI is connected to SiI9022 HDMI
-encoder's video input and encoder's output goes to HDMI connector.
+Convert stmfx bindings to json-schema
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/keystone-k2g-evm.dts | 101 +++++++++++++++++++++++++
- 1 file changed, 101 insertions(+)
+ Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
+ Documentation/devicetree/bindings/mfd/stmfx.yaml   | 100 ++++++++++++++++++
+ .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 ---------------------
+ 3 files changed, 100 insertions(+), 144 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
 
-diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
-index b7f10bf94576..db640bab8c1d 100644
---- a/arch/arm/boot/dts/keystone-k2g-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
-@@ -45,6 +45,19 @@
- 		regulator-max-microvolt = <1800000>;
- 		regulator-always-on;
- 	};
+diff --git a/Documentation/devicetree/bindings/mfd/stmfx.txt b/Documentation/devicetree/bindings/mfd/stmfx.txt
+deleted file mode 100644
+index f0c2f7fcf5c7..000000000000
+--- a/Documentation/devicetree/bindings/mfd/stmfx.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-STMicroelectonics Multi-Function eXpander (STMFX) Core bindings
+-
+-ST Multi-Function eXpander (STMFX) is a slave controller using I2C for
+-communication with the main MCU. Its main features are GPIO expansion, main
+-MCU IDD measurement (IDD is the amount of current that flows through VDD) and
+-resistive touchscreen controller.
+-
+-Required properties:
+-- compatible: should be "st,stmfx-0300".
+-- reg: I2C slave address of the device.
+-- interrupts: interrupt specifier triggered by MFX_IRQ_OUT signal.
+-  Please refer to ../interrupt-controller/interrupt.txt
+-
+-Optional properties:
+-- drive-open-drain: configure MFX_IRQ_OUT as open drain.
+-- vdd-supply: phandle of the regulator supplying STMFX.
+-
+-Example:
+-
+-	stmfx: stmfx@42 {
+-		compatible = "st,stmfx-0300";
+-		reg = <0x42>;
+-		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
+-		interrupt-parent = <&gpioi>;
+-		vdd-supply = <&v3v3>;
+-	};
+-
+-Please refer to ../pinctrl/pinctrl-stmfx.txt for STMFX GPIO expander function bindings.
+diff --git a/Documentation/devicetree/bindings/mfd/stmfx.yaml b/Documentation/devicetree/bindings/mfd/stmfx.yaml
+new file mode 100644
+index 000000000000..4219e0ffcb85
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/stmfx.yaml
+@@ -0,0 +1,100 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/stmfx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	hdmi: connector {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
++title: STMicroelectonics Multi-Function eXpander (STMFX) bindings
 +
-+		type = "a";
++description: ST Multi-Function eXpander (STMFX) is a slave controller using I2C for
++             communication with the main MCU. Its main features are GPIO expansion,
++             main MCU IDD measurement (IDD is the amount of current that flows
++             through VDD) and resistive touchscreen controller.
 +
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&sii9022_out>;
-+			};
-+		};
-+	};
- };
- 
- &k2g_pinctrl {
-@@ -89,6 +102,13 @@
- 		>;
- 	};
- 
-+	i2c1_pins: pinmux_i2c1_pins {
-+		pinctrl-single,pins = <
-+			K2G_CORE_IOPAD(0x1384) (BUFFER_CLASS_B | PIN_PULLUP | MUX_MODE0)	/* i2c1_scl.i2c1_scl */
-+			K2G_CORE_IOPAD(0x1388) (BUFFER_CLASS_B | PIN_PULLUP | MUX_MODE0)	/* i2c1_sda.i2c1_sda */
-+		>;
-+	};
++maintainers:
++  - Amelie Delaunay <amelie.delaunay@st.com>
 +
- 	ecap0_pins: ecap0_pins {
- 		pinctrl-single,pins = <
- 			K2G_CORE_IOPAD(0x1374) (BUFFER_CLASS_B | MUX_MODE4)	/* pr1_mdio_data.ecap0_in_apwm0_out */
-@@ -160,6 +180,40 @@
- 			K2G_CORE_IOPAD(0x1188) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* MDIO_DATA.MDIO_DATA */
- 		>;
- 	};
++allOf:
++  - $ref: ../pinctrl/pincfg-node.yaml
 +
-+	vout_pins: pinmux_vout_pins {
-+		pinctrl-single,pins = <
-+			K2G_CORE_IOPAD(0x1078) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata23.dssdata23 */
-+			K2G_CORE_IOPAD(0x107c) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata22.dssdata22 */
-+			K2G_CORE_IOPAD(0x1080) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata21.dssdata21 */
-+			K2G_CORE_IOPAD(0x1084) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata20.dssdata20 */
-+			K2G_CORE_IOPAD(0x1088) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata19.dssdata19 */
-+			K2G_CORE_IOPAD(0x108c) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata18.dssdata18 */
-+			K2G_CORE_IOPAD(0x1090) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata17.dssdata17 */
-+			K2G_CORE_IOPAD(0x1094) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata16.dssdata16 */
-+			K2G_CORE_IOPAD(0x1098) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata15.dssdata15 */
-+			K2G_CORE_IOPAD(0x109c) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata14.dssdata14 */
-+			K2G_CORE_IOPAD(0x10a0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata13.dssdata13 */
-+			K2G_CORE_IOPAD(0x10a4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata12.dssdata12 */
-+			K2G_CORE_IOPAD(0x10a8) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata11.dssdata11 */
-+			K2G_CORE_IOPAD(0x10ac) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata10.dssdata10 */
-+			K2G_CORE_IOPAD(0x10b0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata9.dssdata9 */
-+			K2G_CORE_IOPAD(0x10b4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata8.dssdata8 */
-+			K2G_CORE_IOPAD(0x10b8) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata7.dssdata7 */
-+			K2G_CORE_IOPAD(0x10bc) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata6.dssdata6 */
-+			K2G_CORE_IOPAD(0x10c0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata5.dssdata5 */
-+			K2G_CORE_IOPAD(0x10c4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata4.dssdata4 */
-+			K2G_CORE_IOPAD(0x10c8) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata3.dssdata3 */
-+			K2G_CORE_IOPAD(0x10cc) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata2.dssdata2 */
-+			K2G_CORE_IOPAD(0x10d0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata1.dssdata1 */
-+			K2G_CORE_IOPAD(0x10d4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssdata0.dssdata0 */
-+			K2G_CORE_IOPAD(0x10d8) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssvsync.dssvsync */
-+			K2G_CORE_IOPAD(0x10dc) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dsshsync.dsshsync */
-+			K2G_CORE_IOPAD(0x10e0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dsspclk.dsspclk */
-+			K2G_CORE_IOPAD(0x10e4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssde.dssde */
-+			K2G_CORE_IOPAD(0x10e8) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0) /* dssfid.dssfid */
-+		>;
-+	};
- };
- 
- &uart0 {
-@@ -357,3 +411,50 @@
- 	pinctrl-0 = <&emac_pins>;
- 	status = "okay";
- };
++properties:
++  compatible:
++    const: st,stmfx-0300
 +
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
-+	clock-frequency = <400000>;
++  reg:
++    enum: [ 0x42, 0x43 ]
 +
-+	sii9022: sii9022@3b {
-+		#sound-dai-cells = <0>;
-+		compatible = "sil,sii9022";
-+		reg = <0x3b>;
++  interrupts:
++    maxItems: 1
 +
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++  drive-open-drain: true
 +
-+			port@0 {
-+				reg = <0>;
++  vdd-supply:
++    maxItems: 1
 +
-+				sii9022_in: endpoint {
-+					remote-endpoint = <&dpi_out>;
-+				};
-+			};
++  stmfx-pin-controller:
++    type: object
 +
-+			port@1 {
-+				reg = <1>;
++    properties:
++      compatible:
++        const: st,stmfx-0300-pinctrl
 +
-+				sii9022_out: endpoint {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+};
++      "#gpio-cells":
++        const: 2
 +
-+&dss {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&vout_pins>;
-+	status = "ok";
++      "#interrupt-cells":
++        const: 2
 +
-+	port {
-+		dpi_out: endpoint {
-+			remote-endpoint = <&sii9022_in>;
-+			data-lines = <24>;
-+		};
-+	};
-+};
++      gpio-controller: true
++
++      interrupt-controller: true
++
++      gpio-ranges:
++        description: if all STMFX pins[24:0] are available (no other STMFX function in use),
++                     you should use gpio-ranges = <&stmfx_pinctrl 0 0 24>;
++                     if agpio[3:0] are not available (STMFX Touchscreen function in use),
++                     you should use gpio-ranges = <&stmfx_pinctrl 0 0 16>, <&stmfx_pinctrl 20 20 4>;
++                     if agpio[7:4] are not available (STMFX IDD function in use),
++                     you should use gpio-ranges = <&stmfx_pinctrl 0 0 20>;
++        maxItems: 1
++
++    required:
++      - compatible
++      - "#gpio-cells"
++      - "#interrupt-cells"
++      - gpio-controller
++      - interrupt-controller
++      - gpio-ranges
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    i2c@0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      stmfx@42 {
++        compatible = "st,stmfx-0300";
++        reg = <0x42>;
++        interrupts = <8 IRQ_TYPE_EDGE_RISING>;
++        interrupt-parent = <&gpioi>;
++        vdd-supply = <&v3v3>;
++
++        stmfx-pin-controller {
++          compatible = "st,stmfx-0300-pinctrl";
++          #gpio-cells = <2>;
++          #interrupt-cells = <2>;
++          gpio-controller;
++          interrupt-controller;
++          gpio-ranges = <&stmfx_pinctrl 0 0 24>;
++        };
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+deleted file mode 100644
+index c1b4c1819b84..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
++++ /dev/null
+@@ -1,116 +0,0 @@
+-STMicroelectronics Multi-Function eXpander (STMFX) GPIO expander bindings
+-
+-ST Multi-Function eXpander (STMFX) offers up to 24 GPIOs expansion.
+-Please refer to ../mfd/stmfx.txt for STMFX Core bindings.
+-
+-Required properties:
+-- compatible: should be "st,stmfx-0300-pinctrl".
+-- #gpio-cells: should be <2>, the first cell is the GPIO number and the second
+-  cell is the gpio flags in accordance with <dt-bindings/gpio/gpio.h>.
+-- gpio-controller: marks the device as a GPIO controller.
+-- #interrupt-cells: should be <2>, the first cell is the GPIO number and the
+-  second cell is the interrupt flags in accordance with
+-  <dt-bindings/interrupt-controller/irq.h>.
+-- interrupt-controller: marks the device as an interrupt controller.
+-- gpio-ranges: specifies the mapping between gpio controller and pin
+-  controller pins. Check "Concerning gpio-ranges property" below.
+-Please refer to ../gpio/gpio.txt.
+-
+-Please refer to pinctrl-bindings.txt for pin configuration.
+-
+-Required properties for pin configuration sub-nodes:
+-- pins: list of pins to which the configuration applies.
+-
+-Optional properties for pin configuration sub-nodes (pinconf-generic ones):
+-- bias-disable: disable any bias on the pin.
+-- bias-pull-up: the pin will be pulled up.
+-- bias-pull-pin-default: use the pin-default pull state.
+-- bias-pull-down: the pin will be pulled down.
+-- drive-open-drain: the pin will be driven with open drain.
+-- drive-push-pull: the pin will be driven actively high and low.
+-- output-high: the pin will be configured as an output driving high level.
+-- output-low: the pin will be configured as an output driving low level.
+-
+-Note that STMFX pins[15:0] are called "gpio[15:0]", and STMFX pins[23:16] are
+-called "agpio[7:0]". Example, to refer to pin 18 of STMFX, use "agpio2".
+-
+-Concerning gpio-ranges property:
+-- if all STMFX pins[24:0] are available (no other STMFX function in use), you
+-  should use gpio-ranges = <&stmfx_pinctrl 0 0 24>;
+-- if agpio[3:0] are not available (STMFX Touchscreen function in use), you
+-  should use gpio-ranges = <&stmfx_pinctrl 0 0 16>, <&stmfx_pinctrl 20 20 4>;
+-- if agpio[7:4] are not available (STMFX IDD function in use), you
+-  should use gpio-ranges = <&stmfx_pinctrl 0 0 20>;
+-
+-
+-Example:
+-
+-	stmfx: stmfx@42 {
+-		...
+-
+-		stmfx_pinctrl: stmfx-pin-controller {
+-			compatible = "st,stmfx-0300-pinctrl";
+-			#gpio-cells = <2>;
+-			#interrupt-cells = <2>;
+-			gpio-controller;
+-			interrupt-controller;
+-			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
+-
+-			joystick_pins: joystick {
+-				pins = "gpio0", "gpio1", "gpio2", "gpio3", "gpio4";
+-				drive-push-pull;
+-				bias-pull-up;
+-			};
+-		};
+-	};
+-
+-Example of STMFX GPIO consumers:
+-
+-	joystick {
+-		compatible = "gpio-keys";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		pinctrl-0 = <&joystick_pins>;
+-		pinctrl-names = "default";
+-		button-0 {
+-			label = "JoySel";
+-			linux,code = <KEY_ENTER>;
+-			interrupt-parent = <&stmfx_pinctrl>;
+-			interrupts = <0 IRQ_TYPE_EDGE_RISING>;
+-		};
+-		button-1 {
+-			label = "JoyDown";
+-			linux,code = <KEY_DOWN>;
+-			interrupt-parent = <&stmfx_pinctrl>;
+-			interrupts = <1 IRQ_TYPE_EDGE_RISING>;
+-		};
+-		button-2 {
+-			label = "JoyLeft";
+-			linux,code = <KEY_LEFT>;
+-			interrupt-parent = <&stmfx_pinctrl>;
+-			interrupts = <2 IRQ_TYPE_EDGE_RISING>;
+-		};
+-		button-3 {
+-			label = "JoyRight";
+-			linux,code = <KEY_RIGHT>;
+-			interrupt-parent = <&stmfx_pinctrl>;
+-			interrupts = <3 IRQ_TYPE_EDGE_RISING>;
+-		};
+-		button-4 {
+-			label = "JoyUp";
+-			linux,code = <KEY_UP>;
+-			interrupt-parent = <&stmfx_pinctrl>;
+-			interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+-		};
+-	};
+-
+-	leds {
+-		compatible = "gpio-leds";
+-		orange {
+-			gpios = <&stmfx_pinctrl 17 1>;
+-		};
+-
+-		blue {
+-			gpios = <&stmfx_pinctrl 19 1>;
+-		};
+-	}
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.15.0
 
