@@ -2,150 +2,83 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46471C35246
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0E8C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262842082E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF26620720
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgA2NwJ (ORCPT
+        id S1726643AbgA2Nw3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:52:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38712 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbgA2NwI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:52:08 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 75568AD85;
-        Wed, 29 Jan 2020 13:52:05 +0000 (UTC)
-Message-ID: <b4c4b18eabe845e4cc3e0e1d5af2f3aa7b9091c7.camel@suse.de>
-Subject: Re: [RFC PATCH 2/4] pinctrl: bcm2835: Refactor platform data
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-Date:   Wed, 29 Jan 2020 14:52:03 +0100
-In-Reply-To: <1580148908-4863-3-git-send-email-stefan.wahren@i2se.com>
-References: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
-         <1580148908-4863-3-git-send-email-stefan.wahren@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-d10hOAw7/iXklX9kAd3Z"
-User-Agent: Evolution 3.34.3 
-MIME-Version: 1.0
+        Wed, 29 Jan 2020 08:52:29 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:60060 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726271AbgA2Nw3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 08:52:29 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Jan 2020 19:22:26 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 19:22:11 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 0AB4C2583; Wed, 29 Jan 2020 19:22:10 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v4 7/8] arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+Date:   Wed, 29 Jan 2020 19:21:58 +0530
+Message-Id: <1580305919-30946-8-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Use generic QUSB2 V2 Phy configuration for sdm845.
 
---=-d10hOAw7/iXklX9kAd3Z
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hi Stefan,
-thanks for the series!
-
-On Mon, 2020-01-27 at 19:15 +0100, Stefan Wahren wrote:
-> This prepares the platform data to be easier to extend for more GPIOs.
-> Except of this there is no functional change.
->=20
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
-
-[...]
-
-> @@ -1083,6 +1112,7 @@ static int bcm2835_pinctrl_probe(struct platform_de=
-vice
-> *pdev)
->  	struct device *dev =3D &pdev->dev;
->  	struct device_node *np =3D dev->of_node;
->  	struct bcm2835_pinctrl *pc;
-> +	struct bcm_plat_data *pdata;
-
-You could define this as const...
-
->  	struct gpio_irq_chip *girq;
->  	struct resource iomem;
->  	int err, i;
-> @@ -1108,7 +1138,13 @@ static int bcm2835_pinctrl_probe(struct platform_d=
-evice
-> *pdev)
->  	if (IS_ERR(pc->base))
->  		return PTR_ERR(pc->base);
-> =20
-> -	pc->gpio_chip =3D bcm2835_gpio_chip;
-> +	match =3D of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
-> +	if (!match)
-> +		return -EINVAL;
-> +
-> +	pdata =3D (struct bcm_plat_data *)match->data;
-
-...and drop this cast.
-
-> +
-> +	memcpy(&pc->gpio_chip, pdata->gpio_chip, sizeof(pc->gpio_chip));
->  	pc->gpio_chip.parent =3D dev;
->  	pc->gpio_chip.of_node =3D np;
-> =20
-> @@ -1159,19 +1195,14 @@ static int bcm2835_pinctrl_probe(struct
-> platform_device *pdev)
->  		return err;
->  	}
-> =20
-> -	match =3D of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
-> -	if (match) {
-> -		bcm2835_pinctrl_desc.confops =3D
-> -			(const struct pinconf_ops *)match->data;
-> -	}
-> -
-> -	pc->pctl_dev =3D devm_pinctrl_register(dev, &bcm2835_pinctrl_desc, pc);
-> +	memcpy(&pc->pctl_desc, pdata->pctl_desc, sizeof(pc->pctl_desc));
-
-I suggest doing (here and below):
-
-	pc->pctl_desc =3D *pdata->pctl_desc;
-
-> +	pc->pctl_dev =3D devm_pinctrl_register(dev, &pc->pctl_desc, pc);
->  	if (IS_ERR(pc->pctl_dev)) {
->  		gpiochip_remove(&pc->gpio_chip);
->  		return PTR_ERR(pc->pctl_dev);
->  	}
-> =20
-> -	pc->gpio_range =3D bcm2835_pinctrl_gpio_range;
-> +	memcpy(&pc->gpio_range, pdata->gpio_range, sizeof(pc->gpio_range));
->  	pc->gpio_range.base =3D pc->gpio_chip.base;
->  	pc->gpio_range.gc =3D &pc->gpio_chip;
->  	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
-
-Regards,
-Nicolas
-
-
---=-d10hOAw7/iXklX9kAd3Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4xjgMACgkQlfZmHno8
-x/5JwAf9FcQOs7WwV7QJ+nt29U48mXMjZhtcYmyn6DKR1pMZjkiT0bDey6lFCqFw
-/GO7cinvI0n8LWSSTlqcfTNfSx8i4/S3HVBwwsH89e5aiXqjNsOhJVvjjZJapVcC
-V9oMmxsstrTuQJXFFyufCcOTOxrZDIy93J1bu+4/UTITv9DuvmV74YDAi42880u+
-41/ZgmJJkAgcirVoODK4lrbocd1ilh2mUFYcu9Of2oA3/MA0XSz50EpS1iHhZtSP
-u6bZFQhOlT/nT2d+WfB9aem95yg+XWcMCA/OHkRgpFWNlFoTOxRrZWRBrOP/Toa3
-+HAulEAOla3nDKnnaVFYAAbFncB5kA==
-=B3Z4
------END PGP SIGNATURE-----
-
---=-d10hOAw7/iXklX9kAd3Z--
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index d42302b..317347a 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2387,7 +2387,7 @@
+ 		};
+ 
+ 		usb_1_hsphy: phy@88e2000 {
+-			compatible = "qcom,sdm845-qusb2-phy";
++			compatible = "qcom,sdm845-qusb2-phy", "qcom,qusb2-v2-phy";
+ 			reg = <0 0x088e2000 0 0x400>;
+ 			status = "disabled";
+ 			#phy-cells = <0>;
+@@ -2402,7 +2402,7 @@
+ 		};
+ 
+ 		usb_2_hsphy: phy@88e3000 {
+-			compatible = "qcom,sdm845-qusb2-phy";
++			compatible = "qcom,sdm845-qusb2-phy", "qcom,qusb2-v2-phy";
+ 			reg = <0 0x088e3000 0 0x400>;
+ 			status = "disabled";
+ 			#phy-cells = <0>;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
