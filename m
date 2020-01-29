@@ -2,102 +2,80 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B622BC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 16:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B210EC33CB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CA1207FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 16:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801CB2070E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 17:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ekFvSkub"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rlHyNa+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgA2QZG (ORCPT
+        id S1726647AbgA2RDQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:25:06 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17767 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgA2QZF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 11:25:05 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e31b1d20001>; Wed, 29 Jan 2020 08:24:50 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 29 Jan 2020 08:25:05 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 29 Jan 2020 08:25:05 -0800
-Received: from [10.2.164.115] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
- 2020 16:25:04 +0000
-Subject: Re: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input driver
- for Tegra210
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Helen Koike <helen.koike@collabora.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
- <3cdea635-a9ca-7b9c-3c99-8f489f4d669a@collabora.com>
- <162488d0-4e74-963a-3366-e4c1f7cf04ca@nvidia.com>
- <20200129100906.GE2479935@ulmo>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <8bf0ab06-a37e-4816-86e2-805b46787d5a@nvidia.com>
-Date:   Wed, 29 Jan 2020 08:25:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 29 Jan 2020 12:03:16 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53816 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgA2RDP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 12:03:15 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00TH38f7125953;
+        Wed, 29 Jan 2020 11:03:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580317388;
+        bh=g6X3JxNTLRFUy2jBFHftDNK/a0/OoLRTQJFdw87B4jg=;
+        h=From:To:CC:Subject:Date;
+        b=rlHyNa+EZuNVZLY4zPHvi1/fKn/r39moc8HByA8F5EgEJ5FyDKMPnsSw0ZjC4q/fV
+         plYgcLAPzEOvdbG8kxKR+maeS7nQ8Wa3EFsQqw8lRxkZZjgjHzKEvyuiQIoOY+nPk/
+         3VlGnaiYkOf6w9mNbbGiFJMCQ0xmT8CeIKotZ9cI=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00TH38AN038585;
+        Wed, 29 Jan 2020 11:03:08 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 29
+ Jan 2020 11:03:07 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 29 Jan 2020 11:03:07 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00TH33Iv102348;
+        Wed, 29 Jan 2020 11:03:04 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <tony@atomide.com>, <bcousson@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>
+CC:     <tomi.valkeinen@ti.com>, <peter.ujfalusi@ti.com>, <bparrot@ti.com>,
+        <praneeth@ti.com>
+Subject: [PATCH 0/2] ARM: dts: keystone-k2g-evm: Display support
+Date:   Wed, 29 Jan 2020 19:03:01 +0200
+Message-ID: <cover.1580317147.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200129100906.GE2479935@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580315090; bh=6I/ImPF+IqDUZJDIu1hFpXvjuHGZpz3pV5FXxWX2E/w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=ekFvSkubLBuF+i4LUc1Nl3qYT/n5NnQFbyBNrrDVVqMJ25q5z+NZPU7FctyuwSii0
-         wcADGpjGgmP/extSwxt3O/PDeO1WmsuAF7p5CxUwK6sxAsgLuafOLULq9e6TkCmoJX
-         AjwysvWDMYdtSJjulG6f86Ap7WOEqAf+BWbFQ8UlxgfZyd8/SwJ5wWtJfdHKPYnRyV
-         teffbOfUIU02M8YW1ndE7/a72cVYUhQFGkOOBvqRcKIDgAQxPk569XNZFtpNIW0LJE
-         G7zsSHs3DXjjzubEv4FfHzyOZV8Hz7eMeebsZ5pZtoVC4ZTG0flUd7bpZ6xlN5BsNl
-         yC8JmG4Sd1PoA==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Now that drm/tidss is queued for mainline, lets add display support for
+k2g-evm. There is no hurry since tidss is out only in v5.7, but it
+should not harm to have the dts changes in place before that.
 
-On 1/29/20 2:09 AM, Thierry Reding wrote:
-> On Tue, Jan 28, 2020 at 02:13:17PM -0800, Sowjanya Komatineni wrote:
->> On 1/28/20 1:45 PM, Helen Koike wrote:
-> [...]
->>> On 1/28/20 4:23 PM, Sowjanya Komatineni wrote:
-> [...]
->>>> +const struct tegra_csi_fops csi2_fops = {
->>>> +     .hw_init = csi2_hw_init,
->>>> +     .csi_start_streaming = csi2_start_streaming,
->>>> +     .csi_err_status = csi2_error_status,
->>>> +};
->>> If I saw correctly, you don't have other instances of struct tegra_csi_fops with different functions.
->>> So why not exposing the functions directly instead of creating a global variable?
->> Currently driver supports Tegra210 only. Later we will add for Tegra186 and
->> Tegra184 support too where we will have separate csi fops.
-> Perhaps this structure should be prefixed with a tegra210_ to make that
-> more obvious?
-Will fix prefix in v2
->>>> +EXPORT_SYMBOL(csi2_fops);
-> Also, why do we need to export these? These will be built as linked into
-> the Tegra VI driver, which is the only one that uses these, right? Would
-> it not be enough to just make it global? Why the need to export?
->
-> Thierry
-Will fix in v2
+Jyri Sarha (2):
+  ARM: dts: keystone-k2g: Add DSS node
+  ARM: dts: keystone-k2g-evm: add HDMI video support
+
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 101 +++++++++++++++++++++++++
+ arch/arm/boot/dts/keystone-k2g.dtsi    |  22 ++++++
+ 2 files changed, 123 insertions(+)
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
