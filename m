@@ -2,103 +2,182 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3D0C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A74FC33CB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46DED22522
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45F120716
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:22:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vmMWBLG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgA2OVz (ORCPT
+        id S1726856AbgA2OWF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:21:55 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:43054 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726178AbgA2OVy (ORCPT
+        Wed, 29 Jan 2020 09:22:05 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:54194 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726852AbgA2OWF (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:21:54 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TEDTG3012736;
-        Wed, 29 Jan 2020 09:21:31 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfam73m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 09:21:31 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00TELUfd043131
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 29 Jan 2020 09:21:30 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 29 Jan
- 2020 09:21:23 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 29 Jan 2020 09:21:23 -0500
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00TEKwxj027599;
-        Wed, 29 Jan 2020 09:21:20 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v4 5/5] MAINTAINERS: add entry for hmc425a driver.
-Date:   Wed, 29 Jan 2020 16:23:01 +0200
-Message-ID: <20200129142301.13918-6-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200129142301.13918-1-beniamin.bia@analog.com>
-References: <20200129142301.13918-1-beniamin.bia@analog.com>
+        Wed, 29 Jan 2020 09:22:05 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580307724; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=IDT6XEpptolSA5GAweBHLJ1Npa9q5AS8n9iMKmwahvI=;
+ b=vmMWBLG/zjGDUenAwIb4vBDTR2G5jkmFWcdGukLMVUGkCNDIo+b7rO8hXscd80L8xba3TwIe
+ j6u0I//p8nwskiHbEihLQm41AnBrBcIp+am1ejFemrWj36RGPhTF4sJTQxwwWcidULrWOBsW
+ lcYmRqA0fWijw4y07r7lAPIysTk=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e31950b.7f7972043928-smtp-out-n02;
+ Wed, 29 Jan 2020 14:22:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A31E4C447A6; Wed, 29 Jan 2020 14:22:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C4A90C447A4;
+        Wed, 29 Jan 2020 14:21:59 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-29_03:2020-01-28,2020-01-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=1 mlxlogscore=881 clxscore=1015 phishscore=0 spamscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001290118
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jan 2020 19:51:59 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>, saravanak@google.com,
+        "Menon, Nishanth" <nm@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+In-Reply-To: <CAF6AEGuhKKbmK7xGX2RT=LbGz_r_4LsPOuU3-mj4gfhX3EBU-Q@mail.gmail.com>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <CAF6AEGuhKKbmK7xGX2RT=LbGz_r_4LsPOuU3-mj4gfhX3EBU-Q@mail.gmail.com>
+Message-ID: <845c9045cd3462164fdd8f0550a2fea1@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Beniamin Bia and Michael Hennerich as maintainers for HMC425A
-attenuator.
+Hey Rob,
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 2020-01-29 08:24, Rob Clark wrote:
+> On Mon, Jan 27, 2020 at 12:05 PM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> This RFC series aims to extend cpu based scaling support to L3/DDR on
+>> SDM845 and SC7180 SoCs.
+>> 
+>> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+>> Patches [5-7] - Hack in a way to add/remove multiple opp tables to
+>>                 a single device. I am yet to fix the debugfs to
+>>                 support multiple opp_tables per device but wanted to
+>>                 send what was working upstream to get an idea if 
+>> multiple
+>>                 opp tables per device is a feature that will be useful
+>>                 upstream.
+>> Patches [9-10] - Add the cpu/cpu-ddr/cpu-l3 opp tables for SDM845
+>>                  and SC7180 SoCs.
+>> 
+>> v3:
+>>  * Migrated to using Saravana's opp-kBps bindings [1]
+>>  * Fixed some misc comments from Rajendra
+>>  * Added support for SC7180
+>> 
+>> v2:
+>>  * Incorporated Viresh's comments from:
+>>  
+>> https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+>>  
+>> https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+>>  * Dropped cpufreq-map passive governor
+>> 
+>> Git-branch: https://github.com/QuinAsura/linux/tree/lnext-012420
+>> 
+>> Some alternate ways of hosting the opp-tables:
+>> https://github.com/QuinAsura/linux/commit/50b92bfaadc8f9a0d1e12249646e018bd6d1a9d3
+>> https://github.com/QuinAsura/linux/commit/3d23d1eefd16ae6d9e3ef91e93e78749d8844e98
+>> Viresh didn't really like ^^ bindings and they dont really scale well. 
+>> Just
+>> including them here for completeness.
+>> 
+>> Depends on the following series:
+>> [1] https://patchwork.kernel.org/cover/11277199/
+>> [2] https://patchwork.kernel.org/cover/11055499/
+>> [3] https://patchwork.kernel.org/cover/11326381/
+> 
+> So drive-by question, from the perspective of someone who cares about
+> a non-cpu device that frequently enjoys a lot of bandwidth (ie. the
+> GPU).. any thoughts on how ddr scaling would/should work for workloads
+> where the CPU is not particularly busy?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e699fe378e71..06c283553e30 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1063,6 +1063,15 @@ F:	drivers/iio/adc/ltc249*
- X:	drivers/iio/*/adjd*
- F:	drivers/staging/iio/*/ad*
- 
-+ANALOG DEVICES INC HMC425A DRIVER
-+M:	Beniamin Bia <beniamin.bia@analog.com>
-+M:	Michael Hennerich <michael.hennerich@analog.com>
-+L:	linux-iio@vger.kernel.org
-+W:	http://ez.analog.com/community/linux-device-drivers
-+S:	Supported
-+F:	drivers/iio/amplifiers/hmc425a.c
-+F:	Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-+
- ANALOGBITS PLL LIBRARIES
- M:	Paul Walmsley <paul.walmsley@sifive.com>
- S:	Supported
+I guess Jordan would have more info
+about ^^. From what I can see from
+the CAF trees there is a similar
+device freq -> DDR Freq mapping that
+you can achieve with required-opps
+bindings and a custom governor ;)
+
+> 
+> BR,
+> -R
+> 
+>> 
+>> Sibi Sankar (10):
+>>   arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+>>   cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+>>   cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+>>   OPP: Add and export helper to update voltage
+>>   opp: of: export _opp_of_get_opp_desc_node
+>>   opp: Allow multiple opp_tables to be mapped to a single device
+>>   opp: Remove multiple attached opp tables from a device
+>>   cpufreq: qcom: Update the bandwidth levels on frequency change
+>>   arm64: dts: qcom: sdm845: Add cpu OPP tables
+>>   arm64: dts: qcom: sc7180: Add cpu OPP tables
+>> 
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 287 +++++++++++++++
+>>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |   2 +-
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 453 
+>> ++++++++++++++++++++++++
+>>  drivers/cpufreq/cpufreq-dt-platdev.c    |   2 +
+>>  drivers/cpufreq/qcom-cpufreq-hw.c       | 246 +++++++++++--
+>>  drivers/opp/core.c                      | 111 +++++-
+>>  drivers/opp/of.c                        |   3 +-
+>>  drivers/opp/opp.h                       |   2 +
+>>  include/linux/pm_opp.h                  |  10 +
+>>  9 files changed, 1083 insertions(+), 33 deletions(-)
+>> 
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+
 -- 
-2.17.1
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
