@@ -2,242 +2,186 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27095C35240
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EFCC33CB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD7E20716
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:08:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CCXGcuD7"
+	by mail.kernel.org (Postfix) with ESMTP id A8CE320716
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgA2UIN (ORCPT
+        id S1727020AbgA2UOc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 15:08:13 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36849 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgA2UIN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 15:08:13 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 185so218490pfv.3
-        for <devicetree@vger.kernel.org>; Wed, 29 Jan 2020 12:08:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pNbYTl5D7tyyPadQOvtvEgIuY7oo9N5/84ZV6aPiL+A=;
-        b=CCXGcuD7tYKTGjAOzvqSlDukmhV+suyVJ8/fo6Ofb2snrXaxvbPe50iXKIEn4DoXs1
-         SYXrZmgfnc1pzPOh3c/hA1vdTE90X4nqGQ3iqYOAdvXdyIY0mJgjXdMMN2mzJ6RD4swD
-         OFOzy5Z45DcYxSXQcniIQD+vgzNd4uRqvU6nY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pNbYTl5D7tyyPadQOvtvEgIuY7oo9N5/84ZV6aPiL+A=;
-        b=gLQXjIAMlsJfkEzVpUkdMmUcT/4h3/OoNAWFyiJgY8epJGZMqaSzH/ngtOKuOxpYqc
-         Y8o1nZCqYMDxHOG7F5jud1/FBS+Zc2KPWQTk/1fcGZb9puefLGk3FcmXTPMCEEDgdxDm
-         3AouvUG4UgdI0xxe7W5Z8xO8Yw19BQyurL7402TBDa2iWcbWXkHrv8JPwQUkqXqrkrB3
-         +7VjfAoz6Hg4khq0y2LUzoxiKnfgnbPO3S9OlpVEacs+jEIvFyzmF/1lUqkwSkxKf7tb
-         JyEx32k5+s3aW5S3Mv0G57IrYC9PfqLfHzVePhGtw8FIgxwPsSLrYN+G9SDAyGwAxs+e
-         3TxQ==
-X-Gm-Message-State: APjAAAVwE1et9v376mQ6pVG/0kPuGBtfETYfMoGDk/lbqxvvJBCIkjii
-        PAXY7K+BmXbRu49Dq2LjD0MxBg==
-X-Google-Smtp-Source: APXvYqwNqzfWZk6lufqk30dH9ILXdft34mJBC++saewCuU8HaAWZPqlMhBVOnbVwcO2EyAR+4k9I8g==
-X-Received: by 2002:a62:1548:: with SMTP id 69mr1273817pfv.239.1580328492369;
-        Wed, 29 Jan 2020 12:08:12 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id o184sm3588727pgo.62.2020.01.29.12.08.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 12:08:11 -0800 (PST)
-Date:   Wed, 29 Jan 2020 12:08:10 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy
- bindings to yaml
-Message-ID: <20200129200810.GB71044@google.com>
-References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
- <1580305919-30946-2-git-send-email-sanm@codeaurora.org>
+        Wed, 29 Jan 2020 15:14:32 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:42004 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbgA2UOb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 15:14:31 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E21CE804EB;
+        Wed, 29 Jan 2020 21:14:27 +0100 (CET)
+Date:   Wed, 29 Jan 2020 21:14:26 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+Cc:     noralf@tronnes.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 2/3] dt-bindings: add binding for tft displays based
+ on ilitek,ili9486
+Message-ID: <20200129201426.GC29646@ravnborg.org>
+References: <cover.1580134320.git.kamlesh.gurudasani@gmail.com>
+ <a37d95cbfc9603265ed15916cdd2fb69e8c5f041.1580134320.git.kamlesh.gurudasani@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580305919-30946-2-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <a37d95cbfc9603265ed15916cdd2fb69e8c5f041.1580134320.git.kamlesh.gurudasani@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
+        a=gEfo2CItAAAA:8 a=XVKnMrC0qe7PrV5dD3AA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
+        a=CjuIK1q_8ugA:10 a=sptkURWiP4Gy88Gu7hUp:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sandeep,
+Hi Kamlesh
 
-On Wed, Jan 29, 2020 at 07:21:52PM +0530, Sandeep Maheswaram wrote:
-> Convert QUSB2 phy  bindings to DT schema format using json-schema.
+Thanks for the conversion to DT Schema format.
+
+On Mon, Jan 27, 2020 at 07:56:14PM +0530, Kamlesh Gurudasani wrote:
+> This binding is for the tft displays based on ilitek,ili9486.
+> ozzmaker,piscreen and waveshare,rpi-lcd-35 are such displays
 > 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
 > ---
->  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 142 +++++++++++++++++++++
->  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 ----------
->  2 files changed, 142 insertions(+), 68 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> v2 changes:
+> * Changing file from txt to yaml format
+> * removed ilitek,ili9486 from compatible string
+> 
+> v3 changes:
+> * no changes
+> 
+> v4 changes:
+> * no changes
+> ---
+>  .../bindings/display/ilitek,ili9486.yaml           | 79 ++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ilitek,ili9486.yaml b/Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
 > new file mode 100644
-> index 0000000..90b3cc6
+> index 0000000..dd306c88
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-> @@ -0,0 +1,142 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
+> +++ b/Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/display/ilitek,ili9486.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Qualcomm QUSB2 phy controller
+> +title: Ilitek ILI9486 display panels device tree bindings
 > +
 > +maintainers:
-> +  - Manu Gautam <mgautam@codeaurora.org>
+> +  - Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
 > +
 > +description:
-> +  QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+> +  This binding is for display panels using an Ilitek ILI9486 controller in SPI
+> +  mode.
+> +
+> +allOf:
+> +  - $ref: panel/panel-common.yaml#
 > +
 > +properties:
 > +  compatible:
-> +    enum:
-> +      - qcom,msm8996-qusb2-phy
-> +      - qcom,msm8998-qusb2-phy
-> +      - qcom,sdm845-qusb2-phy
+> +    oneOf:
+> +      - description:
+> +          Waveshare 3.5" 320x480 Color TFT LCD
+> +        items:
+> +          - enum:
+> +              - waveshare,rpi-lcd-35
+> +          - const: ilitek,ili9486
+> +      - description:
+> +          Ozzmaker 3.5" 320x480 Color TFT LCD
+> +        items:
+> +          - enum:
+> +              - ozzmaker,piscreen
+> +          - const: ilitek,ili9486
 
-If you wanted to maintain the comments from the .txt file you could add
-them after the compatible string (e.g.
-Documentation/devicetree/bindings/pwm/pwm-samsung.yaml)
+This parts looks a bit too complicated.
+I think the following would do the trick:
 
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  clocks:
-> +    minItems: 2
-
-       maxItems: 3 ?
-
-> +    items:
-> +      - description: phy config clock
-> +      - description: 19.2 MHz ref clk
-> +      - description: phy interface clock (Optional)
-> +
-> +  clock-names:
-> +    minItems: 2
-
-       maxItems: 3 ?
-
-> +    items:
-> +      - const: cfg_ahb
-> +      - const: ref
-> +      - const: iface
-> +
-> +  vdda-pll-supply:
-> +     description:
-> +       Phandle to 1.8V regulator supply to PHY refclk pll block.
-> +
-> +  vdda-phy-dpdm-supply:
-> +     description:
-> +       Phandle to 3.1V regulator supply to Dp/Dm port signals.
-> +
-> +  resets:
-> +    maxItems: 1
-
-       description:
-         Phandle to reset to phy block.
-
-> +
-> +  nvmem-cells:
-> +    maxItems: 1
-> +    description:
-> +        Phandle to nvmem cell that contains 'HS Tx trim'
-> +        tuning parameter value for qusb2 phy.
-> +
-> +  qcom,tcsr-syscon:
-> +    description:
-> +        Phandle to TCSR syscon register region.
-> +    $ref: /schemas/types.yaml#/definitions/cell
-> +
-> +  qcom,imp-res-offset-value:
-> +    description:
-> +        It is a 6 bit value that specifies offset to be
-> +        added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
-> +        tuning parameter that may vary for different boards of same SOC.
-> +        This property is applicable to only QUSB2 v2 PHY.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 63
-> +        default: 0
-> +
-> +  qcom,hstx-trim-value:
-> +    description:
-> +        It is a 4 bit value that specifies tuning for HSTX
-> +        output current.
-> +        Possible range is - 15mA to 24mA (stepsize of 600 uA).
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 15
-> +        default: 3
-> +
-> +  qcom,preemphasis-level:
-> +    description:
-> +        It is a 2 bit value that specifies pre-emphasis level.
-> +        Possible range is 0 to 15% (stepsize of 5%).
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 3
-> +        default: 2
-> +
-> +  qcom,preemphasis-width:
-> +    description:
-> +        It is a 1 bit value that specifies how long the HSTX
-> +        pre-emphasis (specified using qcom,preemphasis-level) must be in
-> +        effect. Duration could be half-bit of full-bit.
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 1
-> +        default: 0
-
-I think you could put the properties that are only applicable for QUSB2
-v2 PHY into a block like this and remove the 'This property is
-applicable to only QUSB2 v2 PHY.' comment from the property description:
-
-if:
-  properties:
     compatible:
-      contains:
-        const: qcom,sdm845-qusb2-phy
-then:
-  qcom,imp-res-offset-value:
-    ...
+      items:
+        - enum:
+            # Waveshare 3.5" 320x480 Color TFT LCD
+          - waveshare,rpi-lcd-35
+            # Ozzmaker 3.5" 320x480 Color TFT LCD
+          - ozzmaker,piscreen
+        - const: ilitek,ili9486
+
+This makes it more obvious that you try to say that the binding should
+include one of the enum values and ilitek,ili9486
+
+With this your example would also rightfully fail as it is missing
+the ilitek,ili9486 compatible.
 
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+	Sam
+
+> +
+> +  spi-max-frequency:
+> +    maximum: 32000000
+> +
+> +  dc-gpios:
+> +    maxItems: 1
+> +    description: Display data/command selection (D/CX)
+> +
+> +  backlight: true
+> +  reg: true
+> +  reset-gpios: true
+> +  rotation: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - dc-gpios
+> +  - reset-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    backlight: backlight {
+> +            compatible = "gpio-backlight";
+> +            gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
+> +    };
+> +    spi {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +
+> +            display@0{
+> +                    compatible = "waveshare,rpi-lcd-35";
+> +                    reg = <0>;
+> +                    spi-max-frequency = <32000000>;
+> +                    dc-gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
+> +                    reset-gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
+> +                    rotation = <180>;
+> +                    backlight = <&backlight>;
+> +            };
+> +    };
+> +
+> +...
+> -- 
+> 2.7.4
