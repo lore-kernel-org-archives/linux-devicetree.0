@@ -2,162 +2,242 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F95EC35240
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27095C35240
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF1E20716
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580328111;
-	bh=eUqnYUa8xJcvz8vjf0xZN38k+FZQvoRAsBz21Xm6sZU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PzS26dmnnc7i99b6u4wG8gwJuFiWgdoti/2UGTiB6KDqRrRmA+TY/EZH6UC9ESMzs
-	 qgDQHCdRunyUtr7rIRP/WTxFCnhTaX1IZgfKOgqobQ47JPhJiRXx9FxhJg2OqDfIiL
-	 5BOKv7hNNACTvRnGL6Jo3kxiJTA994Z6eqfIij2k=
+	by mail.kernel.org (Postfix) with ESMTP id EBD7E20716
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:08:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CCXGcuD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgA2UBu (ORCPT
+        id S1726259AbgA2UIN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 15:01:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgA2UBu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 15:01:50 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B276F2067C;
-        Wed, 29 Jan 2020 20:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580328109;
-        bh=eUqnYUa8xJcvz8vjf0xZN38k+FZQvoRAsBz21Xm6sZU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rjv5RFPqGSLFBb+bMIdmwauMlY6BQgrgduh+b+BbCWLmSNE5sAYkGdk3gjtU5l0cm
-         yM1Mevx+pg8NIM1pZfvo4qhbpqD3PvHGA8bqty+FHme7kVyyJLyOe0Au3HwLzHqd3c
-         2zZHeagcFw2DxanCXC2NByH9ip34n2nnY56U3X64=
-Date:   Wed, 29 Jan 2020 20:01:43 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, joel@jms.id.au, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v1 2/2] iio: adc: modify NPCM reset support
-Message-ID: <20200129200143.08bf4a91@archlinux>
-In-Reply-To: <20200119110032.124745-2-tmaimon77@gmail.com>
-References: <20200119110032.124745-1-tmaimon77@gmail.com>
-        <20200119110032.124745-2-tmaimon77@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 29 Jan 2020 15:08:13 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36849 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgA2UIN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 15:08:13 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 185so218490pfv.3
+        for <devicetree@vger.kernel.org>; Wed, 29 Jan 2020 12:08:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pNbYTl5D7tyyPadQOvtvEgIuY7oo9N5/84ZV6aPiL+A=;
+        b=CCXGcuD7tYKTGjAOzvqSlDukmhV+suyVJ8/fo6Ofb2snrXaxvbPe50iXKIEn4DoXs1
+         SYXrZmgfnc1pzPOh3c/hA1vdTE90X4nqGQ3iqYOAdvXdyIY0mJgjXdMMN2mzJ6RD4swD
+         OFOzy5Z45DcYxSXQcniIQD+vgzNd4uRqvU6nY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pNbYTl5D7tyyPadQOvtvEgIuY7oo9N5/84ZV6aPiL+A=;
+        b=gLQXjIAMlsJfkEzVpUkdMmUcT/4h3/OoNAWFyiJgY8epJGZMqaSzH/ngtOKuOxpYqc
+         Y8o1nZCqYMDxHOG7F5jud1/FBS+Zc2KPWQTk/1fcGZb9puefLGk3FcmXTPMCEEDgdxDm
+         3AouvUG4UgdI0xxe7W5Z8xO8Yw19BQyurL7402TBDa2iWcbWXkHrv8JPwQUkqXqrkrB3
+         +7VjfAoz6Hg4khq0y2LUzoxiKnfgnbPO3S9OlpVEacs+jEIvFyzmF/1lUqkwSkxKf7tb
+         JyEx32k5+s3aW5S3Mv0G57IrYC9PfqLfHzVePhGtw8FIgxwPsSLrYN+G9SDAyGwAxs+e
+         3TxQ==
+X-Gm-Message-State: APjAAAVwE1et9v376mQ6pVG/0kPuGBtfETYfMoGDk/lbqxvvJBCIkjii
+        PAXY7K+BmXbRu49Dq2LjD0MxBg==
+X-Google-Smtp-Source: APXvYqwNqzfWZk6lufqk30dH9ILXdft34mJBC++saewCuU8HaAWZPqlMhBVOnbVwcO2EyAR+4k9I8g==
+X-Received: by 2002:a62:1548:: with SMTP id 69mr1273817pfv.239.1580328492369;
+        Wed, 29 Jan 2020 12:08:12 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id o184sm3588727pgo.62.2020.01.29.12.08.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 12:08:11 -0800 (PST)
+Date:   Wed, 29 Jan 2020 12:08:10 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy
+ bindings to yaml
+Message-ID: <20200129200810.GB71044@google.com>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+ <1580305919-30946-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1580305919-30946-2-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 19 Jan 2020 13:00:32 +0200
-Tomer Maimon <tmaimon77@gmail.com> wrote:
+Hi Sandeep,
 
-> Modify NPCM ADC reset support from
-> direct register access to reset controller support.
+On Wed, Jan 29, 2020 at 07:21:52PM +0530, Sandeep Maheswaram wrote:
+> Convert QUSB2 phy  bindings to DT schema format using json-schema.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-
-Hmm.  This presumably breaks all old DT. 
-
-If that's not a problem please say why.
-
-Jonathan
-
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
->  drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
->  1 file changed, 9 insertions(+), 21 deletions(-)
+>  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 142 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 ----------
+>  2 files changed, 142 insertions(+), 68 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
 > 
-> diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
-> index a6170a37ebe8..83bad2d5575d 100644
-> --- a/drivers/iio/adc/npcm_adc.c
-> +++ b/drivers/iio/adc/npcm_adc.c
-> @@ -14,6 +14,7 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/spinlock.h>
->  #include <linux/uaccess.h>
-> +#include <linux/reset.h>
->  
->  struct npcm_adc {
->  	bool int_status;
-> @@ -23,13 +24,9 @@ struct npcm_adc {
->  	struct clk *adc_clk;
->  	wait_queue_head_t wq;
->  	struct regulator *vref;
-> -	struct regmap *rst_regmap;
-> +	struct reset_control *reset;
->  };
->  
-> -/* NPCM7xx reset module */
-> -#define NPCM7XX_IPSRST1_OFFSET		0x020
-> -#define NPCM7XX_IPSRST1_ADC_RST		BIT(27)
-> -
->  /* ADC registers */
->  #define NPCM_ADCCON	 0x00
->  #define NPCM_ADCDATA	 0x04
-> @@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
->  					       msecs_to_jiffies(10));
->  	if (ret == 0) {
->  		regtemp = ioread32(info->regs + NPCM_ADCCON);
-> -		if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
-> +		if (regtemp & NPCM_ADCCON_ADC_CONV) {
->  			/* if conversion failed - reset ADC module */
-> -			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
-> -				     NPCM7XX_IPSRST1_ADC_RST);
-> +			reset_control_assert(info->reset);
->  			msleep(100);
-> -			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
-> -				     0x0);
-> +			reset_control_deassert(info->reset);
->  			msleep(100);
->  
->  			/* Enable ADC and start conversion module */
-> @@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
->  	struct npcm_adc *info;
->  	struct iio_dev *indio_dev;
->  	struct device *dev = &pdev->dev;
-> -	struct device_node *np = pdev->dev.of_node;
->  
->  	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
->  	if (!indio_dev)
-> @@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device *pdev)
->  	if (IS_ERR(info->regs))
->  		return PTR_ERR(info->regs);
->  
-> +	info->reset = devm_reset_control_get(&pdev->dev, NULL);
-> +	if (IS_ERR(info->reset))
-> +		return PTR_ERR(info->reset);
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> new file mode 100644
+> index 0000000..90b3cc6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> @@ -0,0 +1,142 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +
->  	info->adc_clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(info->adc_clk)) {
->  		dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
-> @@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
->  	div = div >> NPCM_ADCCON_DIV_SHIFT;
->  	info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) * 2);
->  
-> -	if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
-> -		info->rst_regmap = syscon_regmap_lookup_by_compatible
-> -			("nuvoton,npcm750-rst");
-> -		if (IS_ERR(info->rst_regmap)) {
-> -			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-rst\n");
-> -			ret = PTR_ERR(info->rst_regmap);
-> -			goto err_disable_clk;
-> -		}
-> -	}
-> -
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq <= 0) {
->  		ret = -EINVAL;
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm QUSB2 phy controller
+> +
+> +maintainers:
+> +  - Manu Gautam <mgautam@codeaurora.org>
+> +
+> +description:
+> +  QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,msm8996-qusb2-phy
+> +      - qcom,msm8998-qusb2-phy
+> +      - qcom,sdm845-qusb2-phy
 
+If you wanted to maintain the comments from the .txt file you could add
+them after the compatible string (e.g.
+Documentation/devicetree/bindings/pwm/pwm-samsung.yaml)
+
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    minItems: 2
+
+       maxItems: 3 ?
+
+> +    items:
+> +      - description: phy config clock
+> +      - description: 19.2 MHz ref clk
+> +      - description: phy interface clock (Optional)
+> +
+> +  clock-names:
+> +    minItems: 2
+
+       maxItems: 3 ?
+
+> +    items:
+> +      - const: cfg_ahb
+> +      - const: ref
+> +      - const: iface
+> +
+> +  vdda-pll-supply:
+> +     description:
+> +       Phandle to 1.8V regulator supply to PHY refclk pll block.
+> +
+> +  vdda-phy-dpdm-supply:
+> +     description:
+> +       Phandle to 3.1V regulator supply to Dp/Dm port signals.
+> +
+> +  resets:
+> +    maxItems: 1
+
+       description:
+         Phandle to reset to phy block.
+
+> +
+> +  nvmem-cells:
+> +    maxItems: 1
+> +    description:
+> +        Phandle to nvmem cell that contains 'HS Tx trim'
+> +        tuning parameter value for qusb2 phy.
+> +
+> +  qcom,tcsr-syscon:
+> +    description:
+> +        Phandle to TCSR syscon register region.
+> +    $ref: /schemas/types.yaml#/definitions/cell
+> +
+> +  qcom,imp-res-offset-value:
+> +    description:
+> +        It is a 6 bit value that specifies offset to be
+> +        added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
+> +        tuning parameter that may vary for different boards of same SOC.
+> +        This property is applicable to only QUSB2 v2 PHY.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 63
+> +        default: 0
+> +
+> +  qcom,hstx-trim-value:
+> +    description:
+> +        It is a 4 bit value that specifies tuning for HSTX
+> +        output current.
+> +        Possible range is - 15mA to 24mA (stepsize of 600 uA).
+> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> +        This property is applicable to only QUSB2 v2 PHY.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 15
+> +        default: 3
+> +
+> +  qcom,preemphasis-level:
+> +    description:
+> +        It is a 2 bit value that specifies pre-emphasis level.
+> +        Possible range is 0 to 15% (stepsize of 5%).
+> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> +        This property is applicable to only QUSB2 v2 PHY.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 3
+> +        default: 2
+> +
+> +  qcom,preemphasis-width:
+> +    description:
+> +        It is a 1 bit value that specifies how long the HSTX
+> +        pre-emphasis (specified using qcom,preemphasis-level) must be in
+> +        effect. Duration could be half-bit of full-bit.
+> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> +        This property is applicable to only QUSB2 v2 PHY.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 1
+> +        default: 0
+
+I think you could put the properties that are only applicable for QUSB2
+v2 PHY into a block like this and remove the 'This property is
+applicable to only QUSB2 v2 PHY.' comment from the property description:
+
+if:
+  properties:
+    compatible:
+      contains:
+        const: qcom,sdm845-qusb2-phy
+then:
+  qcom,imp-res-offset-value:
+    ...
+
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
