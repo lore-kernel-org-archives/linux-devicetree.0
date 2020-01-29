@@ -2,128 +2,87 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32E6C47409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 23:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF41C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 23:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C8C21734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 23:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B62207FF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 23:20:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QEWBNKRk"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="PHBbhLjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgA2XIy (ORCPT
+        id S1726949AbgA2XUl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:08:54 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58976 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgA2XIy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 18:08:54 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00TN8Glt074646;
-        Wed, 29 Jan 2020 17:08:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580339296;
-        bh=8M9ojDbSJHfliIaE8Iz+4SUYlSEo4PZfCL4CyB/5na0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QEWBNKRkUCswNAKvV1BrxAfPgSwUz6WepsQkNon0Umj1lkj2osc92fliC0qlMsBIp
-         NJxdYeOmOtsk58cBhchZkolqyPjU1f7W4cmXtVCWtFXS025aNJcVmTT5J8GdXFxCLJ
-         did3qeDygtr5GIKoV1aT/0aEOnPsnv1MhRLFVkk4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00TN8GO0058050
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jan 2020 17:08:16 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 29
- Jan 2020 17:08:15 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 29 Jan 2020 17:08:15 -0600
-Received: from [10.250.70.160] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00TN8EUb105462;
-        Wed, 29 Jan 2020 17:08:14 -0600
-Subject: Re: [PATCH v4 4/8] ARM: DTS: omap3: add sgx gpu child node
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-CC:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <openpvrsgx-devgroup@letux.org>, <letux-kernel@openphoenux.org>,
-        <kernel@pyra-handheld.com>, <linux-mips@vger.kernel.org>
-References: <cover.1576605726.git.hns@goldelico.com>
- <103c92a7d19387860aea406e0356249b02a3cbce.1576605726.git.hns@goldelico.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <3fce9260-12f2-a678-5d09-0def4d02b261@ti.com>
-Date:   Wed, 29 Jan 2020 18:08:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 29 Jan 2020 18:20:41 -0500
+Received: from onstation.org ([52.200.56.107]:33836 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726939AbgA2XUl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 18:20:41 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 6FAC73F0A4;
+        Wed, 29 Jan 2020 23:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1580340040;
+        bh=xhEqO9D9gJzGJNJNQBriXn442xN0cKXRCxa1IMwgTcs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PHBbhLjF3F7GceQZaJXW7pWkfnS1sKXsU3el/cbnoc9DfNU5CDItQ7s846xJMx5No
+         uPeG2aXE017VQzCStVY3cZYaqZn4calhWlR//MZCF5UuicxlpAkb6XUR/dQFTftIS8
+         /Xt1Ds2YleqcM5CjctAZauqyzc0NaZo2UzTSyDMY=
+From:   Brian Masney <masneyb@onstation.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        jonathan@marek.ca
+Subject: [PATCH 1/3] ARM: qcom_defconfig: add Broadcom bluetooth options
+Date:   Wed, 29 Jan 2020 18:20:29 -0500
+Message-Id: <20200129232031.34538-2-masneyb@onstation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200129232031.34538-1-masneyb@onstation.org>
+References: <20200129232031.34538-1-masneyb@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <103c92a7d19387860aea406e0356249b02a3cbce.1576605726.git.hns@goldelico.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/17/19 1:02 PM, H. Nikolaus Schaller wrote:
-> and add interrupt
-> 
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600 MHz.
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  arch/arm/boot/dts/omap34xx.dtsi | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-> index c4dd9801840d..a858a2e8002d 100644
-> --- a/arch/arm/boot/dts/omap34xx.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx.dtsi
-> @@ -159,7 +159,7 @@
->  		 * are also different clocks, but we do not have any dts users
->  		 * for it.
->  		 */
-> -		sgx_module: target-module@50000000 {
-> +		target-module@50000000 {
->  			compatible = "ti,sysc-omap2", "ti,sysc";
->  			reg = <0x50000014 0x4>;
->  			reg-names = "rev";
-> @@ -169,10 +169,11 @@
->  			#size-cells = <1>;
->  			ranges = <0 0x50000000 0x4000>;
->  
-> -			/*
-> -			 * Closed source PowerVR driver, no child device
-> -			 * binding or driver in mainline
-> -			 */
-> +			sgx: gpu@0 {
-> +				compatible = "ti,omap3-sgx530-121", "img,sgx530-121", "img,sgx530";
-> +				reg = <0x0 0x4000>;	/* 64kB */
+Add Broadcom bluetooth options and serial bus in order to support
+Bluetooth on the Nexus 5 phone.
 
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ arch/arm/configs/qcom_defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Just for future reference, this range should be 0x10000.
+diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
+index cdc75ef7d529..a00765b7225f 100644
+--- a/arch/arm/configs/qcom_defconfig
++++ b/arch/arm/configs/qcom_defconfig
+@@ -50,6 +50,9 @@ CONFIG_IP_PNP_DHCP=y
+ # CONFIG_INET_XFRM_MODE_TUNNEL is not set
+ # CONFIG_INET_XFRM_MODE_BEET is not set
+ # CONFIG_IPV6 is not set
++CONFIG_BT=m
++CONFIG_BT_HCIUART=m
++CONFIG_BT_HCIUART_BCM=y
+ CONFIG_CFG80211=m
+ CONFIG_MAC80211=m
+ CONFIG_RFKILL=y
+@@ -111,6 +114,7 @@ CONFIG_SERIO_LIBPS2=y
+ # CONFIG_LEGACY_PTYS is not set
+ CONFIG_SERIAL_MSM=y
+ CONFIG_SERIAL_MSM_CONSOLE=y
++CONFIG_SERIAL_DEV_BUS=y
+ CONFIG_HW_RANDOM=y
+ CONFIG_I2C=y
+ CONFIG_I2C_CHARDEV=y
+-- 
+2.24.1
 
-Andrew
-
-
-> +				interrupts = <21>;
-> +			};
->  		};
->  	};
->  
-> 
