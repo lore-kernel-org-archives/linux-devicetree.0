@@ -2,47 +2,81 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C73C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 09:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E093C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 09:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67FBF2070E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 09:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421D920732
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 09:51:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQIew7Fm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgA2Jq4 (ORCPT
+        id S1726128AbgA2JvM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:46:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:38660 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbgA2Jq4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:46:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C2011FB;
-        Wed, 29 Jan 2020 01:46:55 -0800 (PST)
-Received: from [10.37.12.123] (unknown [10.37.12.123])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C0A23F52E;
-        Wed, 29 Jan 2020 01:46:46 -0800 (PST)
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-To:     Sibi Sankar <sibis@codeaurora.org>, viresh.kumar@linaro.org,
-        sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com
-Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-References: <20200127200350.24465-1-sibis@codeaurora.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <88b3885a-5ddd-b942-c5a5-d560b2f196bd@arm.com>
-Date:   Wed, 29 Jan 2020 09:46:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 29 Jan 2020 04:51:12 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:45699 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgA2JvM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 04:51:12 -0500
+Received: by mail-yw1-f65.google.com with SMTP id a125so5238175ywe.12;
+        Wed, 29 Jan 2020 01:51:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=msGz2ESZ2UJRzLB9AUoHtHWgVt+qM5wQRkU7yMDJeOE=;
+        b=hQIew7FmRox4FI1ZZrV4uJ/4mjyprfw14dmA02jeqLrF7V2FE5hz/d+fJgDbCY9B62
+         s4sczrTp5GSMQg0qgDJFMWNtRq5OqMHXzDVxf0LW7r/ZHkxwgRGnaybR/psPe0jXkh9u
+         arEpL7nS61xI1wCA8F5oFN7I91s8/LSRlbH00nrOmXRz52qxXIqnH0K1X3ZJRlbiiCJ2
+         fk4P9AiGahIrmm1lnWrX/nRsmMu1uBgUEFS9/ogzv417Atxvlb37xEFev1k4pyTvbU9H
+         uscmz2+ZqYuWYNIDdpOFclIeS5/29ywGyYYO3L8sVVAUkSuz11uA3vKcOJIZPSmdnUI+
+         V3/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=msGz2ESZ2UJRzLB9AUoHtHWgVt+qM5wQRkU7yMDJeOE=;
+        b=Be4H0x9cto0ZADLa6YfgFh9YwmeSBD9m9jCJb5dPSxQBuWoxeKVmFpp8Yy+cgfCCOK
+         XDdDhgWhE2LXuYPafLf8tbflyi7faGXq65R1Pf3HR+JgPRBFq9AIILirOgWrcZWshpBx
+         6YnY59fnsbmfyu8wpzKtm1ezULGCQTi3iUgJfNNAKMvDK68l+Cve65sfidqn80atkHpT
+         5/2LQJ0C4hiZFOBts67sR05Mg0JIR49oeBACaeV6S6WrCrRjj0TOpUtU7Vs2vwrprEtW
+         mbl+9i4coY6cPuYsJ2tcrXLhFO16EG8dvuLoCPV7qI5vxPsbplHgY1g02UyEQMmrARRC
+         eGnA==
+X-Gm-Message-State: APjAAAULj6YZIvsDCs8h/cWpLaxHCzCBWlPDTLh5O9BoF5HnR1ayVVcw
+        rFapgZ8Nrofegi/AgeM2KVnUlEfI
+X-Google-Smtp-Source: APXvYqyqxnX2bQoHJDkHE1V7WT4xVJx7oZZpBgSCPEYZC38pu/OQxFsRgk86QikPTFhc0qganKqffg==
+X-Received: by 2002:a81:3888:: with SMTP id f130mr18461063ywa.138.1580291470885;
+        Wed, 29 Jan 2020 01:51:10 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m203sm733423ywc.10.2020.01.29.01.51.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 01:51:10 -0800 (PST)
+Subject: Re: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
+ adt7475 documentation
+To:     Logan Shaw <Logan.Shaw@alliedtelesis.co.nz>,
+        "robh@kernel.org" <robh@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joshua Scott <Joshua.Scott@alliedtelesis.co.nz>,
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20200126221014.2978-1-logan.shaw@alliedtelesis.co.nz>
+ <20200126221014.2978-3-logan.shaw@alliedtelesis.co.nz>
+ <20200127154800.GA7023@bogus>
+ <b1d669567b5f9f00dfb5d6dab89262f68c5523f1.camel@alliedtelesis.co.nz>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <0849578b-c2aa-d62f-b236-7efab9489238@roeck-us.net>
+Date:   Wed, 29 Jan 2020 01:51:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200127200350.24465-1-sibis@codeaurora.org>
+In-Reply-To: <b1d669567b5f9f00dfb5d6dab89262f68c5523f1.camel@alliedtelesis.co.nz>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -51,78 +85,183 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sibi,
+On 1/28/20 8:30 PM, Logan Shaw wrote:
+> On Mon, 2020-01-27 at 09:48 -0600, Rob Herring wrote:
+>> On Mon, Jan 27, 2020 at 11:10:14AM +1300, Logan Shaw wrote:
+>>> Added a new file documenting the adt7475 devicetree and added the
+>>> four
+>>> new properties to it.
+>>>
+>>> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+>>> ---
+>>> ---
+>>>   .../devicetree/bindings/hwmon/adt7475.yaml    | 95
+>>> +++++++++++++++++++
+>>>   1 file changed, 95 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/hwmon/adt7475.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+>>> b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+>>> new file mode 100644
+>>> index 000000000000..450da5e66e07
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+>>> @@ -0,0 +1,95 @@
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>
+>> Dual license new bindings please:
+>>
+>> (GPL-2.0-only OR BSD-2-Clause)
+>>
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/adt7475.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: ADT7475 hwmon sensor
+>>> +
+>>> +maintainers:
+>>> +  - Jean Delvare <jdelvare@suse.com>
+>>> +
+>>> +description: |
+>>> +  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors
+>>> and multiple
+>>> +  PWN fan controllers.
+>>> +
+>>> +  They support monitoring and controlling up to four fans (the
+>>> ADT7490 can only
+>>> +  control up to three). They support reading a single on chip
+>>> temperature
+>>> +  sensor and two off chip temperature sensors (the ADT7490
+>>> additionally
+>>> +  supports measuring up to three current external temperature
+>>> sensors with
+>>> +  series resistance cancellation (SRC)).
+>>> +
+>>> +  Datasheets:
+>>> +  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
+>>> +  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
+>>> +  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
+>>> +  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
+>>> +
+>>> +  Description taken from omsemiconductors specification sheets,
+>>> with minor
+>>
+>> omsemi?
+>>   ^
+>>
+>>> +  rephrasing.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - adi,adt7473
+>>> +      - adi,adt7475
+>>> +      - adi,adt7476
+>>> +      - adi,adt7490
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  bypass-attenuator-in0:
+>>
+>> Needs a vendor prefix and a type ref.
+> 
+> Adi (Analog Devices) sold the ADT product line (amongst other things)
+> to On Semiconductor. As changing the vendor of these chips (in code)
+> would break backwards compatibility should we keep the vendor as adi?
+> 
+> To confirm, would this make the property "adi,adt7476,bypass-
+> attenuator-in0"?
+> 
+> So used in conjunction with patternProperties you would end up with
+> something like:
+> 
+> "adi,(adt7473|adt7475|adt7476|adt7490),bypass-attenuator-in[0134]"
+> 
 
-In my opinion this solution depends on not always true assumption that
-CPUFreq notification chain will be triggered when there is a frequency
-switch. Extending devfreq governor (as in one of the dependent patch
-series that you have referred) by attaching to this notification
-chain makes sense only when the SchedUtil and fast_switch is not in use.
-The Schedutil CPUFreq governor might use the fast_switch from this
-driver and the notifications will not be triggered. I have also
-commented patch 08/10 which tries to disable it.
+That seems highly unusual and would be quite messy to implement.
+I don't see the point of having the chip name in individual properties.
 
-Regards,
-Lukasz
+Guenter
 
-On 1/27/20 8:03 PM, Sibi Sankar wrote:
-> This RFC series aims to extend cpu based scaling support to L3/DDR on
-> SDM845 and SC7180 SoCs.
-> 
-> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
-> Patches [5-7] - Hack in a way to add/remove multiple opp tables to
->                  a single device. I am yet to fix the debugfs to
-> 		support multiple opp_tables per device but wanted to
-> 		send what was working upstream to get an idea if multiple
-> 		opp tables per device is a feature that will be useful
-> 		upstream.
-> Patches [9-10] - Add the cpu/cpu-ddr/cpu-l3 opp tables for SDM845
->                   and SC7180 SoCs.
-> 
-> v3:
->   * Migrated to using Saravana's opp-kBps bindings [1]
->   * Fixed some misc comments from Rajendra
->   * Added support for SC7180
-> 
-> v2:
->   * Incorporated Viresh's comments from:
->   https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
->   https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
->   * Dropped cpufreq-map passive governor
-> 
-> Git-branch: https://github.com/QuinAsura/linux/tree/lnext-012420
-> 
-> Some alternate ways of hosting the opp-tables:
-> https://github.com/QuinAsura/linux/commit/50b92bfaadc8f9a0d1e12249646e018bd6d1a9d3
-> https://github.com/QuinAsura/linux/commit/3d23d1eefd16ae6d9e3ef91e93e78749d8844e98
-> Viresh didn't really like ^^ bindings and they dont really scale well. Just
-> including them here for completeness.
-> 
-> Depends on the following series:
-> [1] https://patchwork.kernel.org/cover/11277199/
-> [2] https://patchwork.kernel.org/cover/11055499/
-> [3] https://patchwork.kernel.org/cover/11326381/
-> 
-> Sibi Sankar (10):
->    arm64: dts: qcom: sdm845: Add SoC compatible to MTP
->    cpufreq: blacklist SDM845 in cpufreq-dt-platdev
->    cpufreq: blacklist SC7180 in cpufreq-dt-platdev
->    OPP: Add and export helper to update voltage
->    opp: of: export _opp_of_get_opp_desc_node
->    opp: Allow multiple opp_tables to be mapped to a single device
->    opp: Remove multiple attached opp tables from a device
->    cpufreq: qcom: Update the bandwidth levels on frequency change
->    arm64: dts: qcom: sdm845: Add cpu OPP tables
->    arm64: dts: qcom: sc7180: Add cpu OPP tables
-> 
->   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 287 +++++++++++++++
->   arch/arm64/boot/dts/qcom/sdm845-mtp.dts |   2 +-
->   arch/arm64/boot/dts/qcom/sdm845.dtsi    | 453 ++++++++++++++++++++++++
->   drivers/cpufreq/cpufreq-dt-platdev.c    |   2 +
->   drivers/cpufreq/qcom-cpufreq-hw.c       | 246 +++++++++++--
->   drivers/opp/core.c                      | 111 +++++-
->   drivers/opp/of.c                        |   3 +-
->   drivers/opp/opp.h                       |   2 +
->   include/linux/pm_opp.h                  |  10 +
->   9 files changed, 1083 insertions(+), 33 deletions(-)
-> 
+>>
+>>> +    description: |
+>>> +      Configures bypassing the individual voltage input
+>>> +      attenuator, on in0. This is supported on the ADT7476 and
+>>> ADT7490.
+>>> +      If set to a non-zero integer the attenuator is bypassed, if
+>>> set to
+>>> +      zero the attenuator is not bypassed. If the property is
+>>> absent then
+>>> +      the config register is not modified.
+>>
+>> Sounds like this could be boolean? If not, define a schema for what
+>> are
+>> valid values.
+>>
+>>> +    maxItems: 1
+>>> +
+>>> +  bypass-attenuator-in1:
+>>> +    description: |
+>>> +      Configures bypassing the individual voltage input
+>>> +      attenuator, on in1. This is supported on the ADT7473,
+>>> ADT7475,
+>>> +      ADT7476 and ADT7490. If set to a non-zero integer the
+>>> attenuator
+>>> +      is bypassed, if set to zero the attenuator is not bypassed.
+>>> If the
+>>> +      property is absent then the config register is not modified.
+>>> +    maxItems: 1
+>>> +
+>>> +  bypass-attenuator-in3:
+>>> +    description: |
+>>> +      Configures bypassing the individual voltage input
+>>> +      attenuator, on in3. This is supported on the ADT7476 and
+>>> ADT7490.
+>>> +      If set to a non-zero integer the attenuator is bypassed, if
+>>> set to
+>>> +      zero the attenuator is not bypassed. If the property is
+>>> absent then
+>>> +      the config register is not modified.
+>>> +    maxItems: 1
+>>> +
+>>> +  bypass-attenuator-in4:
+>>
+>> These 4 could be a single entry under patternProperties.
+>>
+>>
+>>> +    description: |
+>>> +      Configures bypassing the individual voltage input
+>>> +      attenuator, on in4. This is supported on the ADT7476 and
+>>> ADT7490.
+>>> +      If set to a non-zero integer the attenuator is bypassed, if
+>>> set to
+>>> +      zero the attenuator is not bypassed. If the property is
+>>> absent then
+>>> +      the config register is not modified.
+>>> +    maxItems: 1
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    i2c {
+>>> +      #address-cells = <1>;
+>>> +      #size-cells = <0>;
+>>> +
+>>> +      hwmon@2e {
+>>> +        compatible = "adi,adt7476";
+>>> +        reg = <0x2e>;
+>>> +        bypass-attenuator-in0 = <1>;
+>>> +        bypass-attenuator-in1 = <0>;
+>>> +      };
+>>> +    };
+>>> +...
+>>> -- 
+>>> 2.25.0
+>>>
+
