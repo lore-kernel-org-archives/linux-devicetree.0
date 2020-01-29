@@ -2,228 +2,169 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ECAC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 22:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E0FC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 22:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADCE206D5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 22:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580335266;
-	bh=KMqCZfR8OC4MTYilPgyK7YPT+Qf5ChcD5B7b36gZO+Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rj9EFcUC3ExZ+TwlcT9GJUYwP+vrcbN0JxC1hkPUKsMHCD4Ng85l2/oCY5xpctT00
-	 JkWG1AZu+RJLy8+Ld1EqIaxdE+E7kpyBy42GXIqA5vhSGfzz4RHZ+gonn/SmLpGphH
-	 C6J4Kw7XtNo493Q2BzLIxrLKVa4BZcVemzBHweKk=
+	by mail.kernel.org (Postfix) with ESMTP id 3E98F206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 22:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgA2WBF (ORCPT
+        id S1726283AbgA2WWG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:01:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgA2WBF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:01:05 -0500
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F840206D5;
-        Wed, 29 Jan 2020 22:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580335264;
-        bh=KMqCZfR8OC4MTYilPgyK7YPT+Qf5ChcD5B7b36gZO+Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lLJRKTSsX/A9CVc3vR5U7iGVdFqQrxwzc2R1YVkFg12RKCfPCmWWY+vc2GFQQhmE1
-         I56LmMycL2MQAjXJjFYLroayjXTmVyNtu1TEhnpAO/UunDuRstpV6ltRzm7IVgVTY6
-         5KIvU2dfA2kASn3tW4hmVjNJKl2jqtJFQ9da4+iw=
-Received: by mail-qk1-f179.google.com with SMTP id g195so866694qke.13;
-        Wed, 29 Jan 2020 14:01:04 -0800 (PST)
-X-Gm-Message-State: APjAAAVTWC640kevNcm1vUGZ90kxkDZK+FkdRZ6Vf3m4YxNs/Fm3cx/E
-        R+Mf1aAJZXM2zFqsGDsMOGOkE/wA4Vvsk8B4+w==
-X-Google-Smtp-Source: APXvYqya7/HyzAZ7As4piQq5rd9Qp3/xxmPf0EVs5MW2ZyCiSIU+hACzOqVQcX2Xwp3PGxxJxs0ezV8toTxQNue7DHo=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr2130152qkg.152.1580335263500;
- Wed, 29 Jan 2020 14:01:03 -0800 (PST)
+        Wed, 29 Jan 2020 17:22:06 -0500
+Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:50690 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726222AbgA2WWG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:22:06 -0500
+X-Greylist: delayed 580 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jan 2020 17:22:06 EST
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id 0CAE48124179;
+        Wed, 29 Jan 2020 22:12:26 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id E498918223245;
+        Wed, 29 Jan 2020 22:12:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sack18_895e316a0954a
+X-Filterd-Recvd-Size: 4818
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 29 Jan 2020 22:12:23 +0000 (UTC)
+Message-ID: <39042657067088e4ca960f630a7d222fc48f947a.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: check proper licensing of Devicetree
+ bindings
+From:   Joe Perches <joe@perches.com>
+To:     Lubomir Rintel <lkundrak@v3.sk>, Andy Whitcroft <apw@canonical.com>
+Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 29 Jan 2020 14:11:17 -0800
+In-Reply-To: <20200129123334.388530-1-lkundrak@v3.sk>
+References: <20200129123334.388530-1-lkundrak@v3.sk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-References: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
-In-Reply-To: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 29 Jan 2020 16:00:51 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
-Message-ID: <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: clk: qcom: Fix self-validation, split, and
- clean cruft
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Abhishek Sahu <absahu@codeaurora.org>, sivaprak@codeaurora.org,
-        anusharao@codeaurora.org, Sricharan <sricharan@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 3:23 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
-> because it required a property to be either (3 entries big),
-> (3 entries big), or (7 entries big), but not more than one of those
-> things.  That didn't make a ton of sense.
->
-> This patch splits all of the exceptional device trees (AKA those that
-> would have needed if/then/else rules) from qcom,gcc.yaml.  It also
-> cleans up some cruft found while doing that.
->
-> After this lands, this worked for me atop clk-next:
->   for f in \
->     Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
->       ARCH=arm64 make dt_binding_check DT_SCHEMA_FILES=$f; \
->       ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
->   done
-
-Note that using DT_SCHEMA_FILES may hide some errors in examples as
-all other schemas (including the core ones) are not used for
-validation. So just 'make dt_binding_check' needs to pass (ignoring
-any other unrelated errors as it breaks frequently). Supposedly a
-patch is coming explaining this in the documentation.
-
-> Arbitrary decisions made (yell if you want changed):
-> - Left all the older devices (where clocks / clock-names weren't
->   specified) in a single file.
-> - Didn't make clocks "required" for msm8996/msm8998 but left them as
->   listed.  This seems a little weird but means I didn't need to open a
->   whole different can of worms.  It matches the old binding for
->   msm8996 and doesn't match the binding (but matches the dts) for
->   msm8998.
->
-> Misc cleanups as part of this patch:
-> - sm8150 was claimed to be same set of clocks as sc7180, but driver
->   and dts appear to say that "bi_tcxo_ao" doesn't exist.  Fixed.
-> - In "apq8064", "#thermal-sensor-cells" was missing the "#".
-> - Got rid of "|" at the end of top description since spacing doesn't
->   matter.
-> - Changed indentation to consistently 2 spaces (it was 3 in some
->   places).
-> - Added period at the end of protected-clocks description.
-> - No space before ":".
-> - Updated sc7180/sm8150 example to use the 'qcom,rpmh.h' include.
-> - Updated sc7180/sm8150 example to use larger address/size cells as
->   per reality.
-> - Updated sc7180/sm8150 example to point to the sleep_clk rather than
->   <0>.
-> - Made it so that gcc-ipq8074 didn't require #power-domain-cells since
->   actual dts didn't have it and I got no hits from:
->     git grep _GDSC include/dt-bindings/clock/qcom,gcc-ipq8074.h
-> - Made it so that gcc-qcs404 didn't require #power-domain-cells since
->   actual dts didn't have it and I got no hits from:
->     git grep _GDSC include/dt-bindings/clock/qcom,gcc-qcs404.h
->
-> Noticed, but not done in this patch (volunteers needed):
-
-No requirement to fix dts file errors at this point.
-
-> - Add "aud_ref_clk" to sm8150 bindings / dts even though I found a
->   reference to it in "gcc-sm8150.c".
-> - Fix node name in actual ipq8074 to be "clock-controller" (it's gcc).
-> - Since the example doesn't need phandes to exist, in msm8998 could
->   just make up places providing some of the clocks currently bogused
->   out with <0>.
->
-> Fixes: ab91f72e018a ("clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Wed, 2020-01-29 at 13:33 +0100, Lubomir Rintel wrote:
+> According to Devicetree maintainers (see Link: below), the Devicetree
+> binding documents are preferrably licensed (GPL-2.0-only OR
+> BSD-2-Clause).
+> 
+> Let's check that. The actual check is a bit more relaxed, to allow more
+> liberal but compatible licensing (e.g. GPL-2.0-or-later OR
+> BSD-2-Clause).
+> 
+> Link: https://lore.kernel.org/lkml/20200108142132.GA4830@bogus/
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
->
->  .../bindings/clock/qcom,gcc-apq8064.yaml      |  81 +++++++
->  .../bindings/clock/qcom,gcc-ipq8074.yaml      |  48 ++++
->  .../bindings/clock/qcom,gcc-msm8996.yaml      |  65 ++++++
->  .../bindings/clock/qcom,gcc-msm8998.yaml      |  88 ++++++++
->  .../bindings/clock/qcom,gcc-qcs404.yaml       |  48 ++++
->  .../bindings/clock/qcom,gcc-sc7180.yaml       |  72 ++++++
->  .../bindings/clock/qcom,gcc-sm8150.yaml       |  69 ++++++
->  .../devicetree/bindings/clock/qcom,gcc.yaml   | 212 ++----------------
->  8 files changed, 489 insertions(+), 194 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
->
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
-> new file mode 100644
-> index 000000000000..c09497881cd2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
-> @@ -0,0 +1,81 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-apq8064.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Global Clock & Reset Controller Binding for APQ8064
-> +
-> +maintainers:
-> +  - Stephen Boyd <sboyd@kernel.org>
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description:
-> +  Qualcomm global clock control module which supports the clocks, resets and
-> +  power domains on APQ8064.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,gcc-apq8064
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  '#reset-cells':
-> +    const: 1
-> +
-> +  '#power-domain-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  nvmem-cells:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description:
-> +      Qualcomm TSENS (thermal sensor device) on some devices can
-> +      be part of GCC and hence the TSENS properties can also be part
-> +      of the GCC/clock-controller node.
-> +      For more details on the TSENS properties please refer
-> +      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> +
-> +  nvmem-cell-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description:
-> +      Names for each nvmem-cells specified.
+>  scripts/checkpatch.pl | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index e2976c3fe5ff8..ac93e98cddcee 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3111,6 +3111,11 @@ sub process {
+>  						WARN("SPDX_LICENSE_TAG",
+>  						     "'$spdx_license' is not supported in LICENSES/...\n" . $herecurr);
+>  					}
+> +					if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
+> +					    not $spdx_license =~ /GPL-2\.0.*BSD-2-Clause/) {
+> +						WARN("SPDX_LICENSE_TAG",
+> +						     "DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)\n" . $herecurr);
 
-Isn't that every instance? So drop.
+I think not unless the existing licenses already
+there are changed first.  Only about 1/3 are
+dual licensed BSD.
 
-Otherwise, assuming it all works:
+Do all the existing license holders agree?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+$ git grep -oh "SPDX.*$" Documentation/devicetree/bindings/ | \
+  sort |
+uniq -c | sort -rn
+    269 SPDX-License-Identifier: GPL-2.0
+     81 SPDX-
+License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+     69 SPDX-License-
+Identifier: (GPL-2.0 OR BSD-2-Clause)
+     23 SPDX-License-Identifier:
+GPL-2.0-only
+      9 SPDX-License-Identifier: GPL-2.0+
+      5 SPDX-
+License-Identifier: GPL-2.0-or-later
+      3 SPDX-License-Identifier:
+(GPL-2.0+ OR X11)
+      3 SPDX-License-Identifier: (GPL-2.0 OR MIT)
+      
+3 SPDX-License-Identifier: (GPL-2.0)
+      2 SPDX-License-Identifier:
+GPL-2.0-or-later OR BSD-2-Clause
+      2 SPDX-License-Identifier: (GPL-
+2.0-or-later OR BSD-2-Clause)
+      2 SPDX-License-Identifier: GPL-2.0 OR
+BSD-2-Clause
+      1 SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+ 
+     1 SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+
+There would be way too many false positives given
+the current licensing types in existing files.
+
+Also, the link seems to show just a desire for an
+OR BSD for this file not a desire for a treewide
+change.
+
+But:
+
+Documentation/devicetree/bindings/submitting-patches.txt does show:
+
+ 3) DT binding files should be dual licensed. The preferred license tag is
+     (GPL-2.0-only OR BSD-2-Clause).
+
+So perhaps use code like:
+
+				my $msg_level = \&WARN;
+				$msg_level = \&CHK if ($file);
+				if (&{$msg_level}("SPDX_LICENSE_TAG",
+						  "The preferred bindings license is '(GPL-2.0-only OR BSD-2-Clause)'\n" . $herecurr)
+
+so that when checkpatch is run over existing files,
+this message is not emitted unless using --strict.
+
+Maybe something like:
+---
+ scripts/checkpatch.pl | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index f3b8434..1734c9b 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3124,6 +3124,17 @@ sub process {
+ 					if (!is_SPDX_License_valid($spdx_license)) {
+ 						WARN("SPDX_LICENSE_TAG",
+ 						     "'$spdx_license' is not supported in LICENSES/...\n" . $herecurr);
++					    }
++					if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
++					    $spdx_license !~ /\(GPL-2\.0-only OR BSD-2-Clause\)/) {
++						my $msg_level = \&WARN;
++						$msg_level = \&CHK if ($file);
++						if (&{$msg_level}("SPDX_LICENSE_TAG",
++
++								  "DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)\n" . $herecurr) &&
++						    $fix) {
++							$fixed[$fixlinenr] =~ s/SPDX-License-Identifier: .*/SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)/;
++						}
+ 					}
+ 				}
+ 			}
+
+
