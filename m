@@ -2,51 +2,86 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9C4C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 15:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135B2C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 16:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E98206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 15:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF4220732
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 16:02:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPhAuwVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgA2Prz (ORCPT
+        id S1726599AbgA2QCp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:47:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:42856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbgA2Prz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:47:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CE1431B;
-        Wed, 29 Jan 2020 07:47:54 -0800 (PST)
-Received: from [10.37.12.80] (unknown [10.37.12.80])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D53613F52E;
-        Wed, 29 Jan 2020 07:47:44 -0800 (PST)
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, linux-arm-msm-owner@vger.kernel.org
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <88b3885a-5ddd-b942-c5a5-d560b2f196bd@arm.com>
- <57f9a785d93193719ee0b91e43d0922f@codeaurora.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <a87feb0c-3a34-9070-0b4d-ce31a41136b4@arm.com>
-Date:   Wed, 29 Jan 2020 15:47:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 29 Jan 2020 11:02:45 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36290 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgA2QCp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 11:02:45 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so19055372ljg.3;
+        Wed, 29 Jan 2020 08:02:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=N+MKS0QqOJoA0eOJOaHUYlnBXvBICnO29YkZyoxX/PA=;
+        b=pPhAuwVltDLZJ+6Kv/jCZXbXA8kCcd2CpwKY+7GrlENCYV4ioZ1u80TA84knH5Gkhx
+         zgA83vfmPFB8JuDgrUT7qZGiCnC8odoxtEm+6mFMBaPe3+icq7mwt0Hkcy6qC178pu9m
+         TdKvUpn+3VF+o5lH4/a4wBJghwg3ObfETdVXSywsolwLI4TgeDxnlx+N5gi3WYSQxf9g
+         fg5+Mw7YGqr8I+Aahv6RN9OsZYR0uutN+E/CsumK0otoWuLIHr+nQdpCyOFaDlPdbOg3
+         rDHZFz/oj5TyMrgXcc9+W8ZHNEQnG2o8G+xKYf31HRNSjB4WydW9rMJCV28U098+a7FZ
+         KsxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N+MKS0QqOJoA0eOJOaHUYlnBXvBICnO29YkZyoxX/PA=;
+        b=ZLbKfPda4I0UOLy+tILjFtRshD5hJBgctLQH5mJSC+AXzMimDcDAROGnqyJrN4YJPC
+         I9KQ9GTVHdXV4l8HvhW3UxHNUJ4t1vhgr/fl04XBRWz2Krb2hnnQpZhBltd6JxeDyqUX
+         y+3X/0023lcOxc5Cv7wxUeK6F9ZLn5p0y6Slncl/xtonHT3TMbO0pXh6rTnTTj0JFEMJ
+         Riq7Whs4Ed2hzhYfFUt4OBOhY8QgjoVkZTVf4EXZf2o1hpKDafwJ8y4553jPftv+nkdR
+         LkPz8auR5QpLXbXR2L2cwIIb8mo/trtCMAnnHqi1VQaILTneDhh5vGBTZm2rtIovJQVD
+         dY6A==
+X-Gm-Message-State: APjAAAVqhpr2hrUYMTKz4SAmSq9VFySsSXX8FN4f1b3sZYI69Zfk83uV
+        rdiBrudO10QFSq2omzkBXfvhhCCr
+X-Google-Smtp-Source: APXvYqwl6vjvgK/AqMvdHTh2H7qiBUaVOVGyIwaBt+/7Nt3t41WQhwHmp2Pn0PZ4AgO2OMw/UWgjxQ==
+X-Received: by 2002:a2e:99c5:: with SMTP id l5mr16328583ljj.88.1580313762448;
+        Wed, 29 Jan 2020 08:02:42 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id a12sm1194349ljk.48.2020.01.29.08.02.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 08:02:41 -0800 (PST)
+Subject: Re: [RFC 2/2] dt-bindings: firmware: tegra186-bpmp: Document
+ interconnects property
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200114181519.3402385-2-thierry.reding@gmail.com>
+ <7aefac6c-092c-b5a6-2fa6-e283d2147fc3@linaro.org>
+ <20200120150605.GA712203@ulmo>
+ <57c37b3c-1473-d444-db59-8c6650241188@gmail.com>
+ <20200121141027.GE899558@ulmo>
+ <83d94918-bc01-131b-924c-9750767d3b29@linaro.org>
+ <20200121155432.GA912205@ulmo>
+ <ffc22502-0e7e-522c-543d-0e74cc25f4b1@gmail.com>
+ <20200127122115.GA2117209@ulmo>
+ <d56618e1-8940-65ae-381e-796e44bcf537@gmail.com>
+ <20200129093602.GC2479935@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0b8692ab-4e06-b277-bbe2-93922e47c2f6@gmail.com>
+Date:   Wed, 29 Jan 2020 19:02:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <57f9a785d93193719ee0b91e43d0922f@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200129093602.GC2479935@ulmo>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -54,126 +89,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 1/29/20 2:37 PM, Sibi Sankar wrote:
-> Hey Lukasz,
-> Thanks for taking time to review
-> the series!
-> 
-> On 2020-01-29 15:16, Lukasz Luba wrote:
->> Hi Sibi,
+29.01.2020 12:36, Thierry Reding пишет:
+> On Tue, Jan 28, 2020 at 10:27:00PM +0300, Dmitry Osipenko wrote:
+>> 27.01.2020 15:21, Thierry Reding пишет:
+>>> On Tue, Jan 21, 2020 at 11:12:11PM +0300, Dmitry Osipenko wrote:
+>>>> 21.01.2020 18:54, Thierry Reding пишет:
+>>>>> On Tue, Jan 21, 2020 at 05:18:43PM +0200, Georgi Djakov wrote:
+>>>>>> On 1/21/20 16:10, Thierry Reding wrote:
+>>> [...]
+>>>>>>> I'm not sure if that TEGRA_ICC_EMEM makes a lot of sense. It's always
+>>>>>>> going to be the same and it's arbitrarily defined, so it's effectively
+>>>>>>> useless. But other than that it looks good.
+>>>>>>
+>>>>>> Well, in most cases the target would be the EMEM, so that's fine. I have seen
+>>>>>> that other vendors that may have an additional internal memory, especially
+>>>>>> dedicated to some DSPs and in such cases the bandwidth needs are different for
+>>>>>> the two paths (to internal memory and DDR).
+>>>>>
+>>>>> Most chips have a small internal memory that can be used, though it
+>>>>> seldomly is. However, in that case I would expect the target to be a
+>>>>> completely different device, so it'd look more like this:
+>>>>>
+>>>>> 	interconnects = <&mc TEGRA186_MEMORY_CLIENT_BPMPR &iram>,
+>>>>> 			...;
+>>>>>
+>>>>> I don't think EMEM has any "downstream" other than external memory.
+>>>>
+>>>> The node ID should be mandatory in terms of interconnect, even if it's a
+>>>> single node. EMC (provider) != EMEM (endpoint).
+>>>
+>>> I don't understand why. An ID only makes sense if you've got multiple
+>>> endpoints. For example, a regulator is a provider with a single endpoint
+>>> so we don't specify an ID.
 >>
->> In my opinion this solution depends on not always true assumption that
->> CPUFreq notification chain will be triggered when there is a frequency
+>> Because this is how ICC binding is defined, unless I'm missing something.
 > 
-> This series does not create any
-> devfreq devices nor use the cpufreq
-> notification chain. It just relies
-> on the opening up of required-opps
-> from being exclusive to gen-pd using
-> patches 1,2,3 from patch series[1].
-> With the fast path disabled and
-> schedutil enabled, this series will
-> not miss any cpufreq changes.
+> I don't think so. It's defined as "pairs of phandles and interconnect
+> provider specifiers", which is equivalent to what pretty much all of the
+> resource bindings define. The #interconnect-cells property defines the
+> number of cells used for the specifier. In the normal case this would be
+> 1, and the value of the one cell would be the ID of the endpoint. But if
+> there's only a single endpoint, it's customary to set the number of
+> cells to 0, in which case only the phandle is required.
 
-Thank you Sibi for clarifying this. I spotted in patch 08/10
-that the fast_switch is removed and the normal path is in use,
-which also triggers the notification chain in CPUFreq. Then maybe other
-machinery which you have put in your 'depends on' list accidentally
-works thanks to this.
-
-> 
-> [1] https://patchwork.kernel.org/cover/11055499/
-> 
->> switch. Extending devfreq governor (as in one of the dependent patch
->> series that you have referred) by attaching to this notification
->> chain makes sense only when the SchedUtil and fast_switch is not in use.
-> 
-> fast_switch and cpu notifier chains
-> are mutually exclusive but schedutil
-> will still operate in the slow path
-> IIRC.
-
-True, SchedUtil would work in slow_path. The driver and SoC support
-'fast_switch', your solution when is properly initialized, disables it.
-I would suggest to put this information in the commit message.
-I don't know the side effects on the performance, though. The other
-side effect would be: the CPUFreq notifications will be triggered.
-
-The fast_switch is now the preferred way, any new ideas should
-consider also this path.
-
-> 
->> The Schedutil CPUFreq governor might use the fast_switch from this
->> driver and the notifications will not be triggered. I have also
->> commented patch 08/10 which tries to disable it.
->>
->> Regards,
->> Lukasz
->>
->> On 1/27/20 8:03 PM, Sibi Sankar wrote:
->>> This RFC series aims to extend cpu based scaling support to L3/DDR on
->>> SDM845 and SC7180 SoCs.
->>>
->>> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
->>> Patches [5-7] - Hack in a way to add/remove multiple opp tables to
->>>                  a single device. I am yet to fix the debugfs to
->>>         support multiple opp_tables per device but wanted to
->>>         send what was working upstream to get an idea if multiple
->>>         opp tables per device is a feature that will be useful
->>>         upstream.
->>> Patches [9-10] - Add the cpu/cpu-ddr/cpu-l3 opp tables for SDM845
->>>                   and SC7180 SoCs.
->>>
->>> v3:
->>>   * Migrated to using Saravana's opp-kBps bindings [1]
->>>   * Fixed some misc comments from Rajendra
->>>   * Added support for SC7180
->>>
->>> v2:
->>>   * Incorporated Viresh's comments from:
->>> https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
->>> https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
->>>   * Dropped cpufreq-map passive governor
->>>
->>> Git-branch: https://github.com/QuinAsura/linux/tree/lnext-012420
->>>
->>> Some alternate ways of hosting the opp-tables:
->>> https://github.com/QuinAsura/linux/commit/50b92bfaadc8f9a0d1e12249646e018bd6d1a9d3 
->>>
->>> https://github.com/QuinAsura/linux/commit/3d23d1eefd16ae6d9e3ef91e93e78749d8844e98 
->>>
->>> Viresh didn't really like ^^ bindings and they dont really scale 
->>> well. Just
->>> including them here for completeness.
->>>
->>> Depends on the following series:
->>> [1] https://patchwork.kernel.org/cover/11277199/
->>> [2] https://patchwork.kernel.org/cover/11055499/
->>> [3] https://patchwork.kernel.org/cover/11326381/
->>>
->>> Sibi Sankar (10):
->>>    arm64: dts: qcom: sdm845: Add SoC compatible to MTP
->>>    cpufreq: blacklist SDM845 in cpufreq-dt-platdev
->>>    cpufreq: blacklist SC7180 in cpufreq-dt-platdev
->>>    OPP: Add and export helper to update voltage
->>>    opp: of: export _opp_of_get_opp_desc_node
->>>    opp: Allow multiple opp_tables to be mapped to a single device
->>>    opp: Remove multiple attached opp tables from a device
->>>    cpufreq: qcom: Update the bandwidth levels on frequency change
->>>    arm64: dts: qcom: sdm845: Add cpu OPP tables
->>>    arm64: dts: qcom: sc7180: Add cpu OPP tables
->>>
->>>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 287 +++++++++++++++
->>>   arch/arm64/boot/dts/qcom/sdm845-mtp.dts |   2 +-
->>>   arch/arm64/boot/dts/qcom/sdm845.dtsi    | 453 ++++++++++++++++++++++++
->>>   drivers/cpufreq/cpufreq-dt-platdev.c    |   2 +
->>>   drivers/cpufreq/qcom-cpufreq-hw.c       | 246 +++++++++++--
->>>   drivers/opp/core.c                      | 111 +++++-
->>>   drivers/opp/of.c                        |   3 +-
->>>   drivers/opp/opp.h                       |   2 +
->>>   include/linux/pm_opp.h                  |  10 +
->>>   9 files changed, 1083 insertions(+), 33 deletions(-)
->>>
-> 
+Right, setting interconnect-cells=0 should work. I'll give it a try,
+thank you!
