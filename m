@@ -2,89 +2,382 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37227C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 08:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17219C35240
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 08:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2E6207FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 08:17:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QUGVIZbM"
+	by mail.kernel.org (Postfix) with ESMTP id E7B7620720
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 08:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgA2IRS (ORCPT
+        id S1726076AbgA2Inv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:17:18 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:55253 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726178AbgA2IRS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 03:17:18 -0500
-X-UUID: 645842751a3d4538bbf06b99e476a495-20200129
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3wcLgna0UQ6Pmik49xEVVcy56wDdAIj1SlCJHvZEet0=;
-        b=QUGVIZbMTf5UnlVLL5xlzXz+OZIIc6a6BqD5H4ePY2JjGQ6tcHR7YxpeprLQrA7tJ0daB8m9k4Ikte69Sb5aSHyaMM5dRj1wyq7fugwr3fRapIRZ4NzkUaJk/lEoqSYd1++yKCEqJlmFdqmJe6HJ22aWV885bXFAiTdEXTrJPa8=;
-X-UUID: 645842751a3d4538bbf06b99e476a495-20200129
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <louis.kuo@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1633652493; Wed, 29 Jan 2020 16:17:13 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 29 Jan 2020 16:16:35 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 29 Jan 2020 16:17:18 +0800
-From:   Louis Kuo <louis.kuo@mediatek.com>
-To:     <hans.verkuil@cisco.com>,
-        <laurent.pinchart+renesas@ideasonboard.com>, <tfiga@chromium.org>,
-        <keiichiw@chromium.org>, <matthias.bgg@gmail.com>,
-        <mchehab@kernel.org>
-CC:     <yuzhao@chromium.org>, <zwisler@chromium.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <Sean.Cheng@mediatek.com>,
-        <sj.huang@mediatek.com>, <christie.yu@mediatek.com>,
-        <louis.kuo@mediatek.com>, <frederic.chen@mediatek.com>,
-        <Jerry-ch.Chen@mediatek.com>, <jungo.lin@mediatek.com>,
-        <Rynn.Wu@mediatek.com>, <linux-media@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>
-Subject: [RFC PATCH V5 3/3] dts: arm64: mt8183: Add sensor interface nodes
-Date:   Wed, 29 Jan 2020 16:16:50 +0800
-Message-ID: <20200129081650.8027-4-louis.kuo@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200129081650.8027-1-louis.kuo@mediatek.com>
-References: <20200129081650.8027-1-louis.kuo@mediatek.com>
+        Wed, 29 Jan 2020 03:43:51 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3560 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726068AbgA2Inv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jan 2020 03:43:51 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00T8bSif007839;
+        Wed, 29 Jan 2020 03:43:27 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfakhrx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jan 2020 03:43:27 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00T8hPwv053528
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 29 Jan 2020 03:43:25 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 29 Jan
+ 2020 03:43:19 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 29 Jan 2020 03:43:19 -0500
+Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00T8h95P016705;
+        Wed, 29 Jan 2020 03:43:09 -0500
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3 1/3] iio: amplifiers: hmc425a: Add support for HMC425A step attenuator with gpio interface
+Date:   Wed, 29 Jan 2020 10:45:07 +0200
+Message-ID: <20200129084509.20371-1-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-29_01:2020-01-28,2020-01-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 spamscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001290071
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkIG5vZGVzIGZvciBNZWRpYXRlaydzIHNlbnNvciBpbnRlcmZhY2UgZGV2aWNlLiBTZW5zb3Ig
-aW50ZXJmYWNlIG1vZHVsZQ0KZW1iZWRkZWQgaW4gTWVkaWF0ZWsgU09Dcywgd29ya3MgYXMgYSBI
-VyBjYW1lcmEgaW50ZXJmYWNlIGNvbnRyb2xsZXINCmludGVuZGVkIGZvciBpbWFnZSBhbmQgZGF0
-YSB0cmFuc21pc3Npb24gYmV0d2VlbiBjYW1lcmFzIGFuZCBob3N0IGRldmljZXMuDQoNClNpZ25l
-ZC1vZmYtYnk6IExvdWlzIEt1byA8bG91aXMua3VvQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGFyY2gv
-YXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgfCAxMiArKysrKysrKysrKysNCiAx
-IGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
-NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
-aWF0ZWsvbXQ4MTgzLmR0c2kNCmluZGV4IDY2YWFhMDdmNmNlYy4uYWU4OTM4NmFmZTU2IDEwMDY0
-NA0KLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaQ0KKysrIGIv
-YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaQ0KQEAgLTUwNSw1ICs1MDUs
-MTcgQEANCiAJCQlyZWcgPSA8MCAweDFhMDAwMDAwIDAgMHgxMDAwPjsNCiAJCQkjY2xvY2stY2Vs
-bHMgPSA8MT47DQogCQl9Ow0KKwkJc2VuaW5mOiBzZW5pbmZAMWEwNDAwMDAgew0KKwkJCWNvbXBh
-dGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXNlbmluZiI7DQorCQkJcmVnID0gPDAgMHgxYTA0MDAw
-MCAwIDB4ODAwMD4sDQorCQkJICAgICAgPDAgMHgxMWM4MDAwMCAwIDB4NjAwMD47DQorCQkJcmVn
-LW5hbWVzID0gImJhc2UiLCAicngiOw0KKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyNTEgSVJR
-X1RZUEVfTEVWRUxfTE9XPjsNCisJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BP
-V0VSX0RPTUFJTl9DQU0+Ow0KKwkJCWNsb2NrcyA9IDwmY2Ftc3lzIENMS19DQU1fU0VOSU5GPiwN
-CisJCQkJIDwmdG9wY2tnZW4gQ0xLX1RPUF9NVVhfU0VOSU5GPjsNCisJCQljbG9jay1uYW1lcyA9
-ICJDTEtfQ0FNX1NFTklORiIsICJDTEtfVE9QX01VWF9TRU5JTkYiOw0KKwkJCXN0YXR1cyA9ICJk
-aXNhYmxlZCI7DQorCQl9Ow0KIAl9Ow0KIH07DQotLSANCjIuMTguMA0K
+This patch adds support for the HMC425A 0.5 dB LSB GaAs MMIC 6-BIT
+DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz.
+
+Datasheet:
+https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
+
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+---
+Changes in v3:
+-handle deferred probing
+-hmc425a_remove renamed
+-MODULE_DESCRIPTION on one line
+-device name from chip info
+
+ drivers/iio/amplifiers/Kconfig   |  10 ++
+ drivers/iio/amplifiers/Makefile  |   1 +
+ drivers/iio/amplifiers/hmc425a.c | 251 +++++++++++++++++++++++++++++++
+ 3 files changed, 262 insertions(+)
+ create mode 100644 drivers/iio/amplifiers/hmc425a.c
+
+diff --git a/drivers/iio/amplifiers/Kconfig b/drivers/iio/amplifiers/Kconfig
+index da7f126d197b..9b02c9a2bc8a 100644
+--- a/drivers/iio/amplifiers/Kconfig
++++ b/drivers/iio/amplifiers/Kconfig
+@@ -22,4 +22,14 @@ config AD8366
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ad8366.
+ 
++config HMC425
++	tristate "Analog Devices HMC425A and similar GPIO Gain Amplifiers"
++	depends on GPIOLIB
++	help
++	  Say yes here to build support for Analog Devices HMC425A and similar
++	  gain amplifiers or step attenuators.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called hmc425a.
++
+ endmenu
+diff --git a/drivers/iio/amplifiers/Makefile b/drivers/iio/amplifiers/Makefile
+index 9abef2ebe9bc..19a89db1d9b1 100644
+--- a/drivers/iio/amplifiers/Makefile
++++ b/drivers/iio/amplifiers/Makefile
+@@ -5,3 +5,4 @@
+ 
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_AD8366) += ad8366.o
++obj-$(CONFIG_HMC425) += hmc425a.o
+\ No newline at end of file
+diff --git a/drivers/iio/amplifiers/hmc425a.c b/drivers/iio/amplifiers/hmc425a.c
+new file mode 100644
+index 000000000000..0a412d56eb8f
+--- /dev/null
++++ b/drivers/iio/amplifiers/hmc425a.c
+@@ -0,0 +1,251 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * HMC425A and similar Gain Amplifiers
++ *
++ * Copyright 2020 Analog Devices Inc.
++ */
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/regulator/consumer.h>
++#include <linux/sysfs.h>
++
++enum hmc425a_type {
++	ID_HMC425A,
++};
++
++struct hmc425a_chip_info {
++	const char			*name;
++	const struct iio_chan_spec	*channels;
++	unsigned int			num_channels;
++	unsigned int			num_gpios;
++	int				gain_min;
++	int				gain_max;
++	int				default_gain;
++};
++
++struct hmc425a_state {
++	struct	regulator *reg;
++	struct	mutex lock; /* protect sensor state */
++	struct	hmc425a_chip_info *chip_info;
++	struct	gpio_descs *gpios;
++	enum	hmc425a_type type;
++	u32	gain;
++};
++
++static int hmc425a_write(struct iio_dev *indio_dev, u32 value)
++{
++	struct hmc425a_state *st = iio_priv(indio_dev);
++	int i, *values;
++
++	values = kmalloc_array(st->chip_info->num_gpios, sizeof(int),
++			       GFP_KERNEL);
++	if (!values)
++		return -ENOMEM;
++
++	for (i = 0; i < st->chip_info->num_gpios; i++)
++		values[i] = (value >> i) & 1;
++
++	gpiod_set_array_value_cansleep(st->gpios->ndescs, st->gpios->desc,
++				       values);
++	kfree(values);
++	return 0;
++}
++
++static int hmc425a_read_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan, int *val,
++			    int *val2, long m)
++{
++	struct hmc425a_state *st = iio_priv(indio_dev);
++	int code, gain = 0;
++	int ret;
++
++	mutex_lock(&st->lock);
++	switch (m) {
++	case IIO_CHAN_INFO_HARDWAREGAIN:
++		code = st->gain;
++
++		switch (st->type) {
++		case ID_HMC425A:
++			gain = ~code * -500;
++			break;
++		}
++
++		*val = gain / 1000;
++		*val2 = (gain % 1000) * 1000;
++
++		ret = IIO_VAL_INT_PLUS_MICRO_DB;
++		break;
++	default:
++		ret = -EINVAL;
++	}
++	mutex_unlock(&st->lock);
++
++	return ret;
++};
++
++static int hmc425a_write_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan, int val,
++			     int val2, long mask)
++{
++	struct hmc425a_state *st = iio_priv(indio_dev);
++	struct hmc425a_chip_info *inf = st->chip_info;
++	int code = 0, gain;
++	int ret;
++
++	if (val < 0)
++		gain = (val * 1000) - (val2 / 1000);
++	else
++		gain = (val * 1000) + (val2 / 1000);
++
++	if (gain > inf->gain_max || gain < inf->gain_min)
++		return -EINVAL;
++
++	switch (st->type) {
++	case ID_HMC425A:
++		code = ~((abs(gain) / 500) & 0x3F);
++		break;
++	}
++
++	mutex_lock(&st->lock);
++	switch (mask) {
++	case IIO_CHAN_INFO_HARDWAREGAIN:
++		st->gain = code;
++
++		ret = hmc425a_write(indio_dev, st->gain);
++		break;
++	default:
++		ret = -EINVAL;
++	}
++	mutex_unlock(&st->lock);
++
++	return ret;
++}
++
++static const struct iio_info hmc425a_info = {
++	.read_raw = &hmc425a_read_raw,
++	.write_raw = &hmc425a_write_raw,
++};
++
++#define HMC425A_CHAN(_channel)                                          \
++{                                                                      \
++	.type = IIO_VOLTAGE, .output = 1, .indexed = 1,                \
++	.channel = _channel,                                           \
++	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),         \
++}
++
++static const struct iio_chan_spec hmc425a_channels[] = {
++	HMC425A_CHAN(0),
++};
++
++/* Match table for of_platform binding */
++static const struct of_device_id hmc425a_of_match[] = {
++	{ .compatible = "adi,hmc425a", .data = (void *)ID_HMC425A },
++	{},
++};
++MODULE_DEVICE_TABLE(of, hmc425a_of_match);
++
++static void hmc425a_reg_disable(void *data)
++{
++	struct hmc425a_state *st = data;
++
++	regulator_disable(st->reg);
++}
++
++static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
++	[ID_HMC425A] = {
++		.name = "hmc425a",
++		.channels = hmc425a_channels,
++		.num_channels = ARRAY_SIZE(hmc425a_channels),
++		.num_gpios = 6,
++		.gain_min = -31500,
++		.gain_max = 0,
++		.default_gain = -0x40, /* set default gain -31.5db*/
++	},
++};
++
++static int hmc425a_probe(struct platform_device *pdev)
++{
++	const struct of_device_id *id;
++	struct iio_dev *indio_dev;
++	struct hmc425a_state *st;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	st = iio_priv(indio_dev);
++	id = of_match_device(hmc425a_of_match, &pdev->dev);
++	if (!id)
++		ret = -ENODEV;
++
++	st->type = (enum hmc425a_type)id->data;
++
++	st->chip_info = &hmc425a_chip_info_tbl[st->type];
++	indio_dev->num_channels = st->chip_info->num_channels;
++	indio_dev->channels = st->chip_info->channels;
++	indio_dev->name = st->chip_info->name;
++	st->gain = st->chip_info->default_gain;
++
++	st->gpios = devm_gpiod_get_array(&pdev->dev, "ctrl", GPIOD_OUT_LOW);
++	if (IS_ERR(st->gpios)) {
++		ret = PTR_ERR(st->gpios);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "failed to get gpios\n");
++		return ret;
++	}
++
++	if (st->gpios->ndescs != st->chip_info->num_gpios) {
++		dev_err(&pdev->dev, "%d GPIOs needed to operate\n",
++			st->chip_info->num_gpios);
++		return -ENODEV;
++	}
++
++	st->reg = devm_regulator_get_optional(&pdev->dev, "vcc-supply");
++	if (IS_ERR(st->reg)) {
++		if (PTR_ERR(st->reg) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		st->reg = NULL;
++	} else {
++		ret = regulator_enable(st->reg);
++		if (ret)
++			return ret;
++		ret = devm_add_action_or_reset(&pdev->dev, hmc425a_reg_disable,
++					       st);
++		if (ret)
++			return ret;
++	}
++
++	platform_set_drvdata(pdev, indio_dev);
++	mutex_init(&st->lock);
++
++	indio_dev->dev.parent = &pdev->dev;
++	indio_dev->info = &hmc425a_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	return devm_iio_device_register(&pdev->dev, indio_dev);
++}
++
++static struct platform_driver hmc425a_driver = {
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.of_match_table = hmc425a_of_match,
++	},
++	.probe = hmc425a_probe,
++};
++module_platform_driver(hmc425a_driver);
++
++MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
++MODULE_DESCRIPTION("Analog Devices HMC425A and similar GPIO control Gain Amplifiers");
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
