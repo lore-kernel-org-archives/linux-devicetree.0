@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CE0C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745AAC35240
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8240720716
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0F72071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgA2OVf (ORCPT
+        id S1726742AbgA2OVs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:21:35 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3216 "EHLO
+        Wed, 29 Jan 2020 09:21:48 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:31050 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726178AbgA2OVf (ORCPT
+        by vger.kernel.org with ESMTP id S1726178AbgA2OVs (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:21:35 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TEDTNY012730;
-        Wed, 29 Jan 2020 09:21:16 -0500
+        Wed, 29 Jan 2020 09:21:48 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TEEZaK004532;
+        Wed, 29 Jan 2020 09:21:28 -0500
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfam730-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xrgdbv9u7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 09:21:16 -0500
+        Wed, 29 Jan 2020 09:21:28 -0500
 Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00TELErd043066
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00TELQYu043117
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 29 Jan 2020 09:21:14 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 29 Jan
- 2020 06:21:12 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 29 Jan 2020 09:21:12 -0500
+        Wed, 29 Jan 2020 09:21:27 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 29 Jan 2020 06:21:25 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 29 Jan 2020 06:21:25 -0800
 Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00TEKwxg027599;
-        Wed, 29 Jan 2020 09:21:10 -0500
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00TEKwxi027599;
+        Wed, 29 Jan 2020 09:21:16 -0500
 From:   Beniamin Bia <beniamin.bia@analog.com>
 To:     <jic23@kernel.org>
 CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
@@ -49,10 +49,11 @@ CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
         <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
         <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
         <devicetree@vger.kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
         Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v4 2/5] iio: amplifiers: ad8366: Add write_raw_get_fmt function
-Date:   Wed, 29 Jan 2020 16:22:58 +0200
-Message-ID: <20200129142301.13918-3-beniamin.bia@analog.com>
+Subject: [PATCH v4 4/5] dt-bindings: iio: amplifiers: Add docs for HMC425A Step Attenuator
+Date:   Wed, 29 Jan 2020 16:23:00 +0200
+Message-ID: <20200129142301.13918-5-beniamin.bia@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200129142301.13918-1-beniamin.bia@analog.com>
 References: <20200129142301.13918-1-beniamin.bia@analog.com>
@@ -61,51 +62,81 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-29_03:2020-01-28,2020-01-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=1 mlxlogscore=879 clxscore=1015 phishscore=0 spamscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ clxscore=1015 phishscore=0 malwarescore=0 spamscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 suspectscore=0 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1911200001 definitions=main-2001290118
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch add write_raw_get_fmt function to specify conversion for
-hardware gain.
+From: Michael Hennerich <michael.hennerich@analog.com>
 
+Document support for Analog Devices MC425A Step Attenuator.
+
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
 Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 ---
- drivers/iio/amplifiers/ad8366.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
 
-diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
-index 0176d3d8cc9c..95972ab60f42 100644
---- a/drivers/iio/amplifiers/ad8366.c
-+++ b/drivers/iio/amplifiers/ad8366.c
-@@ -180,9 +180,22 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
- 	return ret;
- }
- 
-+static int ad8366_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				    struct iio_chan_spec const *chan,
-+				    long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		return IIO_VAL_INT_PLUS_MICRO_DB;
-+	default:
-+		return -EINVAL;
-+	}
-+}
+diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+new file mode 100644
+index 000000000000..d800639c14a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- static const struct iio_info ad8366_info = {
- 	.read_raw = &ad8366_read_raw,
- 	.write_raw = &ad8366_write_raw,
-+	.write_raw_get_fmt = &ad8366_write_raw_get_fmt,
- };
- 
- #define AD8366_CHAN(_channel) {				\
++title: HMC425A 6-bit Digital Step Attenuator
++
++maintainers:
++- Michael Hennerich <michael.hennerich@analog.com>
++- Beniamin Bia <beniamin.bia@analog.com>
++
++description: |
++  Digital Step Attenuator IIO device with gpio interface.
++  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
++  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,hmc425a
++
++  vcc-supply: true
++
++  ctrl-gpios:
++    description:
++      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
++      connected to the control pins V1-V6.
++    maxItems: 6
++
++required:
++  - compatible
++  - ctrl-gpios
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    gpio_hmc425a: hmc425a {
++      compatible = "adi,hmc425a";
++      ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
++        <&gpio 39 GPIO_ACTIVE_HIGH>,
++        <&gpio 38 GPIO_ACTIVE_HIGH>,
++        <&gpio 37 GPIO_ACTIVE_HIGH>,
++        <&gpio 36 GPIO_ACTIVE_HIGH>,
++        <&gpio 35 GPIO_ACTIVE_HIGH>;
++      vcc-supply = <&foo>;
++    };
++...
 -- 
 2.17.1
 
