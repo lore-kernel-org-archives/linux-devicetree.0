@@ -2,440 +2,269 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5D5C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EA4C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510D4206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF929206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 20:15:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qagYbN+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgA2UPo (ORCPT
+        id S1727133AbgA2UPu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 15:15:44 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:42076 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgA2UPn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 15:15:43 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id EBDCA804EB;
-        Wed, 29 Jan 2020 21:15:39 +0100 (CET)
-Date:   Wed, 29 Jan 2020 21:15:38 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-Cc:     noralf@tronnes.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 3/3] drm/tinydrm: add support for tft displays based
- on ilitek,ili9486
-Message-ID: <20200129201538.GD29646@ravnborg.org>
-References: <cover.1580134320.git.kamlesh.gurudasani@gmail.com>
- <eb5672abbdb89d7018793c76d7193bfb78a2ea88.1580134320.git.kamlesh.gurudasani@gmail.com>
+        Wed, 29 Jan 2020 15:15:50 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41024 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbgA2UPu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 15:15:50 -0500
+Received: by mail-pf1-f193.google.com with SMTP id w62so211324pfw.8
+        for <devicetree@vger.kernel.org>; Wed, 29 Jan 2020 12:15:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xUYJpOBIHFT2Q+fbwYwCce8J1hD/zrDr2WkofLApH0M=;
+        b=qagYbN+Lmcm1+NIrT2EoYkbq6Law+pIXujyl5Q4o/Ek5a/F4ymxJZn6re8z2qHr1B6
+         pol5R9hEoDKdtU3BpIVFgvarKP3eAagbF2dcWuwCr1Z5N4uCcRRiGnp0pilC0phNDc3Z
+         Pg1rUUbhcBZ+J538vgIoDhFsQo/IsiYBfhGl2ZfeFl9Y/gdZJtBx2cbw6JZ0YEOoKRyQ
+         iDs+/KJ5FaeM/gkUwNR/wUb50fBJEYfO9R8ncccFI04gk8Qmst9cMP1v8bS+JkYVbp8T
+         GNMTOCx5Oba595Otov+HLqHYjfzbzM0wAKVMdsHgld4wxNPfXlFre6P+EIE349bx4Dm2
+         Z8bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xUYJpOBIHFT2Q+fbwYwCce8J1hD/zrDr2WkofLApH0M=;
+        b=oiN8d9pFEw5DRmpX87vG1UXKMkKg+XQQ8Yw9SDowjHg1Irk/v5cGKYd9tOe4vIafLm
+         YWeuw+2mUkEz+1eMd/BL4p1gXSOoB9MgOxuz2x3Rdb7jekAst1ld2EkAdu2lrhKydXQK
+         Y7Wz729sTbQcmwtwHFhdU8P7zobTt7X3kJRBBfP66WNVbYfPyPnDTeAwqSSmOPd9pLVu
+         mJmFQDCNE5BzfgJW3wjk0GcSKrBY74u2i6hMAY86JzSfwsusX0Er2dKCvtSfFDXWrY/F
+         zrXktyx1bJTO8YxeOSP2M7/hzFbacgaVPJE3yk1Wpvhnc7vZo14evUp/IBIVai5dVyqJ
+         Z1eA==
+X-Gm-Message-State: APjAAAWtYLcK1EbjA2zjLiLYsSg4eJtilepBCn0P+S9ecy8xTtfBuB1l
+        PyBCIlNL1kr9XngeJoX0RURXOw==
+X-Google-Smtp-Source: APXvYqxkNYdrqBjmKBuCZmexGAW7j9RetTp4CexeM96VLdc5AcLaNv/SCk8ghWnuihsSYVLW/Ii4zw==
+X-Received: by 2002:a63:454a:: with SMTP id u10mr884844pgk.248.1580328949182;
+        Wed, 29 Jan 2020 12:15:49 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id u13sm3474995pjn.29.2020.01.29.12.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 12:15:48 -0800 (PST)
+Date:   Wed, 29 Jan 2020 13:15:46 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
+Message-ID: <20200129201546.GA31696@xps15>
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-8-bjorn.andersson@linaro.org>
+ <20200110212806.GD11555@xps15>
+ <20200122193936.GB3261042@ripper>
+ <CANLsYkx-C9U4W3R3Xo6t3BJBM4UK_i3zuwzhnXMMEQ0-ur+8Kg@mail.gmail.com>
+ <20200123171524.GV1511@yoga>
+ <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
+ <CANLsYkyhGjrxGiYqtCijwQiMOnvGdpXNKJ0XpxXsFYe=XEY0ZQ@mail.gmail.com>
+ <d1f632b2-dff3-401d-f8f5-2d41d1589c79@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eb5672abbdb89d7018793c76d7193bfb78a2ea88.1580134320.git.kamlesh.gurudasani@gmail.com>
+In-Reply-To: <d1f632b2-dff3-401d-f8f5-2d41d1589c79@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=-VAfIpHNAAAA:8 a=VVQj3QxULDEd12FTjOAA:9
-        a=wLIiKU6he-iQ3f4V:21 a=ibmF_GJylb1PwPcy:21 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=srlwD-8ojaedGGhPAyx8:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kamlesh
-
-On Mon, Jan 27, 2020 at 07:56:46PM +0530, Kamlesh Gurudasani wrote:
-> This adds support fot ilitek,ili9486 based displays with shift register
-> in front of controller.
-> Ozzmaker,Piscreen and Waveshare,rpi-lcd-35 are such displays.
+On Mon, Jan 27, 2020 at 10:46:05AM +0100, Arnaud POULIQUEN wrote:
 > 
-> Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-
-Driver looks good.
-
-Can you please replace tinydrm with tiny in the subject.
-We no longer have a tinydrm folder.
-
-With this fixed:
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-> ---
 > 
-> v2 changes:
-> * assignment of dbi_command before registration
-> * made dc and reset gpio compulsory
-> * typos and unwanted comments removed
-> * changed the name of function which were display specific
-> * arranged the Makefile entries in alphabetical order
+> On 1/24/20 7:44 PM, Mathieu Poirier wrote:
+> > On Thu, 23 Jan 2020 at 10:49, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+> >>
+> >> Hi Bjorn, Mathieu
+> >>
+> >> On 1/23/20 6:15 PM, Bjorn Andersson wrote:
+> >>> On Thu 23 Jan 09:01 PST 2020, Mathieu Poirier wrote:
+> >>>
+> >>>> On Wed, 22 Jan 2020 at 12:40, Bjorn Andersson
+> >>>> <bjorn.andersson@linaro.org> wrote:
+> >>>>>
+> >>>>> On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
+> >>>>>
+> >>>>>> On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
+> >>>>>>> Add a common panic handler that invokes a stop request and sleep enough
+> >>>>>>> to let the remoteproc flush it's caches etc in order to aid post mortem
+> >>>>>>> debugging.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >>>>>>> ---
+> >>>>>>>
+> >>>>>>> Changes since v1:
+> >>>>>>> - None
+> >>>>>>>
+> >>>>>>>  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
+> >>>>>>>  drivers/remoteproc/qcom_q6v5.h |  1 +
+> >>>>>>>  2 files changed, 20 insertions(+)
+> >>>>>>>
+> >>>>>>> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
+> >>>>>>> index cb0f4a0be032..17167c980e02 100644
+> >>>>>>> --- a/drivers/remoteproc/qcom_q6v5.c
+> >>>>>>> +++ b/drivers/remoteproc/qcom_q6v5.c
+> >>>>>>> @@ -6,6 +6,7 @@
+> >>>>>>>   * Copyright (C) 2014 Sony Mobile Communications AB
+> >>>>>>>   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+> >>>>>>>   */
+> >>>>>>> +#include <linux/delay.h>
+> >>>>>>>  #include <linux/kernel.h>
+> >>>>>>>  #include <linux/platform_device.h>
+> >>>>>>>  #include <linux/interrupt.h>
+> >>>>>>> @@ -15,6 +16,8 @@
+> >>>>>>>  #include <linux/remoteproc.h>
+> >>>>>>>  #include "qcom_q6v5.h"
+> >>>>>>>
+> >>>>>>> +#define Q6V5_PANIC_DELAY_MS        200
+> >>>>>>> +
+> >>>>>>>  /**
+> >>>>>>>   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
+> >>>>>>>   * @q6v5:  reference to qcom_q6v5 context to be reinitialized
+> >>>>>>> @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
+> >>>>>>>  }
+> >>>>>>>  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
+> >>>>>>>
+> >>>>>>> +/**
+> >>>>>>> + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
+> >>>>>>> + * @q6v5:  reference to qcom_q6v5 context
+> >>>>>>> + *
+> >>>>>>> + * Set the stop bit and sleep in order to allow the remote processor to flush
+> >>>>>>> + * its caches etc for post mortem debugging.
+> >>>>>>> + */
+> >>>>>>> +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
+> >>>>>>> +{
+> >>>>>>> +   qcom_smem_state_update_bits(q6v5->state,
+> >>>>>>> +                               BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
+> >>>>>>> +
+> >>>>>>> +   mdelay(Q6V5_PANIC_DELAY_MS);
+> >>>>>>
+> >>>>>> I really wonder if the delay should be part of the remoteproc core and
+> >>>>>> configurable via device tree.  Wanting the remote processor to flush its caches
+> >>>>>> is likely something other vendors will want when dealing with a kernel panic.
+> >>>>>> It would be nice to see if other people have an opinion on this topic.  If not
+> >>>>>> then we can keep the delay here and move it to the core if need be.
+> >>>>>>
+> >>>>>
+> >>>>> I gave this some more thought and what we're trying to achieve is to
+> >>>>> signal the remote processors about the panic and then give them time to
+> >>>>> react, but per the proposal (and Qualcomm downstream iirc) we will do
+> >>>>> this for each remote processor, one by one.
+> >>>>>
+> >>>>> So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
+> >>>>> end up giving the first one a whole second to react and the last one
+> >>>>> "only" 200ms.
+> >>>>>
+> >>>>> Moving the delay to the core by iterating over rproc_list calling
+> >>>>> panic() and then delaying would be cleaner imo.
+> >>>>
+> >>>> I agree.
+> >>>>
+> >>>>>
+> >>>>> It might be nice to make this configurable in DT, but I agree that it
+> >>>>> would be nice to hear from others if this would be useful.
+> >>>>
+> >>>> I think the delay has to be configurable via DT if we move this to the
+> >>>> core.  The binding can be optional and default to 200ms if not
+> >>>> present.
+> >>>>
+> >>>
+> >>> How about I make the panic() return the required delay and then we let
+> >>> the core sleep for MAX() of the returned durations?
+> > 
+> > I like it.
+> > 
+> >> That way the default
+> >>> is still a property of the remoteproc drivers - and 200ms seems rather
+> >>> arbitrary to put in the core, even as a default.
+> >>
+> >> I agree with Bjorn, the delay should be provided by the platform.
+> >> But in this case i wonder if it is simpler to just let the platform take care it?
+> > 
+> > If I understand you correctly, that is what Bjorn's original
+> > implementation was doing and it had drawbacks.
+> Yes, 
+> Please tell me if i missed something, the only drawback seems mentioned is the accumulative delay.
+
+Yes, that is correct.
+
+> Could you elaborate how to implement the delay in remote proc core for multi rproc instance.
+> Here is my view:
+> To optimize the delay it would probably be necessary to compute:
+> - the delay based on an initial date,
+> - the delay requested by each rproc instance,
+> - the delay elapsed in each rproc panic ops.
+> Feasible but not straight forward... 
+> So I suppose that you are thinking about a solution based on the store of the max delay that would be applied after last panic() return?
+
+Yes
+
+> anyway, how do you determine the last rproc instance? seems that a prerequisite would be that the panic ops is mandatory... 
+
+Each ->panic() should return the amount of time to way or 0 if no delay is
+required.  If an rpoc doesn't implement ->panic() then it is treated as 0.
+From there wait for the maximum time that was collected.
+
+It would be possible to do something more complicated like taking timestamps
+everytime a ->panic() returns and optimize the time to wait for but that may be
+for a future set.  The first implementation could go with an simple heuristic as
+detailed above.
+
 > 
-> v3 changes:
-> * no changes
+> I'm not familiar with panic mechanism, but how panic ops are scheduled in SMP? Does panics ops would be treated in parallel (using msleep instead of mdelay)?
+> In this case delays could not be cumulative...
+
+The processor that triggered the panic sequentially runs the notifier registered
+with the panic_notifier_list.  Other processors are instructed to take
+themselves offline.  As such there won't be multiple ->panic() running
+concurrently. 
+
 > 
-> v4 changes:
-> * no changes
-> ---
->  MAINTAINERS                    |   7 +
->  drivers/gpu/drm/tiny/Kconfig   |  14 ++
->  drivers/gpu/drm/tiny/Makefile  |   1 +
->  drivers/gpu/drm/tiny/ili9486.c | 283 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 305 insertions(+)
->  create mode 100644 drivers/gpu/drm/tiny/ili9486.c
+> > 
+> >> For instance for stm32mp1 the stop corresponds to the reset on the remote processor core. To inform the coprocessor about an imminent shutdown we use a signal relying on a mailbox (cf. stm32_rproc_stop).
+> >> In this case we would need a delay between the signal and the reset, but not after (no cache management).
+> > 
+> > Here I believe you are referring to the upper limit of 500ms that is
+> > needed for the mbox_send_message() in stm32_rproc_stop() to complete.
+> > Since that is a blocking call I think it would fit with Bjorn's
+> > proposal above if a value of '0' is returned by rproc->ops->panic().
+> > That would mean no further delays are needed (because the blocking
+> > mbox_send_message() would have done the job already).  Let me know if
+> > I'm in the weeds.
+> Yes you are :), this is what i thought, if delay implemented in core.
+
+Not sure I understand your last reply but I _think_ we are saying the same
+thing.
+
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 16423f5..30dd396 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5233,6 +5233,13 @@ S:	Maintained
->  F:	drivers/gpu/drm/tiny/ili9225.c
->  F:	Documentation/devicetree/bindings/display/ilitek,ili9225.txt
->  
-> +DRM DRIVER FOR ILITEK ILI9486 PANELS
-> +M:	Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-> +T:	git git://anongit.freedesktop.org/drm/drm-misc
-> +S:	Maintained
-> +F:	drivers/gpu/drm/tiny/ili9486.c
-> +F:	Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
-> +
->  DRM DRIVER FOR HX8357D PANELS
->  M:	Eric Anholt <eric@anholt.net>
->  T:	git git://anongit.freedesktop.org/drm/drm-misc
-> diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
-> index a866421..4160e74 100644
-> --- a/drivers/gpu/drm/tiny/Kconfig
-> +++ b/drivers/gpu/drm/tiny/Kconfig
-> @@ -47,6 +47,20 @@ config TINYDRM_ILI9341
->  
->  	  If M is selected the module will be called ili9341.
->  
-> +config TINYDRM_ILI9486
-> +	tristate "DRM support for ILI9486 display panels"
-> +	depends on DRM && SPI
-> +	select DRM_KMS_HELPER
-> +	select DRM_KMS_CMA_HELPER
-> +	select DRM_MIPI_DBI
-> +	select BACKLIGHT_CLASS_DEVICE
-> +	help
-> +	  DRM driver for the following Ilitek ILI9486 panels:
-> +	  * PISCREEN 3.5" 320x480 TFT (Ozzmaker 3.5")
-> +	  * RPILCD 3.5" 320x480 TFT (Waveshare 3.5")
-> +
-> +	  If M is selected the module will be called ili9486.
-> +
->  config TINYDRM_MI0283QT
->  	tristate "DRM support for MI0283QT"
->  	depends on DRM && SPI
-> diff --git a/drivers/gpu/drm/tiny/Makefile b/drivers/gpu/drm/tiny/Makefile
-> index 896cf31..c96ceee 100644
-> --- a/drivers/gpu/drm/tiny/Makefile
-> +++ b/drivers/gpu/drm/tiny/Makefile
-> @@ -4,6 +4,7 @@ obj-$(CONFIG_DRM_GM12U320)		+= gm12u320.o
->  obj-$(CONFIG_TINYDRM_HX8357D)		+= hx8357d.o
->  obj-$(CONFIG_TINYDRM_ILI9225)		+= ili9225.o
->  obj-$(CONFIG_TINYDRM_ILI9341)		+= ili9341.o
-> +obj-$(CONFIG_TINYDRM_ILI9486)		+= ili9486.o
->  obj-$(CONFIG_TINYDRM_MI0283QT)		+= mi0283qt.o
->  obj-$(CONFIG_TINYDRM_REPAPER)		+= repaper.o
->  obj-$(CONFIG_TINYDRM_ST7586)		+= st7586.o
-> diff --git a/drivers/gpu/drm/tiny/ili9486.c b/drivers/gpu/drm/tiny/ili9486.c
-> new file mode 100644
-> index 0000000..e960b16
-> --- /dev/null
-> +++ b/drivers/gpu/drm/tiny/ili9486.c
-> @@ -0,0 +1,283 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * DRM driver for Ilitek ILI9486 panels
-> + *
-> + * Copyright 2020 Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-> + */
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/property.h>
-> +#include <linux/spi/spi.h>
-> +#include <video/mipi_display.h>
-> +
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_drv.h>
-> +#include <drm/drm_fb_helper.h>
-> +#include <drm/drm_gem_cma_helper.h>
-> +#include <drm/drm_gem_framebuffer_helper.h>
-> +#include <drm/drm_mipi_dbi.h>
-> +#include <drm/drm_modeset_helper.h>
-> +
-> +#define ILI9486_ITFCTR1         0xb0
-> +#define ILI9486_PWCTRL1         0xc2
-> +#define ILI9486_VMCTRL1         0xc5
-> +#define ILI9486_PGAMCTRL        0xe0
-> +#define ILI9486_NGAMCTRL        0xe1
-> +#define ILI9486_DGAMCTRL        0xe2
-> +#define ILI9486_MADCTL_BGR      BIT(3)
-> +#define ILI9486_MADCTL_MV       BIT(5)
-> +#define ILI9486_MADCTL_MX       BIT(6)
-> +#define ILI9486_MADCTL_MY       BIT(7)
-> +
-> +/*
-> + * The PiScreen/waveshare rpi-lcd-35 has a SPI to 16-bit parallel bus converter
-> + * in front of the  display controller. This means that 8-bit values have to be
-> + * transferred as 16-bit.
-> + */
-> +static int waveshare_command(struct mipi_dbi *mipi, u8 *cmd, u8 *par, size_t num)
-> +{
-> +	struct spi_device *spi = mipi->spi;
-> +	void *data = par;
-> +	u32 speed_hz;
-> +	int i, ret;
-> +	u16 *buf;
-> +
-> +	buf = kmalloc(32 * sizeof(u16), GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * The displays are Raspberry Pi HATs and connected to the 8-bit only
-> +	 * SPI controller, so 16-bit command and parameters need byte swapping
-> +	 * before being transferred as 8-bit on the big endian SPI bus.
-> +	 * Pixel data bytes have already been swapped before this function is
-> +	 * called.
-> +	 */
-> +	buf[0] = cpu_to_be16(*cmd);
-> +	gpiod_set_value_cansleep(mipi->dc, 0);
-> +	speed_hz = mipi_dbi_spi_cmd_max_speed(spi, 2);
-> +	ret = mipi_dbi_spi_transfer(spi, speed_hz, 8, buf, 2);
-> +	if (ret || !num)
-> +		goto free;
-> +
-> +	/* 8-bit configuration data, not 16-bit pixel data */
-> +	if (num <= 32) {
-> +		for (i = 0; i < num; i++)
-> +			buf[i] = cpu_to_be16(par[i]);
-> +		num *= 2;
-> +		speed_hz = mipi_dbi_spi_cmd_max_speed(spi, num);
-> +		data = buf;
-> +	}
-> +
-> +	gpiod_set_value_cansleep(mipi->dc, 1);
-> +	ret = mipi_dbi_spi_transfer(spi, speed_hz, 8, data, num);
-> + free:
-> +	kfree(buf);
-> +
-> +	return ret;
-> +}
-> +
-> +static void waveshare_enable(struct drm_simple_display_pipe *pipe,
-> +			   struct drm_crtc_state *crtc_state,
-> +			   struct drm_plane_state *plane_state)
-> +{
-> +	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(pipe->crtc.dev);
-> +	struct mipi_dbi *dbi = &dbidev->dbi;
-> +	u8 addr_mode;
-> +	int ret, idx;
-> +
-> +	if (!drm_dev_enter(pipe->crtc.dev, &idx))
-> +		return;
-> +
-> +	DRM_DEBUG_KMS("\n");
-> +
-> +	ret = mipi_dbi_poweron_conditional_reset(dbidev);
-> +	if (ret < 0)
-> +		goto out_exit;
-> +	if (ret == 1)
-> +		goto out_enable;
-> +
-> +	mipi_dbi_command(dbi, ILI9486_ITFCTR1);
-> +	mipi_dbi_command(dbi, MIPI_DCS_EXIT_SLEEP_MODE);
-> +	msleep(250);
-> +
-> +	mipi_dbi_command(dbi, MIPI_DCS_SET_PIXEL_FORMAT, 0x55);
-> +
-> +	mipi_dbi_command(dbi, ILI9486_PWCTRL1, 0x44);
-> +
-> +	mipi_dbi_command(dbi, ILI9486_VMCTRL1, 0x00, 0x00, 0x00, 0x00);
-> +
-> +	mipi_dbi_command(dbi, ILI9486_PGAMCTRL,
-> +			 0x0F, 0x1F, 0x1C, 0x0C, 0x0F, 0x08, 0x48, 0x98,
-> +			 0x37, 0x0A, 0x13, 0x04, 0x11, 0x0D, 0x0);
-> +	mipi_dbi_command(dbi, ILI9486_NGAMCTRL,
-> +			 0x0F, 0x32, 0x2E, 0x0B, 0x0D, 0x05, 0x47, 0x75,
-> +			 0x37, 0x06, 0x10, 0x03, 0x24, 0x20, 0x00);
-> +	mipi_dbi_command(dbi, ILI9486_DGAMCTRL,
-> +			 0x0F, 0x32, 0x2E, 0x0B, 0x0D, 0x05, 0x47, 0x75,
-> +			 0x37, 0x06, 0x10, 0x03, 0x24, 0x20, 0x00);
-> +
-> +	mipi_dbi_command(dbi, MIPI_DCS_SET_DISPLAY_ON);
-> +	msleep(100);
-> +
-> + out_enable:
-> +	switch (dbidev->rotation) {
-> +	case 90:
-> +		addr_mode = ILI9486_MADCTL_MY;
-> +		break;
-> +	case 180:
-> +		addr_mode = ILI9486_MADCTL_MV;
-> +		break;
-> +	case 270:
-> +		addr_mode = ILI9486_MADCTL_MX;
-> +		break;
-> +	default:
-> +		addr_mode = ILI9486_MADCTL_MV | ILI9486_MADCTL_MY |
-> +			ILI9486_MADCTL_MX;
-> +		break;
-> +	}
-> +	addr_mode |= ILI9486_MADCTL_BGR;
-> +	mipi_dbi_command(dbi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
-> +	mipi_dbi_enable_flush(dbidev, crtc_state, plane_state);
-> + out_exit:
-> +	drm_dev_exit(idx);
-> +}
-> +
-> +static const struct drm_simple_display_pipe_funcs waveshare_pipe_funcs = {
-> +	.enable = waveshare_enable,
-> +	.disable = mipi_dbi_pipe_disable,
-> +	.update = mipi_dbi_pipe_update,
-> +	.prepare_fb = drm_gem_fb_simple_display_pipe_prepare_fb,
-> +};
-> +
-> +static const struct drm_display_mode waveshare_mode = {
-> +	DRM_SIMPLE_MODE(480, 320, 73, 49),
-> +};
-> +
-> +DEFINE_DRM_GEM_CMA_FOPS(ili9486_fops);
-> +
-> +static struct drm_driver ili9486_driver = {
-> +	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
-> +	.fops			= &ili9486_fops,
-> +	.release		= mipi_dbi_release,
-> +	DRM_GEM_CMA_VMAP_DRIVER_OPS,
-> +	.debugfs_init		= mipi_dbi_debugfs_init,
-> +	.name			= "ili9486",
-> +	.desc			= "Ilitek ILI9486",
-> +	.date			= "20200118",
-> +	.major			= 1,
-> +	.minor			= 0,
-> +};
-> +
-> +static const struct of_device_id ili9486_of_match[] = {
-> +	{ .compatible = "waveshare,rpi-lcd-35" },
-> +	{ .compatible = "ozzmaker,piscreen" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ili9486_of_match);
-> +
-> +static const struct spi_device_id ili9486_id[] = {
-> +	{ "ili9486", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(spi, ili9486_id);
-> +
-> +static int ili9486_probe(struct spi_device *spi)
-> +{
-> +	struct device *dev = &spi->dev;
-> +	struct mipi_dbi_dev *dbidev;
-> +	struct drm_device *drm;
-> +	struct mipi_dbi *dbi;
-> +	struct gpio_desc *dc;
-> +	u32 rotation = 0;
-> +	int ret;
-> +
-> +	dbidev = kzalloc(sizeof(*dbidev), GFP_KERNEL);
-> +	if (!dbidev)
-> +		return -ENOMEM;
-> +
-> +	dbi = &dbidev->dbi;
-> +	drm = &dbidev->drm;
-> +	ret = devm_drm_dev_init(dev, drm, &ili9486_driver);
-> +	if (ret) {
-> +		kfree(dbidev);
-> +		return ret;
-> +	}
-> +
-> +	drm_mode_config_init(drm);
-> +
-> +	dbi->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(dbi->reset)) {
-> +		DRM_DEV_ERROR(dev, "Failed to get gpio 'reset'\n");
-> +		return PTR_ERR(dbi->reset);
-> +	}
-> +
-> +	dc = devm_gpiod_get(dev, "dc", GPIOD_OUT_LOW);
-> +	if (IS_ERR(dc)) {
-> +		DRM_DEV_ERROR(dev, "Failed to get gpio 'dc'\n");
-> +		return PTR_ERR(dc);
-> +	}
-> +
-> +	dbidev->backlight = devm_of_find_backlight(dev);
-> +	if (IS_ERR(dbidev->backlight))
-> +		return PTR_ERR(dbidev->backlight);
-> +
-> +	device_property_read_u32(dev, "rotation", &rotation);
-> +
-> +	ret = mipi_dbi_spi_init(spi, dbi, dc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dbi->command = waveshare_command;
-> +	dbi->read_commands = NULL;
-> +
-> +	ret = mipi_dbi_dev_init(dbidev, &waveshare_pipe_funcs, &waveshare_mode, rotation);
-> +	if (ret)
-> +		return ret;
-> +
-> +	drm_mode_config_reset(drm);
-> +
-> +	ret = drm_dev_register(drm, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	spi_set_drvdata(spi, drm);
-> +
-> +	drm_fbdev_generic_setup(drm, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ili9486_remove(struct spi_device *spi)
-> +{
-> +	struct drm_device *drm = spi_get_drvdata(spi);
-> +
-> +	drm_dev_unplug(drm);
-> +	drm_atomic_helper_shutdown(drm);
-> +
-> +	return 0;
-> +}
-> +
-> +static void ili9486_shutdown(struct spi_device *spi)
-> +{
-> +	drm_atomic_helper_shutdown(spi_get_drvdata(spi));
-> +}
-> +
-> +static struct spi_driver ili9486_spi_driver = {
-> +	.driver = {
-> +		.name = "ili9486",
-> +		.of_match_table = ili9486_of_match,
-> +	},
-> +	.id_table = ili9486_id,
-> +	.probe = ili9486_probe,
-> +	.remove = ili9486_remove,
-> +	.shutdown = ili9486_shutdown,
-> +};
-> +module_spi_driver(ili9486_spi_driver);
-> +
-> +MODULE_DESCRIPTION("Ilitek ILI9486 DRM driver");
-> +MODULE_AUTHOR("Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.7.4
+> Regards,
+> Arnaud
+> 
+> > 
+> >>
+> >> Regards,
+> >> Arnaud
+> >>>
+> >>> Regards,
+> >>> Bjorn
+> >>>
