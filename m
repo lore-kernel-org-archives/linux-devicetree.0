@@ -2,112 +2,75 @@ Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDA7C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 19:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C74C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 19:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659F6206D4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 19:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984F4206D4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 19:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgA2Tke (ORCPT
+        id S1726672AbgA2TrQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 14:40:34 -0500
-Received: from mxout2.idt.com ([157.165.5.26]:50725 "EHLO mxout2.idt.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727369AbgA2Tkd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jan 2020 14:40:33 -0500
-X-Greylist: delayed 319 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jan 2020 14:40:33 EST
-Received: from mail6.idt.com (localhost [127.0.0.1])
-        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id 00TJZ4hJ016692;
-        Wed, 29 Jan 2020 11:35:04 -0800
-Received: from corpml3.corp.idt.com (corpml3.corp.idt.com [157.165.140.25])
-        by mail6.idt.com (8.14.4/8.14.4) with ESMTP id 00TJZ30M005578;
-        Wed, 29 Jan 2020 11:35:03 -0800
-Received: from minli-office.na.ads.idt.com (corpimss2.corp.idt.com [157.165.141.30])
-        by corpml3.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id 00TJZ2W14625;
-        Wed, 29 Jan 2020 11:35:03 -0800 (PST)
-From:   min.li.xe@renesas.com
-To:     robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Min Li <min.li.xe@renesas.com>
-Subject: [PATCH 1/2] dt-bindings: ptp: Add IDT 82P33 based PTP clock
-Date:   Wed, 29 Jan 2020 14:34:31 -0500
-Message-Id: <1580326471-5389-1-git-send-email-min.li.xe@renesas.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-MML: disable
+        Wed, 29 Jan 2020 14:47:16 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:40278 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgA2TrQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 14:47:16 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 9FDDF8046E;
+        Wed, 29 Jan 2020 20:47:12 +0100 (CET)
+Date:   Wed, 29 Jan 2020 20:47:11 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Yannick Fertre <yannick.fertre@st.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: one file of all simple DSI panels
+Message-ID: <20200129194711.GA29646@ravnborg.org>
+References: <20200102101712.5085-1-sam@ravnborg.org>
+ <20200102101712.5085-3-sam@ravnborg.org>
+ <CA+M3ks5Zs5j0FMD4SQiva2soW62tSnu14qiq3kErhLvCMxrxAA@mail.gmail.com>
+ <CAL_Jsq+g8mVdC=aOZDpMGMt3j1Y=Lgku-OcfoBP_V7PGabq5Lg@mail.gmail.com>
+ <CA+M3ks4sD971mCUQRJO+9gXaAWcwgzy2iNtMNVBRov5JSJk=HQ@mail.gmail.com>
+ <CA+M3ks7GkVSi2WcwpK+tkoBx=EpJLfFVAp=qs2ygZyW114hWfw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+M3ks7GkVSi2WcwpK+tkoBx=EpJLfFVAp=qs2ygZyW114hWfw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=2pC7oDVXEgjFpRlVQu8A:9 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Min Li <min.li.xe@renesas.com>
+Hi Benjamin.
+> > >
+> > > Here's the problem. If it is not required, then panels with multiple
+> > > supplies will get added here because they didn't care to begin with.
+> > > Then when someone decides to think about the supplies it will have to
+> > > be moved. Bindings need to be complete from the start.
+> >
+> > Fair enough, I will add fixed supply in dts files.
+> > If reset-gpios could be added in this schema then we could include
+> > oristech panel here.
+> 
+> Does this patch has been merged ?
 
-Add device tree binding doc for the PTP clock based on IDT 82P33
-Synchronization Management Unit (SMU).
+I was sidetracked by other things.
+Maybe you can move it forward?
 
-Signed-off-by: Min Li <min.li.xe@renesas.com>
----
- .../devicetree/bindings/ptp/ptp-idt82p33.yaml      | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
-
-diff --git a/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml b/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
-new file mode 100644
-index 0000000..11d1b40
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ptp/ptp-idt82p33.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: IDT 82P33 PTP Clock Device Tree Bindings
-+
-+description: |
-+  IDT 82P33XXX Synchronization Management Unit (SMU) based PTP clock
-+
-+maintainers:
-+  - Min Li <min.li.xe@renesas.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - idt,82p33810
-+      - idt,82p33813
-+      - idt,82p33814
-+      - idt,82p33831
-+      - idt,82p33910
-+      - idt,82p33913
-+      - idt,82p33914
-+      - idt,82p33931
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+      I2C slave address of the device.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c@1 {
-+        compatible = "abc,acme-1234";
-+        reg = <0x01 0x400>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        phc@51 {
-+            compatible = "idt,82p33810";
-+            reg = <0x51>;
-+        };
-+    };
--- 
-2.7.4
-
+	Sam
