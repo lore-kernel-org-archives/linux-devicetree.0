@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DC6C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A13C33CB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4552220720
+	by mail.kernel.org (Postfix) with ESMTP id F16FE2071E
 	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 13:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgA2Nwy (ORCPT
+        id S1726240AbgA2Nwy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 29 Jan 2020 08:52:54 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:60060 "EHLO
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:11994 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726271AbgA2Nwc (ORCPT
+        by vger.kernel.org with ESMTP id S1726779AbgA2Nwc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Wed, 29 Jan 2020 08:52:32 -0500
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Jan 2020 19:22:26 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 19:22:08 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 19:22:10 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id CBBA7257F; Wed, 29 Jan 2020 19:22:06 +0530 (IST)
+        id 10C1C257F; Wed, 29 Jan 2020 19:22:09 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -39,9 +39,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v4 4/8] dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters
-Date:   Wed, 29 Jan 2020 19:21:55 +0530
-Message-Id: <1580305919-30946-5-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v4 6/8] arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
+Date:   Wed, 29 Jan 2020 19:21:57 +0530
+Message-Id: <1580305919-30946-7-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
 References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
@@ -50,66 +50,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for overriding QUSB2 V2 phy tuning parameters
-in device tree bindings.
+Use generic QUSB2 V2 Phy configuration for SC7180.
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-index 43082c8..dfef356 100644
---- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-@@ -80,6 +80,28 @@ properties:
-         maximum: 63
-         default: 0
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 8011c5f..0d6761b 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1052,7 +1052,7 @@
+ 		};
  
-+  qcom,bias-ctrl-value:
-+    description:
-+        It is a 6 bit value that specifies bias-ctrl-value. It is a PHY
-+        tuning parameter that may vary for different boards of same SOC.
-+        This property is applicable to only QUSB2 v2 PHY.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+        maximum: 63
-+        default: 0
-+
-+  qcom,charge-ctrl-value:
-+    description:
-+        It is a 2 bit value that specifies charge-ctrl-value. It is a PHY
-+        tuning parameter that may vary for different boards of same SOC.
-+        This property is applicable to only QUSB2 v2 PHY.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+        maximum: 3
-+        default: 0
-+
-   qcom,hstx-trim-value:
-     description:
-         It is a 4 bit value that specifies tuning for HSTX
-@@ -118,6 +140,17 @@ properties:
-         maximum: 1
-         default: 0
- 
-+  qcom,hsdisc-trim-value:
-+    description:
-+        It is a 2 bit value tuning parameter that control disconnect
-+        threshold and may vary for different boards of same SOC.
-+        This property is applicable to only QUSB2 v2 PHY.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+        maximum: 3
-+        default: 0
-+
- required:
-   - compatible
-   - reg
+ 		usb_1_hsphy: phy@88e3000 {
+-			compatible = "qcom,sc7180-qusb2-phy";
++			compatible = "qcom,sc7180-qusb2-phy", "qcom,qusb2-v2-phy";
+ 			reg = <0 0x088e3000 0 0x400>;
+ 			status = "disabled";
+ 			#phy-cells = <0>;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
