@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EB3C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD04DC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5012173E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F282464B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lIJoBPTf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvlLQg25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgA3VNw (ORCPT
+        id S1727735AbgA3VMw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:13:52 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35032 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgA3VMy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:12:54 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y73so2141425pfg.2
-        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 13:12:52 -0800 (PST)
+        Thu, 30 Jan 2020 16:12:52 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38503 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727745AbgA3VMw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:12:52 -0500
+Received: by mail-pl1-f194.google.com with SMTP id t6so1823868plj.5
+        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 13:12:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ksW7l4fWNLieSdrD5EsRsMEIiSgG7sjjBAvxsINRjjI=;
-        b=lIJoBPTf3duj1eGQFhz8YZ62Df5Wff7+ob6LqqpeugT+H1yud6k/Zqa6NEla/2kNxa
-         XhvZHWFcApCtUzFq+g3sI+fNNpM7vtTTuAe7F0FoHjweGDvnvcLVehSj5wp/nMORMZKr
-         s7PJGCe+AhcIao2G8L5JmqjVFlzfmralDLnc0=
+        bh=TLRLFIcc4LIDPB9YigEhydFs/8ZzkV4XRdQLFB2ep6Q=;
+        b=mvlLQg25kRWGKBllUT9LNWpMct+Ba9NKWhZdoJX9+F9VAred9+dS/mDDCVnUjMykB6
+         JGnUnzTVq3MReXN52FJHvEOjso6Eo4DYGGCKemrWLVfzm13MY7EJwthSidsm5ZTA2WNN
+         CbsWG08fig8R1vdNkLtPz/Qr8aV/mkk5CBygY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ksW7l4fWNLieSdrD5EsRsMEIiSgG7sjjBAvxsINRjjI=;
-        b=pmRHMxUyQMXzo2cA2myVTeJMpKhh3BPa2+3soWY+fKSu7iSnoO1NlVIspdOOFijhkX
-         RtSufDy1hRvoMp7urSLEKOBnlJ3KxGtAF2U73C0kPPkvg78aFG/Wl2DXoXEotS1iz2p0
-         v227IvhQ1lRZN6mupqFaSMwE9ULSr2cH3c3BaWkbfjkBksgaN8eAlbLy5etL+AxLCRrF
-         XFjycMGuTsojCFkv8tUeBRJd2cgaagpGzYtyOAp/FgqrAqCwr8Chtzrw1k7+idCy6p1A
-         CkdtAJgLs6/rwMNoC5+t5RmmtzRDd7vcSh3M55r1vinX8GitChx2mjF6AXZmPP9QLxVO
-         /JRw==
-X-Gm-Message-State: APjAAAWcSLMy44P0CBNitEn+2y3jZpwhorejz6DfgtaXInlCp5sRXFRb
-        Hg0Q9AaBKXumXngsH3z/t6OnuQ==
-X-Google-Smtp-Source: APXvYqxLqyb7vvP/CmhMs7YyJCKrP+csYoKAiXN3h5NKS0788VFJpZYxoKMMWiN7TlkQ4j8Te7RKKw==
-X-Received: by 2002:a63:6602:: with SMTP id a2mr6293262pgc.403.1580418772289;
-        Thu, 30 Jan 2020 13:12:52 -0800 (PST)
+        bh=TLRLFIcc4LIDPB9YigEhydFs/8ZzkV4XRdQLFB2ep6Q=;
+        b=A0OORRElYgB+CHG97xTsFPTQRlquChoDlnj+OpVdz51o11GLyWreZZK5KiPsMdKXdb
+         6M09zZfPP3djPZl90PUFoKa2t4LkZVBl0Nr4MdpGrQaQfpLv0nuu2WvkN+8AuvjKTbFq
+         RDBgKQRgx43kQEOYFwdvLjF8ZnFNax70O8U+R4+f6fPnz5GgBlX/NnxPKUwucFUGkBgK
+         zuanWyXZjONHOhA9nQmOScQS747h4OT+YbfPZ4wgdgPGXAVC/YXu+9Vd3jRKIpXrCKAJ
+         lvb+sDCCQRdn4/ky8qZDMNWUDt5041BO1I7f0l640tbreuNT/aEA24VABgHKw7FZg1uR
+         4Ipg==
+X-Gm-Message-State: APjAAAVXh1zJc2giiMfZ8WRCTGgQttkvax6t3gfs8+du/WJ2aUUEURr6
+        QtboOKkN7uZdLe0EJ2R2PuXTYA==
+X-Google-Smtp-Source: APXvYqynqQ+EaQq3PdE2MU+3FgfT6u0H42mDI9WEvEDzLZl9MDS9Vjmi62wBJhNJvvoukgiX+YZr8A==
+X-Received: by 2002:a17:90a:db0b:: with SMTP id g11mr7870236pjv.140.1580418770963;
+        Thu, 30 Jan 2020 13:12:50 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.51
+        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 13:12:51 -0800 (PST)
+        Thu, 30 Jan 2020 13:12:50 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -63,10 +63,11 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v3 03/15] arm64: dts: qcom: sdm845: Add the missing clocks on the dispcc
-Date:   Thu, 30 Jan 2020 13:12:19 -0800
-Message-Id: <20200130131220.v3.3.Ie80fa74e1774f4317d80d70d30ef4b78f16cc8df@changeid>
+Subject: [PATCH v3 02/15] dt-bindings: clock: Fix qcom,dispcc bindings for sdm845/sc7180
+Date:   Thu, 30 Jan 2020 13:12:18 -0800
+Message-Id: <20200130131220.v3.2.I0c4bbb0f75a0880cd4bd90d8b267271e2375e0d0@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200130211231.224656-1-dianders@chromium.org>
 References: <20200130211231.224656-1-dianders@chromium.org>
@@ -77,60 +78,318 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We're transitioning over to requiring the Qualcomm Display Clock
-Controller to specify all the input clocks.  Let's add them for
-sdm845.
+The qcom,dispcc bindings had a few problems with them:
 
-NOTES:
-- Until the Linux driver for sdm845's dispcc is updated, these clocks
-  will not actually be used in Linux.  It will continue to use global
-  clock names to match things up.
-- Although the clocks from the DP PHY are required, the DP PHY isn't
-  represented in the dts yet.  Apparently the magic for this is just
-  to use <0>.
+1. They didn't specify all the clocks that dispcc is a client of.
+   Specifically on sc7180 there are two clocks from the DSI PHY and
+   two from the DP PHY.  On sdm845 there are actually two DSI PHYs
+   (each of which has two clocks) and an extra clock from the gcc.
+   These all need to be specified.
 
+2. The sdm845.dtsi has existed for quite some time without specifying
+   the clocks.  The Linux driver was relying on global names to match
+   things up.  While we should transition things, it should be noted
+   in the bindings.
+
+3. The names used the bindings for "xo" and "gpll0" didn't match the
+   names that QC used for these clocks internally and this was causing
+   confusion / difficulty with their code generation tools.  Switched
+   to the internal names to simplify everyone's lives.  It's not quite
+   as clean in a purist sense but it should avoid headaches.  This
+   officially changes the binding, but that seems OK in this case.
+
+Also note that I updated the example.
+
+Fixes: 5d28e44ba630 ("dt-bindings: clock: Add YAML schemas for the QCOM DISPCC clock bindings")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v3:
-- Newly discovered gcc_disp_gpll0_div_clk_src added.
-- Unlike in v2, use internal name instead of purist name.
+- Added include file to description.
+- Discovered / added new gcc input clock on sdm845.
+- Split sc7180 and sdm845 into two files.
+- Switched names to internal QC names rather than logical ones.
+- Updated commit description.
 
 Changes in v2:
-- Patch ("arm64: dts: qcom: sdm845: Add...dispcc") new for v2.
+- Patch ("dt-bindings: clock: Fix qcom,dispcc...") new for v2.
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ .../bindings/clock/qcom,dispcc.yaml           | 67 -------------
+ .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
+ .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
+ 3 files changed, 183 insertions(+), 67 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index d42302b8889b..0985813fee50 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2933,6 +2933,24 @@ opp-200000000 {
- 		dispcc: clock-controller@af00000 {
- 			compatible = "qcom,sdm845-dispcc";
- 			reg = <0 0x0af00000 0 0x10000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
-+				 <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>,
-+				 <&dsi0_phy 0>,
-+				 <&dsi0_phy 1>,
-+				 <&dsi1_phy 0>,
-+				 <&dsi1_phy 1>,
-+				 <0>,
-+				 <0>;
-+			clock-names = "bi_tcxo",
-+				      "gcc_disp_gpll0_clk_src",
-+				      "gcc_disp_gpll0_div_clk_src",
-+				      "dsi0_phy_pll_out_byteclk",
-+				      "dsi0_phy_pll_out_dsiclk",
-+				      "dsi1_phy_pll_out_byteclk",
-+				      "dsi1_phy_pll_out_dsiclk",
-+				      "dp_link_clk_divsel_ten",
-+				      "dp_vco_divided_clk_src_mux";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
+diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+deleted file mode 100644
+index 9c58e02a1de1..000000000000
+--- a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
++++ /dev/null
+@@ -1,67 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/bindings/clock/qcom,dispcc.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Qualcomm Display Clock & Reset Controller Binding
+-
+-maintainers:
+-  - Taniya Das <tdas@codeaurora.org>
+-
+-description: |
+-  Qualcomm display clock control module which supports the clocks, resets and
+-  power domains.
+-
+-properties:
+-  compatible:
+-    enum:
+-      - qcom,sc7180-dispcc
+-      - qcom,sdm845-dispcc
+-
+-  clocks:
+-    minItems: 1
+-    maxItems: 2
+-    items:
+-      - description: Board XO source
+-      - description: GPLL0 source from GCC
+-
+-  clock-names:
+-    items:
+-      - const: xo
+-      - const: gpll0
+-
+-  '#clock-cells':
+-    const: 1
+-
+-  '#reset-cells':
+-    const: 1
+-
+-  '#power-domain-cells':
+-    const: 1
+-
+-  reg:
+-    maxItems: 1
+-
+-required:
+-  - compatible
+-  - reg
+-  - clocks
+-  - clock-names
+-  - '#clock-cells'
+-  - '#reset-cells'
+-  - '#power-domain-cells'
+-
+-examples:
+-  # Example of DISPCC with clock node properties for SDM845:
+-  - |
+-    clock-controller@af00000 {
+-      compatible = "qcom,sdm845-dispcc";
+-      reg = <0xaf00000 0x10000>;
+-      clocks = <&rpmhcc 0>, <&gcc 24>;
+-      clock-names = "xo", "gpll0";
+-      #clock-cells = <1>;
+-      #reset-cells = <1>;
+-      #power-domain-cells = <1>;
+-     };
+-...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+new file mode 100644
+index 000000000000..35315011fc37
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,sc7180-dispcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Display Clock & Reset Controller Binding for SC7180
++
++maintainers:
++  - Taniya Das <tdas@codeaurora.org>
++
++description: |
++  Qualcomm display clock control module which supports the clocks, resets and
++  power domains on SC7180.
++
++  See also dt-bindings/clock/qcom,dispcc-sc7180.h.
++
++properties:
++  compatible:
++    const: qcom,sc7180-dispcc
++
++  clocks:
++    items:
++      - description: Board XO source
++      - description: GPLL0 source from GCC
++      - description: Byte clock from DSI PHY
++      - description: Pixel clock from DSI PHY
++      - description: Link clock from DP PHY
++      - description: VCO DIV clock from DP PHY
++
++  clock-names:
++    items:
++      - const: bi_tcxo
++      - const: gcc_disp_gpll0_clk_src
++      - const: dsi0_phy_pll_out_byteclk
++      - const: dsi0_phy_pll_out_dsiclk
++      - const: dp_phy_pll_link_clk
++      - const: dp_phy_pll_vco_div_clk
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    clock-controller@af00000 {
++      compatible = "qcom,sc7180-dispcc";
++      reg = <0 0x0af00000 0 0x200000>;
++      clocks = <&rpmhcc RPMH_CXO_CLK>,
++               <&gcc GCC_DISP_GPLL0_CLK_SRC>,
++               <&dsi_phy 0>,
++               <&dsi_phy 1>,
++               <&dp_phy 0>,
++               <&dp_phy 1>;
++      clock-names = "bi_tcxo",
++                    "gcc_disp_gpll0_clk_src",
++                    "dsi0_phy_pll_out_byteclk",
++                    "dsi0_phy_pll_out_dsiclk",
++                    "dp_phy_pll_link_clk",
++                    "dp_phy_pll_vco_div_clk";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+new file mode 100644
+index 000000000000..aed2387dc4a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+@@ -0,0 +1,99 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,sdm845-dispcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Display Clock & Reset Controller Binding for SDM845
++
++maintainers:
++  - Taniya Das <tdas@codeaurora.org>
++
++description: |
++  Qualcomm display clock control module which supports the clocks, resets and
++  power domains on SDM845.
++
++  See also dt-bindings/clock/qcom,dispcc-sdm845.h.
++
++properties:
++  compatible:
++    const: qcom,sdm845-dispcc
++
++  # NOTE: sdm845.dtsi existed for quite some time and specified no clocks.
++  # The code had to use hardcoded mechanisms to find the input clocks.
++  # New dts files should have these clocks.
++  clocks:
++    items:
++      - description: Board XO source
++      - description: GPLL0 source from GCC
++      - description: GPLL0 div source from GCC
++      - description: Byte clock from DSI PHY0
++      - description: Pixel clock from DSI PHY0
++      - description: Byte clock from DSI PHY1
++      - description: Pixel clock from DSI PHY1
++      - description: Link clock from DP PHY
++      - description: VCO DIV clock from DP PHY
++
++  clock-names:
++    items:
++      - const: bi_tcxo
++      - const: gcc_disp_gpll0_clk_src
++      - const: gcc_disp_gpll0_div_clk_src
++      - const: dsi0_phy_pll_out_byteclk
++      - const: dsi0_phy_pll_out_dsiclk
++      - const: dsi1_phy_pll_out_byteclk
++      - const: dsi1_phy_pll_out_dsiclk
++      - const: dp_link_clk_divsel_ten
++      - const: dp_vco_divided_clk_src_mux
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    clock-controller@af00000 {
++      compatible = "qcom,sdm845-dispcc";
++      reg = <0 0x0af00000 0 0x10000>;
++      clocks = <&rpmhcc RPMH_CXO_CLK>,
++               <&gcc GCC_DISP_GPLL0_CLK_SRC>,
++               <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>,
++               <&dsi0_phy 0>,
++               <&dsi0_phy 1>,
++               <&dsi1_phy 0>,
++               <&dsi1_phy 1>,
++               <&dp_phy 0>,
++               <&dp_phy 1>;
++      clock-names = "bi_tcxo",
++                    "gcc_disp_gpll0_clk_src",
++                    "gcc_disp_gpll0_div_clk_src",
++                    "dsi0_phy_pll_out_byteclk",
++                    "dsi0_phy_pll_out_dsiclk",
++                    "dsi1_phy_pll_out_byteclk",
++                    "dsi1_phy_pll_out_dsiclk",
++                    "dp_link_clk_divsel_ten",
++                    "dp_vco_divided_clk_src_mux";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
 -- 
 2.25.0.341.g760bfbb309-goog
 
