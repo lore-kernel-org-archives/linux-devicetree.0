@@ -2,96 +2,130 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9225BC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 13:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CDEC35246
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 14:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F152082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 13:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAA320707
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 14:42:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IEmCqz7F"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="r75JM9pR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgA3NxR (ORCPT
+        id S1727413AbgA3Ol5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:53:17 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1421 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726902AbgA3NxR (ORCPT
+        Thu, 30 Jan 2020 09:41:57 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:34339 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726902AbgA3Ol5 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:53:17 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UDnSjw004657;
-        Thu, 30 Jan 2020 14:53:07 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=SD9ONTcrqh7sLptkSCNzDFwyy/VkjsecS0bueRwE0no=;
- b=IEmCqz7FmwowZpTDCN3w3Kl6DEuQx9oD4MhHEI2UZ4UB17EWonGLODlAL1QvIVvKHZ8k
- 64YPxPkmuNMvRsXT3JSDbTgHE1EhWTSjcsfJy7C+dQaiBVhNxJp8HLGVmjTLS/c3Qtdg
- v4siMxrzYhs6iq3NRSL8W4G4CEiKlwVLWvstJ20YRAKGNAY1Kj4wktOlP7D6S+s8X+8B
- fF5hW6+EFVD1MReO3+R3kaJFUYfaEj48SjOIagmy0Yg4YhENTZ3qrMaswId4upEFdC1B
- FC2A/hbxIuprQR1E/75/KbflZ4IzSOf594k5t0fJTETvpfj8BdkQDhVlRvy99zbOESwC Gg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrbpb8w2x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jan 2020 14:53:07 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B256710002A;
-        Thu, 30 Jan 2020 14:53:06 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A045D2D792D;
-        Thu, 30 Jan 2020 14:53:06 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 30 Jan 2020 14:53:05
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] ARM: dts: stm32: remove useless properties in stm32mp157a-avenger96 stmpic node
-Date:   Thu, 30 Jan 2020 14:53:04 +0100
-Message-ID: <20200130135304.27842-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Thu, 30 Jan 2020 09:41:57 -0500
+Received: from [IPv6:2001:420:44c1:2577:91db:5aec:4999:a214]
+ ([IPv6:2001:420:44c1:2577:91db:5aec:4999:a214])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xB0wi8DaDn7E5xB10ihO2H; Thu, 30 Jan 2020 15:41:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1580395314; bh=QnPaP0j7tU+614rpIwXLpxlJdA4DU0xJ3ZxN1G79ADQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=r75JM9pRExf82CZ7FTBGlvkFhPkPpCm2DkdDJINO6iJLHjtBlgmFv1Cb74Y4xU1HN
+         5j+JSYi9g1tRZeqf/i7OM7IWlauH0nRLUzf4RRH7Ak064pkFjkAETMb9YMWxqNnerj
+         Xq8asYxF8w2DfV3MM0LpaztPE65XxDhvBLat//JhmNq3OMXhdCrs9c3CdrhNx7nBZr
+         zSnMiyirRNlq6PratqnuLv0kpm1MFxIDyqsrbx03Hppe6Lc60YNP8qriaTUr+vLA3H
+         XBun4lMMYIk4G/Of9cUwzOKulAqDHCVd6ArajwBXxWQ8o/LXYZ7UGjDxnSlmtwaptf
+         +vsndPF+uLtsg==
+Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
+Date:   Thu, 30 Jan 2020 15:41:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_04:2020-01-28,2020-01-30 signatures=0
+In-Reply-To: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfN+R3ebeiMNb2jJ1P75j291PEX7Nx0Vzuu5rpXhX/cJ38nUz/4cnLiRCfwVJYfJCp/PkuNx0rQWRF/xNAiuZxjbGS1z51MggWPtc4+dtx+wXvGHWJJKu
+ cyfZmlbdcWigV2+QEOY+HCeV/V34tI23h763YO8GoG2/NECw0Neg+njWR/4eurtljC2w5qduoYwUDJ4JlT5BCsXEzix3dUiZsqdYgpq15Jr6evsknO11Lc9/
+ ZhKgWLbF4iGzuTUG6BqLqGc0F2MlCvBBltw5wI9DSDwcd4m+VQAMibmVIfJrniLo3mRCV+A5Saceg9UlQNa26uTo7q/BVZWJA6WodoTqS/ySvEOfSbjufqUT
+ 2mG55hSvr7OJbhx1Y4g8iugiAB4nojbnAKFx7eAKAicO8xqLeO+qWiI/Zk4V44ywXScsZdieB2CA92LkRmjnbC/xJPdzqGk+QTUyYuS7U/Sk6ybPJ/TA1pxb
+ 8MWxU5lkx88SLfdOppp29RZAkVnbvNicF38sw5TAiu5TmtLBp4hl397SG8C1xNC0eUE1J9m7YyMpygeCX04Kv00Ns5mEN7cJLTOIghbfUwZP3hDtVC36H0BW
+ znA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Theses 3 properties are not coded in driver so remove them from the DTS.
+Hi Sowjanya,
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/boot/dts/stm32mp157a-avenger96.dts | 4 ----
- 1 file changed, 4 deletions(-)
+On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
+> This series adds Tegra210 VI and CSI driver for built-in test pattern
+> generator (TPG) capture.
+> 
+> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+> CSI port is one-to-one mapped to VI channel for video capture.
+> 
+> This series has TPG support only where it creates hard media links
+> between CSI subdevice and VI video device without device graphs.
+> 
+> v4l2-compliance results are available below the patch diff.
+> 
+> [v0]:	Includes,
+> 	- Adds CSI TPG clock to Tegra210 clock driver
+> 	- Host1x video driver with VI and CSI clients.
+> 	- Support for Tegra210 only.
+> 	- VI CSI TPG support with hard media links in driver.
+> 	- Video formats supported by Tegra210 VI
+> 	- CSI TPG supported video formats
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-index 628c74a45a25..e2d9febaa661 100644
---- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-@@ -134,10 +134,6 @@
- 		#interrupt-cells = <2>;
- 		status = "okay";
- 
--		st,main-control-register = <0x04>;
--		st,vin-control-register = <0xc0>;
--		st,usb-control-register = <0x30>;
--
- 		regulators {
- 			compatible = "st,stpmic1-regulators";
- 
--- 
-2.15.0
+I'm trying to compile this patch series using the media_tree master
+branch (https://git.linuxtv.org//media_tree.git), but it fails:
 
+drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_queue_setup’:
+drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused variable ‘count’ [-Wunused-variable]
+   71 |  unsigned int count = *nbuffers;
+      |               ^~~~~
+drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_init’:
+drivers/staging/media/tegra/tegra-channel.c:518:55: error: ‘struct host1x_client’ has no member named ‘host’
+  518 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+      |                                                       ^
+make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/tegra-channel.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_tpg_graph_init’:
+drivers/staging/media/tegra/tegra-vi.c:157:55: error: ‘struct host1x_client’ has no member named ‘host’
+  157 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+      |                                                       ^
+drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_init’:
+drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_init’:
+drivers/staging/media/tegra/tegra-vi.c:213:51: error: ‘struct host1x_client’ has no member named ‘host’
+  213 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+      |                                                   ^~
+drivers/staging/media/tegra/tegra-csi.c:259:51: error: ‘struct host1x_client’ has no member named ‘host’
+  259 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+      |                                                   ^~
+drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_exit’:
+drivers/staging/media/tegra/tegra-vi.c:246:51: error: ‘struct host1x_client’ has no member named ‘host’
+  246 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+      |                                                   ^~
+drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_exit’:
+drivers/staging/media/tegra/tegra-csi.c:286:51: error: ‘struct host1x_client’ has no member named ‘host’
+  286 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+      |                                                   ^~
+
+And indeed, struct host1x_client as defined in include/linux/host1x.h doesn't
+have a 'host' field.
+
+Does this series depend on another patch that's not yet in mainline?
+
+Regards,
+
+	Hans
