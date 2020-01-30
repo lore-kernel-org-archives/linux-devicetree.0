@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F016C35248
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AED3C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9A1215A4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD210214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NQMw82GE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dy/9ETdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgA3VMv (ORCPT
+        id S1727872AbgA3VNA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:12:51 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39358 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbgA3VMu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:12:50 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 84so2127091pfy.6
-        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 13:12:50 -0800 (PST)
+        Thu, 30 Jan 2020 16:13:00 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35203 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727864AbgA3VM7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:12:59 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so1829461plt.2
+        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 13:12:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qiYgMeeUC0YBpAKelC+4dn+CN5ICnSUf2MkjMCbgL5c=;
-        b=NQMw82GEkZ6PCiwjiH4rDlQHZWp89OEeOFi1fTtGIJyi/seUYDg2GVNuf+3iQS0Fiu
-         /eWZAkdKHkVeg51jDe0fQTGXbsqxftfBFdoE3DR4sZN3MTn3L6mbGeWlkrJj4jC+W2eK
-         2B8kfMWCHQ2xh4NPd/FxrnPp2i9YH3BXJyFbc=
+        bh=hdWC3RQmqbqeEYneGWU8AA2fWnLGYvTK7uGX6EESI4I=;
+        b=dy/9ETdzg2IbK5MHT6jzlfGoU65H981Bgza6oumaV2dvTW7WTD77C+7h450M+iIWG1
+         frkj33KT7yrQ36Ltw7P3SKdZOsWRKWFowFU/X5e7C9Lk3ymX/hw31CTNdHl3u+JD80Kk
+         fq/0dG4QyBkNXq4+c3RN+kXkwoIZhHvdlRtSA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qiYgMeeUC0YBpAKelC+4dn+CN5ICnSUf2MkjMCbgL5c=;
-        b=ovFvvPZzZBLQ/MP2LLvgGChJ8rcVShxVNB9GswEHEY+8lGTy/ygp6KZwU9o1Zxh12v
-         s0wPt80Y2cs7hTuNT3O196RmkxzqnpsSxNT/yRgFdNpsBj1FklrHO/mlJwP9Yq5GhvjL
-         N2SBBEeBZ5fvt3q+LbBZfmmvb1eBfG1RYpTRvQkDPN9lb1AKgziMFeral71S4cZcSJDS
-         XNrRhjP9l5c3O6QvGp/8OtJ6Mzp+9ukpmwC76aVg274NhoppAYgLAElPfruNjVhOqI3X
-         RWQXnEL6pRA8Sk8anHq/N7YdtmqwFJWBj5b7i93m/k44A+28pNeyfDFvJaM/aaTq0FvI
-         dpsA==
-X-Gm-Message-State: APjAAAXkdOaJHuEGttj3L0bA3Iv70Ofc2dT8Y33Vc/Xr4O/Y0+uqNC3R
-        ozCZGCLN/Cu476rafxSK+CZqkw==
-X-Google-Smtp-Source: APXvYqxtcrlprtA94Pt11rgDOHvAhaLPmxrkPcj2drtGice8emH1/TtSR99Y/5dZQDkssXFxNGMyOQ==
-X-Received: by 2002:a65:4242:: with SMTP id d2mr6728403pgq.166.1580418769626;
-        Thu, 30 Jan 2020 13:12:49 -0800 (PST)
+        bh=hdWC3RQmqbqeEYneGWU8AA2fWnLGYvTK7uGX6EESI4I=;
+        b=bcRpV9/Up9d0NuVoovPC1aFRF3MCUcsytNtTLJiodvR8iRHSFtSoRVMXJMQ1oee7DW
+         ypILELYOVdEpksbpLVPhY1ICPUtN2pwZySP/IuLTys3iTUOWVHUxG/AB6it1ME46wbwX
+         UxF20ogJuX80mweesCD0vNRj0GTxiOQENZF0iy0PuMq6uRO9AZDOrLIAr64Vd9UjaK6d
+         tuO+bvo+WNcAXh7mVoIHKMm4uY5isgKz5Naf2fHJ+dAK59iHHt1tjpM1Jeut665bxpPg
+         DplbvRfoNsKid7bzAUkggnatKX0hKRLA3FKnFVY6YDR2flGf7Ebf2iVHfwGPFaiiksJi
+         vndA==
+X-Gm-Message-State: APjAAAV6Jg0Tgn5wgNIOuv5L1EZk2LVZthUJg/PNI3YKEhaV7zJit46h
+        Zn/b3u8DqnMR5WDGZ0graZirMA==
+X-Google-Smtp-Source: APXvYqzgj3qg6+ijNWRHM27hvrG2XLl3NbrODk5PrDiJH+sgQRp3aGWygTi6vlVx1xdxxUa8jCdRkA==
+X-Received: by 2002:a17:90a:9c1:: with SMTP id 59mr8088935pjo.65.1580418778610;
+        Thu, 30 Jan 2020 13:12:58 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.48
+        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 13:12:49 -0800 (PST)
+        Thu, 30 Jan 2020 13:12:58 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -63,11 +63,10 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 01/15] clk: qcom: rcg2: Don't crash if our parent can't be found; return an error
-Date:   Thu, 30 Jan 2020 13:12:17 -0800
-Message-Id: <20200130131220.v3.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid>
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v3 08/15] arm64: dts: qcom: sdm845: Add missing clocks / fix names on the gpucc
+Date:   Thu, 30 Jan 2020 13:12:24 -0800
+Message-Id: <20200130131220.v3.8.If8596faf02408cef4bb9f52296b911eb9ba49287@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200130211231.224656-1-dianders@chromium.org>
 References: <20200130211231.224656-1-dianders@chromium.org>
@@ -78,73 +77,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When I got my clock parenting slightly wrong I ended up with a crash
-that looked like this:
+We're transitioning over to requiring the Qualcomm GPU Clock
+Controller to specify all the input clocks.  Let's add them for
+sdm845.
 
-  Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000000
-  ...
-  pc : clk_hw_get_rate+0x14/0x44
-  ...
-  Call trace:
-   clk_hw_get_rate+0x14/0x44
-   _freq_tbl_determine_rate+0x94/0xfc
-   clk_rcg2_determine_rate+0x2c/0x38
-   clk_core_determine_round_nolock+0x4c/0x88
-   clk_core_round_rate_nolock+0x6c/0xa8
-   clk_core_round_rate_nolock+0x9c/0xa8
-   clk_core_set_rate_nolock+0x70/0x180
-   clk_set_rate+0x3c/0x6c
-   of_clk_set_defaults+0x254/0x360
-   platform_drv_probe+0x28/0xb0
-   really_probe+0x120/0x2dc
-   driver_probe_device+0x64/0xfc
-   device_driver_attach+0x4c/0x6c
-   __driver_attach+0xac/0xc0
-   bus_for_each_dev+0x84/0xcc
-   driver_attach+0x2c/0x38
-   bus_add_driver+0xfc/0x1d0
-   driver_register+0x64/0xf8
-   __platform_driver_register+0x4c/0x58
-   msm_drm_register+0x5c/0x60
-   ...
+As part of this we've decided that the xo clock should be referred to
+in the bindings as "bi_tcxo".  Change the dts.
 
-It turned out that clk_hw_get_parent_by_index() was returning NULL and
-we weren't checking.  Let's check it so that we don't crash.
+NOTE: Until the Linux driver for sdm845's gpucc is updated, these
+clocks will not actually be used in Linux.  It will continue to use
+global clock names to match things up.  Of course, Linux didn't use
+the old "xo" clock anyway.
 
-Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 ---
-I haven't gone back and tried to reproduce this same crash on older
-kernels, but I'll put the blame on commit ac269395cdd8 ("clk: qcom:
-Convert to clk_hw based provider APIs").  Before that if we got a NULL
-parent back it was fine and dandy since a NULL "struct clk" is valid
-to use but a NULL "struct clk_hw" is not.
 
 Changes in v3:
-- Add Matthias tag.
+- Unlike in v2, use internal name instead of purist name.
 
 Changes in v2:
-- Patch ("clk: qcom: rcg2: Don't crash...") new for v2.
+- Patch ("arm64: dts: qcom: sdm845: Add...gpucc") new for v2.
 
- drivers/clk/qcom/clk-rcg2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index da045b200def..9098001ac805 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -218,6 +218,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 0985813fee50..35d7fcbda43c 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1903,8 +1903,12 @@ gpucc: clock-controller@5090000 {
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+-			clocks = <&rpmhcc RPMH_CXO_CLK>;
+-			clock-names = "xo";
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
++				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
++			clock-names = "bi_tcxo",
++				      "gcc_gpu_gpll0_clk_src",
++				      "gcc_gpu_gpll0_div_clk_src";
+ 		};
  
- 	clk_flags = clk_hw_get_flags(hw);
- 	p = clk_hw_get_parent_by_index(hw, index);
-+	if (!p)
-+		return -EINVAL;
-+
- 	if (clk_flags & CLK_SET_RATE_PARENT) {
- 		rate = f->freq;
- 		if (f->pre_div) {
+ 		stm@6002000 {
 -- 
 2.25.0.341.g760bfbb309-goog
 
