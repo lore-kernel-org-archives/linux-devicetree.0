@@ -2,229 +2,936 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713FBC35240
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 20:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D581C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 20:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428562083E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 20:54:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqfQnsIO"
+	by mail.kernel.org (Postfix) with ESMTP id B22902083E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 20:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580417919;
+	bh=Djzy/frq2jzVw9pAOaqJ/u/5lCniJ4TlNTt6q01sRXo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XP087ofsc9WpTw7jN5tksIv63agjcLU/k+XCKI/dSgZnIc+kgsFyfUG7XxDK+52i4
+	 6+ABNwYyn6ipQXJdeZ5cK8rlIbfqvvKfoXAowSmNzKDaMBqaZaWjaCjMsWT/IB5Fl/
+	 7vFVmpCCK/ZW9Enig5aZgkT0Nfdh8IXiLy65fOcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbgA3Uyl (ORCPT
+        id S1727201AbgA3U6j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:54:41 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41789 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgA3Uyl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 15:54:41 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so4441039otc.8;
-        Thu, 30 Jan 2020 12:54:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gywvdJG4S8zg1F0N8TnRS+h5mKkXnwAKlRZJYdtt1ZA=;
-        b=fqfQnsIOmo8FmmJdsz2QjZwzZa6CYUyDAHwdulBh0jkPnMA2cImjHHcOxHjDXmQxpK
-         T6gAsbqbhlv3FqXjp2FtLtncpIuSJcy8c0KH8OQQJTA88lgBhyNTywMuTRS39yqoLn9e
-         otCeRvbEC+QbtcPgCrRsBKdFutoKjpNJThPflcqDwcA6dn9elZQwW4cAmhwrC0l8nrWf
-         yuiA5qOtgXUUsuFXmYRkCEKFgLvGn+d6kknn2KBw3Y513xLJzFWTdVL5+bfddX62jeJc
-         U1SjOTbI/s0t/d877OkaPGV10zeH/1DLghuVq4hmhPkuDAIUTiTWYoPaMvWgvAXhqAx7
-         aSHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gywvdJG4S8zg1F0N8TnRS+h5mKkXnwAKlRZJYdtt1ZA=;
-        b=pWllvH+ILYwfam+MHPZVQGaJiv36prPhp+dE+KE+rSrPtO+pSm58VRTJjvUQcarLjT
-         1dj1deJXrxttvQu+S5mL9iaV8aagllfLnS1e6nSa2r2QxCJrQ2gjK4H08okZrEgtxduO
-         ei60I99wYdyDWAA8w/UkMfEmb5vl15hAIaY2K9xDpI23xUbTbj8eNOWiPDZQnHpzTlgj
-         w5RxOBWj5AFpb68rmFz/5CW0+jijjP9tOSj/+tOypT4qIdAorwwRiCyCcxmRIIBAQvh0
-         HbotAMx4tnxfA2i+PuLsf8iQG/3n6IcaKmn3m9csBGh7YRrNw68riiKYrxMCAVIV/D8V
-         MHWw==
-X-Gm-Message-State: APjAAAVnbSIxueJ6bvHDDxDSiVKDh8SpQDSIXdr0ZclZzOj0XVEEMwMD
-        v+ngJcI6DyNfIg1HDPvIGrkOf6SBNUL/Irrnkuk=
-X-Google-Smtp-Source: APXvYqwBCKF8eCODlztMB8ORP0u3uiwR5t2s2nCfZgKiHWS07FIMyZ3kn6caD7U18ugZfY2NZqr0ejOUQrOc2egVDVs=
-X-Received: by 2002:a9d:64ca:: with SMTP id n10mr5023218otl.325.1580417680064;
- Thu, 30 Jan 2020 12:54:40 -0800 (PST)
+        Thu, 30 Jan 2020 15:58:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbgA3U6j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jan 2020 15:58:39 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A002D2082E;
+        Thu, 30 Jan 2020 20:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580417915;
+        bh=Djzy/frq2jzVw9pAOaqJ/u/5lCniJ4TlNTt6q01sRXo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d3nlAnYYqSHIJikTRZ29tH4cCmOHKXCY7MK7rv7JdU4n4v/DbNhNzKxafPlKgwcyl
+         ID3vYKx8IceEDJRcxrDWYtfORcurGDva1uQWF0uxaAkQAibocVzr+09n2b4h31zjjU
+         gjRAEcrR3lzN1UnDVfuWbZ9otTNv89MZ81HcuHDA=
+Received: by mail-qv1-f45.google.com with SMTP id y2so2175781qvu.13;
+        Thu, 30 Jan 2020 12:58:35 -0800 (PST)
+X-Gm-Message-State: APjAAAXUJmBg13oBK3Rixdbar+lfXg0is2m7x+KFQuLTp4oVoqsqd4u9
+        z6j3lX6Ausdcm+qujIwgs0y8Pp6h0Bsq6oFrBA==
+X-Google-Smtp-Source: APXvYqzdyYhcyd+ITuv7BeN+SYNqcDiWwwbrOGKGuX2xUObg/eIkRLKgXb0cYMJLpHLSJEdP6uQNOMuBVDI0z0+4YCk=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr6660519qvo.20.1580417914552;
+ Thu, 30 Jan 2020 12:58:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8s1Jx8uZiSr0uiryS492EbFRoFg9QTwkosZsuyfRYp-3g@mail.gmail.com> <9c65eb7a-539b-1fa3-f988-40c32aa8dfe3@ti.com>
-In-Reply-To: <9c65eb7a-539b-1fa3-f988-40c32aa8dfe3@ti.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 30 Jan 2020 20:54:13 +0000
-Message-ID: <CA+V-a8th3eysn0s2q9EEAqQb7vfd3bNcL=ow_z8tSWAC6K=iJw@mail.gmail.com>
-Subject: Re: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200130174006.3154922-1-thierry.reding@gmail.com> <20200130174636.GA3154793@ulmo>
+In-Reply-To: <20200130174636.GA3154793@ulmo>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 30 Jan 2020 14:58:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKopxTzh+MACgrbqK_UdbJ977c2rqjwMgvaWaj4nD4P5Q@mail.gmail.com>
+Message-ID: <CAL_JsqKopxTzh+MACgrbqK_UdbJ977c2rqjwMgvaWaj4nD4P5Q@mail.gmail.com>
+Subject: Re: [RFC] dt-bindings: display: Convert Tegra host1x to json-schema
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, Jan 22, 2020 at 8:13 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On Thu, Jan 30, 2020 at 11:46 AM Thierry Reding
+<thierry.reding@gmail.com> wrote:
 >
-> Hi Prabhakar,
->
-> On 21/01/20 11:27 PM, Lad, Prabhakar wrote:
-> > Hi Rob/Kishon,
+> On Thu, Jan 30, 2020 at 06:40:06PM +0100, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
 > >
-> > On Wed, Jan 8, 2020 at 4:22 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> >>
-> >> This patch adds the bindings for the R-Car PCIe endpoint driver.
-> >>
-> >> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >> ---
-> >>  .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
-> >>  1 file changed, 76 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> >> new file mode 100644
-> >> index 000000000000..99c2a1174463
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> >> @@ -0,0 +1,76 @@
-> >> +# SPDX-License-Identifier: GPL-2.0
-> >> +# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Renesas R-Car PCIe Endpoint
-> >> +
-> >> +maintainers:
-> >> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    items:
-> >> +      - const: renesas,r8a774c0-pcie-ep
-> >> +      - const: renesas,rcar-gen3-pcie-ep
-> >> +
-> >> +  reg:
-> >> +    maxItems: 5
-> >> +
-> >> +  reg-names:
-> >> +    items:
-> >> +      - const: apb-base
-> >> +      - const: memory0
-> >> +      - const: memory1
-> >> +      - const: memory2
-> >> +      - const: memory3
->
-> As I had mentioned in the other patch, I'd prefer if we can create
-> standard binding for representing the memory regions. IMHO we should
-> create subnode for memory regions Each sub-node itself may or may not
-> have more than one memory region.
->
-> In your platform, since there can be only one allocation in a memory
-> region, there should be 4 sub-nodes for each of the memory region and
-> each node should have page_size (or some equivalent property) property
-> to indicate page_size (= region_size).
->
-> For a platform that doesn't have the restriction, there can be a single
-> sub-node containing all the memory region.
->
-> Let's wait for Rob's comment though.
->
-Gentle ping.on the suggestions above.
-
-Cheers,
---Prabhakar
-
-> Thanks
-> Kishon
-> >> +
-> >> +  power-domains:
-> >> +    maxItems: 1
-> >> +
-> >> +  resets:
-> >> +    maxItems: 1
-> >> +
-> >> +  clocks:
-> >> +    maxItems: 1
-> >> +
-> >> +  clock-names:
-> >> +    items:
-> >> +      - const: pcie
-> >> +
-> >> +  max-functions:
-> >> +    minimum: 1
-> >> +    maximum: 6
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - reg-names
-> >> +  - resets
-> >> +  - power-domains
-> >> +  - clocks
-> >> +  - clock-names
-> >> +  - max-functions
-> >> +
-> > apart from dt_binding_check error are we OK with dt bindings ?
+> > Convert the Tegra host1x controller bindings from the free-form text
+> > format to json-schema.
 > >
-> > Cheers,
-> > --Prabhakar
-> >
-> >> +examples:
-> >> +  - |
-> >> +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
-> >> +    #include <dt-bindings/power/r8a774c0-sysc.h>
-> >> +
-> >> +     pcie0_ep: pcie-ep@fe000000 {
-> >> +            compatible = "renesas,r8a774c0-pcie-ep",
-> >> +                         "renesas,rcar-gen3-pcie-ep";
-> >> +            reg = <0 0xfe000000 0 0x80000>,
-> >> +                  <0x0 0xfe100000 0 0x100000>,
-> >> +                  <0x0 0xfe200000 0 0x200000>,
-> >> +                  <0x0 0x30000000 0 0x8000000>,
-> >> +                  <0x0 0x38000000 0 0x8000000>;
-> >> +            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-> >> +            resets = <&cpg 319>;
-> >> +            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> >> +            clocks = <&cpg CPG_MOD 319>;
-> >> +            clock-names = "pcie";
-> >> +            max-functions = /bits/ 8 <1>;
-> >> +    };
-> >> --
-> >> 2.20.1
-> >>
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  .../display/tegra/nvidia,tegra20-host1x.txt   | 487 ----------
+> >  .../display/tegra/nvidia,tegra20-host1x.yaml  | 884 ++++++++++++++++++
+> >  2 files changed, 884 insertions(+), 487 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml
+> [...]
+> > diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml
+> > new file mode 100644
+> > index 000000000000..26b2325813eb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml
+> > @@ -0,0 +1,884 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/tegra/nvidia,tegra20-host1x.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NVIDIA Tegra host1x controller
+> > +
+> > +maintainers:
+> > +  - Thierry Reding <thierry.reding@gmail.com>
+> > +  - Jon Hunter <jonathanh@nvidia.com>
+> > +
+> > +description: The host1x top-level node defines a number of children, each
+> > +  representing one of the host1x client modules defined in this binding.
+> > +
+> > +properties:
+> > +  # required
+> > +  compatible:
+> > +    oneOf:
+> > +      - description: NVIDIA Tegra20
+> > +        allOf:
+> > +          - enum:
+> > +              - nvidia,tegra20-host1x
+> > +          - const: simple-bus
+> > +
+> > +      - description: NVIDIA Tegra30
+> > +        allOf:
+> > +          - enum:
+> > +              - nvidia,tegra30-host1x
+> > +          - const: simple-bus
+> > +
+> > +      - description: NVIDIA Tegra114
+> > +        allOf:
+> > +          - enum:
+> > +              - nvidia,tegra114-host1x
+> > +          - const: simple-bus
+> > +
+> > +      - description: NVIDIA Tegra124
+> > +        allOf:
+> > +          - enum:
+> > +              - nvidia,tegra124-host1x
+> > +          - const: simple-bus
+> > +
+> > +      - description: NVIDIA Tegra132
+> > +        allOf:
+> > +          - enum:
+> > +              - nvidia,tegra132-host1x
+> > +          - const: simple-bus
+> > +
+> > +      - description: NVIDIA Tegra210
+> > +        allOf:
+> > +          - enum:
+> > +              - nvidia,tegra210-host1x
+> > +          - const: simple-bus
+> > +
+> > +      - description: NVIDIA Tegra186
+> > +        allOf:
+> > +          - enum:
+> > +              - nvidia,tegra186-host1x
+> > +          - const: simple-bus
+> > +
+> > +      - description: NVIDIA Tegra194
+> > +        allOf:
+> > +          - enum:
+> > +              - nvidia,tegra194-host1x
+> > +          - const: simple-bus
+
+These are all wrong as they can never be true. compatible cannot be a
+single string that's both nvidia,tegra194-host1x and simple-bus.
+
+What you needed here is s/allOf/items/. However, I'd prefer the
+description be dropped and combine everything into one big enum (and
+then '- const: simple-bus').
+
+>
+> Hi Rob, all,
+>
+> I've been trying to convert this to json-schema, but I'm running into
+> weird issues. What I seem to be seeing is that the above schema for the
+> compatible string ends up matching various device tree nodes, such as
+> the top-level "regulators" node which has just:
+>
+>         compatible = "simple-bus";
+>
+> The intention here is to have one (or more) SoC-specific string and a
+> "simple-bus" in the compatible string. Here are a few examples:
+>
+>         tegra124.dtsi: compatible = "nvidia,tegra124-host1x", "simple-bus";
+>         tegra132.dtsi: compatible = "nvidia,tegra132-host1x",
+>                                     "nvidia,tegra124-host1x",
+>                                     "simple-bus";
+
+Side note, this case doesn't seem to be handled.
+
+>         tegra186.dtsi: compatible = "nvidia,tegra186-host1x", "simple-bus";
+>
+> For some reason none of the variants I've tried (such as items: instead
+> of allOf: in the above) seem to properly match.
+>
+> Any ideas what I'm doing wrong here? There are a couple of additional
+> errors flagged when I run this through the checker, but I think they are
+> all follow-up errors from the mismatched compatible strings.
+
+You need a custom 'select' entry to omit 'simple-bus'. See some
+primecell bindings like pl061 for an example.
+
+>
+> Quoting in full for reference.
+>
+> Thierry
+>
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: host1x syncpoint interrupt
+> > +      - description: host1x general interrupt
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  '#address-cells':
+> > +    description: The number of cells used to represent physical base addresses
+> > +      in the host1x address space.
+> > +    enum: [1, 2]
+> > +
+> > +  '#size-cells':
+> > +    description: The number of cells used to represent the size of an address
+> > +      range in the host1x address space.
+> > +    enum: [1, 2]
+> > +
+> > +  ranges:
+> > +    description: The mapping of the host1x address space to the CPU address
+> > +      space.
+> > +
+> > +  clocks:
+> > +    description: Must contain one entry, for the module clock. See
+> > +      ../clocks/clock-bindings.txt for details.
+> > +
+> > +  resets:
+> > +    description: Must contain an entry for each entry in reset-names. See
+> > +      ../reset/reset.txt for details.
+> > +
+> > +  reset-names:
+> > +    items:
+> > +      - const: host1x
+> > +
+> > +  # optional
+> > +  interconnects:
+> > +    description: Description of the interconnect paths for the host1x
+> > +      controller; see ../interconnect/interconnect.txt for details.
+> > +  interconnect-names:
+> > +    description: A list of names identifying each entry listed in the
+> > +      "interconnects" property.
+> > +
+> > +  # host1x clients
+> > +  vi:
+> > +    description: video input
+> > +    type: object
+
+These should all be broken out into there only files.
+
+> > +    properties:
+> > +      compatible:
+> > +        oneOf:
+> > +          - const: nvidia,tegra20-vi
+> > +          - const: nvidia,tegra30-vi
+> > +          - const: nvidia,tegra114-vi
+> > +          - const: nvidia,tegra124-vi
+> > +          - allOf:
+
+items
+
+> > +              - const: nvidia,tegra132-vi
+> > +              - const: nvidia,tegra124-vi
+> > +          - const: nvidia,tegra210-vi
+> > +          - const: nvidia,tegra186-vi
+> > +          - const: nvidia,tegra194-vi
+> > +
+
+> > +      reg: true
+> > +      interrupts: true
+> > +      clocks: true
+> > +
+> > +      resets: true
+
+Need to know how many entries for each of these.
+
+> > +      reset-names:
+> > +        items:
+> > +          - const: vi
+> > +
+> > +  isp:
+> > +    description: image signal processor
+> > +    type: object
+> > +    properties:
+> > +      compatible:
+> > +        oneOf:
+> > +          - const: nvidia,tegra20-isp
+> > +          - const: nvidia,tegra30-isp
+> > +          - const: nvidia,tegra114-isp
+> > +          - const: nvidia,tegra124-isp
+> > +          - allOf:
+> > +              - const: nvidia,tegra132-isp
+> > +              - const: nvidia,tegra124-isp
+> > +          - const: nvidia,tegra210-isp
+> > +          - const: nvidia,tegra186-isp
+> > +          - const: nvidia,tegra194-isp
+> > +
+> > +      reg: true
+> > +      interrupts: true
+> > +      clocks: true
+> > +      resets: true
+> > +      reset-names:
+> > +        items:
+> > +          - const: isp
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            oneOf:
+> > +              - const: nvidia,tegra186-host1x
+> > +              - const: nvidia,tegra194-host1x
+
+oneOf+const(s) is just an 'enum'
+
+There's a judgement call for doing if/then vs. splitting bindings to
+separate schema files. Not saying you need to split it for that
+reason, but something to keep in mind.
+
+> > +    then:
+> > +      properties:
+> > +        reg-names:
+> > +          items:
+> > +            - const: hypervisor
+> > +            - const: vm
+> > +        reg:
+> > +          items:
+> > +            - description: physical base address and length of the register
+> > +                region assigned to the VM
+> > +            - description: physical base address and length of the register
+> > +                region used by the hypervisor
+> > +    else:
+> > +      properties:
+> > +        reg:
+> > +          items:
+> > +            - description: physical base address and length of the controller
+> > +                registers
+
+The description is pretty much every reg property. Just this is
+sufficient for a single entry:
+
+reg:
+  maxItems: 1
+
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            oneOf:
+> > +              - const: nvidia,tegra20-host1x
+> > +              - const: nvidia,tegra30-host1x
+> > +    then:
+> > +      properties:
+> > +        epp:
+> > +          description: encoder pre-processor
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra20-epp
+> > +                - const: nvidia,tegra30-epp
+> > +                - const: nvidia,tegra114-epp
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - const: epp
+> > +
+> > +        mpe:
+> > +          description: video encoder
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra20-mpe
+> > +                - const: nvidia,tegra30-mpe
+> > +                - const: nvidia,tegra114-mpe
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - const: mpe
+> > +
+> > +        gr2d:
+> > +          description: 2D graphics engine
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra20-gr2d
+> > +                - const: nvidia,tegra30-gr2d
+> > +                - const: nvidia,tegra114-gr2d
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - const: 2d
+> > +
+> > +        gr3d:
+> > +          description: 3D graphics engine
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra20-gr3d
+> > +                - const: nvidia,tegra30-gr3d
+> > +                - const: nvidia,tegra114-gr3d
+> > +            reg: true
+> > +            clocks: true
+> > +            resets: true
+> > +
+> > +          allOf:
+> > +            - if:
+> > +                properties:
+> > +                  compatible:
+> > +                    contains:
+> > +                      oneOf:
+> > +                        - const: nvidia,tegra30-gr3d
+> > +              then:
+> > +                properties:
+> > +                  clock-names:
+> > +                    items:
+> > +                      - const: 3d
+> > +                      - const: 3d2
+> > +                  reset-names:
+> > +                    items:
+> > +                      - const: 3d
+> > +                      - const: 3d2
+> > +              else:
+> > +                properties:
+> > +                  clock-names:
+> > +                    items:
+> > +                      - const: 3d
+> > +                  reset-names:
+> > +                    items:
+> > +                      - const: 3d
+> > +
+> > +        tvo:
+> > +          description: TV encoder output
+> > +          type: object
+> > +          properties:
+> > +            # required
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra20-tvo
+> > +                - const: nvidia,tegra30-tvo
+> > +                - const: nvidia,tegra114-tvo
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            oneOf:
+> > +              - const: nvidia,tegra20-host1x
+> > +              - const: nvidia,tegra30-host1x
+> > +              - const: nvidia,tegra114-host1x
+> > +              - const: nvidia,tegra124-host1x
+> > +              - const: nvidia,tegra132-host1x
+> > +              - const: nvidia,tegra210-host1x
+> > +    then:
+> > +      properties:
+> > +        dc:
+> > +          description: display controller
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra20-dc
+> > +                - const: nvidia,tegra30-dc
+> > +                - const: nvidia,tegra114-dc
+> > +                - const: nvidia,tegra124-dc
+> > +                - allOf:
+> > +                    - const: nvidia,tegra124-dc
+> > +                    - const: nvidia,tegra132-dc
+> > +                - const: nvidia,tegra210-dc
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            clock-names:
+> > +              items:
+> > +                - const: dc
+> > +                - const: parent
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - const: dc
+> > +            interconnects: true
+> > +            interconnect-names:
+> > +              items:
+> > +                - const: XXX
+> > +                - const: XXX
+> > +            nvidia,head:
+> > +              description: The number of the display controller head. This is
+> > +                used to setup the various types of output to receive video
+> > +                data from the given head.
+> > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +          if:
+> > +            properties:
+> > +              compatible:
+> > +                contains:
+> > +                  oneOf:
+> > +                    - const: nvidia,tegra20-dc
+> > +                    - const: nvidia,tegra30-dc
+> > +                    - const: nvidia,tegra114-dc
+> > +          then:
+> > +            properties:
+> > +              rgb:
+> > +                description: Each display controller node has a child node,
+> > +                  named "rgb", that represents the RGB output associated with
+> > +                  the controller.
+> > +                type: object
+> > +                properties:
+> > +                  nvidia,ddc-i2c-bus:
+> > +                    $ref: /schemas/types.yaml#/definitions/phandle
+> > +                    description: phandle of an I2C controller used for DDC
+> > +                      EDID probing
+> > +
+> > +                  nvidia,hpd-gpio:
+> > +                    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +                    description: specifies a GPIO used for hotplug detection
+> > +
+> > +                  nvidia,edid:
+> > +                    $ref: /schemas/types.yaml#/definitions/uint8-array
+> > +                    description: supplies a binary EDID blob
+> > +
+> > +                  nvidia,panel:
+> > +                    $ref: /schemas/types.yaml#/definitions/phandle
+> > +                    description: phandle of a display panel
+> > +
+> > +                  # XXX
+> > +    else:
+> > +      properties:
+> > +        display-hub:
+> > +          description: display controller hub
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              oneOf:
+> > +                - allOf:
+> > +                    - const: nvidia,tegra186-display
+> > +                    - const: simple-bus
+> > +                - allOf:
+> > +                    - const: nvidia,tegra194-display
+> > +                    - const: simple-bus
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            clock-names:
+> > +              items:
+> > +                - const: disp
+> > +                - const: dsc
+> > +                - const: hub
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - const: misc
+> > +                - const: wgrp0
+> > +                - const: wgrp1
+> > +                - const: wgrp2
+> > +                - const: wgrp3
+> > +                - const: wgrp4
+> > +                - const: wgrp5
+> > +            power-domains: true
+> > +            ranges: true
+> > +
+> > +            display:
+> > +              #$nodename: display@[0-9a-f]+
+> > +              description: display controller
+> > +              type: object
+> > +              properties:
+> > +                compatible:
+> > +                  oneOf:
+> > +                    - const: nvidia,tegra186-dc
+> > +                    - const: nvidia,tegra194-dc
+> > +                reg: true
+> > +                interrupts: true
+> > +                clocks: true
+> > +                clock-names:
+> > +                  items:
+> > +                    - const: dc
+> > +                    - const: parent
+> > +                resets: true
+> > +                reset-names:
+> > +                  items:
+> > +                    - const: dc
+> > +                power-domains:
+> > +                  description: A list of phandle and specifiers that identify
+> > +                    the power domains that this display controller is part of.
+> > +
+> > +                interconnects: true
+> > +                interconnect-names:
+> > +                  items:
+> > +                    - const: read-0
+> > +                    - const: read-1
+> > +
+> > +                iommus:
+> > +                  $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +                  description: a phandle and specifier identifying the SMMU
+> > +                    master interface of this display controller.
+> > +                nvidia,outputs:
+> > +                  description: A list of phandles of outputs that this display
+> > +                    controller can drive.
+> > +                  $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +                nvidia,head:
+> > +                  description: The number of the display controller head. This
+> > +                    is used to setup the various types of output to receive
+> > +                    video data from the given head.
+> > +                  $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            oneOf:
+> > +              - const: nvidia,tegra20-host1x
+> > +              - const: nvidia,tegra30-host1x
+> > +              - const: nvidia,tegra114-host1x
+> > +              - const: nvidia,tegra124-host1x
+> > +    then:
+> > +      properties:
+> > +        hdmi:
+> > +          description: High Definition Multimedia Interface
+> > +          type: object
+> > +          properties:
+> > +            # required
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra20-hdmi
+> > +                - const: nvidia,tegra30-hdmi
+> > +                - const: nvidia,tegra114-hdmi
+> > +                - const: nvidia,tegra124-hdmi
+> > +                - allOf:
+> > +                    - const: nvidia,tegra132-hdmi
+> > +                    - const: nvidia,tegra124-hdmi
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            clock-names:
+> > +              items:
+> > +                - const: hdmi
+> > +                - const: parent
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - const: hdmi
+> > +            hdmi-supply:
+> > +              description: supply for the +5V HDMI connector pin
+> > +            vdd-supply:
+> > +              description: regulator for supply voltage
+> > +            pll-supply:
+> > +              description: regulator for PLL
+> > +
+> > +            # optional
+> > +            nvidia,ddc-i2c-bus:
+> > +              description: phandle of an I2C controller used for DDC EDID
+> > +                probing
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +            nvidia,hpd-gpio:
+> > +              description: specifies a GPIO used for hotplug detection
+> > +              $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +            nvidia,edid:
+> > +              description: supplies a binary EDID blob
+> > +              $ref: /schemas/types.yaml#/definitions/uint8-array
+> > +            nvidia,panel:
+> > +              description: phandle of a display panel
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            oneOf:
+> > +              - const: nvidia,tegra124-host1x
+> > +              - const: nvidia,tegra210-host1x
+> > +              - const: nvidia,tegra186-host1x
+> > +              - const: nvidia,tegra194-host1x
+> > +    then:
+> > +      properties:
+> > +        sor:
+> > +          description: The Serial Output Resource (SOR) can be used to drive
+> > +            HDMI, LVDS, eDP and DP outputs.
+> > +
+> > +            See ../pinctrl/nvidia,tegra124-dpaux-padctl.txt for information
+> > +            regarding the DPAUX pad controller bindings.
+> > +          type: object
+> > +          properties:
+> > +            # required
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra124-sor
+> > +                - allOf:
+> > +                    - const: nvidia,tegra132-sor
+> > +                    - const: nvidia,tegra124-sor
+> > +                - const: nvidia,tegra210-sor
+> > +                - const: nvidia,tegra210-sor1
+> > +                - const: nvidia,tegra186-sor
+> > +                - const: nvidia,tegra186-sor1
+> > +                - const: nvidia,tegra194-sor
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            clock-names:
+> > +              items:
+> > +                - description: clock input for the SOR hardware
+> > +                  const: sor
+> > +                - description: SOR output clock
+> > +                  const: out
+> > +                - description: input for the pixel clock
+> > +                  const: parent
+> > +                - description: reference clock for the SOR clock
+> > +                  const: dp
+> > +                - description: safe reference clock for the SOR clock during
+> > +                    power up
+> > +                  const: safe
+> > +                  # deprecated
+> > +                - description: source clock for the SOR clock (obsolete, use
+> > +                    "out" instead)
+> > +                  const: source
+> > +                  # Tegra186 and later
+> > +                - description: SOR pad output clock
+> > +                  const: pad
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - description: module reset
+> > +                  const: sor
+> > +
+> > +            # Tegra186 and later
+> > +            nvidia,interface:
+> > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > +              description: index of the SOR interface
+> > +
+> > +            # optional
+> > +            nvidia,ddc-i2c-bus:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +              description: phandle of an I2C controller used for DDC EDID
+> > +                probing
+> > +
+> > +            nvidia,hpd-gpio:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +              description: specifies a GPIO used for hotplug detection
+> > +
+> > +            nvidia,edid:
+> > +              $ref: /schemas/types.yaml#/definitions/uint8-array
+> > +              description: supplies a binary EDID blob
+> > +
+> > +            nvidia,panel:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +              description: phandle of a display panel
+> > +
+> > +            nvidia,xbar-cfg:
+> > +              $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +              description: 5 cells containing the crossbar configuration.
+> > +                Each lane of the SOR, identified by the cell's index, is
+> > +                mapped via the crossbar to the pad specified by the cell's
+> > +                value.
+> > +
+> > +            # optional when driving an eDP output
+> > +            nvidia,dpaux:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +              description: phandle to a DispayPort AUX interface
+> > +
+> > +        dpaux:
+> > +          description: DisplayPort AUX interface
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra124-dpaux
+> > +                - allOf:
+> > +                    - const: nvidia,tegra132-dpaux
+> > +                    - const: nvidia,tegra124-dpaux
+> > +                - const: nvidia,tegra210-dpaux
+> > +                - const: nvidia,tegra186-dpaux
+> > +                - const: nvidia,tegra194-dpaux
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            clock-names:
+> > +              items:
+> > +                - description: clock input for the DPAUX hardware
+> > +                  const: dpaux
+> > +                - description: reference clock
+> > +                  const: parent
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - const: dpaux
+> > +            vdd-supply:
+> > +              description: phandle of a supply that powers the DisplayPort
+> > +                link
+> > +            i2c-bus:
+> > +              description: Subnode where I2C slave devices are listed. This
+> > +                subnode must be always present. If there are no I2C slave
+> > +                devices, an empty node should be added. See ../../i2c/i2c.yaml
+> > +                for more information.
+> > +
+> > +        vic:
+> > +          description: Video Image Compositor
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra124-vic
+> > +                - allOf:
+> > +                    - const: nvidia,tegra132-vic
+> > +                    - const: nvidia,tegra124-vic
+> > +                - const: nvidia,tegra210-vic
+> > +                - const: nvidia,tegra186-vic
+> > +                - const: nvidia,tegra194-vic
+> > +            reg: true
+> > +            interrupts: true
+> > +            clocks: true
+> > +            clock-names:
+> > +              items:
+> > +                - description: clock input for the VIC hardware
+> > +                - const: vic
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - const: vic
+> > +            interconnects: true
+> > +            interconnect-names:
+> > +              items:
+> > +                - const: read
+> > +                - const: write
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            oneOf:
+> > +              - const: nvidia,tegra30-host1x
+> > +              - const: nvidia,tegra114-host1x
+> > +              - const: nvidia,tegra124-host1x
+> > +              - const: nvidia,tegra210-host1x
+> > +              - const: nvidia,tegra186-host1x
+> > +    then:
+> > +      properties:
+> > +        dsi:
+> > +          description: display serial interface
+> > +          type: object
+> > +          properties:
+> > +            # required
+> > +            compatible:
+> > +              oneOf:
+> > +                - const: nvidia,tegra30-dsi
+> > +                - const: nvidia,tegra114-dsi
+> > +                - const: nvidia,tegra124-dsi
+> > +                - allOf:
+> > +                    - const: nvidia,tegra132-dsi
+> > +                    - const: nvidia,tegra124-dsi
+> > +                - const: nvidia,tegra210-dsi
+> > +                - const: nvidia,tegra186-dsi
+> > +            reg: true
+> > +            clocks: true
+> > +            clock-names:
+> > +              items:
+> > +                - description: DSI module clock
+> > +                  const: dsi
+> > +                - description: low-power module clock
+> > +                  const: lp
+> > +                - description: input for the pixel clock
+> > +                  const: parent
+> > +            resets: true
+> > +            reset-names:
+> > +              items:
+> > +                - description: module reset
+> > +                - const: dsi
+> > +            avdd-dsi-supply:
+> > +              description: phandle of a supply that powers the DSI controller
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +
+> > +            nvidia,mipi-calibrate:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +              description: Should contain a phandle and a specifier specifying
+> > +                which pads are used by this DSI output and need to be
+> > +                calibrated. See also ../display/tegra/nvidia,tegra114-mipi.txt.
+> > +
+> > +            # optional
+> > +            nvidia,ddc-i2c-bus:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +              description: phandle of an I2C controller used for DDC EDID
+> > +                probing
+> > +            nvidia,hpd-gpio:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +              description: specifies a GPIO used for hotplug detection
+> > +            nvidia,edid:
+> > +              $ref: /schemas/types.yaml#/definitions/uint8-array
+> > +              description: supplies a binary EDID blob
+> > +            nvidia,panel:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +              description: phandle of a display panel
+> > +            nvidia,ganged-mode:
+> > +              $ref: /schemas/types.yaml#/definitions/phandle
+> > +              description: contains a phandle to a second DSI controller to
+> > +                gang up with in order to support up to 8 data lanes
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/tegra20-car.h>
+> > +
+> > +    host1x {
+> > +        compatible = "nvidia,tegra20-host1x", "simple-bus";
+> > +        reg = <0x50000000 0x00024000>;
+> > +        interrupts = <0 65 0x04   /* mpcore syncpt */
+> > +                      0 67 0x04>; /* mpcore general */
+> > +        clocks = <&tegra_car TEGRA20_CLK_HOST1X>;
+> > +        resets = <&tegra_car 28>;
+> > +        reset-names = "host1x";
+> > +
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +
+> > +        ranges = <0x54000000 0x54000000 0x04000000>;
+> > +
+> > +        mpe {
+> > +                compatible = "nvidia,tegra20-mpe";
+> > +                reg = <0x54040000 0x00040000>;
+
+Note that these should be giving you dtc warnings with W=1 because you
+are missing unit-addresses. Adding them is going to affect the schema
+if you keep defining the host1x child nodes in the schema. I simply
+would not do that and rely on the normal compatible string matching to
+check child nodes.
+
+Rob
