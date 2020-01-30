@@ -2,182 +2,216 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72385C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 10:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53481C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 10:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F9D206D5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 10:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181442082E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 10:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SdLDJbRf"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TNcEmZxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgA3KHe (ORCPT
+        id S1726913AbgA3KeE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:07:34 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16452 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726873AbgA3KHd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:07:33 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UA3B3E002101;
-        Thu, 30 Jan 2020 11:07:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=xOteWNZ7Ff6UQHGiM84pJCDWGQlrerPhvDSeyaQw1Zg=;
- b=SdLDJbRfmL9Bc9ZSiIQ0ciEft4U2nTsDCp7HurExOwkdCIXtagWov7RuIDvGRaZd201t
- 6K0ODT7sXhlhXZgt4osag/yhxURD05kbvimjNldtLF2Zc2C+M//LEqDTDuaczQV87Blt
- Yvw2qHsxzdNKLS/BIkTaVB7gyVHJYAcSSrhDUVtY+Euxg7PiV7PLl/y+zIQyNfBGmM6p
- XuEzTSkaIYJGfOh7pbRyi8y6L3wHE0mQdLLUkLZLVXODCe2YwRh/aDrKsw2ECqtYYtL8
- UyZCsk+wUQgNlqayeRyx2HBq1ZMEF+noPCyHpnO0A8R9ereVaO4KpYLkcSRzZIBf4Vg5 DQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrcay7hct-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jan 2020 11:07:23 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DC03210003A;
-        Thu, 30 Jan 2020 11:07:22 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C443B2B1872;
-        Thu, 30 Jan 2020 11:07:22 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 11:07:22 +0100
-Subject: Re: [PATCH v2 6/8] remoteproc: Introduce "panic" callback in ops
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-7-bjorn.andersson@linaro.org>
- <20200110212307.GC11555@xps15>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <13ea6f8e-c017-d4b3-6658-c193cb4d18f1@st.com>
-Date:   Thu, 30 Jan 2020 11:07:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 30 Jan 2020 05:34:04 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13016 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgA3KeE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 05:34:04 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e32b10c0001>; Thu, 30 Jan 2020 02:33:48 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Jan 2020 02:34:02 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 02:34:02 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
+ 2020 10:34:02 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 30 Jan 2020 10:34:02 +0000
+Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e32b1150001>; Thu, 30 Jan 2020 02:34:02 -0800
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>
+CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <atalambedu@nvidia.com>, Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH v2 0/9] add ASoC components for AHUB
+Date:   Thu, 30 Jan 2020 16:03:33 +0530
+Message-ID: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200110212307.GC11555@xps15>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_02:2020-01-28,2020-01-30 signatures=0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580380428; bh=ukRTCkA68Znw7y1TQhSgd6vl+HkHAVkoEOQfKSoJrSk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=TNcEmZxXB9PQsS3cQQt4VmtKeUtW6hngC8MJHtUh42xHHFCioBLJhR3tXtC/eUk9M
+         I5ZhJFpWTLrQIZzuRU2zun+DF5qkgs9t6bdtPhTjoUPrBhAZZ6fsyOqMDvGg0VrCDz
+         +E+Mawdt3NqS6YARAAEHvWKzrbhovHANC0lz8iFwCJXR+eerGkZlLOgb8MQjNhqTRe
+         AdssyH3NTjc4LuffFI3BRukYE11eympMGZa/zKmVIlc9h25SyqOH11qGEq2e4gi17v
+         B1Z8FqAcLeRGVEf1nPASDdnWuo6flfPlNxYB0j51BQukml0HKLGfX2bjqxpmPzyDME
+         Eyd7/vc9PDZZQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Overview
+========
+The Audio Hub (AHUB) is part of the Audio Processing Engine (APE) which
+comprises a collection of hardware accelerators for audio pre-processing
+and post-processing. It also includes a programmable full crossbar for
+routing audio data across these accelerators.
 
-On 1/10/20 10:23 PM, Mathieu Poirier wrote:
-> On Thu, Dec 26, 2019 at 09:32:13PM -0800, Bjorn Andersson wrote:
->> Introduce a "panic" function in the remoteproc ops table, to allow
->> remoteproc instances to perform operations needed in order to aid in
->> post mortem system debugging, such as flushing caches etc, when the
->> kernel panics.
->>
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
->>
->> Changes since v1:
->> - None
->>
->>  drivers/remoteproc/remoteproc_core.c | 17 +++++++++++++++++
->>  include/linux/remoteproc.h           |  4 ++++
->>  2 files changed, 21 insertions(+)
->>
->> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->> index 307df98347ba..779f19d6d8e7 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -1832,6 +1832,17 @@ void rproc_shutdown(struct rproc *rproc)
->>  }
->>  EXPORT_SYMBOL(rproc_shutdown);
->>  
->> +static int rproc_panic_handler(struct notifier_block *nb, unsigned long event,
->> +			       void *ptr)
->> +{
->> +	struct rproc *rproc = container_of(nb, struct rproc, panic_nb);
->> +
->> +	if (rproc->state == RPROC_RUNNING)
->> +		rproc->ops->panic(rproc);
->> +
->> +	return NOTIFY_DONE;
->> +}
->> +
->>  /**
->>   * rproc_get_by_phandle() - find a remote processor by phandle
->>   * @phandle: phandle to the rproc
->> @@ -2057,6 +2068,12 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->>  		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
->>  	}
->>  
->> +	/* Register panic notifier for remoteprocs with "panic" callback */
->> +	if (rproc->ops->panic) {
->> +		rproc->panic_nb.notifier_call = rproc_panic_handler;
->> +		atomic_notifier_chain_register(&panic_notifier_list, &rproc->panic_nb);
-> 
-> Line over 80 characters.
-atomic_notifier_chain_unregister should be added in rproc_del.
+This series exposes some of these below mentioned HW devices as ASoC
+components for Tegra platforms from Tegra210 onwards.
+ * ADMAIF : The interface between ADMA and AHUB
+ * XBAR   : Crossbar for routing audio samples across various modules
+ * I2S    : Inter-IC Sound Controller
+ * DMIC   : Digital Microphone
+ * DSPK   : Digital Speaker
 
-Regards,
-Arnaud
-> 
->> +	}
->> +
->>  	mutex_init(&rproc->lock);
->>  
->>  	idr_init(&rproc->notifyids);
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index 16ad66683ad0..7836c528d309 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -369,6 +369,7 @@ enum rsc_handling_status {
->>   *			expects to find it
->>   * @sanity_check:	sanity check the fw image
->>   * @get_boot_addr:	get boot address to entry point specified in firmware
->> + * @panic:	optional callback to react to system panic
->>   */
->>  struct rproc_ops {
->>  	int (*start)(struct rproc *rproc);
->> @@ -383,6 +384,7 @@ struct rproc_ops {
->>  	int (*load)(struct rproc *rproc, const struct firmware *fw);
->>  	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
->>  	u32 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
->> +	void (*panic)(struct rproc *rproc);
->>  };
->>  
->>  /**
->> @@ -481,6 +483,7 @@ struct rproc_dump_segment {
->>   * @auto_boot: flag to indicate if remote processor should be auto-started
->>   * @dump_segments: list of segments in the firmware
->>   * @nb_vdev: number of vdev currently handled by rproc
->> + * @panic_nb: notifier_block for remoteproc's panic handler
->>   */
->>  struct rproc {
->>  	struct list_head node;
->> @@ -514,6 +517,7 @@ struct rproc {
->>  	bool auto_boot;
->>  	struct list_head dump_segments;
->>  	int nb_vdev;
->> +	struct notifier_block panic_nb;
->>  };
->>  
->>  /**
->> -- 
->> 2.24.0
->>
+Following is the summary of current series.
+ 1. Add YAML DT binding documentation for above mentioned modules.
+ 2. Helper function for ACIF programming is exposed for Tegra210 and later.
+ 3. Add ASoC driver components for each of the above modules.
+ 4. Add DT entries for above components for Tegra210, Tegra186 and
+    Tegra194.
+ 5. Enable these components for Jetson-Tx1, Jetson-Tx2 and Jetson-Xavier.
+
+Machine driver series will be sent separately.
+
+Changelog
+=========
+
+v1 -> v2
+--------
+ * [1/9] "dt-bindings: sound: tegra: add DT binding for AHUB"
+   - no changes
+
+ * [2/9] "ASoC: tegra: add support for CIF programming"
+   - removed CIF programming changes for legacy chips.
+   - this patch now exposes helper function for CIF programming,
+     which can be used on Tegra210 later.
+   - later tegra_cif.c can be extended for legacy chips as well.
+   - updated commit message accordingly
+
+ * [3/9] "ASoC: tegra: add Tegra210 based DMIC driver"
+   - removed unnecessary initialization of 'ret' in probe()
+
+ * [4/9] "ASoC: tegra: add Tegra210 based I2S driver"
+   - removed unnecessary initialization of 'ret' in probe()
+   - fixed indentation
+   - added consistent bracing for if-else clauses
+   - updated 'rx_fifo_th' type to 'unsigned int'
+   - used BIT() macro for defines like '1 << {x}' in tegra210_i2s.h
+
+ * [5/9] "ASoC: tegra: add Tegra210 based AHUB driver"
+   - used of_device_get_match_data() to get 'soc_data' and removed
+    explicit of_match_device()
+   - used devm_platform_ioremap_resource() and removed explicit
+    platform_get_resource()
+   - fixed indentation for devm_snd_soc_register_component()
+   - updated commit message
+   - updated commit message to reflect compatible binding for Tegra186 and
+     Tegra194.
+
+ * [6/9] "ASoC: tegra: add Tegra186 based DSPK driver"
+   - removed unnecessary initialization of 'ret' in probe()
+   - updated 'max_th' to 'unsigned int'
+   - shortened lengthy macro names to avoid wrapping in
+     tegra186_dspk_wr_reg() and to be consistent
+
+ * [7/9] "ASoC: tegra: add Tegra210 based ADMAIF driver"
+   - used of_device_get_match_data() and removed explicit of_match_device()
+   - used BIT() macro for defines like '1 << {x}' in tegra210_admaif.h
+   - updated commit message to reflect compatible binding for Tegra186 and
+     Tegra194.
+
+ * [8/9] "arm64: tegra: add AHUB components for few Tegra chips"
+   - no change
+
+ * [9/9] "arm64: tegra: enable AHUB modules for few Tegra chips"
+   - no change
+
+ * common changes for patch [3/9] to [7/9]
+   - sorted headers in alphabetical order
+   - moved MODULE_DEVICE_TABLE() right below *_of_match table
+   - removed macro DRV_NAME
+   - removed explicit 'owner' field from platform_driver structure
+   - added 'const' to snd_soc_dai_ops structure
+
+=================
+
+Sameer Pujar (9):
+  dt-bindings: sound: tegra: add DT binding for AHUB
+  ASoC: tegra: add support for CIF programming
+  ASoC: tegra: add Tegra210 based DMIC driver
+  ASoC: tegra: add Tegra210 based I2S driver
+  ASoC: tegra: add Tegra210 based AHUB driver
+  ASoC: tegra: add Tegra186 based DSPK driver
+  ASoC: tegra: add Tegra210 based ADMAIF driver
+  arm64: tegra: add AHUB components for few Tegra chips
+  arm64: tegra: enable AHUB modules for few Tegra chips
+
+ .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++
+ .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 ++++
+ .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 +++
+ .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++
+ .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 +++
+ arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  48 ++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 231 ++++-
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |  36 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 239 +++++-
+ arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts |  40 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 145 ++++
+ sound/soc/tegra/Kconfig                            |  56 ++
+ sound/soc/tegra/Makefile                           |  12 +
+ sound/soc/tegra/tegra186_dspk.c                    | 512 +++++++++++
+ sound/soc/tegra/tegra186_dspk.h                    |  73 ++
+ sound/soc/tegra/tegra210_admaif.c                  | 886 +++++++++++++++++++
+ sound/soc/tegra/tegra210_admaif.h                  | 164 ++++
+ sound/soc/tegra/tegra210_ahub.c                    | 653 ++++++++++++++
+ sound/soc/tegra/tegra210_ahub.h                    | 125 +++
+ sound/soc/tegra/tegra210_dmic.c                    | 517 ++++++++++++
+ sound/soc/tegra/tegra210_dmic.h                    |  85 ++
+ sound/soc/tegra/tegra210_i2s.c                     | 939 +++++++++++++++++++++
+ sound/soc/tegra/tegra210_i2s.h                     | 132 +++
+ sound/soc/tegra/tegra_cif.c                        |  34 +
+ sound/soc/tegra/tegra_cif.h                        |  47 ++
+ sound/soc/tegra/tegra_pcm.c                        | 222 ++++-
+ sound/soc/tegra/tegra_pcm.h                        |  23 +-
+ 27 files changed, 5832 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+ create mode 100644 sound/soc/tegra/tegra186_dspk.c
+ create mode 100644 sound/soc/tegra/tegra186_dspk.h
+ create mode 100644 sound/soc/tegra/tegra210_admaif.c
+ create mode 100644 sound/soc/tegra/tegra210_admaif.h
+ create mode 100644 sound/soc/tegra/tegra210_ahub.c
+ create mode 100644 sound/soc/tegra/tegra210_ahub.h
+ create mode 100644 sound/soc/tegra/tegra210_dmic.c
+ create mode 100644 sound/soc/tegra/tegra210_dmic.h
+ create mode 100644 sound/soc/tegra/tegra210_i2s.c
+ create mode 100644 sound/soc/tegra/tegra210_i2s.h
+ create mode 100644 sound/soc/tegra/tegra_cif.c
+ create mode 100644 sound/soc/tegra/tegra_cif.h
+
+-- 
+2.7.4
+
