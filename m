@@ -1,110 +1,168 @@
-Return-Path: <SRS0=kwC1=3S=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74906C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 23:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EEDC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 00:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10DB5206D4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jan 2020 23:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142FB2067C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 00:24:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="S6dAZ1r1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M6sCkftY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgA2Xw5 (ORCPT
+        id S1726671AbgA3AY3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:52:57 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46263 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgA2Xw5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 18:52:57 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A95AF891AA;
-        Thu, 30 Jan 2020 12:52:54 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580341974;
-        bh=PTdksFoM/7SQ5czBIotje9MiignV7b05HggnglFtQc4=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=S6dAZ1r18b6INCasDmgP7mvqNyWu0bdI97O/XabFH7vwHdYX1Q9Ls1kEXQ5hEgtRk
-         hPG+2TlNfLqiwomzCLaiounXZhVldSdPksyh2Tlt9mxE0IEqtpYTX18ss6+3J1YXP+
-         A4r8wL2rgcrrU/faYsO2YzHCTURwF9QgvfG6k5zYNk/EmusNXQzk2fICre9oxEDEUU
-         5pGJpb391liuRGVGC+AB4Vv4zlKQavvQN7AE0kty47neB0tGyiupn8i4cBh0JtREVJ
-         vzRJR8/NQqPz2fRdikuNMR6HoMTIGnypQiLWgAmDsfWlupfdTfm5daWS6eqYpShGQD
-         LteyulR2bdVoQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e321ad60000>; Thu, 30 Jan 2020 12:52:54 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1473.3; Thu, 30 Jan 2020 12:52:49 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1473.005; Thu, 30 Jan 2020 12:52:49 +1300
-From:   Logan Shaw <Logan.Shaw@alliedtelesis.co.nz>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joshua Scott <Joshua.Scott@alliedtelesis.co.nz>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
- adt7475 documentation
-Thread-Topic: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
- adt7475 documentation
-Thread-Index: AQHV1JVtwGwHv/A/qEeLHCGfFZLcOaf9zzQAgAJnaoCAANkQgIAAa6QA
-Date:   Wed, 29 Jan 2020 23:52:49 +0000
-Message-ID: <b6829b7582fd777babcad066f7b4c5c3684e4919.camel@alliedtelesis.co.nz>
-References: <20200126221014.2978-1-logan.shaw@alliedtelesis.co.nz>
-         <20200126221014.2978-3-logan.shaw@alliedtelesis.co.nz>
-         <20200127154800.GA7023@bogus>
-         <b1d669567b5f9f00dfb5d6dab89262f68c5523f1.camel@alliedtelesis.co.nz>
-         <CAL_Jsq+UZvX-Avz7mA=RmhNU3hjKd2se1KODfGt9dfdbn_ACKQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+UZvX-Avz7mA=RmhNU3hjKd2se1KODfGt9dfdbn_ACKQ@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:25:ae22:bff:fe77:dd09]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <565BC1698FBA41449B65E6A86B2784B9@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 29 Jan 2020 19:24:29 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39690 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgA3AY3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jan 2020 19:24:29 -0500
+Received: by mail-vs1-f67.google.com with SMTP id p14so1040273vsq.6
+        for <devicetree@vger.kernel.org>; Wed, 29 Jan 2020 16:24:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HPkGA3GK3blVdQi8+NIYhn2wAG+9S/XJZPz8vvp4cLo=;
+        b=M6sCkftYdw+yxCZolQLugqQz0RovdHNk6PaR2tvafsXWi2mt6BF6Ldsv8+gYeZxs4Y
+         T2tWoq+ubinXa1WQmLOIo4QqMm2Q2BQMVBcF/P7CTCZTe0tWMlAeT7Guo+gsC2Doi5Vb
+         boHynzCL0K0eWTW5QtPEO9/8SJrt4pkwf46fw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HPkGA3GK3blVdQi8+NIYhn2wAG+9S/XJZPz8vvp4cLo=;
+        b=nFjZ1PC8Xi6L9JuR0yWhbkw0UifQKCE1SvEB1/RYvAKCyS518xnrG3PjxDtCyToZWc
+         Mt2O3QVwghyI4q+b7cWZZEY1vFONBfv+OKqq6tjJMKP5WDgkets+V2gdEng8ebpYeQ2m
+         JkkfCqD9wu31Ayzn4lsEA8eUA+kRESreisWw5AL0qGXKqPMwPFbsq1TuM4QaGdTT3dV8
+         TXW/vMqkfFRrXrLhuXyrsgUXCDupeL8jgTl/ynD31sE2REPkqQy9xyMGG4b01IlTAT/F
+         endmxOM6OxxE8/cub+3Tybq1bXDMMpRGfTPNxallzWumO74JUznxsIHRv+9apy1fWrMR
+         Pj6Q==
+X-Gm-Message-State: APjAAAVmBChUMDlRvt05/9U+X00T805es6QcpJ5soX5gJyzBjMeY1FnY
+        tggwETFF0dM9R3jYzR8lge767rwcPLA=
+X-Google-Smtp-Source: APXvYqzf3q8PMtJpPaRUbFDEkiKc6a20s9TyaZItGrJ5A+v51yfMrzbQvsg1qPw4BxPY0F7qyCu2kw==
+X-Received: by 2002:a67:5f82:: with SMTP id t124mr1620054vsb.184.1580343867475;
+        Wed, 29 Jan 2020 16:24:27 -0800 (PST)
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
+        by smtp.gmail.com with ESMTPSA id w187sm1054957vkb.8.2020.01.29.16.24.25
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 16:24:25 -0800 (PST)
+Received: by mail-vk1-f169.google.com with SMTP id y184so527691vkc.11
+        for <devicetree@vger.kernel.org>; Wed, 29 Jan 2020 16:24:25 -0800 (PST)
+X-Received: by 2002:a1f:c686:: with SMTP id w128mr1285411vkf.34.1580343865022;
+ Wed, 29 Jan 2020 16:24:25 -0800 (PST)
 MIME-Version: 1.0
+References: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
+ <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
+ <CAD=FV=XLq4-EdsuKnDjuc3-6P3i6o-tV5MJbdFbvAscF_ouOpg@mail.gmail.com> <CAL_JsqLVaJMidm2QcpmxXeT+Q+uU8esm1shdRs3BVoeRYqhJng@mail.gmail.com>
+In-Reply-To: <CAL_JsqLVaJMidm2QcpmxXeT+Q+uU8esm1shdRs3BVoeRYqhJng@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 29 Jan 2020 16:24:10 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Uv-td=PhCSZNsjBB-cQB=vJKLbw_BLbM3B1ORRzuTB5A@mail.gmail.com>
+Message-ID: <CAD=FV=Uv-td=PhCSZNsjBB-cQB=vJKLbw_BLbM3B1ORRzuTB5A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clk: qcom: Fix self-validation, split, and
+ clean cruft
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Taniya Das <tdas@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Abhishek Sahu <absahu@codeaurora.org>, sivaprak@codeaurora.org,
+        anusharao@codeaurora.org, Sricharan <sricharan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAxLTI5IGF0IDExOjI3IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVHVlLCBKYW4gMjgsIDIwMjAgYXQgMTA6MzAgUE0gTG9nYW4gU2hhdw0KPiA8TG9nYW4uU2hh
-d0BhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90ZToNCj4gPiANCj4gPiBPbiBNb24sIDIwMjAtMDEt
-MjcgYXQgMDk6NDggLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+ID4gT24gTW9uLCBKYW4g
-MjcsIDIwMjAgYXQgMTE6MTA6MTRBTSArMTMwMCwgTG9nYW4gU2hhdyB3cm90ZToNCj4gPiA+ID4g
-QWRkZWQgYSBuZXcgZmlsZSBkb2N1bWVudGluZyB0aGUgYWR0NzQ3NSBkZXZpY2V0cmVlIGFuZCBh
-ZGRlZA0KPiA+ID4gPiB0aGUNCj4gPiA+ID4gZm91cg0KPiA+ID4gPiBuZXcgcHJvcGVydGllcyB0
-byBpdC4NCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IExvZ2FuIFNoYXcgPGxvZ2Fu
-LnNoYXdAYWxsaWVkdGVsZXNpcy5jby5uej4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICsgIGJ5cGFz
-cy1hdHRlbnVhdG9yLWluMDoNCj4gPiA+IA0KPiA+ID4gTmVlZHMgYSB2ZW5kb3IgcHJlZml4IGFu
-ZCBhIHR5cGUgcmVmLg0KPiA+IA0KPiA+IEFkaSAoQW5hbG9nIERldmljZXMpIHNvbGQgdGhlIEFE
-VCBwcm9kdWN0IGxpbmUgKGFtb25nc3Qgb3RoZXINCj4gPiB0aGluZ3MpDQo+ID4gdG8gT24gU2Vt
-aWNvbmR1Y3Rvci4gQXMgY2hhbmdpbmcgdGhlIHZlbmRvciBvZiB0aGVzZSBjaGlwcyAoaW4NCj4g
-PiBjb2RlKQ0KPiA+IHdvdWxkIGJyZWFrIGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5IHNob3VsZCB3
-ZSBrZWVwIHRoZSB2ZW5kb3IgYXMNCj4gPiBhZGk/DQo+IA0KPiBZZXMuIEl0IHNob3VsZCBtYXRj
-aCB3aGF0J3MgdXNlZCBpbiB0aGUgY29tcGF0aWJsZSBzdHJpbmcocykuDQo+IA0KPiA+IFRvIGNv
-bmZpcm0sIHdvdWxkIHRoaXMgbWFrZSB0aGUgcHJvcGVydHkgImFkaSxhZHQ3NDc2LGJ5cGFzcy0N
-Cj4gPiBhdHRlbnVhdG9yLWluMCI/DQo+ID4gDQo+ID4gU28gdXNlZCBpbiBjb25qdW5jdGlvbiB3
-aXRoIHBhdHRlcm5Qcm9wZXJ0aWVzIHlvdSB3b3VsZCBlbmQgdXAgd2l0aA0KPiA+IHNvbWV0aGlu
-ZyBsaWtlOg0KPiA+IA0KPiA+ICJhZGksKGFkdDc0NzN8YWR0NzQ3NXxhZHQ3NDc2fGFkdDc0OTAp
-LGJ5cGFzcy1hdHRlbnVhdG9yLWluWzAxMzRdIg0KPiANCj4gTm8gZm9yIHRoZSBwYXJ0ICMncy4g
-SnVzdCBhZGQgJ2FkaSwnLiBNYXliZSB5b3UgdGhvdWdodCBmb3IgdHlwZSByZWYNCj4gdGhhdCdz
-IHdoYXQgSSBtZWFudD8gQSB0eXBlIHJlZiBpczoNCj4gDQo+ICRyZWY6IC9zY2hlbWFzL3R5cGVz
-LnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KDQpZZXMsIEkgd2FzIGEgbGl0dGxlIGNvbmZ1c2Vk
-IGJ1dCBub3cgSSBhbSBvbiB0aGUgcmlnaHQgdHJhY2suDQo=
+Hi,
+
+On Wed, Jan 29, 2020 at 3:50 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Wed, Jan 29, 2020 at 5:26 PM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Jan 29, 2020 at 2:01 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Wed, Jan 29, 2020 at 3:23 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
+> > > > because it required a property to be either (3 entries big),
+> > > > (3 entries big), or (7 entries big), but not more than one of those
+> > > > things.  That didn't make a ton of sense.
+> > > >
+> > > > This patch splits all of the exceptional device trees (AKA those that
+> > > > would have needed if/then/else rules) from qcom,gcc.yaml.  It also
+> > > > cleans up some cruft found while doing that.
+> > > >
+> > > > After this lands, this worked for me atop clk-next:
+> > > >   for f in \
+> > > >     Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
+> > > >     Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
+> > > >     Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
+> > > >     Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
+> > > >     Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
+> > > >     Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
+> > > >     Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
+> > > >     Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
+> > > >       ARCH=arm64 make dt_binding_check DT_SCHEMA_FILES=$f; \
+> > > >       ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
+> > > >   done
+> > >
+> > > Note that using DT_SCHEMA_FILES may hide some errors in examples as
+> > > all other schemas (including the core ones) are not used for
+> > > validation. So just 'make dt_binding_check' needs to pass (ignoring
+> > > any other unrelated errors as it breaks frequently). Supposedly a
+> > > patch is coming explaining this in the documentation.
+> >
+> > That seems like it's going to be a huge pain going forward, but OK.
+>
+> Use of DT_SCHEMA_FILES hiding problems or having to run 'make
+> dt_binding_check' on everything?
+
+Having to run 'make dt_binding_check' on everything.  I guess maybe if
+the tree stays clean it won't be too bad and it wasn't too bad against
+the current linux-next, but I can imagine that every time I want to
+run this I'll run into a pile of warnings / errors in other people's
+files.  Then I need to figure out what to ignore / workaround.  If
+something fails badly (like intel-gw-pcie.yaml) I'll have to realize
+that I should just delete that file to get the rest of the run to
+report errors that are relevant to me.
+
+This'll probably be worse because most maintainer trees are based on
+"-rc1" and at least in the past I've found that "-rc1" tends to have
+lots of problems.  Each maintainer then fixes the problems relative to
+their own subsystem, but it's not a wonderful thing to rely on.
+
+
+> I could probably rework things such that you can check a single
+> binding example against all schema, but dtbs still get validated by
+> just a single schema.
+
+This would be helpful.  ...or some way to easily make really bad
+failures non-fatal.  Then I can maybe just diff the results before my
+patch and after and that'll give me a hint of what I've fixed / made
+worse.
+
+
+> Probably is. There are cases where a new schema breaks another file's
+> example. If someone has a gcc node in another example for example.
+
+At this point I'm going to say that we're better off than we were, but
+I'll try to keep this in mind for future patches.
+
+
+-Doug
