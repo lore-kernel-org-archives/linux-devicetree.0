@@ -2,245 +2,398 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BA8C35248
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 13:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF6EC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 13:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D739320661
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 13:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7F5206F0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 13:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nyqez/yi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbgA3NQJ (ORCPT
+        id S1727208AbgA3Nvz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:16:09 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41259 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbgA3NQI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 08:16:08 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ix9fp-0000Wb-TJ; Thu, 30 Jan 2020 14:15:57 +0100
-Received: from ukl by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ix9fo-0000Lo-An; Thu, 30 Jan 2020 14:15:56 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, kernel@pengutronix.de,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>,
-        Silvan Murer <silvan.murer@gmail.com>
-Subject: [PATCH 3/3] iio: dac: ltc2632: add support for LTC2636 family
-Date:   Thu, 30 Jan 2020 14:15:49 +0100
-Message-Id: <20200130131549.1170-3-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200130131549.1170-1-u.kleine-koenig@pengutronix.de>
-References: <20200130131549.1170-1-u.kleine-koenig@pengutronix.de>
+        Thu, 30 Jan 2020 08:51:55 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50670 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726996AbgA3Nvz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jan 2020 08:51:55 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UDoTLP018602;
+        Thu, 30 Jan 2020 14:50:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=4ORQc1C1L+jHqxdd5qqEPlDyU5e64gXX/2Hf/y/M/Po=;
+ b=nyqez/yipugLph8aD51V48Ds+eLq3eTBxS8yNN5J3mKY4QUHHKyDo0PL5YLy7EPfrT4N
+ 8qXw9diVy+n0q8fz9ksVgNnC02cpMeSfZTcNCXSsqrjda2xNXEIL0G1rHgvVyEdfXJi+
+ r8+VxchmmRsIO4kzU8hc7rqHkh9JAb9cSRgpaarLsPw9zSXyCL0iO47AQUmH0raTPxdl
+ wFQqWIwr2QORh84YX+8rTnPqILoUljWIS23rN+3KAATdwQAhO0otEI0QAosSKfRNmlLH
+ LvuUdj88L8WwCw4Awak4EmMQg1jjdpq1UMvbVnwdUV+wl2JdeOhPAuH/EosS2smc4aY3 Ww== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrc13ghy3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jan 2020 14:50:56 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EF2CB100038;
+        Thu, 30 Jan 2020 14:50:50 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 907E22D792A;
+        Thu, 30 Jan 2020 14:50:50 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 30 Jan 2020 14:50:49
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <robh@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
+Subject: [PATCH] ASoC: dt-bindings: stm32: convert sai to json-schema
+Date:   Thu, 30 Jan 2020 14:50:40 +0100
+Message-ID: <20200130135040.22575-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-30_04:2020-01-28,2020-01-30 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The only difference between LTC2632 and LTC2636 is that the former has
-two DAC channels while the latter has eight.
+Convert the STM32 SAI bindings to DT schema format using json-schema.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 ---
- drivers/iio/dac/Kconfig   |  5 ++-
- drivers/iio/dac/ltc2632.c | 77 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 77 insertions(+), 5 deletions(-)
+ .../bindings/sound/st,stm32-sai.txt           | 107 ----------
+ .../bindings/sound/st,stm32-sai.yaml          | 193 ++++++++++++++++++
+ 2 files changed, 193 insertions(+), 107 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
 
-diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-index cc42219a64f7..33a35ebe4fed 100644
---- a/drivers/iio/dac/Kconfig
-+++ b/drivers/iio/dac/Kconfig
-@@ -132,11 +132,12 @@ config LTC1660
- 	  module will be called ltc1660.
- 
- config LTC2632
--	tristate "Linear Technology LTC2632-12/10/8 DAC spi driver"
-+	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
- 	depends on SPI
- 	help
- 	  Say yes here to build support for Linear Technology
--	  LTC2632-12, LTC2632-10, LTC2632-8 converters (DAC).
-+	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
-+	  LTC2636-8 converters (DAC).
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ltc2632.
-diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
-index 7ab92e178496..1e7ffa0f6071 100644
---- a/drivers/iio/dac/ltc2632.c
-+++ b/drivers/iio/dac/ltc2632.c
-@@ -12,8 +12,6 @@
- #include <linux/iio/iio.h>
- #include <linux/regulator/consumer.h>
- 
--#define LTC2632_DAC_CHANNELS                    2
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+deleted file mode 100644
+index 944743dd9212..000000000000
+--- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
++++ /dev/null
+@@ -1,107 +0,0 @@
+-STMicroelectronics STM32 Serial Audio Interface (SAI).
 -
- #define LTC2632_ADDR_DAC0                       0x0
- #define LTC2632_ADDR_DAC1                       0x1
- 
-@@ -33,6 +31,7 @@
-  */
- struct ltc2632_chip_info {
- 	const struct iio_chan_spec *channels;
-+	const size_t num_channels;
- 	const int vref_mv;
- };
- 
-@@ -57,6 +56,12 @@ enum ltc2632_supported_device_ids {
- 	ID_LTC2632H12,
- 	ID_LTC2632H10,
- 	ID_LTC2632H8,
-+	ID_LTC2636L12,
-+	ID_LTC2636L10,
-+	ID_LTC2636L8,
-+	ID_LTC2636H12,
-+	ID_LTC2636H10,
-+	ID_LTC2636H8,
- };
- 
- static int ltc2632_spi_write(struct spi_device *spi,
-@@ -190,6 +195,12 @@ static const struct iio_chan_spec_ext_info ltc2632_ext_info[] = {
- 	const struct iio_chan_spec _name ## _channels[] = { \
- 		LTC2632_CHANNEL(0, _bits), \
- 		LTC2632_CHANNEL(1, _bits), \
-+		LTC2632_CHANNEL(2, _bits), \
-+		LTC2632_CHANNEL(3, _bits), \
-+		LTC2632_CHANNEL(4, _bits), \
-+		LTC2632_CHANNEL(5, _bits), \
-+		LTC2632_CHANNEL(6, _bits), \
-+		LTC2632_CHANNEL(7, _bits), \
- 	}
- 
- static DECLARE_LTC2632_CHANNELS(ltc2632x12, 12);
-@@ -199,26 +210,62 @@ static DECLARE_LTC2632_CHANNELS(ltc2632x8, 8);
- static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] = {
- 	[ID_LTC2632L12] = {
- 		.channels	= ltc2632x12_channels,
-+		.num_channels	= 2,
- 		.vref_mv	= 2500,
- 	},
- 	[ID_LTC2632L10] = {
- 		.channels	= ltc2632x10_channels,
-+		.num_channels	= 2,
- 		.vref_mv	= 2500,
- 	},
- 	[ID_LTC2632L8] =  {
- 		.channels	= ltc2632x8_channels,
-+		.num_channels	= 2,
- 		.vref_mv	= 2500,
- 	},
- 	[ID_LTC2632H12] = {
- 		.channels	= ltc2632x12_channels,
-+		.num_channels	= 2,
- 		.vref_mv	= 4096,
- 	},
- 	[ID_LTC2632H10] = {
- 		.channels	= ltc2632x10_channels,
-+		.num_channels	= 2,
- 		.vref_mv	= 4096,
- 	},
- 	[ID_LTC2632H8] =  {
- 		.channels	= ltc2632x8_channels,
-+		.num_channels	= 2,
-+		.vref_mv	= 4096,
-+	},
-+	[ID_LTC2636L12] = {
-+		.channels	= ltc2632x12_channels,
-+		.num_channels	= 8,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2636L10] = {
-+		.channels	= ltc2632x10_channels,
-+		.num_channels	= 8,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2636L8] =  {
-+		.channels	= ltc2632x8_channels,
-+		.num_channels	= 8,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2636H12] = {
-+		.channels	= ltc2632x12_channels,
-+		.num_channels	= 8,
-+		.vref_mv	= 4096,
-+	},
-+	[ID_LTC2636H10] = {
-+		.channels	= ltc2632x10_channels,
-+		.num_channels	= 8,
-+		.vref_mv	= 4096,
-+	},
-+	[ID_LTC2636H8] =  {
-+		.channels	= ltc2632x8_channels,
-+		.num_channels	= 8,
- 		.vref_mv	= 4096,
- 	},
- };
-@@ -287,7 +334,7 @@ static int ltc2632_probe(struct spi_device *spi)
- 	indio_dev->info = &ltc2632_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->channels = chip_info->channels;
--	indio_dev->num_channels = LTC2632_DAC_CHANNELS;
-+	indio_dev->num_channels = chip_info->num_channels;
- 
- 	return iio_device_register(indio_dev);
- }
-@@ -312,6 +359,12 @@ static const struct spi_device_id ltc2632_id[] = {
- 	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12] },
- 	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10] },
- 	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] },
-+	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12] },
-+	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10] },
-+	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] },
-+	{ "ltc2636-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H12] },
-+	{ "ltc2636-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H10] },
-+	{ "ltc2636-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H8] },
- 	{}
- };
- MODULE_DEVICE_TABLE(spi, ltc2632_id);
-@@ -335,6 +388,24 @@ static const struct of_device_id ltc2632_of_match[] = {
- 	}, {
- 		.compatible = "lltc,ltc2632-h8",
- 		.data = &ltc2632_chip_info_tbl[ID_LTC2632H8]
-+	}, {
-+		.compatible = "lltc,ltc2636-l12",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2636L12]
-+	}, {
-+		.compatible = "lltc,ltc2636-l10",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2636L10]
-+	}, {
-+		.compatible = "lltc,ltc2636-l8",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2636L8]
-+	}, {
-+		.compatible = "lltc,ltc2636-h12",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2636H12]
-+	}, {
-+		.compatible = "lltc,ltc2636-h10",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2636H10]
-+	}, {
-+		.compatible = "lltc,ltc2636-h8",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2636H8]
- 	},
- 	{}
- };
+-The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
+-as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
+-The SAI contains two independent audio sub-blocks. Each sub-block has
+-its own clock generator and I/O lines controller.
+-
+-Required properties:
+-  - compatible: Should be "st,stm32f4-sai" or "st,stm32h7-sai"
+-  - reg: Base address and size of SAI common register set.
+-  - clocks: Must contain phandle and clock specifier pairs for each entry
+-	in clock-names.
+-  - clock-names: Must contain "pclk" "x8k" and "x11k"
+-	"pclk": Clock which feeds the peripheral bus interface.
+-	        Mandatory for "st,stm32h7-sai" compatible.
+-	        Not used for "st,stm32f4-sai" compatible.
+-	"x8k": SAI parent clock for sampling rates multiple of 8kHz.
+-	"x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
+-  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
+-
+-Optional properties:
+-  - resets: Reference to a reset controller asserting the SAI
+-
+-SAI subnodes:
+-Two subnodes corresponding to SAI sub-block instances A et B can be defined.
+-Subnode can be omitted for unsused sub-block.
+-
+-SAI subnodes required properties:
+-  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
+-	for SAI sub-block A or B respectively.
+-  - reg: Base address and size of SAI sub-block register set.
+-  - clocks: Must contain one phandle and clock specifier pair
+-	for sai_ck which feeds the internal clock generator.
+-	If the SAI shares a master clock, with another SAI set as MCLK
+-	clock provider, SAI provider phandle must be specified here.
+-  - clock-names: Must contain "sai_ck".
+-	Must also contain "MCLK", if SAI shares a master clock,
+-	with a SAI set as MCLK clock provider.
+-  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
+-  - dma-names: identifier string for each DMA request line
+-	"tx": if sai sub-block is configured as playback DAI
+-	"rx": if sai sub-block is configured as capture DAI
+-  - pinctrl-names: should contain only value "default"
+-  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+-
+-SAI subnodes Optional properties:
+-  - st,sync: specify synchronization mode.
+-	By default SAI sub-block is in asynchronous mode.
+-	This property sets SAI sub-block as slave of another SAI sub-block.
+-	Must contain the phandle and index of the sai sub-block providing
+-	the synchronization.
+-  - st,iec60958: support S/PDIF IEC6958 protocol for playback
+-	IEC60958 protocol is not available for capture.
+-	By default, custom protocol is assumed, meaning that protocol is
+-	configured according to protocol defined in related DAI link node,
+-	such as i2s, left justified, right justified, dsp and pdm protocols.
+-	Note: ac97 protocol is not supported by SAI driver
+-   - #clock-cells: should be 0. This property must be present if the SAI device
+-	is a master clock provider, according to clocks bindings, described in
+-	Documentation/devicetree/bindings/clock/clock-bindings.txt.
+-
+-The device node should contain one 'port' child node with one child 'endpoint'
+-node, according to the bindings defined in Documentation/devicetree/bindings/
+-graph.txt.
+-
+-Example:
+-sound_card {
+-	compatible = "audio-graph-card";
+-	dais = <&sai1b_port>;
+-};
+-
+-sai1: sai1@40015800 {
+-	compatible = "st,stm32h7-sai";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	ranges = <0 0x40015800 0x400>;
+-	reg = <0x40015800 0x4>;
+-	clocks = <&rcc SAI1_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
+-	clock-names = "pclk", "x8k", "x11k";
+-	interrupts = <87>;
+-
+-	sai1a: audio-controller@40015804 {
+-		compatible = "st,stm32-sai-sub-a";
+-		reg = <0x4 0x1C>;
+-		clocks = <&rcc SAI1_CK>;
+-		clock-names = "sai_ck";
+-		dmas = <&dmamux1 1 87 0x400 0x0>;
+-		dma-names = "tx";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_sai1a>;
+-
+-		sai1b_port: port {
+-			cpu_endpoint: endpoint {
+-				remote-endpoint = <&codec_endpoint>;
+-				format = "i2s";
+-			};
+-		};
+-	};
+-};
+-
+-audio-codec {
+-	codec_port: port {
+-		codec_endpoint: endpoint {
+-			remote-endpoint = <&cpu_endpoint>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+new file mode 100644
+index 000000000000..33dca007fc86
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+@@ -0,0 +1,193 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/st,stm32-sai.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Serial Audio Interface (SAI)
++
++maintainers:
++  - Olivier Moysan <olivier.moysan@st.com>
++
++description:
++  The SAI interface (Serial Audio Interface) offers a wide set of audio
++  protocols as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
++  The SAI contains two independent audio sub-blocks. Each sub-block has
++  its own clock generator and I/O lines controller.
++
++properties:
++  compatible:
++    enum:
++      - st,stm32f4-sai
++      - st,stm32h7-sai
++
++  reg:
++    items:
++      - description: Base address and size of SAI common register set.
++      - description: Base address and size of SAI identification register set.
++    minItems: 1
++    maxItems: 2
++
++  ranges:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  clocks:
++    items:
++      - description: pclk feeds the peripheral bus interface.
++      - description: x8k, SAI parent clock for sampling rates multiple of 8kHz.
++      - description: x11k, SAI parent clock for sampling rates multiple of 11.025kHz.
++
++  clock-names:
++    items:
++      enum: [ pclk, x8k, x11k ]
++    minItems: 3
++    maxItems: 3
++
++required:
++  - compatible
++  - reg
++  - ranges
++  - "#address-cells"
++  - "#size-cells"
++  - clocks
++  - clock-names
++
++patternProperties:
++  "^audio-controller@[0-9a-f]+$":
++    type: object
++    description:
++      Two subnodes corresponding to SAI sub-block instances A et B
++      can be defined. Subnode can be omitted for unsused sub-block.
++
++    properties:
++      compatible:
++        description: Compatible for SAI sub-block A or B.
++        enum:
++          - st,stm32-sai-sub-a
++          - st,stm32-sai-sub-b
++
++      "#sound-dai-cells":
++        const: 0
++
++      reg:
++        maxItems: 1
++
++      clocks:
++        items:
++          - description: sai_ck clock feeding the internal clock generator.
++          - description: MCLK clock from a SAI set as master clock provider.
++        minItems: 1
++        maxItems: 2
++
++      clock-names:
++        items:
++          - const: sai_ck
++          - const: MCLK
++        minItems: 1
++        maxItems: 2
++
++      dmas:
++        items:
++          - description: SAI sub-block is configured as a capture DAI.
++          - description: SAI sub-block is configured as a playback DAI.
++        minItems: 1
++        maxItems: 1
++
++      dma-names:
++        items:
++          - enum: [ rx, tx ]
++
++      st,sync:
++        description:
++          Configure the SAI sub-block as slave of another SAI sub-block.
++          By default SAI sub-block is in asynchronous mode.
++          Must contain the phandle and index of the SAI sub-block providing
++          the synchronization.
++        allOf:
++          - $ref: /schemas/types.yaml#definitions/phandle-array
++          - maxItems: 1
++
++      st,iec60958:
++        description:
++          If set, support S/PDIF IEC6958 protocol for playback.
++          IEC60958 protocol is not available for capture.
++          By default, custom protocol is assumed, meaning that protocol is
++          configured according to protocol defined in related DAI link node,
++          such as i2s, left justified, right justified, dsp and pdm protocols.
++        allOf:
++          - $ref: /schemas/types.yaml#definitions/flag
++
++      "#clock-cells":
++        description: Configure the SAI device as master clock provider.
++        const: 0
++
++    required:
++      - compatible
++      - "#sound-dai-cells"
++      - reg
++      - clocks
++      - clock-names
++      - dmas
++      - dma-names
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32f4-sai
++
++  - then:
++      properties:
++        clocks:
++          minItems: 2
++          maxItems: 2
++
++        clock-names:
++          items:
++            enum: [ x8k, x11k ]
++          minItems: 2
++          maxItems: 2
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    sai1: sai@4400a000 {
++      compatible = "st,stm32h7-sai";
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges = <0 0x4400a000 0x400>;
++      reg = <0x4400a000 0x4>, <0x4400a3f0 0x10>;
++      interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&rcc SAI1>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
++      clock-names = "pclk", "x8k", "x11k";
++      resets = <&rcc SAI1_R>;
++
++      sai1a: audio-controller@4400a004 {
++        compatible = "st,stm32-sai-sub-a";
++        #sound-dai-cells = <0>;
++        reg = <0x4 0x1c>;
++        clocks = <&rcc SAI1_K>;
++        clock-names = "sai_ck";
++        dmas = <&dmamux1 87 0x400 0x01>;
++        dma-names = "tx";
++      };
++    };
++
++...
 -- 
-2.25.0
+2.17.1
 
