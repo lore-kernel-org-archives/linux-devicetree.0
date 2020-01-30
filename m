@@ -2,414 +2,121 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E315C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61FFC35248
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0631820708
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755F52083E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:38:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P4GDqsD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbgA3VVV (ORCPT
+        id S1727370AbgA3ViS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:21:21 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:43760 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgA3VVV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:21:21 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id B87CD2002E;
-        Thu, 30 Jan 2020 22:21:17 +0100 (CET)
-Date:   Thu, 30 Jan 2020 22:21:16 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     michael.srba@seznam.cz
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v3 2/2] drm/panel: Add a driver for Samsung
- s6e88a0-ams452ef01 panel
-Message-ID: <20200130212116.GB32091@ravnborg.org>
-References: <20200130203555.316-1-michael.srba@seznam.cz>
- <20200130203555.316-2-michael.srba@seznam.cz>
+        Thu, 30 Jan 2020 16:38:18 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:56124 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727313AbgA3ViP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:38:15 -0500
+Received: by mail-pj1-f68.google.com with SMTP id d5so1893696pjz.5
+        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 13:38:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EwmsKAAR9EZeJAmAlDaaBhS2SFQYknZY+oQh1g/QCAE=;
+        b=P4GDqsD+SXwiCy9JUOoM9+wWOVmgS78wb+4/C1tpIyPq02GJCeJnxqEEgOF3HbYOlI
+         BYIwnDL/eJZrdTMcTFAD2q8tKn8VMgc3cJuZ7114rYY2Q4jvFczsJKWtGD8/t3cEmejm
+         KdnUWk62kKdW/GP9ZbtOEViVs9kyEz+QAaIfs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EwmsKAAR9EZeJAmAlDaaBhS2SFQYknZY+oQh1g/QCAE=;
+        b=dGAXgmwgK0w+TnZCV0WP8L2P4xrMcLDbDP8Ht56Z+h254525cV8G56I9pYB+V9Fl0J
+         PUK46b4hLdANDNABQlbPObRQFpY2HpZuv3CufY2UfW21C8loitfHvfnmo+GQXOs1OydQ
+         Mprr/grZ5xTnb8aJExSIMFwVbreDVEmvbbbJWOCX0U3nVB3h5RIBH+66G5xAuWHR9coe
+         b+SEgKH1zqY3Vi5rGXkNRPggd58+jIW8srm0MSLCAWJOcV1rqsE8y5rAUXD1jPnsFPyd
+         0XgkcQAMp3yam4tLfJIVZzG39Vp++3fp7ZTRua98UBY8VqDl5ZaEGX3KzvzOBTvOfkvv
+         toQA==
+X-Gm-Message-State: APjAAAUwJvbqqvck2lf5DV6FyY4LqSj+xrxjw3CCs0gondvaX6IYcOoF
+        tqofk63yVqaa7kTolhMvX4MC+w==
+X-Google-Smtp-Source: APXvYqxnGY0DZfQrEhOfeE54gwV7TiIH7kOdxAYEFz+gCUTbzfGMuGMB3HDD6dI8E1dq8Lsjv2ux8Q==
+X-Received: by 2002:a17:90a:a409:: with SMTP id y9mr8265577pjp.119.1580420294561;
+        Thu, 30 Jan 2020 13:38:14 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w8sm7883326pfj.20.2020.01.30.13.38.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 13:38:13 -0800 (PST)
+Date:   Thu, 30 Jan 2020 13:38:12 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Pradeep P V K <ppvk@codeaurora.org>
+Cc:     adrian.hunter@intel.com, georgi.djakov@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org, vbadigan@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, sboyd@kernel.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [RFC-v2 0/2] Add Support for SDHC bus bandwidth voting
+Message-ID: <20200130213812.GK71044@google.com>
+References: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200130203555.316-2-michael.srba@seznam.cz>
+In-Reply-To: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=WRmskFGdCPKSGLd9HBMA:9 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Michael.
+Hi Pradeep,
 
-I fixed a few too long lines warnings.
+what is the status of this series, do you plan to send v3 soon or
+is it abandonded?
 
-static inline struct s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel *panel)
-became:
-static inline struct
-s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel *panel)
+Thanks
 
-And another long line where the comment was moved one line up.
+Matthias
 
-And finally I added a proper changelog.
-
-With this fixed - applied to drm-misc-next.
-
-	Sam
-
-
-On Thu, Jan 30, 2020 at 09:35:55PM +0100, michael.srba@seznam.cz wrote:
-> From: Michael Srba <Michael.Srba@seznam.cz>
+On Fri, Nov 08, 2019 at 07:08:37PM +0530, Pradeep P V K wrote:
+> Vote for the MSM bus bandwidth required by SDHC driver
+> based on the clock speed and bus width of the card.
+> Otherwise, the system clocks may run at minimum clock
+> speed and thus affecting the performance.
 > 
-> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
-> ---
-> Changes in v2: reorder includes; remove empty functions; fix after rebasing
-> Changes in v3: fix straightforward line-over-80-chars issues
-> ---
->  drivers/gpu/drm/panel/Kconfig                 |   6 +
->  drivers/gpu/drm/panel/Makefile                |   1 +
->  .../panel/panel-samsung-s6e88a0-ams452ef01.c  | 291 ++++++++++++++++++
->  3 files changed, 298 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
+> Adapt to the new ICB framework for bus bandwidth voting.
 > 
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index ae44ac2ec106..0c7d61f32b0e 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -275,6 +275,12 @@ config DRM_PANEL_SAMSUNG_S6E63M0
->  	  Say Y here if you want to enable support for Samsung S6E63M0
->  	  AMOLED LCD panel.
->  
-> +config DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01
-> +	tristate "Samsung AMS452EF01 panel with S6E88A0 DSI video mode controller"
-> +	depends on OF
-> +	select DRM_MIPI_DSI
-> +	select VIDEOMODE_HELPERS
-> +
->  config DRM_PANEL_SAMSUNG_S6E8AA0
->  	tristate "Samsung S6E8AA0 DSI video mode panel"
->  	depends on OF
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index 7c4d3c581fd4..5b622fbe4014 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6D16D0) += panel-samsung-s6d16d0.o
->  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E3HA2) += panel-samsung-s6e3ha2.o
->  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63J0X03) += panel-samsung-s6e63j0x03.o
->  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63M0) += panel-samsung-s6e63m0.o
-> +obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01) += panel-samsung-s6e88a0-ams452ef01.o
->  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0) += panel-samsung-s6e8aa0.o
->  obj-$(CONFIG_DRM_PANEL_SEIKO_43WVF1G) += panel-seiko-43wvf1g.o
->  obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
-> diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c b/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
-> new file mode 100644
-> index 000000000000..14d983f70226
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
-> @@ -0,0 +1,291 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright (C) 2019, Michael Srba
-> +
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include <video/mipi_display.h>
-> +
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_modes.h>
-> +#include <drm/drm_panel.h>
-> +
-> +struct s6e88a0_ams452ef01 {
-> +	struct drm_panel panel;
-> +	struct mipi_dsi_device *dsi;
-> +	struct regulator_bulk_data supplies[2];
-> +	struct gpio_desc *reset_gpio;
-> +
-> +	bool prepared;
-> +};
-> +
-> +static inline struct s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel *panel)
-> +{
-> +	return container_of(panel, struct s6e88a0_ams452ef01, panel);
-> +}
-> +
-> +#define dsi_dcs_write_seq(dsi, seq...) do {				\
-> +		static const u8 d[] = { seq };				\
-> +		int ret;						\
-> +		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));	\
-> +		if (ret < 0)						\
-> +			return ret;					\
-> +	} while (0)
-> +
-> +static void s6e88a0_ams452ef01_reset(struct s6e88a0_ams452ef01 *ctx)
-> +{
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-> +	usleep_range(5000, 6000);
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> +	usleep_range(1000, 2000);
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-> +	usleep_range(10000, 11000);
-> +}
-> +
-> +static int s6e88a0_ams452ef01_on(struct s6e88a0_ams452ef01 *ctx)
-> +{
-> +	struct mipi_dsi_device *dsi = ctx->dsi;
-> +	struct device *dev = &dsi->dev;
-> +	int ret;
-> +
-> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-> +
-> +	dsi_dcs_write_seq(dsi, 0xf0, 0x5a, 0x5a); // enable LEVEL2 commands
-> +	dsi_dcs_write_seq(dsi, 0xcc, 0x4c); // set Pixel Clock Divider polarity
-> +
-> +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-> +		return ret;
-> +	}
-> +	msleep(120);
-> +
-> +	// set default brightness/gama
-> +	dsi_dcs_write_seq(dsi, 0xca,
-> +			  0x01, 0x00, 0x01, 0x00, 0x01, 0x00,	// V255 RR,GG,BB
-> +			  0x80, 0x80, 0x80,			// V203 R,G,B
-> +			  0x80, 0x80, 0x80,			// V151 R,G,B
-> +			  0x80, 0x80, 0x80,			// V87  R,G,B
-> +			  0x80, 0x80, 0x80,			// V51  R,G,B
-> +			  0x80, 0x80, 0x80,			// V35  R,G,B
-> +			  0x80, 0x80, 0x80,			// V23  R,G,B
-> +			  0x80, 0x80, 0x80,			// V11  R,G,B
-> +			  0x6b, 0x68, 0x71,			// V3   R,G,B
-> +			  0x00, 0x00, 0x00);			// V1   R,G,B
-> +	dsi_dcs_write_seq(dsi, 0xb2, 0x40, 0x0a, 0x17, 0x00, 0x0a); // set default Amoled Off Ratio
-> +	dsi_dcs_write_seq(dsi, 0xb6, 0x2c, 0x0b); // set default elvss voltage
-> +	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
-> +	dsi_dcs_write_seq(dsi, 0xf7, 0x03); // gamma/aor update
-> +	dsi_dcs_write_seq(dsi, 0xf0, 0xa5, 0xa5); // disable LEVEL2 commands
-> +
-> +	ret = mipi_dsi_dcs_set_display_on(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set display on: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e88a0_ams452ef01_off(struct s6e88a0_ams452ef01 *ctx)
-> +{
-> +	struct mipi_dsi_device *dsi = ctx->dsi;
-> +	struct device *dev = &dsi->dev;
-> +	int ret;
-> +
-> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-> +
-> +	ret = mipi_dsi_dcs_set_display_off(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set display off: %d\n", ret);
-> +		return ret;
-> +	}
-> +	msleep(35);
-> +
-> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
-> +		return ret;
-> +	}
-> +	msleep(120);
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e88a0_ams452ef01_prepare(struct drm_panel *panel)
-> +{
-> +	struct s6e88a0_ams452ef01 *ctx = to_s6e88a0_ams452ef01(panel);
-> +	struct device *dev = &ctx->dsi->dev;
-> +	int ret;
-> +
-> +	if (ctx->prepared)
-> +		return 0;
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	s6e88a0_ams452ef01_reset(ctx);
-> +
-> +	ret = s6e88a0_ams452ef01_on(ctx);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-> +		gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> +		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies),
-> +				       ctx->supplies);
-> +		return ret;
-> +	}
-> +
-> +	ctx->prepared = true;
-> +	return 0;
-> +}
-> +
-> +static int s6e88a0_ams452ef01_unprepare(struct drm_panel *panel)
-> +{
-> +	struct s6e88a0_ams452ef01 *ctx = to_s6e88a0_ams452ef01(panel);
-> +	struct device *dev = &ctx->dsi->dev;
-> +	int ret;
-> +
-> +	if (!ctx->prepared)
-> +		return 0;
-> +
-> +	ret = s6e88a0_ams452ef01_off(ctx);
-> +	if (ret < 0)
-> +		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-> +
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> +	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> +
-> +	ctx->prepared = false;
-> +	return 0;
-> +}
-> +
-> +static const struct drm_display_mode s6e88a0_ams452ef01_mode = {
-> +	.clock = (540 + 88 + 4 + 20) * (960 + 14 + 2 + 8) * 60 / 1000,
-> +	.hdisplay = 540,
-> +	.hsync_start = 540 + 88,
-> +	.hsync_end = 540 + 88 + 4,
-> +	.htotal = 540 + 88 + 4 + 20,
-> +	.vdisplay = 960,
-> +	.vsync_start = 960 + 14,
-> +	.vsync_end = 960 + 14 + 2,
-> +	.vtotal = 960 + 14 + 2 + 8,
-> +	.vrefresh = 60,
-> +	.width_mm = 56,
-> +	.height_mm = 100,
-> +};
-> +
-> +static int s6e88a0_ams452ef01_get_modes(struct drm_panel *panel,
-> +					struct drm_connector *connector)
-> +{
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(connector->dev, &s6e88a0_ams452ef01_mode);
-> +	if (!mode)
-> +		return -ENOMEM;
-> +
-> +	drm_mode_set_name(mode);
-> +
-> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-> +	connector->display_info.width_mm = mode->width_mm;
-> +	connector->display_info.height_mm = mode->height_mm;
-> +	drm_mode_probed_add(connector, mode);
-> +
-> +	return 1;
-> +}
-> +
-> +static const struct drm_panel_funcs s6e88a0_ams452ef01_panel_funcs = {
-> +	.unprepare = s6e88a0_ams452ef01_unprepare,
-> +	.prepare = s6e88a0_ams452ef01_prepare,
-> +	.get_modes = s6e88a0_ams452ef01_get_modes,
-> +};
-> +
-> +static int s6e88a0_ams452ef01_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct device *dev = &dsi->dev;
-> +	struct s6e88a0_ams452ef01 *ctx;
-> +	int ret;
-> +
-> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +
-> +	ctx->supplies[0].supply = "vdd3";
-> +	ctx->supplies[1].supply = "vci";
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-> +				      ctx->supplies);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to get regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(ctx->reset_gpio)) {
-> +		ret = PTR_ERR(ctx->reset_gpio);
-> +		dev_err(dev, "Failed to get reset-gpios: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ctx->dsi = dsi;
-> +	mipi_dsi_set_drvdata(dsi, ctx);
-> +
-> +	dsi->lanes = 2;
-> +	dsi->format = MIPI_DSI_FMT_RGB888;
-> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST;
-> +
-> +	drm_panel_init(&ctx->panel, dev, &s6e88a0_ams452ef01_panel_funcs,
-> +		       DRM_MODE_CONNECTOR_DSI);
-> +
-> +	ret = drm_panel_add(&ctx->panel);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to add panel: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = mipi_dsi_attach(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to attach to DSI host: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e88a0_ams452ef01_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct s6e88a0_ams452ef01 *ctx = mipi_dsi_get_drvdata(dsi);
-> +	int ret;
-> +
-> +	ret = mipi_dsi_detach(dsi);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
-> +
-> +	drm_panel_remove(&ctx->panel);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id s6e88a0_ams452ef01_of_match[] = {
-> +	{ .compatible = "samsung,s6e88a0-ams452ef01" },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, s6e88a0_ams452ef01_of_match);
-> +
-> +static struct mipi_dsi_driver s6e88a0_ams452ef01_driver = {
-> +	.probe = s6e88a0_ams452ef01_probe,
-> +	.remove = s6e88a0_ams452ef01_remove,
-> +	.driver = {
-> +		.name = "panel-s6e88a0-ams452ef01",
-> +		.of_match_table = s6e88a0_ams452ef01_of_match,
-> +	},
-> +};
-> +module_mipi_dsi_driver(s6e88a0_ams452ef01_driver);
-> +
-> +MODULE_AUTHOR("Michael Srba <Michael.Srba@seznam.cz>");
-> +MODULE_DESCRIPTION("MIPI-DSI based Panel Driver for AMS452EF01 AMOLED LCD with a S6E88A0 controller");
-> +MODULE_LICENSE("GPL v2");
+> This requires the source/destination port ids.
+> Also this requires a tuple of values.
+> 
+> The tuple is for two different paths - from SDHC master
+> to BIMC slave. The other is from CPU master to SDHC slave.
+> This tuple consists of the average and peak bandwidth.
+> 
+> This change is based on Georgi Djakov [RFC]
+> (https://lkml.org/lkml/2018/10/11/499)
+> 
+> ---
+> changed since v1:
+> * Addressed all the Review comments.
+> * Minor code rebasing.
+> 
+> Pradeep P V K (2):
+>   dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported strings
+>   mmc: sdhci-msm: Add support for bus bandwidth voting
+> 
+>  .../devicetree/bindings/mmc/sdhci-msm.txt          |  32 ++
+>  drivers/mmc/host/sdhci-msm.c                       | 366 ++++++++++++++++++++-
+>  2 files changed, 395 insertions(+), 3 deletions(-)
+> 
 > -- 
-> 2.24.0
+> 1.9.1
+> 
