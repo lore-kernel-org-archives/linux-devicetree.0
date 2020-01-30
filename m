@@ -2,118 +2,146 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BD4C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 18:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C036C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 18:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A8C20CC7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 18:17:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BfQG+oTC"
+	by mail.kernel.org (Postfix) with ESMTP id 0BB6D20661
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 18:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgA3SRv (ORCPT
+        id S1729601AbgA3SZ5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:17:51 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:39340 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728843AbgA3SRv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 13:17:51 -0500
-Received: by mail-vs1-f67.google.com with SMTP id p14so2682605vsq.6
-        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 10:17:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CJPY+g/XzCm6UWO3D8mKRxGxfTcXSUIYOUXNI4GNTD8=;
-        b=BfQG+oTCMVxlg4wY8DUnH37t9rAIzLS4W4kBKdZBWR+QzaPeVDDSBBXOCM5jcqS184
-         7z/yo+l0hDOZzpC2ERgZFxmFpmjwHGcZ8UyGlvlgloFIb0V9DTOjRoWcGbjeL6/SP5o6
-         5UvCzcjJvRoIprtS7ojhc5t5+b4RMuK+mt/xs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CJPY+g/XzCm6UWO3D8mKRxGxfTcXSUIYOUXNI4GNTD8=;
-        b=T94MneMDi23ESTE/z6FX9NRwoP6rDjmrSKV5gT6KvEDNnnpUyZWxyRQcvk0+fE2jJn
-         9/868oSFNpjBZNV2oqXRK4aByK8GSw6vsEgOx/wHlryYuETdCOrBRPeXwCDrGwjyfJwH
-         hyCnG92pvDXCj1lfUV5OOTK1Q3H5WwHcPmXhkHPsdCjuAKPhBGP7Hidg0VU0EXeCFijn
-         FB/5LgI28ti+z6rOMGvZDtDBtyc1vsLSoHsl0epsSfIdBoS86PtWjoq9eTXZRV5XhkWC
-         QA2lgIwJZsfiY1ZruACmf20nfcGVvlpckOdyXUADspKp5WKdJznKDrd0imOJWRNgxdz1
-         OQNg==
-X-Gm-Message-State: APjAAAWg2+rttgjCjdb9MBdTt0gIwn0Dq61mIox9V0ipEnkKqD/1RMmt
-        7jrGcnVyQGdWtW9Bnb8Lk/33WLo9ORM=
-X-Google-Smtp-Source: APXvYqzEIsRF7XQfXrC2Rm1Id94Ivk/97jaT0QxBGZp/DaraH48B5z/ZUrR4s13lWu3SilEsYVwGIw==
-X-Received: by 2002:a67:f50c:: with SMTP id u12mr4180739vsn.24.1580408270378;
-        Thu, 30 Jan 2020 10:17:50 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id c2sm1635083uan.14.2020.01.30.10.17.49
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 10:17:49 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id 1so1543651uao.1
-        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 10:17:49 -0800 (PST)
-X-Received: by 2002:ab0:254e:: with SMTP id l14mr3487338uan.91.1580408268842;
- Thu, 30 Jan 2020 10:17:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20200129152458.v2.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
- <20200130180404.6771A2083E@mail.kernel.org>
-In-Reply-To: <20200130180404.6771A2083E@mail.kernel.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 30 Jan 2020 10:17:37 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Xvw+oA70+JG-5wMy+0v5M324idQRJsujVbNnBtEF2gvQ@mail.gmail.com>
-Message-ID: <CAD=FV=Xvw+oA70+JG-5wMy+0v5M324idQRJsujVbNnBtEF2gvQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: clk: qcom: Fix self-validation, split,
- and clean cruft
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Abhishek Sahu <absahu@codeaurora.org>, sivaprak@codeaurora.org,
-        anusharao@codeaurora.org, Sricharan <sricharan@codeaurora.org>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
+        Thu, 30 Jan 2020 13:25:57 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:59254 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729597AbgA3SZ5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 13:25:57 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 4A2452005D;
+        Thu, 30 Jan 2020 19:25:51 +0100 (CET)
+Date:   Thu, 30 Jan 2020 19:25:49 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     michael.srba@seznam.cz
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v2 1/2] dt-bindings: display/panel: add bindings for
+ S6E88A0-AMS452EF01
+Message-ID: <20200130182549.GA21265@ravnborg.org>
+References: <20200130171128.29251-1-michael.srba@seznam.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130171128.29251-1-michael.srba@seznam.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=gEfo2CItAAAA:8
+        a=doRB7wx00yQXQO78LT4A:9 a=CjuIK1q_8ugA:10 a=sptkURWiP4Gy88Gu7hUp:22
+        a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Michael.
 
-On Thu, Jan 30, 2020 at 10:04 AM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> > Misc cleanups as part of this patch:
-> > - sm8150 was claimed to be same set of clocks as sc7180, but driver
-> >   and dts appear to say that "bi_tcxo_ao" doesn't exist.  Fixed.
->
-> Someone will probably want to change this at some point.
+Thanks for the quick feedback and the conversion.
+There is a few things you need to improve as noted below.
 
-I have no insight into sm8150, but I guess I assumed that since it
-wasn't in the driver that maybe sm8150 just doesnt have this hookup?
-I'm happy to add it back in.
+	Sam
+
+On Thu, Jan 30, 2020 at 06:11:27PM +0100, michael.srba@seznam.cz wrote:
+> From: Michael Srba <Michael.Srba@seznam.cz>
+> 
+> This patch adds dts bindings for Samsung AMS452EF01 AMOLED panel, which makes
+> use of their S6E88A0 controller.
+> 
+> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
+> ---
+> Hi,
+> Thanks for the review. I believe I've fixed everything, and I tested that 
+> I get image on drm-next with these patches applied.
+> 
+> Changes since v1: use yaml format for the binding
+> ---
+>  .../panel/samsung,s6e88a0-ams452ef01.yaml     | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml b/Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml
+> new file mode 100644
+> index 000000000000..3d9b480ec706
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+For new bindings please use: (GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
+Filename must match
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung AMS452EF01 AMOLED panel with S6E88A0 video mode DSI controller
+> +
+> +maintainers:
+> +  - Michael Srba <Michael.Srba@seznam.cz>
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: samsung,s6e88a0-ams452ef01
+> +  reg: true
+> +  reset-gpios: true
+> +  vdd3-supply:
+> +     description: core voltage supply
+> +  vci-supply:
+> +     description: voltage supply for analog circuits
+> +  enforce-video-mode: true
+enforce-video-mode is not referenced in the driver - is it relevant?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vdd3-supply
+> +  - vci-supply
+> +  - reset-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    panel@0 {
+> +		reg = <0>;
+> +
+> +		compatible = "samsung,s6e88a0-ams452ef01";
+> +
+> +		vdd3-supply = <&pm8916_l17>;
+> +		vci-supply = <&reg_vlcd_vci>;
+> +		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> +	};
+No tabs in yaml files. And fix indent so it matches.
+Closing '}' below 'p' in ports.
 
 
-> > +description:
-> > +  Qualcomm global clock control module which supports the clocks, resets and
-> > +  power domains on APQ8064.
->
-> It would be great if this could also point to the
-> include/dt-bindings/clock/qcom,apq8064.h file here. If you don't resend
-> this patch then I will try to remember to make this addition to the
-> binding docs.
 
-You're saying that the top-level description for all these should
-point to the header file?  Seems line a sane idea.  I guess we'd need
-to do that for all of them?  I could spin with that if you want, but
-we could also do a follow-up patch?
-
--Doug
+> +
+> +...
+Drop - not needed.
