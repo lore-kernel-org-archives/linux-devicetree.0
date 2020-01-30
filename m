@@ -2,120 +2,109 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB5EC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 14:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB49C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 14:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF27206D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 14:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6304214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 14:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="T8Z6rkOj"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="PpuuLidu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgA3Opl (ORCPT
+        id S1727186AbgA3Or2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:45:41 -0500
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:56301 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726948AbgA3Opl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:45:41 -0500
-Received: from [IPv6:2001:420:44c1:2577:91db:5aec:4999:a214]
- ([IPv6:2001:420:44c1:2577:91db:5aec:4999:a214])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id xB4Yi8EoQn7E5xB4cihPOP; Thu, 30 Jan 2020 15:45:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1580395538; bh=4vDpIAkSrGm95OeRm5AsGZgvUB40s/bpYqX6RcpcurM=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=T8Z6rkOjykQ0aebjDiAEaPPg4l2sPfpr3UqmsCCmN/LkDP0GO5XA/pUYwJyASBcyD
-         dCGJNS1XnSoXLxMpSpzmC43pCxUSgmvaMlCeoSdpua4PUkDstUXy7dXjgZWR+ZRKA3
-         TDJgbTPvnE2XcfQ9KZRbptFTY0ukkU1ZzGBx5PDuMcwRA/D9hLPYMjCrGoN80ZGv8k
-         nWmyIWBAIldStEbV+7S7+9Caelz1uLDy+zdrng0ovDo+C0EcEWjjerIfQZsgRnVmfz
-         jlQw/heZQIvgZU5U8VV2PyEIvBX9pDjBsMWgHb5UKdAEA/jQjQfZFNTOB4ZKTH1wCG
-         6WuSZNBlbc3jA==
-Subject: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input driver for
- Tegra210
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <60357c4c-13cc-f623-12c5-92dfdc3ae21d@xs4all.nl>
-Date:   Thu, 30 Jan 2020 15:45:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 30 Jan 2020 09:47:28 -0500
+Received: from nbd.name ([46.4.11.11]:57476 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727341AbgA3Or2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jan 2020 09:47:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=g9aUeJxHJTjHeT0DtDV0sRSitvmTT7cydU/tVfhJbTc=; b=PpuuLiduTUs4jWyi3yqCkfssNK
+        Rpz95lYkoZsjAoQ5NawIrrcV/ylfBDwyWwere6uHvbaxpYL39u2dYjti07FcfdJyp0lMC5ZbgC3Mt
+        QbusBpg2Yz40Xw93LkUdr2XQoOgKnza1UTOjrwukOQB2e/bTIYnhLx1JZgsJwHQzzWWk=;
+Received: from [178.162.209.135] (helo=maeck.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1ixB6L-0001Vn-K1; Thu, 30 Jan 2020 15:47:25 +0100
+Received: by maeck.local (Postfix, from userid 501)
+        id EF3BF7AE4696; Thu, 30 Jan 2020 15:47:18 +0100 (CET)
+From:   Felix Fietkau <nbd@nbd.name>
+To:     linux-wireless@vger.kernel.org
+Cc:     devicetree@vger.kernel.org
+Subject: [PATCH 01/15] dt-bindings: net: wireless: mt76: document bindings for MT7622
+Date:   Thu, 30 Jan 2020 15:47:04 +0100
+Message-Id: <20200130144718.14298-1-nbd@nbd.name>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBQYv/fdTa43AuMw5zPpJJPYhHKTejm/zcLImS8prFgrsL5ANuf9ID8NtWYHgQ8cnOXupYVJTx9pwxmjXMfxCmchmgTEV9MLlnZDITtJVmccahHTczlN
- K5l0NhQyIIDORPlctCxcLRahr2ro1fmnj+LBo7nSgoYXETR86nui4E89deKA2r1007twUYf1xdCRfJT7kPdhged3p0gq9lyKU9xy7UfYYhOwtc6D8xGRoZ6l
- LEdHVe0feHAIqLuwtAA2Es5Nu7VztZDccdKVCiq+qgfjSscUGTMo8CFZiubCEmin004jhmTLriQVuflmiLW+BCXJJen1JBPuO3G7RiTSex/7LflB7AfOotiL
- rMiHWgSnP/Cpl2f921glnOl3FBObRef1eRLuKga8E5jR7MJaj4Pkue7uiwFP9eNZC+tLdzZAScd/BXyALw50RTY+595KQPVBY7EwCWLVD0YIgXlX1/pzLj3W
- 1igielB7FQT8khLg3Q3jZDt0G1vVXlj0dNfOIbXsoWsySfFQjUmjYXonOUTOnV025OTuhHZQUKHxkLUkDqWYqPE7zhRnyvv+S+gPSpneg4QiH278sDhHTwKp
- S5c=
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
-> Tegra210 contains a powerful Video Input (VI) hardware controller
-> which can support up to 6 MIPI CSI camera sensors.
-> 
-> Each Tegra CSI port can be one-to-one mapped to VI channel and can
-> capture from an external camera sensor connected to CSI or from
-> built-in test pattern generator.
-> 
-> Tegra210 supports built-in test pattern generator from CSI to VI.
-> 
-> This patch adds a V4L2 media controller and capture driver support
-> for Tegra210 built-in CSI to VI test pattern generator.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/staging/media/Kconfig               |   2 +
->  drivers/staging/media/Makefile              |   1 +
->  drivers/staging/media/tegra/Kconfig         |  12 +
->  drivers/staging/media/tegra/Makefile        |  11 +
->  drivers/staging/media/tegra/TODO            |  10 +
->  drivers/staging/media/tegra/csi.h           | 111 +++++
->  drivers/staging/media/tegra/csi2_fops.c     | 335 +++++++++++++++
->  drivers/staging/media/tegra/csi2_fops.h     |  15 +
->  drivers/staging/media/tegra/host1x-video.c  | 120 ++++++
->  drivers/staging/media/tegra/host1x-video.h  |  33 ++
->  drivers/staging/media/tegra/mc_common.h     | 131 ++++++
->  drivers/staging/media/tegra/tegra-channel.c | 628 ++++++++++++++++++++++++++++
->  drivers/staging/media/tegra/tegra-core.c    | 111 +++++
->  drivers/staging/media/tegra/tegra-core.h    | 125 ++++++
->  drivers/staging/media/tegra/tegra-csi.c     | 380 +++++++++++++++++
->  drivers/staging/media/tegra/tegra-vi.c      | 351 ++++++++++++++++
->  drivers/staging/media/tegra/tegra-vi.h      | 101 +++++
->  drivers/staging/media/tegra/vi2_fops.c      | 364 ++++++++++++++++
->  drivers/staging/media/tegra/vi2_fops.h      |  15 +
->  drivers/staging/media/tegra/vi2_formats.h   | 119 ++++++
->  drivers/staging/media/tegra/vi2_registers.h | 194 +++++++++
+MT7622 is a SoC that includes a 2.4 GHz 4x4 802.11n WMAC. Its
+feature set is comparable to a MT7615 chip, but limited to 2.4 GHz.
 
-Please add an entry to the MAINTAINERS file for this new driver.
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ .../bindings/net/wireless/mediatek,mt76.txt   | 26 ++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-Also, checkpatch.pl --strict complains about the SPDX tag in the headers:
+diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+index d4d982f7ab37..3a76d8faaaed 100644
+--- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
++++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+@@ -4,13 +4,21 @@ This node provides properties for configuring the MediaTek mt76xx wireless
+ device. The node is expected to be specified as a child node of the PCI
+ controller to which the wireless chip is connected.
+ 
+-Alternatively, it can specify the wireless part of the MT7628/MT7688 SoC.
+-For SoC, use the compatible string "mediatek,mt7628-wmac" and the following
+-properties:
++Alternatively, it can specify the wireless part of the MT7628/MT7688 or
++MT7622 SoC. For SoC, use the following compatible strings:
++
++compatible:
++- "mediatek,mt7628-wmac" for MT7628/MT7688
++- "mediatek,mt7622-wmac" for MT7622
+ 
++properties:
+ - reg: Address and length of the register set for the device.
+ - interrupts: Main device interrupt
+ 
++MT7622 specific properties:
++- power-domains: phandle to the power domain that the WMAC is part of
++- mediatek,infracfg: phandle to the infrastructure bus fabric syscon node
++
+ Optional properties:
+ 
+ - ieee80211-freq-limit: See ieee80211.txt
+@@ -53,3 +61,15 @@ wmac: wmac@10300000 {
+ 
+ 	mediatek,mtd-eeprom = <&factory 0x0000>;
+ };
++
++MT7622 example:
++
++wmac: wmac@18000000 {
++	compatible = "mediatek,mt7622-wmac";
++	reg = <0 0x18000000 0 0x100000>;
++	interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_LOW>;
++
++	mediatek,infracfg = <&infracfg>;
++
++	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
++};
+-- 
+2.24.0
 
-WARNING: Improper SPDX comment style for 'drivers/staging/media/tegra/csi.h', please use '/*' instead
-#141: FILE: drivers/staging/media/tegra/csi.h:1:
-+// SPDX-License-Identifier: GPL-2.0-only
-
-(same warning for all headers)
-
-Please fix for v2.
-
-Regards,
-
-	Hans
