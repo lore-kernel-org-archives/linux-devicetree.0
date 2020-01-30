@@ -2,148 +2,414 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35A6C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E315C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837E920708
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:19:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XucHTUJG"
+	by mail.kernel.org (Postfix) with ESMTP id 0631820708
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgA3VTV (ORCPT
+        id S1727161AbgA3VVV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:19:21 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:38908 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgA3VTU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:19:20 -0500
-Received: by mail-vs1-f65.google.com with SMTP id r18so3049184vso.5
-        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 13:19:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tKb9L35tQcyRyNMGKuAJ6Ea5QSPI1QLK9JjZ13bjSck=;
-        b=XucHTUJGVqo+dvrOVctD99spVTAWc6/H5Ie5rc4c68sI8IZEdOO3i5dcSPJG7jTxwY
-         yYLYXQG/Yetkj67ZkEKuFz/saEg5P6jcccVihpjXHkMTowW/qlFnfCP9iRao5tWTSGR6
-         76NU6QGK2oEpbP+jc2q8UeV0uStilfnAYz9Fs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tKb9L35tQcyRyNMGKuAJ6Ea5QSPI1QLK9JjZ13bjSck=;
-        b=YnE8KHUUNRBVm2WOpWE65nF0KzJCWxfctLq83zyHrKRBPmA3vl7TwACRr+06KUnyY3
-         wsWdo3Fcc9q7KYcnjVA2rPhOJhPhFtmRdvZtGIRizJqjNqfvGYvDyh+tASdwQ3qqTdV/
-         J+wWS6Dhq9uy1/qXU7QbVVwfT1CJfrwpz+/dJpBCJlyTO8Whm8kBs0EJa0xYBMuhIR8y
-         x+hWB7Ws6LXOj5ZlVp+jCDHegQkHQjQYvM4Y1SL+c3qeybbDQHWT33h7OFHFVzZ/LBcB
-         /otthtsrPMrCnxa6WQzc/PnGScZpvod6zyAO5kLpey9vPcigSdJ5ft9V9F+HHjCIHDxC
-         e9Fg==
-X-Gm-Message-State: APjAAAVF3T/TvfK/7vLiKwd3vP9SqwYaJ6xH9g2d/10n+log9X8Hjr8M
-        rUc29dg//s52LZ2zgD4QPNjf+yhdbx8=
-X-Google-Smtp-Source: APXvYqwlV4reOObyz/tanvnM6nV+A6siVu89sjDTglvVUtZMM8FdvC4r5CkMQGY1kZ6QoRGeMxE3yg==
-X-Received: by 2002:a67:e342:: with SMTP id s2mr4494067vsm.198.1580419159084;
-        Thu, 30 Jan 2020 13:19:19 -0800 (PST)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 94sm1616312uaw.5.2020.01.30.13.19.18
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 13:19:18 -0800 (PST)
-Received: by mail-vs1-f42.google.com with SMTP id p6so3023631vsj.11
-        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 13:19:18 -0800 (PST)
-X-Received: by 2002:a67:fa1a:: with SMTP id i26mr4644896vsq.169.1580419157458;
- Thu, 30 Jan 2020 13:19:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20200124224225.22547-1-dianders@chromium.org> <20200124144154.v2.5.If590c468722d2985cea63adf60c0d2b3098f37d9@changeid>
- <20200129005152.2A3ED205F4@mail.kernel.org>
-In-Reply-To: <20200129005152.2A3ED205F4@mail.kernel.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 30 Jan 2020 13:19:05 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WKDC-58Muq4-TWLZ3V20eQURm7cELMik1FfjcKBnpr7w@mail.gmail.com>
-Message-ID: <CAD=FV=WKDC-58Muq4-TWLZ3V20eQURm7cELMik1FfjcKBnpr7w@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] clk: qcom: Fix sc7180 dispcc parent data
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>, kalyan_t@codeaurora.org,
+        Thu, 30 Jan 2020 16:21:21 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:43760 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgA3VVV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:21:21 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id B87CD2002E;
+        Thu, 30 Jan 2020 22:21:17 +0100 (CET)
+Date:   Thu, 30 Jan 2020 22:21:16 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     michael.srba@seznam.cz
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 2/2] drm/panel: Add a driver for Samsung
+ s6e88a0-ams452ef01 panel
+Message-ID: <20200130212116.GB32091@ravnborg.org>
+References: <20200130203555.316-1-michael.srba@seznam.cz>
+ <20200130203555.316-2-michael.srba@seznam.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130203555.316-2-michael.srba@seznam.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=WRmskFGdCPKSGLd9HBMA:9 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Michael.
 
-On Tue, Jan 28, 2020 at 4:51 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Douglas Anderson (2020-01-24 14:42:20)
-> >
-> > diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
-> > index 30c1e25d3edb..380eca3f847d 100644
-> > --- a/drivers/clk/qcom/dispcc-sc7180.c
-> > +++ b/drivers/clk/qcom/dispcc-sc7180.c
-> > @@ -76,40 +76,32 @@ static struct clk_alpha_pll_postdiv disp_cc_pll0_out_even = {
-> >
-> >  static const struct parent_map disp_cc_parent_map_0[] = {
-> >         { P_BI_TCXO, 0 },
-> > -       { P_CORE_BI_PLL_TEST_SE, 7 },
-> >  };
-> >
-> >  static const struct clk_parent_data disp_cc_parent_data_0[] = {
-> > -       { .fw_name = "bi_tcxo" },
-> > -       { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> > +       { .fw_name = "xo" },
->
-> If we can make the binding match the code here and keep saying "bi_tcxo"
-> then that is preferred. That way we don't have to see bi_tcxo changing
-> and qcom folks are happy to keep the weird name. The name in the binding
-> is really up to the binding writer.
+I fixed a few too long lines warnings.
 
-v3 is now out and it still says "bi_tcxo" and generally uses the
-"internal" name.  The big exception is msm8998's gpucc.  It seems like
-a whole bunch of work has been done to move that over to more "purist"
-(AKA logical) names and I didn't want to undo that work.  If we should
-move msm8998 to match everyone else then hopefully someone can do it
-as a followup patch?
+static inline struct s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel *panel)
+became:
+static inline struct
+s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel *panel)
+
+And another long line where the comment was moved one line up.
+
+And finally I added a proper changelog.
+
+With this fixed - applied to drm-misc-next.
+
+	Sam
 
 
-> >  };
-> >
-> >  static const struct parent_map disp_cc_parent_map_1[] = {
-> >         { P_BI_TCXO, 0 },
-> >         { P_DP_PHY_PLL_LINK_CLK, 1 },
-> >         { P_DP_PHY_PLL_VCO_DIV_CLK, 2 },
-> > -       { P_CORE_BI_PLL_TEST_SE, 7 },
-> >  };
-> [...]
-> > @@ -203,7 +188,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_aux_clk_src = {
-> >         .clkr.hw.init = &(struct clk_init_data){
-> >                 .name = "disp_cc_mdss_dp_aux_clk_src",
-> >                 .parent_data = disp_cc_parent_data_0,
-> > -               .num_parents = 2,
-> > +               .num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
->
-> Can you split this ARRAY_SIZE() stuff to another patch? That will keep
-> focus on what's relevant here without distracting from the patch
-> contents. I know that parent array size is changing, but I don't want it
-> to be changing this line too.
-
-It has been done.
-
--Doug
+On Thu, Jan 30, 2020 at 09:35:55PM +0100, michael.srba@seznam.cz wrote:
+> From: Michael Srba <Michael.Srba@seznam.cz>
+> 
+> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
+> ---
+> Changes in v2: reorder includes; remove empty functions; fix after rebasing
+> Changes in v3: fix straightforward line-over-80-chars issues
+> ---
+>  drivers/gpu/drm/panel/Kconfig                 |   6 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  .../panel/panel-samsung-s6e88a0-ams452ef01.c  | 291 ++++++++++++++++++
+>  3 files changed, 298 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index ae44ac2ec106..0c7d61f32b0e 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -275,6 +275,12 @@ config DRM_PANEL_SAMSUNG_S6E63M0
+>  	  Say Y here if you want to enable support for Samsung S6E63M0
+>  	  AMOLED LCD panel.
+>  
+> +config DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01
+> +	tristate "Samsung AMS452EF01 panel with S6E88A0 DSI video mode controller"
+> +	depends on OF
+> +	select DRM_MIPI_DSI
+> +	select VIDEOMODE_HELPERS
+> +
+>  config DRM_PANEL_SAMSUNG_S6E8AA0
+>  	tristate "Samsung S6E8AA0 DSI video mode panel"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index 7c4d3c581fd4..5b622fbe4014 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6D16D0) += panel-samsung-s6d16d0.o
+>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E3HA2) += panel-samsung-s6e3ha2.o
+>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63J0X03) += panel-samsung-s6e63j0x03.o
+>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63M0) += panel-samsung-s6e63m0.o
+> +obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01) += panel-samsung-s6e88a0-ams452ef01.o
+>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0) += panel-samsung-s6e8aa0.o
+>  obj-$(CONFIG_DRM_PANEL_SEIKO_43WVF1G) += panel-seiko-43wvf1g.o
+>  obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
+> diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c b/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
+> new file mode 100644
+> index 000000000000..14d983f70226
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
+> @@ -0,0 +1,291 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +// Copyright (C) 2019, Michael Srba
+> +
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +
+> +struct s6e88a0_ams452ef01 {
+> +	struct drm_panel panel;
+> +	struct mipi_dsi_device *dsi;
+> +	struct regulator_bulk_data supplies[2];
+> +	struct gpio_desc *reset_gpio;
+> +
+> +	bool prepared;
+> +};
+> +
+> +static inline struct s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct s6e88a0_ams452ef01, panel);
+> +}
+> +
+> +#define dsi_dcs_write_seq(dsi, seq...) do {				\
+> +		static const u8 d[] = { seq };				\
+> +		int ret;						\
+> +		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));	\
+> +		if (ret < 0)						\
+> +			return ret;					\
+> +	} while (0)
+> +
+> +static void s6e88a0_ams452ef01_reset(struct s6e88a0_ams452ef01 *ctx)
+> +{
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> +	usleep_range(5000, 6000);
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +	usleep_range(1000, 2000);
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> +	usleep_range(10000, 11000);
+> +}
+> +
+> +static int s6e88a0_ams452ef01_on(struct s6e88a0_ams452ef01 *ctx)
+> +{
+> +	struct mipi_dsi_device *dsi = ctx->dsi;
+> +	struct device *dev = &dsi->dev;
+> +	int ret;
+> +
+> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +	dsi_dcs_write_seq(dsi, 0xf0, 0x5a, 0x5a); // enable LEVEL2 commands
+> +	dsi_dcs_write_seq(dsi, 0xcc, 0x4c); // set Pixel Clock Divider polarity
+> +
+> +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
+> +		return ret;
+> +	}
+> +	msleep(120);
+> +
+> +	// set default brightness/gama
+> +	dsi_dcs_write_seq(dsi, 0xca,
+> +			  0x01, 0x00, 0x01, 0x00, 0x01, 0x00,	// V255 RR,GG,BB
+> +			  0x80, 0x80, 0x80,			// V203 R,G,B
+> +			  0x80, 0x80, 0x80,			// V151 R,G,B
+> +			  0x80, 0x80, 0x80,			// V87  R,G,B
+> +			  0x80, 0x80, 0x80,			// V51  R,G,B
+> +			  0x80, 0x80, 0x80,			// V35  R,G,B
+> +			  0x80, 0x80, 0x80,			// V23  R,G,B
+> +			  0x80, 0x80, 0x80,			// V11  R,G,B
+> +			  0x6b, 0x68, 0x71,			// V3   R,G,B
+> +			  0x00, 0x00, 0x00);			// V1   R,G,B
+> +	dsi_dcs_write_seq(dsi, 0xb2, 0x40, 0x0a, 0x17, 0x00, 0x0a); // set default Amoled Off Ratio
+> +	dsi_dcs_write_seq(dsi, 0xb6, 0x2c, 0x0b); // set default elvss voltage
+> +	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
+> +	dsi_dcs_write_seq(dsi, 0xf7, 0x03); // gamma/aor update
+> +	dsi_dcs_write_seq(dsi, 0xf0, 0xa5, 0xa5); // disable LEVEL2 commands
+> +
+> +	ret = mipi_dsi_dcs_set_display_on(dsi);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set display on: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int s6e88a0_ams452ef01_off(struct s6e88a0_ams452ef01 *ctx)
+> +{
+> +	struct mipi_dsi_device *dsi = ctx->dsi;
+> +	struct device *dev = &dsi->dev;
+> +	int ret;
+> +
+> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+> +
+> +	ret = mipi_dsi_dcs_set_display_off(dsi);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set display off: %d\n", ret);
+> +		return ret;
+> +	}
+> +	msleep(35);
+> +
+> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
+> +		return ret;
+> +	}
+> +	msleep(120);
+> +
+> +	return 0;
+> +}
+> +
+> +static int s6e88a0_ams452ef01_prepare(struct drm_panel *panel)
+> +{
+> +	struct s6e88a0_ams452ef01 *ctx = to_s6e88a0_ams452ef01(panel);
+> +	struct device *dev = &ctx->dsi->dev;
+> +	int ret;
+> +
+> +	if (ctx->prepared)
+> +		return 0;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	s6e88a0_ams452ef01_reset(ctx);
+> +
+> +	ret = s6e88a0_ams452ef01_on(ctx);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to initialize panel: %d\n", ret);
+> +		gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies),
+> +				       ctx->supplies);
+> +		return ret;
+> +	}
+> +
+> +	ctx->prepared = true;
+> +	return 0;
+> +}
+> +
+> +static int s6e88a0_ams452ef01_unprepare(struct drm_panel *panel)
+> +{
+> +	struct s6e88a0_ams452ef01 *ctx = to_s6e88a0_ams452ef01(panel);
+> +	struct device *dev = &ctx->dsi->dev;
+> +	int ret;
+> +
+> +	if (!ctx->prepared)
+> +		return 0;
+> +
+> +	ret = s6e88a0_ams452ef01_off(ctx);
+> +	if (ret < 0)
+> +		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
+> +
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +
+> +	ctx->prepared = false;
+> +	return 0;
+> +}
+> +
+> +static const struct drm_display_mode s6e88a0_ams452ef01_mode = {
+> +	.clock = (540 + 88 + 4 + 20) * (960 + 14 + 2 + 8) * 60 / 1000,
+> +	.hdisplay = 540,
+> +	.hsync_start = 540 + 88,
+> +	.hsync_end = 540 + 88 + 4,
+> +	.htotal = 540 + 88 + 4 + 20,
+> +	.vdisplay = 960,
+> +	.vsync_start = 960 + 14,
+> +	.vsync_end = 960 + 14 + 2,
+> +	.vtotal = 960 + 14 + 2 + 8,
+> +	.vrefresh = 60,
+> +	.width_mm = 56,
+> +	.height_mm = 100,
+> +};
+> +
+> +static int s6e88a0_ams452ef01_get_modes(struct drm_panel *panel,
+> +					struct drm_connector *connector)
+> +{
+> +	struct drm_display_mode *mode;
+> +
+> +	mode = drm_mode_duplicate(connector->dev, &s6e88a0_ams452ef01_mode);
+> +	if (!mode)
+> +		return -ENOMEM;
+> +
+> +	drm_mode_set_name(mode);
+> +
+> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> +	connector->display_info.width_mm = mode->width_mm;
+> +	connector->display_info.height_mm = mode->height_mm;
+> +	drm_mode_probed_add(connector, mode);
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs s6e88a0_ams452ef01_panel_funcs = {
+> +	.unprepare = s6e88a0_ams452ef01_unprepare,
+> +	.prepare = s6e88a0_ams452ef01_prepare,
+> +	.get_modes = s6e88a0_ams452ef01_get_modes,
+> +};
+> +
+> +static int s6e88a0_ams452ef01_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	struct s6e88a0_ams452ef01 *ctx;
+> +	int ret;
+> +
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->supplies[0].supply = "vdd3";
+> +	ctx->supplies[1].supply = "vci";
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+> +				      ctx->supplies);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to get regulators: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ctx->reset_gpio)) {
+> +		ret = PTR_ERR(ctx->reset_gpio);
+> +		dev_err(dev, "Failed to get reset-gpios: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ctx->dsi = dsi;
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +	dsi->lanes = 2;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST;
+> +
+> +	drm_panel_init(&ctx->panel, dev, &s6e88a0_ams452ef01_panel_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
+> +
+> +	ret = drm_panel_add(&ctx->panel);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to add panel: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = mipi_dsi_attach(dsi);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to attach to DSI host: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int s6e88a0_ams452ef01_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct s6e88a0_ams452ef01 *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = mipi_dsi_detach(dsi);
+> +	if (ret < 0)
+> +		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
+> +
+> +	drm_panel_remove(&ctx->panel);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id s6e88a0_ams452ef01_of_match[] = {
+> +	{ .compatible = "samsung,s6e88a0-ams452ef01" },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, s6e88a0_ams452ef01_of_match);
+> +
+> +static struct mipi_dsi_driver s6e88a0_ams452ef01_driver = {
+> +	.probe = s6e88a0_ams452ef01_probe,
+> +	.remove = s6e88a0_ams452ef01_remove,
+> +	.driver = {
+> +		.name = "panel-s6e88a0-ams452ef01",
+> +		.of_match_table = s6e88a0_ams452ef01_of_match,
+> +	},
+> +};
+> +module_mipi_dsi_driver(s6e88a0_ams452ef01_driver);
+> +
+> +MODULE_AUTHOR("Michael Srba <Michael.Srba@seznam.cz>");
+> +MODULE_DESCRIPTION("MIPI-DSI based Panel Driver for AMS452EF01 AMOLED LCD with a S6E88A0 controller");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.24.0
