@@ -2,394 +2,139 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD04DC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADA7C35240
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F282464B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvlLQg25"
+	by mail.kernel.org (Postfix) with ESMTP id 87EEC20708
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 21:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgA3VMw (ORCPT
+        id S1727241AbgA3VTI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:12:52 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38503 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727745AbgA3VMw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:12:52 -0500
-Received: by mail-pl1-f194.google.com with SMTP id t6so1823868plj.5
-        for <devicetree@vger.kernel.org>; Thu, 30 Jan 2020 13:12:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TLRLFIcc4LIDPB9YigEhydFs/8ZzkV4XRdQLFB2ep6Q=;
-        b=mvlLQg25kRWGKBllUT9LNWpMct+Ba9NKWhZdoJX9+F9VAred9+dS/mDDCVnUjMykB6
-         JGnUnzTVq3MReXN52FJHvEOjso6Eo4DYGGCKemrWLVfzm13MY7EJwthSidsm5ZTA2WNN
-         CbsWG08fig8R1vdNkLtPz/Qr8aV/mkk5CBygY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TLRLFIcc4LIDPB9YigEhydFs/8ZzkV4XRdQLFB2ep6Q=;
-        b=A0OORRElYgB+CHG97xTsFPTQRlquChoDlnj+OpVdz51o11GLyWreZZK5KiPsMdKXdb
-         6M09zZfPP3djPZl90PUFoKa2t4LkZVBl0Nr4MdpGrQaQfpLv0nuu2WvkN+8AuvjKTbFq
-         RDBgKQRgx43kQEOYFwdvLjF8ZnFNax70O8U+R4+f6fPnz5GgBlX/NnxPKUwucFUGkBgK
-         zuanWyXZjONHOhA9nQmOScQS747h4OT+YbfPZ4wgdgPGXAVC/YXu+9Vd3jRKIpXrCKAJ
-         lvb+sDCCQRdn4/ky8qZDMNWUDt5041BO1I7f0l640tbreuNT/aEA24VABgHKw7FZg1uR
-         4Ipg==
-X-Gm-Message-State: APjAAAVXh1zJc2giiMfZ8WRCTGgQttkvax6t3gfs8+du/WJ2aUUEURr6
-        QtboOKkN7uZdLe0EJ2R2PuXTYA==
-X-Google-Smtp-Source: APXvYqynqQ+EaQq3PdE2MU+3FgfT6u0H42mDI9WEvEDzLZl9MDS9Vjmi62wBJhNJvvoukgiX+YZr8A==
-X-Received: by 2002:a17:90a:db0b:: with SMTP id g11mr7870236pjv.140.1580418770963;
-        Thu, 30 Jan 2020 13:12:50 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 13:12:50 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>, jeffrey.l.hugo@gmail.com,
-        linux-arm-msm@vger.kernel.org, harigovi@codeaurora.org,
-        devicetree@vger.kernel.org, mka@chromium.org,
-        kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-clk@vger.kernel.org, hoegsberg@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v3 02/15] dt-bindings: clock: Fix qcom,dispcc bindings for sdm845/sc7180
-Date:   Thu, 30 Jan 2020 13:12:18 -0800
-Message-Id: <20200130131220.v3.2.I0c4bbb0f75a0880cd4bd90d8b267271e2375e0d0@changeid>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200130211231.224656-1-dianders@chromium.org>
-References: <20200130211231.224656-1-dianders@chromium.org>
+        Thu, 30 Jan 2020 16:19:08 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:43608 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbgA3VTI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 16:19:08 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 32D1A2002E;
+        Thu, 30 Jan 2020 22:19:03 +0100 (CET)
+Date:   Thu, 30 Jan 2020 22:19:01 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     michael.srba@seznam.cz
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 1/2] dt-bindings: display/panel: add bindings for
+ S6E88A0-AMS452EF01
+Message-ID: <20200130211901.GA32091@ravnborg.org>
+References: <20200130203555.316-1-michael.srba@seznam.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130203555.316-1-michael.srba@seznam.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=gEfo2CItAAAA:8
+        a=3iyvTDRqwdQwqYLwx0oA:9 a=CjuIK1q_8ugA:10 a=sptkURWiP4Gy88Gu7hUp:22
+        a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The qcom,dispcc bindings had a few problems with them:
+Hi Michael.
 
-1. They didn't specify all the clocks that dispcc is a client of.
-   Specifically on sc7180 there are two clocks from the DSI PHY and
-   two from the DP PHY.  On sdm845 there are actually two DSI PHYs
-   (each of which has two clocks) and an extra clock from the gcc.
-   These all need to be specified.
+I fixed the following:
+- added .yaml extension to $id
+- added a dsi node to the example, and added #address-cells/size-cells
+  to fix dt_binding_check warnings
 
-2. The sdm845.dtsi has existed for quite some time without specifying
-   the clocks.  The Linux driver was relying on global names to match
-   things up.  While we should transition things, it should be noted
-   in the bindings.
+With these fixes - applied to drm-misc-next.
 
-3. The names used the bindings for "xo" and "gpll0" didn't match the
-   names that QC used for these clocks internally and this was causing
-   confusion / difficulty with their code generation tools.  Switched
-   to the internal names to simplify everyone's lives.  It's not quite
-   as clean in a purist sense but it should avoid headaches.  This
-   officially changes the binding, but that seems OK in this case.
+	Sam
 
-Also note that I updated the example.
-
-Fixes: 5d28e44ba630 ("dt-bindings: clock: Add YAML schemas for the QCOM DISPCC clock bindings")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v3:
-- Added include file to description.
-- Discovered / added new gcc input clock on sdm845.
-- Split sc7180 and sdm845 into two files.
-- Switched names to internal QC names rather than logical ones.
-- Updated commit description.
-
-Changes in v2:
-- Patch ("dt-bindings: clock: Fix qcom,dispcc...") new for v2.
-
- .../bindings/clock/qcom,dispcc.yaml           | 67 -------------
- .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
- .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
- 3 files changed, 183 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
-deleted file mode 100644
-index 9c58e02a1de1..000000000000
---- a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
-+++ /dev/null
-@@ -1,67 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--%YAML 1.2
-----
--$id: http://devicetree.org/schemas/bindings/clock/qcom,dispcc.yaml#
--$schema: http://devicetree.org/meta-schemas/core.yaml#
--
--title: Qualcomm Display Clock & Reset Controller Binding
--
--maintainers:
--  - Taniya Das <tdas@codeaurora.org>
--
--description: |
--  Qualcomm display clock control module which supports the clocks, resets and
--  power domains.
--
--properties:
--  compatible:
--    enum:
--      - qcom,sc7180-dispcc
--      - qcom,sdm845-dispcc
--
--  clocks:
--    minItems: 1
--    maxItems: 2
--    items:
--      - description: Board XO source
--      - description: GPLL0 source from GCC
--
--  clock-names:
--    items:
--      - const: xo
--      - const: gpll0
--
--  '#clock-cells':
--    const: 1
--
--  '#reset-cells':
--    const: 1
--
--  '#power-domain-cells':
--    const: 1
--
--  reg:
--    maxItems: 1
--
--required:
--  - compatible
--  - reg
--  - clocks
--  - clock-names
--  - '#clock-cells'
--  - '#reset-cells'
--  - '#power-domain-cells'
--
--examples:
--  # Example of DISPCC with clock node properties for SDM845:
--  - |
--    clock-controller@af00000 {
--      compatible = "qcom,sdm845-dispcc";
--      reg = <0xaf00000 0x10000>;
--      clocks = <&rpmhcc 0>, <&gcc 24>;
--      clock-names = "xo", "gpll0";
--      #clock-cells = <1>;
--      #reset-cells = <1>;
--      #power-domain-cells = <1>;
--     };
--...
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
-new file mode 100644
-index 000000000000..35315011fc37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/clock/qcom,sc7180-dispcc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Display Clock & Reset Controller Binding for SC7180
-+
-+maintainers:
-+  - Taniya Das <tdas@codeaurora.org>
-+
-+description: |
-+  Qualcomm display clock control module which supports the clocks, resets and
-+  power domains on SC7180.
-+
-+  See also dt-bindings/clock/qcom,dispcc-sc7180.h.
-+
-+properties:
-+  compatible:
-+    const: qcom,sc7180-dispcc
-+
-+  clocks:
-+    items:
-+      - description: Board XO source
-+      - description: GPLL0 source from GCC
-+      - description: Byte clock from DSI PHY
-+      - description: Pixel clock from DSI PHY
-+      - description: Link clock from DP PHY
-+      - description: VCO DIV clock from DP PHY
-+
-+  clock-names:
-+    items:
-+      - const: bi_tcxo
-+      - const: gcc_disp_gpll0_clk_src
-+      - const: dsi0_phy_pll_out_byteclk
-+      - const: dsi0_phy_pll_out_dsiclk
-+      - const: dp_phy_pll_link_clk
-+      - const: dp_phy_pll_vco_div_clk
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#reset-cells'
-+  - '#power-domain-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    clock-controller@af00000 {
-+      compatible = "qcom,sc7180-dispcc";
-+      reg = <0 0x0af00000 0 0x200000>;
-+      clocks = <&rpmhcc RPMH_CXO_CLK>,
-+               <&gcc GCC_DISP_GPLL0_CLK_SRC>,
-+               <&dsi_phy 0>,
-+               <&dsi_phy 1>,
-+               <&dp_phy 0>,
-+               <&dp_phy 1>;
-+      clock-names = "bi_tcxo",
-+                    "gcc_disp_gpll0_clk_src",
-+                    "dsi0_phy_pll_out_byteclk",
-+                    "dsi0_phy_pll_out_dsiclk",
-+                    "dp_phy_pll_link_clk",
-+                    "dp_phy_pll_vco_div_clk";
-+      #clock-cells = <1>;
-+      #reset-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
-new file mode 100644
-index 000000000000..aed2387dc4a6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
-@@ -0,0 +1,99 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/clock/qcom,sdm845-dispcc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Display Clock & Reset Controller Binding for SDM845
-+
-+maintainers:
-+  - Taniya Das <tdas@codeaurora.org>
-+
-+description: |
-+  Qualcomm display clock control module which supports the clocks, resets and
-+  power domains on SDM845.
-+
-+  See also dt-bindings/clock/qcom,dispcc-sdm845.h.
-+
-+properties:
-+  compatible:
-+    const: qcom,sdm845-dispcc
-+
-+  # NOTE: sdm845.dtsi existed for quite some time and specified no clocks.
-+  # The code had to use hardcoded mechanisms to find the input clocks.
-+  # New dts files should have these clocks.
-+  clocks:
-+    items:
-+      - description: Board XO source
-+      - description: GPLL0 source from GCC
-+      - description: GPLL0 div source from GCC
-+      - description: Byte clock from DSI PHY0
-+      - description: Pixel clock from DSI PHY0
-+      - description: Byte clock from DSI PHY1
-+      - description: Pixel clock from DSI PHY1
-+      - description: Link clock from DP PHY
-+      - description: VCO DIV clock from DP PHY
-+
-+  clock-names:
-+    items:
-+      - const: bi_tcxo
-+      - const: gcc_disp_gpll0_clk_src
-+      - const: gcc_disp_gpll0_div_clk_src
-+      - const: dsi0_phy_pll_out_byteclk
-+      - const: dsi0_phy_pll_out_dsiclk
-+      - const: dsi1_phy_pll_out_byteclk
-+      - const: dsi1_phy_pll_out_dsiclk
-+      - const: dp_link_clk_divsel_ten
-+      - const: dp_vco_divided_clk_src_mux
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#reset-cells'
-+  - '#power-domain-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    clock-controller@af00000 {
-+      compatible = "qcom,sdm845-dispcc";
-+      reg = <0 0x0af00000 0 0x10000>;
-+      clocks = <&rpmhcc RPMH_CXO_CLK>,
-+               <&gcc GCC_DISP_GPLL0_CLK_SRC>,
-+               <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>,
-+               <&dsi0_phy 0>,
-+               <&dsi0_phy 1>,
-+               <&dsi1_phy 0>,
-+               <&dsi1_phy 1>,
-+               <&dp_phy 0>,
-+               <&dp_phy 1>;
-+      clock-names = "bi_tcxo",
-+                    "gcc_disp_gpll0_clk_src",
-+                    "gcc_disp_gpll0_div_clk_src",
-+                    "dsi0_phy_pll_out_byteclk",
-+                    "dsi0_phy_pll_out_dsiclk",
-+                    "dsi1_phy_pll_out_byteclk",
-+                    "dsi1_phy_pll_out_dsiclk",
-+                    "dp_link_clk_divsel_ten",
-+                    "dp_vco_divided_clk_src_mux";
-+      #clock-cells = <1>;
-+      #reset-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+...
--- 
-2.25.0.341.g760bfbb309-goog
-
+On Thu, Jan 30, 2020 at 09:35:54PM +0100, michael.srba@seznam.cz wrote:
+> From: Michael Srba <Michael.Srba@seznam.cz>
+> 
+> This patch adds dts bindings for Samsung AMS452EF01 AMOLED panel, which makes
+> use of their S6E88A0 controller.
+> 
+> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
+> ---
+> Hi,
+> I recall now that tabs cause a syntax error in yaml, should be easy to check 
+> in checkpatch.pl?
+> I hope there are no more embarassing oversights left.
+> 
+> Changes in v2: use yaml format for the binding
+> Changes in v3: fix oversights too embarassing to admit here
+> ---
+>  .../panel/samsung,s6e88a0-ams452ef01.yaml     | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml b/Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml
+> new file mode 100644
+> index 000000000000..298fc9a78297
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/samsung,s6e88a0-ams452ef01#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung AMS452EF01 AMOLED panel with S6E88A0 video mode DSI controller
+> +
+> +maintainers:
+> +  - Michael Srba <Michael.Srba@seznam.cz>
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: samsung,s6e88a0-ams452ef01
+> +  reg: true
+> +  reset-gpios: true
+> +  vdd3-supply:
+> +     description: core voltage supply
+> +  vci-supply:
+> +     description: voltage supply for analog circuits
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vdd3-supply
+> +  - vci-supply
+> +  - reset-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    panel@0 {
+> +            reg = <0>;
+> +
+> +            compatible = "samsung,s6e88a0-ams452ef01";
+> +
+> +            vdd3-supply = <&pm8916_l17>;
+> +            vci-supply = <&reg_vlcd_vci>;
+> +            reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> +    };
+> -- 
+> 2.24.0
