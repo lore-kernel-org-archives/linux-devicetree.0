@@ -2,486 +2,303 @@ Return-Path: <SRS0=K0Un=3T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9053BC35240
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 19:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36740C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 20:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5313920708
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 19:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C22214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jan 2020 20:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Fv6gi4y1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgA3Twq (ORCPT
+        id S1727585AbgA3USX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:52:46 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:52646 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgA3Twq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 14:52:46 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id F3125803F1;
-        Thu, 30 Jan 2020 20:52:40 +0100 (CET)
-Date:   Thu, 30 Jan 2020 20:52:39 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Michael Srba <Michael.Srba@seznam.cz>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v2 2/2] drm/panel: Add a driver for Samsung
- s6e88a0-ams452ef01 panel
-Message-ID: <20200130195239.GA28017@ravnborg.org>
-References: <20200130171128.29251-1-michael.srba@seznam.cz>
- <20200130171128.29251-2-michael.srba@seznam.cz>
- <20200130182832.GB21265@ravnborg.org>
- <0d78995c-e1a6-f301-12f7-d62cd5833f2c@seznam.cz>
+        Thu, 30 Jan 2020 15:18:23 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14954 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgA3USX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 15:18:23 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3339d80000>; Thu, 30 Jan 2020 12:17:28 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Jan 2020 12:18:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 12:18:20 -0800
+Received: from [10.110.103.70] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
+ 2020 20:18:20 +0000
+Subject: Re: [RFC PATCH v1 5/5] arm64: tegra: Add Tegra VI CSI suppport in
+ device tree
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <1580235801-4129-6-git-send-email-skomatineni@nvidia.com>
+ <20200129094624.GD2479935@ulmo>
+ <bd18711d-ce23-cbee-7824-37a8c78908e6@nvidia.com>
+ <20200130123607.GB2584455@ulmo>
+ <c5fd4eb3-0026-95a5-5162-e1cf5302698e@nvidia.com>
+ <20200130175820.GA3155155@ulmo>
+ <deb6839b-2ddb-be54-a985-a2b7624374af@nvidia.com>
+Message-ID: <ba57fcf2-a7bf-8154-96c9-aba401327af7@nvidia.com>
+Date:   Thu, 30 Jan 2020 12:18:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d78995c-e1a6-f301-12f7-d62cd5833f2c@seznam.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=rgSknGwOoRCBxhHlYYYA:9 a=k_jlxkuc_V8kldkU:21 a=3HhA6UZRQneBFC6W:21
-        a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
+In-Reply-To: <deb6839b-2ddb-be54-a985-a2b7624374af@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580415449; bh=ca6fwawVS1LllpxDMOUrHSchE4I2p7wXuXiAS1BaG4Y=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=Fv6gi4y19QD9RNCb7ovCu73XWStA/oTMANNlrCFgKacSHb6i3A8uOjSDIym++ZtK/
+         8IITmTfl9nOe404yFXERRUnEKRpsqSzK0ydGvQA2gc01fNFiJoXtPvsUwOoi4IWWdD
+         V8HTVwC2RsYEooCKAAP3bLC6xb8NxK7Q9pwJV8wgE3ZqlPCkawRwtTLwWl+sOzdteA
+         6Jn5X7xL95mAxnh+Oxq4996Pi+Q7KujIw25y2Byg7+Vgue4DU3uMJhzaR6QdTvhcC6
+         BC3hLf5bd8TabDZtGS+b/VpGdVPL3LaohC2I2NljORqVEfcL9vRj6ez4KoyS4fmThr
+         qIe6YmDexg58Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Michael.
 
-On Thu, Jan 30, 2020 at 08:02:31PM +0100, Michael Srba wrote:
-> Sending this with thunderbird, fingers crossed for no formatting issues
-Readable...
-
-> 
-> Hi,
-> I've taken about two weeks to send zinitix v2, and haven't heard about
-> that or
-> v3 yet, so combined with how easy it was to address the issues, I didn't
-> want
-> to risk that was the reason :)
-> I'm not sure how I should make the subject shorter, it's already pretty
-> barebones, so if it has to be done, I assume you would have a suggestion
-> on what
-> is not as important as it seems to me?
-> I'm also not sure if splitting the comment on line 78 to three lines
-> (two seem
-> to not suffice) wouldn't be even worse than leaving it like this? Or
-> should I
-> have it more to the left so that it fits on just two lines?
-> Similarly, I'm not sure what the convention for splitting would be on
-> line 25,
-> since I saw the line breaks placed mostly after a whole function parameter.
-> Actually, for all of the above-80 lines except the one that I missed when
-> updating it today I don't really know how to handle them... except maybe
-> line
-> 139, I guess I missed that since it's off-by-one
-
-Address what you think needs to be addressed.
-If I feel strong about some of the remaining warnings I
-will fix when applying.
-And let you know what I did if this is the case.
-
-	Sam
-
-
-> 
-> On 30. 01. 20 19:28, Sam Ravnborg wrote:
-> > Hi Micahel.
-> >
-> > Thanks for the quick feedback.
-> >
-> > Please address checkpatch warnings.
-> >
-> > be2b44c76320 (HEAD -> drm-misc-next) drm/panel: Add a driver for Samsung s6e88a0-ams452ef01 panel
-> > -:7: WARNING:COMMIT_MESSAGE: Missing commit description - Add an appropriate one
-> >
-> > -:40: WARNING:FILE_PATH_CHANGES: added, moved or deleted file(s), does MAINTAINERS need updating?
-> > #40: 
-> > new file mode 100644
-> >
-> > -:69: WARNING:LONG_LINE: line over 80 characters
-> > #69: FILE: drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c:25:
-> > +static inline struct s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel *panel)
-> >
-> > -:74: WARNING:MACRO_WITH_FLOW_CONTROL: Macros with flow control statements should be avoided
-> > #74: FILE: drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c:30:
-> > +#define dsi_dcs_write_seq(dsi, seq...) do {				\
-> > +		static const u8 d[] = { seq };				\
-> > +		int ret;						\
-> > +		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));	\
-> > +		if (ret < 0)						\
-> > +			return ret;					\
-> > +	} while (0)
-> >
-> > -:122: WARNING:LONG_LINE_COMMENT: line over 80 characters
-> > #122: FILE: drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c:78:
-> > +	dsi_dcs_write_seq(dsi, 0xb2, 0x40, 0x0a, 0x17, 0x00, 0x0a); // set default Amoled Off Ratio
-> >
-> > -:183: WARNING:LONG_LINE: line over 80 characters
-> > #183: FILE: drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c:139:
-> > +		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> >
-> > -:226: WARNING:LONG_LINE: line over 80 characters
-> > #226: FILE: drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c:182:
-> > +static int s6e88a0_ams452ef01_get_modes(struct drm_panel *panel, struct drm_connector *connector)
-> >
-> > total: 0 errors, 7 warnings, 0 checks, 308 lines checked
-> >
-> >
-> >
-> > Use: dim checkpatch" if you have dim.
-> > Otherwise use checkpatch -q --emacs --strict --show-types
-> >
-> > Ignore the warning "MACRO_WITH_FLOW_CONTROL" - as this seems legit in this use-case.
-> >
-> > 	Sam
-> >
-> > On Thu, Jan 30, 2020 at 06:11:28PM +0100, michael.srba@seznam.cz wrote:
-> >> From: Michael Srba <Michael.Srba@seznam.cz>
-> >>
-> >> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
-> >> ---
-> >> Changes since v1: reorder includes; remove empty functions; fix after rebasing
-> >> ---
-> >>  drivers/gpu/drm/panel/Kconfig                 |   6 +
-> >>  drivers/gpu/drm/panel/Makefile                |   1 +
-> >>  .../panel/panel-samsung-s6e88a0-ams452ef01.c  | 289 ++++++++++++++++++
-> >>  3 files changed, 296 insertions(+)
-> >>  create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
-> >>
-> >> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> >> index ae44ac2ec106..0c7d61f32b0e 100644
-> >> --- a/drivers/gpu/drm/panel/Kconfig
-> >> +++ b/drivers/gpu/drm/panel/Kconfig
-> >> @@ -275,6 +275,12 @@ config DRM_PANEL_SAMSUNG_S6E63M0
-> >>  	  Say Y here if you want to enable support for Samsung S6E63M0
-> >>  	  AMOLED LCD panel.
-> >>  
-> >> +config DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01
-> >> +	tristate "Samsung AMS452EF01 panel with S6E88A0 DSI video mode controller"
-> >> +	depends on OF
-> >> +	select DRM_MIPI_DSI
-> >> +	select VIDEOMODE_HELPERS
-> >> +
-> >>  config DRM_PANEL_SAMSUNG_S6E8AA0
-> >>  	tristate "Samsung S6E8AA0 DSI video mode panel"
-> >>  	depends on OF
-> >> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> >> index 7c4d3c581fd4..5b622fbe4014 100644
-> >> --- a/drivers/gpu/drm/panel/Makefile
-> >> +++ b/drivers/gpu/drm/panel/Makefile
-> >> @@ -28,6 +28,7 @@ obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6D16D0) += panel-samsung-s6d16d0.o
-> >>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E3HA2) += panel-samsung-s6e3ha2.o
-> >>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63J0X03) += panel-samsung-s6e63j0x03.o
-> >>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63M0) += panel-samsung-s6e63m0.o
-> >> +obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01) += panel-samsung-s6e88a0-ams452ef01.o
-> >>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0) += panel-samsung-s6e8aa0.o
-> >>  obj-$(CONFIG_DRM_PANEL_SEIKO_43WVF1G) += panel-seiko-43wvf1g.o
-> >>  obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
-> >> diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c b/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
-> >> new file mode 100644
-> >> index 000000000000..49d3f6d0f137
-> >> --- /dev/null
-> >> +++ b/drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams452ef01.c
-> >> @@ -0,0 +1,289 @@
-> >> +// SPDX-License-Identifier: GPL-2.0-only
-> >> +// Copyright (C) 2019, Michael Srba
-> >> +
-> >> +#include <linux/delay.h>
-> >> +#include <linux/gpio/consumer.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/regulator/consumer.h>
-> >> +
-> >> +#include <video/mipi_display.h>
-> >> +
-> >> +#include <drm/drm_mipi_dsi.h>
-> >> +#include <drm/drm_modes.h>
-> >> +#include <drm/drm_panel.h>
-> >> +
-> >> +struct s6e88a0_ams452ef01 {
-> >> +	struct drm_panel panel;
-> >> +	struct mipi_dsi_device *dsi;
-> >> +	struct regulator_bulk_data supplies[2];
-> >> +	struct gpio_desc *reset_gpio;
-> >> +
-> >> +	bool prepared;
-> >> +};
-> >> +
-> >> +static inline struct s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel *panel)
-> >> +{
-> >> +	return container_of(panel, struct s6e88a0_ams452ef01, panel);
-> >> +}
-> >> +
-> >> +#define dsi_dcs_write_seq(dsi, seq...) do {				\
-> >> +		static const u8 d[] = { seq };				\
-> >> +		int ret;						\
-> >> +		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));	\
-> >> +		if (ret < 0)						\
-> >> +			return ret;					\
-> >> +	} while (0)
-> >> +
-> >> +static void s6e88a0_ams452ef01_reset(struct s6e88a0_ams452ef01 *ctx)
-> >> +{
-> >> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-> >> +	usleep_range(5000, 6000);
-> >> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> >> +	usleep_range(1000, 2000);
-> >> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-> >> +	usleep_range(10000, 11000);
-> >> +}
-> >> +
-> >> +static int s6e88a0_ams452ef01_on(struct s6e88a0_ams452ef01 *ctx)
-> >> +{
-> >> +	struct mipi_dsi_device *dsi = ctx->dsi;
-> >> +	struct device *dev = &dsi->dev;
-> >> +	int ret;
-> >> +
-> >> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-> >> +
-> >> +	dsi_dcs_write_seq(dsi, 0xf0, 0x5a, 0x5a); // enable LEVEL2 commands
-> >> +	dsi_dcs_write_seq(dsi, 0xcc, 0x4c); // set Pixel Clock Divider polarity
-> >> +
-> >> +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +	msleep(120);
-> >> +
-> >> +	// set default brightness/gama
-> >> +	dsi_dcs_write_seq(dsi, 0xca,
-> >> +			  0x01, 0x00, 0x01, 0x00, 0x01, 0x00,	// V255 RR,GG,BB
-> >> +			  0x80, 0x80, 0x80,			// V203 R,G,B
-> >> +			  0x80, 0x80, 0x80,			// V151 R,G,B
-> >> +			  0x80, 0x80, 0x80,			// V87  R,G,B
-> >> +			  0x80, 0x80, 0x80,			// V51  R,G,B
-> >> +			  0x80, 0x80, 0x80,			// V35  R,G,B
-> >> +			  0x80, 0x80, 0x80,			// V23  R,G,B
-> >> +			  0x80, 0x80, 0x80,			// V11  R,G,B
-> >> +			  0x6b, 0x68, 0x71,			// V3   R,G,B
-> >> +			  0x00, 0x00, 0x00);			// V1   R,G,B
-> >> +	dsi_dcs_write_seq(dsi, 0xb2, 0x40, 0x0a, 0x17, 0x00, 0x0a); // set default Amoled Off Ratio
-> >> +	dsi_dcs_write_seq(dsi, 0xb6, 0x2c, 0x0b); // set default elvss voltage
-> >> +	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
-> >> +	dsi_dcs_write_seq(dsi, 0xf7, 0x03); // gamma/aor update
-> >> +	dsi_dcs_write_seq(dsi, 0xf0, 0xa5, 0xa5); // disable LEVEL2 commands
-> >> +
-> >> +	ret = mipi_dsi_dcs_set_display_on(dsi);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to set display on: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int s6e88a0_ams452ef01_off(struct s6e88a0_ams452ef01 *ctx)
-> >> +{
-> >> +	struct mipi_dsi_device *dsi = ctx->dsi;
-> >> +	struct device *dev = &dsi->dev;
-> >> +	int ret;
-> >> +
-> >> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-> >> +
-> >> +	ret = mipi_dsi_dcs_set_display_off(dsi);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to set display off: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +	msleep(35);
-> >> +
-> >> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +	msleep(120);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int s6e88a0_ams452ef01_prepare(struct drm_panel *panel)
-> >> +{
-> >> +	struct s6e88a0_ams452ef01 *ctx = to_s6e88a0_ams452ef01(panel);
-> >> +	struct device *dev = &ctx->dsi->dev;
-> >> +	int ret;
-> >> +
-> >> +	if (ctx->prepared)
-> >> +		return 0;
-> >> +
-> >> +	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	s6e88a0_ams452ef01_reset(ctx);
-> >> +
-> >> +	ret = s6e88a0_ams452ef01_on(ctx);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-> >> +		gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> >> +		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	ctx->prepared = true;
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int s6e88a0_ams452ef01_unprepare(struct drm_panel *panel)
-> >> +{
-> >> +	struct s6e88a0_ams452ef01 *ctx = to_s6e88a0_ams452ef01(panel);
-> >> +	struct device *dev = &ctx->dsi->dev;
-> >> +	int ret;
-> >> +
-> >> +	if (!ctx->prepared)
-> >> +		return 0;
-> >> +
-> >> +	ret = s6e88a0_ams452ef01_off(ctx);
-> >> +	if (ret < 0)
-> >> +		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-> >> +
-> >> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> >> +	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> >> +
-> >> +	ctx->prepared = false;
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static const struct drm_display_mode s6e88a0_ams452ef01_mode = {
-> >> +	.clock = (540 + 88 + 4 + 20) * (960 + 14 + 2 + 8) * 60 / 1000,
-> >> +	.hdisplay = 540,
-> >> +	.hsync_start = 540 + 88,
-> >> +	.hsync_end = 540 + 88 + 4,
-> >> +	.htotal = 540 + 88 + 4 + 20,
-> >> +	.vdisplay = 960,
-> >> +	.vsync_start = 960 + 14,
-> >> +	.vsync_end = 960 + 14 + 2,
-> >> +	.vtotal = 960 + 14 + 2 + 8,
-> >> +	.vrefresh = 60,
-> >> +	.width_mm = 56,
-> >> +	.height_mm = 100,
-> >> +};
-> >> +
-> >> +static int s6e88a0_ams452ef01_get_modes(struct drm_panel *panel, struct drm_connector *connector)
-> >> +{
-> >> +	struct drm_display_mode *mode;
-> >> +
-> >> +	mode = drm_mode_duplicate(connector->dev, &s6e88a0_ams452ef01_mode);
-> >> +	if (!mode)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	drm_mode_set_name(mode);
-> >> +
-> >> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-> >> +	connector->display_info.width_mm = mode->width_mm;
-> >> +	connector->display_info.height_mm = mode->height_mm;
-> >> +	drm_mode_probed_add(connector, mode);
-> >> +
-> >> +	return 1;
-> >> +}
-> >> +
-> >> +static const struct drm_panel_funcs s6e88a0_ams452ef01_panel_funcs = {
-> >> +	.unprepare = s6e88a0_ams452ef01_unprepare,
-> >> +	.prepare = s6e88a0_ams452ef01_prepare,
-> >> +	.get_modes = s6e88a0_ams452ef01_get_modes,
-> >> +};
-> >> +
-> >> +static int s6e88a0_ams452ef01_probe(struct mipi_dsi_device *dsi)
-> >> +{
-> >> +	struct device *dev = &dsi->dev;
-> >> +	struct s6e88a0_ams452ef01 *ctx;
-> >> +	int ret;
-> >> +
-> >> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> >> +	if (!ctx)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	ctx->supplies[0].supply = "vdd3";
-> >> +	ctx->supplies[1].supply = "vci";
-> >> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-> >> +				      ctx->supplies);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to get regulators: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> >> +	if (IS_ERR(ctx->reset_gpio)) {
-> >> +		ret = PTR_ERR(ctx->reset_gpio);
-> >> +		dev_err(dev, "Failed to get reset-gpios: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	ctx->dsi = dsi;
-> >> +	mipi_dsi_set_drvdata(dsi, ctx);
-> >> +
-> >> +	dsi->lanes = 2;
-> >> +	dsi->format = MIPI_DSI_FMT_RGB888;
-> >> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST;
-> >> +
-> >> +	drm_panel_init(&ctx->panel, dev, &s6e88a0_ams452ef01_panel_funcs,
-> >> +		       DRM_MODE_CONNECTOR_DSI);
-> >> +
-> >> +	ret = drm_panel_add(&ctx->panel);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to add panel: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	ret = mipi_dsi_attach(dsi);
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "Failed to attach to DSI host: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int s6e88a0_ams452ef01_remove(struct mipi_dsi_device *dsi)
-> >> +{
-> >> +	struct s6e88a0_ams452ef01 *ctx = mipi_dsi_get_drvdata(dsi);
-> >> +	int ret;
-> >> +
-> >> +	ret = mipi_dsi_detach(dsi);
-> >> +	if (ret < 0)
-> >> +		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
-> >> +
-> >> +	drm_panel_remove(&ctx->panel);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static const struct of_device_id s6e88a0_ams452ef01_of_match[] = {
-> >> +	{ .compatible = "samsung,s6e88a0-ams452ef01" },
-> >> +	{ /* sentinel */ },
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, s6e88a0_ams452ef01_of_match);
-> >> +
-> >> +static struct mipi_dsi_driver s6e88a0_ams452ef01_driver = {
-> >> +	.probe = s6e88a0_ams452ef01_probe,
-> >> +	.remove = s6e88a0_ams452ef01_remove,
-> >> +	.driver = {
-> >> +		.name = "panel-s6e88a0-ams452ef01",
-> >> +		.of_match_table = s6e88a0_ams452ef01_of_match,
-> >> +	},
-> >> +};
-> >> +module_mipi_dsi_driver(s6e88a0_ams452ef01_driver);
-> >> +
-> >> +MODULE_AUTHOR("Michael Srba <Michael.Srba@seznam.cz>");
-> >> +MODULE_DESCRIPTION("MIPI-DSI based Panel Driver for AMS452EF01 AMOLED LCD with a S6E88A0 controller");
-> >> +MODULE_LICENSE("GPL v2");
-> >> -- 
-> >> 2.24.0
+On 1/30/20 10:58 AM, Sowjanya Komatineni wrote:
+>
+> On 1/30/20 9:58 AM, Thierry Reding wrote:
+>> On Thu, Jan 30, 2020 at 09:18:50AM -0800, Sowjanya Komatineni wrote:
+>>> On 1/30/20 4:36 AM, Thierry Reding wrote:
+>>>> On Wed, Jan 29, 2020 at 08:22:48AM -0800, Sowjanya Komatineni wrote:
+>>>>> On 1/29/20 1:46 AM, Thierry Reding wrote:
+>>>>>> On Tue, Jan 28, 2020 at 10:23:21AM -0800, Sowjanya Komatineni wrote:
+>>>>>>> Tegra210 contains VI controller for video input capture from MIPI
+>>>>>>> CSI camera sensors and also supports built-in test pattern=20
+>>>>>>> generator.
+>>>>>>>
+>>>>>>> CSI ports can be one-to-one mapped to VI channels for capturing=20
+>>>>>>> from
+>>>>>>> an external sensor or from built-in test pattern generator.
+>>>>>>>
+>>>>>>> This patch adds support for VI and CSI and enables them in Tegra210
+>>>>>>> device tree.
+>>>>>>>
+>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>> ---
+>>>>>>> =A0=A0=A0 arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 8 ++++++=
++
+>>>>>>> =A0=A0=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi=A0=A0=A0=A0=A0=
+=A0 | 31=20
+>>>>>>> +++++++++++++++++++++++++-
+>>>>>>> =A0=A0=A0 2 files changed, 38 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi=20
+>>>>>>> b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>> index b0095072bc28..ec1b3033fa03 100644
+>>>>>>> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>> @@ -10,6 +10,14 @@
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 vi@54080000 {
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> +
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 csi@0x54080838 {
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> +
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sor@54580000 {
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi=20
+>>>>>>> b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>> index 48c63256ba7f..c6107ec03ad1 100644
+>>>>>>> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>> @@ -136,9 +136,38 @@
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 vi@54080000 {
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "nvidi=
+a,tegra210-vi";
+>>>>>>> -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080000 0x0 0x00=
+040000>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080000 0x0 0x80=
+8>;
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupts =3D <GIC_S=
+PI 69 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "disabled"=
+;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clocks =3D <&tegra_car =
+TEGRA210_CLK_VI>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-parents =3D <&teg=
+ra_car=20
+>>>>>>> TEGRA210_CLK_PLL_C4_OUT0>;
+>>>>>>> +
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clocks =3D <&tegra_car TEGRA210_=
+CLK_VI>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clock-names =3D "vi";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 resets =3D <&tegra_car 20>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reset-names =3D "vi";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> +
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 csi@0x54080838 {
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "nvidia,tegra210-=
+csi";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080838 0x0 0x20=
+00>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "disabled";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clocks =3D <&tegra_car =
+TEGRA210_CLK_CILAB>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&=
+tegra_car TEGRA210_CLK_CILCD>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&=
+tegra_car TEGRA210_CLK_CILE>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-parents =3D <&teg=
+ra_car=20
+>>>>>>> TEGRA210_CLK_PLL_P>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 <&tegra_car TEGRA210_CLK_PLL_P>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 <&tegra_car TEGRA210_CLK_PLL_P>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-rates =3D <102000=
+000>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0 <102000000>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0 <102000000>;
+>>>>>>> +
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clocks =3D <&tegra_car TEGRA210_=
+CLK_CSI>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGRA=
+210_CLK_CILAB>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGRA=
+210_CLK_CILCD>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGRA=
+210_CLK_CILE>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clock-names =3D "csi", "cilab", =
+"cilcd", "cile";
+>>>>>>> +
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>> Can this be a child of the vi node? Looking at the register=20
+>>>>>> ranges it
+>>>>>> seems like these are actually a single IP block. If they have=20
+>>>>>> separate
+>>>>>> blocks with clearly separate functionality, then it makes sense=20
+>>>>>> to have
+>>>>>> CSI be a child node of VI, though it may also be okay to merge=20
+>>>>>> both and
+>>>>>> have a single node with the driver doing all of the differentiation
+>>>>>> between what's VI and what's CSI.
+>>>>>>
+>>>>>> Looking at later chips, the split between VI and CSI is more=20
+>>>>>> explicit,
+>>>>>> so having the split in DT for Tegra210 may make sense for=20
+>>>>>> consistency.
+>>>>>>
+>>>>>> I know we've discussed this before, but for some reason I keep=20
+>>>>>> coming
+>>>>>> back to this. I'll go through the other patches to see if I can=20
+>>>>>> get a
+>>>>>> clearer picture of how this could all work together.
+>>>>>>
+>>>>>> Thierry
+>>>>> We can keep it separate as we discussed.
+>>>>>
+>>>>> But as Tegra186 onwards, CSI is separate device to be all=20
+>>>>> cosistent I kept
+>>>>> CSI as separate node for Tegra210 as well.
+>>>> =A0 From our discussion, my understanding was that CSI would be a=20
+>>>> separate
+>>>> device, but it would still be a subdevice of VI. The address offset of
+>>>> the CSI registers not being aligned to a power of two is a strong
+>>>> indication that this is really all part of the same block.
+>>> Yes our earlier discussion is to have CSI as subdevice.
+>>>
+>>> Later looking into T186 and later NVCSI is totally separate so it=20
+>>> will be
+>>> separate device and to have driver common moved Tegra210 CSI also as
+>>> separate device instead of having it as subdevice of VI.
+>>>
+>>> Earlier when we discussed at that time I am using TPG also from device
+>>> graphs but not moved to hard media links inside driver for TPG.
+>>>
+>>> For this we need CSI to be available prior to VI.
+>> Why is that? Does creating the hard media links need access to a struct
+>> device? What if we created that device in the VI driver without any
+>> reliance on DT? Shouldn't that also work? I have a hard time imagining
+>> that there aren't other devices like this where we don't necessarily
+>> have separate devices for these links.
+> Yes we need CSI structure for hard link TPG also as all csi channel=20
+> list is part of CSI device.
+>
+> We can create CSI channel subdevices within VI without using CSI=20
+> device from a separate CSI driver probe for Tegra210 and make all=20
+> subdev related ops implementations as global so they can be used from=20
+> VI driver for Tegra210 and can also be used for Tegra186 and later in=20
+> separate CSI driver.
+>
+> During creating media links in VI driver for TPG, for T210 we can use=20
+> local CSI device structure and for T186+ we can use CSI device=20
+> structure created during CSI probe.
+>
+> Sorry, I didn't understood what you meant by separate devices for=20
+> these link.
+>
+> We only have Tegra CSI linked to Tegra VI for TPG/Real sensor.
+>
+>>> If we add CSI as subdevice to VI, CSI will not be available by the time
+>>> VI init happens.
+>> The CSI subdevice should be registered as part of the VI driver's probe,
+>> right? That's typically where you'd call of_platform_populate(). Could
+>> we not set up the hard media links in the ->init() callbacks for the
+>> host1x clients? Those are called after all of the devices have been
+>> probed, so the CSI device should be available at that time.
+>>
+yes, will update to have CSI as child node to VI
+>>> Currently host1x subdevices listed has CSI before VI and CSI init=20
+>>> happens
+>>> earlier so by the time VI init happens CSI is available to do media=20
+>>> links
+>>> b/w VI video entity and CSI subdevice entity.
+>> Okay, I understand how this would be a convenient solution. However, the
+>> device tree is a hardware description, so we need to ignore what we know
+>> about the operating system infrastructure that we want to use when
+>> writing the device tree bindings (and the device tree content) in order
+>> to make sure the same binding will work on a different operating system
+>> which may have a completely different infrastructure (or none at all).
+>>
+>>> Also having CSI as separate subdevice (not as subdevice to VI) for=20
+>>> T210 will
+>>> be consistent with T186 and later.
+>> Again, I see how that's convenient. But the main difference between
+>> Tegra210 and Tegra186 is that on the former, the CSI is merged with VI,
+>> whereas on the latter the CSI is a completely separate hardware block.
+>>
+>> Since device tree describes the hardware, that difference should be
+>> apparent in the device tree. I initially thought as well that it would
+>> be advantageous if both had the same representation, but I do realize
+>> now that this has a significant impact on the device tree, and it
+>> violates the basic principles we base device tree binding design on.
+>>
+>> Thierry
+>
+> I just thought of driver implementation being common b/w T210 and=20
+> T186+ by having CSI as separate device node rather than as child node=20
+> to VI to avoid CSI structure handling within VI for T210 only.
+>
+> Will update DT and driver to have CSI as child node of VI for T210.
+>
+>
