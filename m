@@ -2,82 +2,81 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CBCC33CB7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BE6C35240
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDE8214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7E3214D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cCCXrbR6"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="M+YcKaeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgAaQI2 (ORCPT
+        id S1729276AbgAaQNk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:08:28 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35629 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729297AbgAaQI2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 11:08:28 -0500
-Received: by mail-vs1-f67.google.com with SMTP id x123so4698757vsc.2
-        for <devicetree@vger.kernel.org>; Fri, 31 Jan 2020 08:08:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4xPLoiaUgyd94a+bWIqEdjSO+/pm7JzzixTlR76nC4k=;
-        b=cCCXrbR60CBlDAGSpmvFYrjjyE1DVVDlZhNhjXqkIlKpR2BcoPRCHGrUSSTCDfRqDk
-         72D2LUsRS4KoF3mrsLr5JyigXGZ9EsF0j5WPA+OZLvWstHHFS/ADUWF2H+JRsfTpY1YT
-         ZYDGjjQ7IrKGRYG64lWiFl0zCmZnBnqC4m0/4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4xPLoiaUgyd94a+bWIqEdjSO+/pm7JzzixTlR76nC4k=;
-        b=tEiOgC8b+tWwzjEzZtRh/oaFBrUVyRnx7By8uf3YbHDnJzixs1MptY1Atfw6JXJB1T
-         Lx2WG3HqOGeL4D4wbEUBqCnaa0vCkHMcF+eZ/2yezrNYf3/ypfHbrOQIahFL4mxA/sF4
-         IbFnTali/bLoiwKH60OvfuKaWWAZTYWtvKe1MTyUyMkcM0YUqkSHVvBxujmGYVQBzXaV
-         WVN17bQBD+ydPpi+a4+G3F7/MvyPoA6NEfSSa7LESSjvkbJqAnXGvPEHoe0twxlpiweg
-         90DzT20ek6y4qjB4kNlIIWDhCbh5EYEPhBB/Facn62SyDv+PVrzAFCLXe8YI/KdWtI1S
-         0xqg==
-X-Gm-Message-State: APjAAAXkdQlfBZ3SySR9AzmHQFCrj3Jn3WuIhNDI5YOWPRrENyonMxRD
-        HACUArw19hmOPGU/aMHqbDyQA01t+zw=
-X-Google-Smtp-Source: APXvYqyV+xGj7dHdkljkLCRt19LFF0nFtDOjUD6oFFBtHQGYsgrsoan6HXhPYDl4yLNsXySbyCn/wA==
-X-Received: by 2002:a67:fbcb:: with SMTP id o11mr7053201vsr.109.1580486905551;
-        Fri, 31 Jan 2020 08:08:25 -0800 (PST)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id i65sm2680560vkb.1.2020.01.31.08.08.24
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 08:08:24 -0800 (PST)
-Received: by mail-vk1-f178.google.com with SMTP id p191so2208339vkf.8
-        for <devicetree@vger.kernel.org>; Fri, 31 Jan 2020 08:08:24 -0800 (PST)
-X-Received: by 2002:a1f:a9d0:: with SMTP id s199mr6709266vke.40.1580486903706;
- Fri, 31 Jan 2020 08:08:23 -0800 (PST)
+        Fri, 31 Jan 2020 11:13:40 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29552 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729162AbgAaQNk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:13:40 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VG8Ufu012526;
+        Fri, 31 Jan 2020 17:13:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=HUDBBixwA13IQ1SSxhBd1lmaKx9dqoz2nLZDQib/1NY=;
+ b=M+YcKaeJ2bnVCl5PayaMJx+tFQAQGf39itcySN6HFpedQJV60UeyQR+C3dnWO5cUftet
+ GbGDnNSjoRvGb9p5bocMIOMMVwwq6udnrw3lR1x5yiYRmZ1YDuGEt2eXJNuD+ssGRoYx
+ DjnZc2l2lbGzI7hEmfHpDQSH0dYvYPFdkMCxSkvSBI/IvDSKrIvzxHaLm2ARDTIwEYTc
+ BYlmU1xUEQVqRMpTLmrVAQC3dHPdMcbckmJMZvJe+QMnLRdD24sLLFwULK9Avg3kl0JA
+ 6pgph/GNCKKc7UGzCSmm2hWL1nyDuQWkHvTU2pEuyecFki1KCmFXRjOvMEDRpx3H4opv oQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrc13pvvx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jan 2020 17:13:31 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BC12810002A;
+        Fri, 31 Jan 2020 17:13:26 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A0DEE2D3796;
+        Fri, 31 Jan 2020 17:13:26 +0100 (CET)
+Received: from lmecxl0995.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 31 Jan
+ 2020 17:13:25 +0100
+Subject: Re: [PATCH v3 1/2] dt-bindings: usb: dwc2: add support for STM32MP15
+ SoCs USB OTG HS and FS
+To:     Felipe Balbi <balbi@kernel.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+References: <20200124084131.23749-1-amelie.delaunay@st.com>
+ <20200124084131.23749-2-amelie.delaunay@st.com> <87imkr7nou.fsf@kernel.org>
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+Message-ID: <c29867bd-8056-a82f-2273-101470395e78@st.com>
+Date:   Fri, 31 Jan 2020 17:13:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
- <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com> <4bd79f53cab95db9286067836722dd4b@codeaurora.org>
-In-Reply-To: <4bd79f53cab95db9286067836722dd4b@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 31 Jan 2020 08:08:09 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=X7pUvab1FXkPbxio_0hW0mvAguFbPAcfQ1=K9HD9bMug@mail.gmail.com>
-Message-ID: <CAD=FV=X7pUvab1FXkPbxio_0hW0mvAguFbPAcfQ1=K9HD9bMug@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87imkr7nou.fsf@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_04:2020-01-31,2020-01-31 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -85,50 +84,27 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi,
 
-On Fri, Jan 31, 2020 at 4:16 AM <smasetty@codeaurora.org> wrote:
+On 1/31/20 2:36 PM, Felipe Balbi wrote:
+> Hi,
+> 
+> Amelie Delaunay <amelie.delaunay@st.com> writes:
+> 
+>> Add the specific compatible string for the DWC2 IP found in the STM32MP15
+>> SoCs.
+>> STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
+>> ID pin state. usb33d-supply described the regulator supplying Vbus and ID
+>> sensing comparators.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> 
+> This doesn't apply. dwc2 bindings is still in .txt format. I have taken
+> patch 2, though.
 >
-> >> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000
-> >> 0 0x10000>,
-> >> +                               <0 0x0b490000 0 0x10000>;
-> >> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-> >> +                       interrupts = <GIC_SPI 304
-> >> IRQ_TYPE_LEVEL_HIGH>,
-> >> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       interrupt-names = "hfi", "gmu";
-> >> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-> >> +                              <&gpucc GPU_CC_CXO_CLK>,
-> >> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-> >> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-> >> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
-> >> +                       power-domains = <&gpucc CX_GDSC>;
-> >
-> > Bindings claim that you need both CX and GC.  Is sc7180 somehow
-> > different?  Bindings also claim that you should be providing
-> > power-domain-names.
-> No this is still needed, We need the GX power domain for GPU recovery
-> use cases where the shutdown was not successful.
 
-This almost sounds as if the bindings should mark the GX power domain
-as optional?  The driver can function without it but doesn't get all
-the features?  As the binding is written right now I think it is
-"invalid" to not specify a a GX power domain and once the yaml
-conversion is done then it will even be flagged as an error.  That's
-going to make it harder to land the your patch...
+Thanks for taking driver patch.
 
-> I am working the Taniya
-> to get the dependencies sorted out to bring this change in. This should
-> be
-> okay for the time being.
+Rob, would you mind to take patch 1 (Yaml binding update) in your tree ?
 
-What breaks today if you add in the GX power domain here?
+Regards,
+Amelie
 
-Oh, I see.  It's not even provided by the 'gpucc-sc7180.c' file.  What
-happens if you do this for now:
-
-  power-domains = <&gpucc CX_GDSC>, <0>;
-  power-domain-names = "cx", "gx";
-
-That seems to be the trendy thing to do if a phandle to something is
-"required" but the code isn't ready for it.
-
--Doug
