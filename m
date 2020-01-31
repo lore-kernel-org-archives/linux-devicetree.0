@@ -2,133 +2,91 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6866CC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B99C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 15:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370E0214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580482602;
-	bh=Fbo07jQcDehzcQlRBI+lJd0rapqIcWAeWwHOs5pWDU0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ne3Kj7HJkjgSWI3cwsckZzK8hVb6jGGErLpqlg6S6LLxtp/GlJDvbdHcDy6OAxC2T
-	 SkbL/eFhprH+2mNqbBgZgaGVDsGdsjmhZzV1ujcIFkqI9vmp3ngwFgJR8Jc+NAj5Cz
-	 JsOjPNtBu9UDnVaMqZcwce0bIQEnAoAd/U2uDOqw=
+	by mail.kernel.org (Postfix) with ESMTP id 9B83D20705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 15:14:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXxZk9X+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgAaO4l (ORCPT
+        id S1729030AbgAaPOg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:56:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbgAaO4l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:56:41 -0500
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25312214D8;
-        Fri, 31 Jan 2020 14:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580482600;
-        bh=Fbo07jQcDehzcQlRBI+lJd0rapqIcWAeWwHOs5pWDU0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LjM+TLEJnKgOcwwtfkbvxqhOmEgOhgh3vtClqWg2f+oBqlUWyraPTIGWWSLcxgaGE
-         6aCUUD835+zmkwOVFAwitulnuTBxL6fptObyDu5FvkTGFZKB8GFPcgxHR5t5fG/wAO
-         NjjnlNk86wJMBBXe4NPCkSNR7WEgqAA3/f6ucq+g=
-Received: by mail-qt1-f172.google.com with SMTP id w47so5587792qtk.4;
-        Fri, 31 Jan 2020 06:56:40 -0800 (PST)
-X-Gm-Message-State: APjAAAUdDcb/8zwC5dy7vVqrKCSl+GoNUJMv7h5evn1WcJgFhtA+w+ex
-        eQRB+Av7w1UfGIRdqFoUSPgnELBB4/ZKPz5WMg==
-X-Google-Smtp-Source: APXvYqwUU7ztApQ6WbiV1zy8jHYJO4SrzOW/4hVpbUEXlnLzCr4/Ofde7F3GuB6r+Rpd4kga4ExE8pOJK1L4+T90Dq0=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr10888419qtp.224.1580482599278;
- Fri, 31 Jan 2020 06:56:39 -0800 (PST)
+        Fri, 31 Jan 2020 10:14:36 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53538 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728893AbgAaPOg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 10:14:36 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VFEUSS042071;
+        Fri, 31 Jan 2020 09:14:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580483670;
+        bh=oGFn7FCda5lV95p7QFBd+eBDB4foT+y/egIAbRIGLYc=;
+        h=From:To:CC:Subject:Date;
+        b=LXxZk9X+REmReSOpHtvghDrZMqxEri6/hwsykvS4WgD+Nxsz1VSZKEo19BxeK5Jym
+         zHtp+7t311Ole9CTosX1a5w4ueiCCUhyHjR1+vIuMs8urYZSZyT+khTAuB8a9I3bnq
+         YXI6pYp3ZhvdiP9JJHmgzxgD1ZeoOyAlazDbj+RU=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VFEUmL060081
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 09:14:30 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 09:14:29 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 09:14:29 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VFETJ8117450;
+        Fri, 31 Jan 2020 09:14:29 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-master 0/1] DP83867 Speed optimization feature
+Date:   Fri, 31 Jan 2020 09:11:09 -0600
+Message-ID: <20200131151110.31642-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200124114914.27065-1-dafna.hirschfeld@collabora.com>
- <CAL_JsqKgNzY=KF8XzuGjw2NogBawfi0gh9ytrk_nw_Ewg2QDdg@mail.gmail.com>
- <9c4a971f-6a65-594e-4a79-9e2aa16e58cb@collabora.com> <d9888d47-f320-57f4-5773-454673e5762d@ti.com>
-In-Reply-To: <d9888d47-f320-57f4-5773-454673e5762d@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 31 Jan 2020 08:56:28 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL8DMhwUhn5RG6X5X=d20rmJyDWx-apecC_eAYLSGQppA@mail.gmail.com>
-Message-ID: <CAL_JsqL8DMhwUhn5RG6X5X=d20rmJyDWx-apecC_eAYLSGQppA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: fix compilation error of the example in intel,lgm-emmc-phy.yaml
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 6:21 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
->
->
-> On 24/01/20 7:59 pm, Dafna Hirschfeld wrote:
-> >
-> >
-> > On 24.01.20 15:03, Rob Herring wrote:
-> >> On Fri, Jan 24, 2020 at 5:49 AM Dafna Hirschfeld
-> >> <dafna.hirschfeld@collabora.com> wrote:
-> >>>
-> >>> Running:
-> >>> export
-> >>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> >>>
-> >>> 'make dt_binding_check'
-> >>>
-> >>> gives a compilation error. This is because in the example there
-> >>> is the label 'emmc-phy' but labels are not allowed to have '-' sing.
-> >>> Replace the '-' with '_' to fix the error.
-> >>>
-> >>> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> >>
-> >> There's a fix from the author, but you're first to get the fix
-> >> correct, so:
-> > Oh, sorry, I was not aware of that.
-> > Dafna
-> >
-> >>
-> >> Fixes: 5bc999108025 ("dt-bindings: phy: intel-emmc-phy: Add YAML
-> >> schema for LGM eMMC PHY")
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> >>
-> >> Kishon, Please apply these soon as linux-next is broken.
-> >>
->
-> merged now, Thanks!
+Hello
 
-And please drop or revert this. It's still has failures:
+Speed optimization, also known as link downshift, enables fallback to 100M
+operation after multiple consecutive failed attempts at Gigabit link
+establishment. Such a case could occur if cabling with only four wires
+were connected instead of the standard cabling with eight wires.
+Speed optimization also supports fallback to 10M if link establishment fails
+in Gigabit and in 100M mode.
 
-Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dts:23.13-33:
-Warning (reg_format): /example-0/chiptop@e0200000/emmc-phy@a8:reg:
-property has invalid length (8 bytes) (#address-cells == 2,
-#size-cells == 1)
-Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dt.yaml:
-Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dt.yaml:
-Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dt.yaml:
-Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dts:21.33-26.13:
-Warning (avoid_default_addr_size):
-/example-0/chiptop@e0200000/emmc-phy@a8: Relying on default
-#address-cells value
-Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dts:21.33-26.13:
-Warning (avoid_default_addr_size):
-/example-0/chiptop@e0200000/emmc-phy@a8: Relying on default
-#size-cells value
+Speed optimization can be enabled via strap or via register configuration.
+The 48 pin devices do not have the ability to strap this feature and the PHY
+team suggested to enable this bit for all use cases.
 
+Dan
 
-I'll send out a complete fix and take via the DT tree so maybe we can
-have an rc1 that works.
+Dan Murphy (1):
+  net: phy: dp83867: Add speed optimization feature
 
-Rob
+ drivers/net/phy/dp83867.c | 48 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+-- 
+2.25.0
+
