@@ -2,142 +2,82 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AABC33CB2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 11:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98569C33CB7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 12:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4381D217BA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 11:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F65A20707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 12:03:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GyAmld/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgAaLyM (ORCPT
+        id S1728553AbgAaMD5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:54:12 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55706 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbgAaLyM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 06:54:12 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 27B9E28A964
-Message-ID: <739f60a89646cc92f26e34523cbe8aaab5697351.camel@collabora.com>
-Subject: Re: [PATCH v4 5/6] media: rkvdec: Add the rkvdec driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Date:   Fri, 31 Jan 2020 08:53:47 -0300
-In-Reply-To: <20200130171249.3ae0444a@collabora.com>
-References: <20200129195501.8317-1-ezequiel@collabora.com>
-                <20200129195501.8317-6-ezequiel@collabora.com>
-         <20200130171249.3ae0444a@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 31 Jan 2020 07:03:57 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:62769 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728408AbgAaMD4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jan 2020 07:03:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580472236; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=DATLwmm6gFXl+yI0FvjPg5/iHOuhkrdRvmV/WIqzDAQ=; b=GyAmld/Uh2miT10TkWLhqb75m02KHE1QIqy4e90h7VdNTSZ7wANON3VbdQ3lGlNPQeWcFp0S
+ QB67VyiMGMofx+kWbPFwoC0/vTXZqLvRnxzr+SrnUgFhlb/4MiC77Q5B/JE0PouRDoU9BhYf
+ 8pvHmcJMyMpVenuAj0FmTB3UhSQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3417a9.7f2554fedd50-smtp-out-n02;
+ Fri, 31 Jan 2020 12:03:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AAE76C447A2; Fri, 31 Jan 2020 12:03:53 +0000 (UTC)
+Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ACF31C433CB;
+        Fri, 31 Jan 2020 12:03:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ACF31C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH v3] Add A618 GPU nodes
+Date:   Fri, 31 Jan 2020 17:33:39 +0530
+Message-Id: <1580472220-3453-1-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2020-01-30 at 17:12 +0100, Boris Brezillon wrote:
-> On Wed, 29 Jan 2020 16:55:00 -0300
-> Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> 
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > 
-> > The rockchip vdec block is a stateless decoder that's able to decode
-> > H264, HEVC and VP9 content. This commit adds the core infrastructure
-> > and the H264 backend. Support for VP9 and HEVS will be added later on.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> > v4:
-> > * Make poc tables const, as suggested by Hans
-> > * Move buffer extra space calculation TRY_FMT, as done on Hantro.
-> > * Get rid of vb2_request_get_buf and open-code
-> >   following Cedrus. We can move it to a helper as a follow-up patch.
-> 
-> Well, we know what that means in practice :-).
-> 
+I used this branch qcom/arm64-for-5.6-to-be-rebased as suggested by Matthias.
+This patch needs the clock patches and the clock patches have not yet landed, so
+please apply the following series and patches in order
 
-Well, not necesarily. I think we can expect a helper soon,
-but it doesn't have to be part of this series :-)
+a) All patches from https://patchwork.kernel.org/project/linux-clk/list/?series=203517&state=%2a&archive=both
+b) Patches 1 and 2 from https://patchwork.kernel.org/project/linux-clk/list/?series=203527&archive=both&state=%2a
+c) All patches from https://patchwork.kernel.org/project/linux-clk/list/?series=221739&archive=both&state=%2a
+d) https://lore.kernel.org/linux-arm-msm/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59%40changeid/raw
+e) This patch "arm64: dts: qcom: sc7180: Add A618 gpu dt blob"
 
-And perhaps we can find another way to link a media request
-to a vb2 queue, so we don't have to iterate over objects
-like we are doing now?
+v3: Addressed review comments from previous submits. Also removed the
+interconnect bindings from this patch and I will submit as a new patch with its
+dependencies listed. Also I will be sending a new patch for updating the
+bindings documentation.
 
-> > new file mode 100644
-> > index 000000000000..1293b3621364
-> > --- /dev/null
-> > +++ b/drivers/staging/media/rkvdec/rkvdec-regs.h
-> > @@ -0,0 +1,239 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Rockchip VPU codec driver
-> > + *
-> > + * Copyright (C) 2015 Rockchip Electronics Co., Ltd.
-> > + *	Jung Zhao <jung.zhao@rock-chips.com>
-> > + *	Alpha Lin <alpha.lin@rock-chips.com>
-> > + *
-> > + * This software is licensed under the terms of the GNU General Public
-> > + * License version 2, as published by the Free Software Foundation, and
-> > + * may be copied, distributed, and modified under those terms.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> 
-> Oops, looks like I forgot to remove the license text here. Also not
-> entirely sure the copyrights are correct (might be a copy from the
-> hantro driver instead of the rkvdec one).
-> 
+Sharat Masetty (1):
+  arm64: dts: qcom: sc7180: Add A618 gpu dt blob
 
-Right.
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 102 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-> 
-> > diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
-> > new file mode 100644
-> > index 000000000000..529ef86510d3
-> > --- /dev/null
-> > +++ b/drivers/staging/media/rkvdec/rkvdec.h
-> > @@ -0,0 +1,124 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Hantro VPU codec driver
-> > + *
-> > + * Copyright 2018 Google LLC.
-> > + *	Tomasz Figa <tfiga@chromium.org>
-> > + *
-> > + * Based on s5p-mfc driver by Samsung Electronics Co., Ltd.
-> > + * Copyright (C) 2011 Samsung Electronics Co., Ltd.
-> > + */
-> 
-> This header has been copied from the hantro driver, so it's most likely
-> wrong.
-> 
-
-Oh, I totally missed this.
-
-Thanks for reviewing!
-Ezequiel
-
-
-
+--
+1.9.1
