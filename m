@@ -2,322 +2,329 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B195C35246
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 02:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E08EC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 02:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC226214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 02:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4019206F0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 02:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="nlilg6le"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qDL8vgKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgAaCev (ORCPT
+        id S1727777AbgAaC5w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:34:51 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49094 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgAaCeq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 21:34:46 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5F8AE891A9;
-        Fri, 31 Jan 2020 15:34:41 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580438081;
-        bh=/BNnKxqCTj/fgQsJ3Pn0ht3Xm+bk/2ErX13kP8nxHrs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=nlilg6leryPa4PsmG9Ljdp6M2zJ7IrRTmuHXTG6D3akVyLLGfUsX2uijZLrkGK1A2
-         oz3sDuxlpD3yr3PVHb1vG+UVcyeJkr2xZ0mQschlox3zbNmz6a8ILwckTRjI71Li0u
-         Dak8aTExF4j1wYLKKQ1RdAeSKeOiyQ/qf6LZ4XdJNgLCVLZu2fhfmVbN31XZaDU7a5
-         AeN3AQ0JNSX/wyOe/m+XB18GMsVpeV/IJUMkXP/dOE+qK1L3dg3cYtHBXgYK/mv+mJ
-         6l+1S9/TvMzJKc5KkET/KZnOOZTjYFQk/LdWGh1IDtGbxLyG5RHXAeHWFrOuGCoUYS
-         kXpegdCzo2MXg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e3392410002>; Fri, 31 Jan 2020 15:34:41 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 0FC9E13EED4;
-        Fri, 31 Jan 2020 15:34:41 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 357DD280071; Fri, 31 Jan 2020 15:34:41 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v4 2/2] spi: Add generic SPI multiplexer
-Date:   Fri, 31 Jan 2020 15:34:33 +1300
-Message-Id: <20200131023433.12133-3-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200131023433.12133-1-chris.packham@alliedtelesis.co.nz>
-References: <20200131023433.12133-1-chris.packham@alliedtelesis.co.nz>
+        Thu, 30 Jan 2020 21:57:52 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5906 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727739AbgAaC5v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 21:57:51 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e33977a0000>; Thu, 30 Jan 2020 18:56:58 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Jan 2020 18:57:50 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 18:57:50 -0800
+Received: from [10.110.103.70] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
+ 2020 02:57:50 +0000
+Subject: Re: [RFC PATCH v1 5/5] arm64: tegra: Add Tegra VI CSI suppport in
+ device tree
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <1580235801-4129-6-git-send-email-skomatineni@nvidia.com>
+ <20200129094624.GD2479935@ulmo>
+ <bd18711d-ce23-cbee-7824-37a8c78908e6@nvidia.com>
+ <20200130123607.GB2584455@ulmo>
+ <c5fd4eb3-0026-95a5-5162-e1cf5302698e@nvidia.com>
+ <20200130175820.GA3155155@ulmo>
+ <deb6839b-2ddb-be54-a985-a2b7624374af@nvidia.com>
+ <ba57fcf2-a7bf-8154-96c9-aba401327af7@nvidia.com>
+Message-ID: <c1eef60b-eddd-8030-06b9-8009694f9a6a@nvidia.com>
+Date:   Thu, 30 Jan 2020 18:57:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <ba57fcf2-a7bf-8154-96c9-aba401327af7@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580439418; bh=nZ1j3mIvtSf9K9okZrK5BmQnPSrbi/HKW3zTWpWZ3ME=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=qDL8vgKEP7RndBoqgckuiqmznvQezcgR8GOZ3WW5J8J4tArlyscmCLRaY3LLsOJnd
+         ofpZf7l5A0KOYQVHHsfRs2egUT/qAFnBU0mBj1nCpST5FboAMfHcckCZO4z+g53OUl
+         APkWsATdg8R9kBeXm7N/kCPBJhHPKfIkD70LvtCIxqS98eAj7UFgTbjTrFzhE4/SO+
+         dh/o60urcgf/U8iqMf/m8p0aoAdXcKoyyQdBqcs92vOXNnHp5ZUsPlCB3leB2WhT09
+         pFafv6fjLA2v/LTAvW3QrPOIV0L7PJ+TDbsZT7/OlFFQir4Ac+WuVgaedNzeHSLYGO
+         5qe6MhhnuI/Kw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a SPI device driver that sits in-band and provides a SPI controller
-which supports chip selects via a mux-control. This enables extra SPI
-devices to be connected with limited native chip selects.
+Hi Thierry
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+Currently all channels allocation and creating media links are all in vi=20
+init client ops.
 
-Notes:
-    Changes in v4:
-    - incorporate review feedback from Andy
+So just populating CSI child from VI with moving CSI as child node to VI=20
+for Tegra210 should work.
 
- drivers/spi/Kconfig   |  12 +++
- drivers/spi/Makefile  |   1 +
- drivers/spi/spi-mux.c | 189 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 202 insertions(+)
- create mode 100644 drivers/spi/spi-mux.c
+Will have all the fixes in v2 along with link_validate implementations=20
+and merging files to have it simpler.
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 870f7797b56b..90df945490d9 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -880,6 +880,18 @@ config SPI_ZYNQMP_GQSPI
- #
- # Add new SPI master controllers in alphabetical order above this line
- #
-+#
-+
-+comment "SPI Multiplexer support"
-+
-+config SPI_MUX
-+	tristate "SPI multiplexer support"
-+	select MULTIPLEXER
-+	help
-+	  This adds support for SPI multiplexers. Each SPI mux will be
-+	  accessible as a SPI controller, the devices behind the mux will appea=
-r
-+	  to be chip selects on this controller. It is still necessary to
-+	  select one or more specific mux-controller drivers.
-=20
- #
- # There are lots of SPI device types, with sensors and memory
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index bb49c9e6d0a0..116409533727 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -9,6 +9,7 @@ ccflags-$(CONFIG_SPI_DEBUG) :=3D -DDEBUG
- # config declarations into driver model code
- obj-$(CONFIG_SPI_MASTER)		+=3D spi.o
- obj-$(CONFIG_SPI_MEM)			+=3D spi-mem.o
-+obj-$(CONFIG_SPI_MUX)			+=3D spi-mux.o
- obj-$(CONFIG_SPI_SPIDEV)		+=3D spidev.o
- obj-$(CONFIG_SPI_LOOPBACK_TEST)		+=3D spi-loopback-test.o
-=20
-diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
-new file mode 100644
-index 000000000000..86708644fd2f
---- /dev/null
-+++ b/drivers/spi/spi-mux.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * General Purpose SPI multiplexer
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <linux/spi/spi.h>
-+#include <linux/mux/consumer.h>
-+
-+#define SPI_MUX_NO_CS	((unsigned int)-1)
-+
-+/**
-+ * DOC: Driver description
-+ *
-+ * This driver supports a MUX on an SPI bus. This can be useful when you=
- need
-+ * more chip selects than the hardware peripherals support, or than are
-+ * available in a particular board setup.
-+ *
-+ * The driver will create an additional SPI controller. Devices added un=
-der the
-+ * mux will be handled as 'chip selects' on this controller.
-+ */
-+
-+/**
-+ * struct spi_mux_priv - the basic spi_mux structure
-+ * @spi:		pointer to the device struct attached to the parent
-+ *			spi controller
-+ * @current_cs:		The current chip select set in the mux
-+ * @child_msg_complete: The mux replaces the complete callback in the ch=
-ild's
-+ *			message to its own callback; this field is used by the
-+ *			driver to store the child's callback during a transfer
-+ * @child_msg_context:	Used to store the child's context to the callback
-+ * @child_msg_dev:	Used to store the spi_device pointer to the child
-+ * @mux:		mux_control structure used to provide chip selects for
-+ *			downstream spi devices
-+ */
-+struct spi_mux_priv {
-+	struct spi_device	*spi;
-+	unsigned int		current_cs;
-+
-+	void			(*child_msg_complete)(void *context);
-+	void			*child_msg_context;
-+	struct spi_device	*child_msg_dev;
-+	struct mux_control	*mux;
-+};
-+
-+/* should not get called when the parent controller is doing a transfer =
-*/
-+static int spi_mux_select(struct spi_device *spi)
-+{
-+	struct spi_mux_priv *priv =3D spi_controller_get_devdata(spi->controlle=
-r);
-+	int ret;
-+
-+	if (priv->current_cs =3D=3D spi->chip_select)
-+		return 0;
-+
-+	dev_dbg(&priv->spi->dev, "setting up the mux for cs %d\n",
-+		spi->chip_select);
-+
-+	/* copy the child device's settings except for the cs */
-+	priv->spi->max_speed_hz =3D spi->max_speed_hz;
-+	priv->spi->mode =3D spi->mode;
-+	priv->spi->bits_per_word =3D spi->bits_per_word;
-+
-+	ret =3D mux_control_select(priv->mux, spi->chip_select);
-+	if (ret)
-+		return ret;
-+
-+	priv->current_cs =3D spi->chip_select;
-+
-+	return 0;
-+}
-+
-+static int spi_mux_setup(struct spi_device *spi)
-+{
-+	struct spi_mux_priv *priv =3D spi_controller_get_devdata(spi->controlle=
-r);
-+
-+	/*
-+	 * can be called multiple times, won't do a valid setup now but we will
-+	 * change the settings when we do a transfer (necessary because we
-+	 * can't predict from which device it will be anyway)
-+	 */
-+	return spi_setup(priv->spi);
-+}
-+
-+static void spi_mux_complete_cb(void *context)
-+{
-+	struct spi_mux_priv *priv =3D (struct spi_mux_priv *)context;
-+	struct spi_controller *ctlr =3D spi_get_drvdata(priv->spi);
-+	struct spi_message *m =3D ctlr->cur_msg;
-+
-+	m->complete =3D priv->child_msg_complete;
-+	m->context =3D priv->child_msg_context;
-+	m->spi =3D priv->child_msg_dev;
-+	spi_finalize_current_message(ctlr);
-+	mux_control_deselect(priv->mux);
-+}
-+
-+static int spi_mux_transfer_one_message(struct spi_controller *ctlr,
-+						struct spi_message *m)
-+{
-+	struct spi_mux_priv *priv =3D spi_controller_get_devdata(ctlr);
-+	struct spi_device *spi =3D m->spi;
-+	int ret;
-+
-+	ret =3D spi_mux_select(spi);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Replace the complete callback, context and spi_device with our own
-+	 * pointers. Save originals
-+	 */
-+	priv->child_msg_complete =3D m->complete;
-+	priv->child_msg_context =3D m->context;
-+	priv->child_msg_dev =3D m->spi;
-+
-+	m->complete =3D spi_mux_complete_cb;
-+	m->context =3D priv;
-+	m->spi =3D priv->spi;
-+
-+	/* do the transfer */
-+	ret =3D spi_async(priv->spi, m);
-+	return ret;
-+}
-+
-+static int spi_mux_probe(struct spi_device *spi)
-+{
-+	struct spi_controller *ctlr;
-+	struct spi_mux_priv *priv;
-+	int ret;
-+
-+	ctlr =3D spi_alloc_master(&spi->dev, sizeof(*priv));
-+	if (!ctlr)
-+		return -ENOMEM;
-+
-+	spi_set_drvdata(spi, ctlr);
-+	priv =3D spi_controller_get_devdata(ctlr);
-+	priv->spi =3D spi;
-+
-+	priv->mux =3D devm_mux_control_get(&spi->dev, NULL);
-+	ret =3D PTR_ERR_OR_ZERO(priv->mux);
-+	if (ret) {
-+		if (ret !=3D -EPROBE_DEFER)
-+			dev_err(&spi->dev, "failed to get control-mux\n");
-+		goto err_put_ctlr;
-+	}
-+
-+	priv->current_cs =3D SPI_MUX_NO_CS;
-+
-+	/* supported modes are the same as our parent's */
-+	ctlr->mode_bits =3D spi->controller->mode_bits;
-+	ctlr->flags =3D spi->controller->flags;
-+	ctlr->transfer_one_message =3D spi_mux_transfer_one_message;
-+	ctlr->setup =3D spi_mux_setup;
-+	ctlr->num_chipselect =3D mux_control_states(priv->mux);
-+	ctlr->bus_num =3D -1;
-+	ctlr->dev.of_node =3D spi->dev.of_node;
-+
-+	ret =3D devm_spi_register_controller(&spi->dev, ctlr);
-+	if (ret)
-+		goto err_put_ctlr;
-+
-+	return ret;
-+
-+err_put_ctlr:
-+	spi_controller_put(ctlr);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id spi_mux_of_match[] =3D {
-+	{ .compatible =3D "spi-mux" },
-+	{ },
-+};
-+
-+static struct spi_driver spi_mux_driver =3D {
-+	.probe  =3D spi_mux_probe,
-+	.driver =3D {
-+		.name   =3D "spi-mux",
-+		.of_match_table =3D spi_mux_of_match,
-+	},
-+};
-+
-+module_spi_driver(spi_mux_driver);
-+
-+MODULE_DESCRIPTION("SPI multiplexer");
-+MODULE_LICENSE("GPL");
---=20
-2.25.0
+Thanks
 
+Sowjanya
+
+
+
+On 1/30/20 12:18 PM, Sowjanya Komatineni wrote:
+>
+> On 1/30/20 10:58 AM, Sowjanya Komatineni wrote:
+>>
+>> On 1/30/20 9:58 AM, Thierry Reding wrote:
+>>> On Thu, Jan 30, 2020 at 09:18:50AM -0800, Sowjanya Komatineni wrote:
+>>>> On 1/30/20 4:36 AM, Thierry Reding wrote:
+>>>>> On Wed, Jan 29, 2020 at 08:22:48AM -0800, Sowjanya Komatineni wrote:
+>>>>>> On 1/29/20 1:46 AM, Thierry Reding wrote:
+>>>>>>> On Tue, Jan 28, 2020 at 10:23:21AM -0800, Sowjanya Komatineni=20
+>>>>>>> wrote:
+>>>>>>>> Tegra210 contains VI controller for video input capture from MIPI
+>>>>>>>> CSI camera sensors and also supports built-in test pattern=20
+>>>>>>>> generator.
+>>>>>>>>
+>>>>>>>> CSI ports can be one-to-one mapped to VI channels for capturing=20
+>>>>>>>> from
+>>>>>>>> an external sensor or from built-in test pattern generator.
+>>>>>>>>
+>>>>>>>> This patch adds support for VI and CSI and enables them in=20
+>>>>>>>> Tegra210
+>>>>>>>> device tree.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>> ---
+>>>>>>>> =A0=A0=A0 arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 8 +++++=
+++
+>>>>>>>> =A0=A0=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi=A0=A0=A0=A0=A0=
+=A0 | 31=20
+>>>>>>>> +++++++++++++++++++++++++-
+>>>>>>>> =A0=A0=A0 2 files changed, 38 insertions(+), 1 deletion(-)
+>>>>>>>>
+>>>>>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi=20
+>>>>>>>> b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>>> index b0095072bc28..ec1b3033fa03 100644
+>>>>>>>> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>>> @@ -10,6 +10,14 @@
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 vi@54080000 {
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>>> +
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 csi@0x54080838 {
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>>> +
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sor@54580000 {
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi=20
+>>>>>>>> b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>>> index 48c63256ba7f..c6107ec03ad1 100644
+>>>>>>>> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>>> @@ -136,9 +136,38 @@
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 vi@54080000 {
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "nvid=
+ia,tegra210-vi";
+>>>>>>>> -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080000 0x0 0x0=
+0040000>;
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080000 0x0 0x8=
+08>;
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupts =3D <GIC_=
+SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "disabled=
+";
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clocks =3D <&tegra_car=
+ TEGRA210_CLK_VI>;
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-parents =3D <&te=
+gra_car=20
+>>>>>>>> TEGRA210_CLK_PLL_C4_OUT0>;
+>>>>>>>> +
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clocks =3D <&tegra_car TEGRA210=
+_CLK_VI>;
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clock-names =3D "vi";
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 resets =3D <&tegra_car 20>;
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reset-names =3D "vi";
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>>> +
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 csi@0x54080838 {
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "nvidia,tegra210=
+-csi";
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080838 0x0 0x2=
+000>;
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "disabled";
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clocks =3D <&tegra_car=
+ TEGRA210_CLK_CILAB>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <=
+&tegra_car TEGRA210_CLK_CILCD>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <=
+&tegra_car TEGRA210_CLK_CILE>;
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-parents =3D <&te=
+gra_car=20
+>>>>>>>> TEGRA210_CLK_PLL_P>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0 <&tegra_car TEGRA210_CLK_PLL_P>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0 <&tegra_car TEGRA210_CLK_PLL_P>;
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-rates =3D <10200=
+0000>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0 <102000000>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0 <102000000>;
+>>>>>>>> +
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clocks =3D <&tegra_car TEGRA210=
+_CLK_CSI>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGR=
+A210_CLK_CILAB>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGR=
+A210_CLK_CILCD>,
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGR=
+A210_CLK_CILE>;
+>>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clock-names =3D "csi", "cilab",=
+ "cilcd", "cile";
+>>>>>>>> +
+>>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> Can this be a child of the vi node? Looking at the register=20
+>>>>>>> ranges it
+>>>>>>> seems like these are actually a single IP block. If they have=20
+>>>>>>> separate
+>>>>>>> blocks with clearly separate functionality, then it makes sense=20
+>>>>>>> to have
+>>>>>>> CSI be a child node of VI, though it may also be okay to merge=20
+>>>>>>> both and
+>>>>>>> have a single node with the driver doing all of the differentiation
+>>>>>>> between what's VI and what's CSI.
+>>>>>>>
+>>>>>>> Looking at later chips, the split between VI and CSI is more=20
+>>>>>>> explicit,
+>>>>>>> so having the split in DT for Tegra210 may make sense for=20
+>>>>>>> consistency.
+>>>>>>>
+>>>>>>> I know we've discussed this before, but for some reason I keep=20
+>>>>>>> coming
+>>>>>>> back to this. I'll go through the other patches to see if I can=20
+>>>>>>> get a
+>>>>>>> clearer picture of how this could all work together.
+>>>>>>>
+>>>>>>> Thierry
+>>>>>> We can keep it separate as we discussed.
+>>>>>>
+>>>>>> But as Tegra186 onwards, CSI is separate device to be all=20
+>>>>>> cosistent I kept
+>>>>>> CSI as separate node for Tegra210 as well.
+>>>>> =A0 From our discussion, my understanding was that CSI would be a=20
+>>>>> separate
+>>>>> device, but it would still be a subdevice of VI. The address=20
+>>>>> offset of
+>>>>> the CSI registers not being aligned to a power of two is a strong
+>>>>> indication that this is really all part of the same block.
+>>>> Yes our earlier discussion is to have CSI as subdevice.
+>>>>
+>>>> Later looking into T186 and later NVCSI is totally separate so it=20
+>>>> will be
+>>>> separate device and to have driver common moved Tegra210 CSI also as
+>>>> separate device instead of having it as subdevice of VI.
+>>>>
+>>>> Earlier when we discussed at that time I am using TPG also from device
+>>>> graphs but not moved to hard media links inside driver for TPG.
+>>>>
+>>>> For this we need CSI to be available prior to VI.
+>>> Why is that? Does creating the hard media links need access to a struct
+>>> device? What if we created that device in the VI driver without any
+>>> reliance on DT? Shouldn't that also work? I have a hard time imagining
+>>> that there aren't other devices like this where we don't necessarily
+>>> have separate devices for these links.
+>> Yes we need CSI structure for hard link TPG also as all csi channel=20
+>> list is part of CSI device.
+>>
+>> We can create CSI channel subdevices within VI without using CSI=20
+>> device from a separate CSI driver probe for Tegra210 and make all=20
+>> subdev related ops implementations as global so they can be used from=20
+>> VI driver for Tegra210 and can also be used for Tegra186 and later in=20
+>> separate CSI driver.
+>>
+>> During creating media links in VI driver for TPG, for T210 we can use=20
+>> local CSI device structure and for T186+ we can use CSI device=20
+>> structure created during CSI probe.
+>>
+>> Sorry, I didn't understood what you meant by separate devices for=20
+>> these link.
+>>
+>> We only have Tegra CSI linked to Tegra VI for TPG/Real sensor.
+>>
+>>>> If we add CSI as subdevice to VI, CSI will not be available by the=20
+>>>> time
+>>>> VI init happens.
+>>> The CSI subdevice should be registered as part of the VI driver's=20
+>>> probe,
+>>> right? That's typically where you'd call of_platform_populate(). Could
+>>> we not set up the hard media links in the ->init() callbacks for the
+>>> host1x clients? Those are called after all of the devices have been
+>>> probed, so the CSI device should be available at that time.
+>>>
+> yes, will update to have CSI as child node to VI
+>>>> Currently host1x subdevices listed has CSI before VI and CSI init=20
+>>>> happens
+>>>> earlier so by the time VI init happens CSI is available to do media=20
+>>>> links
+>>>> b/w VI video entity and CSI subdevice entity.
+>>> Okay, I understand how this would be a convenient solution. However,=20
+>>> the
+>>> device tree is a hardware description, so we need to ignore what we=20
+>>> know
+>>> about the operating system infrastructure that we want to use when
+>>> writing the device tree bindings (and the device tree content) in order
+>>> to make sure the same binding will work on a different operating system
+>>> which may have a completely different infrastructure (or none at all).
+>>>
+>>>> Also having CSI as separate subdevice (not as subdevice to VI) for=20
+>>>> T210 will
+>>>> be consistent with T186 and later.
+>>> Again, I see how that's convenient. But the main difference between
+>>> Tegra210 and Tegra186 is that on the former, the CSI is merged with VI,
+>>> whereas on the latter the CSI is a completely separate hardware block.
+>>>
+>>> Since device tree describes the hardware, that difference should be
+>>> apparent in the device tree. I initially thought as well that it would
+>>> be advantageous if both had the same representation, but I do realize
+>>> now that this has a significant impact on the device tree, and it
+>>> violates the basic principles we base device tree binding design on.
+>>>
+>>> Thierry
+>>
+>> I just thought of driver implementation being common b/w T210 and=20
+>> T186+ by having CSI as separate device node rather than as child node=20
+>> to VI to avoid CSI structure handling within VI for T210 only.
+>>
+>> Will update DT and driver to have CSI as child node of VI for T210.
+>>
+>>
