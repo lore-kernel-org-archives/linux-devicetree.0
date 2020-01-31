@@ -2,173 +2,107 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72536C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 15:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98582C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 15:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EF5215A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 15:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AHTCOOW9"
+	by mail.kernel.org (Postfix) with ESMTP id 6E107206D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 15:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580484423;
+	bh=feaXjJSyIbn/V2Z1XTQcyhK42e4ZQjLyMkNzPk0RkS4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=EEkV2Aa9eeMNAgFIPvFc2gpN3Gtpz62BMnfg5cH23I9x6FehzP1+AfNaZC5Ip6h4C
+	 S/BxFeVzWGO6anxRCPt8jDdq9YM6dGw/IWAGYhg5qWFEVs/oQ1VNCYwTBNcxjc5Fmw
+	 u+k7NqiYIGLJlj8vkZlHbz5OTuCvbp5288yHiPVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgAaPOi (ORCPT
+        id S1728839AbgAaP1D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:14:38 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40128 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbgAaPOg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 10:14:36 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VFEUgT050952;
-        Fri, 31 Jan 2020 09:14:30 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580483670;
-        bh=yg2sSIG6On/6b8axJNdbwxWrQCuSRBjvO2ZcRGpU8qE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=AHTCOOW9iHtgukmcZRvod3d/5YMDZNwTV6As+1HO8qDXf93lr8CzO3Sc9ZowLQNSf
-         4K195sFjwQP3Cep1FnZ7zqnBBHgCnIHcrKAl0JUJ/BEfyhPbKlOpQiH5v6mX9lKPTF
-         JIbEDOQqkKE3DAQIwxeq1fzhSIKSuPFIxYnRsIrc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VFEUlC086558
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jan 2020 09:14:30 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
- Jan 2020 09:14:30 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 31 Jan 2020 09:14:30 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VFET0W031051;
-        Fri, 31 Jan 2020 09:14:30 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <bunk@kernel.org>
-CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization feature
-Date:   Fri, 31 Jan 2020 09:11:10 -0600
-Message-ID: <20200131151110.31642-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200131151110.31642-1-dmurphy@ti.com>
-References: <20200131151110.31642-1-dmurphy@ti.com>
+        Fri, 31 Jan 2020 10:27:03 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33545 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbgAaP1C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 10:27:02 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q81so7644647oig.0;
+        Fri, 31 Jan 2020 07:27:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ez089ynUc+TlcDcX+4cLFbd8sndHHgz7Rvi4njg721E=;
+        b=eUs1klp55sINKzFBcDGM6q8hMj8UoPnCwA/AvRtxmgspQPfHD9Bo4qt23yExM49NAf
+         KMhKMPo0ExqQ+13NEpHLAQavSPG8w2KtY1aOYvm3mIrqshwcjFsFYByBjSiyhRny5vTe
+         QyUg29ZdbnQBqlvq4kHwbnKQB1S8apf0nsSoMxA/udlFDTj8kE0+GvHU/NNav2pCzNxB
+         OhHEJS/mjshNnUXj3zJkmdz9dtC3VR5tiN2RVlLz6TbZz7S1cqpWHT/+0U0aBBQQgsuI
+         n5XT8dXg5MJYPIWlLEHzQYHGIYxIiUK0SDIQWxEhWiQdXV0hY5hWbMte9SpfCGEHiHrZ
+         sWHA==
+X-Gm-Message-State: APjAAAXZqZxT5LlBrLIC4fYqSf393JZyXUroWqa48R/MzirKlbAw35O6
+        j70Y209n5XW2kLaOkhbtaxuNDNQ=
+X-Google-Smtp-Source: APXvYqxODx8i3br92Jg61geRQgay0X2fzeI7on0ikwKe72gAs1CdViMHUpR123f+RfYosTzistdCzw==
+X-Received: by 2002:aca:af09:: with SMTP id y9mr6304826oie.101.1580484421558;
+        Fri, 31 Jan 2020 07:27:01 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id p83sm2722525oia.51.2020.01.31.07.27.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 07:27:01 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH] dt-bindings: phy: Fix errors in intel,lgm-emmc-phy example
+Date:   Fri, 31 Jan 2020 09:27:00 -0600
+Message-Id: <20200131152700.18392-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Set the speed optimization bit on the DP83867 PHY.
-This feature can also be strapped on the 64 pin PHY devices
-but the 48 pin devices do not have the strap pin available to enable
-this feature in the hardware.  PHY team suggests to have this bit set.
+DT labels can't have '-' in them causing a compile failure in the example.
+Fixing that leads to more warnings:
 
-With this bit set the PHY will auto negotiate and report the link
-parameters in the PHYSTS register and not in the BMCR.  So we need to
-over ride the genphy_read_status with a DP83867 specific read status.
+Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dts:23.13-33: Warning (reg_format): /example-0/chiptop@e0200000/emmc-phy@a8:reg: property has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dts:21.33-26.13: Warning (avoid_default_addr_size): /example-0/chiptop@e0200000/emmc-phy@a8: Relying on default #address-cells value
+Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dts:21.33-26.13: Warning (avoid_default_addr_size): /example-0/chiptop@e0200000/emmc-phy@a8: Relying on default #size-cells value
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Fixes: 5bc999108025 ("dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY")
+Cc: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 48 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+I will apply this to the DT tree for -rc1.
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 967f57ed0b65..695aaf4f942f 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -21,6 +21,7 @@
- #define DP83867_DEVADDR		0x1f
+ Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+index ff7959c21af0..0ccee64c6962 100644
+--- a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+@@ -45,8 +45,10 @@ examples:
+     sysconf: chiptop@e0200000 {
+       compatible = "intel,lgm-syscon", "syscon";
+       reg = <0xe0200000 0x100>;
++      #address-cells = <1>;
++      #size-cells = <1>;
  
- #define MII_DP83867_PHYCTRL	0x10
-+#define MII_DP83867_PHYSTS	0x11
- #define MII_DP83867_MICR	0x12
- #define MII_DP83867_ISR		0x13
- #define DP83867_CFG2		0x14
-@@ -118,6 +119,15 @@
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
- 
-+/* PHY STS bits */
-+#define DP83867_PHYSTS_1000			BIT(15)
-+#define DP83867_PHYSTS_100			BIT(14)
-+#define DP83867_PHYSTS_DUPLEX			BIT(13)
-+#define DP83867_PHYSTS_LINK			BIT(10)
-+
-+/* CFG2 bits */
-+#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
-+
- /* CFG3 bits */
- #define DP83867_CFG3_INT_OE			BIT(7)
- #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-@@ -287,6 +297,36 @@ static int dp83867_config_intr(struct phy_device *phydev)
- 	return phy_write(phydev, MII_DP83867_MICR, micr_status);
- }
- 
-+static int dp83867_read_status(struct phy_device *phydev)
-+{
-+	int status = phy_read(phydev, MII_DP83867_PHYSTS);
-+
-+	if (status < 0)
-+		return status;
-+
-+	if (status & DP83867_PHYSTS_DUPLEX)
-+		phydev->duplex = DUPLEX_FULL;
-+	else
-+		phydev->duplex = DUPLEX_HALF;
-+
-+	if (status & DP83867_PHYSTS_1000)
-+		phydev->speed = SPEED_1000;
-+	else if (status & DP83867_PHYSTS_100)
-+		phydev->speed = SPEED_100;
-+	else
-+		phydev->speed = SPEED_10;
-+
-+	if (status & DP83867_PHYSTS_LINK)
-+		phydev->link = 1;
-+	else
-+		phydev->link = 0;
-+
-+	phydev->pause = 0;
-+	phydev->asym_pause = 0;
-+
-+	return 0;
-+}
-+
- static int dp83867_config_port_mirroring(struct phy_device *phydev)
- {
- 	struct dp83867_private *dp83867 =
-@@ -467,6 +507,12 @@ static int dp83867_config_init(struct phy_device *phydev)
- 	int ret, val, bs;
- 	u16 delay;
- 
-+	/* Force speed optimization for the PHY even if it strapped */
-+	ret = phy_modify(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN,
-+			 DP83867_SPEED_OPTIMIZED_EN);
-+	if (ret)
-+		return ret;
-+
- 	ret = dp83867_verify_rgmii_cfg(phydev);
- 	if (ret)
- 		return ret;
-@@ -655,6 +701,8 @@ static struct phy_driver dp83867_driver[] = {
- 		.config_init	= dp83867_config_init,
- 		.soft_reset	= dp83867_phy_reset,
- 
-+		.read_status	= dp83867_read_status,
-+
- 		.get_wol	= dp83867_get_wol,
- 		.set_wol	= dp83867_set_wol,
- 
+-      emmc-phy: emmc-phy@a8 {
++      emmc_phy: emmc-phy@a8 {
+         compatible = "intel,lgm-emmc-phy";
+         reg = <0x00a8 0x10>;
+         clocks = <&emmc>;
 -- 
-2.25.0
+2.20.1
 
