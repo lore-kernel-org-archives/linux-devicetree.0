@@ -2,125 +2,82 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C69FC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DCBC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FBD2467B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:35:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cs92N2ZI"
+	by mail.kernel.org (Postfix) with ESMTP id 349DD21734
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:37:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580481434;
+	bh=ylK95ZjRxTXe3+y7rsfKzJHRJBkVlqUlI6znaz1nTXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e2ElL7Sh7ZLYMkNUPb6lXHKGvjAkwLL8P+BiVRqgRJ/QeU48XapDVIKfq6IRkzy/O
+	 t5/qKMDT8JWU9ajCr0uqb9Ifd38I7Oi+6LJcOsdL46XEmO2QIV8ieAbXR8Q/OEQIjZ
+	 53SxgExtYHk+VEsl7K/WBgAUoDvDx/xMt3vJT+Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgAaOfD (ORCPT
+        id S1729001AbgAaOhN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:35:03 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46819 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728825AbgAaOfD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 09:35:03 -0500
-Received: by mail-ed1-f66.google.com with SMTP id m8so7930546edi.13;
-        Fri, 31 Jan 2020 06:35:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e+L0iX3tm8D59zvK+565nrkVCoUCzYBhBvxeDsG6SUQ=;
-        b=Cs92N2ZINKPfHdeM1/OUztTdDDpWztVzBoW2706c9ZZXQKlTL80GOYZkpCIhg0ACCM
-         l9PyboELzrezD4mYgUpEPeJ8I2PIQ45lHQK7hKrygZcavIgtNU4N6IBZIGQpo74Tn2dh
-         q07QbEG+dZ4ZAZx0NR/NwFuYZTGCTVQ5nMVBJVZykgu2iSPObDKEfJOnvSktDPnNhXDn
-         kgH7aZdF3XsjF2YE0/zbYzYpgGxKCmOa0diEogqp5OFU5XQhCOEc2orpom1dRIw8Gn/N
-         lLru6xnxOhWRdh2wvOBMTNk5Qie4+WykL2zmrAeGE0BbJ9Q4okZRYK2DGPjq85HCd5zj
-         0uCQ==
+        Fri, 31 Jan 2020 09:37:13 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43163 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728825AbgAaOhN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 09:37:13 -0500
+Received: by mail-oi1-f193.google.com with SMTP id p125so7403079oif.10;
+        Fri, 31 Jan 2020 06:37:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e+L0iX3tm8D59zvK+565nrkVCoUCzYBhBvxeDsG6SUQ=;
-        b=BQrUxsf0esHazHymeqfJaiBairigc87S42t90mEcmBfxVz3q7hZYPLThXh7GtO/uH5
-         H9d5qU19N9P80TwmTIDZOhdYunhirdz2sLJCXLoPWaNA+azanOTfPJv7dxZELoszEj0t
-         5asp4uXJB4v8+gUvmHANF+IMMEHKrqYYu78FEsO3Zr7BovIJTR7Y3VHixmBAm3Ggs/Mb
-         pF8gjmKctDsPJMfGRP+voojTmbUzTae1+lJ3hXAhovcvyDisG7Jd2zv+FfxFXhnaqr08
-         VxG5nYpn+XdME+nFrw56pr2abxeR5yyMghjw1FKYjU28+14NDp8+2dxbBABwcNUYbJ7p
-         7h8A==
-X-Gm-Message-State: APjAAAXr1o4cRnGzkws1uW51n+MRMNrXCZEseHN/qfMNUi2w2BTY+w7R
-        KOblPcfAiZAcUDELcbeTAYs=
-X-Google-Smtp-Source: APXvYqyLVYadz3t7QzEt5g6a58I6klmZbuRSMlzUhuJgeiNPSqabB8cXOnMSGi9TKnxJanABOXEh8Q==
-X-Received: by 2002:a50:dacd:: with SMTP id s13mr546095edj.194.1580481301293;
-        Fri, 31 Jan 2020 06:35:01 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id g31sm502417edd.53.2020.01.31.06.34.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 06:35:00 -0800 (PST)
-Subject: Re: [PATCH v2 5/9] ASoC: tegra: add Tegra210 based AHUB driver
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-6-git-send-email-spujar@nvidia.com>
- <160bb2ca-89bb-0ecf-a334-0fac591b439a@gmail.com>
- <00ce0f46-4401-c1da-5513-4aa38d224a44@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <aeced6f5-cd7d-bc57-ce83-541554a7dd40@gmail.com>
-Date:   Fri, 31 Jan 2020 17:34:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hGvNGrNQh9w/cT7YnGvDepDZTp70ocpHTM/PadWQKDE=;
+        b=eu7QgISFfTs5M61ZcP1CydsN6/NU4PSfjjjJaEQTftb6tg9e8nu1l745mmWQBW5ANX
+         ZxH+xZkRnUHztnm/cnEZ23IEE3QDcoH1WbVHOWAQ1B3qBIOcU5aUTz93GP9buCDMWauL
+         gxPrO5/4Ueh7hLTHhYcHFkIxxku6d35cJKLAyIptzP416J67JJunlrBqvbJArxypiTh0
+         jVmq0Ekx81unOUjuAV9zHkeUyx6cpbIyNflcQuyl/VE+JonKGBF3xw/K9RehO6oWW+ed
+         lkVVdQHVUgIrydmnXPJ7yaqnU8HNIPtusQRD0RSoEDO8haIADkM3YOlA9plHJ4mrIFGS
+         9GyQ==
+X-Gm-Message-State: APjAAAXb+R45WAnoBAS3xokLWNfTz0NumAy/bd8IaFYZRc0gW3tDB0J8
+        6AB+40S3+9fU/DQJjHfrNw==
+X-Google-Smtp-Source: APXvYqxTjk7Xs/oFr2rF2ZYTojPRFhl5+cRH623gMN4PJXVOczIQatGEhe6lRKx4II8dbEJovMQu7Q==
+X-Received: by 2002:a54:410e:: with SMTP id l14mr6398971oic.42.1580481432570;
+        Fri, 31 Jan 2020 06:37:12 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w72sm2663524oie.49.2020.01.31.06.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 06:37:11 -0800 (PST)
+Received: (nullmailer pid 26729 invoked by uid 1000);
+        Fri, 31 Jan 2020 14:37:11 -0000
+Date:   Fri, 31 Jan 2020 08:37:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/9] dt-bindings: iio: imu: inv_mpu6050: add missing
+ entry for mpu6000
+Message-ID: <20200131143711.GA24467@bogus>
+References: <20200120093620.9681-1-jmaneyrol@invensense.com>
+ <20200120093620.9681-2-jmaneyrol@invensense.com>
 MIME-Version: 1.0
-In-Reply-To: <00ce0f46-4401-c1da-5513-4aa38d224a44@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120093620.9681-2-jmaneyrol@invensense.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-31.01.2020 06:12, Sameer Pujar пишет:
+On Mon, Jan 20, 2020 at 10:36:12AM +0100, Jean-Baptiste Maneyrol wrote:
+> mpu6000 is spi only.
 > 
-> 
-> On 1/30/2020 10:55 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 30.01.2020 13:33, Sameer Pujar пишет:
->> ...
->>> +#include <linux/clk.h>
->>> +#include <linux/device.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/pm_runtime.h>
->>> +#include <linux/regmap.h>
->>> +#include <sound/soc.h>
->>> +#include "tegra210_ahub.h"
->> Nit: I'd separate the per-directory includes with a blank line, like it
->> done by the most of existing drivers, for consistency.
-> 
-> Hi Dmitry,
-> 
-> I'd assume these are the only review comments (which includes your other
-> replies for v2 5/9) for the series.
-> Let me know otherwise.
-> 
-> It would help me to discuss all the issues at once, finalize changes for
-> v3 and so that we can avoid multiple iterations.
+> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+> ---
+>  Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Hello Sameer,
-
-I'll take another look at the patches around Monday.
-
-In general, you should wait for a week or two if you're expecting to get
-more comments.
-
-There is now more than month for you to finish this series. If you have
-any other patches that depend on this series, then you may send them as
-RFC and explicitly state that they depend on another series.
+Just combine all the DT patches if you're only adding new compatible 
+strings.
