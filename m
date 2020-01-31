@@ -2,145 +2,110 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178E1C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 21:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EAFC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 22:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D091220707
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 21:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012B520707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 22:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EAnJcYHO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DatComwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgAaVnU (ORCPT
+        id S1726202AbgAaWWJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 16:43:20 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:39061 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgAaVnU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 16:43:20 -0500
-Received: by mail-ua1-f65.google.com with SMTP id 73so3134593uac.6
-        for <devicetree@vger.kernel.org>; Fri, 31 Jan 2020 13:43:19 -0800 (PST)
+        Fri, 31 Jan 2020 17:22:09 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44509 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgAaWWJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 17:22:09 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so4218885pgl.11;
+        Fri, 31 Jan 2020 14:22:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=77iC328Ix55f8VFyzEfO2GMt08mqvFscC4bjbzzCOZU=;
-        b=EAnJcYHOR3ksx1xu/pw65w6JGYMh2xej0Mc4zDb3jtP78rR15ykv/sZtF0FkjJbSak
-         b37qkQE2D14Y3z8vOROlg2MYyd005jIT3q29AlSTbjIBx/pCRxYehOaJ/wQjimcgSSxe
-         6M65uD4rgYGAFuPGbXKpa7AjCV3oL5q6ZOezM=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/HFcoQMFwoF5gwXFjCOgMWeMPSstLjSDHZ4Dum+BpLY=;
+        b=DatComwmXGtiPYRomdkOy0XFknlTGW4jw8cqnPXUs3c1PayQQ01hJkqNdNRCG8/3as
+         pZ/HWMofmFNsf38uGdGoFb3KtxSkVedmPKnu1jwNA2VWD0/4lpfh7rRv7HJc7BHC4AJa
+         O02dRGqtmspUgZGqsDhaanNF5EdARykMjcLg8SgyQktv9O3aCgdAdKUh2t+uFNq/6oBb
+         9tKZ9w8vkAtdC8LszUYhH4MUge04bpiWX+0BGuCp8I892FKG/uCFih4C0Sz3kVIhKEqk
+         IM6KyEzpAP0RXQ1QsP0P5JnzqdRzaJdfvyMe4Y6yG5V9RDGEL7j/Dw0JyZdCWhnGly0V
+         pSSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=77iC328Ix55f8VFyzEfO2GMt08mqvFscC4bjbzzCOZU=;
-        b=qmQKqgBPGHtnr9BjmtfLw73WWC2pmNx+Y/6l94AtRMBuImA77c2hwWN5td+mH/W//p
-         l/GK4DAoc0y9YPm/IySKtWp8Ac8dVLq++E+aI/M59zUo780sHSzlpmRMVXIK1VOs9tOv
-         5BOivbcR13Vb2LTOqt8irN7274++wlrt73zU40ROahu2552czNdatD7d1raPHbyuYaNP
-         TeGVNyHRdi7ZrjdFpalobutik+FdAWfoia1F6vXPLeiM3Po5y+bIuwBQwrFpAAxNQ62l
-         5Zv9r49kbzH1x8AWtkNmWCA4mdvZWWEYPutp9zq3GwWnOjXgmg/mBR1woe91tMzT6lb/
-         88oA==
-X-Gm-Message-State: APjAAAUKc2rMcnFU+YgQcP5K+TwpupygX8A+Hk6Irabqu7sLv39MCSsP
-        +7XEhhuwtqcsvV7RZ5vyvsbc4fIGEYo=
-X-Google-Smtp-Source: APXvYqzb0ioA7BPz0MeOOvKo1plrYeaVHI6NWsOoV1u88UpUHzip+i+jvLB9VgvECdfqmG2xK423hA==
-X-Received: by 2002:ab0:3387:: with SMTP id y7mr7322443uap.99.1580506998684;
-        Fri, 31 Jan 2020 13:43:18 -0800 (PST)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id g140sm3088071vkf.18.2020.01.31.13.43.17
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 13:43:17 -0800 (PST)
-Received: by mail-ua1-f54.google.com with SMTP id z24so3138075uam.7
-        for <devicetree@vger.kernel.org>; Fri, 31 Jan 2020 13:43:17 -0800 (PST)
-X-Received: by 2002:ab0:724c:: with SMTP id d12mr7797680uap.0.1580506997224;
- Fri, 31 Jan 2020 13:43:17 -0800 (PST)
-MIME-Version: 1.0
-References: <1580472220-3453-1-git-send-email-smasetty@codeaurora.org> <1580472220-3453-2-git-send-email-smasetty@codeaurora.org>
-In-Reply-To: <1580472220-3453-2-git-send-email-smasetty@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 31 Jan 2020 13:43:06 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
-Message-ID: <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/HFcoQMFwoF5gwXFjCOgMWeMPSstLjSDHZ4Dum+BpLY=;
+        b=rMaHTIZKmrRTJ+Z4TuawucBLdRtbxzHaUI4oLWn45kGp6bwxcIqkQJh9Xbc40NPFCK
+         RVyYIWoZozaiMl3YDSex7mjhcS16tBtA68yC23Jq0gZFtiRJqpccVBgH5zhl/1ADO/u6
+         DYhfFu2TVCTdunlsQHkeV1Yy8jpQsbP84+Q2EmiSRYiFy7Igb7hjvv/wm5TR5P20vk9J
+         bylwZiOjnu7WvQTqNE5/JFjbRYWtIYnFV1fQEdANDAoFngYyAFt3y94siud5e31X+d26
+         QaMFGDBBSLXpgXA9cPo7DC+hgOJksdDmbEzZtckK/PNsoYXrdkg5wqMnsoO/vcMzm83E
+         IC9Q==
+X-Gm-Message-State: APjAAAWKmuXW2jpQNhY+qrnvwYGlZ17bnul31l9GHQZs+6MQjOW3Zmnl
+        Y0g2kJsns65HVuQst4zd/Ss=
+X-Google-Smtp-Source: APXvYqx7oLNYYYIoBn05Sgk8HxhcExQrlyg5hCf0aIq/sj8/mwAJ8Vjgu7X4e0+MgzPbAFocAsrZ6Q==
+X-Received: by 2002:a62:ddd0:: with SMTP id w199mr12425962pff.1.1580509327790;
+        Fri, 31 Jan 2020 14:22:07 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:200::1:a521])
+        by smtp.gmail.com with ESMTPSA id v8sm11201515pff.151.2020.01.31.14.22.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 14:22:07 -0800 (PST)
+From:   rentao.bupt@gmail.com
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH 0/3] aspeed-g6: enable usb support
+Date:   Fri, 31 Jan 2020 14:21:54 -0800
+Message-Id: <20200131222157.20849-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+From: Tao Ren <rentao.bupt@gmail.com>
 
-On Fri, Jan 31, 2020 at 4:04 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
->
-> +               adreno_smmu: iommu@5040000 {
-> +                       compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
-> +                       reg = <0 0x05040000 0 0x10000>;
-> +                       #iommu-cells = <1>;
-> +                       #global-interrupts = <2>;
-> +                       interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
-> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
-> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
-> +
-> +                       clock-names = "bus", "iface", "mem_iface_clk";
+The patch series aims at enabling USB Host and Gadget support on AST2600
+platforms.
 
-Repeated comment from v2 feedback:
+Patch #1 moves hardcoded vhub attributes (number of downstream ports and
+endpoints) to "struct ast_hub_config" which is then attached to "struct
+of_device_id". By doing this, it will be easier to enable ast2600 vhub
+which supports more ports and endpoints.
 
-Please send a patch to:
+Patch #2 enables AST2600 support in aspeed-vhub gadget driver.
 
-Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+Patch #3 adds USB devices and according pin groups in aspeed-g6 dtsi.
 
-...adding 'qcom,sc7180-smmu-v2'.  If you do this it will point out
-that you've added a new clock: "mem_iface_clk".  Is this truly a new
-clock in sc7180 compared to previous IOMMUs?  ...or is it not really
-needed?
+Tao Ren (3):
+  usb: gadget: aspeed: read vhub config from of_device_id
+  usb: gadget: aspeed: add ast2600 vhub support
+  ARM: dts: aspeed-g6: add usb functions
 
+ arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi   |  25 +++++
+ arch/arm/boot/dts/aspeed-g6.dtsi           |  43 ++++++++
+ drivers/usb/gadget/udc/aspeed-vhub/Kconfig |   4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/core.c  | 109 ++++++++++++++-------
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c   |  30 ++++--
+ drivers/usb/gadget/udc/aspeed-vhub/epn.c   |   4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/hub.c   |  26 +++--
+ drivers/usb/gadget/udc/aspeed-vhub/vhub.h  |  23 ++---
+ 8 files changed, 191 insertions(+), 73 deletions(-)
 
-> +               gmu: gmu@506a000 {
-> +                       compatible="qcom,adreno-gmu-618.0", "qcom,adreno-gmu";
-> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000 0 0x10000>,
-> +                               <0 0x0b490000 0 0x10000>;
-> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-> +                       interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "hfi", "gmu";
-> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-> +                              <&gpucc GPU_CC_CXO_CLK>,
-> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
-> +                       power-domains = <&gpucc CX_GDSC>;
-> +                       power-domain-names = "cx";
+-- 
+2.17.1
 
-As per continued comments on v2, please see if this works for you:
-
-  power-domains = <&gpucc CX_GDSC>, <0>;
-  power-domain-names = "cx", "gx";
-
-...and work to get something more real for "gx" ASAP.  It did seem to
-boot for me and (unless someone disagrees) it seems better than
-totally leaving it out / violating the bindings?
-
-
--Doug
