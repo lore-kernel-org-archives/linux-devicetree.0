@@ -2,128 +2,114 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C3FC35248
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 13:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BC8C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 13:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D8320705
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 13:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580477789;
-	bh=36im6bznVr3VlhITe091kW2o8aBJr7dAtawFyqiBVVc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=SuGNbspKzyJvNJL9peOnRovcKfZd8uZU922+XZ9yJT5a2O2giyWfXDZejrsUKc7FX
-	 rnFswsr89jsz0VG9fM7dwfSQDcPLxkkf520aKfvjV3xjB22yqBSm+n9IUbFGGAHBs5
-	 SvKulV6ddVi5k+FzhJzpgTGGh3EVCXEgebnIWlr4=
+	by mail.kernel.org (Postfix) with ESMTP id 231EB20705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 13:43:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fzWaT5aw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgAaNgZ (ORCPT
+        id S1728719AbgAaNnp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:36:25 -0500
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:40707 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728614AbgAaNgZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 08:36:25 -0500
-Received: by mail-lj1-f172.google.com with SMTP id n18so7093384ljo.7;
-        Fri, 31 Jan 2020 05:36:23 -0800 (PST)
+        Fri, 31 Jan 2020 08:43:45 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40212 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbgAaNnp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 08:43:45 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so8709750wmi.5
+        for <devicetree@vger.kernel.org>; Fri, 31 Jan 2020 05:43:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=36im6bznVr3VlhITe091kW2o8aBJr7dAtawFyqiBVVc=;
-        b=aCgWyI54FFxymXQIxylsUJxHwJOzcvMk/eK3kXkaRxQUbLwqy7aA51PXmRG0vrmNdu
-         K93Oz5gIeIiopw3F/E+0VjM54ZstePlZNcnLw5mhD+Y7bcSsalgiyiuO4Zfx9I/Iv/Lw
-         a+O57/lv01X6ZXtROOF4NiOQeIILLCnBdgOx/pAfG4crT0ZFffiutPawQwfh3HtrPodJ
-         SW/lIw+B+PPgALXnR0QiV1SuODqPAr4b6h7BNk0VWA9JkV2elmr6Rj5slkO8H9bQfANc
-         YfXePRTFJ2YqY/Nx30dr12Td1rMCPS1DWMTrmFciMVCfm5Sv9rzi20sy57Fnv7OasVLa
-         ttTQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+Z/QqKPZRNPOFz7Xr+UvMoQ/x/R9CxVbSeJizVEab2M=;
+        b=fzWaT5awKSTprWGNFjvI5CWYnpVIrcnpr/AbZvBQFVBcyiGG+bYBV2uAED78hSAEz0
+         7zsFtBxH85RtgleESDclo/phjJl0zeCBDiIqdBdt/oDG636i/yRAF9NlJVHdUemRVUy6
+         vC+sSqdEcIgsBUtMrVwGouKeiHl//FBWO1Ln3kPU6kgmjlyo4w2yQzhCLbWSkMMS+K68
+         +ixaKPMOyhESZQw4ZJWuPLJaVEhp/KetXJBZKLrHAMXkGY/3LQktbA1oIoL8nNdoWdyM
+         l6zu1UeE01BWgm8s5Xnw22cGgb7DrvNxpuTfTXMdjPGN/k4oj/XEp+RQRAN5+N+mQVTh
+         TfCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=36im6bznVr3VlhITe091kW2o8aBJr7dAtawFyqiBVVc=;
-        b=mUFA+5VyBWppgAB5tQVixEZlYd3DLdJqUNG18nL79IKRBAZBPx15vNO8kAFwnWT+ea
-         scWZHDU6Ne/G+SVm5ui3U4LqoTMElbfov0oBLgbSi+zIvXWPStz/CJZFbZlKmE5dY9J6
-         dlFg8KwzjWN5qnRhgutJ3OizQlQAOFaaFrM4dYqhcrotYLJywiM55Q7MrVaPIktg4VhY
-         ELEs6WEJrFG0JFcEgFwnDv8BtLeUzC32nWeRSKoG96UFHYLJ9LfzQIKNPryMosY6NJiT
-         lrcOOZ4E+zhjEuSca8uNvByXHlIYFDGo1K+agPbbeRiiDdWbzzNWhL+HqchwT5HYoodk
-         pzQg==
-X-Gm-Message-State: APjAAAVPyN5W1IXlJX/x0Pdr+TSKD2BQ89EOhplKFMIiAtA+1Y1mpnZy
-        3LgZJHh7/8QV+5TV2+C1VTk=
-X-Google-Smtp-Source: APXvYqy9SXfc4Ak9UEw8yYRMtjd1zHNdFzILr7FF5HWU+feIs3Zgjdp34mjDT2MiG1qbVqC08wXeEA==
-X-Received: by 2002:a2e:8944:: with SMTP id b4mr6106832ljk.90.1580477783171;
-        Fri, 31 Jan 2020 05:36:23 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id f21sm2901282ljc.30.2020.01.31.05.36.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 Jan 2020 05:36:22 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+Z/QqKPZRNPOFz7Xr+UvMoQ/x/R9CxVbSeJizVEab2M=;
+        b=bD336sF7zcBiGyZrbBvrrsO4/Aeaz8fLns5bUszpQ+jsfOMSJ/Vk+aoWo4l1VI781V
+         yNclllin8zm4DZsk/4M78G3zNvZh2wr0+J3XWVuwtNN932UlA9ADM+6wRjQY+P/ujfbB
+         HC8Ih2gw2Gu2V6s/pkol7ctpSYcnmKMQoHtQ2tNuvc/rZFp/EL1JShK38oxt9jQfIiz9
+         zRJNGeo+7q8ZFwMmVkQz1GllR78pBGMbhlUc9DR8qDWNL9j1uaPmzJG9kJzG3PXKmILn
+         XNVQ2YEttSgJk8/SnjDZ1hKsgTDQzz59/fkzkuAwwObyA1kvlncVwdAmyQLJlUGLkAjg
+         AG3A==
+X-Gm-Message-State: APjAAAVIwbbIrVBgagMgM2ZqvNDwy8pnjxOMOc0iJm3xcuZdHWK0rIVO
+        l8lHXtkqxm02zWCmoNHdxO7f8jCZBLw=
+X-Google-Smtp-Source: APXvYqzt/Q19RKB5qlDxzHOJGecKCDHb2QXQ847rq1x4DycbKl05VzkB6sXzwu8DxSWkFSpV18idNA==
+X-Received: by 2002:a1c:2358:: with SMTP id j85mr12487076wmj.28.1580478223062;
+        Fri, 31 Jan 2020 05:43:43 -0800 (PST)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id g25sm16185615wmh.3.2020.01.31.05.43.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 05:43:42 -0800 (PST)
+Subject: Re: [PATCH v3 10/19] usb: dwc3: Add support for
+ role-switch-default-mode binding
+To:     Felipe Balbi <balbi@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-usb@vger.kernel.org, gregkh@linuxfoundation.org,
+        jackp@codeaurora.org, bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: dwc2: add support for STM32MP15 SoCs USB OTG HS and FS
-In-Reply-To: <20200124084131.23749-2-amelie.delaunay@st.com>
-References: <20200124084131.23749-1-amelie.delaunay@st.com> <20200124084131.23749-2-amelie.delaunay@st.com>
-Date:   Fri, 31 Jan 2020 15:36:17 +0200
-Message-ID: <87imkr7nou.fsf@kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        devicetree@vger.kernel.org
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+ <20200122185610.131930-11-bryan.odonoghue@linaro.org>
+ <87o8uj7nzj.fsf@kernel.org>
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Message-ID: <9b95478d-5ac7-3dfa-a70e-1dd881bd5b2c@linaro.org>
+Date:   Fri, 31 Jan 2020 13:43:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <87o8uj7nzj.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 31/01/2020 13:29, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Bryan O'Donoghue <bryan.odonoghue@linaro.org> writes:
+>> From: John Stultz <john.stultz@linaro.org>
+>>
+>> Support the new role-switch-default-mode binding for configuring
+>> the default role the controller assumes as when the usb role is
+>> USB_ROLE_NONE
+> 
+> per specification, device is supposed to be the default role. Why isn't
+> that working for you?
+> 
 
+Speaking for myself - its only the role-switch logic I need. This patch 
+seemed to go along with the the role-switch stuff but, now that you ask, 
+this series can probably do without it.
 
-Hi,
-
-Amelie Delaunay <amelie.delaunay@st.com> writes:
-
-> Add the specific compatible string for the DWC2 IP found in the STM32MP15
-> SoCs.
-> STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
-> ID pin state. usb33d-supply described the regulator supplying Vbus and ID
-> sensing comparators.
->
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-
-This doesn't apply. dwc2 bindings is still in .txt format. I have taken
-patch 2, though.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl40LVEACgkQzL64meEa
-mQZIPQ/+PCvVhKhlTWv/YRoBCIDmZrvMR7z4BnhSOWmy8BihbEU5X7F+qo3P+VyY
-Gw/us6ppE93yom8f5mljaKlLrB1nWhVa8EU3wq3kFSDgIcMZ1HV8zBWDhqDClcN7
-SG/fImL0IxTTf9SDhPiNU+Kj+MfUMuwMmoIcvqDfoWtM9lR/9JDWOPfzTHYWl6Qv
-5zkxOrMuTA4z+/yYQpwXsmQxUQnywhhgN8AHmFCeXtnO+AsdutFJHM52Pp8XXW7I
-s6SMdX0/EaC8IFCxLXYIdRw1agHTDwf5EqtML1d9pVrgZzGC4wcknDwWZMwvRTha
-YXNRFPiQ6bqzeT7RJPRpxBtoYZDXxBNXQ/cqVt+FTiv3G+xYiVW97Sj1+fwIC7/0
-T/A01s7frHhCnJM5pDErhoJW0aq5BmesgxW2AhyY/M+mXlGbjcKCKDWahAuhf0Cx
-s4em3gwLACNvw1Ztp1sv/BvRAE81QMt9+m9PI5pZu8IVU6PpIb1jQBsvgu6POoYc
-9FIhAqYKYuzIgF1p7z3ee2c7+14IwJl1br5P6Xyx81IeS0gna8v+vicErSPCt+On
-r8VDIjv5dknh5IoQfO/+q59f8mp3e2XdVB6pZYTwsJu2i1nK6Afy/jVCJICw1I+a
-7FD6QaprCNakl/Zbfv8wJUQaKbCChpZEV3gNL1lzNinIG6b2KDc=
-=QKjo
------END PGP SIGNATURE-----
---=-=-=--
+---
+bod
