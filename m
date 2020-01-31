@@ -2,153 +2,121 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA43C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 08:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3CFC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 09:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB2B20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 08:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10153214D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 09:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580461614;
+	bh=V7vDxMmmNX8/A1ufnjJg7tEfNXHbzelUW1ofiI0bxCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=haG8bv4lWhRTjngiwCbACUIvOcGzyBOVh9zeiKakOfi06/ptleay2LnvlFHZeSZWP
+	 0Fci3a94OsMNscU/+HoV+EHmG3Ze0qvW943JsHBuaJvhsuthYWigbZhT67Km/nSR71
+	 PKBMv4gY8PVf+08YpZFaox2/5nYevwlYsxWvVwx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgAaItr (ORCPT
+        id S1728159AbgAaJGx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 03:49:47 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37524 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgAaItr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 03:49:47 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so7738145wmf.2;
-        Fri, 31 Jan 2020 00:49:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oRnNY4JLf7ZTy3fdUTm9bEVVoWS6JMbuHY/wh8kGwgE=;
-        b=czxENc/T5NRWyxAs9HPgbBXIIJkPFgzLcgWLPj0aU4IvG8oIeCVMW8/RwQXamI/h1Q
-         ZGsLtEP9q+k/lbK5GPcvLCbcotURGKC+iSlpm03W1AllaK2kkQzKbSHE1N5HWlmddHco
-         c96yqUMBPnrzS02cEUmxSD6RBz1vSZkXQEzhjBoJEavJwTTUlzg6wfdf0TvfJuK0XCVc
-         Z3D4/ySW8mrdXTHNZ+meC8YjfOTtR0rkESTsGJLrQOzG3E96KwPfEzgFFyQ5Qi6aXm/7
-         fo9wNkVbL0SeUW5NvHeauePJ5ZeCnFT0+UHfz1/al/t6nG7AxCHOpjcInjxHhbIM6lYC
-         ZyHg==
-X-Gm-Message-State: APjAAAVW2oakKSP43oyZuXVzfU83uBOA66JIRd8jt1xLWCOVFnGjrpeR
-        ntESLK2gJLaHCH5ho+uXscXKAKsQ4qw=
-X-Google-Smtp-Source: APXvYqySY42pc1aYVVB+FtN/uubVEJzMCyrRHDIBuzHAc9fotMDyplrvmbtRD7ITLJFsIeB5sdNZXA==
-X-Received: by 2002:a1c:3803:: with SMTP id f3mr3070206wma.134.1580460112337;
-        Fri, 31 Jan 2020 00:41:52 -0800 (PST)
-Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id x7sm11034302wrq.41.2020.01.31.00.41.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 00:41:51 -0800 (PST)
-From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 03/12] ARM: dts: imx7d: cl-som-imx7: fix i2c2
-Date:   Fri, 31 Jan 2020 08:36:29 +0000
-Message-Id: <20200131083638.6118-3-git@andred.net>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200131083638.6118-1-git@andred.net>
-References: <20200131083638.6118-1-git@andred.net>
+        Fri, 31 Jan 2020 04:06:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728151AbgAaJGx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:06:53 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 551E5206F0;
+        Fri, 31 Jan 2020 09:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580461612;
+        bh=V7vDxMmmNX8/A1ufnjJg7tEfNXHbzelUW1ofiI0bxCg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y0OJFeMQhpY0sXS4zKX09ro+1I0G5B1zntn688rrb6fejMrX5MpTjefojd56PxR47
+         Cw8hOA8PzmnyJwKYIJsmrolmv4wa4yXRi1RiuZB+V1u8IvySYxMHUYNUwqG+E6s6vt
+         txWo1RkgBOlq4TGaf3Vn9xq5d6tPdnJj/B5jv60c=
+Date:   Fri, 31 Jan 2020 10:06:50 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkml@metux.net" <lkml@metux.net>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Message-ID: <20200131090650.GA2267325@kroah.com>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128153806.7780-3-benjamin.gaignard@st.com>
+ <20200128155243.GC3438643@kroah.com>
+ <0dd9dc95-1329-0ad4-d03d-99899ea4f574@st.com>
+ <20200128165712.GA3667596@kroah.com>
+ <62b38576-0e1a-e30e-a954-a8b6a7d8d897@st.com>
+ <CACRpkdY427EzpAt7f5wwqHpRS_SHM8Fvm+cFrwY8op0E_J+D9Q@mail.gmail.com>
+ <20200129095240.GA3852081@kroah.com>
+ <20200129111717.GA3928@sirena.org.uk>
+ <0b109c05-24cf-a1c4-6072-9af8a61f45b2@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b109c05-24cf-a1c4-6072-9af8a61f45b2@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I2C2 is configured incorrectly at the moment:
-* update i2c2 to actually work (fix incorrect pinctrl assignments)
-* add the i2c2 bus recovery information [1]
+On Fri, Jan 31, 2020 at 08:37:27AM +0000, Benjamin GAIGNARD wrote:
+> 
+> On 1/29/20 12:17 PM, Mark Brown wrote:
+> > On Wed, Jan 29, 2020 at 10:52:40AM +0100, Greg KH wrote:
+> >
+> >> It just needs to be part of the bus logic for the specific bus that this
+> >> "firewall" is on.  Just like we do the same thing for USB or thunderbolt
+> >> devices.  Put this in the bus-specific code please.
+> > I'd expect that this is going to affect at least platform and AMBA
+> > buses.
+> 
+> Correct me if I'm wrong but creating a new type of bus would mean
+> that all the drivers living on this bus must be changed to register 
+> themselves on this bus ?
 
-[1] Note that scl is being marked as GPIO_OPEN_DRAIN even
-though the i.MX pinctrl driver does not support enabling
-open drain directly - it is enabled by the fixed pinmux
-entry.
-So while this flag has no effect in practice, it needs
-to be there purely so as to fix the following warning
-from gpiolib:
-    gpio-6 (scl): enforced open drain please flag it properly in DT/ACPI DSDT/board file
-as that is the mode requested by i2c-imx.c
+Yes.
 
-Signed-off-by: André Draszik <git@andred.net>
-Cc: Ilya Ledvich <ilya@compulab.co.il>
-Cc: Igor Grinberg <grinberg@compulab.co.il>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 26 +++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+> Or does a solution exist to let them live on the platform bus and call 
+> firewalled bus before been probed ?
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index e0432a3aa36f..ec82f4738c4f 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -72,8 +72,11 @@
- };
- 
- &i2c2 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "gpio";
- 	pinctrl-0 = <&pinctrl_i2c2>;
-+	pinctrl-1 = <&pinctrl_i2c2_recovery>;
-+	sda-gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 	status = "okay";
- 
- 	pmic: pmic@8 {
-@@ -236,13 +239,6 @@
- 		>;
- 	};
- 
--	pinctrl_i2c2: i2c2grp {
--		fsl,pins = <
--			MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
--			MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
--		>;
--	};
--
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
- 			MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
-@@ -273,4 +269,18 @@
- 			MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x34
- 		>;
- 	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO07__I2C2_SDA	0x4000000f
-+			MX7D_PAD_LPSR_GPIO1_IO06__I2C2_SCL	0x4000000f
-+		>;
-+	};
-+
-+	pinctrl_i2c2_recovery: i2c2recoverygrp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	0x4000007f
-+			MX7D_PAD_LPSR_GPIO1_IO06__GPIO1_IO6	0x4000007f
-+		>;
-+	};
- };
--- 
-2.23.0.rc1
+Why do people want to abuse the platform bus so much?  If a device is on
+a bus that can have such a controller, then it is on a real bus, use it!
 
+> All the impacted drivers could work on the existing bus with or without 
+> the firewall so I don't want to break
+
+break what?
+
+> 
+> that.
+
+Odd line-break :)
+
+Just register the driver on both busses, no big deal.
+
+Stop abusing the platform bus code for things that it is not for.
+
+thanks,
+
+greg k-h
