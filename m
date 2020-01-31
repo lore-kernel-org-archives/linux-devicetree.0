@@ -2,128 +2,145 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584D4C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8494DC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8E32067C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21419214D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rr/3FVWC"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ug0sxkYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgAaO2d (ORCPT
+        id S1729076AbgAaOaA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:28:33 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46616 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgAaO2d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 09:28:33 -0500
-Received: by mail-ed1-f67.google.com with SMTP id m8so7907826edi.13;
-        Fri, 31 Jan 2020 06:28:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CLz6QJyteNjgtifwy8DJYQXyk6DI/jxjrX09D8jN1+g=;
-        b=rr/3FVWC08HmgqZi6qiFtQykyot5oXttra1dAt8ZacUW5mtYNjokfXF1FO9cC1YbxL
-         0Qm0WNxJ8hJU/To0EdU55P7LPTuIrx86Bpzljn38jJHm4Ey7yABtsDcjDQYLBpVxY8C1
-         cCS8KvHSXGl00w6cWxq0W9YAVj4WzaFBtUQeRrohmSj2k3UsQPHA8amb0iaIUye6YByV
-         RQwnndQ+dFYwL+39YeZxBf0S6YL2NBMUeBC56BUCJfuW2W4CWyL1OypRN/g+eaXwl3ZN
-         JIH5uIYJyD9Rk+/QHgPwj4m/16aaKV8CpZ2LVKqrBndhjDaqp5kWHOuXjfr3WomZbt9o
-         LXGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CLz6QJyteNjgtifwy8DJYQXyk6DI/jxjrX09D8jN1+g=;
-        b=mS9KFFRRDnJhoovrqe4HvHdWNoOW2PDSmyuKLiYhwV3U/ViS5HCmiiljkJgmbOJt+b
-         W5Lr8JmQy/ku/EXrSGJYT7mQ3lnAZyTbknV0Wb5zUjtVXw7MHexDDUGzPBkj5TG8jJ2P
-         m/kKwkt+fLUAELRKts0v/9yBAUMhGQUHHUNy0yexWNT2tzKuVxrqetGq1S8357U3ddUn
-         Oczcn78ZqGJvTNPFDMc2YPkdCySXoDJXJDUI+62swJ5/hrXDGQz7bokBoJFUAxpIk65U
-         mppQr9yaE9l/0lU/62lmnU+Byxo6Bux3Ljy3wOmoQMhZRtyhEbpDNMMuT7vwK2WkcuxN
-         NRuw==
-X-Gm-Message-State: APjAAAVPSXqIdoIrTJrsDJIxo6F/oo3vcKHDUI5jj15X6ltgF120sCCg
-        1S3vt7TzvP5EckS3QXmMiFdvFDnB
-X-Google-Smtp-Source: APXvYqwkW3mu3UBFStjSVmGRYRHjOKqAu236crn3j+BmCZbluMpViXVvMzbtPpr+Iuq+CSsu6027kw==
-X-Received: by 2002:a17:906:31cb:: with SMTP id f11mr9225899ejf.337.1580480911234;
-        Fri, 31 Jan 2020 06:28:31 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id c20sm521857edt.67.2020.01.31.06.28.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 06:28:30 -0800 (PST)
-Subject: Re: [PATCH v2 2/7] dt-bindings: iio: light: add support for
- Dyna-Image AL3010
-To:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>
-Cc:     linux-iio@vger.kernel.org,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20200128133052.201587-1-david@ixit.cz>
- <20200128133052.201587-3-david@ixit.cz> <20200131142408.GA5196@bogus>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0da22026-5d4a-5ef6-a2d0-30e7d5fd32cf@gmail.com>
-Date:   Fri, 31 Jan 2020 17:28:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 31 Jan 2020 09:30:00 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:45115 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729070AbgAaOaA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jan 2020 09:30:00 -0500
+Received: from [IPv6:2001:420:44c1:2577:a04f:7995:3c9:b968]
+ ([IPv6:2001:420:44c1:2577:a04f:7995:3c9:b968])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id xXIviyHzaVuxOxXIyiw9vz; Fri, 31 Jan 2020 15:29:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1580480997; bh=KR7EznYBMkt354xhu7C0+6DgiIJTm+VmPaNCZY9hKD8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=ug0sxkYChv6BTu1xkP0sC0xCUcrgwta+q9ucrbSgk0PrmR+LfKQE0mmNl+3GAczVV
+         pthR10z9nEwxw8Ai29INnVY+6nf+7Wx524SPlil7t9JaPJ1U/FDJQDcmZEmbS1kRcp
+         EkTXRXCn61e2ATxi643jb805dj/imUgzPdfhkeMIxiwHoXvwiKPj2sLPjN1leQLKQS
+         Xh/4hHrOD8bNDhJ2RJogp5VR2vS5pn7d1Yuo3xAQyCcoVhH1rTR/akRAx4xTY0QNCq
+         b3F3SiietFgU/WkFKmI/IZHdz2BXIRsnLtpLKoOFFwI+YjkQawucLlBK/+G8Y0eFcj
+         OdjFizMdjMGWg==
+Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
+        frankc@nvidia.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
+ <20200130154246.GA2904678@ulmo>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8654e6fd-c403-6e68-e5cf-09297b5d8b5d@xs4all.nl>
+Date:   Fri, 31 Jan 2020 15:29:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200131142408.GA5196@bogus>
+In-Reply-To: <20200130154246.GA2904678@ulmo>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfCqH4Rqa5JScrU5yccR0hxnJW9qBhh+i+yk9NqKcTkbucS1a1ztOTwwyQU2g42qAcwbOjCwjsnGgGdArXN8npjWWmuGBZNbmQhFoft5Za35hhLgqZXVg
+ I9gd/W0c7H4ZfjoTL54sEB5r0Ft/X2Vzi0Ql75hrGg6PiK6D2cAxhcky2SEluJk0sK91n2G4vyMPX3E+Zuiz3jTpD+4jfPzqAB5mzYpYYLZW4HOhcOrvM8lj
+ XZZyg4mYXik+rnJLRxX0MOIH1QNMpMOHofoD8vaDtHBqKEIeZYlvLoUwBCn4g3DVTYtFjjSq/3OmCJcmfwd2PUNk1EOxPZUWCVNvisiC6RAnv8XKRoEPJuj2
+ 3LUPN6jfwo8NZMZDfV+/PmkguyFpwbfjj9QnVwCo0jFdX94ryOWetxrmZQYqM3O2H0YwkRuscB3GquDEubL7I5RA9azASuHmbo5QGaJ/jXV+Uc9sHquRj9+7
+ DrP5Th9LSmkp7iF7TXVvO8KR8shvQPfraBnlI67rO38aEFbhBENqkJr02MQqpWkvwxA45WUa7AtIXz9jmiSN7tu7dhHJ/vCIHeXwotOIDUtfUPJmi2jn/MC4
+ U/Y=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-31.01.2020 17:24, Rob Herring пишет:
-> On Tue, 28 Jan 2020 14:30:47 +0100, David Heidelberg wrote:
->> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
->> provides a multiple gain function with linear response over a dynamic
->> range 1216/4863/19452/77806.
+On 1/30/20 4:42 PM, Thierry Reding wrote:
+> On Thu, Jan 30, 2020 at 03:41:50PM +0100, Hans Verkuil wrote:
+>> Hi Sowjanya,
 >>
->> Signed-off-by: David Heidelberg <david@ixit.cz>
->> ---
->>  .../devicetree/bindings/iio/light/al3010.yaml | 40 +++++++++++++++++++
->>  1 file changed, 40 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/light/al3010.yaml
+>> On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
+>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
+>>> generator (TPG) capture.
+>>>
+>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+>>> CSI port is one-to-one mapped to VI channel for video capture.
+>>>
+>>> This series has TPG support only where it creates hard media links
+>>> between CSI subdevice and VI video device without device graphs.
+>>>
+>>> v4l2-compliance results are available below the patch diff.
+>>>
+>>> [v0]:	Includes,
+>>> 	- Adds CSI TPG clock to Tegra210 clock driver
+>>> 	- Host1x video driver with VI and CSI clients.
+>>> 	- Support for Tegra210 only.
+>>> 	- VI CSI TPG support with hard media links in driver.
+>>> 	- Video formats supported by Tegra210 VI
+>>> 	- CSI TPG supported video formats
 >>
+>> I'm trying to compile this patch series using the media_tree master
+>> branch (https://git.linuxtv.org//media_tree.git), but it fails:
+>>
+>> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_queue_setup’:
+>> drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused variable ‘count’ [-Wunused-variable]
+>>    71 |  unsigned int count = *nbuffers;
+>>       |               ^~~~~
+>> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_init’:
+>> drivers/staging/media/tegra/tegra-channel.c:518:55: error: ‘struct host1x_client’ has no member named ‘host’
+>>   518 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+>>       |                                                       ^
+>> make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/tegra-channel.o] Error 1
+>> make[4]: *** Waiting for unfinished jobs....
+>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_tpg_graph_init’:
+>> drivers/staging/media/tegra/tegra-vi.c:157:55: error: ‘struct host1x_client’ has no member named ‘host’
+>>   157 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+>>       |                                                       ^
+>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_init’:
+>> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_init’:
+>> drivers/staging/media/tegra/tegra-vi.c:213:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>   213 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>       |                                                   ^~
+>> drivers/staging/media/tegra/tegra-csi.c:259:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>   259 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>       |                                                   ^~
+>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_exit’:
+>> drivers/staging/media/tegra/tegra-vi.c:246:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>   246 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>       |                                                   ^~
+>> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_exit’:
+>> drivers/staging/media/tegra/tegra-csi.c:286:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>   286 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>       |                                                   ^~
+>>
+>> And indeed, struct host1x_client as defined in include/linux/host1x.h doesn't
+>> have a 'host' field.
+>>
+>> Does this series depend on another patch that's not yet in mainline?
 > 
-> My bot found errors running 'make dt_binding_check' on your patch:
+> Sowjanya's been working on top of linux-next, so, yes, this patch
+> depends on a change that's been merged into the DRM tree for v5.6-rc1.
 > 
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> Documentation/devicetree/bindings/iio/light/al3010.example.dts:20.17-30: Warning (reg_format): /example-0/i2c/al3010@1c:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-> Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/iio/light/al3010.example.dts:17.5-24.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for I2C bus
-> Documentation/devicetree/bindings/iio/light/al3010.example.dts:17.5-24.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for I2C bus
-> Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
-> Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/iio/light/al3010.example.dts:18.23-23.15: Warning (avoid_default_addr_size): /example-0/i2c/al3010@1c: Relying on default #address-cells value
-> Documentation/devicetree/bindings/iio/light/al3010.example.dts:18.23-23.15: Warning (avoid_default_addr_size): /example-0/i2c/al3010@1c: Relying on default #size-cells value
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: al3010@1c: 'interrupt' is a required property
-> 
-> See https://patchwork.ozlabs.org/patch/1230351
-> Please check and re-submit.
+> Thierry
 > 
 
-The bot is right.
+Is there a specific linux-next tag that works? I tried next-20200131 but that
+failed to boot. Same problem with the mainline repo since the host1x patches
+were merged yesterday. It compiles fine, but the boot just stops. Or am I
+missing some kernel config that is now important to have?
 
-> 
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt
+Regards,
 
-               ^ (s) is missing
-
-> +  - vdd-supply
+	Hans
