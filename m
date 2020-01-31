@@ -2,114 +2,129 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0802C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 06:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E0AC35240
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 08:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C21620705
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 06:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE0C20705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 08:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cW7pJggb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgAaG46 (ORCPT
+        id S1728157AbgAaIh4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 01:56:58 -0500
-Received: from sauhun.de ([88.99.104.3]:56920 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgAaG46 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jan 2020 01:56:58 -0500
-Received: from localhost (p54B333AF.dip0.t-ipconnect.de [84.179.51.175])
-        by pokefinder.org (Postfix) with ESMTPSA id 721C42C0830;
-        Fri, 31 Jan 2020 07:56:55 +0100 (CET)
-Date:   Fri, 31 Jan 2020 07:56:55 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 5/6] i2c: i2c-stm32f7: allow controller to be
- wakeup-source
-Message-ID: <20200131065654.GB1028@ninjato>
-References: <1578317314-17197-1-git-send-email-alain.volmat@st.com>
- <1578317314-17197-6-git-send-email-alain.volmat@st.com>
- <20200130083927.GH2208@ninjato>
+        Fri, 31 Jan 2020 03:37:56 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36350 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728099AbgAaIh4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jan 2020 03:37:56 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00V8WWYv021065;
+        Fri, 31 Jan 2020 09:37:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=RvByVWKDnR1khDO+OZk/bWtvJxxsg3zo5oWTGlVFTCI=;
+ b=cW7pJggbx3yrKAIItVkeJdJz8XFnekW5VBKJ9+R15zPyciyniAlMLSVdQRu/O5Orr219
+ PyXaMkzgz7N0xEON0xL6FkfbNArnfv0lm3+kBIxEo4FRQvEdCcJqibbjE6/JmFS5eH96
+ DDw5g6wKxrryDoLCklMK1UIG8HMRBWXwSOv0OJ3V/n81YSTFERFSTZ84KkkrvlXysKGq
+ xv0/fU2qMMYE+kkQ+6SMkT5zAzlfjXnEgzOMsnFQLQOhEy+m/626IeY/wChEIwxLRMl+
+ 8d3mCNttMM79G87ZeevoOkNeNZoVzv+QNuva2+PwX3WRjY8MI6xOmBqaKsgNxr9s9VjM RQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrc13mmns-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jan 2020 09:37:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4450910003B;
+        Fri, 31 Jan 2020 09:37:28 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag7node3.st.com [10.75.127.21])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 03CB921FEBF;
+        Fri, 31 Jan 2020 09:37:28 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG7NODE3.st.com
+ (10.75.127.21) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
+ 2020 09:37:27 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Fri, 31 Jan 2020 09:37:27 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "Loic PALLARDY" <loic.pallardy@st.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkml@metux.net" <lkml@metux.net>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Thread-Topic: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Thread-Index: AQHV1fD3WqS5xyjWNkazyajQl95bjqgAKU6AgAANnwCAAARlAIAAO2IAgADdioCAAALMAIAAF6SAgAL4AQA=
+Date:   Fri, 31 Jan 2020 08:37:27 +0000
+Message-ID: <0b109c05-24cf-a1c4-6072-9af8a61f45b2@st.com>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128153806.7780-3-benjamin.gaignard@st.com>
+ <20200128155243.GC3438643@kroah.com>
+ <0dd9dc95-1329-0ad4-d03d-99899ea4f574@st.com>
+ <20200128165712.GA3667596@kroah.com>
+ <62b38576-0e1a-e30e-a954-a8b6a7d8d897@st.com>
+ <CACRpkdY427EzpAt7f5wwqHpRS_SHM8Fvm+cFrwY8op0E_J+D9Q@mail.gmail.com>
+ <20200129095240.GA3852081@kroah.com> <20200129111717.GA3928@sirena.org.uk>
+In-Reply-To: <20200129111717.GA3928@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <638172DDBE744F46AA57A5E08293B1A9@st.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kORqDWCi7qDJ0mEj"
-Content-Disposition: inline
-In-Reply-To: <20200130083927.GH2208@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_02:2020-01-30,2020-01-31 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---kORqDWCi7qDJ0mEj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 1/29/20 12:17 PM, Mark Brown wrote:
+> On Wed, Jan 29, 2020 at 10:52:40AM +0100, Greg KH wrote:
+>
+>> It just needs to be part of the bus logic for the specific bus that this
+>> "firewall" is on.  Just like we do the same thing for USB or thunderbolt
+>> devices.  Put this in the bus-specific code please.
+> I'd expect that this is going to affect at least platform and AMBA
+> buses.
 
-On Thu, Jan 30, 2020 at 09:39:27AM +0100, Wolfram Sang wrote:
-> On Mon, Jan 06, 2020 at 02:28:33PM +0100, Alain Volmat wrote:
-> > Allow the i2c-stm32f7 controller to become a wakeup-source
-> > of the system. In such case, when a slave is registered to the
-> > I2C controller, receiving a I2C message targeting that registered
-> > slave address wakes up the suspended system.
-> >=20
-> > In order to be able to wake-up, the I2C controller DT node
-> > must have the property wakeup-source defined and a slave
-> > must be registered.
-> >=20
-> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
->=20
-> Applied to for-next, thanks!
+Correct me if I'm wrong but creating a new type of bus would mean
 
-And I will drop it again because buildbot rightfully complains:
+that all the drivers living on this bus must be changed to register=20
+themselves on this bus ?
 
+Or does a solution exist to let them live on the platform bus and call=20
+firewalled bus before been probed ?
 
-> Reported-by: kbuild test robot <lkp@intel.com>
->=20
-> All errors (new ones prefixed by >>):
->=20
->    drivers/i2c/busses/i2c-stm32f7.c: In function 'stm32f7_i2c_suspend':
-> >> drivers/i2c/busses/i2c-stm32f7.c:2199:44: error: 'struct dev_pm_info' =
-has no member named 'wakeup_path'
->      if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
->                                                ^
->    drivers/i2c/busses/i2c-stm32f7.c: In function 'stm32f7_i2c_resume':
->    drivers/i2c/busses/i2c-stm32f7.c:2218:44: error: 'struct dev_pm_info' =
-has no member named 'wakeup_path'
->      if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
->                                                ^
+All the impacted drivers could work on the existing bus with or without=20
+the firewall so I don't want to break
 
-wakeup_path is only there if CONFIG_PM. Please fix and send a new
-version.
+that.
 
-
---kORqDWCi7qDJ0mEj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4zz7YACgkQFA3kzBSg
-KbaWShAAsD5Gaj6lEFcuVH415Va4PzT6S2H3CUZIfq7iTBdNKWV8nvABcAaS18FA
-WY9qmpili5WRVugYU+1X4rxzEnSPiO6Sx5s9HGZHPefRlr2B99BknwPRCRkwWb6g
-vGNROAZh+qQuTayJ2UH33dSGtjXQ09KH4uDrIeRBoxWRuOlhxOe1FBmwudzEC4UM
-g3nCUq94rccym19fNkWxATy1RCwd2LZF4RRjj2CQLW+o41hUa/Vtb953oxjKPZHo
-p6lNncLSls4myb0yyqLEfnyFgOaopM7kOaTsgZAElto7WptLPtrcv0M6pCuZGeQx
-jFEqtZqSGNQsnlv4kZIei/Cnwp/zP1wgsHblLH20w1AuKAwq0G91kysEIH6OYak/
-HUL09BSJ25ZVEKDOonq/bIVPlxSvO5C0SYkq+YjgY5ojSCWWLF8ThkUCayynCEu1
-qsLn6oY7bB/8qqpiqPb+rx6M5ZuLLz3RKQmv28WuV2Oyl/KPgjtBXQ4KDG8l5fxI
-bUGHLyMdiyGFoK64lppvjAWp3WSsN8IvcVfRrl7HfTgZ+iGONbCs+ZYVQ9Y3i1gw
-APQl4R/vack7OumxG6wFjRvEpPDfwDvaR6A4yxpi62mp+YwP9NZ93pduvhqrF/DB
-XMvJqyy4aMLZFDC1ioWldHX8FuFEXLqc2BULX/o0S92ZKSRYVc4=
-=wM4/
------END PGP SIGNATURE-----
-
---kORqDWCi7qDJ0mEj--
+Benjamin
