@@ -2,100 +2,198 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407EAC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 19:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316FCC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 19:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF8E22522
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 19:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F4C206F0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 19:57:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gj+D0AFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbgAaTlg (ORCPT
+        id S1726023AbgAaT52 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:41:36 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:43938 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgAaTlg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 14:41:36 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 1D83120024;
-        Fri, 31 Jan 2020 20:41:31 +0100 (CET)
-Date:   Fri, 31 Jan 2020 20:41:30 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] dt-bindings: display: convert panel-dpi to DT
- schema
-Message-ID: <20200131194130.GA26925@ravnborg.org>
-References: <20200125203454.7450-1-sam@ravnborg.org>
- <20200125203454.7450-4-sam@ravnborg.org>
- <CAL_Jsq+JsEk1qz7NQc0ybO0xgmTB+YcmUL_d=u7_Y0A56v18nw@mail.gmail.com>
+        Fri, 31 Jan 2020 14:57:28 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57064 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgAaT51 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 14:57:27 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VJvN6m083311;
+        Fri, 31 Jan 2020 13:57:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580500643;
+        bh=aKowKe42ihGou9BZv9xiLNDP/sParsGV17KSoR247LQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gj+D0AFE/W8Z1nTAgJa+J/leeSZHLH52eL7OyBUSPlWn1P40o8H70It5fpaHF3hhx
+         mSw5JfG/ypw/8fYKVO8DRW0RuE6oNSffQqNI7zyTp+GdTz+hvjKs72obdElTbTYHeJ
+         qJefTnLOc+wcuQVsrYIOKvY+Wi1ycoJ7q2Gvc+fM=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VJvNs2051034
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 13:57:23 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 13:57:22 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 13:57:22 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VJvMZJ044834;
+        Fri, 31 Jan 2020 13:57:22 -0600
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
+ feature
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
+References: <20200131151110.31642-1-dmurphy@ti.com>
+ <20200131151110.31642-2-dmurphy@ti.com>
+ <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
+ <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
+ <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
+ <516ae353-e068-fe5e-768f-52308ef670a9@ti.com>
+ <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <07701542-2a94-7333-6682-a8e8986ea6d4@ti.com>
+Date:   Fri, 31 Jan 2020 13:54:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+JsEk1qz7NQc0ybO0xgmTB+YcmUL_d=u7_Y0A56v18nw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=Smb47HSlpyMrLoV_zPMA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob.
+Florian
 
-> > +
-> > +properties:
-> > +  compatible:
-> > +    contains:
-> > +      const: panel-dpi
-> > +    description:
-> > +      Shall contain "panel-dpi" in addition to an optional panel-specific
-> > +      compatible string defined in individual panel bindings.
-> > +      "panel-dpi" can be used alone, thus no dedicated binding file
-> > +      is required for each and every panel.
-> 
-> While this has occurred, I don't think the schema should allow it. I
-> think a 'minItems: 2' should be added here.
-> 
-> AFAIK, MIPI DPI just defines a spec for what already existed. Maybe it
-> constrains things somewhat, but to the extent why we require a panel
-> specific compatible in the first place? Doubtful...
+On 1/31/20 1:29 PM, Florian Fainelli wrote:
+> On 1/31/20 11:14 AM, Dan Murphy wrote:
+>> Florian
+>>
+>> On 1/31/20 12:42 PM, Florian Fainelli wrote:
+>>> On 1/31/20 10:29 AM, Dan Murphy wrote:
+>>>> Florian
+>>>>
+>>>> On 1/31/20 11:49 AM, Florian Fainelli wrote:
+>>>>> On 1/31/20 7:11 AM, Dan Murphy wrote:
+>>>>>> Set the speed optimization bit on the DP83867 PHY.
+>>>>>> This feature can also be strapped on the 64 pin PHY devices
+>>>>>> but the 48 pin devices do not have the strap pin available to enable
+>>>>>> this feature in the hardware.  PHY team suggests to have this bit set.
+>>>>> OK, but why and how does that optimization work exactly?
+>>>> I described this in the cover letter.  And it is explained in the data
+>>>> sheet Section 8.4.6.6
+>>> Sorry I complete missed that and just focused on the patch, you should
+>>> consider not providing a cover letter for a single patch, and especially
+>>> not when the cover letter contains more information than the patch
+>>> commit message itself.
+>> Sorry I usually give a cover letter to all my network related patches.
+>>
+>> Unless I misinterpreted David on his reply to me about cover letters.
+>>
+>> https://www.spinics.net/lists/netdev/msg617575.html
+> This was a 2 patches series, for which a cover letter is mandatory:
+>
+> but for single patches, there really is no need, and having to replicate
+> the same information in two places is just error prone.
+>
+>> And I seemed to have missed David on the --cc list so I will add him for
+>> v2.
+>>
+>> I was also asked not to provide the same information in the cover letter
+>> and the commit message.
+> The cover letter is meant to provide some background about choices you
+> have made, or how to merge the patches, or their dependencies, and
+> describe the changes in a big picture. The patches themselves are
+> supposed to be comprehensive.
 
-You triggered me to re-read some old thread about this.
-And I think I got it now.
+As always thank you for the guidance.  I will update the commit with 
+better information and remove the cover letter.
 
-Based on a proposal you made some weeks ago I did it like this:
-properties:
-  compatible:
-    description:
-      Shall contain a panel specific compatible and "panel-dpi"
-      in that order.
-    items:
-      - {}
-      - const: panel-dpi
 
-So no constraints on the panel specific compatible, expect that it is present.
-And panel-dpi must be listed as the second compatible.
+>
+>> Either way I am ok with not providing a cover letter and updating the
+>> commit message with more information.
+>>
+>>
+>>>>>     Departing from
+>>>>> the BMSR reads means you possibly are going to introduce bugs and/or
+>>>>> incomplete information. For instance, you set phydev->pause and
+>>>>> phydev->asym_pause to 0 now, is there no way to extract what the link
+>>>>> partner has advertised?
+>>>> I was using the marvel.c as my template as it appears to have a separate
+>>>> status register as well.
+>>>>
+>>>> Instead of setting those bits in the call back I can call the
+>>>> genphy_read_status then override the duplex and speed based on the
+>>>> physts register like below.  This way link status and pause values can
+>>>> be updated and then we can update the speed and duplex settings.
+>>>>
+>>>>         ret = genphy_read_status(phydev);
+>>>>       if (ret)
+>>>>           return ret;
+>>>>
+>>>>       if (status < 0)
+>>>>           return status;
+>>>>
+>>>>       if (status & DP83867_PHYSTS_DUPLEX)
+>>>>           phydev->duplex = DUPLEX_FULL;
+>>>>       else
+>>>>           phydev->duplex = DUPLEX_HALF;
+>>>>
+>>>>       if (status & DP83867_PHYSTS_1000)
+>>>>           phydev->speed = SPEED_1000;
+>>>>       else if (status & DP83867_PHYSTS_100)
+>>>>           phydev->speed = SPEED_100;
+>>>>       else
+>>>>           phydev->speed = SPEED_10;
+>>>>
+>>> OK, but what if they disagree, are they consistently latched with
+>>> respect to one another?
+>> Well in parsing through the code for genphy read status when auto
+>> negotiation is set the phydev structure appears to be setup per what has
+>> been configured.  I did not see any reading of speed or duplex when auto
+>> neg is set it is just taking the LPA register. But I am probably not
+>> right here.  So we and our customers found that the phy was always
+>> reporting a 1Gbps connection when the 4 wire cable connected when using
+>> genphy_read_status.  This PHYSTS register provides a single location
+>> within the register set for quick access to commonly accessed
+>> information.
+> That is the kind of information that you want to put in the commit
+> message, and that sounds like a Fix more than a feature to me. If the
+> BMSR is not reflecting the correct speed, clearly something is not quite
+> good. You may also consider reflecting whether downshift was in action
+> and that led to reducing the speed, something like
+> m88e1011_link_change_notify() does.
 
-Updated the example too.
-Will post a v3.
+But what is it fixing?  When the driver was originally submitted it was 
+meant to be a Giga bit PHY.  No requirement for any connection less then 
+1Gbps. Now we have a customer who wants to use this feature and they 
+want it upstreamed.  (YAY for them pushing upstream).
 
-Thanks!
+Do I reference my original commit?  Because I am actually flipping the 
+bits to turn it on as well only way this was a fix is if the user had 
+the feature strapped to on.  But to date we have not had any requests 
+for this support.
 
-	Sam
+So then it would be ok to do a genphy_read_status and then override the 
+speed and duplex mode from the PHYSTS register?
+
+I don't think that the link change notification is needed.  The speed 
+should not change once the cable is plugged in and the speed is negotiated.
+
+Dan
+
+
