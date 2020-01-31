@@ -2,84 +2,97 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD6FC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31239C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71063206D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D75206D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:17:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VcPMttHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgAaROL (ORCPT
+        id S1726722AbgAaRRb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:14:11 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:34622 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgAaROL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 12:14:11 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 28F7220047;
-        Fri, 31 Jan 2020 18:14:08 +0100 (CET)
-Date:   Fri, 31 Jan 2020 18:14:06 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 0/3] dt-bindings: convert timing + panel-dpi to DT
- schema
-Message-ID: <20200131171406.GC5464@ravnborg.org>
-References: <20200125203454.7450-1-sam@ravnborg.org>
+        Fri, 31 Jan 2020 12:17:31 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40950 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgAaRRb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 12:17:31 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VHHORw044420;
+        Fri, 31 Jan 2020 11:17:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580491044;
+        bh=+Lek5+g/nyO29sHE2v79UKO/32OeJVnF+qZpmQhxI2o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VcPMttHsm08yVTRRIyC1A0qEFeHYBfuHpVc2p2N/ldSx4Udz87FbYIX+rWcaKJFE6
+         6XYxkbUa8hLIFXXJVjnTxxSSM32h65PTj/DaN2QS0l9oSR5YbXoWLTUT6+B+vISNF/
+         CZJUX9DiG1kkk8JY2Dg0mH9GX/PF9lMm9uZ898ck=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VHHO4m002841
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 11:17:24 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 11:17:24 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 11:17:23 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VHHNpR076978;
+        Fri, 31 Jan 2020 11:17:23 -0600
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
+ feature
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>
+References: <20200131151110.31642-1-dmurphy@ti.com>
+ <20200131151110.31642-2-dmurphy@ti.com>
+ <20200131091004.18d54183@cakuba.hsd1.ca.comcast.net>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <6b4bb017-de97-0688-47c5-723ec4c3a339@ti.com>
+Date:   Fri, 31 Jan 2020 11:14:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200125203454.7450-1-sam@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=CBQ9Mmf69siU5x-MksAA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20200131091004.18d54183@cakuba.hsd1.ca.comcast.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all.
+Jakub
 
-On Sat, Jan 25, 2020 at 09:34:51PM +0100, Sam Ravnborg wrote:
-> This set of patches convert display-timing.txt to DT schema.
-> To do that add a panel-timing.yaml file that include all the
-> panel-timing properties and use this in panel-common and in display-timings.
-> 
-> panel-dpi was also converted so we have no .txt users left of panel-timing
-> in panel/
-> 
-> Everything passed dt_binding_check - and the trivial errors I tried in
-> the examples was all catched during validation.
-> 
-> This work was triggered by a patch-set from Oleksandr Suvorov aiming
-> at updating panel-lvds to support panel-dpi too.
-> This will make it simple to add additional properties to panel-dpi.
-> 
-> Thanks for the quick responses on v2 and likewise the quick
-> feedback on the request for the license change!
-> 
-> Highlights from v2 - see individual patches for details.
-> - Got acks for the license change
-> - Simplfied panel-timings bindings
-> - panel-dpi can now be used without a panel specific compatible
->   So panel-dpi can be used as a generic binding for dumb panels
+On 1/31/20 11:10 AM, Jakub Kicinski wrote:
+> On Fri, 31 Jan 2020 09:11:10 -0600, Dan Murphy wrote:
+>> Set the speed optimization bit on the DP83867 PHY.
+>> This feature can also be strapped on the 64 pin PHY devices
+>> but the 48 pin devices do not have the strap pin available to enable
+>> this feature in the hardware.  PHY team suggests to have this bit set.
+>>
+>> With this bit set the PHY will auto negotiate and report the link
+>> parameters in the PHYSTS register and not in the BMCR.  So we need to
+>> over ride the genphy_read_status with a DP83867 specific read status.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> While we wait for the PHY folk to take a look, could you please
+> provide a Fixes tag?
 
-Any feedback on this patchset?
+Hmm. This is not a bug fix though this is a new feature being added.
 
-	Sam
+Not sure what it would be fixing.
+
+Dan
+
