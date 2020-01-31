@@ -2,172 +2,108 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
-	WEIRD_QUOTING autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8283CC33CB2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 03:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A9DC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 04:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D2620705
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 03:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DDD320705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 04:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="noyHcUPq"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kBN2T6XT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgAaD5o (ORCPT
+        id S1728018AbgAaEnt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 22:57:44 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:43500 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgAaD5o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 22:57:44 -0500
-Received: by mail-qv1-f65.google.com with SMTP id p2so2629396qvo.10;
-        Thu, 30 Jan 2020 19:57:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OS9mBViSnpsx15jMubvsBFiHBkNyIzUT3w9rd7Dkm/4=;
-        b=noyHcUPqJ0I5pWCEXCl8lIoSgyMPfW1Alr3FH8Icy2qTfIQG6tC7f5iR6GJJgBlvBH
-         Zj7O6G0hnO+elulx3q0wMDv6N602q09EdFidsG+RazZIn6kKV15MIrMncnKEIg7BjvDf
-         MGBpMYvNY0vc8PhsLTtRl7c4xih/i7Kz7jHZM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OS9mBViSnpsx15jMubvsBFiHBkNyIzUT3w9rd7Dkm/4=;
-        b=RfKP5siitwCr8+Lan9g6BTulFi+Kvngs8IsNx5/2PBXrOCdmBgPvdHg9uupUVlcLfB
-         z7Z/Yh93Hbd0ONRPtdj3Vz2I6O5+S7JgYn36JE4sB0DHcOmmt+WSUj6OGzgtFE1uJF31
-         /VNIxlwJVoh8l+m+EGZ7wpuFGn1Cm7vm2+DAaMCH4i0DZ2SyprtHXvQv+OaXvEN2JJHH
-         rDfV+6OP8AAhrMqWSQhEgHMD8jByrmGAFqFWJuvT9aVqmuFQoMiQd4xRULD74jXl9d/2
-         Uasg08s1EbdpQcxU84RNOBdCk1KPfkNzfqRq7AaZddGOxhGZU21x1Bv/HoY+C+nRCGHx
-         fhBg==
-X-Gm-Message-State: APjAAAXCTNlWGAe15Z0n9MyN1P5hZ5OWc7ETtqe9BXFZyV19lobw20tE
-        PtTjDigQKtqMTBc9ohM5ALX15sJXRlwmxZ/VHsI=
-X-Google-Smtp-Source: APXvYqwa+52T6lEl42UR4l4JCqYs01dXPTl8h5GnRqow8oHgCFNPqL4JOACxrc1HcV1odaRzFYIi256vZzydv0SSYWQ=
-X-Received: by 2002:a0c:ead1:: with SMTP id y17mr8055946qvp.210.1580443062931;
- Thu, 30 Jan 2020 19:57:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20200128011817.4095682-1-vijaykhemka@fb.com>
-In-Reply-To: <20200128011817.4095682-1-vijaykhemka@fb.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 31 Jan 2020 03:57:31 +0000
-Message-ID: <CACPK8XfJYVH6EotMQcuuoV5hWnkA79oHSCvQBx5gr4np8Y59og@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: aspeed: tiogapass: Add gpio line names
-To:     Vijay Khemka <vijaykhemka@fb.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sai Dasari <sdasari@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 Jan 2020 23:43:49 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:30592 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727986AbgAaEns (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jan 2020 23:43:48 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580445828; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Ll0wcKc1k7IzcI6Q0ZHQPG6BHe+VN/nY0QZPu5GmLGY=; b=kBN2T6XTaIW43e+mNE5Nb4494r4H7yZAzewy5zVaiqrpWcNW+zVDUOER97ZiRXe0wtuCqLsk
+ tVbzXJLaR7yo82Tn2lBGhjrnYgW8yW0ZBNWu+lMzx49XJaTZrD4HUZ6dDU449Fr5msieIfOa
+ BgwMad295hRXN2e4eJ5W8Rar2M4=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e33b082.7f8d58e4b180-smtp-out-n02;
+ Fri, 31 Jan 2020 04:43:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B7A2DC433A2; Fri, 31 Jan 2020 04:43:46 +0000 (UTC)
+Received: from akdwived-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C87ADC43383;
+        Fri, 31 Jan 2020 04:43:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C87ADC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+From:   Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, ckadabi@codeaurora.org,
+        tsoni@codeaurora.org, bryanh@codeaurora.org,
+        psodagud@codeaurora.org, rnayak@codeaurora.org,
+        satyap@codeaurora.org, pheragu@codeaurora.org,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Subject: [PATCH v4 0/2] Add Embedded USB Debugger (EUD) driver
+Date:   Fri, 31 Jan 2020 10:13:29 +0530
+Message-Id: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Jan 2020 at 01:18, Vijay Khemka <vijaykhemka@fb.com> wrote:
->
-> Added GPIO line names for all gpio used in tiogapass platform,
-> these line names will be used by libgpiod to control GPIOs
->
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+This is a series of patches that implements a driver for the control
+peripheral, EUD (Embedded USB Debugger). The EUD is a mini-USB hub 
+implemented on chip to support the USB-based debug and trace capabilities.
+Apart from debug capabilities, EUD has a control peripheral. Control 
+Peripheral is on when EUD is on and gets signals like USB attach, pet EUD,
+charge phone etc. EUD driver listens to events like USB attach or detach 
+and charger enable or disable and then notifies the USB driver or PMIC 
+driver respectively about these events via EXTCON. At regular intervals, 
+the EUD driver receives an interrupt to pet the driver indicating that 
+the software is functional.
 
-The verbosity of the bindings is unfortunate, but I think it's the
-only option we have to date.
+Changes since v3:
+- Remove power supply type check in the enable path of EUD
+- Use default attribute group to create sysfs attribute
+- Updated the dt-binding
+Changes since v2:
+- Remove module_param and add sysfs support instead
+- Simplify if-else condition
+- Change if-elseif to switch case
+- Return -ENOMEM
+- Got rid of unnecessary checks in sysfs store function
+- Updated the dt-binding
+Changes since v1:
+- Remove EUD_NR as it is an unused macro
+Changes since v0:
+- Remove select SERIAL_CORE from Kconfig as this patch doesn't involve
+  anything related to serial console
+- Changed the dt-bindings to remove extcon and replace it with graphs
+  to represent a connection with client
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+Avaneesh Kumar Dwivedi (2):
+  dt-bindings: Documentation for qcom,eud
+  Embedded USB Debugger (EUD) driver
 
-I will merge this through the aspeed tree for 5.7.
+ Documentation/ABI/stable/sysfs-driver-msm-eud      |   5 +
+ .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  |  43 +++
+ drivers/soc/qcom/Kconfig                           |  12 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/eud.c                             | 329 +++++++++++++++++++++
+ 5 files changed, 390 insertions(+)
+ create mode 100644 Documentation/ABI/stable/sysfs-driver-msm-eud
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+ create mode 100644 drivers/soc/qcom/eud.c
 
-Cheers,
-
-Joel
-
-> ---
-> v2 : Added BIOS_SPI_BMC_CTRL gpio line name
->
->  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 63 +++++++++++++++++++
->  1 file changed, 63 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> index 682f729ea25e..fb7f034d5db2 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> @@ -121,6 +121,69 @@
->         kcs_addr = <0xca2>;
->  };
->
-> +&gpio {
-> +       status = "okay";
-> +       gpio-line-names =
-> +       /*A0-A7*/       "BMC_CPLD_FPGA_SEL","","","","","","","",
-> +       /*B0-B7*/       "","BMC_DEBUG_EN","","","","BMC_PPIN","PS_PWROK",
-> +                       "IRQ_PVDDQ_GHJ_VRHOT_LVT3",
-> +       /*C0-C7*/       "","","","","","","","",
-> +       /*D0-D7*/       "BIOS_MRC_DEBUG_MSG_DIS","BOARD_REV_ID0","",
-> +                       "BOARD_REV_ID1","IRQ_DIMM_SAVE_LVT3","BOARD_REV_ID2",
-> +                       "CPU_ERR0_LVT3_BMC","CPU_ERR1_LVT3_BMC",
-> +       /*E0-E7*/       "RESET_BUTTON","RESET_OUT","POWER_BUTTON",
-> +                       "POWER_OUT","NMI_BUTTON","","CPU0_PROCHOT_LVT3_ BMC",
-> +                       "CPU1_PROCHOT_LVT3_ BMC",
-> +       /*F0-F7*/       "IRQ_PVDDQ_ABC_VRHOT_LVT3","",
-> +                       "IRQ_PVCCIN_CPU0_VRHOT_LVC3",
-> +                       "IRQ_PVCCIN_CPU1_VRHOT_LVC3",
-> +                       "IRQ_PVDDQ_KLM_VRHOT_LVT3","","P3VBAT_BRIDGE_EN","",
-> +       /*G0-G7*/       "CPU_ERR2_LVT3","CPU_CATERR_LVT3","PCH_BMC_THERMTRIP",
-> +                       "CPU0_SKTOCC_LVT3","","","","BIOS_SMI_ACTIVE",
-> +       /*H0-H7*/       "LED_POST_CODE_0","LED_POST_CODE_1","LED_POST_CODE_2",
-> +                       "LED_POST_CODE_3","LED_POST_CODE_4","LED_POST_CODE_5",
-> +                       "LED_POST_CODE_6","LED_POST_CODE_7",
-> +       /*I0-I7*/       "CPU0_FIVR_FAULT_LVT3","CPU1_FIVR_FAULT_LVT3",
-> +                       "FORCE_ADR","UV_ADR_TRIGGER_EN","","","","",
-> +       /*J0-J7*/       "","","","","","","","",
-> +       /*K0-K7*/       "","","","","","","","",
-> +       /*L0-L7*/       "IRQ_UV_DETECT","IRQ_OC_DETECT","HSC_TIMER_EXP","",
-> +                       "MEM_THERM_EVENT_PCH","PMBUS_ALERT_BUF_EN","","",
-> +       /*M0-M7*/       "CPU0_RC_ERROR","CPU1_RC_ERROR","","OC_DETECT_EN",
-> +                       "CPU0_THERMTRIP_LATCH_LVT3",
-> +                       "CPU1_THERMTRIP_LATCH_LVT3","","",
-> +       /*N0-N7*/       "","","","CPU_MSMI_LVT3","","BIOS_SPI_BMC_CTRL","","",
-> +       /*O0-O7*/       "","","","","","","","",
-> +       /*P0-P7*/       "BOARD_SKU_ID0","BOARD_SKU_ID1","BOARD_SKU_ID2",
-> +                       "BOARD_SKU_ID3","BOARD_SKU_ID4","BMC_PREQ",
-> +                       "BMC_PWR_DEBUG","RST_RSMRST",
-> +       /*Q0-Q7*/       "","","","","UARTSW_LSB","UARTSW_MSB",
-> +                       "POST_CARD_PRES_BMC","PE_BMC_WAKE",
-> +       /*R0-R7*/       "","","BMC_TCK_MUX_SEL","BMC_PRDY",
-> +                       "BMC_XDP_PRSNT_IN","RST_BMC_PLTRST_BUF","SLT_CFG0",
-> +                       "SLT_CFG1",
-> +       /*S0-S7*/       "THROTTLE","BMC_READY","","HSC_SMBUS_SWITCH_EN","",
-> +                       "","","",
-> +       /*T0-T7*/       "","","","","","","","",
-> +       /*U0-U7*/       "","","","","","BMC_FAULT","","",
-> +       /*V0-V7*/       "","","","FAST_PROCHOT_EN","","","","",
-> +       /*W0-W7*/       "","","","","","","","",
-> +       /*X0-X7*/       "","","","GLOBAL_RST_WARN",
-> +                       "CPU0_MEMABC_MEMHOT_LVT3_BMC",
-> +                       "CPU0_MEMDEF_MEMHOT_LVT3_BMC",
-> +                       "CPU1_MEMGHJ_MEMHOT_LVT3_BMC",
-> +                       "CPU1_MEMKLM_MEMHOT_LVT3_BMC",
-> +       /*Y0-Y7*/       "SIO_S3","SIO_S5","BMC_JTAG_SEL","SIO_ONCONTROL","",
-> +                       "","","",
-> +       /*Z0-Z7*/       "","SIO_POWER_GOOD","IRQ_PVDDQ_DEF_VRHOT_LVT3","",
-> +                       "","","","",
-> +       /*AA0-AA7*/     "CPU1_SKTOCC_LVT3","IRQ_SML1_PMBUS_ALERT",
-> +                       "SERVER_POWER_LED","","PECI_MUX_SELECT","UV_HIGH_SET",
-> +                       "","POST_COMPLETE",
-> +       /*AB0-AB7*/     "IRQ_HSC_FAULT","OCP_MEZZA_PRES","","","","","","",
-> +       /*AC0-AC7*/     "","","","","","","","";
-> +};
-> +
->  &mac0 {
->         status = "okay";
->
-> --
-> 2.17.1
->
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
