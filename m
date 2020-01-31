@@ -2,107 +2,128 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEB8C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584D4C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B44120CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580480715;
-	bh=DTTFB4hezcnZxTo9Bf5UOlSZBplaNAEang91YJ4jsIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SdfP9rnqhYh3H3Wt+qpThI6Jsy8XyH5DrpDP38nSyay8Vhxg0+H7Lg9HwgH08O1Ea
-	 ByLegqONyrb9DFIPH3gfKGsoJjTHkISELnmmVgZor0BEZ7+Ft8Xis5+5jLNDCkM0FC
-	 ZFmfJVaFxtSJADuHhpuGj2qgS/QSWAhbanH3Qesw=
+	by mail.kernel.org (Postfix) with ESMTP id 2B8E32067C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:28:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rr/3FVWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgAaOZO (ORCPT
+        id S1728931AbgAaO2d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:25:14 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43428 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728730AbgAaOZO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 09:25:14 -0500
-Received: by mail-oi1-f193.google.com with SMTP id p125so7365468oif.10
-        for <devicetree@vger.kernel.org>; Fri, 31 Jan 2020 06:25:14 -0800 (PST)
+        Fri, 31 Jan 2020 09:28:33 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46616 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728827AbgAaO2d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 09:28:33 -0500
+Received: by mail-ed1-f67.google.com with SMTP id m8so7907826edi.13;
+        Fri, 31 Jan 2020 06:28:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CLz6QJyteNjgtifwy8DJYQXyk6DI/jxjrX09D8jN1+g=;
+        b=rr/3FVWC08HmgqZi6qiFtQykyot5oXttra1dAt8ZacUW5mtYNjokfXF1FO9cC1YbxL
+         0Qm0WNxJ8hJU/To0EdU55P7LPTuIrx86Bpzljn38jJHm4Ey7yABtsDcjDQYLBpVxY8C1
+         cCS8KvHSXGl00w6cWxq0W9YAVj4WzaFBtUQeRrohmSj2k3UsQPHA8amb0iaIUye6YByV
+         RQwnndQ+dFYwL+39YeZxBf0S6YL2NBMUeBC56BUCJfuW2W4CWyL1OypRN/g+eaXwl3ZN
+         JIH5uIYJyD9Rk+/QHgPwj4m/16aaKV8CpZ2LVKqrBndhjDaqp5kWHOuXjfr3WomZbt9o
+         LXGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CY7J+IlecaG8nz6DPJS4G/LtHnWj0sEM0OBoR5NJd0k=;
-        b=M8pKfzUWqM2Bw6PwAaf00k94ijIt3W1JwN023HeLUqw5TX5EMshJ7BqSN6sBP5XZek
-         JaZRrIf2b0NzD/oqXK9lJrk1wdCKAi9EGF6GbbT/bVpOntaWE01zFeQMvhlvk98tcgAT
-         QaI2XUsQygc+fvlHfjbURZJVCdcsNQCXF9EnhMMJz47hORbiIJ+Ktvk/9DCOZt2oig9m
-         GGyEjoSj8Lfn/b+Q99l/URyuAfqvqMPUwuTLA06XE5czb9CBX5xRxIi0I4yDj7BjvKdc
-         3f7pm5oMeJN6xSrYZMpfXHK7I+fj33VJRK8KpKaZoE7MaDOV12jj8TW2RDRfIfNiL0Pn
-         vyUg==
-X-Gm-Message-State: APjAAAUS82bLmitH+6gmAdNM9gQI1WehRBD4LAmMcwFThZ7vUBlIpuhA
-        02UFsLjt4NNZ8WGxCljjcg==
-X-Google-Smtp-Source: APXvYqwP4UCqynTaGuEXM1pVcinpeQ7FXXcHK8C275p9lQJe8/rqR+GKzHezIpMqcGLexQe+mA4tIw==
-X-Received: by 2002:a05:6808:315:: with SMTP id i21mr6201353oie.139.1580480713686;
-        Fri, 31 Jan 2020 06:25:13 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d131sm2709089oia.36.2020.01.31.06.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 06:25:13 -0800 (PST)
-Received: (nullmailer pid 7140 invoked by uid 1000);
-        Fri, 31 Jan 2020 14:25:11 -0000
-Date:   Fri, 31 Jan 2020 08:25:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     michael.srba@seznam.cz
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Michael Srba <Michael.Srba@seznam.cz>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display/panel: add bindings for
- S6E88A0-AMS452EF01
-Message-ID: <20200131142511.GA6222@bogus>
-References: <20200130203555.316-1-michael.srba@seznam.cz>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CLz6QJyteNjgtifwy8DJYQXyk6DI/jxjrX09D8jN1+g=;
+        b=mS9KFFRRDnJhoovrqe4HvHdWNoOW2PDSmyuKLiYhwV3U/ViS5HCmiiljkJgmbOJt+b
+         W5Lr8JmQy/ku/EXrSGJYT7mQ3lnAZyTbknV0Wb5zUjtVXw7MHexDDUGzPBkj5TG8jJ2P
+         m/kKwkt+fLUAELRKts0v/9yBAUMhGQUHHUNy0yexWNT2tzKuVxrqetGq1S8357U3ddUn
+         Oczcn78ZqGJvTNPFDMc2YPkdCySXoDJXJDUI+62swJ5/hrXDGQz7bokBoJFUAxpIk65U
+         mppQr9yaE9l/0lU/62lmnU+Byxo6Bux3Ljy3wOmoQMhZRtyhEbpDNMMuT7vwK2WkcuxN
+         NRuw==
+X-Gm-Message-State: APjAAAVPSXqIdoIrTJrsDJIxo6F/oo3vcKHDUI5jj15X6ltgF120sCCg
+        1S3vt7TzvP5EckS3QXmMiFdvFDnB
+X-Google-Smtp-Source: APXvYqwkW3mu3UBFStjSVmGRYRHjOKqAu236crn3j+BmCZbluMpViXVvMzbtPpr+Iuq+CSsu6027kw==
+X-Received: by 2002:a17:906:31cb:: with SMTP id f11mr9225899ejf.337.1580480911234;
+        Fri, 31 Jan 2020 06:28:31 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id c20sm521857edt.67.2020.01.31.06.28.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 06:28:30 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] dt-bindings: iio: light: add support for
+ Dyna-Image AL3010
+To:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>
+Cc:     linux-iio@vger.kernel.org,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+References: <20200128133052.201587-1-david@ixit.cz>
+ <20200128133052.201587-3-david@ixit.cz> <20200131142408.GA5196@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0da22026-5d4a-5ef6-a2d0-30e7d5fd32cf@gmail.com>
+Date:   Fri, 31 Jan 2020 17:28:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130203555.316-1-michael.srba@seznam.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200131142408.GA5196@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Jan 2020 21:35:54 +0100, michael.srba@seznam.cz wrote:
-> From: Michael Srba <Michael.Srba@seznam.cz>
+31.01.2020 17:24, Rob Herring пишет:
+> On Tue, 28 Jan 2020 14:30:47 +0100, David Heidelberg wrote:
+>> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
+>> provides a multiple gain function with linear response over a dynamic
+>> range 1216/4863/19452/77806.
+>>
+>> Signed-off-by: David Heidelberg <david@ixit.cz>
+>> ---
+>>  .../devicetree/bindings/iio/light/al3010.yaml | 40 +++++++++++++++++++
+>>  1 file changed, 40 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/light/al3010.yaml
+>>
 > 
-> This patch adds dts bindings for Samsung AMS452EF01 AMOLED panel, which makes
-> use of their S6E88A0 controller.
+> My bot found errors running 'make dt_binding_check' on your patch:
 > 
-> Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
-> ---
-> Hi,
-> I recall now that tabs cause a syntax error in yaml, should be easy to check 
-> in checkpatch.pl?
-> I hope there are no more embarassing oversights left.
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> Documentation/devicetree/bindings/iio/light/al3010.example.dts:20.17-30: Warning (reg_format): /example-0/i2c/al3010@1c:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+> Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/iio/light/al3010.example.dts:17.5-24.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for I2C bus
+> Documentation/devicetree/bindings/iio/light/al3010.example.dts:17.5-24.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for I2C bus
+> Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
+> Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/iio/light/al3010.example.dts:18.23-23.15: Warning (avoid_default_addr_size): /example-0/i2c/al3010@1c: Relying on default #address-cells value
+> Documentation/devicetree/bindings/iio/light/al3010.example.dts:18.23-23.15: Warning (avoid_default_addr_size): /example-0/i2c/al3010@1c: Relying on default #size-cells value
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/light/al3010.example.dt.yaml: al3010@1c: 'interrupt' is a required property
 > 
-> Changes in v2: use yaml format for the binding
-> Changes in v3: fix oversights too embarassing to admit here
-> ---
->  .../panel/samsung,s6e88a0-ams452ef01.yaml     | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml
+> See https://patchwork.ozlabs.org/patch/1230351
+> Please check and re-submit.
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+The bot is right.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.yaml: $id: 'http://devicetree.org/schemas/display/panel/samsung,s6e88a0-ams452ef01#' does not match 'http://devicetree.org/schemas/.*\\.yaml#'
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/display/panel/samsung,s6e88a0-ams452ef01.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> 
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupt
 
-See https://patchwork.ozlabs.org/patch/1231597
-Please check and re-submit.
+               ^ (s) is missing
+
+> +  - vdd-supply
