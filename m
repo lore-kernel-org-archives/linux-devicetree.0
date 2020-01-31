@@ -2,97 +2,118 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31239C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA88C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D75206D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VcPMttHs"
+	by mail.kernel.org (Postfix) with ESMTP id EE91C2082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:23:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgAaRRb (ORCPT
+        id S1727039AbgAaRXk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:17:31 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40950 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgAaRRb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 12:17:31 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VHHORw044420;
-        Fri, 31 Jan 2020 11:17:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580491044;
-        bh=+Lek5+g/nyO29sHE2v79UKO/32OeJVnF+qZpmQhxI2o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VcPMttHsm08yVTRRIyC1A0qEFeHYBfuHpVc2p2N/ldSx4Udz87FbYIX+rWcaKJFE6
-         6XYxkbUa8hLIFXXJVjnTxxSSM32h65PTj/DaN2QS0l9oSR5YbXoWLTUT6+B+vISNF/
-         CZJUX9DiG1kkk8JY2Dg0mH9GX/PF9lMm9uZ898ck=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VHHO4m002841
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jan 2020 11:17:24 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
- Jan 2020 11:17:24 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 31 Jan 2020 11:17:23 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VHHNpR076978;
-        Fri, 31 Jan 2020 11:17:23 -0600
-Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
- feature
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <bunk@kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>
-References: <20200131151110.31642-1-dmurphy@ti.com>
- <20200131151110.31642-2-dmurphy@ti.com>
- <20200131091004.18d54183@cakuba.hsd1.ca.comcast.net>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <6b4bb017-de97-0688-47c5-723ec4c3a339@ti.com>
-Date:   Fri, 31 Jan 2020 11:14:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 12:23:40 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58502 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgAaRXk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 12:23:40 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id DA248295711;
+        Fri, 31 Jan 2020 17:23:37 +0000 (GMT)
+Date:   Fri, 31 Jan 2020 18:23:34 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, intel-gfx-trybot@lists.freedesktop.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v10 09/12] dt-bindings: display: bridge: lvds-codec: Add
+ new bus-width prop
+Message-ID: <20200131182334.6b91f1b9@collabora.com>
+In-Reply-To: <20200131171248.GB5464@ravnborg.org>
+References: <20200128135514.108171-1-boris.brezillon@collabora.com>
+        <20200128135514.108171-10-boris.brezillon@collabora.com>
+        <20200131171248.GB5464@ravnborg.org>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200131091004.18d54183@cakuba.hsd1.ca.comcast.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Jakub
+On Fri, 31 Jan 2020 18:12:48 +0100
+Sam Ravnborg <sam@ravnborg.org> wrote:
 
-On 1/31/20 11:10 AM, Jakub Kicinski wrote:
-> On Fri, 31 Jan 2020 09:11:10 -0600, Dan Murphy wrote:
->> Set the speed optimization bit on the DP83867 PHY.
->> This feature can also be strapped on the 64 pin PHY devices
->> but the 48 pin devices do not have the strap pin available to enable
->> this feature in the hardware.  PHY team suggests to have this bit set.
->>
->> With this bit set the PHY will auto negotiate and report the link
->> parameters in the PHYSTS register and not in the BMCR.  So we need to
->> over ride the genphy_read_status with a DP83867 specific read status.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> While we wait for the PHY folk to take a look, could you please
-> provide a Fixes tag?
+> Hi Boris.
+> 
+> On Tue, Jan 28, 2020 at 02:55:11PM +0100, Boris Brezillon wrote:
+> > Add the bus-width property to describe the input bus format.
+> > 
+> > v10:
+> > * Add changelog to the commit message
+> > * Add Rob's R-b
+> > 
+> > v8 -> v9:
+> > * No changes
+> > 
+> > v7:
+> > * Rebase on top of lvds-codec changes
+> > * Drop the data-mapping property
+> > 
+> > v4 -> v6:
+> > * Not part of the series
+> > 
+> > v3:
+> > * New patch
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/display/bridge/lvds-codec.yaml    | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > index 8f373029f5d2..7c4e42f4de61 100644
+> > --- a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > @@ -55,6 +55,14 @@ properties:
+> >          description: |
+> >            For LVDS encoders, port 0 is the parallel input
+> >            For LVDS decoders, port 0 is the LVDS input
+> > +        properties:
+> > +          bus-width:
+> > +            allOf:
+> > +              - $ref: /schemas/types.yaml#/definitions/uint32
+> > +              - enum: [18, 24]
+> > +              - default: 24
+> > +          description:
+> > +            Number of data lines used to transmit the RGB data.  
+> 
+> Would this be a candidate for a bridge-common.yaml?
+> So we share the same definition across all bridges using it.
 
-Hmm. This is not a bug fix though this is a new feature being added.
-
-Not sure what it would be fixing.
-
-Dan
-
+Could be, though the default and accepted values is likely to be
+overloaded on a per-bridge basis. Anyway, looks like bridge-common.yaml
+doesn't exists yet, so maybe we should merge this change and move the
+field definition when another bridge starts using this property.
