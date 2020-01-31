@@ -2,134 +2,140 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96B1C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 13:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450C3C35240
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 13:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F49A205F4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 13:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD2320707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 13:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580476613;
-	bh=ggrq9Jgc11j9oBbDNU2WET2SP3MbFbO1y78dajMXLfc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bZTsvH8WH+yFZrhp30kdQzZGj0OrhEOCM1UQV4Og9shwtbw7fjsNbUBGvS9X3l4Ia
-	 ayHtMreSdfVhCMzwIv4x6l1OYHJ8iRDpsIhjekWDHji0VTXIW+MucvQdNLB2yH64Im
-	 GR8UiWJIkT+Meww1CfgIopb9/uwZEwTHPMeozs5w=
+	s=default; t=1580476977;
+	bh=R/r0MkhJmy8WKxVLMV0Jvzi1Aq0WoGmSqQ5lRPedXO4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=lXbRe8ykwZqmvOLQNzWQ2BvQTr7/NkkqzWaJLQbaD2fIZV/D3lbNJWJNQLo1S+m5O
+	 QpYSoBlNMS8695tlyLTqtkBggwflVk7mSvvuS6uUFXoKZpExa/1aZp4dtncIjA3PkP
+	 jCOtrrcLcKdnVTwoTb7hVXZjW6fH/FORSfYm2nuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgAaNQt (ORCPT
+        id S1728612AbgAaNWx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:16:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbgAaNQt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:16:49 -0500
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B841B214D8;
-        Fri, 31 Jan 2020 13:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580476608;
-        bh=ggrq9Jgc11j9oBbDNU2WET2SP3MbFbO1y78dajMXLfc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=REGgpnatP7syvTAN13b3NhETyEXsZVzYCcZ9RyVO+h3jGNo2hxi6rsL2y7DhCXW+P
-         mIhffXNpcPqw0cDM8/aAidmUwrV74NLYpT/HbvC/aJ/VMjlj3LVZ3L/dPH/2LouKwL
-         gi8QvC5LlnYvhbaq/HyIyjLsGtixlWTnrjD3rFrU=
-Received: by mail-lj1-f175.google.com with SMTP id v17so7055928ljg.4;
-        Fri, 31 Jan 2020 05:16:47 -0800 (PST)
-X-Gm-Message-State: APjAAAUTSQoDCZzBRvrHafCY+0Sfn0dJgs/zLicFSuuKVFpoub5zO1nB
-        J2dfipeRMA+4KbF1icQWsBGC5/jJLA39OtJQg5I=
-X-Google-Smtp-Source: APXvYqyHH1mBNjzJnIDT8ozGRMEfl14lXQUHfdq30KTGdoctW1gTxpv8Cq9HZwZufM6lRyIvRwc5SSMGxFrcr40jDYU=
-X-Received: by 2002:a2e:9c85:: with SMTP id x5mr6044390lji.50.1580476605934;
- Fri, 31 Jan 2020 05:16:45 -0800 (PST)
+        Fri, 31 Jan 2020 08:22:53 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35099 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728566AbgAaNWx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 08:22:53 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z18so4871300lfe.2;
+        Fri, 31 Jan 2020 05:22:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=R/r0MkhJmy8WKxVLMV0Jvzi1Aq0WoGmSqQ5lRPedXO4=;
+        b=pIaT0b9Qd+4jkE1fkwMkX4pZO0yQhKJOO71b2et3q1rT1iC/jQjRwWfwU/AXqWwB3p
+         ENbCxggJF2BGfFYIpwRDYUm1bGTiWPbvrsaEpYZmpDEQB4zOIFPsxngQ/6H6M2USTVtf
+         Vve+M/a+QXj9ZHXDq0iQXpLrsy1bkhIKW91in13kumaND7ifTb2VIjQRfD8vT+Mda02I
+         XLQWhJ6v/rI8gZmlPw9/viYAdoUB6EeAn5qw5JLd+WNaoQTLSjKeuz9ULalWUglV8Zba
+         f2+8HvwfV/XW0XZEeotpLoBjkKuCZpUYFljUlZm2OiN7ZNtF74No0tJpuoYnHnRgXqne
+         Nfaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=R/r0MkhJmy8WKxVLMV0Jvzi1Aq0WoGmSqQ5lRPedXO4=;
+        b=JHV+bV9El2QOETV5Zrc8Iu1te/4Z1IJpyCthKH6FAF5fVnJi3rCcoSn79CQMm9a9/m
+         klFmfsmVYhR18MkNHZsv+vHHhVRAIwqlYba9fpyBHe1RNwukWD3T/pBOZ6OKDXYbbH9h
+         CgV9qmKuCGeGvJmn2gesiAmIruMYSftaDEYgYY0WS2Pmx3MlxD++YPh8SJp2FjJjZMnO
+         sLIMhyC9li8L95Rze/kHGt1nBSx4AHImXToE0/0UZ/YAgm1bwNQ7pNpOVV7OourpkZb6
+         VgfNcuiiTogHuWElmaU3vfH8NoH7H2o1Be/rOrQVkhF/1JwX9HbEnFjmUDFMmf8lSPaH
+         dYEw==
+X-Gm-Message-State: APjAAAV25EeMAj8sxfL8RhDK7+m2XCO4bLMs1Bu/o7hukL76a9HQWQ7g
+        mglGrIeCu8ybWd7Zbu7dJEof31r+MYz/Ng==
+X-Google-Smtp-Source: APXvYqzWwcCbOKCFh1HsdRYKRkmzRO5iaW1wDQodZvRcZcxHxE/w0zpfSzIX/lAO18wKHHtdYGphEQ==
+X-Received: by 2002:a19:dc14:: with SMTP id t20mr5415708lfg.47.1580476970640;
+        Fri, 31 Jan 2020 05:22:50 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id d22sm4593737lfi.49.2020.01.31.05.22.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 Jan 2020 05:22:49 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 06/19] dt-bindings: usb: dwc3: Add a gpio-usb-connector description
+In-Reply-To: <20200122185610.131930-7-bryan.odonoghue@linaro.org>
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org> <20200122185610.131930-7-bryan.odonoghue@linaro.org>
+Date:   Fri, 31 Jan 2020 15:22:44 +0200
+Message-ID: <87zhe37obf.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200127215453.15144-1-lukasz.luba@arm.com> <20200127215453.15144-4-lukasz.luba@arm.com>
-In-Reply-To: <20200127215453.15144-4-lukasz.luba@arm.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 31 Jan 2020 14:16:34 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
-Message-ID: <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
-To:     lukasz.luba@arm.com
-Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Bryan O'Donoghue <bryan.odonoghue@linaro.org> writes:
+
+> A USB connector should be a child node of the USB controller
+> connector/usb-connector.txt. This patch adds a property
+> "gpio_usb_connector" which declares a connector child device. Code in the
+> DWC3 driver will then
 >
-> From: Lukasz Luba <lukasz.luba@arm.com>
+> - Search for "gpio_usb_controller"
+> - Do an of_platform_populate() if found
 >
-> Enable the Energy Model (EM) brings possibility to use Energy Aware
-> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
-> default. The EAS only works with SchedUtil - a CPUFreq governor which
-> handles direct requests from the scheduler for the frequency change. Thus,
-> to make EAS working in default, the SchedUtil governor should be
-> configured as default CPUFreq governor.
-
-Full stop. That's enough of needed explanation of schedutil.
-
-> Although, the EAS might be enabled
-> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
-> then set as CPUFreq governor, i.e.:
+> This will have the effect of making the declared node a child of the USB
+> controller and will make sure that USB role-switch events detected with t=
+he
+> gpio_usb_controller driver propagate into the DWC3 controller code
+> appropriately.
 >
-> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
->
-> To check if EAS is ready to work, the read output from the command below
-> should show '1':
-> cat /proc/sys/kernel/sched_energy_aware
->
-> To disable EAS in runtime simply 'echo 0' to the file above.
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-Not related to this commit. If you were implemeting here
-schedutil/EAS, then it makes sense to post all this. However what's
-the point to describe it in every defconfig change?
+I'm assuming this will go together with the rest of the series:
 
-> Some test results, which stress the scheduler on Odroid-XU3:
-> hackbench -l 500 -s 4096
-> With mainline code and with this patch set.
+Acked-by: Felipe Balbi <balbi@kernel.org>
 
-Skip the last sentence - duplicated information.
+=2D-=20
+balbi
 
->
-> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
-> (which is set to =y in default exynos_defconfig)
->
->                 |               this patch set                  | mainline
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The commit will be applied on its own branch so the meaning of "this
-patch set" will be lost. Maybe just "before/after"?
+-----BEGIN PGP SIGNATURE-----
 
->                 |-----------------------------------------------|---------------
->                 | performance   | SchedUtil     | SchedUtil     | performance
->                 | governor      | governor      | governor      | governor
->                 |               | w/o EAS       | w/ EAS        |
-> ----------------|---------------|---------------|---------------|---------------
-> hackbench w/ PL | 12.7s         | 11.7s         | 12.0s         | 13.0s - 12.2s
-> hackbench w/o PL| 9.2s          | 8.1s          | 8.2s          | 9.2s - 8.4s
-
-Why does the performance different before and after this patch?
-
-Mention - lower better (?). Space between number and unit... or better
-mention [s] in column title.
-
-And last but not least:
-Why this patch is separate from 1/3? I don't get the need of splitting them.
-
-Best regards,
-Krzysztof
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl40KiQACgkQzL64meEa
+mQYVaBAAx9WmHAADAAgq27OlaDx5snDPwLIuAOLo7kYBkfcIatnvmX3XLlgEk2+T
+92MrgOmZVnbwpdtEManQBiY9UvQQ61VT7ixFNRbODPcruGlszZWsKWts4Ejr3LF6
+7Nc6IIe/Xjkzw+aYR+8mugwLFc+/jMi/4cLBD4bCviLJMF1y0+aMhrqvPtwtuwm2
+WcTcSByy706oswRV32NwB8jUPcNHKEs9QodVF4e7QVPgscl5pIqfe+jA6L19/HQ+
+NqB8jFvFT3ZQmvhAU8PRLd0R3+XNpDHek4RS4StzDzeyF5YiJJx7JmuQv8r+ddtJ
+OGKN5q5Q7eH89m91d5YUU9TDvI9DA0vtjDXPn6skjtXajq8boXg8fNMXrJU//f7S
+lkbwCiOYQ7rsIWf0e/LWc+aPE4wogqKQf64fmZCZSV82uQf3bVdyGp6R2iArKLLA
+B8nQNe6sWdZy8DG004QW+AV+OCvxiqNhUGyqqRNQWxZyg3FRtuXBri9yTFUBUUPE
+8O7R9Sj2Bjqbs3isf2TQ6e2h/GfHfIE/otHSSnEPfdKu7wVfZlukskyjU4C5sXBR
+LkpRupe6gzbS2qts4lPthcExdjMR76HWmsBWhINXOUxCj+p3WqEoliR7/riGbYnx
+Y1Q1HP8oc8AtJC7ekoq5UJx2yxuQZsJIHuSUSU6xsTlAQf6uQGU=
+=UWt1
+-----END PGP SIGNATURE-----
+--=-=-=--
