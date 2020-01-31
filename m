@@ -2,125 +2,216 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52750C35240
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAFFC35240
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28C8A206F0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580488744;
-	bh=VpI6Sp9ytbmILt/JCxZcpGcjyWABm9z0PduVBfUuexE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sK0EeAyvwFBXsmIeOLKPNzJeTSrXs6/QREKLiOVS0L1ad5KLsRdcm5/OHbOg6DH45
-	 jmLHR8C4Gu6FUDO377qY9zfCFNauxFliortrOIFEDxtLmQnBRjczmGsiWEObOtGA9T
-	 5mH5tbgbGbt5lb83pgHEp0TaU49zrzxXUwbSqGx0=
+	by mail.kernel.org (Postfix) with ESMTP id 15315206F0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgAaQjA (ORCPT
+        id S1726322AbgAaQma (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:39:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59166 "EHLO mail.kernel.org"
+        Fri, 31 Jan 2020 11:42:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:37410 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbgAaQjA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:39:00 -0500
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13623206F0;
-        Fri, 31 Jan 2020 16:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580488739;
-        bh=VpI6Sp9ytbmILt/JCxZcpGcjyWABm9z0PduVBfUuexE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YCfulT6I2cb7jMb72PzcxWhVL7n8wE3Sa2stzAyLWG4uiKC2ylEQmfGSneYLyTZLK
-         5Uri9fjYhW8gYJTlud5zB0xOkC4JfUCurZE9vJ5wstCRoFos+TtuLpZXEK86r5oY6m
-         DDSfPuYbpbKzrn1jBqPHxZHi/5t52NywzY80nfhg=
-Received: by mail-qt1-f175.google.com with SMTP id w47so5862750qtk.4;
-        Fri, 31 Jan 2020 08:38:59 -0800 (PST)
-X-Gm-Message-State: APjAAAVxrsQYoNttyJH8U6fQ9mIJFOQZuU7T4ec7mSFgisHk6sOT8kDX
-        KqeE4ysnExpGSgOXhfdW1Pbro05EmAePpr86/w==
-X-Google-Smtp-Source: APXvYqwWHczInFh7uaGKKxummXJSDmakmN9eY3QRuyrI5DrFCoTGyNZpJXbAx5W0R4uNl69txIth0/2+vhIiol1RjIU=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr11476022qtp.224.1580488738216;
- Fri, 31 Jan 2020 08:38:58 -0800 (PST)
+        id S1726193AbgAaQma (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:42:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E032FEC;
+        Fri, 31 Jan 2020 08:42:29 -0800 (PST)
+Received: from [10.37.12.54] (unknown [10.37.12.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D8D23F68E;
+        Fri, 31 Jan 2020 08:42:11 -0800 (PST)
+Subject: Re: [PATCH 2/3] ARM: dts: exynos: Add Exynos5422 CPU
+ dynamic-power-coefficient information
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+ <20200127215453.15144-3-lukasz.luba@arm.com>
+ <CAJKOXPcgC1xE2=-=_hqvqrBCBzQF4113+wez=3Lqp71=yv8gZw@mail.gmail.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <7c405b02-060c-3fbc-f6a8-2b4180753ad0@arm.com>
+Date:   Fri, 31 Jan 2020 16:42:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200130211231.224656-1-dianders@chromium.org> <20200130131220.v3.2.I0c4bbb0f75a0880cd4bd90d8b267271e2375e0d0@changeid>
-In-Reply-To: <20200130131220.v3.2.I0c4bbb0f75a0880cd4bd90d8b267271e2375e0d0@changeid>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 31 Jan 2020 10:38:46 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+eKYm2Z9_2U3-FjvNc1ku690Qypuba=w_h_1wq4zJb-A@mail.gmail.com>
-Message-ID: <CAL_Jsq+eKYm2Z9_2U3-FjvNc1ku690Qypuba=w_h_1wq4zJb-A@mail.gmail.com>
-Subject: Re: [PATCH v3 02/15] dt-bindings: clock: Fix qcom,dispcc bindings for sdm845/sc7180
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        devicetree@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJKOXPcgC1xE2=-=_hqvqrBCBzQF4113+wez=3Lqp71=yv8gZw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 3:12 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> The qcom,dispcc bindings had a few problems with them:
->
-> 1. They didn't specify all the clocks that dispcc is a client of.
->    Specifically on sc7180 there are two clocks from the DSI PHY and
->    two from the DP PHY.  On sdm845 there are actually two DSI PHYs
->    (each of which has two clocks) and an extra clock from the gcc.
->    These all need to be specified.
->
-> 2. The sdm845.dtsi has existed for quite some time without specifying
->    the clocks.  The Linux driver was relying on global names to match
->    things up.  While we should transition things, it should be noted
->    in the bindings.
->
-> 3. The names used the bindings for "xo" and "gpll0" didn't match the
->    names that QC used for these clocks internally and this was causing
->    confusion / difficulty with their code generation tools.  Switched
->    to the internal names to simplify everyone's lives.  It's not quite
->    as clean in a purist sense but it should avoid headaches.  This
->    officially changes the binding, but that seems OK in this case.
->
-> Also note that I updated the example.
->
-> Fixes: 5d28e44ba630 ("dt-bindings: clock: Add YAML schemas for the QCOM DISPCC clock bindings")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v3:
-> - Added include file to description.
-> - Discovered / added new gcc input clock on sdm845.
-> - Split sc7180 and sdm845 into two files.
-> - Switched names to internal QC names rather than logical ones.
-> - Updated commit description.
->
-> Changes in v2:
-> - Patch ("dt-bindings: clock: Fix qcom,dispcc...") new for v2.
->
->  .../bindings/clock/qcom,dispcc.yaml           | 67 -------------
->  .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
->  .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
->  3 files changed, 183 insertions(+), 67 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
 
-Other than the same $id problem,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 1/31/20 1:05 PM, Krzysztof Kozlowski wrote:
+> On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
+>>
+>> From: Lukasz Luba <lukasz.luba@arm.com>
+>>
+>> Add dynamic power coefficient into CPU nodes which let CPUFreq subsystem
+>> register the Energy Model (EM) for the CPUs.
+>>
+>> The 'dynamic-power-coefficient' is used for calculating the dynamic power
+>> according to the equation in documentation [1].  The Energy Model (EM)
+>> framework relies on calculated power and cost for each OPP. The OPP power
+>> values come from CPUFreq driver, which registered required callback
+>> function. The simple implementation of a CPUFREQ driver, like cpufreq-dt,
+>> uses 'dev_pm_opp_of_register_em()' which relay on
+>> 'dynamic-power-coefficient' to calculate the power of requested OPP for the
+>> EM [2].
+>>
+>> The calculated values might be checked in
+>> /sys/kernel/debug/energy_model/pd*/
+>>
+>> $ grep . /sys/kernel/debug/energy_model/pd1/cs*/*
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/cost:558
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/frequency:1000000
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/power:310
+>> /sys/kernel/debug/energy_model/pd1/cs:1100000/cost:558
+>> /sys/kernel/debug/energy_model/pd1/cs:1100000/frequency:1100000
+>> /sys/kernel/debug/energy_model/pd1/cs:1100000/power:341
+>> /sys/kernel/debug/energy_model/pd1/cs:1200000/cost:558
+>> /sys/kernel/debug/energy_model/pd1/cs:1200000/frequency:1200000
+>> /sys/kernel/debug/energy_model/pd1/cs:1200000/power:372
+>> /sys/kernel/debug/energy_model/pd1/cs:1300000/cost:674
+>> /sys/kernel/debug/energy_model/pd1/cs:1300000/frequency:1300000
+>> /sys/kernel/debug/energy_model/pd1/cs:1300000/power:487
+>> /sys/kernel/debug/energy_model/pd1/cs:1400000/cost:675 ...
+>>
+>> $ grep . /sys/kernel/debug/energy_model/pd0/cs*/*
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/cost:200
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/frequency:1000000
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/power:154
+>> /sys/kernel/debug/energy_model/pd0/cs:1100000/cost:260
+>> /sys/kernel/debug/energy_model/pd0/cs:1100000/frequency:1100000
+>> /sys/kernel/debug/energy_model/pd0/cs:1100000/power:220
+>> /sys/kernel/debug/energy_model/pd0/cs:1200000/cost:260
+>> /sys/kernel/debug/energy_model/pd0/cs:1200000/frequency:1200000
+>> /sys/kernel/debug/energy_model/pd0/cs:1200000/power:240
+>> /sys/kernel/debug/energy_model/pd0/cs:1300000/cost:260
+>> /sys/kernel/debug/energy_model/pd0/cs:1300000/frequency:1300000
+>> /sys/kernel/debug/energy_model/pd0/cs:1300000/power:260
+>> /sys/kernel/debug/energy_model/pd0/cs:200000/cost:130 ...
+> 
+> Please, do not describe entire Energy Model in commit message touching
+> DTS. It brings too much information which look unrelated and therefore
+> it makes difficult to spot real rationale behind the change. Just
+> mention:
+> 1. Why you are doing it?
+> 2. What are you doing?
+> 3. How did you figure out magic constants here (details of "what")?
+
+OK, I will clean this up.
+
+> 
+>> To provide a proper value of the 'dynamic-power-coefficient' the real power
+>> can be measured using a dedicated hardware, i.e. INA2xx. The Odroid-XU3
+>> hwmon sensors have been used to capture the power value during a sysbench
+>> test running on single core and at each possible OPP.
+> 
+> Since you mention the values, post them. That's the only thing which
+> reader cannot get on his own. All other values posted in commit
+> message will be seen after running tests...
+
+Makes sense, but as you spotted it can vary probably due to ASV, so I
+will skip to put values in commit message.
+
+> 
+>> The measured values
+>> were divided by 2, since the dynamic power is typically half of the
+>> consumed power (the second half is static power). Next, the approximation
+>> was made and the power model derived, showing the 'C' value of routhly X.
+> 
+> s/routhly/roughly/
+> 
+> What is X?
+
+The 'X' is <128> or <310>
+
+> 
+>> Check the example equations in drivers/opp/of.c [2].
+>> Thus, i.e. the power = 1.0Watt at 1GHz => 0.5W dynamic power =>
+>> dynamic-power-coefficient = 400
+>>
+>> Using this simple technique we can provide and needed coefficient.  The
+> 
+> s/and/the/ ?
+
+correct
+
+> 
+>> approximation does not have to be super precised. The proportion is
+>> important and the difference between power consumed by different CPUs
+>> running at the same frequency, which is then used in Energy Aware Scheduler
+>> algorithms. An example power values on Odroid-XU3:
+>>
+>> (LITTLE CPU)
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/frequency:1000000
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/power:154
+> 
+> For A7, 1V and 1 GHz this gives 142, not 154. Is it correct? What ASV
+> are you using?
+
+Good question, it may vary depending on ASV. Would it vary also due to
+bootloader?
+This one is quite old:
+U-Boot 2012.07 (Aug 11 2014 - 18:33:44) for Exynos5422
+
+Odroid-xu3 rev0.2 20140529 ASV regs dump:
+EXYNOS_CHIPID_REG_PKG_ID=0x320c832a
+EXYNOS_CHIPID_REG_AUX_INFO=0x4f
+
+Odroid-xu4 rev0.1 20180912 ASV regs dump:
+EXYNOS_CHIPID_REG_PKG_ID=0x3b0e832a
+EXYNOS_CHIPID_REG_AUX_INFO=0x100c004f
+
+> 
+>> (big CPU)
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/frequency:1000000
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/power:310
+>>
+>> In Odroid-XU3 case the derived coefficient value for 'big' CPU has:
+>> dynamic-power-coefficient = <310>;
+>> while the 'LITTLE':
+>> dynamic-power-coefficient = <128>;
+> 
+> Make it all compact. First, you mention power values which are the
+> same as in the beginning of this commit message. Why repeating? Then
+> you mention the power coefficient in 4 lines instead of simple:
+> For Odroid XU3, the derived power coefficient is then 128 for an A7
+> CPU and 310 for an A15 CPU. Or something similar.
+
+OK, I will keep simple, as you have commented.
+
+> 
+>>
+>> [1] Documentation/devicetree/bindings/arm/cpus.yaml
+>> [2] https://elixir.bootlin.com/linux/v5.4/source/drivers/opp/of.c#L1044
+> 
+> Refer to path inside, no external sources unless needed.
+
+OK
+
+Regards,
+Lukasz
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
