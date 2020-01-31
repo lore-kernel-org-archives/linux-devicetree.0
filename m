@@ -2,90 +2,140 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D45EC35240
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 10:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432A9C35240
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 11:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE152206F0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 10:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A50A20707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 11:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Rti07r8w"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VZmZkAoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgAaKkV (ORCPT
+        id S1728325AbgAaLPY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:40:21 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51609 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgAaKkV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:40:21 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 488DJL5K8vz9sSP;
-        Fri, 31 Jan 2020 21:40:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1580467218;
-        bh=NpDbQvQ6a1gVpANE05CiJvGMkImEaOzhU76R7vlCsyM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Rti07r8wsEq5Cv2Oll1n+7tK55v/64zehHtajY+SpSJnAkMxgHfhLqY+HDr6VcpLS
-         8GUBZZQXne2NFCa3W1n7IiZmmOPgIg1pd2M/blkyTI8Drd/eqCh0OexnldSyBoWAeH
-         SJlXSM1rAlKhvco/yHCRsXmQq6yVKFauxYBbAHMMLqNS0Ya/PRDsOjD6NK1Kr8vPyF
-         xtknii2clX37PXMKAssNCLCMwtOLIEtWdt13YEyv5xtr+7YZLUQixrz65ZPrFIyE0D
-         VN3gvs/J48BWFxpdiIRy0/b6Xl8CfC6mfgW9uxqAnAMn9tm/u8+uw0rR6mHly/IxeY
-         9HsYkw22XFWSg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Rob Herring <robh@kernel.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hch@lst.de, ulf.hansson@linaro.org,
-        chzigotzky@xenosoft.de, linuxppc-dev@ozlabs.org
-Subject: Re: [PATCH] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-In-Reply-To: <20200128142646.GA17341@bogus>
-References: <20200126115247.13402-1-mpe@ellerman.id.au> <20200128142646.GA17341@bogus>
-Date:   Fri, 31 Jan 2020 21:40:17 +1100
-Message-ID: <87k157gb8u.fsf@mpe.ellerman.id.au>
+        Fri, 31 Jan 2020 06:15:24 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58452 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbgAaLPY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 06:15:24 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VBF8H6116300;
+        Fri, 31 Jan 2020 05:15:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580469308;
+        bh=TjGJ1NftSvs3cwiS/cwU0Elwon6VuzHoGrqYjFUfHlo=;
+        h=From:To:CC:Subject:Date;
+        b=VZmZkAoTbF9MRPwbHOyOnTEMEvOy3nqEhYxSUjthuA+PXbQpKQn4kMGNWp4o/0rWO
+         xOJnue66jb7Iw7f+rAcynt3EJ2NF43+q0nMIxb+6R94/KQaap2xc7tZ6kbUNWMM03l
+         kUey9/PDRwRhWwfX5Ss6SYffH2dR07Varnm6aYT8=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VBF8PJ005715;
+        Fri, 31 Jan 2020 05:15:08 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 05:15:08 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 05:15:07 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VBF4Ei026862;
+        Fri, 31 Jan 2020 05:15:05 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>
+CC:     <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>
+Subject: [PATCH v4 0/2] drm/bridge: Support for Toshiba tc358768 RGB to DSI bridge
+Date:   Fri, 31 Jan 2020 13:15:51 +0200
+Message-ID: <20200131111553.472-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
-> On Sun, 26 Jan 2020 22:52:47 +1100, Michael Ellerman wrote:
->> There's an OF helper called of_dma_is_coherent(), which checks if a
->> device has a "dma-coherent" property to see if the device is coherent
->> for DMA.
->> 
->> But on some platforms devices are coherent by default, and on some
->> platforms it's not possible to update existing device trees to add the
->> "dma-coherent" property.
->> 
->> So add a Kconfig symbol to allow arch code to tell
->> of_dma_is_coherent() that devices are coherent by default, regardless
->> of the presence of the property.
->> 
->> Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
->> when the system has a coherent cache.
->> 
->> Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
->> Cc: stable@vger.kernel.org # v3.16+
->> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
->> Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
->> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
->> ---
->>  arch/powerpc/Kconfig | 1 +
->>  drivers/of/Kconfig   | 4 ++++
->>  drivers/of/address.c | 6 +++++-
->>  3 files changed, 10 insertions(+), 1 deletion(-)
->> 
->
-> Applied, thanks.
+Hi,
 
-Thanks.
+Changes since v3:
+- bindings/example: Fixed the node name
+- bindings/example: Added include for GPIO_ACTIVE_LOW and fixed up the gpio
+		    binding
+- driver: Moved the label for goto in tc358768_calc_pll()
+- driver: Replaced the refcounting of enabled with a simple bool as hw_enable()
+  is only called from one place (tc358768_bridge_pre_enable)
+- driver: Added Reviewed-by from Andrzej
 
-cheers
+Changes since v2:
+- Implement pre_enable and post_disbale callbacks and move code from enable and
+  disable callbacks.
+- hw_enable/disable is removed from tc358768_dsi_host_transfer()
+- Defines for DSI_CONFW accesses
+- breakout from the loops  (the check for it) is moved one level up in
+  tc358768_calc_pll()
+
+Changes since v1:
+DT bindings document:
+- Removed MaxItems for the regulators
+- additionalProperties: false added to port@1
+
+Driver:
+- Year is now 2020
+- Includes shorted
+- The three letter members of the private struct documented 0 they are named as
+  in the datasheet
+- Error handling for the IO functions is following what sil-sii8620.c does
+- regmap regcache is disabled along with refcache_sync() and volatile callback
+  for regmap
+- The hw enable and disable functions got separated
+- Taken the suggested simplifactions from Andrzej for tc358768_calc_pll() and
+  tc358768_dsi_host_transfer()
+- The driver no longer stores the drm_display_mode, it relies on
+  priv->bridge.encoder->crtc->state->adjusted_mode where it needs it
+- tc358768_calc_pll() can be used for verification only to not modify the state
+- refcounting added for hw enable state as a dsi transfer was shutting down the
+  bridge when it was already enabled.
+
+Tested on top of drm-next + LED backlight patches + DT patches on dra7-evm with
+osd101t2045 (panel-simple) and osd101t2587 panel drivers.
+
+Cover letter from v1:
+TC358768 is a parallel RGB to MIPI DSI bridge.
+
+The initial driver supports MIPI_DSI_MODE_VIDEO, MIPI_DSI_FMT_RGB888 and
+only write is implemented for mipi_dsi_host_ops.transfer due to lack of hardware
+where other modes can be tested.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dt-bindings: display: bridge: Add documentation for Toshiba tc358768
+  drm/bridge: Add tc358768 driver
+
+ .../display/bridge/toshiba,tc358768.yaml      |  159 +++
+ drivers/gpu/drm/bridge/Kconfig                |   10 +
+ drivers/gpu/drm/bridge/Makefile               |    1 +
+ drivers/gpu/drm/bridge/tc358768.c             | 1044 +++++++++++++++++
+ 4 files changed, 1214 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+ create mode 100644 drivers/gpu/drm/bridge/tc358768.c
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
