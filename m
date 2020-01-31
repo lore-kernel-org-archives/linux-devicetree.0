@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D19C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 20:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC163C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 20:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02B320CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 20:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87ED5215A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 20:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofZAaEqC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rjdbkl17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgAaUsi (ORCPT
+        id S1726138AbgAaUvH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:48:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46640 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgAaUsh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 15:48:37 -0500
-Received: by mail-pf1-f194.google.com with SMTP id k29so3914125pfp.13;
-        Fri, 31 Jan 2020 12:48:37 -0800 (PST)
+        Fri, 31 Jan 2020 15:51:07 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42563 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgAaUvG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 15:51:06 -0500
+Received: by mail-pg1-f196.google.com with SMTP id s64so4074819pgb.9;
+        Fri, 31 Jan 2020 12:51:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3C6QHOm9kLlMNSEBc1VIbyYgFyyrxZylD3jkKeywRZU=;
-        b=ofZAaEqCrl3a0R/wvij9pEEI34+UVgFAmbhBB2Kbx7NFYXiZ8Y2GeVTHr0RCEyena8
-         DE7jXQ+UVliiBLCo/VwvjaGcJG5zq2aZx0ZBBLnG0ynPpkghFygNgTZUOehbPjFkf1zt
-         AYWvchulGKnfxKg/zwMLQeUMWx3aTSm7OAHw+LK9Wo5/E9Jo1x+RaDKeVhzqfdhxwJo1
-         MUFjifbNUg6M3zZJJkLKkOQiixu/ADPc70yVVD3STnDitYdJmgOw1QacW6UEZyj8pIJ+
-         gWnhUzEISvdOz9qJLFEZf/z+UuEWWoPeKMtvSKQ11vGRElej2jm5mAZI8WEbITBCyKVB
-         RN0Q==
+        bh=Gz7hT2tygEwD6nceUGAt7bKWyydcJ2UC17mizbip3uc=;
+        b=Rjdbkl178kIn2Jgf7Y7Mjim4nCgMqZXASWFNjkmJZHutnT/cO0lk0UvLouRDwNDj7G
+         hbAZOQfDc0wUq05v1YLbH+wj6tQknnJX143U1lnNuj2XeSN7OSWDFNZ4fHNqHDMa4Aho
+         YstXpOpWw+HiO9dMOIflNbgj0aJHAaWk8vFYWZ0O2tfDxJ9Hq8cfKzFzBSFJz95GtBhD
+         hN7wydpa7sw6SL5Zjm66TBo9mZs5wvbv1IaVYVmhNHtZT3bBClr9HCVyoNPCU5GDdQ28
+         IPe6WIfryYDjIHuAA7Abiw+cF9Q2+zGvX9MRrxULBn3WTGg9bBHxM5tZkrlyHBEy0chf
+         h3dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=3C6QHOm9kLlMNSEBc1VIbyYgFyyrxZylD3jkKeywRZU=;
-        b=qJiAkjhBIK18N8siftiWcfsbZm+scadBteUVFzJMZ1hvWPLW7q4LKaxl5XZVg5bnEr
-         aZb4EF38+rsgsnVX07OZOREUZhnBzVO0ZOv1Zdi4/5mBZWm2lPBoaswa5ebze2ALaEz7
-         Al+5JpIfZT6Sz/iHwzQElBHkU7m/T1IW2Qw/DLq69B34MVeqPCerRFOdgJJreiOkaSjA
-         pDpgOgfIVqieAS/2nlIpr/RWh3tzL0/VMhivhvl0hrM3gZ9AHvrgEB9FValZ/BVMOUgJ
-         r9HoJye6n55fAIxQ1c0NwG9GBlfoRpHQg54MDZYu9ptYz9631iJKR2otZquj4qE4olnF
-         /9vg==
-X-Gm-Message-State: APjAAAWCXfffVWzvg0kD9EVWZRcOnI2DAWplJhqB2wG38K4Jiw+KhVu1
-        adgMTx5veQAfu0pTZaTHTM4=
-X-Google-Smtp-Source: APXvYqzOJRfqW17uCQm7Nv01ZzIqEWvenFXOJ535jg/Lxw2RfOrSbDIElC/ZGG2C46dCs/XadS1H5A==
-X-Received: by 2002:a62:ab13:: with SMTP id p19mr3240625pff.98.1580503716828;
-        Fri, 31 Jan 2020 12:48:36 -0800 (PST)
+        bh=Gz7hT2tygEwD6nceUGAt7bKWyydcJ2UC17mizbip3uc=;
+        b=IswIf9h1xDIeJWHo/dfUUvGr1hR/5DfQIR5ZHqmcS1wS7wWv1mUIrt25MpLXjIBcsG
+         iauC61QmpFoBT7vDXGxZ450CiidJW22AB6h+aQTEF8E7+wr5fu0e0ro2d69uOoG042hp
+         mhh8MmYch7mNCXZ65dvogEIKAbPzq9IK8neWgPAOEtfDp1CJ2HAf0cCcOucv8nGDVKyK
+         FhM48kpyhGwn+Ra0UK0+hRFSVJZS71ujk4Q6aJNCi01KmXJ9LmUcNSq7+OBqKtdCr7gc
+         eVKKCgz9fRX2XAt82ynsAjwdh/uS7VpxqWNmCsrSU9mGuOSGhqb7kJBMqa8cktoJx4ms
+         PZiQ==
+X-Gm-Message-State: APjAAAVjJ160dJSt1c51Ch9JbebX7Dd13lcvsj2KP2+dZlJiITRbhnos
+        njQzMjYrMzH5WGSzam63FFY=
+X-Google-Smtp-Source: APXvYqzEKbF29q60efRnkcFKCynbuqxPymfdpk04gq6LT3W2Oox7TGhiPZLUEI6lDBC6NOg7ywiwVw==
+X-Received: by 2002:a63:1853:: with SMTP id 19mr11852184pgy.170.1580503865584;
+        Fri, 31 Jan 2020 12:51:05 -0800 (PST)
 Received: from [10.67.48.234] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id g13sm7288640pfo.169.2020.01.31.12.48.35
+        by smtp.googlemail.com with ESMTPSA id o16sm11115591pgl.58.2020.01.31.12.51.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 12:48:36 -0800 (PST)
+        Fri, 31 Jan 2020 12:51:04 -0800 (PST)
 Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
 To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Sudeep Holla <sudeep.holla@arm.com>
 Cc:     Mark Rutland <mark.rutland@arm.com>,
         "robh@kernel.org" <robh@kernel.org>,
@@ -77,11 +78,12 @@ Cc:     Mark Rutland <mark.rutland@arm.com>,
         "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Robin.Murphy@arm.com" <Robin.Murphy@arm.com>
+        <linux-arm-kernel@lists.infradead.org>
 References: <20200128153806.7780-1-benjamin.gaignard@st.com>
  <20200128163628.GB30489@bogus> <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
  <20200128171639.GA36496@bogus> <26eb1fde-5408-43f0-ccba-f0c81e791f54@st.com>
+ <6a6ba7ff-7ed9-e573-63ca-66fca609075b@arm.com>
+ <c4d5c46a-7f90-ff2b-9496-26102114c5e6@st.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -137,12 +139,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <548b1427-cf6e-319a-36e2-c3e9363b930d@gmail.com>
-Date:   Fri, 31 Jan 2020 12:48:33 -0800
+Message-ID: <e370fb7a-02a6-f5f3-c87d-cd09a80d69ec@gmail.com>
+Date:   Fri, 31 Jan 2020 12:51:03 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <26eb1fde-5408-43f0-ccba-f0c81e791f54@st.com>
+In-Reply-To: <c4d5c46a-7f90-ff2b-9496-26102114c5e6@st.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -151,65 +153,108 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/28/20 12:06 PM, Benjamin GAIGNARD wrote:
+On 1/29/20 5:40 AM, Benjamin GAIGNARD wrote:
 > 
-> On 1/28/20 6:17 PM, Sudeep Holla wrote:
->> On Tue, Jan 28, 2020 at 04:46:41PM +0000, Benjamin GAIGNARD wrote:
->>> On 1/28/20 5:36 PM, Sudeep Holla wrote:
->>>> On Tue, Jan 28, 2020 at 04:37:59PM +0100, Benjamin Gaignard wrote:
->>>>> Bus firewall framework aims to provide a kernel API to set the configuration
->>>>> of the harware blocks in charge of busses access control.
->>>>>
->>>>> Framework architecture is inspirated by pinctrl framework:
->>>>> - a default configuration could be applied before bind the driver.
->>>>>     If a configuration could not be applied the driver is not bind
->>>>>     to avoid doing accesses on prohibited regions.
->>>>> - configurations could be apllied dynamically by drivers.
->>>>> - device node provides the bus firewall configurations.
->>>>>
->>>>> An example of bus firewall controller is STM32 ETZPC hardware block
->>>>> which got 3 possible configurations:
->>>>> - trust: hardware blocks are only accessible by software running on trust
->>>>>     zone (i.e op-tee firmware).
->>>>> - non-secure: hardware blocks are accessible by non-secure software (i.e.
->>>>>     linux kernel).
->>>>> - coprocessor: hardware blocks are only accessible by the coprocessor.
->>>>> Up to 94 hardware blocks of the soc could be managed by ETZPC.
->>>>>
->>>> /me confused. Is ETZPC accessible from the non-secure kernel space to
->>>> begin with ? If so, is it allowed to configure hardware blocks as secure
->>>> or trusted ? I am failing to understand the overall design of a system
->>>> with ETZPC controller.
->>> Non-secure kernel could read the values set in ETZPC, if it doesn't match
->>> with what is required by the device node the driver won't be probed.
+> On 1/28/20 11:06 PM, Robin Murphy wrote:
+>> On 2020-01-28 8:06 pm, Benjamin GAIGNARD wrote:
 >>>
->> OK, but I was under the impression that it was made clear that Linux is
->> not firmware validation suite. The firmware need to ensure all the devices
->> that are not accessible in the Linux kernel are marked as disabled and
->> this needs to happen before entering the kernel. So if this is what this
->> patch series achieves, then there is no need for it. Please stop pursuing
->> this any further or provide any other reasons(if any) to have it. Until
->> you have other reasons, NACK for this series.
+>>> On 1/28/20 6:17 PM, Sudeep Holla wrote:
+>>>> On Tue, Jan 28, 2020 at 04:46:41PM +0000, Benjamin GAIGNARD wrote:
+>>>>> On 1/28/20 5:36 PM, Sudeep Holla wrote:
+>>>>>> On Tue, Jan 28, 2020 at 04:37:59PM +0100, Benjamin Gaignard wrote:
+>>>>>>> Bus firewall framework aims to provide a kernel API to set the 
+>>>>>>> configuration
+>>>>>>> of the harware blocks in charge of busses access control.
+>>>>>>>
+>>>>>>> Framework architecture is inspirated by pinctrl framework:
+>>>>>>> - a default configuration could be applied before bind the driver.
+>>>>>>>      If a configuration could not be applied the driver is not bind
+>>>>>>>      to avoid doing accesses on prohibited regions.
+>>>>>>> - configurations could be apllied dynamically by drivers.
+>>>>>>> - device node provides the bus firewall configurations.
+>>>>>>>
+>>>>>>> An example of bus firewall controller is STM32 ETZPC hardware block
+>>>>>>> which got 3 possible configurations:
+>>>>>>> - trust: hardware blocks are only accessible by software running 
+>>>>>>> on trust
+>>>>>>>      zone (i.e op-tee firmware).
+>>>>>>> - non-secure: hardware blocks are accessible by non-secure 
+>>>>>>> software (i.e.
+>>>>>>>      linux kernel).
+>>>>>>> - coprocessor: hardware blocks are only accessible by the 
+>>>>>>> coprocessor.
+>>>>>>> Up to 94 hardware blocks of the soc could be managed by ETZPC.
+>>>>>>>
+>>>>>> /me confused. Is ETZPC accessible from the non-secure kernel space to
+>>>>>> begin with ? If so, is it allowed to configure hardware blocks as 
+>>>>>> secure
+>>>>>> or trusted ? I am failing to understand the overall design of a 
+>>>>>> system
+>>>>>> with ETZPC controller.
+>>>>> Non-secure kernel could read the values set in ETZPC, if it doesn't 
+>>>>> match
+>>>>> with what is required by the device node the driver won't be probed.
+>>>>>
+>>>> OK, but I was under the impression that it was made clear that Linux is
+>>>> not firmware validation suite. The firmware need to ensure all the 
+>>>> devices
+>>>> that are not accessible in the Linux kernel are marked as disabled and
+>>>> this needs to happen before entering the kernel. So if this is what 
+>>>> this
+>>>> patch series achieves, then there is no need for it. Please stop 
+>>>> pursuing
+>>>> this any further or provide any other reasons(if any) to have it. Until
+>>>> you have other reasons, NACK for this series.
+>>>
+>>> No it doesn't disable the nodes.
+>>>
+>>> When the firmware disable a node before the kernel that means it change
+>>>
+>>> the DTB and that is a problem when you want to sign it. With my proposal
+>>>
+>>> the DTB remains the same.
+>>
+>> ???
+>>
+>> :/
+>>
+>> The DTB is used to pass the kernel command line, memory reservations, 
+>> random seeds, and all manner of other things dynamically generated by 
+>> firmware at boot-time. Apologies for being blunt but if "changing the 
+>> DTB" is considered a problem then I can't help but think you're doing 
+>> it wrong.
 > 
-> No it doesn't disable the nodes.
+> Yes but I would like to limit the number of cases where a firmware has 
+> to change the DTB.
 > 
-> When the firmware disable a node before the kernel that means it change
+> With this proposal nodes remain the same and embedded the firewall 
+> configuration(s).
 > 
-> the DTB and that is a problem when you want to sign it. With my proposal
+> Until now firewall configuration is "static", the firmware disable (or 
+> remove) the nodes not accessible from Linux.
 > 
-> the DTB remains the same.
+> If Linux can rely on node's firewall information it could allow switch 
+> dynamically an hardware block from Linux to a coprocessor.
+> 
+> For example Linux could manage the display pipe configuration and when 
+> going to suspend handover the display hardware block to a coprocessor in 
+> charge a refreshing only some pixels.
 
-Could you use an overlay then which is the result of the firewalling
-results by your firewall block, which is smaller than the main SoC/board
-DTB and can be easily audited not to accidentally enable blocks, but
-only disable them by adding/changing the respective "status" property.
-Worst case, your driver probes, has been firewalled and this is not
-reflected in the DTB, you get a bus error, or a hang, or however it gets
-implemented.
+OK, let's continue that example, would not it make sense then to just
+steal the peripheral away from Linux by ensuring that Linux is no longer
+running and the only thing that you need to make sure of is that either
+you restore the HW in the exact same that you stole it from, or that
+Linux is capable of refreshing its state against what the HW state was
+left in?
 
-Like Robin and Sudeep here, I do not understand why the kernel should
-have any business in this, let alone allowing blocks to change owners,
-that sounds contrary to the purpose of a firewall being controlled under
-an untrusted entity (Linux).
+If you have a set of display pipeline drivers, on your way to suspend,
+you can define a protocol with the co-processor so as to signal an
+ownership change, and the co-processor can take control from there.
+
+In your example, it sounds like the firewall could be meant to detect
+uncoordinated concurrent accesses to the same HW block between different
+SW/FW entities. If that is the case, this is most likely a bug and you
+can probably just get away with doing reporting instead of an entirely
+new subsystem?
 -- 
 Florian
