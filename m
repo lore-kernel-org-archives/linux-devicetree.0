@@ -2,109 +2,261 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BE6C35240
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF28C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7E3214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="M+YcKaeJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2646E2082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 16:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580488585;
+	bh=Fs/FAawPdYJuq52mxS/wqXFtjT4M8et3Ikr/1M6FIic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X7Ox9Pt94yUijcSg2pTZvxdO+rGtSAkOFhFzj7flsnCFna+d0qRYV+yJ92Zz6YXdu
+	 B2rSuagw2O8MmpHeqDC6HaOw12FgHHhuI8gsTpi6Cv/0Oj9JfxXl4kK9bFbdKQWt7G
+	 UXlkOQwrZPfXREfXoD7v5BVGHRy7zVsPUPIuLQ0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgAaQNk (ORCPT
+        id S1726252AbgAaQgY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:13:40 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29552 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729162AbgAaQNk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:13:40 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VG8Ufu012526;
-        Fri, 31 Jan 2020 17:13:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=HUDBBixwA13IQ1SSxhBd1lmaKx9dqoz2nLZDQib/1NY=;
- b=M+YcKaeJ2bnVCl5PayaMJx+tFQAQGf39itcySN6HFpedQJV60UeyQR+C3dnWO5cUftet
- GbGDnNSjoRvGb9p5bocMIOMMVwwq6udnrw3lR1x5yiYRmZ1YDuGEt2eXJNuD+ssGRoYx
- DjnZc2l2lbGzI7hEmfHpDQSH0dYvYPFdkMCxSkvSBI/IvDSKrIvzxHaLm2ARDTIwEYTc
- BYlmU1xUEQVqRMpTLmrVAQC3dHPdMcbckmJMZvJe+QMnLRdD24sLLFwULK9Avg3kl0JA
- 6pgph/GNCKKc7UGzCSmm2hWL1nyDuQWkHvTU2pEuyecFki1KCmFXRjOvMEDRpx3H4opv oQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrc13pvvx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jan 2020 17:13:31 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BC12810002A;
-        Fri, 31 Jan 2020 17:13:26 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A0DEE2D3796;
-        Fri, 31 Jan 2020 17:13:26 +0100 (CET)
-Received: from lmecxl0995.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 31 Jan
- 2020 17:13:25 +0100
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: dwc2: add support for STM32MP15
- SoCs USB OTG HS and FS
-To:     Felipe Balbi <balbi@kernel.org>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-References: <20200124084131.23749-1-amelie.delaunay@st.com>
- <20200124084131.23749-2-amelie.delaunay@st.com> <87imkr7nou.fsf@kernel.org>
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-Message-ID: <c29867bd-8056-a82f-2273-101470395e78@st.com>
-Date:   Fri, 31 Jan 2020 17:13:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 11:36:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgAaQgY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:36:24 -0500
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39B972082E;
+        Fri, 31 Jan 2020 16:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580488583;
+        bh=Fs/FAawPdYJuq52mxS/wqXFtjT4M8et3Ikr/1M6FIic=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0vTVadZyhl18ZX2cB2ZszEp/pmLdOqd3Wb9g9oMn2WouCnQPQzkOnfSz7Mz2kdQ66
+         mUTxp//K97YBKg5YuFxeHpHO487+Ba5g72MrxSkC8bNeSoTXR7lE2iRMWHlHpIIQbq
+         8bihIsGKNz6axIaeu9XVyoIWYCzY/uSF9bnvcg80=
+Received: by mail-qt1-f181.google.com with SMTP id v25so5848754qto.7;
+        Fri, 31 Jan 2020 08:36:23 -0800 (PST)
+X-Gm-Message-State: APjAAAXlf0R37utORTR9WCYlqlmKO19AbLjPT0UIh/jWJMkPNmVD6pcr
+        5s/MKUZ+FJc03m7P0X6z0gnIeqYpFaoSCNTrAg==
+X-Google-Smtp-Source: APXvYqxvfr9BW//7wSw4AQYOawlaBPSl3VOxQmUJxzMOB7suHBwIa8Z/SVB+GdRGRPXiNdGoCKMUZF8+LjvD3ZM7EhY=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr11714482qtj.300.1580488582310;
+ Fri, 31 Jan 2020 08:36:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <87imkr7nou.fsf@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-31_04:2020-01-31,2020-01-31 signatures=0
+References: <20200130211231.224656-1-dianders@chromium.org> <20200130131220.v3.11.I27bbd90045f38cd3218c259526409d52a48efb35@changeid>
+In-Reply-To: <20200130131220.v3.11.I27bbd90045f38cd3218c259526409d52a48efb35@changeid>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 31 Jan 2020 10:36:10 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+_2E-bAbP9F6VYkWRp0crEyRGa5peuwP58-PZniVny7w@mail.gmail.com>
+Message-ID: <CAL_Jsq+_2E-bAbP9F6VYkWRp0crEyRGa5peuwP58-PZniVny7w@mail.gmail.com>
+Subject: Re: [PATCH v3 11/15] dt-bindings: clock: Cleanup qcom,videocc
+ bindings for sdm845/sc7180
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On 1/31/20 2:36 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> Amelie Delaunay <amelie.delaunay@st.com> writes:
-> 
->> Add the specific compatible string for the DWC2 IP found in the STM32MP15
->> SoCs.
->> STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
->> ID pin state. usb33d-supply described the regulator supplying Vbus and ID
->> sensing comparators.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> 
-> This doesn't apply. dwc2 bindings is still in .txt format. I have taken
-> patch 2, though.
+On Thu, Jan 30, 2020 at 3:13 PM Douglas Anderson <dianders@chromium.org> wrote:
 >
+> This makes the qcom,videocc bindings match the recent changes to the
+> dispcc and gpucc.
+>
+> 1. Switched to using "bi_tcxo" instead of "xo".
+>
+> 2. Adds a description for the XO clock.  Not terribly important but
+>    nice if it cleanly matches its cousins.
+>
+> 3. Updates the example to use the symbolic name for the RPMH clock and
+>    also show that the real devices are currently using 2 address cells
+>    / size cells and fixes the spacing on the closing brace.
+>
+> 4. Split into 2 files.  In this case they could probably share one
+>    file, but let's be consistent.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v3:
+> - Added include file to description.
+> - Split videocc bindings into 2 files.
+> - Unlike in v2, use internal name instead of purist name.
+>
+> Changes in v2:
+> - Patch ("dt-bindings: clock: Cleanup qcom,videocc") new for v2.
+>
+>  .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 +++++++++++++++++++
+>  ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++++----
+>  2 files changed, 77 insertions(+), 13 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+>  rename Documentation/devicetree/bindings/clock/{qcom,videocc.yaml => qcom,sdm845-videocc.yaml} (60%)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+> new file mode 100644
+> index 000000000000..f12ec56737e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,sc7180-videocc.yaml#
 
-Thanks for taking driver patch.
+'bindings/' should be removed here. I just found my check on this was
+inadequate. The clock bindings seem to have the most copy-n-paste of
+this.
 
-Rob, would you mind to take patch 1 (Yaml binding update) in your tree ?
+Otherwise,
 
-Regards,
-Amelie
+Reviewed-by: Rob Herring <robh@kernel.org>
 
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Video Clock & Reset Controller Binding for SC7180
+> +
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm video clock control module which supports the clocks, resets and
+> +  power domains on SC7180.
+> +
+> +  See also dt-bindings/clock/qcom,videocc-sc7180.h.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sc7180-videocc
+> +
+> +  clocks:
+> +    items:
+> +      - description: Board XO source
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bi_tcxo
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  '#reset-cells':
+> +    const: 1
+> +
+> +  '#power-domain-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +  - '#reset-cells'
+> +  - '#power-domain-cells'
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    clock-controller@ab00000 {
+> +      compatible = "qcom,sc7180-videocc";
+> +      reg = <0 0x0ab00000 0 0x10000>;
+> +      clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +      clock-names = "bi_tcxo";
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
+> similarity index 60%
+> rename from Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+> rename to Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
+> index 43cfc893a8d1..60300f5ab307 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
+> @@ -1,30 +1,31 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/bindings/clock/qcom,videocc.yaml#
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,sdm845-videocc.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+> -title: Qualcomm Video Clock & Reset Controller Binding
+> +title: Qualcomm Video Clock & Reset Controller Binding for SDM845
+>
+>  maintainers:
+>    - Taniya Das <tdas@codeaurora.org>
+>
+>  description: |
+>    Qualcomm video clock control module which supports the clocks, resets and
+> -  power domains.
+> +  power domains on SDM845.
+> +
+> +  See also dt-bindings/clock/qcom,videocc-sdm845.h.
+>
+>  properties:
+>    compatible:
+> -    enum:
+> -      - qcom,sc7180-videocc
+> -      - qcom,sdm845-videocc
+> +    const: qcom,sdm845-videocc
+>
+>    clocks:
+> -    maxItems: 1
+> +    items:
+> +      - description: Board XO source
+>
+>    clock-names:
+>      items:
+> -      - const: xo
+> +      - const: bi_tcxo
+>
+>    '#clock-cells':
+>      const: 1
+> @@ -48,15 +49,15 @@ required:
+>    - '#power-domain-cells'
+>
+>  examples:
+> -  # Example of VIDEOCC with clock node properties for SDM845:
+>    - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+>      clock-controller@ab00000 {
+>        compatible = "qcom,sdm845-videocc";
+> -      reg = <0xab00000 0x10000>;
+> -      clocks = <&rpmhcc 0>;
+> -      clock-names = "xo";
+> +      reg = <0 0x0ab00000 0 0x10000>;
+> +      clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +      clock-names = "bi_tcxo";
+>        #clock-cells = <1>;
+>        #reset-cells = <1>;
+>        #power-domain-cells = <1>;
+> -     };
+> +    };
+>  ...
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
