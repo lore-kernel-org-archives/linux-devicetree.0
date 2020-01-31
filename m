@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C017CC33CB2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 08:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A8AC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 08:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D70320705
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 08:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C309E20705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 08:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgAaIsZ (ORCPT
+        id S1728183AbgAaIsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 03:48:25 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39652 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728175AbgAaIsY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 03:48:24 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so7707917wme.4;
-        Fri, 31 Jan 2020 00:48:23 -0800 (PST)
+        Fri, 31 Jan 2020 03:48:41 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50487 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728175AbgAaIsl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 03:48:41 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a5so6966972wmb.0;
+        Fri, 31 Jan 2020 00:48:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2dEBK2/0QEjcEIbTow6H8atvD57XckSzsqrktuuuwiQ=;
-        b=iE1y3RWV6QWI2ssruPyBjM36XoczkGFjHbsAK0Y9paiW+gaFQBHH/jxSsIsLAoirYF
-         rrkYwl2rFqusVLx0t5h3dtjthYzl69mfNc2AT+hcEHaFoSITKYuHtiuNfHvwybE8ige+
-         zx7tBKDEZXncKMHWLI2JUQtigaqSQYDd6QPeXKDyeXnj6qcST8YugW6lELv1KbdLjWBe
-         I7Lzjzj+iLRlblzpS2iGRjTSCdLEzTM+qYiPfXp6/DDxTg4JsJ+L86wlIluEj9AQ5h3Q
-         NmpuMr8C2TMz2RmDHp3dvkAUvKFSy6eD6MwyIjZFJoWUrv4QOWi3u3bM0sZ6Q9dinoYO
-         gkPQ==
-X-Gm-Message-State: APjAAAU7CS6MbwWa3bizXyUTFUAcjJFzQrOg6OnzWrzZFWKMVFycCvz6
-        ZgTzWnp8QnEtzWrprrmhMPfTG2F/Z/Q=
-X-Google-Smtp-Source: APXvYqyHY3SsN8sdxcNTZKwuYJH0cgDW0nY1gVdu6YC/r1hZq5mTO/Ua3IXVS/iQwDDxxCzDvFMN6w==
-X-Received: by 2002:a1c:6389:: with SMTP id x131mr11106584wmb.155.1580460119746;
-        Fri, 31 Jan 2020 00:41:59 -0800 (PST)
+        bh=sMmbpncOJ0ZaEaTp6uD1F3mJKzNvU9i5QAcT7nrh4JY=;
+        b=taKZC9bUFSpkLtDWwagZqFjJrmmfH0HbDtYdkUPFjSuAs5iSCJS+QWW4LHCxIGb9KP
+         N9GJ3JB3zT/Icnmuq6Za2kXCKFz1aJyKEOSiR/Ja5JzdB6g/mqfdo2r16PSp/fum1AFq
+         cI2l+U9GAa/4Lw2HkPKAGh8rihQu1msjitVVhvg0VIL0KRZpiWqxDI6esSPdu9q3H67q
+         80XlWsz4S4jD4PdNVZPihlAJiuHvSHhTkvOKdAPIxb8z5Qvdwt0bWc3EK7sYQwFV+M/J
+         HnZh3wl+rv6N1huzjfDTr7D8NkSQN3Z0aBuse0tJbM4WDmiykLTm8HQei7e2cGv8Cnzg
+         BJng==
+X-Gm-Message-State: APjAAAXpMptjafk2H39fOBN8KAAIOyU+h09t2RNqHWW5R2bAov19cJib
+        ffF1q/fgG10ycJQTxc+dBcUgBn4OlHE=
+X-Google-Smtp-Source: APXvYqzKcapyTjD9nBiBSyVMOTcqge1oPKD3TaBRMVfA2GO5FZ48/UrkimVNYtSOgOOLzu22AYMvKA==
+X-Received: by 2002:a1c:6a06:: with SMTP id f6mr11000810wmc.137.1580460117691;
+        Fri, 31 Jan 2020 00:41:57 -0800 (PST)
 Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id x7sm11034302wrq.41.2020.01.31.00.41.58
+        by smtp.gmail.com with ESMTPSA id x7sm11034302wrq.41.2020.01.31.00.41.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 00:41:59 -0800 (PST)
+        Fri, 31 Jan 2020 00:41:57 -0800 (PST)
 From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
@@ -55,9 +55,9 @@ Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 10/12] ARM: dts: imx7d: cl-som-imx7: add WiLink8 WLAN support
-Date:   Fri, 31 Jan 2020 08:36:36 +0000
-Message-Id: <20200131083638.6118-10-git@andred.net>
+Subject: [PATCH v3 08/12] ARM: dts: imx7d: cl-som-imx7: update UART1 (debug) clock
+Date:   Fri, 31 Jan 2020 08:36:34 +0000
+Message-Id: <20200131083638.6118-8-git@andred.net>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200131083638.6118-1-git@andred.net>
 References: <20200131083638.6118-1-git@andred.net>
@@ -69,13 +69,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-add / enable TI's WiLink8 WLAN module on SDIO2.
-
-Notes:
-* power is always enabled (because of bluetooth)
-* the downstream delay of 70ms after power-on
-  doesn't seem to reliably work, hence it was
-  bumped to 700ms
+assign OSC as uart1 (debug) clock to achieve low power,
+so that the PLL doesn't need to be kept on
 
 Signed-off-by: André Draszik <git@andred.net>
 Cc: Ilya Ledvich <ilya@compulab.co.il>
@@ -90,94 +85,22 @@ Cc: NXP Linux Team <linux-imx@nxp.com>
 Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 60 +++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index a16cbb070a12..4cb36decef3d 100644
+index d4637a8ca223..f80be855b4ec 100644
 --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
 +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -28,6 +28,24 @@
- 		compatible = "smsc,usb3503";
- 		reset-gpios = <&pca9555 6 GPIO_ACTIVE_LOW>;
- 	};
-+
-+	pwrseq_ti_wifi: ti-wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&pca9555 0 GPIO_ACTIVE_LOW>;
-+		post-power-on-delay-ms = <700>;
-+		/* 10μs during shutdown, but 60μs between two enables */
-+		power-off-delay-us = "60";
-+	};
-+
-+	reg_ti_wifi: regulator-ti-wifi {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wilink-regulator";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pca9555 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
- };
- 
- &cpu0 {
-@@ -232,6 +250,31 @@
+@@ -222,7 +222,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
+ 	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
+-	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
  	status = "okay";
  };
  
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	vmmc-supply = <&reg_ti_wifi>;
-+	mmc-pwrseq = <&pwrseq_ti_wifi>;
-+	non-removable;
-+	cap-power-off-card;
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1835";
-+		reg = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usdhc2_wlcore>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <15 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-+
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
-@@ -308,6 +351,23 @@
- 		>;
- 	};
- 
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD2_CMD__SD2_CMD		0x59
-+			MX7D_PAD_SD2_CLK__SD2_CLK		0x19
-+			MX7D_PAD_SD2_DATA0__SD2_DATA0		0x59
-+			MX7D_PAD_SD2_DATA1__SD2_DATA1		0x59
-+			MX7D_PAD_SD2_DATA2__SD2_DATA2		0x59
-+			MX7D_PAD_SD2_DATA3__SD2_DATA3		0x59
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_wlcore: usdhc2wlcoregrp {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO15__GPIO1_IO15		0x34
-+		>;
-+	};
-+
- 	pinctrl_usdhc3: usdhc3grp {
- 		fsl,pins = <
- 			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
 -- 
 2.23.0.rc1
 
