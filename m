@@ -2,176 +2,128 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586B7C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 18:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1001BC35240
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 18:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A37206F0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 18:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D886620CC7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 18:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xUXjddQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgAaSZN (ORCPT
+        id S1726332AbgAaScv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:25:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:38206 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgAaSZN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:25:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0E97FEC;
-        Fri, 31 Jan 2020 10:25:12 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BB963F68E;
-        Fri, 31 Jan 2020 10:25:10 -0800 (PST)
-Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
-        "lkml@metux.net" <lkml@metux.net>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "system-dt@lists.openampproject.org" 
-        <system-dt@lists.openampproject.org>,
-        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200128153806.7780-1-benjamin.gaignard@st.com>
- <20200128163628.GB30489@bogus> <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
- <20200128171639.GA36496@bogus> <26eb1fde-5408-43f0-ccba-f0c81e791f54@st.com>
- <6a6ba7ff-7ed9-e573-63ca-66fca609075b@arm.com>
- <c4d5c46a-7f90-ff2b-9496-26102114c5e6@st.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3624ec3e-b06a-907d-ebfa-8516b14cb306@arm.com>
-Date:   Fri, 31 Jan 2020 18:25:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 31 Jan 2020 13:32:51 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48794 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgAaScv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 13:32:51 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VIWj0P063141;
+        Fri, 31 Jan 2020 12:32:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580495565;
+        bh=q2HZkUr28QG6cWoG52S+ZRVcQYY3XCcEI2XJl8Y38Io=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xUXjddQ8VRVzGoFCZSj7lLubniGGZVbFrsysmwmFQpqkfztFCgZHMiQQCjpu4/sM1
+         1Rf1Z75Tc4MpG1HQqbpzH75g2SPoT4w9VKOlhJ+IRBlvPyPYQDkn64zAKHIpdmYfZE
+         gdHD4cwv2lQ+2cgsJoLP+YjmjRO4D0zC3jVucRo4=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VIWjpo121344
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 12:32:45 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 12:32:45 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 12:32:45 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VIWjEx001278;
+        Fri, 31 Jan 2020 12:32:45 -0600
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
+ feature
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
+References: <20200131151110.31642-1-dmurphy@ti.com>
+ <20200131151110.31642-2-dmurphy@ti.com>
+ <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
+Date:   Fri, 31 Jan 2020 12:29:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <c4d5c46a-7f90-ff2b-9496-26102114c5e6@st.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/01/2020 1:40 pm, Benjamin GAIGNARD wrote:
-> 
-> On 1/28/20 11:06 PM, Robin Murphy wrote:
->> On 2020-01-28 8:06 pm, Benjamin GAIGNARD wrote:
->>>
->>> On 1/28/20 6:17 PM, Sudeep Holla wrote:
->>>> On Tue, Jan 28, 2020 at 04:46:41PM +0000, Benjamin GAIGNARD wrote:
->>>>> On 1/28/20 5:36 PM, Sudeep Holla wrote:
->>>>>> On Tue, Jan 28, 2020 at 04:37:59PM +0100, Benjamin Gaignard wrote:
->>>>>>> Bus firewall framework aims to provide a kernel API to set the
->>>>>>> configuration
->>>>>>> of the harware blocks in charge of busses access control.
->>>>>>>
->>>>>>> Framework architecture is inspirated by pinctrl framework:
->>>>>>> - a default configuration could be applied before bind the driver.
->>>>>>>       If a configuration could not be applied the driver is not bind
->>>>>>>       to avoid doing accesses on prohibited regions.
->>>>>>> - configurations could be apllied dynamically by drivers.
->>>>>>> - device node provides the bus firewall configurations.
->>>>>>>
->>>>>>> An example of bus firewall controller is STM32 ETZPC hardware block
->>>>>>> which got 3 possible configurations:
->>>>>>> - trust: hardware blocks are only accessible by software running
->>>>>>> on trust
->>>>>>>       zone (i.e op-tee firmware).
->>>>>>> - non-secure: hardware blocks are accessible by non-secure
->>>>>>> software (i.e.
->>>>>>>       linux kernel).
->>>>>>> - coprocessor: hardware blocks are only accessible by the
->>>>>>> coprocessor.
->>>>>>> Up to 94 hardware blocks of the soc could be managed by ETZPC.
->>>>>>>
->>>>>> /me confused. Is ETZPC accessible from the non-secure kernel space to
->>>>>> begin with ? If so, is it allowed to configure hardware blocks as
->>>>>> secure
->>>>>> or trusted ? I am failing to understand the overall design of a
->>>>>> system
->>>>>> with ETZPC controller.
->>>>> Non-secure kernel could read the values set in ETZPC, if it doesn't
->>>>> match
->>>>> with what is required by the device node the driver won't be probed.
->>>>>
->>>> OK, but I was under the impression that it was made clear that Linux is
->>>> not firmware validation suite. The firmware need to ensure all the
->>>> devices
->>>> that are not accessible in the Linux kernel are marked as disabled and
->>>> this needs to happen before entering the kernel. So if this is what
->>>> this
->>>> patch series achieves, then there is no need for it. Please stop
->>>> pursuing
->>>> this any further or provide any other reasons(if any) to have it. Until
->>>> you have other reasons, NACK for this series.
->>>
->>> No it doesn't disable the nodes.
->>>
->>> When the firmware disable a node before the kernel that means it change
->>>
->>> the DTB and that is a problem when you want to sign it. With my proposal
->>>
->>> the DTB remains the same.
->>
->> ???
->>
->> :/
->>
->> The DTB is used to pass the kernel command line, memory reservations,
->> random seeds, and all manner of other things dynamically generated by
->> firmware at boot-time. Apologies for being blunt but if "changing the
->> DTB" is considered a problem then I can't help but think you're doing
->> it wrong.
-> 
-> Yes but I would like to limit the number of cases where a firmware has
-> to change the DTB.
+Florian
 
-Sure, but unless you can limit that number to strictly zero, then 
-presumably the firmware must have the general capability to verify, 
-modify, and re-sign a DTB. At that point having it also tweak the status 
-of nodes that it wants for itself doesn't seem like a particularly big ask.
+On 1/31/20 11:49 AM, Florian Fainelli wrote:
+> On 1/31/20 7:11 AM, Dan Murphy wrote:
+>> Set the speed optimization bit on the DP83867 PHY.
+>> This feature can also be strapped on the 64 pin PHY devices
+>> but the 48 pin devices do not have the strap pin available to enable
+>> this feature in the hardware.  PHY team suggests to have this bit set.
+> OK, but why and how does that optimization work exactly?
 
-> With this proposal nodes remain the same and embedded the firewall
-> configuration(s).
-> 
-> Until now firewall configuration is "static", the firmware disable (or
-> remove) the nodes not accessible from Linux.
-> 
-> If Linux can rely on node's firewall information it could allow switch
-> dynamically an hardware block from Linux to a coprocessor.
-> 
-> For example Linux could manage the display pipe configuration and when
-> going to suspend handover the display hardware block to a coprocessor in
-> charge a refreshing only some pixels.
+I described this in the cover letter.  And it is explained in the data 
+sheet Section 8.4.6.6
 
-And like I'm sure I said before, the interface between Linux and the 
-Secure environment to ultimately achieve that will almost certainly make 
-inspecting a passive status bit in a register redundant anyway.
+>   Departing from
+> the BMSR reads means you possibly are going to introduce bugs and/or
+> incomplete information. For instance, you set phydev->pause and
+> phydev->asym_pause to 0 now, is there no way to extract what the link
+> partner has advertised?
 
-In the interest of being productive, though, there is another way of 
-looking at this. If we drop the pretence that it's in any way generic or 
-ever going to be relevant beyond certain configurations of certain 
-STMicro SoCs, then in plain terms it's just some block of MMIO registers 
-that have *something* to do with various other devices. At that point, 
-the answer is just to treat it as a syscon and make the relevant drivers 
-for those SoCs aware of it. I'm most familiar with the "General Register 
-File" on Rockchip SoCs as a prime example of "bunch of registers that 
-relate to the integration of various IP blocks", which manages to be 
-supported just fine without invasive hooks in the driver core.
+I was using the marvel.c as my template as it appears to have a separate 
+status register as well.
 
-Robin.
+Instead of setting those bits in the call back I can call the 
+genphy_read_status then override the duplex and speed based on the 
+physts register like below.  This way link status and pause values can 
+be updated and then we can update the speed and duplex settings.
+
+       ret = genphy_read_status(phydev);
+     if (ret)
+         return ret;
+
+     if (status < 0)
+         return status;
+
+     if (status & DP83867_PHYSTS_DUPLEX)
+         phydev->duplex = DUPLEX_FULL;
+     else
+         phydev->duplex = DUPLEX_HALF;
+
+     if (status & DP83867_PHYSTS_1000)
+         phydev->speed = SPEED_1000;
+     else if (status & DP83867_PHYSTS_100)
+         phydev->speed = SPEED_100;
+     else
+         phydev->speed = SPEED_10;
+
+
+>> With this bit set the PHY will auto negotiate and report the link
+>> parameters in the PHYSTS register and not in the BMCR.
+> That should be BMSR, the BMCR is about control, not status.
+
+OK.
+
+Dan
+
