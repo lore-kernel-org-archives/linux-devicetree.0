@@ -2,74 +2,116 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D260EC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91015C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2EE5214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580490606;
-	bh=4Ca/p9eaun/fjwm17b1QdTDYvF3FekqAh2W9nVCEcTM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NicBbIDYLGek0TwHXXckzhUHJjpUO9DN3sT63ygVQIQpKU605u3v4RK9CAYGxdUI8
-	 7ROkTQli1ELpBMF+wiS321ulcQzZarsNqf8XH92/2sEXV/BcjqaY4kGU7JvufTRL2U
-	 4cgmGF9UpB+Q0SCr86e4r8Dl0dszQRJ+e1R8i6Jc=
+	by mail.kernel.org (Postfix) with ESMTP id 6C4CA206D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 17:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgAaRKG (ORCPT
+        id S1726712AbgAaRMx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:10:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbgAaRKF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:10:05 -0500
-Received: from cakuba.hsd1.ca.comcast.net (unknown [199.201.64.133])
+        Fri, 31 Jan 2020 12:12:53 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:34512 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbgAaRMx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 12:12:53 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13CD9206D5;
-        Fri, 31 Jan 2020 17:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580490605;
-        bh=4Ca/p9eaun/fjwm17b1QdTDYvF3FekqAh2W9nVCEcTM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jx7LEo+pnyxcvs482GuASR8tSjvD5I8+37EAetaUWSd41CuobJ+9QFTk3n/Fj/guK
-         ckENUrlTtSiyFIDgCbBskOPaG+ckOrSTDXhI8SVGBNhWFctWXUQgdPW8f6Oiv0ZBuY
-         SHr9bU+u4VC3QJcDMEDdFtHBrnuTAH5pYvT3f8sc=
-Date:   Fri, 31 Jan 2020 09:10:04 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <bunk@kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>
-Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed
- optimization feature
-Message-ID: <20200131091004.18d54183@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <20200131151110.31642-2-dmurphy@ti.com>
-References: <20200131151110.31642-1-dmurphy@ti.com>
-        <20200131151110.31642-2-dmurphy@ti.com>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 6C3F32004A;
+        Fri, 31 Jan 2020 18:12:49 +0100 (CET)
+Date:   Fri, 31 Jan 2020 18:12:48 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, intel-gfx-trybot@lists.freedesktop.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v10 09/12] dt-bindings: display: bridge: lvds-codec: Add
+ new bus-width prop
+Message-ID: <20200131171248.GB5464@ravnborg.org>
+References: <20200128135514.108171-1-boris.brezillon@collabora.com>
+ <20200128135514.108171-10-boris.brezillon@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128135514.108171-10-boris.brezillon@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=QX4gbG5DAAAA:8
+        a=VwQbUJbxAAAA:8 a=40l160qCl5jptrrAx3AA:9 a=CjuIK1q_8ugA:10
+        a=AbAUZ8qAyYyZVLSsDulk:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 31 Jan 2020 09:11:10 -0600, Dan Murphy wrote:
-> Set the speed optimization bit on the DP83867 PHY.
-> This feature can also be strapped on the 64 pin PHY devices
-> but the 48 pin devices do not have the strap pin available to enable
-> this feature in the hardware.  PHY team suggests to have this bit set.
-> 
-> With this bit set the PHY will auto negotiate and report the link
-> parameters in the PHYSTS register and not in the BMCR.  So we need to
-> over ride the genphy_read_status with a DP83867 specific read status.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Hi Boris.
 
-While we wait for the PHY folk to take a look, could you please 
-provide a Fixes tag?
+On Tue, Jan 28, 2020 at 02:55:11PM +0100, Boris Brezillon wrote:
+> Add the bus-width property to describe the input bus format.
+> 
+> v10:
+> * Add changelog to the commit message
+> * Add Rob's R-b
+> 
+> v8 -> v9:
+> * No changes
+> 
+> v7:
+> * Rebase on top of lvds-codec changes
+> * Drop the data-mapping property
+> 
+> v4 -> v6:
+> * Not part of the series
+> 
+> v3:
+> * New patch
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/display/bridge/lvds-codec.yaml    | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> index 8f373029f5d2..7c4e42f4de61 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> @@ -55,6 +55,14 @@ properties:
+>          description: |
+>            For LVDS encoders, port 0 is the parallel input
+>            For LVDS decoders, port 0 is the LVDS input
+> +        properties:
+> +          bus-width:
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/uint32
+> +              - enum: [18, 24]
+> +              - default: 24
+> +          description:
+> +            Number of data lines used to transmit the RGB data.
+
+Would this be a candidate for a bridge-common.yaml?
+So we share the same definition across all bridges using it.
+
+	Sam
