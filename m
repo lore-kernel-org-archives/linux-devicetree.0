@@ -7,99 +7,103 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C5EC2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F384EC2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C0120CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E0121734
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 14:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580480590;
-	bh=9AbfdDMLA8A7UYBbvsqRQGnNtSluxdZ0UpUB5POGpTY=;
+	s=default; t=1580480635;
+	bh=0cZB0Sd6XZdR13HzNIchXIFkJJok7hj7GectaRtGsMc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wwMmcCSXVbp25/30GJFulFIcB2Q9gEFomwt0cq67fonLqrNZtRE5LiBbsuzFOWI21
-	 Eju19L7JT3graO7TB2zURn2Sk6DSzTtTKZ4qw9pHfEqs0CLZPQvrMZWpBcBp32z3N1
-	 SkZsPJ67DlJvhSflazT4ZXsaQ96DNcdApudgvZ/k=
+	b=ZzPdARUj8HNqnuMBA8ZhHFhnsRNZA4TZ2oaJUnrOBpzYdwlX+PFeCnEcYkLxKk23q
+	 tlZs1FioOmJrgb0/B25krhfAyziG5hB8R2FypAyz+Hf2ja2QgjdqQp1mRhunbJslI8
+	 ccTFlWKqox5txcRU963vvTRdCELx/q3TCc/ZuaNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgAaOXK (ORCPT
+        id S1728825AbgAaOXz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:23:10 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36224 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728730AbgAaOXJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 09:23:09 -0500
-Received: by mail-ot1-f67.google.com with SMTP id g15so6724969otp.3
-        for <devicetree@vger.kernel.org>; Fri, 31 Jan 2020 06:23:09 -0800 (PST)
+        Fri, 31 Jan 2020 09:23:55 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39216 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728730AbgAaOXz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jan 2020 09:23:55 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so6709814oty.6;
+        Fri, 31 Jan 2020 06:23:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PxMeFzkOsZfzvlj1E/GqrVrfLq2JwIzh0NLeWA9Dicc=;
-        b=CxmMEeJEVWN7ohxJQMxwZOxEVBOn8JNsBQQQJtW7amhXXw1Ke1uKhRtuVIDmidl/Yb
-         zndHbAp+0I0jebvlsVUwjEM0HaOsHu78Wwn2q7owzpvq3a2CXK/E5BETuEDvfwB/tqkt
-         e1cBMbG7BlaBMs/73AeAphAOOr21bp0DatBI1WO8sKuJUy6GyHuMpGlpHx/tH+XxkyhT
-         68v7GmsbmtVH3v2+QhAEgqK9pC2TzIoIJ03JIJ49pH8g20HF44hkinwkrf26hP3cx7Wk
-         aXFhzAo8dCjxdqghHhXRJDE05s4JpM113Iro2kkpmTtyTlrMUypMq6jr9V8d4k4NlzSC
-         6H+Q==
-X-Gm-Message-State: APjAAAWifaIaGb6WpgSdhu2FKFmXM8lsePbqHJvp9mfagUynpTXkmz+x
-        cG1aNNuMs5QAmn0uyw3zAw==
-X-Google-Smtp-Source: APXvYqzbha/ycL5MajoXxSDh1B5G7/y41e7NeKsIZddrNIh8p5A46V6ONoTNhVOF1NvK7fkbx6+A4w==
-X-Received: by 2002:a9d:370:: with SMTP id 103mr1920211otv.103.1580480589112;
-        Fri, 31 Jan 2020 06:23:09 -0800 (PST)
+        bh=5uwU39YyYRL3F37tHbbpfkuTD2Ge/FRXkO7F7HVJViM=;
+        b=WEdrQR8AIlV1kn1OWcnHjMpjszB9gj2qHLDHCiVkbIePXSA/6tTnqUUuqNXLH09fp9
+         wX6Gv+jCIJoLrhd2xkuv7VUY5pvFvdaYAdV56P5abwnCPvix7bJzH1KLI4FswBlGWyTe
+         cW676wzypUZJiYpT22Yq/1dnHoHIcq7aMHXCzEKxOLak2vGQ5rKVVFebQaBKqNpROdlk
+         /Ljvuf9UDDRaclYLX//numkgNttKi9uCCuGkc6xIsd7yKjLt+MKIdJLXkGKavZn86ZX1
+         omqQwQ8KXc2shhUfkkX+YwuHhg1SUTwdQPSr5Dt8hOLlMgZjjaJTe4z782K/zg+ACO41
+         Kbxg==
+X-Gm-Message-State: APjAAAUndxNYxVG3dkbWq9WhAgmGfBwns9EJ6dFHNbJizXBlLwBRG9P0
+        bn7amGEiwKJpXQF6uXZDA4KJg1I=
+X-Google-Smtp-Source: APXvYqxAX9BkIBFcXo6Bjdh3cDS5uE8g2wRF8ywC1Tz4ET9W/tKUjqFL1YqVZt9pQDJ4jzKcusd0Og==
+X-Received: by 2002:a9d:7593:: with SMTP id s19mr7380770otk.219.1580480633913;
+        Fri, 31 Jan 2020 06:23:53 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e5sm258654otk.74.2020.01.31.06.23.08
+        by smtp.gmail.com with ESMTPSA id q5sm2636565oia.21.2020.01.31.06.23.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 06:23:08 -0800 (PST)
-Received: (nullmailer pid 3810 invoked by uid 1000);
-        Fri, 31 Jan 2020 14:23:07 -0000
-Date:   Fri, 31 Jan 2020 08:23:07 -0600
+        Fri, 31 Jan 2020 06:23:53 -0800 (PST)
+Received: (nullmailer pid 5038 invoked by uid 1000);
+        Fri, 31 Jan 2020 14:23:52 -0000
+Date:   Fri, 31 Jan 2020 08:23:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-Cc:     noralf@tronnes.org, Sam Ravnborg <sam@ravnborg.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-Subject: Re: [PATCH v4 2/3] dt-bindings: add binding for tft displays based
- on ilitek,ili9486
-Message-ID: <20200131142307.GA679@bogus>
-References: <cover.1580134320.git.kamlesh.gurudasani@gmail.com>
- <a37d95cbfc9603265ed15916cdd2fb69e8c5f041.1580134320.git.kamlesh.gurudasani@gmail.com>
+To:     David Heidelberg <david@ixit.cz>
+Cc:     linux-iio@vger.kernel.org, David Heidelberg <david@ixit.cz>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] dt-bindings: iio: light: add support for
+ Dyna-Image AL3320A
+Message-ID: <20200131142352.GA4558@bogus>
+References: <20200128133052.201587-1-david@ixit.cz>
+ <20200128133052.201587-2-david@ixit.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a37d95cbfc9603265ed15916cdd2fb69e8c5f041.1580134320.git.kamlesh.gurudasani@gmail.com>
+In-Reply-To: <20200128133052.201587-2-david@ixit.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Jan 2020 19:56:14 +0530, Kamlesh Gurudasani wrote:
-> This binding is for the tft displays based on ilitek,ili9486.
-> ozzmaker,piscreen and waveshare,rpi-lcd-35 are such displays
+On Tue, 28 Jan 2020 14:30:46 +0100, David Heidelberg wrote:
+> This commit add dt-bindings support to al3320a driver and vendor-prefix
+> dynaimage.
+> Partly based on unmerged commit:
+> "iio: Add Dyna-Image AP3223 ambient light and proximity driver"
 > 
-> Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+> Signed-off-by: David Heidelberg <david@ixit.cz>
 > ---
-> 
-> v2 changes:
-> * Changing file from txt to yaml format
-> * removed ilitek,ili9486 from compatible string
-> 
-> v3 changes:
-> * no changes
-> 
-> v4 changes:
-> * no changes
-> ---
->  .../bindings/display/ilitek,ili9486.yaml           | 79 ++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9486.yaml
+>  .../bindings/iio/light/al3320a.yaml           | 40 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/ilitek,ili9486.example.dt.yaml: display@0: compatible: ['waveshare,rpi-lcd-35'] is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/ilitek,ili9486.example.dt.yaml: display@0: compatible: ['waveshare,rpi-lcd-35'] is too short
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/ilitek,ili9486.example.dt.yaml: display@0: compatible:0: 'waveshare,rpi-lcd-35' is not one of ['ozzmaker,piscreen']
+Documentation/devicetree/bindings/iio/light/al3320a.example.dts:20.17-30: Warning (reg_format): /example-0/i2c/al3320a@1c:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/iio/light/al3320a.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/iio/light/al3320a.example.dts:17.5-24.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for I2C bus
+Documentation/devicetree/bindings/iio/light/al3320a.example.dts:17.5-24.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for I2C bus
+Documentation/devicetree/bindings/iio/light/al3320a.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/iio/light/al3320a.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
+Documentation/devicetree/bindings/iio/light/al3320a.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/iio/light/al3320a.example.dts:18.24-23.15: Warning (avoid_default_addr_size): /example-0/i2c/al3320a@1c: Relying on default #address-cells value
+Documentation/devicetree/bindings/iio/light/al3320a.example.dts:18.24-23.15: Warning (avoid_default_addr_size): /example-0/i2c/al3320a@1c: Relying on default #size-cells value
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/light/al3320a.example.dt.yaml: al3320a@1c: 'interrupt' is a required property
 
-See https://patchwork.ozlabs.org/patch/1229867
+See https://patchwork.ozlabs.org/patch/1230353
 Please check and re-submit.
