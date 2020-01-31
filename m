@@ -2,109 +2,128 @@ Return-Path: <SRS0=rjyW=3U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1D0C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 03:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D65C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 03:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA3B206E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 03:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41DC20705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jan 2020 03:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JXWuQhzY"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="crNbZOH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgAaDMh (ORCPT
+        id S1727910AbgAaD4d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jan 2020 22:12:37 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6425 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727749AbgAaDMh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 22:12:37 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e339aef0000>; Thu, 30 Jan 2020 19:11:43 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 19:12:36 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 19:12:36 -0800
-Received: from [10.25.73.84] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
- 2020 03:12:31 +0000
-CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH v2 5/9] ASoC: tegra: add Tegra210 based AHUB driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh+dt@kernel.org>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-6-git-send-email-spujar@nvidia.com>
- <160bb2ca-89bb-0ecf-a334-0fac591b439a@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <00ce0f46-4401-c1da-5513-4aa38d224a44@nvidia.com>
-Date:   Fri, 31 Jan 2020 08:42:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 30 Jan 2020 22:56:33 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43639 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbgAaD4d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jan 2020 22:56:33 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so4372091qtj.10;
+        Thu, 30 Jan 2020 19:56:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=giaaas3saM7ZnV4c4smX1JcgTAL1YeM8DtaRFKtNHgc=;
+        b=crNbZOH9Ed0ABdlKTXB1vBiOXKB7+GjFPPrcykjonbeRhA77dU4D95buRmuSb/HrTf
+         lhpOiS4cAAUqZgxGlqbJ+h4wqsWTzf2wpwTyEHHJeDGT2l1kYposPBEuTywoKwmbtOj4
+         YAfplw+l3R8Uxp67cX3Khtk28NkYrLFgNldho=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=giaaas3saM7ZnV4c4smX1JcgTAL1YeM8DtaRFKtNHgc=;
+        b=R1CoVTSBg+GKTPHS7swNpLx92hbAmtrcYzviB2bTDZMcyVShPLWbfIVdKAD+1jJULP
+         0OEe3ERDr+rk+bjmkSUsrpKbmrGUcmi1KPBaQCC2yPYAbKcQ/olK04HhVDuwlzSUxGKb
+         aZL37UQe6M+fyT//HVznXjJfKwwO+9HoXBCHpKOv3aXPF9RWgPozdj73Cmnm8rJsqtaQ
+         p0be4PU8Zg04hzKS5mNo0xSkXLuL6KFV1iDZlGmMb4UOFVmMa3Hpp/c6fSf2R41/pHya
+         rFmFTxoyuRMT3JXJgrrGcJXPRorJIAydum97p6UW0yB1F93rYk+zOYDSIEzCZdCX3Y7l
+         rEBQ==
+X-Gm-Message-State: APjAAAU1pAqKjdhJvuG+NOL7rYn0Vn7znxXzM0HZaCYaHopIibD1bjyi
+        9itt/RAvE6NjMSvnR8zM5rChbaseBGqIyVrRg9g=
+X-Google-Smtp-Source: APXvYqzuY2q7VtjMI43kwIjVulHF6td/oZnRE/hNAX7gUXypAD+c+GinBXcwLLN5Y0oaVYyv8JfSq5V15f8talvX9lw=
+X-Received: by 2002:aed:3b3b:: with SMTP id p56mr8919865qte.234.1580442992161;
+ Thu, 30 Jan 2020 19:56:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <160bb2ca-89bb-0ecf-a334-0fac591b439a@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580440304; bh=pOv0j2LC/b/wPjHJax5N8sojDpZ23UrGRdvxHFuGJS4=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=JXWuQhzY18eWXms0wSacXtCMzZKzJXcryJ0/IFA82s/qshH4SKD4koZBJMt7zjDPS
-         Dl34fHgTC9mVA1mENlCbL4HHogea11m+shE/gxpbSTEu+JFKMuxx2CuszQnC+b3CDc
-         /+VFo8N/sNXeK3SOCkHizNwBiXaG8nXspXCp4j8f9d8eho3tcWKq3lRrmtGqHXv4sA
-         kk4tLGOfgPO15MHiT/iWuwlCddL4+hbWxdTNz7yhQ8NHL4rZ1HubFrsh3Ztf2+PxsF
-         Uhxk1Jj7ux8d+3oIDAUqWZW0mPiYr82sFdqw9kuwUcB1PpuBqxKRRLHDe28nGgKt2a
-         WdFfbrR9bg9Rg==
+References: <20200128011728.4092945-1-vijaykhemka@fb.com>
+In-Reply-To: <20200128011728.4092945-1-vijaykhemka@fb.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 31 Jan 2020 03:56:20 +0000
+Message-ID: <CACPK8Xc6TbHLgWO3p7YXJf+jfzNhiGzGsdDwQsQ56ix8sUQGzg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: aspeed: tiogapass: Add IPMB device
+To:     Vijay Khemka <vijaykhemka@fb.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sai Dasari <sdasari@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 1/30/2020 10:55 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
+On Tue, 28 Jan 2020 at 01:17, Vijay Khemka <vijaykhemka@fb.com> wrote:
 >
+> Adding IPMB devices for facebook tiogapass platform.
 >
-> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
->> +#include <linux/clk.h>
->> +#include <linux/device.h>
->> +#include <linux/module.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/regmap.h>
->> +#include <sound/soc.h>
->> +#include "tegra210_ahub.h"
-> Nit: I'd separate the per-directory includes with a blank line, like it
-> done by the most of existing drivers, for consistency.
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 
-Hi Dmitry,
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-I'd assume these are the only review comments (which includes your other=20
-replies for v2 5/9) for the series.
-Let me know otherwise.
+I will merge this through the aspeed tree for 5.7.
 
-It would help me to discuss all the issues at once, finalize changes for=20
-v3 and so that we can avoid multiple iterations.
+Cheers,
 
-Thanks,
-Sameer.
+Joel
 
-
+> ---
+>  arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> index fb7f034d5db2..719c130a198c 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> @@ -5,6 +5,7 @@
+>
+>  #include "aspeed-g5.dtsi"
+>  #include <dt-bindings/gpio/aspeed-gpio.h>
+> +#include <dt-bindings/i2c/i2c.h>
+>
+>  / {
+>         model = "Facebook TiogaPass BMC";
+> @@ -428,6 +429,11 @@
+>  &i2c4 {
+>         status = "okay";
+>         // BMC Debug Header
+> +       ipmb0@10 {
+> +               compatible = "ipmb-dev";
+> +               reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
+> +               i2c-protocol;
+> +       };
+>  };
+>
+>  &i2c5 {
+> @@ -509,6 +515,11 @@
+>  &i2c9 {
+>         status = "okay";
+>         //USB Debug Connector
+> +       ipmb0@10 {
+> +               compatible = "ipmb-dev";
+> +               reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
+> +               i2c-protocol;
+> +       };
+>  };
+>
+>  &pwm_tacho {
+> --
+> 2.17.1
+>
