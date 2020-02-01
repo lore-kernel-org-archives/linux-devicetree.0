@@ -2,162 +2,130 @@ Return-Path: <SRS0=GCsk=3V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C28DC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Feb 2020 16:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B93C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Feb 2020 18:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 331A02070C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Feb 2020 16:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580574189;
-	bh=x1vznGxXozS/hjB8sqVDcOqBSOe4F3cdKFfOi/g1R6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BWbYkkjwkZwWL09R/Nhj/guOnxlLChprhVomDZgSl8BSIwsBIGUBDBIdj1HrEClTk
-	 9weDaBMZYKyMKGtk3vW3KW7ZCxxA2yHu4Ya0BsLAa9ypf9JZtjdZhoF3QJ7Y/AIFOx
-	 Cqqdw+9eeLwrfT+nDp45LsheA9Lgv3S6vHc+FglY=
+	by mail.kernel.org (Postfix) with ESMTP id F207D2073B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Feb 2020 18:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgBAQXI (ORCPT
+        id S1726379AbgBASBA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Feb 2020 11:23:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgBAQXI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 1 Feb 2020 11:23:08 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 1 Feb 2020 13:01:00 -0500
+Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:53940 "EHLO
+        ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbgBASBA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:01:00 -0500
+Received: from localhost.localdomain (silversquare.silversquare.eu [185.174.184.98])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA231206D3;
-        Sat,  1 Feb 2020 16:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580574187;
-        bh=x1vznGxXozS/hjB8sqVDcOqBSOe4F3cdKFfOi/g1R6o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YPj/YMO+1KaDaHN7Yg7xZ7p8brl+I5JNyR5i38jw+2S//GR/Da+rzXzhW8TAiVSgH
-         VGN97p3MyVzqgAtBJaFVTBGeqPthq1n0qBQtGrz9ju+YWz1cftREs5GcX8YxwtaMZp
-         pOylV82PyIOk/L+FimAVnmoaM+xyoBF4/MSPBPyQ=
-Date:   Sat, 1 Feb 2020 16:23:03 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        by ixit.cz (Postfix) with ESMTPSA id 3A9F5251DC;
+        Sat,  1 Feb 2020 19:00:57 +0100 (CET)
+From:   David Heidelberg <david@ixit.cz>
+To:     linux-iio@vger.kernel.org
+Cc:     David Heidelberg <david@ixit.cz>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 9/9] iio: imu: inv_mpu6050: fix LPF bandwidth setting
-Message-ID: <20200201162303.46dc0461@archlinux>
-In-Reply-To: <20200120093620.9681-10-jmaneyrol@invensense.com>
-References: <20200120093620.9681-1-jmaneyrol@invensense.com>
-        <20200120093620.9681-10-jmaneyrol@invensense.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH v3 1/7] dt-bindings: iio: light: add support for Dyna-Image AL3320A
+Date:   Sat,  1 Feb 2020 19:00:18 +0100
+Message-Id: <20200201180024.328700-2-david@ixit.cz>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200201180024.328700-1-david@ixit.cz>
+References: <20200201180024.328700-1-david@ixit.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Jan 2020 10:36:20 +0100
-Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
+This commit add dt-bindings support to al3320a driver and vendor-prefix
+dynaimage.
+Partly based on unmerged commit:
+"iio: Add Dyna-Image AP3223 ambient light and proximity driver"
 
-> As every chip has some little variant in LPF bandwidth values,
-> use common values that are working for all chips.
-> Simplify the LPF setting function.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-hmm. On this one I wonder if the 'fix' title is strictly accurate.
-It's certainly a good thing to have, but I'm not sure if we will
-want to backport it.  If you do, then break it out of this series
-as a separate fix and add appropriate fixes tag.
 
-All the other patches I haven't commented on in this series look fine
-to me subject to Rob's suggestion of combining the dt ID additions for
-the binding doc into one patch.
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+ .../bindings/iio/light/al3320a.yaml           | 45 +++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ 2 files changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 30 ++++++++++++----------
->  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  | 10 ++++----
->  2 files changed, 21 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> index 9ecc667debbe..c4db9086775c 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> @@ -707,30 +707,32 @@ static int inv_mpu6050_write_raw(struct iio_dev *indio_dev,
->  /**
->   *  inv_mpu6050_set_lpf() - set low pass filer based on fifo rate.
->   *
-> - *                  Based on the Nyquist principle, the sampling rate must
-> - *                  exceed twice of the bandwidth of the signal, or there
-> - *                  would be alising. This function basically search for the
-> - *                  correct low pass parameters based on the fifo rate, e.g,
-> - *                  sampling frequency.
-> + *                  Based on the Nyquist principle, the bandwidth of the low
-> + *                  pass filter must not exceed the signal sampling rate divided
-> + *                  by 2, or there would be aliasing.
-> + *                  This function basically search for the correct low pass
-> + *                  parameters based on the fifo rate, e.g, sampling frequency.
->   *
->   *  lpf is set automatically when setting sampling rate to avoid any aliases.
->   */
->  static int inv_mpu6050_set_lpf(struct inv_mpu6050_state *st, int rate)
->  {
-> -	static const int hz[] = {188, 98, 42, 20, 10, 5};
-> +	static const int hz[] = {400, 200, 90, 40, 20, 10};
->  	static const int d[] = {
-> -		INV_MPU6050_FILTER_188HZ, INV_MPU6050_FILTER_98HZ,
-> -		INV_MPU6050_FILTER_42HZ, INV_MPU6050_FILTER_20HZ,
-> +		INV_MPU6050_FILTER_200HZ, INV_MPU6050_FILTER_100HZ,
-> +		INV_MPU6050_FILTER_45HZ, INV_MPU6050_FILTER_20HZ,
->  		INV_MPU6050_FILTER_10HZ, INV_MPU6050_FILTER_5HZ
->  	};
-> -	int i, h, result;
-> +	int i, result;
->  	u8 data;
->  
-> -	h = (rate >> 1);
-> -	i = 0;
-> -	while ((h < hz[i]) && (i < ARRAY_SIZE(d) - 1))
-> -		i++;
-> -	data = d[i];
-> +	data = INV_MPU6050_FILTER_5HZ;
-> +	for (i = 0; i < ARRAY_SIZE(hz); ++i) {
-> +		if (rate >= hz[i]) {
-> +			data = d[i];
-> +			break;
-> +		}
-> +	}
->  	result = inv_mpu6050_set_lpf_regs(st, data);
->  	if (result)
->  		return result;
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> index 7ae614052210..9a81098a8b4d 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> @@ -370,14 +370,14 @@ enum inv_mpu6050_scan {
->  };
->  
->  enum inv_mpu6050_filter_e {
-> -	INV_MPU6050_FILTER_256HZ_NOLPF2 = 0,
-> -	INV_MPU6050_FILTER_188HZ,
-> -	INV_MPU6050_FILTER_98HZ,
-> -	INV_MPU6050_FILTER_42HZ,
-> +	INV_MPU6050_FILTER_NOLPF2 = 0,
-> +	INV_MPU6050_FILTER_200HZ,
-> +	INV_MPU6050_FILTER_100HZ,
-> +	INV_MPU6050_FILTER_45HZ,
->  	INV_MPU6050_FILTER_20HZ,
->  	INV_MPU6050_FILTER_10HZ,
->  	INV_MPU6050_FILTER_5HZ,
-> -	INV_MPU6050_FILTER_2100HZ_NOLPF,
-> +	INV_MPU6050_FILTER_NOLPF,
->  	NUM_MPU6050_FILTER
->  };
->  
+diff --git a/Documentation/devicetree/bindings/iio/light/al3320a.yaml b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
+new file mode 100644
+index 000000000000..08e7ee4bdf55
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/al3320a.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Dyna-Image AL3320A sensor
++
++maintainers:
++  - David Heidelberg <david@ixit.cz>
++
++properties:
++  compatible:
++    const: dynaimage,al3320a
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vdd-supply:
++    description: Regulator that provides power to the sensor
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - vdd-supply
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        al3320a@1c {
++            compatible = "dynaimage,al3320a";
++            reg = <0x1c>;
++            vdd-supply = <&vdd_reg>;
++            interrupts = <0 99 4>;
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9cd52d9e1f7f..8d2ebf3d0aa1 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -267,6 +267,8 @@ patternProperties:
+     description: Dragino Technology Co., Limited
+   "^dserve,.*":
+     description: dServe Technology B.V.
++  "^dynaimage,.*":
++    description: Dyna-Image
+   "^ea,.*":
+     description: Embedded Artists AB
+   "^ebs-systart,.*":
+-- 
+2.25.0
 
