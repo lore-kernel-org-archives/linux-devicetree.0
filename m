@@ -2,91 +2,173 @@ Return-Path: <SRS0=/AfF=3W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4ABC35240
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 04:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDABC35240
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 04:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDE63206E6
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 04:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D549920838
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 04:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T7l4+/A3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ILJVF5P9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgBBEh7 (ORCPT
+        id S1726869AbgBBEjx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Feb 2020 23:37:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40958 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgBBEh7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Feb 2020 23:37:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4oWUZJaR7Jx+L3WxZYUTftOrPw0KXFITkchU6eONNQ8=; b=T7l4+/A3xrUaQ52FJYISmxjnG
-        duMEZTL96r95Umj+7OgsE+FIk3i0RC11BPcq5vSR88P1L6PQ/+njvBj7lf2gdLCAHlsX+FOBg9DqO
-        QxAM9/lQXJUr8oiveKu19VxkDskDkaQGwAOv29Has4EKNvva0RQx8JwaDFkv0wDXVV6BwUV5GIp/a
-        BYtForHRfejzD3vR0REa6j2y/s99V41bG/bmlNC8ohl3Y3UgBBTfkUi/je8SQRpm7J4XnrvBH0Nnu
-        vk7aX3Y0Z6UqKQoQ/msYTtf+sX0t9w5oej3LFg05ncHlnUgg/6DFicMgXsTD1snYT65GNUZZZsqH/
-        T3pN4f51Q==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iy717-0006gy-4o; Sun, 02 Feb 2020 04:37:53 +0000
-Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
- ioctl for device
-To:     Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Darren Stevens <darren@stevens-zone.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, linuxppc-dev@ozlabs.org,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>,
-        "contact@a-eon.com" <contact@a-eon.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20200126115247.13402-1-mpe@ellerman.id.au>
- <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
- <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c9c7de30-dea8-f162-f049-a16b2bcf7b7c@infradead.org>
-Date:   Sat, 1 Feb 2020 20:37:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 1 Feb 2020 23:39:53 -0500
+Received: from mail-pj1-f42.google.com ([209.85.216.42]:35053 "EHLO
+        mail-pj1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgBBEjx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Feb 2020 23:39:53 -0500
+Received: by mail-pj1-f42.google.com with SMTP id q39so4864190pjc.0
+        for <devicetree@vger.kernel.org>; Sat, 01 Feb 2020 20:39:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d2Ia3DkAO43aComdEVaT18sYNG+CL/EC8bmSWjIf8dQ=;
+        b=ILJVF5P94QMLDCHQ7mljRNHgji5xkNvmNP5X3RUsIMBFytffOpRPDR76CcEk/sGBOw
+         XpGRuHqapqYjUqweniIlKlBH7Cg/sx6IG/IH7lEZWqWkC1GMmAaFC8Zuc38wrxi6Vxjh
+         mx8RaYkzHEjoHwJM0yem9uhfM0tLenJ6M38Z8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d2Ia3DkAO43aComdEVaT18sYNG+CL/EC8bmSWjIf8dQ=;
+        b=Xl+YO/fST7ka7TflH4KJFaSZDq0KoXrofOdvC5R07lFgIbp7w+ePueEKkvnokVRuyW
+         kuxdRYXSwAwsEERSN18x6vU21PGov3SW6Howp8GJQ6S/MbZovx942BIW3kGTNCqvTAPi
+         01R1uOwSXN1BBNFCWduBE2WYRjg2ikFzzaHHTUlKxpOXLjNe665sRKMuSECzvoMT9d2T
+         TUCpPb2cTwAKoI0gCsXv3kSWMRNU2NryaAavzPOVao0Is10EGzmCUtPqod5ajcudVQma
+         Ex24FJRYvzx0xBFP5Mjf75eYxOZIjcUVWrKVFCejrS3nDlIj4BxYF7cmpDJCqsUeG81V
+         M0BA==
+X-Gm-Message-State: APjAAAWl9SUkRrYah2X/POlBgc4x7w0oSITd0W1EvuMmCRqTHjjIiy3H
+        WEheIj9dlj0rC6aQwzy5yUlKLA==
+X-Google-Smtp-Source: APXvYqwoOY5XcIFk02jMBOYatkuYTxzbNHGKPGAPbPhX9vY2JqY1v3xm4Nr1kLOYIeGBdjMrunggDg==
+X-Received: by 2002:a17:90a:d104:: with SMTP id l4mr22157849pju.60.1580618391773;
+        Sat, 01 Feb 2020 20:39:51 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u11sm14526328pgh.60.2020.02.01.20.39.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2020 20:39:51 -0800 (PST)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v2] dt-bindings: tpm: Convert cr50 binding to YAML
+Date:   Sat,  1 Feb 2020 20:39:49 -0800
+Message-Id: <20200202043949.213427-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-In-Reply-To: <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[might be network related, so adding netdev mailing list]
+This allows us to validate the dt binding to the implementation. Add the
+interrupt property too, because that's required but nobody noticed when
+the non-YAML binding was introduced.
 
-On 2/1/20 4:08 PM, Christian Zigotzky wrote:
-> Hello,
-> 
-> We regularly compile and test Linux kernels every day during the merge window. Since Thuesday we have very high CPU loads because of the avahi daemon on our desktop Linux systems (Ubuntu, Debian etc).
-> 
-> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
-> 
-> Could you please test the latest Git kernel?
-> 
-> It is possible to deactivate the avahi daemon with the following lines in the file "/etc/avahi/avahi-daemon.conf":
-> 
-> use-ipv4=no
-> use-ipv6=no
-> 
-> But this is only a temporary solution.
-> 
-> Thanks,
-> Christian
+Cc: Andrey Pronin <apronin@chromium.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
 
+Changes from v1:
+ * Dropped spi-max-frequency as required
+ * Capped spi-max-frequency at 1MHz
+ * Added interrupt-parent to example to be realistic
 
+ .../bindings/security/tpm/google,cr50.txt     | 19 -------
+ .../bindings/security/tpm/google,cr50.yaml    | 50 +++++++++++++++++++
+ 2 files changed, 50 insertions(+), 19 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+
+diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+deleted file mode 100644
+index cd69c2efdd37..000000000000
+--- a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
+-
+-H1 Secure Microcontroller running Cr50 firmware provides several
+-functions, including TPM-like functionality. It communicates over
+-SPI using the FIFO protocol described in the PTP Spec, section 6.
+-
+-Required properties:
+-- compatible: Should be "google,cr50".
+-- spi-max-frequency: Maximum SPI frequency.
+-
+-Example:
+-
+-&spi0 {
+-	tpm@0 {
+-		compatible = "google,cr50";
+-		reg = <0>;
+-		spi-max-frequency = <800000>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+new file mode 100644
+index 000000000000..31a5b0740a7a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/tpm/google,cr50.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: H1 Secure Microcontroller with Cr50 Firmware on SPI Bus
++
++description:
++  H1 Secure Microcontroller running Cr50 firmware provides several functions,
++  including TPM-like functionality. It communicates over SPI using the FIFO
++  protocol described in the PTP Spec, section 6.
++
++maintainers:
++  - Andrey Pronin <apronin@chromium.org>
++
++properties:
++  compatible:
++    const: google,cr50
++
++  reg: true
++
++  spi-max-frequency:
++    maximum: 1000000
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    spi {
++      #address-cells = <0x1>;
++      #size-cells = <0x0>;
++      tpm@0 {
++          compatible = "google,cr50";
++          reg = <0>;
++          spi-max-frequency = <1000000>;
++          interrupt-parent = <&gpio_controller>;
++          interrupts = <50 IRQ_TYPE_EDGE_RISING>;
++      };
++    };
++...
 -- 
-~Randy
+Sent by a computer, using git, on the internet
 
