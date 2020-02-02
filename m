@@ -2,96 +2,115 @@ Return-Path: <SRS0=/AfF=3W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E530DC35240
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 08:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB6FC35240
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 09:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8303A205F4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 08:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="BaVurHIL"
+	by mail.kernel.org (Postfix) with ESMTP id 4CA21206E6
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 09:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580637134;
+	bh=WnuHvcNhi03J05r188dBuWuqXjZDCK2ppNbVC9tfFh8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mYmsTAVocZo7zwIwt7o7Z8OoZ3zjEQx4MT4MKnLNJ7idO3RhmdvgLqd7q7yJsF1Dy
+	 MO6c1l6A6NVo2Pbh2gTfpXD3U3LIcNEseWSfZf6gQO51CMVLCH9aoHvwJH0H3qRle8
+	 q80FISv/rGkyuzVW+H42PtgCYjLei0ShjUeCVUWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgBBITR (ORCPT
+        id S1726044AbgBBJwN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Feb 2020 03:19:17 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:38581 "EHLO pegase1.c-s.fr"
+        Sun, 2 Feb 2020 04:52:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgBBITQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Feb 2020 03:19:16 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 489P4b5b7lz9tyWH;
-        Sun,  2 Feb 2020 09:19:11 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=BaVurHIL; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id B9NtGOyoWiNR; Sun,  2 Feb 2020 09:19:11 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 489P4b3vmYz9tyW9;
-        Sun,  2 Feb 2020 09:19:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580631551; bh=nozbN1o9P4CquvGdWc1FeJctNG7HaAWCWuutf8WmoXU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BaVurHIL6TimjlEGYLds15Z9up+mVUQ6HV+193Whp9YFYK5rM+qPDpX1j0Fa5jLCv
-         v9NWpQ21dmPmw6A/Z+xZ4BegodThZOkQUgVpRLkN0K0YjzDpsRRdSCWGxRUG3yReVW
-         O72UzU/h74/kFSX47OMjhnFbv5L1NLTG6Lk2xUrA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B0F38B767;
-        Sun,  2 Feb 2020 09:19:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id finORXVEXN_k; Sun,  2 Feb 2020 09:19:14 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6DDD8B752;
-        Sun,  2 Feb 2020 09:19:13 +0100 (CET)
-Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
- ioctl for device
-To:     Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Darren Stevens <darren@stevens-zone.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@ozlabs.org, "contact@a-eon.com" <contact@a-eon.com>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>
-References: <20200126115247.13402-1-mpe@ellerman.id.au>
- <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
- <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <75aab3c9-1cb6-33bf-5de1-e05bbd98b6fb@c-s.fr>
-Date:   Sun, 2 Feb 2020 09:19:08 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1725962AbgBBJwN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Feb 2020 04:52:13 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E6E0206D3;
+        Sun,  2 Feb 2020 09:52:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580637133;
+        bh=WnuHvcNhi03J05r188dBuWuqXjZDCK2ppNbVC9tfFh8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BIm2sGfYkS6UpmfgyjQba1JbzQzkHRfs0f0cgL2bghUB2LdP61ythvtqVChnqqu0v
+         H/KrU7zFgV72gFoXV1UoXwfwp6znPGo2RSa5om868p46vnbGuqniCi9NRvAClpVsZl
+         8vfh1Qs5Jnmh6a3I9YO2SwtZHezJvj31NCoVe32s=
+Date:   Sun, 2 Feb 2020 09:52:07 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, kernel@pengutronix.de,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>,
+        Silvan Murer <silvan.murer@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: ltc2632: expand for ltc2636
+ support
+Message-ID: <20200202095207.511afbf1@archlinux>
+In-Reply-To: <20200130131549.1170-1-u.kleine-koenig@pengutronix.de>
+References: <20200130131549.1170-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+On Thu, 30 Jan 2020 14:15:47 +0100
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote:
 
-Le 02/02/2020 à 01:08, Christian Zigotzky a écrit :
-> Hello,
-> 
-> We regularly compile and test Linux kernels every day during the merge 
-> window. Since Thuesday we have very high CPU loads because of the avahi 
-> daemon on our desktop Linux systems (Ubuntu, Debian etc).
-> 
-> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
+> The ltc2636 family of devices is register compatible with the ltc2636
+> chips, it just features 8 instead of 2 channels.
+>=20
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/iio/dac/ltc2632.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Docu=
+mentation/devicetree/bindings/iio/dac/ltc2632.txt
+> index e0d5fea33031..9d114957a28b 100644
+> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> +++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> @@ -1,4 +1,4 @@
+> -Linear Technology LTC2632 DAC device driver
+> +Linear Technology LTC2632/2636 DAC device driver
 
-Do you know which ioctl, on which device ?
-Can you take a trace of running avahi-daemon with 'strace' ?
+Whilst we are here, can we clear out the reference to 'driver'.
+It's a binding so describes the hardware, not the driver talking
+to it.
 
-Can you bisect ?
+Linear Technology LTC... DAC
 
-Christophe
+If that's all that comes up, I can tidy this up when applying.
+
+Jonathan
+
+> =20
+>  Required properties:
+>   - compatible: Has to contain one of the following:
+> @@ -8,6 +8,12 @@ Required properties:
+>  	lltc,ltc2632-h12
+>  	lltc,ltc2632-h10
+>  	lltc,ltc2632-h8
+> +	lltc,ltc2636-l12
+> +	lltc,ltc2636-l10
+> +	lltc,ltc2636-l8
+> +	lltc,ltc2636-h12
+> +	lltc,ltc2636-h10
+> +	lltc,ltc2636-h8
+> =20
+>  Property rules described in Documentation/devicetree/bindings/spi/spi-bu=
+s.txt
+>  apply. In particular, "reg" and "spi-max-frequency" properties must be g=
+iven.
+
