@@ -3,57 +3,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D8AC3524B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 04:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33657C35240
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 04:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C243206E6
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 04:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03069206E6
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 04:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W5dSLRFI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GdZbQ2ee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgBBEl4 (ORCPT
+        id S1726814AbgBBEnM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Feb 2020 23:41:56 -0500
-Received: from mail-pf1-f170.google.com ([209.85.210.170]:37416 "EHLO
-        mail-pf1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgBBEl4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Feb 2020 23:41:56 -0500
-Received: by mail-pf1-f170.google.com with SMTP id p14so5681251pfn.4
-        for <devicetree@vger.kernel.org>; Sat, 01 Feb 2020 20:41:56 -0800 (PST)
+        Sat, 1 Feb 2020 23:43:12 -0500
+Received: from mail-pj1-f53.google.com ([209.85.216.53]:33100 "EHLO
+        mail-pj1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgBBEnM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Feb 2020 23:43:12 -0500
+Received: by mail-pj1-f53.google.com with SMTP id m7so4033738pjs.0
+        for <devicetree@vger.kernel.org>; Sat, 01 Feb 2020 20:43:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:from:subject:to:cc:user-agent:date;
-        bh=H12+mHAIL3bb+dr51PEHEZZsNDqvfJx+5YVGqZOlIqM=;
-        b=W5dSLRFIZDasi2ZLWn6GgNC7sX8MGtmEFZNWKCJEsFT6QnVU5QO/HMBRn3UmnFMwah
-         0c0UqKk4IJA0yKpbuKsWSPeBYdmgJVIL5EqGxl4qjIuEM1YkvfyR+5+scSlJvdK6HSUZ
-         SYc4puNrwGTpUmg8BQtNAfjxntKMuVlTW8H5E=
+        bh=WVYttVnSjhlDMR2gVja4CMRjqdc6hYD+bYx+dfA+kjA=;
+        b=GdZbQ2ee09Zy+6IaQ8V2DWdqd1AQreSrjhMPEJd35jiz2k8OxaN4ljeBLU8fQuGHxK
+         IJDPkykmOkL7wT66wQsI6n/3uHumV5ZW0DtIQa0swlmLB1zoZab6S746WzH0XV6uPJVx
+         D1fhGZQtOTcyeTAnFj+RfEv3E/a6pehVTN2NM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
          :user-agent:date;
-        bh=H12+mHAIL3bb+dr51PEHEZZsNDqvfJx+5YVGqZOlIqM=;
-        b=OKVlLrncAIElj9Ik7XGDuV/P9M9CYLf9GUbZ7dHtZ+oXEfwFmc2YbukmgSy0MehvGB
-         42Xu09sgrCbXzdRmJaLXwPq0sPf0OkXvpsa2UtDCHk1dmSRlz0sZMMWSAxtoLvU+eXnE
-         8O3KFH6S6NRphcFhkou22J+Eou9D3EYL247rI6AAP3kxELdGf+Efv83a4IGtONm3L7Ls
-         qaxDHTD9tjyPXutf6RQmt4dQqg+y4UsDrlIJHycvJRo7rE7sKEy0kckXcPWlweHdtTsx
-         ns/pwqbmyOcPwB4boe7OFR5/RPA6o11v3b6XuglTNjgFBBknu8elUH/HhYrRQXeFXfpL
-         jTUA==
-X-Gm-Message-State: APjAAAX59NRGt/Cd9Qo02+sEFM8mUIkxRnvdKbIoMeoIJvVYXAxzrDf4
-        hqxH/ib78sqZSXETTroYo9DBbw==
-X-Google-Smtp-Source: APXvYqxWj4RW/5Bk7AHjnHF/W7VHqk96YwJGSAMNrtEvaEZ6lz2Ds+BjrwBXQxmcbz0eS8CS+qsqjg==
-X-Received: by 2002:aa7:96b6:: with SMTP id g22mr5878006pfk.206.1580618515603;
-        Sat, 01 Feb 2020 20:41:55 -0800 (PST)
+        bh=WVYttVnSjhlDMR2gVja4CMRjqdc6hYD+bYx+dfA+kjA=;
+        b=GNgBSCHVOF74wRtFzFxhjG2vK7wY23xodWs/ZfbHTX3saG+VreSPUPcHJDkYpf/xMX
+         TEQDV/32ReNSQzCWgPyZvKBkRRxyYP9aGSPWiaRTakgpONsWdiQXSh3aMy7tS0xWoHKh
+         mstgnqAHHuN8ieU6n7G0+HRhFchiJa3DzPKZdi7v60Oe0wwfCXCUD68mNmkfuXfwf/T8
+         yWskThru7/lgxJ0aNbQp9SU5xTFo0OYRWFsahWKCZWYE+Qqo4Hgsv1gqHXaN2iogWyNe
+         /Av0MkKcwLUIiMty4kRKj5JygWPewMOcq63LPT5QbsZS+ZT0QUbqm/alitITC32ygUMC
+         Ry6w==
+X-Gm-Message-State: APjAAAV6/vjGuv77PB797kW/m0lUo8qn9K/PVnzXqG0kY0XQtxADHEeV
+        Xp/P5l6OOSqmcNk0+vAo9ymOwQ==
+X-Google-Smtp-Source: APXvYqwE1x9wfemYAznSfOFcQB/dTrqmq3F5ol77Z/XC3KlmQ+tkCkE9qZ2lFR0WuNyX7+LykqGJVw==
+X-Received: by 2002:a17:902:7d86:: with SMTP id a6mr17891671plm.212.1580618591163;
+        Sat, 01 Feb 2020 20:43:11 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q21sm15215761pff.105.2020.02.01.20.41.55
+        by smtp.gmail.com with ESMTPSA id e17sm16176605pfm.12.2020.02.01.20.43.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2020 20:41:55 -0800 (PST)
-Message-ID: <5e365313.1c69fb81.5bf81.9c29@mx.google.com>
+        Sat, 01 Feb 2020 20:43:10 -0800 (PST)
+Message-ID: <5e36535e.1c69fb81.510f6.ba36@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -73,18 +73,57 @@ Cc:     Douglas Anderson <dianders@chromium.org>,
         linux-arm-msm@vger.kernel.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 User-Agent: alot/0.8.1
-Date:   Sat, 01 Feb 2020 20:41:54 -0800
+Date:   Sat, 01 Feb 2020 20:43:09 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 Quoting Sai Prakash Ranjan (2020-02-01 07:29:48)
-> Convert QCOM watchdog timer bindings to DT schema format using
-> json-schema.
->=20
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
+> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/D=
+ocumentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> new file mode 100644
+> index 000000000000..5448cc537a03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/qcom-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Krait Processor Sub-system (KPSS) Watchdog timer
+> +
+> +maintainers:
+> +  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> +
+> +allOf:
+> +  - $ref: watchdog.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,kpss-timer
+> +      - qcom,kpss-wdt
+> +      - qcom,kpss-wdt-apq8064
+> +      - qcom,kpss-wdt-ipq4019
+> +      - qcom,kpss-wdt-ipq8064
+> +      - qcom,kpss-wdt-msm8960
+> +      - qcom,scss-timer
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+By the way, I would expect the watchdog to have an interrupt property.
+Not sure why it isn't described in the existing binding.
 
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
