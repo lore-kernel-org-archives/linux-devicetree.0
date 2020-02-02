@@ -2,140 +2,132 @@ Return-Path: <SRS0=/AfF=3W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1C1C3524A
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 12:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE7AC3524A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 13:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B17CD20679
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 12:23:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580646235;
-	bh=fWBjZ93MKqpXWAx41RjCUrJ+LeLwV8ChrgICmHyrAe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jDEeb9JGgbOR8NvAuuBaf5gNENkXig5KOXIav6lElbrQ/R5zCkhqKhDHrbVhAA5qq
-	 TCf9grYtMb3+hvZmpeoo1iNcyIxL2H0kZ0SgK3yGTCXtFQXj4YIrpfF6QCeku0YO2P
-	 9P8w0vSGFujhTgKXZIMboU5ZTzx8QtSd/YkM0blY=
+	by mail.kernel.org (Postfix) with ESMTP id 521182067C
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 13:00:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgIz0s5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbgBBMXz (ORCPT
+        id S1726743AbgBBNAD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Feb 2020 07:23:55 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39602 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgBBMXy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 2 Feb 2020 07:23:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yQDGYskfy6d4Ic5b9Ykr6AUmvD96h/wBFQChrF6vatc=; b=pBnPvZMG0NcIWoli8sT3UHktF
-        anTG1iGY05tgNOsFyX5hIPPW/VTGfNYm8/2uCi0UVzUXNa26rMqY4TiyUMAwOtQ1rjxEchHCJyqu1
-        pX82Pfnfb5HOo4BY6OSK2nF20SNSe7qQ4Mpn5idNjKkhfVE8fJHCMn2R5YIgdx+YrOO7I=;
-Received: from [151.216.144.116] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iyEHx-0006xw-Bz; Sun, 02 Feb 2020 12:23:45 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id EE321D00D65; Sun,  2 Feb 2020 12:23:44 +0000 (GMT)
-Date:   Sun, 2 Feb 2020 12:23:44 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        Sun, 2 Feb 2020 08:00:03 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43336 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgBBNAD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 2 Feb 2020 08:00:03 -0500
+Received: by mail-yw1-f68.google.com with SMTP id f204so9471670ywc.10;
+        Sun, 02 Feb 2020 05:00:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AH44IHY8LM9hNPEbRtsEm9RIhekLfcrQmhRGmajQBHY=;
+        b=JgIz0s5wSKGBK+tfeB5/vDAeI091XJabpzldKR9UAgT7pUXlJhhRG5HCDBI5LeKfic
+         Czkl7Js+nI6YwGu4UXoN9oPjZqLGLeDYTnn+m2bo3FGLo4OzdYElucGW886I+Rz3JdC9
+         OX1yzKc/bUZyKyP3MdPowqOhhdcpiN+8WIHZ1l5quntT1INEmQ2oaeLEOBBMBegZbvbc
+         jHlXkx4UL7Snn9psqzZa+EPnLs7z1hbAaU4xuxTWP0t9VgawcsH3vtNergQT5pFOER57
+         aOmCkJpKdgjgN0JpMWCwHkid8uEPyhFBjusCkDfrShvbsvthHYTMKNbX33rnbe5f99g6
+         qgUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AH44IHY8LM9hNPEbRtsEm9RIhekLfcrQmhRGmajQBHY=;
+        b=UGtYqyJNqisoB3+OX6VQGEqtWroxiJwJB6Wh3RWfanYpvqOXIjU9nxxX0eFVCiz3Fg
+         +6AobjhDwUNQaz3+W34yMBL1wNzbcZnmkRaq2cB+MhlvLSQjxmCg+F4IOfiPeVb5nc/B
+         EH6f3BeQMl5kEdQar83kCOQrOHH2HpKhExS+jwP+Yo4Xd9RzC0RbksRtDF4n8v35eZed
+         CpNPy4H5S0WlgYtAmMacyduouHa4Q/Gw87TKdoGUrF5Oui8cSZXLCDehiBBK41xd6V4x
+         jJh1p+BnWo2z+DjOkl7sAqkFF42tRTmAAcgA9kV2VLKEo8i7vCPhds3KMqALtUt0rASK
+         v7Gw==
+X-Gm-Message-State: APjAAAUy+vMIWljeBI7+2OaxLg2W/PfqyOoIRGIgo1zmrHC8c+BIOqak
+        1Ks5BlFvVlWjxjsmoVnkkgGuisYaMHI=
+X-Google-Smtp-Source: APXvYqy+sjtTqD37PK/Ym1JLqM0bJO+tVP/hDjqdMipCl/DoBz8JAHptrKJ0YAzBNhEkhgjpLJA9RA==
+X-Received: by 2002:a0d:d1c6:: with SMTP id t189mr14350608ywd.393.1580648401835;
+        Sun, 02 Feb 2020 05:00:01 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id m137sm7090013ywd.108.2020.02.02.05.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 05:00:01 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     Han Xu <han.xu@nxp.com>, Adam Ford <aford173@gmail.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "system-dt@lists.openampproject.org" 
-        <system-dt@lists.openampproject.org>,
-        "lkml@metux.net" <lkml@metux.net>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
-        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Robin.Murphy@arm.com" <Robin.Murphy@arm.com>
-Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
-Message-ID: <20200202122344.GV3897@sirena.org.uk>
-Mail-Followup-To: Florian Fainelli <f.fainelli@gmail.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "system-dt@lists.openampproject.org" <system-dt@lists.openampproject.org>,
-        "lkml@metux.net" <lkml@metux.net>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
-        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "Robin.Murphy@arm.com" <Robin.Murphy@arm.com>
-References: <20200128153806.7780-1-benjamin.gaignard@st.com>
- <20200128163628.GB30489@bogus>
- <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
- <20200128171639.GA36496@bogus>
- <26eb1fde-5408-43f0-ccba-f0c81e791f54@st.com>
- <548b1427-cf6e-319a-36e2-c3e9363b930d@gmail.com>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH V2 1/5] spi: fspi: enable fspi on imx8qxp and imx8mm
+Date:   Sun,  2 Feb 2020 06:59:46 -0600
+Message-Id: <20200202125950.1825013-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4jz2RIiWkXBLiaBi"
-Content-Disposition: inline
-In-Reply-To: <548b1427-cf6e-319a-36e2-c3e9363b930d@gmail.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Han Xu <han.xu@nxp.com>
 
---4jz2RIiWkXBLiaBi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Pull in this patch from NXP's upstream repo to
+enable fspi on imx8qxp and imx8mm
 
-On Fri, Jan 31, 2020 at 12:48:33PM -0800, Florian Fainelli wrote:
+Signed-off-by: Han Xu <han.xu@nxp.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+V2: Reorder s-o-b lines to give credit in proper order.
 
-> Like Robin and Sudeep here, I do not understand why the kernel should
-> have any business in this, let alone allowing blocks to change owners,
-> that sounds contrary to the purpose of a firewall being controlled under
-> an untrusted entity (Linux).
+diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+index 8c5084a3a617..00c7899428a1 100644
+--- a/drivers/spi/spi-nxp-fspi.c
++++ b/drivers/spi/spi-nxp-fspi.c
+@@ -324,6 +324,22 @@ static const struct nxp_fspi_devtype_data lx2160a_data = {
+ 	.little_endian = true,  /* little-endian    */
+ };
+ 
++static const struct nxp_fspi_devtype_data imx8mm_data = {
++	.rxfifo = SZ_512,       /* (64  * 64 bits)  */
++	.txfifo = SZ_1K,        /* (128 * 64 bits)  */
++	.ahb_buf_size = SZ_2K,  /* (256 * 64 bits)  */
++	.quirks = 0,
++	.little_endian = true,  /* little-endian    */
++};
++
++static const struct nxp_fspi_devtype_data imx8qxp_data = {
++	.rxfifo = SZ_512,       /* (64  * 64 bits)  */
++	.txfifo = SZ_1K,        /* (128 * 64 bits)  */
++	.ahb_buf_size = SZ_2K,  /* (256 * 64 bits)  */
++	.quirks = 0,
++	.little_endian = true,  /* little-endian    */
++};
++
+ struct nxp_fspi {
+ 	void __iomem *iobase;
+ 	void __iomem *ahb_addr;
+@@ -1076,6 +1092,8 @@ static int nxp_fspi_resume(struct device *dev)
+ 
+ static const struct of_device_id nxp_fspi_dt_ids[] = {
+ 	{ .compatible = "nxp,lx2160a-fspi", .data = (void *)&lx2160a_data, },
++	{ .compatible = "nxp,imx8mm-fspi", .data = (void *)&imx8mm_data, },
++	{ .compatible = "nxp,imx8qxp-fspi", .data = (void *)&imx8qxp_data, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
+-- 
+2.24.0
 
-Can we rely on there being a more trusted level of software than
-Linux on a system?  It wasn't standard to have anything on 32 bit
-Arm systems as far as I remember so you could end up with some IP
-blocks intended to support TrustZone sitting idle.
-
---4jz2RIiWkXBLiaBi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl42v1AACgkQJNaLcl1U
-h9Ad2Qf/Z89ElUT49FpCeQbf2hYD+rbmBZfToVl5iOvMgypip56DLpLz7Z9pg+fM
-XNUGFiieZuTdvl02zzZNBQxe/G3sdoWmFREGsjq7rhCuoD8DZCYfZa/YYhOm7ME4
-7txqcaZqSxKc1PQg1A6TNr/ItFpaWJ9sJPr61uOnPE0dDASNagjEARUNlV2wqW3f
-z3HmQn3H7y+qffq+pHj11fNLLAMjs90PKztzqOFrhSUe5CBphAYH4mGFk9hpVZUq
-r1kMsN6SjmINlLZ/XI1b03U3QnQMJLjVoDjtBpLKc5MQZMfuqx/Q6X/6Pp4RXUfJ
-2mrNWRU65pMJeuVGwmd5Brs59iLTgA==
-=jc/v
------END PGP SIGNATURE-----
-
---4jz2RIiWkXBLiaBi--
