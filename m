@@ -2,94 +2,109 @@ Return-Path: <SRS0=/AfF=3W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC4CC35249
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 16:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A3EC35249
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 17:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E866920658
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 16:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoUUS+o3"
+	by mail.kernel.org (Postfix) with ESMTP id A923B2067C
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 17:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580664278;
+	bh=CB/V4ylEcJdiUc+eCTLQx8SjNvEkUUscT8KGY/0JaGE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nNJ+6ZYbYK46H3Mgr6/wHvbi6kkxbjw0RRt/7KuOqdVCdXpamFvbKF8dtJ+80u2Ao
+	 ssb5YtXfqTJqfFdD6YhLJL1acip7N2MhMNS9CASa6vULUnz6YkiPkXNn2sfziTXpgo
+	 KhgOqve8BnOHtJ3YUPgf+vovWLyX35LBiT7mOxGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgBBQjx (ORCPT
+        id S1726900AbgBBRYf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Feb 2020 11:39:53 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42455 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgBBQjx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 2 Feb 2020 11:39:53 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y19so8026837lfl.9;
-        Sun, 02 Feb 2020 08:39:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZVaC0F6rgdniTKROUmCnnA4r9wsKzEyhP6hHedwGoWo=;
-        b=XoUUS+o3zhjNpAbUAUIfkj/DPoLWtowdwYUaTHzcwfzGiWEvDtnGA0vFtlP/shH3Vo
-         25dS7EkTu8G7uCL7S/SjtLAhWZe9JAEAwq4eOCUOTW82/yN4sRnb+6gZmO8M4zYMtsQT
-         5jGkW4xhG1S/8gELd3Oapxj2sn4N0CMam04YmPY6py7ZqQdQhhhofHzeb67kzv4QoH8M
-         0GXtRajwA83o+0WP59UES85ARZjANg3xULWrkuueaHQC8pTSq6ut/DMAydv1Q351UTsV
-         pLn76PMJNYr6w1MdaJb+lZRGW0wbiOBB2DJXtBj2KQ/6eZDXu59Ar2grySPYG9JSw3Hn
-         4/8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZVaC0F6rgdniTKROUmCnnA4r9wsKzEyhP6hHedwGoWo=;
-        b=VSbnGTPQJeUOJlenCLhV3/U7B/qYL0dTvbTCAuoQ3KCnGRpZvWXcPJyC1t5sAm9OhF
-         bWprzyvuJoXQlUu9nqSHD+X8UHhzH7NbKOvC7Ea6IOvd6cO5oUKTwIJyklfHwjYu0h9a
-         Vt/oWgnxiqwTtZ1RhzLtC0NzjUm6Lt0HJXDKvuwa/iWeQFQHQIznd4YWpa2NSPJTt8ZI
-         /jMOqH7XIVdHTts+tirxl69jPWM0qWEJhAGC2pUtJMuO8VdHzOAPfxHGl657Oc6vXOGB
-         j0F7OHCcjwJObZ4egfNAgFiuDPzCVARt+O2SYgfGBLf9ZXavIaRrErZ5Kdks9mukNekj
-         fW5A==
-X-Gm-Message-State: APjAAAUsmbR03YVFUtyU803F861X5iR2IcvX82QbBwJoSu5Wtlf6wlus
-        fFaLdJaRS0SIODJN7cta3CDpksYgRnkEicW95iQ=
-X-Google-Smtp-Source: APXvYqzzlxrTpJnf9hamU4U8roypGWc+64P/nSJO0cYNO9R2+JV7vqrhizVneA72cA7hYjmojWIPthZlH0pd8OGiFsY=
-X-Received: by 2002:a19:c3c2:: with SMTP id t185mr9929668lff.56.1580661590508;
- Sun, 02 Feb 2020 08:39:50 -0800 (PST)
+        Sun, 2 Feb 2020 12:24:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726525AbgBBRYf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Feb 2020 12:24:35 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6211520658;
+        Sun,  2 Feb 2020 17:24:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580664274;
+        bh=CB/V4ylEcJdiUc+eCTLQx8SjNvEkUUscT8KGY/0JaGE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S6lND/nSo/Foexo+6RxCpsvSSS1PLF+WpmopLOCZHHwa4pDvXAm7TModuMe9RGhcL
+         YJ8eiqkObMLtwdd30SBDNL0di0CKUsUlA1PX5oO24mejvBju5Ni1WNw2LV9Ix0Rz2u
+         J77aYAuq7KkVRdG9ajt9cyfm6L9VMHrDsHr3RDFE=
+Date:   Sun, 2 Feb 2020 17:24:26 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, rpi-receiver@htl-steyr.ac.at,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: devantech-srf04.yaml: add pm
+ feature
+Message-ID: <20200202172426.485989ea@archlinux>
+In-Reply-To: <20200120164454.GA8716@arbad>
+References: <20200120164454.GA8716@arbad>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-2-aford173@gmail.com>
-In-Reply-To: <20200202125950.1825013-2-aford173@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Sun, 2 Feb 2020 13:39:41 -0300
-Message-ID: <CAOMZO5D3emrAk84wDS04qJC-3AyvFnqodhoMsXO-ukHnYsU+PQ@mail.gmail.com>
-Subject: Re: [PATCH V2 2/5] spi: fspi: dynamically alloc AHB memory
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-spi <linux-spi@vger.kernel.org>, Han Xu <han.xu@nxp.com>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 2, 2020 at 10:00 AM Adam Ford <aford173@gmail.com> wrote:
->
-> From: Han Xu <han.xu@nxp.com>
->
-> Apply patch from NXP upstream repo to
-> dynamically allocate AHB memory as needed.
+On Mon, 20 Jan 2020 17:44:55 +0100
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-The commit log could be improved here. What is the motivation for doing this?
+> Add GPIO line and startup time for usage of power management
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to poke at it.
 
-> +               if (!f->ahb_addr) {
-> +                       dev_err(f->dev, "failed to alloc memory\n");
+Thanks,
 
-There is no need for this error message as the MM core will take care of it.
+Jonathan
+
+> ---
+>  .../iio/proximity/devantech-srf04.yaml         | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> index 4e80ea7c1475..8afbac24c34e 100644
+> --- a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> +++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> @@ -51,6 +51,24 @@ properties:
+>        the time between two interrupts is measured in the driver.
+>      maxItems: 1
+>  
+> +  power-gpios:
+> +    description:
+> +      Definition of the GPIO for power management of connected peripheral
+> +      (output).
+> +      This GPIO can be used by the external hardware for power management.
+> +      When the device gets suspended it's switched off and when it resumes
+> +      it's switched on again. After some period of inactivity the driver
+> +      get suspended automatically (autosuspend feature).
+> +    maxItems: 1
+> +
+> +  startup-time-ms:
+> +    description:
+> +      This is the startup time the device needs after a resume to be up and
+> +      running.
+> +    minimum: 0
+> +    maximum: 1000
+> +    default: 100
+> +
+>  required:
+>    - compatible
+>    - trig-gpios
+
