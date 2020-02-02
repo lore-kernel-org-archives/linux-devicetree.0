@@ -2,57 +2,68 @@ Return-Path: <SRS0=/AfF=3W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A9CC35240
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 10:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36692C3524C
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 11:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCCF206D3
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 10:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B292082E
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 11:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580640847;
-	bh=F0EDniuFmzcCk7oluLdlcjcnGDk3f069p1FmQrtQm8U=;
+	s=default; t=1580642904;
+	bh=idvg0ScIrlr77Wo2HLm6435xerymIe999QDm8yIO6+Y=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s7Fco9hTJSwjxJDZHwqV2pJ0h4Lsj9gQ9kwjwvJ5Ng4VwnQDhxjPm84eRZY5Xv5Xl
-	 c0AmUOuI/D8PuZ24bmKo6RKNSqe1JAZRD66YmJ/MpGb+CYkI0aLzsGe32+7nRivcjb
-	 rgqyBXcFaa1OH9k1PwF7l2pQObPFUhNWM3tvzOcs=
+	b=BREkXzTYQkL8h92wlTcGkRneC6PKHwKmo3pKB9NJwarwUZGEjcW0qmPbNGTmPW55q
+	 NZubGsMH0WuzVjtwerrxSEq1jDaiPMdg5SvRqhwITSiobmh9kHaTZoQ5RD23DzeZHe
+	 BsvkrjKS0fVnnMZ2AGKvAdonAhDj4sxGX8VFix4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgBBKyE (ORCPT
+        id S1726205AbgBBL2X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Feb 2020 05:54:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33890 "EHLO mail.kernel.org"
+        Sun, 2 Feb 2020 06:28:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbgBBKyE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Feb 2020 05:54:04 -0500
+        id S1726150AbgBBL2X (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Feb 2020 06:28:23 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 881552067C;
-        Sun,  2 Feb 2020 10:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97DA9206D3;
+        Sun,  2 Feb 2020 11:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580640843;
-        bh=F0EDniuFmzcCk7oluLdlcjcnGDk3f069p1FmQrtQm8U=;
+        s=default; t=1580642902;
+        bh=idvg0ScIrlr77Wo2HLm6435xerymIe999QDm8yIO6+Y=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qqPLuAsMSmfz9HbdklT+jK86SRXYLMlmojG2HAvFmqYynuoPnxn+nYACEQZ3LOIji
-         2IqJ9ONaKx297YPkLUmBBPVSSBe5oXxWPCOwHEoEmyw0aBDLOM/V1ywCVEWq1aWqAk
-         M6HJ8qD9HMY43cw9uyCeW70QYSeYknzwvl2JFn/A=
-Date:   Sun, 2 Feb 2020 10:53:58 +0000
+        b=C1HaChaMOIyBwVl9vkRkqNBfD+C/F4DutFmVLMOFlVrERUFr9rh1UBSqkbO74zG/g
+         r5mNxXldsaarO9YcnhvGWebtfKJGT946hzquZCN4XhBAwl7yPyBBQCV/Awg2wJ7xa1
+         d/jHolFONRV+NG2tyijX+90XXdWvNHAIZKwpXFlA=
+Date:   Sun, 2 Feb 2020 11:28:15 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 4/5] dt-bindings: iio: amplifiers: Add docs for
- HMC425A Step Attenuator
-Message-ID: <20200202105358.27b6b8a6@archlinux>
-In-Reply-To: <20200129142301.13918-5-beniamin.bia@analog.com>
-References: <20200129142301.13918-1-beniamin.bia@analog.com>
-        <20200129142301.13918-5-beniamin.bia@analog.com>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Joel Stanley <joel@jms.id.au>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH v1 2/2] iio: adc: modify NPCM reset support
+Message-ID: <20200202112815.66b4b119@archlinux>
+In-Reply-To: <CAP6Zq1hupvQeXwynt02ePu6eL9X5oriNNwSmJEPqQWZBj770oA@mail.gmail.com>
+References: <20200119110032.124745-1-tmaimon77@gmail.com>
+        <20200119110032.124745-2-tmaimon77@gmail.com>
+        <20200129200143.08bf4a91@archlinux>
+        <CAP6Zq1hupvQeXwynt02ePu6eL9X5oriNNwSmJEPqQWZBj770oA@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,75 +73,159 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 29 Jan 2020 16:23:00 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
+On Thu, 30 Jan 2020 10:20:30 +0200
+Tomer Maimon <tmaimon77@gmail.com> wrote:
 
-> From: Michael Hennerich <michael.hennerich@analog.com>
+> Hi Jonathan,
 > 
-> Document support for Analog Devices MC425A Step Attenuator.
+> The patch replace reset ADC method from direct register access to using
+> reset driver (will applied next Linux version).
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next-history.git/commit/?h=next-20200130&id=9c81b2ccf82da6e995b63e945afa882cfaa03ca9
 > 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
->  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> new file mode 100644
-> index 000000000000..d800639c14a5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HMC425A 6-bit Digital Step Attenuator
-> +
-> +maintainers:
-> +- Michael Hennerich <michael.hennerich@analog.com>
-> +- Beniamin Bia <beniamin.bia@analog.com>
-> +
-> +description: |
-> +  Digital Step Attenuator IIO device with gpio interface.
-> +  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,hmc425a
-> +
-> +  vcc-supply: true
-> +
-> +  ctrl-gpios:
-> +    description:
-> +      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
-> +      connected to the control pins V1-V6.
-> +    maxItems: 6
+> The ADC dt-binding modified as well to use the new reset method (approved
+> by Rob Herring)
+> https://www.spinics.net/lists/devicetree/msg331327.html
+> 
+> Indeed the this modification require DT modification as it described in the
+> ADC dt-binding commit, is it an issue? Do you thnk I should describe it in
+> the commit?
 
-Does this force exactly 6?
+Whether it is an issue depends on nuvoton business model.  Can they ensure
+that all places the kernel is changed will also have appropriate dt updates?
 
-> +
-> +required:
-> +  - compatible
-> +  - ctrl-gpios
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    gpio_hmc425a: hmc425a {
-> +      compatible = "adi,hmc425a";
-> +      ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
-> +        <&gpio 39 GPIO_ACTIVE_HIGH>,
-> +        <&gpio 38 GPIO_ACTIVE_HIGH>,
-> +        <&gpio 37 GPIO_ACTIVE_HIGH>,
-> +        <&gpio 36 GPIO_ACTIVE_HIGH>,
-> +        <&gpio 35 GPIO_ACTIVE_HIGH>;
-> +      vcc-supply = <&foo>;
-> +    };
-> +...
+If not, you need to make the code continue to function without the change
+(fall back to old methods).  If they do have enough control to ensure it won't
+break any systems out in the wild, then just add a note to say that is the
+case to the commit message.
+
+Reasons this sort of thing is sometimes safe include:
+* preproduction part so no users outside of people who will expect
+potential breakage
+* dt and new kernel images only distributed in a firmware package, or
+where build script used to build the firmware package will ensure they
+match (this is a bmc chip I think, so I guess not many people build their own
+kernels except via scripting to package everything up as a firmware image
+of some type?)
+
+Thanks,
+
+Jonathan
+> 
+> Thanks,
+> 
+> Tomer
+> 
+> 
+> 
+> On Wed, 29 Jan 2020 at 22:01, Jonathan Cameron <jic23@kernel.org> wrote:
+> 
+> > On Sun, 19 Jan 2020 13:00:32 +0200
+> > Tomer Maimon <tmaimon77@gmail.com> wrote:
+> >  
+> > > Modify NPCM ADC reset support from
+> > > direct register access to reset controller support.
+> > >
+> > > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>  
+> >
+> > Hmm.  This presumably breaks all old DT.
+> >
+> > If that's not a problem please say why.
+> >
+> > Jonathan
+> >  
+> > > ---
+> > >  drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
+> > >  1 file changed, 9 insertions(+), 21 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
+> > > index a6170a37ebe8..83bad2d5575d 100644
+> > > --- a/drivers/iio/adc/npcm_adc.c
+> > > +++ b/drivers/iio/adc/npcm_adc.c
+> > > @@ -14,6 +14,7 @@
+> > >  #include <linux/regulator/consumer.h>
+> > >  #include <linux/spinlock.h>
+> > >  #include <linux/uaccess.h>
+> > > +#include <linux/reset.h>
+> > >
+> > >  struct npcm_adc {
+> > >       bool int_status;
+> > > @@ -23,13 +24,9 @@ struct npcm_adc {
+> > >       struct clk *adc_clk;
+> > >       wait_queue_head_t wq;
+> > >       struct regulator *vref;
+> > > -     struct regmap *rst_regmap;
+> > > +     struct reset_control *reset;
+> > >  };
+> > >
+> > > -/* NPCM7xx reset module */
+> > > -#define NPCM7XX_IPSRST1_OFFSET               0x020
+> > > -#define NPCM7XX_IPSRST1_ADC_RST              BIT(27)
+> > > -
+> > >  /* ADC registers */
+> > >  #define NPCM_ADCCON   0x00
+> > >  #define NPCM_ADCDATA  0x04
+> > > @@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info,  
+> > int *val, u8 channel)  
+> > >                                              msecs_to_jiffies(10));
+> > >       if (ret == 0) {
+> > >               regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > -             if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
+> > > +             if (regtemp & NPCM_ADCCON_ADC_CONV) {
+> > >                       /* if conversion failed - reset ADC module */
+> > > -                     regmap_write(info->rst_regmap,  
+> > NPCM7XX_IPSRST1_OFFSET,  
+> > > -                                  NPCM7XX_IPSRST1_ADC_RST);
+> > > +                     reset_control_assert(info->reset);
+> > >                       msleep(100);
+> > > -                     regmap_write(info->rst_regmap,  
+> > NPCM7XX_IPSRST1_OFFSET,  
+> > > -                                  0x0);
+> > > +                     reset_control_deassert(info->reset);
+> > >                       msleep(100);
+> > >
+> > >                       /* Enable ADC and start conversion module */
+> > > @@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device  
+> > *pdev)  
+> > >       struct npcm_adc *info;
+> > >       struct iio_dev *indio_dev;
+> > >       struct device *dev = &pdev->dev;
+> > > -     struct device_node *np = pdev->dev.of_node;
+> > >
+> > >       indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+> > >       if (!indio_dev)
+> > > @@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device  
+> > *pdev)  
+> > >       if (IS_ERR(info->regs))
+> > >               return PTR_ERR(info->regs);
+> > >
+> > > +     info->reset = devm_reset_control_get(&pdev->dev, NULL);
+> > > +     if (IS_ERR(info->reset))
+> > > +             return PTR_ERR(info->reset);
+> > > +
+> > >       info->adc_clk = devm_clk_get(&pdev->dev, NULL);
+> > >       if (IS_ERR(info->adc_clk)) {
+> > >               dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
+> > > @@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device  
+> > *pdev)  
+> > >       div = div >> NPCM_ADCCON_DIV_SHIFT;
+> > >       info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) *  
+> > 2);  
+> > >
+> > > -     if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
+> > > -             info->rst_regmap = syscon_regmap_lookup_by_compatible
+> > > -                     ("nuvoton,npcm750-rst");
+> > > -             if (IS_ERR(info->rst_regmap)) {
+> > > -                     dev_err(&pdev->dev, "Failed to find  
+> > nuvoton,npcm750-rst\n");  
+> > > -                     ret = PTR_ERR(info->rst_regmap);
+> > > -                     goto err_disable_clk;
+> > > -             }
+> > > -     }
+> > > -
+> > >       irq = platform_get_irq(pdev, 0);
+> > >       if (irq <= 0) {
+> > >               ret = -EINVAL;  
+> >
+> >  
 
