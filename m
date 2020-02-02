@@ -1,110 +1,89 @@
-Return-Path: <SRS0=GCsk=3V=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=/AfF=3W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0B2C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Feb 2020 18:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A6C35249
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 00:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B522D20728
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Feb 2020 18:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D98C20661
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 00:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH9NbU0A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="W8mIytyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgBAS72 (ORCPT
+        id S1726708AbgBBAO0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:59:28 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36916 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgBAS72 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Feb 2020 13:59:28 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b15so7068749lfc.4;
-        Sat, 01 Feb 2020 10:59:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/phYC3XepYJ8HcBAgyCtC3+v9VkhmdsR0sH380NesxM=;
-        b=DH9NbU0ALqHKtTRfsqL59umJ9dO7pBbRSvtbDH+ndY8xHDRorsCqqSzPnpumOM21g0
-         2K/vgjYlwyfcMhsf4zpcU/K1ajiej13gBHNxrgeJfA0HTfI69hFiXxsP51P1VqFDzyLy
-         dseV7w75afQZlyo4OxtOKIWiZuRAUBk0DknwLh235xo6wuOGX8yog/hTyYmOxHi7O4dW
-         Y5veaNagCaXPQM3Fsy5skvOS/nn6+VwWmrxw0QQ2ikQ2sDerovm5Xj/6jJ24vTVY0sJa
-         r/mOJTjkYqzTWMFL6IDe/mM3yh8uh3/0TV1I5/f8AKfvzS5oJEawisADickxwUBnKdl/
-         wTMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/phYC3XepYJ8HcBAgyCtC3+v9VkhmdsR0sH380NesxM=;
-        b=tDU1apYl9J7UDNMLMDDtIzrhGn97AlHDCOzRjM9/787BIsRDK+BLQoEbLka6xL4qXz
-         HETc+hO9N8wt6p0c1IDARH7mLo6gM3LDDvKOIh+RvnEyF6L7xqiEdLP/alOaMLEPsZMa
-         euwZ+TnqykLPQ1YNmCZDUt7FIFBKuWTIcfXaOZjhOLiCT+RK966poPE8Tuz9nuwwukGz
-         94nuNQefumqEByQgX0/c6HIf2rHE/RfU7jlqzdjbkMcrB3dL7l03Xg99Bh7086CAimV8
-         SWNtqT3ArgMot6HprlmZIeQ+/tQZnCBurUDXYNP44TP2jfNulHdqVteGrtzXVAqRwdSb
-         e7Mg==
-X-Gm-Message-State: APjAAAVZKMMVQ89beWh67QfDy+YGolM8BcUxc4reVnAkjikGc5TOvwjB
-        Kps0qghKaO5SCIs9NgrizBWqsGPc
-X-Google-Smtp-Source: APXvYqyYF8EwgrTrmh39fKJq5HxBXHL7O7R8QpY7NiEBPCOSuRP0LnxmxOZi7SY7vBLkpImcMAHuNg==
-X-Received: by 2002:a19:844:: with SMTP id 65mr8328474lfi.20.1580583565203;
-        Sat, 01 Feb 2020 10:59:25 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id v7sm6472203lfa.10.2020.02.01.10.59.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2020 10:59:24 -0800 (PST)
-Subject: Re: [PATCH v3 1/7] dt-bindings: iio: light: add support for
- Dyna-Image AL3320A
-To:     David Heidelberg <david@ixit.cz>, linux-iio@vger.kernel.org
-Cc:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20200201180024.328700-1-david@ixit.cz>
- <20200201180024.328700-3-david@ixit.cz>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2c026269-079e-01fb-b469-87c6d4f2983e@gmail.com>
-Date:   Sat, 1 Feb 2020 21:59:22 +0300
+        Sat, 1 Feb 2020 19:14:26 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:28197 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgBBAOZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Feb 2020 19:14:25 -0500
+X-Greylist: delayed 344 seconds by postgrey-1.27 at vger.kernel.org; Sat, 01 Feb 2020 19:14:25 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1580602464;
+        s=strato-dkim-0002; d=xenosoft.de;
+        h=In-Reply-To:Date:Message-ID:Subject:From:References:Cc:To:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=M2p6BlJKlzc7zwD9OCcddn1toLSZU/FWLhGgP48heGQ=;
+        b=W8mIytyOz7zu8hRVf0LBlcdPbkpi6amlUZ2A5aypJUHh1aniu3IhoxdNQDgFlmCrE0
+        ZXM1ASOtdvPZuwMVmAnhOJ94S1QFnTQcsTdkEEQfwaNqWj5EBFNC9n2U8oPWkzPgR594
+        zVSj+JOHH0EL5bUq7Qa44Hkf5Z9BzSH7SH6+z4rnwdvJmuGEMAAufVe6/IjHy1ZUp/J+
+        ZWEiRsipPVSOCDKU5YlER/N4OEiHuCC5yofWXb+ReWKOWwpHTY2JBk5Cxu082e3zy9wl
+        Zze3ThOFBwxGGqaupl0hmb9OlCZ/EZ+Wq2/fRFHmAuGRLIJRvaafXV2kvND/zk3Jf5bg
+        UxMw==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhSLlpvF7aofGh9KUohSyVOsmPy"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2a02:8109:89c0:ebfc:188b:8a2:e727:e5f1]
+        by smtp.strato.de (RZmta 46.1.12 AUTH)
+        with ESMTPSA id 40bcf3w1208HBpI
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 2 Feb 2020 01:08:17 +0100 (CET)
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Darren Stevens <darren@stevens-zone.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, linuxppc-dev@ozlabs.org,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>,
+        "contact@a-eon.com" <contact@a-eon.com>
+References: <20200126115247.13402-1-mpe@ellerman.id.au>
+ <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+Subject: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate ioctl
+ for device
+Message-ID: <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
+Date:   Sun, 2 Feb 2020 01:08:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200201180024.328700-3-david@ixit.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: de-DE
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-01.02.2020 21:00, David Heidelberg пишет:
-> Subject: [PATCH v3 2/7] dt-bindings: iio: light: add support for Dyna-Image
->  AL3010
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=UTF-8
-> Content-Transfer-Encoding: 8bit
+Hello,
 
-Looks like something went wrong, ^ this shouldn't be in the patch's body.
+We regularly compile and test Linux kernels every day during the merge 
+window. Since Thuesday we have very high CPU loads because of the avahi 
+daemon on our desktop Linux systems (Ubuntu, Debian etc).
 
-> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
-> provides a multiple gain function with linear response over a dynamic
-> range 1216/4863/19452/77806.
-> 
-> Signed-off-by: David Heidelberg <david@ixit.cz>
-> ---
+Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
 
-You should put individual changelog for each patch under the ---, or
-just add a cover-letter with global changelog.
+Could you please test the latest Git kernel?
 
->  .../devicetree/bindings/iio/light/al3010.yaml | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/al3010.yaml
-...
+It is possible to deactivate the avahi daemon with the following lines 
+in the file "/etc/avahi/avahi-daemon.conf":
+
+use-ipv4=no
+use-ipv6=no
+
+But this is only a temporary solution.
+
+Thanks,
+Christian
