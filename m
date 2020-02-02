@@ -4,271 +4,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CF7C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 09:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F68C3524B
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 10:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9EE20842
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 09:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF6B2080D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Feb 2020 10:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580637275;
-	bh=lZ+gpFRO/27mD2MNG+VxM4kJtYhrhExKjpmvC8D8YBE=;
+	s=default; t=1580640084;
+	bh=DjmOvLJxu6nBLbbp0bEQYG1bPbOlqP5KLiv8uBsHamI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zYpuu3QVPPfKP0kxFGqqrygoBvxdFb1Ov5G/Se4omAaLmnccL5QcCTFDuAl+NDEdc
-	 Obqc78TYiM6+HUO8zdUcJ/jeJVqRsFFOC/pAMNxM6z+ar6Of/4fJiFvy1u9/AbDZLq
-	 845scdzhsitTFVU9YWQSk4li4K+S6K9TePMM24cY=
+	b=CkqRWvnFVAko19nC8Dn8WByo5mLSQYWsy8c0ecKh3RMyKBLPq5seDJlCqJIPc5GbQ
+	 Y3vxfleaKJv78T7sWnD17leW+84u9nuQNclDzlKxFnnRyCy3HOoH/igHzR8qGpSRa5
+	 +hy/wtmyHh8vWJyzjNrKnMxKqolrQXB91l16lpzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725962AbgBBJye (ORCPT
+        id S1725995AbgBBKlX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Feb 2020 04:54:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
+        Sun, 2 Feb 2020 05:41:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbgBBJye (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Feb 2020 04:54:34 -0500
+        id S1725956AbgBBKlX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Feb 2020 05:41:23 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D5162080D;
-        Sun,  2 Feb 2020 09:54:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8D71206D3;
+        Sun,  2 Feb 2020 10:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580637273;
-        bh=lZ+gpFRO/27mD2MNG+VxM4kJtYhrhExKjpmvC8D8YBE=;
+        s=default; t=1580640081;
+        bh=DjmOvLJxu6nBLbbp0bEQYG1bPbOlqP5KLiv8uBsHamI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PTmQh3HjlVTBCjg+NADfk+aKCcSgSJvgg1EXX0Aq9fCTfGPUbI4XEx7yAI8kZepWH
-         j6T1S9iJtNYvZKj0WOkd6ViDeApOy4uQbZh8ocFziFafOoJ7up1iXv6Kw4Nz3zAYOc
-         Hll7hZ07SfRgY1WJQh8fzWgWVT0KVjcZL+hZEVHk=
-Date:   Sun, 2 Feb 2020 09:54:28 +0000
+        b=zsScn23DkdukUMrzFoLdl+wnQYrmmOGE0mcqREqvOfdr7AbfUVYlITC5u90Ecxxfa
+         XH/vUshLwOEDVRCdYccZFqmaMQDYyi8zBdLfGvcjoSC3+RjVaRdmPitpumWMoDp9A0
+         J2eCm5TVek2pOh0qrS30wga6fSYe3Et/NPRPkJVY=
+Date:   Sun, 2 Feb 2020 10:41:16 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, kernel@pengutronix.de,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>,
-        Silvan Murer <silvan.murer@gmail.com>
-Subject: Re: [PATCH 3/3] iio: dac: ltc2632: add support for LTC2636 family
-Message-ID: <20200202095428.238af727@archlinux>
-In-Reply-To: <20200130131549.1170-3-u.kleine-koenig@pengutronix.de>
-References: <20200130131549.1170-1-u.kleine-koenig@pengutronix.de>
-        <20200130131549.1170-3-u.kleine-koenig@pengutronix.de>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 1/5] iio: core: Handle 'dB' suffix in core
+Message-ID: <20200202104116.4f9fa9f3@archlinux>
+In-Reply-To: <20200129142301.13918-2-beniamin.bia@analog.com>
+References: <20200129142301.13918-1-beniamin.bia@analog.com>
+        <20200129142301.13918-2-beniamin.bia@analog.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Jan 2020 14:15:49 +0100
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote:
+On Wed, 29 Jan 2020 16:22:57 +0200
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-> The only difference between LTC2632 and LTC2636 is that the former has
-> two DAC channels while the latter has eight.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-Looks good to me. I'd like to give a little time for Maxime and Silvan
-to have a look if they wish.
-
-If I seem to have lost this in a few weeks, give me a poke!
-
-Thanks,
-
-Jonathan
-
+> This patch handles the db suffix used for writing micro db values.
+> 
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 > ---
->  drivers/iio/dac/Kconfig   |  5 ++-
->  drivers/iio/dac/ltc2632.c | 77 +++++++++++++++++++++++++++++++++++++--
->  2 files changed, 77 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-> index cc42219a64f7..33a35ebe4fed 100644
-> --- a/drivers/iio/dac/Kconfig
-> +++ b/drivers/iio/dac/Kconfig
-> @@ -132,11 +132,12 @@ config LTC1660
->  	  module will be called ltc1660.
-> =20
->  config LTC2632
-> -	tristate "Linear Technology LTC2632-12/10/8 DAC spi driver"
-> +	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi=
- driver"
->  	depends on SPI
->  	help
->  	  Say yes here to build support for Linear Technology
-> -	  LTC2632-12, LTC2632-10, LTC2632-8 converters (DAC).
-> +	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
-> +	  LTC2636-8 converters (DAC).
-> =20
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ltc2632.
-> diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
-> index 7ab92e178496..1e7ffa0f6071 100644
-> --- a/drivers/iio/dac/ltc2632.c
-> +++ b/drivers/iio/dac/ltc2632.c
-> @@ -12,8 +12,6 @@
->  #include <linux/iio/iio.h>
->  #include <linux/regulator/consumer.h>
-> =20
-> -#define LTC2632_DAC_CHANNELS                    2
-> -
->  #define LTC2632_ADDR_DAC0                       0x0
->  #define LTC2632_ADDR_DAC1                       0x1
-> =20
-> @@ -33,6 +31,7 @@
->   */
->  struct ltc2632_chip_info {
->  	const struct iio_chan_spec *channels;
-> +	const size_t num_channels;
->  	const int vref_mv;
->  };
-> =20
-> @@ -57,6 +56,12 @@ enum ltc2632_supported_device_ids {
->  	ID_LTC2632H12,
->  	ID_LTC2632H10,
->  	ID_LTC2632H8,
-> +	ID_LTC2636L12,
-> +	ID_LTC2636L10,
-> +	ID_LTC2636L8,
-> +	ID_LTC2636H12,
-> +	ID_LTC2636H10,
-> +	ID_LTC2636H8,
->  };
-> =20
->  static int ltc2632_spi_write(struct spi_device *spi,
-> @@ -190,6 +195,12 @@ static const struct iio_chan_spec_ext_info ltc2632_e=
-xt_info[] =3D {
->  	const struct iio_chan_spec _name ## _channels[] =3D { \
->  		LTC2632_CHANNEL(0, _bits), \
->  		LTC2632_CHANNEL(1, _bits), \
-> +		LTC2632_CHANNEL(2, _bits), \
-> +		LTC2632_CHANNEL(3, _bits), \
-> +		LTC2632_CHANNEL(4, _bits), \
-> +		LTC2632_CHANNEL(5, _bits), \
-> +		LTC2632_CHANNEL(6, _bits), \
-> +		LTC2632_CHANNEL(7, _bits), \
->  	}
-> =20
->  static DECLARE_LTC2632_CHANNELS(ltc2632x12, 12);
-> @@ -199,26 +210,62 @@ static DECLARE_LTC2632_CHANNELS(ltc2632x8, 8);
->  static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] =3D {
->  	[ID_LTC2632L12] =3D {
->  		.channels	=3D ltc2632x12_channels,
-> +		.num_channels	=3D 2,
->  		.vref_mv	=3D 2500,
->  	},
->  	[ID_LTC2632L10] =3D {
->  		.channels	=3D ltc2632x10_channels,
-> +		.num_channels	=3D 2,
->  		.vref_mv	=3D 2500,
->  	},
->  	[ID_LTC2632L8] =3D  {
->  		.channels	=3D ltc2632x8_channels,
-> +		.num_channels	=3D 2,
->  		.vref_mv	=3D 2500,
->  	},
->  	[ID_LTC2632H12] =3D {
->  		.channels	=3D ltc2632x12_channels,
-> +		.num_channels	=3D 2,
->  		.vref_mv	=3D 4096,
->  	},
->  	[ID_LTC2632H10] =3D {
->  		.channels	=3D ltc2632x10_channels,
-> +		.num_channels	=3D 2,
->  		.vref_mv	=3D 4096,
->  	},
->  	[ID_LTC2632H8] =3D  {
->  		.channels	=3D ltc2632x8_channels,
-> +		.num_channels	=3D 2,
-> +		.vref_mv	=3D 4096,
-> +	},
-> +	[ID_LTC2636L12] =3D {
-> +		.channels	=3D ltc2632x12_channels,
-> +		.num_channels	=3D 8,
-> +		.vref_mv	=3D 2500,
-> +	},
-> +	[ID_LTC2636L10] =3D {
-> +		.channels	=3D ltc2632x10_channels,
-> +		.num_channels	=3D 8,
-> +		.vref_mv	=3D 2500,
-> +	},
-> +	[ID_LTC2636L8] =3D  {
-> +		.channels	=3D ltc2632x8_channels,
-> +		.num_channels	=3D 8,
-> +		.vref_mv	=3D 2500,
-> +	},
-> +	[ID_LTC2636H12] =3D {
-> +		.channels	=3D ltc2632x12_channels,
-> +		.num_channels	=3D 8,
-> +		.vref_mv	=3D 4096,
-> +	},
-> +	[ID_LTC2636H10] =3D {
-> +		.channels	=3D ltc2632x10_channels,
-> +		.num_channels	=3D 8,
-> +		.vref_mv	=3D 4096,
-> +	},
-> +	[ID_LTC2636H8] =3D  {
-> +		.channels	=3D ltc2632x8_channels,
-> +		.num_channels	=3D 8,
->  		.vref_mv	=3D 4096,
->  	},
->  };
-> @@ -287,7 +334,7 @@ static int ltc2632_probe(struct spi_device *spi)
->  	indio_dev->info =3D &ltc2632_info;
->  	indio_dev->modes =3D INDIO_DIRECT_MODE;
->  	indio_dev->channels =3D chip_info->channels;
-> -	indio_dev->num_channels =3D LTC2632_DAC_CHANNELS;
-> +	indio_dev->num_channels =3D chip_info->num_channels;
-> =20
->  	return iio_device_register(indio_dev);
+>  drivers/iio/industrialio-core.c | 35 ++++++++++++++++++++++++++++++---
+>  1 file changed, 32 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 65ff0d067018..b70111837420 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -769,17 +769,18 @@ static ssize_t iio_read_channel_info_avail(struct device *dev,
 >  }
-> @@ -312,6 +359,12 @@ static const struct spi_device_id ltc2632_id[] =3D {
->  	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12] =
-},
->  	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10] =
-},
->  	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] },
-> +	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12] =
-},
-> +	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10] =
-},
-> +	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] },
-> +	{ "ltc2636-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H12] =
-},
-> +	{ "ltc2636-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H10] =
-},
-> +	{ "ltc2636-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H8] },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(spi, ltc2632_id);
-> @@ -335,6 +388,24 @@ static const struct of_device_id ltc2632_of_match[] =
-=3D {
->  	}, {
->  		.compatible =3D "lltc,ltc2632-h8",
->  		.data =3D &ltc2632_chip_info_tbl[ID_LTC2632H8]
-> +	}, {
-> +		.compatible =3D "lltc,ltc2636-l12",
-> +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636L12]
-> +	}, {
-> +		.compatible =3D "lltc,ltc2636-l10",
-> +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636L10]
-> +	}, {
-> +		.compatible =3D "lltc,ltc2636-l8",
-> +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636L8]
-> +	}, {
-> +		.compatible =3D "lltc,ltc2636-h12",
-> +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636H12]
-> +	}, {
-> +		.compatible =3D "lltc,ltc2636-h10",
-> +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636H10]
-> +	}, {
-> +		.compatible =3D "lltc,ltc2636-h8",
-> +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636H8]
->  	},
->  	{}
->  };
+>  
+>  /**
+> - * iio_str_to_fixpoint() - Parse a fixed-point number from a string
+> + * __iio_str_to_fixpoint() - Parse a fixed-point number from a string
+>   * @str: The string to parse
+>   * @fract_mult: Multiplier for the first decimal place, should be a power of 10
+>   * @integer: The integer part of the number
+>   * @fract: The fractional part of the number
+> + * @scale_db: True if this should parse as dB
+>   *
+>   * Returns 0 on success, or a negative error code if the string could not be
+>   * parsed.
+>   */
+> -int iio_str_to_fixpoint(const char *str, int fract_mult,
+> -	int *integer, int *fract)
+> +int __iio_str_to_fixpoint(const char *str, int fract_mult,
+> +			  int *integer, int *fract, bool scale_db)
+>  {
+>  	int i = 0, f = 0;
+>  	bool integer_part = true, negative = false;
+> @@ -810,6 +811,10 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
+>  				break;
+>  			else
+>  				return -EINVAL;
+> +		} else if (!strncmp(str, " dB", sizeof(" dB") - 1) && scale_db) {
+
+I think we need to ignore spacing between the value and the dB.
+
+We could do that by ignoring spaces in general, but that will lead
+to odd results in other cases.  Perhaps we just need to handle " dB" and "dB"
+to cover likely options?
+
+> +			/* Ignore the dB suffix */
+> +			str += sizeof(" dB") - 1;
+> +			continue;
+>  		} else if (*str == '.' && integer_part) {
+>  			integer_part = false;
+>  		} else {
+> @@ -832,6 +837,22 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
+>  }
+>  EXPORT_SYMBOL_GPL(iio_str_to_fixpoint);
+>  
+> +/**
+> + * iio_str_to_fixpoint() - Parse a fixed-point number from a string
+> + * @str: The string to parse
+> + * @fract_mult: Multiplier for the first decimal place, should be a power of 10
+> + * @integer: The integer part of the number
+> + * @fract: The fractional part of the number
+> + *
+> + * Returns 0 on success, or a negative error code if the string could not be
+> + * parsed.
+> + */
+> +int iio_str_to_fixpoint(const char *str, int fract_mult,
+> +			int *integer, int *fract)
+> +{
+> +	return __iio_str_to_fixpoint(str, fract_mult, integer, fract, false);
+> +}
+> +
+>  static ssize_t iio_write_channel_info(struct device *dev,
+>  				      struct device_attribute *attr,
+>  				      const char *buf,
+> @@ -842,6 +863,7 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  	int ret, fract_mult = 100000;
+>  	int integer, fract = 0;
+>  	bool is_char = false;
+> +	bool scale_db = false;
+>  
+>  	/* Assumes decimal - precision based on number of digits */
+>  	if (!indio_dev->info->write_raw)
+> @@ -853,6 +875,9 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  		case IIO_VAL_INT:
+>  			fract_mult = 0;
+>  			break;
+> +		case IIO_VAL_INT_PLUS_MICRO_DB:
+> +			scale_db = true;
+> +			/* fall through */
+>  		case IIO_VAL_INT_PLUS_MICRO:
+>  			fract_mult = 100000;
+>  			break;
+> @@ -877,6 +902,10 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  		if (ret)
+>  			return ret;
+>  	}
+> +	ret = __iio_str_to_fixpoint(buf, fract_mult, &integer, &fract,
+> +				    scale_db);
+> +	if (ret)
+> +		return ret;
+>  
+>  	ret = indio_dev->info->write_raw(indio_dev, this_attr->c,
+>  					 integer, fract, this_attr->address);
 
