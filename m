@@ -7,83 +7,83 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE28AC35247
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 15:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B26AC35247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 15:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4DEF2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 15:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6248720838
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 15:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580745058;
-	bh=g1LFrS1dKioZMrp4GHtaPlj8hGdEtrpsQGtLQX72YD0=;
+	s=default; t=1580745241;
+	bh=k1ij7xtj7QOUeGO+WCPds9gB1px2XN/nsv8ejt+4z2I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PByQLlOwFfd8H6Tk3kloQJjXFRAPRzj0lqDVWUliOKVp23jDMIi+oNLa6MxX9r7zH
-	 RzRw8JNVd73q2cgAYnQKMtjhlgJuACizlRswcdXkz69FRN4vsjAXh2kQuewAegSZB0
-	 RjnGAuIqLJjrl4+oyqxLDIxsv+YYsJ0n3ZErz7Ek=
+	b=iynApsq56tG6hcJibVrb3XdIT9AXPyGRN9syNrndKR8nXE99CL2rr1dW1MiJUT4z5
+	 sUf6mEhJ1LfPCNjaPX/zw0oD8DI9wm5SKBp3tsoyYUG6TyiWlYKd1lZi+UQLkFIbcu
+	 M2wlrcEHBqMqwAPMIj+I6p+yKRHxpVOBi5+SIzig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgBCPu6 (ORCPT
+        id S1727860AbgBCPyB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:50:58 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37592 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727860AbgBCPu6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 10:50:58 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so17781062wmf.2;
-        Mon, 03 Feb 2020 07:50:56 -0800 (PST)
+        Mon, 3 Feb 2020 10:54:01 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33615 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727616AbgBCPyA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 10:54:00 -0500
+Received: by mail-wr1-f66.google.com with SMTP id u6so5589007wrt.0
+        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 07:53:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2k2kojlNxd6DLo6ZxtPDv7dwX5Kkpi8+VuIoDodoN/U=;
-        b=s+lNy+63T8N4tpl+7Do/OIGNrUOsRl8ILh/o5OEG/89bbymKgPfjoQZBQYXKhTmJhf
-         7rmAp8gJwI4igIcxLlE2c0AT/4PZ8n4kPUkpJDg4biMfp/svmo+50stwPB1CFjGGCi/j
-         nNf4BACFMn8ADnLP+O5nTo/TGLQ35byb3ilB8mquXb0rboRllaYbkjNP/ceJr21SsYL3
-         yazfvsMuBgDjZfbcf0qR7MD23i9G3Ixlk06YmRA0Nzf83YS1uRkz+JEP4asirsK395L9
-         e6MQgICHvjQk2O8C8EWDsszVDVCgxp+TToidLqzkTyWuxZ/alRRXRsrOVMIWGZ7f898x
-         DWJA==
-X-Gm-Message-State: APjAAAVBNmUgqS2aYV2StksPHXHgD/yMB4gmIRd6Ula6kGiXxEVZ82ZZ
-        UUp9CbJ8WZ+FfWnKLz1fEQ==
-X-Google-Smtp-Source: APXvYqyRfaAh3JGytPrKq2wtY9lyEdrbniGXSqLRqcVdhsb6pMyhheXASqBIVxbekNRZP4jDij2odA==
-X-Received: by 2002:a1c:3b0a:: with SMTP id i10mr31837445wma.177.1580745055783;
-        Mon, 03 Feb 2020 07:50:55 -0800 (PST)
+        bh=tP8fWS0Om+HUZS9XvN6HPA99hRkjM3xVE0yxOW/WzBs=;
+        b=Kmbl9d6o4aqki9KvLnPTNxx+UPziSZhZYQsk1ttG24U5/+TtmdjnexywEC1zOHarxv
+         sOI7+8SxwOoUR4FwYDuMXG9QDa1b/Ctt9FXWAaKTI6+gYNURsin2+jQiFlKyKa3ixF/U
+         k03IOmAiTGWUxG9E9j5fzYXgdA/4gfAwh7+3bMe5CASaw4Iopr4xJ/hHlV7qxmrIdJeI
+         Uw3gCe3Wc29IuW++fKP5aq6qLqtS6X6TDj9eeBHHqhEVbA81oS58j/fI4WC6YeqZ1nBZ
+         YeAY2DQxF5Kg5LQuWhizMlxhpfNeJJNYo3RgvCc1Wc1XyAnlyNLOmzY+R2mbGaNNJbgV
+         Hcrg==
+X-Gm-Message-State: APjAAAVIo8aZwDxHOcJqh4df8Z514Mn+OXptkg0OUH9p+gwxaHYE76kO
+        NNwQAPUsRyLHC0VLMb/r8zocYCQgTQ==
+X-Google-Smtp-Source: APXvYqzHf4VEmi2pcidWYBE74yP1wuva3q2BtMtnLGr1Ujp3xojBAWYPbbfNYhl4YvKIuxa+73JvAA==
+X-Received: by 2002:a5d:42c5:: with SMTP id t5mr17245205wrr.73.1580745238257;
+        Mon, 03 Feb 2020 07:53:58 -0800 (PST)
 Received: from rob-hp-laptop ([212.187.182.163])
-        by smtp.gmail.com with ESMTPSA id w8sm24091252wmm.0.2020.02.03.07.50.54
+        by smtp.gmail.com with ESMTPSA id 18sm23239849wmf.1.2020.02.03.07.53.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 07:50:55 -0800 (PST)
-Received: (nullmailer pid 25905 invoked by uid 1000);
-        Mon, 03 Feb 2020 15:50:53 -0000
-Date:   Mon, 3 Feb 2020 15:50:53 +0000
+        Mon, 03 Feb 2020 07:53:57 -0800 (PST)
+Received: (nullmailer pid 31100 invoked by uid 1000);
+        Mon, 03 Feb 2020 15:53:56 -0000
+Date:   Mon, 3 Feb 2020 15:53:56 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     mripard@kernel.org, wens@csie.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 4/5] media: dt-bindings: media: Add Allwinner A64
- deinterlace compatible
-Message-ID: <20200203155053.GA25849@bogus>
-References: <20200125110353.591658-1-jernej.skrabec@siol.net>
- <20200125110353.591658-5-jernej.skrabec@siol.net>
+To:     Marek Vasut <marex@denx.de>
+Cc:     dri-devel@lists.freedesktop.org, Marek Vasut <marex@denx.de>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Cross <xobs@kosagi.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: Add ITE Tech prefix
+Message-ID: <20200203155356.GA30832@bogus>
+References: <20200127022023.379080-1-marex@denx.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200125110353.591658-5-jernej.skrabec@siol.net>
+In-Reply-To: <20200127022023.379080-1-marex@denx.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 25 Jan 2020 12:03:52 +0100, Jernej Skrabec wrote:
+On Mon, 27 Jan 2020 03:20:21 +0100, Marek Vasut wrote:
+> Add vendor prefix for ITE Tech Inc, http://www.ite.com.tw/
 > 
-> Allwinner A64 SoC also contains deinterlace core, compatible to H3.
-> 
-> Add compatible string for it.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Sean Cross <xobs@kosagi.com>
+> Cc: devicetree@vger.kernel.org
+> To: dri-devel@lists.freedesktop.org
 > ---
->  .../bindings/media/allwinner,sun8i-h3-deinterlace.yaml      | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
