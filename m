@@ -2,323 +2,142 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A439C35247
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 15:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABAAC3524D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 15:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C1B2082E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 15:04:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dx/WZtXa"
+	by mail.kernel.org (Postfix) with ESMTP id 9BEEB20838
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 15:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgBCPER (ORCPT
+        id S1728687AbgBCPK2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:04:17 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61702 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728266AbgBCPEQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 10:04:16 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013EqvFr017176;
-        Mon, 3 Feb 2020 16:04:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=czxoDb+Ym5WSi8VaAnSALIhWW1kCa/SOG96l6MnWDjs=;
- b=dx/WZtXai6N3pQIDSdcWqvDxBqS91j2ropI9lBnBVf7Bwn4cXJf7bEKNX38VSy6yWRGd
- pFdgKz2rTuElDxLn38OQVT8mxkEPJS1WrM93803kO87DIYMBl9Ygwc5aCMT8Pr0zFCul
- 8oP0D2Stl7kx18JhLDxFKKhbbqBkIOOccw41oWEdAvD7mjn7DCuKysFP8aDVYrQCMQWP
- xVqBXoPLoi3e6JYSKYvqCHROaqgfHql2CR8NB9ZAbDh+lZ4V+OrPuPqY3etlVQ+SJL/0
- ouhvviT8YTMrbqtgsdTI3NjBf/svibarJajB8e4DgxghZRaO5lKowG0KxmDeDwizFCxe iQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xvyp5ssmc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Feb 2020 16:04:01 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0102A10002A;
-        Mon,  3 Feb 2020 16:04:01 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E55882B26E8;
-        Mon,  3 Feb 2020 16:04:00 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 3 Feb 2020 16:04:00
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sriram.dash@samsung.com>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 2/2] dt-bindings: net: can: Convert M_CAN to json-schema
-Date:   Mon, 3 Feb 2020 16:03:53 +0100
-Message-ID: <20200203150353.23903-3-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200203150353.23903-1-benjamin.gaignard@st.com>
-References: <20200203150353.23903-1-benjamin.gaignard@st.com>
+        Mon, 3 Feb 2020 10:10:28 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:36316 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727988AbgBCPK1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 10:10:27 -0500
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 013F9JW7001610;
+        Mon, 3 Feb 2020 17:09:19 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id BB3D46032F; Mon,  3 Feb 2020 17:09:19 +0200 (IST)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com, joel@jms.id.au
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v2 2/2] iio: adc: modify NPCM reset support
+Date:   Mon,  3 Feb 2020 17:09:17 +0200
+Message-Id: <20200203150917.176391-2-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200203150917.176391-1-tmaimon77@gmail.com>
+References: <20200203150917.176391-1-tmaimon77@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_04:2020-02-02,2020-02-03 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert M_CAN bindings to json-schema
+Modify NPCM ADC reset support from
+direct register access to reset controller support.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+please make sure to modify NPCM adc device tree
+parameters as described at nuvoton,npcm-adc.txt
+document for using this change.
+
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 ---
-version 2:
-- use can-transceiver.yaml instead of coding the property in this file
-- change the name of yaml file to bosch,m_can.yaml
-- use uint32-array for bosch,mram-cfg property
- .../devicetree/bindings/net/can/bosch,m_can.yaml   | 146 +++++++++++++++++++++
- .../devicetree/bindings/net/can/m_can.txt          |  75 -----------
- 2 files changed, 146 insertions(+), 75 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+ drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml b/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
-new file mode 100644
-index 000000000000..f3e760714d3a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
-@@ -0,0 +1,146 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/can/bosch,m_can.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bosch MCAN controller Bindings
-+
-+description: Bosch MCAN controller for CAN bus
-+
-+maintainers:
-+  -  Sriram Dash <sriram.dash@samsung.com>
-+
-+allOf:
-+  - $ref: can-transceiver.yaml
-+
-+properties:
-+  compatible:
-+    const: bosch,m_can
-+
-+  reg:
-+    items:
-+      - description: M_CAN registers map
-+      - description: message RAM
-+
-+  reg-names:
-+    items:
-+      - const: m_can
-+      - const: message_ram
-+
-+  interrupts:
-+    items:
-+      - description: interrupt line0
-+      - description: interrupt line1
-+    minItems: 1
-+    maxItems: 2
-+
-+  interrupt-names:
-+    items:
-+      - const: int0
-+      - const: int1
-+    minItems: 1
-+    maxItems: 2
-+
-+  clocks:
-+    items:
-+      - description: peripheral clock
-+      - description: bus clock
-+
-+  clock-names:
-+    items:
-+      - const: hclk
-+      - const: cclk
-+
-+  bosch,mram-cfg:
-+    description: |
-+                 Message RAM configuration data.
-+                 Multiple M_CAN instances can share the same Message RAM
-+                 and each element(e.g Rx FIFO or Tx Buffer and etc) number
-+                 in Message RAM is also configurable, so this property is
-+                 telling driver how the shared or private Message RAM are
-+                 used by this M_CAN controller.
-+
-+                 The format should be as follows:
-+                 <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems txe_elems txb_elems>
-+                 The 'offset' is an address offset of the Message RAM where
-+                 the following elements start from. This is usually set to
-+                 0x0 if you're using a private Message RAM. The remain cells
-+                 are used to specify how many elements are used for each FIFO/Buffer.
-+
-+                 M_CAN includes the following elements according to user manual:
-+                 11-bit Filter	0-128 elements / 0-128 words
-+                 29-bit Filter	0-64 elements / 0-128 words
-+                 Rx FIFO 0	0-64 elements / 0-1152 words
-+                 Rx FIFO 1	0-64 elements / 0-1152 words
-+                 Rx Buffers	0-64 elements / 0-1152 words
-+                 Tx Event FIFO	0-32 elements / 0-64 words
-+                 Tx Buffers	0-32 elements / 0-576 words
-+
-+                 Please refer to 2.4.1 Message RAM Configuration in Bosch
-+                 M_CAN user manual for details.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/int32-array
-+      - items:
-+         items:
-+           - description: The 'offset' is an address offset of the Message RAM
-+                          where the following elements start from. This is usually
-+                          set to 0x0 if you're using a private Message RAM.
-+             default: 0
-+           - description: 11-bit Filter 0-128 elements / 0-128 words
-+             minimum: 0
-+             maximum: 128
-+           - description: 29-bit Filter 0-64 elements / 0-128 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx FIFO 0 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx FIFO 1 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Rx Buffers 0-64 elements / 0-1152 words
-+             minimum: 0
-+             maximum: 64
-+           - description: Tx Event FIFO 0-32 elements / 0-64 words
-+             minimum: 0
-+             maximum: 32
-+           - description: Tx Buffers 0-32 elements / 0-576 words
-+             minimum: 0
-+             maximum: 32
-+        maxItems: 1
-+
-+  can-transceiver: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+  - bosch,mram-cfg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6sx-clock.h>
-+    can@20e8000 {
-+      compatible = "bosch,m_can";
-+      reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
-+      reg-names = "m_can", "message_ram";
-+      interrupts = <0 114 0x04>, <0 114 0x04>;
-+      interrupt-names = "int0", "int1";
-+      clocks = <&clks IMX6SX_CLK_CANFD>,
-+               <&clks IMX6SX_CLK_CANFD>;
-+      clock-names = "hclk", "cclk";
-+      bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
-+
-+      can-transceiver {
-+        max-bitrate = <5000000>;
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-deleted file mode 100644
-index ed614383af9c..000000000000
---- a/Documentation/devicetree/bindings/net/can/m_can.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--Bosch MCAN controller Device Tree Bindings
---------------------------------------------------
+diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
+index a6170a37ebe8..83bad2d5575d 100644
+--- a/drivers/iio/adc/npcm_adc.c
++++ b/drivers/iio/adc/npcm_adc.c
+@@ -14,6 +14,7 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/spinlock.h>
+ #include <linux/uaccess.h>
++#include <linux/reset.h>
+ 
+ struct npcm_adc {
+ 	bool int_status;
+@@ -23,13 +24,9 @@ struct npcm_adc {
+ 	struct clk *adc_clk;
+ 	wait_queue_head_t wq;
+ 	struct regulator *vref;
+-	struct regmap *rst_regmap;
++	struct reset_control *reset;
+ };
+ 
+-/* NPCM7xx reset module */
+-#define NPCM7XX_IPSRST1_OFFSET		0x020
+-#define NPCM7XX_IPSRST1_ADC_RST		BIT(27)
 -
--Required properties:
--- compatible		: Should be "bosch,m_can" for M_CAN controllers
--- reg			: physical base address and size of the M_CAN
--			  registers map and Message RAM
--- reg-names		: Should be "m_can" and "message_ram"
--- interrupts		: Should be the interrupt number of M_CAN interrupt
--			  line 0 and line 1, could be same if sharing
--			  the same interrupt.
--- interrupt-names	: Should contain "int0" and "int1"
--- clocks		: Clocks used by controller, should be host clock
--			  and CAN clock.
--- clock-names		: Should contain "hclk" and "cclk"
--- pinctrl-<n>		: Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
--- pinctrl-names 	: Names corresponding to the numbered pinctrl states
--- bosch,mram-cfg	: Message RAM configuration data.
--			  Multiple M_CAN instances can share the same Message
--			  RAM and each element(e.g Rx FIFO or Tx Buffer and etc)
--			  number in Message RAM is also configurable,
--			  so this property is telling driver how the shared or
--			  private Message RAM are used by this M_CAN controller.
+ /* ADC registers */
+ #define NPCM_ADCCON	 0x00
+ #define NPCM_ADCDATA	 0x04
+@@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
+ 					       msecs_to_jiffies(10));
+ 	if (ret == 0) {
+ 		regtemp = ioread32(info->regs + NPCM_ADCCON);
+-		if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
++		if (regtemp & NPCM_ADCCON_ADC_CONV) {
+ 			/* if conversion failed - reset ADC module */
+-			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
+-				     NPCM7XX_IPSRST1_ADC_RST);
++			reset_control_assert(info->reset);
+ 			msleep(100);
+-			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
+-				     0x0);
++			reset_control_deassert(info->reset);
+ 			msleep(100);
+ 
+ 			/* Enable ADC and start conversion module */
+@@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
+ 	struct npcm_adc *info;
+ 	struct iio_dev *indio_dev;
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = pdev->dev.of_node;
+ 
+ 	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+ 	if (!indio_dev)
+@@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(info->regs))
+ 		return PTR_ERR(info->regs);
+ 
++	info->reset = devm_reset_control_get(&pdev->dev, NULL);
++	if (IS_ERR(info->reset))
++		return PTR_ERR(info->reset);
++
+ 	info->adc_clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(info->adc_clk)) {
+ 		dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
+@@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
+ 	div = div >> NPCM_ADCCON_DIV_SHIFT;
+ 	info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) * 2);
+ 
+-	if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
+-		info->rst_regmap = syscon_regmap_lookup_by_compatible
+-			("nuvoton,npcm750-rst");
+-		if (IS_ERR(info->rst_regmap)) {
+-			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-rst\n");
+-			ret = PTR_ERR(info->rst_regmap);
+-			goto err_disable_clk;
+-		}
+-	}
 -
--			  The format should be as follows:
--			  <offset sidf_elems xidf_elems rxf0_elems rxf1_elems
--			   rxb_elems txe_elems txb_elems>
--			  The 'offset' is an address offset of the Message RAM
--			  where the following elements start from. This is
--			  usually set to 0x0 if you're using a private Message
--			  RAM. The remain cells are used to specify how many
--			  elements are used for each FIFO/Buffer.
--
--			  M_CAN includes the following elements according to user manual:
--			  11-bit Filter	0-128 elements / 0-128 words
--			  29-bit Filter	0-64 elements / 0-128 words
--			  Rx FIFO 0	0-64 elements / 0-1152 words
--			  Rx FIFO 1	0-64 elements / 0-1152 words
--			  Rx Buffers	0-64 elements / 0-1152 words
--			  Tx Event FIFO	0-32 elements / 0-64 words
--			  Tx Buffers	0-32 elements / 0-576 words
--
--			  Please refer to 2.4.1 Message RAM Configuration in
--			  Bosch M_CAN user manual for details.
--
--Optional Subnode:
--- can-transceiver	: Can-transceiver subnode describing maximum speed
--			  that can be used for CAN/CAN-FD modes. See
--			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
--			  for details.
--Example:
--SoC dtsi:
--m_can1: can@20e8000 {
--	compatible = "bosch,m_can";
--	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
--	reg-names = "m_can", "message_ram";
--	interrupts = <0 114 0x04>,
--		     <0 114 0x04>;
--	interrupt-names = "int0", "int1";
--	clocks = <&clks IMX6SX_CLK_CANFD>,
--		 <&clks IMX6SX_CLK_CANFD>;
--	clock-names = "hclk", "cclk";
--	bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
--};
--
--Board dts:
--&m_can1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_m_can1>;
--	status = "enabled";
--
--	can-transceiver {
--		max-bitrate = <5000000>;
--	};
--};
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq <= 0) {
+ 		ret = -EINVAL;
 -- 
-2.15.0
+2.22.0
 
