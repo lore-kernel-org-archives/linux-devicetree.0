@@ -2,106 +2,101 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F89C33CAC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBB3C33CAC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5D720658
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:11:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNXtJhDN"
+	by mail.kernel.org (Postfix) with ESMTP id D1BA320658
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580724884;
+	bh=ett86Bst4w/w1XmSmfSTCsp2XAU1cH/u7rk3PBVlB0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AqhHE+DbvGXbUcANZRRjUIZCQvT/RDdAOaOFq7or7AyJBiNiqWCIfqAHlL+m26XiG
+	 zfOhwU14jsDRxSC/OnjudhsjQbD7mGPBuCvVO04LnV42XR1CyA8C7p0yd7BXcTi4mz
+	 5B3z/U61OINFhsjgtpVbkDPUdSVWH38qN8Q85wlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgBCKLW (ORCPT
+        id S1726244AbgBCKOo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:11:22 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:52922 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgBCKLV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 05:11:21 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ep11so6105811pjb.2;
-        Mon, 03 Feb 2020 02:11:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4dC5vZjnr8IWvufmlwLWuCfxRjV7yLvgDjVS1/z103Q=;
-        b=gNXtJhDNv08S4fJzniL6YYfHrPochu1S78UL6QYeJlnVpLV0vinCkGwH8B/gzyBZO5
-         QauncyeOmUrcZWzAcCxAxLmhc+gz/CJG3ii4UPaf55f6uCqNr4pFmaksaV/qOlR3mG2X
-         V5kfb6rS7WifHScLmVAKmVI3NqpIEADkgfjFxcaXCT784raeWl5jM2OFkuc9N3csCDxd
-         e4ywrFJnDdI8XhyHGMYiYFtUg0ZzdEGFKR5eiX8k2IFDiYwmTI/9rcDJvLCrv7KdfnyB
-         rdmCRsu/g7OQNvg7OSJHJfxbeRLnDKswIwnDFBgK8cRlJvSQhCNIk5iI7xrHex0RwEkp
-         GEHg==
+        Mon, 3 Feb 2020 05:14:44 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40547 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgBCKOo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 05:14:44 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j104so17184815wrj.7;
+        Mon, 03 Feb 2020 02:14:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4dC5vZjnr8IWvufmlwLWuCfxRjV7yLvgDjVS1/z103Q=;
-        b=RB433vD2Av/bjgcjNrA9hohzgzsELN7eGT75BVeeEanEU2qXmPVb9tig0z+l6IvIq5
-         KhsbLVn/r9+PMaexCso1bIBs/NtqqzM0BuIFu7+Ty7duAyz5SgxK6oMZpmVtnDv81GQE
-         oQmEfIUimYPlmDkcp64Cbq4QF09CsTokxiGqMvOjjGw1iBvRKm851aPlENVAKnFn2AQm
-         MWp4Ghr1tHPv2i/zk6T25s5hQ0WqYxeNlFGhyCzCosk+G7pb4UozpGoZ65Mam5Bla+yg
-         k263PHx1a5uJXCZtzB10TlMNE6u6yiwnxRTu2kWywFL6Rb+OQS2JmiJzNKIoR7V+j5v1
-         /Rcw==
-X-Gm-Message-State: APjAAAW83r6a4WGqTaIrSe1e7YHeIdwyAvD2Xu8LyIgEKdw2eW4R5DXC
-        01msxfnwcRefKgHjUl4heWsBu+85/BFeydWdlBU=
-X-Google-Smtp-Source: APXvYqwvSk3kyzFEkF16zgVr87wi9kTgBo74pIIZQvaZ95Y0VScXP+UxOQwValhzbgbSNpxG+b6SSg+VgL3Dcl7uSbE=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr28494608pjb.30.1580724681048;
- Mon, 03 Feb 2020 02:11:21 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VeTk9NFWqY2AFFX1U47JHNOnYrtYJUipcDdzTnxdTw4=;
+        b=XjGEM5zQuiMM2+w0ue2qncdk/84TqjsZ+tE88qHyRiy82oonsahji6PskEo8i2jy9q
+         6orEtFX1r2LL02m4+WYHRvdqC8m+PNTJHdDqUJKIOKiE2bNYXr3ljyHT91KphRvFS+Ek
+         Gi5WI7GLqhhOezxkVvnCrOuEbGxI4y7v6rY0tcLJ+IM7a6nJhEmRDAqF7+acDBjmqbcY
+         uAl7AKUHXUbBHoqiXx03k9kCGu9NlJJ18ek1pOkF1pPPyyufiIGEs3lH6pVFYOjosqWl
+         LxICDm6M21T9SWDa1TaXjImckV2XXIMCuiBs/PTAInWZHxZ2gV8FFd+FYQTaq9kAvu59
+         1HeQ==
+X-Gm-Message-State: APjAAAX3GFOFHS55aaa0ZRR71hGjvajmjXBEpqtO+sLpVK8uP9GX5jct
+        XGmqUygdmMqLNuTtC9Imgdi9DMpyzg==
+X-Google-Smtp-Source: APXvYqy+FnFfJwsfZztZ3WYAtBH/oqT3NH+T+W2/hO9SuPbGror4fjsAxjEbIcawDdvgCPggf1l6zQ==
+X-Received: by 2002:adf:ff8c:: with SMTP id j12mr14349774wrr.354.1580724882064;
+        Mon, 03 Feb 2020 02:14:42 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.163])
+        by smtp.gmail.com with ESMTPSA id k13sm24011191wrx.59.2020.02.03.02.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 02:14:41 -0800 (PST)
+Received: (nullmailer pid 814 invoked by uid 1000);
+        Mon, 03 Feb 2020 10:14:40 -0000
+Date:   Mon, 3 Feb 2020 10:14:40 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [PATCH 12/12] dt-bindings: arm: bcm: Convert BCM2835 firmware
+ binding to YAML
+Message-ID: <20200203101440.GA31848@bogus>
+References: <20200202211827.27682-1-f.fainelli@gmail.com>
+ <20200202211827.27682-13-f.fainelli@gmail.com>
 MIME-Version: 1.0
-References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com> <1580650021-8578-4-git-send-email-hadar.gat@arm.com>
-In-Reply-To: <1580650021-8578-4-git-send-email-hadar.gat@arm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Feb 2020 12:11:13 +0200
-Message-ID: <CAHp75Vd4VYJD9kSgMU+iKOC5FOarPtMG4eG3Jbnf7OeebWuC7w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: add HG as cctrng maintainer
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200202211827.27682-13-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 2, 2020 at 3:29 PM Hadar Gat <hadar.gat@arm.com> wrote:
->
-> I work for Arm on maintaining the TrustZone CryptoCell TRNG driver.
+On Sun,  2 Feb 2020 13:18:27 -0800, Florian Fainelli wrote:
+> Convert the Raspberry Pi BCM2835 firmware binding document to YAML.
+> Verified with dt_binding_check and dtbs_check.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.txt  | 14 --------
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 33 +++++++++++++++++++
+>  2 files changed, 33 insertions(+), 14 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> 
 
-> +CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
-> +M:     Hadar Gat <hadar.gat@arm.com>
-> +L:     linux-crypto@vger.kernel.org
-> +S:     Supported
-> +F:     drivers/char/hw_random/cctrng.c
-> +F:     drivers/char/hw_random/cctrng.h
-> +F:     Documentation/devicetree/bindings/rng/arm-cctrng.txt
-> +W:     https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
-> +
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Had you run parse-maintainers.pl afterwards to be sure everything is okay?
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml: $id: path/filename 'arm/bcm/raspberrypi,bcm2835.yaml' doesn't match actual filename
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
--- 
-With Best Regards,
-Andy Shevchenko
+See https://patchwork.ozlabs.org/patch/1232487
+Please check and re-submit.
