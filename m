@@ -2,101 +2,95 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBB3C33CAC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018DDC33CAC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1BA320658
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580724884;
-	bh=ett86Bst4w/w1XmSmfSTCsp2XAU1cH/u7rk3PBVlB0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AqhHE+DbvGXbUcANZRRjUIZCQvT/RDdAOaOFq7or7AyJBiNiqWCIfqAHlL+m26XiG
-	 zfOhwU14jsDRxSC/OnjudhsjQbD7mGPBuCvVO04LnV42XR1CyA8C7p0yd7BXcTi4mz
-	 5B3z/U61OINFhsjgtpVbkDPUdSVWH38qN8Q85wlI=
+	by mail.kernel.org (Postfix) with ESMTP id C94222080D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:17:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOG4l/EJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgBCKOo (ORCPT
+        id S1727637AbgBCKR0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:14:44 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40547 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727389AbgBCKOo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 05:14:44 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j104so17184815wrj.7;
-        Mon, 03 Feb 2020 02:14:42 -0800 (PST)
+        Mon, 3 Feb 2020 05:17:26 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42112 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbgBCKRZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 05:17:25 -0500
+Received: by mail-pl1-f193.google.com with SMTP id e8so3058625plt.9;
+        Mon, 03 Feb 2020 02:17:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BI5Btq2BdundVSKnBkH4i1TFYWWU2lOLfpEXkz2+34s=;
+        b=uOG4l/EJf8A41gc/jrWj8EHPHycM5dDbt4B75bhhTdoLLLwHOrRFYjwVJm7iW3MmaA
+         DjAAMXUI+hBR2vVQ9OXZ+9Xp7LhNCzKguyxX3oE8IjszizV/Jhr0sHESa/OLqKyBg9+x
+         t8TmgTUUwcdk0G6KVv3Xk13Q5kvka41iQXWwk7F50eyCTaaDYsJvXlfBYL8LzOrBWszR
+         xUgGSsWF5zfk823OiDIDtlAvxCQG+EhsAj7nnETA+Bp7Lq+rOzhVkfKaCBym1UEe/Ra5
+         9P0rRsLjziDh+71Bx9dKNnghPeXSy8yP0ToW30/pmaXLkYtlUJQ7rxDySWKKI/nEdzOB
+         k91Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VeTk9NFWqY2AFFX1U47JHNOnYrtYJUipcDdzTnxdTw4=;
-        b=XjGEM5zQuiMM2+w0ue2qncdk/84TqjsZ+tE88qHyRiy82oonsahji6PskEo8i2jy9q
-         6orEtFX1r2LL02m4+WYHRvdqC8m+PNTJHdDqUJKIOKiE2bNYXr3ljyHT91KphRvFS+Ek
-         Gi5WI7GLqhhOezxkVvnCrOuEbGxI4y7v6rY0tcLJ+IM7a6nJhEmRDAqF7+acDBjmqbcY
-         uAl7AKUHXUbBHoqiXx03k9kCGu9NlJJ18ek1pOkF1pPPyyufiIGEs3lH6pVFYOjosqWl
-         LxICDm6M21T9SWDa1TaXjImckV2XXIMCuiBs/PTAInWZHxZ2gV8FFd+FYQTaq9kAvu59
-         1HeQ==
-X-Gm-Message-State: APjAAAX3GFOFHS55aaa0ZRR71hGjvajmjXBEpqtO+sLpVK8uP9GX5jct
-        XGmqUygdmMqLNuTtC9Imgdi9DMpyzg==
-X-Google-Smtp-Source: APXvYqy+FnFfJwsfZztZ3WYAtBH/oqT3NH+T+W2/hO9SuPbGror4fjsAxjEbIcawDdvgCPggf1l6zQ==
-X-Received: by 2002:adf:ff8c:: with SMTP id j12mr14349774wrr.354.1580724882064;
-        Mon, 03 Feb 2020 02:14:42 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.163])
-        by smtp.gmail.com with ESMTPSA id k13sm24011191wrx.59.2020.02.03.02.14.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 02:14:41 -0800 (PST)
-Received: (nullmailer pid 814 invoked by uid 1000);
-        Mon, 03 Feb 2020 10:14:40 -0000
-Date:   Mon, 3 Feb 2020 10:14:40 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH 12/12] dt-bindings: arm: bcm: Convert BCM2835 firmware
- binding to YAML
-Message-ID: <20200203101440.GA31848@bogus>
-References: <20200202211827.27682-1-f.fainelli@gmail.com>
- <20200202211827.27682-13-f.fainelli@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BI5Btq2BdundVSKnBkH4i1TFYWWU2lOLfpEXkz2+34s=;
+        b=degCOYuNyiMDoRC67xhEgwMWLGIKZcEcQehePhdhcQQTWCdP+G2HvwFCHgbgF3AgTB
+         6ZTun9q9ontChwbYSv+CWJaHVBX1OLWZzVBvGygRAtKj/wPOvR7zkmHH1N0BCW3ot29b
+         +l7f0tcOzfnTN0ErFJIZuZCenlnWxnJ7nSOUA6Z20EidbPZj0n1d/1HMqq6sWendkc6+
+         PJVzJ8MuRcLAlghMQLASaMCkQFXE7NSNqpeVViyec0mtpBdE8hMyfZYSVwbI2eaygiz5
+         Rw0F3nE/9xovqyHhTz2p4bw9y52U4asLrxfhD4kIAb+iO9i+57AfJ4tgQmdZsIUuKTrq
+         NA0g==
+X-Gm-Message-State: APjAAAX5cFEEb+jqJJJhEoD3JVoaKBlFJ1SFM2lNWCoiuJS/fVxt1WRd
+        xGZuN5kOA2b4Tc6xxivMuVLZ9Om+SyNBjU7reQ0=
+X-Google-Smtp-Source: APXvYqzV9MbL08KEx9zQLN9PuY7RQZClzngiq85jd5w3xWNpSBewrq2tMS+iJnHE6y9/aOoQFGFajKLDEHBk7ulmy10=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr29209552pjq.132.1580725045200;
+ Mon, 03 Feb 2020 02:17:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200202211827.27682-13-f.fainelli@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200129084509.20371-1-beniamin.bia@analog.com> <20200129084509.20371-3-beniamin.bia@analog.com>
+In-Reply-To: <20200129084509.20371-3-beniamin.bia@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 Feb 2020 12:17:17 +0200
+Message-ID: <CAHp75VfbhqvsigBDY_uYsTVwLRGVuBhr0eO1zqSu4ivjd7X-oQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] MAINTAINERS: add entry for hmc425a driver.
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        biabeniamin@outlook.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun,  2 Feb 2020 13:18:27 -0800, Florian Fainelli wrote:
-> Convert the Raspberry Pi BCM2835 firmware binding document to YAML.
-> Verified with dt_binding_check and dtbs_check.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../arm/bcm/raspberrypi,bcm2835-firmware.txt  | 14 --------
->  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 33 +++++++++++++++++++
->  2 files changed, 33 insertions(+), 14 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> 
+On Wed, Jan 29, 2020 at 10:45 AM Beniamin Bia <beniamin.bia@analog.com> wrote:
+>
+> Add Beniamin Bia and Michael Hennerich as maintainers for HMC425A
+> attenuator.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> +ANALOG DEVICES INC HMC425A DRIVER
+> +M:     Beniamin Bia <beniamin.bia@analog.com>
+> +M:     Michael Hennerich <michael.hennerich@analog.com>
+> +L:     linux-iio@vger.kernel.org
+> +W:     http://ez.analog.com/community/linux-device-drivers
+> +S:     Supported
+> +F:     drivers/iio/amplifiers/hmc425a.c
+> +F:     Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
 
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml: $id: path/filename 'arm/bcm/raspberrypi,bcm2835.yaml' doesn't match actual filename
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Had you run parse-maintainers.pl afterwards to see if everything is okay?
 
-See https://patchwork.ozlabs.org/patch/1232487
-Please check and re-submit.
+-- 
+With Best Regards,
+Andy Shevchenko
