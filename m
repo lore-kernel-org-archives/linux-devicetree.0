@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B742EC35251
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4C5C47409
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940CE2082E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4F32166E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wasqs3eQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oIlhuDLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgBCScP (ORCPT
+        id S1729850AbgBCScT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:32:15 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42983 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729800AbgBCScP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 13:32:15 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 4so8001800pfz.9
-        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 10:32:14 -0800 (PST)
+        Mon, 3 Feb 2020 13:32:19 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46882 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729860AbgBCScT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 13:32:19 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y8so6170922pll.13
+        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 10:32:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VgteBj9kECksIDTJrgniP2446O1fnhyCOGN0Ivx+enM=;
-        b=Wasqs3eQqUzCosW2InB859U3pOvbe38Hb1XgxdLpg6eoIZdzcG1bmQE2AkHc/hD56S
-         skYrU9/Iz0iHIwxBM896C1cPiba1pe/l33EBfXbzaovXELHSeSoE0WG1x5UfI+GdVv6r
-         qBlhIePFzl/Daj1DGeuKd6ey0dTb9aO3yY33I=
+        bh=9E3MDcN8JkIIVVYO16t0TV8GJSty+OCKTtffnXuzHkU=;
+        b=oIlhuDLHgyP0bws+AB1ZDQLPM/gHPhv4Y7WTrKwFAUy1uGWxMKD6DBHJ7RQxf+1yE2
+         A055u286tCSa7oR9TiKBffNJwFTySW+LeHRhhFODtPZekum8WcuceqU/XFJnu+CP0eI1
+         HbjJRCvF989qg2SjI6NrDxPLiQAUMgKoO6oa0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VgteBj9kECksIDTJrgniP2446O1fnhyCOGN0Ivx+enM=;
-        b=fUFkn1NfYJzMMAhlZ+4kJZ5zEdBmXNVx2Am8Kvj6GLvZtbHGIJovrQ811bD6oqdve2
-         XCQj5d/+YDRMZMJItVYd22tyelgbc1B8QSaSAZJj/o50zAjU3Joemvt/vRe7t2nDG/7E
-         f0IIzWHqyTlMrp0s5W8kz6eMHhoB5GnIhGb68IEK5i3gzss4xJ498OElUlZR9JdCvVWA
-         /hFeb5u5igu3AN4O49UgO90mFLZqbWUTPvzyzFcF+gGfXZ6D+/1jMkHh+9kXBcAahZAR
-         Yu7VJW5Ylaiq8D9b/LAo+H6HNb05nuO8yCMC7iv1ekkKcZY+JsMIfC5uOs1rjwuSql+k
-         h+iA==
-X-Gm-Message-State: APjAAAUdR9lWOeJbsqyuAJa7BRL2phDiFlEkhDbYeDlQ0t28M6z+oCGJ
-        uaGEV6qKYZKuSRfYEx6ddXWDxw==
-X-Google-Smtp-Source: APXvYqzvauFbriTETiUnafbrlgvwI/wPoIrVw6ombXysZj6zY/10IZRZSdiVV5V0bmXbBDeIPjRjjw==
-X-Received: by 2002:a63:511:: with SMTP id 17mr4524461pgf.221.1580754734404;
-        Mon, 03 Feb 2020 10:32:14 -0800 (PST)
+        bh=9E3MDcN8JkIIVVYO16t0TV8GJSty+OCKTtffnXuzHkU=;
+        b=OLx3Ppyk6lrwjq7PrPS+rL/PZx+awYaOmqj3cLTpUXi+9tUFFMS1ysUhbhFlM8IgX/
+         /QCIlIuqIhW5LVAnXBfPFZBO9Zwm2Sdwrc2FtTSRl+sczx2veMb/ZVwyNEDjuXt/d+Cl
+         K/BPXCBgqp5OhAPTk3tZJJPwqkZ6paqq+6tXrHOA3fmyPlAjRgof4KV/v7NGRER+X97M
+         SPYUDw5G59zCqkufErKQmoV/BadJ2zM/bGjUYclUFeSxgQ5DTMHd+8L4GCVGP/JldiNC
+         sNwVTjd5Db2mKo4/w9IsBF8P6DVDTyFG5LGXKApJ5TkbLxTkUv/IsNWH0IvAQxm1rSKE
+         bXcA==
+X-Gm-Message-State: APjAAAWvkc0jV0KVbdRc9TrzrSSoZRDs3867fqLSguj36ftx63alYswM
+        JMj9lG0L52ErVjrw6r8tV/4M5g==
+X-Google-Smtp-Source: APXvYqz6LEPvu9HfVNaJgndKAe08uXxmsIW2f9tqI7uk3E8WFBm2YvDsS/8tXKParDzrma9AYQLlLQ==
+X-Received: by 2002:a17:90a:6c26:: with SMTP id x35mr415234pjj.126.1580754738895;
+        Mon, 03 Feb 2020 10:32:18 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.13
+        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 10:32:13 -0800 (PST)
+        Mon, 03 Feb 2020 10:32:18 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -63,11 +63,12 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/15] clk: qcom: rcg2: Don't crash if our parent can't be found; return an error
-Date:   Mon,  3 Feb 2020 10:31:34 -0800
-Message-Id: <20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid>
+Subject: [PATCH v4 05/15] clk: qcom: Get rid of the test clock for dispcc-sc7180
+Date:   Mon,  3 Feb 2020 10:31:38 -0800
+Message-Id: <20200203103049.v4.5.I28ac8f801456f1b950f7da10ed0f74a1344d4a35@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200203183149.73842-1-dianders@chromium.org>
 References: <20200203183149.73842-1-dianders@chromium.org>
@@ -78,74 +79,195 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When I got my clock parenting slightly wrong I ended up with a crash
-that looked like this:
+The test clock isn't in the bindings and apparently it's not used by
+anyone upstream.  Remove it.
 
-  Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000000
-  ...
-  pc : clk_hw_get_rate+0x14/0x44
-  ...
-  Call trace:
-   clk_hw_get_rate+0x14/0x44
-   _freq_tbl_determine_rate+0x94/0xfc
-   clk_rcg2_determine_rate+0x2c/0x38
-   clk_core_determine_round_nolock+0x4c/0x88
-   clk_core_round_rate_nolock+0x6c/0xa8
-   clk_core_round_rate_nolock+0x9c/0xa8
-   clk_core_set_rate_nolock+0x70/0x180
-   clk_set_rate+0x3c/0x6c
-   of_clk_set_defaults+0x254/0x360
-   platform_drv_probe+0x28/0xb0
-   really_probe+0x120/0x2dc
-   driver_probe_device+0x64/0xfc
-   device_driver_attach+0x4c/0x6c
-   __driver_attach+0xac/0xc0
-   bus_for_each_dev+0x84/0xcc
-   driver_attach+0x2c/0x38
-   bus_add_driver+0xfc/0x1d0
-   driver_register+0x64/0xf8
-   __platform_driver_register+0x4c/0x58
-   msm_drm_register+0x5c/0x60
-   ...
-
-It turned out that clk_hw_get_parent_by_index() was returning NULL and
-we weren't checking.  Let's check it so that we don't crash.
-
-Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
+Suggested-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 ---
-I haven't gone back and tried to reproduce this same crash on older
-kernels, but I'll put the blame on commit ac269395cdd8 ("clk: qcom:
-Convert to clk_hw based provider APIs").  Before that if we got a NULL
-parent back it was fine and dandy since a NULL "struct clk" is valid
-to use but a NULL "struct clk_hw" is not.
 
 Changes in v4: None
 Changes in v3:
-- Add Matthias tag.
+- Patch ("clk: qcom: Get rid of the test...dispcc-sc7180") split out for v3.
 
-Changes in v2:
-- Patch ("clk: qcom: rcg2: Don't crash...") new for v2.
+Changes in v2: None
 
- drivers/clk/qcom/clk-rcg2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/clk/qcom/dispcc-sc7180.c | 32 ++++++++++----------------------
+ 1 file changed, 10 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index da045b200def..9098001ac805 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -218,6 +218,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
+index a820e1558677..397f5d9dafc8 100644
+--- a/drivers/clk/qcom/dispcc-sc7180.c
++++ b/drivers/clk/qcom/dispcc-sc7180.c
+@@ -76,38 +76,32 @@ static struct clk_alpha_pll_postdiv disp_cc_pll0_out_even = {
  
- 	clk_flags = clk_hw_get_flags(hw);
- 	p = clk_hw_get_parent_by_index(hw, index);
-+	if (!p)
-+		return -EINVAL;
-+
- 	if (clk_flags & CLK_SET_RATE_PARENT) {
- 		rate = f->freq;
- 		if (f->pre_div) {
+ static const struct parent_map disp_cc_parent_map_0[] = {
+ 	{ P_BI_TCXO, 0 },
+-	{ P_CORE_BI_PLL_TEST_SE, 7 },
+ };
+ 
+ static const struct clk_parent_data disp_cc_parent_data_0[] = {
+ 	{ .fw_name = "bi_tcxo" },
+-	{ .fw_name = "core_bi_pll_test_se" },
+ };
+ 
+ static const struct parent_map disp_cc_parent_map_1[] = {
+ 	{ P_BI_TCXO, 0 },
+ 	{ P_DP_PHY_PLL_LINK_CLK, 1 },
+ 	{ P_DP_PHY_PLL_VCO_DIV_CLK, 2 },
+-	{ P_CORE_BI_PLL_TEST_SE, 7 },
+ };
+ 
+ static const struct clk_parent_data disp_cc_parent_data_1[] = {
+ 	{ .fw_name = "bi_tcxo" },
+ 	{ .fw_name = "dp_phy_pll_link_clk" },
+ 	{ .fw_name = "dp_phy_pll_vco_div_clk" },
+-	{ .fw_name = "core_bi_pll_test_se" },
+ };
+ 
+ static const struct parent_map disp_cc_parent_map_2[] = {
+ 	{ P_BI_TCXO, 0 },
+ 	{ P_DSI0_PHY_PLL_OUT_BYTECLK, 1 },
+-	{ P_CORE_BI_PLL_TEST_SE, 7 },
+ };
+ 
+ static const struct clk_parent_data disp_cc_parent_data_2[] = {
+ 	{ .fw_name = "bi_tcxo" },
+ 	{ .fw_name = "dsi0_phy_pll_out_byteclk" },
+-	{ .fw_name = "core_bi_pll_test_se" },
+ };
+ 
+ static const struct parent_map disp_cc_parent_map_3[] = {
+@@ -115,7 +109,6 @@ static const struct parent_map disp_cc_parent_map_3[] = {
+ 	{ P_DISP_CC_PLL0_OUT_MAIN, 1 },
+ 	{ P_GPLL0_OUT_MAIN, 4 },
+ 	{ P_DISP_CC_PLL0_OUT_EVEN, 5 },
+-	{ P_CORE_BI_PLL_TEST_SE, 7 },
+ };
+ 
+ static const struct clk_parent_data disp_cc_parent_data_3[] = {
+@@ -123,31 +116,26 @@ static const struct clk_parent_data disp_cc_parent_data_3[] = {
+ 	{ .hw = &disp_cc_pll0.clkr.hw },
+ 	{ .fw_name = "gcc_disp_gpll0_clk_src" },
+ 	{ .hw = &disp_cc_pll0_out_even.clkr.hw },
+-	{ .fw_name = "core_bi_pll_test_se" },
+ };
+ 
+ static const struct parent_map disp_cc_parent_map_4[] = {
+ 	{ P_BI_TCXO, 0 },
+ 	{ P_GPLL0_OUT_MAIN, 4 },
+-	{ P_CORE_BI_PLL_TEST_SE, 7 },
+ };
+ 
+ static const struct clk_parent_data disp_cc_parent_data_4[] = {
+ 	{ .fw_name = "bi_tcxo" },
+ 	{ .fw_name = "gcc_disp_gpll0_clk_src" },
+-	{ .fw_name = "core_bi_pll_test_se" },
+ };
+ 
+ static const struct parent_map disp_cc_parent_map_5[] = {
+ 	{ P_BI_TCXO, 0 },
+ 	{ P_DSI0_PHY_PLL_OUT_DSICLK, 1 },
+-	{ P_CORE_BI_PLL_TEST_SE, 7 },
+ };
+ 
+ static const struct clk_parent_data disp_cc_parent_data_5[] = {
+ 	{ .fw_name = "bi_tcxo" },
+ 	{ .fw_name = "dsi0_phy_pll_out_dsiclk" },
+-	{ .fw_name = "core_bi_pll_test_se" },
+ };
+ 
+ static const struct freq_tbl ftbl_disp_cc_mdss_ahb_clk_src[] = {
+@@ -166,7 +154,7 @@ static struct clk_rcg2 disp_cc_mdss_ahb_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_ahb_clk_src",
+ 		.parent_data = disp_cc_parent_data_4,
+-		.num_parents = 3,
++		.num_parents = 2,
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
+@@ -180,7 +168,7 @@ static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_byte0_clk_src",
+ 		.parent_data = disp_cc_parent_data_2,
+-		.num_parents = 3,
++		.num_parents = 2,
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_byte2_ops,
+ 	},
+@@ -213,7 +201,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_dp_crypto_clk_src",
+ 		.parent_data = disp_cc_parent_data_1,
+-		.num_parents = 4,
++		.num_parents = 3,
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_byte2_ops,
+ 	},
+@@ -227,7 +215,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_link_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_dp_link_clk_src",
+ 		.parent_data = disp_cc_parent_data_1,
+-		.num_parents = 4,
++		.num_parents = 3,
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_byte2_ops,
+ 	},
+@@ -241,7 +229,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_pixel_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_dp_pixel_clk_src",
+ 		.parent_data = disp_cc_parent_data_1,
+-		.num_parents = 4,
++		.num_parents = 3,
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_dp_ops,
+ 	},
+@@ -256,7 +244,7 @@ static struct clk_rcg2 disp_cc_mdss_esc0_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_esc0_clk_src",
+ 		.parent_data = disp_cc_parent_data_2,
+-		.num_parents = 3,
++		.num_parents = 2,
+ 		.ops = &clk_rcg2_ops,
+ 	},
+ };
+@@ -279,7 +267,7 @@ static struct clk_rcg2 disp_cc_mdss_mdp_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_mdp_clk_src",
+ 		.parent_data = disp_cc_parent_data_3,
+-		.num_parents = 5,
++		.num_parents = 4,
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
+ };
+@@ -292,7 +280,7 @@ static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_pclk0_clk_src",
+ 		.parent_data = disp_cc_parent_data_5,
+-		.num_parents = 3,
++		.num_parents = 2,
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_pixel_ops,
+ 	},
+@@ -307,7 +295,7 @@ static struct clk_rcg2 disp_cc_mdss_rot_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_rot_clk_src",
+ 		.parent_data = disp_cc_parent_data_3,
+-		.num_parents = 5,
++		.num_parents = 4,
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
+ };
+@@ -321,7 +309,7 @@ static struct clk_rcg2 disp_cc_mdss_vsync_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_vsync_clk_src",
+ 		.parent_data = disp_cc_parent_data_0,
+-		.num_parents = 2,
++		.num_parents = 1,
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
+ };
 -- 
 2.25.0.341.g760bfbb309-goog
 
