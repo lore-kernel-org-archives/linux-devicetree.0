@@ -2,87 +2,169 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FE6C3524D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741DBC3524D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8B920661
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580723286;
-	bh=/YnR0gNee/udTt/+8UwpBt6xjr3OsBiOajv2a3BGgO4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dkOoyDg2qpH0H1poKRgzcSlTHqy83wXyhQhUuFT9wCcjxFnoX25m9HSsINzLLIWIg
-	 Ph0GYTKWsDMUwTnr82JmNeaKXWG6j8Xjn71iz9zykCdB4BQvXhIMpR824N2JNhx40+
-	 jj+o/eoe43Cefsdb9gFHCFCUKdhZeuLfvvoozhgA=
+	by mail.kernel.org (Postfix) with ESMTP id 4502D2087E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:50:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sTgNH601"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbgBCJsG (ORCPT
+        id S1727148AbgBCJuw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:48:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727225AbgBCJsF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:48:05 -0500
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AACD20721;
-        Mon,  3 Feb 2020 09:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580723285;
-        bh=/YnR0gNee/udTt/+8UwpBt6xjr3OsBiOajv2a3BGgO4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IGuBirssdtgzyD0dn1VavC3zT28Cbe+sKG4ESV6NuyNFN8LSN9NVOLF6jfdd2hAhh
-         s31phKhRFOt4v/lftV4lOpepsQ1xhidNWSK/FqO5CG78XE3AZ38wMm7K9oMMl7iVRJ
-         aujnLbkhDGnQOEt7xevrs5MlvS1kotd4oSoq0xKk=
-Received: by mail-qt1-f180.google.com with SMTP id c24so10932536qtp.5;
-        Mon, 03 Feb 2020 01:48:05 -0800 (PST)
-X-Gm-Message-State: APjAAAVQwtwdEt8UrySUz3mQwOKuF/AKdtlBTQK8ig6d4hCt2D5KJRZQ
-        6fZJCRBpivbHS4MKMTC1kDgky6GqfKipwz1pYw==
-X-Google-Smtp-Source: APXvYqxrmmcnfXw+ftAZK0AeZXfN2/SIkqjT9bA6aObc2yIfmHHIvH662w6kA5cQ78pG9DxWcntHxLcYZCyspZIK6XE=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr23019321qtj.300.1580723284238;
- Mon, 03 Feb 2020 01:48:04 -0800 (PST)
+        Mon, 3 Feb 2020 04:50:52 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41617 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgBCJuw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 04:50:52 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l3so3426864pgi.8;
+        Mon, 03 Feb 2020 01:50:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EWRKsWaWmg5NO/mnYvImE8+2/MqqhQvfqqUf6+UV82M=;
+        b=sTgNH601s+cs5seICnN457wor5rcnZdDi9R2868VFJp5S2mk+clBQGsh578++udKxD
+         DGgtgP6+JuVe1hlDbIAbg7PKQ0o8QWD2C0DPFijb0PDhh8lxkfiN7RNeGIBiQTeyeHwN
+         HIjH3Jmx8vK/NugnFh7U/H8eui7iUv2nsrZXE7LqRhvMAGYcFaFolMGJr6pMUDW1XWTc
+         fwvz6eaD4swsb5sKIGVdtG8GLs9JGOediDdPgqTtvEd1L/+1ODzAxNsN49N5ZB4jt6Ys
+         L9UADWe99kpnOAgtPtQbc4j6R8B3uwjeSSosjT5apPPuI15WnFAWCiXqxjr6uNMW1H7I
+         QCTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EWRKsWaWmg5NO/mnYvImE8+2/MqqhQvfqqUf6+UV82M=;
+        b=dKJxiGQ2yJ2Yh9PZ65BWrxpA3S/klJN9KtCUR1i4nFOyD2Z6owkJK/HHDbyJ7IILJg
+         PZNfLnzLvqCCYT5t8+2jSZNeQ7aDMcGwgmqlztjc4QBPwVxVKKHswL5h3IXsAmp3/1bG
+         msvjdyy0H5jWg76pq3bs9+uRtnQGn1lZwgDoSPJAd+/Jshj4LRBzRmO3U3MlrnbtxX6x
+         /ECujEX60mTUit8k2uHJKUyCEHtWONbfvhjxxKtzfPsXn6ikvElYzZY406iPCRFWDraX
+         q6toITNH+iFW2mzOfSj4nLhIYLTWT5ucUYXOPzZid9VmyQ0S1/brktWE5X4iysTcDJ5U
+         MfQg==
+X-Gm-Message-State: APjAAAWqOKbP6c6nB8dQ5Q58I1L87QH9k7F63zZqP97V5KXCAI+iaPJO
+        /+VP0+HAr74mMne+VHizmzVb48Ha3hK5qIwElpM=
+X-Google-Smtp-Source: APXvYqw8y57bod1JAAwsPHyqT98wQ90m4CAg3j8uNvdGBt7JwYxPmdmqDV4w1DH3vCs/JGdJO3tZRGH8vhCdHg3bEWM=
+X-Received: by 2002:a63:5a23:: with SMTP id o35mr24113786pgb.4.1580723450104;
+ Mon, 03 Feb 2020 01:50:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20200202043949.213427-1-swboyd@chromium.org>
-In-Reply-To: <20200202043949.213427-1-swboyd@chromium.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 3 Feb 2020 09:47:53 +0000
-X-Gmail-Original-Message-ID: <CAL_Jsq+tU8--9C065qPb9bvN5X=edJtD6Q6XjkS71k1S-hVHrQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+tU8--9C065qPb9bvN5X=edJtD6Q6XjkS71k1S-hVHrQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: tpm: Convert cr50 binding to YAML
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Andrey Pronin <apronin@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>
+References: <20200131023433.12133-1-chris.packham@alliedtelesis.co.nz> <20200131023433.12133-3-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200131023433.12133-3-chris.packham@alliedtelesis.co.nz>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 Feb 2020 11:50:42 +0200
+Message-ID: <CAHp75VfT=KNM6J1bP5cPsLw7Z776opcB9Kf6qhNCZukY-7g=pQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] spi: Add generic SPI multiplexer
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 2, 2020 at 4:39 AM Stephen Boyd <swboyd@chromium.org> wrote:
+On Fri, Jan 31, 2020 at 4:34 AM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
 >
-> This allows us to validate the dt binding to the implementation. Add the
-> interrupt property too, because that's required but nobody noticed when
-> the non-YAML binding was introduced.
->
-> Cc: Andrey Pronin <apronin@chromium.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Changes from v1:
->  * Dropped spi-max-frequency as required
->  * Capped spi-max-frequency at 1MHz
->  * Added interrupt-parent to example to be realistic
->
->  .../bindings/security/tpm/google,cr50.txt     | 19 -------
->  .../bindings/security/tpm/google,cr50.yaml    | 50 +++++++++++++++++++
->  2 files changed, 50 insertions(+), 19 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> Add a SPI device driver that sits in-band and provides a SPI controller
+> which supports chip selects via a mux-control. This enables extra SPI
+> devices to be connected with limited native chip selects.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for an update, my comments below.
+
+...
+
+>  #
+>  # Add new SPI master controllers in alphabetical order above this line
+>  #
+
+> +#
+
+Redundant line.
+
+...
+
+> +/*
+> + * General Purpose SPI multiplexer
+> + */
+
+I think Mark wants to have this in one line with C++ style of comments.
+
+...
+
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/err.h>
+> +#include <linux/slab.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/mux/consumer.h>
+
+Perhaps sorted?
+
+...
+
+> +       /* do the transfer */
+> +       ret = spi_async(priv->spi, m);
+> +       return ret;
+
+return spi_async(...);
+
+...
+
+
+> +       priv->mux = devm_mux_control_get(&spi->dev, NULL);
+
+> +       ret = PTR_ERR_OR_ZERO(priv->mux);
+
+This is a bit complicated.
+
+> +       if (ret) {
+
+Why not simple do
+
+  if (IS_ERR(priv->mux)) {
+    ret = PTR_ERR(...);
+    ...
+  }
+
+?
+
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(&spi->dev, "failed to get control-mux\n");
+> +               goto err_put_ctlr;
+> +       }
+
+> +       ctlr->dev.of_node = spi->dev.of_node;
+
+I'm wondering why SPI core can't handle this by default (like GPIO
+subsystem does).
+
+> +       ret = devm_spi_register_controller(&spi->dev, ctlr);
+> +       if (ret)
+> +               goto err_put_ctlr;
+> +
+
+> +       return ret;
+
+return 0;
+
+...
+
+> +static const struct of_device_id spi_mux_of_match[] = {
+> +       { .compatible = "spi-mux" },
+> +       { },
+
+Comma is not needed in terminator line.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
