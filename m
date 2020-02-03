@@ -2,69 +2,67 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0353C3524D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 08:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF818C3524D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 08:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A307D20721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 08:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA8C20658
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 08:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="NeBaOOmM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uRJSVjHM"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="OG9KdFGA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KhGuh51D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgBCIbz (ORCPT
+        id S1727406AbgBCIeH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 03:31:55 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50399 "EHLO
+        Mon, 3 Feb 2020 03:34:07 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33003 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726410AbgBCIby (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 03:31:54 -0500
+        by vger.kernel.org with ESMTP id S1726244AbgBCIeG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 03:34:06 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7F91B3AF2;
-        Mon,  3 Feb 2020 03:31:53 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 03 Feb 2020 03:31:53 -0500
+        by mailnew.nyi.internal (Postfix) with ESMTP id E370B5E0C;
+        Mon,  3 Feb 2020 03:34:05 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 03 Feb 2020 03:34:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=OmLQiTU7CIJEgfH4BB0wpQ3U+xt
-        6/6j/9KiOYhlqIRI=; b=NeBaOOmMgJ9dMRzU9MQWb7FnVH2O1iR3oWG3dIkQNHr
-        0VR1nWZ+Kp0r4TW9ohHc0xfq0itNqE9ySjyuiTkB3UYvEs8bzblFdIkgGGM4xMs6
-        2iyaqjLIMf0+YnsDehiPvbTBMdO8wbQan0IJM8Ed6m46Eaf0u0901yKe3q/FWWHY
-        u5oo6mCjIiJetYEaFqaJFb/pHUbNtdAfLKdClmB+Q9d8kxhIopLQde2+Am3vTlPn
-        SKFxRjjiSWKaukgmqtDtuVNH2yDN/ak81PYJvdeXOGUx37pTHrFwkcsPKnlGYpUt
-        IaEQLlREdQh/Wvu+DbnNO6CR60T2oLkbYP6uddpg3XA==
+        :content-type:in-reply-to; s=fm2; bh=nLBFK/U/9FVj2QhUZ4f3HwAHrai
+        1iMWaFonW+4I4K0c=; b=OG9KdFGAiPq0zqE/PDLHzu1MLCGdRi5KiJW1u+ArHue
+        X8Cs0pIji51zAxpjmMPvWvOlDd28+5Bo7tdaZeGe4U5rdFxXc5HuKqUL6p749jEl
+        JQZ0XCuUw7Qf/EB28byQEkOSBc0NrJaLdLouUPJjMCWC7jQQsKrB/RnPvHtiRJhN
+        Pe+4PGzpsoKA2yopk8rauKZzAmRb5R5fTL6MxtsJk2pMtNUEhGGMw5Tmh1JCAVIS
+        3yGzEEPTmNp/4lWMuoZZEksiXJKj//ITOJ7Vw6kcl8eEpSYNcHHA2BNz1xOmd+xq
+        0xQc/yX4vTUitoQRR8+1NQeC31Ifkm6jIe+bPMkKtXA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=OmLQiT
-        U7CIJEgfH4BB0wpQ3U+xt6/6j/9KiOYhlqIRI=; b=uRJSVjHMbnfxpTHFBeSXO6
-        /MM5JJ0f+DFb7XObhwADxy0P8yWHENTV7pjn2gw9ixtpARHAzb3YU+1nRGQcpZil
-        DvNbSJJFs5pXHKRuCJqyXS9rGHT5ihlWM704Y6Cn6CHgxXUAifYgZjvqIm/5kE1z
-        s3dkrFIP0x39LQqlBQrh0mv/3WqXSqt0gfwyNkThecc6IrGIDXkSp6JOjfoyshgO
-        MjM0ym3Uoo7rk55W3II5pTKTgcv6HyzG9URWd01t+Z3V0gl6pSnI1019IPI4azVL
-        ekVO73tGTyUYMlCbqRAHVsClnrtpTYEyctomSTUikkrfoi8sW8S62+sV6fp16GsQ
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=nLBFK/
+        U/9FVj2QhUZ4f3HwAHrai1iMWaFonW+4I4K0c=; b=KhGuh51D/CSZ65vh1myQT8
+        n4080jUEBAfLd6IDKptRu95IDkPM5XEfSD8lPiB7ZAzD6Dy2leIjyjsR0jz6fuUp
+        h2ct+PLKYSsSPvDe+XoH0/DBuMqMNq1fgm/z+TBJ/kzbk05jTtRTkSe2riHhoGhb
+        pFzp2SbYzeinjEG2BoWe5cphHewZMzKPngWenRByJbA6EDJK1aB/ix8GP621p9Mo
+        JwYm3N3dzmNWSLrMCASiMRM2NghrKnI4Bd0IrmRPp72pPAUu0VkgwfAQn5ApInio
+        ga/7VwIW93BfrelbNqsXcbYdwxjjcBbSAPhK+MjRgYFP3ktQe2sdUP9NkD8+Mzsw
         ==
-X-ME-Sender: <xms:eNo3XnYvH8QHn9S7Z_7jd3m1xpbcaOQ02zwQMGc9Eq50xSoakXKamw>
+X-ME-Sender: <xms:_No3XvOvOla3tF1qtF3HMGkOBEqVEfLW2waWH19XXLvY6i-BtBNZ9g>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeeigdduudelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucev
-    lhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvg
-    estggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:eNo3XugKssXinG4YxJDa03RwjmEGDZYbLD3-vd0NB8kaFj-fMOdl9A>
-    <xmx:eNo3XpciFCpgMIo921RcMDgOEE12ZCl5HvVF-ROCj5LHK2p824V7Xg>
-    <xmx:eNo3XtniRCmBDq_aH8FLq89JKsot7iokNR-pB5mJoJ55Q0OZO7EMOA>
-    <xmx:edo3XhZ0wx7z1uH6IVv0Vf2cVJhJcRCc6o9xr7dEfGigKDfauvt7EA>
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:_No3XmQpwCAipjGOIXx6hkjModXzQzO7vyowyRZLL9dbwyUyKBnfzA>
+    <xmx:_No3XhCBMIa7P20bA78hxrNE-hxojAIWbTuGyKYQ0qS4rweRgpS1gw>
+    <xmx:_No3Xljz7mk0H9yOHbdQx_AwufJ75RTzT2FDMov30urE1_EqS_cZUQ>
+    <xmx:_do3XokOnmeCMkCr77nfM_bhUWmqivs3Zjnyk0eczQy-rDl7et9_ug>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6BBF1328005A;
-        Mon,  3 Feb 2020 03:31:52 -0500 (EST)
-Date:   Mon, 3 Feb 2020 09:31:51 +0100
+        by mail.messagingengine.com (Postfix) with ESMTPA id 98B763060187;
+        Mon,  3 Feb 2020 03:34:04 -0500 (EST)
+Date:   Mon, 3 Feb 2020 09:34:03 +0100
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
@@ -84,100 +82,59 @@ Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         open list <linux-kernel@vger.kernel.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH 08/12] dt-bindings: arm: bcm: Convert BCM4708 to YAML
-Message-ID: <20200203083151.ghg57pgjlci4y7in@gilmour.lan>
+Subject: Re: [PATCH 11/12] dt-bindings: arm: Document Broadcom SoCs
+ 'secondary-boot-reg'
+Message-ID: <20200203083403.6wmuduxqsv7quujp@gilmour.lan>
 References: <20200202211827.27682-1-f.fainelli@gmail.com>
- <20200202211827.27682-9-f.fainelli@gmail.com>
+ <20200202211827.27682-12-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200202211827.27682-9-f.fainelli@gmail.com>
+In-Reply-To: <20200202211827.27682-12-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Sun, Feb 02, 2020 at 01:18:23PM -0800, Florian Fainelli wrote:
-> Update the Broadcom BCM4708 SoC family binding document for boards/SoCs
-> to use YAML. Verified with dt_binding_check and dtbs_check.
+On Sun, Feb 02, 2020 at 01:18:26PM -0800, Florian Fainelli wrote:
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index c23c24ff7575..6f56a623c1cd 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -272,6 +272,22 @@ properties:
+>        While optional, it is the preferred way to get access to
+>        the cpu-core power-domains.
 >
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../bindings/arm/bcm/brcm,bcm4708.txt         | 15 ----
->  .../bindings/arm/bcm/brcm,bcm4708.yaml        | 88 +++++++++++++++++++
->  2 files changed, 88 insertions(+), 15 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
->
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> deleted file mode 100644
-> index 8608a776caa7..000000000000
-> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -Broadcom BCM4708 device tree bindings
-> --------------------------------------------
-> -
-> -Boards with the BCM4708 SoC shall have the following properties:
-> -
-> -Required root node property:
-> -
-> -bcm4708
-> -compatible = "brcm,bcm4708";
-> -
-> -bcm4709
-> -compatible = "brcm,bcm4709";
-> -
-> -bcm53012
-> -compatible = "brcm,bcm53012";
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
-> new file mode 100644
-> index 000000000000..d48313c7ae45
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/bcm/brcm,bcm4708.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +  secondary-boot-reg:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: |
+> +      Required for systems that have an "enable-method" property value of
+> +      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
 > +
-> +title: Broadcom BCM4708 device tree bindings
+> +      This includes the following SoCs: |
+> +      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
+> +      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
 > +
-> +description:
-> +  Broadcom BCM4708/47081/4709/47094/53012 Wi-Fi/network SoCs based
-> +  on the iProc architecture (Northstar).
+> +      The secondary-boot-reg property is a u32 value that specifies the
+> +      physical address of the register used to request the ROM holding pen
+> +      code release a secondary CPU. The value written to the register is
+> +      formed by encoding the target CPU id into the low bits of the
+> +      physical start address it should jump to.
 > +
-> +maintainers:
-> +  - Florian Fainelli <f.fainelli@gmail.com>
-> +  - Hauke Mehrtens <hauke@hauke-m.de>
-> +  - Rafal Milecki <zajec5@gmail.com>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +      - description: BCM4708 based boards
-> +        items:
-> +          - enum:
-> +              - asus,rt-ac56u
-> +              - asus,rt-ac68u
-> +              - buffalo,wzr-1750dhp
-> +              - linksys,ea6300-v1
-> +              - linksys,ea6500-v2
-> +              - luxul,xap-1510v1
-> +              - luxul,xwc-1000
-> +              - netgear,r6250v1
-> +              - netgear,r6300v2
-> +              - smartrg,sr400ac
-> +              - brcm,bcm94708
-> +          - const: brcm,bcm4708
 
-I'm under the impression that while the SoC compatible description in
-your other bindings is obvious enough, if anything, you should have a
-description of the boards. But it's up to you :)
+You can make the requirement explicit (and enforced by the schemas) using:
+
+if:
+  properties:
+    enable-method:
+      contains:
+        enum:
+	  - brcm,bcm11351-cpu-method
+	  - brcm,bcm23550
+	  - brcm,bcm-nsp-smp
+
+then:
+  required:
+    - secondary-boot-reg
 
 Maxime
