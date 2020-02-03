@@ -2,88 +2,109 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C49C33CAC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AEAC33CAC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83A420661
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0869020658
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 10:53:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMf4Er6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgBCKlL (ORCPT
+        id S1727588AbgBCKxr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:41:11 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:14206 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726100AbgBCKlL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 05:41:11 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Feb 2020 16:11:08 +0530
-Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Feb 2020 16:10:45 +0530
-Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
-        id A6A1E21187; Mon,  3 Feb 2020 16:10:43 +0530 (IST)
-From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, robh@kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, tientzu@chromium.org,
-        seanpaul@chromium.org, rjliao@codeaurora.org, yshavit@google.com,
-        devicetree@vger.kernel.org,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Subject: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device tree bindings for QTI chip WCN3991
-Date:   Mon,  3 Feb 2020 16:10:41 +0530
-Message-Id: <1580726441-1100-2-git-send-email-gubbaven@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580726441-1100-1-git-send-email-gubbaven@codeaurora.org>
-References: <1580726441-1100-1-git-send-email-gubbaven@codeaurora.org>
+        Mon, 3 Feb 2020 05:53:47 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39632 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgBCKxq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 05:53:46 -0500
+Received: by mail-il1-f195.google.com with SMTP id f70so12202055ill.6;
+        Mon, 03 Feb 2020 02:53:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xA1slDoqBq1wNtrTR0f7nXbBTEQEIlnapNwEpNkpg9g=;
+        b=EMf4Er6vqgT1LOu6aLpORiIOn63hrGTH1Ch3gUJjIQPtn4zvJLO1f4XvBdHLgVMazs
+         PCdP5/YS/l7nIqgEai6oruDRAMmnWD9C48rHgg7GWqW37JolnCJq3wE6kna+JVHd2zSe
+         agq3KnmnbYp5WkMsKS81aK6SE9V1mTQBvfAWuxAARuia+kwb6QGPqOOBIDIhTa/Wcptt
+         kzR938ls/FRk/232pMp8Ox5SVYXE1TlnxUczlSroKOUNxqm7aZRMdKqBTnKG5kSzSn+C
+         9qu3NJD23C3BbaNtTrOZa1sw01EQHv6NzfFxRESsTaYnyLSrA1uFEPHHsKoOXFpkhIA0
+         fQZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xA1slDoqBq1wNtrTR0f7nXbBTEQEIlnapNwEpNkpg9g=;
+        b=OxvMyGfxV1KXczUFyE0jQf5IehD5Ecgw5n0Hz/7NeBhgyxC2SF0ZXyVIwzJ7LSz/jf
+         ys190/iyfezZmN+sBixaWMbgLg5FfvUJa3jrCGPAaMURRQIyu1XDqoE3sPSFqCWevcZx
+         XSHpQsBo1zdJ6jnDertEPRQXS30JrowHPaBi8kuLsHAlLXQOHpl/8emzNgUipE7p4URW
+         xJeDCEGCdVZO81s84I9vAxUtoglo44uTq5XJXyQSc2iOD/PdXgPhggTLxctE+RqNfMO6
+         iPHYPfFP4g2mYMauznEuuEziLJIMHyOqXH+WZMoqqtFhaLh3yOhYLMWZkdl7YtorhSbL
+         jjcw==
+X-Gm-Message-State: APjAAAVnVuClf6L8PnkjQ4jo4kMLqGgulc6UI0SYfIcC9sxJq48UxZPS
+        r8VyW1MCQcuUuItXWMCJLSpEceT8MIw2gS3D3oypDH5T
+X-Google-Smtp-Source: APXvYqwi2e+OZzwE+GaVgXvx0G8DUeuHxSXqJptgRY6pVJihSlOnoWPfMoYbRYTuQT20fciXDKoALEGsg78SgS3s+JY=
+X-Received: by 2002:a92:1547:: with SMTP id v68mr20312779ilk.58.1580727225757;
+ Mon, 03 Feb 2020 02:53:45 -0800 (PST)
+MIME-Version: 1.0
+References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-2-aford173@gmail.com>
+ <CAOMZO5D3emrAk84wDS04qJC-3AyvFnqodhoMsXO-ukHnYsU+PQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5D3emrAk84wDS04qJC-3AyvFnqodhoMsXO-ukHnYsU+PQ@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 3 Feb 2020 04:53:34 -0600
+Message-ID: <CAHCN7xJyZRwJhnWW2mAbOeGyrMsB7Au_e6AvwiNmNS8gFUfSyw@mail.gmail.com>
+Subject: Re: [PATCH V2 2/5] spi: fspi: dynamically alloc AHB memory
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     linux-spi <linux-spi@vger.kernel.org>, Han Xu <han.xu@nxp.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add compatible string for the Qualcomm WCN3991 Bluetooth controller
+On Sun, Feb 2, 2020 at 10:39 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> On Sun, Feb 2, 2020 at 10:00 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > From: Han Xu <han.xu@nxp.com>
+> >
+> > Apply patch from NXP upstream repo to
+> > dynamically allocate AHB memory as needed.
+>
+> The commit log could be improved here. What is the motivation for doing this?
 
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
----
-v3:
-  *Updated clocks with <&rpmhcc RPMH_RF_CLK2>  
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 3 +++
- 1 file changed, 3 insertions(+)
+My motivation is to get the flexspi on the i.MX8MM to work, and I did
+a list of the patches applied on the NXP branch to see what was
+applied on top of their 4.19 kernel and this patch series generated
+from that list.  Most of the NXP commits are one-line commits, and I
+don't know the motivation for what's happening.  NXP did it, and I
+know it works on the Flexspi driver.
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 68b67d9..beca646 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -11,6 +11,7 @@ Required properties:
-  - compatible: should contain one of the following:
-    * "qcom,qca6174-bt"
-    * "qcom,wcn3990-bt"
-+   * "qcom,wcn3991-bt"
-    * "qcom,wcn3998-bt"
- 
- Optional properties for compatible string qcom,qca6174-bt:
-@@ -30,6 +31,7 @@ Optional properties for compatible string qcom,wcn399x-bt:
- 
-  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-  - firmware-name: specify the name of nvm firmware to load
-+ - clocks: clock provided to the controller
- 
- Examples:
- 
-@@ -56,5 +58,6 @@ serial@898000 {
- 		vddch0-supply = <&vreg_l25a_3p3>;
- 		max-speed = <3200000>;
- 		firmware-name = "crnv21.bin";
-+		clocks = <&rpmhcc RPMH_RF_CLK2>;
- 	};
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+Maybe Han Xu can comment, since it's really his patch.
 
+
+adam
+>
+> > +               if (!f->ahb_addr) {
+> > +                       dev_err(f->dev, "failed to alloc memory\n");
+>
+> There is no need for this error message as the MM core will take care of it.
