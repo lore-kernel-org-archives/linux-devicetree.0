@@ -2,134 +2,253 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DBBC3524D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 14:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6B2C33CAC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 14:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8C72082E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 14:16:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xxf3hbaW"
+	by mail.kernel.org (Postfix) with ESMTP id 654D32086A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 14:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580739991;
+	bh=D/zNJaSs6rQP+XLHVrZC4bnZOKsFGxBaJJyDkh+zQOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S5sFEODl+qTqpGKb4Q56LVkaNTivLv8F4/ICSIDCmS/Tx3eJwSaqDsPkPYbuedP59
+	 8omn005wU6c5L7y/BweGqPGP07bPQjCdnaDcQZp3mW9ZzHWe1A50rtwr7zWNlZvFzZ
+	 h7Rz2MaOzgb4+IcG2tvoSp2QfvJLxEPP3DgxkAog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgBCOQr (ORCPT
+        id S1728196AbgBCO0a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:16:47 -0500
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:38059 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727303AbgBCOQr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 09:16:47 -0500
-Received: by mail-lf1-f54.google.com with SMTP id r14so9823458lfm.5
-        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 06:16:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=s8HN/ssfW3RrGfj5iOn18Wtg7GOj1L1nchbFe0O3XtE=;
-        b=xxf3hbaWq7V1P+it5KB8wcbCcFCotmfcg+NAH0x6Wy9SdhEhFcv6ono0niHnd6HLqY
-         jnVyLBB4qRwClW/4Ie2u8LE98KmeCtBHnnwq4r99g6PlSmPm/VaBN/ABAedO56zGjqOb
-         vUzERbQOxjASHgg/8lb6bL+g//KeqtgJL8yP9388ySSB47cXviHzJaUoOOjoVUbZjdRg
-         rR1bMwrB7lL3+akdmFdBeSMRxcWW9AYyAKqmmJyrfx90V3gl7/0E0dxJChgy6h3pSyLR
-         8d0MasMk7SKLpwRN9Vq+su0okTJG/hVqThERV2IKhz1x9VEMI4xCPayMeDuk7IUw8xli
-         IGxQ==
+        Mon, 3 Feb 2020 09:26:30 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56103 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727570AbgBCO0a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 09:26:30 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q9so16107510wmj.5;
+        Mon, 03 Feb 2020 06:26:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=s8HN/ssfW3RrGfj5iOn18Wtg7GOj1L1nchbFe0O3XtE=;
-        b=HBQkG5uBpfHgQEgSNFmwQS24/Shvgotdpatx5IXBvwP4v3NfOM/tlYllqimwMEzlIz
-         D9th2qTqrCfXIypGo5KCYiroUmqL554YyWCXgCE43g20bxJ2oCGiXafRmXx7fea+n/5u
-         pCdJ+D3Kvl/Xf+b78KOuZS0y0vP7Gc98sxcGXJeh2KdLaXoQSdtXEtI6rvVH2AKf/Eps
-         XArtLJ6bKl/npa5YdyCNpZX4vWwlaNnd+CwtKCurBFq5XWIlBmKw3MJMEU1y+Ia+hty5
-         xV/CMF+4vcmZeo8WTNlwEAWj9wloN7F7aHq/KEYXhjBMJ4/clJ24Nn/80u4r0ezIOplW
-         Y7ig==
-X-Gm-Message-State: APjAAAWDe2jF9Iw5H9j/IxHUFeYqWoEMPFa0mXJPxbimctGDe1F3CIzx
-        mmT8L6YrkhDG1V+VqnZgtmPFJVpBeiHrUuGG3uD7JA==
-X-Google-Smtp-Source: APXvYqxlH+MsUuRAcTfdFjXSPCXxa+6z6dX4MgpSyEhbTxumvWgRTMDWlXIst132BjcY9+0l4qdxd/lXkZbRE4+uk9E=
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr11547220lfn.74.1580739405080;
- Mon, 03 Feb 2020 06:16:45 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=itc17noPW/qOhrB9VNLS0A5datkiWJZoXQQ/RMMvGb4=;
+        b=FbNok9t4h4HordSj02XMpfiliSEX/NEn7M/qQw4hIQva8jsU3WQviiJSjLhX+6YeRy
+         at3YDSIScg4u6USeTZoyyod7EX0vNf7RZebnmNNt5/JlrQN7yifzR8r+Qt42C5u2D7bv
+         reYfzBlc1rqRWf9QOFH1sqOxNFQLqnq7eMKQ2e8L+tpXRGn24pKhzQc3UKL7jO89pwc4
+         mlfzI8iRBFbNbJ1cAH8yJbYpovJF8AqOTtMo8Ly0Pm0STpPdDeNxS4ewgOk8lf60JJDd
+         9FIJdRru1KH+JGpRuVpORWRcqIhfNOpjvYL3/Xufe2zvAU0reYrtWTcvIW7u18emmhkY
+         xrRg==
+X-Gm-Message-State: APjAAAVibx/mvqo6d3q6OWw43mzJVILP+zu2DZRdMBTY6BCUP/L/DDs9
+        sZf1/+gAkKPqJKnhhTrbuJs9En3bSA==
+X-Google-Smtp-Source: APXvYqxc2RMlFnmFy5Opti+9z+rRZLxfxDLV3D5FBrtAkPSVjJL0S3CbhEJWd5zGMozHNjHKt12opQ==
+X-Received: by 2002:a1c:96c4:: with SMTP id y187mr30487850wmd.112.1580739987385;
+        Mon, 03 Feb 2020 06:26:27 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id 18sm22963441wmf.1.2020.02.03.06.26.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 06:26:26 -0800 (PST)
+Received: (nullmailer pid 27658 invoked by uid 1000);
+        Mon, 03 Feb 2020 14:26:25 -0000
+Date:   Mon, 3 Feb 2020 14:26:25 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        mark.rutland@arm.com, sriram.dash@samsung.com,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: net: can: Convert M_CAN to json-schema
+Message-ID: <20200203142625.GA19020@bogus>
+References: <20200124155542.2053-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 3 Feb 2020 19:46:34 +0530
-Message-ID: <CA+G9fYvi8g=5MG4HzN0QPH+_LEX1xXo-m2xmbHRqdMJzaqBCFQ@mail.gmail.com>
-Subject: OF: ERROR: Bad of_node_put() on /ocp/interconnect
-To:     linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124155542.2053-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The following error/warning noticed on beagleboard x15 running linux
-next 5.5.0-next-20200203.
+On Fri, Jan 24, 2020 at 04:55:42PM +0100, Benjamin Gaignard wrote:
+> Convert M_CAN bindings to json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../bindings/net/can/can-transceiver.txt           |  24 ----
+>  .../devicetree/bindings/net/can/m_can.txt          |  75 ----------
+>  .../devicetree/bindings/net/can/m_can.yaml         | 151 +++++++++++++++++++++
+>  3 files changed, 151 insertions(+), 99 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: cee5a42837d4a6c4189f06f7bf355b97a24c3c93
-  git describe: next-20200203
-  make_kernelversion: 5.5.0
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-next/694/config
+No chance other controllers aren't going to have a transceiver?
 
+>  delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/can/m_can.yaml
 
-[    0.000000] OF: ERROR: Bad of_node_put() on
-/ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
-  5.5.0-next-20200203 #1
-[    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
-[    0.000000] Backtrace:
-[    0.000000] [<c040fac4>] (dump_backtrace) from [<c040fdf8>]
-(show_stack+0x20/0x24)
-[    0.000000]  r7:c23f2e68 r6:00000000 r5:600000d3 r4:c23f2e68
-[    0.000000] [<c040fdd8>] (show_stack) from [<c14144d0>]
-(dump_stack+0xe8/0x114)
-[    0.000000] [<c14143e8>] (dump_stack) from [<c112b7cc>]
-(of_node_release+0xb4/0xcc)
-[    0.000000]  r10:efca9a44 r9:00000001 r8:00000000 r7:00000000
-r6:c23d2350 r5:efca9a44
-[    0.000000]  r4:efca9a70 r3:be2d277f
-[    0.000000] [<c112b718>] (of_node_release) from [<c1419c28>]
-(kobject_put+0x11c/0x23c)
-[    0.000000]  r5:c2422cb8 r4:efca9a70
-[    0.000000] [<c1419b0c>] (kobject_put) from [<c112aa98>]
-(of_node_put+0x24/0x28)
-[    0.000000]  r7:e98f7980 r6:c2201ef4 r5:00000000 r4:e98f7940
-[    0.000000] [<c112aa74>] (of_node_put) from [<c20474a0>]
-(of_clk_init+0x1a4/0x248)
-[    0.000000] [<c20472fc>] (of_clk_init) from [<c20140dc>]
-(omap_clk_init+0x4c/0x68)
-[    0.000000]  r10:efc8b8c0 r9:c2433054 r8:00000000 r7:c2208700
-r6:00000066 r5:c20dab64
-[    0.000000]  r4:c2434500
-[    0.000000] [<c2014090>] (omap_clk_init) from [<c2014afc>]
-(omap4_sync32k_timer_init+0x18/0x3c)
-[    0.000000]  r5:c20dab64 r4:c2433000
-[    0.000000] [<c2014ae4>] (omap4_sync32k_timer_init) from
-[<c2014de8>] (omap5_realtime_timer_init+0x1c/0x258)
-[    0.000000] [<c2014dcc>] (omap5_realtime_timer_init) from
-[<c2005954>] (time_init+0x30/0x44)
-[    0.000000]  r9:c2433054 r8:00000000 r7:c2208700 r6:00000066
-r5:c20dab64 r4:c2433000
-[    0.000000] [<c2005924>] (time_init) from [<c20012dc>]
-(start_kernel+0x590/0x720)
-[    0.000000] [<c2000d4c>] (start_kernel) from [<00000000>] (0x0)
-[    0.000000]  r10:30c5387d r9:412fc0f2 r8:8ffdc000 r7:00000000
-r6:30c0387d r5:00000000
-[    0.000000]  r4:c2000330
+bosch,m_can.yaml
 
-full test log,
-https://lkft.validation.linaro.org/scheduler/job/1158386#L3677
+> diff --git a/Documentation/devicetree/bindings/net/can/m_can.yaml b/Documentation/devicetree/bindings/net/can/m_can.yaml
+> new file mode 100644
+> index 000000000000..efdbed81af29
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/m_can.yaml
+> @@ -0,0 +1,151 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/can/m_can.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bosch MCAN controller Bindings
+> +
+> +description: Bosch MCAN controller for CAN bus
+> +
+> +maintainers:
+> +  -  Sriram Dash <sriram.dash@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: bosch,m_can
+> +
+> +  reg:
+> +    items:
+> +      - description: M_CAN registers map
+> +      - description: message RAM
+> +
+> +  reg-names:
+> +    items:
+> +      - const: m_can
+> +      - const: message_ram
+> +
+> +  interrupts:
+> +    items:
+> +      - description: interrupt line0
+> +      - description: interrupt line1
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: int0
+> +      - const: int1
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clocks:
+> +    items:
+> +      - description: peripheral clock
+> +      - description: bus clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: hclk
+> +      - const: cclk
+> +
+> +  bosch,mram-cfg:
+> +    description: |
+> +                 Message RAM configuration data.
+> +                 Multiple M_CAN instances can share the same Message RAM
+> +                 and each element(e.g Rx FIFO or Tx Buffer and etc) number
+> +                 in Message RAM is also configurable, so this property is
+> +                 telling driver how the shared or private Message RAM are
+> +                 used by this M_CAN controller.
+> +
+> +                 The format should be as follows:
+> +                 <offset sidf_elems xidf_elems rxf0_elems rxf1_elems rxb_elems txe_elems txb_elems>
+> +                 The 'offset' is an address offset of the Message RAM where
+> +                 the following elements start from. This is usually set to
+> +                 0x0 if you're using a private Message RAM. The remain cells
+> +                 are used to specify how many elements are used for each FIFO/Buffer.
+> +
+> +                 M_CAN includes the following elements according to user manual:
+> +                 11-bit Filter	0-128 elements / 0-128 words
+> +                 29-bit Filter	0-64 elements / 0-128 words
+> +                 Rx FIFO 0	0-64 elements / 0-1152 words
+> +                 Rx FIFO 1	0-64 elements / 0-1152 words
+> +                 Rx Buffers	0-64 elements / 0-1152 words
+> +                 Tx Event FIFO	0-32 elements / 0-64 words
+> +                 Tx Buffers	0-32 elements / 0-576 words
+> +
+> +                 Please refer to 2.4.1 Message RAM Configuration in Bosch
+> +                 M_CAN user manual for details.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/int32-matrix
 
--- 
-Linaro LKFT
-https://lkft.linaro.org
+Looks like uint32-array based on the constraints.
+
+> +      - items:
+> +         items:
+> +           - description: The 'offset' is an address offset of the Message RAM
+> +                          where the following elements start from. This is usually
+> +                          set to 0x0 if you're using a private Message RAM.
+> +             default: 0
+> +           - description: 11-bit Filter 0-128 elements / 0-128 words
+> +             minimum: 0
+> +             maximum: 128
+> +           - description: 29-bit Filter 0-64 elements / 0-128 words
+> +             minimum: 0
+> +             maximum: 64
+> +           - description: Rx FIFO 0 0-64 elements / 0-1152 words
+> +             minimum: 0
+> +             maximum: 64
+> +           - description: Rx FIFO 1 0-64 elements / 0-1152 words
+> +             minimum: 0
+> +             maximum: 64
+> +           - description: Rx Buffers 0-64 elements / 0-1152 words
+> +             minimum: 0
+> +             maximum: 64
+> +           - description: Tx Event FIFO 0-32 elements / 0-64 words
+> +             minimum: 0
+> +             maximum: 32
+> +           - description: Tx Buffers 0-32 elements / 0-576 words
+> +             minimum: 0
+> +             maximum: 32
+> +        maxItems: 1
+> +
+> +  can-transceiver:
+> +    type: object
+> +
+> +    properties:
+> +      max-bitrate:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: a positive non 0 value that determines the max speed that
+> +                     CAN/CAN-FD can run.
+> +        minimum: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - clocks
+> +  - clock-names
+> +  - bosch,mram-cfg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx6sx-clock.h>
+> +    can@20e8000 {
+> +      compatible = "bosch,m_can";
+> +      reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
+> +      reg-names = "m_can", "message_ram";
+> +      interrupts = <0 114 0x04>, <0 114 0x04>;
+> +      interrupt-names = "int0", "int1";
+> +      clocks = <&clks IMX6SX_CLK_CANFD>,
+> +               <&clks IMX6SX_CLK_CANFD>;
+> +      clock-names = "hclk", "cclk";
+> +      bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
+> +
+> +      can-transceiver {
+> +        max-bitrate = <5000000>;
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.15.0
+> 
