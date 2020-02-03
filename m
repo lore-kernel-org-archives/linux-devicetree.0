@@ -2,233 +2,165 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16EBC35247
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 17:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A34FC35247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 17:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8059420721
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 17:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC132087E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 17:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EAKDQu8q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T3/dlEbs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgBCRJU (ORCPT
+        id S1727958AbgBCRfD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:09:20 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:46978 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgBCRJS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 12:09:18 -0500
-Received: by mail-vk1-f195.google.com with SMTP id u6so4315909vkn.13
-        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 09:09:16 -0800 (PST)
+        Mon, 3 Feb 2020 12:35:03 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35830 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgBCRfD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 12:35:03 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y73so7943427pfg.2
+        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 09:35:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CWQc8dWjlP2ZA9TkToOZ6adaS42b79Cp5nFYcug4BVk=;
-        b=EAKDQu8qFYvqVVBY6uTHZgB1TJs7Z9uMCfyWVlawP4ae8ZrTJg8UgyZmAEtPSl1PNx
-         Fz74VmTHzWlvIhFr3tnpdoM/9PTqfIt1rc+9fZZX00uGb28Cal9pEtzWF2whX5me+Vv5
-         Z4UGUpECKY1Lb3uxtkRYOanrG6RgiddygoDAo=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/2GnHgYEod44KNh5O907qr0Dr3tZt31Xm1Pio0+BUtU=;
+        b=T3/dlEbss69QCdMNMPoph/AGjrLOJywnCDQUDC2crHYwLXIj8gbLjE1Mhh/0AS4Q5i
+         1AN7ohRk8xc5mWmOgUpM/XP9ETNjwFHjATcQYoN/y6IcTcbeIIKbLoOOtplCNuIlIw6C
+         lt1Al/0QHs4pwiYD+e5S5S6DGygimX8cRV8E3qtmVn0c98qAteldebnd1oAOpSZWRLfg
+         X4hvg2OAdCgQIqlJrR5SZ3IxW3t0aZSQGeM7PWTCFvoCLYqq0Cq4KzyCL5katLBoLA+4
+         hc+utViSzEbgLYkXa9iZmRJ+ZawjFNhlcJ0L48IDNx6YU3dp1OVy3uPvyrzXLMKfamqU
+         h+qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CWQc8dWjlP2ZA9TkToOZ6adaS42b79Cp5nFYcug4BVk=;
-        b=Lt0SsKGR+Oeykw5ll1z4cMfxNN0H0LIG1+TTpRDhqk99g/VfJ/5WJD6tr8N1b8vnaZ
-         uSamugqOc7Rd0b87DNSfe8Is8HkqC+PE0yh9srosxD3Qx+ONG3d1i6XBpZ7yoUke2bNh
-         3rwHKBDK6VUFVYUdr/Si6b6lvaSijmry8/TtKHDubFZxsNJjL/bJdhvZ6L049XNjndWg
-         29JG+or/4bSbq+rrd+341NWcrKc++k6Lk4sxqv9WymvI7tD+4o4hHgM0OiRtuC5QBJ9h
-         NaveQPLGUfvGk3oGMSmCtM+pEyUDs/0TH4N71TIT1krnmMijw4UcbSChFlhVoWGwzMoQ
-         Nlhw==
-X-Gm-Message-State: APjAAAWKpUnOgZB81pVLn2oomdXZPujx8ILVK4iT6EXNydejr9KDcTsk
-        4vtMYo2Sd0J4L9jv/lDujAY6qvovmtA=
-X-Google-Smtp-Source: APXvYqxy4OTxcDmV9kfbzdEBf7PNRef44+2lmYFlIIUQQiArT4bv1icR4U52ygiJM4Usl17MJewWnQ==
-X-Received: by 2002:a1f:7288:: with SMTP id n130mr14585494vkc.46.1580749755359;
-        Mon, 03 Feb 2020 09:09:15 -0800 (PST)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id s8sm5441276vsk.13.2020.02.03.09.09.14
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 09:09:14 -0800 (PST)
-Received: by mail-vs1-f53.google.com with SMTP id v141so9358322vsv.12
-        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 09:09:14 -0800 (PST)
-X-Received: by 2002:a67:8704:: with SMTP id j4mr16525027vsd.106.1580749753932;
- Mon, 03 Feb 2020 09:09:13 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/2GnHgYEod44KNh5O907qr0Dr3tZt31Xm1Pio0+BUtU=;
+        b=DysCtJyE5kUm1QMK2cp0/i1s5mtaEDg65p1+27Pxl1UK7QbsG+Zm88mSOALCUG+sEz
+         mzNJ/5GBTigH8k3TE8y0Y2tfhzOdd5jSHZiV8xHV4p99xte1s7jV/M+lSZY5+nE/6X2p
+         ++ZlEQntev//SMlpkkG0myFgPUfrQEMQeeiYXdsz3Bv4c9Rf/lLXma0faiAVKSTW+ZmF
+         jjHMOjlpzB36SVQLyM7wvbyGszlNBJpm/45zkhYr8/pFdRFktu0wPKAPsINncN0nsFkv
+         nDPlw3EMaLjW7DBXmh8ZdsEJaQGs4XzHcQNRbPE7NrFuj+uyfKVRGmzUPPdece+8MWUH
+         spWA==
+X-Gm-Message-State: APjAAAWuGYDiJqqeC+NEs9IOtMPgZEVfPwZ/dGWa/EV8Km7qJ06y+eYL
+        cMWEoYB48yaMVfbADkBo2iEYTg==
+X-Google-Smtp-Source: APXvYqwHjAZO5+aiba+vTO0oc2CApTMEtmAA4xfo4oGHCw/dpaiKyNl42GAFhoYlHtXUvoagPsmxZg==
+X-Received: by 2002:a63:7e58:: with SMTP id o24mr25705879pgn.214.1580751302915;
+        Mon, 03 Feb 2020 09:35:02 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s18sm700055pgn.34.2020.02.03.09.35.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 09:35:02 -0800 (PST)
+Date:   Mon, 3 Feb 2020 09:35:00 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v5] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
+ device node
+Message-ID: <20200203173500.GB3948@builder>
+References: <1580281223-2759-1-git-send-email-pillair@codeaurora.org>
 MIME-Version: 1.0
-References: <20200129152458.v2.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
- <20200130180404.6771A2083E@mail.kernel.org>
-In-Reply-To: <20200130180404.6771A2083E@mail.kernel.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 3 Feb 2020 09:09:02 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UsURCk4WD9uhvw1LJoTNMZ0anxgEfFGXRMk1Ps3HWxeQ@mail.gmail.com>
-Message-ID: <CAD=FV=UsURCk4WD9uhvw1LJoTNMZ0anxgEfFGXRMk1Ps3HWxeQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: clk: qcom: Fix self-validation, split,
- and clean cruft
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Abhishek Sahu <absahu@codeaurora.org>, sivaprak@codeaurora.org,
-        anusharao@codeaurora.org, Sricharan <sricharan@codeaurora.org>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580281223-2759-1-git-send-email-pillair@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Tue 28 Jan 23:00 PST 2020, Rakesh Pillai wrote:
 
-On Thu, Jan 30, 2020 at 10:04 AM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Douglas Anderson (2020-01-29 15:25:06)
-> > The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
-> > because it required a property to be either (3 entries big),
-> > (3 entries big), or (7 entries big), but not more than one of those
-> > things.  That didn't make a ton of sense.
-> >
-> > This patch splits all of the exceptional device trees (AKA those that
-> > would have needed if/then/else rules) from qcom,gcc.yaml.  It also
-> > cleans up some cruft found while doing that.
-> >
-> > After this lands, this worked for me atop clk-next with just the known
-> > error about msm8998:
-> >   for f in \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
-> >       ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
-> >   done
-> >
-> > I then picked this patch atop linux-next (next-20200129) and ran:
-> >   # Delete broken yaml:
-> >   rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> >   ARCH=arm64 make dt_binding_check | grep 'clock/qcom'
-> > ...and that didn't seem to indicate problems.
-> >
-> > Arbitrary decisions made (yell if you want changed):
-> > - Left all the older devices (where clocks / clock-names weren't
-> >   specified) in a single file.
-> > - Didn't make clocks "required" for msm8996 but left them as listed.
-> >   This seems a little weird but it matches the old binding.
-> >
-> > Misc cleanups as part of this patch:
-> > - sm8150 was claimed to be same set of clocks as sc7180, but driver
-> >   and dts appear to say that "bi_tcxo_ao" doesn't exist.  Fixed.
->
-> Someone will probably want to change this at some point.
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on sc7180 soc.
+> 
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 ++++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..167f68ac 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -287,6 +287,11 @@
+>  	vdda-pll-supply = <&vreg_l4a_0p8>;
+>  };
+>  
+> +&wifi {
+> +	status = "okay";
+> +	qcom,msa-fixed-perm;
+> +};
+> +
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+>  &qspi_clk {
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 8011c5f..0a00c94 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -75,6 +75,12 @@
+>  			reg = <0x0 0x80900000 0x0 0x200000>;
+>  			no-map;
+>  		};
+> +
+> +		wlan_fw_mem: memory@93900000 {
+> +			compatible = "removed-dma-pool";
 
-I haven't heard anything from Qualcomm, so leaving it the way it was
-in v2 for the v3 I'm prepping.  Someone can always do a follow-up
-patch.
+Sorry for not spotting this earlier, the "removed-dma-pool" compatible
+is a downstream thing and isn't defined upstream.
+
+> +                     no-map;
+> +                     reg = <0 0x93900000 0 0x200000>;
+
+If you swap the order of no-map and reg in this node it will look like
+all the others.
 
 
-> > - In "apq8064", "#thermal-sensor-cells" was missing the "#".
-> > - Got rid of "|" at the end of top description since spacing doesn't
-> >   matter.
-> > - Changed indentation to consistently 2 spaces (it was 3 in some
-> >   places).
-> > - Added period at the end of protected-clocks description.
-> > - No space before ":".
-> > - Updated sc7180/sm8150 example to use the 'qcom,rpmh.h' include.
-> > - Updated sc7180/sm8150 example to use larger address/size cells as
-> >   per reality.
-> > - Updated sc7180/sm8150 example to point to the sleep_clk rather than
-> >   <0>.
-> > - Made it so that gcc-ipq8074 didn't require #power-domain-cells since
-> >   actual dts didn't have it and I got no hits from:
-> >     git grep _GDSC include/dt-bindings/clock/qcom,gcc-ipq8074.h
-> > - Made it so that gcc-qcs404 didn't require #power-domain-cells since
-> >   actual dts didn't have it and I got no hits from:
-> >     git grep _GDSC include/dt-bindings/clock/qcom,gcc-qcs404.h
-> >
-> > Noticed, but not done in this patch (volunteers needed):
-> > - Add "aud_ref_clk" to sm8150 bindings / dts even though I found a
-> >   reference to it in "gcc-sm8150.c".
-> > - Fix node name in actual ipq8074 to be "clock-controller" (it's gcc).
-> > - Since the example doesn't need phandes to exist, in msm8998 could
-> >   just make up places providing some of the clocks currently bogused
-> >   out with <0>.
-> > - On msm8998 clocks are listed as required but current dts doesn't
-> >   have them.
-> >
-> > Fixes: ab91f72e018a ("clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> >
-> > Changes in v2:
-> > - Clocks are required for msm8998; note that current dts is broken.
-> > - Drop description for 'gcc-apq8064' nvmem-cell-names.
-> > - Commit message now describes running dt_binding_check differently.
-> > - Added Rob's review tag.
-> >
-> >  .../bindings/clock/qcom,gcc-apq8064.yaml      |  79 +++++++
-> >  .../bindings/clock/qcom,gcc-ipq8074.yaml      |  48 ++++
-> >  .../bindings/clock/qcom,gcc-msm8996.yaml      |  65 ++++++
-> >  .../bindings/clock/qcom,gcc-msm8998.yaml      |  90 ++++++++
-> >  .../bindings/clock/qcom,gcc-qcs404.yaml       |  48 ++++
-> >  .../bindings/clock/qcom,gcc-sc7180.yaml       |  72 ++++++
-> >  .../bindings/clock/qcom,gcc-sm8150.yaml       |  69 ++++++
-> >  .../devicetree/bindings/clock/qcom,gcc.yaml   | 212 ++----------------
-> >  8 files changed, 489 insertions(+), 194 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
-> > new file mode 100644
-> > index 000000000000..a386cfd27793
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
-> > @@ -0,0 +1,79 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-apq8064.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Global Clock & Reset Controller Binding for APQ8064
-> > +
-> > +maintainers:
-> > +  - Stephen Boyd <sboyd@kernel.org>
-> > +  - Taniya Das <tdas@codeaurora.org>
-> > +
-> > +description:
-> > +  Qualcomm global clock control module which supports the clocks, resets and
-> > +  power domains on APQ8064.
->
-> It would be great if this could also point to the
-> include/dt-bindings/clock/qcom,apq8064.h file here. If you don't resend
-> this patch then I will try to remember to make this addition to the
-> binding docs.
+Apart from that the patch looks good.
 
-Funny that you should pick this example.  There is no 'qcom,apq8064.h'
-and it appears that this driver and device tree files use:
+Regards,
+Bjorn
 
-  - dt-bindings/clock/qcom,gcc-msm8960.h
-  - dt-bindings/reset/qcom,gcc-msm8960.h
-
-I'll point to those.
-
--Doug
+> +		};
+>  	};
+>  
+>  	cpus {
+> @@ -1490,6 +1496,28 @@
+>  
+>  			#freq-domain-cells = <1>;
+>  		};
+> +
+> +		wifi: wifi@18800000 {
+> +			compatible = "qcom,wcn3990-wifi";
+> +			reg = <0 0x18800000 0 0x800000>;
+> +			reg-names = "membase";
+> +			iommus = <&apps_smmu 0xc0 0x1>;
+> +			interrupts =
+> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
+> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
+> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
+> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
+> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
+> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
+> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
+> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
+> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
+> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
+> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
+> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
+> +			memory-region = <&wlan_fw_mem>;
+> +			status = "disabled";
+> +		};
+>  	};
+>  
+>  	thermal-zones {
+> -- 
+> 2.7.4
+> 
