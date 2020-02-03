@@ -2,132 +2,92 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1439C3524D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 16:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB069C35247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 17:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CD52082E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 16:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DEF82080D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 17:00:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Zue/IOlN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QjnvLUY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgBCQwO (ORCPT
+        id S1727918AbgBCRAO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:52:14 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:46432 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727946AbgBCQuP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 11:50:15 -0500
-X-UUID: c814e9ac7ff541c2b03bc6b7734cb5f1-20200204
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=H9GMx9DnwGDgodla7Vg+jUBwtFlHLpaLo8S7jY2l5XU=;
-        b=Zue/IOlNDbjjIhCQSoLUzz07QVmuwh4FejS979v1jf76XShrTaNvPXnPGTnrvQl+1pvYnQKgcNlKQvXnOU3hUjzK0BhQR4RGGMoO4jl84yPmrnpPWqbVV/CXBXZaZYFbtLGFMrLrGazlNbADNV98R0csRVj5ODcyjQu1oNuUZPI=;
-X-UUID: c814e9ac7ff541c2b03bc6b7734cb5f1-20200204
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1437683526; Tue, 04 Feb 2020 00:50:09 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 4 Feb 2020 00:47:30 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 4 Feb 2020 00:50:22 +0800
-Message-ID: <1580748607.31376.3.camel@mtksdaap41>
-Subject: Re: [PATCH v8 4/5] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        Josef Friedl <josef.friedl@speed.at>,
-        <srv_heupstream@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-kernel@vger.kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        <linux-rtc@vger.kernel.org>
-Date:   Tue, 4 Feb 2020 00:50:07 +0800
-In-Reply-To: <1580730044-30501-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1580730044-30501-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1580730044-30501-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 3 Feb 2020 12:00:14 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44685 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbgBCRAN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 12:00:13 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y5so7858848pfb.11
+        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 09:00:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:subject:to:cc:user-agent:date;
+        bh=+bbS1LurHkbiJrVa8DwGY53PnP/qS0ULTiVuSYs5A3E=;
+        b=QjnvLUY4Q4hhfq3l2iwv+1X78eBmhau5DSyA/OBUYOQTo7bb7ep2XKYKghIh3ErkDd
+         IZFNWonhBADCHxXVXrF5wA4/tjMGNQMg+h06spG6a6CTAKE8J4qvXYpFAP4mY6hPQbnm
+         wMnNfqk/rz0xpnssK+2Td5w2GVQGzRoArLMDk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
+         :user-agent:date;
+        bh=+bbS1LurHkbiJrVa8DwGY53PnP/qS0ULTiVuSYs5A3E=;
+        b=Bz/vlKMpeZNZG/NXrqmYH3I+gsnE8ys966+wv66njgZxcmwha3R3v6aGSHs3FZNyUG
+         /2WoPRUDl3naa8mZYh1/FhVTejRACFwaHLNMClo/Q+FSuC0Nn9cgeqinG1Mj/VW8nykP
+         BOkLAasVWNF2NcQx2BKNLs4bjA76dkPZole+2hZP6DzudY1u++vM92yi4iUiaOXb1nNG
+         Eep9zjQgjpjpQEMrz1QS2lD4tlhngkrlzEVcUq8MVB/G2HpqcLhZITa3UZQ4IDBbvNx+
+         m07JayOS8oTa4T1Dc7KD0Cu1Ate/mf1PpbtvIto037A2JUW8GxAIruLXo9/b0pQd2URw
+         zoyg==
+X-Gm-Message-State: APjAAAVg0ljjtmGdZJ7a5fDrDNbYIplM413KGRoTL2kFJelzyYkRP0FA
+        XctW1d1y2QbK2OtfuDQAlSG4tA==
+X-Google-Smtp-Source: APXvYqxfeVAORXMLObE3gAN7OxJt/+U7e9kSIe1Jr0RUJ3rinUWbypd7Od3IggLAS+/64DWu/MihZg==
+X-Received: by 2002:a63:7907:: with SMTP id u7mr21605031pgc.138.1580749213150;
+        Mon, 03 Feb 2020 09:00:13 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id v9sm21759786pja.26.2020.02.03.09.00.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 09:00:12 -0800 (PST)
+Message-ID: <5e38519c.1c69fb81.d469f.9b0c@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 37D3D0CDB433DAF44B511CA24F2337DFE40A7492358ED61E79F74C61A38C3D7A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3726ea2e21cffd2f9667aaa0430003b2407ed74f.1580632081.git.saiprakash.ranjan@codeaurora.org>
+References: <3726ea2e21cffd2f9667aaa0430003b2407ed74f.1580632081.git.saiprakash.ranjan@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH] dt-bindings: watchdog: Add optional interrupts property
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        devicetree@vger.kernel.org
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 03 Feb 2020 09:00:11 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAyLTAzIGF0IDE5OjQwICswODAwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3Rl
-Og0KPiBGcm9tOiBSYW4gQmkgPHJhbi5iaUBtZWRpYXRlay5jb20+DQo+IA0KPiBUaGlzIGFkZCBz
-dXBwb3J0IGZvciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFJUQy4gRHJpdmVyIHVzaW5nDQo+IGNvbXBh
-dGlibGUgZGF0YSB0byBzdG9yZSBkaWZmZXJlbnQgUlRDX1dSVEdSIGFkZHJlc3Mgb2Zmc2V0Lg0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogUmFuIEJpIDxyYW4uYmlAbWVkaWF0ZWsuY29tPg0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNv
-bT4NCj4gLS0tDQo+ICBkcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMgICAgICAgfCAyNSArKysrKysr
-KysrKysrKysrKy0tLS0tLS0tDQo+ICBpbmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvcnRjLmggfCAx
-NiArKysrKysrKysrKysrKystDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyks
-IDkgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ydGMvcnRjLW10NjM5
-Ny5jIGIvZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jDQo+IGluZGV4IDUyNDlmYzkuLmE5MDczNWUx
-IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMNCj4gKysrIGIvZHJpdmVy
-cy9ydGMvcnRjLW10NjM5Ny5jDQo+IEBAIC05LDE4ICs5LDMxIEBADQo+ICAjaW5jbHVkZSA8bGlu
-dXgvbWZkL210NjM5Ny9jb3JlLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ICAj
-aW5jbHVkZSA8bGludXgvbXV0ZXguaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4N
-Cj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gICNpbmNsdWRlIDxsaW51
-eC9yZWdtYXAuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9ydGMuaD4NCj4gICNpbmNsdWRlIDxsaW51
-eC9tZmQvbXQ2Mzk3L3J0Yy5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L21vZF9kZXZpY2V0YWJsZS5o
-Pg0KPiAgDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdDYzOTdfcnRjX29m
-X21hdGNoW10gPSB7DQo+ICsJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzMjMtcnRjIiwN
-Cj4gKwkJLmRhdGEgPSAodm9pZCAqKSZtdDYzOTdfcnRjX2RhdGEsIH0sDQo+ICsJeyAuY29tcGF0
-aWJsZSA9ICJtZWRpYXRlayxtdDYzNTgtcnRjIiwNCj4gKwkJLmRhdGEgPSAodm9pZCAqKSZtdDYz
-NThfcnRjX2RhdGEsIH0sDQo+ICsJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzOTctcnRj
-IiwNCj4gKwkJLmRhdGEgPSAodm9pZCAqKSZtdDYzOTdfcnRjX2RhdGEsIH0sDQo+ICsJe30NCj4g
-K307DQo+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBtdDYzOTdfcnRjX29mX21hdGNoKTsNCj4g
-Kw0KPiAgc3RhdGljIGludCBtdGtfcnRjX3dyaXRlX3RyaWdnZXIoc3RydWN0IG10NjM5N19ydGMg
-KnJ0YykNCj4gIHsNCj4gIAlpbnQgcmV0Ow0KPiAgCXUzMiBkYXRhOw0KPiAgDQo+IC0JcmV0ID0g
-cmVnbWFwX3dyaXRlKHJ0Yy0+cmVnbWFwLCBydGMtPmFkZHJfYmFzZSArIFJUQ19XUlRHUiwgMSk7
-DQo+ICsJcmV0ID0gcmVnbWFwX3dyaXRlKHJ0Yy0+cmVnbWFwLA0KPiArCQkJICAgcnRjLT5hZGRy
-X2Jhc2UgKyBydGMtPmRhdGEtPndydGdyLCAxKTsNCg0Kbml0OiBmaXQgaW4gb25lIGxpbmUuDQoN
-CjwuLi4+DQoNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaCBi
-L2luY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaA0KPiBpbmRleCBmODRiOTE2Li5mZmZlMzRh
-IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvcnRjLmgNCj4gKysrIGIv
-aW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3L3J0Yy5oDQo+IEBAIC0xOCw3ICsxOCw4IEBADQo+ICAj
-ZGVmaW5lIFJUQ19CQlBVX0NCVVNZICAgICAgICAgQklUKDYpDQo+ICAjZGVmaW5lIFJUQ19CQlBV
-X0tFWSAgICAgICAgICAgICgweDQzIDw8IDgpDQo+ICANCj4gLSNkZWZpbmUgUlRDX1dSVEdSICAg
-ICAgICAgICAgICAweDAwM2MNCj4gKyNkZWZpbmUgUlRDX1dSVEdSX01UNjM1OCAgICAgICAweDNh
-DQo+ICsjZGVmaW5lIFJUQ19XUlRHUl9NVDYzOTcgICAgICAgMHgzYw0KPiAgDQo+ICAjZGVmaW5l
-IFJUQ19JUlFfU1RBICAgICAgICAgICAgMHgwMDAyDQo+ICAjZGVmaW5lIFJUQ19JUlFfU1RBX0FM
-ICAgICAgICAgQklUKDApDQo+IEBAIC01Nyw2ICs1OCwxMCBAQA0KPiAgI2RlZmluZSBNVEtfUlRD
-X1BPTExfREVMQVlfVVMgIDEwDQo+ICAjZGVmaW5lIE1US19SVENfUE9MTF9USU1FT1VUICAgKGpp
-ZmZpZXNfdG9fdXNlY3MoSFopKQ0KPiAgDQo+ICtzdHJ1Y3QgbXRrX3J0Y19kYXRhIHsNCj4gKwl1
-MzIJCQl3cnRncjsNCj4gK307DQo+ICsNCj4gIHN0cnVjdCBtdDYzOTdfcnRjIHsNCj4gIAlzdHJ1
-Y3QgZGV2aWNlICAgICAgICAgICAqZGV2Ow0KPiAgCXN0cnVjdCBydGNfZGV2aWNlICAgICAgICpy
-dGNfZGV2Ow0KPiBAQCAtNjYsNiArNzEsMTUgQEAgc3RydWN0IG10NjM5N19ydGMgew0KPiAgCXN0
-cnVjdCByZWdtYXAgICAgICAgICAgICpyZWdtYXA7DQo+ICAJaW50ICAgICAgICAgICAgICAgICAg
-ICAgaXJxOw0KPiAgCXUzMiAgICAgICAgICAgICAgICAgICAgIGFkZHJfYmFzZTsNCj4gKwljb25z
-dCBzdHJ1Y3QgbXRrX3J0Y19kYXRhICpkYXRhOw0KPiArfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0
-IHN0cnVjdCBtdGtfcnRjX2RhdGEgbXQ2MzU4X3J0Y19kYXRhID0gew0KPiArCS53cnRnciA9IFJU
-Q19XUlRHUl9NVDYzNTgsDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a19y
-dGNfZGF0YSBtdDYzOTdfcnRjX2RhdGEgPSB7DQo+ICsJLndydGdyID0gUlRDX1dSVEdSX01UNjM5
-NywNCj4gIH07DQoNCkhpLA0KDQpQdXR0aW5nIHRoZXNlIGluIGhlYWRlciBmaWxlIGRvZXNuJ3Qg
-bG9va3MgcmlnaHQgdG8gbWUuDQpXaG8gbmVlZCB0aGlzPyBjYW4geW91IG1vdmUgdGhlbSBiYWNr
-IHRvIHJ0Yy1tdDYzOTcuYz8NCg0KSm9lLkMNCg0KDQo=
+Quoting Sai Prakash Ranjan (2020-02-02 21:31:15)
+> Add optional interrupts property for specifying pre-timeout (bark)
+> interrupt on QCOM SoCs.
+>=20
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+
+Maybe there could be a description that says it's the "pre-timeout
+(bark)" but I'm not too worried about it.
 
