@@ -2,120 +2,239 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8D1C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4476FC35247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072332087E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B00221582
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KoUFZ7B+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jc0bkPXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgBCSCo (ORCPT
+        id S1727934AbgBCScO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:02:44 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37435 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729101AbgBCSCo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 13:02:44 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c23so6162168plz.4
-        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 10:02:44 -0800 (PST)
+        Mon, 3 Feb 2020 13:32:14 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37973 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728517AbgBCScO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 13:32:14 -0500
+Received: by mail-pg1-f193.google.com with SMTP id a33so8258439pgm.5
+        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 10:32:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0z4xw4BeflaOTebZuwoiVPM7Ym0RVfiYJ39j1NuVvqM=;
-        b=KoUFZ7B+ZrJt1l8ZOQJoXPkMIL95ryAMqyfdGFP8KeWeeRp1lMU13TMLACrG0ChiL5
-         plhUgDce0INjw957wBXRRQJ6OfeY5B8dQnK+0bZ2wABNsI9oU8WoscZYJ4OI8AogQB1X
-         dQMQbWN7cAHjrt+ZZnQ8CsI9hXZ89Fd2GkiVmtq/GXRMBEw3ivkQyrWPHa2eu1JSbWPc
-         v+g8XSCRbzHACgfW7M2fdOIDnX8jS8yB3Kh9pWAz1lgZXqBowMJyuWmYEW1OvWEOscCs
-         DnBxP0ITR5Oxk0U74JhdG+KATDqnpLnVuLAiEBaRFPsXBWdwpAnIYd3kkf3VtrVEty2C
-         I06g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y3mIATAg+5LdFoD0uzm3jVblzLIA03DsoYz6n06M99I=;
+        b=Jc0bkPXu0q0TJFHgu0J0I3RK3fr/jvvfd9XIt0V72QkJ0/4yfkc9JDfEQcwEo/9jda
+         00eu2uEH8hLxxxsTQQoeuUXH4s4LCzG7PPrVQT/HaDeD9MXtRb0rBAkxe7njWA6Dm1yV
+         mkXvBw6cJF19/OOQqDfxYT5OCyYpzficnfaHg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0z4xw4BeflaOTebZuwoiVPM7Ym0RVfiYJ39j1NuVvqM=;
-        b=kiSz+KnkyimdBrGUOHJAmewAxen6ZfWUSD++G0MWq1Hm9/OvetuBEkByOUWBYiP26C
-         sXJUnD5VqBwIaIPjQ7sBUC7UZ2gCXSt2nHQVNHVjgZHyP0W8PtsSHpg69sO4Y5sZ6bGi
-         vgP0bhuZH+g5SUMNOapP25uW/I/341wSliHuufebkqXLRAFvUIawRdYK3vkjPu/9gVlV
-         9zJX8eTi34ELGskpX/uaH+JkLiK/jFX2p6cfvqcpkkbh2U82Dh8qcjgkAFvt2pcBll+l
-         S3eN6tvJ9Nm6UbnDNZT5X8cdeREZMe9IEbcd99dlz6O/iIpqBzuUMDgzZzw5mrLWeJE+
-         GmGQ==
-X-Gm-Message-State: APjAAAV5TYWkzz41p2tN+N2WXqtUz6lfUIVdvaGpTe9QCmYmCMZ9jkFM
-        0AOSwWvqAKkrJk1xv+iZh3fB5g==
-X-Google-Smtp-Source: APXvYqy4E3aojhy38aJZFfYOHvNBw5Qdycb8SsmfK816pdRuDYZmSaC0IYSB5EQqbt8rPJC5X8xjjw==
-X-Received: by 2002:a17:902:9b93:: with SMTP id y19mr24520456plp.89.1580752963506;
-        Mon, 03 Feb 2020 10:02:43 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 10sm21441424pfu.132.2020.02.03.10.02.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y3mIATAg+5LdFoD0uzm3jVblzLIA03DsoYz6n06M99I=;
+        b=gyRxizvM1cQ4ULJ0DS3ZWMOsSmQki5TQDYE1sQG3cNSG9X5zlsJVhuLpZTKI3RvyoJ
+         lhv8KLhLWxSya+rxYwkoSWcriCUmilMFzMDr3n6S8i7Ou5F9GRcCyzldyV0OO0P2MNZu
+         wa6/dtNGcKbIPDQ1C4QM45rbtUASVM4rboFc1HpNyccCAkEY9GQ6pzyDXsd+/0OcbuC7
+         lj16qtTKJFhYftdzaxP8C2HeXkT6Ls0D2+ChRDfkDyTvoGORk9e9vKZLblT82jZ0WV/y
+         egQ4A9+4mXK9Muy0OF07XRCX0FRyA54qTu1c4TVzr3ojQZ8cYHjXPLNPu+6r+EO01Hku
+         YLnA==
+X-Gm-Message-State: APjAAAUmeEXv2vsUADx5XV6NL30J6/7xCOR6yfxHha+jwtnxGaatiaxQ
+        A+ncNqu4HcyLTrae1ebZwkpreg==
+X-Google-Smtp-Source: APXvYqwbQrtlwxFZ4HRXRZxhqJZn4EN4SQWxd/AalIpnCgqHAzJYQavSHgOve0nJe/XDjgCBXLdCYg==
+X-Received: by 2002:a65:5ccc:: with SMTP id b12mr26278507pgt.124.1580754733211;
+        Mon, 03 Feb 2020 10:32:13 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 10:02:42 -0800 (PST)
-Date:   Mon, 3 Feb 2020 10:02:40 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Dikshita Agarwal <dikshita@codeaurora.org>
-Cc:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
-Subject: Re: [PATCH V4 0/4] Enable video on sc7180
-Message-ID: <20200203180240.GD3948@builder>
-References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
+        Mon, 03 Feb 2020 10:32:12 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>, jeffrey.l.hugo@gmail.com,
+        linux-arm-msm@vger.kernel.org, harigovi@codeaurora.org,
+        devicetree@vger.kernel.org, mka@chromium.org,
+        kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-clk@vger.kernel.org, hoegsberg@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v4 00/15] clk: qcom: Fix parenting for dispcc/gpucc/videocc
+Date:   Mon,  3 Feb 2020 10:31:33 -0800
+Message-Id: <20200203183149.73842-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 14 Jan 04:53 PST 2020, Dikshita Agarwal wrote:
+The aim of this series is to get the dispcc and gpucc in a workable
+shape upstream for sc7180.  I personally wasn't focusing on (and
+didn't test much) videocc but pulled it along for the ride.
 
-> Hello,
-> 
-> Changes since v3:
-> 
->   - addressed DT and DT schema review comments.
-> 
->   - renamed DT schema file.
-> 
-> v3 can be found at [1].
-> These changes depend on patch series [2] - [6].
-> 
-> Thanks,
-> Dikshita
-> 
+Most of the work in this series deals with the fact that the parenting
+info for these clock controllers was in a bad shape.  It looks like it
+was half transitioned from the old way of doing things (relying on
+global names) to the new way of doing things (putting the linkage in
+the device tree).  This should fully transition us.
 
-Picked up the dts patches for 5.7, with Stan's acks
+As part of this transition I update the sdm845.dtsi file to specify
+the info as per the new way of doing things.  Although I've now put
+the linkage info in the sdm845.dtsi file, though, I haven't updated
+the sdm845 clock drivers in Linux so they still work via the global
+name matching.  It's left as an exercise to the reader to update the
+sdm845 clock drivers in Linux.
 
-Regards,
-Bjorn
+This series passes these things for me on linux-next (next-20200129)
+after picking the recent gcc fix I posted [1]:
 
-> [1] https://lkml.org/lkml/2020/1/2/267
-> [2] https://patchwork.kernel.org/project/linux-media/list/?series=219021
-> [3] https://patchwork.kernel.org/project/linux-media/list/?series=214797
-> [4] https://lkml.org/lkml/2019/12/27/73
-> [5] https://lore.kernel.org/patchwork/project/lkml/list/?series=418681
-> [6] https://lore.kernel.org/patchwork/project/lkml/list/?series=424054
-> 
-> Dikshita Agarwal (4):
->   arm64: dts: sc7180: Add Venus video codec DT node
->   dt-bindings: media: venus: Add sc7180 DT schema
->   venus: core: add sc7180 DT compatible and resource struct
->   arm64: dts: sc7180: Add Venus firmware subnode
-> 
->  .../bindings/media/qcom,sc7180-venus.yaml          | 144 +++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +
->  arch/arm64/boot/dts/qcom/sc7180.dtsi               |  36 ++++++
->  drivers/media/platform/qcom/venus/core.c           |  45 +++++++
->  4 files changed, 231 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-> 
-> -- 
-> 1.9.1
-> 
+  for f in \
+    Documentation/devicetree/bindings/clock/qcom,msm8998-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml; do \
+        ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
+    done
+
+  I also tried this:
+    # Delete broken yaml:
+    rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+    ARCH=arm64 make dt_binding_check | grep 'clock/qcom'
+  ...and that didn't seem to indicate problems.
+
+  I also tried this (make sure you don't run w/ -j64 or diff is hard):
+    # Delete broken yaml:
+    rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+    git checkout beforeMyCode
+    ARCH=arm64 make dt_binding_check > old.txt 2>&1
+    git checkout myCode
+    ARCH=arm64 make dt_binding_check > new.txt 2>&1
+    diff old.txt new.txt
+  ...and that didn't seem to indicate problems.
+
+I have confirmed that (with extra patches) the display/gpu come up on
+sc7180 and sdm845-cheza.  You can find the top of my downstream tree at:
+  https://crrev.com/c/2017976/4
+
+I have confirmed that sdm845-cheza display / GPU come up atop
+next-20200129, which is what this series is posted against.
+
+From v2 to v3, this series has quite a few changes.  Mostly it's:
+- Always split into multiple files (Stephen).
+- Use internal names, not purist names (Taniya).
+- I realized that I forgot to update the sc7180 video clock controller
+  driver in v2.
+- A few other misc cleanups / fixes, see each patch for details.
+
+From v3 to v4 this just removes the "bindings/" from the schema ID and
+adds Rob's tag to two of the bindings patches.  The third binding
+patch didn't get Rob's Ack because he suggested combining two files
+might be a good idea.  I'm assuming he'll be OK with leaving them
+split since Stephen prefers it that way, but if I have to do a v5 I
+can do that.
+
+It feels like with this many patches there's very little chance I
+didn't do something stupid like make a tpyo or a paste-o paste-o,
+though I tried to cross-check as much as I could.  I apologize in
+advance for the stupid things I did that I should have known better
+about.
+
+[1] https://lore.kernel.org/r/20200129152458.v2.1.I4452dc951d7556ede422835268742b25a18b356b@changeid
+
+Changes in v4:
+- (non-change): Didn't combine sdm845 & sc7180 gpucc as per Stephen.
+- Added Rob's review tag.
+- Fixed schema id to not have "bindings/" as per Rob.
+
+Changes in v3:
+- Add Matthias tag.
+- Added include file to description.
+- Added pointer to inlude file in description.
+- Added videocc include file.
+- Discovered / added new gcc input clock on sdm845.
+- Everyone but msm8998 now uses internal QC names.
+- Fixed typo grpahics => graphics
+- Newly discovered gcc_disp_gpll0_div_clk_src added.
+- Patch ("clk: qcom: Get rid of fallback...dispcc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...dispcc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...gpucc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...videocc-sc7180") new for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in dispcc-sc7180...") split out for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in gpucc-sc7180...") split out for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in videocc-sc7180...") new for v3.
+- Split bindings into 3 files.
+- Split sc7180 and sdm845 into two files.
+- Split videocc bindings into 2 files.
+- Switched names to internal QC names rather than logical ones.
+- Unlike in v2, use internal name instead of purist name.
+- Updated commit description.
+
+Changes in v2:
+- Added includes
+- Changed various parent names to match bindings / driver
+- Patch ("arm64: dts: qcom: sdm845: Add...dispcc") new for v2.
+- Patch ("arm64: dts: qcom: sdm845: Add...gpucc") new for v2.
+- Patch ("arm64: dts: qcom: sdm845: Add...videocc") new for v2.
+- Patch ("clk: qcom: rcg2: Don't crash...") new for v2.
+- Patch ("dt-bindings: clock: Cleanup qcom,videocc") new for v2.
+- Patch ("dt-bindings: clock: Fix qcom,dispcc...") new for v2.
+- Patch ("dt-bindings: clock: Fix qcom,gpucc...") new for v2.
+
+Douglas Anderson (14):
+  clk: qcom: rcg2: Don't crash if our parent can't be found; return an
+    error
+  dt-bindings: clock: Fix qcom,dispcc bindings for sdm845/sc7180
+  arm64: dts: qcom: sdm845: Add the missing clocks on the dispcc
+  clk: qcom: Get rid of fallback global names for dispcc-sc7180
+  clk: qcom: Get rid of the test clock for dispcc-sc7180
+  clk: qcom: Use ARRAY_SIZE in dispcc-sc7180 for parent clocks
+  dt-bindings: clock: Fix qcom,gpucc bindings for sdm845/sc7180/msm8998
+  arm64: dts: qcom: sdm845: Add missing clocks / fix names on the gpucc
+  clk: qcom: Get rid of the test clock for gpucc-sc7180
+  clk: qcom: Use ARRAY_SIZE in gpucc-sc7180 for parent clocks
+  dt-bindings: clock: Cleanup qcom,videocc bindings for sdm845/sc7180
+  clk: qcom: Get rid of the test clock for videocc-sc7180
+  clk: qcom: Use ARRAY_SIZE in videocc-sc7180 for parent clocks
+  arm64: dts: qcom: sdm845: Add the missing clock on the videocc
+
+Taniya Das (1):
+  arm64: dts: sc7180: Add clock controller nodes
+
+ .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 --------------
+ ...om,dispcc.yaml => qcom,msm8998-gpucc.yaml} | 33 +++----
+ .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
+ .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 ++++++++++++++
+ .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 ++++++++++++
+ .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
+ .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 ++++++++++++++
+ ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 47 +++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 28 +++++-
+ drivers/clk/qcom/clk-rcg2.c                   |  3 +
+ drivers/clk/qcom/dispcc-sc7180.c              | 45 +++------
+ drivers/clk/qcom/gpucc-sc7180.c               |  4 +-
+ drivers/clk/qcom/videocc-sc7180.c             |  4 +-
+ 14 files changed, 513 insertions(+), 140 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+ rename Documentation/devicetree/bindings/clock/{qcom,dispcc.yaml => qcom,msm8998-gpucc.yaml} (51%)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml
+ rename Documentation/devicetree/bindings/clock/{qcom,videocc.yaml => qcom,sdm845-videocc.yaml} (61%)
+
+-- 
+2.25.0.341.g760bfbb309-goog
+
