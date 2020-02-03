@@ -6,91 +6,83 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305A4C3524F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FE6C3524D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19E42080D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8B920661
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580722800;
-	bh=90PTvB49gOGO55ExQ0APc/RsiX8s5nixQEtQ0hlwaRY=;
+	s=default; t=1580723286;
+	bh=/YnR0gNee/udTt/+8UwpBt6xjr3OsBiOajv2a3BGgO4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y8nqrrS0otDCRQrgDZfmd8+izVGyL272nSU5G/GgKtLCXfSvevtQmLwuJ23QudG4b
-	 5VAsFFWIUPYFqVHqxwyyzqAGbfrXxj10OX1kIWUwI8NjV4EEG/sDMhjhc3tEx+3LgE
-	 XIFrKzTU0r54Z8Hj9snrmnK6g3501+WOCOjqV6p4=
+	b=dkOoyDg2qpH0H1poKRgzcSlTHqy83wXyhQhUuFT9wCcjxFnoX25m9HSsINzLLIWIg
+	 Ph0GYTKWsDMUwTnr82JmNeaKXWG6j8Xjn71iz9zykCdB4BQvXhIMpR824N2JNhx40+
+	 jj+o/eoe43Cefsdb9gFHCFCUKdhZeuLfvvoozhgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbgBCJj7 (ORCPT
+        id S1727723AbgBCJsG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:39:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 04:48:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727630AbgBCJj7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:39:59 -0500
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        id S1727225AbgBCJsF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:48:05 -0500
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC7E2080D;
-        Mon,  3 Feb 2020 09:39:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AACD20721;
+        Mon,  3 Feb 2020 09:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580722798;
-        bh=90PTvB49gOGO55ExQ0APc/RsiX8s5nixQEtQ0hlwaRY=;
+        s=default; t=1580723285;
+        bh=/YnR0gNee/udTt/+8UwpBt6xjr3OsBiOajv2a3BGgO4=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZnrtPPt0E/qGj4mQVzMR6msPqTfcMyQCYaCwHAW8zWi1onwkHFFLxCcb/WhZ2c9F/
-         H8B+3nhoo7cCwrWT1XjKX59Eg7rsCWRiqBAw34wXE12h6d0crOA230IFq0g9NOOCNu
-         bmjzjaHZduJWoB/vujKoB8R3xpEujaLfTeVrRb64=
-Received: by mail-qt1-f177.google.com with SMTP id h12so10934615qtu.1;
-        Mon, 03 Feb 2020 01:39:58 -0800 (PST)
-X-Gm-Message-State: APjAAAVWRmgZiaCos6yQHZXEXdoOT1knj4QCyqzAwEaoisuj2CZIPkRN
-        Hng2q8/LfYDQLBIVKmDhfc8WQvbbs3GL0dzu+g==
-X-Google-Smtp-Source: APXvYqy7yMTTAlW5+O0G7s/WzsgPHbziXztEbOqnsDKjoXJTTDypK4XTLXpxAwgULfdRVhFdXanI6iKHKIjNLLuzvSw=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr23000069qtj.300.1580722797545;
- Mon, 03 Feb 2020 01:39:57 -0800 (PST)
+        b=IGuBirssdtgzyD0dn1VavC3zT28Cbe+sKG4ESV6NuyNFN8LSN9NVOLF6jfdd2hAhh
+         s31phKhRFOt4v/lftV4lOpepsQ1xhidNWSK/FqO5CG78XE3AZ38wMm7K9oMMl7iVRJ
+         aujnLbkhDGnQOEt7xevrs5MlvS1kotd4oSoq0xKk=
+Received: by mail-qt1-f180.google.com with SMTP id c24so10932536qtp.5;
+        Mon, 03 Feb 2020 01:48:05 -0800 (PST)
+X-Gm-Message-State: APjAAAVQwtwdEt8UrySUz3mQwOKuF/AKdtlBTQK8ig6d4hCt2D5KJRZQ
+        6fZJCRBpivbHS4MKMTC1kDgky6GqfKipwz1pYw==
+X-Google-Smtp-Source: APXvYqxrmmcnfXw+ftAZK0AeZXfN2/SIkqjT9bA6aObc2yIfmHHIvH662w6kA5cQ78pG9DxWcntHxLcYZCyspZIK6XE=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr23019321qtj.300.1580723284238;
+ Mon, 03 Feb 2020 01:48:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200203052507.93215-1-sboyd@kernel.org> <20200203052507.93215-2-sboyd@kernel.org>
-In-Reply-To: <20200203052507.93215-2-sboyd@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 3 Feb 2020 09:39:46 +0000
-X-Gmail-Original-Message-ID: <CAL_JsqJObO2AgP6m_=Z=7eWHA7C6q-Vrv20v08h_r0EL4pOfAg@mail.gmail.com>
-Message-ID: <CAL_JsqJObO2AgP6m_=Z=7eWHA7C6q-Vrv20v08h_r0EL4pOfAg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt/bindings: clk: fsl,plldig: Drop 'bindings' from
- schema id
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org, Wen He <wen.he_1@nxp.com>
+References: <20200202043949.213427-1-swboyd@chromium.org>
+In-Reply-To: <20200202043949.213427-1-swboyd@chromium.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 3 Feb 2020 09:47:53 +0000
+X-Gmail-Original-Message-ID: <CAL_Jsq+tU8--9C065qPb9bvN5X=edJtD6Q6XjkS71k1S-hVHrQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+tU8--9C065qPb9bvN5X=edJtD6Q6XjkS71k1S-hVHrQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: tpm: Convert cr50 binding to YAML
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Andrey Pronin <apronin@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 5:25 AM Stephen Boyd <sboyd@kernel.org> wrote:
+On Sun, Feb 2, 2020 at 4:39 AM Stephen Boyd <swboyd@chromium.org> wrote:
 >
-> Having 'bindings' in here causes a warning when checking the schema.
+> This allows us to validate the dt binding to the implementation. Add the
+> interrupt property too, because that's required but nobody noticed when
+> the non-YAML binding was introduced.
 >
->  Documentation/devicetree/bindings/clock/fsl,plldig.yaml:
->  $id: relative path/filename doesn't match actual path or filename
->          expected: http://devicetree.org/schemas/clock/fsl,plldig.yaml#
->
-> Remove it.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Wen He <wen.he_1@nxp.com>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> Cc: Andrey Pronin <apronin@chromium.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  Documentation/devicetree/bindings/clock/fsl,plldig.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Changes from v1:
+>  * Dropped spi-max-frequency as required
+>  * Capped spi-max-frequency at 1MHz
+>  * Added interrupt-parent to example to be realistic
+>
+>  .../bindings/security/tpm/google,cr50.txt     | 19 -------
+>  .../bindings/security/tpm/google,cr50.yaml    | 50 +++++++++++++++++++
+>  2 files changed, 50 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
 
-There's actually a more few of these in clock bindings. I am going to
-do a tree wide fix on this. I was waiting until the clock tree is
-merged.
-
-And I didn't really mean to commit this check to dtschema until all
-these were fixed, so I've reverted it for now.
-
-So either go ahead and apply this or I'll get it.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
