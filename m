@@ -2,220 +2,216 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A17FC33CAC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 12:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC20C33CAC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 13:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A0920658
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 12:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580733349;
-	bh=o5DtjYnkWfbL05CkwBTu/BP81Q2//L79o5FOJiCzfHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QPNEuUOmcr/LINhMTFSDY7SwYyYL41d809Bi8gYkYhT0kOcIkFTWdvrZJoSCeBbKB
-	 rfjW1IIoMb4AdMJTsdLWl3EgnlLGFb1Dwz5lzUAxm53GvK7Z1GyDVq506oygiZbyOn
-	 UfOPZlz3+ScLbLf3vynjmZ5L8OQzDkTd/ZoO1w3c=
+	by mail.kernel.org (Postfix) with ESMTP id ACCE720658
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 13:16:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UjMAiyHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgBCMfo (ORCPT
+        id S1728200AbgBCNQa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:35:44 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39356 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbgBCMfn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 07:35:43 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so16814720wme.4;
-        Mon, 03 Feb 2020 04:35:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xXa4goUYYVZ0ZTHIzT0gn35b1DItXYVERf7wIcsGJf0=;
-        b=ufMDYop+TWcrUN5PJd7NvZEDF5imwwCAcqgeKMjaCZuFdd66qX+Py1aT1qsFGdWccg
-         QN3jOvqajxFN59FrILXDscF2/igHsccRMMLopBqCk0fpNFoqbvNETD5dhrccXI0l66WK
-         HxUtoUoB1JcFewc27XM9b8VoAxIjSg7S7Uv4gL6ChOL+SHS/ZVOnwmP/+eJORPOudrF2
-         qf3ZOe0iG/TnSmuptCcTu89BQhBeucy5hCGK7BgWRjqF8a9rFkiMEiCFdKodFTrwKX4x
-         2MgR4/BbqKCMfPVt9aGmY0q9+NpN8wQ5yUIZl7/0ZdFIFgBWM8ZoltrKsR1eDOYhmW/8
-         dLrQ==
-X-Gm-Message-State: APjAAAXhDne6CN4aje+JUA7gC1jWEuPpLujs0YvXcg3EZqOlRFyck/bQ
-        zrzjYWIV7ZkB8zvodrj0E5Hv5p6txA==
-X-Google-Smtp-Source: APXvYqwD7AkEk5EzolooJ7Or0i+TDQW2CUQRuKKaGWjXnRMaB//sjvTWOKVzvrjd6RQlRKk18jSjOw==
-X-Received: by 2002:a1c:9cce:: with SMTP id f197mr30280639wme.133.1580733341113;
-        Mon, 03 Feb 2020 04:35:41 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.163])
-        by smtp.gmail.com with ESMTPSA id l29sm1804725wrb.64.2020.02.03.04.35.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 04:35:40 -0800 (PST)
-Received: (nullmailer pid 14680 invoked by uid 1000);
-        Mon, 03 Feb 2020 12:35:39 -0000
-Date:   Mon, 3 Feb 2020 12:35:39 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
-        mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-Subject: Re: [PATCH v2] dt-bindings: convert cros-ec-keyb.txt to yaml
-Message-ID: <20200203123539.GA26961@bogus>
-References: <20200124104158.5008-1-dafna.hirschfeld@collabora.com>
+        Mon, 3 Feb 2020 08:16:30 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24068 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727308AbgBCNQa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 08:16:30 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013DDkls004591;
+        Mon, 3 Feb 2020 14:16:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=eKUMSsfaSS3DKlATW7x6z4h915ZK9Rxrx5+47GP+oO0=;
+ b=UjMAiyHOT8Fu8d4vUAU3a7Hvbnnq8oyswQi8MrJnN5IZXT6ikxda3A+R/pIbUPNLBpWD
+ np2VhXcDJjL8gGrLlY9LI12rSQIhdtgGCsXekDK4EneWYf0hGqSLdFD2Xp4np5uFFNcE
+ EwX3uPZ6xRam0eP79AGFS2o60gTqcNoZk5JzdXnJwTempTWQA1Ubn4fsXmJrMNyI8xlf
+ JGD3bWQH1/yOcdM4PNIRJmMLEKxQHgzfx0aD81jccIrWxUy5lHse168GwUCBcr2hR7Oc
+ KEaS44W6m8q7QYoP06LY6xRahOdQEUS9cdnOTN8cBMmvha+BC5T6gM7K0qp//TVA9b24 xQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xvybdsgjw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Feb 2020 14:16:05 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5544610002A;
+        Mon,  3 Feb 2020 14:16:03 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag7node1.st.com [10.75.127.19])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3943A2CD0EC;
+        Mon,  3 Feb 2020 14:16:03 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG7NODE1.st.com
+ (10.75.127.19) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 14:16:02 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Mon, 3 Feb 2020 14:16:02 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "lkml@metux.net" <lkml@metux.net>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
+Thread-Topic: [PATCH v2 0/7] Introduce bus firewall controller framework
+Thread-Index: AQHV1fD3HkoxlN8gBkO/naZ6SuTotagANYcAgAAC24CAAAijAIAALxcAgAAhvgCAAQS1gIADdFSAgARgoQA=
+Date:   Mon, 3 Feb 2020 13:16:02 +0000
+Message-ID: <df6fcb24-2357-af1d-8060-1a9ca0064758@st.com>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128163628.GB30489@bogus> <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
+ <20200128171639.GA36496@bogus> <26eb1fde-5408-43f0-ccba-f0c81e791f54@st.com>
+ <6a6ba7ff-7ed9-e573-63ca-66fca609075b@arm.com>
+ <c4d5c46a-7f90-ff2b-9496-26102114c5e6@st.com>
+ <3624ec3e-b06a-907d-ebfa-8516b14cb306@arm.com>
+In-Reply-To: <3624ec3e-b06a-907d-ebfa-8516b14cb306@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AF77F517FFAD2C458C9E80E1C7A101E4@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124104158.5008-1-dafna.hirschfeld@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-03_04:2020-02-02,2020-02-03 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 11:41:58AM +0100, Dafna Hirschfeld wrote:
-> Convert the binding file cros-ec-keyb.txt to yaml format.
-> 
-> This was tested and verified on ARM and ARM64 with:
-> 
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-> 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> ---
-> Changes from v1:
-> add: "additionalProperties: false"
-> 
->  .../bindings/input/cros-ec-keyb.txt           |  72 ------------
->  .../bindings/input/cros-ec-keyb.yaml          | 107 ++++++++++++++++++
->  2 files changed, 107 insertions(+), 72 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.txt
->  create mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml b/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-> new file mode 100644
-> index 000000000000..d414a2ad7c69
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/cros-ec-keyb.yaml
-> @@ -0,0 +1,107 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/cros-ec-keyb.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ChromeOS EC Keyboard
-> +
-> +maintainers:
-> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> +  - Rob Herring <robh+dt@kernel.org>
-
-Again, should be a Google/Cros person (I'm assuming Dmitry is here as 
-input maintainer). 
-
-> +
-> +description: |
-> +  Google's ChromeOS EC Keyboard is a simple matrix keyboard implemented on
-> +  a separate EC (Embedded Controller) device. It provides a message for reading
-> +  key scans from the EC. These are then converted into keycodes for processing
-> +  by the kernel. This binding is based on matrix-keymap.txt and extends it.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-keyb
-> +
-> +  google,needs-ghost-filter:
-> +    type: boolean
-> +    description: |
-> +      True to enable a ghost filter for the matrix keyboard.
-> +      This is recommended if the EC does not have its own logic or
-> +      hardware for this.
-> +
-> +  # properties from matrix-keymap.txt
-> +  linux,keymap:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      an array of packed 1-cell entries containing the equivalent
-> +      of row, column and linux key-code. The 32-bit big endian cell is packed
-> +      as:
-> +      row << 24 | column << 16 | key-code
-> +
-> +  keypad,num-rows:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Number of row lines connected to the keypad controller.
-> +
-> +  keypad,num-columns:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Number of column lines connected to the keypad controller.
-
-matrix-keypad.txt should be converted to yaml and then referenced here.
-
-Unless you have max sizes, then there's not any more to add here.
-
-> +
-> +required:
-> +  - compatible
-> +  - linux,keymap
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    cros-ec-keyb {
-> +        compatible = "google,cros-ec-keyb";
-> +        keypad,num-rows = <8>;
-> +        keypad,num-columns = <13>;
-> +        google,needs-ghost-filter;
-> +        /*
-> +         * Keymap entries take the form of 0xRRCCKKKK where
-> +         * RR=Row CC=Column KKKK=Key Code
-> +         * The values below are for a US keyboard layout and
-> +         * are taken from the Linux driver. Note that the
-> +         * 102ND key is not used for US keyboards.
-> +         */
-> +        linux,keymap = <
-> +                /* CAPSLCK F1         B          F10     */
-> +                0x0001003a 0x0002003b 0x00030030 0x00040044
-> +                /* N       =          R_ALT      ESC     */
-> +                0x00060031 0x0008000d 0x000a0064 0x01010001
-> +                /* F4      G          F7         H       */
-> +                0x0102003e 0x01030022 0x01040041 0x01060023
-> +                /* '       F9         BKSPACE    L_CTRL  */
-> +                0x01080028 0x01090043 0x010b000e 0x0200001d
-> +                /* TAB     F3         T          F6      */
-> +                0x0201000f 0x0202003d 0x02030014 0x02040040
-> +                /* ]       Y          102ND      [       */
-> +                0x0205001b 0x02060015 0x02070056 0x0208001a
-> +                /* F8      GRAVE      F2         5       */
-> +                0x02090042 0x03010029 0x0302003c 0x03030006
-> +                /* F5      6          -          \       */
-> +                0x0304003f 0x03060007 0x0308000c 0x030b002b
-> +                /* R_CTRL  A          D          F       */
-> +                0x04000061 0x0401001e 0x04020020 0x04030021
-> +                /* S       K          J          ;       */
-> +                0x0404001f 0x04050025 0x04060024 0x04080027
-> +                /* L       ENTER      Z          C       */
-> +                0x04090026 0x040b001c 0x0501002c 0x0502002e
-> +                /* V       X          ,          M       */
-> +                0x0503002f 0x0504002d 0x05050033 0x05060032
-> +                /* L_SHIFT /          .          SPACE   */
-> +                0x0507002a 0x05080035 0x05090034 0x050B0039
-> +                /* 1       3          4          2       */
-> +                0x06010002 0x06020004 0x06030005 0x06040003
-> +                /* 8       7          0          9       */
-> +                0x06050009 0x06060008 0x0608000b 0x0609000a
-> +                /* L_ALT   DOWN       RIGHT      Q       */
-> +                0x060a0038 0x060b006c 0x060c006a 0x07010010
-> +                /* E       R          W          I       */
-> +                0x07020012 0x07030013 0x07040011 0x07050017
-> +                /* U       R_SHIFT    P          O       */
-> +                0x07060016 0x07070036 0x07080019 0x07090018
-> +                /* UP      LEFT    */
-> +                0x070b0067 0x070c0069>;
-> +    };
-> +...
-> -- 
-> 2.17.1
-> 
+DQpPbiAxLzMxLzIwIDc6MjUgUE0sIFJvYmluIE11cnBoeSB3cm90ZToNCj4gT24gMjkvMDEvMjAy
+MCAxOjQwIHBtLCBCZW5qYW1pbiBHQUlHTkFSRCB3cm90ZToNCj4+DQo+PiBPbiAxLzI4LzIwIDEx
+OjA2IFBNLCBSb2JpbiBNdXJwaHkgd3JvdGU6DQo+Pj4gT24gMjAyMC0wMS0yOCA4OjA2IHBtLCBC
+ZW5qYW1pbiBHQUlHTkFSRCB3cm90ZToNCj4+Pj4NCj4+Pj4gT24gMS8yOC8yMCA2OjE3IFBNLCBT
+dWRlZXAgSG9sbGEgd3JvdGU6DQo+Pj4+PiBPbiBUdWUsIEphbiAyOCwgMjAyMCBhdCAwNDo0Njo0
+MVBNICswMDAwLCBCZW5qYW1pbiBHQUlHTkFSRCB3cm90ZToNCj4+Pj4+PiBPbiAxLzI4LzIwIDU6
+MzYgUE0sIFN1ZGVlcCBIb2xsYSB3cm90ZToNCj4+Pj4+Pj4gT24gVHVlLCBKYW4gMjgsIDIwMjAg
+YXQgMDQ6Mzc6NTlQTSArMDEwMCwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6DQo+Pj4+Pj4+PiBC
+dXMgZmlyZXdhbGwgZnJhbWV3b3JrIGFpbXMgdG8gcHJvdmlkZSBhIGtlcm5lbCBBUEkgdG8gc2V0
+IHRoZQ0KPj4+Pj4+Pj4gY29uZmlndXJhdGlvbg0KPj4+Pj4+Pj4gb2YgdGhlIGhhcndhcmUgYmxv
+Y2tzIGluIGNoYXJnZSBvZiBidXNzZXMgYWNjZXNzIGNvbnRyb2wuDQo+Pj4+Pj4+Pg0KPj4+Pj4+
+Pj4gRnJhbWV3b3JrIGFyY2hpdGVjdHVyZSBpcyBpbnNwaXJhdGVkIGJ5IHBpbmN0cmwgZnJhbWV3
+b3JrOg0KPj4+Pj4+Pj4gLSBhIGRlZmF1bHQgY29uZmlndXJhdGlvbiBjb3VsZCBiZSBhcHBsaWVk
+IGJlZm9yZSBiaW5kIHRoZSBkcml2ZXIuDQo+Pj4+Pj4+PiDCoMKgwqDCoMKgIElmIGEgY29uZmln
+dXJhdGlvbiBjb3VsZCBub3QgYmUgYXBwbGllZCB0aGUgZHJpdmVyIGlzIG5vdCANCj4+Pj4+Pj4+
+IGJpbmQNCj4+Pj4+Pj4+IMKgwqDCoMKgwqAgdG8gYXZvaWQgZG9pbmcgYWNjZXNzZXMgb24gcHJv
+aGliaXRlZCByZWdpb25zLg0KPj4+Pj4+Pj4gLSBjb25maWd1cmF0aW9ucyBjb3VsZCBiZSBhcGxs
+aWVkIGR5bmFtaWNhbGx5IGJ5IGRyaXZlcnMuDQo+Pj4+Pj4+PiAtIGRldmljZSBub2RlIHByb3Zp
+ZGVzIHRoZSBidXMgZmlyZXdhbGwgY29uZmlndXJhdGlvbnMuDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4g
+QW4gZXhhbXBsZSBvZiBidXMgZmlyZXdhbGwgY29udHJvbGxlciBpcyBTVE0zMiBFVFpQQyBoYXJk
+d2FyZSANCj4+Pj4+Pj4+IGJsb2NrDQo+Pj4+Pj4+PiB3aGljaCBnb3QgMyBwb3NzaWJsZSBjb25m
+aWd1cmF0aW9uczoNCj4+Pj4+Pj4+IC0gdHJ1c3Q6IGhhcmR3YXJlIGJsb2NrcyBhcmUgb25seSBh
+Y2Nlc3NpYmxlIGJ5IHNvZnR3YXJlIHJ1bm5pbmcNCj4+Pj4+Pj4+IG9uIHRydXN0DQo+Pj4+Pj4+
+PiDCoMKgwqDCoMKgIHpvbmUgKGkuZSBvcC10ZWUgZmlybXdhcmUpLg0KPj4+Pj4+Pj4gLSBub24t
+c2VjdXJlOiBoYXJkd2FyZSBibG9ja3MgYXJlIGFjY2Vzc2libGUgYnkgbm9uLXNlY3VyZQ0KPj4+
+Pj4+Pj4gc29mdHdhcmUgKGkuZS4NCj4+Pj4+Pj4+IMKgwqDCoMKgwqAgbGludXgga2VybmVsKS4N
+Cj4+Pj4+Pj4+IC0gY29wcm9jZXNzb3I6IGhhcmR3YXJlIGJsb2NrcyBhcmUgb25seSBhY2Nlc3Np
+YmxlIGJ5IHRoZQ0KPj4+Pj4+Pj4gY29wcm9jZXNzb3IuDQo+Pj4+Pj4+PiBVcCB0byA5NCBoYXJk
+d2FyZSBibG9ja3Mgb2YgdGhlIHNvYyBjb3VsZCBiZSBtYW5hZ2VkIGJ5IEVUWlBDLg0KPj4+Pj4+
+Pj4NCj4+Pj4+Pj4gL21lIGNvbmZ1c2VkLiBJcyBFVFpQQyBhY2Nlc3NpYmxlIGZyb20gdGhlIG5v
+bi1zZWN1cmUga2VybmVsIA0KPj4+Pj4+PiBzcGFjZSB0bw0KPj4+Pj4+PiBiZWdpbiB3aXRoID8g
+SWYgc28sIGlzIGl0IGFsbG93ZWQgdG8gY29uZmlndXJlIGhhcmR3YXJlIGJsb2NrcyBhcw0KPj4+
+Pj4+PiBzZWN1cmUNCj4+Pj4+Pj4gb3IgdHJ1c3RlZCA/IEkgYW0gZmFpbGluZyB0byB1bmRlcnN0
+YW5kIHRoZSBvdmVyYWxsIGRlc2lnbiBvZiBhDQo+Pj4+Pj4+IHN5c3RlbQ0KPj4+Pj4+PiB3aXRo
+IEVUWlBDIGNvbnRyb2xsZXIuDQo+Pj4+Pj4gTm9uLXNlY3VyZSBrZXJuZWwgY291bGQgcmVhZCB0
+aGUgdmFsdWVzIHNldCBpbiBFVFpQQywgaWYgaXQgZG9lc24ndA0KPj4+Pj4+IG1hdGNoDQo+Pj4+
+Pj4gd2l0aCB3aGF0IGlzIHJlcXVpcmVkIGJ5IHRoZSBkZXZpY2Ugbm9kZSB0aGUgZHJpdmVyIHdv
+bid0IGJlIHByb2JlZC4NCj4+Pj4+Pg0KPj4+Pj4gT0ssIGJ1dCBJIHdhcyB1bmRlciB0aGUgaW1w
+cmVzc2lvbiB0aGF0IGl0IHdhcyBtYWRlIGNsZWFyIHRoYXQgDQo+Pj4+PiBMaW51eCBpcw0KPj4+
+Pj4gbm90IGZpcm13YXJlIHZhbGlkYXRpb24gc3VpdGUuIFRoZSBmaXJtd2FyZSBuZWVkIHRvIGVu
+c3VyZSBhbGwgdGhlDQo+Pj4+PiBkZXZpY2VzDQo+Pj4+PiB0aGF0IGFyZSBub3QgYWNjZXNzaWJs
+ZSBpbiB0aGUgTGludXgga2VybmVsIGFyZSBtYXJrZWQgYXMgZGlzYWJsZWQgDQo+Pj4+PiBhbmQN
+Cj4+Pj4+IHRoaXMgbmVlZHMgdG8gaGFwcGVuIGJlZm9yZSBlbnRlcmluZyB0aGUga2VybmVsLiBT
+byBpZiB0aGlzIGlzIHdoYXQNCj4+Pj4+IHRoaXMNCj4+Pj4+IHBhdGNoIHNlcmllcyBhY2hpZXZl
+cywgdGhlbiB0aGVyZSBpcyBubyBuZWVkIGZvciBpdC4gUGxlYXNlIHN0b3ANCj4+Pj4+IHB1cnN1
+aW5nDQo+Pj4+PiB0aGlzIGFueSBmdXJ0aGVyIG9yIHByb3ZpZGUgYW55IG90aGVyIHJlYXNvbnMo
+aWYgYW55KSB0byBoYXZlIGl0LiANCj4+Pj4+IFVudGlsDQo+Pj4+PiB5b3UgaGF2ZSBvdGhlciBy
+ZWFzb25zLCBOQUNLIGZvciB0aGlzIHNlcmllcy4NCj4+Pj4NCj4+Pj4gTm8gaXQgZG9lc24ndCBk
+aXNhYmxlIHRoZSBub2Rlcy4NCj4+Pj4NCj4+Pj4gV2hlbiB0aGUgZmlybXdhcmUgZGlzYWJsZSBh
+IG5vZGUgYmVmb3JlIHRoZSBrZXJuZWwgdGhhdCBtZWFucyBpdCANCj4+Pj4gY2hhbmdlDQo+Pj4+
+DQo+Pj4+IHRoZSBEVEIgYW5kIHRoYXQgaXMgYSBwcm9ibGVtIHdoZW4geW91IHdhbnQgdG8gc2ln
+biBpdC4gV2l0aCBteSANCj4+Pj4gcHJvcG9zYWwNCj4+Pj4NCj4+Pj4gdGhlIERUQiByZW1haW5z
+IHRoZSBzYW1lLg0KPj4+DQo+Pj4gPz8/DQo+Pj4NCj4+PiA6Lw0KPj4+DQo+Pj4gVGhlIERUQiBp
+cyB1c2VkIHRvIHBhc3MgdGhlIGtlcm5lbCBjb21tYW5kIGxpbmUsIG1lbW9yeSByZXNlcnZhdGlv
+bnMsDQo+Pj4gcmFuZG9tIHNlZWRzLCBhbmQgYWxsIG1hbm5lciBvZiBvdGhlciB0aGluZ3MgZHlu
+YW1pY2FsbHkgZ2VuZXJhdGVkIGJ5DQo+Pj4gZmlybXdhcmUgYXQgYm9vdC10aW1lLiBBcG9sb2dp
+ZXMgZm9yIGJlaW5nIGJsdW50IGJ1dCBpZiAiY2hhbmdpbmcgdGhlDQo+Pj4gRFRCIiBpcyBjb25z
+aWRlcmVkIGEgcHJvYmxlbSB0aGVuIEkgY2FuJ3QgaGVscCBidXQgdGhpbmsgeW91J3JlIGRvaW5n
+DQo+Pj4gaXQgd3JvbmcuDQo+Pg0KPj4gWWVzIGJ1dCBJIHdvdWxkIGxpa2UgdG8gbGltaXQgdGhl
+IG51bWJlciBvZiBjYXNlcyB3aGVyZSBhIGZpcm13YXJlIGhhcw0KPj4gdG8gY2hhbmdlIHRoZSBE
+VEIuDQo+DQo+IFN1cmUsIGJ1dCB1bmxlc3MgeW91IGNhbiBsaW1pdCB0aGF0IG51bWJlciB0byBz
+dHJpY3RseSB6ZXJvLCB0aGVuIA0KPiBwcmVzdW1hYmx5IHRoZSBmaXJtd2FyZSBtdXN0IGhhdmUg
+dGhlIGdlbmVyYWwgY2FwYWJpbGl0eSB0byB2ZXJpZnksIA0KPiBtb2RpZnksIGFuZCByZS1zaWdu
+IGEgRFRCLiBBdCB0aGF0IHBvaW50IGhhdmluZyBpdCBhbHNvIHR3ZWFrIHRoZSANCj4gc3RhdHVz
+IG9mIG5vZGVzIHRoYXQgaXQgd2FudHMgZm9yIGl0c2VsZiBkb2Vzbid0IHNlZW0gbGlrZSBhIA0K
+PiBwYXJ0aWN1bGFybHkgYmlnIGFzay4NCj4NCj4+IFdpdGggdGhpcyBwcm9wb3NhbCBub2RlcyBy
+ZW1haW4gdGhlIHNhbWUgYW5kIGVtYmVkZGVkIHRoZSBmaXJld2FsbA0KPj4gY29uZmlndXJhdGlv
+bihzKS4NCj4+DQo+PiBVbnRpbCBub3cgZmlyZXdhbGwgY29uZmlndXJhdGlvbiBpcyAic3RhdGlj
+IiwgdGhlIGZpcm13YXJlIGRpc2FibGUgKG9yDQo+PiByZW1vdmUpIHRoZSBub2RlcyBub3QgYWNj
+ZXNzaWJsZSBmcm9tIExpbnV4Lg0KPj4NCj4+IElmIExpbnV4IGNhbiByZWx5IG9uIG5vZGUncyBm
+aXJld2FsbCBpbmZvcm1hdGlvbiBpdCBjb3VsZCBhbGxvdyBzd2l0Y2gNCj4+IGR5bmFtaWNhbGx5
+IGFuIGhhcmR3YXJlIGJsb2NrIGZyb20gTGludXggdG8gYSBjb3Byb2Nlc3Nvci4NCj4+DQo+PiBG
+b3IgZXhhbXBsZSBMaW51eCBjb3VsZCBtYW5hZ2UgdGhlIGRpc3BsYXkgcGlwZSBjb25maWd1cmF0
+aW9uIGFuZCB3aGVuDQo+PiBnb2luZyB0byBzdXNwZW5kIGhhbmRvdmVyIHRoZSBkaXNwbGF5IGhh
+cmR3YXJlIGJsb2NrIHRvIGEgY29wcm9jZXNzb3IgaW4NCj4+IGNoYXJnZSBhIHJlZnJlc2hpbmcg
+b25seSBzb21lIHBpeGVscy4NCj4NCj4gQW5kIGxpa2UgSSdtIHN1cmUgSSBzYWlkIGJlZm9yZSwg
+dGhlIGludGVyZmFjZSBiZXR3ZWVuIExpbnV4IGFuZCB0aGUgDQo+IFNlY3VyZSBlbnZpcm9ubWVu
+dCB0byB1bHRpbWF0ZWx5IGFjaGlldmUgdGhhdCB3aWxsIGFsbW9zdCBjZXJ0YWlubHkgDQo+IG1h
+a2UgaW5zcGVjdGluZyBhIHBhc3NpdmUgc3RhdHVzIGJpdCBpbiBhIHJlZ2lzdGVyIHJlZHVuZGFu
+dCBhbnl3YXkuDQoNCkl0IGlzIG5vdCBvbmx5IGFib3V0IHNlY3VyZSBhbmQgbm9uIHNlY3VyZSBo
+YXJkd2FyZSBibG9ja3Mgc3BsaXQgYnV0IA0KYWxzbyBhYm91dCB0aGUgc3BsaXQgd2l0aCB0aGUg
+Y29wcm9jZXNzb3IuDQoNClRoZSBnb2FsIGlzIHRvIGRlc2NyaWJlLCBpbiB0aGUgZGV2aWNlIHRy
+ZWUsIHRoZXNlIHBvc3NpYmxlIA0KY29uZmlndXJhdGlvbnMgdG8gYmUgYWJsZSB0byB1c2UgdGhl
+bSBkeW5hbWljYWxseSByYXRoZXIgdGhhbg0KDQpoYXZpbmcgYSBzdGF0aWMgY29uZmlndXJhdGlv
+bi4gSXQgY291bGQgYWxzbyBoZWxwIHRvIGRldGVjdCANCm1pc2NvbmZpZ3VyYXRpb24gYmV0d2Vl
+biB0aGUgZmlyZXdhbGwgYW5kIHRoZSBEVCBub2Rlcy4NCg0KPg0KPiBJbiB0aGUgaW50ZXJlc3Qg
+b2YgYmVpbmcgcHJvZHVjdGl2ZSwgdGhvdWdoLCB0aGVyZSBpcyBhbm90aGVyIHdheSBvZiANCj4g
+bG9va2luZyBhdCB0aGlzLiBJZiB3ZSBkcm9wIHRoZSBwcmV0ZW5jZSB0aGF0IGl0J3MgaW4gYW55
+IHdheSBnZW5lcmljIA0KPiBvciBldmVyIGdvaW5nIHRvIGJlIHJlbGV2YW50IGJleW9uZCBjZXJ0
+YWluIGNvbmZpZ3VyYXRpb25zIG9mIGNlcnRhaW4gDQo+IFNUTWljcm8gU29DcywgdGhlbiBpbiBw
+bGFpbiB0ZXJtcyBpdCdzIGp1c3Qgc29tZSBibG9jayBvZiBNTUlPIA0KPiByZWdpc3RlcnMgdGhh
+dCBoYXZlICpzb21ldGhpbmcqIHRvIGRvIHdpdGggdmFyaW91cyBvdGhlciBkZXZpY2VzLiBBdCAN
+Cj4gdGhhdCBwb2ludCwgdGhlIGFuc3dlciBpcyBqdXN0IHRvIHRyZWF0IGl0IGFzIGEgc3lzY29u
+IGFuZCBtYWtlIHRoZSANCj4gcmVsZXZhbnQgZHJpdmVycyBmb3IgdGhvc2UgU29DcyBhd2FyZSBv
+ZiBpdC4gSSdtIG1vc3QgZmFtaWxpYXIgd2l0aCANCj4gdGhlICJHZW5lcmFsIFJlZ2lzdGVyIEZp
+bGUiIG9uIFJvY2tjaGlwIFNvQ3MgYXMgYSBwcmltZSBleGFtcGxlIG9mIA0KPiAiYnVuY2ggb2Yg
+cmVnaXN0ZXJzIHRoYXQgcmVsYXRlIHRvIHRoZSBpbnRlZ3JhdGlvbiBvZiB2YXJpb3VzIElQIA0K
+PiBibG9ja3MiLCB3aGljaCBtYW5hZ2VzIHRvIGJlIHN1cHBvcnRlZCBqdXN0IGZpbmUgd2l0aG91
+dCBpbnZhc2l2ZSANCj4gaG9va3MgaW4gdGhlIGRyaXZlciBjb3JlLg0KDQpJIGhhZCB0aG91Z2h0
+IHRvIHVzZSBzeXNjb24gYnV0IHRoZXJlIGlzIHNvbWUgcHJvYmxlbXMgd2l0aCB0aGF0IHdheTog
+aWYgDQp0aGUgZmlyZXdhbGwgaGFyZHdhcmUgY2hhbmdlIHRoZSB3YXkgaXQgZW5jb2RlIHRoZSBp
+bmZvcm1hdGlvbiB5b3UgaGF2ZSANCmNoYW5nZSBhbGwgaXQgY3VzdG9tZXJzLiBUaGF0IHdvdWxk
+IG1lYW4gYWRkIGluIGVhY2ggZHJpdmVyIGEgdGVzdCB0byANCmRldGVjdCB0aGUgZmlyZXdhbGwg
+dmVyc2lvbiBhbmQgYWN0IGFjY29yZGluZ2x5LiBUaGF0IGRvZXNuJ3Qgc291bmQgDQpyZWFzb25h
+YmxlIHRvIG1lIHNvIEkgZGVjaWRlIHRvIGNyZWF0ZSBhbiBpbnRlcmZhY2UgdG8gYWJzdHJhY3Qg
+dGhlIA0KZmlyZXdhbGwgdG8gYXZvaWQgdGhpcyBwcm9ibGVtLg0KDQpJIGNvdWxkIHJldXNlIHRo
+aXMgaW50ZXJmYWNlIGluIHRoZSB+NDAgaW1wYWN0ZWQgZHJpdmVycyAobm90IGFsbCANCmRlZGlj
+YXRlZCB0byBTVE1pY3JvIFNvQ3MpIGJ1dCBhZGRpbmcgaXQgaW4gdGhlIGRyaXZlciBjb3JlIGFz
+IGEgZ2VuZXJpYyANCnNlcnZpY2Ugd2FzIG1ha2luZyBtb3JlIHNlbnMgZm9yIG1lLiBOb3RlIHRo
+YXQgSSBoYXZlIHRha2UgY2FyZSBvZiB1c2luZyANCmEgY29tcGlsYXRpb24gZmxhZyB0byBub3Qg
+aW1wYWN0IHRoZSBvdGhlcnMgYXJjaGl0ZWN0dXJlcy4NCg0KQmVuamFtaW4NCg0KPg0KPiBSb2Jp
+bi4=
