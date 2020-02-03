@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D558C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56108C35249
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3F62082E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331052082E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gi/MTaHs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TePUltcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgBCSce (ORCPT
+        id S1728554AbgBCScn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:32:34 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41658 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730018AbgBCScc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 13:32:32 -0500
-Received: by mail-pf1-f196.google.com with SMTP id j9so4919659pfa.8
-        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 10:32:31 -0800 (PST)
+        Mon, 3 Feb 2020 13:32:43 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32949 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729977AbgBCSc3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 13:32:29 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 6so8277724pgk.0
+        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 10:32:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GcQPmK/EL5PoNkrImo6wzmVbqHzRjqrCxX5jeH1GDVc=;
-        b=Gi/MTaHsVWTX49DUKWopOV2+0N0eP8zKJ5xdlfwWhsT3f+OcxCe1lJktY9QLSZhIKz
-         9GB+xpaVIkOlaGWNG9Hw/9IChuRDtoHU5mDGq+BoryAYgWQBAbqS5Ru3Utnyhl0avZZu
-         0pr9cda/+qTDQotla82A6OnzXWzrW6dXE/Oz4=
+        bh=wwHxgEKez+fOFQykbyJ2qqd0S0Aa+T2rnyaksz+8v/M=;
+        b=TePUltcYjHGOlhvm0sss/m7Bi8+vuqTXeBmxqiuTXNO7vBo8DOMdKF8xaaGZ+Ak1/L
+         e+xMsYn8+w1pPO2BsSHcBT9+8H8s1i0ZN+cXyfYYl3D4XMGvL9VvLivjnfdhUztJtqpN
+         nAlwQ0RtFvqRjNWTF81qT183sNFpLO6Dx+2mM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GcQPmK/EL5PoNkrImo6wzmVbqHzRjqrCxX5jeH1GDVc=;
-        b=mlJ3K9ueJAfP9aFydQvWYrladXu6hYiUP/uk1VaE3Pdkpn/3Mls6DxNxxTpFz03wfR
-         4IAnl3LcIYEQ0Ws9UV/y1nYc0KkIW02cxSeigzAUG/ZT9lm5s6p/Oc6nWNz823x6KJGl
-         o7lavvojhFOVboVpOjmWRauantW8/0GP6UJpaMqizA4QjH0EdftJVHxWb4wIu+41v6cI
-         iCWG02Cy5WFRsFLaXHNtPftA5pUQC+NVMmHW11zkGkkzsnBVCpok2fLsaKoDgv29D/Sz
-         6VH3N9XEYhZ2IDMJ81iFjyD5pQPn1udugmlhAIa6hhoBXDjWeVo4LPmKyjFwm+VSlcW6
-         ujWw==
-X-Gm-Message-State: APjAAAWdetC7Ai2xU1yNoeevgAIMFi0Pmw5cyAEIQLm+Qd83YsNoZueL
-        MjbeQAjWdfu3moZ2qlrJdac4Iw==
-X-Google-Smtp-Source: APXvYqxZZESrsKizk1ZwzzsrnzuSxnKXSwRiJMTS+PwoYXAq69qJ2bPEUC3EQesTffzVikG7ozabhg==
-X-Received: by 2002:a63:6787:: with SMTP id b129mr26811249pgc.103.1580754750870;
-        Mon, 03 Feb 2020 10:32:30 -0800 (PST)
+        bh=wwHxgEKez+fOFQykbyJ2qqd0S0Aa+T2rnyaksz+8v/M=;
+        b=LTuSR6OCbw7UJwHX5OHEhmMFTaVS6EQmdA2xKQtNdH0kVVWQ2D9YU1Ytfxxwe5QoJq
+         IyNW3OOR7y5biFX9B2VL9b38fSerfB/XUf23M3npnYDA68GKsaPziWeuz3midXOa9ZUE
+         tawhQKOc8BIE3OtT9lcPwTOjLKXMRsHsNER9A3/Jxee+/Kuxf7DmtFZtFqognEwRt1AT
+         ioILolPtj8xesgFQ+SvfLRCM8ZbStcTOiV0Tb0CpKkM451xHqbdK0FNlFlH8YIJsBDA+
+         g/pmsgvx6QEQM8XA35/UdBrWryHbKn9D3HIyK+Yy1ts9D5G9BpJ58HOmX+3bsndOOdFa
+         QT5g==
+X-Gm-Message-State: APjAAAUSSvAW96Oes7Zu9FCRIBIi4/q1hc5w79tdBJcu+xcVmsmB2/ZO
+        uYAlmh8Z33kZThSKf0Y7dd5lrQ==
+X-Google-Smtp-Source: APXvYqz38nwGUpv83wdaxTCNi+AL895a1bGWZsc4tkumVdC6AUR9GLTk3X5Ee2dUKrhJgDGub2DzRQ==
+X-Received: by 2002:a63:1f5b:: with SMTP id q27mr12770437pgm.434.1580754747633;
+        Mon, 03 Feb 2020 10:32:27 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.29
+        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 10:32:30 -0800 (PST)
+        Mon, 03 Feb 2020 10:32:27 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -63,10 +63,12 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v4 15/15] arm64: dts: sc7180: Add clock controller nodes
-Date:   Mon,  3 Feb 2020 10:31:48 -0800
-Message-Id: <20200203103049.v4.15.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid>
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 12/15] clk: qcom: Get rid of the test clock for videocc-sc7180
+Date:   Mon,  3 Feb 2020 10:31:45 -0800
+Message-Id: <20200203103049.v4.12.Ifd19a2701a102ec9f04e61a09345198383a9e937@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200203183149.73842-1-dianders@chromium.org>
 References: <20200203183149.73842-1-dianders@chromium.org>
@@ -77,107 +79,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Taniya Das <tdas@codeaurora.org>
+The test clock isn't in the bindings and apparently it's not used by
+anyone upstream.  Remove it.
 
-Add the display, video & graphics clock controller nodes supported on
-SC7180.
-
-NOTE: the dispcc needs input clocks from various PHYs that aren't in
-the device tree yet.  For now we'll leave these stubbed out with <0>,
-which is apparently the magic way to do this.  These clocks aren't
-really "optional" and this stubbing out method is apparently the best
-way to handle it.
-
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Suggested-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v4: None
 Changes in v3:
-- Added videocc include file.
-- Unlike in v2, use internal name instead of purist name.
+- Patch ("clk: qcom: Get rid of the test...videocc-sc7180") new for v3.
 
-Changes in v2:
-- Added includes
-- Changed various parent names to match bindings / driver
+Changes in v2: None
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 47 ++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ drivers/clk/qcom/videocc-sc7180.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 8011c5fe2a31..57ff5e0f7ae6 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -5,8 +5,11 @@
-  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-  */
+diff --git a/drivers/clk/qcom/videocc-sc7180.c b/drivers/clk/qcom/videocc-sc7180.c
+index 76add30024aa..653fc4e6bb6f 100644
+--- a/drivers/clk/qcom/videocc-sc7180.c
++++ b/drivers/clk/qcom/videocc-sc7180.c
+@@ -50,13 +50,11 @@ static struct clk_alpha_pll video_pll0 = {
+ static const struct parent_map video_cc_parent_map_1[] = {
+ 	{ P_BI_TCXO, 0 },
+ 	{ P_VIDEO_PLL0_OUT_MAIN, 1 },
+-	{ P_CORE_BI_PLL_TEST_SE, 7 },
+ };
  
-+#include <dt-bindings/clock/qcom,dispcc-sc7180.h>
- #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-+#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
-+#include <dt-bindings/clock/qcom,videocc-sc7180.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
- #include <dt-bindings/power/qcom-aoss-qmp.h>
-@@ -1039,6 +1042,20 @@ pinmux {
- 			};
- 		};
+ static const struct clk_parent_data video_cc_parent_data_1[] = {
+ 	{ .fw_name = "bi_tcxo" },
+ 	{ .hw = &video_pll0.clkr.hw },
+-	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
+ };
  
-+		gpucc: clock-controller@5090000 {
-+			compatible = "qcom,sc7180-gpucc";
-+			reg = <0 0x05090000 0 0x9000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-+				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-+			clock-names = "bi_tcxo",
-+				      "gcc_gpu_gpll0_clk_src",
-+				      "gcc_gpu_gpll0_div_clk_src";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		qspi: spi@88dc000 {
- 			compatible = "qcom,qspi-v1";
- 			reg = <0 0x088dc000 0 0x600>;
-@@ -1151,6 +1168,36 @@ usb_1_dwc3: dwc3@a600000 {
- 			};
- 		};
- 
-+		videocc: clock-controller@ab00000 {
-+			compatible = "qcom,sc7180-videocc";
-+			reg = <0 0x0ab00000 0 0x10000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "bi_tcxo";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		dispcc: clock-controller@af00000 {
-+			compatible = "qcom,sc7180-dispcc";
-+			reg = <0 0x0af00000 0 0x200000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
-+				 <0>,
-+				 <0>,
-+				 <0>,
-+				 <0>;
-+			clock-names = "bi_tcxo",
-+				      "gcc_disp_gpll0_clk_src",
-+				      "dsi0_phy_pll_out_byteclk",
-+				      "dsi0_phy_pll_out_dsiclk",
-+				      "dp_phy_pll_link_clk",
-+				      "dp_phy_pll_vco_div_clk";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
+ static const struct freq_tbl ftbl_video_cc_venus_clk_src[] = {
+@@ -78,7 +76,7 @@ static struct clk_rcg2 video_cc_venus_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "video_cc_venus_clk_src",
+ 		.parent_data = video_cc_parent_data_1,
+-		.num_parents = 3,
++		.num_parents = 2,
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
 -- 
 2.25.0.341.g760bfbb309-goog
 
