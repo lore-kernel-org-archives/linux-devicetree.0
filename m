@@ -2,139 +2,95 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF818C3524D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 08:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305A4C3524F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA8C20658
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 08:34:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="OG9KdFGA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KhGuh51D"
+	by mail.kernel.org (Postfix) with ESMTP id F19E42080D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 09:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580722800;
+	bh=90PTvB49gOGO55ExQ0APc/RsiX8s5nixQEtQ0hlwaRY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Y8nqrrS0otDCRQrgDZfmd8+izVGyL272nSU5G/GgKtLCXfSvevtQmLwuJ23QudG4b
+	 5VAsFFWIUPYFqVHqxwyyzqAGbfrXxj10OX1kIWUwI8NjV4EEG/sDMhjhc3tEx+3LgE
+	 XIFrKzTU0r54Z8Hj9snrmnK6g3501+WOCOjqV6p4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgBCIeH (ORCPT
+        id S1727756AbgBCJj7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 03:34:07 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33003 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726244AbgBCIeG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 03:34:06 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E370B5E0C;
-        Mon,  3 Feb 2020 03:34:05 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 03 Feb 2020 03:34:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=nLBFK/U/9FVj2QhUZ4f3HwAHrai
-        1iMWaFonW+4I4K0c=; b=OG9KdFGAiPq0zqE/PDLHzu1MLCGdRi5KiJW1u+ArHue
-        X8Cs0pIji51zAxpjmMPvWvOlDd28+5Bo7tdaZeGe4U5rdFxXc5HuKqUL6p749jEl
-        JQZ0XCuUw7Qf/EB28byQEkOSBc0NrJaLdLouUPJjMCWC7jQQsKrB/RnPvHtiRJhN
-        Pe+4PGzpsoKA2yopk8rauKZzAmRb5R5fTL6MxtsJk2pMtNUEhGGMw5Tmh1JCAVIS
-        3yGzEEPTmNp/4lWMuoZZEksiXJKj//ITOJ7Vw6kcl8eEpSYNcHHA2BNz1xOmd+xq
-        0xQc/yX4vTUitoQRR8+1NQeC31Ifkm6jIe+bPMkKtXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=nLBFK/
-        U/9FVj2QhUZ4f3HwAHrai1iMWaFonW+4I4K0c=; b=KhGuh51D/CSZ65vh1myQT8
-        n4080jUEBAfLd6IDKptRu95IDkPM5XEfSD8lPiB7ZAzD6Dy2leIjyjsR0jz6fuUp
-        h2ct+PLKYSsSPvDe+XoH0/DBuMqMNq1fgm/z+TBJ/kzbk05jTtRTkSe2riHhoGhb
-        pFzp2SbYzeinjEG2BoWe5cphHewZMzKPngWenRByJbA6EDJK1aB/ix8GP621p9Mo
-        JwYm3N3dzmNWSLrMCASiMRM2NghrKnI4Bd0IrmRPp72pPAUu0VkgwfAQn5ApInio
-        ga/7VwIW93BfrelbNqsXcbYdwxjjcBbSAPhK+MjRgYFP3ktQe2sdUP9NkD8+Mzsw
-        ==
-X-ME-Sender: <xms:_No3XvOvOla3tF1qtF3HMGkOBEqVEfLW2waWH19XXLvY6i-BtBNZ9g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeeigdduudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:_No3XmQpwCAipjGOIXx6hkjModXzQzO7vyowyRZLL9dbwyUyKBnfzA>
-    <xmx:_No3XhCBMIa7P20bA78hxrNE-hxojAIWbTuGyKYQ0qS4rweRgpS1gw>
-    <xmx:_No3Xljz7mk0H9yOHbdQx_AwufJ75RTzT2FDMov30urE1_EqS_cZUQ>
-    <xmx:_do3XokOnmeCMkCr77nfM_bhUWmqivs3Zjnyk0eczQy-rDl7et9_ug>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 98B763060187;
-        Mon,  3 Feb 2020 03:34:04 -0500 (EST)
-Date:   Mon, 3 Feb 2020 09:34:03 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH 11/12] dt-bindings: arm: Document Broadcom SoCs
- 'secondary-boot-reg'
-Message-ID: <20200203083403.6wmuduxqsv7quujp@gilmour.lan>
-References: <20200202211827.27682-1-f.fainelli@gmail.com>
- <20200202211827.27682-12-f.fainelli@gmail.com>
+        Mon, 3 Feb 2020 04:39:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727630AbgBCJj7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:39:59 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC7E2080D;
+        Mon,  3 Feb 2020 09:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580722798;
+        bh=90PTvB49gOGO55ExQ0APc/RsiX8s5nixQEtQ0hlwaRY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZnrtPPt0E/qGj4mQVzMR6msPqTfcMyQCYaCwHAW8zWi1onwkHFFLxCcb/WhZ2c9F/
+         H8B+3nhoo7cCwrWT1XjKX59Eg7rsCWRiqBAw34wXE12h6d0crOA230IFq0g9NOOCNu
+         bmjzjaHZduJWoB/vujKoB8R3xpEujaLfTeVrRb64=
+Received: by mail-qt1-f177.google.com with SMTP id h12so10934615qtu.1;
+        Mon, 03 Feb 2020 01:39:58 -0800 (PST)
+X-Gm-Message-State: APjAAAVWRmgZiaCos6yQHZXEXdoOT1knj4QCyqzAwEaoisuj2CZIPkRN
+        Hng2q8/LfYDQLBIVKmDhfc8WQvbbs3GL0dzu+g==
+X-Google-Smtp-Source: APXvYqy7yMTTAlW5+O0G7s/WzsgPHbziXztEbOqnsDKjoXJTTDypK4XTLXpxAwgULfdRVhFdXanI6iKHKIjNLLuzvSw=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr23000069qtj.300.1580722797545;
+ Mon, 03 Feb 2020 01:39:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200202211827.27682-12-f.fainelli@gmail.com>
+References: <20200203052507.93215-1-sboyd@kernel.org> <20200203052507.93215-2-sboyd@kernel.org>
+In-Reply-To: <20200203052507.93215-2-sboyd@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 3 Feb 2020 09:39:46 +0000
+X-Gmail-Original-Message-ID: <CAL_JsqJObO2AgP6m_=Z=7eWHA7C6q-Vrv20v08h_r0EL4pOfAg@mail.gmail.com>
+Message-ID: <CAL_JsqJObO2AgP6m_=Z=7eWHA7C6q-Vrv20v08h_r0EL4pOfAg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt/bindings: clk: fsl,plldig: Drop 'bindings' from
+ schema id
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        devicetree@vger.kernel.org, Wen He <wen.he_1@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 01:18:26PM -0800, Florian Fainelli wrote:
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> index c23c24ff7575..6f56a623c1cd 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> @@ -272,6 +272,22 @@ properties:
->        While optional, it is the preferred way to get access to
->        the cpu-core power-domains.
+On Mon, Feb 3, 2020 at 5:25 AM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> +  secondary-boot-reg:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: |
-> +      Required for systems that have an "enable-method" property value of
-> +      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
-> +
-> +      This includes the following SoCs: |
-> +      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
-> +      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
-> +
-> +      The secondary-boot-reg property is a u32 value that specifies the
-> +      physical address of the register used to request the ROM holding pen
-> +      code release a secondary CPU. The value written to the register is
-> +      formed by encoding the target CPU id into the low bits of the
-> +      physical start address it should jump to.
-> +
+> Having 'bindings' in here causes a warning when checking the schema.
+>
+>  Documentation/devicetree/bindings/clock/fsl,plldig.yaml:
+>  $id: relative path/filename doesn't match actual path or filename
+>          expected: http://devicetree.org/schemas/clock/fsl,plldig.yaml#
+>
+> Remove it.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Wen He <wen.he_1@nxp.com>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/clock/fsl,plldig.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-You can make the requirement explicit (and enforced by the schemas) using:
+There's actually a more few of these in clock bindings. I am going to
+do a tree wide fix on this. I was waiting until the clock tree is
+merged.
 
-if:
-  properties:
-    enable-method:
-      contains:
-        enum:
-	  - brcm,bcm11351-cpu-method
-	  - brcm,bcm23550
-	  - brcm,bcm-nsp-smp
+And I didn't really mean to commit this check to dtschema until all
+these were fixed, so I've reverted it for now.
 
-then:
-  required:
-    - secondary-boot-reg
+So either go ahead and apply this or I'll get it.
 
-Maxime
+Acked-by: Rob Herring <robh@kernel.org>
+
+Rob
