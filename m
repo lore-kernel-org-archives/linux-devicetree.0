@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B59C3524F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F7EC35247
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 118D32087E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B082086A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 18:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Iu4R/LVC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DvCPSi4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgBCScY (ORCPT
+        id S1727543AbgBCSdE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:32:24 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38675 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729895AbgBCScX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 13:32:23 -0500
-Received: by mail-pl1-f194.google.com with SMTP id t6so6188672plj.5
-        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 10:32:22 -0800 (PST)
+        Mon, 3 Feb 2020 13:33:04 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39578 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729871AbgBCScU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 13:32:20 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so6186900plp.6
+        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 10:32:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ufyh64dRjL554l+6oMW1t40PwX6Rqwwg9SWigyl7ov0=;
-        b=Iu4R/LVC0EdNzIyoQUz8gWVzIe5lYDEVv9XEVVbybjxRJVKQ7hZwaKyA4L14iMiSgW
-         /2t6buaCUEB1VtzaelRwCZ2alxHB5gKAaahP56T37tVRChyoQYXCoTiFlJ9sUFYYdnGc
-         nSNb3yfhzRas7U/wZx/GdB/BOYXQoIse+lAyo=
+        bh=jXYsSn/bpLUzHQDBpuUsY8VACz18k1Ng4zjCUcwxPLU=;
+        b=DvCPSi4kRl7tU7zUHQYYkP2oswPPToVk5xFfvz7f2QZP7q16XqP64C1ZgbTSwLYtJC
+         4fJQ4r7/L0E91nja7MKi4SThX74OjlvF9y/Jpt+naf3yD1GWrwB5Zdy+6cjE8b9hRYo1
+         yLjstt5SXIEqmBMG8L6Ct9aQUsnHNlcCbDGhY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ufyh64dRjL554l+6oMW1t40PwX6Rqwwg9SWigyl7ov0=;
-        b=aoVvcnqarMZqeiDOKxavbOG+ZMwbvI0BNUb9abQIVcYsNMQZFFxxQ0BIHHFzuHFP2J
-         Fbj59F4YTd9cZpDcI0QtFYs6SvZCyWt0+f5FxJNwR6tBCYv4JfUyhjFW0i9OGmE/j4Ug
-         42OC2UsPGOxbhuB/1PD0fvYVf9DqifzONEm0fNv1z3WQ1HQyObLlITmf3ukMpfDAOp/S
-         VrcpOwhulGOSwHRV4jyLGQON/h2SleoFWJ1m8wxKCqnok9tyhd4P2FQ4tb279hlnsgaW
-         6RUyKumin7jmlAHUGe5T+XKGnMPSaasBpdcoVUYFGHv+hBH50wjMzsJjUWIjcRZs7r7b
-         C84A==
-X-Gm-Message-State: APjAAAUF5bsLTSvs+Sn2wxqzpdJbO5RHwyZJ+zO0k/jQW9l01t6Wx4Ae
-        TSEO0VHNKh4APoie/H38CgnmlQ==
-X-Google-Smtp-Source: APXvYqz6kUe+BL54L392u2mtnt3eimDhwtj6qe/DuiV7csWXSR1rYgvKL5qywrLDF2vuLi5/0hswWg==
-X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr25461526plm.83.1580754742337;
-        Mon, 03 Feb 2020 10:32:22 -0800 (PST)
+        bh=jXYsSn/bpLUzHQDBpuUsY8VACz18k1Ng4zjCUcwxPLU=;
+        b=uULzuic6IACpszss7/J3pRtpWZ1O/y4gsO6OpScOatqhVtYGHiL101/Qi4a7GFJDmF
+         jL0Glj/qOQJ4FUK4ox6dqVpTMQ+SWd75/mMog0eyDs27l64ja9RwCCrofFA0PDStggUi
+         f4iTl/WZ5hdHKdYPTBCg1nIrTMhmrCCpI7sTeRZK5S/nUyBWDBS6iI202896gjkE9KaG
+         BcTRqWyXZWwMY9qMfG5n7NUpmN3WjZJNx4+PD/HXpgLovH1YswH4XqZC1hC56Ab9QMIy
+         DE92ked9bzbzwblAfRMIQm5yaiUlZZ2SSzaUxQfddojrqo2ESxzZdkRXMFUKjmNLv37A
+         sSSw==
+X-Gm-Message-State: APjAAAXDUv8XZDYQAZSx5q4jOYDKFXpqrKd4LXkJuOcVq0BjUawGyxd9
+        FjRzTggR6WT/qSMuvNqO2KA1hA==
+X-Google-Smtp-Source: APXvYqy7AcJrWdMib9/JT8Iy6xmiUWomyiuo8ggeOh8yMGAzAJB004x763BL5QJdNTKafdw+YuCQ6g==
+X-Received: by 2002:a17:902:aa81:: with SMTP id d1mr26001471plr.16.1580754740036;
+        Mon, 03 Feb 2020 10:32:20 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.21
+        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 10:32:21 -0800 (PST)
+        Mon, 03 Feb 2020 10:32:19 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -63,10 +63,11 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v4 08/15] arm64: dts: qcom: sdm845: Add missing clocks / fix names on the gpucc
-Date:   Mon,  3 Feb 2020 10:31:41 -0800
-Message-Id: <20200203103049.v4.8.If8596faf02408cef4bb9f52296b911eb9ba49287@changeid>
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 06/15] clk: qcom: Use ARRAY_SIZE in dispcc-sc7180 for parent clocks
+Date:   Mon,  3 Feb 2020 10:31:39 -0800
+Message-Id: <20200203103049.v4.6.If590c468722d2985cea63adf60c0d2b3098f37d9@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200203183149.73842-1-dianders@chromium.org>
 References: <20200203183149.73842-1-dianders@chromium.org>
@@ -77,50 +78,125 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We're transitioning over to requiring the Qualcomm GPU Clock
-Controller to specify all the input clocks.  Let's add them for
-sdm845.
-
-As part of this we've decided that the xo clock should be referred to
-in the bindings as "bi_tcxo".  Change the dts.
-
-NOTE: Until the Linux driver for sdm845's gpucc is updated, these
-clocks will not actually be used in Linux.  It will continue to use
-global clock names to match things up.  Of course, Linux didn't use
-the old "xo" clock anyway.
+It's nicer to use ARRAY_SIZE instead of hardcoding.  Had we always
+been doing this it would have prevented a previous bug.  See commit
+74c31ff9c84a ("clk: qcom: gpu_cc_gmu_clk_src has 5 parents, not 6").
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v4: None
 Changes in v3:
-- Unlike in v2, use internal name instead of purist name.
+- Patch ("clk: qcom: Use ARRAY_SIZE in dispcc-sc7180...") split out for v3.
 
-Changes in v2:
-- Patch ("arm64: dts: qcom: sdm845: Add...gpucc") new for v2.
+Changes in v2: None
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/clk/qcom/dispcc-sc7180.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 0985813fee50..35d7fcbda43c 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1903,8 +1903,12 @@ gpucc: clock-controller@5090000 {
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
--			clocks = <&rpmhcc RPMH_CXO_CLK>;
--			clock-names = "xo";
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-+				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-+			clock-names = "bi_tcxo",
-+				      "gcc_gpu_gpll0_clk_src",
-+				      "gcc_gpu_gpll0_div_clk_src";
- 		};
- 
- 		stm@6002000 {
+diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
+index 397f5d9dafc8..dd7af41e47eb 100644
+--- a/drivers/clk/qcom/dispcc-sc7180.c
++++ b/drivers/clk/qcom/dispcc-sc7180.c
+@@ -154,7 +154,7 @@ static struct clk_rcg2 disp_cc_mdss_ahb_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_ahb_clk_src",
+ 		.parent_data = disp_cc_parent_data_4,
+-		.num_parents = 2,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_4),
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
+@@ -168,7 +168,7 @@ static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_byte0_clk_src",
+ 		.parent_data = disp_cc_parent_data_2,
+-		.num_parents = 2,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_byte2_ops,
+ 	},
+@@ -188,7 +188,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_aux_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_dp_aux_clk_src",
+ 		.parent_data = disp_cc_parent_data_0,
+-		.num_parents = 2,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
+ 		.ops = &clk_rcg2_ops,
+ 	},
+ };
+@@ -201,7 +201,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_dp_crypto_clk_src",
+ 		.parent_data = disp_cc_parent_data_1,
+-		.num_parents = 3,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_byte2_ops,
+ 	},
+@@ -215,7 +215,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_link_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_dp_link_clk_src",
+ 		.parent_data = disp_cc_parent_data_1,
+-		.num_parents = 3,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_byte2_ops,
+ 	},
+@@ -229,7 +229,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_pixel_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_dp_pixel_clk_src",
+ 		.parent_data = disp_cc_parent_data_1,
+-		.num_parents = 3,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_dp_ops,
+ 	},
+@@ -244,7 +244,7 @@ static struct clk_rcg2 disp_cc_mdss_esc0_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_esc0_clk_src",
+ 		.parent_data = disp_cc_parent_data_2,
+-		.num_parents = 2,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
+ 		.ops = &clk_rcg2_ops,
+ 	},
+ };
+@@ -267,7 +267,7 @@ static struct clk_rcg2 disp_cc_mdss_mdp_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_mdp_clk_src",
+ 		.parent_data = disp_cc_parent_data_3,
+-		.num_parents = 4,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_3),
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
+ };
+@@ -280,7 +280,7 @@ static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_pclk0_clk_src",
+ 		.parent_data = disp_cc_parent_data_5,
+-		.num_parents = 2,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_5),
+ 		.flags = CLK_SET_RATE_PARENT,
+ 		.ops = &clk_pixel_ops,
+ 	},
+@@ -295,7 +295,7 @@ static struct clk_rcg2 disp_cc_mdss_rot_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_rot_clk_src",
+ 		.parent_data = disp_cc_parent_data_3,
+-		.num_parents = 4,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_3),
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
+ };
+@@ -309,7 +309,7 @@ static struct clk_rcg2 disp_cc_mdss_vsync_clk_src = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "disp_cc_mdss_vsync_clk_src",
+ 		.parent_data = disp_cc_parent_data_0,
+-		.num_parents = 1,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
+ 		.ops = &clk_rcg2_shared_ops,
+ 	},
+ };
 -- 
 2.25.0.341.g760bfbb309-goog
 
