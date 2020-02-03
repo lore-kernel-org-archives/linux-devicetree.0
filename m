@@ -2,180 +2,89 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DACC33CAC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 12:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A6DC33CAC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 12:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8D32084E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 12:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4C720658
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 12:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580732335;
-	bh=qihcrtRGqMh+9MIyah++7BzSnSVo6/hnfHFm/pbGO9k=;
+	s=default; t=1580732637;
+	bh=DaVbhOcwQcUqBB6R2bC90u79+9972OgbrdPgCGo4ayc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tCNFLdWT6H51qpHg3eyfZNAVzLPyxM42MiCl9sry5Hbw8KoIifuVV+pnOYnbOcz0K
-	 oPbjBxW9YBsElVAuACtdY/bScNzqjqIlMw3CaufW/84LZi5fLgSRTo6kG2mZgtfhBo
-	 4sAdI9PC39E39UlnXQRQE8UymYZYmYrJ8el5kkIs=
+	b=bh73evk4AcPHtMW3P4gQufUzHqVm2CC9vcw+Ez9I1jzSsO1MpuqDNcIaG8ztIUcQy
+	 ZBQ8Xo07Nsr+lSn3ISOZHWpG8dUivKPJOdpW+5uHHxX4Jwpr+6RrfBcitH99e+BBQC
+	 id3YVy2WGUkApyZCcHD9NsN5WI4Z4BtOkG/lLIog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbgBCMSz (ORCPT
+        id S1727954AbgBCMX5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:18:55 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38838 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727747AbgBCMSy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 07:18:54 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so16735955wmj.3;
-        Mon, 03 Feb 2020 04:18:51 -0800 (PST)
+        Mon, 3 Feb 2020 07:23:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36879 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727907AbgBCMX5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 07:23:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so17831113wru.4;
+        Mon, 03 Feb 2020 04:23:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T5cRAPd7w9hBIUYF0g5UbUKoG1I95bGivsP9WxcVBFE=;
-        b=to2+5hwT3E3/wTgaUdZ7yjm5bY1CB5XV2qn4MZCaPbxp79iCWpkwTqhl8ARIwnVsNa
-         iLHcyPV5P9DK4y3oHeoJvqEngceOgztPs5bcEWLrbNCiT5uYazo6DA6gbiH54APAtrTz
-         HClhJyEIPLnkOyt9TOQ1Wl+vwyL5e9LZlk4TS+bNJ7sK5FZ0Ri3g8BknQCrXGSUNiQYS
-         TR8DX1VzwDVf/G9ZO4Qqu/kShM0Z3Zcyo6V51tPIyBCQlKAP0JKvSvnAadJGe46BhXTF
-         MSJ6RWRyubK5+Ywy6bwq6HBWYI+EZcTVyMw5eCWL9Hcbd7Ksz1kDU9j8vFetN2yTSp55
-         5VtA==
-X-Gm-Message-State: APjAAAWQu73zQUQkb/uskddnPe0VfyqClzuCm6IWGqvBmKRVxbVGLjDm
-        PMLRZ3kjD8kweOdTEWQTag==
-X-Google-Smtp-Source: APXvYqzbOsuXf/ZMwWy6PpgIYTf+5yaeFPhm9fvA6cLOjgOMxCW2XC9WKpmj+sdABuD1nBKMOCwqZg==
-X-Received: by 2002:a7b:cb46:: with SMTP id v6mr30971369wmj.117.1580732331073;
-        Mon, 03 Feb 2020 04:18:51 -0800 (PST)
+        bh=3v/Vs0yeJ3ecKwEer6nb6dCD848+syrgOhZ1MgNf01o=;
+        b=fqKSl7X0LutSAY99vuoVKB6cxiwFTzr1G1eDlVI4oxgGt1QDruCijmCtNXclpwOHuZ
+         QZYJX0eD5KbnjcYZ+GKYovEqcwIJHduocWVnh5DQLcRSMrEgBx08vGgevNZiHExlkfQg
+         ffp+pNGtx0xx2HKY+Cs8TCU/9xjNnFlRe1vJZCGGAWl/OJgEyjTazaK5LVQiffqf0e1N
+         1CwIF57bt2Pmi4WFSRwapdwYDQRi4+t5c2WbdlZsiSBG7WI9GEmHds24MBZkLVGBFxRx
+         jbJeQDCEpgL/s0lv8L6Mdy78gOp7vFBvxoIF1RWQCDAkz8qdbxUIlJ/r+EEqgKr4VIUT
+         Dr/w==
+X-Gm-Message-State: APjAAAXVskE183SbV+q8jt3k3TBc35xpZx8hhIdBOX7Xna64Z3X5atey
+        Sb157QCu/40FF2/dYqEbvQ==
+X-Google-Smtp-Source: APXvYqzm7oTIsPC2zqv1FVF4iP/x1vKYv6xy17lG21/YsbaWyAoqw9qpdPt25TTkhLOPw4zWj+CrZQ==
+X-Received: by 2002:a5d:620b:: with SMTP id y11mr15162486wru.230.1580732635248;
+        Mon, 03 Feb 2020 04:23:55 -0800 (PST)
 Received: from rob-hp-laptop ([212.187.182.163])
-        by smtp.gmail.com with ESMTPSA id o15sm25365728wra.83.2020.02.03.04.18.49
+        by smtp.gmail.com with ESMTPSA id n1sm25145622wrw.52.2020.02.03.04.23.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 04:18:50 -0800 (PST)
-Received: (nullmailer pid 18049 invoked by uid 1000);
-        Mon, 03 Feb 2020 12:18:49 -0000
-Date:   Mon, 3 Feb 2020 12:18:49 +0000
+        Mon, 03 Feb 2020 04:23:54 -0800 (PST)
+Received: (nullmailer pid 26802 invoked by uid 1000);
+        Mon, 03 Feb 2020 12:23:52 -0000
+Date:   Mon, 3 Feb 2020 12:23:52 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     devicetree@vger.kernel.org, myungjoo.ham@samsung.com,
-        cw00.choi@samsung.com, mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        linux-kernel@vger.kernel.org, helen.koike@collabora.com,
-        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com
-Subject: Re: [PATCH] dt-bindings: convert extcon-usbc-cros-ec.txt
- extcon-usbc-cros-ec.yaml
-Message-ID: <20200203121849.GA8196@bogus>
-References: <20200122151313.11782-1-dafna.hirschfeld@collabora.com>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com, alain.volmat@st.com
+Subject: Re: [PATCH 2/5] dt-bindings: i2c: i2c-stm32f7: add st,stm32mp15-i2c
+ compatible
+Message-ID: <20200203122352.GA26745@bogus>
+References: <1579795970-22319-1-git-send-email-alain.volmat@st.com>
+ <1579795970-22319-3-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200122151313.11782-1-dafna.hirschfeld@collabora.com>
+In-Reply-To: <1579795970-22319-3-git-send-email-alain.volmat@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 04:13:13PM +0100, Dafna Hirschfeld wrote:
-> convert the binding file extcon-usbc-cros-ec.txt to yaml format
-> This was tested and verified on ARM with:
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+On Thu, 23 Jan 2020 17:12:47 +0100, Alain Volmat wrote:
+> Add a new stm32mp15 specific compatible to handle FastMode+
+> registers which are different on the stm32mp15 compared
+> to the stm32f7 or stm32h7.
 > 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 > ---
->  .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 -----------
->  .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 42 +++++++++++++++++++
->  2 files changed, 42 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>  Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-> deleted file mode 100644
-> index 8e8625c00dfa..000000000000
-> --- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -ChromeOS EC USB Type-C cable and accessories detection
-> -
-> -On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
-> -able to detect the state of external accessories such as display adapters
-> -or USB devices when said accessories are attached or detached.
-> -
-> -The node for this device must be under a cros-ec node like google,cros-ec-spi
-> -or google,cros-ec-i2c.
-> -
-> -Required properties:
-> -- compatible:		Should be "google,extcon-usbc-cros-ec".
-> -- google,usb-port-id:	Specifies the USB port ID to use.
-> -
-> -Example:
-> -	cros-ec@0 {
-> -		compatible = "google,cros-ec-i2c";
-> -
-> -		...
-> -
-> -		extcon {
-> -			compatible = "google,extcon-usbc-cros-ec";
-> -			google,usb-port-id = <0>;
-> -		};
-> -	}
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> new file mode 100644
-> index 000000000000..78779831282a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Surely Google is the only copyright holder on the old file and would be 
-okay with dual licensing here?
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ChromeOS EC USB Type-C cable and accessories detection
-> +
-> +maintainers:
-> +  - MyungJoo Ham <myungjoo.ham@samsung.com>
-> +  - Chanwoo Choi <cw00.choi@samsung.com>
-
-Usually this is someone that knows the h/w, not who applies the patch. 
-I'd expect a Google person.
-
-> +
-> +description: |
-> +  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
-> +  able to detect the state of external accessories such as display adapters
-> +  or USB devices when said accessories are attached or detached.
-> +  The node for this device must be under a cros-ec node like google,cros-ec-spi
-> +  or google,cros-ec-i2c.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,extcon-usbc-cros-ec
-> +
-> +  google,usb-port-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      the port id
-
-Any range of values allowed? ~0 is okay?
-
-> +required:
-> +  - compatible
-> +  - google,usb-port-id
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    cros-ec@0 {
-> +        compatible = "google,cros-ec-i2c";
-> +        extcon {
-> +            compatible = "google,extcon-usbc-cros-ec";
-> +            google,usb-port-id = <0>;
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
