@@ -2,163 +2,131 @@ Return-Path: <SRS0=8HU2=3X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFE5C3524D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 07:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88263C3524D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 08:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B323C20658
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 07:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5662520658
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Feb 2020 08:23:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mBsWaIqg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="da7n1AvY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgBCHqS (ORCPT
+        id S1727225AbgBCIXJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 02:46:18 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35936 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbgBCHqP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 02:46:15 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so16629492wru.3
-        for <devicetree@vger.kernel.org>; Sun, 02 Feb 2020 23:46:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3nucfqlZlbS9OuDGzb3kixq1Br5Ct5yP/xRIMcpGX3I=;
-        b=mBsWaIqgxBm8aCgBacUzTG7hSSBWgBjHas+8ae87Zzr33BdDyOswJQPMH3FbJ0eOhD
-         kCtZzepzkXSgXl+4F+CLOPlJ2CvCSbzSqx6sjQkzOq07TkagOaHfhR+5rwpkRwIaqwId
-         NP6ltWCKqca7ky9ktf/JB9p3Hk1x+Ose9hDG1Xj1/MSitC77bKNotLaD8fVh0j4eFcS5
-         DkJ8biOJMNn0LjxriM/OkD9IKdQVbi1l8TpOLPLF9LRFHPSvk6Cn1ueXhjy5n5Rcm996
-         1c2z9DchENiRTvTIUJwHx6nLH8QULbKfTRr/dIGYh5UjzbVJFs+TN4awtfXJuOGZ+p9Y
-         969g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3nucfqlZlbS9OuDGzb3kixq1Br5Ct5yP/xRIMcpGX3I=;
-        b=H6se3MzzUYwPNh0AnuKHAziBOiEvYEsXTez81W5XKNyuPyffHRte6SGzjSzonRakGK
-         0/D9Izjuo5pdtMXsBTRQpIgv0ILrGtd1Ojg2XcaGXf2IpRJafPNPFaqPC0Q7w/7u9j5o
-         29kqpj9IpjcQ9ZbCdiae3S8SY+je66Zr3G046VH8aIm9Zz001YwlFgExxcj0Q/6wQ0ou
-         ET6HK2llO3XProqE+PTUoFZnwn7lrcUYdy5uPYM+Nmx6a/FETh4gzhWzewrfpIubyDl7
-         7b78mRUHQ7w9KXOXQ962YdtBPe2RAnH8fekZFaR9/Of9kewCqiNNtYcjJKvc6BQVBH31
-         D57Q==
-X-Gm-Message-State: APjAAAV5H0owNo6jXOkmO53XkHzV1da07duZ5t5SiCrT9t+EXeLKdiA0
-        baA0CcG6Ew06EdwYaugqWkkgDQ==
-X-Google-Smtp-Source: APXvYqwUM3eHfQyl0jYk2jMIm1HD6qhbHIGYlpCQN5vKCDU4ZGIkG0S0TmUkq8oDkZb8nAkfD69J1A==
-X-Received: by 2002:adf:ffc7:: with SMTP id x7mr13424029wrs.159.1580715972793;
-        Sun, 02 Feb 2020 23:46:12 -0800 (PST)
-Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id r15sm21991157wmh.21.2020.02.02.23.46.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 23:46:12 -0800 (PST)
-Date:   Mon, 3 Feb 2020 07:46:21 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Tianping Fang <tianping.fang@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
-Subject: Re: [PATCH v7 3/6] mfd: Add support for the MediaTek MT6358 PMIC
-Message-ID: <20200203074621.GB13919@dell>
-References: <1576057435-3561-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1576057435-3561-4-git-send-email-hsin-hsiung.wang@mediatek.com>
- <20191216151735.GD2369@dell>
- <1579664886.6399.24.camel@mtksdaap41>
+        Mon, 3 Feb 2020 03:23:09 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:64613 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726653AbgBCIXI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 03:23:08 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580718187; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=RSjEiJ0ttdkS4GFK/NmrKRk8pctFGBmoDIg5s6bhlOg=;
+ b=da7n1AvY1a7V/37oqTufbUlJcIAEqcV6fTE1T9I9ucHCTpsLO3Yz8vz9DwqUm9NmEHVvTZLh
+ zBJsF3Ot2fW3fhbO2wt2AGm9Q3q3dKIVLHmPR8aocdc65OC8qiSsOTV5/xCzKDtXN9rlaUPP
+ gvu1nGQdjyXRumfcQWK5b7sFpTg=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e37d86a.7fc837d1c3e8-smtp-out-n03;
+ Mon, 03 Feb 2020 08:23:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C5B3FC447A0; Mon,  3 Feb 2020 08:23:05 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: gubbaven)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1FD62C43383;
+        Mon,  3 Feb 2020 08:23:05 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1579664886.6399.24.camel@mtksdaap41>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 03 Feb 2020 13:53:05 +0530
+From:   gubbaven@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        robh@kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
+        yshavit@google.com, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip WCN3991
+In-Reply-To: <20200131223626.GA237926@google.com>
+References: <1580456335-7317-1-git-send-email-gubbaven@codeaurora.org>
+ <1580456335-7317-2-git-send-email-gubbaven@codeaurora.org>
+ <20200131223626.GA237926@google.com>
+Message-ID: <3a9f33a4e8e6f2ac2ebd286e31e5836f@codeaurora.org>
+X-Sender: gubbaven@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Jan 2020, Hsin-hsiung Wang wrote:
+Hi Matthias,
 
-> Hi,
+On 2020-02-01 04:06, Matthias Kaehlcke wrote:
+> + DT folks
 > 
-> On Mon, 2019-12-16 at 15:17 +0000, Lee Jones wrote:
-> > On Wed, 11 Dec 2019, Hsin-Hsiung Wang wrote:
-> > 
-> > > This adds support for the MediaTek MT6358 PMIC. This is a
-> > > multifunction device with the following sub modules:
-> > > 
-> > > - Regulator
-> > > - RTC
-> > > - Codec
-> > > - Interrupt
-> > > 
-> > > It is interfaced to the host controller using SPI interface
-> > > by a proprietary hardware called PMIC wrapper or pwrap.
-> > > MT6358 MFD is a child device of the pwrap.
-> > > 
-> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > > ---
-> > >  drivers/mfd/Makefile                 |   2 +-
-> > >  drivers/mfd/mt6358-irq.c             | 224 ++++++++++++++++++++++++++++
-> > >  drivers/mfd/mt6397-core.c            |  45 +++++-
-> > >  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
-> > >  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/mt6397/core.h      |   3 +
-> > >  6 files changed, 712 insertions(+), 2 deletions(-)
-> > >  create mode 100644 drivers/mfd/mt6358-irq.c
-> > >  create mode 100644 include/linux/mfd/mt6358/core.h
-> > >  create mode 100644 include/linux/mfd/mt6358/registers.h
-
-[...]
-
-> > > +int mt6358_irq_init(struct mt6397_chip *chip)
-> > > +{
-> > > +	int i, j, ret;
-> > > +	struct pmic_irq_data *irqd;
-> > > +
-> > > +	irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
-> > > +			    GFP_KERNEL);
-> > > +	if (!irqd)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	chip->irq_data = irqd;
-> > > +
-> > > +	mutex_init(&chip->irqlock);
-> > > +	irqd->top_int_status_reg = MT6358_TOP_INT_STATUS0;
-> > > +	irqd->num_pmic_irqs = MT6358_IRQ_NR;
-> > > +	irqd->num_top = ARRAY_SIZE(mt6358_ints);
-> > > +
-> > > +	irqd->enable_hwirq = devm_kcalloc(chip->dev,
-> > > +					  irqd->num_pmic_irqs,
-> > > +					  sizeof(bool),
-> > 
-> > This is fragile.  What if the type changes elsewhere?
-> > 
+> On Fri, Jan 31, 2020 at 01:08:55PM +0530, Venkata Lakshmi Narayana 
+> Gubba wrote:
+>> Add compatible string for the Qualcomm WCN3991 Bluetooth controller
+>> 
+>> Signed-off-by: Venkata Lakshmi Narayana Gubba 
+>> <gubbaven@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 3 +++
+>>  1 file changed, 3 insertions(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
+>> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> index 68b67d9..e72045d 100644
+>> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> @@ -11,6 +11,7 @@ Required properties:
+>>   - compatible: should contain one of the following:
+>>     * "qcom,qca6174-bt"
+>>     * "qcom,wcn3990-bt"
+>> +   * "qcom,wcn3991-bt"
+>>     * "qcom,wcn3998-bt"
+>> 
+>>  Optional properties for compatible string qcom,qca6174-bt:
+>> @@ -30,6 +31,7 @@ Optional properties for compatible string 
+>> qcom,wcn399x-bt:
+>> 
+>>   - max-speed: see 
+>> Documentation/devicetree/bindings/serial/slave-device.txt
+>>   - firmware-name: specify the name of nvm firmware to load
+>> + - clocks: clock provided to the controller
+>> 
+>>  Examples:
+>> 
+>> @@ -56,5 +58,6 @@ serial@898000 {
+>>  		vddch0-supply = <&vreg_l25a_3p3>;
+>>  		max-speed = <3200000>;
+>>  		firmware-name = "crnv21.bin";
+>> +		clocks = <&rpmhcc>;
 > 
-> Thanks for your comment.
-> Do you mean using 'sizeof(*irqd->enable_hwirq)' instead of
-> 'sizeof(bool)'?
+> That specifies a clock controller, not a clock.
+> 
+> For a device with the SC7180 SoC we use this:
+> 
+> 		clocks = <&rpmhcc RPMH_RF_CLK2>;
 
-Yes please.
+[Venkata] :
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Sure, we will update in next patch set.
+> 
+>>  	};
+>>  };
+
+Regards,
+Venkata.
