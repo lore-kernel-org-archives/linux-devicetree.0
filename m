@@ -2,113 +2,89 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFF0C2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 13:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D243C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 13:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D882192A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 13:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF68E2166E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 13:26:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ZQptpfXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgBDNV3 (ORCPT
+        id S1727242AbgBDN0a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 08:21:29 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:7394 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727168AbgBDNV3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 08:21:29 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Feb 2020 18:48:35 +0530
-Received: from pillair-linux.qualcomm.com ([10.204.116.193])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Feb 2020 18:48:26 +0530
-Received: by pillair-linux.qualcomm.com (Postfix, from userid 452944)
-        id C315A3963; Tue,  4 Feb 2020 18:48:24 +0530 (IST)
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v6] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Tue,  4 Feb 2020 18:48:20 +0530
-Message-Id: <1580822300-4491-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 4 Feb 2020 08:26:30 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37237 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727183AbgBDN03 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 08:26:29 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 014DNoVK030249;
+        Tue, 4 Feb 2020 14:26:17 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=AplTNN5L+r2sBe+jH4b1Al4L+72dRx8nYadx/tYF8Ug=;
+ b=ZQptpfXca1Q2Ug7CIhv4qXR30/e2gpoGXV3YL2Z0t0T2MGKKK6j5dXKjgJUQnDbREHsm
+ FEysJBgBfVpQDR8mZnRG92U3HBeQXHpUDhKKdXAMkIcs9IyZtsv1rbVmyFwMNlEGVV2j
+ x7ZIhpJim5exW954sZQ+vPSCWnvUSHDhsy7wuwu11nc+ieZGNLt/s59zvAMv9j4cJUAX
+ eX7jYYNdXmUZZRecIbbBvVvtNV4YAQWTOgtanF04qHn+qhcm6WfOsccx1ZWXFiVuNdaV
+ 2q7bZKb+DXRrie9IFAtHat4+z2rcugLY1ZQOsegz0Sz/kylIvf2LdD2uJHYZaXlJbYHF 1Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xw0019tb3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Feb 2020 14:26:17 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 042AB100034;
+        Tue,  4 Feb 2020 14:26:12 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D5FEA2B188F;
+        Tue,  4 Feb 2020 14:26:12 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 4 Feb 2020 14:26:12
+ +0100
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 0/3] USB OTG Dual Role on STM32MP15
+Date:   Tue, 4 Feb 2020 14:26:03 +0100
+Message-ID: <20200204132606.20222-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-04_04:2020-02-04,2020-02-04 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device node for the ath10k SNOC platform driver probe
-and add resources required for WCN3990 on sc7180 soc.
+This patchset adds support for USB OTG Dual Role on stm32mp15.
+USB OTG HS is configured in Dual Role mode on stm32mp157c-ev1, role detection
+uses ID pin.
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+Amelie Delaunay (3):
+  ARM: dts: stm32: add USB OTG full support on stm32mp151
+  ARM: dts: stm32: add USB OTG pinctrl to stm32mp15
+  ARM: dts: stm32: enable USB OTG Dual Role on stm32mp157c-ev1
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50a..167f68ac 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -287,6 +287,11 @@
- 	vdda-pll-supply = <&vreg_l4a_0p8>;
- };
- 
-+&wifi {
-+	status = "okay";
-+	qcom,msa-fixed-perm;
-+};
-+
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
- &qspi_clk {
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 8011c5f..e3e8610 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -75,6 +75,11 @@
- 			reg = <0x0 0x80900000 0x0 0x200000>;
- 			no-map;
- 		};
-+
-+		wlan_fw_mem: memory@93900000 {
-+			reg = <0 0x93900000 0 0x200000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
-@@ -1490,6 +1495,28 @@
- 
- 			#freq-domain-cells = <1>;
- 		};
-+
-+		wifi: wifi@18800000 {
-+			compatible = "qcom,wcn3990-wifi";
-+			reg = <0 0x18800000 0 0x800000>;
-+			reg-names = "membase";
-+			iommus = <&apps_smmu 0xc0 0x1>;
-+			interrupts =
-+				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-+				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-+				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-+				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-+				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-+				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-+				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-+				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-+				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-+				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-+				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-+				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-+			memory-region = <&wlan_fw_mem>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	thermal-zones {
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/stm32mp151.dtsi        |  3 ++-
+ arch/arm/boot/dts/stm32mp157c-ed1.dts    |  4 ++++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts    |  3 ++-
+ 4 files changed, 21 insertions(+), 2 deletions(-)
+
 -- 
-2.7.4
+2.17.1
 
