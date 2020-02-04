@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D61C35247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CEFC35247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33022082E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B871F20674
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxqH2zud"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WeRebeBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbgBDSTP (ORCPT
+        id S1727468AbgBDSWK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:19:15 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35676 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbgBDSTO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 13:19:14 -0500
-Received: by mail-lf1-f68.google.com with SMTP id z18so12899433lfe.2
-        for <devicetree@vger.kernel.org>; Tue, 04 Feb 2020 10:19:11 -0800 (PST)
+        Tue, 4 Feb 2020 13:22:10 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33731 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgBDSWK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 13:22:10 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so19690072lji.0
+        for <devicetree@vger.kernel.org>; Tue, 04 Feb 2020 10:22:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=263l/kXk/O2VqBW1YQGhsnniYx47UR4rp/DuGLM6uRs=;
-        b=kxqH2zudhtDJEy7ymcHvBzEW3FJpBMLx3CFfUdHnAVFXasTaqStnKXJa88Qd5MfzHr
-         UbQLp0c/9m7cBeJM4BVWCs6h0rihDUFeauy/E0ly1EBdlc4HixVHSzUtqetSdUQpXlOl
-         sp+wsHotrzDUY7T5d+hui7bjrII+OkqAXQ18+cZI79daW41LyaNoevVvDscXkzAJM+Da
-         pFnLz+Bo0x/6YNwxIkn0ZR0T9A2shQ7hcUI//wLyi80iY6sn0D4f4MSqErvemK32An+P
-         k+oQvTAFqRfw+sUdQp8fYL82mXDNOkWlnyytsSf04J60eph8Db99ifBecXICZbjBUO17
-         pmOQ==
+        bh=QDmc7rJKH3PB8BRLa4LSMdik+WscauM3bJQAO66d9eA=;
+        b=WeRebeBVSEUt28wl435zQEX1/6tiqV9monpU/7Ej5fqLhT4R41NF8WtVIPn3kCpd2W
+         wbcN2Sjxu4ENSsuskkDYKK9U80zRpDL4LUYH/tlUOhVyLqB1KATrcbuAqPq0Al5qoWvp
+         rMHMlBCss0WzMtE8Lymhfpn15/d3thD2oJEIZmNP8MDzdV8YSMDGPweIJImQWGcV8Ga/
+         j/IbkkAP1Fj9pbuFBAyq/t9v6EySeBAPmFRUvTPRYghB8ovJFADomNk5+wvaaAHEWM0S
+         hpqdASOKeTOzzB6JZ+53/Eq07SOogb68gbxVJW6udAD0KmS978l/cAwWllNpHbBrJLcc
+         ldEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=263l/kXk/O2VqBW1YQGhsnniYx47UR4rp/DuGLM6uRs=;
-        b=ZXCISYfdtzVvfyr6MvEeUyPiJjKfjaJZQbOur3oiIG9/fR4cQbX/x0dOOZwoqHjPqt
-         N8YwyML63AV2onfywHK0xQGSK9DmN8U2q9YvLLsEFp1LYE877C4jXPtOeWzAUk5TsiV7
-         Lxo0IQqQQXiptxK/E/LzhUTUvKfQtE5e4OFm8qbM/hATWqQyBlvlsjKCwvzxmrb+Ul5F
-         fbDX0LFGKK1jB5Mm74kkc6YKOzQJWuX4JyM/SpMIaZ6UhFSSCraTtjDyj73kevoth/1H
-         1Axkc7O6XHKmX8dRDfXZnsCAFYzY9gBAdIXrc+BmB3mqM57izgLNn02TP2GX2GNUSDKt
-         8luA==
-X-Gm-Message-State: APjAAAV8XLqwyOQ8w/NbWbuxmkWbJ1LjO7NBeph6nUzTDccu2eVPDOQF
-        pRMUCHsu4XhJ472JS+o2Geh0xgdpkzIE/ERm1W1qKA==
-X-Google-Smtp-Source: APXvYqxYI97dIGwKe2kfoCU+bRfD51KxBYO1PfazopT6MD7LCXVkpTRstdxdtvoPSvV2TW99mgjSmdDAHXDrIn3Whl8=
-X-Received: by 2002:ac2:489b:: with SMTP id x27mr15395596lfc.130.1580840350453;
- Tue, 04 Feb 2020 10:19:10 -0800 (PST)
+        bh=QDmc7rJKH3PB8BRLa4LSMdik+WscauM3bJQAO66d9eA=;
+        b=PTHH6WnsYyXgaUik/qIhNH6DWHURdv/VaVdETKW7ZBHrPtIEvi1YgRST4Pfm+LbyDS
+         3C0dFFLzNoiw/nuIb/sfDqzVOWZnfEnE9RDi7/REs3U6+oepJ9En4lFsIKMiuahmwYUE
+         rqEb65+cW3i0PVMKhJQ6lTLqoiIKk28yQoka7v9K/Kw0DHVJwSJFa4EpewEfJiSTDK3U
+         NEYAq2Qrls4Uhx4EmDMHRt6JwqIjeSuLBTJFb5cxwaHC1EJzeA9vwo53R5iN0Hlt19x7
+         kmWWcgN8COIb3mc9Mf95Gz26pg2Zbs9Rcvoj7rhq6XUYrrFIq2pK24u1Z4ZZhy7j1a/G
+         3l3Q==
+X-Gm-Message-State: APjAAAWUO5f2c2XDasUt7SxjzdPl07uf3b0l8bHwLEmPx0ZzV3LMVi7E
+        1awh3cfeK3Tyr2rGL4BFXqaoTIbtTNcbh2zYVNqFmg==
+X-Google-Smtp-Source: APXvYqxET1q8n/qQ6aY0jYO8nGz1OvZdbUcpn8bnrFqAZJyuuJYIXotPvLB+pBHSS5AiqYMW6+TjrlGJYozegKXPWGc=
+X-Received: by 2002:a2e:81c7:: with SMTP id s7mr18353599ljg.3.1580840527698;
+ Tue, 04 Feb 2020 10:22:07 -0800 (PST)
 MIME-Version: 1.0
-References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org> <1578630784-962-7-git-send-email-daidavid1@codeaurora.org>
-In-Reply-To: <1578630784-962-7-git-send-email-daidavid1@codeaurora.org>
+References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org> <1578630784-962-6-git-send-email-daidavid1@codeaurora.org>
+In-Reply-To: <1578630784-962-6-git-send-email-daidavid1@codeaurora.org>
 From:   Evan Green <evgreen@google.com>
-Date:   Tue, 4 Feb 2020 10:18:34 -0800
-Message-ID: <CAE=gft7qtfQjKK-MGgR_sK+Lsi2GmXgPkSsysD-DdUmFW4qMQw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] arm64: dts: sdm845: Redefine interconnect provider
- DT nodes
+Date:   Tue, 4 Feb 2020 10:21:31 -0800
+Message-ID: <CAE=gft6--=zhxfR9G=S0g-5c9YdpvaFWz9dcgV7zJQAzcreZjg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] interconnect: qcom: sdm845: Split qnodes into
+ their respective NoCs
 To:     David Dai <daidavid1@codeaurora.org>
 Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -79,100 +79,37 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Thu, Jan 9, 2020 at 8:33 PM David Dai <daidavid1@codeaurora.org> wrote:
 >
-> Add the DT nodes for each of the Network-On-Chip interconnect
-> buses found on SDM845 based platform and redefine the rsc_hlos
-> child node as a bcm-voter device to better represent the hardware.
+> In order to better represent the hardware and its different Network-On-Chip
+> devices, split the sdm845 provider driver into NoC specific providers.
+> Remove duplicate functionality already provided by the icc rpmh and
+> bcm voter drivers to calculate and commit bandwidth requests to hardware.
 >
 > Signed-off-by: David Dai <daidavid1@codeaurora.org>
 > ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 58 insertions(+), 3 deletions(-)
+>  drivers/interconnect/qcom/sdm845.c             | 1132 ++++++++++--------------
+>  include/dt-bindings/interconnect/qcom,sdm845.h |  263 +++---
+>  2 files changed, 609 insertions(+), 786 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index ddb1f23..7c617a9 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1364,6 +1364,55 @@
->                         interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
->                 };
+> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+> index f078cf0..8145612 100644
+> --- a/drivers/interconnect/qcom/sdm845.c
+> +++ b/drivers/interconnect/qcom/sdm845.c
+> @@ -5,283 +5,285 @@
+>   */
 >
-> +               mem_noc: interconnect@1380000 {
-> +                       compatible = "qcom,sdm845-mem-noc";
-> +                       reg = <0 0x01380000 0 0x27200>;
-> +                       #interconnect-cells = <1>;
-> +                       qcom,bcm-voters = <&apps_bcm_voter>;
-> +               };
-> +
-> +               dc_noc: interconnect@14e0000 {
-> +                       compatible = "qcom,sdm845-dc-noc";
-> +                       reg = <0 0x014e0000 0 0x400>;
-> +                       #interconnect-cells = <1>;
-> +                       qcom,bcm-voters = <&apps_bcm_voter>;
-> +               };
-> +
-> +               config_noc: interconnect@1500000 {
-> +                       compatible = "qcom,sdm845-config-noc";
-> +                       reg = <0 0x01500000 0 0x5080>;
-> +                       #interconnect-cells = <1>;
-> +                       qcom,bcm-voters = <&apps_bcm_voter>;
-> +               };
-> +
-> +               system_noc: interconnect@1620000 {
-> +                       compatible = "qcom,sdm845-system-noc";
-> +                       reg = <0 0x01620000 0 0x18080>;
-> +                       #interconnect-cells = <1>;
-> +                       qcom,bcm-voters = <&apps_bcm_voter>;
-> +               };
-> +
-> +               aggre1_noc: interconnect@16e0000 {
-> +                       compatible = "qcom,sdm845-aggre1-noc";
-> +                       reg = <0 0x016e0000 0 0xd080>;
-> +                       #interconnect-cells = <1>;
-> +                       qcom,bcm-voters = <&apps_bcm_voter>;
-> +               };
-> +
-> +               aggre2_noc: interconnect@1700000 {
-> +                       compatible = "qcom,sdm845-aggre2-noc";
-> +                       reg = <0 0x01700000 0 0x3b100>;
-> +                       #interconnect-cells = <1>;
-> +                       qcom,bcm-voters = <&apps_bcm_voter>;
-> +               };
-> +
-> +               mmss_noc: interconnect@1740000 {
-> +                       compatible = "qcom,sdm845-mmss-noc";
-> +                       reg = <0 0x01740000 0 0x1c1000>;
-> +                       #interconnect-cells = <1>;
-> +                       qcom,bcm-voters = <&apps_bcm_voter>;
-> +               };
-> +
->                 ufs_mem_hc: ufshc@1d84000 {
->                         compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
->                                      "jedec,ufs-2.0";
-> @@ -3100,6 +3149,13 @@
->                         #mbox-cells = <1>;
->                 };
->
-> +               gladiator_noc: interconnect@17900000 {
-> +                       compatible = "qcom,sdm845-gladiator-noc";
-> +                       reg = <0 0x17900000 0 0xd080>;
-> +                       #interconnect-cells = <1>;
-> +                       qcom,bcm-voters = <&apps_bcm_voter>;
-> +               };
-> +
->                 apps_rsc: rsc@179c0000 {
->                         label = "apps_rsc";
->                         compatible = "qcom,rpmh-rsc";
-> @@ -3174,9 +3230,8 @@
->                                 };
->                         };
->
-> -                       rsc_hlos: interconnect {
-> -                               compatible = "qcom,sdm845-rsc-hlos";
-> -                               #interconnect-cells = <1>;
+>  #include <asm/div64.h>
 
-With this reworking of the bindings the examples in these files are now broken:
-Documentation/devicetree/bindings/display/msm/gpu.txt
-Documentation/devicetree/bindings/display/msm/dpu.txt
+You don't need this header anymore, right?
 
-It would be nice to fix them up in a subsequent change.
--Evan
+> -#include <dt-bindings/interconnect/qcom,sdm845.h>
+>  #include <linux/device.h>
+>  #include <linux/interconnect.h>
+>  #include <linux/interconnect-provider.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> -#include <linux/of_platform.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/sort.h>
+
+..or this one.
