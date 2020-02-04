@@ -2,168 +2,110 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC73EC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE9AC2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8066A2051A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA6A20674
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQbfdZPc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRyxYkhu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgBDLEd (ORCPT
+        id S1726887AbgBDLH5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:04:33 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45918 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgBDLEc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 06:04:32 -0500
-Received: by mail-wr1-f65.google.com with SMTP id a6so22402437wrx.12;
-        Tue, 04 Feb 2020 03:04:31 -0800 (PST)
+        Tue, 4 Feb 2020 06:07:57 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38305 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbgBDLH5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 06:07:57 -0500
+Received: by mail-pg1-f193.google.com with SMTP id a33so9490085pgm.5;
+        Tue, 04 Feb 2020 03:07:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lq/aNd5t/n/SsQ33A9X2QOBbDCCTY/Azoi8wa+8cOTk=;
-        b=iQbfdZPctYYFYFe0aUyR/AN3T2OIAlD9LW+pbO2tB5Kd0khUBhrk2VCiZf7Pqzcn1q
-         ZYKBmXwwpEX+fBcaqgm3v9nEVGlZhDp5/0hveaBDju6IHVy7jJHxgQoBXqvx/BUdXK25
-         8QLroR/cZuEz6eKBdJ3O76fp6mxM1b/2L/GIPOEJQ1z0x8HX1mSNa4rvwy5YRVFZZ/+K
-         GdxlxZHJGLzXHoI3BoJjcV03rxvagIv9ZwmauHytttmSrldBrCS5nm/Oz/FSOpUsuzu3
-         3XZEh1mksOLi9kmyw6lub+ilm3rG+ALM0aaFk30qBt9aLO1m6//Cs0SwUPvzX1gLU9qv
-         bsCg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ESHQtDlIcqtlfd+NGPSAxf7TiL0GDSX0Vx2MqLzOZw8=;
+        b=CRyxYkhua7wqf0UmXQPzq2KQXbrAz9m4mVtTNrv2cRwBLNqziFULS+46m1H0OU+DOt
+         5YZK19o0bVR+jIfRuIK2NuRu5lObnKIwqtXBvtR5LxB0dUzWVBkCmDqdD5a6Xc2ZdyeD
+         v2zSLltYTJSJsfDfYJgJURvpv809LiznmqL5dwlmSLA51wqDruR/vYMNvo7Wp3vjSODC
+         5UutoOkZ1X1hveYWu3qzbSsII+qkXVidqTt1mxtYyW+fEyOBPhkq+CA+2lQlgFfwVm1P
+         BeNQIVmNeLSHwVS9Qc8moooCkvdI6MK3rJJ3Jp55ofZ/L996+QKK7WvlUrqm2x/wHiwM
+         nw4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=lq/aNd5t/n/SsQ33A9X2QOBbDCCTY/Azoi8wa+8cOTk=;
-        b=AY5wUr9pQeRa8i2n4Bi1xnBsRvNAKPVI6LIBEQIqVfMuCHUnUVw+6CM0k20OdKleMl
-         5Cj+uzUcYFw0P+OHtbrdztZL0iVVSPQYTzQaZ27SIcg4PZj88pucsmUHlxxM72selZKy
-         TgvpOslbP+IT1jOVSBtnUbSpqdtFp6Wj9FTs39VQEh7YgRNZxFhbRzBfK0QNsWhGtHFd
-         SKki9l1R8z13iDnEqnvrhIqrej+NgQy4YFXLvP7zmBCGm2OP1rEwn1uPQqnetMr9a0S0
-         LGK7zs/h8cCFaYQRCbh04DLPGBcgsrP2iAepOhNjyFJAkzLVKt+P/WWBUjQMUXSf8h0h
-         MyGg==
-X-Gm-Message-State: APjAAAWBo6ihT8IQb/ORuPwdn33UAPVjtBrXndBBhamhvCxKhsGYlrVe
-        rVT7Gm+wVymgEb+wtuqrhQk=
-X-Google-Smtp-Source: APXvYqw7YrquZWw+fpXAYpAvC1Luli9B6j7sqPME9mNfNKHYuOULgqqGyr10Ngrfrelur6/8Z2xiNw==
-X-Received: by 2002:adf:f288:: with SMTP id k8mr23194202wro.301.1580814270682;
-        Tue, 04 Feb 2020 03:04:30 -0800 (PST)
-Received: from localhost.localdomain (p5B3F65E4.dip0.t-ipconnect.de. [91.63.101.228])
-        by smtp.gmail.com with ESMTPSA id y185sm3476935wmg.2.2020.02.04.03.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 03:04:30 -0800 (PST)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings: regulator: add document bindings for mp5416
-Date:   Tue,  4 Feb 2020 12:04:17 +0100
-Message-Id: <20200204110419.25933-2-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200204110419.25933-1-sravanhome@gmail.com>
-References: <20200204110419.25933-1-sravanhome@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ESHQtDlIcqtlfd+NGPSAxf7TiL0GDSX0Vx2MqLzOZw8=;
+        b=FDh28kNJtC3AkLraELOeYNqOzFWDVcZAt9bpGz+HrQoN6NASpexAKYzxYiqC/6gLpb
+         ZMuKuzHzWBpYh3khgh+LpcyksyyeJha4W//i8UboRiVSkcSI8149GGfm9Fl0Q4+UzJLW
+         r8cLUVtP+xhTgwDtkNRR3me0DcgKTKcN3vroJym8BxXwJPwJsrN6ul5AZTqedNlWdNCY
+         7IpvXaGRLupHJZ9uOeLnc0jninXtq5RRhxnMUyPwcprBAtx8X8L1jb3jbflG52yC4+mj
+         tILyoqeSbyYpqB7HYW4g8w3jj9cTGT+HcE8TMStgltWMECKwu/Jvvqfrozg+bNwFKa9+
+         HDyw==
+X-Gm-Message-State: APjAAAXKyArdZ710P0YljW/JsiI3fE9Ift+sMIWRRX4fUJN9tHvEHGcp
+        tF/N0XRjs9aBQ3xojwR5xHBaaju04keZ52tJtLzi8TjqBdk=
+X-Google-Smtp-Source: APXvYqyPQ+yETkyt1/TkchmZ3n6Rdzgwtsf/ny9fnoHapXSiK5r4dCz5U/ntSbFw4vm7r9QH01Z0RYz3v7l6Imiw3FU=
+X-Received: by 2002:a65:4685:: with SMTP id h5mr32173510pgr.203.1580814476576;
+ Tue, 04 Feb 2020 03:07:56 -0800 (PST)
+MIME-Version: 1.0
+References: <20200131023433.12133-1-chris.packham@alliedtelesis.co.nz>
+ <20200131023433.12133-3-chris.packham@alliedtelesis.co.nz>
+ <CAHp75VfT=KNM6J1bP5cPsLw7Z776opcB9Kf6qhNCZukY-7g=pQ@mail.gmail.com> <86509a5e6656c4f560ee6f6514ab00a232994957.camel@alliedtelesis.co.nz>
+In-Reply-To: <86509a5e6656c4f560ee6f6514ab00a232994957.camel@alliedtelesis.co.nz>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 4 Feb 2020 13:07:48 +0200
+Message-ID: <CAHp75VdRYDrTeBy9+TbbE8y3jt_Fntr6fnXon3CuqCZFYQ7Maw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] spi: Add generic SPI multiplexer
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for mp5416 regulator driver.
+On Mon, Feb 3, 2020 at 11:12 PM Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
+> On Mon, 2020-02-03 at 11:50 +0200, Andy Shevchenko wrote:
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- .../bindings/regulator/mps,mp5416.yaml        | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
+...
 
-diff --git a/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml b/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
-new file mode 100644
-index 000000000000..f0acce2029fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/mps,mp5416.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Monolithic Power System MP5416 PMIC
-+
-+maintainers:
-+  - Saravanan Sekar <sravanhome@gmail.com>
-+
-+properties:
-+  $nodename:
-+    pattern: "^pmic@[0-9a-f]{1,2}$"
-+  compatible:
-+    enum:
-+      - mps,mp5416
-+
-+  reg:
-+    maxItems: 1
-+
-+  regulators:
-+    type: object
-+    description: |
-+      list of regulators provided by this controller, must be named
-+      after their hardware counterparts BUCK[1-4] and LDO[1-4]
-+
-+    patternProperties:
-+      "^buck[1-4]$":
-+        allOf:
-+          - $ref: "regulator.yaml#"
-+        type: object
-+
-+      "^ldo[1-4]$":
-+        allOf:
-+          - $ref: "regulator.yaml#"
-+        type: object
-+
-+    additionalProperties: false
-+  additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@69 {
-+          compatible = "mps,mp5416";
-+          reg = <0x69>;
-+
-+          regulators {
-+
-+            buck1 {
-+             regulator-name = "buck1";
-+             regulator-min-microvolt = <600000>;
-+             regulator-max-microvolt = <2187500>;
-+             regulator-min-microamp  = <3800000>;
-+             regulator-max-microamp  = <6800000>;
-+             regulator-boot-on;
-+            };
-+
-+            ldo2 {
-+             regulator-name = "ldo2";
-+             regulator-min-microvolt = <800000>;
-+             regulator-max-microvolt = <3975000>;
-+            };
-+         };
-+       };
-+     };
-+...
+> > > +       priv->mux = devm_mux_control_get(&spi->dev, NULL);
+> > > +       ret = PTR_ERR_OR_ZERO(priv->mux);
+> >
+> > This is a bit complicated.
+> >
+> > > +       if (ret) {
+> >
+> > Why not simple do
+> >
+> >   if (IS_ERR(priv->mux)) {
+> >     ret = PTR_ERR(...);
+> >     ...
+> >   }
+> >
+> > ?
+>
+> I've had other maintainers/reviewers suggest the opposite for patches
+> I've submitted to other subsystems which is why I went with
+> PTR_ERR_OR_ZERO. It also works well with the goto err_put_ctlr; which
+> needs ret to be set. It's not exactly a common pattern in the spi code
+> so I'd be happy to go the other way if that's the desired convention
+> for spi.
+
+Either way is the same amount of lines. The slight difference, that we
+don't check for 0. Can you check if generated code is different in
+these cases?
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
