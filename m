@@ -2,128 +2,121 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A23DC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D25C3524D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CEB20661
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46F321744
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:34:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l6INJAji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbgBDOPm (ORCPT
+        id S1727345AbgBDOeO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:15:42 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:47719 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727207AbgBDOPm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 09:15:42 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Feb 2020 19:45:39 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Feb 2020 19:45:39 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id B45A528BA; Tue,  4 Feb 2020 19:45:38 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v1] dt-bindings: msm:disp: update dsi and dpu bindings
-Date:   Tue,  4 Feb 2020 19:45:37 +0530
-Message-Id: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 4 Feb 2020 09:34:14 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:35741 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727250AbgBDOeN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 09:34:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580826853; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=LOayz92CiS3mJzv9h9nepoJ7jN0NsDcY/StZV7GTdyM=; b=l6INJAjiq2YDaEXkpFGD8yu8cc+5VNEJFmGbXE2Hb21VeGZrLioiF7A8MGUAZUDGn07tdCfV
+ 5oi083RXWvzSMm+99Ty+t9R/2quldTmu80n71G7rsLxbcvtNPulFQXy6Sv/BoomTiRjbTyym
+ XH4FllJgw7mgldVdfo2flW0DqoA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3980df.7f0a627aa298-smtp-out-n03;
+ Tue, 04 Feb 2020 14:34:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DEE0CC447A6; Tue,  4 Feb 2020 14:34:06 +0000 (UTC)
+Received: from [192.168.1.5] (unknown [122.164.174.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7EBEEC447A2;
+        Tue,  4 Feb 2020 14:34:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7EBEEC447A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH V6 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        linux-gpio@vger.kernel.org, robh+dt@kernel.org, agross@kernel.org,
+        sivaprak@codeaurora.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org>
+ <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
+ <20200127154113.GA6904@bogus>
+ <422e31d0-f67f-3b10-5d8f-ccc9d6f7dc70@codeaurora.org>
+ <9acb9b69-fd44-57db-e974-9fee5a1d871f@codeaurora.org>
+Message-ID: <11ad212e-5c6a-968b-33ca-977c8596ef6a@codeaurora.org>
+Date:   Tue, 4 Feb 2020 20:03:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <9acb9b69-fd44-57db-e974-9fee5a1d871f@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Updating bindings of dsi and dpu by adding and removing certain
-properties.
+Hi Linus,
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
+On 2/4/2020 7:34 PM, Sricharan R wrote:
+> Hi Rob,
+> 
+> On 1/28/2020 10:07 AM, Sricharan R wrote:
+>> Hi,
+>>
+>> On 1/27/2020 9:11 PM, Rob Herring wrote:
+>>> On Sun, 19 Jan 2020 18:43:17 +0530, Sricharan R wrote:
+>>>> Add device tree binding Documentation details for ipq6018
+>>>> pinctrl driver.
+>>>>
+>>>> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>>>> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>>>> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>>>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>>>> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>>>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>>> ---
+>>>> [V6] 
+>>>>   * Addressed review comments form Rob.
+>>>>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 153 +++++++++++++++++++++
+>>>>  1 file changed, 153 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+>>>>
+>>>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Thanks Rob.
+>>
+>> Hi Linus,
+>>    The pinctrl driver can now be pulled in.
+> 
+> Any chance this can be taken for 5.6 ?
+> 
 
-Changes in v1:
-        - Adding "ahb" clock as a required property.
-        - Adding "bus", "rot", "lut" as optional properties for sc7180 device.
-        - Removing properties from dsi bindings that are unused.
-	- Removing power-domain property since DSI is the child node of MDSS
-	  and it will inherit supply from its parent.
+Can the pinctrl driver be taken for 5.6 by any chance ?
 
- Documentation/devicetree/bindings/display/msm/dpu.txt | 7 +++++++
- Documentation/devicetree/bindings/display/msm/dsi.txt | 5 -----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+Regards,
+ Sricharan
 
-diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
-index 551ae26..dd58472a 100644
---- a/Documentation/devicetree/bindings/display/msm/dpu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
-@@ -19,6 +19,7 @@ Required properties:
-   The following clocks are required:
-   * "iface"
-   * "bus"
-+  * "ahb"
-   * "core"
- - interrupts: interrupt signal from MDSS.
- - interrupt-controller: identifies the node as an interrupt controller.
-@@ -50,6 +51,8 @@ Required properties:
- - clock-names: device clock names, must be in same order as clocks property.
-   The following clocks are required.
-   * "bus"
-+  For the device "qcom,sc7180-dpu":
-+  * "bus" - is an optional property due to architecture change.
-   * "iface"
-   * "core"
-   * "vsync"
-@@ -70,6 +73,10 @@ Optional properties:
- - assigned-clocks: list of clock specifiers for clocks needing rate assignment
- - assigned-clock-rates: list of clock frequencies sorted in the same order as
-   the assigned-clocks property.
-+- For the device "qcom,sc7180-dpu":
-+  clock-names: optional device clocks, needed for accessing LUT blocks.
-+  * "rot"
-+  * "lut"
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
-index af95586..61d659a 100644
---- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-+++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-@@ -8,13 +8,10 @@ Required properties:
- - reg-names: The names of register regions. The following regions are required:
-   * "dsi_ctrl"
- - interrupts: The interrupt signal from the DSI block.
--- power-domains: Should be <&mmcc MDSS_GDSC>.
- - clocks: Phandles to device clocks.
- - clock-names: the following clocks are required:
--  * "mdp_core"
-   * "iface"
-   * "bus"
--  * "core_mmss"
-   * "byte"
-   * "pixel"
-   * "core"
-@@ -156,7 +153,6 @@ Example:
- 			"core",
- 			"core_mmss",
- 			"iface",
--			"mdp_core",
- 			"pixel";
- 		clocks =
- 			<&mmcc MDSS_AXI_CLK>,
-@@ -164,7 +160,6 @@ Example:
- 			<&mmcc MDSS_ESC0_CLK>,
- 			<&mmcc MMSS_MISC_AHB_CLK>,
- 			<&mmcc MDSS_AHB_CLK>,
--			<&mmcc MDSS_MDP_CLK>,
- 			<&mmcc MDSS_PCLK0_CLK>;
- 
- 		assigned-clocks =
 -- 
-2.7.4
-
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
