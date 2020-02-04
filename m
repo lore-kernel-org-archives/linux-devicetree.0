@@ -2,105 +2,173 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7AAC3524B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6898C35247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6926A2082E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:21:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRXhrdh5"
+	by mail.kernel.org (Postfix) with ESMTP id C3C7920674
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgBDPVm (ORCPT
+        id S1727328AbgBDPi7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:21:42 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36993 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbgBDPVm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 10:21:42 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so23598494wru.4;
-        Tue, 04 Feb 2020 07:21:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IYd/QKfvl5lKpjb0P27O+LHksv33HQMEU50lHIKW7qc=;
-        b=NRXhrdh5Rb97QAC85TQXRfLbha7BQp5PxRsH4sese3VbM9AkgzbaItOgm/MDbZLsj+
-         UKuR4IgAtwG+1yy7TsZ67lAlfd2ODdlrPMcfRUGLuvrNZB05GR7cI3AakFuVomWzZ4xD
-         NV/tgUfHgHKVqvEovTB70a8rTWssXfzAB7mgaNU1WCy0MbS0UFydBpgNqZAkifH+0qHR
-         KhCmGfvVxg5r7Yu8cRVvQ3XCR655Xt0/wPaoP7A0Kb7o3kCqct1q3AC9lCT5dCc4l0XQ
-         //ZOv5xL+S/I3fvI6XzVkVrbkEny42NQR77EmDoDHdyFQqmYFdPyEryHcLVHS1GTCfs9
-         RJqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IYd/QKfvl5lKpjb0P27O+LHksv33HQMEU50lHIKW7qc=;
-        b=OYr9sLGOjUeNB6Bd8+BbGhgntQQvAzpawxdNXXI5l7357bmvg7NR401JlnmSA/64zU
-         iFBn8LP7W3xWL7eAKkjGqJp+MUT/zBiOJPzKB2kmlAuyCDzOmy04q6MbLRBAgVozHVf9
-         n+gktyVzCYS6wVxllvqItGLddMgUZQCRQba8DbgHRhiWm/u5ueTzkqz2zz3uyjXr78zh
-         29g40fIrReEM/w39RPA7qrkMGRnMnHJmU2FrsO6S4Gzneigkz0WOK9evEbw7eV3a91lv
-         8yLOM879vIfFe5ZmXhNClFYMhm3CoPjkM/zHvB4+0Ld6lt0XSUD1OiMurCuGOA01qx7P
-         izow==
-X-Gm-Message-State: APjAAAX6IoAuoc7CKBrzONePs8uvgHpPvKFqaFXyvDrEgUHVoYRi6dp7
-        PB5BR/uJqvflqT6OC5U0644=
-X-Google-Smtp-Source: APXvYqzKp5ib9bjFyBvcOodNWyfCm3frsjRuCpkEVS86DeFPQsVS9Oh78tgaxHBk7beSKl4Y27QKig==
-X-Received: by 2002:a05:6000:1012:: with SMTP id a18mr12703005wrx.113.1580829699732;
-        Tue, 04 Feb 2020 07:21:39 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id x10sm29902174wrv.60.2020.02.04.07.21.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 07:21:39 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] Documentation: watchdog: qcom-wdt: add new no-pretimeout option
-Date:   Tue,  4 Feb 2020 16:21:03 +0100
-Message-Id: <20200204152104.13278-3-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200204152104.13278-1-ansuelsmth@gmail.com>
-References: <20200204152104.13278-1-ansuelsmth@gmail.com>
+        Tue, 4 Feb 2020 10:38:59 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40582 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbgBDPi7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 10:38:59 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 3E90428DBA5
+Subject: Re: [PATCH] dt-bindings: convert extcon-usbc-cros-ec.txt
+ extcon-usbc-cros-ec.yaml
+To:     Rob Herring <robh@kernel.org>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     devicetree@vger.kernel.org, myungjoo.ham@samsung.com,
+        cw00.choi@samsung.com, mark.rutland@arm.com, bleung@chromium.org,
+        groeck@chromium.org, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+References: <20200122151313.11782-1-dafna.hirschfeld@collabora.com>
+ <20200203121849.GA8196@bogus>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <46068846-5d7d-8de6-3950-3b0a0d8b60a2@collabora.com>
+Date:   Tue, 4 Feb 2020 16:38:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200203121849.GA8196@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add description for new no-pretimeout function to force legacy
-probe if any interrupt is defined.
+Hi Dafna, Rob,
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- Documentation/devicetree/bindings/watchdog/qcom-wdt.txt | 2 ++
- 1 file changed, 2 insertions(+)
+On 3/2/20 13:18, Rob Herring wrote:
+> On Wed, Jan 22, 2020 at 04:13:13PM +0100, Dafna Hirschfeld wrote:
+>> convert the binding file extcon-usbc-cros-ec.txt to yaml format
+>> This was tested and verified on ARM with:
+>> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>>
+>> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+>> ---
+>>  .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 -----------
+>>  .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 42 +++++++++++++++++++
+>>  2 files changed, 42 insertions(+), 24 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>> deleted file mode 100644
+>> index 8e8625c00dfa..000000000000
+>> --- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>> +++ /dev/null
+>> @@ -1,24 +0,0 @@
+>> -ChromeOS EC USB Type-C cable and accessories detection
+>> -
+>> -On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+>> -able to detect the state of external accessories such as display adapters
+>> -or USB devices when said accessories are attached or detached.
+>> -
+>> -The node for this device must be under a cros-ec node like google,cros-ec-spi
+>> -or google,cros-ec-i2c.
+>> -
+>> -Required properties:
+>> -- compatible:		Should be "google,extcon-usbc-cros-ec".
+>> -- google,usb-port-id:	Specifies the USB port ID to use.
+>> -
+>> -Example:
+>> -	cros-ec@0 {
+>> -		compatible = "google,cros-ec-i2c";
+>> -
+>> -		...
+>> -
+>> -		extcon {
+>> -			compatible = "google,extcon-usbc-cros-ec";
+>> -			google,usb-port-id = <0>;
+>> -		};
+>> -	}
+>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>> new file mode 100644
+>> index 000000000000..78779831282a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+>> @@ -0,0 +1,42 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> 
+> Surely Google is the only copyright holder on the old file and would be 
+> okay with dual licensing here?
+> 
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: ChromeOS EC USB Type-C cable and accessories detection
+>> +
+>> +maintainers:
+>> +  - MyungJoo Ham <myungjoo.ham@samsung.com>
+>> +  - Chanwoo Choi <cw00.choi@samsung.com>
+> 
+> Usually this is someone that knows the h/w, not who applies the patch. 
+> I'd expect a Google person.
+> 
 
-diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-index 33081bd33637..01978bff74ee 100644
---- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-@@ -14,6 +14,8 @@ Required properties :
- Optional properties :
- - timeout-sec : shall contain the default watchdog timeout in seconds,
-                 if unset, the default timeout is 30 seconds
-+- no-pretimeout : shall be set if the platform have some interrupts
-+                  defined in the node but doesn't support pretimeout
- 
- Example:
- 	watchdog@208a038 {
--- 
-2.24.0
+I'd say that the driver author should be the maintainer, but if you don't know
+who is the maintainer because is not specified you can add Benson and me as
+maintainers (as chrome-platform maintainers we take care of this and all cros-ec
+related drivers)
 
+Benson Leung <bleung@chromium.org>
+Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+>> +
+>> +description: |
+>> +  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+>> +  able to detect the state of external accessories such as display adapters
+>> +  or USB devices when said accessories are attached or detached.
+>> +  The node for this device must be under a cros-ec node like google,cros-ec-spi
+>> +  or google,cros-ec-i2c.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: google,extcon-usbc-cros-ec
+>> +
+>> +  google,usb-port-id:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      the port id
+> 
+> Any range of values allowed? ~0 is okay?
+> 
+
+From hardware point of view, the port id, is a number from 0 to 255. The typical
+usage is have two ports with port id 0 and port id 1.
+
+
+>> +required:
+>> +  - compatible
+>> +  - google,usb-port-id
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    cros-ec@0 {
+>> +        compatible = "google,cros-ec-i2c";
+>> +        extcon {
+>> +            compatible = "google,extcon-usbc-cros-ec";
+>> +            google,usb-port-id = <0>;
+>> +        };
+>> +    };
+>> -- 
+>> 2.17.1
+>>
