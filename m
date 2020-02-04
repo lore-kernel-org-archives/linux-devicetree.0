@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D6AC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D38C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2592087E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C49520674
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LkbJ4FWM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pv3brgod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbgBDLT6 (ORCPT
+        id S1727197AbgBDLUH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:19:58 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19279 "EHLO
+        Tue, 4 Feb 2020 06:20:07 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19289 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbgBDLT5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 06:19:57 -0500
+        with ESMTP id S1727154AbgBDLUF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 06:20:05 -0500
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3953450000>; Tue, 04 Feb 2020 03:19:33 -0800
+        id <B5e39534d0000>; Tue, 04 Feb 2020 03:19:41 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 03:19:56 -0800
+  Tue, 04 Feb 2020 03:20:04 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 03:19:56 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 11:19:56 +0000
+        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 03:20:04 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
+ 2020 11:20:04 +0000
 Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
  (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Feb 2020 11:19:56 +0000
+ Transport; Tue, 4 Feb 2020 11:20:03 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3953580001>; Tue, 04 Feb 2020 03:19:55 -0800
+        id <B5e3953600002>; Tue, 04 Feb 2020 03:20:03 -0800
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -44,9 +44,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 17/19] arm64: tegra: Add xudc node for Tegra186
-Date:   Tue, 4 Feb 2020 16:47:03 +0530
-Message-ID: <1580815025-10915-18-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V4 19/19] ARM: tegra: Remove USB 2-0 port from Jetson TK1 padctl
+Date:   Tue, 4 Feb 2020 16:47:05 +0530
+Message-ID: <1580815025-10915-20-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
 References: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
@@ -54,62 +54,49 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580815173; bh=ddexJiymOJOkm6mOcuFH3qQ8/CVzSV1cFWStnmWV+fo=;
+        t=1580815181; bh=UZPndxJaS6exdoWA+8qZB2sYlM6GTteSHhoz8vK44JU=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=LkbJ4FWM3hdm54skgvSOK2/ult4Xc/MlsuYbKgmURfiotL/dWwmDsmiOouOWVLyRf
-         4dA7ZeOvwImMwoYnz5o6axlt+NKO8ZT3VnXsF85uKJonmmRomBKx9ZZsJtqWKKNjnL
-         ghzghKTTCAgS8EItedWvTHOLtEz/fw2AShsnx91CkFnE16rZ1z4/Iiuiq5Wt1OyekW
-         vSwbEdM6ruF/lymr9Ys7ktgsTuquD1OiDeIBPjiNRBOpJt1HsdblOqxXW2dYBgId+i
-         ZG3GG/l0jHb3XVik4nW5P9CK/2wmFbtq8zCCMaIiESq6gyR2uZwvX7JVvyzVv5yKPI
-         xXGhDBhV9Rp2g==
+        b=pv3brgodZD9Z9So0D+oNlB0/adP3C6bCPz7RZfGAkog3ecSZsqBgmfXnQDu1JdWfh
+         nLZRyKDXJ1/Q+Oa2MFYQCGXn19xDfGMzBU+lJrk88qClHWeI1fuaGc1az5A8cRZo/H
+         8Eo9ON7YwdDQ6XvXpChVIh0E2WKWAKntXVhps2Oj3NqOOU15Qi3E1h6LQSvkuYrU+i
+         UcyHRsSPImRg3QuZ8LAsbX8Z/BnGH3D/3ZOBx0W9es+NqA5nBgSZ6rYA5UpZIvSpOE
+         UW9+ggGkfeTUBsP7pgOfG8XFKhU20eMA6RkQrEo3j1d9DM4A3vPqkt0k4v/HMcGvY6
+         aac5MLR8KCXRw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra186 has one XUSB device mode controller, which can be operated
-HS and SS modes. Add DT entry for XUSB device mode controller.
+On Jetson TK1 USB 2-0 port is controlled by phy-tegra-usb driver
+rather than padctl driver. Remove the entry for the same.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 ---
-V2-V4:
- - No changes in this version
+V4:
+ - New patch in the series.
 ---
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index c905527..58100fb 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -572,6 +572,25 @@
- 		nvidia,xusb-padctl = <&padctl>;
- 	};
+diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+index d5fd642..54600ff 100644
+--- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
++++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+@@ -1782,12 +1782,6 @@
+ 		};
  
-+	usb@3550000 {
-+		compatible = "nvidia,tegra186-xudc";
-+		reg = <0x0 0x03550000 0x0 0x8000>,
-+		      <0x0 0x03558000 0x0 0x1000>;
-+		reg-names = "base", "fpci";
-+		interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&bpmp TEGRA186_CLK_XUSB_CORE_DEV>,
-+			 <&bpmp TEGRA186_CLK_XUSB_SS>,
-+			 <&bpmp TEGRA186_CLK_XUSB_CORE_SS>,
-+			 <&bpmp TEGRA186_CLK_XUSB_FS>;
-+		clock-names = "dev", "ss", "ss_src", "fs_src";
-+		iommus = <&smmu TEGRA186_SID_XUSB_DEV>;
-+		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_XUSBB>,
-+				<&bpmp TEGRA186_POWER_DOMAIN_XUSBA>;
-+		power-domain-names = "dev", "ss";
-+		nvidia,xusb-padctl = <&padctl>;
-+		status = "disabled";
-+	};
-+
- 	fuse@3820000 {
- 		compatible = "nvidia,tegra186-efuse";
- 		reg = <0x0 0x03820000 0x0 0x10000>;
+ 		ports {
+-			/* Micro A/B */
+-			usb2-0 {
+-				status = "okay";
+-				mode = "otg";
+-			};
+-
+ 			/* Mini PCIe */
+ 			usb2-1 {
+ 				status = "okay";
 -- 
 2.7.4
 
