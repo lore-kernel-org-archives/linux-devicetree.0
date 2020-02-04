@@ -2,90 +2,100 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01A1C3524D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 03:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FBAC3524A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 03:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B1821582
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 03:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3AE20732
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 03:17:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ntq0vDAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgBDDMQ (ORCPT
+        id S1726994AbgBDDRm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Feb 2020 22:12:16 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:20063 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgBDDMQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 22:12:16 -0500
-Received: from [10.7.0.4] (10.28.11.250) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 4 Feb
- 2020 11:12:48 +0800
-Subject: Re: [PATCH v7 1/5] dt-bindings: clock: meson: add A1 PLL clock
- controller bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200120034937.128600-1-jian.hu@amlogic.com>
- <20200120034937.128600-2-jian.hu@amlogic.com> <20200121220038.GA13566@bogus>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <af5e7bf9-84d1-0e23-4167-a800d18408d8@amlogic.com>
-Date:   Tue, 4 Feb 2020 11:12:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 3 Feb 2020 22:17:42 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34551 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727015AbgBDDRl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Feb 2020 22:17:41 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so21095595wrr.1
+        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 19:17:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zAILjWnGpR64ApE/VIc16t+QeMtOijCsh2+8KuWkxNM=;
+        b=Ntq0vDAxIs6ev78entCJdSxSUuM0k0WAGpR2ZJzcYs03/Dp1l7PG7KeAsssfpi24nr
+         1m1rww7xW+L8OEysYDJXFa1HG/+fK0QkXTvRDxjTjbW+5IDzEmZjbr9XL/zg5wZsNvaf
+         Y36nZ90AotUDCaWWf6jgkHPA89lgppcxLHWUNHWGIshHY31rFveoL225WlzGdvonoxVX
+         Ar+ZIVG2K7Lm9hxBgpHpLhU4rgbNSeNcGbyGoTu2CiXEq1Tg7jeVYkqIwBQgTI8wlJDH
+         4LvwBrIxMMZKNOarI6SOUPHxZNry0odxUi4tJ5vqR8JPsX3L3A4rGe2Y0XGWBibJJzdk
+         5XTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zAILjWnGpR64ApE/VIc16t+QeMtOijCsh2+8KuWkxNM=;
+        b=UNyn86lboyk/cDIlgftwBs+jyAwBqnG4YrO7oh28mHI+jnZKZOKc43CjbzMLW0SQKd
+         KyaMG2LQ5kr3zSm6Tj1M2n4UnS8+Zah4MOWJrhjPeyLVqiWgl+SPK+Ubl/6zmr7A49CZ
+         91BIeP1t8eIheGOH9gwfLu9kjCuuGWEbRAIsIQE0X2OIvokV9R2flw/LqaRmNS933ET2
+         qKz55o4fpo2sgr8/JwgAu00aQWymHORe4hRFGX9UvuasngZ0DXW0uL8mkdiVBgjtbady
+         iYib7dBXreYCaDSxZXTC1cQsYgmYFvFu8gD80sKjI4PptqAv0fwXjaCT+MQWdUHlMuDv
+         TEbQ==
+X-Gm-Message-State: APjAAAVVlUQWogvrrWksc/l1T6DWDEPTXDGBwXNzxlzcptniWFQrv8aO
+        AwrdL0V0BYdt7qQAFA7nyM+Eeg==
+X-Google-Smtp-Source: APXvYqxAzH2Mr4YWUjg4UzrS6BI7zknPs9nKRaCBTGplTtPRA5N0czrnd+fmuMX7DOvPF4/YBKnfGA==
+X-Received: by 2002:a5d:6451:: with SMTP id d17mr14714946wrw.255.1580786258746;
+        Mon, 03 Feb 2020 19:17:38 -0800 (PST)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id y185sm1923831wmg.2.2020.02.03.19.17.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2020 19:17:38 -0800 (PST)
+Subject: Re: [PATCH v4 1/2] dt-bindings: Documentation for qcom,eud
+To:     Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, ckadabi@codeaurora.org,
+        tsoni@codeaurora.org, bryanh@codeaurora.org,
+        psodagud@codeaurora.org, rnayak@codeaurora.org,
+        satyap@codeaurora.org, pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-2-git-send-email-akdwived@codeaurora.org>
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Message-ID: <f06e6af6-5045-ce75-fcc6-e07890b3a29c@linaro.org>
+Date:   Tue, 4 Feb 2020 03:17:41 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200121220038.GA13566@bogus>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <1580445811-15948-2-git-send-email-akdwived@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.11.250]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 31/01/2020 04:43, Avaneesh Kumar Dwivedi wrote:
+> Documentation for Embedded USB Debugger (EUD) device tree bindings.
+> 
+> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+> Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+> ---
+>   .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  | 43 ++++++++++++++++++++++
+>   1 file changed, 43 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
 
+Forgot to mention, this file should be described in YAML.
 
-On 2020/1/22 6:00, Rob Herring wrote:
-> On Mon, 20 Jan 2020 11:49:33 +0800, Jian Hu wrote:
->> Add the documentation to support Amlogic A1 PLL clock driver,
->> and add A1 PLL clock controller bindings.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 52 +++++++++++++++++++
->>   include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
->>   2 files changed, 68 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
->>
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> 
-> .
-> 
-I had gotten your Reviewed-by tag in v5 version, And the tag is missing 
-in v6, I am sorry about it. There is something wrong in v6, it can not 
-be compiled by dt_binding_check. It had been fixed in v7. Should I wait 
-for your tag again?
+./Documentation/devicetree/writing-schema.rst
+./Documentation/devicetree/bindings/example-schema.yaml
 
-I will send v8 because the driver is changed a bit. Could I add your tag?
+---
+bod
