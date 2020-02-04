@@ -2,259 +2,218 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F68CC3524D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 08:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2087BC2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665192051A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 08:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD9521744
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 09:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZoTry6if"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="muEMdnhD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u5lJU7Jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgBDIjv (ORCPT
+        id S1726329AbgBDJUA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 03:39:51 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:39465 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgBDIjv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 03:39:51 -0500
-Received: by mail-vs1-f68.google.com with SMTP id p14so10816802vsq.6
-        for <devicetree@vger.kernel.org>; Tue, 04 Feb 2020 00:39:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JdACrWI5vpsKlW8g7CbCx4APcl8wQGsCUNfkqtOAUqY=;
-        b=ZoTry6ifrXYZ8NRpb4uFD6f8WFpGkP1CXTPfFBVnloLaIWSa7gZ+buv7s86HWwnxs/
-         M12XR6tin65nLhbuNc/o+4+qbt5ruCZys/maCffFMoxrDNT0KQ4n/dey147sgi9U/B9t
-         3Lc7xnftI3HMCCyCCMU1azLJfdD3iTNbF2pWE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JdACrWI5vpsKlW8g7CbCx4APcl8wQGsCUNfkqtOAUqY=;
-        b=Qaf5Ct4qo1THJPyWtysGzlfmSNtIlPEcLeRsiDsnzudQay7XFa1p3MM0DnCCjvBxcx
-         WX4lhwvo79fSGv70GysbvF33paDXU7fIDob6YkvWFPdtjot0NQ0/w+Kf9a2V9TnjCY1K
-         RNzzc8F3/jdGUtnUZyxzVuVYJrvGmTiGcKgrs+kKP7cGMOYg/52ucPkq4zXtJgfbwPEe
-         ayZRJTIj7Jq8F37HXqkmq6pmKiyUPwZcRUs5XbO7dX6YqG/BC9LYn3Y17EB7ly66uTll
-         C91pP8gt72uw7U7KjcBLBcKeAnakZjZ9Qep7+4QEHxHK7PriufgWHTttcVGqgUc9JrLI
-         rnLQ==
-X-Gm-Message-State: APjAAAXu12GjRdq1TmuyYUS6Lp71/JfyYNrI+qT75t2h1xLHOBfqyo4n
-        mF6vgWhOtr96JrGsOZg5hjmCxik9cFxlQOQUDml6jA==
-X-Google-Smtp-Source: APXvYqzm6bymaLptiCwaALgQxa/dXLU/xksVDThtHsJkaE+BEyd84+Ci1h/y9Kiw/5Sf5kCjVQl5T9ZFrWSe8P1XwVs=
-X-Received: by 2002:a67:ecd5:: with SMTP id i21mr17903723vsp.166.1580805589999;
- Tue, 04 Feb 2020 00:39:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20200114021934.178057-1-ikjn@chromium.org> <20200121074727.35893-1-ikjn@chromium.org>
- <20200127160529.GA30843@bogus>
-In-Reply-To: <20200127160529.GA30843@bogus>
-From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Tue, 4 Feb 2020 16:39:39 +0800
-Message-ID: <CAATdQgDW6H_jM5UV-jqB98ep93fSh-zTNE8agkoU4XbgSWj0TQ@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        Tue, 4 Feb 2020 04:20:00 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50471 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726554AbgBDJUA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 04:20:00 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 59B186B76;
+        Tue,  4 Feb 2020 04:19:58 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 04 Feb 2020 04:19:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=x4lyZnW5C94NfX9C1zEMyUaspjy
+        lIhh7aPoztF74m5c=; b=muEMdnhDQ+bTk2YEyzZPghqhY3VJVq5qOVd8NnIvzo1
+        1v0IUNwdPCmJrVxK4WqQ5vtpIrt1E9kZsULc+Zr+bOGEqUFmyAdV1hYxSWJjPaE3
+        w1XHJ6foSS5FEMzJmvjcA976KdZgtrojUYwEaQFrcQFIOC4dcW80Lu0WxVDIWaXa
+        iyI2pcKSVAOLniHLLXWpGlW+dYPaNa5qDhA4eSdH7E7flgJGhwgBfYJSAugnDqbx
+        vIb7z0TpyEZf0hZsxMWWi4y6fOUHjyu2l1DhIg6xx0hZs8WTVQ9M0U//hlKqSN6S
+        1TJqdYxlB4rm/UiOHJ/p4L2M9/peZfb2PNUhHNR/+Xg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=x4lyZn
+        W5C94NfX9C1zEMyUaspjylIhh7aPoztF74m5c=; b=u5lJU7JhJcrZtKQRcmrAxA
+        /UyFU3w5EzuqZMvB9hxipXPXzRfWzPS/r3Wi1tW1G5Z8YSZTw/KyLJYyf3ajPbN2
+        EuR4QNVmD7/v2yMJQ3I6HjjmVCt1XC5kK/J648RTACqi+NJYa6AVPqJdwONP7QuK
+        YPmnM0kfSO78B9wIXclXWCkFEfOBqGZufvg9tgpUyLQc/ozwUYAd1c/P7/d0Ayth
+        LmUb4X3Bfqbv/TlNP+CH/89XT9goaFCXKWYPXUhS6jza57BwjoSc2lltzaeYzCDd
+        ok3MQsvHEKLZsy5kyTh/8irPfU4HZXNTo8828fiz2YKcFp/pDXejgAWQdVZgykQQ
+        ==
+X-ME-Sender: <xms:PDc5Xq02AxCfAFgRtkb6tRwZf7wGEE4687_w6Jd0HIGFjgJ9JPV1Rw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeelgddtfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:PDc5XgBMh_8nOAw7B3cMzQtSqeGyhnSgBAW3H_IlmWPVBOOvNAto3w>
+    <xmx:PDc5XnEn5YITSLPoIMnnYQCTJg4jAa9CnAqF8fGaU5I66PVuhevoIQ>
+    <xmx:PDc5XpDU3Rb5S3xbjgDiZtaG4g53ogju3QEQ9-Ln-AjfyNTg-lR8sw>
+    <xmx:Pjc5XiAaywj81i7AfV_Z1EYGEoOIiLSRyq4fC7xZQolWtPR-10Qsvw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 86DDC328005A;
+        Tue,  4 Feb 2020 04:19:56 -0500 (EST)
+Date:   Tue, 4 Feb 2020 10:19:54 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Sugaya Taichi <sugaya.taichi@socionext.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [PATCH 11/12] dt-bindings: arm: Document Broadcom SoCs
+ 'secondary-boot-reg'
+Message-ID: <20200204091954.4zdxow4ijqnmvbdj@gilmour.lan>
+References: <20200202211827.27682-1-f.fainelli@gmail.com>
+ <20200202211827.27682-12-f.fainelli@gmail.com>
+ <20200203083403.6wmuduxqsv7quujp@gilmour.lan>
+ <2744136e-a6e7-de19-4142-04f7edf0c6ea@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vg5cqlhr5mk6q6uh"
+Content-Disposition: inline
+In-Reply-To: <2744136e-a6e7-de19-4142-04f7edf0c6ea@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 12:05 AM Rob Herring <robh@kernel.org> wrote:
+
+--vg5cqlhr5mk6q6uh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Feb 03, 2020 at 09:29:30PM -0800, Florian Fainelli wrote:
 >
-> On Tue, Jan 21, 2020 at 03:47:27PM +0800, Ikjoon Jang wrote:
-> > Convert the ChromeOS EC bindings to json-schema.
+>
+> On 2/3/2020 12:34 AM, Maxime Ripard wrote:
+> > On Sun, Feb 02, 2020 at 01:18:26PM -0800, Florian Fainelli wrote:
+> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> index c23c24ff7575..6f56a623c1cd 100644
+> >> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> @@ -272,6 +272,22 @@ properties:
+> >>        While optional, it is the preferred way to get access to
+> >>        the cpu-core power-domains.
+> >>
+> >> +  secondary-boot-reg:
+> >> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> >> +    description: |
+> >> +      Required for systems that have an "enable-method" property value of
+> >> +      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
+> >> +
+> >> +      This includes the following SoCs: |
+> >> +      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
+> >> +      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
+> >> +
+> >> +      The secondary-boot-reg property is a u32 value that specifies the
+> >> +      physical address of the register used to request the ROM holding pen
+> >> +      code release a secondary CPU. The value written to the register is
+> >> +      formed by encoding the target CPU id into the low bits of the
+> >> +      physical start address it should jump to.
+> >> +
 > >
-> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> > ---
-> > v3: node name changed in rpmsg example
-> > v2: cleanup description, fix typos, remove LPC, add add RPMSG example
-> > ---
-> >  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ------------
-> >  .../devicetree/bindings/mfd/cros-ec.yaml      | 111 ++++++++++++++++++
-> >  2 files changed, 111 insertions(+), 76 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
->
-> > -Required properties (LPC):
-> > -- compatible: "google,cros-ec-lpc"
-> > -- reg: List of (IO address, size) pairs defining the interface uses
->
-> Where did this go?
-
-I'm not sure about the details or future plans on LPC interface,
-but I guess LPC has been just a future plan without any usages, so removed it.
-
->
->
-> > diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.yaml b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
-> > new file mode 100644
-> > index 000000000000..6a5b87cebcfa
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
-> > @@ -0,0 +1,111 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mfd/cros-ec.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ChromeOS Embedded Controller
-> > +
-> > +maintainers:
-> > +  - Benson Leung <bleung@chromium.org>
-> > +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > +  - Guenter Roeck <groeck@chromium.org>
-> > +
-> > +description: |
-> > +  Google's ChromeOS EC is a microcontroller which talks to the AP and
-> > +  implements various functions such as keyboard and battery charging.
-> > +  The EC can be connected through various interfaces (I2C, SPI, and others)
-> > +  and the compatible string specifies which interface is being used.
-> > +
-
-I will drop | here also.
-
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - description:
-> > +          For implementations of the EC is connected through I2C.
-> > +        const: google,cros-ec-i2c
-> > +      - description:
-> > +          For implementations of the EC is connected through SPI.
-> > +        const: google,cros-ec-spi
-> > +      - description:
-> > +          For implementations of the EC is connected through RPMSG.
-> > +        const: google,cros-ec-rpmsg
-> > +
-> > +  google,has-vbc-nvram:
-> > +    description: |
->
-> You can drop '|' if there's no formatting to maintain. And you should
-> reflow this.
-
-Okay,
-
->
-> > +      Some implementations of the EC include a small
-> > +      nvram space used to store verified boot context data.
-> > +      This boolean flag is used to specify whether this nvram is
-> > +      present or not.
-> > +    type: boolean
-> > +
-> > +required:
-> > +  - compatible
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          const: google,cros-ec-i2c
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          description: I2C slave address
-> > +          maxItems: 1
-> > +      required:
-> > +        - reg
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          const: google,cros-ec-spi
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          description: SPI chip select
-> > +          maxItems: 1
-> > +        google,cros-ec-spi-pre-delay:
-> > +          description: |
-> > +            This property specifies the delay in usecs between the
-> > +            assertion of the CS and the first clock pulse.
->
-> Needs a type reference at a minumum and ideally some constraints.
-
-Got it, I will add a type reference here,
-and for the constraints, these spi transaction delay cannot be bound.
-I will just add default: 0 here.
-
->
-> > +        google,cros-ec-spi-msg-delay:
-> > +          description: |
-> > +            This property specifies the delay in usecs between messages.
->
-> Same here.
->
-> > +      required:
-> > +        - reg
-> > +
->
-> Add:
-> additionalProperties: false
-
-Ack.
-
->
-> > +examples:
-> > +  # Example for I2C
-> > +  - |
-> > +    i2c0 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        cros-ec@1e {
-> > +            compatible = "google,cros-ec-i2c";
-> > +            reg = <0x1e>;
-> > +            interrupts = <6 0>;
->
-> Not documented.
-
-Sorry but I can't understand this part, can you elaborate on here?
-Do you mean adding comments here? or
-need more documentation on cros-ec-i2c?
-
->
-> > +            interrupt-parent = <&gpx1>;
-> > +        };
-> > +    };
-> > +  # Example for SPI
-> > +  - |
-> > +    spi0 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        cros-ec@0 {
-> > +            compatible = "google,cros-ec-spi";
-> > +            reg = <0x0>;
-> > +            google,cros-ec-spi-msg-delay = <30>;
-> > +            interrupts = <99 0>;
-> > +            interrupt-parent = <&gpio7>;
-> > +            spi-max-frequency = <5000000>;
-> > +        };
-> > +    };
-> > +  # Example for RPMSG
-> > +  - |
-> > +    scp0 {
-> > +        cros-ec@0 {
-> > +            compatible = "google,cros-ec-rpmsg";
-> > +        };
-> > +    };
-> > +...
-> > --
-> > 2.25.0.341.g760bfbb309-goog
+> > You can make the requirement explicit (and enforced by the schemas) using:
 > >
+> > if:
+> >   properties:
+> >     enable-method:
+> >       contains:
+> >         enum:
+> > 	  - brcm,bcm11351-cpu-method
+> > 	  - brcm,bcm23550
+> > 	  - brcm,bcm-nsp-smp
+> >
+> > then:
+> >   required:
+> >     - secondary-boot-reg
+>
+> Thanks! That was exactly what I was looking for, it seems to be matching
+> a bit too greedily though:
+>
+>   DTC     arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml
+>   CHECK   arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml
+> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
+> cpu@0: 'secondary-boot-reg' is a required property
+> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
+> cpu@1: 'secondary-boot-reg' is a required property
+> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
+> cpu@2: 'secondary-boot-reg' is a required property
+> /home/ff944844/dev/linux/arch/arm/boot/dts/bcm2836-rpi-2-b.dt.yaml:
+> cpu@3: 'secondary-boot-reg' is a required property
+>   DTC     arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dt.yaml
+>
+> not sure why though as your example appears correct.
+
+Yeah, sorry, that's on me :)
+
+The nodes that are generating this error are the cpu@[0-3] ones, and
+they don't have the enable-method property at all.
+
+This is because if needs a schema, and will only try to validate the
+schema under then if the one under if is valid.
+
+The one under if contains a list of values for enable-method, but in
+the case where enable-method is absent, the schema will be valid, and
+thus the schema under then will be applied.
+
+What we actually want to express is "if there's an enable-method
+property, and that property contains those three values, then you need
+to have a secondary-boot-reg property."
+
+So you need:
+
+if:
+  # If the enable-method property contains one of those values
+  properties:
+    enable-method:
+      contains:
+        enum:
+          - brcm,bcm11351-cpu-method
+          - brcm,bcm23550
+          - brcm,bcm-nsp-smp
+
+  # and if enable method is present
+  required:
+    - enable-method
+
+# Then we need secondary-boot-reg too
+then:
+  required:
+    - secondary-boot-reg
+
+Maxime
+
+--vg5cqlhr5mk6q6uh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXjk3NQAKCRDj7w1vZxhR
+xUJqAP9PY/enY2j1VQJ01XYs+KegUxo9BgTuq8dCybDPrips1QEArb4oFWY9TC8/
+z/m1a1AkxlYIO28zaAO8oofwiueDjAQ=
+=AiEU
+-----END PGP SIGNATURE-----
+
+--vg5cqlhr5mk6q6uh--
