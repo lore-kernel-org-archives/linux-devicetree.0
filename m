@@ -2,139 +2,102 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519ECC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD318C3524B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2792B217BA
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4Xyb8Li"
+	by mail.kernel.org (Postfix) with ESMTP id 8476F2166E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbgBDOo1 (ORCPT
+        id S1727299AbgBDOwe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:44:27 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42600 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727258AbgBDOo1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 09:44:27 -0500
-Received: by mail-il1-f196.google.com with SMTP id x2so16046234ila.9;
-        Tue, 04 Feb 2020 06:44:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pBPgZrCmoCK+adPpBYU1UgcBrMjDVFByBZS7ldjpSQg=;
-        b=E4Xyb8LiS6clI+5dqopwS6OxlDQ+b2NTz73F0W4FBbpOs3EEVtrxId487UD5r2m8PL
-         HI1VKjnvEvRLgZHOARQnfMSd/8EYJBGf4HCw7TL3k5RWfK7MXwYBuwxzq5oPF2t+Rlj9
-         cUlguf56kwFgdu16U9HCo7Ywnsgeo7Xa2Q1TAIEEfAB1KOl0uPL6ce+TmnvfJ75C01BO
-         RchsaGygoM1zofuLrx75cI9PGtpn83vxqyx0smAb8D/AtI1SrGB5Pqmu2TmrDqxnnizT
-         dI4bdSBfpQFHNjxcIIqJ3ELyp8k9XQolPw6DnXnPyk1BG6S3YqzNa0SvghlBrEvh2FXT
-         sJEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pBPgZrCmoCK+adPpBYU1UgcBrMjDVFByBZS7ldjpSQg=;
-        b=AYMbwMH/Q1DIJy0ycjinSs7YJKKru+fceutNU3pNlIdXfVG7Aa75Hw1igVxEtYMjGC
-         ih0Csee6t2eVn6voFXYqZ/AMoiGUM6mWz6IOH00INlHuewMwMNSN0BLiBbZ+UTAEMa3W
-         qGQhXFSqa73OhS1TH6V6kwq1/+cWM5Lk6YoODA79fWvpya40pybmSF+toQgCFcJ6cp1C
-         KWSMhS+6gcBWpp1i3YL6E1iBfJTYRkoTWxxYmsGBVHc5fl2WVNdzPkY3YXyO+diLYPCr
-         lbLUPc8mLSR0I1OO7p6Vr4hfuQBTDKYnLcZTtJmJvPpE772+NXs+HCV0wGGoXhbD+oyR
-         4i5A==
-X-Gm-Message-State: APjAAAXeHiZwKdYYYg3C4NuEaTn2h92+wdT3DzB988zWZVCv97QZU3tv
-        ymCyk6otkg0dkSiemRWtv0uHWEXFi8zmB5/WP5Y=
-X-Google-Smtp-Source: APXvYqwK9TpjhX0h1rx34qAMHunSgEc+MuYa+gdNBn5BAmQldz1Y+KTnEKcwvvlYqWn8uE+Twe4govU8jiD5qoDHMWo=
-X-Received: by 2002:a92:5e8b:: with SMTP id f11mr27598714ilg.178.1580827466019;
- Tue, 04 Feb 2020 06:44:26 -0800 (PST)
+        Tue, 4 Feb 2020 09:52:34 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:39790 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727267AbgBDOwe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 09:52:34 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 014EqC8b008030, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 014EqC8b008030
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 4 Feb 2020 22:52:13 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 4 Feb 2020 22:52:12 +0800
+Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 4 Feb 2020 22:52:12 +0800
+Received: from james-BS01.localdomain (172.21.190.33) by
+ RTEXMB01.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server id
+ 15.1.1779.2 via Frontend Transport; Tue, 4 Feb 2020 22:52:12 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     <linux-realtek-soc@lists.infradead.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCH v3 0/2] Initial RTD1319 SoC and Realtek PymParticle EVB support
+Date:   Tue, 4 Feb 2020 22:52:05 +0800
+Message-ID: <20200204145207.28622-1-james.tai@realtek.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
-In-Reply-To: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 4 Feb 2020 07:44:14 -0700
-Message-ID: <CAOCk7NoAY7QaoBufG=JOR54PocdtrMsxUh9HmdWEwQ4zSG5MDg@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] dt-bindings: msm:disp: update dsi and dpu bindings
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 7:15 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> Updating bindings of dsi and dpu by adding and removing certain
-> properties.
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->
-> Changes in v1:
->         - Adding "ahb" clock as a required property.
->         - Adding "bus", "rot", "lut" as optional properties for sc7180 device.
->         - Removing properties from dsi bindings that are unused.
->         - Removing power-domain property since DSI is the child node of MDSS
->           and it will inherit supply from its parent.
->
->  Documentation/devicetree/bindings/display/msm/dpu.txt | 7 +++++++
->  Documentation/devicetree/bindings/display/msm/dsi.txt | 5 -----
->  2 files changed, 7 insertions(+), 5 deletions(-)
-> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> index af95586..61d659a 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> @@ -8,13 +8,10 @@ Required properties:
->  - reg-names: The names of register regions. The following regions are required:
->    * "dsi_ctrl"
->  - interrupts: The interrupt signal from the DSI block.
-> -- power-domains: Should be <&mmcc MDSS_GDSC>.
->  - clocks: Phandles to device clocks.
->  - clock-names: the following clocks are required:
-> -  * "mdp_core"
->    * "iface"
->    * "bus"
-> -  * "core_mmss"
+Hi Andreas,
 
-Why do you think these are unused?  I see them used in the driver, and
-as far as I can tell these get routed to the hardware, therefore they
-should be described in DT.
+This series adds Device Trees for the Realtek RTD1319 SoC and Realtek's
+PymParticle EVB.
 
->    * "byte"
->    * "pixel"
->    * "core"
-> @@ -156,7 +153,6 @@ Example:
->                         "core",
->                         "core_mmss",
->                         "iface",
-> -                       "mdp_core",
->                         "pixel";
->                 clocks =
->                         <&mmcc MDSS_AXI_CLK>,
-> @@ -164,7 +160,6 @@ Example:
->                         <&mmcc MDSS_ESC0_CLK>,
->                         <&mmcc MMSS_MISC_AHB_CLK>,
->                         <&mmcc MDSS_AHB_CLK>,
-> -                       <&mmcc MDSS_MDP_CLK>,
->                         <&mmcc MDSS_PCLK0_CLK>;
->
->                 assigned-clocks =
-> --
-> 2.7.4
->
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+The v3 correct the GIC redistributor address range and adding the virtual
+maintenance interrupt for architecture timer.
+
+v2 -> v3:
+* Add virtual maintenance interrupt for architecture timer
+* Correct the GIC redistributor address range
+
+v1 -> v2:
+* Reserve the boot ROM address
+* Reserve boot loader address
+* Reserve audio/video FW address
+* Reserve RPC and ring buffer address
+* Reserve TEE address
+* Support 1 GiB RAM by default
+* Reduce rbus range to 2 MiB
+* Apply the syscon for ISO,MISC,CRT,SB2,SCPU_WRAPPER
+* Adjust compatible strings order in document
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Andreas Färber <afaerber@suse.de>
+
+James Tai (2):
+  dt-bindings: arm: realtek: Document RTD1319 and Realtek PymParticle
+    EVB
+  arm64: dts: realtek: Add RTD1319 SoC and Realtek PymParticle EVB
+
+ .../devicetree/bindings/arm/realtek.yaml      |   6 +
+ arch/arm64/boot/dts/realtek/Makefile          |   2 +
+ .../boot/dts/realtek/rtd1319-pymparticle.dts  |  43 ++++
+ arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 +
+ arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 213 ++++++++++++++++++
+ 5 files changed, 276 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+
+-- 
+2.25.0
+
