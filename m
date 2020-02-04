@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873BDC3524F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE51AC2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD6A20674
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A589D20674
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MKgfgOsV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rX5wJWME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgBDLTV (ORCPT
+        id S1727320AbgBDLTO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:19:21 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17793 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgBDLTU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 06:19:20 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3953290000>; Tue, 04 Feb 2020 03:19:05 -0800
+        Tue, 4 Feb 2020 06:19:14 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19206 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgBDLTN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 06:19:13 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3953190000>; Tue, 04 Feb 2020 03:18:49 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 03:19:19 -0800
+  Tue, 04 Feb 2020 03:19:12 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 03:19:19 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 11:19:19 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Feb 2020 11:19:19 +0000
+        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 03:19:12 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
+ 2020 11:19:12 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 4 Feb 2020 11:19:11 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3953330000>; Tue, 04 Feb 2020 03:19:18 -0800
+        id <B5e39532c0000>; Tue, 04 Feb 2020 03:19:10 -0800
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -44,9 +44,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 07/19] phy: tegra: xusb: Add set_mode support for UTMI phy on Tegra186
-Date:   Tue, 4 Feb 2020 16:46:53 +0530
-Message-ID: <1580815025-10915-8-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V4 05/19] phy: tegra: xusb: Add support to get companion USB 3 port
+Date:   Tue, 4 Feb 2020 16:46:51 +0530
+Message-ID: <1580815025-10915-6-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
 References: <1580815025-10915-1-git-send-email-nkristam@nvidia.com>
@@ -54,176 +54,85 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580815145; bh=XY85GZ1xhLmQbTGWnF/+YXyWP5eCg+ePBGk/T2GRp1Y=;
+        t=1580815129; bh=+LHfXAfut5jNIM4RKz/C79YRvIVVypk+r6fq2YZz/18=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=MKgfgOsVYq9nGH3sq/bkpC8moIgj5IKSD7IsXL4t4ARw9bo1p2W6/MfY5sor9oXg3
-         r0HTTU4QhzpllgjxaYLrUiInMdCdZyUXC5hrepInh3ad94GBN+pf/6KeXywxJ3dWqx
-         ubwB90kFs7KJgq1ED+ECJ4vr7IHXLdMMcPv6FGSjNBw3g045OOoYUob64VL0WyRO/c
-         VOzxiXeBle84iSt+6/7Ii/WMkBAJKUwRPlT0EuW8nt7SE4MK1YoBQQyuOH3UxYy+Qi
-         xTZDsPU5K2cbftbOPv76VYYubtILvWa9D8lERx+iND0/tp6+8vgbQnrO9V04TzBqox
-         94tLrRC4L7meA==
+        b=rX5wJWME2LHwtb98njAS1iMK5foOuo13dnmGTQFu3zyJYntDF5WLj668ce8MtQCBm
+         1DoEox1uf3GO9Rhb4dNrEL1mrQlCWLFOKTyHPmS9sj+nmQz6zpNT/kj2B6tUO18C2d
+         49RybVkRx6Gce9olJvgQT06zrkp+ay1Sz/om6uDqMQhzbAwv2tPtAKEuAo7bNLnF/8
+         RIMZ1vszokfstNK3lo5oAsaxp1PYbx1y0PPzEq2VFqnaHm6tl1hR3vLGrcVelRAF+t
+         ZH5HeBJsCK5ldoLrtZhnQLjLjrmOYwhq1oYksl7VdtWvjGvhBLwjy/UjcS8URMSuRz
+         XcjSK9BFRm+fw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for set_mode on UTMI phy. This allow XUSB host/device mode
-drivers to configure the hardware to corresponding modes.
+Tegra XUSB host, device mode driver requires the USB 3 companion port
+number for corresponding USB 2 port. Add API to retrieve the same.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: JC Kuo <jckuo@nvidia.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V4:
- - Added comment for conditional regulator disable.
+ - Addressed comment from Thierry.
  - Added Acked-by info.
 ---
-V2-V3:
- - No changes in this version
+V3:
+ - Added Reviewed-by updates to commit message.
 ---
- drivers/phy/tegra/xusb-tegra186.c | 114 ++++++++++++++++++++++++++++++--------
- 1 file changed, 92 insertions(+), 22 deletions(-)
+V2:
+ - Added -ENODEV as return instead of -1, to sync other errors.
+---
+ drivers/phy/tegra/xusb.c       | 21 +++++++++++++++++++++
+ include/linux/phy/tegra/xusb.h |  2 ++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
-index 84c2739..ea62251 100644
---- a/drivers/phy/tegra/xusb-tegra186.c
-+++ b/drivers/phy/tegra/xusb-tegra186.c
-@@ -301,6 +301,97 @@ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
- 	tegra186_utmi_bias_pad_power_off(padctl);
+diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+index 2c0e29c..a8f0a0b 100644
+--- a/drivers/phy/tegra/xusb.c
++++ b/drivers/phy/tegra/xusb.c
+@@ -1294,6 +1294,27 @@ int tegra_phy_xusb_utmi_port_reset(struct phy *phy)
  }
+ EXPORT_SYMBOL_GPL(tegra_phy_xusb_utmi_port_reset);
  
-+static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
-+					       bool status)
++int tegra_xusb_padctl_get_usb3_companion(struct tegra_xusb_padctl *padctl,
++				    unsigned int port)
 +{
-+	u32 value;
++	struct tegra_xusb_usb2_port *usb2;
++	struct tegra_xusb_usb3_port *usb3;
++	int i;
 +
-+	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
++	usb2 = tegra_xusb_find_usb2_port(padctl, port);
++	if (!usb2)
++		return -EINVAL;
 +
-+	value = padctl_readl(padctl, USB2_VBUS_ID);
-+
-+	if (status) {
-+		value |= VBUS_OVERRIDE;
-+		value &= ~ID_OVERRIDE(~0);
-+		value |= ID_OVERRIDE_FLOATING;
-+	} else {
-+		value &= ~VBUS_OVERRIDE;
++	for (i = 0; i < padctl->soc->ports.usb3.count; i++) {
++		usb3 = tegra_xusb_find_usb3_port(padctl, i);
++		if (usb3 && usb3->port == usb2->base.index)
++			return usb3->base.index;
 +	}
 +
-+	padctl_writel(padctl, value, USB2_VBUS_ID);
-+
-+	return 0;
++	return -ENODEV;
 +}
++EXPORT_SYMBOL_GPL(tegra_xusb_padctl_get_usb3_companion);
 +
-+static int tegra186_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
-+					    bool status)
-+{
-+	u32 value;
-+
-+	dev_dbg(padctl->dev, "%s id override\n", status ? "set" : "clear");
-+
-+	value = padctl_readl(padctl, USB2_VBUS_ID);
-+
-+	if (status) {
-+		if (value & VBUS_OVERRIDE) {
-+			value &= ~VBUS_OVERRIDE;
-+			padctl_writel(padctl, value, USB2_VBUS_ID);
-+			usleep_range(1000, 2000);
-+
-+			value = padctl_readl(padctl, USB2_VBUS_ID);
-+		}
-+
-+		value &= ~ID_OVERRIDE(~0);
-+		value |= ID_OVERRIDE_GROUNDED;
-+	} else {
-+		value &= ~ID_OVERRIDE(~0);
-+		value |= ID_OVERRIDE_FLOATING;
-+	}
-+
-+	padctl_writel(padctl, value, USB2_VBUS_ID);
-+
-+	return 0;
-+}
-+
-+static int tegra186_utmi_phy_set_mode(struct phy *phy, enum phy_mode mode,
-+				      int submode)
-+{
-+	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-+	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+	struct tegra_xusb_usb2_port *port = tegra_xusb_find_usb2_port(padctl,
-+								lane->index);
-+	int err = 0;
-+
-+	mutex_lock(&padctl->lock);
-+
-+	dev_dbg(&port->base.dev, "%s: mode %d", __func__, mode);
-+
-+	if (mode == PHY_MODE_USB_OTG) {
-+		if (submode == USB_ROLE_HOST) {
-+			tegra186_xusb_padctl_id_override(padctl, true);
-+
-+			err = regulator_enable(port->supply);
-+		} else if (submode == USB_ROLE_DEVICE) {
-+			tegra186_xusb_padctl_vbus_override(padctl, true);
-+		} else if (submode == USB_ROLE_NONE) {
-+			/*
-+			 * When port is peripheral only or role transitions to
-+			 * USB_ROLE_NONE from USB_ROLE_DEVICE, regulator is not
-+			 * enabled.
-+			 */
-+			if (regulator_is_enabled(port->supply))
-+				regulator_disable(port->supply);
-+
-+			tegra186_xusb_padctl_id_override(padctl, false);
-+			tegra186_xusb_padctl_vbus_override(padctl, false);
-+		}
-+	}
-+
-+	mutex_unlock(&padctl->lock);
-+
-+	return err;
-+}
-+
- static int tegra186_utmi_phy_power_on(struct phy *phy)
- {
- 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-@@ -439,6 +530,7 @@ static const struct phy_ops utmi_phy_ops = {
- 	.exit = tegra186_utmi_phy_exit,
- 	.power_on = tegra186_utmi_phy_power_on,
- 	.power_off = tegra186_utmi_phy_power_off,
-+	.set_mode = tegra186_utmi_phy_set_mode,
- 	.owner = THIS_MODULE,
- };
- 
-@@ -857,28 +949,6 @@ static void tegra186_xusb_padctl_remove(struct tegra_xusb_padctl *padctl)
- {
- }
- 
--static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
--					       bool status)
--{
--	u32 value;
--
--	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
--
--	value = padctl_readl(padctl, USB2_VBUS_ID);
--
--	if (status) {
--		value |= VBUS_OVERRIDE;
--		value &= ~ID_OVERRIDE(~0);
--		value |= ID_OVERRIDE_FLOATING;
--	} else {
--		value &= ~VBUS_OVERRIDE;
--	}
--
--	padctl_writel(padctl, value, USB2_VBUS_ID);
--
--	return 0;
--}
--
- static const struct tegra_xusb_padctl_ops tegra186_xusb_padctl_ops = {
- 	.probe = tegra186_xusb_padctl_probe,
- 	.remove = tegra186_xusb_padctl_remove,
+ MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
+ MODULE_DESCRIPTION("Tegra XUSB Pad Controller driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.h
+index 1235865..71d9569 100644
+--- a/include/linux/phy/tegra/xusb.h
++++ b/include/linux/phy/tegra/xusb.h
+@@ -21,4 +21,6 @@ int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
+ int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
+ 					bool val);
+ int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
++int tegra_xusb_padctl_get_usb3_companion(struct tegra_xusb_padctl *padctl,
++					 unsigned int port);
+ #endif /* PHY_TEGRA_XUSB_H */
 -- 
 2.7.4
 
