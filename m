@@ -2,93 +2,114 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D98C3524B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B486C3524D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCEC20674
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 14:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C23218AC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:10:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1TlePiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgBDOwf (ORCPT
+        id S1727290AbgBDPK0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 09:52:35 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:39791 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727281AbgBDOwe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 09:52:34 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 014EqC8d008030, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 014EqC8d008030
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 4 Feb 2020 22:52:13 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 4 Feb 2020 22:52:13 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 4 Feb 2020 22:52:12 +0800
-Received: from james-BS01.localdomain (172.21.190.33) by
- RTEXMB01.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Tue, 4 Feb 2020 22:52:12 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     <linux-realtek-soc@lists.infradead.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Tue, 4 Feb 2020 10:10:26 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41447 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727297AbgBDPK0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 10:10:26 -0500
+Received: by mail-lf1-f65.google.com with SMTP id m30so12418852lfp.8;
+        Tue, 04 Feb 2020 07:10:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bOyXqJTMJpGxnWbJ6CKeee1fvpUr341gEX8SV5oQQCU=;
+        b=O1TlePiADJbKYBupj2fnfW870fVe17j9u063poPBQPqY7ir3uqzJOTSVXiaYkEIbWP
+         1MVljGSK/AFYpXl7E7f3FAWhegZUGafflyTuItUYgLOC5JmkEr1goIJSu/98JbxklCIU
+         BBXE2nyWTgglSSx2CCIHoYxG68uXWpXMMRz7PK8ymhKkJ3KGM4ObMtVN75Sh9rjzWeyx
+         gtwVNVbvVzGV8FbTEbADzpBz9sovCKWn/5QJOWW4m9/mx9zNMFr/zJL5lDTjeuz75jZv
+         DH51aD5OQ/bxcHxp+T/aeSnrU2mefIaZFUZzytVopmFdEDtXoOc1vphdLSJ9jKL6Tye/
+         xN+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bOyXqJTMJpGxnWbJ6CKeee1fvpUr341gEX8SV5oQQCU=;
+        b=YvqrmvzQ4v4ZalKnZywmK2F1h8k0NeDzF/+1oaIEeU5kxjJNFwh8lywKI2ebH+TUqd
+         0kpfOmw+yxv9Bu/cHdQi2oYc4v6IS31vXunO5/hz5bBd2IKTk8/o7dKwN30qJs8Goc+Z
+         /xwHZej4pdni5WJJugnnx/dp5TdLbZDEEC2yQzt+dRpwjFrxzKW0alKjq5pDo/F0KQJ0
+         3QSz+RrI/34X32524cctOSmaFIsC+cN60PL5LqCnJzLNWwZ3znpoYDHajGfry5te82da
+         mMnCjj9Q+klIdjuXCwbu2m5eOUUP0IW1vR0ixc9YnSFHw2wz7qqc5SXaDKmNgNIvleK2
+         tINQ==
+X-Gm-Message-State: APjAAAUcnU/7oEAKMFfh9uzFSdAkQn9ZXvDqiEPG1TtDkI9OJ1dmWc01
+        Ct4DaPm95WI8qEM0JVM6zz1YbtHQ
+X-Google-Smtp-Source: APXvYqwwbabdhnCboq2+5Sp2du8E38mwDuKCHSWZXOTDF1Yt+bgOaUDExFDy6Q2DRXDV8qm2fFAHuQ==
+X-Received: by 2002:a19:cc07:: with SMTP id c7mr15243564lfg.177.1580829023688;
+        Tue, 04 Feb 2020 07:10:23 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i4sm13804144lji.0.2020.02.04.07.10.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 07:10:23 -0800 (PST)
+Subject: Re: [PATCH v4 2/7] dt-bindings: iio: light: add support for
+ Dyna-Image AL3010
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and Realtek PymParticle EVB
-Date:   Tue, 4 Feb 2020 22:52:06 +0800
-Message-ID: <20200204145207.28622-2-james.tai@realtek.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200204145207.28622-1-james.tai@realtek.com>
-References: <20200204145207.28622-1-james.tai@realtek.com>
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20200204093031.616409-1-david@ixit.cz>
+ <20200204093031.616409-3-david@ixit.cz> <20200204095257.GA23609@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <193d39c7-a89b-17ee-1f8f-a6f6fbf6485c@gmail.com>
+Date:   Tue, 4 Feb 2020 18:10:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+In-Reply-To: <20200204095257.GA23609@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
-EVB.
+04.02.2020 12:52, Michał Mirosław пишет:
+> On Tue, Feb 04, 2020 at 10:30:30AM +0100, David Heidelberg wrote:
+>> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
+>> provides a multiple gain function with linear response over a dynamic
+>> range 1216/4863/19452/77806.
+> [...]
+>> +properties:
+>> +  compatible:
+>> +    const: dynaimage,al3010
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  vdd-supply:
+>> +    description: Regulator that provides power to the sensor
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - vdd-supply
+> 
+> Regulator and interrupt should be optional.
 
-Signed-off-by: James Tai <james.tai@realtek.com>
----
- v2 -> v3: Unchanged
-
- v1 -> v2:
- * Put string in alphabetical order
-
- Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-index 845f9c76d6f7..3b48ae71fdd8 100644
---- a/Documentation/devicetree/bindings/arm/realtek.yaml
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -42,6 +42,12 @@ properties:
-               - synology,ds418 # Synology DiskStation DS418
-           - const: realtek,rtd1296
- 
-+      # RTD1319 SoC based boards
-+      - items:
-+          - enum:
-+              - realtek,pymparticle # Realtek PymParticle EVB
-+          - const: realtek,rtd1319
-+
-       # RTD1395 SoC based boards
-       - items:
-           - enum:
--- 
-2.25.0
-
+Indeed, that's a good correction +1
