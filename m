@@ -2,175 +2,188 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E54C35247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 16:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C7FC35247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 16:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554C02087E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 16:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D222084E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 16:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6AkK9qW"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SUoOU5mT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgBDQZT (ORCPT
+        id S1727390AbgBDQhO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 11:25:19 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39287 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727290AbgBDQZS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 11:25:18 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so7472481plp.6;
-        Tue, 04 Feb 2020 08:25:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O/sCeixAp7RG7twZulDcz878W1v+r0QG4QBn97QB9rg=;
-        b=g6AkK9qWCKU3Yfgak1ZzxPplEEuZm5WS9jkpqbTozPyu4F7s75YCaIkpQxTl6+N9Qr
-         BKac/0+fytPBY0MZtL8uGnvRDrp5/+RZhDqknJ6j99aQERefyozvFNfyqbvKohuPq7xl
-         sJtSJ8iO3UOenan3dBTZiFd6Q+zfZtpOeiYP4EWC7HDE0znJQlisO9I9DmtQNB8/7n6z
-         dqyc59QzAGmcgUgBqyPUOLbyewRSFVNmi97x5WoCwcy6HXhjuurxQOGnpk6h/+PyJPC9
-         P/jSItGYGXkxwOgJ0DI6HXeAOHPF9o5skHRRgCnPZ7/EkbyMvn9FeW0QoigWIsEq9bq1
-         Tl/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O/sCeixAp7RG7twZulDcz878W1v+r0QG4QBn97QB9rg=;
-        b=JSiKW5cUExXErgNWshQMMJDYNVakWgiCwSwzh1QyftKFCQLQ6g1KlhjRyoz9Z4YZRx
-         p77Q6T/xUrLWv/MzzaF1f5Z8t9oWKyn7LbIXgU1i+KsJzG2CrcHNiQI3u4pD5PE1jNaR
-         n5J1h0HqDJzvvET/p2reYfx1OCLd7F22QCImim6yFrYggmPUrG6vNbL1MwV6xGnCDlnW
-         kHJWhDqDg+ZsfNt5pLO5399se8khScymbdJjTwlVmLCeux5lRl8ptEonCBj7+sPzW64R
-         GFqWzResEx3tuiEsuSPaDFLB6JWBshm3NchKVezzOObxmaox1snYTfVO3cir1a4LSsft
-         PFGg==
-X-Gm-Message-State: APjAAAX2yur7HUm1TzoPnNdkWd96O7CcWjuz6/1nn77mucUAx7IQwaka
-        J7Q3ICUnJDqEIberjZSPc9k=
-X-Google-Smtp-Source: APXvYqxsd7qC0DJSURNNHya+EzrexA8llJ52xqkcSMF38z9LBvQk/VZwgInLjeqfMdyHtNnlg5CCeQ==
-X-Received: by 2002:a17:902:968c:: with SMTP id n12mr30840031plp.144.1580833518073;
-        Tue, 04 Feb 2020 08:25:18 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c68sm25237454pfc.156.2020.02.04.08.25.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Feb 2020 08:25:17 -0800 (PST)
-Date:   Tue, 4 Feb 2020 08:25:16 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     ansuelsmth@gmail.com
-Cc:     'Andy Gross' <agross@kernel.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Wim Van Sebroeck' <wim@linux-watchdog.org>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: R: [PATCH 1/3] watchdog: qcom-wdt: add option to skip pretimeout
-Message-ID: <20200204162516.GA22814@roeck-us.net>
-References: <20200204152104.13278-1-ansuelsmth@gmail.com>
- <20200204160824.GA17320@roeck-us.net>
- <035201d5db76$78f56670$6ae03350$@gmail.com>
+        Tue, 4 Feb 2020 11:37:14 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44962 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727296AbgBDQhO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 11:37:14 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580834233; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=agoXjFrnTmxkOUbSigXOO4ODx6+TcOAJBzPUjhLzlBM=; b=SUoOU5mTsMhPW8AwhyPrsA2qT6shwOKHiwxuuG8peY2dK3x8TGuDpNN5tgPlSMYpt/slYDQc
+ bvLGAamD32nssag1hcTMCV42DBidq4dKIqblmWpKbWZDpStU/t8hGTuK7R5MQlmhVLMl2zz5
+ AfV7mwZQGvIKiTSWUhmIr0RylRA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e399db6.7fd838397030-smtp-out-n03;
+ Tue, 04 Feb 2020 16:37:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3EFD8C447A1; Tue,  4 Feb 2020 16:37:09 +0000 (UTC)
+Received: from Pillair (unknown [183.83.68.224])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68156C43383;
+        Tue,  4 Feb 2020 16:37:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 68156C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <1580281223-2759-1-git-send-email-pillair@codeaurora.org> <20200203173500.GB3948@builder>
+In-Reply-To: <20200203173500.GB3948@builder>
+Subject: RE: [PATCH v5] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Tue, 4 Feb 2020 22:07:02 +0530
+Message-ID: <000001d5db79$5814edb0$083ec910$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <035201d5db76$78f56670$6ae03350$@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHPh76zXXDoz9WIzFQCmi0NWmaUmALbmOLiqAEGNCA=
+Content-Language: en-us
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 05:16:34PM +0100, ansuelsmth@gmail.com wrote:
-> If something like this is used, msm-timer require interrupts. Without this
-> configuration, the device is unbootable as the system froze on system
-> bootup.
-> 
-> timer@200a000 {
-> 			compatible = "qcom,kpss-timer", "qcom,msm-timer";
-> 			interrupts = <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>,
-> 				     <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>,
-> 				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>,
-> 				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>,
-> 				     <GIC_PPI 5 (GIC_CPU_MASK_SIMPLE(2) |
-> 						 IRQ_TYPE_EDGE_RISING)>;
-> 			no-pretimeout;
-> 			reg = <0x0200a000 0x100>;
-> 			clock-frequency = <25000000>,
-> 					  <32768>;
-> 			clocks = <&sleep_clk>;
-> 			clock-names = "sleep";
-> 			cpu-offset = <0x80000>;
-> 		};
-> 
+Hi Bjorn,
+I have addressed your comments and sent out the v6 for this patch.
 
-I think this is all wrong; the new property shows up in a node which
-is completely unrelated to a watchdog. Maybe it wasn't such a good idea
-to tie the watchdog to the timer node. At the very least, the situation
-should be handled in the driver via of_table flags. If the situation can't
-be handled that way, something is even more wrong. In that case it might
-be better to revert commit 36375491a439 until that is sorted out properly.
+Thanks,
+Rakesh Pillai.
 
-Guenter
-
-> > On Tue, Feb 04, 2020 at 04:21:01PM +0100, Ansuel Smith wrote:
-> > > Some platform like ipq806x doesn't support pretimeout.
-> > > As the driver check if there are available interrupts and ipq806x
-> > > use msm-timer that require interrupts, the watchdog fail to probe
-> > > as request_irq tries to use a ppi interrupt. Add an option to skip
-> > > pretimeout setup and use the normal watchdog probe.
-> > >
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > ---
-> > >  drivers/watchdog/qcom-wdt.c | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> > > index a494543d3ae1..e689e97e883e 100644
-> > > --- a/drivers/watchdog/qcom-wdt.c
-> > > +++ b/drivers/watchdog/qcom-wdt.c
-> > > @@ -189,6 +189,7 @@ static int qcom_wdt_probe(struct platform_device
-> > *pdev)
-> > >  	u32 percpu_offset;
-> > >  	int irq, ret;
-> > >  	struct clk *clk;
-> > > +	bool nopretimeout;
-> > >
-> > >  	regs = of_device_get_match_data(dev);
-> > >  	if (!regs) {
-> > > @@ -204,6 +205,8 @@ static int qcom_wdt_probe(struct platform_device
-> > *pdev)
-> > >  	if (!res)
-> > >  		return -ENOMEM;
-> > >
-> > > +	nopretimeout = of_property_read_bool(np, "no-pretimeout");
-> > > +
-> > >  	/* We use CPU0's DGT for the watchdog */
-> > >  	if (of_property_read_u32(np, "cpu-offset", &percpu_offset))
-> > >  		percpu_offset = 0;
-> > > @@ -247,7 +250,7 @@ static int qcom_wdt_probe(struct platform_device
-> > *pdev)
-> > >
-> > >  	/* check if there is pretimeout support */
-> > >  	irq = platform_get_irq(pdev, 0);
-> > > -	if (irq > 0) {
-> > > +	if (!nopretimeout && irq > 0) {
-> > 
-> > That is unnecessary; such platforms should simply not provide an
-> interrupt.
-> > Or, in other words, what is the point of assigning an interrupt to be used
-> > for pretimeout if the platform doesn't support it ? And then to add yet
-> > another attribute to tell the driver not to use it ?
-> > 
-> > Guenter
-> > 
-> > >  		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
-> > >  				       IRQF_TRIGGER_RISING,
-> > >  				       "wdt_bark", &wdt->wdd);
-> > > --
-> > > 2.24.0
-> > >
+> -----Original Message-----
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Sent: Monday, February 3, 2020 11:05 PM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+linux-
+> kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
+> Subject: Re: [PATCH v5] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
 > 
+> On Tue 28 Jan 23:00 PST 2020, Rakesh Pillai wrote:
+> 
+> > Add device node for the ath10k SNOC platform driver probe
+> > and add resources required for WCN3990 on sc7180 soc.
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28
+> ++++++++++++++++++++++++++++
+> >  2 files changed, 33 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 388f50a..167f68ac 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -287,6 +287,11 @@
+> >  	vdda-pll-supply = <&vreg_l4a_0p8>;
+> >  };
+> >
+> > +&wifi {
+> > +	status = "okay";
+> > +	qcom,msa-fixed-perm;
+> > +};
+> > +
+> >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> >
+> >  &qspi_clk {
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 8011c5f..0a00c94 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -75,6 +75,12 @@
+> >  			reg = <0x0 0x80900000 0x0 0x200000>;
+> >  			no-map;
+> >  		};
+> > +
+> > +		wlan_fw_mem: memory@93900000 {
+> > +			compatible = "removed-dma-pool";
+> 
+> Sorry for not spotting this earlier, the "removed-dma-pool" compatible
+> is a downstream thing and isn't defined upstream.
+> 
+> > +                     no-map;
+> > +                     reg = <0 0x93900000 0 0x200000>;
+> 
+> If you swap the order of no-map and reg in this node it will look like
+> all the others.
+> 
+> 
+> Apart from that the patch looks good.
+> 
+> Regards,
+> Bjorn
+> 
+> > +		};
+> >  	};
+> >
+> >  	cpus {
+> > @@ -1490,6 +1496,28 @@
+> >
+> >  			#freq-domain-cells = <1>;
+> >  		};
+> > +
+> > +		wifi: wifi@18800000 {
+> > +			compatible = "qcom,wcn3990-wifi";
+> > +			reg = <0 0x18800000 0 0x800000>;
+> > +			reg-names = "membase";
+> > +			iommus = <&apps_smmu 0xc0 0x1>;
+> > +			interrupts =
+> > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0
+> */ >,
+> > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1
+> */ >,
+> > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2
+> */ >,
+> > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3
+> */ >,
+> > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4
+> */ >,
+> > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5
+> */ >,
+> > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6
+> */ >,
+> > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7
+> */ >,
+> > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8
+> */ >,
+> > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9
+> */ >,
+> > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10
+> */>,
+> > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11
+> */>;
+> > +			memory-region = <&wlan_fw_mem>;
+> > +			status = "disabled";
+> > +		};
+> >  	};
+> >
+> >  	thermal-zones {
+> > --
+> > 2.7.4
+> >
