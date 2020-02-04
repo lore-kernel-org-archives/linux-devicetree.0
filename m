@@ -2,114 +2,123 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B486C3524D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F773C35247
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C23218AC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372872087E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 15:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1TlePiA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4H66yf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgBDPK0 (ORCPT
+        id S1727314AbgBDPVa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 10:10:26 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41447 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbgBDPK0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 10:10:26 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so12418852lfp.8;
-        Tue, 04 Feb 2020 07:10:24 -0800 (PST)
+        Tue, 4 Feb 2020 10:21:30 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36029 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbgBDPVa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 10:21:30 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so4165824wma.1;
+        Tue, 04 Feb 2020 07:21:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bOyXqJTMJpGxnWbJ6CKeee1fvpUr341gEX8SV5oQQCU=;
-        b=O1TlePiADJbKYBupj2fnfW870fVe17j9u063poPBQPqY7ir3uqzJOTSVXiaYkEIbWP
-         1MVljGSK/AFYpXl7E7f3FAWhegZUGafflyTuItUYgLOC5JmkEr1goIJSu/98JbxklCIU
-         BBXE2nyWTgglSSx2CCIHoYxG68uXWpXMMRz7PK8ymhKkJ3KGM4ObMtVN75Sh9rjzWeyx
-         gtwVNVbvVzGV8FbTEbADzpBz9sovCKWn/5QJOWW4m9/mx9zNMFr/zJL5lDTjeuz75jZv
-         DH51aD5OQ/bxcHxp+T/aeSnrU2mefIaZFUZzytVopmFdEDtXoOc1vphdLSJ9jKL6Tye/
-         xN+g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GhE5FW40OPB90pmIillZl/71nzFIm2pOC803DrZ4Spw=;
+        b=Z4H66yf0ClAGZ9BU9Y1LjQyl8Ns+xdotOdY3OLtZcf7OMRs2jRCAc1RFWdkKqv3Ge4
+         ajcwLi6kYGhEeQEv+X6c7uZtL310AGgjRwH6joEcoR56RGRNSK9Zbo4BSrecXFNUtu/d
+         RGpAhtm/ChL1jX7kNaOHhr8V9w+ZcV6fyjNiNrq89p85D84E4jNAiyLZgHmP2dX0dm3u
+         0PGue8Tk4zklj0ulPaa0t/GTe13hxoLZ9qpLakHhxydDCDRhEEpPxAKBB2MX0UxGyx86
+         VkkyldEAOrIbz6m9zM4Eg8UFJeCOkWi5K8QYFUBUDuOS35wYEL+OGy3HXpB6k2vMxFop
+         FGYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=bOyXqJTMJpGxnWbJ6CKeee1fvpUr341gEX8SV5oQQCU=;
-        b=YvqrmvzQ4v4ZalKnZywmK2F1h8k0NeDzF/+1oaIEeU5kxjJNFwh8lywKI2ebH+TUqd
-         0kpfOmw+yxv9Bu/cHdQi2oYc4v6IS31vXunO5/hz5bBd2IKTk8/o7dKwN30qJs8Goc+Z
-         /xwHZej4pdni5WJJugnnx/dp5TdLbZDEEC2yQzt+dRpwjFrxzKW0alKjq5pDo/F0KQJ0
-         3QSz+RrI/34X32524cctOSmaFIsC+cN60PL5LqCnJzLNWwZ3znpoYDHajGfry5te82da
-         mMnCjj9Q+klIdjuXCwbu2m5eOUUP0IW1vR0ixc9YnSFHw2wz7qqc5SXaDKmNgNIvleK2
-         tINQ==
-X-Gm-Message-State: APjAAAUcnU/7oEAKMFfh9uzFSdAkQn9ZXvDqiEPG1TtDkI9OJ1dmWc01
-        Ct4DaPm95WI8qEM0JVM6zz1YbtHQ
-X-Google-Smtp-Source: APXvYqwwbabdhnCboq2+5Sp2du8E38mwDuKCHSWZXOTDF1Yt+bgOaUDExFDy6Q2DRXDV8qm2fFAHuQ==
-X-Received: by 2002:a19:cc07:: with SMTP id c7mr15243564lfg.177.1580829023688;
-        Tue, 04 Feb 2020 07:10:23 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id i4sm13804144lji.0.2020.02.04.07.10.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 07:10:23 -0800 (PST)
-Subject: Re: [PATCH v4 2/7] dt-bindings: iio: light: add support for
- Dyna-Image AL3010
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        bh=GhE5FW40OPB90pmIillZl/71nzFIm2pOC803DrZ4Spw=;
+        b=qZr5YYNB96MVATmMITWbK06SIoLbRDVI0ZOiDW5qflbAGfY8MzLTCJsMTtq6KFa92X
+         G3JpP1+QVa6rfeVBP6cmE68hasAjIbobhenNL51Y9J1j+GY3Yn2lhgyYDADAKSqP5LmM
+         AP2iSoC3lxot8W+QQ2pWzGj9vpSaFmlGtbcHtM/BU9p0dTIkMqzWL0YU5E8maZMIa2Oc
+         gsPENnYyO7D07sX2B2vfWb7Fo4q2JJ1/+bf49jZACYblie+TNO7JeiKN9o+uXBxDyB98
+         iiNRRVbUUI/diYNVViS917JsgTdLA+tTob/Fcmnu7TO+uhRVVAzRSl/ZStIT4baAzLtA
+         HzZQ==
+X-Gm-Message-State: APjAAAXo5DAQZF0aUTI4kUdyYZEOEkIuQzkW5nLj5V3pLOTrOmSEKy0h
+        E3S1h2z39vrk6S4VjltXnco=
+X-Google-Smtp-Source: APXvYqxj2GHvAQRiTyHO73SCccCsAxR0kmLAN3Xf1aA64me3ICvJ8h71Ene7V4cxj8rM4pJPz1nACw==
+X-Received: by 2002:a7b:c4c3:: with SMTP id g3mr6184072wmk.131.1580829687814;
+        Tue, 04 Feb 2020 07:21:27 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id x10sm29902174wrv.60.2020.02.04.07.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 07:21:27 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20200204093031.616409-1-david@ixit.cz>
- <20200204093031.616409-3-david@ixit.cz> <20200204095257.GA23609@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <193d39c7-a89b-17ee-1f8f-a6f6fbf6485c@gmail.com>
-Date:   Tue, 4 Feb 2020 18:10:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] watchdog: qcom-wdt: add option to skip pretimeout
+Date:   Tue,  4 Feb 2020 16:21:01 +0100
+Message-Id: <20200204152104.13278-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200204095257.GA23609@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-04.02.2020 12:52, Michał Mirosław пишет:
-> On Tue, Feb 04, 2020 at 10:30:30AM +0100, David Heidelberg wrote:
->> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
->> provides a multiple gain function with linear response over a dynamic
->> range 1216/4863/19452/77806.
-> [...]
->> +properties:
->> +  compatible:
->> +    const: dynaimage,al3010
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  vdd-supply:
->> +    description: Regulator that provides power to the sensor
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - vdd-supply
-> 
-> Regulator and interrupt should be optional.
+Some platform like ipq806x doesn't support pretimeout.
+As the driver check if there are available interrupts and ipq806x
+use msm-timer that require interrupts, the watchdog fail to probe
+as request_irq tries to use a ppi interrupt. Add an option to skip
+pretimeout setup and use the normal watchdog probe.
 
-Indeed, that's a good correction +1
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/watchdog/qcom-wdt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+index a494543d3ae1..e689e97e883e 100644
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -189,6 +189,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	u32 percpu_offset;
+ 	int irq, ret;
+ 	struct clk *clk;
++	bool nopretimeout;
+ 
+ 	regs = of_device_get_match_data(dev);
+ 	if (!regs) {
+@@ -204,6 +205,8 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	if (!res)
+ 		return -ENOMEM;
+ 
++	nopretimeout = of_property_read_bool(np, "no-pretimeout");
++
+ 	/* We use CPU0's DGT for the watchdog */
+ 	if (of_property_read_u32(np, "cpu-offset", &percpu_offset))
+ 		percpu_offset = 0;
+@@ -247,7 +250,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 
+ 	/* check if there is pretimeout support */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq > 0) {
++	if (!nopretimeout && irq > 0) {
+ 		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+ 				       IRQF_TRIGGER_RISING,
+ 				       "wdt_bark", &wdt->wdd);
+-- 
+2.24.0
+
