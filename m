@@ -2,897 +2,378 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URI_HEX,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E02C35247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3F5C3524D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 19:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBBD12087E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C1B2166E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 19:03:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z/TV9ECn"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Irx9UF2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgBDSXW (ORCPT
+        id S1727314AbgBDTDD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:23:22 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41764 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727355AbgBDSXW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 13:23:22 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so19665023ljc.8
-        for <devicetree@vger.kernel.org>; Tue, 04 Feb 2020 10:23:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MRUfWbLDv66bpaQvV0xFrly7gS7vo1/XriSb4pAftHo=;
-        b=Z/TV9ECnJCbCTJCKfHqv4SmZ3vqno3bBSofpT0MP84wSpnvq0NDDmnZ3MaDsU91Fqt
-         szcqrjttiReG0QVlueJOhU6BWw6gn4YsEhjMxPuMCEqnlWS1IjvI3cQuQwq7/KjfqYqQ
-         oGGQREs6d7/PEv6NIPJxYtLGqM5gB7xEQZZdjeBl5D9yARoOkpZxWAh+hI4iZC3OUHFS
-         Kk8HkkFgb3ceG8YxjdisxE7WiyqMzOugT5w/vg5SxshCRucF6z+2/Sskzj21127+vOFV
-         hh9g2V5v5XKECCJ+lSqrPU2TFcdN/k7BoksCjMQe7L7T+1zSrXtAMR4o0VSWveEKZbgm
-         BwWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MRUfWbLDv66bpaQvV0xFrly7gS7vo1/XriSb4pAftHo=;
-        b=BGBVNm5m0ofM+v0ePinK03lo1VntwiIvRCGSbwEvnM41HmLrU+CY9pRqIWt5lYgnMN
-         Ef4tynIp5P9AdNruc/88dDCZRhsW0r3sT2qH9dDOA3OmMzkwjUBMWgbPUaeBuIsRQkP1
-         ECoRumWgnR1nCCj5ZguU93VbMXqOkaXnddzJUbYxKpp+cdZnhLjslgNbGmr0g//C7WwA
-         7yTmE8Hi7nSlbByZjAFfWk8QJ2kaRjMiNUAS7AVNXdTWcAsJfPPsCK8tOt1Vcy/3IcOE
-         +G3HFWW4/G0litSt+mrM1rnhBhQI++fvrPanueov8P7Dvt3gGFmvOFIqQZVPPyIWUilH
-         pMUg==
-X-Gm-Message-State: APjAAAWCfQyBN4UMTTsPWKfweRrr3SHaFBcpajwGbOt9uQz+RQOJe4oc
-        wBIyxrZP1ICQt7xXkT8K8G7leNTskmdtH6pBroyYDA==
-X-Google-Smtp-Source: APXvYqwmg4Pr9S63lIHJMEFXlQlazv9QN8yUzNOKAYFkKVtB/T2seEvYksPyWLUjHTWlsDj+Is8145dF7nGLPpV+Zsg=
-X-Received: by 2002:a2e:8702:: with SMTP id m2mr18183771lji.278.1580840598373;
- Tue, 04 Feb 2020 10:23:18 -0800 (PST)
+        Tue, 4 Feb 2020 14:03:03 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17869 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbgBDTDD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 14:03:03 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e39bfcd0001>; Tue, 04 Feb 2020 11:02:37 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 04 Feb 2020 11:03:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 04 Feb 2020 11:03:00 -0800
+Received: from [10.2.167.216] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
+ 2020 19:03:00 +0000
+Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <098ac46f-fe13-f215-b9a4-aa8d01395592@xs4all.nl>
+ <6c3d2557-8982-37bf-810a-6d9faad9e5a4@nvidia.com>
+ <9c4775f2-8188-43f4-1de1-56620fad2e7c@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <af813a4e-339c-4254-75a0-8db995fe2aba@nvidia.com>
+Date:   Tue, 4 Feb 2020 11:02:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org> <1578630784-962-5-git-send-email-daidavid1@codeaurora.org>
-In-Reply-To: <1578630784-962-5-git-send-email-daidavid1@codeaurora.org>
-From:   Evan Green <evgreen@google.com>
-Date:   Tue, 4 Feb 2020 10:22:41 -0800
-Message-ID: <CAE=gft4w_FwwuHuRdHGs=jLkB=-dgftF3DWNxRO9tCSHs0WY7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] interconnect: qcom: Consolidate interconnect RPMh support
-To:     David Dai <daidavid1@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9c4775f2-8188-43f4-1de1-56620fad2e7c@xs4all.nl>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580842957; bh=QdkMWA8+wiyM9IKyMENIV2uTOCR+3SziBADHcApLWP8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=Irx9UF2/ReL47lbfuETPkwoWO0PN5uK/ISUfi/5+80gmOVGZULNUBnvgprHBvn+91
+         b0I/AMOMm/YNTGijjVXI6AzNBDSIfuEKrO0bo5tqmxGYxPjvZT+xEzIJSD9ghfoDcX
+         Aml0x2HPhHMxUnYilMj+saWQ06LTrU8VsEIfo8BqZEFvj5msaRptqpSufY/JwR4dLD
+         m+wGpcRS5hQCU79yQK0Hi+6zsXDYxW4xcw6+BKqpoovBpGk/6kGpg5A8cR+tq9jAqa
+         e57IXspz/a66t9v7jfPM6ZGKAqk4+BYOYx4sV+s59iT4bmOEcWMeT+3wybjde1HXZk
+         7ztUHkWvCPZ9w==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 8:33 PM David Dai <daidavid1@codeaurora.org> wrote:
+
+On 2/4/20 9:22 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
 >
-> Add bcm voter driver and add support for RPMh specific interconnect providers
-> which implements the set and aggregate functionalities that translates
-> bandwidth requests into RPMh messages. These modules provide a common set of
-> functionalities for all Qualcomm RPMh based interconnect providers and
-> should help reduce code duplication when adding new providers.
 >
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-
-This was a little tough to wrap my head around, but then I understood
-that most of it was a copy of functions from sdm845.c, which are later
-deleted in patch 5 when sdm845.c uses the bcm-voter driver.
-
-> ---
->  drivers/interconnect/qcom/Kconfig     |   8 +
->  drivers/interconnect/qcom/Makefile    |   4 +
->  drivers/interconnect/qcom/bcm-voter.c | 363 ++++++++++++++++++++++++++++++++++
->  drivers/interconnect/qcom/bcm-voter.h |  28 +++
->  drivers/interconnect/qcom/icc-rpmh.c  | 158 +++++++++++++++
->  drivers/interconnect/qcom/icc-rpmh.h  | 151 ++++++++++++++
->  6 files changed, 712 insertions(+)
->  create mode 100644 drivers/interconnect/qcom/bcm-voter.c
->  create mode 100644 drivers/interconnect/qcom/bcm-voter.h
->  create mode 100644 drivers/interconnect/qcom/icc-rpmh.c
->  create mode 100644 drivers/interconnect/qcom/icc-rpmh.h
+> On 2/4/20 5:42 PM, Sowjanya Komatineni wrote:
+>> On 2/4/20 4:53 AM, Hans Verkuil wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
+>>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
+>>>> generator (TPG) capture.
+>>>>
+>>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+>>>> CSI port is one-to-one mapped to VI channel for video capture.
+>>>>
+>>>> This series has TPG support only where it creates hard media links
+>>>> between CSI subdevice and VI video device without device graphs.
+>>>>
+>>>> v4l2-compliance results are available below the patch diff.
+>>>>
+>>>> [v0]: Includes,
+>>>>         - Adds CSI TPG clock to Tegra210 clock driver
+>>>>         - Host1x video driver with VI and CSI clients.
+>>>>         - Support for Tegra210 only.
+>>>>         - VI CSI TPG support with hard media links in driver.
+>>>>         - Video formats supported by Tegra210 VI
+>>>>         - CSI TPG supported video formats
+>>>>
+>>>>
+>>>> Sowjanya Komatineni (5):
+>>>>     dt-bindings: clock: tegra: Add clk id for CSI TPG clock
+>>>>     clk: tegra: Add Tegra210 CSI TPG clock gate
+>>>>     dt-binding: tegra: Add VI and CSI bindings
+>>>>     media: tegra: Add Tegra Video input driver for Tegra210
+>>>>     arm64: tegra: Add Tegra VI CSI suppport in device tree
+>>>>
+>>>>    .../display/tegra/nvidia,tegra20-host1x.txt        |  10 +-
+>>>>    arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   8 +
+>>>>    arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  31 +-
+>>>>    drivers/clk/tegra/clk-tegra210.c                   |   7 +
+>>>>    drivers/staging/media/Kconfig                      |   2 +
+>>>>    drivers/staging/media/Makefile                     |   1 +
+>>>>    drivers/staging/media/tegra/Kconfig                |  12 +
+>>>>    drivers/staging/media/tegra/Makefile               |  11 +
+>>>>    drivers/staging/media/tegra/TODO                   |  10 +
+>>>>    drivers/staging/media/tegra/csi.h                  | 111 ++++
+>>>>    drivers/staging/media/tegra/csi2_fops.c            | 335 +++++++++++
+>>>>    drivers/staging/media/tegra/csi2_fops.h            |  15 +
+>>>>    drivers/staging/media/tegra/host1x-video.c         | 120 ++++
+>>>>    drivers/staging/media/tegra/host1x-video.h         |  33 ++
+>>>>    drivers/staging/media/tegra/mc_common.h            | 131 +++++
+>>>>    drivers/staging/media/tegra/tegra-channel.c        | 628 +++++++++++++++++++++
+>>>>    drivers/staging/media/tegra/tegra-core.c           | 111 ++++
+>>>>    drivers/staging/media/tegra/tegra-core.h           | 125 ++++
+>>>>    drivers/staging/media/tegra/tegra-csi.c            | 380 +++++++++++++
+>>>>    drivers/staging/media/tegra/tegra-vi.c             | 351 ++++++++++++
+>>>>    drivers/staging/media/tegra/tegra-vi.h             | 101 ++++
+>>>>    drivers/staging/media/tegra/vi2_fops.c             | 364 ++++++++++++
+>>>>    drivers/staging/media/tegra/vi2_fops.h             |  15 +
+>>>>    drivers/staging/media/tegra/vi2_formats.h          | 119 ++++
+>>>>    drivers/staging/media/tegra/vi2_registers.h        | 194 +++++++
+>>>>    include/dt-bindings/clock/tegra210-car.h           |   2 +-
+>>>>    26 files changed, 3224 insertions(+), 3 deletions(-)
+>>>>    create mode 100644 drivers/staging/media/tegra/Kconfig
+>>>>    create mode 100644 drivers/staging/media/tegra/Makefile
+>>>>    create mode 100644 drivers/staging/media/tegra/TODO
+>>>>    create mode 100644 drivers/staging/media/tegra/csi.h
+>>>>    create mode 100644 drivers/staging/media/tegra/csi2_fops.c
+>>>>    create mode 100644 drivers/staging/media/tegra/csi2_fops.h
+>>>>    create mode 100644 drivers/staging/media/tegra/host1x-video.c
+>>>>    create mode 100644 drivers/staging/media/tegra/host1x-video.h
+>>>>    create mode 100644 drivers/staging/media/tegra/mc_common.h
+>>>>    create mode 100644 drivers/staging/media/tegra/tegra-channel.c
+>>>>    create mode 100644 drivers/staging/media/tegra/tegra-core.c
+>>>>    create mode 100644 drivers/staging/media/tegra/tegra-core.h
+>>>>    create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+>>>>    create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+>>>>    create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+>>>>    create mode 100644 drivers/staging/media/tegra/vi2_fops.c
+>>>>    create mode 100644 drivers/staging/media/tegra/vi2_fops.h
+>>>>    create mode 100644 drivers/staging/media/tegra/vi2_formats.h
+>>>>    create mode 100644 drivers/staging/media/tegra/vi2_registers.h
+>>>>
+>>>>
+>>>> v4l2-compliance SHA: e7402fb758fd106955c3b7d5a5e961d1cb606f4a, 32 bits, 32-bit time_t
+>>>>
+>>>> Compliance test for tegra-video device /dev/video0:
+>>> Since this driver creates a /dev/media0 device you should test with:
+>>>
+>>> v4l2-compliance -m0 -s10: that tests everything found in the media topology.
+>>>
+>>> It finds a few issues in the media topology itself:
+>>>
+>>> ----------------------------------------------------------------------------
+>>> $ v4l2-compliance -M0
+>>> v4l2-compliance SHA: 5af0730d06247a2de487abf2e00e70b156f1fb82, 64 bits, 64-bit time_t
+>>>
+>>> Compliance test for host1x_video device /dev/media0:
+>>>
+>>> Media Driver Info:
+>>>           Driver name      : host1x_video
+>>>           Model            : NVIDIA Tegra Video Input Device
+>>>           Serial           :
+>>>           Bus info         :
+>>>           Media version    : 5.5.0
+>>>           Hardware revision: 0x00000003 (3)
+>>>           Driver version   : 5.5.0
+>>>
+>>> Required ioctls:
+>>>                   warn: v4l2-test-media.cpp(52): empty bus_info
+>>>           test MEDIA_IOC_DEVICE_INFO: OK
+>>>
+>>> Allow for multiple opens:
+>>>           test second /dev/media0 open: OK
+>>>                   warn: v4l2-test-media.cpp(52): empty bus_info
+>>>           test MEDIA_IOC_DEVICE_INFO: OK
+>>>           test for unlimited opens: OK
+>>>
+>>> Media Controller ioctls:
+>>>                   fail: v4l2-test-media.cpp(117): function == MEDIA_ENT_F_V4L2_SUBDEV_UNKNOWN
+>>>                   fail: v4l2-test-media.cpp(203): checkFunction(ent.function, true)
+>>>           test MEDIA_IOC_G_TOPOLOGY: FAIL
+>>>                   fail: v4l2-test-media.cpp(390): num_data_links != num_links
+>>>           test MEDIA_IOC_ENUM_ENTITIES/LINKS: FAIL
+>>>           test MEDIA_IOC_SETUP_LINK: OK
+>>>           test invalid ioctls: OK
+>>>
+>>> Total for host1x_video device /dev/media0: 8, Succeeded: 6, Failed: 2, Warnings: 2
+>>> ----------------------------------------------------------------------------
+>>>
+>>> Note: the -M0 option tests just /dev/media0 without testing any of the devices
+>>> mentioned in the topology. Use -m0 for that.
+>> OK
+>>> I see a lot of spam in the kernel log:
+>>>
+>>> [  484.362145] tegra-vi 54080000.vi: TPG mode is set to Black/White Direct Mode
+>>> [  486.147937] tegra-csi 54080838.csi: using Tegra default WIDTH X HEIGHT (1920x1080)
+>>> [  486.155499] tegra-csi 54080838.csi: using Tegra default RAW10 video format
+>>> [  486.162403] tegra-csi 54080838.csi: using Tegra default RAW10 video format
+>>>
+>>> Change that to dev_dbg or delete altogether.
+>> ok, removed TPG mode message in v2.
+>>
+>> Other above messages are to log using default format when requested
+>> format is not supported by TPG mode.
+>>
+>> Will change them to dev_dbg.
+>>
+>>> I also noticed that changing the test pattern while streaming did not seem to have
+>>> any effect until I stop and restart streaming. Is that a limitation of the HW or of
+>>> the driver?
+>> Do you mean changing test pattern mode of different channel while other
+>> channels are streaming?
+> No, from the same channel. E.g. v4l2-ctl --stream-mmap, then do from another
+> console 'v4l2-ctl -c test-pattern=1'.
 >
-> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-> index 2f9304d..cd100a4 100644
-> --- a/drivers/interconnect/qcom/Kconfig
-> +++ b/drivers/interconnect/qcom/Kconfig
-> @@ -5,6 +5,9 @@ config INTERCONNECT_QCOM
->         help
->           Support for Qualcomm's Network-on-Chip interconnect hardware.
+> It depends on the hardware whether or not you can change the test pattern
+> while streaming. But it is nice for testing if this is possible.
+
+Test-pattern mode changes during active streaming will not get set as 
+test-pattern mode is in CSI and mode is set every time during the start 
+of streaming and then VI keeps capturing the frames.
+
+basically its during CSI subdevice stream enable.
+
+
+>> In v1, pg mode from handler is stored in vi which is common for all
+>> channels.
+>>
+>> So, v2 has change to use channel specific pg mode rather than common
+>> mode for all channels.
+> That sounds better. You want independent test patterns for each channel
+> if possible.
 >
-> +config INTERCONNECT_QCOM_BCM_VOTER
-> +       tristate
-> +
->  config INTERCONNECT_QCOM_MSM8974
->         tristate "Qualcomm MSM8974 interconnect driver"
->         depends on INTERCONNECT_QCOM
-> @@ -23,10 +26,15 @@ config INTERCONNECT_QCOM_QCS404
->           This is a driver for the Qualcomm Network-on-Chip on qcs404-based
->           platforms.
+> Regards,
 >
-> +config INTERCONNECT_QCOM_RPMH
-> +       tristate
-> +
->  config INTERCONNECT_QCOM_SDM845
->         tristate "Qualcomm SDM845 interconnect driver"
->         depends on INTERCONNECT_QCOM
->         depends on (QCOM_RPMH && QCOM_COMMAND_DB && OF) || COMPILE_TEST
-> +       select INTERCONNECT_QCOM_RPMH
-> +       select INTERCONNECT_QCOM_BCM_VOTER
->         help
->           This is a driver for the Qualcomm Network-on-Chip on sdm845-based
->           platforms.
-> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-> index 9adf9e3..9317fa7 100644
-> --- a/drivers/interconnect/qcom/Makefile
-> +++ b/drivers/interconnect/qcom/Makefile
-> @@ -4,8 +4,12 @@ qnoc-msm8974-objs                      := msm8974.o
->  qnoc-qcs404-objs                       := qcs404.o
->  qnoc-sdm845-objs                       := sdm845.o
->  icc-smd-rpm-objs                       := smd-rpm.o
-> +icc-bcm-voter-objs                     := bcm-voter.o
-> +icc-rpmh-obj                           := icc-rpmh.o
+>          Hans
 >
-> +obj-$(CONFIG_INTERCONNECT_QCOM_BCM_VOTER) += icc-bcm-voter.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
-> +obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
-> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-> new file mode 100644
-> index 0000000..a65680e
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/bcm-voter.c
-> @@ -0,0 +1,363 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/list_sort.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <soc/qcom/rpmh.h>
-> +#include <soc/qcom/tcs.h>
-> +
-> +#include "bcm-voter.h"
-> +#include "icc-rpmh.h"
-> +
-> +static LIST_HEAD(bcm_voters);
-
-Doesn't this need a lock?
-
-> +
-> +/**
-> + * struct bcm_voter - Bus Clock Manager voter
-> + * @dev: reference to the device that communicates with the BCM
-> + * @np: reference to the device node to match bcm voters
-> + * @lock: mutex to protect commit and wake/sleep lists in the voter
-> + * @commit_list: list containing bcms to be committed to hardware
-> + * @ws_list: list containing bcms that have different wake/sleep votes
-> + * @voter_node: list of bcm voters
-> + */
-> +struct bcm_voter {
-> +       struct device *dev;
-> +       struct device_node *np;
-> +       struct mutex lock;
-> +       struct list_head commit_list;
-> +       struct list_head ws_list;
-> +       struct list_head voter_node;
-> +};
-> +
-> +static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
-> +{
-> +       const struct qcom_icc_bcm *bcm_a =
-> +                       list_entry(a, struct qcom_icc_bcm, list);
-> +       const struct qcom_icc_bcm *bcm_b =
-> +                       list_entry(b, struct qcom_icc_bcm, list);
-> +
-> +       if (bcm_a->aux_data.vcd < bcm_b->aux_data.vcd)
-> +               return -1;
-> +       else if (bcm_a->aux_data.vcd == bcm_b->aux_data.vcd)
-> +               return 0;
-> +       else
-> +               return 1;
-> +}
-> +
-> +static void bcm_aggregate(struct qcom_icc_bcm *bcm)
-> +{
-> +       size_t i, bucket;
-> +       u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
-> +       u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
-> +       u64 temp;
-> +
-> +       for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
-> +               for (i = 0; i < bcm->num_nodes; i++) {
-> +                       temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
-> +                       do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
-> +                       agg_avg[bucket] = max(agg_avg[bucket], temp);
-> +
-> +                       temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
-> +                       do_div(temp, bcm->nodes[i]->buswidth);
-> +                       agg_peak[bucket] = max(agg_peak[bucket], temp);
-> +               }
-> +
-> +               temp = agg_avg[bucket] * 1000ULL;
-> +               do_div(temp, bcm->aux_data.unit);
-> +               bcm->vote_x[bucket] = temp;
-> +
-> +               temp = agg_peak[bucket] * 1000ULL;
-> +               do_div(temp, bcm->aux_data.unit);
-> +               bcm->vote_y[bucket] = temp;
-> +       }
-> +
-> +       if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
-> +           bcm->vote_y[QCOM_ICC_BUCKET_AMC] == 0) {
-> +               bcm->vote_x[QCOM_ICC_BUCKET_AMC] = 1;
-> +               bcm->vote_x[QCOM_ICC_BUCKET_WAKE] = 1;
-> +               bcm->vote_y[QCOM_ICC_BUCKET_AMC] = 1;
-> +               bcm->vote_y[QCOM_ICC_BUCKET_WAKE] = 1;
-> +       }
-> +}
-> +
-> +static inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
-> +                       u32 addr, bool commit)
-> +{
-> +       bool valid = true;
-> +
-> +       if (!cmd)
-> +               return;
-> +
-> +       if (vote_x == 0 && vote_y == 0)
-> +               valid = false;
-> +
-> +       if (vote_x > BCM_TCS_CMD_VOTE_MASK)
-> +               vote_x = BCM_TCS_CMD_VOTE_MASK;
-> +
-> +       if (vote_y > BCM_TCS_CMD_VOTE_MASK)
-> +               vote_y = BCM_TCS_CMD_VOTE_MASK;
-> +
-> +       cmd->addr = addr;
-> +       cmd->data = BCM_TCS_CMD(commit, valid, vote_x, vote_y);
-> +
-> +       /*
-> +        * Set the wait for completion flag on command that need to be completed
-> +        * before the next command.
-> +        */
-> +       if (commit)
-> +               cmd->wait = true;
-> +}
-> +
-> +static void tcs_list_gen(struct list_head *bcm_list, int bucket,
-> +                        struct tcs_cmd tcs_list[MAX_VCD],
-> +                        int n[MAX_VCD])
-
-"n" should really be MAX_VCD + 1 to guarantee that it's
-zero-terminated, otherwise rpmh_write_batch() could go nuts.
-
-> +{
-> +       struct qcom_icc_bcm *bcm;
-> +       bool commit;
-> +       size_t idx = 0, batch = 0, cur_vcd_size = 0;
-> +
-> +       memset(n, 0, sizeof(int) * MAX_VCD);
-> +
-> +       list_for_each_entry(bcm, bcm_list, list) {
-> +               commit = false;
-> +               cur_vcd_size++;
-> +               if ((list_is_last(&bcm->list, bcm_list)) ||
-> +                   bcm->aux_data.vcd != list_next_entry(bcm, list)->aux_data.vcd) {
-> +                       commit = true;
-> +                       cur_vcd_size = 0;
-> +               }
-> +               tcs_cmd_gen(&tcs_list[idx], bcm->vote_x[bucket],
-> +                           bcm->vote_y[bucket], bcm->addr, commit);
-> +               idx++;
-> +               n[batch]++;
-> +               /*
-> +                * Batch the BCMs in such a way that we do not split them in
-> +                * multiple payloads when they are under the same VCD. This is
-> +                * to ensure that every BCM is committed since we only set the
-> +                * commit bit on the last BCM request of every VCD.
-> +                */
-> +               if (n[batch] >= MAX_RPMH_PAYLOAD) {
-> +                       if (!commit) {
-> +                               n[batch] = cur_vcd_size;
-
-You lost what used to be a -= here to just an = during the copy from
-sdm845.c. How did that happen?
-
-> +                               n[batch + 1] = cur_vcd_size;
-> +                       }
-> +                       batch++;
-> +               }
-> +       }
-> +}
-> +
-> +/**
-> + * of_bcm_voter_get - gets a bcm voter handle from DT node
-> + * @dev: device pointer for the consumer device
-> + * @name: name for the bcm voter device
-> + *
-> + * This function will match a device_node pointer for the phandle
-> + * specified in the device DT and return a bcm_voter handle on success.
-> + *
-> + * Returns bcm_voter pointer or ERR_PTR() on error. EPROBE_DEFER is returned
-> + * when matching bcm voter is yet to be found.
-> + */
-> +struct bcm_voter *of_bcm_voter_get(struct device *dev, const char *name)
-> +{
-> +       struct bcm_voter *voter = ERR_PTR(-EPROBE_DEFER);
-> +       struct bcm_voter *temp;
-> +       struct device_node *np, *node;
-> +       int idx = 0;
-> +
-> +       if (!dev || !dev->of_node)
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       np = dev->of_node;
-> +
-> +       if (name) {
-> +               idx = of_property_match_string(np, "qcom,bcm-voter-names", name);
-> +               if (idx < 0)
-> +                       return ERR_PTR(idx);
-> +       }
-> +
-> +       node = of_parse_phandle(np, "qcom,bcm-voters", idx);
-> +
-> +       list_for_each_entry(temp, &bcm_voters, voter_node) {
-> +               if (temp->np == node) {
-> +                       voter = temp;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       return voter;
-> +}
-> +EXPORT_SYMBOL_GPL(of_bcm_voter_get);
-> +
-> +/**
-> + * qcom_icc_bcm_voter_add - queues up the bcm nodes that require updates
-> + * @voter: voter that the bcms are being added to
-> + * @bcm: bcm to add to the commit and wake sleep list
-> + */
-> +void qcom_icc_bcm_voter_add(struct bcm_voter *voter, struct qcom_icc_bcm *bcm)
-> +{
-> +       if (!voter)
-> +               return;
-> +
-> +       mutex_lock(&voter->lock);
-> +       if (list_empty(&bcm->list))
-> +               list_add_tail(&bcm->list, &voter->commit_list);
-> +
-> +       if (list_empty(&bcm->ws_list))
-> +               list_add_tail(&bcm->ws_list, &voter->ws_list);
-> +
-> +       mutex_unlock(&voter->lock);
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_icc_bcm_voter_add);
-> +
-> +/**
-> + * qcom_icc_bcm_voter_commit - generates and commits tcs cmds based on bcms
-> + * @voter: voter that needs flushing
-> + *
-> + * This function generates a set of AMC commands and flushes to the BCM device
-> + * associated with the voter. It conditionally generate WAKE and SLEEP commands
-> + * based on deltas between WAKE/SLEEP requirements. The ws_list persists
-> + * through multiple commit requests and bcm nodes are removed only when the
-> + * requirements for WAKE matches SLEEP.
-> + *
-> + * Returns 0 on success, or an appropriate error code otherwise.
-> + */
-> +int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
-> +{
-> +       struct qcom_icc_bcm *bcm;
-> +       struct qcom_icc_bcm *bcm_tmp;
-> +       int commit_idx[MAX_VCD];
-> +       struct tcs_cmd cmds[MAX_BCMS];
-> +       int ret = 0;
-> +
-> +       if (!voter)
-> +               return 0;
-> +
-> +       mutex_lock(&voter->lock);
-> +       list_for_each_entry(bcm, &voter->commit_list, list)
-> +               bcm_aggregate(bcm);
-> +
-> +       /*
-> +        * Pre sort the BCMs based on VCD for ease of generating a command list
-> +        * that groups the BCMs with the same VCD together. VCDs are numbered
-> +        * with lowest being the most expensive time wise, ensuring that
-> +        * those commands are being sent the earliest in the queue. This needs
-> +        * to be sorted every commit since we can't guarantee the order in which
-> +        * the BCMs are added to the list.
-> +        */
-> +       list_sort(NULL, &voter->commit_list, cmp_vcd);
-> +
-> +       /*
-> +        * Construct the command list based on a pre ordered list of BCMs
-> +        * based on VCD.
-> +        */
-> +       tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
-> +
-> +       if (!commit_idx[0])
-> +               goto out;
-> +
-> +       ret = rpmh_invalidate(voter->dev);
-> +       if (ret) {
-> +               pr_err("Error invalidating RPMH client (%d)\n", ret);
-> +               goto out;
-> +       }
-> +
-> +       ret = rpmh_write_batch(voter->dev, RPMH_ACTIVE_ONLY_STATE,
-> +                              cmds, commit_idx);
-> +       if (ret) {
-> +               pr_err("Error sending AMC RPMH requests (%d)\n", ret);
-> +               goto out;
-> +       }
-> +
-> +       list_for_each_entry_safe(bcm, bcm_tmp, &voter->commit_list, list)
-> +               list_del_init(&bcm->list);
-> +
-> +       INIT_LIST_HEAD(&voter->commit_list);
-
-This isn't necessary, you just carefully cherry-picked everything off
-the list in the previous line.
-
-> +
-> +       list_for_each_entry_safe(bcm, bcm_tmp, &voter->ws_list, ws_list) {
-> +               /*
-> +                * Only generate WAKE and SLEEP commands if a resource's
-> +                * requirements change as the execution environment transitions
-> +                * between different power states.
-> +                */
-> +               if (bcm->vote_x[QCOM_ICC_BUCKET_WAKE] !=
-> +                   bcm->vote_x[QCOM_ICC_BUCKET_SLEEP] ||
-> +                   bcm->vote_y[QCOM_ICC_BUCKET_WAKE] !=
-> +                   bcm->vote_y[QCOM_ICC_BUCKET_SLEEP])
-> +                       list_add_tail(&bcm->list, &voter->commit_list);
-> +               else
-> +                       list_del_init(&bcm->ws_list);
-> +       }
-> +
-> +       if (list_empty(&voter->commit_list))
-> +               goto out;
-> +
-> +       list_sort(NULL, &voter->commit_list, cmp_vcd);
-> +
-> +       tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_WAKE, cmds, commit_idx);
-> +
-> +       ret = rpmh_write_batch(voter->dev, RPMH_WAKE_ONLY_STATE, cmds, commit_idx);
-> +       if (ret) {
-> +               pr_err("Error sending WAKE RPMH requests (%d)\n", ret);
-> +               goto out;
-> +       }
-> +
-> +       tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
-> +
-> +       ret = rpmh_write_batch(voter->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
-> +       if (ret) {
-> +               pr_err("Error sending SLEEP RPMH requests (%d)\n", ret);
-> +               goto out;
-> +       }
-> +
-> +out:
-> +       list_for_each_entry_safe(bcm, bcm_tmp, &voter->commit_list, list)
-> +               list_del_init(&bcm->list);
-> +
-> +       INIT_LIST_HEAD(&voter->commit_list);
-
-You can also remove this.
-
-
-> +       mutex_unlock(&voter->lock);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_icc_bcm_voter_commit);
-> +
-> +static int qcom_icc_bcm_voter_probe(struct platform_device *pdev)
-> +{
-> +       struct bcm_voter *voter;
-> +
-> +       voter = devm_kzalloc(&pdev->dev, sizeof(*voter), GFP_KERNEL);
-> +       if (!voter)
-> +               return -ENOMEM;
-> +
-> +       voter->dev = &pdev->dev;
-> +       voter->np = pdev->dev.of_node;
-> +       mutex_init(&voter->lock);
-> +       INIT_LIST_HEAD(&voter->commit_list);
-> +       INIT_LIST_HEAD(&voter->ws_list);
-> +       list_add_tail(&voter->voter_node, &bcm_voters);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id bcm_voter_of_match[] = {
-> +       { .compatible = "qcom,sdm845-bcm-voter" },
-> +       { },
-> +};
-> +
-> +static struct platform_driver qcom_icc_bcm_voter_driver = {
-> +       .probe = qcom_icc_bcm_voter_probe,
-> +       .driver = {
-> +               .name           = "sdm845_bcm_voter",
-> +               .of_match_table = bcm_voter_of_match,
-> +       },
-> +};
-> +module_platform_driver(qcom_icc_bcm_voter_driver);
-> +MODULE_AUTHOR("David Dai <daidavid1@codeaurora.org>");
-> +MODULE_DESCRIPTION("Qualcomm BCM Voter interconnect driver");
-> +MODULE_LICENSE("GPL v2");
-> +
-> diff --git a/drivers/interconnect/qcom/bcm-voter.h b/drivers/interconnect/qcom/bcm-voter.h
-> new file mode 100644
-> index 0000000..808b068
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/bcm-voter.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#ifndef __DRIVERS_INTERCONNECT_QCOM_BCM_VOTER_H__
-> +#define __DRIVERS_INTERCONNECT_QCOM_BCM_VOTER_H__
-> +
-> +#include <soc/qcom/cmd-db.h>
-> +#include <soc/qcom/rpmh.h>
-> +#include <soc/qcom/tcs.h>
-> +
-> +#include "icc-rpmh.h"
-> +
-> +#define DEFINE_QBCM(_name, _bcmname, _keepalive, _numnodes, ...)       \
-> +               static struct qcom_icc_bcm _name = {                    \
-> +               .name = _bcmname,                                       \
-> +               .keepalive = _keepalive,                                \
-> +               .num_nodes = _numnodes,                                 \
-> +               .nodes = { __VA_ARGS__ },                               \
-> +       }
-> +
-> +struct bcm_voter *of_bcm_voter_get(struct device *dev, const char *name);
-> +void qcom_icc_bcm_voter_add(struct bcm_voter *voter, struct qcom_icc_bcm *bcm);
-> +int qcom_icc_bcm_voter_commit(struct bcm_voter *voter);
-> +
-> +#endif
-> diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
-> new file mode 100644
-> index 0000000..09ad9fe
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/icc-rpmh.c
-> @@ -0,0 +1,158 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#include <asm/div64.h>
-> +#include <dt-bindings/interconnect/qcom,sdm845.h>
-> +#include <linux/interconnect.h>
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/module.h>
-> +
-> +#include "bcm-voter.h"
-> +#include "icc-rpmh.h"
-> +
-> +/**
-> + * qcom_icc_pre_aggregate - cleans up stale values from prior icc_set
-> + * @node: icc node to operate on
-> + */
-> +void qcom_icc_pre_aggregate(struct icc_node *node)
-> +{
-> +       size_t i;
-> +       struct qcom_icc_node *qn;
-> +
-> +       qn = node->data;
-> +
-> +       for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
-> +               qn->sum_avg[i] = 0;
-> +               qn->max_peak[i] = 0;
-> +       }
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_icc_pre_aggregate);
-> +
-> +/**
-> + * qcom_icc_aggregate - aggregate bw for buckets indicated by tag
-> + * @node: node to aggregate
-> + * @tag: tag to indicate which buckets to aggregate
-> + * @avg_bw: new bw to sum aggregate
-> + * @peak_bw: new bw to max aggregate
-> + * @agg_avg: existing aggregate avg bw val
-> + * @agg_peak: existing aggregate peak bw val
-> + */
-> +int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-> +                      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> +{
-> +       size_t i;
-> +       struct qcom_icc_node *qn;
-> +       struct qcom_icc_provider *qp;
-> +
-> +       qn = node->data;
-> +       qp = to_qcom_provider(node->provider);
-> +
-> +       if (!tag)
-> +               tag = QCOM_ICC_TAG_ALWAYS;
-> +
-> +       for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
-> +               if (tag & BIT(i)) {
-> +                       qn->sum_avg[i] += avg_bw;
-> +                       qn->max_peak[i] = max_t(u32, qn->max_peak[i], peak_bw);
-> +               }
-> +       }
-> +
-> +       *agg_avg += avg_bw;
-> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
-> +
-> +       for (i = 0; i < qn->num_bcms; i++)
-> +               qcom_icc_bcm_voter_add(qp->voter, qn->bcms[i]);
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_icc_aggregate);
-> +
-> +/**
-> + * qcom_icc_set - set the constraints based on path
-> + * @src: source node for the path to set constraints on
-> + * @dst: destination node for the path to set constraints on
-> + *
-> + * Return: 0 on success, or an error code otherwise
-> + */
-> +int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> +{
-> +       struct qcom_icc_provider *qp;
-> +       struct icc_node *node;
-> +       int ret = 0;
-> +
-> +       if (!src)
-> +               node = dst;
-> +       else
-> +               node = src;
-> +
-> +       qp = to_qcom_provider(node->provider);
-> +
-> +       qcom_icc_bcm_voter_commit(qp->voter);
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_icc_set);
-> +
-> +/**
-> + * qcom_icc_bcm_init - populates bcm aux data and connect qnodes
-> + * @bcm: bcm to be initialized
-> + * @dev: associated provider device
-> + *
-> + * Return: 0 on success, or an error code otherwise
-> + */
-> +int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev)
-> +{
-> +       struct qcom_icc_node *qn;
-> +       const struct bcm_db *data;
-> +       size_t data_count;
-> +       int i;
-> +
-> +       bcm->addr = cmd_db_read_addr(bcm->name);
-> +       if (!bcm->addr) {
-> +               dev_err(dev, "%s could not find RPMh address\n",
-> +                       bcm->name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       data = cmd_db_read_aux_data(bcm->name, &data_count);
-> +       if (IS_ERR(data)) {
-> +               dev_err(dev, "%s command db read error (%ld)\n",
-> +                       bcm->name, PTR_ERR(data));
-> +               return PTR_ERR(data);
-> +       }
-> +       if (!data_count) {
-> +               dev_err(dev, "%s command db missing or partial aux data\n",
-> +                       bcm->name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       bcm->aux_data.unit = le32_to_cpu(data->unit);
-> +       bcm->aux_data.width = le16_to_cpu(data->width);
-> +       bcm->aux_data.vcd = data->vcd;
-> +       bcm->aux_data.reserved = data->reserved;
-> +       INIT_LIST_HEAD(&bcm->list);
-> +       INIT_LIST_HEAD(&bcm->ws_list);
-> +
-> +       /*
-> +        * Link Qnodes to their respective BCMs
-> +        */
-> +       for (i = 0; i < bcm->num_nodes; i++) {
-> +               qn = bcm->nodes[i];
-> +               qn->bcms[qn->num_bcms] = bcm;
-> +               qn->num_bcms++;
-> +       }
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_icc_bcm_init);
-> +
-> +static struct platform_driver qcom_icc_rpmh_driver = {
-> +       .driver = {
-> +               .name           = "icc_rpmh",
-> +       },
-> +};
-> +module_platform_driver(qcom_icc_rpmh_driver);
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
-> new file mode 100644
-> index 0000000..0ff8f8d
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/icc-rpmh.h
-> @@ -0,0 +1,151 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#ifndef __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
-> +#define __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
-> +
-> +#define to_qcom_provider(_provider) \
-> +       container_of(_provider, struct qcom_icc_provider, provider)
-> +
-> +/**
-> + * struct qcom_icc_provider - Qualcomm specific interconnect provider
-> + * @provider: generic interconnect provider
-> + * @dev: reference to the NoC device
-> + * @bcms: list of bcms that maps to the provider
-> + * @num_bcms: number of @bcms
-> + * @voter: bcm voter targeted by this provider
-> + */
-> +struct qcom_icc_provider {
-> +       struct icc_provider provider;
-> +       struct device *dev;
-> +       struct qcom_icc_bcm **bcms;
-> +       size_t num_bcms;
-> +       struct bcm_voter *voter;
-> +};
-> +
-> +/**
-> + * struct bcm_db - Auxiliary data pertaining to each Bus Clock Manager (BCM)
-> + * @unit: divisor used to convert bytes/sec bw value to an RPMh msg
-> + * @width: multiplier used to convert bytes/sec bw value to an RPMh msg
-> + * @vcd: virtual clock domain that this bcm belongs to
-> + * @reserved: reserved field
-> + */
-> +struct bcm_db {
-> +       __le32 unit;
-> +       __le16 width;
-> +       u8 vcd;
-> +       u8 reserved;
-> +};
-> +
-> +#define MAX_LINKS              128
-> +#define MAX_BCMS               64
-> +#define MAX_BCM_PER_NODE       3
-> +#define MAX_VCD                        10
-> +
-> +/*
-> + * The AMC bucket denotes constraints that are applied to hardware when
-> + * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
-> + * when the execution environment transitions between active and low power mode.
-> + */
-> +#define QCOM_ICC_BUCKET_AMC            0
-> +#define QCOM_ICC_BUCKET_WAKE           1
-> +#define QCOM_ICC_BUCKET_SLEEP          2
-> +#define QCOM_ICC_NUM_BUCKETS           3
-> +#define QCOM_ICC_TAG_AMC               BIT(QCOM_ICC_BUCKET_AMC)
-> +#define QCOM_ICC_TAG_WAKE              BIT(QCOM_ICC_BUCKET_WAKE)
-> +#define QCOM_ICC_TAG_SLEEP             BIT(QCOM_ICC_BUCKET_SLEEP)
-> +#define QCOM_ICC_TAG_ACTIVE_ONLY       (QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
-> +#define QCOM_ICC_TAG_ALWAYS            (QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
-> +                                        QCOM_ICC_TAG_SLEEP)
-> +
-> +/**
-> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
-> + * @name: the node name used in debugfs
-> + * @links: an array of nodes where we can go next while traversing
-> + * @id: a unique node identifier
-> + * @num_links: the total number of @links
-> + * @channels: num of channels at this node
-> + * @buswidth: width of the interconnect between a node and the bus
-> + * @sum_avg: current sum aggregate value of all avg bw requests
-> + * @max_peak: current max aggregate value of all peak bw requests
-> + * @bcms: list of bcms associated with this logical node
-> + * @num_bcms: num of @bcms
-> + */
-> +struct qcom_icc_node {
-> +       const char *name;
-> +       u16 links[MAX_LINKS];
-> +       u16 id;
-> +       u16 num_links;
-> +       u16 channels;
-> +       u16 buswidth;
-> +       u64 sum_avg[QCOM_ICC_NUM_BUCKETS];
-> +       u64 max_peak[QCOM_ICC_NUM_BUCKETS];
-> +       struct qcom_icc_bcm *bcms[MAX_BCM_PER_NODE];
-> +       size_t num_bcms;
-> +};
-> +
-> +/**
-> + * struct qcom_icc_bcm - Qualcomm specific hardware accelerator nodes
-> + * known as Bus Clock Manager (BCM)
-> + * @name: the bcm node name used to fetch BCM data from command db
-> + * @type: latency or bandwidth bcm
-> + * @addr: address offsets used when voting to RPMH
-> + * @vote_x: aggregated threshold values, represents sum_bw when @type is bw bcm
-> + * @vote_y: aggregated threshold values, represents peak_bw when @type is bw bcm
-> + * @dirty: flag used to indicate whether the bcm needs to be committed
-> + * @keepalive: flag used to indicate whether a keepalive is required
-> + * @aux_data: auxiliary data used when calculating threshold values and
-> + * communicating with RPMh
-> + * @list: used to link to other bcms when compiling lists for commit
-> + * @ws_list: used to keep track of bcms that may transition between wake/sleep
-> + * @num_nodes: total number of @num_nodes
-> + * @nodes: list of qcom_icc_nodes that this BCM encapsulates
-> + */
-> +struct qcom_icc_bcm {
-> +       const char *name;
-> +       u32 type;
-> +       u32 addr;
-> +       u64 vote_x[QCOM_ICC_NUM_BUCKETS];
-> +       u64 vote_y[QCOM_ICC_NUM_BUCKETS];
-> +       bool dirty;
-> +       bool keepalive;
-> +       struct bcm_db aux_data;
-> +       struct list_head list;
-> +       struct list_head ws_list;
-> +       size_t num_nodes;
-> +       struct qcom_icc_node *nodes[];
-> +};
-> +
-> +struct qcom_icc_fabric {
-> +       struct qcom_icc_node **nodes;
-> +       size_t num_nodes;
-> +};
-> +
-> +struct qcom_icc_desc {
-> +       struct qcom_icc_node **nodes;
-> +       size_t num_nodes;
-> +       struct qcom_icc_bcm **bcms;
-> +       size_t num_bcms;
-> +};
-> +
-> +#define DEFINE_QNODE(_name, _id, _channels, _buswidth,                 \
-> +                       _numlinks, ...)                                 \
-> +               static struct qcom_icc_node _name = {                   \
-> +               .id = _id,                                              \
-> +               .name = #_name,                                         \
-> +               .channels = _channels,                                  \
-> +               .buswidth = _buswidth,                                  \
-> +               .num_links = _numlinks,                                 \
-> +               .links = { __VA_ARGS__ },                               \
-> +       }
-> +
-> +int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-> +                      u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
-> +int qcom_icc_set(struct icc_node *src, struct icc_node *dst);
-> +int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev);
-> +void qcom_icc_pre_aggregate(struct icc_node *node);
-> +
-> +#endif
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+>>> Note that the RGB pixelformat appears to be incorrect: it is set to RGB32 but it
+>>> should be BGR32. Actually, it should be XBGR32 since there is no alpha channel
+>>> present (I think). RGB32 and BGR32 are deprecated in favor of RGBX/A and X/ABGR.
+>>>
+>>> Regards,
+>>>
+>>>           Hans
+>> Will fix it.
+>>>> Driver Info:
+>>>>           Driver name      : tegra-video
+>>>>           Card type        : 54080000.vi-output-0
+>>>>           Bus info         : platform:54080000.vi:0
+>>>>           Driver version   : 5.5.0
+>>>>           Capabilities     : 0x85200001
+>>>>                   Video Capture
+>>>>                   Read/Write
+>>>>                   Streaming
+>>>>                   Extended Pix Format
+>>>>                   Device Capabilities
+>>>>           Device Caps      : 0x05200001
+>>>>                   Video Capture
+>>>>                   Read/Write
+>>>>                   Streaming
+>>>>                   Extended Pix Format
+>>>> Media Driver Info:
+>>>>           Driver name      : host1x_video
+>>>>           Model            : NVIDIA Tegra Video Input Device
+>>>>           Serial           :
+>>>>           Bus info         :
+>>>>           Media version    : 5.5.0
+>>>>           Hardware revision: 0x00000003 (3)
+>>>>           Driver version   : 5.5.0
+>>>> Interface Info:
+>>>>           ID               : 0x03000003
+>>>>           Type             : V4L Video
+>>>> Entity Info:
+>>>>           ID               : 0x00000001 (1)
+>>>>           Name             : 54080000.vi-output-0
+>>>>           Function         : V4L2 I/O
+>>>>           Pad 0x01000002   : 0: Sink
+>>>>             Link 0x0200001b: from remote pad 0x100001a of entity 'tpg-0': Data, Enabled
+>>>>
+>>>> Required ioctls:
+>>>>           test MC information (see 'Media Driver Info' above): OK
+>>>>           test VIDIOC_QUERYCAP: OK
+>>>>
+>>>> Allow for multiple opens:
+>>>>           test second /dev/video0 open: OK
+>>>>           test VIDIOC_QUERYCAP: OK
+>>>>           test VIDIOC_G/S_PRIORITY: OK
+>>>>           test for unlimited opens: OK
+>>>>
+>>>>           test invalid ioctls: OK
+>>>> Debug ioctls:
+>>>>           test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>>>>           test VIDIOC_LOG_STATUS: OK (Not Supported)
+>>>>
+>>>> Input ioctls:
+>>>>           test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>>>>           test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>>>>           test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>>>>           test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>>>>           test VIDIOC_G/S/ENUMINPUT: OK
+>>>>           test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>>>>           Inputs: 1 Audio Inputs: 0 Tuners: 0
+>>>>
+>>>> Output ioctls:
+>>>>           test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>>>>           test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>>>>           test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>>>>           test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>>>>           test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>>>>           Outputs: 0 Audio Outputs: 0 Modulators: 0
+>>>>
+>>>> Input/Output configuration ioctls:
+>>>>           test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>>>>           test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>>>>           test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>>>>           test VIDIOC_G/S_EDID: OK (Not Supported)
+>>>>
+>>>> Control ioctls (Input 0):
+>>>>           test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+>>>>           test VIDIOC_QUERYCTRL: OK
+>>>>           test VIDIOC_G/S_CTRL: OK
+>>>>           test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+>>>>           test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+>>>>           test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>>>>           Standard Controls: 2 Private Controls: 0
+>>>>
+>>>> Format ioctls (Input 0):
+>>>>           test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>>>>           test VIDIOC_G/S_PARM: OK (Not Supported)
+>>>>           test VIDIOC_G_FBUF: OK (Not Supported)
+>>>>           test VIDIOC_G_FMT: OK
+>>>>           test VIDIOC_TRY_FMT: OK
+>>>>           test VIDIOC_S_FMT: OK
+>>>>           test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>>>>           test Cropping: OK (Not Supported)
+>>>>           test Composing: OK (Not Supported)
+>>>>           test Scaling: OK (Not Supported)
+>>>>
+>>>> Codec ioctls (Input 0):
+>>>>           test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>>>>           test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>>>>           test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+>>>>
+>>>> Buffer ioctls (Input 0):
+>>>>           test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>>>>           test VIDIOC_EXPBUF: OK
+>>>>           test Requests: OK (Not Supported)
+>>>>
+>>>> Test input 0:
+>>>>
+>>>> Streaming ioctls:
+>>>>           test read/write: OK
+>>>>           test blocking wait: OK
+>>>>           test MMAP (no poll): OK
+>>>>           test MMAP (select): OK
+>>>>           test MMAP (epoll): OK
+>>>>           test USERPTR (no poll): OK (Not Supported)
+>>>>           test USERPTR (select): OK (Not Supported)
+>>>>           test DMABUF: Cannot test, specify --expbuf-device
+>>>>
+>>>> Total for tegra-video device /dev/video0: 53, Succeeded: 53, Failed: 0, Warnings: 0
+>>>>
