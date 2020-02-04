@@ -2,114 +2,192 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CEFC35247
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9F2C3524D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B871F20674
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847052166E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 18:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WeRebeBV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IUlAuvrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbgBDSWK (ORCPT
+        id S1727454AbgBDSWY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 13:22:10 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33731 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbgBDSWK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 13:22:10 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y6so19690072lji.0
-        for <devicetree@vger.kernel.org>; Tue, 04 Feb 2020 10:22:08 -0800 (PST)
+        Tue, 4 Feb 2020 13:22:24 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:36097 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727390AbgBDSWY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 13:22:24 -0500
+Received: by mail-vs1-f65.google.com with SMTP id a2so12025706vso.3
+        for <devicetree@vger.kernel.org>; Tue, 04 Feb 2020 10:22:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QDmc7rJKH3PB8BRLa4LSMdik+WscauM3bJQAO66d9eA=;
-        b=WeRebeBVSEUt28wl435zQEX1/6tiqV9monpU/7Ej5fqLhT4R41NF8WtVIPn3kCpd2W
-         wbcN2Sjxu4ENSsuskkDYKK9U80zRpDL4LUYH/tlUOhVyLqB1KATrcbuAqPq0Al5qoWvp
-         rMHMlBCss0WzMtE8Lymhfpn15/d3thD2oJEIZmNP8MDzdV8YSMDGPweIJImQWGcV8Ga/
-         j/IbkkAP1Fj9pbuFBAyq/t9v6EySeBAPmFRUvTPRYghB8ovJFADomNk5+wvaaAHEWM0S
-         hpqdASOKeTOzzB6JZ+53/Eq07SOogb68gbxVJW6udAD0KmS978l/cAwWllNpHbBrJLcc
-         ldEw==
+        bh=cype+1HdLaYeGzPg6QLAFeuguxQu4poaB2OEsU3y04s=;
+        b=IUlAuvrBfjzl5pITuJlx+XC7sqgnBZqUwLmF9uQn/eUBKie2QtVpwI2xPwyf+a/syV
+         OXaRJG/EOJB0KrDkMikM6npajjVQ8ecz9K2nJbZhUH8PLIkih+o8CsokUdnJCJGnn+ZP
+         U2WqwmKL8+8A6UKrfacQQUvqu+UoXenC43pCo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QDmc7rJKH3PB8BRLa4LSMdik+WscauM3bJQAO66d9eA=;
-        b=PTHH6WnsYyXgaUik/qIhNH6DWHURdv/VaVdETKW7ZBHrPtIEvi1YgRST4Pfm+LbyDS
-         3C0dFFLzNoiw/nuIb/sfDqzVOWZnfEnE9RDi7/REs3U6+oepJ9En4lFsIKMiuahmwYUE
-         rqEb65+cW3i0PVMKhJQ6lTLqoiIKk28yQoka7v9K/Kw0DHVJwSJFa4EpewEfJiSTDK3U
-         NEYAq2Qrls4Uhx4EmDMHRt6JwqIjeSuLBTJFb5cxwaHC1EJzeA9vwo53R5iN0Hlt19x7
-         kmWWcgN8COIb3mc9Mf95Gz26pg2Zbs9Rcvoj7rhq6XUYrrFIq2pK24u1Z4ZZhy7j1a/G
-         3l3Q==
-X-Gm-Message-State: APjAAAWUO5f2c2XDasUt7SxjzdPl07uf3b0l8bHwLEmPx0ZzV3LMVi7E
-        1awh3cfeK3Tyr2rGL4BFXqaoTIbtTNcbh2zYVNqFmg==
-X-Google-Smtp-Source: APXvYqxET1q8n/qQ6aY0jYO8nGz1OvZdbUcpn8bnrFqAZJyuuJYIXotPvLB+pBHSS5AiqYMW6+TjrlGJYozegKXPWGc=
-X-Received: by 2002:a2e:81c7:: with SMTP id s7mr18353599ljg.3.1580840527698;
- Tue, 04 Feb 2020 10:22:07 -0800 (PST)
+        bh=cype+1HdLaYeGzPg6QLAFeuguxQu4poaB2OEsU3y04s=;
+        b=JIgOgqLOp1/Z2Ii34VnPcxvZ1jl2AcNo3t6oDloVPl57XYUFdC4Cf/gWk/DH7hbykj
+         NqPEFfde5jH6Ej+ln4BOXSHJ5vrw/fkYWaVGcr//jGTsmmPErxGL74dB1zA5N+SiC+DC
+         MvBU/DeTlXMNmZ5sbPUEvTkoVXEwIbQ3J/nSPgjWAEvrUGkGb4fIHKr8Ivqp8a6kKeUp
+         RJPur6JEk9anlnW3iI5U+As8sUrT6r8/SAeWli0eP5TVUl/XXtYA86aDbIL/Qn9SyilT
+         fXIBSULGo7W/8Cx5YBd7Q0ZArfoAEwsieS/apPx9KAh2v9tKFh/LG5Lk0RuNUEOwGnPC
+         zRZg==
+X-Gm-Message-State: APjAAAUB4KWlFGLEeeFN3lkdjB9ZxeYpATzW+7BVOX8jlecnz8TVkhEJ
+        1zVlv9alhAq3G09wL1IxU1E0q4PrgaM=
+X-Google-Smtp-Source: APXvYqx/51jrYSleyNQq9b35AAOXgnul+0BTPWDICCqnozPVMwjdqjoOWDicN6E2yow34vpysFk8dQ==
+X-Received: by 2002:a67:c517:: with SMTP id e23mr19471951vsk.135.1580840542769;
+        Tue, 04 Feb 2020 10:22:22 -0800 (PST)
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com. [209.85.221.176])
+        by smtp.gmail.com with ESMTPSA id x9sm6736021vsf.7.2020.02.04.10.22.21
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2020 10:22:21 -0800 (PST)
+Received: by mail-vk1-f176.google.com with SMTP id c129so5459619vkh.7
+        for <devicetree@vger.kernel.org>; Tue, 04 Feb 2020 10:22:21 -0800 (PST)
+X-Received: by 2002:a1f:a9d0:: with SMTP id s199mr17919151vke.40.1580840540768;
+ Tue, 04 Feb 2020 10:22:20 -0800 (PST)
 MIME-Version: 1.0
-References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org> <1578630784-962-6-git-send-email-daidavid1@codeaurora.org>
-In-Reply-To: <1578630784-962-6-git-send-email-daidavid1@codeaurora.org>
-From:   Evan Green <evgreen@google.com>
-Date:   Tue, 4 Feb 2020 10:21:31 -0800
-Message-ID: <CAE=gft6--=zhxfR9G=S0g-5c9YdpvaFWz9dcgV7zJQAzcreZjg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] interconnect: qcom: sdm845: Split qnodes into
- their respective NoCs
-To:     David Dai <daidavid1@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+References: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 4 Feb 2020 10:22:09 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XXyYTqVV4=e8Kz0tYQ=5TWjZi2QETNL_0BaFqKi5o0Cg@mail.gmail.com>
+Message-ID: <CAD=FV=XXyYTqVV4=e8Kz0tYQ=5TWjZi2QETNL_0BaFqKi5o0Cg@mail.gmail.com>
+Subject: Re: [v1] dt-bindings: msm:disp: update dsi and dpu bindings
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pm@vger.kernel.org
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 8:33 PM David Dai <daidavid1@codeaurora.org> wrote:
+Hi,
+
+On Tue, Feb 4, 2020 at 6:15 AM Harigovindan P <harigovi@codeaurora.org> wrote:
 >
-> In order to better represent the hardware and its different Network-On-Chip
-> devices, split the sdm845 provider driver into NoC specific providers.
-> Remove duplicate functionality already provided by the icc rpmh and
-> bcm voter drivers to calculate and commit bandwidth requests to hardware.
+> Updating bindings of dsi and dpu by adding and removing certain
+> properties.
 >
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
->  drivers/interconnect/qcom/sdm845.c             | 1132 ++++++++++--------------
->  include/dt-bindings/interconnect/qcom,sdm845.h |  263 +++---
->  2 files changed, 609 insertions(+), 786 deletions(-)
 >
-> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-> index f078cf0..8145612 100644
-> --- a/drivers/interconnect/qcom/sdm845.c
-> +++ b/drivers/interconnect/qcom/sdm845.c
-> @@ -5,283 +5,285 @@
->   */
+> Changes in v1:
+>         - Adding "ahb" clock as a required property.
+>         - Adding "bus", "rot", "lut" as optional properties for sc7180 device.
+>         - Removing properties from dsi bindings that are unused.
+>         - Removing power-domain property since DSI is the child node of MDSS
+>           and it will inherit supply from its parent.
 >
->  #include <asm/div64.h>
+>  Documentation/devicetree/bindings/display/msm/dpu.txt | 7 +++++++
+>  Documentation/devicetree/bindings/display/msm/dsi.txt | 5 -----
+>  2 files changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> index 551ae26..dd58472a 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> @@ -19,6 +19,7 @@ Required properties:
+>    The following clocks are required:
+>    * "iface"
+>    * "bus"
+> +  * "ahb"
 
-You don't need this header anymore, right?
+This is only required for sc7180?  ...or old SoCs should have had it
+all along too?
 
-> -#include <dt-bindings/interconnect/qcom,sdm845.h>
->  #include <linux/device.h>
->  #include <linux/interconnect.h>
->  #include <linux/interconnect-provider.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
-> -#include <linux/of_platform.h>
-> -#include <linux/platform_device.h>
->  #include <linux/sort.h>
 
-..or this one.
+>    * "core"
+>  - interrupts: interrupt signal from MDSS.
+>  - interrupt-controller: identifies the node as an interrupt controller.
+> @@ -50,6 +51,8 @@ Required properties:
+>  - clock-names: device clock names, must be in same order as clocks property.
+>    The following clocks are required.
+>    * "bus"
+> +  For the device "qcom,sc7180-dpu":
+> +  * "bus" - is an optional property due to architecture change.
+
+This is a really odd way to write it for two reasons:
+* You're breaking up the flow of the list.
+* This shouldn't be listed as "optional" in sc7180 but unless there is
+some reason to ever provide it on sc7180.  It should simply be
+disallowed.
+
+Maybe instead just:
+
+   The following clocks are required.
+-  * "bus"
++  * "bus" (anything other than qcom,sc7180-dpu)
+
+We really need to get this into yaml ASAP but that'd probably be OK to
+tide us over.
+
+NOTE: when converting to yaml, ideally we'll have a separate file per
+SoC to avoid crazy spaghetti, see commit 2a8aa18c1131 ("dt-bindings:
+clk: qcom: Fix self-validation, split, and clean cruft") in clk-next
+for an example of starting the transition to one yaml per SoC (at
+least for anything majorly different).
+
+
+>    * "iface"
+>    * "core"
+>    * "vsync"
+> @@ -70,6 +73,10 @@ Optional properties:
+>  - assigned-clocks: list of clock specifiers for clocks needing rate assignment
+>  - assigned-clock-rates: list of clock frequencies sorted in the same order as
+>    the assigned-clocks property.
+> +- For the device "qcom,sc7180-dpu":
+> +  clock-names: optional device clocks, needed for accessing LUT blocks.
+> +  * "rot"
+> +  * "lut"
+>
+>  Example:
+>
+> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> index af95586..61d659a 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> @@ -8,13 +8,10 @@ Required properties:
+>  - reg-names: The names of register regions. The following regions are required:
+>    * "dsi_ctrl"
+>  - interrupts: The interrupt signal from the DSI block.
+> -- power-domains: Should be <&mmcc MDSS_GDSC>.
+
+Is this supposed to be removed from all SoCs using this bindings, or
+just yours?
+
+I'll also note that you left it in the "Example:" below.
+
+
+>  - clocks: Phandles to device clocks.
+>  - clock-names: the following clocks are required:
+> -  * "mdp_core"
+>    * "iface"
+>    * "bus"
+> -  * "core_mmss"
+
+As Jeffrey pointed out, you shouldn't be removing these from old SoCs.
+In "drivers/gpu/drm/msm/dsi/dsi_cfg.c" you can clearly see them used.
+Maybe it's time for you to do the yaml conversion and handle this
+correctly per-SoC.
+
+-Doug
