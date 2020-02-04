@@ -2,68 +2,68 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7822C3524D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 07:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F68CC3524D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 08:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED3120674
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 07:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665192051A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 08:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RXnUPNFA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZoTry6if"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgBDHoy (ORCPT
+        id S1726479AbgBDIjv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 02:44:54 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:33427 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgBDHox (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 02:44:53 -0500
-Received: by mail-vk1-f196.google.com with SMTP id i78so4915795vke.0
-        for <devicetree@vger.kernel.org>; Mon, 03 Feb 2020 23:44:53 -0800 (PST)
+        Tue, 4 Feb 2020 03:39:51 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:39465 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgBDIjv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 03:39:51 -0500
+Received: by mail-vs1-f68.google.com with SMTP id p14so10816802vsq.6
+        for <devicetree@vger.kernel.org>; Tue, 04 Feb 2020 00:39:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PrJkaVosHVyDC3fJ7ODIJY8tH2A+lqKAd2gAEcP3LqI=;
-        b=RXnUPNFAExJbKvzQbWRSzigj2n5KQbtVWAkmfN5b3Cx7N17s6x6+JFpKQa1oUei03F
-         BXlRwmOaBRBls7iCRkBmqhAmPd16T9JcinVAR6gN9hCJE7HXZEMaCuuUUhgdfZPJw2hO
-         LSZ+Is1b0UJHU942FfZwiLITm3RsZrzWRHZvs=
+        bh=JdACrWI5vpsKlW8g7CbCx4APcl8wQGsCUNfkqtOAUqY=;
+        b=ZoTry6ifrXYZ8NRpb4uFD6f8WFpGkP1CXTPfFBVnloLaIWSa7gZ+buv7s86HWwnxs/
+         M12XR6tin65nLhbuNc/o+4+qbt5ruCZys/maCffFMoxrDNT0KQ4n/dey147sgi9U/B9t
+         3Lc7xnftI3HMCCyCCMU1azLJfdD3iTNbF2pWE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PrJkaVosHVyDC3fJ7ODIJY8tH2A+lqKAd2gAEcP3LqI=;
-        b=j+w6D/e8cAIK8EPnAIQnW1vefV+yCsmklHo8HPSGZpj7xtrDrF7lYgf7ahzNauo/Py
-         JY/19bJj8VAiABWvh7+e1naVg2CcDI2wiPB4HFGa9TfEH4MQPcQ0x/CKGmh4mkXWWuHd
-         Q6ib2e/mSd5TIJp66xuCplOOLztwOMUOGy46XJnWl4Oko+v+7SOLo8x5kKAS0tr2R3KB
-         ULAmeoi+09ke2C6Y4bX/c0531tehFD+uJWlgAAgLal5t2L3FcdmzDRIXmEX03Wif2IqF
-         lKXZpi5mlZCLaKtdmH+yBH9PUd79GR344hsXBpy5UTUTOpXROdeKexAFzSgJw0STciW7
-         lGJA==
-X-Gm-Message-State: APjAAAXfBkulV4BJhyObdgmNS/J2AByDjJ/1fH53laZnPPk/a+AJwT9l
-        EVw39RxT3ovVc4GQBTmD3nsoJVs1p2rofftFB3XWwA==
-X-Google-Smtp-Source: APXvYqyIj13EoH0jYPwM1kKCOFX/RV4/LYJXjijNF/m1go8sCfb68u/ehTXS8H/FGQhgexUB6V01thob+q5J+/A/jKg=
-X-Received: by 2002:a1f:264b:: with SMTP id m72mr16513637vkm.51.1580802292741;
- Mon, 03 Feb 2020 23:44:52 -0800 (PST)
+        bh=JdACrWI5vpsKlW8g7CbCx4APcl8wQGsCUNfkqtOAUqY=;
+        b=Qaf5Ct4qo1THJPyWtysGzlfmSNtIlPEcLeRsiDsnzudQay7XFa1p3MM0DnCCjvBxcx
+         WX4lhwvo79fSGv70GysbvF33paDXU7fIDob6YkvWFPdtjot0NQ0/w+Kf9a2V9TnjCY1K
+         RNzzc8F3/jdGUtnUZyxzVuVYJrvGmTiGcKgrs+kKP7cGMOYg/52ucPkq4zXtJgfbwPEe
+         ayZRJTIj7Jq8F37HXqkmq6pmKiyUPwZcRUs5XbO7dX6YqG/BC9LYn3Y17EB7ly66uTll
+         C91pP8gt72uw7U7KjcBLBcKeAnakZjZ9Qep7+4QEHxHK7PriufgWHTttcVGqgUc9JrLI
+         rnLQ==
+X-Gm-Message-State: APjAAAXu12GjRdq1TmuyYUS6Lp71/JfyYNrI+qT75t2h1xLHOBfqyo4n
+        mF6vgWhOtr96JrGsOZg5hjmCxik9cFxlQOQUDml6jA==
+X-Google-Smtp-Source: APXvYqzm6bymaLptiCwaALgQxa/dXLU/xksVDThtHsJkaE+BEyd84+Ci1h/y9Kiw/5Sf5kCjVQl5T9ZFrWSe8P1XwVs=
+X-Received: by 2002:a67:ecd5:: with SMTP id i21mr17903723vsp.166.1580805589999;
+ Tue, 04 Feb 2020 00:39:49 -0800 (PST)
 MIME-Version: 1.0
 References: <20200114021934.178057-1-ikjn@chromium.org> <20200121074727.35893-1-ikjn@chromium.org>
- <6739cc32-9beb-ac0a-f500-db2d70bb8e22@collabora.com> <20200127161206.GB30843@bogus>
- <ef653218-4a59-73e1-186e-9b62b8ed6dae@collabora.com>
-In-Reply-To: <ef653218-4a59-73e1-186e-9b62b8ed6dae@collabora.com>
+ <20200127160529.GA30843@bogus>
+In-Reply-To: <20200127160529.GA30843@bogus>
 From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Tue, 4 Feb 2020 15:44:41 +0800
-Message-ID: <CAATdQgAf8udrhAYt048m5crkDy2sGDu5n6BP0U1v-qgbyjUJrQ@mail.gmail.com>
+Date:   Tue, 4 Feb 2020 16:39:39 +0800
+Message-ID: <CAATdQgDW6H_jM5UV-jqB98ep93fSh-zTNE8agkoU4XbgSWj0TQ@mail.gmail.com>
 Subject: Re: [PATCH v3] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Gwendal Grignou <gwendal@chromium.org>,
         Lee Jones <lee.jones@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Guenter Roeck <groeck@chromium.org>,
         Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
@@ -75,58 +75,186 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks for the reviews,
-I will send v4 soon, sorry for the late reply.
-
-On Tue, Jan 28, 2020 at 12:25 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
+On Tue, Jan 28, 2020 at 12:05 AM Rob Herring <robh@kernel.org> wrote:
 >
-> Hi Rob,
->
-> On 27/1/20 17:12, Rob Herring wrote:
-> > On Mon, Jan 27, 2020 at 04:57:13PM +0100, Enric Balletbo i Serra wrote:
-> >> Hi Ikjoon,
-> >>
-> >> On 21/1/20 8:47, Ikjoon Jang wrote:
-> >>> Convert the ChromeOS EC bindings to json-schema.
-> >>>
-> >>> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> >>> ---
-> >>> v3: node name changed in rpmsg example
-> >>> v2: cleanup description, fix typos, remove LPC, add add RPMSG example
-> >>> ---
-> >>>  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ------------
-> >>>  .../devicetree/bindings/mfd/cros-ec.yaml      | 111 ++++++++++++++++++
-> >>>  2 files changed, 111 insertions(+), 76 deletions(-)
-> >>>  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
-> >>>  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
-> >>>
-> >>
-> >> Still in mfd directory, this is not a MFD driver, please move to chrome/cros-ec.yaml
+> On Tue, Jan 21, 2020 at 03:47:27PM +0800, Ikjoon Jang wrote:
+> > Convert the ChromeOS EC bindings to json-schema.
 > >
-> > Please don't. Looks to me like the chrome EC has multiple functions and
-> > is a device.
-> >
+> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> > ---
+> > v3: node name changed in rpmsg example
+> > v2: cleanup description, fix typos, remove LPC, add add RPMSG example
+> > ---
+> >  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ------------
+> >  .../devicetree/bindings/mfd/cros-ec.yaml      | 111 ++++++++++++++++++
+> >  2 files changed, 111 insertions(+), 76 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
 >
-> This binding is part of the Chrome EC core and we explicitly moved all this out
-> from mfd subsytem in the past because wasn't really fit as mfd driver.
+> > -Required properties (LPC):
+> > -- compatible: "google,cros-ec-lpc"
+> > -- reg: List of (IO address, size) pairs defining the interface uses
 >
-> We still have one device driver (cros_ec_dev) in mfd, this is the one that
-> instantiates all the subdevices but the above binding is not related to this
-> one. All the core/bus part is in platform/chrome, looks to me more coherent have
-> the binding accordingly.
->
-> Anyway I'll let you the final decision, nothing that worries me too much.
->
-> Thanks,
->  Enric
->
-> > Bindings directories are often 1:1 with kernel driver directories, but
-> > not always.
+> Where did this go?
 
-Converting the format at this time. I will keep the same directory in v4.
-It seems that cros_ec_dev device driver should be changed before moving.
+I'm not sure about the details or future plans on LPC interface,
+but I guess LPC has been just a future plan without any usages, so removed it.
 
-> >
-> > Rob
+>
+>
+> > diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.yaml b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
+> > new file mode 100644
+> > index 000000000000..6a5b87cebcfa
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
+> > @@ -0,0 +1,111 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mfd/cros-ec.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ChromeOS Embedded Controller
+> > +
+> > +maintainers:
+> > +  - Benson Leung <bleung@chromium.org>
+> > +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > +  - Guenter Roeck <groeck@chromium.org>
+> > +
+> > +description: |
+> > +  Google's ChromeOS EC is a microcontroller which talks to the AP and
+> > +  implements various functions such as keyboard and battery charging.
+> > +  The EC can be connected through various interfaces (I2C, SPI, and others)
+> > +  and the compatible string specifies which interface is being used.
+> > +
+
+I will drop | here also.
+
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - description:
+> > +          For implementations of the EC is connected through I2C.
+> > +        const: google,cros-ec-i2c
+> > +      - description:
+> > +          For implementations of the EC is connected through SPI.
+> > +        const: google,cros-ec-spi
+> > +      - description:
+> > +          For implementations of the EC is connected through RPMSG.
+> > +        const: google,cros-ec-rpmsg
+> > +
+> > +  google,has-vbc-nvram:
+> > +    description: |
+>
+> You can drop '|' if there's no formatting to maintain. And you should
+> reflow this.
+
+Okay,
+
+>
+> > +      Some implementations of the EC include a small
+> > +      nvram space used to store verified boot context data.
+> > +      This boolean flag is used to specify whether this nvram is
+> > +      present or not.
+> > +    type: boolean
+> > +
+> > +required:
+> > +  - compatible
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          const: google,cros-ec-i2c
+> > +    then:
+> > +      properties:
+> > +        reg:
+> > +          description: I2C slave address
+> > +          maxItems: 1
+> > +      required:
+> > +        - reg
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          const: google,cros-ec-spi
+> > +    then:
+> > +      properties:
+> > +        reg:
+> > +          description: SPI chip select
+> > +          maxItems: 1
+> > +        google,cros-ec-spi-pre-delay:
+> > +          description: |
+> > +            This property specifies the delay in usecs between the
+> > +            assertion of the CS and the first clock pulse.
+>
+> Needs a type reference at a minumum and ideally some constraints.
+
+Got it, I will add a type reference here,
+and for the constraints, these spi transaction delay cannot be bound.
+I will just add default: 0 here.
+
+>
+> > +        google,cros-ec-spi-msg-delay:
+> > +          description: |
+> > +            This property specifies the delay in usecs between messages.
+>
+> Same here.
+>
+> > +      required:
+> > +        - reg
+> > +
+>
+> Add:
+> additionalProperties: false
+
+Ack.
+
+>
+> > +examples:
+> > +  # Example for I2C
+> > +  - |
+> > +    i2c0 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        cros-ec@1e {
+> > +            compatible = "google,cros-ec-i2c";
+> > +            reg = <0x1e>;
+> > +            interrupts = <6 0>;
+>
+> Not documented.
+
+Sorry but I can't understand this part, can you elaborate on here?
+Do you mean adding comments here? or
+need more documentation on cros-ec-i2c?
+
+>
+> > +            interrupt-parent = <&gpx1>;
+> > +        };
+> > +    };
+> > +  # Example for SPI
+> > +  - |
+> > +    spi0 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        cros-ec@0 {
+> > +            compatible = "google,cros-ec-spi";
+> > +            reg = <0x0>;
+> > +            google,cros-ec-spi-msg-delay = <30>;
+> > +            interrupts = <99 0>;
+> > +            interrupt-parent = <&gpio7>;
+> > +            spi-max-frequency = <5000000>;
+> > +        };
+> > +    };
+> > +  # Example for RPMSG
+> > +  - |
+> > +    scp0 {
+> > +        cros-ec@0 {
+> > +            compatible = "google,cros-ec-rpmsg";
+> > +        };
+> > +    };
+> > +...
+> > --
+> > 2.25.0.341.g760bfbb309-goog
 > >
