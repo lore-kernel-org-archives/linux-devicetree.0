@@ -2,336 +2,144 @@ Return-Path: <SRS0=skvR=3Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6875C3524B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E1CC2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77AD220674
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03FA20730
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Feb 2020 11:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPrtxgG0"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="U6GC4mSi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgBDLKW (ORCPT
+        id S1726965AbgBDLMM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 06:10:22 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54932 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgBDLKV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 06:10:21 -0500
-Received: by mail-pj1-f67.google.com with SMTP id dw13so1212712pjb.4;
-        Tue, 04 Feb 2020 03:10:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fB3mZrEGeC49afI3Ip3CR6vlAM4jq7k1Xx9Bu92kk3M=;
-        b=MPrtxgG0yzszFwspXDn57PyOpHFCowQRIl+gbyft0wvzPKUolfunKZtbtsaaA0UQ9G
-         rNgiDUSoxQyBTokPZT0ZLIMY8/kVjXFUysnbnINXHVwLHcSAfA/ttyl647IAeCQR+A5d
-         HgOOLJpzWPWjAHL5lP/xt9s3ThyS/sU+kJt+QVSnByRE8QYbEB3QuR2w0MjLc1SsKA0l
-         SwP6IeEnwWGP920xVbxqalp0870HA3sVxtJSJshueCkFMB3p+OSq/7qcGzaXdVuNY9Vv
-         celBhbCbh3JBq+8IjGapZtZQ2gVP732OZP47Fo1dIX7yfb0SHOWh5h+5mJxwfiSsUGw0
-         DJnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fB3mZrEGeC49afI3Ip3CR6vlAM4jq7k1Xx9Bu92kk3M=;
-        b=Up9QKx393/BRl7yO7aANnFozg86uHPMXvPlrEx5AzpBcLZDETMRXwKwdXieWhyXOB+
-         esQWzq31CyUHP4zVlX8uHlfbYX696XGsJIEjp9QFixN0BhMTtdUHuFtSgvRO6iYBoNf2
-         W4BsVtO2kbYQ86p8AsmeWhBuPNnI6wQ1jtI2YajLX3odswDU+JyNgoS8HTQxbzuhoUuG
-         1T6HPqkFwATFEzIrT+eGfdz1ncg3/mIeFYse0axNrQml4mM5ExZ3CO9sLoPnZt1Keoi4
-         nOtFBUZQjAcVffI/ad4wkds+cV8fzJJ9W7QA0pdjzMV0NkRiUHnuYfN45LMvxueAU3QS
-         ZtrA==
-X-Gm-Message-State: APjAAAXopO9VSa19Pv/QeMwijOk2Pj17OimmkqQ4RpxMUziuZTHzFGu1
-        Cfp2PfpNZ8JrIqaXR8Xx6lWZe+JDGRzhEbgW3ic=
-X-Google-Smtp-Source: APXvYqyWSPwrztPZ2Rxt99tpPpy8Ess18nvGiqptz5hdwPqEUv1sSi7lZeBdeDkaIrl0iwusTW+A6mhLkh0z1Ds6aVM=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr5865173pjq.132.1580814620837;
- Tue, 04 Feb 2020 03:10:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200204032838.20739-1-chris.packham@alliedtelesis.co.nz> <20200204032838.20739-3-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200204032838.20739-3-chris.packham@alliedtelesis.co.nz>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 Feb 2020 13:10:12 +0200
-Message-ID: <CAHp75VfouDS0MM=V2FesXrVssp4Mx230gh_cuFN7Ej+DpnVzJQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] spi: Add generic SPI multiplexer
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Tue, 4 Feb 2020 06:12:12 -0500
+Received: from mail-db8eur05hn2224.outbound.protection.outlook.com ([52.101.150.224]:29465
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726887AbgBDLMM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 4 Feb 2020 06:12:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vrd0k9gX7W0DdX8NeTCZCVmL4Q68TxrDFuVKMFtSzUVzSyIfLRciy6g/4b9xHLfQTeF26mexxaOCMXAxg168HebzMI9DeAQi/e4YhZfPg/TTRlsVSr4hVAQOTh3P/u9Ht94PTSx3B4eBEIENdB4xGQCfVPpfJH3qPSQbtotNXKVjIMjC0ocY1wndepZv8iyNp6FYWWChfZ63JK+LOArALeV04yF8da+b5L7K/hs4TJDwPlh4VjkfcJGpkeAw7ZeUvP1x53Fa4OI5AMsToBenm/bmXdWgR81kUKxSug7+tU7AUy0a8zRHcVGYadHrk3VCUfpVNAF8EVGNE9k+ixPBpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zkjPjzfDMgMB3/na1YLTKsGY9i8jue32k9z/pee5+lo=;
+ b=kns7ubWaCWrjVGpQoX1u5gtjQPhYBH0suqCPrOCjVoSkDp0bFMfKgx2HCRSOZvihEArK+Htlz9QUQutqfjxLDgyqma61nHPeNUzutvOO2MfJJBq0IvD5c3XwC/3oZZrhtazmlLbfFSBlgPvu6wIzziBte26qb4Om164dCzuP4+iPyQ8jS/Vs+Xy6B7LHIO5y9RYlms/qlFrVMnFof1qS1b2CEf1IWV/ekpg8OsqJkSr5q7P9n8kGapV99/vVqB7NjO6nuLdxJRp7flzJ/7Zd1Pb+ouo2uOuP0XXMgqpzTRP3qVza+ww5Mm4WkWUKbADpqFkwhOD6p6Em2YImmV9/Kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zkjPjzfDMgMB3/na1YLTKsGY9i8jue32k9z/pee5+lo=;
+ b=U6GC4mSi6GqE7iYMFirjNNZXtz0ceTo/4K60QobErI/VJbfcCg8Xj5fqKhF4pDsbQj3drnXCZ0/R8+aywclTqkfz6zeAm6s9TrGL8BEvxlR2iejp++1mDNAOSGCMouW9JJzwQqiG/TFPS/O1gqH5IoXBprREOC5NNkGVoS1a464=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ VI1PR05MB7039.eurprd05.prod.outlook.com (20.181.33.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.29; Tue, 4 Feb 2020 11:11:58 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2686.031; Tue, 4 Feb 2020
+ 11:11:58 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     devicetree@vger.kernel.org
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Peter Chen <peter.chen@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] Add Aster carrier board support for Colibri iMX7 CoM
+Date:   Tue,  4 Feb 2020 13:11:45 +0200
+Message-Id: <20200204111151.3426090-1-oleksandr.suvorov@toradex.com>
+X-Mailer: git-send-email 2.24.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PR2P264CA0009.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::21)
+ To VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
+MIME-Version: 1.0
+Received: from localhost (194.105.145.90) by PR2P264CA0009.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.30 via Frontend Transport; Tue, 4 Feb 2020 11:11:58 +0000
+X-Mailer: git-send-email 2.24.1
+X-Originating-IP: [194.105.145.90]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 23c72aa3-c4d7-4618-8340-08d7a9630d2d
+X-MS-TrafficTypeDiagnostic: VI1PR05MB7039:|VI1PR05MB7039:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB70392196B666E697F7BF0C13F9030@VI1PR05MB7039.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 03030B9493
+X-Forefront-Antispam-Report: SFV:SPM;SFS:(10019020)(4636009)(346002)(136003)(39840400004)(366004)(376002)(396003)(189003)(199004)(186003)(66946007)(36756003)(478600001)(8676002)(81156014)(2906002)(81166006)(66476007)(6486002)(8936002)(5660300002)(66556008)(16526019)(1076003)(6666004)(956004)(44832011)(7416002)(4326008)(2616005)(54906003)(86362001)(6916009)(316002)(26005)(6496006)(52116002)(23200700001);DIR:OUT;SFP:1501;SCL:5;SRVR:VI1PR05MB7039;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;CAT:OSPM;
+Received-SPF: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GgfMpO488fAngJz0IEUQ0ut22t30KmvHzGbe7xpxx81kpOFPrmyBwE4vvvv4gJ6m39IWT4QZ4B+C/Ebnoo/37ybIzzCF/yvGlzWAkKl//lp3dHfinXr5mDXiX8uPIkv5C2SsVeFsibUOYfzHcvQkfcP3qeCV+72nVoWGitqmFlNOQ0Dx87RPj1NJXza/7v0iAHFvy33uBSuSEUAhTzzvcKs9CGSv6bvlAC8mIYOPOViNGF2YHQ7EXN6g0783K99JSlNEbUjiP6gKVUcK5RMX7bWQUfsYBJcdp7YKrgzw/TnP6aC6tGyyrmrRvEW1YJIY8ir6RRY4KVv2OSLhmHd0rvAB4KjjRZVVcjviO10iJS365wvQfyLNgjpYkGAHzBzjIeh/W6StCC8P7ZKgXCEBMMvhrll+oPxOkAtmkxzWzAXhX/6G91La25jvc/4iGX45lcv1A3B3xpMg6QpmhlKtnpYBOHQzQHfKW12a4k38FGlFTkyqd832wyFcBK89aOcALgLTLOSPMRUFP+MFJQmlogWuPuf+x0ZkxuJWcPcRI/yKBvjVrw9IasddHS9rVG/fjgIS4bhiBz5HMqlbPW2W1Hhyy5J/QHurikyl74a6Rn7jK1YyxJp7G8V+3m2O0y4MtfV0tCwWHOzfcn5t6ukUgPdDq5kkwT9gRpSjbOFcfwl5zXO242FRHve2ptP/ux590WmmJMHCzUihgx1Q0iiULMCOV4s2jYj8F5RnbpPEZnnQwUAgUoqdjGs2l898xzOCamp2WBE3kQZYarjOkENy2A==
+X-MS-Exchange-AntiSpam-MessageData: FN80g9++rnwkfOkTrqwwH9/lePvBdfuRv4gmur4VWTjuzsbjmd2kD5FsQ3NaaK8ib8q1+KitYP7el6CdBD97s466x7gR6Hi4VHogzhHtTk1SISViPEUA9Rfxy7qz/7PMGNWBh12IFOz9gWEih9Qdeg==
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23c72aa3-c4d7-4618-8340-08d7a9630d2d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2020 11:11:58.6286
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 107KJoy3vARzFekdd9/dbrzpBl5w1Tyr28VaclgapbdGTFhnaLSLD95pPDCC8c+iAr1zVvHvB8fIYLieW6yrOCPwyLJ8MDc1mIkXOmRgbiE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7039
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 5:28 AM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
->
-> Add a SPI device driver that sits in-band and provides a SPI controller
-> which supports chip selects via a mux-control. This enables extra SPI
-> devices to be connected with limited native chip selects.
->
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+This series adds devicetree for the Toradex Aster board along with
+Toradex Computer on Module Colibri iMX7S/iMX7D.
 
-Mostly I did style review here.
 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->
-> Notes:
->     Changes in v5:
->     - Drop redudnant lines, use IS_ERR() instead of PTR_ERR_OR_ZERO
->
->     Changes in v4:
->     - incorporate review feedback from Andy
->
->  drivers/spi/Kconfig   |  11 +++
->  drivers/spi/Makefile  |   1 +
->  drivers/spi/spi-mux.c | 187 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 199 insertions(+)
->  create mode 100644 drivers/spi/spi-mux.c
->
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 870f7797b56b..a4509000a291 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -881,6 +881,17 @@ config SPI_ZYNQMP_GQSPI
->  # Add new SPI master controllers in alphabetical order above this line
->  #
->
-> +comment "SPI Multiplexer support"
-> +
-> +config SPI_MUX
-> +       tristate "SPI multiplexer support"
-> +       select MULTIPLEXER
-> +       help
-> +         This adds support for SPI multiplexers. Each SPI mux will be
-> +         accessible as a SPI controller, the devices behind the mux will appear
-> +         to be chip selects on this controller. It is still necessary to
-> +         select one or more specific mux-controller drivers.
-> +
->  #
->  # There are lots of SPI device types, with sensors and memory
->  # being probably the most widely used ones.
-> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-> index bb49c9e6d0a0..116409533727 100644
-> --- a/drivers/spi/Makefile
-> +++ b/drivers/spi/Makefile
-> @@ -9,6 +9,7 @@ ccflags-$(CONFIG_SPI_DEBUG) := -DDEBUG
->  # config declarations into driver model code
->  obj-$(CONFIG_SPI_MASTER)               += spi.o
->  obj-$(CONFIG_SPI_MEM)                  += spi-mem.o
-> +obj-$(CONFIG_SPI_MUX)                  += spi-mux.o
->  obj-$(CONFIG_SPI_SPIDEV)               += spidev.o
->  obj-$(CONFIG_SPI_LOOPBACK_TEST)                += spi-loopback-test.o
->
-> diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
-> new file mode 100644
-> index 000000000000..4f94c9127fc1
-> --- /dev/null
-> +++ b/drivers/spi/spi-mux.c
-> @@ -0,0 +1,187 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// General Purpose SPI multiplexer
-> +
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mux/consumer.h>
-> +#include <linux/slab.h>
-> +#include <linux/spi/spi.h>
-> +
-> +#define SPI_MUX_NO_CS  ((unsigned int)-1)
-> +
-> +/**
-> + * DOC: Driver description
-> + *
-> + * This driver supports a MUX on an SPI bus. This can be useful when you need
-> + * more chip selects than the hardware peripherals support, or than are
-> + * available in a particular board setup.
-> + *
-> + * The driver will create an additional SPI controller. Devices added under the
-> + * mux will be handled as 'chip selects' on this controller.
-> + */
-> +
-> +/**
-> + * struct spi_mux_priv - the basic spi_mux structure
-> + * @spi:               pointer to the device struct attached to the parent
-> + *                     spi controller
-> + * @current_cs:                The current chip select set in the mux
-> + * @child_msg_complete: The mux replaces the complete callback in the child's
-> + *                     message to its own callback; this field is used by the
-> + *                     driver to store the child's callback during a transfer
-> + * @child_msg_context: Used to store the child's context to the callback
-> + * @child_msg_dev:     Used to store the spi_device pointer to the child
-> + * @mux:               mux_control structure used to provide chip selects for
-> + *                     downstream spi devices
-> + */
-> +struct spi_mux_priv {
-> +       struct spi_device       *spi;
-> +       unsigned int            current_cs;
-> +
-> +       void                    (*child_msg_complete)(void *context);
-> +       void                    *child_msg_context;
-> +       struct spi_device       *child_msg_dev;
-> +       struct mux_control      *mux;
-> +};
-> +
-> +/* should not get called when the parent controller is doing a transfer */
-> +static int spi_mux_select(struct spi_device *spi)
-> +{
-> +       struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
-> +       int ret;
-> +
-> +       if (priv->current_cs == spi->chip_select)
-> +               return 0;
-> +
-> +       dev_dbg(&priv->spi->dev, "setting up the mux for cs %d\n",
-> +               spi->chip_select);
-> +
-> +       /* copy the child device's settings except for the cs */
-> +       priv->spi->max_speed_hz = spi->max_speed_hz;
-> +       priv->spi->mode = spi->mode;
-> +       priv->spi->bits_per_word = spi->bits_per_word;
-> +
-> +       ret = mux_control_select(priv->mux, spi->chip_select);
-> +       if (ret)
-> +               return ret;
-> +
-> +       priv->current_cs = spi->chip_select;
-> +
-> +       return 0;
-> +}
-> +
-> +static int spi_mux_setup(struct spi_device *spi)
-> +{
-> +       struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
-> +
-> +       /*
-> +        * can be called multiple times, won't do a valid setup now but we will
-> +        * change the settings when we do a transfer (necessary because we
-> +        * can't predict from which device it will be anyway)
-> +        */
-> +       return spi_setup(priv->spi);
-> +}
-> +
-> +static void spi_mux_complete_cb(void *context)
-> +{
-> +       struct spi_mux_priv *priv = (struct spi_mux_priv *)context;
-> +       struct spi_controller *ctlr = spi_get_drvdata(priv->spi);
-> +       struct spi_message *m = ctlr->cur_msg;
-> +
-> +       m->complete = priv->child_msg_complete;
-> +       m->context = priv->child_msg_context;
-> +       m->spi = priv->child_msg_dev;
-> +       spi_finalize_current_message(ctlr);
-> +       mux_control_deselect(priv->mux);
-> +}
-> +
-> +static int spi_mux_transfer_one_message(struct spi_controller *ctlr,
-> +                                               struct spi_message *m)
-> +{
-> +       struct spi_mux_priv *priv = spi_controller_get_devdata(ctlr);
-> +       struct spi_device *spi = m->spi;
-> +       int ret;
-> +
-> +       ret = spi_mux_select(spi);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /*
-> +        * Replace the complete callback, context and spi_device with our own
-> +        * pointers. Save originals
-> +        */
-> +       priv->child_msg_complete = m->complete;
-> +       priv->child_msg_context = m->context;
-> +       priv->child_msg_dev = m->spi;
-> +
-> +       m->complete = spi_mux_complete_cb;
-> +       m->context = priv;
-> +       m->spi = priv->spi;
-> +
-> +       /* do the transfer */
-> +       return spi_async(priv->spi, m);
-> +}
-> +
-> +static int spi_mux_probe(struct spi_device *spi)
-> +{
-> +       struct spi_controller *ctlr;
-> +       struct spi_mux_priv *priv;
-> +       int ret;
-> +
-> +       ctlr = spi_alloc_master(&spi->dev, sizeof(*priv));
-> +       if (!ctlr)
-> +               return -ENOMEM;
-> +
-> +       spi_set_drvdata(spi, ctlr);
-> +       priv = spi_controller_get_devdata(ctlr);
-> +       priv->spi = spi;
-> +
-> +       priv->mux = devm_mux_control_get(&spi->dev, NULL);
-> +       if (IS_ERR(priv->mux)) {
-> +               ret = PTR_ERR(priv->mux);
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(&spi->dev, "failed to get control-mux\n");
-> +               goto err_put_ctlr;
-> +       }
-> +
-> +       priv->current_cs = SPI_MUX_NO_CS;
-> +
-> +       /* supported modes are the same as our parent's */
-> +       ctlr->mode_bits = spi->controller->mode_bits;
-> +       ctlr->flags = spi->controller->flags;
-> +       ctlr->transfer_one_message = spi_mux_transfer_one_message;
-> +       ctlr->setup = spi_mux_setup;
-> +       ctlr->num_chipselect = mux_control_states(priv->mux);
-> +       ctlr->bus_num = -1;
-> +       ctlr->dev.of_node = spi->dev.of_node;
-> +
-> +       ret = devm_spi_register_controller(&spi->dev, ctlr);
-> +       if (ret)
-> +               goto err_put_ctlr;
-> +
-> +       return 0;
-> +
-> +err_put_ctlr:
-> +       spi_controller_put(ctlr);
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct of_device_id spi_mux_of_match[] = {
-> +       { .compatible = "spi-mux" },
-> +       { }
-> +};
-> +
-> +static struct spi_driver spi_mux_driver = {
-> +       .probe  = spi_mux_probe,
-> +       .driver = {
-> +               .name   = "spi-mux",
-> +               .of_match_table = spi_mux_of_match,
-> +       },
-> +};
-> +
-> +module_spi_driver(spi_mux_driver);
-> +
-> +MODULE_DESCRIPTION("SPI multiplexer");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.25.0
->
+Oleksandr Suvorov (6):
+  ARM: dts: imx7-colibri: add alias for RTC
+  ARM: dts: imx7-colibri: fix muxing of usbc_det pin
+  ARM: dts: imx7-colibri: Convert to SPDX license tags for Colibri iMX7
+  ARM: imx_v6_v7_defconfig: Enable TOUCHSCREEN_ATMEL_MXT
+  ARM: imx_v6_v7_defconfig: Enable TOUCHSCREEN_AD7879
+  ARM: dts: imx7-colibri: add support for Toradex Aster carrier board
 
+ arch/arm/boot/dts/Makefile                    |   3 +
+ arch/arm/boot/dts/imx7-colibri-aster.dtsi     | 191 ++++++++++++++++++
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi   |  45 +----
+ arch/arm/boot/dts/imx7-colibri.dtsi           |  51 +----
+ arch/arm/boot/dts/imx7d-colibri-aster.dts     |  20 ++
+ .../arm/boot/dts/imx7d-colibri-emmc-aster.dts |  20 ++
+ arch/arm/boot/dts/imx7d-colibri-eval-v3.dts   |  40 +---
+ arch/arm/boot/dts/imx7s-colibri-aster.dts     |  15 ++
+ arch/arm/boot/dts/imx7s-colibri-eval-v3.dts   |  40 +---
+ arch/arm/configs/imx_v6_v7_defconfig          |   3 +
+ 10 files changed, 272 insertions(+), 156 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx7-colibri-aster.dtsi
+ create mode 100644 arch/arm/boot/dts/imx7d-colibri-aster.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-colibri-emmc-aster.dts
+ create mode 100644 arch/arm/boot/dts/imx7s-colibri-aster.dts
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.24.1
+
