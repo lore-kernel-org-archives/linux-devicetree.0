@@ -2,127 +2,160 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B53C3524F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26019C35249
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBDF21741
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A51217BA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fnUtazXU"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jwf+Qbf1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dJvD9bND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgBEHCG (ORCPT
+        id S1726236AbgBEHtN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:02:06 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:39693 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727981AbgBEHCF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 02:02:05 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580886125; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=895Q+fKggWhwkwgRG0plgGxTflX/NjId+yNJ80pnPq4=; b=fnUtazXUzpCjVLptvv+qMJBpnfLxVwhkcW98DR2Q+akLa0I7ddO+gl59cLHVmZuyWae4fcaS
- +Ld8sVTj5v+fpYOAlDV0xk5TIHI8UPs5vAw8mrWOmkFhMedKu5UyUotjKnVNpHGGefwUYJ65
- q478khQmC6qRuThUhPeZqGydl6k=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a6863.7f66726cb458-smtp-out-n03;
- Wed, 05 Feb 2020 07:01:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B3F83C433CB; Wed,  5 Feb 2020 07:01:55 +0000 (UTC)
-Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3AA49C43383;
-        Wed,  5 Feb 2020 07:01:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3AA49C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-From:   Sharat Masetty <smasetty@codeaurora.org>
-To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        jcrouse@codeaurora.org, mka@chromium.org, dianders@chromium.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v4 2/3] clk: qcom: gpucc: Add support for GX GDSC for SC7180
-Date:   Wed,  5 Feb 2020 12:31:36 +0530
-Message-Id: <1580886097-6312-3-git-send-email-smasetty@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
-References: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
+        Wed, 5 Feb 2020 02:49:13 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60285 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbgBEHtN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 02:49:13 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 06AD66FE9;
+        Wed,  5 Feb 2020 02:49:12 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 05 Feb 2020 02:49:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=klnBhs3icmG873ARFeW0I55GIqv
+        Bct2WyDKkuastGyo=; b=jwf+Qbf1/dIOpQQPu6d5faHN3Z6Nv1tEzdcooIugMth
+        1avbUSzp56VsATlVcfZS4dAfADLi8S4qu/j6jsF7Zb43cVOD/zjIJ3rKAaFIlmjB
+        7yE7GKchPOAUw0QAFwXscVn+R8J2xLbSw7mplWO8w4ODugAY/eFEXTmjQSSJi4ir
+        R9t3n1+ga5wKgN9dhZgGpA6b1V6S7sRBSRDrbcekZNERahh5kTneYXC1+53SrlBR
+        CRlpAJyACUCokmEmQu0RB1gZMl0bdoaYrgIyGVYUP3rfWImjHA/PkRsPAy54uDag
+        OSYkxhZNlFbdzy0ABW3VgifxRNK0MfSIkN7mbZQWoBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=klnBhs
+        3icmG873ARFeW0I55GIqvBct2WyDKkuastGyo=; b=dJvD9bNDzk98V5EJjwjbLX
+        z/jqP7Y8Z4SGado2htR38gfwWtfB9jHHAJyZUvdd0l0Dlaqa5LLY0f6iBDWHqqv2
+        ZNZYOuzMod1M5vjBbNjUMnRFqDstAwnK2wROivOVgyeFNznPTGjfLQpOnHgMhnUS
+        +OF/Tuv3B1coSez3a2FM5b3Cd4RpOwct9mAwc0vI/2j8N1LnPPGKP6tiZdnKH8ES
+        Fn4sbCYM/59xrLrRM19pVhPfW0SNHTM98Qfsz1QrTlhXQUfi52jJEjMBmPtZ1liZ
+        XY4yB1hJI/5z0WqqB8wXyh0fLFto0jqby/jBpmSn3AeQf1kjohNqzDOdKjZIf4AQ
+        ==
+X-ME-Sender: <xms:dnM6XpEULNBgxpV7IuDuGHtWsEwpv4vI8j1lg3kb7G6-VzY-QfuY1g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrhedtgdduudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:dnM6Xgt0evq26rLEpnUD07S8oq9BA9S2eDUWqQfmW-FOGo1hdY6UIQ>
+    <xmx:dnM6XsmFFPc77gnLfW67-HeRJd-hfQfxPxgdwgEK943FmGAu-CUh8A>
+    <xmx:dnM6XgyfuUHKvwyo9-Cc9FXCActuE6qPfkDXSLBnQUqpNXYS5VaHBA>
+    <xmx:d3M6XvKw6IGTWtKFAkvMrL3VaXUa2KseZuISM1x1FzF4V0ahHgfzzQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3FBB33280059;
+        Wed,  5 Feb 2020 02:49:10 -0500 (EST)
+Date:   Wed, 5 Feb 2020 08:49:08 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Sugaya Taichi <sugaya.taichi@socionext.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Vinod Koul <vkoul@kernel.org>,
+        "james.tai" <james.tai@realtek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 11/12] dt-bindings: arm: Document Broadcom SoCs
+ 'secondary-boot-reg'
+Message-ID: <20200205074908.kwtqadfcwo2mtefk@gilmour.lan>
+References: <20200204235552.7466-1-f.fainelli@gmail.com>
+ <20200204235552.7466-12-f.fainelli@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wa2xbnbegqf4phpr"
+Content-Disposition: inline
+In-Reply-To: <20200204235552.7466-12-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Taniya Das <tdas@codeaurora.org>
 
- Most of the time the CPU should not be touching the GX domain on the
- GPU
- except for a very special use case when the CPU needs to force the GX
- headswitch off. Add a dummy enable function for the GX gdsc to simulate
- success so that the pm_runtime reference counting is correct.
+--wa2xbnbegqf4phpr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/gpucc-sc7180.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+On Tue, Feb 04, 2020 at 03:55:51PM -0800, Florian Fainelli wrote:
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index c23c24ff7575..d7b181a44789 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -272,6 +272,39 @@ properties:
+>        While optional, it is the preferred way to get access to
+>        the cpu-core power-domains.
+>
+> +  secondary-boot-reg:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: |
+> +      Required for systems that have an "enable-method" property value of
+> +      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
+> +
+> +      This includes the following SoCs: |
+> +      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
+> +      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
+> +
+> +      The secondary-boot-reg property is a u32 value that specifies the
+> +      physical address of the register used to request the ROM holding pen
+> +      code release a secondary CPU. The value written to the register is
+> +      formed by encoding the target CPU id into the low bits of the
+> +      physical start address it should jump to.
+> +
+> +if:
+> +  # If the enable-method property contains one of those values
+> +  properties:
+> +    enable-method:
+> +      contains:
+> +        enum:
+> +          - brcm,bcm11351-cpu-method
+> +          - brcm,bcm23550
+> +          - brcm,bcm-nsp-smp
+> +  # and if enable-method is present
 
-diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
-index ec61194..3b29f19 100644
---- a/drivers/clk/qcom/gpucc-sc7180.c
-+++ b/drivers/clk/qcom/gpucc-sc7180.c
-@@ -172,8 +172,45 @@ enum {
- 	.flags = VOTABLE,
- };
- 
-+/*
-+ * On SC7180 the GPU GX domain is *almost* entirely controlled by the GMU
-+ * running in the CX domain so the CPU doesn't need to know anything about the
-+ * GX domain EXCEPT....
-+ *
-+ * Hardware constraints dictate that the GX be powered down before the CX. If
-+ * the GMU crashes it could leave the GX on. In order to successfully bring back
-+ * the device the CPU needs to disable the GX headswitch. There being no sane
-+ * way to reach in and touch that register from deep inside the GPU driver we
-+ * need to set up the infrastructure to be able to ensure that the GPU can
-+ * ensure that the GX is off during this super special case. We do this by
-+ * defining a GX gdsc with a dummy enable function and a "default" disable
-+ * function.
-+ *
-+ * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
-+ * driver. During power up, nothing will happen from the CPU (and the GMU will
-+ * power up normally but during power down this will ensure that the GX domain
-+ * is *really* off - this gives us a semi standard way of doing what we need.
-+ */
-+static int gx_gdsc_enable(struct generic_pm_domain *domain)
-+{
-+	/* Do nothing but give genpd the impression that we were successful */
-+	return 0;
-+}
-+
-+static struct gdsc gx_gdsc = {
-+	.gdscr = 0x100c,
-+	.clamp_io_ctrl = 0x1508,
-+	.pd = {
-+		.name = "gpu_gx_gdsc",
-+		.power_on = gx_gdsc_enable,
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = CLAMP_IO,
-+};
-+
- static struct gdsc *gpu_cc_sc7180_gdscs[] = {
- 	[CX_GDSC] = &cx_gdsc,
-+	[GX_GDSC] = &gx_gdsc,
- };
- 
- static struct clk_regmap *gpu_cc_sc7180_clocks[] = {
--- 
-1.9.1
+Those comments were purely for the explanation, but you can keep them
+I guess :)
+
+Regardless on whether or not you keep them, for the whole series
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Maxime
+
+--wa2xbnbegqf4phpr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXjpzdAAKCRDj7w1vZxhR
+xUq2AQDV+M4Nkim7RmuY3y8QYuA2P6xeHBu487XApQ5G8aH+fwEAlmF1WVwn93es
+CiiM9/4giVvGZGr3rNoZg/tgdu0GZQs=
+=+UYd
+-----END PGP SIGNATURE-----
+
+--wa2xbnbegqf4phpr--
