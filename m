@@ -6,62 +6,68 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48179C352A2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02626C352A2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205BF217BA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51EA217BA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580930618;
-	bh=u2UIn7F+9QuQQyPEXQ+hPn66a/4sZE4MOJ97XcYdzrk=;
+	s=default; t=1580930626;
+	bh=ktriyZSNaJk0LPZkbijLldVFqkClsDP2Z2k22uVPmQc=;
 	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=ha7irdTnVNlgS7kFVOrqodcB3roIckcK3XLpLpZ/iTatOvfdQs+AZlHkBxXt/ktPU
-	 MxbbW+iHfjuzRII1yjaXt1cPvgKG82VMW/dc/kaQ4pVpHJ/EiVnVmUJwX33wzZHQXV
-	 K2WwAqtZyQO9AdKSPx9bVPn1NC1OrgrhfOqI3jKI=
+	b=NQWzB0dhnY/p1KzynyUkNnkr7DCu3+ShOFyn9IH+hq0yhEH3IG9c4ClUgXC0k6kf3
+	 pn1KJr2ujuoaz9XvlC6rV19vwmGoI5N4eOHL2hflxYGQY/o5Pn/RIFsKOEhSTOnOGH
+	 zugYZCIlJyBWyFfE97l5qygmJ9gWCPG8qww2QYAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgBETXh (ORCPT
+        id S1727481AbgBETXm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:23:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40122 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 14:23:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgBETXh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:23:37 -0500
+        id S1727104AbgBETXm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 14:23:42 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 923B72072B;
-        Wed,  5 Feb 2020 19:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4E482072B;
+        Wed,  5 Feb 2020 19:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580930616;
-        bh=u2UIn7F+9QuQQyPEXQ+hPn66a/4sZE4MOJ97XcYdzrk=;
+        s=default; t=1580930622;
+        bh=ktriyZSNaJk0LPZkbijLldVFqkClsDP2Z2k22uVPmQc=;
         h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=FJ1MCrdI1mNYYExkWaWxASa0jTixCeY/Myz3thcYyCHss/2HeB2LIsFuRuo85/Sq0
-         FbLViC0gDI/PdgSxcZ5MoGJs8Lmds4CDdW/uQDh9SgP0GHbeDXsNxrTb/ewB8IhVtG
-         YGammme3f5t04VhnbQIWlQN/gEsvdWSdR4E1knPs=
+        b=L0ugEpXrdMs+tNELmbCfoExJ+gFCTqDLBwPSsgW5bja5h2t3fvi8igAu+ZEZlRljj
+         grJ0eEFaru6XT6A0CUbLHWUAeiWBCJVzgXDhpNyA0Rot90HCz7N44YwL5Xi+5rnhI4
+         bnz96kPeegP3WXd4SwEGhFbl1HkPouTLTgUqjYt0=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580235801-4129-2-git-send-email-skomatineni@nvidia.com>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com> <1580235801-4129-2-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1580235801-4129-3-git-send-email-skomatineni@nvidia.com>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com> <1580235801-4129-3-git-send-email-skomatineni@nvidia.com>
 Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
 From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RFC PATCH v1 1/5] dt-bindings: clock: tegra: Add clk id for CSI TPG clock
+Subject: Re: [RFC PATCH v1 2/5] clk: tegra: Add Tegra210 CSI TPG clock gate
 To:     frankc@nvidia.com, hverkuil@xs4all.nl, jonathanh@nvidia.com,
         skomatineni@nvidia.com, thierry.reding@gmail.com
 User-Agent: alot/0.8.1
-Date:   Wed, 05 Feb 2020 11:23:35 -0800
-Message-Id: <20200205192336.923B72072B@mail.kernel.org>
+Date:   Wed, 05 Feb 2020 11:23:41 -0800
+Message-Id: <20200205192341.E4E482072B@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sowjanya Komatineni (2020-01-28 10:23:17)
-> Tegra210 uses PLLD out internally for CSI TPG.
+Quoting Sowjanya Komatineni (2020-01-28 10:23:18)
+> Tegra210 CSI hardware internally uses PLLD for internal test pattern
+> generator logic.
 >=20
-> This patch adds clk id for this CSI TPG clock from PLLD.
+> PLLD_BASE register in CAR has a bit CSI_CLK_SOURCE to enable PLLD
+> out to CSI during TPG mode.
+>=20
+> This patch adds this CSI TPG clock gate to Tegra210 clock driver
+> to allow Tegra video driver to ungate CSI TPG clock during TPG mode
+> and gate during non TPG mode.
 >=20
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
