@@ -2,187 +2,154 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F1FC35247
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 00:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C27C35251
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 06:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16231214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 00:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CADEF21741
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 06:51:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="jxgt4+g0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PJ+u2sUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgBEAsI (ORCPT
+        id S1725875AbgBEGvp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Feb 2020 19:48:08 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:56456 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727689AbgBEAsH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Feb 2020 19:48:07 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 04CF5891AC;
-        Wed,  5 Feb 2020 13:48:02 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580863682;
-        bh=YxaM9B6U71dDZTqUpdY/y2wYP3mw7nippBqDGx1ZrZ0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=jxgt4+g0doCZav7KWHwLXeamBho/5GnGJACwvuIs8EFh0kzyYz3t4J7+ni1fcIU6f
-         k/Sj/Ghx8PcnaarY5bGjyTgP6xFTb9wg/QXIDdQCuhH3B+JOEhgBYaWNbszcaGTvUE
-         M5Z7GAuoLIj+WiXyDgOZ5ppZdvjaLHOq/aD+qyG87aOGotV8yQRiITCQ8P+4F1MHU7
-         Qrg8HyapjCB1/4YnC5upNPaABbUeYUT27Dz7FJgys7EssFPMo8VOIiIpYbJ9M+iefC
-         fdp/oQ4vb1DmSvQ8+TgYe9EuEWALzrj1YyC1owzepMTIRV9WlzsFthEqajh2scTr8S
-         fSsyHan82hzbg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e3a10c20001>; Wed, 05 Feb 2020 13:48:02 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Feb 2020 13:48:02 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1473.005; Wed, 5 Feb 2020 13:48:02 +1300
-From:   Logan Shaw <Logan.Shaw@alliedtelesis.co.nz>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joshua Scott <Joshua.Scott@alliedtelesis.co.nz>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
- adt7475 documentation
-Thread-Topic: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
- adt7475 documentation
-Thread-Index: AQHV1JVtwGwHv/A/qEeLHCGfFZLcOaf9zzQAgAPiowCACUbkAA==
-Date:   Wed, 5 Feb 2020 00:48:01 +0000
-Message-ID: <a3c4d78c7c454287aea91f70fa8de1f259561cc0.camel@alliedtelesis.co.nz>
-References: <20200126221014.2978-1-logan.shaw@alliedtelesis.co.nz>
-         <20200126221014.2978-3-logan.shaw@alliedtelesis.co.nz>
-         <20200127154800.GA7023@bogus>
-         <9d4afb3f77e1dea7f050fe32616ca955fb95eaa9.camel@alliedtelesis.co.nz>
-In-Reply-To: <9d4afb3f77e1dea7f050fe32616ca955fb95eaa9.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:25:ae22:bff:fe77:dd09]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <49912492BB4A4C458AE04DAF57CD5D57@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 5 Feb 2020 01:51:45 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:27713 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726809AbgBEGvo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 01:51:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580885503; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=FEUHkLBJ+nAGJuyoz3LEU26JARROyquI5FGuyUlZs9g=;
+ b=PJ+u2sUNGTqIhHAX3Syi37z/mqW16j3oPsi0A1fg+iYwHY6sb8G8ofiqetpgBRP9s/jkLNIC
+ lCTW9Lu7uXiljg1cexb3kaoa4222Cz1qNSIZqqrIQ182/bD8qGqgnr/SQKjgWrf3go6UtdVz
+ Y0bYmCZdsSHIJy3VyPfMM+G4hoE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3a65fb.7ff54b745b58-smtp-out-n01;
+ Wed, 05 Feb 2020 06:51:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 39525C447A1; Wed,  5 Feb 2020 06:51:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AF06C43383;
+        Wed,  5 Feb 2020 06:51:38 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Feb 2020 12:21:38 +0530
+From:   smasetty@codeaurora.org
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v3] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+In-Reply-To: <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
+References: <1580472220-3453-1-git-send-email-smasetty@codeaurora.org>
+ <1580472220-3453-2-git-send-email-smasetty@codeaurora.org>
+ <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
+Message-ID: <1e29097cc1cdf18671379f6420f872b0@codeaurora.org>
+X-Sender: smasetty@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SnVzdCBhIGdlbnRsZSByZW1pbmRlciBhcyB0aGlzIHRocmVhZCBoYXMgYmVlbiBxdWlldCBmb3Ig
-YSB3aGlsZS4gUm9iLA0KSSB3b3VsZCBhcHByZWNpYXRlIHNvbWUgZmVlZGJhY2sgb24gbXkgcXVl
-c3Rpb24gZnJvbSBteSBwcmV2aW91cyBlbWFpbC4gDQoNClRvIGFkZCBhIGxpdHRsZSBtb3JlIGRl
-dGFpbDogSSB3YW50IHRvIGF2b2lkIHNpbXBseSBjaGVja2luZyBmb3IgdGhlDQpleGlzdGVuY2Ug
-b2YgYSBwcm9wZXJ0eSBpbiB0aGUgRFRTIGFzIHRoYXQgY291bGQgYnJlYWsgY29tcGF0aWJpbGl0
-eQ0Kd2l0aCBjb2RlYmFzZXMgaW1wbGVtZW50aW5nIHRoZWlyIG93biBtZXRob2Qgb2YgaGFuZGxp
-bmcgdGhlIGF0dGVudWF0b3INCmJ5cGFzcy4NCg0KT24gVGh1LCAyMDIwLTAxLTMwIGF0IDAzOjA3
-ICswMDAwLCBMb2dhbiBTaGF3IHdyb3RlOg0KPiBPbiBNb24sIDIwMjAtMDEtMjcgYXQgMDk6NDgg
-LTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+IE9uIE1vbiwgSmFuIDI3LCAyMDIwIGF0IDEx
-OjEwOjE0QU0gKzEzMDAsIExvZ2FuIFNoYXcgd3JvdGU6DQo+ID4gPiBBZGRlZCBhIG5ldyBmaWxl
-IGRvY3VtZW50aW5nIHRoZSBhZHQ3NDc1IGRldmljZXRyZWUgYW5kIGFkZGVkIHRoZQ0KPiA+ID4g
-Zm91cg0KPiA+ID4gbmV3IHByb3BlcnRpZXMgdG8gaXQuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1v
-ZmYtYnk6IExvZ2FuIFNoYXcgPGxvZ2FuLnNoYXdAYWxsaWVkdGVsZXNpcy5jby5uej4NCj4gPiA+
-IC0tLQ0KPiA+ID4gLS0tDQo+ID4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvaHdtb24vYWR0
-NzQ3NS55YW1sICAgIHwgOTUNCj4gPiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgOTUgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0K
-PiA+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2h3bW9uL2FkdDc0NzUueWFt
-bA0KPiA+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2h3bW9uL2FkdDc0NzUueWFtbA0KPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaHdtb24vYWR0NzQ3NS55YW1sDQo+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0
-NA0KPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi40NTBkYTVlNjZlMDcNCj4gPiA+IC0tLSAvZGV2
-L251bGwNCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9od21v
-bi9hZHQ3NDc1LnlhbWwNCj4gPiA+IEBAIC0wLDAgKzEsOTUgQEANCj4gPiA+ICsjIFNQRFgtTGlj
-ZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4gDQo+ID4gRHVhbCBsaWNlbnNlIG5ldyBiaW5k
-aW5ncyBwbGVhc2U6DQo+ID4gDQo+ID4gKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2UpDQo+
-ID4gDQo+ID4gPiArJVlBTUwgMS4yDQo+ID4gPiArLS0tDQo+ID4gPiArJGlkOiBodHRwOi8vZGV2
-aWNldHJlZS5vcmcvc2NoZW1hcy9hZHQ3NDc1LnlhbWwjDQo+ID4gPiArJHNjaGVtYTogaHR0cDov
-L2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4gPiArDQo+ID4gPiAr
-dGl0bGU6IEFEVDc0NzUgaHdtb24gc2Vuc29yDQo+ID4gPiArDQo+ID4gPiArbWFpbnRhaW5lcnM6
-DQo+ID4gPiArICAtIEplYW4gRGVsdmFyZSA8amRlbHZhcmVAc3VzZS5jb20+DQo+ID4gPiArDQo+
-ID4gPiArZGVzY3JpcHRpb246IHwNCj4gPiA+ICsgIFRoZSBBRFQ3NDczLCBBRFQ3NDc1LCBBRFQ3
-NDc2LCBhbmQgQURUNzQ5MCBhcmUgdGhlcm1hbA0KPiA+ID4gbW9uaXRvcnMNCj4gPiA+IGFuZCBt
-dWx0aXBsZQ0KPiA+ID4gKyAgUFdOIGZhbiBjb250cm9sbGVycy4NCj4gPiA+ICsNCj4gPiA+ICsg
-IFRoZXkgc3VwcG9ydCBtb25pdG9yaW5nIGFuZCBjb250cm9sbGluZyB1cCB0byBmb3VyIGZhbnMg
-KHRoZQ0KPiA+ID4gQURUNzQ5MCBjYW4gb25seQ0KPiA+ID4gKyAgY29udHJvbCB1cCB0byB0aHJl
-ZSkuIFRoZXkgc3VwcG9ydCByZWFkaW5nIGEgc2luZ2xlIG9uIGNoaXANCj4gPiA+IHRlbXBlcmF0
-dXJlDQo+ID4gPiArICBzZW5zb3IgYW5kIHR3byBvZmYgY2hpcCB0ZW1wZXJhdHVyZSBzZW5zb3Jz
-ICh0aGUgQURUNzQ5MA0KPiA+ID4gYWRkaXRpb25hbGx5DQo+ID4gPiArICBzdXBwb3J0cyBtZWFz
-dXJpbmcgdXAgdG8gdGhyZWUgY3VycmVudCBleHRlcm5hbCB0ZW1wZXJhdHVyZQ0KPiA+ID4gc2Vu
-c29ycyB3aXRoDQo+ID4gPiArICBzZXJpZXMgcmVzaXN0YW5jZSBjYW5jZWxsYXRpb24gKFNSQykp
-Lg0KPiA+ID4gKw0KPiA+ID4gKyAgRGF0YXNoZWV0czoNCj4gPiA+ICsgIGh0dHBzOi8vd3d3Lm9u
-c2VtaS5jb20vcHViL0NvbGxhdGVyYWwvQURUNzQ3My1ELlBERg0KPiA+ID4gKyAgaHR0cHM6Ly93
-d3cub25zZW1pLmNvbS9wdWIvQ29sbGF0ZXJhbC9BRFQ3NDc1LUQuUERGDQo+ID4gPiArICBodHRw
-czovL3d3dy5vbnNlbWkuY29tL3B1Yi9Db2xsYXRlcmFsL0FEVDc0NzYtRC5QREYNCj4gPiA+ICsg
-IGh0dHBzOi8vd3d3Lm9uc2VtaS5jb20vcHViL0NvbGxhdGVyYWwvQURUNzQ5MC1ELlBERg0KPiA+
-ID4gKw0KPiA+ID4gKyAgRGVzY3JpcHRpb24gdGFrZW4gZnJvbSBvbXNlbWljb25kdWN0b3JzIHNw
-ZWNpZmljYXRpb24gc2hlZXRzLA0KPiA+ID4gd2l0aCBtaW5vcg0KPiA+IA0KPiA+IG9tc2VtaT8N
-Cj4gPiAgXg0KPiA+IA0KPiA+ID4gKyAgcmVwaHJhc2luZy4NCj4gPiA+ICsNCj4gPiA+ICtwcm9w
-ZXJ0aWVzOg0KPiA+ID4gKyAgY29tcGF0aWJsZToNCj4gPiA+ICsgICAgZW51bToNCj4gPiA+ICsg
-ICAgICAtIGFkaSxhZHQ3NDczDQo+ID4gPiArICAgICAgLSBhZGksYWR0NzQ3NQ0KPiA+ID4gKyAg
-ICAgIC0gYWRpLGFkdDc0NzYNCj4gPiA+ICsgICAgICAtIGFkaSxhZHQ3NDkwDQo+ID4gPiArDQo+
-ID4gPiArICByZWc6DQo+ID4gPiArICAgIG1heEl0ZW1zOiAxDQo+ID4gPiArDQo+ID4gPiArICBi
-eXBhc3MtYXR0ZW51YXRvci1pbjA6DQo+ID4gDQo+ID4gTmVlZHMgYSB2ZW5kb3IgcHJlZml4IGFu
-ZCBhIHR5cGUgcmVmLiANCj4gPiANCj4gPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiA+ICsg
-ICAgICBDb25maWd1cmVzIGJ5cGFzc2luZyB0aGUgaW5kaXZpZHVhbCB2b2x0YWdlIGlucHV0DQo+
-ID4gPiArICAgICAgYXR0ZW51YXRvciwgb24gaW4wLiBUaGlzIGlzIHN1cHBvcnRlZCBvbiB0aGUg
-QURUNzQ3NiBhbmQNCj4gPiA+IEFEVDc0OTAuDQo+ID4gPiArICAgICAgSWYgc2V0IHRvIGEgbm9u
-LXplcm8gaW50ZWdlciB0aGUgYXR0ZW51YXRvciBpcyBieXBhc3NlZCwNCj4gPiA+IGlmDQo+ID4g
-PiBzZXQgdG8NCj4gPiA+ICsgICAgICB6ZXJvIHRoZSBhdHRlbnVhdG9yIGlzIG5vdCBieXBhc3Nl
-ZC4gSWYgdGhlIHByb3BlcnR5IGlzDQo+ID4gPiBhYnNlbnQgdGhlbg0KPiA+ID4gKyAgICAgIHRo
-ZSBjb25maWcgcmVnaXN0ZXIgaXMgbm90IG1vZGlmaWVkLg0KPiA+IA0KPiA+IFNvdW5kcyBsaWtl
-IHRoaXMgY291bGQgYmUgYm9vbGVhbj8gSWYgbm90LCBkZWZpbmUgYSBzY2hlbWEgZm9yIHdoYXQN
-Cj4gPiBhcmUgDQo+ID4gdmFsaWQgdmFsdWVzLg0KPiANCj4gQnkgYm9vbGVhbiBhcmUgeW91IHJl
-ZmVycmluZyB0byBhIGR0cyBwcm9wZXJ0eSB0aGF0IGlzIGV2YWx1YXRlZA0KPiAodXNpbmcNCj4g
-ZnVuY3Rpb24gb2ZfcHJvcGVydHlfcmVhZF9ib29sKSBhcyB0cnVlL2ZhbHNlLCBkZXBlbmRpbmcg
-b24gaXRzDQo+IHByZXNlbmNlPyBGb3IgZXhhbXBsZSAicmVndWxhdG9yLWFsd2F5cy1vbiIgaW46
-DQo+IC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3JlZ3VsYXRv
-ci55YW1sIC4NCj4gDQo+ID4gDQo+ID4gPiArICAgIG1heEl0ZW1zOiAxDQo+ID4gPiArDQo+ID4g
-PiArICBieXBhc3MtYXR0ZW51YXRvci1pbjE6DQo+ID4gPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+
-ID4gPiArICAgICAgQ29uZmlndXJlcyBieXBhc3NpbmcgdGhlIGluZGl2aWR1YWwgdm9sdGFnZSBp
-bnB1dA0KPiA+ID4gKyAgICAgIGF0dGVudWF0b3IsIG9uIGluMS4gVGhpcyBpcyBzdXBwb3J0ZWQg
-b24gdGhlIEFEVDc0NzMsDQo+ID4gPiBBRFQ3NDc1LA0KPiA+ID4gKyAgICAgIEFEVDc0NzYgYW5k
-IEFEVDc0OTAuIElmIHNldCB0byBhIG5vbi16ZXJvIGludGVnZXIgdGhlDQo+ID4gPiBhdHRlbnVh
-dG9yDQo+ID4gPiArICAgICAgaXMgYnlwYXNzZWQsIGlmIHNldCB0byB6ZXJvIHRoZSBhdHRlbnVh
-dG9yIGlzIG5vdA0KPiA+ID4gYnlwYXNzZWQuDQo+ID4gPiBJZiB0aGUNCj4gPiA+ICsgICAgICBw
-cm9wZXJ0eSBpcyBhYnNlbnQgdGhlbiB0aGUgY29uZmlnIHJlZ2lzdGVyIGlzIG5vdA0KPiA+ID4g
-bW9kaWZpZWQuDQo+ID4gPiArICAgIG1heEl0ZW1zOiAxDQo+ID4gPiArDQo+ID4gPiArICBieXBh
-c3MtYXR0ZW51YXRvci1pbjM6DQo+ID4gPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gPiArICAg
-ICAgQ29uZmlndXJlcyBieXBhc3NpbmcgdGhlIGluZGl2aWR1YWwgdm9sdGFnZSBpbnB1dA0KPiA+
-ID4gKyAgICAgIGF0dGVudWF0b3IsIG9uIGluMy4gVGhpcyBpcyBzdXBwb3J0ZWQgb24gdGhlIEFE
-VDc0NzYgYW5kDQo+ID4gPiBBRFQ3NDkwLg0KPiA+ID4gKyAgICAgIElmIHNldCB0byBhIG5vbi16
-ZXJvIGludGVnZXIgdGhlIGF0dGVudWF0b3IgaXMgYnlwYXNzZWQsDQo+ID4gPiBpZg0KPiA+ID4g
-c2V0IHRvDQo+ID4gPiArICAgICAgemVybyB0aGUgYXR0ZW51YXRvciBpcyBub3QgYnlwYXNzZWQu
-IElmIHRoZSBwcm9wZXJ0eSBpcw0KPiA+ID4gYWJzZW50IHRoZW4NCj4gPiA+ICsgICAgICB0aGUg
-Y29uZmlnIHJlZ2lzdGVyIGlzIG5vdCBtb2RpZmllZC4NCj4gPiA+ICsgICAgbWF4SXRlbXM6IDEN
-Cj4gPiA+ICsNCj4gPiA+ICsgIGJ5cGFzcy1hdHRlbnVhdG9yLWluNDoNCj4gPiANCj4gPiBUaGVz
-ZSA0IGNvdWxkIGJlIGEgc2luZ2xlIGVudHJ5IHVuZGVyIHBhdHRlcm5Qcm9wZXJ0aWVzLg0KPiA+
-IA0KPiA+IA0KPiA+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ID4gKyAgICAgIENvbmZpZ3Vy
-ZXMgYnlwYXNzaW5nIHRoZSBpbmRpdmlkdWFsIHZvbHRhZ2UgaW5wdXQNCj4gPiA+ICsgICAgICBh
-dHRlbnVhdG9yLCBvbiBpbjQuIFRoaXMgaXMgc3VwcG9ydGVkIG9uIHRoZSBBRFQ3NDc2IGFuZA0K
-PiA+ID4gQURUNzQ5MC4NCj4gPiA+ICsgICAgICBJZiBzZXQgdG8gYSBub24temVybyBpbnRlZ2Vy
-IHRoZSBhdHRlbnVhdG9yIGlzIGJ5cGFzc2VkLA0KPiA+ID4gaWYNCj4gPiA+IHNldCB0bw0KPiA+
-ID4gKyAgICAgIHplcm8gdGhlIGF0dGVudWF0b3IgaXMgbm90IGJ5cGFzc2VkLiBJZiB0aGUgcHJv
-cGVydHkgaXMNCj4gPiA+IGFic2VudCB0aGVuDQo+ID4gPiArICAgICAgdGhlIGNvbmZpZyByZWdp
-c3RlciBpcyBub3QgbW9kaWZpZWQuDQo+ID4gPiArICAgIG1heEl0ZW1zOiAxDQo+ID4gPiArDQo+
-ID4gPiArcmVxdWlyZWQ6DQo+ID4gPiArICAtIGNvbXBhdGlibGUNCj4gPiA+ICsgIC0gcmVnDQo+
-ID4gPiArDQo+ID4gPiArZXhhbXBsZXM6DQo+ID4gPiArICAtIHwNCj4gPiA+ICsgICAgaTJjIHsN
-Cj4gPiA+ICsgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiA+ICsgICAgICAjc2l6ZS1j
-ZWxscyA9IDwwPjsNCj4gPiA+ICsNCj4gPiA+ICsgICAgICBod21vbkAyZSB7DQo+ID4gPiArICAg
-ICAgICBjb21wYXRpYmxlID0gImFkaSxhZHQ3NDc2IjsNCj4gPiA+ICsgICAgICAgIHJlZyA9IDww
-eDJlPjsNCj4gPiA+ICsgICAgICAgIGJ5cGFzcy1hdHRlbnVhdG9yLWluMCA9IDwxPjsNCj4gPiA+
-ICsgICAgICAgIGJ5cGFzcy1hdHRlbnVhdG9yLWluMSA9IDwwPjsNCj4gPiA+ICsgICAgICB9Ow0K
-PiA+ID4gKyAgICB9Ow0KPiA+ID4gKy4uLg0KPiA+ID4gLS0gDQo+ID4gPiAyLjI1LjANCj4gPiA+
-IA0K
+On 2020-02-01 03:13, Doug Anderson wrote:
+> Hi,
+> 
+> On Fri, Jan 31, 2020 at 4:04 AM Sharat Masetty 
+> <smasetty@codeaurora.org> wrote:
+>> 
+>> +               adreno_smmu: iommu@5040000 {
+>> +                       compatible = "qcom,sc7180-smmu-v2", 
+>> "qcom,smmu-v2";
+>> +                       reg = <0 0x05040000 0 0x10000>;
+>> +                       #iommu-cells = <1>;
+>> +                       #global-interrupts = <2>;
+>> +                       interrupts = <GIC_SPI 229 
+>> IRQ_TYPE_LEVEL_HIGH>,
+>> +                                       <GIC_SPI 231 
+>> IRQ_TYPE_LEVEL_HIGH>,
+>> +                                       <GIC_SPI 364 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 365 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 366 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 367 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 368 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 369 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 370 
+>> IRQ_TYPE_EDGE_RISING>,
+>> +                                       <GIC_SPI 371 
+>> IRQ_TYPE_EDGE_RISING>;
+>> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+>> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
+>> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
+>> +
+>> +                       clock-names = "bus", "iface", "mem_iface_clk";
+> 
+> Repeated comment from v2 feedback:
+> 
+> Please send a patch to:
+> 
+> Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> 
+> ...adding 'qcom,sc7180-smmu-v2'.  If you do this it will point out
+> that you've added a new clock: "mem_iface_clk".  Is this truly a new
+> clock in sc7180 compared to previous IOMMUs?  ...or is it not really
+> needed?
+I can confirm that this clock is needed for SC7180. I will send out a 
+new patch
+to update the documentation this week.
+> 
+> 
+>> +               gmu: gmu@506a000 {
+>> +                       compatible="qcom,adreno-gmu-618.0", 
+>> "qcom,adreno-gmu";
+>> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000 
+>> 0 0x10000>,
+>> +                               <0 0x0b490000 0 0x10000>;
+>> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
+>> +                       interrupts = <GIC_SPI 304 
+>> IRQ_TYPE_LEVEL_HIGH>,
+>> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       interrupt-names = "hfi", "gmu";
+>> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+>> +                              <&gpucc GPU_CC_CXO_CLK>,
+>> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
+>> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
+>> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
+>> +                       power-domains = <&gpucc CX_GDSC>;
+>> +                       power-domain-names = "cx";
+> 
+> As per continued comments on v2, please see if this works for you:
+> 
+>   power-domains = <&gpucc CX_GDSC>, <0>;
+>   power-domain-names = "cx", "gx";
+> 
+> ...and work to get something more real for "gx" ASAP.  It did seem to
+> boot for me and (unless someone disagrees) it seems better than
+> totally leaving it out / violating the bindings?
+> 
+> 
+> -Doug
