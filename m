@@ -2,265 +2,83 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5EDC35247
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592E7C352A1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F1521927
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580922518;
-	bh=xU5WaflUK+bVVNzW3WzzQ7GtqeX4Yu9CijeKL7DeyTQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EooKx8SCBC8ZErKP+4kCaBlmtiR+8zrkGsZBpUMu/AA9WCFwShTnnSiqJdmcOtQSL
-	 Twx4RFNZ7u3KIk3MNVb6Gz1WRxWtIE3BuAvml1eYo8txQ9gLEYIKd3mxP4HlIpclBq
-	 zaWl1Xj1OY3Vn8LeuJxAy+qeSoe1Gu/+9/zACljg=
+	by mail.kernel.org (Postfix) with ESMTP id 3223420702
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgBERIi (ORCPT
+        id S1727116AbgBERXw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:08:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36645 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgBERIh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 12:08:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so3687998wru.3;
-        Wed, 05 Feb 2020 09:08:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wVyS98mSn4UeFr2rUO9PasOfBrlg4kFydqotmUAfD/w=;
-        b=ZUBVc75epbqt1k01BP4rV/5TEzSRXOxKSJUpHc5vafcvOk5rucS8i3l/ykfvGNPcT3
-         BldoM/4ttdQKJYhwkwcMTHrsxE0jQ/YPMZWHb/LoZuD+UYsB5V7A8zHerGeAEWXG2k9X
-         SAZoUXo6u3agfhfeHOiiyUIjyoXWE+n58j9XgcEK4D4wl+3klji63NdAanZQDDrXa9Kp
-         gPirF/cRGmMQXpZN9si2OfD99Rgp+ljxWvTMdHBtqmO6fE6crSxsCh8kqTQCwwSQHXYb
-         pAAMW09lJVf1d9g+YoHGfSjDzjbGJYAZMagP9JjWQJq65xhXGtXghJRHC3zTXJkJvMPf
-         Kw3w==
-X-Gm-Message-State: APjAAAXnoyDYXm/VuXP5C630zgSVlDACWacOfXseTnnLKF1QlPaSZNVh
-        u4WvhfoS9qfnxcpHRX0cew==
-X-Google-Smtp-Source: APXvYqwaQiQMAa8h+Izmp9nvuziS6m0uiZRyCGM1+IZ+qyjy4io1DJ/1o+lCJNm/dF9gYXsu8JczlA==
-X-Received: by 2002:adf:ecd0:: with SMTP id s16mr28949693wro.325.1580922514565;
-        Wed, 05 Feb 2020 09:08:34 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id q1sm561081wrw.5.2020.02.05.09.08.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 09:08:33 -0800 (PST)
-Received: (nullmailer pid 27473 invoked by uid 1000);
-        Wed, 05 Feb 2020 17:08:32 -0000
-Date:   Wed, 5 Feb 2020 17:08:32 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        alsa-devel@alsa-project.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dt-bindings: stm32: convert i2s to json-schema
-Message-ID: <20200205170832.GA19383@bogus>
-References: <20200127125420.29827-1-olivier.moysan@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127125420.29827-1-olivier.moysan@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 5 Feb 2020 12:23:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:49940 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726748AbgBERXw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 12:23:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB8BD1FB;
+        Wed,  5 Feb 2020 09:23:51 -0800 (PST)
+Received: from ssg-dev-vb.kfn.arm.com (E111385.Arm.com [10.50.4.77])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D044A3F52E;
+        Wed,  5 Feb 2020 09:23:47 -0800 (PST)
+From:   Hadar Gat <hadar.gat@arm.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Weili Qian <qianweili@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
+Subject: [PATCH v3 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+Date:   Wed,  5 Feb 2020 19:23:22 +0200
+Message-Id: <1580923405-28140-1-git-send-email-hadar.gat@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 01:54:20PM +0100, Olivier Moysan wrote:
-> Convert the STM32 I2S bindings to DT schema format using json-schema.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
-> The items for dma-names and clock-names properties are all
-> mandatory, but may be provided in any order.
-> The syntax used for these properties allows to avoid order constraint.
+The Arm CryptoCell is a hardware security engine.
+This patch introduces driver for its TRNG (True Random Number Generator)
+engine.
 
-Other than having .dts files with differing order, I don't see any 
-reason we need to allow any order here. So decide which order is most 
-prevalent and use that, and then fix the other dts files.
+v3 changes: removed few unneeded "#ifdef CONFIG_PM" from the code.
 
-> ---
->  .../bindings/sound/st,stm32-i2s.txt           | 62 -------------
->  .../bindings/sound/st,stm32-i2s.yaml          | 91 +++++++++++++++++++
->  2 files changed, 91 insertions(+), 62 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-> deleted file mode 100644
-> index cbf24bcd1b8d..000000000000
-> --- a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-> +++ /dev/null
-> @@ -1,62 +0,0 @@
-> -STMicroelectronics STM32 SPI/I2S Controller
-> -
-> -The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
-> -Only some SPI instances support I2S.
-> -
-> -Required properties:
-> -  - compatible: Must be "st,stm32h7-i2s"
-> -  - reg: Offset and length of the device's register set.
-> -  - interrupts: Must contain the interrupt line id.
-> -  - clocks: Must contain phandle and clock specifier pairs for each entry
-> -	in clock-names.
-> -  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
-> -	"i2sclk": clock which feeds the internal clock generator
-> -	"pclk": clock which feeds the peripheral bus interface
-> -	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
-> -	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
-> -  - dmas: DMA specifiers for tx and rx dma.
-> -    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
-> -  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
-> -  - pinctrl-names: should contain only value "default"
-> -  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-> -
-> -Optional properties:
-> -  - resets: Reference to a reset controller asserting the reset controller
-> -
-> -The device node should contain one 'port' child node with one child 'endpoint'
-> -node, according to the bindings defined in Documentation/devicetree/bindings/
-> -graph.txt.
-> -
-> -Example:
-> -sound_card {
-> -	compatible = "audio-graph-card";
-> -	dais = <&i2s2_port>;
-> -};
-> -
-> -i2s2: audio-controller@40003800 {
-> -	compatible = "st,stm32h7-i2s";
-> -	reg = <0x40003800 0x400>;
-> -	interrupts = <36>;
-> -	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
-> -	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
-> -	dmas = <&dmamux2 2 39 0x400 0x1>,
-> -           <&dmamux2 3 40 0x400 0x1>;
-> -	dma-names = "rx", "tx";
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_i2s2>;
-> -
-> -	i2s2_port: port@0 {
-> -		cpu_endpoint: endpoint {
-> -			remote-endpoint = <&codec_endpoint>;
-> -			format = "i2s";
-> -		};
-> -	};
-> -};
-> -
-> -audio-codec {
-> -	codec_port: port@0 {
-> -		codec_endpoint: endpoint {
-> -			remote-endpoint = <&cpu_endpoint>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
-> new file mode 100644
-> index 000000000000..cdfb375c7a14
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/st,stm32-i2s.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 SPI/I2S Controller
-> +
-> +maintainers:
-> +  - Olivier Moysan <olivier.moysan@st.com>
-> +
-> +description:
-> +  The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
-> +  Only some SPI instances support I2S.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,stm32h7-i2s
-> +
-> +  "#sound-dai-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: clock feeding the peripheral bus interface.
-> +      - description: clock feeding the internal clock generator.
-> +      - description: I2S parent clock for sampling rates multiple of 8kHz.
-> +      - description: I2S parent clock for sampling rates multiple of 11.025kHz.
-> +
-> +  clock-names:
-> +    items:
-> +      - enum: [ pclk, i2sclk, x8k, x11k ]
-> +      - enum: [ pclk, i2sclk, x8k, x11k ]
-> +      - enum: [ pclk, i2sclk, x8k, x11k ]
-> +      - enum: [ pclk, i2sclk, x8k, x11k ]
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/string-array
+v2 changes: fixed 'make dt_bnding_check' errors.
 
-*-names already has a type, so this is not needed.
+Hadar Gat (3):
+  dt-bindings: add device tree binding for Arm CryptoCell trng engine
+  hw_random: cctrng: introduce Arm CryptoCell driver
+  MAINTAINERS: add HG as cctrng maintainer
 
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    items:
-> +      - description: audio capture DMA.
-> +      - description: audio playback DMA.
-> +
-> +  dma-names:
-> +    items:
-> +      - enum: [ rx, tx ]
-> +      - enum: [ rx, tx ]
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/string-array
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - "#sound-dai-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - dmas
-> +  - dma-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    i2s2: audio-controller@4000b000 {
-> +        compatible = "st,stm32h7-i2s";
-> +        #sound-dai-cells = <0>;
-> +        reg = <0x4000b000 0x400>;
-> +        clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
-> +        clock-names = "pclk", "i2sclk", "x8k", "x11k";
-> +        interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +        dmas = <&dmamux1 39 0x400 0x01>,
-> +               <&dmamux1 40 0x400 0x01>;
-> +        dma-names = "rx", "tx";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&i2s2_pins_a>;
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
-> 
+ .../devicetree/bindings/rng/arm-cctrng.yaml        |  51 ++
+ MAINTAINERS                                        |   9 +
+ drivers/char/hw_random/Kconfig                     |  12 +
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/cctrng.c                    | 766 +++++++++++++++++++++
+ drivers/char/hw_random/cctrng.h                    |  69 ++
+ 6 files changed, 908 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+ create mode 100644 drivers/char/hw_random/cctrng.c
+ create mode 100644 drivers/char/hw_random/cctrng.h
+
+-- 
+2.7.4
+
