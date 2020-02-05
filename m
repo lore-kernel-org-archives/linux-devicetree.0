@@ -2,154 +2,88 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C27C35251
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 06:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956BEC3524F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CADEF21741
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 06:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6FC21741
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PJ+u2sUN"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PiZYNMCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725875AbgBEGvp (ORCPT
+        id S1727561AbgBEHB4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 01:51:45 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:27713 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726809AbgBEGvo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 01:51:44 -0500
+        Wed, 5 Feb 2020 02:01:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23308 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726277AbgBEHBy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 02:01:54 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580885503; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=FEUHkLBJ+nAGJuyoz3LEU26JARROyquI5FGuyUlZs9g=;
- b=PJ+u2sUNGTqIhHAX3Syi37z/mqW16j3oPsi0A1fg+iYwHY6sb8G8ofiqetpgBRP9s/jkLNIC
- lCTW9Lu7uXiljg1cexb3kaoa4222Cz1qNSIZqqrIQ182/bD8qGqgnr/SQKjgWrf3go6UtdVz
- Y0bYmCZdsSHIJy3VyPfMM+G4hoE=
-X-Mailgun-Sending-Ip: 104.130.122.25
+ s=smtp; t=1580886113; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=FAAy3O1hxyU0/+fvL1xrHaa2WdkrwTdW+HGQMimJI18=; b=PiZYNMCUK/13eBrMSzk2fIkjJjUW9pIdeT6ptAP+qLe4gzsCL1jvWJsLk7soZMneEZP6k1o3
+ 1Quoq4CZ1HnwHR6DZs01rxHRyTNASu87EViijNlM2AeOuKuKbTI04Nr+S8egF97L94HQptLX
+ qNh/isot7JOFPbvgSNP6US88xsY=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a65fb.7ff54b745b58-smtp-out-n01;
- Wed, 05 Feb 2020 06:51:39 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e3a6860.7ff3e069f110-smtp-out-n03;
+ Wed, 05 Feb 2020 07:01:52 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 39525C447A1; Wed,  5 Feb 2020 06:51:39 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id 12AFFC447A3; Wed,  5 Feb 2020 07:01:52 +0000 (UTC)
+Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AF06C43383;
-        Wed,  5 Feb 2020 06:51:38 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Feb 2020 12:21:38 +0530
-From:   smasetty@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v3] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
-In-Reply-To: <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
-References: <1580472220-3453-1-git-send-email-smasetty@codeaurora.org>
- <1580472220-3453-2-git-send-email-smasetty@codeaurora.org>
- <CAD=FV=XJF4KworkHFLoNtxB7d+VyGqZSZkDUdie+09ur1g5thw@mail.gmail.com>
-Message-ID: <1e29097cc1cdf18671379f6420f872b0@codeaurora.org>
-X-Sender: smasetty@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61BF6C43383;
+        Wed,  5 Feb 2020 07:01:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61BF6C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v4 1/3] dt-bindings: clk: qcom: Add support for GPU GX GDSCR
+Date:   Wed,  5 Feb 2020 12:31:35 +0530
+Message-Id: <1580886097-6312-2-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
+References: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-02-01 03:13, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Jan 31, 2020 at 4:04 AM Sharat Masetty 
-> <smasetty@codeaurora.org> wrote:
->> 
->> +               adreno_smmu: iommu@5040000 {
->> +                       compatible = "qcom,sc7180-smmu-v2", 
->> "qcom,smmu-v2";
->> +                       reg = <0 0x05040000 0 0x10000>;
->> +                       #iommu-cells = <1>;
->> +                       #global-interrupts = <2>;
->> +                       interrupts = <GIC_SPI 229 
->> IRQ_TYPE_LEVEL_HIGH>,
->> +                                       <GIC_SPI 231 
->> IRQ_TYPE_LEVEL_HIGH>,
->> +                                       <GIC_SPI 364 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 365 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 366 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 367 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 368 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 369 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 370 
->> IRQ_TYPE_EDGE_RISING>,
->> +                                       <GIC_SPI 371 
->> IRQ_TYPE_EDGE_RISING>;
->> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
->> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
->> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
->> +
->> +                       clock-names = "bus", "iface", "mem_iface_clk";
-> 
-> Repeated comment from v2 feedback:
-> 
-> Please send a patch to:
-> 
-> Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> 
-> ...adding 'qcom,sc7180-smmu-v2'.  If you do this it will point out
-> that you've added a new clock: "mem_iface_clk".  Is this truly a new
-> clock in sc7180 compared to previous IOMMUs?  ...or is it not really
-> needed?
-I can confirm that this clock is needed for SC7180. I will send out a 
-new patch
-to update the documentation this week.
-> 
-> 
->> +               gmu: gmu@506a000 {
->> +                       compatible="qcom,adreno-gmu-618.0", 
->> "qcom,adreno-gmu";
->> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000 
->> 0 0x10000>,
->> +                               <0 0x0b490000 0 0x10000>;
->> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
->> +                       interrupts = <GIC_SPI 304 
->> IRQ_TYPE_LEVEL_HIGH>,
->> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
->> +                       interrupt-names = "hfi", "gmu";
->> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
->> +                              <&gpucc GPU_CC_CXO_CLK>,
->> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
->> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
->> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
->> +                       power-domains = <&gpucc CX_GDSC>;
->> +                       power-domain-names = "cx";
-> 
-> As per continued comments on v2, please see if this works for you:
-> 
->   power-domains = <&gpucc CX_GDSC>, <0>;
->   power-domain-names = "cx", "gx";
-> 
-> ...and work to get something more real for "gx" ASAP.  It did seem to
-> boot for me and (unless someone disagrees) it seems better than
-> totally leaving it out / violating the bindings?
-> 
-> 
-> -Doug
+From: Taniya Das <tdas@codeaurora.org>
+
+In the cases where the GPU SW requires to use the GX GDSCR add
+support for the same.
+
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ include/dt-bindings/clock/qcom,gpucc-sc7180.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/dt-bindings/clock/qcom,gpucc-sc7180.h b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
+index 0e4643b..65e706d 100644
+--- a/include/dt-bindings/clock/qcom,gpucc-sc7180.h
++++ b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
+@@ -15,7 +15,8 @@
+ #define GPU_CC_CXO_CLK			6
+ #define GPU_CC_GMU_CLK_SRC		7
+ 
+-/* CAM_CC GDSCRs */
++/* GPU_CC GDSCRs */
+ #define CX_GDSC				0
++#define GX_GDSC				1
+ 
+ #endif
+-- 
+1.9.1
