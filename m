@@ -2,89 +2,89 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C35C35247
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8F1C35247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB1D20702
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F7220659
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:33:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580923994;
+	bh=dDdn5xtdB+st172DSpUXYY0xm0Ed5Ds8avMEYUtPX8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NXx01dSK4iUVfNjYQgAiTB5QI5fKKODE83zAXK2c2bZWfesxBxg4aPaWZLxHWxRC+
+	 sF+mwg9ctP6rGjn9OixVL9LsAIlJmP2p1s5a8K1vbdA7LnmJgE1lTcExBxw320Q8K4
+	 jEMNsbjjWhNAD7FkFOL/KDzFEcJEm9HcCUsvK9qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgBERYj (ORCPT
+        id S1727363AbgBERdN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:24:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:50032 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbgBERYj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Feb 2020 12:24:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3E141FB;
-        Wed,  5 Feb 2020 09:24:38 -0800 (PST)
-Received: from ssg-dev-vb.kfn.arm.com (E111385.Arm.com [10.50.4.77])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C17D73F52E;
-        Wed,  5 Feb 2020 09:24:34 -0800 (PST)
-From:   Hadar Gat <hadar.gat@arm.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
-Subject: [PATCH v3 3/3] MAINTAINERS: add HG as cctrng maintainer
-Date:   Wed,  5 Feb 2020 19:23:25 +0200
-Message-Id: <1580923405-28140-4-git-send-email-hadar.gat@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580923405-28140-1-git-send-email-hadar.gat@arm.com>
-References: <1580923405-28140-1-git-send-email-hadar.gat@arm.com>
+        Wed, 5 Feb 2020 12:33:13 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37176 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbgBERdN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 12:33:13 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so3829481wmf.2
+        for <devicetree@vger.kernel.org>; Wed, 05 Feb 2020 09:33:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NIXMdyM17Vsgu9U2iF1Gocz/YPTIf7hG1iqxFJ4gHAI=;
+        b=ELoOernyXg2ar/E/Z443W3ChfcsK9aRhNsqNqYlsdtDZSJdkGEy0/a03HgdFS9p3SX
+         jIm+rIRxkJWCJYsv2/7PcBnQLTLYewLdNwebSFhRQZBEzlrmWXOkbrIpKEyFVgHPGMMs
+         43H1q91bEihNCKE9gg/GN+VBCYCQWCbYDyD107Fj0DbqYilvgkm/a+NTHlOqpRgG7uZk
+         AQ9uVaApXROQWCBu26IA86Y65ra6XqMQwRjTFkTbq44o5I93W3wlW5OSSQq45pKilVaA
+         TyXYTc0JALLrjDx1bbtNug1HOS8nshP6QE8Myjtv0tQT0R39ekE5TnTY+3tcgIlQRII6
+         ktIg==
+X-Gm-Message-State: APjAAAXsvmQGTUL1g8vV5YP/9AoAm6ZRybrkdx1H1sSV7vix9SnjJUBp
+        tvo0tial0EkUSJ1ke9M+UA==
+X-Google-Smtp-Source: APXvYqx3+2W+cyvAcOhXugVfztjPGzLY93MUdM73HQ7///RVqRrqQvMvrFeRIzWNzJm+AfMJ5rSu4A==
+X-Received: by 2002:a1c:6755:: with SMTP id b82mr6472269wmc.127.1580923991972;
+        Wed, 05 Feb 2020 09:33:11 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id r1sm658791wrx.11.2020.02.05.09.33.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 09:33:11 -0800 (PST)
+Received: (nullmailer pid 3137 invoked by uid 1000);
+        Wed, 05 Feb 2020 17:33:09 -0000
+Date:   Wed, 5 Feb 2020 17:33:09 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+Cc:     noralf@tronnes.org, Sam Ravnborg <sam@ravnborg.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: add vendor prefix for OzzMaker and
+ Waveshare Electronics
+Message-ID: <20200205173309.GA2474@bogus>
+References: <cover.1580134320.git.kamlesh.gurudasani@gmail.com>
+ <aa8799c4164b54fa5c4ca55e48966d7b61352c2c.1580134320.git.kamlesh.gurudasani@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa8799c4164b54fa5c4ca55e48966d7b61352c2c.1580134320.git.kamlesh.gurudasani@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I work for Arm on maintaining the TrustZone CryptoCell TRNG driver.
+On Mon, 27 Jan 2020 19:55:33 +0530, Kamlesh Gurudasani wrote:
+> Add vendor prefix for OzzMaker [1] and Waveshare Electronics [2]
+> Both are display manufacturers
+> 
+> [1] https://ozzmaker.com/about/
+> [2] https://www.waveshare.com/contact_us
+> 
+> Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-Signed-off-by: Hadar Gat <hadar.gat@arm.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Applied, thanks.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a0c1618..654585a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3790,6 +3790,15 @@ S:	Supported
- F:	drivers/crypto/ccree/
- W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
- 
-+CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
-+M:	Hadar Gat <hadar.gat@arm.com>
-+L:	linux-crypto@vger.kernel.org
-+S:	Supported
-+F:	drivers/char/hw_random/cctrng.c
-+F:	drivers/char/hw_random/cctrng.h
-+F:	Documentation/devicetree/bindings/rng/arm-cctrng.txt
-+W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
-+
- CEC FRAMEWORK
- M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
- L:	linux-media@vger.kernel.org
--- 
-2.7.4
-
+Rob
