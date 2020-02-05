@@ -4,83 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FD2C35247
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD17CC35247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9610121741
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A382421741
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580924955;
-	bh=qu97ho64I01Jqu+8j6o3YO79NwmsJxrKOpqYsQsoB8E=;
+	s=default; t=1580924979;
+	bh=HEIYYcGr13hxh0JA3SJPegUXD5pWC7sQilxmcm/dJSY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pXM0+eD5sJtpI09UlDMiBKLrxe41XaeHpTyTu+qjjW8CODVjWaK5IYtd7Gyz/JhZh
-	 f2Xw2uOJfDBdNgod+fqsRwZ/6AdGQ8ZNSvYRciu9JK7AFRTpFCeDG8tkc/MGAA2Htd
-	 uj9NrlDXVKqUPttLMuwA5E6+Ojm7AgTz+Y2yzfv8=
+	b=fbTWel9zCggdABsp4Sfx/fYtRQqJUyf1p+UcI1/2Srv8niovTQacUwD1EISl3xqe7
+	 dyr2FJazrWbUricFYZUAw00i6gkkclW3cUMdLd1nOHAePYEMxkoBYZmZWPrAyvwCIP
+	 uzOdy3LpFHrOQsoZihKgWOrDhocduRMDsL6SVNYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgBERtP (ORCPT
+        id S1727390AbgBERtf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:49:15 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36816 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgBERtO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 12:49:14 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so3905744wma.1;
-        Wed, 05 Feb 2020 09:49:13 -0800 (PST)
+        Wed, 5 Feb 2020 12:49:35 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40726 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbgBERtf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 12:49:35 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t3so3817368wru.7;
+        Wed, 05 Feb 2020 09:49:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p7yEieln0jae2eT2M/0er6+kV9NoBt/oQX2qMjPZJ/Q=;
-        b=Vkg6rWGzIbo2Rb2+JwVkfGipK8LcEPHzzweKLy1UXhfWkt8taI12ZVYMyTHw+Sx+az
-         kcscyMSDyzCHgo4BUNWLRs86WOl6RgWT34GUkdXYQGODl/n3wAaUub8205qukgpfLsZ1
-         xe2wRUc+sQeZxWzHwuoWzmy5aOLhKBwVaBZc0XEFzxJ955Xd9BR+T1N/PnK3nCojidQB
-         7WamhChOj+p15UVuKr3l7i2HpFr4EPCNfajws4S12LjtXVZYUlXDZECdFPItenZcJEZ7
-         rYSqfJVCKMCK15gCn+dfah65C1xoq/ZMssX4T4LK4qAivMVTycBUHt1BMKsXaVZPoziH
-         RgPQ==
-X-Gm-Message-State: APjAAAW7L6wkzm46TYRgKxfgZZvJA1AEaIa4GMAFUEGffr7mKHvLE9gO
-        G2VWjf1j6RHg9eoEweColw==
-X-Google-Smtp-Source: APXvYqxrkccvNl9da8AtZiLVomEnf+cjr97jeYk9zDCvBB4OzibTwGtQk0HvdayBC/CQAVvY6ffffQ==
-X-Received: by 2002:a05:600c:20c6:: with SMTP id y6mr6912417wmm.95.1580924952525;
-        Wed, 05 Feb 2020 09:49:12 -0800 (PST)
+        bh=Lsfbnz3H38vTOletZ4EmB6C9KpZCxglql+qL3XIYGjo=;
+        b=pjIRK2NY3jjzO8+3tsKZuZBX/0U6wTbDe3+IQcd6RDKD3JE2GTV49yu/u/6QaccMzC
+         kDRNWmZVJtbAZYLzmzVnBGKbRCiIemBTcDLHibA/XmHGW9NpE8Uil/UKubUvSQ86cQbb
+         IBBEe+crd0PMv8tWuLy1Ri1t15Sazz3ZXeHBQ2doooD7iDGERSH7tWW48ocs+YoJn3dN
+         rbzpGL4ydNv+rQWc3QLh8jHB2xTrXO2H/I6bw77xLAU4PqDUmq/wvyuERe5Tq5ZPiKe7
+         zShELQ2nwVCnxEtZ7m/XKMxuhNUNcimUHDDuzMyigyzYD9ilNWyqpuEdL+guqH37tP28
+         Z34w==
+X-Gm-Message-State: APjAAAUjtWQWCXxfBYAeT8KWVf/1OekCeOsQ9JRvPL5o1mFGgKkNqdH0
+        EXKmp9AkjwgXrP+uwBZfIw==
+X-Google-Smtp-Source: APXvYqybHL6/b3Oz5I7G0CLuDoP0nfLxsBDQ3ivJbNaQ7/MXHy/EygjBmjdA1/E6DvSGs4NYiVTZrg==
+X-Received: by 2002:adf:ea8a:: with SMTP id s10mr28065695wrm.278.1580924973513;
+        Wed, 05 Feb 2020 09:49:33 -0800 (PST)
 Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id s1sm695548wro.66.2020.02.05.09.49.11
+        by smtp.gmail.com with ESMTPSA id t1sm335850wma.43.2020.02.05.09.49.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 09:49:11 -0800 (PST)
-Received: (nullmailer pid 29276 invoked by uid 1000);
-        Wed, 05 Feb 2020 17:49:10 -0000
-Date:   Wed, 5 Feb 2020 17:49:10 +0000
+        Wed, 05 Feb 2020 09:49:32 -0800 (PST)
+Received: (nullmailer pid 29957 invoked by uid 1000);
+        Wed, 05 Feb 2020 17:49:31 -0000
+Date:   Wed, 5 Feb 2020 17:49:31 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Tamizh Chelvam <tamizhr@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        Tamizh Chelvam <tamizhr@codeaurora.org>
-Subject: Re: [PATCHv2 1/2] dt-bindings: ath10k: Add new dt entries to
- identify coex support
-Message-ID: <20200205174910.GA29218@bogus>
-References: <1580152736-18654-1-git-send-email-tamizhr@codeaurora.org>
+To:     Ludovic Barre <ludovic.barre@st.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        srinivas.kandagatla@linaro.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: Re: [PATCH V2 5/9] dt-bindings: mmc: mmci: add delay block base
+ register for sdmmc
+Message-ID: <20200205174931.GA29922@bogus>
+References: <20200128090636.13689-1-ludovic.barre@st.com>
+ <20200128090636.13689-6-ludovic.barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580152736-18654-1-git-send-email-tamizhr@codeaurora.org>
+In-Reply-To: <20200128090636.13689-6-ludovic.barre@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Jan 2020 00:48:55 +0530, Tamizh Chelvam wrote:
-> This adds new dt entries qcom,coexist-support and qcom,coexist-gpio-pin
-> which will be used by ath10k driver to identify coex support
-> of a hardware and notify wifi firmware the gpio pin number.
-> This pin number information is needed for the hardware QCA4019.
+On Tue, 28 Jan 2020 10:06:32 +0100, Ludovic Barre wrote:
+> To support the sdr104 mode, the sdmmc variant has a
+> hardware delay block to manage the clock phase when sampling
+> data received by the card.
 > 
-> Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
+> This patch adds a second base register (optional) for
+> sdmmc delay block.
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 > ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
