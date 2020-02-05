@@ -2,170 +2,68 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D938C352A2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 13:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A96FC35254
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A05217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 13:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EDBC20702
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgBENnl (ORCPT
+        id S1726377AbgBEOax (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 08:43:41 -0500
-Received: from mga06.intel.com ([134.134.136.31]:44008 "EHLO mga06.intel.com"
+        Wed, 5 Feb 2020 09:30:53 -0500
+Received: from comms.puri.sm ([159.203.221.185]:48758 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgBENnl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Feb 2020 08:43:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 05:43:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
-   d="scan'208";a="220105346"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 05 Feb 2020 05:43:37 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 161F0101; Wed,  5 Feb 2020 15:43:36 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2] gpio: Avoid kernel.h inclusion where it's possible
-Date:   Wed,  5 Feb 2020 15:43:36 +0200
-Message-Id: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
+        id S1726455AbgBEOaw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:30:52 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 91956E0346;
+        Wed,  5 Feb 2020 06:30:51 -0800 (PST)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Ns3qqi5_L7qs; Wed,  5 Feb 2020 06:30:50 -0800 (PST)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
+Cc:     linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
+        kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH v1 00/12] arm64: dts: librem5-devkit: description updates
+Date:   Wed,  5 Feb 2020 15:29:51 +0100
+Message-Id: <20200205143003.28408-1-martin.kepplinger@puri.sm>
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Inclusion of kernel.h increases the mess with the header dependencies.
-Avoid kernel.h inclusion where it's possible.
+These are additions to the imx8mq-librem5-devkit devicetree description
+we are running for quite some time. All users should have them:
 
-Besides that, clean up a bit other inclusions inside GPIO subsystem headers.
-It includes:
- - removal pin control bits (forward declaration and header) from linux/gpio.h
- - removal of.h from asm-generic/gpio.h
- - use of explicit headers in gpio/consumer.h
- - add FIXME note with regard to gpio.h inclusion in of_gpio,h
+Angus Ainslie (Purism) (11):
+  arm64: dts: librem5-devkit: add sai2 and sai6 pinctrl definitions
+  arm64: dts: librem5-devkit: add the simcom 7100 modem and audio
+  arm64: dts: librem5-devkit: allow modem to wake the system from
+    suspend
+  arm64: dts: librem5-devkit: enable sai2 audio interface
+  arm64: dts: librem5-devkit: add the sgtl5000 i2c audio codec
+  arm64: dts: librem5-devkit: add a vbus supply to usb0
+  arm64: dts: librem5-devkit: add the regulators for DVFS
+  arm64: dts: librem5-devkit: add a battery for the bq25896 to monitor
+  arm64: dts: librem5-devkit: allow the redpine card to be removed
+  arm64: dts: librem5-devkit: configure VSELECT
+  arm64: dts: librem5-devkit: increase the VBUS current in the kernel
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: Elaborate changes in the commit message (Bartosz)
- include/asm-generic/gpio.h    | 4 ++--
- include/linux/gpio.h          | 2 --
- include/linux/gpio/consumer.h | 5 ++++-
- include/linux/of_gpio.h       | 9 ++++++---
- 4 files changed, 12 insertions(+), 8 deletions(-)
+Martin Kepplinger (1):
+  arm64: dts: librem5-devkit: add lsm9ds1 mount matrix
 
-diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
-index 19eadac415c4..aea9aee1f3e9 100644
---- a/include/asm-generic/gpio.h
-+++ b/include/asm-generic/gpio.h
-@@ -2,10 +2,8 @@
- #ifndef _ASM_GENERIC_GPIO_H
- #define _ASM_GENERIC_GPIO_H
- 
--#include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/errno.h>
--#include <linux/of.h>
- 
- #ifdef CONFIG_GPIOLIB
- 
-@@ -140,6 +138,8 @@ static inline void gpio_unexport(unsigned gpio)
- 
- #else	/* !CONFIG_GPIOLIB */
- 
-+#include <linux/kernel.h>
-+
- static inline bool gpio_is_valid(int number)
- {
- 	/* only non-negative numbers are valid */
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 2157717c2136..008ad3ee56b7 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -102,11 +102,9 @@ void devm_gpio_free(struct device *dev, unsigned int gpio);
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/bug.h>
--#include <linux/pinctrl/pinctrl.h>
- 
- struct device;
- struct gpio_chip;
--struct pinctrl_dev;
- 
- static inline bool gpio_is_valid(int number)
- {
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index bf2d017dd7b7..0a72fccf60ff 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -2,9 +2,10 @@
- #ifndef __LINUX_GPIO_CONSUMER_H
- #define __LINUX_GPIO_CONSUMER_H
- 
-+#include <linux/bits.h>
- #include <linux/bug.h>
-+#include <linux/compiler_types.h>
- #include <linux/err.h>
--#include <linux/kernel.h>
- 
- struct device;
- 
-@@ -189,6 +190,8 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 
- #else /* CONFIG_GPIOLIB */
- 
-+#include <linux/kernel.h>
-+
- static inline int gpiod_count(struct device *dev, const char *con_id)
- {
- 	return 0;
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index 16967390a3fe..f821095218b0 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -11,9 +11,8 @@
- #define __LINUX_OF_GPIO_H
- 
- #include <linux/compiler.h>
--#include <linux/kernel.h>
--#include <linux/errno.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio.h>		/* FIXME: Shouldn't be here */
- #include <linux/of.h>
- 
- struct device_node;
-@@ -34,6 +33,8 @@ enum of_gpio_flags {
- 
- #ifdef CONFIG_OF_GPIO
- 
-+#include <linux/kernel.h>
-+
- /*
-  * OF GPIO chip for memory mapped banks
-  */
-@@ -63,6 +64,8 @@ extern void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc);
- 
- #else /* CONFIG_OF_GPIO */
- 
-+#include <linux/errno.h>
-+
- /* Drivers may not strictly depend on the GPIO support, so let them link. */
- static inline int of_get_named_gpio_flags(struct device_node *np,
- 		const char *list_name, int index, enum of_gpio_flags *flags)
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 173 +++++++++++++++++-
+ 1 file changed, 165 insertions(+), 8 deletions(-)
+
 -- 
-2.24.1
+2.20.1
 
