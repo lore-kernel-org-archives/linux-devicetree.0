@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF06C35254
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3588BC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509A6217BA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1F820702
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgBEObZ (ORCPT
+        id S1727563AbgBEObQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:31:25 -0500
-Received: from comms.puri.sm ([159.203.221.185]:49134 "EHLO comms.puri.sm"
+        Wed, 5 Feb 2020 09:31:16 -0500
+Received: from comms.puri.sm ([159.203.221.185]:49016 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbgBEObY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:31:24 -0500
+        id S1727477AbgBEObP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:31:15 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id A3C84E0346;
-        Wed,  5 Feb 2020 06:31:24 -0800 (PST)
+        by comms.puri.sm (Postfix) with ESMTP id 9D9F9E0DCB;
+        Wed,  5 Feb 2020 06:31:15 -0800 (PST)
 Received: from comms.puri.sm ([127.0.0.1])
         by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1mLsTUCg2xNS; Wed,  5 Feb 2020 06:31:23 -0800 (PST)
+        with ESMTP id nPtQJje9XwOq; Wed,  5 Feb 2020 06:31:14 -0800 (PST)
 From:   Martin Kepplinger <martin.kepplinger@puri.sm>
 To:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
@@ -32,9 +32,9 @@ Cc:     linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
         kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v1 11/12] arm64: dts: librem5-devkit: increase the VBUS current in the kernel
-Date:   Wed,  5 Feb 2020 15:30:02 +0100
-Message-Id: <20200205143003.28408-12-martin.kepplinger@puri.sm>
+Subject: [PATCH v1 08/12] arm64: dts: librem5-devkit: add a battery for the bq25896 to monitor
+Date:   Wed,  5 Feb 2020 15:29:59 +0100
+Message-Id: <20200205143003.28408-9-martin.kepplinger@puri.sm>
 In-Reply-To: <20200205143003.28408-1-martin.kepplinger@puri.sm>
 References: <20200205143003.28408-1-martin.kepplinger@puri.sm>
 Content-Transfer-Encoding: 8bit
@@ -45,31 +45,52 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-The poly fuses can handle 6V 4Amps so incease the kernel limts to 5V
-3.5Amps.
+Add a simple-battery with default power capacity
+
+Discharge curve comes from the panasonic NCR18650B datasheet
+
+https://www.batteryspace.com/prod-specs/NCR18650B.pdf
 
 Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../dts/freescale/imx8mq-librem5-devkit.dts     | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 8f920c554ebd..15cc05c0d6cf 100644
+index 6a8f6cee96cf..4957acc512d5 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -444,10 +444,10 @@
- 				PDO_FIXED_USB_COMM |
- 				PDO_FIXED_DUAL_ROLE |
- 				PDO_FIXED_DATA_SWAP )>;
--			sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM |
-+			sink-pdos = <PDO_FIXED(5000, 3500, PDO_FIXED_USB_COMM |
- 				PDO_FIXED_DUAL_ROLE |
- 				PDO_FIXED_DATA_SWAP )
--			     PDO_VAR(5000, 3000, 3000)>;
-+			     PDO_VAR(5000, 5000, 3500)>;
- 			op-sink-microwatt = <10000000>;
+@@ -26,6 +26,22 @@
+ 		power-supply = <&reg_22v4_p>;
+ 	};
  
- 			ports {
++	bat: battery {
++		compatible = "simple-battery";
++		voltage-min-design-microvolt = <3000000>;
++		voltage-max-design-microvolt = <4192000>;
++		energy-full-design-microwatt-hours = <11700000>;
++		charge-full-design-microamp-hours = <3250000>;
++		precharge-current-microamp = <130000>;
++		charge-term-current-microamp = <66000>;
++		constant-charge-current-max-microamp = <1600000>;
++		constant-charge-voltage-max-microvolt = <4200000>;
++		factory-internal-resistance-micro-ohms = <250000>;
++		ocv-capacity-celsius = <25>;
++		ocv-capacity-table-0 = <4192000 100>, <3750000 85>, <3650000 68>,
++			<3500000 51>, <3400000 34>, <3250000 17>, <3000000 0>;
++	};
++
+ 	chosen {
+ 		stdout-path = &uart1;
+ 	};
+@@ -480,6 +496,7 @@
+ 		ti,minimum-sys-voltage = <3000000>; /* 3V */
+ 		ti,boost-voltage = <5000000>; /* 5V */
+ 		ti,boost-max-current = <50000>; /* 50mA */
++		monitored-battery = <&bat>;
+ 	};
+ };
+ 
 -- 
 2.20.1
 
