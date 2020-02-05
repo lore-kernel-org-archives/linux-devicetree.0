@@ -2,230 +2,85 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E6FC35249
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 09:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34790C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 09:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADBC2082E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 09:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="HwpIHsvO"
+	by mail.kernel.org (Postfix) with ESMTP id 0A9172051A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 09:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgBEJEc (ORCPT
+        id S1728035AbgBEJKZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 04:04:32 -0500
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:45960 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbgBEJEc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 04:04:32 -0500
-Received: by mail-lf1-f41.google.com with SMTP id 203so904497lfa.12
-        for <devicetree@vger.kernel.org>; Wed, 05 Feb 2020 01:04:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yYMn6cE/WNoeqN62ZAAmhI4wYArwEEHlXYPNuMr1nyE=;
-        b=HwpIHsvOP3yoYXzkZoGYK+cFPYTN231QiTNPhYjhYIG4fM4bUZZZf//q50chXLtgKg
-         s9PZevA3iIKRhqB9aEv5KsY8dODcXCirCHIZ1BwE6NiPuw5MqkhHkx1Wgaa70NowJWvV
-         TZRC8vGwzt6Pq2b1/QCCZftlt5LUO/SaH7w3Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yYMn6cE/WNoeqN62ZAAmhI4wYArwEEHlXYPNuMr1nyE=;
-        b=eP6XwP3MGiDutk580tjV0RHUQO419/0IEOukaQci1Be2EKIMdWepWlJmX+E6i1x1c9
-         hW+WL2IZI7I4CnjE4IlFdHSEts0PDtU/Z5lc8CXe3vA7XWIokmJ5fN3S4NyaTOgiXVOh
-         1yWlPLQrs7zAVN+VBhEjz8skzD6ICIcq7vQ+PlpnI8cB6nHt7n2SkcKTeb3yWQ+lh/V4
-         60bZnoIqhfPTWzSksla9kYUZxDM4aGI5Vp8Ew2Ie/iZzVxK6gfocY/pG8LFCaZVlaALq
-         DietLWixXEsOYGY79aaFGcsKeLbP6nJsiIf3LpkRu18Jg4tcE+y1vfI46saGnhpfY5lx
-         A9tA==
-X-Gm-Message-State: APjAAAV4YsiwrEJjpRgCsREl9y8O+pA0f0GhzO4Tey7USrqSr9TTeQK4
-        q5YexyK5n97hpqkAVnGu+RTUiA==
-X-Google-Smtp-Source: APXvYqyRbCvRTJL4VuUw/f2qieTsfUb6oHtln//sIMhg4KPQptgJ0rPo863FlLm0um1EEvfTa/RBkg==
-X-Received: by 2002:ac2:44a2:: with SMTP id c2mr17214630lfm.105.1580893469075;
-        Wed, 05 Feb 2020 01:04:29 -0800 (PST)
-Received: from taos.konsulko.bg (lan.nucleusys.com. [92.247.61.126])
-        by smtp.gmail.com with ESMTPSA id k25sm12684009lji.42.2020.02.05.01.04.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 01:04:28 -0800 (PST)
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-To:     linux-iio@vger.kernel.org
-Cc:     jic23@kernel.org, Matt Ranostay <matt.ranostay@konsulko.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v3 3/3] dt-bindings: iio: chemical: consolidate atlas-sensor docs
-Date:   Wed,  5 Feb 2020 11:04:21 +0200
-Message-Id: <20200205090421.18339-4-matt.ranostay@konsulko.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200205090421.18339-1-matt.ranostay@konsulko.com>
-References: <20200205090421.18339-1-matt.ranostay@konsulko.com>
+        Wed, 5 Feb 2020 04:10:25 -0500
+Received: from mga12.intel.com ([192.55.52.136]:3362 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727068AbgBEJKZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 04:10:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 01:10:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
+   d="scan'208";a="231654014"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 05 Feb 2020 01:10:24 -0800
+Received: from [10.226.38.72] (unknown [10.226.38.72])
+        by linux.intel.com (Postfix) with ESMTP id 8B76C5805E9;
+        Wed,  5 Feb 2020 01:10:21 -0800 (PST)
+Subject: Re: [PATCH v4 2/2] dt-bindings: clk: intel: Add bindings document &
+ header file for CGU
+To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org,
+        robh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+References: <cover.1580374761.git.rahul.tanwar@linux.intel.com>
+ <24933f5f1c48a891f9c05c7292117108fc880932.1580374761.git.rahul.tanwar@linux.intel.com>
+ <20200131022541.3853C2067C@mail.kernel.org>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <556c2277-885c-f6be-60b3-564187618ca6@linux.intel.com>
+Date:   Wed, 5 Feb 2020 17:10:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200131022541.3853C2067C@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since Atlas Scientific device support only varies from the compatible
-string is ideal all the respective docs are merged into a single doc
-named atlas,sensor.yaml
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
----
- .../bindings/iio/chemical/atlas,ec-sm.txt     | 21 --------
- .../bindings/iio/chemical/atlas,orp-sm.txt    | 21 --------
- .../bindings/iio/chemical/atlas,ph-sm.txt     | 21 --------
- .../bindings/iio/chemical/atlas,sensor.yaml   | 53 +++++++++++++++++++
- 4 files changed, 53 insertions(+), 63 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
- create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
+Hi Stephen,
 
-diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
-deleted file mode 100644
-index f4320595b851..000000000000
---- a/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--* Atlas Scientific EC-SM OEM sensor
--
--http://www.atlas-scientific.com/_files/_datasheets/_oem/EC_oem_datasheet.pdf
--
--Required properties:
--
--  - compatible: must be "atlas,ec-sm"
--  - reg: the I2C address of the sensor
--  - interrupts: the sole interrupt generated by the device
--
--  Refer to interrupt-controller/interrupts.txt for generic interrupt client
--  node bindings.
--
--Example:
--
--atlas@64 {
--	compatible = "atlas,ec-sm";
--	reg = <0x64>;
--	interrupt-parent = <&gpio1>;
--	interrupts = <16 2>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
-deleted file mode 100644
-index af1f5a9aa4da..000000000000
---- a/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--* Atlas Scientific ORP-SM OEM sensor
--
--https://www.atlas-scientific.com/_files/_datasheets/_oem/ORP_oem_datasheet.pdf
--
--Required properties:
--
--  - compatible: must be "atlas,orp-sm"
--  - reg: the I2C address of the sensor
--  - interrupts: the sole interrupt generated by the device
--
--  Refer to interrupt-controller/interrupts.txt for generic interrupt client
--  node bindings.
--
--Example:
--
--atlas@66 {
--	compatible = "atlas,orp-sm";
--	reg = <0x66>;
--	interrupt-parent = <&gpio1>;
--	interrupts = <16 2>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
-deleted file mode 100644
-index 79d90f060327..000000000000
---- a/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--* Atlas Scientific pH-SM OEM sensor
--
--http://www.atlas-scientific.com/_files/_datasheets/_oem/pH_oem_datasheet.pdf
--
--Required properties:
--
--  - compatible: must be "atlas,ph-sm"
--  - reg: the I2C address of the sensor
--  - interrupts: the sole interrupt generated by the device
--
--  Refer to interrupt-controller/interrupts.txt for generic interrupt client
--  node bindings.
--
--Example:
--
--atlas@65 {
--	compatible = "atlas,ph-sm";
--	reg = <0x65>;
--	interrupt-parent = <&gpio1>;
--	interrupts = <16 2>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
-new file mode 100644
-index 000000000000..24aec7291100
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/chemical/atlas,sensor.yaml##
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atlas Scientific OEM sensors
-+
-+maintainers:
-+  - Matt Ranostay <matt.ranostay@konsulko.com>
-+
-+description: |
-+  Atlas Scientific OEM sensors connected via I2C
-+
-+  Datasheets:
-+    http://www.atlas-scientific.com/_files/_datasheets/_oem/DO_oem_datasheet.pdf
-+    http://www.atlas-scientific.com/_files/_datasheets/_oem/EC_oem_datasheet.pdf
-+    http://www.atlas-scientific.com/_files/_datasheets/_oem/ORP_oem_datasheet.pdf
-+    http://www.atlas-scientific.com/_files/_datasheets/_oem/pH_oem_datasheet.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - atlas,do-sm
-+      - atlas,ec-sm
-+      - atlas,orp-sm
-+      - atlas,ph-sm
-+
-+  reg:
-+     maxItems: 1
-+
-+  interrupts:
-+     maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      atlas@66 {
-+        compatible = "atlas,orp-sm";
-+        reg = <0x66>;
-+        interrupt-parent = <&gpio1>;
-+        interrupts = <16 2>;
-+      };
-+    };
--- 
-2.20.1
+Thanks for taking time out to review.
+
+On 31/1/2020 10:25 AM, Stephen Boyd wrote:
+> Quoting Rahul Tanwar (2020-01-30 01:04:03)
+>> Clock generation unit(CGU) is a clock controller IP of Intel's Lightning
+>> Mountain(LGM) SoC. Add DT bindings include file and document for CGU clock
+>> controller driver of LGM.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>
+>> +
+>> +/* LJPLL4 */
+>> +#define LGM_CLK_PCIE           45
+>> +#define LGM_CLK_SATA           LGM_CLK_PCIE
+> What is with the aliases?
+
+Aliases are just for code readability when more than one peripherals
+share the same clock.
+
+Regards,
+Rahul
+
 
