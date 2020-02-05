@@ -2,226 +2,117 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB57CC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 15:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1F2C352A2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A811218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 15:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA71C222C2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:03:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZ21f8Bd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgBEPlp (ORCPT
+        id S1727390AbgBEQD2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 10:41:45 -0500
-Received: from skedge03.snt-world.com ([91.208.41.68]:34210 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgBEPlp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 10:41:45 -0500
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id DCD5467A6FE;
-        Wed,  5 Feb 2020 16:41:41 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 5 Feb 2020
- 16:41:41 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Wed, 5 Feb 2020 16:41:41 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Adam Ford <aford173@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
+        Wed, 5 Feb 2020 11:03:28 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33076 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbgBEQD2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 11:03:28 -0500
+Received: by mail-pl1-f195.google.com with SMTP id ay11so1061500plb.0;
+        Wed, 05 Feb 2020 08:03:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=lwzRWT19O/6EWZAZN5+8cbnobKlxcqATu6y9++oUh3Q=;
+        b=mZ21f8BdL0BQdFgronFUSHE+D69XR2X9dDAJK8mC8QNqoQt0rPxt4ei4rO/nqm02D9
+         eThp9s/LhRc9mV7lyf5nX2AdzbXfGlmmkBAwrwGlCfX0dDK1GMtppyvhoWDfLb9S7QyG
+         Fzkfq2IlwxA0x/ZNDCt1favYjO3bTfi+Sg0pRWu4t0XFATD590ID/f9qIWgZzalihySU
+         XeLws0X+T8mvh8gbHLd6aYJ4ghgVZnLzVjPJwX32ZT5+HRKhWk9xtINDx++aJG1eoo4i
+         w6qZMFPa5j8L3kIEw0DKKtjs8K0gQKso16S70vc6rF7C6FxSpFNlS96eE8kCDxDjFcij
+         9yhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=lwzRWT19O/6EWZAZN5+8cbnobKlxcqATu6y9++oUh3Q=;
+        b=H5TeD4Eb2x+7q7FehwM6Jt9VGMI2ituxcuBa/mj+y6xEBWIA6DBp3UFQQg1Lqj1FMn
+         WTFLhyURIFnPn3vFWyqERZ5pm0exunku8Fs8UgByn0NshMPE9HJoN6b+71KL14gN9a+i
+         FSqiEw0VBaGEJPF1Jpnsmyxmjr308w8duXI0JGNYgdwDKo3sfJonALFaLABN9GVE5Hbt
+         wjcotcM97z801KFt4hx/I7jSrMzJm2ZosBeYmwNi5J0wKMnb0u+kc1D6X+E7uQ+LM8Mu
+         IM/XQPM45L5uaVib2vWE0s/Sc13Xlplfbg74y6tW7LPgNqIpzUlaUDTBc3Eiq81mB7LY
+         czzw==
+X-Gm-Message-State: APjAAAWIVwjuGpkifhev03toB94gtJ1pp69EoUXrWCZ3vPYUoUsrc5p4
+        /lDnUGlHAStEae7tgpyyI8kiUFKZ
+X-Google-Smtp-Source: APXvYqy0GhETUHo5gQlEDqgf1vkCNJh5ZVE8HnS6M13YjSsa49Jf3cQEwmBEUia4nBeysNENYo/9Tg==
+X-Received: by 2002:a17:902:ff11:: with SMTP id f17mr34529835plj.273.1580918607351;
+        Wed, 05 Feb 2020 08:03:27 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k1sm30009595pfg.66.2020.02.05.08.03.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Feb 2020 08:03:26 -0800 (PST)
+Date:   Wed, 5 Feb 2020 08:03:25 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
-Thread-Topic: [PATCH 5/7] arm64: dts: imx8mm: add GPC power domains
-Thread-Index: AQHVqxK76SDACaL8QUasrdsECo8DbaeqwvaAgAAKqICAYkD9AA==
-Date:   Wed, 5 Feb 2020 15:41:41 +0000
-Message-ID: <db801b5e-0482-0379-c19e-5c293532c493@kontron.de>
-References: <20191205021924.25188-1-aford173@gmail.com>
- <20191205021924.25188-6-aford173@gmail.com>
- <DB7PR04MB517877B39D4659568F69B813875C0@DB7PR04MB5178.eurprd04.prod.outlook.com>
- <CAHCN7xLwJvqb=Pc8oOxdRLOExjw-cDKaEmm4-bR3Yt=t+OwY6Q@mail.gmail.com>
-In-Reply-To: <CAHCN7xLwJvqb=Pc8oOxdRLOExjw-cDKaEmm4-bR3Yt=t+OwY6Q@mail.gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <32680A5ECEBE5747A3268A81C8330511@snt-world.com>
-Content-Transfer-Encoding: base64
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] hwmon: Support ADI Fan Control IP
+Message-ID: <20200205160325.GA25403@roeck-us.net>
+References: <20191009102806.262241-1-nuno.sa@analog.com>
+ <20191020161231.GA27783@roeck-us.net>
+ <7755456dfbaf6ae0a45baf7b1a3ed7eb9a817d4a.camel@analog.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: DCD5467A6FE.A43F0
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: aford173@gmail.com, devicetree@vger.kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com, peng.fan@nxp.com,
-        ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de,
-        shawnguo@kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7755456dfbaf6ae0a45baf7b1a3ed7eb9a817d4a.camel@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQoNCk9uIDA1LjEyLjE5IDA0OjE1LCBBZGFtIEZvcmQgd3JvdGU6DQo+IE9uIFdlZCwgRGVj
-IDQsIDIwMTkgYXQgODozNyBQTSBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+IHdyb3RlOg0K
-Pj4NCj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4+IEZyb206IEFkYW0gRm9yZCA8
-YWZvcmQxNzNAZ21haWwuY29tPg0KPj4+IFNlbnQ6IFRodXJzZGF5LCBEZWNlbWJlciA1LCAyMDE5
-IDEwOjE5IEFNDQo+Pj4gVG86IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
-Pj4+IENjOiBBZGFtIEZvcmQgPGFmb3JkMTczQGdtYWlsLmNvbT47IFJvYiBIZXJyaW5nIDxyb2Jo
-K2R0QGtlcm5lbC5vcmc+Ow0KPj4+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
-OyBTaGF3biBHdW8NCj4+PiA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYSBIYXVlciA8cy5o
-YXVlckBwZW5ndXRyb25peC5kZT47DQo+Pj4gUGVuZ3V0cm9uaXggS2VybmVsIFRlYW0gPGtlcm5l
-bEBwZW5ndXRyb25peC5kZT47IEZhYmlvIEVzdGV2YW0NCj4+PiA8ZmVzdGV2YW1AZ21haWwuY29t
-PjsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT47DQo+Pj4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4+PiBTdWJqZWN0OiBb
-UEFUQ0ggNS83XSBhcm02NDogZHRzOiBpbXg4bW06IGFkZCBHUEMgcG93ZXIgZG9tYWlucw0KPj4+
-DQo+Pj4gVGhlcmUgaXMgYSBwb3dlciBkb21haW4gY29udHJvbGxlciBvbiB0aGUgaS5YTThNIE1p
-bmkgdXNlZCBmb3IgaGFuZGxpbmcNCj4+PiBpbnRlcnJ1cHRzIGFuZCBjb250cm9sbGluZyBjZXJ0
-YWluIHBlcmlwaGVyYWxzIGxpa2UgVVNCIE9URyBhbmQgUENJZSwgd2hpY2gNCj4+PiBhcmUgY3Vy
-cmVudGx5IHVuYXZhaWxhYmxlLg0KPj4+DQo+Pj4gVGhpcyBwYXRjaCBlbmFibGVzIHN1cHBvcnQg
-dGhlIGNvbnRyb2xsZXIgaXRzZWxmIHRvIHRoZSBoZWxwIGZhY2lsaXRhdGUgZW5hYmxpbmcNCj4+
-PiBhZGRpdGlvbmFsIHBlcmlwaGVyYWxzLg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogQWRhbSBG
-b3JkIDxhZm9yZDE3M0BnbWFpbC5jb20+DQo+Pj4gLS0tDQo+Pj4gICBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaSB8IDgyDQo+Pj4gKysrKysrKysrKysrKysrKysrKysr
-Ky0NCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA4MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
-DQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14
-OG1tLmR0c2kNCj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNp
-DQo+Pj4gaW5kZXggMjNjOGZhZDc5MzJiLi5kMDVjNWI2MTdhNGQgMTAwNjQ0DQo+Pj4gLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4+PiArKysgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KPj4+IEBAIC00LDYgKzQsNyBA
-QA0KPj4+ICAgICovDQo+Pj4NCj4+PiAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9pbXg4
-bW0tY2xvY2suaD4NCj4+PiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Bvd2VyL2lteDhtLXBvd2Vy
-Lmg+DQo+Pj4gICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+DQo+Pj4gICAjaW5j
-bHVkZSA8ZHQtYmluZGluZ3MvaW5wdXQvaW5wdXQuaD4NCj4+PiAgICNpbmNsdWRlIDxkdC1iaW5k
-aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQo+Pj4gQEAgLTEzLDcgKzE0LDcg
-QEANCj4+Pg0KPj4+ICAgLyB7DQo+Pj4gICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDhtbSI7
-DQo+Pj4gLSAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4+PiArICAgICBpbnRlcnJ1
-cHQtcGFyZW50ID0gPCZncGM+Ow0KPj4NCj4+IE5BQ0ssIGZvciBpbXg4bW0sIGlteDhtbiAmIGZ1
-dHVyZSBpLk1YOE0gU09DLCB3ZSBkb24ndCB0cmVhdCBHUEMgYXMgaW50ZXJydXB0IGNvbnRyb2xs
-ZXIgaW4gbGludXggYW55bW9yZS4NCj4+IEFib3ZlIGNoYW5nZSB3aWxsIGJyZWFrIHRoZSBsb3cg
-cG93ZXIgbW9kZSBzdXBwb3J0KHN1c3BlbmQvcmVzdW1lKQ0KPiANCj4gV2hhdCBtYWtlcyBpdCBk
-aWZmZXJlbnQgdGhhbiB0aGUgaS5NWDhNUT8gIFRoZSBJIGJhc2ljYWxseSBjb3BpZWQgdGhpcw0K
-PiBmcm9tIHRoZSBpLk1YOE1RIGFuZCB1cGRhdGVkIHRoZSBiaXQgbG9jYXRpb25zIGFuZCB0cmll
-ZCB0byBsZWF2ZQ0KPiBldmVyeXRoaW5nIGVsc2UgdGhlIHNhbWUuDQo+IA0KPiBJJ20gT0sgd2l0
-aCByZW1vdmluZyB0aGUgaW50ZXJydXB0IGNvbnRyb2xsZXIgc3R1ZmYsIGJ1dCBpZiB0aGF0J3MN
-Cj4gcmVxdWlyZWQsIEknZCBsaWtlIHRvIHVuZGVyc3RhbmQgd2h5IGl0J3Mgc3RpbGwgaW4gdGhl
-IGkuTVg4US4NCg0KSSB3b3VsZCBhbHNvIGxpa2UgdG8ga25vdyBob3cgTlhQIHBsYW5zIHRvIGlt
-cGxlbWVudCB0aGluZ3MgbGlrZSBHUEMgaW4gDQptYWlubGluZS4gSSBjdXJyZW50bHkgdXNlIGEg
-dHJlZSBbMV0gdGhhdCBkb2Vzbid0IHVzZSBhbnkgcG93ZXIgZG9tYWluIA0KZHJpdmVyIGJ1dCBV
-U0IsIExDRElGIGFuZCBNSVBJLURTSSBhcmUgd29ya2luZyBmaW5lLg0KRm9yIHRoaXMgSSBwb3J0
-ZWQgc29tZSBwYXRjaGVzIGZyb20gdGhlIGlteF81LjQuMF84ZHhscGhhbnRvbV9lciB0cmVlIGlu
-IA0KdGhlIE5YUCByZXBvc2l0b3J5IFsyXSBhbmQgYWRkZWQgYSBmZXcgc21hbGwgaGFja3MgdG8g
-ZW5hYmxlIG1pc3NpbmcgDQpjbG9ja3MsIGV0Yy4NCg0KSXMgdGhlcmUgc29tZSByb2FkbWFwIGZv
-ciB0aGUgdXBzdHJlYW0gc3VwcG9ydCBvZiB0aGUgZGlmZmVyZW50IGRyaXZlcnMgDQphbmQgZmVh
-dHVyZXMgb2YgdGhlIGkuTVg4TU0/DQoNClRoYW5rcywNCkZyaWVkZXINCg0KWzFdIGh0dHBzOi8v
-Z2l0LmtvbnRyb24tZWxlY3Ryb25pY3MuZGUvbGludXgvbGludXgvY29tbWl0cy92NS40LWt0bg0K
-WzJdIA0KaHR0cHM6Ly9zb3VyY2UuY29kZWF1cm9yYS5vcmcvZXh0ZXJuYWwvaW14L2xpbnV4LWlt
-eC9sb2cvP2g9aW14XzUuNC4wXzhkeGxwaGFudG9tX2VyDQoNCj4gDQo+IGFkYW0NCj4+DQo+PiBC
-Ug0KPj4gSmFja3kgQmFpDQo+Pg0KPj4+ICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwyPjsNCj4+
-PiAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+Pj4NCj4+PiBAQCAtNDk1LDYgKzQ5Niw4NSBA
-QA0KPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19T
-UEkgODkgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICNyZXNldC1jZWxscyA9IDwxPjsNCj4+PiAgICAgICAgICAgICAgICAgICAgICAgIH07
-DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICBncGM6IGdwY0AzMDNhMDAwMCB7DQo+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14OG1t
-LWdwYyI7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MzAzYTAw
-MDAgMHgxMDAwMD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0
-LXBhcmVudCA9IDwmZ2ljPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRl
-cnJ1cHRzID0gPEdJQ19TUEkgODcgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+Pj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+Pj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwzPjsNCj4+PiArDQo+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdjIHsNCj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+Pj4gKw0K
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdjX21pcGk6IHBvd2Vy
-LWRvbWFpbkAwIHsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsNCj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPElNWDhNTV9QT1dFUl9ET01BSU5fTUlQ
-ST47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPj4+ICsN
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBnY19wY2llOiBwb3dl
-ci1kb21haW5AMSB7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47DQo+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxJTVg4TU1fUE9XRVJfRE9NQUlOX1BD
-SUU+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4+PiAr
-DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwZ2Nfb3RnMTogcG93
-ZXItZG9tYWluQDIgew0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+Ow0KPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPQ0KPj4+IDxJTVg4TU1fUE9XRVJfRE9N
-QUlOX1VTQl9PVEcxPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGdj
-X290ZzI6IHBvd2VyLWRvbWFpbkAzIHsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsNCj4+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0NCj4+PiA8SU1YOE1N
-X1BPV0VSX0RPTUFJTl9VU0JfT1RHMj47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHBnY19kZHIxOiBwb3dlci1kb21haW5ANCB7DQo+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47DQo+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxJ
-TVg4TU1fUE9XRVJfRE9NQUlOX0REUjE+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBwZ2NfZ3B1MmQ6IHBvd2VyLWRvbWFpbkA1IHsNCj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsN
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
-PElNWDhNTV9QT1dFUl9ET01BSU5fR1BVMkQ+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBwZ2NfZ3B1OiBwb3dlci1kb21haW5ANiB7DQo+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47
-DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
-IDxJTVg4TU1fUE9XRVJfRE9NQUlOX0dQVT47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHBnY192cHU6IHBvd2VyLWRvbWFpbkA3IHsNCj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwwPjsN
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
-PElNWDhNTV9QT1dFUl9ET01BSU5fVlBVPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcGdjX2dwdTNkOiBwb3dlci1kb21haW5AOCB7DQo+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47
-DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
-IDxJTVg4TU1fUE9XRVJfRE9NQUlOX0dQVTNEPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgcGdjX2Rpc3A6IHBvd2VyLWRvbWFpbkA5IHsNCj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDww
-PjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
-ID0gPElNWDhNTV9QT1dFUl9ET01BSU5fRElTUD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB9Ow0KPj4+ICsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHBnY192cHVfZzE6IHBvd2VyLWRvbWFpbkBhIHsNCj4+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9
-IDwwPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cmVnID0gPElNWDhNTV9QT1dFUl9WUFVfRzE+Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfTsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBwZ2NfdnB1X2cyOiBwb3dlci1kb21haW5AYiB7DQo+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8
-MD47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
-ZyA9IDxJTVg4TU1fUE9XRVJfVlBVX0cyPjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIH07DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcGdjX3ZwdV9oMTogcG93ZXItZG9tYWluQGMgew0KPj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+
-Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcg
-PSA8SU1YOE1NX1BPV0VSX1ZQVV9IMT47DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB9Ow0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgIH07DQo+Pj4gICAgICAgICAgICAgICAgfTsNCj4+Pg0KPj4+
-ICAgICAgICAgICAgICAgIGFpcHMyOiBidXNAMzA0MDAwMDAgew0KPj4+IC0tDQo+Pj4gMi4yMC4x
-DQo+Pg0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18NCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbA0KPiA=
+On Wed, Feb 05, 2020 at 08:11:49AM +0000, Sa, Nuno wrote:
+> Hi Guenter,
+> 
+> On Sun, 2019-10-20 at 09:12 -0700, Guenter Roeck wrote:
+> > [External]
+> > 
+> > On Wed, Oct 09, 2019 at 12:28:05PM +0200, Nuno Sá wrote:
+> > > The purpose of this IP Core is to control the fan used for the
+> > > cooling of a
+> > > Xilinx Zynq Ultrascale+ MPSoC without the need of any external
+> > > temperature
+> > > sensors. To achieve this, the IP core uses the PL SYSMONE4
+> > > primitive to
+> > > obtain the PL temperature and, based on those readings, it then
+> > > outputs
+> > > a PWM signal to control the fan rotation accordingly.
+> > > 
+> > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> > 
+> > Applied to hwmon-next.
+> 
+> Did you somehow decided not to merge this driver or did you forget
+> about it? I was trying to find it mainline to sync our trees with the
+> reviewed version and I could not see it there...
+> 
+Hmm. I have no idea what happened. I marked it as accepted,
+and as mentioned above claimed that I added it to hwmon-next,
+but it isn't there. Weird. Maybe I was waiting for a new version
+after Rob's feedback for the bindings, but if so I should have
+communicated that. My apologies. I queued it up for the next kernel
+release, with the bindings change as requested by Rob
+(adi,pulses-per-revolution -> pulses-per-revolution). It will show
+up in hwmon-next (and linux-next) after the commit window closes.
+
+Guenter
