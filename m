@@ -2,46 +2,44 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956BEC3524F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76B5C35249
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6FC21741
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF02217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 07:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PiZYNMCU"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PG3ICmG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgBEHB4 (ORCPT
+        id S1727861AbgBEHB6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 02:01:56 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23308 "EHLO
+        Wed, 5 Feb 2020 02:01:58 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34774 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726277AbgBEHBy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 02:01:54 -0500
+        by vger.kernel.org with ESMTP id S1727504AbgBEHB6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 02:01:58 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580886113; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=FAAy3O1hxyU0/+fvL1xrHaa2WdkrwTdW+HGQMimJI18=; b=PiZYNMCUK/13eBrMSzk2fIkjJjUW9pIdeT6ptAP+qLe4gzsCL1jvWJsLk7soZMneEZP6k1o3
- 1Quoq4CZ1HnwHR6DZs01rxHRyTNASu87EViijNlM2AeOuKuKbTI04Nr+S8egF97L94HQptLX
- qNh/isot7JOFPbvgSNP6US88xsY=
+ s=smtp; t=1580886117; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=KBgrq18X/unHwzcEQjxUJ1qgq9OWyPupMMdfoEVNsSA=; b=PG3ICmG1x9eose3Lmjg84YGmKfiMTAZN0OSZR9wp21nXNjBVe8b5KlrRLFaEd93psKVkhnq/
+ 29uW60FQgkt9fQn0++jzHgi2Q4PKGyy/mi7ZSagz7zJiW/IpkXeI0n2o5AORdYr+L4tkMJhj
+ B9tyRUxcuMsldXEp+upQQKuXYbE=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3a6860.7ff3e069f110-smtp-out-n03;
- Wed, 05 Feb 2020 07:01:52 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e3a685c.7f8d59180f80-smtp-out-n02;
+ Wed, 05 Feb 2020 07:01:48 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 12AFFC447A3; Wed,  5 Feb 2020 07:01:52 +0000 (UTC)
+        id 6E011C4479C; Wed,  5 Feb 2020 07:01:48 +0000 (UTC)
 Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61BF6C43383;
-        Wed,  5 Feb 2020 07:01:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61BF6C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 853D1C433CB;
+        Wed,  5 Feb 2020 07:01:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 853D1C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
 From:   Sharat Masetty <smasetty@codeaurora.org>
@@ -49,41 +47,44 @@ To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
 Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
         jcrouse@codeaurora.org, mka@chromium.org, dianders@chromium.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v4 1/3] dt-bindings: clk: qcom: Add support for GPU GX GDSCR
-Date:   Wed,  5 Feb 2020 12:31:35 +0530
-Message-Id: <1580886097-6312-2-git-send-email-smasetty@codeaurora.org>
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH v4 0/3] sc7180: Add A618 GPU bindings
+Date:   Wed,  5 Feb 2020 12:31:34 +0530
+Message-Id: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
-References: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Taniya Das <tdas@codeaurora.org>
+I used this branch qcom/arm64-for-5.6-to-be-rebased as suggested by Matthias.
+This patch needs the clock patches and the clock patches have not yet landed, so
 
-In the cases where the GPU SW requires to use the GX GDSCR add
-support for the same.
+please apply the following series and patches in order
+a) All patches from https://patchwork.kernel.org/project/linux-clk/list/?series=203517&state=%2a&archive=both
+b) Patches 1 and 2 from https://patchwork.kernel.org/project/linux-clk/list/?series=203527&archive=both&state=%2a
+c) All patches from https://patchwork.kernel.org/project/linux-clk/list/?series=221739&archive=both&state=%2a
+d) https://lore.kernel.org/linux-arm-msm/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59%40changeid/raw
+e) This patch "arm64: dts: qcom: sc7180: Add A618 gpu dt blob"
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- include/dt-bindings/clock/qcom,gpucc-sc7180.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+v3: Addressed review comments from previous submits. Also removed the
+interconnect bindings from this patch and I will submit as a new patch with its
+dependencies listed. Also I will be sending a new patch for updating the
+bindings documentation.
 
-diff --git a/include/dt-bindings/clock/qcom,gpucc-sc7180.h b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
-index 0e4643b..65e706d 100644
---- a/include/dt-bindings/clock/qcom,gpucc-sc7180.h
-+++ b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
-@@ -15,7 +15,8 @@
- #define GPU_CC_CXO_CLK			6
- #define GPU_CC_GMU_CLK_SRC		7
- 
--/* CAM_CC GDSCRs */
-+/* GPU_CC GDSCRs */
- #define CX_GDSC				0
-+#define GX_GDSC				1
- 
- #endif
--- 
+v4: Add GX_GDSC power domain binding for GMU
+
+Sharat Masetty (1):
+  arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+
+Taniya Das (2):
+  dt-bindings: clk: qcom: Add support for GPU GX GDSCR
+  clk: qcom: gpucc: Add support for GX GDSC for SC7180
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 102 ++++++++++++++++++++++++++
+ drivers/clk/qcom/gpucc-sc7180.c               |  37 ++++++++++
+ include/dt-bindings/clock/qcom,gpucc-sc7180.h |   3 +-
+ 3 files changed, 141 insertions(+), 1 deletion(-)
+
+--
 1.9.1
