@@ -7,90 +7,77 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CF6C35247
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBA4C35247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC2B20702
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871F620674
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580921282;
-	bh=npOYvnvrovIcxTpmP/BSyN24E8S0U9eg6c+lfbjDJCU=;
+	s=default; t=1580921997;
+	bh=NdIdY6bOWJGa3XduBs/202shhJVzsc1q0N0undsE+dM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cu9LLai7YZpwXp3m7X1FfqUTpklxuuPrImXGhGC/UrQT82qpsMk+sXK5GDxHqMgdU
-	 QZMye2A3DmgZ6h6LcNFAu2wybz4ewlg+gXFx0QoO1xmP5+ZWVdQIhJLbZtnPZPTZQ/
-	 Bb+LXwUKNDR9NtaMVy+oQimKE3UOT2wA2+EUXDf4=
+	b=MZCv2Bk0PI7zHccvoG2x5ajSSzX40wMUsT4hzKnOg2qL4QjvHlzAwsy92Dl3Ik+IY
+	 kgCYIix5C5lOWLcGee+CSfpjIoxwnZjvr5GjFi916kRxxt/1AOlBKPF5rKWGXxBHpp
+	 bvD8Ms+7Akc5n9+wOCWmugfr/STnUCvTgivm88RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgBEQsC (ORCPT
+        id S1726748AbgBEQ75 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 11:48:02 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55634 "EHLO
+        Wed, 5 Feb 2020 11:59:57 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50455 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgBEQsC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 11:48:02 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so3224405wmj.5;
-        Wed, 05 Feb 2020 08:48:00 -0800 (PST)
+        with ESMTP id S1726534AbgBEQ75 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 11:59:57 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a5so3288087wmb.0
+        for <devicetree@vger.kernel.org>; Wed, 05 Feb 2020 08:59:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sg+9y4ZuDI4laj7uyhA1zY5m32IMeo2ETRsWzCEEVrk=;
-        b=ByfUCqp8NWXvLJvN/PucWoNvvRNNAu1veqKLyPrUoJ4kYwvb3uwpUk53ECIsoC19J0
-         BUUk36nKl00iq5cfrtXlCoMYniEUqigN76jtgpBwaywkGkp+6mzFUspQP3V0C45gZIK6
-         Obc6b53L6xF51ONl38zjfiyRaCcupqT8Mw+1DhJDgnRfZAW9o1aAJNdkgqZmAuM5NeX2
-         xBaujovvRn1/FMvWHMk/sBZ6YEA4uXSks60orCDAv+KhkTdYwo7Fj6pDBySopVjt9X07
-         53V1w7kvq+zFyBtTgjNKrE3WEHmnsjpLi93q6ddtDwAY3/yXgRDTQXgSjp1qsdpxLzj5
-         paDQ==
-X-Gm-Message-State: APjAAAVVhCYi6Hptw75TMdObozbpdfjlHNJOx9wUrZJXdowrY466EB7t
-        8nrNrCvUQewl1U7wDovTFw==
-X-Google-Smtp-Source: APXvYqwMtUlQEaUDNrfzAKaMRiKiWvrZGJX2RF0Ip2aB9NqMpVgSSfmUtf5bgXleEXGsJ6mGhtAd2w==
-X-Received: by 2002:a1c:545d:: with SMTP id p29mr7218951wmi.91.1580921280285;
-        Wed, 05 Feb 2020 08:48:00 -0800 (PST)
+        bh=J9lHfSmu3T+zxmC1zITBR2yHsBSPWAsbRFxY8FyMsrc=;
+        b=l5tIzzD4poOBBGGtrNZPldjZ5jXVUnGYMD3vn87LdmPwRk3QU0HeN2TCImTxzAZCVc
+         Rsu0PNVzpmDts0ulrAf7X0YCkwJaT9lNJDTC3NIjLp7JRv6nNBbKytbrpN4uMpdGesq0
+         ODVCJ9Y7fub27HlafMfPynYskVNBXAwzyVFyRz858KaNj6RWdaXFVZYt1EGoRCBc3dBD
+         KLgYmJwrAr7zOOd/Mx23LiBIWlfZEVSt+0Av5nsByNSgiGBNp9/B9fyBXRpG4qZrqyys
+         ZKxgEyIcooK7fM7PPSTNxViphAD9dDwANfsUMMxO3q59FOA3gDldieufijq8svF8eYxD
+         AD7g==
+X-Gm-Message-State: APjAAAXkBUnqH9aGAoGh0MyNduVb11I0ZiA4yNZFxzAxUrTgr2d6h3Hx
+        UPh4RDrLBVs4ApwHwNEle857WQ/O7g==
+X-Google-Smtp-Source: APXvYqwfaXlfSsfF+wm++sfEE+zIl2j0FE22/dO4GsIAfIRi8XhgDdLrw3nChXJK0IJNAqxcc67ZAg==
+X-Received: by 2002:a7b:c204:: with SMTP id x4mr6769750wmi.20.1580921994135;
+        Wed, 05 Feb 2020 08:59:54 -0800 (PST)
 Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id a26sm203951wmm.18.2020.02.05.08.47.59
+        by smtp.gmail.com with ESMTPSA id x7sm510359wrq.41.2020.02.05.08.59.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 08:47:59 -0800 (PST)
-Received: (nullmailer pid 23017 invoked by uid 1000);
-        Wed, 05 Feb 2020 16:47:58 -0000
-Date:   Wed, 5 Feb 2020 16:47:58 +0000
+        Wed, 05 Feb 2020 08:59:53 -0800 (PST)
+Received: (nullmailer pid 11501 invoked by uid 1000);
+        Wed, 05 Feb 2020 16:59:52 -0000
+Date:   Wed, 5 Feb 2020 16:59:52 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     James Tai <james.tai@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and
- Realtek PymParticle EVB
-Message-ID: <20200205164758.GA22823@bogus>
-References: <20200204145207.28622-1-james.tai@realtek.com>
- <20200204145207.28622-2-james.tai@realtek.com>
+To:     Tomas Paukrt <tomaspaukrt@email.cz>
+Cc:     devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mmc: omap-hsmmc: Fix SDIO interrupt
+Message-ID: <20200205165952.GA11353@bogus>
+References: <SaB.ZWWp.2HlNFL4wfl{.1UAAm}@seznam.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204145207.28622-2-james.tai@realtek.com>
+In-Reply-To: <SaB.ZWWp.2HlNFL4wfl{.1UAAm}@seznam.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 4 Feb 2020 22:52:06 +0800, James Tai wrote:
-> Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
-> EVB.
+On Wed, 22 Jan 2020 21:10:39 +0100 (CET), "Tomas Paukrt" wrote:
 > 
-> Signed-off-by: James Tai <james.tai@realtek.com>
+> SDIO interrupt must be specified correctly as IRQ_TYPE_LEVEL_LOW instead of GPIO_ACTIVE_LOW.
+> 
+> Signed-off-by: Tomas Paukrt <tomaspaukrt@email.cz>
 > ---
->  v2 -> v3: Unchanged
-> 
->  v1 -> v2:
->  * Put string in alphabetical order
-> 
->  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Applied, thanks.
 
-If a tag was not added on purpose, please state why and what changed.
+Rob
