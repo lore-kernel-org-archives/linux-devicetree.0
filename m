@@ -2,293 +2,191 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21284C35247
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 18:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7103C352A2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E187E20674
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 18:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580927482;
-	bh=C0LmwRRDO6V9aBNMwOg6TmriDbDymklxGiZ5xV5e6GQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mXtyOBVZ1vYX3MtH7g2JqMnoyoq4koVTpkRJfLCUjK1HZmXWNAlAEWK6Kc/f7XU0S
-	 OCd/nVxFCJZgX7dPhOQDk3m8MT0GNEauNuogUztrkyigetuA78N9Vo4dUyhYKjmMXo
-	 dMK2XMEgNHgQlQoCSBIvpbHDYPY3qAZSqe+cKnz0=
+	by mail.kernel.org (Postfix) with ESMTP id 8F756217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BuyExxOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgBESbV (ORCPT
+        id S1727443AbgBETTt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:31:21 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34954 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgBESbV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 13:31:21 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b17so4062413wmb.0;
-        Wed, 05 Feb 2020 10:31:17 -0800 (PST)
+        Wed, 5 Feb 2020 14:19:49 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:38711 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgBETTs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 14:19:48 -0500
+Received: by mail-vk1-f195.google.com with SMTP id w4so890315vkd.5
+        for <devicetree@vger.kernel.org>; Wed, 05 Feb 2020 11:19:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mevmQ6k3Ihmv8r7EI3IwBN79KI6v2gp2UE5ATwyofr0=;
+        b=BuyExxOHNOnGw0g31bLqy0gVGWAXxG3djserMGkbzccG82zvt+a2/8Sqzj9jTg+Asa
+         2upuVHfTuyxd4DU4e3VS+64pnwjwhNe/J8UtYPtwP/hwbQ2Of2yNZIjQyTe42b6laPAb
+         Oa7DZNT5TuIoIpdt1rU89W3v4zmQUoQWR0r1E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6Wdi1Nw0TkbyvcKynPsbbC+SOzflRd/srDAI90XenZE=;
-        b=GWq+dEQUXJlz0Ac+2OGlrCSA6NW0bLszpGjJr6FLbFDw++7/B6JfgfKK7JXW6xDEpX
-         ClPgg42p8WWlk9HzWIhhrV32VNGmYuXrkdQf/XzhwsZfAofY5hOBb+v8qilBqdmKDpzG
-         MwOIUreO71vfHNXJpKFEjOyxR+cHOCziD9JZiX8TFoEaulY7ShbR6XbAgdrDyX7FEJH6
-         GmrNP3GMXU4XrP+hcA3a0MStjOv4mX+mr2EBYqxMYU++WncDWNgl/mTmxL/6k1iQzmWi
-         C2MOqzgwS9+uRQHiPwXRlIk5kLuiXkz4Haf0DHFXLIjC8DvYWGXlB+dMdmxEHxTk512V
-         R27g==
-X-Gm-Message-State: APjAAAXLW1cn8gPe47zCVGovYuTW8Im5cPf2QmoCtt3YtVDdGf4OtOQq
-        ujeghYlm2fD/rmQrGLvJWA==
-X-Google-Smtp-Source: APXvYqyn42Q1ovkJ2Lu+d8qWkUbTjADyn1vtAXRSpRxtBayMzNNVpcCMSU3WQqP8Tvcd/ZzJv+vAIw==
-X-Received: by 2002:a1c:e388:: with SMTP id a130mr6975762wmh.176.1580927476553;
-        Wed, 05 Feb 2020 10:31:16 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id k13sm732442wrx.59.2020.02.05.10.31.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 10:31:15 -0800 (PST)
-Received: (nullmailer pid 351 invoked by uid 1000);
-        Wed, 05 Feb 2020 18:31:14 -0000
-Date:   Wed, 5 Feb 2020 18:31:14 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Konrad Kociolek <konrad@cadence.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] Add dt-bindings for Cadence XSPI controller
-Message-ID: <20200205183114.GA23752@bogus>
-References: <20200128124313.12837-1-konrad@cadence.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mevmQ6k3Ihmv8r7EI3IwBN79KI6v2gp2UE5ATwyofr0=;
+        b=quAM9k9+ShSFNcTJzgMNfZLtwpWVK6ftdJbOq/8vHRQXzxPvQmAmDKhUFyFg69MMDs
+         mlXkULnixzDTm+j7rU9GBKgTxKhvM/PkB38doD2Ho0pztEADlL/jsOtOvqlC+laTW3Z3
+         OVvsZ1TyFdufdmDzAiuCE1xfN8XFCjNX+fWfb7G4g8peIRY7AYdbyV+OAC0M2ZbuuECN
+         c/NJWoZpMVDzweT35/chzyh17Hy0GQnB6CIKAEg4OohiDcBmlnPkJWSA1NTBQcj/yyhp
+         W0RCmobBGaMeWSzBwONiOswsZbUNJ5QlmlcvKU0UGD45u4mR3gR+AAH6/kN9eAQxrwbd
+         UjFQ==
+X-Gm-Message-State: APjAAAXCVBytQBUuGkZpBC//dCCB6WljHyo0thIWnQkfJ+SWUo2I8i2H
+        o/4T/EVCfrOfvmuZx45COf0w5Eu0Qog=
+X-Google-Smtp-Source: APXvYqxOv/KpJtx9rBGT1ETUJWuAwQh4CGpzwCsSu3/qkdk6giX1VMnTBH7wbfHL7Cn4sq9tNyF4eQ==
+X-Received: by 2002:a05:6122:1066:: with SMTP id k6mr2704207vko.68.1580930385808;
+        Wed, 05 Feb 2020 11:19:45 -0800 (PST)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id c2sm171971uan.14.2020.02.05.11.19.44
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 11:19:45 -0800 (PST)
+Received: by mail-ua1-f51.google.com with SMTP id a33so1281483uad.11
+        for <devicetree@vger.kernel.org>; Wed, 05 Feb 2020 11:19:44 -0800 (PST)
+X-Received: by 2002:a9f:300a:: with SMTP id h10mr14335806uab.91.1580930384495;
+ Wed, 05 Feb 2020 11:19:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128124313.12837-1-konrad@cadence.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org> <1580886097-6312-4-git-send-email-smasetty@codeaurora.org>
+In-Reply-To: <1580886097-6312-4-git-send-email-smasetty@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 5 Feb 2020 11:19:33 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UEQ0mOXuDrSZrcJ8g6jb0eLf1Ttn+Mn7T6d2TpCMUcuA@mail.gmail.com>
+Message-ID: <CAD=FV=UEQ0mOXuDrSZrcJ8g6jb0eLf1Ttn+Mn7T6d2TpCMUcuA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:43:04PM +0100, Konrad Kociolek wrote:
-> Add dt-bindings documentation for Cadence XSPI controller to support
-> SPI based flash memories.
-> 
-> Signed-off-by: Konrad Kociolek <konrad@cadence.com>
+Hi,
+
+On Tue, Feb 4, 2020 at 11:02 PM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>
+> This patch adds the required dt nodes and properties
+> to enabled A618 GPU.
+>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 > ---
-> Changes between initial version and v2:
->   - renamed yaml file
->   - added missing include
-> 
->  .../devicetree/bindings/spi/cdns,xspi.yaml         | 166 +++++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/cdns,xspi.yaml b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> new file mode 100644
-> index 000000000000..e8c43957fd90
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
-> @@ -0,0 +1,166 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 102 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index f3fcc5c..63fff15 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1043,6 +1043,108 @@
+>                         };
+>                 };
+>
+> +               gpu: gpu@5000000 {
+> +                       compatible = "qcom,adreno-618.0", "qcom,adreno";
+> +                       #stream-id-cells = <16>;
+> +                       reg = <0 0x05000000 0 0x40000>, <0 0x0509e000 0 0x1000>,
+> +                               <0 0x05061000 0 0x800>;
+> +                       reg-names = "kgsl_3d0_reg_memory", "cx_mem", "cx_dbgc";
+> +                       interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
+> +                       iommus = <&adreno_smmu 0>;
+> +                       operating-points-v2 = <&gpu_opp_table>;
+> +                       qcom,gmu = <&gmu>;
+> +
+> +                       gpu_opp_table: opp-table {
+> +                               compatible = "operating-points-v2";
+> +
+> +                               opp-800000000 {
+> +                                       opp-hz = /bits/ 64 <800000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+> +                               };
+> +
+> +                               opp-650000000 {
+> +                                       opp-hz = /bits/ 64 <650000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
+> +                               };
+> +
+> +                               opp-565000000 {
+> +                                       opp-hz = /bits/ 64 <565000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
+> +                               };
+> +
+> +                               opp-430000000 {
+> +                                       opp-hz = /bits/ 64 <430000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+> +                               };
+> +
+> +                               opp-355000000 {
+> +                                       opp-hz = /bits/ 64 <355000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
+> +                               };
+> +
+> +                               opp-267000000 {
+> +                                       opp-hz = /bits/ 64 <267000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+> +                               };
+> +
+> +                               opp-180000000 {
+> +                                       opp-hz = /bits/ 64 <180000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               adreno_smmu: iommu@5040000 {
+> +                       compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
 
-Dual license new bindings:
+As per prior discussion "qcom,sc7180-smmu-v2" needs to be added to the bindings.
 
-(GPL-2.0-only OR BSD-2-Clause)
 
-> +# Copyright 2020 Cadence
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/cdns,xspi.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +                       reg = <0 0x05040000 0 0x10000>;
+> +                       #iommu-cells = <1>;
+> +                       #global-interrupts = <2>;
+> +                       interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
+> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
+> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
 > +
-> +title: Cadence XSPI Controller
-> +
-> +maintainers:
-> +  - Konrad Kociolek <konrad@cadence.com>
-> +
-> +description: |
-> +  The XSPI controller allows SPI protocol communication in
-> +  single, dual, quad or octal wire transmission modes for
-> +  read/write access to slaves such as SPI-NOR flash.
-> +
+> +                       clock-names = "bus", "iface", "mem_iface_clk";
 
-Needs a ref to spi-controller.yaml
+As per discussion in v3 [1], "mem_iface_clk" is new and needs to be
+added to the bindings. Presumably that patch should be posted / Acked
+by Rob before we land this dts.
 
-> +properties:
-> +  compatible:
-> +    const: cdns,xspi-nor-fpga
-> +
-> +  reg:
-> +    maxItems: 3
-> +    description: |
-> +      Contains three entries, each of which is a tuple consisting of a
-> +      physical address and length. The first entry is the address and
-> +      length of the controller register set. The second entry is the
-> +      address and length of the Slave DMA data port. The third entry is
-> +      the address and length of auxiliary registers.
+Other than relying on un-posted bindings, this looks sane to me and
+this patch lets me bring the GPU up on my sc7180-based board.
 
-Split into 3 descriptions:
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
-items:
-  - description: ...
-  - description: ...
-  - description: ...
 
-With that, drop 'maxItems' as it is implied.
+-Doug
 
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  cdns,dqs-last-data-drop:
-> +    type: boolean
-> +    description: |
-> +      This parameter should be set when the Flash Device being used
-> +      issues data on negative edge of Flash clock and returns them with
-> +      DQS and the PHY is configured to sample data in DQS mode.
-> +      If this param is set the controller internally requests this redundant
-> +      data at the end of the transfer cleaning up the PHY FIFO.
-> +
-> +  cdns,phy-data-select-oe-start:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Adjusts the starting point of the DQ pad output enable window.
-> +      Lower numbers pull the rising edge earlier in time and larger
-> +      numbers cause the rising edge to be delayed. Each bit changes
-> +      the output enable time by a 1/2 cycle resolution.
-> +
-> +  cdns,phy-data-select-oe-end:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Adjusts the ending point of the DQ pad output enable window.
-> +      Lower numbers pull the falling edge earlier in time and larger
-> +      numbers cause the falling edge to be delayed. Each bit changes
-> +      the output enable time by a 1/2 cycle resolution.
-> +
-> +  cdns,phy-dqs-select-oe-start:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Adjusts the starting point of the DQS pad output enable window.
-> +      Lower numbers pull the rising edge earlier in time and larger
-> +      numbers cause the rising edge to be delayed. Each bit changes
-> +      the output enable time by a 1/2 cycle resolution.
-> +
-> +  cdns,phy-dqs-select-oe-end:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Adjusts the ending point of the DQS pad output enable window.
-> +      Lower numbers pull the falling edge earlier in time and larger
-> +      numbers cause the falling edge to be delayed. Each bit changes
-> +      the output enable time by a 1/2 cycle resolution.
-> +
-> +  cdns,phy-gate-cfg-close:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Normally the gate is closing then all bits of dfi_cebar are high
-> +      or when dfi_rd_pre_post_amble and rebar_dfi are high. This parameter
-> +      allows to extend the closing of the DQS gate. Recommended zero.
-> +
-> +  cdns,phy-gate-cfg:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Coarse adjust of gate open time. This value is the number of cycles
-> +      to delay the dfi_rddata_en signal prior to opening the gate in
-> +      full cycle increments. Decreasing this value pulls the gate earlier
-> +      in time. This field should be programmed such that the gate signal
-> +      lands in the valid DQS gate window.
-> +
-> +  cdns,phy-rd-del-select:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Defines the read data delay. Holds the number of cycles to delay
-> +      the dfi_rddata_en signal prior to enabling the read FIFO.
-> +      After this delay, the read pointers begin incrementing the read FIFO.
-> +
-> +  cdns,phy-clk-wr-delay:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Controls the clk_wr delay line which adjusts the write DQ bit
-> +      timing in 1/256th steps of the clock period in normal DLL
-> +      locked mode. In bypass mode this field directly programs
-> +      the number of delay elements.
-
-For all of these, any constraints on the values? default?
-
-> +
-> +  cdns,phy-use-lpbk-dqs:
-> +    type: boolean
-> +    description: |
-> +      This parameter chooses lpbk_dqs to capture data for reads.
-> +      Instead memory DQS will be used.
-> +
-> +  cdns,phy-use-ext-lpbk-dqs:
-> +    type: boolean
-> +    description: |
-> +      This parameter chooses external lpbk_dqs for data capture
-> +      (lpbk_dqs connected to the lpbk_dqs_IO pad). When not used
-> +      mem_rebar_pad is used for data read capture.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - cdns,phy-data-select-oe-start
-> +  - cdns,phy-data-select-oe-end
-> +  - cdns,phy-dqs-select-oe-start
-> +  - cdns,phy-dqs-select-oe-end
-> +  - cdns,phy-gate-cfg-close
-> +  - cdns,phy-gate-cfg
-> +  - cdns,phy-rd-del-select
-> +  - cdns,phy-clk-wr-delay
-
-Is there no sensible default to make these optional?
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    xspi: spi@a0010000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        compatible = "cdns,xspi-nor-fpga";
-> +        reg = <0x0 0xa0010000 0x0 0x10000>,
-> +              <0x0 0xb0000000 0x0 0x10000>,
-> +              <0x0 0xa0020000 0x0 0x10000>;
-> +        interrupts = <0 90 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-parent = <&gic>;
-> +        cdns,dqs-last-data-drop;
-> +        cdns,phy-data-select-oe-start = <0>;
-> +        cdns,phy-data-select-oe-end = <4>;
-> +        cdns,phy-dqs-select-oe-start = <0>;
-> +        cdns,phy-dqs-select-oe-end = <1>;
-> +        cdns,phy-gate-cfg-close = <3>;
-> +        cdns,phy-gate-cfg = <0>;
-> +        cdns,phy-rd-del-select = <5>;
-> +        cdns,phy-clk-wr-delay = <64>;
-> +        cdns,phy-use-lpbk-dqs;
-> +        cdns,phy-use-ext-lpbk-dqs;
-> +        mt35xu512@0 {
-
-flash@0
-
-> +            compatible = "spi-nor", "micron,mt35xu512";
-
-Wrong order. Most specific first.
-
-> +            spi-max-frequency = <75000000>;
-> +            reg = <0>;
-> +        };
-> +        mt35xu512@1 {
-
-flash@1
-
-> +            compatible = "spi-nor", "micron,mt35xu512";
-> +            spi-max-frequency = <75000000>;
-> +            reg = <1>;
-> +        };
-> +    };
-> -- 
-> 2.15.0
-> 
+[1] https://lore.kernel.org/r/1e29097cc1cdf18671379f6420f872b0@codeaurora.org
