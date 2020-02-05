@@ -6,79 +6,244 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85726C352A2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26928C35247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CBE20720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D392072B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 19:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580930785;
-	bh=Q/HJu0QBkh8ZWySfNb9GoTSbLQOccyPvNK9xMTiJyak=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=dPQy5+RggArLf+Yyrn7w6PM/eFNigWfAbuDe574jQezTvlyrYjwt+dUwtFV5aLjYz
-	 mwsmlKFLpMhopJW++jj6/3xMBmKDlDZ8R+5nLnJ4/NPQ3iLBUKWvaj92qp5/AW4n0y
-	 fTI8wMRyO5zea12CCDwglWZm11rdP4vWL1bOxdpo=
+	s=default; t=1580931238;
+	bh=+nyLmX46s9G7X/53SRM/o2mo63iRBrtO5nxuwKZt+fs=;
+	h=In-Reply-To:References:From:Subject:To:Date:List-ID:From;
+	b=ckVSGsgUePECUxitXW2XDXqafmoQqBG1ZnmVbkoz1OY+W1lQDj6yoMCPAKmm/Qi+s
+	 8JfCwD33OuKL+WhqpIqyKtZ7+hinkhlRkAzruIbkeswyB/ssVLFlSxyCS3M7OMYhyb
+	 MAnTYraYzhTw2prX2O20hnNG0HHkbofDOWJx0THE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgBET0V (ORCPT
+        id S1727199AbgBETdy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 14:26:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40992 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 14:33:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727305AbgBET0U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Feb 2020 14:26:20 -0500
+        id S1727122AbgBETdy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 14:33:54 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A1F620720;
-        Wed,  5 Feb 2020 19:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BDCC20720;
+        Wed,  5 Feb 2020 19:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580930780;
-        bh=Q/HJu0QBkh8ZWySfNb9GoTSbLQOccyPvNK9xMTiJyak=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=QlazzWd8qp1w8WSYWK1t6NyzdBB9lZzZ0GIkk7D25a+IIexjODahAz733h/vCpx9X
-         C5XtkneSZu90gUlCBPGC0j3iazQ1BSNL2GMnWggJs4JdLW6oByzNhxmXwDH8KJ/Fbb
-         HrP4CPIn9uvWn11nI9Bx5C9B+Mhd/0KGGUKpuTqg=
+        s=default; t=1580931233;
+        bh=+nyLmX46s9G7X/53SRM/o2mo63iRBrtO5nxuwKZt+fs=;
+        h=In-Reply-To:References:From:Subject:To:Date:From;
+        b=kzNO9SWODHYyp8ttsM3EJyJsqbEW2BZ759IxFZNM9RPOF4RFdOgjYnGzLyet3qILQ
+         NJMot8rfIn3SAU9tn3yEj1KcIrROCQjzIWA6hxPWJdAcrsLpALx9074WEHnjpWpG0z
+         yzmFYmvSPxB2JcQr0SSS+kLRWPkAEzxBlbAnAqqs=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com> <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+In-Reply-To: <1579905147-12142-5-git-send-email-vnkgutta@codeaurora.org>
+References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org> <1579905147-12142-5-git-send-email-vnkgutta@codeaurora.org>
 From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input driver for Tegra210
-To:     frankc@nvidia.com, hverkuil@xs4all.nl, jonathanh@nvidia.com,
-        skomatineni@nvidia.com, thierry.reding@gmail.com
+Subject: Re: [PATCH v2 4/7] clk: qcom: clk-alpha-pll: Add support for controlling Lucid PLLs
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jshriram@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, psodagud@codeaurora.org,
+        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
+        vinod.koul@linaro.org, vnkgutta@codeaurora.org
 User-Agent: alot/0.8.1
-Date:   Wed, 05 Feb 2020 11:26:19 -0800
-Message-Id: <20200205192620.3A1F620720@mail.kernel.org>
+Date:   Wed, 05 Feb 2020 11:33:52 -0800
+Message-Id: <20200205193353.2BDCC20720@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sowjanya Komatineni (2020-01-28 10:23:20)
-> diff --git a/drivers/staging/media/tegra/Kconfig b/drivers/staging/media/=
-tegra/Kconfig
-> new file mode 100644
-> index 000000000000..443b99f2e2c9
-> --- /dev/null
-> +++ b/drivers/staging/media/tegra/Kconfig
-> @@ -0,0 +1,12 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config VIDEO_TEGRA
-> +       tristate "NVIDIA Tegra VI driver"
-> +       depends on ARCH_TEGRA || (ARM && COMPILE_TEST)
-> +       depends on COMMON_CLK
+Quoting Venkata Narendra Kumar Gutta (2020-01-24 14:32:24)
+> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alph=
+a-pll.c
+> index 1b073b2..4258ab0 100644
+> --- a/drivers/clk/qcom/clk-alpha-pll.c
+> +++ b/drivers/clk/qcom/clk-alpha-pll.c
+> @@ -1367,3 +1388,172 @@ static int clk_alpha_pll_postdiv_fabia_set_rate(s=
+truct clk_hw *hw,
+>         .set_rate =3D clk_alpha_pll_postdiv_fabia_set_rate,
+>  };
+>  EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_fabia_ops);
+> +
+> +void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *r=
+egmap,
 
-What depends on the common clk framework? I don't see any clk-provider.h
-includes here.
+Can we get some kernel documentation for this function?
 
-> +       depends on VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> +       depends on MEDIA_CONTROLLER
-> +       select TEGRA_HOST1X
-> +       select VIDEOBUF2_DMA_CONTIG
-> +       select V4L2_FWNODE
-> +       help
-> +         Say yes here to enable support for Tegra video input hardware
+> +                            const struct alpha_pll_config *config)
+> +{
+> +       if (config->l)
+> +               regmap_write(regmap, PLL_L_VAL(pll), config->l);
+> +
+> +       regmap_write(regmap, PLL_CAL_L_VAL(pll), LUCID_PLL_CAL_VAL);
+> +
+> +       if (config->alpha)
+> +               regmap_write(regmap, PLL_ALPHA_VAL(pll), config->alpha);
+> +
+> +       if (config->config_ctl_val)
+> +               regmap_write(regmap, PLL_CONFIG_CTL(pll),
+> +                            config->config_ctl_val);
+> +
+> +       if (config->config_ctl_hi_val)
+> +               regmap_write(regmap, PLL_CONFIG_CTL_U(pll),
+> +                            config->config_ctl_hi_val);
+> +
+> +       if (config->config_ctl_hi1_val)
+> +               regmap_write(regmap, PLL_CONFIG_CTL_U1(pll),
+> +                            config->config_ctl_hi1_val);
+> +
+> +       if (config->user_ctl_val)
+> +               regmap_write(regmap, PLL_USER_CTL(pll),
+> +                            config->user_ctl_val);
+> +
+> +       if (config->user_ctl_hi_val)
+> +               regmap_write(regmap, PLL_USER_CTL_U(pll),
+> +                            config->user_ctl_hi_val);
+> +
+> +       if (config->user_ctl_hi1_val)
+> +               regmap_write(regmap, PLL_USER_CTL_U1(pll),
+> +                            config->user_ctl_hi1_val);
+> +
+> +       if (config->test_ctl_val)
+> +               regmap_write(regmap, PLL_TEST_CTL(pll),
+> +                            config->test_ctl_val);
+> +
+> +       if (config->test_ctl_hi_val)
+> +               regmap_write(regmap, PLL_TEST_CTL_U(pll),
+> +                            config->test_ctl_hi_val);
+> +
+> +       if (config->test_ctl_hi1_val)
+> +               regmap_write(regmap, PLL_TEST_CTL_U1(pll),
+> +                            config->test_ctl_hi1_val);
+> +
+> +       regmap_update_bits(regmap, PLL_MODE(pll), PLL_UPDATE_BYPASS,
+> +                          PLL_UPDATE_BYPASS);
+> +
+> +       /* Disable PLL output */
+> +       regmap_update_bits(regmap, PLL_MODE(pll),  PLL_OUTCTRL, 0);
+> +
+> +       /* Set operation mode to OFF */
+> +       regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
+> +
+> +       /* PLL should be in OFF mode before continuing */
+> +       wmb();
+
+How does the write above overtake the write below? This barrier looks
+wrong.
+
+> +
+> +       /* Place the PLL in STANDBY mode */
+> +       regmap_update_bits(regmap, PLL_MODE(pll), PLL_RESET_N, PLL_RESET_=
+N);
+> +}
+> +EXPORT_SYMBOL_GPL(clk_lucid_pll_configure);
+> +
+> +/*
+> + * The Lucid PLL requires a power-on self-calibration which happens when=
+ the
+> + * PLL comes out of reset. Calibrate in case it is not completed.
+> + */
+> +static int alpha_pll_lucid_prepare(struct clk_hw *hw)
+> +{
+> +       struct clk_alpha_pll *pll =3D to_clk_alpha_pll(hw);
+> +       u32 regval;
+> +       int ret;
+> +
+> +       /* Return early if calibration is not needed. */
+> +       regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
+> +       if (regval & LUCID_PCAL_DONE)
+> +               return 0;
+> +
+> +       ret =3D clk_trion_pll_enable(hw);
+> +       if (ret)
+> +               return ret;
+> +
+> +       clk_trion_pll_disable(hw);
+> +
+> +       return 0;
+
+Can you write this like:
+
+	/* On/off to calibrate */
+	ret =3D clk_trion_pll_enable(hw);
+	if (!ret)
+		clk_trion_pll_disable(hw);
+
+	return ret;
+
+> +}
+> +
+> +static int alpha_pll_lucid_set_rate(struct clk_hw *hw, unsigned long rat=
+e,
+> +                                   unsigned long prate)
+> +{
+> +       struct clk_alpha_pll *pll =3D to_clk_alpha_pll(hw);
+> +       unsigned long rrate;
+> +       u32 regval, l, alpha_width =3D pll_alpha_width(pll);
+> +       u64 a;
+> +       int ret;
+> +
+> +       rrate =3D alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
+> +
+> +       /*
+> +        * Due to a limited number of bits for fractional rate programmin=
+g, the
+> +        * rounded up rate could be marginally higher than the requested =
+rate.
+> +        */
+> +       if (rrate > (rate + PLL_RATE_MARGIN) || rrate < rate) {
+
+Any chance this can be pushed into the alpha_pll_round_rate() API? It's
+duplicated in this driver.
+
+> +               pr_err("Call set rate on the PLL with rounded rates!\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
+> +       regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
+> +
+> +       /* Latch the PLL input */
+> +       ret =3D regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
+> +                                PLL_UPDATE, PLL_UPDATE);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Wait for 2 reference cycles before checking the ACK bit. */
+
+Are reference cycles 2 * 1 / 19.2MHz?
+
+> +       udelay(1);
+> +       regmap_read(pll->clkr.regmap, PLL_MODE(pll), &regval);
+> +       if (!(regval & ALPHA_PLL_ACK_LATCH)) {
+> +               WARN(1, "PLL latch failed. Output may be unstable!\n");
+
+Do we need a big WARN stack for this? How about pr_warn() instead?
+
+> +               return -EINVAL;
+> +       }
+> +
+> +       /* Return the latch input to 0 */
+> +       ret =3D regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
+> +                                PLL_UPDATE, 0);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (clk_hw_is_enabled(hw)) {
+> +               ret =3D wait_for_pll_enable_lock(pll);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       /* Wait for PLL output to stabilize */
+> +       udelay(100);
+> +       return 0;
+> +}
