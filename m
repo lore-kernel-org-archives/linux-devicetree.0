@@ -2,104 +2,113 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EA1C352A2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 12:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A07C35254
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 12:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A610217BA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 12:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D9E2192A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 12:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KJJ25gaI"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FVbvESaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgBEMHd (ORCPT
+        id S1727994AbgBEM05 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 07:07:33 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:29425 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726810AbgBEMHd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 07:07:33 -0500
+        Wed, 5 Feb 2020 07:26:57 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:60280 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728047AbgBEM0z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 07:26:55 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580904453; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Rw6fpPoaZ9TjeIMYqlvtFgTZBBMNHEMBUrNzr/IGp5k=; b=KJJ25gaIVRQZ9LjIfY8BlDbv1qfTYNC+P/Si0Ay/7kOjvasuzoCwskU3MaHFLqZYYuvyFq7e
- VSS/qmtrZFMt5t42kGX8iiEBN3mnN1j/7MLN4Das4s/Q/kZ2xOBES1t4wTGYOnurffHCyoLz
- dT+UbvV34sJJOZ+w+BWhDlyDAWo=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ s=smtp; t=1580905614; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=hzVPZL4VtKtArOeylhakFEa12U0ksSDJ+F88Oy/mtJc=; b=FVbvESaW3DVOAgfWAsKNnZitwT4pekSYPj3Avc3ylMewO/bGbhJfpHL+DJoc4RC62Q93W1FY
+ Zt/B1GX+JkW0lLmZZPl1RXIQOnYcDIk9EYPa6/3uNbY+4Ol8b3doeLZwS506vVmNLFgT5XqO
+ EH0cFCW+o1RxHdrEAvi2CV20OZ8=
+X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3ab001.7fc5a6c5e500-smtp-out-n02;
- Wed, 05 Feb 2020 12:07:29 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e3ab48a.7f25d7f70f10-smtp-out-n02;
+ Wed, 05 Feb 2020 12:26:50 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2830CC447A2; Wed,  5 Feb 2020 12:07:29 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id E10BCC447AC; Wed,  5 Feb 2020 12:26:49 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DF5BC43383;
-        Wed,  5 Feb 2020 12:07:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DF5BC43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9EFB2C447A5;
+        Wed,  5 Feb 2020 12:26:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9EFB2C447A5
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v3 6/7] arm64: dts: qcom: sc7180: Add cpuidle low power
- states
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         bjorn.andersson@linaro.org, evgreen@chromium.org,
         dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
         lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net,
-        devicetree@vger.kernel.org
-References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
- <1580736940-6985-7-git-send-email-mkshah@codeaurora.org>
- <20200204231509.GB18972@google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <b07c9989-b44a-969c-4c4a-9f9465781e45@codeaurora.org>
-Date:   Wed, 5 Feb 2020 17:37:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200204231509.GB18972@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+        Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
+Subject: [PATCH v4 3/6] dt-bindings: soc: qcom: Add RSC power domain specifier
+Date:   Wed,  5 Feb 2020 17:56:09 +0530
+Message-Id: <1580905572-22712-4-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580905572-22712-1-git-send-email-mkshah@codeaurora.org>
+References: <1580905572-22712-1-git-send-email-mkshah@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+In addition to transmitting resource state requests to the remote
+processor, the RSC is responsible for powering off/lowering the
+requirements from CPUs subsystem for the associated hardware like
+buses, clocks, and regulators when all CPUs and cluster is powered down.
 
-On 2/5/2020 4:45 AM, Matthias Kaehlcke wrote:
-> On Mon, Feb 03, 2020 at 07:05:39PM +0530, Maulik Shah wrote:
->> Add device bindings for cpuidle states for cpu devices.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 78 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 8011c5f..0aa0ced 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -86,6 +86,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x0>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
->> +					   &LITTLE_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
-> These entries are deleted again by the next patch in this series ('arm64:
-> dts: qcom: sc7180: Convert to the hierarchical CPU topology layout').
-> What is the point in adding them in the first place?
+The power domain is configured to a low power state and when all the
+CPUs are powered down, the RSC can lower resource state requirements
+and power down the rails that power the CPUs.
 
-Clubbed 6th and 7th patch in v4 series.
+Add PM domain specifier property for RSC controller.
 
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
+ Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+index 9b86d1e..5682806 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+@@ -83,6 +83,14 @@ Properties:
+ 	Value type: <string>
+ 	Definition: Name for the RSC. The name would be used in trace logs.
+ 
++- #power-domain-cells:
++	Usage: optional
++	Value type: <u32>
++	Definition: Must be 0. Number of cells in power domain specifier.
++		    Optional for controllers that may be in 'solver' state
++		    where they can be in autonomous mode executing low power
++		    modes.
++
+ Drivers that want to use the RSC to communicate with RPMH must specify their
+ bindings as child nodes of the RSC controllers they wish to communicate with.
+ 
+@@ -112,6 +120,7 @@ TCS-OFFSET: 0xD00
+ 				  <SLEEP_TCS   3>,
+ 				  <WAKE_TCS    3>,
+ 				  <CONTROL_TCS 1>;
++		#power-domain-cells = <0>;
+ 	};
+ 
+ Example 2:
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
