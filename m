@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AEDC35254
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974D7C35254
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1559B217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7798A217BA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 14:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgBEObB (ORCPT
+        id S1727548AbgBEObN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 09:31:01 -0500
-Received: from comms.puri.sm ([159.203.221.185]:48826 "EHLO comms.puri.sm"
+        Wed, 5 Feb 2020 09:31:13 -0500
+Received: from comms.puri.sm ([159.203.221.185]:48982 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgBEObB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Feb 2020 09:31:01 -0500
+        id S1727477AbgBEObM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 09:31:12 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 999CBE049D;
-        Wed,  5 Feb 2020 06:31:00 -0800 (PST)
+        by comms.puri.sm (Postfix) with ESMTP id 7653CE0304;
+        Wed,  5 Feb 2020 06:31:12 -0800 (PST)
 Received: from comms.puri.sm ([127.0.0.1])
         by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8X0Ugy737Zw9; Wed,  5 Feb 2020 06:30:59 -0800 (PST)
+        with ESMTP id Dw3NlkAExb7l; Wed,  5 Feb 2020 06:31:11 -0800 (PST)
 From:   Martin Kepplinger <martin.kepplinger@puri.sm>
 To:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
@@ -32,9 +32,9 @@ Cc:     linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
         kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v1 03/12] arm64: dts: librem5-devkit: allow modem to wake the system from suspend
-Date:   Wed,  5 Feb 2020 15:29:54 +0100
-Message-Id: <20200205143003.28408-4-martin.kepplinger@puri.sm>
+Subject: [PATCH v1 07/12] arm64: dts: librem5-devkit: add the regulators for DVFS
+Date:   Wed,  5 Feb 2020 15:29:58 +0100
+Message-Id: <20200205143003.28408-8-martin.kepplinger@puri.sm>
 In-Reply-To: <20200205143003.28408-1-martin.kepplinger@puri.sm>
 References: <20200205143003.28408-1-martin.kepplinger@puri.sm>
 Content-Transfer-Encoding: 8bit
@@ -45,66 +45,44 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-Connect the WoWWAN signal to a gpio key to wake up the system from suspend.
+Specify which regulator is used for cpufreq DVFS.
 
 Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 ---
- .../dts/freescale/imx8mq-librem5-devkit.dts   | 27 +++++++++++++++----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 8162576e8f3d..ac6ba227e1da 100644
+index ac0145839a69..6a8f6cee96cf 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -33,7 +33,7 @@
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_gpio_keys>;
-+		pinctrl-0 = <&pinctrl_gpio_keys>, <&pinctrl_wwan_in>;
- 
- 		btn1 {
- 			label = "VOL_UP";
-@@ -55,6 +55,15 @@
- 			wakeup-source;
- 			linux,code = <KEY_HP>;
- 		};
-+
-+		wwan_wake {
-+			label = "WWAN_WAKE";
-+			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;
-+			interrupt-parent = <&gpio3>;
-+			interrupts = <8 GPIO_ACTIVE_LOW>;
-+			wakeup-source;
-+			linux,code = <KEY_PHONE>;
-+		};
- 	};
- 
- 	leds {
-@@ -767,11 +776,19 @@
- 		>;
- 	};
- 
--	pinctrl_wwan: wwangrp {
-+	pinctrl_wwan_in: wwaningrp {
-+		fsl,pins = <
-+		/* nWoWWAN */
-+		MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8	0x80
-+		>;
-+	};
-+
-+	pinctrl_wwan_out: wwanoutgrp {
- 		fsl,pins = <
--			MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4	0x09 /* nWWAN_DISABLE */
--			MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8	0x80 /* nWoWWAN */
--			MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x19 /* WWAN_RESET */
-+		/* nWWAN_DISABLE */
-+		MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4	0x09
-+		/* WWAN_RESET */
-+		MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x19
- 		>;
+@@ -223,6 +223,26 @@
  	};
  };
+ 
++&A53_0 {
++	operating-points-v2 = <&a53_opp_table>;
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_1 {
++	operating-points-v2 = <&a53_opp_table>;
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_2 {
++	operating-points-v2 = <&a53_opp_table>;
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_3 {
++	operating-points-v2 = <&a53_opp_table>;
++	cpu-supply = <&buck2_reg>;
++};
++
+ &clk {
+ 	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
+ 	assigned-clock-rates = <786432000>, <722534400>;
 -- 
 2.20.1
 
