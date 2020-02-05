@@ -4,103 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC4CC352A2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CF6C35247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C09C21927
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC2B20702
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 16:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580920852;
-	bh=8pSQscO0/O3EPjfB6In674Upc6rSeBNvV4WyunI4wU8=;
+	s=default; t=1580921282;
+	bh=npOYvnvrovIcxTpmP/BSyN24E8S0U9eg6c+lfbjDJCU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gKu1BwAs76+puULbb1PJdEo4fWl2zhdWxxXfIVwmCODkAFe0uSS2GSTLM6zGke6RP
-	 Hlopa9Dn3h+RdNNVxjNuevcrV5VPodj6m5c2R60qXOx1O4D8fDWYtnD0fD5IsFpLrC
-	 6NIVP7j7FarbNxBMI6hme0vcvF/+3KXNuoRrMLF8=
+	b=Cu9LLai7YZpwXp3m7X1FfqUTpklxuuPrImXGhGC/UrQT82qpsMk+sXK5GDxHqMgdU
+	 QZMye2A3DmgZ6h6LcNFAu2wybz4ewlg+gXFx0QoO1xmP5+ZWVdQIhJLbZtnPZPTZQ/
+	 Bb+LXwUKNDR9NtaMVy+oQimKE3UOT2wA2+EUXDf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgBEQkw (ORCPT
+        id S1727083AbgBEQsC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 11:40:52 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54614 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgBEQkv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 11:40:51 -0500
-Received: by mail-wm1-f65.google.com with SMTP id g1so3195595wmh.4;
-        Wed, 05 Feb 2020 08:40:49 -0800 (PST)
+        Wed, 5 Feb 2020 11:48:02 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55634 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727081AbgBEQsC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 11:48:02 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so3224405wmj.5;
+        Wed, 05 Feb 2020 08:48:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YRyho1A5PtF4sCFUVKeESMDn8UQwlv3lsWB4C+ixlEY=;
-        b=tgM0TUxfJdyQ7p7KSFnEsuZoCy4/PQiDOhw5OVtfxekOV3HasqTm032biU/mTZlTL+
-         Damz+cyVRwiGUDjV9eJ6CgaJt0OEkh+qULV3oJFT3cTDSV9LaMzN/dV7qrf9LCns1b7v
-         nBh8XLFaF9GtccacaOTQe/gDScJAFLidgJT2v49cXouCZfUwUXc4XR+EBwIlCdpHnp6G
-         MiISaMIx3+XUrvHKV2JXAWBToQ1C6O9ktJuGC8mcwJXm+5UDEyFKpP3JWoIt1/elISPX
-         2Vs45xkVKaIUxps3CX/fmaXXidjgZdWZPytIT7tzHYx4HtsNAHvl92+RhNshfYhXY2NX
-         7ClQ==
-X-Gm-Message-State: APjAAAViG4yiNZmQHVm2xoVR/ALiXeNJYmoGW2JbzKiFfzB6Jbzbhi/I
-        7ldcaqecwO+YXWS/wOZn2Q==
-X-Google-Smtp-Source: APXvYqwgSBNbRA19+O3qYDxG+xq/bkC9e2Rnn786m+qvq+3WemWWG3Fq4I2R9vkXdBpW7/tUBRMRSg==
-X-Received: by 2002:a7b:cbd6:: with SMTP id n22mr6942375wmi.118.1580920849090;
-        Wed, 05 Feb 2020 08:40:49 -0800 (PST)
+        bh=sg+9y4ZuDI4laj7uyhA1zY5m32IMeo2ETRsWzCEEVrk=;
+        b=ByfUCqp8NWXvLJvN/PucWoNvvRNNAu1veqKLyPrUoJ4kYwvb3uwpUk53ECIsoC19J0
+         BUUk36nKl00iq5cfrtXlCoMYniEUqigN76jtgpBwaywkGkp+6mzFUspQP3V0C45gZIK6
+         Obc6b53L6xF51ONl38zjfiyRaCcupqT8Mw+1DhJDgnRfZAW9o1aAJNdkgqZmAuM5NeX2
+         xBaujovvRn1/FMvWHMk/sBZ6YEA4uXSks60orCDAv+KhkTdYwo7Fj6pDBySopVjt9X07
+         53V1w7kvq+zFyBtTgjNKrE3WEHmnsjpLi93q6ddtDwAY3/yXgRDTQXgSjp1qsdpxLzj5
+         paDQ==
+X-Gm-Message-State: APjAAAVVhCYi6Hptw75TMdObozbpdfjlHNJOx9wUrZJXdowrY466EB7t
+        8nrNrCvUQewl1U7wDovTFw==
+X-Google-Smtp-Source: APXvYqwMtUlQEaUDNrfzAKaMRiKiWvrZGJX2RF0Ip2aB9NqMpVgSSfmUtf5bgXleEXGsJ6mGhtAd2w==
+X-Received: by 2002:a1c:545d:: with SMTP id p29mr7218951wmi.91.1580921280285;
+        Wed, 05 Feb 2020 08:48:00 -0800 (PST)
 Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id g15sm469526wro.65.2020.02.05.08.40.48
+        by smtp.gmail.com with ESMTPSA id a26sm203951wmm.18.2020.02.05.08.47.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 08:40:48 -0800 (PST)
-Received: (nullmailer pid 3886 invoked by uid 1000);
-        Wed, 05 Feb 2020 16:40:48 -0000
-Date:   Wed, 5 Feb 2020 16:40:48 +0000
+        Wed, 05 Feb 2020 08:47:59 -0800 (PST)
+Received: (nullmailer pid 23017 invoked by uid 1000);
+        Wed, 05 Feb 2020 16:47:58 -0000
+Date:   Wed, 5 Feb 2020 16:47:58 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Harigovindan P <harigovi@codeaurora.org>, robdclark@gmail.com,
-        seanpaul@chromium.org, sean@poorly.run
-Subject: Re: [PATCHv3 1/2] dt-bindings: display: add visionox rm69299 panel
- variant
-Message-ID: <20200205164048.GA3452@bogus>
-References: <1580907990-32108-1-git-send-email-harigovi@codeaurora.org>
- <1580907990-32108-2-git-send-email-harigovi@codeaurora.org>
+To:     James Tai <james.tai@realtek.com>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and
+ Realtek PymParticle EVB
+Message-ID: <20200205164758.GA22823@bogus>
+References: <20200204145207.28622-1-james.tai@realtek.com>
+ <20200204145207.28622-2-james.tai@realtek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580907990-32108-2-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <20200204145207.28622-2-james.tai@realtek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  5 Feb 2020 18:36:29 +0530, Harigovindan P wrote:
-> Add bindings for visionox rm69299 panel.
+On Tue, 4 Feb 2020 22:52:06 +0800, James Tai wrote:
+> Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
+> EVB.
 > 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> Signed-off-by: James Tai <james.tai@realtek.com>
 > ---
+>  v2 -> v3: Unchanged
 > 
-> Changes in v1:
-> 	- Added a compatible string to support sc7180 panel version.
-> Changes in v2:
-> 	- Removed unwanted properties from description.
-> 	- Creating source files without execute permissions(Rob Herring).
-> Changes in v3:
-> 	- Changing txt file into yaml
+>  v1 -> v2:
+>  * Put string in alphabetical order
 > 
->  .../bindings/display/visionox,rm69299.yaml         | 109 +++++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/visionox,rm69299.yaml
+>  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Documentation/devicetree/bindings/display/visionox,rm69299.yaml:  while scanning for the next token
-found character that cannot start any token
-  in "<unicode string>", line 83, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/visionox,rm69299.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/display/visionox,rm69299.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1233831
-Please check and re-submit.
+If a tag was not added on purpose, please state why and what changed.
