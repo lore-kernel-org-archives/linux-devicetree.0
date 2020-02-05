@@ -2,180 +2,207 @@ Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60471C352A2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D075DC35247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F09321741
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LFEU7F5u"
+	by mail.kernel.org (Postfix) with ESMTP id 9856C21741
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 17:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580924866;
+	bh=EsupDoQIFFE/AHmYsPM/3CALiSfw7Q+0rJAOszhmxKM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hlcdb7RZYIcGY8WMsAItPClFUwbQNv8wnArVCAhz1mf5PaA9vKfKti0je5ZixfdtS
+	 0LNJ9/KS6e6XRzsvXAEj1Wpjy6PyePV2o7HBBMjr9vyOk9JkAY4xI56OtJW+IRFbLy
+	 O9fCYoAC1J1YlZM5iaJV9wVQwIePJhBdhQJCkuRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgBERje (ORCPT
+        id S1727079AbgBERrq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 12:39:34 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41687 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbgBERje (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 12:39:34 -0500
-Received: by mail-pf1-f195.google.com with SMTP id j9so1560079pfa.8
-        for <devicetree@vger.kernel.org>; Wed, 05 Feb 2020 09:39:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=aO5p5IBLxlU8LmggP8EmaW7PqxkUQ4rk9prwoiPWExY=;
-        b=LFEU7F5uRUHvjlHxU71R+6/md8i08kseXhFg8q/mXFNEvx4HMeFGZljgfUttHo5+J6
-         kV7Np7W1PZZ38VSOWJtq3+lnECqnHmlydR90zYKVffplVYCGHkFqnG0mtYWUPxioAWZL
-         UMsKw4DME/VMUvTxq642siQQgTIfXUOghivlg=
+        Wed, 5 Feb 2020 12:47:46 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44974 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbgBERrp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 12:47:45 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so3791843wrx.11;
+        Wed, 05 Feb 2020 09:47:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=aO5p5IBLxlU8LmggP8EmaW7PqxkUQ4rk9prwoiPWExY=;
-        b=A//z5B5NSrzBOnxfET7vsTSO7JPDsTokGmXuujkAalgOkc9R52yXVyusKUKaeTUBKZ
-         R166pfLq3/SUbQDxE4a1Astj/52C+10YbhelnqnMUP2sIoUhc9D4yr/MPIus0qq+8JM4
-         OLo9qXrKF5PQBdSkgxwFU9BBXNBNfbyseLw2be3+IMEZ7hxFa/vevar3jaIOk53hQ/VV
-         EBonD7mMscA/bV+fWKcpg5KlVqAjUN10fSY1n81ZgNr1zRvPH46+SvJSkLCOotAgQgzz
-         lef5kAfms34Pp7r9+jI6aTID6uKaM9G3iCrQ1tAKxItAgxVjtF+s8yYHMxXIBR+OBk5s
-         sQ6g==
-X-Gm-Message-State: APjAAAX9aZcNeL5ta4qKtu5zUd9c1dmAWIWeYHrUylnFHld5I/8qvyJk
-        oQGgDFkwrhhKGAXOfAptgzBmoQ==
-X-Google-Smtp-Source: APXvYqx8kJG30FrBwFchNB07QuFE4dTA8rPgEi4RVVBWzFM230ur6MhRgba9ASq4e0C0OXPpkdRZuw==
-X-Received: by 2002:a63:4d4c:: with SMTP id n12mr38694833pgl.212.1580924373586;
-        Wed, 05 Feb 2020 09:39:33 -0800 (PST)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id h3sm140257pfr.15.2020.02.05.09.39.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 09:39:32 -0800 (PST)
-Subject: Re: [PATCH v2 00/12] dt-bindings: arm: bcm: Convert boards to YAML
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "james.tai" <james.tai@realtek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
-References: <20200204235552.7466-1-f.fainelli@gmail.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <2d263951-fbc5-ae5f-6643-b72debf5aa05@broadcom.com>
-Date:   Wed, 5 Feb 2020 09:39:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CYLfMRQOnfB9NcsP3jbmvn6lucoo/vUebKxirhMntc0=;
+        b=tnm44IXJ1eniMLeztRtHWnM9AwcJ+TGr2TsJ8OKwvmrQuTyUARXpabN8l0FDHnNrv5
+         0Q17YoiBIo3HyMUeHBlCfx6JC1xc6+hlgEHrsVrmm721vJemwZVJsq1iD0Fx7RKGBbue
+         sGJnjSUhkHSrldPFqLZjEF0Uz2yEmF+DII+d2v2Lki4TAjIizvgAIyDpsw+DNhVspx4J
+         wab/gMU2Ahe4c/jbdt5+kQuaEgWdQFS5E92Z4TIGpY5Iww7DbxIGUg8CG5nPqGvVgIVb
+         +7dVNtP74D7gIAvZt4t2GSO+6NqbPkpCKCgRwevR+TtunDvEmUyquZVJU2uSwj2Vhfp4
+         Yh1A==
+X-Gm-Message-State: APjAAAWm5atDHrolSkbJDaDi0qSwHBFe6JINvvHRUF/fW28gywxakkD9
+        Lne2u1PIen9+16wDNJIF+g==
+X-Google-Smtp-Source: APXvYqztCHUsi45+Mt62Wd/cXHFhEBCqL5ykVTJiCzLLf1seeZgXV2jDrI41CauiGVreIOnEmV30nA==
+X-Received: by 2002:adf:fe43:: with SMTP id m3mr31718793wrs.213.1580924862634;
+        Wed, 05 Feb 2020 09:47:42 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.166])
+        by smtp.gmail.com with ESMTPSA id u14sm659294wrm.51.2020.02.05.09.47.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2020 09:47:42 -0800 (PST)
+Received: (nullmailer pid 26578 invoked by uid 1000);
+        Wed, 05 Feb 2020 17:47:40 -0000
+Date:   Wed, 5 Feb 2020 17:47:40 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     linux-i2c@vger.kernel.org, mark.rutland@arm.com,
+        bleung@chromium.org, enric.balletbo@collabora.com,
+        groeck@chromium.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, helen.koike@collabora.com,
+        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com
+Subject: Re: [PATCH] dt-bindings: convert i2c-cros-ec-tunnel.txt to yaml
+Message-ID: <20200205174740.GA10738@bogus>
+References: <20200127161213.13339-1-dafna.hirschfeld@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200204235552.7466-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127161213.13339-1-dafna.hirschfeld@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Florian,
+On Mon, Jan 27, 2020 at 05:12:13PM +0100, Dafna Hirschfeld wrote:
+> Convert the binding file i2c-cros-ec-tunnel.txt to yaml format.
+> 
+> This was tested and verified on ARM and ARM64 with:
+> 
+> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+> 
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
+>  .../bindings/i2c/i2c-cros-ec-tunnel.txt       | 39 ------------
+>  .../bindings/i2c/i2c-cros-ec-tunnel.yaml      | 61 +++++++++++++++++++
+>  2 files changed, 61 insertions(+), 39 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+> deleted file mode 100644
+> index 898f030eba62..000000000000
+> --- a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+> +++ /dev/null
+> @@ -1,39 +0,0 @@
+> -I2C bus that tunnels through the ChromeOS EC (cros-ec)
+> -======================================================
+> -On some ChromeOS board designs we've got a connection to the EC (embedded
+> -controller) but no direct connection to some devices on the other side of
+> -the EC (like a battery and PMIC).  To get access to those devices we need
+> -to tunnel our i2c commands through the EC.
+> -
+> -The node for this device should be under a cros-ec node like google,cros-ec-spi
+> -or google,cros-ec-i2c.
+> -
+> -
+> -Required properties:
+> -- compatible: google,cros-ec-i2c-tunnel
+> -- google,remote-bus: The EC bus we'd like to talk to.
+> -
+> -Optional child nodes:
+> -- One node per I2C device connected to the tunnelled I2C bus.
+> -
+> -
+> -Example:
+> -	cros-ec@0 {
+> -		compatible = "google,cros-ec-spi";
+> -
+> -		...
+> -
+> -		i2c-tunnel {
+> -			compatible = "google,cros-ec-i2c-tunnel";
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -
+> -			google,remote-bus = <0>;
+> -
+> -			battery: sbs-battery@b {
+> -				compatible = "sbs,sbs-battery";
+> -				reg = <0xb>;
+> -				sbs,poll-retry-count = <1>;
+> -			};
+> -		};
+> -	}
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+> new file mode 100644
+> index 000000000000..c1383e607f47
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/i2c/i2c-cros-ec-tunnel.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: I2C bus that tunnels through the ChromeOS EC (cros-ec)
+> +
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> +  - Guenter Roeck <groeck@chromium.org>
+> +
+> +description: |
+> +  On some ChromeOS board designs we've got a connection to the EC (embedded
+> +  controller) but no direct connection to some devices on the other side of
+> +  the EC (like a battery and PMIC). To get access to those devices we need
+> +  to tunnel our i2c commands through the EC.
+> +  The node for this device should be under a cros-ec node like google,cros-ec-spi
+> +  or google,cros-ec-i2c.
 
-Patch series:
+You should have a ref to /schemas/i2c-controller.yaml here.
 
-Acked-by: Scott Branden <scott.branden@broadcom.com>
-
-On 2020-02-04 3:55 p.m., Florian Fainelli wrote:
-> Hi Rob, Maxime,
->
-> This patch series converts most files under D/dt-bindings/arm/bcm/ with
-> the exception of bcm63138 and brcmstb to the YAML format. Those two may
-> be split accordingly later on since document not just the root node.
->
-> Changes in v2:
->
-> - fixed typo in Vulcan binding
-> - simplified how SoC compatible strings are specified
-> - fixed filename in bcm2835 firmware binding
-> - added 'secondary-boot-reg' constraint
->
->
-> Florian Fainelli (12):
->    dt-bindings: arm: bcm: Convert Cygnus to YAML
->    dt-bindings: arm: bcm: Convert Hurricane 2 to YAML
->    dt-bindings: arm: bcm: Convert Northstar Plus to YAML
->    dt-bindings: arm: bcm: Convert Northstar 2 to YAML
->    dt-bindings: arm: bcm: Convert Stingray to YAML
->    dt-bindings: arm: bcm: Convert BCM21664 to YAML
->    dt-bindings: arm: bcm: Convert BCM23550 to YAML
->    dt-bindings: arm: bcm: Convert BCM4708 to YAML
->    dt-bindings: arm: bcm: Convert BCM11351 to YAML
->    dt-bindings: arm: bcm: Convert Vulcan to YAML
->    dt-bindings: arm: Document Broadcom SoCs 'secondary-boot-reg'
->    dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML
->
->   .../arm/bcm/brcm,bcm11351-cpu-method.txt      | 36 --------
->   .../bindings/arm/bcm/brcm,bcm11351.txt        | 10 ---
->   .../bindings/arm/bcm/brcm,bcm11351.yaml       | 21 +++++
->   .../bindings/arm/bcm/brcm,bcm21664.txt        | 15 ----
->   .../bindings/arm/bcm/brcm,bcm21664.yaml       | 21 +++++
->   .../arm/bcm/brcm,bcm23550-cpu-method.txt      | 36 --------
->   .../bindings/arm/bcm/brcm,bcm23550.txt        | 15 ----
->   .../bindings/arm/bcm/brcm,bcm23550.yaml       | 21 +++++
->   .../bindings/arm/bcm/brcm,bcm4708.txt         | 15 ----
->   .../bindings/arm/bcm/brcm,bcm4708.yaml        | 88 +++++++++++++++++++
->   .../bindings/arm/bcm/brcm,cygnus.txt          | 31 -------
->   .../bindings/arm/bcm/brcm,cygnus.yaml         | 29 ++++++
->   .../devicetree/bindings/arm/bcm/brcm,hr2.txt  | 14 ---
->   .../devicetree/bindings/arm/bcm/brcm,hr2.yaml | 28 ++++++
->   .../devicetree/bindings/arm/bcm/brcm,ns2.txt  |  9 --
->   .../devicetree/bindings/arm/bcm/brcm,ns2.yaml | 23 +++++
->   .../bindings/arm/bcm/brcm,nsp-cpu-method.txt  | 39 --------
->   .../devicetree/bindings/arm/bcm/brcm,nsp.txt  | 34 -------
->   .../devicetree/bindings/arm/bcm/brcm,nsp.yaml | 36 ++++++++
->   .../bindings/arm/bcm/brcm,stingray.txt        | 12 ---
->   .../bindings/arm/bcm/brcm,stingray.yaml       | 24 +++++
->   .../bindings/arm/bcm/brcm,vulcan-soc.txt      | 10 ---
->   .../bindings/arm/bcm/brcm,vulcan-soc.yaml     | 22 +++++
->   .../arm/bcm/raspberrypi,bcm2835-firmware.txt  | 14 ---
->   .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 33 +++++++
->   .../devicetree/bindings/arm/cpus.yaml         | 33 +++++++
->   26 files changed, 379 insertions(+), 290 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,cygnus.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,cygnus.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,hr2.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,ns2.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,vulcan-soc.yaml
->   delete mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
->
-
+> +
+> +properties:
+> +  compatible:
+> +    const:
+> +      google,cros-ec-i2c-tunnel
+> +
+> +  google,remote-bus:
+> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+> +    description: The EC bus we'd like to talk to.
+> +
+> +  "#address-cells": true
+> +  "#size-cells": true
+> +
+> +patternProperties:
+> +  "^.*@[0-9a-f]+$":
+> +    type: object
+> +    description: One node per I2C device connected to the tunnelled I2C bus.
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - google,remote-bus
+> +
+> +examples:
+> +  - |
+> +    cros-ec@0 {
+> +        compatible = "google,cros-ec-spi";
+> +        i2c-tunnel {
+> +            compatible = "google,cros-ec-i2c-tunnel";
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            google,remote-bus = <0>;
+> +
+> +            battery: sbs-battery@b {
+> +                compatible = "sbs,sbs-battery";
+> +                reg = <0xb>;
+> +                sbs,poll-retry-count = <1>;
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.17.1
+> 
