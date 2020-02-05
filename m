@@ -4,234 +4,291 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE715C35247
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 18:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21284C35247
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 18:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7FF217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 18:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E187E20674
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 18:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580927106;
-	bh=hOydfYfzrCn/LQuDT+PO7LxII0NusccR2HEa5F4UbXU=;
+	s=default; t=1580927482;
+	bh=C0LmwRRDO6V9aBNMwOg6TmriDbDymklxGiZ5xV5e6GQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EAXsCALtQ07EWw59seYWmP2DMMowqBCrrn79wf9CwucucRZPeAw+4gRzurcn2Q8YX
-	 EDM/5FZREQNp+B5l8EG5parkAvfRp7OOeTo++xgB6Mk7Kkh4Hu8QzkNuG8RC6JZE92
-	 39hR3mZ29FyVntQvbzmfImi54/DNnFp3fBDgl9Ho=
+	b=mXtyOBVZ1vYX3MtH7g2JqMnoyoq4koVTpkRJfLCUjK1HZmXWNAlAEWK6Kc/f7XU0S
+	 OCd/nVxFCJZgX7dPhOQDk3m8MT0GNEauNuogUztrkyigetuA78N9Vo4dUyhYKjmMXo
+	 dMK2XMEgNHgQlQoCSBIvpbHDYPY3qAZSqe+cKnz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgBESZD (ORCPT
+        id S1727104AbgBESbV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 13:25:03 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54147 "EHLO
+        Wed, 5 Feb 2020 13:31:21 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34954 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbgBESZD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 13:25:03 -0500
-Received: by mail-wm1-f67.google.com with SMTP id s10so3546603wmh.3;
-        Wed, 05 Feb 2020 10:25:01 -0800 (PST)
+        with ESMTP id S1727081AbgBESbV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 13:31:21 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b17so4062413wmb.0;
+        Wed, 05 Feb 2020 10:31:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RSc09GihEjzTvjEtlsohVROecxEidcvCpfVJp0d2hyg=;
-        b=OL01PjhL8lArlCSpnIEW67h6dMLLx9G4WLrulFtk6Fo4cKMnBCTvFaOsmUpro31WkP
-         uL/OuQLIpha2DeOY3svk4Ev3YedRAiWjGIHtS2qn2gmi9gBchJgu8l3hauu0gnIOyxv4
-         9TF1W6g/noLnaorNFLxVHmxlhPLC/fZ2YxsFa6Jq2Ad+aRpYQvoyr+tSy0mTlt0CNB3J
-         h63Cxyx2l2H3MMN7xRTUiGM/N4uiBLxhqkfHSCoanxBOVsbmy6JnK/plGeg6B7sIZvjZ
-         ccq6WOEHWQFgfsOMBziCsQBT+VMf9A8IJbkjzJS+GIJMummvbVDGX/U6hGRHD7BNdSno
-         SEng==
-X-Gm-Message-State: APjAAAUHjZgwBIV4ApITYkyHuL1RpXyent8SMsJAWKI7W6LHfm6NqRKm
-        NAD7CJxkmHPf+XowXjioHhFC0hKE8A==
-X-Google-Smtp-Source: APXvYqz0OyKZaZUIEl0dvOgaLfULo7tApC3jXaas0FpSmwEYGD2eRs91jZJjw844MT9OsUXRg2U24A==
-X-Received: by 2002:a1c:7c18:: with SMTP id x24mr7626555wmc.185.1580927100515;
-        Wed, 05 Feb 2020 10:25:00 -0800 (PST)
+        bh=6Wdi1Nw0TkbyvcKynPsbbC+SOzflRd/srDAI90XenZE=;
+        b=GWq+dEQUXJlz0Ac+2OGlrCSA6NW0bLszpGjJr6FLbFDw++7/B6JfgfKK7JXW6xDEpX
+         ClPgg42p8WWlk9HzWIhhrV32VNGmYuXrkdQf/XzhwsZfAofY5hOBb+v8qilBqdmKDpzG
+         MwOIUreO71vfHNXJpKFEjOyxR+cHOCziD9JZiX8TFoEaulY7ShbR6XbAgdrDyX7FEJH6
+         GmrNP3GMXU4XrP+hcA3a0MStjOv4mX+mr2EBYqxMYU++WncDWNgl/mTmxL/6k1iQzmWi
+         C2MOqzgwS9+uRQHiPwXRlIk5kLuiXkz4Haf0DHFXLIjC8DvYWGXlB+dMdmxEHxTk512V
+         R27g==
+X-Gm-Message-State: APjAAAXLW1cn8gPe47zCVGovYuTW8Im5cPf2QmoCtt3YtVDdGf4OtOQq
+        ujeghYlm2fD/rmQrGLvJWA==
+X-Google-Smtp-Source: APXvYqyn42Q1ovkJ2Lu+d8qWkUbTjADyn1vtAXRSpRxtBayMzNNVpcCMSU3WQqP8Tvcd/ZzJv+vAIw==
+X-Received: by 2002:a1c:e388:: with SMTP id a130mr6975762wmh.176.1580927476553;
+        Wed, 05 Feb 2020 10:31:16 -0800 (PST)
 Received: from rob-hp-laptop ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id b21sm459441wmd.37.2020.02.05.10.24.59
+        by smtp.gmail.com with ESMTPSA id k13sm732442wrx.59.2020.02.05.10.31.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 10:24:59 -0800 (PST)
-Received: (nullmailer pid 22918 invoked by uid 1000);
-        Wed, 05 Feb 2020 18:24:58 -0000
-Date:   Wed, 5 Feb 2020 18:24:58 +0000
+        Wed, 05 Feb 2020 10:31:15 -0800 (PST)
+Received: (nullmailer pid 351 invoked by uid 1000);
+        Wed, 05 Feb 2020 18:31:14 -0000
+Date:   Wed, 5 Feb 2020 18:31:14 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ekigwana@gmail.com, jic23@kernel.org,
-        lars@metafoo.de
-Subject: Re: [PATCH v3 2/3] dt-bindings: iio: frequency: Add docs for ADF4360
- PLL
-Message-ID: <20200205182458.GA14182@bogus>
-References: <20200128111302.24359-1-alexandru.ardelean@analog.com>
- <20200128111302.24359-2-alexandru.ardelean@analog.com>
+To:     Konrad Kociolek <konrad@cadence.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] Add dt-bindings for Cadence XSPI controller
+Message-ID: <20200205183114.GA23752@bogus>
+References: <20200128124313.12837-1-konrad@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200128111302.24359-2-alexandru.ardelean@analog.com>
+In-Reply-To: <20200128124313.12837-1-konrad@cadence.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:13:01PM +0200, Alexandru Ardelean wrote:
-> From: Edward Kigwana <ekigwana@gmail.com>
+On Tue, Jan 28, 2020 at 01:43:04PM +0100, Konrad Kociolek wrote:
+> Add dt-bindings documentation for Cadence XSPI controller to support
+> SPI based flash memories.
 > 
-> This change adds the device-tree bindings documentation for the ADF4360
-> family of PLLs.
-> 
-> Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Konrad Kociolek <konrad@cadence.com>
 > ---
->  .../bindings/iio/frequency/adi,adf4360.yaml   | 137 ++++++++++++++++++
->  1 file changed, 137 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
+> Changes between initial version and v2:
+>   - renamed yaml file
+>   - added missing include
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
+>  .../devicetree/bindings/spi/cdns,xspi.yaml         | 166 +++++++++++++++++++++
+>  1 file changed, 166 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/cdns,xspi.yaml b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
 > new file mode 100644
-> index 000000000000..895e2cb2b300
+> index 000000000000..e8c43957fd90
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
-> @@ -0,0 +1,137 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright 2019-2020 Edward Kigwana
+> +++ b/Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+> @@ -0,0 +1,166 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
+
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +# Copyright 2020 Cadence
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/iio/frequency/adi,adf4360.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +$id: "http://devicetree.org/schemas/spi/cdns,xspi.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +title: Analog Devices ADF4360 PLL device driver
+> +title: Cadence XSPI Controller
 > +
 > +maintainers:
-> +  - Lars-Peter Clausen <lars@metafoo.de>
-> +  - Edward Kigwana <ekigwana@gmail.com>
+> +  - Konrad Kociolek <konrad@cadence.com>
 > +
 > +description: |
-> +  Bindings for the Analog Devices ADF4360 family of clock generator phase-locked
-> +  loop (PLL) devices with an integrated voltage-controlled oscillator (VCO).
-> +  Each of the parts in the family supports a specific frequency range.
-> +  Datasheets can be found here:
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-0.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-1.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-2.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-3.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-4.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-5.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-6.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-7.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-8.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-9.pdf
+> +  The XSPI controller allows SPI protocol communication in
+> +  single, dual, quad or octal wire transmission modes for
+> +  read/write access to slaves such as SPI-NOR flash.
 > +
+
+Needs a ref to spi-controller.yaml
+
 > +properties:
 > +  compatible:
-> +    pattern: '^adi,adf4360-[0-9]$'
+> +    const: cdns,xspi-nor-fpga
 > +
 > +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: clkin
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  adi,loop-filter-pfd-frequency-hz:
+> +    maxItems: 3
 > +    description: |
-> +      The phase-frequency-detector frequency that the external loop filter was
-> +      designed for.
-> +    allOf:
-> +      - minimum: 25000
-> +      - maximum: 8000000
-> +    maxItems: 1
+> +      Contains three entries, each of which is a tuple consisting of a
+> +      physical address and length. The first entry is the address and
+> +      length of the controller register set. The second entry is the
+> +      address and length of the Slave DMA data port. The third entry is
+> +      the address and length of auxiliary registers.
 
-You're mixing array and scalar properties. Drop 'maxItems' and min/max 
-don't need to be under 'allOf'.
+Split into 3 descriptions:
+
+items:
+  - description: ...
+  - description: ...
+  - description: ...
+
+With that, drop 'maxItems' as it is implied.
 
 > +
-> +  adi,loop-filter-charger-pump-current-microamp:
-> +    description: |
-> +      The charge pump current that the external loop filter was designed for.
-> +      The provided value is clamped to the closest enumerated value.
-> +    enum: [ 310, 620, 930, 1250, 1560, 1870, 2180, 2500 ]
-> +
-> +  adi,vco-minimum-frequency-hz:
-> +    description: |
-> +      Required for ADF4360-7, ADF4360-8 and ADF4360-9. Minimum VCO frequency
-> +      that can be supported by the tuning range set by the external inductor.
+> +  interrupts:
 > +    maxItems: 1
 > +
-> +  adi,vco-maximum-frequency-hz:
-> +    description: |
-> +      Required for ADF4360-7, ADF4360-8 and ADF4360-9. Maximum VCO frequency
-> +      that can be supported by the tuning range set by the external inductor.
-> +    maxItems: 1
-> +
-> +  adi,loop-filter-inverting:
-> +    description: Indicates that the external loop filter is an inverting filter.
+> +  cdns,dqs-last-data-drop:
 > +    type: boolean
-> +
-> +  adi,power-up-frequency-hz:
 > +    description: |
-> +      PLL tunes to the set frequency on probe or defaults to either the minimum
-> +      for the part or value set using adi,vco-minimum-frequency-hz.
-> +    maxItems: 1
+> +      This parameter should be set when the Flash Device being used
+> +      issues data on negative edge of Flash clock and returns them with
+> +      DQS and the PHY is configured to sample data in DQS mode.
+> +      If this param is set the controller internally requests this redundant
+> +      data at the end of the transfer cleaning up the PHY FIFO.
 > +
-> +  vdd-supply:
+> +  cdns,phy-data-select-oe-start:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 > +    description: |
-> +      vdd supply is used to enable or disable chip when regulator power down
-> +      mode is set. Other power down modes are used to mitigate the case of a
-> +      shared regulator.
+> +      Adjusts the starting point of the DQ pad output enable window.
+> +      Lower numbers pull the rising edge earlier in time and larger
+> +      numbers cause the rising edge to be delayed. Each bit changes
+> +      the output enable time by a 1/2 cycle resolution.
 > +
-> +  enable-gpios:
+> +  cdns,phy-data-select-oe-end:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 > +    description: |
-> +      Chip enable gpio is used to enable or disable chip when chip enable power
-> +      down mode is set.
-> +    maxItems: 1
+> +      Adjusts the ending point of the DQ pad output enable window.
+> +      Lower numbers pull the falling edge earlier in time and larger
+> +      numbers cause the falling edge to be delayed. Each bit changes
+> +      the output enable time by a 1/2 cycle resolution.
 > +
-> +  adi,muxout-gpios:
+> +  cdns,phy-dqs-select-oe-start:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 > +    description: |
-> +      MUX out gpio is used to detect chip and test pll lock state on read when
-> +      muxout control is set to lock detect.
-> +    maxItems: 1
+> +      Adjusts the starting point of the DQS pad output enable window.
+> +      Lower numbers pull the rising edge earlier in time and larger
+> +      numbers cause the rising edge to be delayed. Each bit changes
+> +      the output enable time by a 1/2 cycle resolution.
 > +
-> +  adi,power-out-level-microamp:
+> +  cdns,phy-dqs-select-oe-end:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 > +    description: |
-> +      Chip support setting of output power level. This property is optional.
-> +      If it is not provided by default 11000 uA will be set.
-> +    enum: [ 3500, 5000, 7500, 11000 ]
+> +      Adjusts the ending point of the DQS pad output enable window.
+> +      Lower numbers pull the falling edge earlier in time and larger
+> +      numbers cause the falling edge to be delayed. Each bit changes
+> +      the output enable time by a 1/2 cycle resolution.
+> +
+> +  cdns,phy-gate-cfg-close:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Normally the gate is closing then all bits of dfi_cebar are high
+> +      or when dfi_rd_pre_post_amble and rebar_dfi are high. This parameter
+> +      allows to extend the closing of the DQS gate. Recommended zero.
+> +
+> +  cdns,phy-gate-cfg:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Coarse adjust of gate open time. This value is the number of cycles
+> +      to delay the dfi_rddata_en signal prior to opening the gate in
+> +      full cycle increments. Decreasing this value pulls the gate earlier
+> +      in time. This field should be programmed such that the gate signal
+> +      lands in the valid DQS gate window.
+> +
+> +  cdns,phy-rd-del-select:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Defines the read data delay. Holds the number of cycles to delay
+> +      the dfi_rddata_en signal prior to enabling the read FIFO.
+> +      After this delay, the read pointers begin incrementing the read FIFO.
+> +
+> +  cdns,phy-clk-wr-delay:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Controls the clk_wr delay line which adjusts the write DQ bit
+> +      timing in 1/256th steps of the clock period in normal DLL
+> +      locked mode. In bypass mode this field directly programs
+> +      the number of delay elements.
+
+For all of these, any constraints on the values? default?
+
+> +
+> +  cdns,phy-use-lpbk-dqs:
+> +    type: boolean
+> +    description: |
+> +      This parameter chooses lpbk_dqs to capture data for reads.
+> +      Instead memory DQS will be used.
+> +
+> +  cdns,phy-use-ext-lpbk-dqs:
+> +    type: boolean
+> +    description: |
+> +      This parameter chooses external lpbk_dqs for data capture
+> +      (lpbk_dqs connected to the lpbk_dqs_IO pad). When not used
+> +      mem_rebar_pad is used for data read capture.
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - adi,loop-filter-charge-pump-current
-> +  - adi,loop-filter-pfd-frequency-hz
+> +  - interrupts
+> +  - cdns,phy-data-select-oe-start
+> +  - cdns,phy-data-select-oe-end
+> +  - cdns,phy-dqs-select-oe-start
+> +  - cdns,phy-dqs-select-oe-end
+> +  - cdns,phy-gate-cfg-close
+> +  - cdns,phy-gate-cfg
+> +  - cdns,phy-rd-del-select
+> +  - cdns,phy-clk-wr-delay
+
+Is there no sensible default to make these optional?
+
 > +
 > +examples:
 > +  - |
-> +      spi0 {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
+> +    #include <dt-bindings/interrupt-controller/irq.h>
 > +
-> +          pll@0 {
-> +                  compatible = "adi,adf4360-7";
-> +                  reg = <0>;
-> +                  spi-max-frequency = <2000000>;
-> +                  clocks = <&ref_clock>;
-> +                  #clock-cells = <0>;
-> +                  clock-names = "clkin";
-> +                  clock-output-names = "adf4360-7";
-> +
-> +                  adi,loop-filter-charge-pump-current = <5>;
-> +                  adi,loop-filter-pfd-frequency-hz = <2500000>;
-> +                  adi,vco-minimum-frequency-hz = <700000000>;
-> +                  adi,vco-maximum-frequency-hz = <840000000>;
-> +          };
-> +      };
-> +...
+> +    xspi: spi@a0010000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "cdns,xspi-nor-fpga";
+> +        reg = <0x0 0xa0010000 0x0 0x10000>,
+> +              <0x0 0xb0000000 0x0 0x10000>,
+> +              <0x0 0xa0020000 0x0 0x10000>;
+> +        interrupts = <0 90 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-parent = <&gic>;
+> +        cdns,dqs-last-data-drop;
+> +        cdns,phy-data-select-oe-start = <0>;
+> +        cdns,phy-data-select-oe-end = <4>;
+> +        cdns,phy-dqs-select-oe-start = <0>;
+> +        cdns,phy-dqs-select-oe-end = <1>;
+> +        cdns,phy-gate-cfg-close = <3>;
+> +        cdns,phy-gate-cfg = <0>;
+> +        cdns,phy-rd-del-select = <5>;
+> +        cdns,phy-clk-wr-delay = <64>;
+> +        cdns,phy-use-lpbk-dqs;
+> +        cdns,phy-use-ext-lpbk-dqs;
+> +        mt35xu512@0 {
+
+flash@0
+
+> +            compatible = "spi-nor", "micron,mt35xu512";
+
+Wrong order. Most specific first.
+
+> +            spi-max-frequency = <75000000>;
+> +            reg = <0>;
+> +        };
+> +        mt35xu512@1 {
+
+flash@1
+
+> +            compatible = "spi-nor", "micron,mt35xu512";
+> +            spi-max-frequency = <75000000>;
+> +            reg = <1>;
+> +        };
+> +    };
 > -- 
-> 2.20.1
+> 2.15.0
 > 
