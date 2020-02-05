@@ -6,84 +6,141 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E678DC35254
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 10:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D533C35254
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBC32072B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 10:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA1420674
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 11:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgBEKwp (ORCPT
+        id S1728280AbgBELAn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 05:52:45 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:63844 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727170AbgBEKwp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 05:52:45 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 05 Feb 2020 16:22:42 +0530
-Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 05 Feb 2020 16:22:14 +0530
-Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
-        id 7D108213F5; Wed,  5 Feb 2020 16:22:13 +0530 (IST)
-From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, robh@kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, tientzu@chromium.org,
-        seanpaul@chromium.org, rjliao@codeaurora.org, yshavit@google.com,
-        devicetree@vger.kernel.org,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Subject: [PATCH v1] Bluetooth: hci_qca: Optimized code while enabling clocks for BT SOC
-Date:   Wed,  5 Feb 2020 16:21:43 +0530
-Message-Id: <1580899903-19032-1-git-send-email-gubbaven@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 5 Feb 2020 06:00:43 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52062 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727562AbgBELAn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 06:00:43 -0500
+Received: from localhost.localdomain (p200300CB87166A00C93B781DBBC01C5E.dip0.t-ipconnect.de [IPv6:2003:cb:8716:6a00:c93b:781d:bbc0:1c5e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 32C8B2913B4;
+        Wed,  5 Feb 2020 11:00:40 +0000 (GMT)
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     devicetree@vger.kernel.org
+Cc:     myungjoo.ham@samsung.com, cw00.choi@samsung.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        linux-kernel@vger.kernel.org, dafna.hirschfeld@collabora.com,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+Subject: [PATCH v2] dt-bindings: convert extcon-usbc-cros-ec.txt extcon-usbc-cros-ec.yaml
+Date:   Wed,  5 Feb 2020 12:00:28 +0100
+Message-Id: <20200205110029.3395-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Directly passing clock pointer to clock code without checking for NULL
-  as clock code takes care of it
-* Removed the comment which was not necessary
-* Updated code for return in qca_regulator_enable()
+convert the binding file extcon-usbc-cros-ec.txt to yaml format
+This was tested and verified on ARM with:
+make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
 
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 ---
- drivers/bluetooth/hci_qca.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Changes since v1:
+1 - changing the license to (GPL-2.0-only OR BSD-2-Clause)
+2 - changing the maintainers
+3 - changing the google,usb-port-id property to have minimum 0 and maximum 255
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index eacc65b..8e95bfe 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1756,13 +1756,10 @@ static int qca_regulator_enable(struct qca_serdev *qcadev)
- 	power->vregs_on = true;
- 
- 	ret = clk_prepare_enable(qcadev->susclk);
--	if (ret) {
--		/* Turn off regulators to overcome power leakage */
-+	if (ret)
- 		qca_regulator_disable(qcadev);
--		return ret;
+ .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 ----------
+ .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 45 +++++++++++++++++++
+ 2 files changed, 45 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+deleted file mode 100644
+index 8e8625c00dfa..000000000000
+--- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-ChromeOS EC USB Type-C cable and accessories detection
+-
+-On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+-able to detect the state of external accessories such as display adapters
+-or USB devices when said accessories are attached or detached.
+-
+-The node for this device must be under a cros-ec node like google,cros-ec-spi
+-or google,cros-ec-i2c.
+-
+-Required properties:
+-- compatible:		Should be "google,extcon-usbc-cros-ec".
+-- google,usb-port-id:	Specifies the USB port ID to use.
+-
+-Example:
+-	cros-ec@0 {
+-		compatible = "google,cros-ec-i2c";
+-
+-		...
+-
+-		extcon {
+-			compatible = "google,extcon-usbc-cros-ec";
+-			google,usb-port-id = <0>;
+-		};
 -	}
- 
--	return 0;
-+	return ret;
- }
- 
- static void qca_regulator_disable(struct qca_serdev *qcadev)
-@@ -1781,8 +1778,7 @@ static void qca_regulator_disable(struct qca_serdev *qcadev)
- 	regulator_bulk_disable(power->num_vregs, power->vreg_bulk);
- 	power->vregs_on = false;
- 
--	if (qcadev->susclk)
--		clk_disable_unprepare(qcadev->susclk);
-+	clk_disable_unprepare(qcadev->susclk);
- }
- 
- static int qca_init_regulators(struct qca_power *qca,
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+new file mode 100644
+index 000000000000..fd95e413d46f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ChromeOS EC USB Type-C cable and accessories detection
++
++maintainers:
++  - Benson Leung <bleung@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++
++description: |
++  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
++  able to detect the state of external accessories such as display adapters
++  or USB devices when said accessories are attached or detached.
++  The node for this device must be under a cros-ec node like google,cros-ec-spi
++  or google,cros-ec-i2c.
++
++properties:
++  compatible:
++    const: google,extcon-usbc-cros-ec
++
++  google,usb-port-id:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description: the port id
++    minimum: 0
++    maximum: 255
++
++required:
++  - compatible
++  - google,usb-port-id
++
++additionalProperties: false
++
++examples:
++  - |
++    cros-ec@0 {
++        compatible = "google,cros-ec-i2c";
++        extcon {
++            compatible = "google,extcon-usbc-cros-ec";
++            google,usb-port-id = <0>;
++        };
++    };
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
 
