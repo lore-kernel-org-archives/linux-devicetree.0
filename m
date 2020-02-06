@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1D3C352A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821CBC2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C7A21775
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630EA21741
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgBFIw1 (ORCPT
+        id S1728016AbgBFI4U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:52:27 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:33807 "EHLO
+        Thu, 6 Feb 2020 03:56:20 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:32768 "EHLO
         alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727778AbgBFIw1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 03:52:27 -0500
+        by vger.kernel.org with ESMTP id S1727895AbgBFI4U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 03:56:20 -0500
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Feb 2020 14:22:24 +0530
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Feb 2020 14:26:18 +0530
 Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Feb 2020 14:22:02 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Feb 2020 14:26:17 +0530
 Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 2DE7628E6; Thu,  6 Feb 2020 14:22:02 +0530 (IST)
+        id A3A8428E6; Thu,  6 Feb 2020 14:26:16 +0530 (IST)
 From:   Harigovindan P <harigovi@codeaurora.org>
 To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
@@ -34,8 +34,8 @@ Cc:     Harigovindan P <harigovi@codeaurora.org>,
         seanpaul@chromium.org, hoegsberg@chromium.org,
         kalyan_t@codeaurora.org, nganji@codeaurora.org
 Subject: [v1] drm/msm/dsi: save pll state before dsi host is powered off
-Date:   Thu,  6 Feb 2020 14:21:54 +0530
-Message-Id: <1580979114-16447-1-git-send-email-harigovi@codeaurora.org>
+Date:   Thu,  6 Feb 2020 14:26:15 +0530
+Message-Id: <1580979375-17161-1-git-send-email-harigovi@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -50,7 +50,7 @@ Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 
 Changes in v1:
 	- Saving pll state before dsi host is powered off.
-	- Removed calling of save state in post_disable since everything
+	- Removed calling of save state in msm_dsi_phy_disable since everything
 	would be resetted and it would save only resetted values.
 
  drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
