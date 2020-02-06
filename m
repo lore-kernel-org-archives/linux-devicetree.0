@@ -2,106 +2,165 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ABEC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F75C33CAC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 14:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9DC214AF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580997443;
-	bh=BY3bAmfDGpjwi1ZC/nQxJs5fLqd4G6irce8OC6djfEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZeU2Pbh/pAROBPQC+RV46YaR88cYj4BR6dNrhQOyvtR5IxWJxPjtFx7gvTb6XzPIG
-	 /2ZQcDTaLmM+B7EaM5VkCB7TM/EfepcP+1zYn/l0G8sAMB9Bh0tKwMzy3EK10/n1K6
-	 0dHDIHTjJlo6ZQGPKEG34wggqMuxMIUjJ8oaaLZI=
+	by mail.kernel.org (Postfix) with ESMTP id A08E6217BA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 14:14:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="OTMh3ak8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgBFN5X (ORCPT
+        id S1728189AbgBFOON (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:57:23 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48438 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbgBFN5W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 08:57:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BY3bAmfDGpjwi1ZC/nQxJs5fLqd4G6irce8OC6djfEA=; b=h1BSwCcLlgimk6Oh3na09vu/N
-        AbeV6VNbvypZMJ77dtITNE6feYpGs3nzvQ6YOFFredtdIeVKhbrW6GAZkBdPIHoxS2SbWCUBfUzSG
-        SiiXB0bFFLqXUm+Sl79j8fgCaHIktc6HeQdPXZAt8eHrQpqugIU9jadLOG+04x/pKALtU=;
-Received: from fw-tnat-cam2.arm.com ([217.140.106.50] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1izheg-0002Jg-TW; Thu, 06 Feb 2020 13:57:18 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 8977ED01D7F; Thu,  6 Feb 2020 13:57:18 +0000 (GMT)
-Date:   Thu, 6 Feb 2020 13:57:18 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     lgirdwood@gmail.com, heiko@sntech.de, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, pgwipeout@gmail.com
-Subject: Re: [PATCH 2/3] ASoC: rockchip: Make RK3328 GPIO_MUTE control
- explicit
-Message-ID: <20200206135718.GQ3897@sirena.org.uk>
-References: <cover.1580950046.git.robin.murphy@arm.com>
- <29a846da33c02df64eca62b5fa0f3884652f788f.1580950046.git.robin.murphy@arm.com>
- <20200206114606.GM3897@sirena.org.uk>
- <ad2c941a-9724-510e-959f-3cca3cab1dc2@arm.com>
+        Thu, 6 Feb 2020 09:14:13 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45447 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgBFOON (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 09:14:13 -0500
+Received: by mail-vs1-f65.google.com with SMTP id v141so3803538vsv.12
+        for <devicetree@vger.kernel.org>; Thu, 06 Feb 2020 06:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zq26qbESibgRQo9Jt8lbKYJuguzXROj1d9xvP1lsLj0=;
+        b=OTMh3ak8WHbmFIhfKhaZWiZins4prgaMm65Qnrse7HErepdEtI+xZHcTAvKk7tfg7D
+         REYznSAyc53K8kO2ydadMMaEqwqh9dpEN2Nvv2aGDuGKHQSrS+PCkvgDkjxCPxJ4/I78
+         ZMtLb8n3yFdJB52xNRI0NG3sYhtqcy1ygP0UsVTA0jpjuipHUNg5ZYDTa+SernIq6/2v
+         A9R1M8XXJzFuE4q6pbo/GSnjb49a/oh6z7m6pqaoqsUbAuNJ3/nNsWGlT+XaBk/jllzs
+         vD68vLYPo+HZRLZwME/z63FNLHCf1FlIJ1cJvzPHh2Xr+kEWw9wTHTpU44GBJb4ekNPs
+         HBew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zq26qbESibgRQo9Jt8lbKYJuguzXROj1d9xvP1lsLj0=;
+        b=Ma3G0pezFN5nQCWCXVzMc8tJ5oztbPYPzeaM63MYrpQEl/KNZrvq2/DBZCl1XBum40
+         FXWzYnnbpQb3yWuzNgpVSI51auJ3eYWhsoYFX3H+1Hcaik7ZtiQd4vp2ZbCOCG1GjmrV
+         Nia+QOON8GAY++YtN1iHlQefmkxPf6VSrQPTFbMvFlMsVY8SUsKVuSD8jgHkJ8KUCKb1
+         RBUIK3Iuv3UCbUxpRe+5jEXQOu3XksMDgb9vGpV5G7g6bjOxD8CGlt+qrhgYbGXprzVe
+         JWdSB885C+uvXdZOS5GuCa4UIt3XCPMngZmG+tPGwPcrDM9fcUIcwJVs3IkR8bKCYC9B
+         5/1w==
+X-Gm-Message-State: APjAAAVWsIARMDbVVy7oCvIxw6xwE3AtbyxW/+D5ij8Ck9qG/KAJyvXw
+        YIWQ3tTzpuiZ36ZaLu2y3sheeAHpzZvVEZehsfAzkA==
+X-Google-Smtp-Source: APXvYqzebCTr2QcQz9u5oLrDGawETmoHyGUrr+V12r7zXovoI3ed0UYSk2EhVLGHr9yZ7IKix4nLC4jFkJMS3Wfbtsk=
+X-Received: by 2002:a67:d011:: with SMTP id r17mr1672458vsi.159.1580998451210;
+ Thu, 06 Feb 2020 06:14:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k1RcuuA4CmYq3pph"
-Content-Disposition: inline
-In-Reply-To: <ad2c941a-9724-510e-959f-3cca3cab1dc2@arm.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+In-Reply-To: <20191219172823.1652600-1-anarsoul@gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 6 Feb 2020 19:43:59 +0530
+Message-ID: <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Vasily,
 
---k1RcuuA4CmYq3pph
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+For this entire series, the DTS files don't contain any trip points.
+Did I miss some other series?
 
-On Thu, Feb 06, 2020 at 12:36:04PM +0000, Robin Murphy wrote:
-> On 2020-02-06 11:46 am, Mark Brown wrote:
+At a minimum, you should add some "hot" or "critical" trip points
+since then don't require a cooling-map with throttling actions. If you
+have "passive" trip points, then you need to provide cooling-maps.
 
-> > This makes sense but it is an ABI break so is going to need
-> > quirking for existing boards that unfortunately rely on the
-> > existing behaviour.
+Since this series has been merged, could you please follow up with a
+fixup series to add the trip points?
 
-> I guess the existing (mis)behaviour could be predicated on an
-> of_machine_is_compatible() check for Rock64 boards - it's ugly, but should
-> do the job if you feel it's more important to be 100% strict about not
-> regressing supported systems for any possible kernel/DTB combination.
+Regards,
+Amit
+p.s. We should catch all this automatically, I'll send out yaml
+bindings for the thermal framework soon that should catch this stuff.
 
-Yes, that's what I'm suggesting - we don't need to be exhaustive
-but having an obvious place for people to put the quirk in if
-they are affected is much better practice than just silently
-letting things break.
-
---k1RcuuA4CmYq3pph
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl48Gz0ACgkQJNaLcl1U
-h9Dqlwf/e9pbZnoHIpXKjbaTLD0JTMQR2bflNKfkFgJa4HN0EBmRU/2zzjhQsMBj
-FwXbRw0mbFlfh8DvJcHwjp9Nt+DzRk084QZm1xjXyIdok04lxQCq0/XwBENKJGUp
-icw2FFpQGCVQJRixdXMaY0M0woDlf8GF/gk+KkNrJWvtD3JYD3pbaNqDO3Sfg4C/
-ECfMVskfkS0XSKhcMWqbmFBf8ImMABUOu8qV6oWbEmxRlmjMxv28pNjXi+L96X83
-qZ9St2FvccCApJ7twkomusHVtpw62Cpwy0OOwxOFIjEWTHXzhyAH/vFtPmMJwZJJ
-vHRSZAgaioZ451LfVRCV/L6YnOeigg==
-=S0B3
------END PGP SIGNATURE-----
-
---k1RcuuA4CmYq3pph--
+On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> H6 and R40 SoCs.
+>
+> v8:
+>         - [vasily] Address more Maxime's comments for dt-schema
+>         - [vasily] Add myself to MAINTAINERS for the driver and schema
+>         - [vasily] Round calibration data size to word boundary for H6 and A64
+>         - [vasily] Change offset for A64 since it reports too low temp otherwise.
+>                    Likely conversion formula in user manual is not correct.
+>
+> v7:
+>         - [vasily] Address Maxime's comments for dt-schema
+>         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
+>         - [vasily] Add Maxime's a-b to the driver patch
+>
+> v6:
+>         - [ondrej, vasily] Squash all driver related changes into a
+>                            single patch
+>         - [ondrej] Rename calib -> calibration
+>         - [ondrej] Fix thermal zone registration check
+>         - [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
+>         - [ondrej] Rework scale/offset values, H6 calibration
+>         - [ondrej] Explicitly set mod clock to 24 MHz
+>         - [ondrej] Set undocumented bits in CTRL0 for H6
+>         - [ondrej] Add support for A83T
+>         - [ondrej] Add dts changes for A83T, H3, H5, H6
+>         - [vasily] Add dts changes for A64
+>         - [vasily] Address Maxime's comments for YAML scheme
+>         - [vasily] Make .calc_temp callback mandatory
+>         - [vasily] Set .max_register in regmap config, so regs can be
+>                    inspected using debugfs
+>
+> Ondrej Jirman (4):
+>   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+>   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+>   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+>   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
+>
+> Vasily Khoruzhick (1):
+>   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
+>
+> Yangtao Li (2):
+>   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
+>   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+>     bindings
+>
+>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
+>  MAINTAINERS                                   |   8 +
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+>  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+>  drivers/thermal/Kconfig                       |  14 +
+>  drivers/thermal/Makefile                      |   1 +
+>  drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
+>  11 files changed, 985 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+>  create mode 100644 drivers/thermal/sun8i_thermal.c
+>
+> --
+> 2.24.1
+>
