@@ -2,104 +2,98 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34910C352A2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBE8C352A3
 	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097F621775
+	by mail.kernel.org (Postfix) with ESMTP id 6B10D2465A
 	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1581021987;
-	bh=Ocj0H6TQmpr7XwjGv77HKUZhpIL7ZWZKic9S5tcam94=;
+	bh=Fd2YhmJXyHWICE9xLRUhbR43QWIjp3P2ufjVNviVWns=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P2EebLnth8HQmwvN4QTa8ki0A1lZDQI3kOwQOc+HVFNWdrjt+px7v1NSCyUoUQIZ+
-	 ABt7fhGJ9+ljGz2xd05aKQafDnMYq6vlu6HZXJlJc5hxirN1GezgNkqj+Hxm6qHd3j
-	 m0j0w4av3QlYX/zbpaC42mxyelJ/3PMk+z78K48o=
+	b=OEHLUbjqoe6tEf0v0iDvIPXLlGH0g8esxp1dB1zxM47/kCjyOGJ1fT5+qOxCF0so3
+	 bcPOiwuk4goCI9BTVSc6OcdwDdLFZnj3RhfoKzl8roLQC4GXcGHZTgS0xpjwAGUmWm
+	 cG/XBkt0AwukZ3k6Pv1gYX4+IJHFq0SEdc0T+vPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgBFUq0 (ORCPT
+        id S1728229AbgBFUq0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 6 Feb 2020 15:46:26 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40745 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgBFUqZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:25 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z7so3333485pgk.7;
-        Thu, 06 Feb 2020 12:46:23 -0800 (PST)
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35955 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbgBFUqV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:21 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 185so59054pfv.3;
+        Thu, 06 Feb 2020 12:46:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jPtOQdw8vyUeztLpc680CHtZLK6W1JEQ2cHvbgrlY+8=;
-        b=WqXY9MDGqAuSlJ3Htq+iCYlFvm9yzCL2kfMcTGeF6Fm4x7kEg1/X8EivvdBzr3oRew
-         7gHInV7c4+S9g2kIDnKx+40EffR34sc4K8E4NnQ1oxGGaM2UgZ2PbtM3itWF0qk/0LTN
-         ISTe4CXRiZfiQFqAOGy8CbBhOgTOPwyHoVjDXI5FbZTtB/aPUhxHXyzbeO7UP6qf8pIB
-         HR5fC5KKnih6yhfjQsYIUeOmpfZ4nKBY5fr7Yv+jClW2ixtRL0ZkeeJzystO/c/pqJct
-         kNxzqBha1V9aGfMoL2/B1jKkuwxz7XTcXCkQm0Omn45fPoZloF6d71dy1HbpSRekiTpC
-         hAKA==
-X-Gm-Message-State: APjAAAURznOXjApo7kd+BORqDLn+qnYPuIoHyISmXPBIPZcxqTaskEst
-        wB6Qm5XBxp1SoAObeqVebQ==
-X-Google-Smtp-Source: APXvYqxza9xpQ1nh+paMG8H01152jYTBvT3wn55ABgjvQ/4PX2elrh5aIP/rcP6j59uN6+87Rk8oUQ==
-X-Received: by 2002:a63:4b52:: with SMTP id k18mr5635945pgl.371.1581021982840;
-        Thu, 06 Feb 2020 12:46:22 -0800 (PST)
+        bh=ug/wlo0Kk7ZmWuOhLjsGf8WpCyfYM5yOAezTl3oLxGE=;
+        b=PKgrnsV5MKiUZIMMv8THQCJTRF/OfN/A2C2Uz0slq+rnPdh1JeeJtHSPDRphIcio+0
+         MeryKD3yM6dqE/SC+j55EOXV7JQw2OXW675E3qs8H7PFZBr6cmQ9I5k1ePyMMMhOZT/3
+         nDaScFYIicxyK8eJel8Rur3dtlwKwb/FgIKWZICxE42HbkuK34vj3c6hh350lY02D5N+
+         HcK0hHtqk7lz+99hEYwPJA/eO/DqYbDIXbHROjZDPZrDBpJdM37llOW+vUWlL3tyCq3m
+         QWQRUdmdW78uFj4dZOvy5QrN7S5RT+fYv2+ZN86VMFyQ4hDwVUMGrDIT2mv/UsZ1JqnX
+         Bwxw==
+X-Gm-Message-State: APjAAAVfOduh9fRLaV0hRJzxa0/+wc3yxYkGsQZnY3HZLEeFl4cDvUS0
+        6e3B8v203iB7SxQ5jm9QCA==
+X-Google-Smtp-Source: APXvYqzR75X0SOO8/Ci8hfXh+3pGKYvyPgI2KQi3sQN7ajgY/oC7QShvBli/8QrnOI53l84UKQeUKg==
+X-Received: by 2002:a65:4d0d:: with SMTP id i13mr3719314pgt.346.1581021981006;
+        Thu, 06 Feb 2020 12:46:21 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id z29sm292462pgc.21.2020.02.06.12.46.21
+        by smtp.gmail.com with ESMTPSA id a21sm287558pgd.12.2020.02.06.12.46.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:22 -0800 (PST)
-Received: (nullmailer pid 28243 invoked by uid 1000);
-        Thu, 06 Feb 2020 17:56:52 -0000
-Date:   Thu, 6 Feb 2020 17:56:52 +0000
+        Thu, 06 Feb 2020 12:46:19 -0800 (PST)
+Received: (nullmailer pid 28310 invoked by uid 1000);
+        Thu, 06 Feb 2020 19:15:32 -0000
+Date:   Thu, 6 Feb 2020 19:15:32 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v3 2/2] dt-bindings: clk: intel: Add bindings document &
- header file for a new clock driver
-Message-ID: <20200206175652.GA25108@bogus>
-References: <cover.1580373142.git.rahul.tanwar@linux.intel.com>
- <1c4b7a999f47df4214a60971e27fa9311c8c64b4.1580373142.git.rahul.tanwar@linux.intel.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] Documentation: watchdog: qcom-wdt: Remove deprecated
+ compatible
+Message-ID: <20200206191532.GA24542@bogus>
+References: <20200204152104.13278-1-ansuelsmth@gmail.com>
+ <20200204152104.13278-2-ansuelsmth@gmail.com>
+ <20200204160958.GB17320@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1c4b7a999f47df4214a60971e27fa9311c8c64b4.1580373142.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <20200204160958.GB17320@roeck-us.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 04:54:01PM +0800, Rahul Tanwar wrote:
-> Clock generation unit(CGU) is a clock controller IP of Intel's Lightning
-> Mountain(LGM) SoC. Add DT bindings include file and document for CGU clock
-> controller driver of LGM.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  40 +++++
->  include/dt-bindings/clock/intel,lgm-clk.h          | 165 +++++++++++++++++++++
->  2 files changed, 205 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
->  create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-> new file mode 100644
-> index 000000000000..e9649fe75435
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/intel,cgu-lgm.yaml#
+On Tue, Feb 04, 2020 at 08:09:58AM -0800, Guenter Roeck wrote:
+> On Tue, Feb 04, 2020 at 04:21:02PM +0100, Ansuel Smith wrote:
+> > "qcom,kpss-wdt-msm8960"
+> > "qcom,kpss-wdt-apq8064"
+> > "qcom,kpss-wdt-ipq8064"
+> > "qcom,kpss-wdt-ipq4019"
+> > 
+> > and deprectaed and not used in the driver code at all. Drop them and
+> > fix the example.
+> > 
+> Rob may correct me, but I don't think you can just remove
+> deprecated properties. It doesn't matter if the driver supports
+> it or not; after all, DT property descriptions are supposed
+> to be OS independent.
 
-Drop 'bindings'
+Right.
 
-With that,
+Also, there's a conversion of this to schema under review, so it will 
+need to be refactored if not dropped.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Rob
