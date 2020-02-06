@@ -2,82 +2,112 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09CFC35247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCE8C35247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93770214AF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D18214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581026316;
-	bh=DIJMIz4b/WVmP/UX/VyRfCoVMvUq23sYLm2ETi3RUu4=;
+	s=default; t=1581026392;
+	bh=UPOTq0a1wwemy3i0Bqe1m6zV6WB9xk2D9tJOiwwIqAg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VJ73J9DfL+9dNn53KJyMCaA4PnGAvF8IH5OhDftcnHIAqbKi2Ez7w4QoLdgeqvijG
-	 btk+DQQlAHQvPILrwouVipckG1gZbiQ00uiiuZdRpMwcwPbnRZgsjL+TEi5025tipf
-	 Q1YRiAdqx9jViOUXbfWojangORC4+A4jR491X+is=
+	b=ErAAvv6HMuM0vzM1zozJBSQ6Ef6OWLakUQxqzHJVlxoSNjFiJqOoO0LVjUT7HBqVL
+	 DhCYTv4d7JNWkVqbDtAq3BtHMp4guW/FVjj1b0SI8VZV6aD/Qy0TlaNDgfRaHFgb7T
+	 AWlCkEohLBptMJj+FFaCtEeVc82RSz+vZ7qVW1ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbgBFV6g (ORCPT
+        id S1727443AbgBFV7v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:58:36 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35199 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbgBFV6g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:58:36 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so120438plt.2
-        for <devicetree@vger.kernel.org>; Thu, 06 Feb 2020 13:58:35 -0800 (PST)
+        Thu, 6 Feb 2020 16:59:51 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46443 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFV7v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:59:51 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so97293pll.13;
+        Thu, 06 Feb 2020 13:59:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BStdKAPKolNMZwxrXVPcUbFQXgxnAXRWUYti5a2mUC8=;
-        b=lnGVl54dBt/ICHiM5W3qVADltVV5ghj0dvmauRAtOHOEZNGdW7zSIOs2uwe6DwYkAX
-         maGVwelMEfbKYpcxuP3CA6lJJ5CZYZH9u+TGzhTdIaKJBFNXK05IulvA7Tw0yS4AJE+I
-         miOivLpsGAjjC/e89L2LDAaXP4hq/a1THu7Dj7EVSDpqsnI4fJraMDuJuce3U0XT0r8A
-         qCWC5KSWZPQQ1ARnSK9PuU1c+duQalnpVwKi7O1x2+F4Q3ghhgB+Oe7lgeYcGiyCT17W
-         SN79+l5kEdtvleVoWJtLGzQNiklrGnoLuhwRptVBhUgJVP1DpCZsIUZBMwO64xzEoKDg
-         cAHQ==
-X-Gm-Message-State: APjAAAWvs1o7LaMI5OTv43tMR54hwN1wf1z+bqpcJC1+bpyz4j0tELEx
-        7f5YdqsX/K0LtjmZ10LD7jiaOK/CQQ==
-X-Google-Smtp-Source: APXvYqzBiBbLFostSn1/kLsQsSIGXC3FSgAma6fd+JBSyrdcn3bID2QllKR51tWs9zi+tjz22cDevg==
-X-Received: by 2002:a17:90a:c24c:: with SMTP id d12mr7166780pjx.113.1581026315469;
-        Thu, 06 Feb 2020 13:58:35 -0800 (PST)
+        bh=sVXixa0B18zMPBUSYheGAsct/qyckxIS2tHmquk4WAY=;
+        b=gJH5kA6dCGEhZ/3W03hp6v/kLHQtNaGbLVveZZzxmn4ccBop06p7TniQvv61wknVov
+         lJJwxRj5ZfA2PMXRwmcQpLjO8Pm2zi7mcfxFoCIKwy39mpvrTZTAjKDHimHtE5CoEv+o
+         8RWzlGHkw6CPp/cSlKdlNomL5a6EAOo0zV7kW3wP+vhJu41QXOsvyGZQFgXxb31LXsLg
+         ygVE/TCvXZu3wqw4TA0poWzqp4szDa+6rbQI8RgvWOMkffQwUVLRBSbsieuHd2epwDjX
+         tvzVWgQDPRCMi7C8zDKQKDic5/+B5O5rq1Ou7+8l0eNI58YPDHptH34ZK7uzGTch/fRZ
+         2S4w==
+X-Gm-Message-State: APjAAAUT7Uc0eLCACGklNlG4ABPUbGvbnJmjbgmldvPzjuPdoi/UQQgP
+        5xSsVKevPa3c/aa6CyKefw==
+X-Google-Smtp-Source: APXvYqzQ9YsVc8gaumvlVWv2GaV+63IJpG8P6rBR7UaLfsBaOKX7ODYfLVMDfZ2RjAeHqRqV4JhmWg==
+X-Received: by 2002:a17:902:d205:: with SMTP id t5mr6261830ply.138.1581026389477;
+        Thu, 06 Feb 2020 13:59:49 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id z3sm347354pfz.155.2020.02.06.13.58.34
+        by smtp.gmail.com with ESMTPSA id v25sm343170pfe.147.2020.02.06.13.59.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 13:58:34 -0800 (PST)
-Received: (nullmailer pid 21455 invoked by uid 1000);
-        Thu, 06 Feb 2020 21:58:33 -0000
-Date:   Thu, 6 Feb 2020 14:58:33 -0700
+        Thu, 06 Feb 2020 13:59:48 -0800 (PST)
+Received: (nullmailer pid 23357 invoked by uid 1000);
+        Thu, 06 Feb 2020 21:59:47 -0000
+Date:   Thu, 6 Feb 2020 14:59:47 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     bage@linutronix.de
-Cc:     devicetree@vger.kernel.org, Bastian Germann <bage@linutronix.de>
-Subject: Re: [PATCH 2/5] dt-bindings: arm: sunxi: Add Linutronix Testbox
-Message-ID: <20200206215833.GA21375@bogus>
-References: <20200206113328.7296-1-bage@linutronix.de>
- <20200206113328.7296-3-bage@linutronix.de>
+To:     peng.fan@nxp.com
+Cc:     sudeep.holla@arm.com, mark.rutland@arm.com,
+        viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andre.przywara@arm.com
+Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+Message-ID: <20200206215947.GA21514@bogus>
+References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
+ <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200206113328.7296-3-bage@linutronix.de>
+In-Reply-To: <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu,  6 Feb 2020 12:33:24 +0100, bage@linutronix.de wrote:
-> From: Bastian Germann <bage@linutronix.de>
+On Thu, Feb 06, 2020 at 09:01:25PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Add device tree bindings for the newly added Linutronix Testbox board.
+> SCMI could use SMC/HVC as tranports, so add into devicetree
+> binding doc.
 > 
-> Signed-off-by: Bastian Germann <bage@linutronix.de>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  Documentation/devicetree/bindings/arm/sunxi.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> index f493d69e6194..03cff8b55a93 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> @@ -14,7 +14,7 @@ Required properties:
+>  
+>  The scmi node with the following properties shall be under the /firmware/ node.
+>  
+> -- compatible : shall be "arm,scmi"
+> +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
+>  - mboxes: List of phandle and mailbox channel specifiers. It should contain
+>  	  exactly one or two mailboxes, one for transmitting messages("tx")
+>  	  and another optional for receiving the notifications("rx") if
+> @@ -25,6 +25,8 @@ The scmi node with the following properties shall be under the /firmware/ node.
+>  	  protocol identifier for a given sub-node.
+>  - #size-cells : should be '0' as 'reg' property doesn't have any size
+>  	  associated with it.
+> +- arm,smc-id : SMC id required when using smc transports
+> +- arm,hvc-id : HVC id required when using hvc transports
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Don't the SMC ids get standardized?
+
+>  
+>  Optional properties:
+>  
+> -- 
+> 2.16.4
+> 
