@@ -2,107 +2,281 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C71C2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA15C352A2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8471214AF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580997247;
-	bh=GCzxJGLDhyzAc2+59nJJJlFFQZG+KekwiRcn/IX7tEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=va9QgoDaQ8oe3GUrhKx8/XNefV75+xEdlzSo068/y0VwVvXSct3z3L2nXpkd+fqC6
-	 RBr65dyV9YdIVlgGR+EgAWh+p94+5Yua9sCilEYyd9UqZ04Cj1xKz9IQV/QBkFtgo+
-	 g+SMbIyokqZXwsSdKCezaImD+gFnbDpyZjHfPx04=
+	by mail.kernel.org (Postfix) with ESMTP id EA34921775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:56:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CvXrtfZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbgBFNyH (ORCPT
+        id S1727872AbgBFN4M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:54:07 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42910 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFNyH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 08:54:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GCzxJGLDhyzAc2+59nJJJlFFQZG+KekwiRcn/IX7tEw=; b=OQWErEdDb/s7SaXS1CW0VBVGO
-        zsh/6D9z+LcFFmHYN/TIyNXdiSVzPvzGz+DXiucYa9JFU5a8V1Zkk+deq/vRR4sMtgYiGw/r4IHnX
-        2qg+E3luQg91bzTitvqbqjY1NeeTiz3KlQyKLAbRRBwiEFVETeqx3WX56J6iPCTo2IApw=;
-Received: from fw-tnat-cam2.arm.com ([217.140.106.50] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1izhbY-0002Fm-Dn; Thu, 06 Feb 2020 13:54:04 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id E3403D01D7F; Thu,  6 Feb 2020 13:54:03 +0000 (GMT)
-Date:   Thu, 6 Feb 2020 13:54:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     linux-spi@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
+        Thu, 6 Feb 2020 08:56:12 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21936 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727511AbgBFN4M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 08:56:12 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580997371; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=vl/gIxiBZYHP/CySTb94sGV3BKfRnMZhF+th9yYcAsI=; b=CvXrtfZiEiVim+LVfW9vr6liEDAB8RwTXayHxSVWRKje74DZyX+XF3AVLiXjVFxtgAgTZ8CJ
+ nztgmXnFgJkxmSFCEH8LYWHaKV/MyD+NrIHeaAyExvoCGRMJ1ie2P60bkBUeerRZpXRMj8zU
+ ncV3mFVpLKRiFt4EkspKJBl8pes=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3c1af7.7f787ad0f570-smtp-out-n03;
+ Thu, 06 Feb 2020 13:56:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 33219C4479C; Thu,  6 Feb 2020 13:56:07 +0000 (UTC)
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90B36C433CB;
+        Thu,  6 Feb 2020 13:56:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90B36C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH resend 1/2] spi: add driver for ar934x spi controller
-Message-ID: <20200206135403.GP3897@sirena.org.uk>
-References: <20200206084443.209719-1-gch981213@gmail.com>
- <20200206084443.209719-2-gch981213@gmail.com>
- <20200206113158.GK3897@sirena.org.uk>
- <CAJsYDVKnOv+4NT8V+9fFy_0KE7QSoeTL0jHTdq31Z=88vBzHgQ@mail.gmail.com>
- <CAJsYDV+C+-uqurM+yTS3XXXrEDe+G3XFrpYEAaZLvzECLNoF+A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="T6OnZCvW5HcnivXR"
-Content-Disposition: inline
-In-Reply-To: <CAJsYDV+C+-uqurM+yTS3XXXrEDe+G3XFrpYEAaZLvzECLNoF+A@mail.gmail.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V3 1/2] mfd: qcom-spmi-pmic: Convert bindings to .yaml format
+Date:   Thu,  6 Feb 2020 19:25:26 +0530
+Message-Id: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the bindings from .txt to .yaml format.
 
---T6OnZCvW5HcnivXR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |  80 --------------
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.yaml    | 115 +++++++++++++++++++++
+ 2 files changed, 115 insertions(+), 80 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
 
-On Thu, Feb 06, 2020 at 08:33:33PM +0800, Chuanhong Guo wrote:
-> On Thu, Feb 6, 2020 at 8:30 PM Chuanhong Guo <gch981213@gmail.com> wrote:
-
-> > Chipselect is also handled during transfer. Controller asserts
-> > corresponding chipselect in SHIFT_CTRL register, and if SHIFT_TERM bit
-> > is set, controller will deassert chipselect after current transfer is
-> > done. I need to know whether this is the last transfer and set
-> > SHIFT_TERM accordingly.
-
-> Oh, I remembered that I saw transfer_one function name somewhere and
-> thought maybe I could shorten the function name a bit. I'll correct
-> this back to ar934x_spi_transfer_one_message in v2.
-
-OK, sounds good - I see the chip select handling now.
-
---T6OnZCvW5HcnivXR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl48GnkACgkQJNaLcl1U
-h9Abxwf/bD6z7Zyx5ZcODXIHhsjroI14CG3xmml4eA/SkHeU5P02YglZOlXrAjQK
-AxJfhBpbiDy+R/eKMrzK4bsFjEOWsVLBiJ9HItN0qnnUmTXwfm5hyyxgw5qeHejb
-Uzu6XVVf5KmUS9XrOZ4p4JIIO5HWitOpmCtrfMQtvjp7hi+5NIjApdSw5nCMZYxb
-edOMq+0DDhXeMdLytbsQOehx6Vflyi7nEZS9TNEeLYG1zQPotBJccAiHypEtU0P0
-l/T1U624W5dSwFkSARM+Ko6HNSVgriPTMS1ZVqz4RHnfB+U3g3IsnjAdNgU1nUQP
-okovYCXjjOzLRa1fubeUMcjxNrRaZg==
-=fyFm
------END PGP SIGNATURE-----
-
---T6OnZCvW5HcnivXR--
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+deleted file mode 100644
+index fffc8fd..0000000
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
++++ /dev/null
+@@ -1,80 +0,0 @@
+-          Qualcomm SPMI PMICs multi-function device bindings
+-
+-The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
+-PMICs.  These PMICs use a QPNP scheme through SPMI interface.
+-QPNP is effectively a partitioning scheme for dividing the SPMI extended
+-register space up into logical pieces, and set of fixed register
+-locations/definitions within these regions, with some of these regions
+-specifically used for interrupt handling.
+-
+-The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
+-interfaced to the chip via the SPMI (System Power Management Interface) bus.
+-Support for multiple independent functions are implemented by splitting the
+-16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
+-each. A function can consume one or more of these fixed-size register regions.
+-
+-Required properties:
+-- compatible:      Should contain one of:
+-                   "qcom,pm8941",
+-                   "qcom,pm8841",
+-                   "qcom,pma8084",
+-                   "qcom,pm8019",
+-                   "qcom,pm8226",
+-                   "qcom,pm8110",
+-                   "qcom,pma8084",
+-                   "qcom,pmi8962",
+-                   "qcom,pmd9635",
+-                   "qcom,pm8994",
+-                   "qcom,pmi8994",
+-                   "qcom,pm8916",
+-                   "qcom,pm8004",
+-                   "qcom,pm8909",
+-                   "qcom,pm8950",
+-                   "qcom,pmi8950",
+-                   "qcom,pm8998",
+-                   "qcom,pmi8998",
+-                   "qcom,pm8005",
+-                   or generalized "qcom,spmi-pmic".
+-- reg:             Specifies the SPMI USID slave address for this device.
+-                   For more information see:
+-                   Documentation/devicetree/bindings/spmi/spmi.txt
+-
+-Required properties for peripheral child nodes:
+-- compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
+-
+-Optional properties for peripheral child nodes:
+-- interrupts:      Interrupts are specified as a 4-tuple. For more information
+-                   see:
+-                   Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+-- interrupt-names: Corresponding interrupt name to the interrupts property
+-
+-Each child node of SPMI slave id represents a function of the PMIC. In the
+-example below the rtc device node represents a peripheral of pm8941
+-SID = 0. The regulator device node represents a peripheral of pm8941 SID = 1.
+-
+-Example:
+-
+-	spmi {
+-		compatible = "qcom,spmi-pmic-arb";
+-
+-		pm8941@0 {
+-			compatible = "qcom,pm8941", "qcom,spmi-pmic";
+-			reg = <0x0 SPMI_USID>;
+-
+-			rtc {
+-				compatible = "qcom,rtc";
+-				interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
+-				interrupt-names = "alarm";
+-			};
+-		};
+-
+-		pm8941@1 {
+-			compatible = "qcom,pm8941", "qcom,spmi-pmic";
+-			reg = <0x1 SPMI_USID>;
+-
+-			regulator {
+-				compatible = "qcom,regulator";
+-				regulator-name = "8941_boost";
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+new file mode 100644
+index 0000000..affc169
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+@@ -0,0 +1,115 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/mfd/qcom,spmi-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm SPMI PMICs multi-function device bindings
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++  - Stephen Boyd <sboyd@codeaurora.org>
++
++description: |
++  The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
++  PMICs.  These PMICs use a QPNP scheme through SPMI interface.
++  QPNP is effectively a partitioning scheme for dividing the SPMI extended
++  register space up into logical pieces, and set of fixed register
++  locations/definitions within these regions, with some of these regions
++  specifically used for interrupt handling.
++
++  The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
++  interfaced to the chip via the SPMI (System Power Management Interface) bus.
++  Support for multiple independent functions are implemented by splitting the
++  16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
++  each. A function can consume one or more of these fixed-size register regions.
++
++properties:
++  compatible:
++    enum:
++      - qcom,pm8941
++      - qcom,pm8841
++      - qcom,pma8084
++      - qcom,pm8019
++      - qcom,pm8226
++      - qcom,pm8110
++      - qcom,pma8084
++      - qcom,pmi8962
++      - qcom,pmd9635
++      - qcom,pm8994
++      - qcom,pmi8994
++      - qcom,pm8916
++      - qcom,pm8004
++      - qcom,pm8909
++      - qcom,pm8950
++      - qcom,pmi8950
++      - qcom,pm8998
++      - qcom,pmi8998
++      - qcom,pm8005
++      - qcom,spmi-pmic
++
++  reg:
++    maxItems: 1
++    description:
++      Specifies the SPMI USID slave address for this device.
++      For more information see Documentation/devicetree/bindings/spmi/spmi.txt
++
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
++    description:
++      Each child node of SPMI slave id represents a function of the PMIC. In the
++      example below the rtc device node represents a peripheral of pm8941
++      SID = 0. The regulator device node represents a peripheral of pm8941 SID = 1.
++
++    properties:
++      compatible:
++        description:
++          Compatible of the PMIC device.
++
++      interrupts:
++        maxItems: 2
++        description:
++          Interrupts are specified as a 4-tuple. For more information
++          see Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
++
++      interrupt-names:
++        description:
++          Corresponding interrupt name to the interrupts property
++
++    required:
++      - compatible
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    spmi {
++        compatible = "qcom,spmi-pmic-arb";
++        #address-cells = <2>;
++        #size-cells = <0>;
++
++       pm8941@0 {
++         compatible = "qcom,pm8941";
++         reg = <0x0 0x0>;
++
++         rtc {
++           compatible = "qcom,rtc";
++           interrupts = <0x0 0x61 0x1 0x1>;
++           interrupt-names = "alarm";
++         };
++       };
++
++       pm8941@1 {
++         compatible = "qcom,pm8941";
++         reg = <0x1 0x0>;
++
++         regulator {
++           compatible = "qcom,regulator";
++           regulator-name = "8941_boost";
++         };
++       };
++    };
++...
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
