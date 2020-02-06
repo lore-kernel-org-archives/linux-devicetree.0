@@ -2,111 +2,106 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D79C33CAC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ABEC2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80D4217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:56:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="khya/urK"
+	by mail.kernel.org (Postfix) with ESMTP id 5C9DC214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580997443;
+	bh=BY3bAmfDGpjwi1ZC/nQxJs5fLqd4G6irce8OC6djfEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZeU2Pbh/pAROBPQC+RV46YaR88cYj4BR6dNrhQOyvtR5IxWJxPjtFx7gvTb6XzPIG
+	 /2ZQcDTaLmM+B7EaM5VkCB7TM/EfepcP+1zYn/l0G8sAMB9Bh0tKwMzy3EK10/n1K6
+	 0dHDIHTjJlo6ZQGPKEG34wggqMuxMIUjJ8oaaLZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgBFN4O (ORCPT
+        id S1727773AbgBFN5X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:56:14 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:57491 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727549AbgBFN4N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 08:56:13 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580997373; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=mW67z5fJQUs/2JR6p4GaeWdEZ1YlpNpt/lb6jF4izcY=; b=khya/urK19RhiOaCQKkA6MNV6jZgI3ySRIUHKWhix6iaqAz19RBJpP6P1RZ2zcR2nfpkz1MW
- w7SrOI/WlcIszVdf1RZXpv8cpcO9b/HbTSz+Y5ONvsKX2s3mmdmpcPTSln2qxNfeKXsk5p3d
- ZufajrnEI5t7WJ2Vw+K/ARNRPOM=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3c1afa.7ff404caeed8-smtp-out-n03;
- Thu, 06 Feb 2020 13:56:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CB0E1C43383; Thu,  6 Feb 2020 13:56:10 +0000 (UTC)
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D5C15C447A0;
-        Thu,  6 Feb 2020 13:56:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D5C15C447A0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V3 2/2] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
-Date:   Thu,  6 Feb 2020 19:25:27 +0530
-Message-Id: <1580997328-16365-2-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org>
-References: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org>
+        Thu, 6 Feb 2020 08:57:23 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48438 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgBFN5W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 08:57:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BY3bAmfDGpjwi1ZC/nQxJs5fLqd4G6irce8OC6djfEA=; b=h1BSwCcLlgimk6Oh3na09vu/N
+        AbeV6VNbvypZMJ77dtITNE6feYpGs3nzvQ6YOFFredtdIeVKhbrW6GAZkBdPIHoxS2SbWCUBfUzSG
+        SiiXB0bFFLqXUm+Sl79j8fgCaHIktc6HeQdPXZAt8eHrQpqugIU9jadLOG+04x/pKALtU=;
+Received: from fw-tnat-cam2.arm.com ([217.140.106.50] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1izheg-0002Jg-TW; Thu, 06 Feb 2020 13:57:18 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 8977ED01D7F; Thu,  6 Feb 2020 13:57:18 +0000 (GMT)
+Date:   Thu, 6 Feb 2020 13:57:18 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     lgirdwood@gmail.com, heiko@sntech.de, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, pgwipeout@gmail.com
+Subject: Re: [PATCH 2/3] ASoC: rockchip: Make RK3328 GPIO_MUTE control
+ explicit
+Message-ID: <20200206135718.GQ3897@sirena.org.uk>
+References: <cover.1580950046.git.robin.murphy@arm.com>
+ <29a846da33c02df64eca62b5fa0f3884652f788f.1580950046.git.robin.murphy@arm.com>
+ <20200206114606.GM3897@sirena.org.uk>
+ <ad2c941a-9724-510e-959f-3cca3cab1dc2@arm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="k1RcuuA4CmYq3pph"
+Content-Disposition: inline
+In-Reply-To: <ad2c941a-9724-510e-959f-3cca3cab1dc2@arm.com>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
-found on SC7180 based platforms
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
----
- Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 2 ++
- drivers/mfd/qcom-spmi-pmic.c                              | 4 ++++
- 2 files changed, 6 insertions(+)
+--k1RcuuA4CmYq3pph
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-index affc169..36f0795 100644
---- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-+++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-@@ -46,6 +46,8 @@ properties:
-       - qcom,pm8998
-       - qcom,pmi8998
-       - qcom,pm8005
-+      - qcom,pm6150
-+      - qcom,pm6150l
-       - qcom,spmi-pmic
- 
-   reg:
-diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
-index 1df1a27..5bfeec8 100644
---- a/drivers/mfd/qcom-spmi-pmic.c
-+++ b/drivers/mfd/qcom-spmi-pmic.c
-@@ -36,6 +36,8 @@
- #define PM8998_SUBTYPE		0x14
- #define PMI8998_SUBTYPE		0x15
- #define PM8005_SUBTYPE		0x18
-+#define PM6150L_SUBTYPE		0x1F
-+#define PM6150_SUBTYPE		0x28
- 
- static const struct of_device_id pmic_spmi_id_table[] = {
- 	{ .compatible = "qcom,spmi-pmic", .data = (void *)COMMON_SUBTYPE },
-@@ -57,6 +59,8 @@ static const struct of_device_id pmic_spmi_id_table[] = {
- 	{ .compatible = "qcom,pm8998",    .data = (void *)PM8998_SUBTYPE },
- 	{ .compatible = "qcom,pmi8998",   .data = (void *)PMI8998_SUBTYPE },
- 	{ .compatible = "qcom,pm8005",    .data = (void *)PM8005_SUBTYPE },
-+	{ .compatible = "qcom,pm6150l",   .data = (void *)PM6150L_SUBTYPE },
-+	{ .compatible = "qcom,pm6150",    .data = (void *)PM6150_SUBTYPE },
- 	{ }
- };
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+On Thu, Feb 06, 2020 at 12:36:04PM +0000, Robin Murphy wrote:
+> On 2020-02-06 11:46 am, Mark Brown wrote:
+
+> > This makes sense but it is an ABI break so is going to need
+> > quirking for existing boards that unfortunately rely on the
+> > existing behaviour.
+
+> I guess the existing (mis)behaviour could be predicated on an
+> of_machine_is_compatible() check for Rock64 boards - it's ugly, but should
+> do the job if you feel it's more important to be 100% strict about not
+> regressing supported systems for any possible kernel/DTB combination.
+
+Yes, that's what I'm suggesting - we don't need to be exhaustive
+but having an obvious place for people to put the quirk in if
+they are affected is much better practice than just silently
+letting things break.
+
+--k1RcuuA4CmYq3pph
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl48Gz0ACgkQJNaLcl1U
+h9Dqlwf/e9pbZnoHIpXKjbaTLD0JTMQR2bflNKfkFgJa4HN0EBmRU/2zzjhQsMBj
+FwXbRw0mbFlfh8DvJcHwjp9Nt+DzRk084QZm1xjXyIdok04lxQCq0/XwBENKJGUp
+icw2FFpQGCVQJRixdXMaY0M0woDlf8GF/gk+KkNrJWvtD3JYD3pbaNqDO3Sfg4C/
+ECfMVskfkS0XSKhcMWqbmFBf8ImMABUOu8qV6oWbEmxRlmjMxv28pNjXi+L96X83
+qZ9St2FvccCApJ7twkomusHVtpw62Cpwy0OOwxOFIjEWTHXzhyAH/vFtPmMJwZJJ
+vHRSZAgaioZ451LfVRCV/L6YnOeigg==
+=S0B3
+-----END PGP SIGNATURE-----
+
+--k1RcuuA4CmYq3pph--
