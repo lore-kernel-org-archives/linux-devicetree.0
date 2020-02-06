@@ -2,176 +2,78 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272B0C33CAC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 09:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945C3C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 09:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0715320838
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 09:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C60B206CC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 09:12:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgBFJAT (ORCPT
+        id S1728324AbgBFJM1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 04:00:19 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42185 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbgBFJAT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 04:00:19 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1izd19-0002bO-4D; Thu, 06 Feb 2020 10:00:11 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1izd18-0005Aq-3G; Thu, 06 Feb 2020 10:00:10 +0100
-Date:   Thu, 6 Feb 2020 10:00:10 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
-        lee.jones@linaro.org, stwiss.opensource@diasemi.com,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 3/3] watchdog: da9062: add power management ops
-Message-ID: <20200206090010.ya6p2kvab452kedr@pengutronix.de>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-4-m.felsch@pengutronix.de>
- <20200123205132.GA13377@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123205132.GA13377@roeck-us.net>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:58:04 up 83 days, 16 min, 81 users,  load average: 0.06, 0.11,
- 0.06
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Thu, 6 Feb 2020 04:12:27 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:3864 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727848AbgBFJM1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 04:12:27 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Feb 2020 14:42:24 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Feb 2020 14:42:04 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 54F7C28E6; Thu,  6 Feb 2020 14:42:03 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: [v1] drm/msm/dsi/pll: call vco set rate explicitly
+Date:   Thu,  6 Feb 2020 14:42:01 +0530
+Message-Id: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guenter,
+For a given byte clock, if VCO recalc value is exactly same as
+vco set rate value, vco_set_rate does not get called assuming
+VCO is already set to required value. But Due to GDSC toggle,
+VCO values are erased in the HW. To make sure VCO is programmed
+correctly, we forcefully call set_rate from vco_prepare.
 
-On 20-01-23 12:51, Guenter Roeck wrote:
-> On Wed, Jan 08, 2020 at 10:57:04AM +0100, Marco Felsch wrote:
-> > Disable the watchdog during suspend if it is enabled and re-enable it on
-> > resume. So we can sleep without the interruptions.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
 
-I got an kbuild email so I checked the linux-next master tree. On
-linux-next this patch isn't used instead the old v1 was used...
+Changes in v1:
+	- Calling set rate from vco_prepare
 
-Regards,
-  Marco
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> > ---
-> > v2:
-> > - add dlg,use-sw-pm check to differentiate between automatic and manual
-> >   disabling/enabling.
-> > ---
-> >  drivers/watchdog/da9062_wdt.c | 37 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> > 
-> > diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-> > index e149e66a6ea9..c9b9d6394525 100644
-> > --- a/drivers/watchdog/da9062_wdt.c
-> > +++ b/drivers/watchdog/da9062_wdt.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/jiffies.h>
-> >  #include <linux/mfd/da9062/registers.h>
-> >  #include <linux/mfd/da9062/core.h>
-> > +#include <linux/property.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/of.h>
-> >  
-> > @@ -30,6 +31,7 @@ static const unsigned int wdt_timeout[] = { 0, 2, 4, 8, 16, 32, 65, 131 };
-> >  struct da9062_watchdog {
-> >  	struct da9062 *hw;
-> >  	struct watchdog_device wdtdev;
-> > +	bool use_sw_pm;
-> >  };
-> >  
-> >  static unsigned int da9062_wdt_timeout_to_sel(unsigned int secs)
-> > @@ -198,6 +200,8 @@ static int da9062_wdt_probe(struct platform_device *pdev)
-> >  	if (!wdt)
-> >  		return -ENOMEM;
-> >  
-> > +	wdt->use_sw_pm = device_property_present(dev, "dlg,use-sw-pm");
-> > +
-> >  	wdt->hw = chip;
-> >  
-> >  	wdt->wdtdev.info = &da9062_watchdog_info;
-> > @@ -212,6 +216,7 @@ static int da9062_wdt_probe(struct platform_device *pdev)
-> >  	watchdog_set_restart_priority(&wdt->wdtdev, 128);
-> >  
-> >  	watchdog_set_drvdata(&wdt->wdtdev, wdt);
-> > +	dev_set_drvdata(dev, &wdt->wdtdev);
-> >  
-> >  	ret = devm_watchdog_register_device(dev, &wdt->wdtdev);
-> >  	if (ret < 0)
-> > @@ -220,10 +225,42 @@ static int da9062_wdt_probe(struct platform_device *pdev)
-> >  	return da9062_wdt_ping(&wdt->wdtdev);
-> >  }
-> >  
-> > +static int __maybe_unused da9062_wdt_suspend(struct device *dev)
-> > +{
-> > +	struct watchdog_device *wdd = dev_get_drvdata(dev);
-> > +	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
-> > +
-> > +	if (!wdt->use_sw_pm)
-> > +		return 0;
-> > +
-> > +	if (watchdog_active(wdd))
-> > +		return da9062_wdt_stop(wdd);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused da9062_wdt_resume(struct device *dev)
-> > +{
-> > +	struct watchdog_device *wdd = dev_get_drvdata(dev);
-> > +	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
-> > +
-> > +	if (!wdt->use_sw_pm)
-> > +		return 0;
-> > +
-> > +	if (watchdog_active(wdd))
-> > +		return da9062_wdt_start(wdd);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static SIMPLE_DEV_PM_OPS(da9062_wdt_pm_ops,
-> > +			 da9062_wdt_suspend, da9062_wdt_resume);
-> > +
-> >  static struct platform_driver da9062_wdt_driver = {
-> >  	.probe = da9062_wdt_probe,
-> >  	.driver = {
-> >  		.name = "da9062-watchdog",
-> > +		.pm = &da9062_wdt_pm_ops,
-> >  		.of_match_table = da9062_compatible_id_table,
-> >  	},
-> >  };
-> 
-
+diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+index 1c89454..6ac04fc 100644
+--- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
++++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+@@ -411,6 +411,12 @@ static int dsi_pll_10nm_vco_prepare(struct clk_hw *hw)
+ 	if (pll_10nm->slave)
+ 		dsi_pll_enable_pll_bias(pll_10nm->slave);
+ 
++	rc = dsi_pll_10nm_vco_set_rate(hw,pll_10nm->vco_current_rate, 0);
++	if (rc) {
++		pr_err("vco_set_rate failed, rc=%d\n", rc);
++		return rc;
++	}
++
+ 	/* Start PLL */
+ 	pll_write(pll_10nm->phy_cmn_mmio + REG_DSI_10nm_PHY_CMN_PLL_CNTRL,
+ 		  0x01);
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.7.4
+
