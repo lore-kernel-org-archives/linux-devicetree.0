@@ -7,85 +7,88 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D283C35247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430AFC352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067B2214AF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F60A2192A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581025916;
-	bh=L3OWlSAx20NWD+iXhm1i9zco+WDXp1YvgSyLhmxj1p8=;
+	s=default; t=1581025957;
+	bh=hVdR04PjaEfMdkcNAhu8lEZapEZR2+CWNeBZmTy1TOM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kG1WLjLTzP4XhLv4jHK6SAgDF5asZ6MxFL8zSrH1RM448DfD8ShQnAPlJrSLIFpqR
-	 BiO5QGd5CA/1+WmJxBiBSfJ17E1gBNISSbq/9nQbKVUQxWEECxkZjs0vuaCTYoJDrm
-	 8f1F/8BpLuObjBotJ+jNO+cS1tAioJCSXIlkvru4=
+	b=NPkeTxy8E3BHQl1Pylk5mEbVhbuiM6xT0sM7XW0Qr8fmeoPcAtaZXstYCsOPlWH/K
+	 iRj0CcTCmLgFw3kmQ9DKzU8pYgTa2PaESVuAZodKPZ1bRY1eDI7YwYeQwpV4vDC+Ik
+	 u3rDSdfJhkwl1W1RCevRcOjfNvCUpGPKnvAYlju0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgBFVvz (ORCPT
+        id S1727443AbgBFVwg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:51:55 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38428 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFVvz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:51:55 -0500
-Received: by mail-pl1-f196.google.com with SMTP id t6so105943plj.5;
-        Thu, 06 Feb 2020 13:51:54 -0800 (PST)
+        Thu, 6 Feb 2020 16:52:36 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43180 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFVwg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:52:36 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u131so3412467pgc.10;
+        Thu, 06 Feb 2020 13:52:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iz85MmRiE9rW06Ut/PVFpOf2uBDxnpNB+UaYiY3zwJg=;
-        b=EgC9mPRfdl/yDpKMazZpVostrccEy9XJ+Q7Q+ED3SuJPiAL/SZbe3FbNTCsmNZguVT
-         +lLBt3bhFhZR8G/NY58atdKMmgps/Ng763Z6OTX6gtioJ615bt3vDmO2da4hgSut/WrW
-         rEpOu+DoKN4r1HedE+ZpMPyfyRThh3JwaMAIbYMYYncSKQUlsEk292mq1bt81fatDxdG
-         WoigO2rjZRfbmCGN8rS65dK4s9TmhmD5hNDh9jiCpLss/Y2iNg07XQK/8t7lBZ0ecoqG
-         04zME05ImEVBGc8uoMubs/+aQi/4XLvgHjwTM3ohHWvZwalXkVRkj88iWxfsI2gkMN7f
-         maLg==
-X-Gm-Message-State: APjAAAUKjmVWYd3q2ei9xx0x/W3Uqz8t573ZSOBJsQnjdIgIwkkle+w/
-        ZhrUBK+EtviRrIE09m3noA==
-X-Google-Smtp-Source: APXvYqzsjQHh+Y8UWbIyQxUqon1VTSyaStKgHn7olYOehoc7PGKXMBs7r1WzMLqnWyRSlHrdgMcLFw==
-X-Received: by 2002:a17:90a:f013:: with SMTP id bt19mr5579089pjb.47.1581025914205;
-        Thu, 06 Feb 2020 13:51:54 -0800 (PST)
+        bh=FtdzqnFbYBCvi9ExcMSjlC82MNqpwwImTBc/WnOaN6k=;
+        b=ACSNtke8GAbIhgMmZzpRWvmSc9fdBV9BFA3ZHcgco+r+kCcQQvO2iPPZ8QtYPwYqTR
+         Mn0GGcBFJ9lbEMOCHRYadFq1VP5GVJRIryD/3H5A0r5n6csVKQbxGM594iRFmqzU2U5e
+         9Qn2L5lGzxC0OK+xSt01u0sR7e6ELEFX7fmHRwtFtk7LV5X46Id9NU5Hc/eIsPSnWPVW
+         59FlOXOCuzZyJF6DkY+umxqAfs9mrOqNZ8WUIOVpXd/Pi0fNi3CUZwgGAUk2M6dKZvsP
+         oafB1kyWsIm/IC/53X0OPb8dE0lJX2V7cUzzXXRE5CD5pNeDjAVKH2rT9OmspiJ7p77Z
+         CKwg==
+X-Gm-Message-State: APjAAAXlogsH8cTAvq8hd/2hUXuRdCMuRZR55aicg/TZRv+MV98GYSEP
+        CBVrpQuF3HVQBsWo4EiHOQ==
+X-Google-Smtp-Source: APXvYqwaFOqRlvpMxkGTCo4EtvXfZfUY0Dj/TNqM5kt+/273ObTUwIN/lBf/e5g/AOqrfve9igNUvQ==
+X-Received: by 2002:a62:188:: with SMTP id 130mr6311789pfb.249.1581025955567;
+        Thu, 06 Feb 2020 13:52:35 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id j14sm342951pgs.57.2020.02.06.13.51.52
+        by smtp.gmail.com with ESMTPSA id q28sm353053pfl.153.2020.02.06.13.52.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 13:51:53 -0800 (PST)
-Received: (nullmailer pid 10401 invoked by uid 1000);
-        Thu, 06 Feb 2020 21:51:52 -0000
-Date:   Thu, 6 Feb 2020 14:51:52 -0700
+        Thu, 06 Feb 2020 13:52:34 -0800 (PST)
+Received: (nullmailer pid 11642 invoked by uid 1000);
+        Thu, 06 Feb 2020 21:52:33 -0000
+Date:   Thu, 6 Feb 2020 14:52:33 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Yuti Amonkar <yamonkar@cadence.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        maxime@cerno.tech, jsarha@ti.com, tomi.valkeinen@ti.com,
-        praneeth@ti.com, mparab@cadence.com, sjakhade@cadence.com,
-        yamonkar@cadence.com
-Subject: Re: [PATCH v4 01/13] dt-bindings: phy: Remove Cadence MHDP PHY dt
- binding
-Message-ID: <20200206215152.GA10342@bogus>
-References: <1580969461-16981-1-git-send-email-yamonkar@cadence.com>
- <1580969461-16981-2-git-send-email-yamonkar@cadence.com>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     linux-iio@vger.kernel.org, jic23@kernel.org,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] dt-bindings: iio: chemical: consolidate
+ atlas-sensor docs
+Message-ID: <20200206215233.GA11472@bogus>
+References: <20200206061332.20427-1-matt.ranostay@konsulko.com>
+ <20200206061332.20427-4-matt.ranostay@konsulko.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580969461-16981-2-git-send-email-yamonkar@cadence.com>
+In-Reply-To: <20200206061332.20427-4-matt.ranostay@konsulko.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 6 Feb 2020 07:10:49 +0100, Yuti Amonkar wrote:
-> Remove the Cadence MHDP PHY bindings. The binding is added
-> in next commit in YAML format. It is renamed to adopt
-> torrent nomenclature.
-> This will not affect ABI as the driver has never been functional,
-> and therefore do not exist in any active use case.
+On Wed,  5 Feb 2020 22:13:32 -0800, Matt Ranostay wrote:
+> Since Atlas Scientific device support only varies from the compatible
+> string is ideal all the respective docs are merged into a single doc
+> named atlas,sensor.yaml
 > 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
 > ---
->  .../bindings/phy/phy-cadence-dp.txt           | 30 -------------------
->  1 file changed, 30 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>  .../bindings/iio/chemical/atlas,ec-sm.txt     | 21 --------
+>  .../bindings/iio/chemical/atlas,orp-sm.txt    | 21 --------
+>  .../bindings/iio/chemical/atlas,ph-sm.txt     | 21 --------
+>  .../bindings/iio/chemical/atlas,sensor.yaml   | 53 +++++++++++++++++++
+>  4 files changed, 53 insertions(+), 63 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
+>  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
+>  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
