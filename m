@@ -4,110 +4,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FDDC352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB824C352A2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D17B227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C150721927
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021996;
-	bh=aZV9knOAXi/0WajZqPpOgbFb+9AYqzq1ToPyIXh+tTs=;
+	s=default; t=1581022004;
+	bh=ve5jqGOOdexBchuEVk5Y8IHPvCgd7O/CnGxwt4IDuhY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=amBNtVhBDWy0FHr+tLzkRUT3U4mc430xMxig2cpBYBxrq+TNTfAP1i5i9292uawvM
-	 1RZMZ6SnX2B/qk7iVxALcGpE8cSQvSdz5gOFefAvh/CXJd2/22ga9GNMZ3s7n0q0PO
-	 Oiu0YTk8Y1OQTf6MzEP0irZQPfHoYplWvDBiSk4A=
+	b=vTIxA4IpEKqOs10Sj/p/vkkD2im7lWr48kieMckpvn5lB0Nq4oU2mTegSW6joszWs
+	 Q/xoxrqN33dbJlg8jqYsa7xEAp2ujL7bOXoz/m/L4w6QEE2DJvc2lHFc40GjQ/7+dz
+	 hLLTJz3xrmfTvJSx2VS/rXFTBfk7HQsyjh8y1Tz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgBFUqf (ORCPT
+        id S1728248AbgBFUq3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:35 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41780 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbgBFUqe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:34 -0500
-Received: by mail-pg1-f193.google.com with SMTP id l3so3338806pgi.8;
-        Thu, 06 Feb 2020 12:46:32 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:29 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53516 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728240AbgBFUq2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:28 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so493918pjc.3;
+        Thu, 06 Feb 2020 12:46:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ydXcMt/LQYTtC9+Pd4G5bVOYifXyo4gCLRUMdz5nmlc=;
-        b=izxZTnUEAW22RfqU1j51xkVaz4f4OhJha8Ap9BYyUUG54PWehpIlBQx4rzx46DJTPn
-         Em5fAElIFaTKZKysamF99ePfoXd7w+lbKDbuPF7Pj/c6SOhOkj+y4I4MTe6p8zQdiClg
-         HmNxu9xkEeFcmtKkThjVM3oJKAjLnm8jPyG7qD8HTVxxHKZZjEgk7UkKRd2XKeFWcbLy
-         73B4cBSOI91QI3EqXGUnhAaiUFzz8HxDuBybhy6x6MaebOcQh+f4WxE0LNRJOTE1OFiJ
-         TKlkOMsUGhzRdyLqvqnZSmgHOTl/GxyCcKr0wecnYjQVe0ZRAlUdhzbnE1kk77yLKo5J
-         od9w==
-X-Gm-Message-State: APjAAAX5JJKjJRqN8qT76kZhWxk85QA1MaCbEsIFvrGzEO+sd+hGfNeF
-        AMUEHAyI10v/5y6YFBAbQg==
-X-Google-Smtp-Source: APXvYqydDGv//MOaVcF+ltoSavNLLJxMyuRh6BXzPCHtlqH+bv6Q9/MQz/jK+pB7hWgEMXve5dqvDw==
-X-Received: by 2002:a62:2ad1:: with SMTP id q200mr6105224pfq.123.1581021991999;
-        Thu, 06 Feb 2020 12:46:31 -0800 (PST)
+        bh=2NBFgKyFN0dyFl8VDFki9+LYpwoMV3nlGwylBI5zhTc=;
+        b=tL/eeFTaTUPdX1sEJOfibqQkkFH1ckukIgSGdrKCfw4XlAzWZRAKpuR4HR1X9ZG54R
+         4YViIx9YVx3+MZcEYb5ugS6uxohlVdlSNSZEqtqdOMwOLZ7f9rp9vvq/R3QeuM33ZOSD
+         OKpYCo499jG86ChQYkAQlofbcuQhDBlTo9FgH/pBP5Ed17sSm/rD106P6+oSPp3iC6Q2
+         Dha31vTwbAuEHLnszcBez3rAT0CaS9Gvj7GH0dtQt6lPaKY9XhhJA7aV2lPvVxcgCo1m
+         ufjoGaW+xl2tIsTC2D6vecYEbpxgq3biA8HS17699zuzjYuEiDxG5EZITFME90xbn4ih
+         lP5w==
+X-Gm-Message-State: APjAAAVc+/un8+ElHplaLBjwSFQsnv1cRLNUjasZEM3WuoBSOQ/PqDvp
+        U99jZ70PhYjbLqwWmuKFFQ==
+X-Google-Smtp-Source: APXvYqyNEAAyTPvXxo1+qNGiJAaKLAML/OFDLMtfR2Y+1qUW/cvHgBNZYIkLTG9VLfLbpd3NqAC9UA==
+X-Received: by 2002:a17:90a:c390:: with SMTP id h16mr6846851pjt.131.1581021987274;
+        Thu, 06 Feb 2020 12:46:27 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id r13sm170817pjp.14.2020.02.06.12.46.30
+        by smtp.gmail.com with ESMTPSA id e38sm268368pgm.82.2020.02.06.12.46.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:31 -0800 (PST)
-Received: (nullmailer pid 13921 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:40:30 -0000
-Date:   Thu, 6 Feb 2020 18:40:30 +0000
+        Thu, 06 Feb 2020 12:46:26 -0800 (PST)
+Received: (nullmailer pid 23987 invoked by uid 1000);
+        Thu, 06 Feb 2020 19:13:14 -0000
+Date:   Thu, 6 Feb 2020 19:13:14 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-spi@vger.kernel.org, Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 4/5] dt-bindings: spi: spi-nxp-fspi: Add support for
- imx8mm, imx8qxp
-Message-ID: <20200206184030.GA11381@bogus>
-References: <20200202125950.1825013-1-aford173@gmail.com>
- <20200202125950.1825013-4-aford173@gmail.com>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v1] dt-bindings: msm:disp: update dsi and dpu bindings
+Message-ID: <20200206191314.GA19759@bogus>
+References: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200202125950.1825013-4-aford173@gmail.com>
+In-Reply-To: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 06:59:49AM -0600, Adam Ford wrote:
-> Add support for nxp,imx8qxp-fspi and nxp,imx8mm-fspi do the bindings
+On Tue, Feb 04, 2020 at 07:45:37PM +0530, Harigovindan P wrote:
+> Updating bindings of dsi and dpu by adding and removing certain
+> properties.
 
-s/do/to/
+Yes, the diff tells me that. The commit message should say why.
 
-> document.
+This change breaks compatibility as well.
+
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
-> V2: No change
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> index 2cd67eb727d4..7ac60d9fe357 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> @@ -2,6 +2,9 @@
+> Changes in v1:
+>         - Adding "ahb" clock as a required property.
+>         - Adding "bus", "rot", "lut" as optional properties for sc7180 device.
+>         - Removing properties from dsi bindings that are unused.
+> 	- Removing power-domain property since DSI is the child node of MDSS
+> 	  and it will inherit supply from its parent.
+> 
+>  Documentation/devicetree/bindings/display/msm/dpu.txt | 7 +++++++
+>  Documentation/devicetree/bindings/display/msm/dsi.txt | 5 -----
+>  2 files changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> index 551ae26..dd58472a 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> @@ -19,6 +19,7 @@ Required properties:
+>    The following clocks are required:
+>    * "iface"
+>    * "bus"
+> +  * "ahb"
+
+You can't just add new clocks...
+
+>    * "core"
+>  - interrupts: interrupt signal from MDSS.
+>  - interrupt-controller: identifies the node as an interrupt controller.
+> @@ -50,6 +51,8 @@ Required properties:
+>  - clock-names: device clock names, must be in same order as clocks property.
+>    The following clocks are required.
+>    * "bus"
+> +  For the device "qcom,sc7180-dpu":
+> +  * "bus" - is an optional property due to architecture change.
+>    * "iface"
+>    * "core"
+>    * "vsync"
+> @@ -70,6 +73,10 @@ Optional properties:
+>  - assigned-clocks: list of clock specifiers for clocks needing rate assignment
+>  - assigned-clock-rates: list of clock frequencies sorted in the same order as
+>    the assigned-clocks property.
+> +- For the device "qcom,sc7180-dpu":
+> +  clock-names: optional device clocks, needed for accessing LUT blocks.
+> +  * "rot"
+> +  * "lut"
 >  
->  Required properties:
->    - compatible : Should be "nxp,lx2160a-fspi"
-> +			    "nxp,imx8qxp-fspi"
-> +			    "nxp,imx8mm-fspi"
-
-All 3 are different and no compatibility?
-
-> +
->    - reg :        First contains the register location and length,
->                   Second contains the memory mapping address and length
->    - reg-names :  Should contain the resource reg names:
+>  Example:
+>  
+> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> index af95586..61d659a 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> @@ -8,13 +8,10 @@ Required properties:
+>  - reg-names: The names of register regions. The following regions are required:
+>    * "dsi_ctrl"
+>  - interrupts: The interrupt signal from the DSI block.
+> -- power-domains: Should be <&mmcc MDSS_GDSC>.
+>  - clocks: Phandles to device clocks.
+>  - clock-names: the following clocks are required:
+> -  * "mdp_core"
+>    * "iface"
+>    * "bus"
+> -  * "core_mmss"
+>    * "byte"
+>    * "pixel"
+>    * "core"
+> @@ -156,7 +153,6 @@ Example:
+>  			"core",
+>  			"core_mmss",
+>  			"iface",
+> -			"mdp_core",
+>  			"pixel";
+>  		clocks =
+>  			<&mmcc MDSS_AXI_CLK>,
+> @@ -164,7 +160,6 @@ Example:
+>  			<&mmcc MDSS_ESC0_CLK>,
+>  			<&mmcc MMSS_MISC_AHB_CLK>,
+>  			<&mmcc MDSS_AHB_CLK>,
+> -			<&mmcc MDSS_MDP_CLK>,
+>  			<&mmcc MDSS_PCLK0_CLK>;
+>  
+>  		assigned-clocks =
 > -- 
-> 2.24.0
+> 2.7.4
 > 
