@@ -2,107 +2,94 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC9FC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 14:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8F2C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 14:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E4C20838
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 14:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CCE21775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 14:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbOGeDbG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew8kBRM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBFOpJ (ORCPT
+        id S1727789AbgBFOv5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:45:09 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55382 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbgBFOpJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 09:45:09 -0500
-Received: by mail-pj1-f68.google.com with SMTP id d5so64024pjz.5;
-        Thu, 06 Feb 2020 06:45:08 -0800 (PST)
+        Thu, 6 Feb 2020 09:51:57 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37537 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727600AbgBFOv5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 09:51:57 -0500
+Received: by mail-io1-f67.google.com with SMTP id k24so6609888ioc.4;
+        Thu, 06 Feb 2020 06:51:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZE5pr5H6hvMlDNS4zB/gxs27dYvMV2BawxvYH6pi0do=;
-        b=gbOGeDbGejEATAJsmupRXx1OGbSnuQtdiKRVXy4T9gze0qsJnKxVyTiLmyI8x2PVlX
-         pRM2lpZ9pB17Ac3HXKZXYC2qVCXIh4fAirTQI/DFzMeQQAz3udH43jigUxIUdzxmj2cE
-         VgO28E+kbX8blTr3I7lXVJBV5XJ5ziOnNNS1iY7MRLliYI/01hXtPIwuD6mGpwXhCWua
-         vTNhs1KM0+FVlUii5tG/+gt21H1bj1G0VYPumP+Wt+bG/YJ8gUOjvsC2waPoBM8VF7BA
-         CnfdtixJ6cEGCfBSl390qw837d14+NHUprWug8Bz/hgkBPURLhkRL0XtQBy0m5LWDjOH
-         eung==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TqCXQKOBDXFQJVKGddlbc8pIiQ4q9FZiH/HTbC2xQy4=;
+        b=Ew8kBRM3/hL/4Kf0D2cwaTyLQ6Ds0xowkyP1rL4Mhrj2e8N3BvOyoJpmVJRJuDzbxE
+         s+hwyF6pkxXoHwciWNdtQEFg1Zt6H4WfNMD4RB/uxNxeFhiufi7/2w1e7V0qqw3p0xex
+         mU0w7qRdmzggpIIt9oPTIhmRIoobsnW6ubrnRSZQm4kKc3dNcSUdKfT5634rn5Nj4iMr
+         aD/4ESSeySiZl6MAyZEGer5u6rpziqyIDXkamz3sYoJB0FYdmeMv196F+IKFFWGFkWm1
+         ALPxipRfzvs+MoPHrnnLO2hry7+sVUdWldEZ1kjYadAWKbvVNhV/XGtjkB0mMCWp8ENA
+         jVkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZE5pr5H6hvMlDNS4zB/gxs27dYvMV2BawxvYH6pi0do=;
-        b=DgaHgMae0foR2hmcV0gdmcB3jzrIq41yGnQDUganrwpYAWVyOOjACV2gZ/BFx1DNEW
-         h0/DWMdn+yO9hAxiqWXqvtIsrldM/xXymVlsg9Mai2VA7HISMiDd2hslUxEaYkPQnOad
-         ve+9mrUu0kIPYbSCqROviabad+WMXMnfO2cRnn9rUAUJXhBVWp6mSJdxBeK8LoOAua7O
-         vZ4wLo/pdMxusgV5NBs6CTSvHRqA6eXPQwQdYNEj4JIfiFDbm2gGar8xxnfwym2kgpIb
-         HLCg5KnVwhU2sM4x+p36RPqWc55QeNRV7cstV4V9nP2cVucvSJ1Gsn+pFy8Dab2KoYgz
-         a++A==
-X-Gm-Message-State: APjAAAXZjOpgn16XTnxC4+LBuuu49Kotj7KhkPbATvZdQHXDKhKK5jZS
-        Fpd7kEOsak1C2TIdZZkCr1U=
-X-Google-Smtp-Source: APXvYqx9ZszK8VTATue0ZKY28pvbrF7QUbfFxeax1OgidxbBs3YHS3LARjrq5lekGFQGbd6HOTz1Og==
-X-Received: by 2002:a17:902:a984:: with SMTP id bh4mr4153989plb.281.1581000307332;
-        Thu, 06 Feb 2020 06:45:07 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n14sm3853937pgf.79.2020.02.06.06.45.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 06:45:06 -0800 (PST)
-Subject: Re: [PATCH 3/3] watchdog: da9062: add power management ops
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
-        lee.jones@linaro.org, stwiss.opensource@diasemi.com,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-4-m.felsch@pengutronix.de>
- <20200123205132.GA13377@roeck-us.net>
- <20200206090010.ya6p2kvab452kedr@pengutronix.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <a5d61822-c4fa-d5d3-c3ef-174b57a651bc@roeck-us.net>
-Date:   Thu, 6 Feb 2020 06:45:04 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TqCXQKOBDXFQJVKGddlbc8pIiQ4q9FZiH/HTbC2xQy4=;
+        b=cOY1kcreBqKC6Y1qZBomC+SOcEdmLcBev0koN/D06+/o/WnGMeZqJG4ZQPB9Hhl0Yp
+         6utYSuZzladNh7RjJi3liHBoiv0Hs7Dk9N+YL+tzgwjLt55RFbZhnzkHQlom7PkfuiwB
+         riPZWI0tQ87NmAMITFoC5NCd5OqTQSG/i5JNFfjbHd5oej1czF2/TNGapsWVs3lJGaPI
+         fshB3UoCCTNTbFyjV+boV3tANTIRdEnmxXc7djR7C9t+DS0hYPNQqWkx9y4GITjNYQfJ
+         2a0DyI3E3i+QNU2zmdrxBYcJw2/W89nVj9qbmun7r4TsIO+wNRF5Ne2cSe1LLKjcb5gy
+         uyag==
+X-Gm-Message-State: APjAAAXB2ISGRFyIty7dykmggPxQtrQ+sqxUyjOlUbE1AG9TJHyknLNi
+        WH55iAsERa3M2Ytmwow2gGNRxxaK8FDWTVY8ACc=
+X-Google-Smtp-Source: APXvYqwZYxfalpMvjr4USAwpdtFeqzts07iNxgJWdvTv/0SPzfTizDCBhbfM18KUA+AWxFcUyEZ7fepmukSqkbODuyE=
+X-Received: by 2002:a02:a50f:: with SMTP id e15mr35226468jam.48.1581000715561;
+ Thu, 06 Feb 2020 06:51:55 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200206090010.ya6p2kvab452kedr@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1580979114-16447-1-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1580979114-16447-1-git-send-email-harigovi@codeaurora.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 6 Feb 2020 07:51:44 -0700
+Message-ID: <CAOCk7NqEaJsbTwWgieXbGNN-eGFH3X0i=umMpLaLrPcB4GQzEw@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm/dsi: save pll state before dsi host is
+ powered off
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/6/20 1:00 AM, Marco Felsch wrote:
-> Hi Guenter,
-> 
-> On 20-01-23 12:51, Guenter Roeck wrote:
->> On Wed, Jan 08, 2020 at 10:57:04AM +0100, Marco Felsch wrote:
->>> Disable the watchdog during suspend if it is enabled and re-enable it on
->>> resume. So we can sleep without the interruptions.
->>>
->>> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
->>> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> I got an kbuild email so I checked the linux-next master tree. On
-> linux-next this patch isn't used instead the old v1 was used...
-> 
+On Thu, Feb 6, 2020 at 1:52 AM Harigovindan P <harigovi@codeaurora.org> wrote:
+>
+> Save pll state before dsi host is powered off. Without this change
+> some register values gets resetted.
 
-Yes, it appears that I picked the wrong version as well, and Wim picked it
-up from there. But, really, what do you expect if you don't tag your
-submissions with version numbers ?
+The phy driver already does this.  Why is the current implementation
+insufficient?
 
-I would suggest to send a follow-up patch to fix what is in -next.
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>
+> Changes in v1:
+>         - Saving pll state before dsi host is powered off.
+>         - Removed calling of save state in post_disable since everything
+>         would be resetted and it would save only resetted values.
 
-Guenter
+Removed from post_disable?  Thats not what I see in the change since
+you are adding code to dsi_mgr_bridge_post_disable()
