@@ -7,103 +7,92 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A36AC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634B6C352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC6B21775
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395B321775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581022033;
-	bh=IKtvLJH3POdpqJGJPZGuuIFX0JHRAm8o5gtj6atoK6o=;
+	s=default; t=1581022036;
+	bh=m8ipF+p1KWwxF0FH5urumluw+7Tw0tSrH5k0gM9Q3Ys=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dNQmFHSENgj2ZUeczfnOkLxztha+U1gCitqIqbaYRDjYswFr6QxFPiY9/hQtaex45
-	 qst9VNDwTOfAk18jXNveZdGcHjBOP2v0mL311kuS5O+JTLyBgt1GuclUejYhiJPssX
-	 3L7Ndll1wWEGdAdpcco9LBZP5H7zG74OqYeSDX/4=
+	b=Ja9Mim2BJ6r6QztV5EwIllqFZVbve3GLCvGFJhwmQfZIWPLalieEVZmclwrBfHhUs
+	 c6Bs61wCTN24ApbiZaudemJqlOPylFxwN5hRGXr9RZNT+lkh0ZT6FJ48uW4mG1clOI
+	 w36Tfd6obwFnsTfh31TVq/pcE7KKENSK8Zbz3Njg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgBFUpq (ORCPT
+        id S1728017AbgBFUpn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:46 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36737 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbgBFUpp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:45:45 -0500
-Received: by mail-pl1-f194.google.com with SMTP id a6so43447plm.3;
-        Thu, 06 Feb 2020 12:45:45 -0800 (PST)
+        Thu, 6 Feb 2020 15:45:43 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55562 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728009AbgBFUpm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:45:42 -0500
+Received: by mail-pj1-f66.google.com with SMTP id d5so488746pjz.5;
+        Thu, 06 Feb 2020 12:45:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CCWnD6/En746LfUHwkqymcGUcnPpptz2DSpQ1Ez5SOo=;
-        b=JbMds/ho9nUpnm8cXEfGvud8BFeLZ9ipAnA4JLFKDUF4BYe3CIWXQOM5gR3m7gzeEA
-         1A+pTXVsEPit3pKuf5RnI5UvsfGEsEbcptcYSaKMsNvMcEs7dcEdc4aVdlQmLHrlXU5C
-         ueP24f3fTKcZQ0juWY+huACagivPU6mR7mL0bjvDiUnyUy6ZOmu4mkTU7UyT5cCQ5SDh
-         rcmQHKvmdqlhtYfxsB+MCOgmqVa6+wRmMm5aWAu3IPxTytIIqjmhbQK9V0j4LM9kL2D0
-         C+Gr0wiwyYJek2DPl5GT89WYFxI7Uo15f8OZ9cjSCfkzB1dBkVA06/5DYVv58ZAQTkka
-         85qA==
-X-Gm-Message-State: APjAAAViT93hNv9dMvBQzcmoLGdPiJogoExPCcAs3nPQhue4p1COiFk/
-        Qbjflp+s1dfXaTma6XGtfA==
-X-Google-Smtp-Source: APXvYqwe1ExZhSMFyKB8on4CDR61XtJcPmp+HJxgSNnoGXk7d9N9LdjNbUm6Le3nrUv0jQvz1qW0Pw==
-X-Received: by 2002:a17:90a:bf0c:: with SMTP id c12mr6380858pjs.112.1581021944891;
-        Thu, 06 Feb 2020 12:45:44 -0800 (PST)
+        bh=JQfj0uzbhk9PL5wqDoKeIBKd41MQ1h8voivIlPs9HKc=;
+        b=eq+XzsaqERQOwcCshZzAYec2ud6qQJ6e80VLFLiKooJkqgaLPIvHd2CwrQcSzU4ya8
+         9P2T0H34tt+P9kw5O4vjBs7Lo1K2SPq1TXBMBIcjF3UruXRG/xMwfFOALscUbSxv8MZE
+         pIYw2YaxLQpiCneGOtTDSnJLyGlm9Jt+28sEMqQAirgINql2yNsMRTQZZj8Rmeyka7B7
+         RWzR+2HTMan/4IS/m3bDbnWjh3QYFU5H2Ip86eqxUQiN9pSBNzCmlmomkegROKXl43AV
+         8D02ezfuXmPiZr5BNL4S2hc/dJ1vuMSVXEwIm5E4Csl489//k5vNSyDGTSBNp/zjG9OP
+         5cyw==
+X-Gm-Message-State: APjAAAVMLATDNr9+Vd096SBJB4MwMM0WkxWrrGw+G3RDP24wPhp2wxN8
+        1NfelBmg2zXxFQ/nqyMK2w==
+X-Google-Smtp-Source: APXvYqzSMACQuqwX22lBn2rt4IX37CGDwizLP6s5gsYe5polHbDhnFefNbnnYKXjV0FMspaifpEDqg==
+X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr6788847pjb.44.1581021940411;
+        Thu, 06 Feb 2020 12:45:40 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id c6sm279450pgk.78.2020.02.06.12.45.43
+        by smtp.gmail.com with ESMTPSA id 4sm284539pfn.90.2020.02.06.12.45.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:44 -0800 (PST)
-Received: (nullmailer pid 25171 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:56:51 -0000
-Date:   Thu, 6 Feb 2020 18:56:51 +0000
+        Thu, 06 Feb 2020 12:45:39 -0800 (PST)
+Received: (nullmailer pid 24630 invoked by uid 1000);
+        Thu, 06 Feb 2020 17:54:58 -0000
+Date:   Thu, 6 Feb 2020 17:54:58 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add device tree binding for Arm
- CryptoCell trng engine
-Message-ID: <20200206185651.GA14044@bogus>
-References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
- <1580650021-8578-2-git-send-email-hadar.gat@arm.com>
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: dmaengine: Add UniPhier external DMA
+ controller bindings
+Message-ID: <20200206175458.GA12845@bogus>
+References: <1580362048-28455-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1580362048-28455-2-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580650021-8578-2-git-send-email-hadar.gat@arm.com>
+In-Reply-To: <1580362048-28455-2-git-send-email-hayashi.kunihiko@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 03:26:59PM +0200, Hadar Gat wrote:
-> The Arm CryptoCell is a hardware security engine. This patch adds DT
-> bindings for its TRNG (True Random Number Generator) engine.
+On Thu, Jan 30, 2020 at 02:27:27PM +0900, Kunihiko Hayashi wrote:
+> Add devicetree binding documentation for external DMA controller
+> implemented on Socionext UniPhier SoCs.
 > 
-> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  .../devicetree/bindings/rng/arm-cctrng.yaml        | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+>  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
 > new file mode 100644
-> index 0000000..fe9422e
+> index 00000000..32abf18
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> @@ -0,0 +1,51 @@
+> +++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> @@ -0,0 +1,57 @@
 > +# SPDX-License-Identifier: GPL-2.0
 
 Dual license new bindings:
@@ -112,79 +101,75 @@ Dual license new bindings:
 
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
+> +$id: http://devicetree.org/schemas/dma/socionext,uniphier-xdmac.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Arm ZrustZone CryptoCell TRNG engine
+> +title: Socionext UniPhier external DMA controller
+> +
+> +description: |
+> +  This describes the devicetree bindings for an external DMA engine to perform
+> +  memory-to-memory or peripheral-to-memory data transfer capable of supporting
+> +  16 channels, implemented in Socionext UniPhier SoCs.
 > +
 > +maintainers:
-> +  - Hadar Gat <hadar.gat@arm.com>
+> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > +
-> +description: |+
-> +  Arm ZrustZone CryptoCell TRNG (True Random Number Generator) engine.
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
 > +
 > +properties:
 > +  compatible:
-> +    description: Should be "arm,cryptocell-7x3-trng"
+> +    items:
+> +      - const: socionext,uniphier-xdmac
 
-Drop. That's what the schema says.
+You can drop 'items' for a single item.
 
-> +    const: arm,cryptocell-7x3-trng
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
 
-Is 'x' a wildcard? We don't do wildcards unless you have other ways to 
-get the specific version.
+You need to say what each entry is:
+
+items:
+  - description: ...
+  - description: ...
 
 > +
 > +  interrupts:
-> +    description: Interrupt number for the device.
-
-Drop. That's all 'interrupts'.
-
 > +    maxItems: 1
 > +
-> +  reg:
-> +    description: Base physical address of the engine and length of memory
-> +                 mapped region.
-
-Drop.
-
-> +    maxItems: 1
-> +
-> +  rosc-ratio:
-> +    description: Sampling ratio values from calibration for 4 ring oscillators.
-> +    maxItems: 1
-
-Is this an array?
-
-Needs a vendor prefix, a type ref and any constraints you can come up 
-with.
- 
-> +
-> +  clocks:
-> +    description: Reference to the crypto engine clock.
-
-How many clocks?
-
+> +  "#dma-cells":
+> +    const: 2
+> +    description: |
+> +      DMA request from clients consists of 2 cells:
+> +        1. Channel index
+> +        2. Transfer request factor number, If no transfer factor, use 0.
+> +           The number is SoC-specific, and this should be specified with
+> +           relation to the device to use the DMA controller.
 > +
 > +required:
 > +  - compatible
-> +  - interrupts
 > +  - reg
-> +  - rosc-ratio
-> +
-> +additionalProperties: false
+> +  - interrupts
+> +  - "#dma-cells"
+
+Add:
+
+additionalProperties: false
+
 > +
 > +examples:
 > +  - |
-> +    arm_cctrng: arm_cctrng@60000000 {
+> +    xdmac: dma-controller@5fc10000 {
+> +        compatible = "socionext,uniphier-xdmac";
+> +        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
+> +        interrupts = <0 188 4>;
+> +        #dma-cells = <2>;
+> +        dma-channels = <16>;
 
-rng@...
+Not documented. You need at least 'dma-channels: true' to indicate 
+you're using this. But you should be able to have some constraints such 
+as 'maximum: 16'.
 
-> +        compatible = "arm,cryptocell-7x3-trng";
-> +        interrupts = <0 29 4>;
-> +        reg = <0x60000000 0x10000>;
-> +        rosc-ratio = <5000 1000 500 0>;
-> +    };
-> -- 
-> 2.7.4
-> 
+Rob
