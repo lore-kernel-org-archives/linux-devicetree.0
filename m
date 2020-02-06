@@ -2,144 +2,144 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA4AC35247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 19:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A949FC35247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 19:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F44E217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 19:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747D021775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 19:30:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="Tv8MZfQy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rld0aMEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgBFT0y (ORCPT
+        id S1727479AbgBFTap (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:26:54 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:45879 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbgBFT0x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 14:26:53 -0500
-Received: by mail-vs1-f65.google.com with SMTP id v141so4516008vsv.12
-        for <devicetree@vger.kernel.org>; Thu, 06 Feb 2020 11:26:53 -0800 (PST)
+        Thu, 6 Feb 2020 14:30:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51650 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgBFTao (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 14:30:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t23so15510wmi.1;
+        Thu, 06 Feb 2020 11:30:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=S7KpLMUY7LiWZq/Kj/eAi+yNVL0NiKccJvwviJrN6LU=;
-        b=Tv8MZfQyvsljJl/L3IaZhjvF0zhvW7SGNWz006rU+AEOnWunbxolvEn+ld89B6WyJW
-         yn7gHQ2DktgOFMcX/tw2hqsr4MwhiimED2xSWJRNi0Apz814aNulaQTHc9vuGeK9IDNT
-         It5U1ReUUYb4xFG50FuVrDTevCZD9OT1L6gMNuK6aOR8E6g97ydSvQuyTUAWyDPrMdh6
-         vnjEkFc16T2U61hgk19+NgLZQA6IzseSsUaAl2CKt1oSsru/HYy478Lyv/RNrNgsMfJg
-         E34mx0+Ekt0XJqgazqxe82zwubl03+fz1uevMPW37HhjqMn6CPFGAdE0XsKrux2KOFyn
-         AYyw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WVXxvdnecOHHPSMEpYhU98LOQNanSGQy7dqix/yCj14=;
+        b=rld0aMEN8ENxF6NsO4UBquyzfTqkVnCfO4ttYXcOnQTIiZ2T5BaetOtb+iUxm/digi
+         GwXCxFCbf5j7C0+xHtVjg/+qN5LphmxCz9rsPcbNeGphW/jgXiPcz7/K3138J67nxkND
+         EIuIdsyJlk+291aRA0ZRZ/5N9If1Qn61r1QrWBc3V4pDnKy8msHD7ha2d/bAk+c4bfho
+         hXyIwWkkpmAKSbwU4S4ijV78TN4d5cq0w4L39UqKbj974eX5quRRnA9eRK0H0TNqIBj1
+         N2Zusf3OCJYB9fL/YJ7cLFTCgkHzuRC70YInw8O98N6xfPJ+D+NAJ8adRhFlQi2RexSC
+         rx0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=S7KpLMUY7LiWZq/Kj/eAi+yNVL0NiKccJvwviJrN6LU=;
-        b=OjV0kS4W1RGS5F30ZgsvZ6CaG9xJQwcvNQ6huNt8EqXUWX6FGsM/clRLIy26VYBv4V
-         A+E1EsMdwrUfAYNvIE+0I1FdQgzVVYsHMIfhJ1STblc59v86sZRrLieLBzYexrlYrqdY
-         RyrhsoJEoP0Yhf2RB/OJnB8bS5RC5hpgGrGTXtfFNOxcc+TnF1tyxcH+dx6FAuIHozeX
-         6pOkzZzrw0h+S350w9i7O7MhJCV1d9XvfnT13xW/wWeYrtzvTZjnBTn+JlidIqgyWPem
-         KRIlWe+zNMxqpxuDVG2PiAuxgkv9/q5iAwmKwKZCrlA1Ud6jdZPrZPJxFfQmkrRZuMG6
-         0sVQ==
-X-Gm-Message-State: APjAAAWcwETwTc6377yv1FAFlF+MdAtCqS2CaDmfhCi8CKyvPr2sKY9m
-        V7FY5ePa8WO1vU4PCAz/9Zjp+uxElnPafLU15WlmrQ==
-X-Google-Smtp-Source: APXvYqwoojhOiE1bY8Keza3r5GUPbzrgIujBGiCbM5sfzEmHarjYTwY433tNBdAO58ymcgqBI0TN5G4Kv1fiGkD0b+o=
-X-Received: by 2002:a67:d011:: with SMTP id r17mr2575599vsi.159.1581017212681;
- Thu, 06 Feb 2020 11:26:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219172823.1652600-1-anarsoul@gmail.com> <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
- <20200206155703.fyry7nh473mc7pqy@core.my.home>
-In-Reply-To: <20200206155703.fyry7nh473mc7pqy@core.my.home>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 7 Feb 2020 00:56:41 +0530
-Message-ID: <CAHLCerMLFYRNUfPAzbUTZkn33P7LG5PtHMNiSJ2GMCoJ=0k74w@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-To:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WVXxvdnecOHHPSMEpYhU98LOQNanSGQy7dqix/yCj14=;
+        b=eeWhAat/dpLT/+wGeFAI6n2hh7LgtJwtYkqNN+i4hE9qz4AcdKEjZsBbazPpMYH9sG
+         9Vi4cmZhpuJT2gWjo/JSY3IedGGCzy08okzLp3mGSdjJWw42ApKQ0F7aS7/7GgNDuukp
+         wyl4Y+of0RTIwe50yKyj/qxLu70C1B9DuSGTO5Ejz7ReJI1HmnWFKgdJCOVqAxZdzCAf
+         XG7yUh7M1ewILbuZdxTj9ha95MfIbsMjwmEvPl1ZeplEyhi4Aoot4vCbF91smeYsn2EG
+         jH3IKyZkZLA/l5s18oqgzIRkA1Jpgmt/HnQdJf4+GGEs1KnZjQYwFnbvAr2op9yIt5Rl
+         Wnrw==
+X-Gm-Message-State: APjAAAXpdyh8su4xSnewyiJoQ3yvzg+mTu5OEtuteffwSeOQHPh78V3J
+        VzQgQ9uG8VQaMlLHH4kDgxmPb8fImAI=
+X-Google-Smtp-Source: APXvYqyUtf3IIJnos/BEz0mLtu3pt+RIDgoWIXskDhqxOOYrmnTSVr7eGt0o8sCfa5DWMJh0NB1Jvg==
+X-Received: by 2002:a5d:484f:: with SMTP id n15mr3249087wrs.365.1581017442402;
+        Thu, 06 Feb 2020 11:30:42 -0800 (PST)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id b128sm537014wmb.25.2020.02.06.11.30.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 11:30:41 -0800 (PST)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org
+Subject: [PATCH] MIPS: c-r4k: Invalidate BMIPS5000 ZSCM prefetch lines
+Date:   Thu,  6 Feb 2020 14:30:37 -0500
+Message-Id: <20200206193037.32041-1-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 9:27 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
-:
->
-> Hi Amit,
->
-> On Thu, Feb 06, 2020 at 07:43:59PM +0530, Amit Kucheria wrote:
-> > Hi Vasily,
-> >
-> > For this entire series, the DTS files don't contain any trip points.
-> > Did I miss some other series?
-> >
-> > At a minimum, you should add some "hot" or "critical" trip points
-> > since then don't require a cooling-map with throttling actions. If you
-> > have "passive" trip points, then you need to provide cooling-maps.
-> >
-> > Since this series has been merged, could you please follow up with a
-> > fixup series to add the trip points?
->
-> I don't think lack of trip points causes runtime issues. Or does it? I pl=
-anned
-> to send update with some trip points and cooling maps for 5.7 merge windo=
-w.
-> Is this acceptable?
+Zephyr secondary cache is 256KB, 128B lines. 32B sectors. A secondary cache
+line can contain two instruction cache lines (64B), or four data cache
+lines (32B). Hardware prefetch Cache detects stream access, and prefetches
+ahead of processor access. Add support to inavalidate BMIPS5000 cpu zephyr
+secondary cache module (ZSCM) on DMA from device so that data returned is
+coherent during DMA read operations.
 
-Yes, I think that would be fine.
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ arch/mips/mm/c-r4k.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-> If not, I can send a patch that adds:
->
-> + trips {
-> +         cpu-very-hot {
-> +                 temperature =3D <100000>;
-> +                 hysteresis =3D <0>;
-> +                 type =3D "critical";
-> +         };
-> + };
->
-> and
->
-> + trips {
-> +         gpu-very-hot {
-> +                 temperature =3D <100000>;
-> +                 hysteresis =3D <0>;
-> +                 type =3D "critical";
-> +         };
-> + };
->
-> everywhere where appropriate. Though that will make rebase of out of
-> tree patches that already have a more complicated setup to be sent for th=
-e next
-> merge window a bit tedious.
+diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
+index 5f3d0103b95d..2d8892ba68ab 100644
+--- a/arch/mips/mm/c-r4k.c
++++ b/arch/mips/mm/c-r4k.c
+@@ -901,6 +901,35 @@ static void r4k_dma_cache_wback_inv(unsigned long addr, unsigned long size)
+ 	__sync();
+ }
+ 
++static void prefetch_cache_inv(unsigned long addr, unsigned long size)
++{
++	unsigned int linesz = cpu_scache_line_size();
++	unsigned long addr0 = addr, addr1;
++	int cpu_type = current_cpu_type();
++
++	if (cpu_type == CPU_BMIPS5000) {
++		/* invalidate zephyr secondary cache module prefetch lines */
++		addr0 &= ~(linesz - 1);
++		addr1 = (addr0 + size - 1) & ~(linesz - 1);
++
++		protected_writeback_scache_line(addr0);
++		if (likely(addr1 != addr0))
++			protected_writeback_scache_line(addr1);
++		else
++			return;
++
++		addr0 += linesz;
++		if (likely(addr1 != addr0))
++			protected_writeback_scache_line(addr0);
++		else
++			return;
++
++		addr1 -= linesz;
++		if (likely(addr1 > addr0))
++			protected_writeback_scache_line(addr0);
++	}
++}
++
+ static void r4k_dma_cache_inv(unsigned long addr, unsigned long size)
+ {
+ 	/* Catch bad driver code */
+@@ -908,6 +937,7 @@ static void r4k_dma_cache_inv(unsigned long addr, unsigned long size)
+ 		return;
+ 
+ 	preempt_disable();
++	prefetch_cache_inv(addr, size);
+ 	if (cpu_has_inclusive_pcaches) {
+ 		if (size >= scache_size) {
+ 			if (current_cpu_type() != CPU_LOONGSON64)
+-- 
+2.17.1
 
-Right, don't do that.
-
-> thank you,
->         Ondrej
->
-> > Regards,
-> > Amit
-> > p.s. We should catch all this automatically, I'll send out yaml
-> > bindings for the thermal framework soon that should catch this stuff.
