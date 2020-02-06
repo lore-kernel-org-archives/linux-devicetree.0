@@ -7,88 +7,86 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430AFC352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6A0C352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F60A2192A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EB5218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581025957;
-	bh=hVdR04PjaEfMdkcNAhu8lEZapEZR2+CWNeBZmTy1TOM=;
+	s=default; t=1581026006;
+	bh=asT22JlRmd3IjvGnC0pCQ6O27FBMSqJYAHER7yNoQuU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NPkeTxy8E3BHQl1Pylk5mEbVhbuiM6xT0sM7XW0Qr8fmeoPcAtaZXstYCsOPlWH/K
-	 iRj0CcTCmLgFw3kmQ9DKzU8pYgTa2PaESVuAZodKPZ1bRY1eDI7YwYeQwpV4vDC+Ik
-	 u3rDSdfJhkwl1W1RCevRcOjfNvCUpGPKnvAYlju0=
+	b=Im1ehiEBpzcVluOKVO0APiycvWJ/uhP+OvLlFhQKj4kfQHqg2HOEv6HGWHWOPGKp2
+	 lAOgB5mTiIWINjGXCd2Am8LP/5xvlY44A8KiwSR6Zt/efQw1SyO6a+zLiM4jlfa69c
+	 VHRpUpM575WRpvYyOS8EAVbH71xG3iITs7FwEDU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBFVwg (ORCPT
+        id S1727499AbgBFVxZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:52:36 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43180 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFVwg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:52:36 -0500
-Received: by mail-pg1-f193.google.com with SMTP id u131so3412467pgc.10;
-        Thu, 06 Feb 2020 13:52:35 -0800 (PST)
+        Thu, 6 Feb 2020 16:53:25 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39310 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFVxZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:53:25 -0500
+Received: by mail-pg1-f196.google.com with SMTP id j15so8448pgm.6;
+        Thu, 06 Feb 2020 13:53:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FtdzqnFbYBCvi9ExcMSjlC82MNqpwwImTBc/WnOaN6k=;
-        b=ACSNtke8GAbIhgMmZzpRWvmSc9fdBV9BFA3ZHcgco+r+kCcQQvO2iPPZ8QtYPwYqTR
-         Mn0GGcBFJ9lbEMOCHRYadFq1VP5GVJRIryD/3H5A0r5n6csVKQbxGM594iRFmqzU2U5e
-         9Qn2L5lGzxC0OK+xSt01u0sR7e6ELEFX7fmHRwtFtk7LV5X46Id9NU5Hc/eIsPSnWPVW
-         59FlOXOCuzZyJF6DkY+umxqAfs9mrOqNZ8WUIOVpXd/Pi0fNi3CUZwgGAUk2M6dKZvsP
-         oafB1kyWsIm/IC/53X0OPb8dE0lJX2V7cUzzXXRE5CD5pNeDjAVKH2rT9OmspiJ7p77Z
-         CKwg==
-X-Gm-Message-State: APjAAAXlogsH8cTAvq8hd/2hUXuRdCMuRZR55aicg/TZRv+MV98GYSEP
-        CBVrpQuF3HVQBsWo4EiHOQ==
-X-Google-Smtp-Source: APXvYqwaFOqRlvpMxkGTCo4EtvXfZfUY0Dj/TNqM5kt+/273ObTUwIN/lBf/e5g/AOqrfve9igNUvQ==
-X-Received: by 2002:a62:188:: with SMTP id 130mr6311789pfb.249.1581025955567;
-        Thu, 06 Feb 2020 13:52:35 -0800 (PST)
+        bh=8T1V38W5InTL1ntbQpn0paEkXJSeVE+sBMZNsYeKt+Q=;
+        b=PE4KOYnVhZgLSmguPfsstdtbWmCsvGlpxamc96BgxMXizuK97gs8RwoYdURG98tzGC
+         utodzcg3tlb/e2hTbYIAAjOmqzEHlW/WcrRQYqu7YA/r6PYzc0F+ieLc6jqpb+FCDT62
+         dFWIcFGmEBcQsxBEhBNKRFPPEkmJKWlvkpKn9TAr6dtzeb2NxriZA4Eo0GXaRpSK8B+L
+         u32TSGU80NNUbhONVhBeBICitaUvCGOyZKKFgRinovptOHeIiN07ACoxXQ4Gm0kuGIZK
+         +dDAZdT37Wk1cH4JPaIPhDiJJeUPWOtrBuGfTxVppYdNN6Z7PneA5MMeSBRtWGHfl2SG
+         kjZw==
+X-Gm-Message-State: APjAAAX0Ivs7Lt6GgQr4Me0iRuG5DFbsN27xJZRRdRxwddN/YoF4VKm9
+        BCO31qQHlR9DX77GqGEP2Q==
+X-Google-Smtp-Source: APXvYqxwfSB9rD8wKssgqYc0bxXd5ezj/OQINqf5YEcYx/FXYBgHAuI127vduMLt5QWUIz7pAyzY7g==
+X-Received: by 2002:a63:6c09:: with SMTP id h9mr5884788pgc.34.1581026004705;
+        Thu, 06 Feb 2020 13:53:24 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id q28sm353053pfl.153.2020.02.06.13.52.34
+        by smtp.gmail.com with ESMTPSA id y6sm360844pgc.10.2020.02.06.13.53.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 13:52:34 -0800 (PST)
-Received: (nullmailer pid 11642 invoked by uid 1000);
-        Thu, 06 Feb 2020 21:52:33 -0000
-Date:   Thu, 6 Feb 2020 14:52:33 -0700
+        Thu, 06 Feb 2020 13:53:24 -0800 (PST)
+Received: (nullmailer pid 13011 invoked by uid 1000);
+        Thu, 06 Feb 2020 21:53:22 -0000
+Date:   Thu, 6 Feb 2020 14:53:22 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-Cc:     linux-iio@vger.kernel.org, jic23@kernel.org,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] dt-bindings: iio: chemical: consolidate
- atlas-sensor docs
-Message-ID: <20200206215233.GA11472@bogus>
-References: <20200206061332.20427-1-matt.ranostay@konsulko.com>
- <20200206061332.20427-4-matt.ranostay@konsulko.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, megous@megous.com,
+        mylene.josserand@bootlin.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v2] dt-bindings: touchscreen: Convert edt-ft5x06 to
+ json-schema
+Message-ID: <20200206215322.GA12956@bogus>
+References: <20200206101434.30209-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200206061332.20427-4-matt.ranostay@konsulko.com>
+In-Reply-To: <20200206101434.30209-1-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  5 Feb 2020 22:13:32 -0800, Matt Ranostay wrote:
-> Since Atlas Scientific device support only varies from the compatible
-> string is ideal all the respective docs are merged into a single doc
-> named atlas,sensor.yaml
+On Thu, 6 Feb 2020 11:14:34 +0100, Benjamin Gaignard wrote:
+> Convert the EDT-FT5x06 to DT schema using json-schema.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  .../bindings/iio/chemical/atlas,ec-sm.txt     | 21 --------
->  .../bindings/iio/chemical/atlas,orp-sm.txt    | 21 --------
->  .../bindings/iio/chemical/atlas,ph-sm.txt     | 21 --------
->  .../bindings/iio/chemical/atlas,sensor.yaml   | 53 +++++++++++++++++++
->  4 files changed, 53 insertions(+), 63 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
->  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
->  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
+> version 2:
+> - preserve formatting in description
+> - use 'const' rather than 'enum' for reg property
+> - fix max/min issues 
+>  .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
+>  .../bindings/input/touchscreen/edt-ft5x06.yaml     | 123 +++++++++++++++++++++
+>  2 files changed, 123 insertions(+), 75 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
