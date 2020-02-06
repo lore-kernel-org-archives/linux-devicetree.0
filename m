@@ -2,155 +2,86 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7F6C352A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128C8C35247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D774921775
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27CD21775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581022039;
-	bh=2mypfZiDRaJrFJmEI4VwAsb9QLXMFR3851PTF17t2jY=;
+	s=default; t=1581022041;
+	bh=scZ6gvM4fDZ8bKwOqo6zd/bAlIB8tkl+0YZp5Tp7RVM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vfd/W/amk419K+4lAraMaRS3D05RiiuEssr5HaI5fo5HpXCwrcCZAA0oFwewrv0AF
-	 AQsYIQcxX/NdEVEVz6Tl4bInHlcLY5ZrX4QFimGsjl1AX7arMdjYp0vSGRuDcO5Hn6
-	 B9uFidwtQbFKsZCK4rBRTiT3H+e/jCWnakPf1K6k=
+	b=OhMrEybPdcLCMoJlz05Z/AXpJovCmYFv3CPb2ADO1B1hxg+DsU4hncdjw6V0Ob1AR
+	 //PPhXPoaV1/n2QdcbpXHnbd68cQN7x1b/5du6+9AvRlX8Qw+3J5BxVshTWYvvxHM1
+	 8Evv0VL+Oh85WkAdw4MBRvvccCazPEyZCnDNJLHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgBFUpk (ORCPT
+        id S1727964AbgBFUpi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:40 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38343 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbgBFUpj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:45:39 -0500
-Received: by mail-pj1-f68.google.com with SMTP id j17so494516pjz.3;
-        Thu, 06 Feb 2020 12:45:38 -0800 (PST)
+        Thu, 6 Feb 2020 15:45:38 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35114 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgBFUpi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:45:38 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y73so60853pfg.2;
+        Thu, 06 Feb 2020 12:45:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T1ngJTNlZxERh60vPjrLNV/Vk1r1+t/IfAuzUHqs6AE=;
-        b=gxwGl/Tr463nIBcxt040C/p0Q/o+tybQ+E1tfZkmFMmqdIlosAbqLw3G9qj72KfkOB
-         wo95ctoRVWkhi0BmC3wvYJk72Te615hYJfxWguGNxguNscrsY7NQmI+KKneOljTr//qz
-         OfQBnrGC1AkRR5sVY751zx4vGqO8zwXhQRWbBniWpggOmEf5FegW7YtO2MFT4m24cuqs
-         7+PO/GH7Chc852pDO54hh3R9YRX8XXh4Csrs3wD67ckPZ3BdVY5nHMMn6ZIb5YZZrkDB
-         9fmpgE0GC0fk6AuqPvXrfN0t9D7gTCqa7mFiWDC4EE+h9+RS0Dh1iXMrYuasv4GzZ1Ni
-         uXDQ==
-X-Gm-Message-State: APjAAAVmaUL5YKoOZbH1tTBYnghIHLJjzPOF7KqdNao4TTLnAlFMJT35
-        iXj1WHh6Aq5+CZ6ATcu10g==
-X-Google-Smtp-Source: APXvYqznJpweiJKL3aDfMJ802+43g2YmmQmhHstj1DGetYn8bdZRWJosqYnLRb7RZxOqXbOSU/+waA==
-X-Received: by 2002:a17:902:444:: with SMTP id 62mr5363236ple.209.1581021938443;
-        Thu, 06 Feb 2020 12:45:38 -0800 (PST)
+        bh=p3IMIbr/J9CTW2/B2PDo91i8UjkmasWwxiEZYW81UxQ=;
+        b=rF0rqyQDa4P9YFcwRjqnRA0YMozYq0fcTwY67TcCRJDdrIDQMPh1ltUSjYvAeKwau6
+         LeJyF8HmGsKRf+Jmmrm6jRofhv9zh6zyfxx3yGhLMmcJXm88MrIF+cW5Fn54H+dhPwLa
+         NrAg8CaElGLvEYN5RTI1FYRI3sbTqAc60edagJoI4hfB9YWSTYTmtt9mXF8sH5+uo/QW
+         ZIyZe1WeyzbEmfokgbo2IctLWbGEQrvSxh+im1q43wNFkQuVvxoLnR65tqlGWLZFTzgm
+         7uvXvFyu1ic0PAl/Wds9zXxE8BIkeMNuQvV2O4EtVWSEbRafS6ulhlqI2aBkbriWl8mo
+         1bNA==
+X-Gm-Message-State: APjAAAUuCWNFyeUfpesue2AA5psmQcm+kBnvh/9jP6NfvugaC8pQIDHL
+        FfqMEgj8XKM5i929JlMmIQ==
+X-Google-Smtp-Source: APXvYqzPL+ZDB178qEFY2njUEyFS57NH70RPQPC702j/FcQGVNzk0fFb3Yshxc5YmsTqVemI7K/DHg==
+X-Received: by 2002:a63:4c60:: with SMTP id m32mr5523373pgl.433.1581021936531;
+        Thu, 06 Feb 2020 12:45:36 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id a18sm271188pfl.138.2020.02.06.12.45.37
+        by smtp.gmail.com with ESMTPSA id i66sm282634pfg.85.2020.02.06.12.45.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:37 -0800 (PST)
-Received: (nullmailer pid 8727 invoked by uid 1000);
-        Thu, 06 Feb 2020 19:05:26 -0000
-Date:   Thu, 6 Feb 2020 19:05:26 +0000
+        Thu, 06 Feb 2020 12:45:35 -0800 (PST)
+Received: (nullmailer pid 19744 invoked by uid 1000);
+        Thu, 06 Feb 2020 19:10:57 -0000
+Date:   Thu, 6 Feb 2020 19:10:57 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        mark.rutland@arm.com, sriram.dash@samsung.com,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindinsg: net: can: Convert can-transceiver to
- json-schema
-Message-ID: <20200206190526.GA29141@bogus>
-References: <20200203150353.23903-1-benjamin.gaignard@st.com>
- <20200203150353.23903-2-benjamin.gaignard@st.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: regulator: add document bindings for
+ mp5416
+Message-ID: <20200206191057.GA19653@bogus>
+References: <20200204110419.25933-1-sravanhome@gmail.com>
+ <20200204110419.25933-2-sravanhome@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203150353.23903-2-benjamin.gaignard@st.com>
+In-Reply-To: <20200204110419.25933-2-sravanhome@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 04:03:52PM +0100, Benjamin Gaignard wrote:
-> Convert can-transceiver property to json-schema
+On Tue,  4 Feb 2020 12:04:17 +0100, Saravanan Sekar wrote:
+> Add device tree binding information for mp5416 regulator driver.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 > ---
->  .../bindings/net/can/can-transceiver.txt           | 24 ----------------------
->  .../bindings/net/can/can-transceiver.yaml          | 23 +++++++++++++++++++++
->  2 files changed, 23 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
->  create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.yaml
+>  .../bindings/regulator/mps,mp5416.yaml        | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.txt b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-> deleted file mode 100644
-> index 0011f53ff159..000000000000
-> --- a/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -Generic CAN transceiver Device Tree binding
-> -------------------------------
-> -
-> -CAN transceiver typically limits the max speed in standard CAN and CAN FD
-> -modes. Typically these limitations are static and the transceivers themselves
-> -provide no way to detect this limitation at runtime. For this situation,
-> -the "can-transceiver" node can be used.
-> -
-> -Required Properties:
-> - max-bitrate:	a positive non 0 value that determines the max
-> -		speed that CAN/CAN-FD can run. Any other value
-> -		will be ignored.
-> -
-> -Examples:
-> -
-> -Based on Texas Instrument's TCAN1042HGV CAN Transceiver
-> -
-> -m_can0 {
-> -	....
-> -	can-transceiver {
-> -		max-bitrate = <5000000>;
-> -	};
-> -	...
-> -};
-> diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.yaml b/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
-> new file mode 100644
-> index 000000000000..73bb084a45a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
-> @@ -0,0 +1,23 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/can/can-transceiver.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: CAN transceiver Bindings
-> +
-> +description: CAN transceiver generic properties bindings
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-> +
-> +properties:
-> +  can-transceiver:
-> +    type: object
 
-I think we want to drop this (or define $nodename) and then do:
-
-can-transceiver:
-  $ref: can-transceiver.yaml#
-
-in the users.
-
-> +
-> +    properties:
-> +      max-bitrate:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: a positive non 0 value that determines the max speed that
-> +                     CAN/CAN-FD can run.
-> +        minimum: 1
-> -- 
-> 2.15.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
