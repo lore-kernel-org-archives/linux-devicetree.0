@@ -2,51 +2,50 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BD4C33CAC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 15:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1354C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 15:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D99B222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 15:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9864622464
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 15:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="kwHFPJh9"
+	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="HRMOGWg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgBFPYb (ORCPT
+        id S1727457AbgBFPYg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:24:31 -0500
+        Thu, 6 Feb 2020 10:24:36 -0500
 Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:15398
         "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727505AbgBFPYb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:24:31 -0500
+        id S1727789AbgBFPYf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:24:35 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f5li6/WwksEhWpqWuRoavSTtFhiK8LR1iGLCfbcE7WlMaTwvIC9O52UOqBfsiGXm7abtfTZld7UmqeHmkuK/I57UmL21Mie2s7iQZk+QZlmvdBndbxGaR5ZLrlNf7MPcAF9aOLE+izOR7KRX/TIN4Jp1Zvj50t9SE6gOQW22P7+b0MCAmWSUDGjVLAZDZEEr6Qrh8gKZYSP/L2XGAiMbCPdDd7vKjYhzzA3lvdk43/tuR2jro9DA+4F3WdYLlpZU73a+yx81O9HkyHkHE9eWUS1H1/XiN6pTKKeZ4TT0ZlINDyDhOMv7Pu7CKFlnIYM3bZqD37kNSvrnklGQDxiDWQ==
+ b=Hah9DnP8RjwkVkSEoptK7nomknl+4ojinj1uLq6LSBTz8w81XFFp408zbHPOTfQOC3RCCNiia25Q9x7gSHPWqJoeHvaKn5Q1xoXH4A/BtSNJ6101rrb2NMwQcO+lT1TNP7ME2ugqidVYN3DmueOsNwH5vg+sWwGQkayGCkiOKTUdO220P+EXc8vS5pQPANMLWxBI7fIzHdF7eZ2KoVN/uhJuPbtitHqKrfww6PO1wl+AemMVgG2MtGnF2RXy2pM0g4OOrD2rEcRinMW35dm/nrQvh866hFU98uA6DUe/iwBfKokBmS0GU5qekdW6g6to3fYhpWYP20jCnoJivEpT/w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=toZDouw/ofV3eZGQ1rB/FHy1riorfgb0UqXJmUf6LhA=;
- b=TJ1NjjaR2odUb8bPSxf6dyvIpBTKpCVmxJtJWNuZ9JGbrcUFbJbNiHtx/7FyAxrw0OJqKFzF2Nxo4VTDzfmk514cZgtiovivj7I9mLixKHiVSjcjNOKDUcHjZJ+Hm2iEnypLze3sR7ibc9iCxLBOz6gjPpnQiME+gUvGYrW6QugQmcPSkplHzuCJSIYB8Uu0e5vrYvejtKPBSrYoAcvG0kHccwvck9FvqEWN87Ih/pyrvfKDq2Z2cvmHNznFl4M2zH+We5NF8rUr6jfRoIU49x6osC5jmHfH3XkBxg1OCia/AZk9RKBUsLKYcMPuLUIQZt8GIDXwRx5a3FyAlBp/+A==
+ bh=OxacbAxE9SCR9kD2aT4z0F5/qBgG16/j/quan9SZXec=;
+ b=YNpYq8+zNlylLKnLS6ljQPx1ZBOcz3ig2byTXNpLsjMiE6jLRrmaTh1RRZ3lAcLcZAiXfGe2b67zpQEizjb5f6PB130ot7nGRlswKJhuFTP2Z4fQhdLbjoqLw97rq6xprSD/bDwlY1s8smDgT0r6qUQNGnGIunU3gEvKpWLvRCPraH1cB+F0YRD4GKWedvCSw20gg/83qaVLgUQ3NKashODO/dVzg/LHWYTlyW5OuosaE1i6mBiq/ttXNAz+R0VTnhXZP3UlFqI+niqekKXs9j9tYDAtX4GDtOHSRFSq52+odF3vH9JtN9vp5i/eq9O0StVd1DG2YqPAuAPNno6Eig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=kococonnector.com; dmarc=pass action=none
  header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=toZDouw/ofV3eZGQ1rB/FHy1riorfgb0UqXJmUf6LhA=;
- b=kwHFPJh9cpcXN/tj6GqkA4fYohrFt0c70y5mzkmilVxHk296YQqbGiEhqq2BJJrYmpJP21peF53cxvwE8ZSebzoORtDNNdIOP6ZBCzCaQcEIfPb2WaIrRqhYKJqas01k6Em8+jGuGipJvw/lK5LERJr3ypm69JrO6EQHdpbH8QM=
+ bh=OxacbAxE9SCR9kD2aT4z0F5/qBgG16/j/quan9SZXec=;
+ b=HRMOGWg3fgNZFe+JRay4RDVIocd8apTobLplDMYb/AZPibZKAeP4I218EhLEMs6cmzcz3fsDYTCIwjnn4Ymw56GjycuYfxqMIsOPoOz7peWHup0E/IIzB+zN3Vfgp4W3r0sVX2D+iEK7AOzD+pxRvJ26B3FwC25TUZu+A9ZyNkI=
 Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
  DB6PR0902MB1847.eurprd09.prod.outlook.com (10.171.76.139) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.23; Thu, 6 Feb 2020 15:24:09 +0000
+ 15.20.2707.23; Thu, 6 Feb 2020 15:24:12 +0000
 Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
  ([fe80::406b:dddb:f0d2:7ea7]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
  ([fe80::406b:dddb:f0d2:7ea7%7]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
- 15:24:09 +0000
-Received: from localhost (193.47.161.132) by GV0P278CA0034.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:28::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 15:24:09 +0000
+ 15:24:12 +0000
+Received: from localhost (193.47.161.132) by GV0P278CA0019.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:28::6) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 15:24:12 +0000
 From:   Oliver Graute <oliver.graute@kococonnector.com>
 To:     "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>
 CC:     "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
@@ -63,19 +62,19 @@ CC:     "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/5] arm64: dts: imx8qm: added sata node
-Thread-Topic: [PATCH 3/5] arm64: dts: imx8qm: added sata node
-Thread-Index: AQHV3QF6DWUgMDjwi0S3VULcsUehEQ==
-Date:   Thu, 6 Feb 2020 15:24:09 +0000
-Message-ID: <20200206152222.31095-4-oliver.graute@kococonnector.com>
+Subject: [PATCH 5/5] arm64: dts: imx8qm-rom7720: added sata node
+Thread-Topic: [PATCH 5/5] arm64: dts: imx8qm-rom7720: added sata node
+Thread-Index: AQHV3QF86XfMAKsLvk6dsr17oKebTA==
+Date:   Thu, 6 Feb 2020 15:24:12 +0000
+Message-ID: <20200206152222.31095-6-oliver.graute@kococonnector.com>
 References: <20200206152222.31095-1-oliver.graute@kococonnector.com>
 In-Reply-To: <20200206152222.31095-1-oliver.graute@kococonnector.com>
 Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: GV0P278CA0034.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:710:28::21) To DB6PR0902MB2072.eurprd09.prod.outlook.com
+x-clientproxiedby: GV0P278CA0019.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:710:28::6) To DB6PR0902MB2072.eurprd09.prod.outlook.com
  (2603:10a6:6:8::23)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=oliver.graute@kococonnector.com; 
@@ -83,76 +82,54 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [193.47.161.132]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e77b47a4-5b1e-4cdf-2d42-08d7ab189cc7
+x-ms-office365-filtering-correlation-id: b38e2ad5-46ea-46c1-4716-08d7ab189eac
 x-ms-traffictypediagnostic: DB6PR0902MB1847:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0902MB1847D31AAC7E1977ABE743F1EB1D0@DB6PR0902MB1847.eurprd09.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:296;
+x-microsoft-antispam-prvs: <DB6PR0902MB18476329D4520A69F0DC8EC9EB1D0@DB6PR0902MB1847.eurprd09.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1051;
 x-forefront-prvs: 0305463112
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39830400003)(346002)(376002)(136003)(366004)(199004)(189003)(508600001)(4326008)(64756008)(186003)(5660300002)(2906002)(6486002)(66446008)(6916009)(81166006)(81156014)(44832011)(16526019)(956004)(2616005)(26005)(66556008)(66946007)(66476007)(54906003)(7416002)(6496006)(8676002)(52116002)(86362001)(36756003)(8936002)(71200400001)(1076003)(316002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1847;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39830400003)(346002)(376002)(136003)(366004)(199004)(189003)(508600001)(4326008)(64756008)(186003)(5660300002)(2906002)(6486002)(66446008)(6916009)(81166006)(81156014)(44832011)(16526019)(956004)(2616005)(26005)(66556008)(4744005)(66946007)(66476007)(54906003)(7416002)(6496006)(8676002)(52116002)(86362001)(36756003)(8936002)(71200400001)(1076003)(316002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1847;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: kococonnector.com does not
  designate permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Np/PsX60n0JhU895OcLcw52xUUYSVtZ17/NUTyRM5MQuxJ2gKgRVZP43fbMNxIJJ/3kSmMpHzm0qPkrqEQ1D81LkTiB6PCbvyJ3HcF+1DSiDuNo7SbBrrYHlajdoNu8gKoKNlqCNr5Mfk/jXNpMyT9JGzKJ7kGQKvUX0qiIYVGL+rn7o0mr5Hg0bai8IRiDAR3ryslDVFK4Prk2JXPqI2TfWb1O2XvlKLmIq/pahTfODluo4W/CehYjsMCSyptH4oCKsD/1LiyCNIcR7NFeGuLt9ZR8MA4QCdV5GWX+zt71UPykiHgS9/xaW5Aiy0yEfxrU8g8hDjz36NYXWEVFGlCoQRTMTSfztWUlT2sUvc+PKoNkMHT8Kg6YL7ZeEx+teuSqx7URF9j217VoPIsE2HfwRD4Yp8wzF2XtPP0IetaFV63wBd7MbYnQqCcJ+2m8X5lB8FOD1HNl4dIyUrsZZyZVrlh/s8PEuO0PXvc+LEB8=
-x-ms-exchange-antispam-messagedata: 7eq2JA12m677xrIHsdXpytwSZtDeUIvgtIeA7FKlVxd6JG14RE82WZdIzQ2IcDLWYDmRkJgnUiHQon93d8tOacxie8E3CtPy79uiNz0/aa7EDX2N329QMqTWmy4h6EnE8TUKVsZuGzzzBxyM2aJhuA==
+x-microsoft-antispam-message-info: Q3nu3eNTwz9peRC0dyfH7rgbU3SgxEMIGtYmTJ8YXPnohVNmMJi5wEoKQ79m1dEB3yCUk8TCUiNZK3feWbGgHIsJz8ebPIIFTREHvvc9mQK96PJ4pI2yzpcFscmAi/biRrwIBjMzACv4MR9X4ok0meTg74GeVm202iw9T95pYYuQThq2bH/xDdcqpUdQ5UX1GqVoDcCosn5O+P7ab/6dnWNN/02MuZ7lktl2eH1EBn17633VDTXdjm7gGWBHAmT88mel2S84863oBpTq6CRRR1CD8XOv0rzgYF151ZVA2PjeURg4HJn3lFHlGxhDo/NXZr/LHZ8cWNWGj7faPkL9u/OQQuqnhYFAU/yAkR/77LXe0KsA0KhI/YMUiC0/j5Z6Cqnrs5HXJLdRlUEGr4SLWRCW+7ZsiU/k9lqBU2PWKbSSA68wm0eVaCwTokMB7Y+Y6NolIVuB8XvFRTEBP0hBo7ybB89ayDdlg0WpCsnWqfaX6+mzwdM3r3VVs0Tez1gM
+x-ms-exchange-antispam-messagedata: lt8W/VObuAOAxnM9csWNQu8N8Ua0/Ao5h04Xxr75QAuhKSOP6OE0o5BOy4g6o+ggY5MZBY3dFETeYDRyeygk+bmDyd7jvxs4n/SjxCOy/i2UggP/sGiW5AlA06TEmOrxIisRXoIBBcE9oRc7k3V/ag==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: kococonnector.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e77b47a4-5b1e-4cdf-2d42-08d7ab189cc7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 15:24:09.5207
+X-MS-Exchange-CrossTenant-Network-Message-Id: b38e2ad5-46ea-46c1-4716-08d7ab189eac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 15:24:12.7259
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r2od5b4DMLr0ssHOK2tqNSQOH7bA/bNTEvE3YH0YSPsX06Qs/e6wqOXIqvssDzzeRoqcC7jnN3bqVj4jlCNMaS7xStcIbpWS7iypN595iLg=
+X-MS-Exchange-CrossTenant-userprincipalname: ggkWW8OWt1n9xsKxTFQfHJ5f+2kl6mgay+pg6YUorGyRECwMoqRILUarLzbIjXTs4wNyFnU4R3g0qvLrkuroxkiUEnpD5qKvGjLreO9Kc8c=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB1847
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
----
- arch/arm64/boot/dts/freescale/imx8qm.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8qm.dtsi
-index fa827ed04e09..5d96be5fec1b 100644
---- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-@@ -140,6 +140,29 @@
- 		method =3D "smc";
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts b/arch/arm=
+64/boot/dts/freescale/imx8qm-rom7720-a1.dts
+index 466f8c5c3705..8edfc8302357 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
++++ b/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
+@@ -106,6 +106,12 @@
  	};
+ };
 =20
-+	sata: sata@5f020000 {
-+		compatible =3D "fsl,imx8qm-ahci";
-+		reg =3D <0x0 0x5f020000 0x0 0x10000>, /* Controller reg */
-+			<0x0 0x5f1a0000 0x0 0x10000>; /* PHY reg */
-+		reg-names =3D "ctl", "phy";
-+		interrupts =3D <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-+/*
-+		clocks =3D <&clk IMX8QM_HSIO_SATA_CLK>,
-+			 <&clk IMX8QM_HSIO_PHY_X1_PCLK>,
-+			 <&clk IMX8QM_HSIO_SATA_EPCS_TX_CLK>,
-+			 <&clk IMX8QM_HSIO_SATA_EPCS_RX_CLK>,
-+			 <&clk IMX8QM_HSIO_PHY_X2_PCLK_0>,
-+			 <&clk IMX8QM_HSIO_PHY_X2_PCLK_1>,
-+			 <&clk IMX8QM_HSIO_PHY_X1_APB_CLK>;
-+		clock-names =3D "sata", "sata_ref", "epcs_tx", "epcs_rx",
-+				"phy_pclk0", "phy_pclk1", "phy_apbclk";
-+*/
-+		hsio =3D <&hsio>;
-+		//power-domains =3D <&pd_sata0>;
-+		iommus =3D <&smmu 0x13 0x7f80>;
-+		status =3D "disabled";
-+	};
++&sata {
++	pinctrl-0 =3D <&pinctrl_pciea>;
++	clkreq-gpio =3D <&lsio_gpio4 27 GPIO_ACTIVE_LOW>;
++	status =3D "okay";
++};
 +
- 	smmu: iommu@51400000 {
- 		compatible =3D "arm,mmu-500";
- 		interrupt-parent =3D <&gic>;
+ &usdhc1 {
+ 	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
+ 	pinctrl-0 =3D <&pinctrl_usdhc1>;
 --=20
 2.17.1
 
