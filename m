@@ -7,118 +7,158 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53716C2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 04:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A765C33CAC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 04:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2655820720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 04:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F1321741
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 04:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="d5i1wkGo"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Whkwu/LR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgBFEYc (ORCPT
+        id S1727762AbgBFEfT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 23:24:32 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43082 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727618AbgBFEYc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Feb 2020 23:24:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id u131so2052193pgc.10
-        for <devicetree@vger.kernel.org>; Wed, 05 Feb 2020 20:24:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=r/EB8vKdOIGyVfGGy6ndAk8y4CEDnzKKwajRB6fo/Ug=;
-        b=d5i1wkGoQkBN525LDzVEZ0hZ3DF4hypWZWxm1A/fAHdx6Yjz4Pp12sPCvi0cvD6YyD
-         i2BI57Hq8nrXcrgN1cwi2p1c1lruK315q9JpHznHXWUeZt8Xd93Manl205Bj2NmklVqk
-         4fWlakzK2wmpDXvM4/ur/68mr3jWamNU/zHug=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=r/EB8vKdOIGyVfGGy6ndAk8y4CEDnzKKwajRB6fo/Ug=;
-        b=anWY6aj7niih8LgEHbHrAc3fI1es+YG224NFsxd2Q20ZY+oKtiTN/gcWCdVGjHpFbD
-         SvQCnRN2YSHEoSCBsBdePiW+h9mA4umSlwQziM5r7V/CEHEjUp0XD2+pIRHiaGVULPLf
-         ivWVInVYGYA1vnhYMvvIM2j/EYQXBm8s3Anx9is7I5R2/UeViblSSmIrAIbo7+uOAmLh
-         gc26oDED/9zQQiVKetwZifUSfSn7dWjDWE/HL11IuM7ck6levM98aSHEgm+xFqWW6OnO
-         C/5Cm4B42wV9msxf6tFsGR2twL130b7/1UlvyT83Q2tWkSF/zfVxBYfZ3pJAeOYOtwkl
-         KuGQ==
-X-Gm-Message-State: APjAAAWyXx5J3pCaIbOpW/R+AgHh82LzZe4Mq7FNryP++wgpt0ouAU1l
-        yNqGQ0LAkqnmtcMBw3aSB2x1ig==
-X-Google-Smtp-Source: APXvYqw5d4n+gmSHrGnvae8L9c3b94CQRh9KoCreL3P3Td4dguhV2Ah/+dFtVSjeCvz9jw7f3R0bPw==
-X-Received: by 2002:a62:e30d:: with SMTP id g13mr1750129pfh.92.1580963071778;
-        Wed, 05 Feb 2020 20:24:31 -0800 (PST)
-Received: from [192.168.139.53] (50-196-3-218-static.hfc.comcastbusiness.net. [50.196.3.218])
-        by smtp.gmail.com with ESMTPSA id r145sm1126382pfr.5.2020.02.05.20.24.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2020 20:24:31 -0800 (PST)
+        Wed, 5 Feb 2020 23:35:19 -0500
+Received: from ozlabs.org ([203.11.71.1]:36391 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbgBFEfT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 23:35:19 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ClwM2XjNz9s29;
+        Thu,  6 Feb 2020 15:35:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1580963716;
+        bh=59zFNalJmp/WvnEScCF3ArwVDsj2RfvIy0ivPyUHgHA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Whkwu/LRfqatjhKrdPr0f6xAsscgI2GAcwnucCINarqZf1GbbRhy7k46Mc95LWSxm
+         qrw0UUlfp3K2Y5GLbLZ5L6O2QFWD7qzytCKVyZlR99x5BsGuSsWxCI9EU07mIe+fQb
+         bpSF1e9l2lrORXLJK8P2vkZRljA3gDojwjw/eKNOTAuvcg6gBadUo2Tj+HPeTgRAob
+         FvYXHJbaAlsaWTzMt2Bo8615d2IFgJ8jDochbh0K3L2rvqFAY6nExHRirdN9p2hfiK
+         s7nrhSFtwublQSzPKXjUpdIVC2rn+cSC8CoTDJ4i41+Ptpg2R3Em4zZ6IoRxHwp7bN
+         rB/awUKLetxHQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        DTML <devicetree@vger.kernel.org>,
+        Darren Stevens <darren@stevens-zone.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@ozlabs.org, "contact\@a-eon.com" <contact@a-eon.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
+        mad skateman <madskateman@gmail.com>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
+In-Reply-To: <C11859E1-BE71-494F-81E2-9B27E27E60EE@xenosoft.de>
+References: <20200203095325.24c3ab1c@cakuba.hsd1.ca.comcast.net> <C11859E1-BE71-494F-81E2-9B27E27E60EE@xenosoft.de>
+Date:   Thu, 06 Feb 2020 15:35:10 +1100
+Message-ID: <87tv441gg1.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v3 3/3] dt-bindings: iio: chemical: consolidate atlas-sensor docs
-Date:   Wed, 5 Feb 2020 20:24:30 -0800
-Message-Id: <214E66BE-6839-45DA-A676-103CC10FAF4A@konsulko.com>
-References: <20200205164027.GA1992@bogus>
-Cc:     linux-iio@vger.kernel.org, jic23@kernel.org,
-        devicetree@vger.kernel.org
-In-Reply-To: <20200205164027.GA1992@bogus>
-To:     Rob Herring <robh@kernel.org>
-X-Mailer: iPhone Mail (17D50)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Christian Zigotzky <chzigotzky@xenosoft.de> writes:
+> Kernel 5.5 PowerPC is also affected.
+
+I don't know what you mean by that. What sha are you talking about?
+
+I have a system with avahi running and everything's fine.
+
+  # grep use- /etc/avahi/avahi-daemon.conf=20
+  use-ipv4=3Dyes
+  use-ipv6=3Dyes
+=20=20
+  # systemctl status -l --no-pager avahi-daemon
+  =E2=97=8F avahi-daemon.service - Avahi mDNS/DNS-SD Stack
+     Loaded: loaded (/lib/systemd/system/avahi-daemon.service; enabled; ven=
+dor preset: enabled)
+     Active: active (running) since Thu 2020-02-06 14:55:34 AEDT; 38min ago
+   Main PID: 1884 (avahi-daemon)
+     Status: "avahi-daemon 0.7 starting up."
+     CGroup: /system.slice/avahi-daemon.service
+             =E2=94=9C=E2=94=801884 avahi-daemon: running [mpe-ubuntu-le.lo=
+cal]
+             =E2=94=94=E2=94=801888 avahi-daemon: chroot helper
+=20=20
+  Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
+ record for fe80::5054:ff:fe66:2a19 on eth0.*.
+  Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
+ record for 10.61.141.81 on eth0.IPv4.
+  Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
+ record for ::1 on lo.*.
+  Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
+ record for 127.0.0.1 on lo.IPv4.
+  Feb 06 14:55:34 mpe-ubuntu-le systemd[1]: Started Avahi mDNS/DNS-SD Stack.
+  Feb 06 14:55:35 mpe-ubuntu-le avahi-daemon[1884]: Server startup complete=
+. Host name is mpe-ubuntu-le.local. Local service cookie is 3972418141.
+  Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Leaving mDNS multicast =
+group on interface eth0.IPv6 with address fe80::5054:ff:fe66:2a19.
+  Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Joining mDNS multicast =
+group on interface eth0.IPv6 with address fd69:d75f:b8b5:61:5054:ff:fe66:2a=
+19.
+  Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Registering new address=
+ record for fd69:d75f:b8b5:61:5054:ff:fe66:2a19 on eth0.*.
+  Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Withdrawing address rec=
+ord for fe80::5054:ff:fe66:2a19 on eth0.
+=20=20
+  # uname -r
+  5.5.0-gcc-8.2.0
 
 
-> On Feb 5, 2020, at 08:40, Rob Herring <robh@kernel.org> wrote:
->=20
-> =EF=BB=BFOn Wed,  5 Feb 2020 11:04:21 +0200, Matt Ranostay wrote:
->> Since Atlas Scientific device support only varies from the compatible
->> string is ideal all the respective docs are merged into a single doc
->> named atlas,sensor.yaml
->>=20
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
->> ---
->> .../bindings/iio/chemical/atlas,ec-sm.txt     | 21 --------
->> .../bindings/iio/chemical/atlas,orp-sm.txt    | 21 --------
->> .../bindings/iio/chemical/atlas,ph-sm.txt     | 21 --------
->> .../bindings/iio/chemical/atlas,sensor.yaml   | 53 +++++++++++++++++++
->> 4 files changed, 53 insertions(+), 63 deletions(-)
->> delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,e=
-c-sm.txt
->> delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,o=
-rp-sm.txt
->> delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,p=
-h-sm.txt
->> create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,s=
-ensor.yaml
->>=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> warning: no schema found in file: Documentation/devicetree/bindings/iio/ch=
-emical/atlas,sensor.yaml
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/c=
-hemical/atlas,sensor.yaml: ignoring, error in schema: $id
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:2=
-1.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node mu=
-st be at root node
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/c=
-hemical/atlas,sensor.yaml: $id: 'http://devicetree.org/schemas/iio/chemical/=
-atlas,sensor.yaml##' is not a 'uri-reference'
-> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Document=
-ation/devicetree/bindings/iio/chemical/atlas,sensor.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/iio/chemical/atlas,sensor.=
-example.dts] Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->=20
-> See https://patchwork.ozlabs.org/patch/1233724
-> Please check and re-submit.
+The key question is what ioctl is it complaining about. You should be
+able to find that via strace.
 
-Gah will do...=20
+cheers
 
-- Matt=
+> Christian Zigotzky wrote:
+>
+> Hi All,
+>
+> The issue with the avahi-daemon still exist in the latest Git kernel. It'=
+s a PowerPC issue. I compiled the latest Git kernel on a PC today and there=
+ aren't any issues with the avahi daemon. Another Power Mac user reported t=
+he same issue on his G5. I tested with the AmigaOne X1000 and X5000 in the =
+last days.
+>
+> I bisected today but I think the result isn't correct because it found th=
+e other problem with ordering of PCSCSI definition in esp_rev enum. I don't=
+ know how to bisect if there is another issue at the same time. Maybe "git =
+bisect skip"?
+>
+> 2086faae3c55a652cfbd369e18ecdb703aacc493 is the first bad commit
+> commit 2086faae3c55a652cfbd369e18ecdb703aacc493
+> Author: Kars de Jong <jongk@linux-m68k.org>
+> Date:   Tue Nov 19 21:20:20 2019 +0100
+>
+>     scsi: esp_scsi: Correct ordering of PCSCSI definition in esp_rev enum
+>
+>     The order of the definitions in the esp_rev enum is important. The va=
+lues
+>     are used in comparisons for chip features.
+>
+>     Add a comment to the enum explaining this.
+>
+>     Also, the actual values for the enum fields are irrelevant, so remove=
+ the
+>     explicit values (suggested by Geert Uytterhoeven). This makes adding =
+a new
+>     field in the middle of the enum easier.
+>
+>     Finally, move the PCSCSI definition to the right place in the enum. I=
+n its
+>     previous location, at the end of the enum, the wrong values are writt=
+en to
+>     the CONFIG3 register when used with FAST-SCSI targets.
+>
+>     Link: https://lore.kernel.org/r/20191119202021.28720-2-jongk@linux-m6=
+8k.org
+>     Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+>     Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+>
+> :040000 040000 cdc128596e33fb60406b5de9b17b79623c187c1a 48ceab06439f95285=
+e8b30181e75f9a68c25fcb5 M    drivers
