@@ -2,135 +2,175 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97832C2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A26C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67BB620838
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 15:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqz+EvUc"
+	by mail.kernel.org (Postfix) with ESMTP id 4B6A0217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgBFPHA (ORCPT
+        id S1727555AbgBFPKD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:07:00 -0500
-Received: from mail-pf1-f179.google.com ([209.85.210.179]:41291 "EHLO
-        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbgBFPHA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 10:07:00 -0500
-Received: by mail-pf1-f179.google.com with SMTP id j9so3253718pfa.8;
-        Thu, 06 Feb 2020 07:07:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=G8bcinAwhlUKAuE74TFdnn/03DR7H2/LoI5cBt5NR84=;
-        b=sqz+EvUcpfmT6rf/EBl88O6Ils/FJVBwNArhARJV7LalyCl5HbAxm2ZsP0Qnit07l9
-         /rLBxD05vpp8K3bzE0hpMYt+SyECbwEq8ELSYMkL6IQIH2fpmit36gwiO3r2ex7wZYnL
-         DHxheh+mwtykjEITCAuaOqUskn9Ss+tav3dPc6R5+YITB3K7WHnPsdaLYFlZB0vJfmYe
-         6NW+7Hb2ZSnH6bgHuFXHi6p/o/c7anudMMvO1tVgWL1hnDeckvBzRkV4G3ndmI5XoMu6
-         DUcsn1a8AVC8N63bcvxPVKgGCpXQGcatVszjmQyftkf8JkcPgVwO9dAutXrSBV7u0PZ2
-         wRoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=G8bcinAwhlUKAuE74TFdnn/03DR7H2/LoI5cBt5NR84=;
-        b=hv5lUMc9knSYpaWKTaUsQ+b+DnX+EBxcGbqc6DYbxb6Bw1FN8gQYvkdocuQqTD/5el
-         5AFi0Bp1LAP5lug8FKihxp96hAMBhOHog3zrmM1EN+L9MHnQB/mZpF8DE0/QsxZipSm+
-         dynqnKbfgZdRZt1xAtY9eB5VfVGxFCV3h2cwCAvm3WmPoWwZziuLP7mjmzmnzeU5VtUa
-         UacyhOsJpcY6e5zOlsiUJgG/IFNoe0id1KciMJvnA9QVwR9PHRTqcdjj3NWcJ5OqzsYE
-         qvr7OULF33YkGYPgGkmS/ZFg84eYkH7SmI6eziX4G7oGjakCiLciqDTKk95e5/SxUW1i
-         QPpw==
-X-Gm-Message-State: APjAAAWQIkhlwG62fbjAXSo6Y5OhpRew6uS86sSmo2H9MfsUhuCFMH8Q
-        LAGXf7B539rNSUItBPm3tunSLEeC3JI=
-X-Google-Smtp-Source: APXvYqwamc8plCqTbprXCkhunsgWbC5c2htmzmXJcs4Y2ZztW1yziXirU+hE91UkVfIygEy4UV/NzA==
-X-Received: by 2002:a63:3154:: with SMTP id x81mr4200126pgx.32.1581001619559;
-        Thu, 06 Feb 2020 07:06:59 -0800 (PST)
-Received: from localhost.localdomain ([2001:19f0:7001:2668:5400:1ff:fe62:2bbd])
-        by smtp.gmail.com with ESMTPSA id 64sm3748157pfd.48.2020.02.06.07.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 07:06:59 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-spi@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH v2 2/2] dt-binding: spi: add bindings for spi-ar934x
-Date:   Thu,  6 Feb 2020 23:06:26 +0800
-Message-Id: <20200206150626.708649-3-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200206150626.708649-1-gch981213@gmail.com>
-References: <20200206150626.708649-1-gch981213@gmail.com>
+        Thu, 6 Feb 2020 10:10:03 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16950 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727389AbgBFPKC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 10:10:02 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016F0MvJ011983;
+        Thu, 6 Feb 2020 10:09:38 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xyhm94w10-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Feb 2020 10:09:38 -0500
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 016F9btD017972
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 6 Feb 2020 10:09:37 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 6 Feb 2020
+ 10:09:36 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 6 Feb 2020 10:09:35 -0500
+Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 016F9VRW021605;
+        Thu, 6 Feb 2020 10:09:31 -0500
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v5 1/5] iio: core: Handle 'dB' suffix in core
+Date:   Thu, 6 Feb 2020 17:11:45 +0200
+Message-ID: <20200206151149.32122-1-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 suspectscore=1 bulkscore=0 adultscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002060114
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding documentation for SPI controller in Qualcomm Atheros
-AR934x/QCA95xx SoCs.
+This patch handles the db suffix used for writing micro db values.
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 ---
-Changes since v1: none
- .../bindings/spi/qca,ar934x-spi.yaml          | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+Changes in v5:
+-handle both 'db' and ' db' cases
 
-diff --git a/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-new file mode 100644
-index 000000000000..8f0c520a571c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/qca,ar934x-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ drivers/iio/industrialio-core.c | 39 ++++++++++++++++++++++++++++++---
+ 1 file changed, 36 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 65ff0d067018..684c3b151b29 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -769,17 +769,18 @@ static ssize_t iio_read_channel_info_avail(struct device *dev,
+ }
+ 
+ /**
+- * iio_str_to_fixpoint() - Parse a fixed-point number from a string
++ * __iio_str_to_fixpoint() - Parse a fixed-point number from a string
+  * @str: The string to parse
+  * @fract_mult: Multiplier for the first decimal place, should be a power of 10
+  * @integer: The integer part of the number
+  * @fract: The fractional part of the number
++ * @scale_db: True if this should parse as dB
+  *
+  * Returns 0 on success, or a negative error code if the string could not be
+  * parsed.
+  */
+-int iio_str_to_fixpoint(const char *str, int fract_mult,
+-	int *integer, int *fract)
++int __iio_str_to_fixpoint(const char *str, int fract_mult,
++			  int *integer, int *fract, bool scale_db)
+ {
+ 	int i = 0, f = 0;
+ 	bool integer_part = true, negative = false;
+@@ -810,6 +811,14 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
+ 				break;
+ 			else
+ 				return -EINVAL;
++		} else if (!strncmp(str, " dB", sizeof(" dB") - 1) && scale_db) {
++			/* Ignore the dB suffix */
++			str += sizeof(" dB") - 1;
++			continue;
++		} else if (!strncmp(str, "dB", sizeof("dB") - 1) && scale_db) {
++			/* Ignore the dB suffix */
++			str += sizeof("dB") - 1;
++			continue;
+ 		} else if (*str == '.' && integer_part) {
+ 			integer_part = false;
+ 		} else {
+@@ -832,6 +841,22 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
+ }
+ EXPORT_SYMBOL_GPL(iio_str_to_fixpoint);
+ 
++/**
++ * iio_str_to_fixpoint() - Parse a fixed-point number from a string
++ * @str: The string to parse
++ * @fract_mult: Multiplier for the first decimal place, should be a power of 10
++ * @integer: The integer part of the number
++ * @fract: The fractional part of the number
++ *
++ * Returns 0 on success, or a negative error code if the string could not be
++ * parsed.
++ */
++int iio_str_to_fixpoint(const char *str, int fract_mult,
++			int *integer, int *fract)
++{
++	return __iio_str_to_fixpoint(str, fract_mult, integer, fract, false);
++}
 +
-+title: Qualcomm Atheros AR934x/QCA95xx SoC SPI controller
-+
-+maintainers:
-+  - Chuanhong Guo <gch981213@gmail.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: qca,ar934x-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+examples:
-+  - |
-+    spi: spi@1f000000 {
-+        compatible = "qca,ar934x-spi";
-+        reg = <0x1f000000 0x1c>;
-+        clocks = <&pll ATH79_CLK_AHB>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
+ static ssize_t iio_write_channel_info(struct device *dev,
+ 				      struct device_attribute *attr,
+ 				      const char *buf,
+@@ -842,6 +867,7 @@ static ssize_t iio_write_channel_info(struct device *dev,
+ 	int ret, fract_mult = 100000;
+ 	int integer, fract = 0;
+ 	bool is_char = false;
++	bool scale_db = false;
+ 
+ 	/* Assumes decimal - precision based on number of digits */
+ 	if (!indio_dev->info->write_raw)
+@@ -853,6 +879,9 @@ static ssize_t iio_write_channel_info(struct device *dev,
+ 		case IIO_VAL_INT:
+ 			fract_mult = 0;
+ 			break;
++		case IIO_VAL_INT_PLUS_MICRO_DB:
++			scale_db = true;
++			/* fall through */
+ 		case IIO_VAL_INT_PLUS_MICRO:
+ 			fract_mult = 100000;
+ 			break;
+@@ -877,6 +906,10 @@ static ssize_t iio_write_channel_info(struct device *dev,
+ 		if (ret)
+ 			return ret;
+ 	}
++	ret = __iio_str_to_fixpoint(buf, fract_mult, &integer, &fract,
++				    scale_db);
++	if (ret)
++		return ret;
+ 
+ 	ret = indio_dev->info->write_raw(indio_dev, this_attr->c,
+ 					 integer, fract, this_attr->address);
 -- 
-2.24.1
+2.17.1
 
