@@ -2,134 +2,99 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51366C2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1D3C352A2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2539821741
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:45:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTjfFX4w"
+	by mail.kernel.org (Postfix) with ESMTP id 30C7A21775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgBFIpp (ORCPT
+        id S1727851AbgBFIw1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:45:45 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36626 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgBFIpp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 03:45:45 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so2069865plm.3;
-        Thu, 06 Feb 2020 00:45:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SiniMnh/RN6JalocAKlnItv6rVv3J8q3lmdsPVBexzY=;
-        b=hTjfFX4wJc781CINonn04AQZ1w/lSUFluU+ZgGw25i8Y3p0AkDMd+9KclIGdLgmVJe
-         UQuh/AIHacNBSG1PZ7zDoe59M1Q1/U//h/zgLmCEyX/NNPAa1VjfPKy/4lCwfMuPDxRr
-         CC/SXSl8ngzJyle30kJS7bMIKB3MxgzGlw3WB/gzO+ZuLNZSo02s3cc0khE3/syM0JQl
-         DhNretY+cix2Mt3zUbL3kGptMYFqxES/JL0II8p2710RvoInFNWf8SEmCdwucFdic1l8
-         JQn9q9NLG8pfDo68spKNAX3DfYxYt5CT47CYnynuhxz5Ev9Xg2zO79pj8QkIYk3j7D7W
-         9EXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SiniMnh/RN6JalocAKlnItv6rVv3J8q3lmdsPVBexzY=;
-        b=NEkWQTyG4jTKMkUJg5MZNjHB0pyJ0Y9aGBxLsc4HvlKAppN0VtVUXW5wfkjO2dkMVR
-         MMHvMJyQpsdFVqqImhZbBWtg3ddVnyxMWWh2yHK4g/qSxtAdO3Hr6DYW7THAZVAjygzU
-         bmsyXy0ijSoPBUKJ0ZRhejqxer+cxKtjXOpRC62vBo0wrjl7rWEqFTVIHnPoNu+MiPYh
-         zCvLONVUj7qhLhifu54QSPwwLS5P8OSaEDlW1G1HJd9CWjeCnWJq7ETioXPtvA2KhaTV
-         OgJFtWC2ewmd6rbP9YDCuVu+9FewwfbCHLejxRTJJB25e9WlUkZAX74GnCH/do2DpaWo
-         f7lw==
-X-Gm-Message-State: APjAAAUNXP+NMj/2lfpUEQU8sBIiNKno5EzihUcQAQEDZm1+KnVpusNS
-        KPIW0isFH9P0spv7AvDX4FQL5/BOPqfoxg==
-X-Google-Smtp-Source: APXvYqxZF3bxh1VhPGEhNJEGf1eQQNcRMdlOX2LrkZK7zuHTNuo5O+zwlhNYMfRWLse70/QIByjk8g==
-X-Received: by 2002:a17:902:aa04:: with SMTP id be4mr2701711plb.41.1580978744512;
-        Thu, 06 Feb 2020 00:45:44 -0800 (PST)
-Received: from localhost.localdomain ([240e:379:947:2855::fa3])
-        by smtp.gmail.com with ESMTPSA id 6sm2638370pgh.0.2020.02.06.00.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 00:45:43 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-spi@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH resend 2/2] dt-binding: spi: add bindings for spi-ar934x
-Date:   Thu,  6 Feb 2020 16:44:43 +0800
-Message-Id: <20200206084443.209719-3-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200206084443.209719-1-gch981213@gmail.com>
-References: <20200206084443.209719-1-gch981213@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Feb 2020 03:52:27 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:33807 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727778AbgBFIw1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 03:52:27 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Feb 2020 14:22:24 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Feb 2020 14:22:02 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 2DE7628E6; Thu,  6 Feb 2020 14:22:02 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: [v1] drm/msm/dsi: save pll state before dsi host is powered off
+Date:   Thu,  6 Feb 2020 14:21:54 +0530
+Message-Id: <1580979114-16447-1-git-send-email-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding documentation for SPI controller in Qualcomm Atheros
-AR934x/QCA95xx SoCs.
+Save pll state before dsi host is powered off. Without this change
+some register values gets resetted.
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 ---
- .../bindings/spi/qca,ar934x-spi.yaml          | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
 
-diff --git a/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-new file mode 100644
-index 000000000000..8f0c520a571c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/qca,ar934x-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+Changes in v1:
+	- Saving pll state before dsi host is powered off.
+	- Removed calling of save state in post_disable since everything
+	would be resetted and it would save only resetted values.
+
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 104115d..a987efe 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -506,6 +506,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
+ 	struct mipi_dsi_host *host = msm_dsi->host;
+ 	struct drm_panel *panel = msm_dsi->panel;
++	struct msm_dsi_pll *src_pll;
+ 	bool is_dual_dsi = IS_DUAL_DSI();
+ 	int ret;
+ 
+@@ -539,6 +540,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 								id, ret);
+ 	}
+ 
++	/* Save PLL status if it is a clock source */
++	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
++	msm_dsi_pll_save_state(src_pll);
 +
-+title: Qualcomm Atheros AR934x/QCA95xx SoC SPI controller
-+
-+maintainers:
-+  - Chuanhong Guo <gch981213@gmail.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: qca,ar934x-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+examples:
-+  - |
-+    spi: spi@1f000000 {
-+        compatible = "qca,ar934x-spi";
-+        reg = <0x1f000000 0x1c>;
-+        clocks = <&pll ATH79_CLK_AHB>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
+ 	ret = msm_dsi_host_power_off(host);
+ 	if (ret)
+ 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+index b0cfa67..f509ebd 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+@@ -724,10 +724,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
+ 	if (!phy || !phy->cfg->ops.disable)
+ 		return;
+ 
+-	/* Save PLL status if it is a clock source */
+-	if (phy->usecase != MSM_DSI_PHY_SLAVE)
+-		msm_dsi_pll_save_state(phy->pll);
+-
+ 	phy->cfg->ops.disable(phy);
+ 
+ 	dsi_phy_regulator_disable(phy);
 -- 
-2.24.1
+2.7.4
 
