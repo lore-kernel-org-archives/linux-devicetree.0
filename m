@@ -2,299 +2,174 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16631C33CAC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 10:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAE3C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 10:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C9220730
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 10:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YSvdrzns"
+	by mail.kernel.org (Postfix) with ESMTP id B22FB21741
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 10:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580984783;
+	bh=0JgSe6SPXxtiGzuqSpPoTEMWToGrknUcN1/s8u6Vf+M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=h89u6aASXM38h8okZkZy3GgySTvWqg2Aq6TACfh3jhiZFOTEUI9EIPwUClqWdU+Ox
+	 dAGUfCkB/95mQIjHlPl4gd21No/KSirw+wms73HtLtm7SIMMOcuVGFJ89FZSgQfu3a
+	 d/gDhF0XcWTpCk37ikq0LHS26Mby7Z7dBp1RtuRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgBFKOv (ORCPT
+        id S1728415AbgBFK0U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:14:51 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1264 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728064AbgBFKOu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 05:14:50 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016AE1cT029531;
-        Thu, 6 Feb 2020 11:14:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=cd4NIXD5xZnyms8X8dFTpTnCxvt97ezcFjxViV6JTTI=;
- b=YSvdrznssoEfjr8wHs2Zcssoi+gwwsZ+C79Hi2W0z0xYP4QmaWxCtVvMCC0Mye4C1F7Y
- M9yWIqcKbRAQuoZBscLGPcHj+JrKk0nSscd3jVBzju5zQFrF7kfTRyUFlYR514xpBB9X
- 31NlSDyce5ajZtUinGYNJ9lUVWVJH3oS9Q8UIgcESc/OIBwaYcmoCB+pHpSSOAE1+hlm
- w8jq/jgL4Xk/saz4Sov5aVDHUeoeBs83p7gsZTzuIwP0/tGf+5gqYHyKg8+shpoNI1Av
- w4P7Z8hp3LyjJuefeC2O559LH/aHVjl1jVuG9VfjcB0P75Jf734/K7iFf3qIxBha24JT 4Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhkbefvm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 11:14:41 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 227B9100034;
-        Thu,  6 Feb 2020 11:14:37 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0CC142AAB71;
-        Thu,  6 Feb 2020 11:14:37 +0100 (CET)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 6 Feb 2020 11:14:36
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <megous@megous.com>,
-        <mylene.josserand@bootlin.com>
-CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2] dt-bindings: touchscreen: Convert edt-ft5x06 to json-schema
-Date:   Thu, 6 Feb 2020 11:14:34 +0100
-Message-ID: <20200206101434.30209-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Thu, 6 Feb 2020 05:26:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728394AbgBFK0U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:26:20 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A94D206CC;
+        Thu,  6 Feb 2020 10:26:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580984779;
+        bh=0JgSe6SPXxtiGzuqSpPoTEMWToGrknUcN1/s8u6Vf+M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MYc2c6ZZyJ8vOUJLwASgkPxI64n+PKHyG9kUruxfxfOcaXwKN20gVAa1F11rD/1xy
+         G1lY/SCl3pbS7xjd6cl5kCtzFLQlYb3Gnci0FlILhLL5dCrwmJ2ac/BY+pS2YCxybZ
+         zmLza8wlOPi9pRe8vIoNSVZmTvbr+VabbcbR7fR8=
+Date:   Thu, 6 Feb 2020 10:26:14 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Bia, Beniamin" <Beniamin.Bia@analog.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "biabeniamin@outlook.com" <biabeniamin@outlook.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: iio: amplifiers: Add docs for
+ HMC425A Step Attenuator
+Message-ID: <20200206102614.64593f10@archlinux>
+In-Reply-To: <17fefa85f2c441549bc07e08fb13994b10854fbf.camel@analog.com>
+References: <20200129142301.13918-1-beniamin.bia@analog.com>
+        <20200129142301.13918-5-beniamin.bia@analog.com>
+        <20200202105358.27b6b8a6@archlinux>
+        <17fefa85f2c441549bc07e08fb13994b10854fbf.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_01:2020-02-06,2020-02-05 signatures=0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the EDT-FT5x06 to DT schema using json-schema.
+On Mon, 3 Feb 2020 11:25:48 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-version 2:
-- preserve formatting in description
-- use 'const' rather than 'enum' for reg property
-- fix max/min issues 
- .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
- .../bindings/input/touchscreen/edt-ft5x06.yaml     | 123 +++++++++++++++++++++
- 2 files changed, 123 insertions(+), 75 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> On Sun, 2020-02-02 at 10:53 +0000, Jonathan Cameron wrote:
+> > On Wed, 29 Jan 2020 16:23:00 +0200
+> > Beniamin Bia <beniamin.bia@analog.com> wrote:
+> >   
+> > > From: Michael Hennerich <michael.hennerich@analog.com>
+> > > 
+> > > Document support for Analog Devices MC425A Step Attenuator.
+> > > 
+> > > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> > > ---
+> > >  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 48 +++++++++++++++++++
+> > >  1 file changed, 48 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> > > 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> > > b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> > > new file mode 100644
+> > > index 000000000000..d800639c14a5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> > > @@ -0,0 +1,48 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: HMC425A 6-bit Digital Step Attenuator
+> > > +
+> > > +maintainers:
+> > > +- Michael Hennerich <michael.hennerich@analog.com>
+> > > +- Beniamin Bia <beniamin.bia@analog.com>
+> > > +
+> > > +description: |
+> > > +  Digital Step Attenuator IIO device with gpio interface.
+> > > +  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR,
+> > > 2.2 - 8.0 GHz
+> > > +  
+> > > https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - adi,hmc425a
+> > > +
+> > > +  vcc-supply: true
+> > > +
+> > > +  ctrl-gpios:
+> > > +    description:
+> > > +      Must contain an array of 6 GPIO specifiers, referring to the GPIO
+> > > pins
+> > > +      connected to the control pins V1-V6.
+> > > +    maxItems: 6  
+> > 
+> > Does this force exactly 6?  
+> 
+> I'm [also] a bit unsure whether to force this number in DT.
+> One idea [with this driver] would be to maybe have it support multiple of these
+> GPIO-controlled attenuators/amplifiers. And those could have a higher/lower
+> number of GPIOs.
+> 
+> In any case, we could enforce this as-is [for now], and see later when/if adding
+> new parts.
+> No strong opinion from my side about this though.
+It should be enforced for each of the devices supported.
+So for devices with less, it would only allow precisely that
+lesser number.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-deleted file mode 100644
-index 0f6950073d6f..000000000000
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--FocalTech EDT-FT5x06 Polytouch driver
--=====================================
--
--There are 5 variants of the chip for various touch panel sizes
--FT5206GE1  2.8" .. 3.8"
--FT5306DE4  4.3" .. 7"
--FT5406EE8  7"   .. 8.9"
--FT5506EEG  7"   .. 8.9"
--FT5726NEI  5.7” .. 11.6"
--
--The software interface is identical for all those chips, so that
--currently there is no need for the driver to distinguish between the
--different chips. Nevertheless distinct compatible strings are used so
--that a distinction can be added if necessary without changing the DT
--bindings.
--
--
--Required properties:
-- - compatible:  "edt,edt-ft5206"
--           or:  "edt,edt-ft5306"
--           or:  "edt,edt-ft5406"
--           or:  "edt,edt-ft5506"
--           or:  "evervision,ev-ft5726"
--           or:  "focaltech,ft6236"
--
-- - reg:         I2C slave address of the chip (0x38)
-- - interrupts:       interrupt specification for the touchdetect
--                     interrupt
--
--Optional properties:
-- - reset-gpios: GPIO specification for the RESET input
-- - wake-gpios:  GPIO specification for the WAKE input
-- - vcc-supply:  Regulator that supplies the touchscreen
--
-- - pinctrl-names: should be "default"
-- - pinctrl-0:   a phandle pointing to the pin settings for the
--                control gpios
--
-- - threshold:   allows setting the "click"-threshold in the range
--                from 0 to 80.
--
-- - gain:        allows setting the sensitivity in the range from 0 to
--                31. Note that lower values indicate higher
--                sensitivity.
--
-- - offset:      allows setting the edge compensation in the range from
--                0 to 31.
--
-- - offset-x:    Same as offset, but applies only to the horizontal position.
--                Range from 0 to 80, only supported by evervision,ev-ft5726
--                devices.
--
-- - offset-y:    Same as offset, but applies only to the vertical position.
--                Range from 0 to 80, only supported by evervision,ev-ft5726
--                devices.
--
-- - touchscreen-size-x	   : See touchscreen.txt
-- - touchscreen-size-y	   : See touchscreen.txt
-- - touchscreen-fuzz-x      : See touchscreen.txt
-- - touchscreen-fuzz-y      : See touchscreen.txt
-- - touchscreen-inverted-x  : See touchscreen.txt
-- - touchscreen-inverted-y  : See touchscreen.txt
-- - touchscreen-swapped-x-y : See touchscreen.txt
--
--Example:
--	polytouch: edt-ft5x06@38 {
--		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
--		reg = <0x38>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&edt_ft5x06_pins>;
--		interrupt-parent = <&gpio2>;
--		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
--		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
--		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
--	};
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-new file mode 100644
-index 000000000000..0ea104fd49a5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/edt-ft5x06.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: FocalTech EDT-FT5x06 Polytouch Bindings
-+
-+description: |
-+             There are 5 variants of the chip for various touch panel sizes
-+              FT5206GE1  2.8" .. 3.8"
-+              FT5306DE4  4.3" .. 7"
-+              FT5406EE8  7"   .. 8.9"
-+              FT5506EEG  7"   .. 8.9"
-+              FT5726NEI  5.7” .. 11.6"
-+
-+maintainers:
-+  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+  - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - evervision,ev-ft5726
-+
-+    then:
-+      properties:
-+        offset-x: true
-+        offset-y: true
-+
-+properties:
-+  compatible:
-+    enum:
-+      - edt,edt-ft5206
-+      - edt,edt-ft5306
-+      - edt,edt-ft5406
-+      - edt,edt-ft5506
-+      - evervision,ev-ft5726
-+      - focaltech,ft6236
-+
-+  reg:
-+    const: 0x38
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  wake-gpios:
-+    maxItems: 1
-+
-+  vcc-supply:
-+    maxItems: 1
-+
-+  gain:
-+    description: Allows setting the sensitivity in the range from 0 to 31.
-+                 Note that lower values indicate higher sensitivity.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 31
-+
-+  offset:
-+    description: Allows setting the edge compensation in the range from 0 to 31.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 31
-+
-+  offset-x:
-+    description: Same as offset, but applies only to the horizontal position.
-+                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 80
-+
-+  offset-y:
-+    description: Same as offset, but applies only to the vertical position.
-+                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 80
-+
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-fuzz-x: true
-+  touchscreen-fuzz-y: true
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-swapped-x-y: true
-+  interrupt-controller: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    i2c@00000000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      edt-ft5x06@38 {
-+        compatible = "edt,edt-ft5406";
-+        reg = <0x38>;
-+        interrupt-parent = <&gpio2>;
-+        interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-+        reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+        wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-+      };
-+    };
-+
-+...
--- 
-2.15.0
+One slight quirk is someone crazy might wire certain pins to high or low
+because they don't need the precision.
+
+Not sure how we handle that one but can deal with it when it happens.
+
+Jonathan
+
+> 
+> >   
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - ctrl-gpios
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +    gpio_hmc425a: hmc425a {
+> > > +      compatible = "adi,hmc425a";
+> > > +      ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 39 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 38 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 37 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 36 GPIO_ACTIVE_HIGH>,
+> > > +        <&gpio 35 GPIO_ACTIVE_HIGH>;
+> > > +      vcc-supply = <&foo>;
+> > > +    };
+> > > +...  
 
