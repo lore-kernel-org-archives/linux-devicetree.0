@@ -2,93 +2,166 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16F7C352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D4CC35247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E63A218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647F5218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021973;
-	bh=af4PLSnafY906SvjpN1hR69Go8XQb27ra81bq2aCGyM=;
+	s=default; t=1581021978;
+	bh=PDqOiQh5CRzgkaDkb+PXm0mylANHd9bs835Cpd0b8WA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O7Qr8Z40HKzFhMWDMbFDQOzXZ3//jxvW4ZJRjCRMX8w81YRx4fDiKQqw/8UqTTFTf
-	 RCs1PX60VW2bE8TJFxeAe+XUY0nHiLBLBqmsvYxHyBZY2NorsaGMyseJdzKLawHHdp
-	 6tTMDdqI7UZmypMypVqODtYQ1C0EavB2HhXi+Frc=
+	b=avf5ntdkNeJlXAm8jWv+FdRMNHqBM2NyV3fwI17r/vQ63OHwecUeifyPECO0e6Gwr
+	 C8OZqzFBzVtVjHQ4ehPxWXxP/pLRLe5VGAy8oq9edSC6q/Mgg41TTuyMkUNoNYxD0W
+	 qG1h25kLJGjx2EqnPaQLQZZ26I0UgESHhr3fNrjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgBFUqN (ORCPT
+        id S1727874AbgBFUqR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:13 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43541 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbgBFUqM (ORCPT
+        Thu, 6 Feb 2020 15:46:17 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33299 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728174AbgBFUqM (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:12 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u131so3333318pgc.10;
-        Thu, 06 Feb 2020 12:46:10 -0800 (PST)
+Received: by mail-pl1-f193.google.com with SMTP id ay11so51470plb.0;
+        Thu, 06 Feb 2020 12:46:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zUJVXEe9nmb8lzTi4rWGnunn6uT7SLbqo7l18w5TMkM=;
-        b=WuqzAx4IQ2bRl4/nWYyFkvAiATskqse55LaTeb1APvx+wWXd8kE6Ib3cdOEjXujLfR
-         b28yo6DDN2s5zYUWqLbTrn1UEiqiwNrQfukIPMqNOGfoOK2xyHhTly2MXGs+Bs4i9MtR
-         i3Fq1BhDz347+78R7RdW9gDseZLKa/180qz9vREqVtbDNYoOgF5BbWHeHHMloOAu9HCY
-         HbqKS2dHeoUzw1n2CLDru3A/XfDbgXHzfF+d52Xj5K0ZH3qX2iWTxGJb/CYjLRRrygi8
-         crC93/AXpEgcZUrFyNe4MeE0w0nVEWwqbrfyGEMwAgdcNWsO19lrAbHEmSuA6S9jNYXW
-         ++5A==
-X-Gm-Message-State: APjAAAVHduqLx+BoVuSJaTqGC0dUGMSKeR+WV4MwuwvCBs9VsFEh7fe5
-        6FNjZDWrfRmT+QKGFQqcNw==
-X-Google-Smtp-Source: APXvYqwPyQbSQo7BMvabDsbXOSck7ihIN04c3RRAFzLU27liOcRjuh4U6Ul11wxJFT9owm46O1L3Mw==
-X-Received: by 2002:a63:e04a:: with SMTP id n10mr5591161pgj.341.1581021970134;
-        Thu, 06 Feb 2020 12:46:10 -0800 (PST)
+        bh=sMMUOJ1dmkcOXYOO3yw5bPGn6S7i93VnJXQW8PuR95g=;
+        b=YZXj+IW++eKcnHShzZe5TITnHdOALEDkU5ga7lcmhn29d/95gRs4zOX3E+/np0iTfS
+         vfs943Qx716q5IDh6xLlkOOv7LI59a7yoyboIWHummRlVj1S8746SyBpl2cCE+Mf8Mtb
+         GLRFDnqhHTfnIYUPCfz4BV5ciRMYxtZSVWlMUXPOuI66jw/iMmyA3GZ468uFcgN/JWVX
+         6FgB/ArqJzZ3UEetB9WXqf27thyIBRolhunjgX2AzyLw4cb23x7wgvgnKBDl+BYp9Deh
+         WmG55shxiXRFoB5iqyqjl/Ze4osganyMWP/dZmdMTBgdcM4uYqSZ/Caklu7oBe5DN6VQ
+         Y3gQ==
+X-Gm-Message-State: APjAAAVPNL1uyx7v1IZsbPNgEG0P159JuNr5YJ4cmnVGb9nZEXbm5ZGJ
+        TmVh2I6sIRoPqddxGIgMFw==
+X-Google-Smtp-Source: APXvYqzGp2S5nKGhFS/AzmjJ2SfKCyJUGc80hTOiA6U59PWgA2OUv3astvinezo/swqiqr6tcm8gbQ==
+X-Received: by 2002:a17:902:bc89:: with SMTP id bb9mr5595992plb.162.1581021972166;
+        Thu, 06 Feb 2020 12:46:12 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id v10sm292858pgk.24.2020.02.06.12.46.08
+        by smtp.gmail.com with ESMTPSA id i64sm288884pgc.51.2020.02.06.12.46.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:09 -0800 (PST)
-Received: (nullmailer pid 11196 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:39:05 -0000
-Date:   Thu, 6 Feb 2020 18:39:05 +0000
+        Thu, 06 Feb 2020 12:46:11 -0800 (PST)
+Received: (nullmailer pid 13714 invoked by uid 1000);
+        Thu, 06 Feb 2020 19:07:58 -0000
+Date:   Thu, 6 Feb 2020 19:07:58 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCHv2 1/2] dt-bindings: watchdog: Convert QCOM watchdog timer
- bindings to YAML
-Message-ID: <20200206183905.GA11134@bogus>
-References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
- <2edca4b54ee6b33493e0427c17de983d3ce3012f.1580570160.git.saiprakash.ranjan@codeaurora.org>
+To:     David Heidelberg <david@ixit.cz>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] dt-bindings: iio: light: add support for
+ Dyna-Image AL3320A
+Message-ID: <20200206190758.GA11064@bogus>
+References: <20200204093031.616409-1-david@ixit.cz>
+ <20200204093031.616409-2-david@ixit.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2edca4b54ee6b33493e0427c17de983d3ce3012f.1580570160.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20200204093031.616409-2-david@ixit.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat,  1 Feb 2020 20:59:48 +0530, Sai Prakash Ranjan wrote:
-> Convert QCOM watchdog timer bindings to DT schema format using
-> json-schema.
+On Tue, Feb 04, 2020 at 10:30:27AM +0100, David Heidelberg wrote:
+> This commit add dt-bindings support to al3320a driver and vendor-prefix
+> dynaimage.
 > 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> 
+> Signed-off-by: David Heidelberg <david@ixit.cz>
 > ---
->  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 ------------
->  .../bindings/watchdog/qcom-wdt.yaml           | 44 +++++++++++++++++++
->  2 files changed, 44 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
->  create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+>  .../bindings/iio/light/al3320a.yaml           | 45 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/iio/light/al3320a.yaml b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
+> new file mode 100644
+> index 000000000000..08e7ee4bdf55
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/al3320a.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Dyna-Image AL3320A sensor
+> +
+> +maintainers:
+> +  - David Heidelberg <david@ixit.cz>
+> +
+> +properties:
+> +  compatible:
+> +    const: dynaimage,al3320a
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - vdd-supply
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        al3320a@1c {
+
+light-sensor@1c
+
+> +            compatible = "dynaimage,al3320a";
+> +            reg = <0x1c>;
+> +            vdd-supply = <&vdd_reg>;
+> +            interrupts = <0 99 4>;
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9cd52d9e1f7f..8d2ebf3d0aa1 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -267,6 +267,8 @@ patternProperties:
+>      description: Dragino Technology Co., Limited
+>    "^dserve,.*":
+>      description: dServe Technology B.V.
+> +  "^dynaimage,.*":
+> +    description: Dyna-Image
+>    "^ea,.*":
+>      description: Embedded Artists AB
+>    "^ebs-systart,.*":
+> -- 
+> 2.25.0
+> 
