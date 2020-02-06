@@ -1,95 +1,67 @@
-Return-Path: <SRS0=uboK=3Z=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2941AC352A2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 22:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085CBC352A2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 01:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95F7214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Feb 2020 22:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580943111;
-	bh=7jofB+B4X06+m/QmPPK8i8hbugSJUjDJNEOv4/+YztY=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=VpoozL6fzgZAU77UPVO/wHGkvQJdnrmcFQOGSpaWhNKurCmzDthlmiswgmWVXOgzv
-	 pFWMP+WiGl3BcX5bVSzOdyyQU7Vf9kF+GgL9V7bt54IBle96Q2ji3nLI3VLNBevJD4
-	 QXKwVxA6Xf6UG6UQZLnuZc+n5x+LS0h2lYdMkhW0=
+	by mail.kernel.org (Postfix) with ESMTP id DBBC820838
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 01:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgBEWvq (ORCPT
+        id S1727577AbgBFBHN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Feb 2020 17:51:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
+        Wed, 5 Feb 2020 20:07:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:53526 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbgBEWvq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Feb 2020 17:51:46 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5486220730;
-        Wed,  5 Feb 2020 22:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580943105;
-        bh=7jofB+B4X06+m/QmPPK8i8hbugSJUjDJNEOv4/+YztY=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=GXUjNVGDU3rvq+e8Cd55zKyh7jfZEp2d/wHxWUxnR4fXOOOLuxQO6gY2uYbUG874L
-         94yDoivV+jh7Jm0wdOqbfhs4xHWUexD9Tucl9VcXpNWpeDDC3Qu6ClTUIFKbmfBQS1
-         lSNmZZS0WPC4d3oQoEyeRcxAP8ST4gpVnWLp/2XQ=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200205194649.31309-1-geert+renesas@glider.be>
-References: <20200205194649.31309-1-geert+renesas@glider.be>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] of: clk: Make <linux/of_clk.h> self-contained
-To:     Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 05 Feb 2020 14:51:44 -0800
-Message-Id: <20200205225145.5486220730@mail.kernel.org>
+        id S1727307AbgBFBHM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Feb 2020 20:07:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B36A30E;
+        Wed,  5 Feb 2020 17:07:12 -0800 (PST)
+Received: from DESKTOP-VLO843J.lan (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DBC7A3F68E;
+        Wed,  5 Feb 2020 17:07:10 -0800 (PST)
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, heiko@sntech.de
+Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        pgwipeout@gmail.com
+Subject: [PATCH 0/3] Clean up RK3328 audio codec GPIO control
+Date:   Thu,  6 Feb 2020 01:07:10 +0000
+Message-Id: <cover.1580950046.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2020-02-05 11:46:49)
-> Depending on include order:
->=20
->     include/linux/of_clk.h:11:45: warning: \u2018struct device_node\u2019=
- declared inside parameter list will not be visible outside of this definit=
-ion or declaration
->      unsigned int of_clk_get_parent_count(struct device_node *np);
->                                                  ^~~~~~~~~~~
->     include/linux/of_clk.h:12:43: warning: \u2018struct device_node\u2019=
- declared inside parameter list will not be visible outside of this definit=
-ion or declaration
->      const char *of_clk_get_parent_name(struct device_node *np, int index=
-);
->                                                ^~~~~~~~~~~
->     include/linux/of_clk.h:13:31: warning: \u2018struct of_device_id\u201=
-9 declared inside parameter list will not be visible outside of this defini=
-tion or declaration
->      void of_clk_init(const struct of_device_id *matches);
->                                    ^~~~~~~~~~~~
->=20
-> Fix this by adding forward declarations for struct device_node and
-> struct of_device_id.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Noticed when cleaning up some platform code.
-> I am not aware of this being triggered in upstream, but this will become a
-> dependency for these cleanups.
+Hi all,
 
-So apply for fixes? I'll just throw it in now.
+Investigating the RK3328 GPIO_MUTE pin in the context of boards that use
+it to control a regulator has highlighted that the audio codec driver
+currently has some hard-coded implicit control of that pin. Fortunately
+those boards don't currently enable the audio codec, because it would be
+pretty terrible if playing audio changed the SD card I/O voltage. This
+is a first crack at making things better.
 
-Applied to clk-next.
+Robin.
+
+
+Robin Murphy (3):
+  ASoC: dt-bindings: Make RK3328 codec GPIO explicit
+  ASoC: rockchip: Make RK3328 GPIO_MUTE control explicit
+  arm64: dts: rockchip: Describe RK3328 GPIO_MUTE users
+
+ .../bindings/sound/rockchip,rk3328-codec.txt  |  7 ++++++-
+ arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |  1 +
+ .../arm64/boot/dts/rockchip/rk3328-rock64.dts |  1 +
+ sound/soc/codecs/rk3328_codec.c               | 20 +++++--------------
+ 4 files changed, 13 insertions(+), 16 deletions(-)
+
+-- 
+2.17.1
 
