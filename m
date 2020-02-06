@@ -2,80 +2,94 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC1AC35247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C6BC352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26442218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1244222C2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021929;
-	bh=QEhKDCiQLzidNtk3lcIqJb0H7vFsPdjquOWRwL2P7LA=;
+	s=default; t=1581021931;
+	bh=epovF0QWEoG+HqgOXm4132BEo9wqUUNBsUWnnnQRMNY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UgV6NMGRsVog3FR2VGzDQ/pMPjSI3Q8EyNx2gqWgQnriLxrmdA5OV9JytjicFrA8t
-	 QVdn0FmKqlC3wi1g2eLMl5v7YkYSnPkilUfJi6AKbPLjtiLDrJor8j5SBKN30ADa4w
-	 +fzLbOAdotHLfU1CmNnTSDhOdc52iFE2+uK5X8pY=
+	b=BX0rbuGuU3aSNmbhGYUVFF7y2irXP8dmo3FpoQiUOQEIrv53lcNG070ApQ1PI6pmj
+	 eewVN8qYXdmFE7u6/K1xvJrE34+YIG7b8gzu99CVTnDMxCAWx5SAquzxBdth/9PMl7
+	 TMjKY5btVfljAyinh/vH//I8dkFYp7+nzAzJk8sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgBFUp2 (ORCPT
+        id S1727842AbgBFUpb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:28 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34051 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbgBFUp2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:45:28 -0500
-Received: by mail-pj1-f67.google.com with SMTP id f2so655154pjq.1;
-        Thu, 06 Feb 2020 12:45:28 -0800 (PST)
+        Thu, 6 Feb 2020 15:45:31 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41883 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbgBFUpb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:45:31 -0500
+Received: by mail-pf1-f193.google.com with SMTP id j9so43715pfa.8;
+        Thu, 06 Feb 2020 12:45:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vCgkQ9Nwh84zfpfOxPFRld6KLGaYtG3x5hpmxoRF600=;
-        b=MxC4VA803Hx8yGCukVXoo1C+5DjvHn7GLVWuGx9pZvDNRLaVC/JaZh6IbY63DdFA/K
-         zOBEBvbXuhb42j0CnKWfMg1A4q8aQyt2ph3CAH3ii/vHEa9tN5DlQhunYEWj7JSofetJ
-         AUMjrLURO8HgZRIyYNE2KBAkdgT3V1xmcJ7WWZNlUlbbkb+pG8DDoOkLy0ubvfoUpfCH
-         zHi2r7bK2wW+hIYCPfL6LlpLvbAo3MdMhXzg6u79WiQ2u1zjvJ+aRTvuRnqkW00CQVru
-         Lw7nHChEkz6lzwqud2AR8g+OLE0WWkkr2ABDvmFsFsVvxrh9UZSNP8wdW27ki3LWVZZ7
-         t/PA==
-X-Gm-Message-State: APjAAAXr/0x5g/3gjPF7AzZ0bjqnsli1abXwzQ3oymCwMAyWOEXH32j3
-        W7N51BtQccDMGdDu/7XILEHuL/FafQ==
-X-Google-Smtp-Source: APXvYqyq2g8mBmBjRil05ulZerB8hO+T93Rrx3/WCqh8GeKdyfaMW0nZ4KUewMQgTDEGvsBfTkFq3g==
-X-Received: by 2002:a17:90a:330f:: with SMTP id m15mr6596932pjb.24.1581021927783;
-        Thu, 06 Feb 2020 12:45:27 -0800 (PST)
+        bh=H2tVfCzm70bqHn3/yPEccEJKGtHclRembq2rrvGRktQ=;
+        b=XY1pBze54J/QBb4LhkW8czLaW4xkUbA5SCHEGNX7oFg+QNH7lR8hvWoHCtk/wbd3YV
+         wz3+4hJiMfkzmkAGUPUIjBOGUYQgUVBnD7wslIboqFWTICWgGX7Gh36/RLaIE4KEUMP3
+         n97BM74kRojMHdeoVHZ7IAMlEc6QozDWRGg98Bz6Qg14zInZFbg0s9Q7JX7yfa61dJ1D
+         38Hw4DAWDD3VpaKZNLGdO0gSJdVih3BNrJ8U6msEL50C6lKeifwTp1CKqR46DDhs6ZI5
+         VVvLo+3i+xBhZVATvNESwPnpwGdEccF89APE6TkLC0Pv4qBn/iC/gfktSkr10MG5mlQf
+         tXgg==
+X-Gm-Message-State: APjAAAUplqFfEEJLKo/JrXvb9IOfFxHqiZSAGeyXW2dyTXuVbxjHrGV1
+        TnhRaPA9KAITXnvYYXbeWQ==
+X-Google-Smtp-Source: APXvYqwfL4vZeTOwGsr6xUGNFEjJf8dH67j94K/HXOdtctgmKZDpYGF4Hd+jwY8XeBUB/qLzc7l6kg==
+X-Received: by 2002:a62:c583:: with SMTP id j125mr6195854pfg.27.1581021930368;
+        Thu, 06 Feb 2020 12:45:30 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id f127sm280145pfa.112.2020.02.06.12.45.26
+        by smtp.gmail.com with ESMTPSA id b1sm282011pfp.44.2020.02.06.12.45.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:27 -0800 (PST)
-Received: (nullmailer pid 12148 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:22:39 -0000
-Date:   Thu, 6 Feb 2020 18:22:39 +0000
+        Thu, 06 Feb 2020 12:45:29 -0800 (PST)
+Received: (nullmailer pid 28991 invoked by uid 1000);
+        Thu, 06 Feb 2020 17:22:58 -0000
+Date:   Thu, 6 Feb 2020 17:22:58 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Felix Fietkau <nbd@nbd.name>
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 01/15] dt-bindings: net: wireless: mt76: document
- bindings for MT7622
-Message-ID: <20200206182239.GA12086@bogus>
-References: <20200130144718.14298-1-nbd@nbd.name>
+To:     Louis Kuo <louis.kuo@mediatek.com>
+Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
+        tfiga@chromium.org, keiichiw@chromium.org, matthias.bgg@gmail.com,
+        mchehab@kernel.org, yuzhao@chromium.org, zwisler@chromium.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
+        sj.huang@mediatek.com, christie.yu@mediatek.com,
+        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
+        jungo.lin@mediatek.com, Rynn.Wu@mediatek.com,
+        linux-media@vger.kernel.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH V5 2/3] dt-bindings: mt8183: Add sensor interface
+ dt-bindings
+Message-ID: <20200206172258.GA19946@bogus>
+References: <20200129081650.8027-1-louis.kuo@mediatek.com>
+ <20200129081650.8027-3-louis.kuo@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200130144718.14298-1-nbd@nbd.name>
+In-Reply-To: <20200129081650.8027-3-louis.kuo@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Jan 2020 15:47:04 +0100, Felix Fietkau wrote:
-> MT7622 is a SoC that includes a 2.4 GHz 4x4 802.11n WMAC. Its
-> feature set is comparable to a MT7615 chip, but limited to 2.4 GHz.
+On Wed, Jan 29, 2020 at 04:16:49PM +0800, Louis Kuo wrote:
+> This patch adds the DT binding documentation for the sensor interface
+> module in Mediatek SoCs.
 > 
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
 > ---
->  .../bindings/net/wireless/mediatek,mt76.txt   | 26 ++++++++++++++++---
->  1 file changed, 23 insertions(+), 3 deletions(-)
-> 
+>  .../bindings/media/mediatek-seninf.txt        | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.txt
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Bindings have moved to DT schema. Please convert this to a schema.
+
+Sorry to ask for this on a v5, but I don't recall seeing an earlier 
+version recently.
