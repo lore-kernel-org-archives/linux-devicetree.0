@@ -2,93 +2,164 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9029C35247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C39C352A2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5746218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EEA21927
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581022024;
-	bh=8sanEyQE/d6OhZDzPy3oomn9flzBLq8d4aAZn3eEdiw=;
+	s=default; t=1581022025;
+	bh=t6gAXVYeLqNGcn3uNe+3IOPYvaSAvtuxvxAZ/QpX1ks=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=La1AVlbgeCqeiMpMyioXTBZlHzeZ1nR5WqWG5+jQh7KMkIWn5yB0t4qJfFHXZl2ki
-	 LKH1dAIZwingFu6bFmPh8hwF31LsUVSwHmWmdYqX1YTF+WMDVVfDVTxeIsSlH68F+1
-	 CetjLk8CPxGe6kwyZzgtMlQ08YtqTUxhAkiajbp4=
+	b=LCQvIfjP5oM85c7FNB58CST6WOFqIk21StYjv6K+SiO6lxWcuNaWOXR4jUjQUOrDE
+	 gPsuIx221BGkn6rwFxj/PSZM0EBhLvkN53GbRg8ofbPf2cWga6U9f3z0WCbtD1P3Nu
+	 KFLmp2M+7wU57r5e++lKlrq1U9qwAos1tFLBLQbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgBFUqC (ORCPT
+        id S1728080AbgBFUpx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:02 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39080 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbgBFUqA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:00 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so36444plp.6;
-        Thu, 06 Feb 2020 12:46:00 -0800 (PST)
+        Thu, 6 Feb 2020 15:45:53 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53482 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgBFUpx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:45:53 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so493316pjc.3;
+        Thu, 06 Feb 2020 12:45:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ITfgawVi1o3ZrkVgoG14aNaXMoHE4l1uh0uke02a5xY=;
-        b=lXD+QnYtL8ofyTlCxpHyFfYen0wBuqv5k74C1fW9D6bEKO9Z/bAr+lvbLRrWSB5Uom
-         8iQXS/rED7M6jhIJpltuntEN3LXE2xoZp2JjN9ca+EZyiNU0yQeVLDbPe1teO4KMNAzC
-         806ID/klKsaSsITlCHjJGaC00wLBr/Ld0G+u9EFMmBVkyTdAsavOKiQD0Bql8kk3Tccn
-         QnU0iG2S/txl0Y3M7aymNjqJgb/7/mq+TkrSiI83S+bCfiE5MoKaFlPl2qaKCmvUItqd
-         kAM2N8g/pMWCB9m9EhjQGX6mwD2ASvpKnqylvwTTyrtYOIea+TwkYlYCZ/dFg2V2OYpw
-         BOGQ==
-X-Gm-Message-State: APjAAAUyKP0nh7oxa17uTaBMYJS9fGxZRssnsAIzW6LurRgu5TeWy4v4
-        W99wy1bZ1f8IOzz6hzRtXw==
-X-Google-Smtp-Source: APXvYqw5PrR4A4sMr3Pru2treXn0yygxf34oC36OJZ6C0iA981eFQHEE0V6TkhLX+FkDPa+g1ctGBw==
-X-Received: by 2002:a17:90a:db0f:: with SMTP id g15mr6519888pjv.40.1581021960029;
-        Thu, 06 Feb 2020 12:46:00 -0800 (PST)
+        bh=gkYCIC+GBi47yGE96tVbuGnhb1/5AqGy5/4xHMrpYMY=;
+        b=OB4iqH3NJl4f6mgge4orsj/muqUVP2YwXqk8suFLw2TzPO786mFxNr5NfNUqA3XJvE
+         /i80prVCHEW/1MxLZ5ETRuSn4t1FXxJnGNpNmpD2V06JepTjzDDMh0hctdpOIL8/hFGn
+         BXMg/EQaUCQrhqgRk6TIxsb0nxixpjwt0UgcDHlQyh/dIDKTK6KixZk7bdeW75D/NtnO
+         PlfIvjVyVUFIa+rGsOQazFADximcbeFiSFw/ips2I6N/ok0b23RwRxFUi/m/vQSKCBrA
+         KeHrjYAU72KBnf6IenjgXX/rKbHMKlifTfuSZA2z7Zmss2DBfJTo8kUf9qfNDzufnGP3
+         d8SA==
+X-Gm-Message-State: APjAAAX2ABkmUqQzw/LFe7skuTdJ3z1ozv/EN+XfReLB85s4r9TpDSqk
+        GTodYnOX/aIf/tgzbfbr0A==
+X-Google-Smtp-Source: APXvYqyBHaVGW+K5L7iKRT6Okva0bvO6F4LkQe6ArBJwCjn3U3dfPcIf21o4O0K9cOYYDs4Zc1oDQA==
+X-Received: by 2002:a17:90a:1697:: with SMTP id o23mr6913345pja.62.1581021950995;
+        Thu, 06 Feb 2020 12:45:50 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id x12sm287307pfr.47.2020.02.06.12.45.58
+        by smtp.gmail.com with ESMTPSA id gc1sm165783pjb.20.2020.02.06.12.45.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:59 -0800 (PST)
-Received: (nullmailer pid 11050 invoked by uid 1000);
-        Thu, 06 Feb 2020 19:06:34 -0000
-Date:   Thu, 6 Feb 2020 19:06:34 +0000
+        Thu, 06 Feb 2020 12:45:50 -0800 (PST)
+Received: (nullmailer pid 7333 invoked by uid 1000);
+        Thu, 06 Feb 2020 17:28:31 -0000
+Date:   Thu, 6 Feb 2020 17:28:31 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Justin Swartz <justin.swartz@risingedge.co.za>
-Cc:     Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] [media] dt-bindings: Add binding for rk3228 rga
-Message-ID: <20200206190634.GA10940@bogus>
-References: <cover.1580768038.git.justin.swartz@risingedge.co.za>
- <4e66b3f029c56d7c7709d39ed15894b86f51fd37.1580768038.git.justin.swartz@risingedge.co.za>
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy
+ bindings to yaml
+Message-ID: <20200206172831.GA32685@bogus>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+ <1580305919-30946-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4e66b3f029c56d7c7709d39ed15894b86f51fd37.1580768038.git.justin.swartz@risingedge.co.za>
+In-Reply-To: <1580305919-30946-2-git-send-email-sanm@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  3 Feb 2020 22:40:15 +0000, Justin Swartz wrote:
-> Indicate that the rk3228 rga is compatible with that of the rk3288.
+On Wed, Jan 29, 2020 at 07:21:52PM +0530, Sandeep Maheswaram wrote:
+> Convert QUSB2 phy  bindings to DT schema format using json-schema.
 > 
-> But if any rk3228-specific quirks are identified in future that
-> require handling logic that differs from what is provided for the
-> rk3288, then allow for the compatibility string "rockchip,rk3228-rga"
-> to be matched instead of "rockchip,rk3288-rga".
-> 
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/media/rockchip-rga.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 142 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 ----------
+>  2 files changed, 142 insertions(+), 68 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> new file mode 100644
+> index 0000000..90b3cc6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> @@ -0,0 +1,142 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm QUSB2 phy controller
+> +
+> +maintainers:
+> +  - Manu Gautam <mgautam@codeaurora.org>
+> +
+> +description:
+> +  QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,msm8996-qusb2-phy
+> +      - qcom,msm8998-qusb2-phy
+> +      - qcom,sdm845-qusb2-phy
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    minItems: 2
+> +    items:
+> +      - description: phy config clock
+> +      - description: 19.2 MHz ref clk
+> +      - description: phy interface clock (Optional)
+> +
+> +  clock-names:
+> +    minItems: 2
+> +    items:
+> +      - const: cfg_ahb
+> +      - const: ref
+> +      - const: iface
+> +
+> +  vdda-pll-supply:
+> +     description:
+> +       Phandle to 1.8V regulator supply to PHY refclk pll block.
+> +
+> +  vdda-phy-dpdm-supply:
+> +     description:
+> +       Phandle to 3.1V regulator supply to Dp/Dm port signals.
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  nvmem-cells:
+> +    maxItems: 1
+> +    description:
+> +        Phandle to nvmem cell that contains 'HS Tx trim'
+> +        tuning parameter value for qusb2 phy.
+> +
+> +  qcom,tcsr-syscon:
+> +    description:
+> +        Phandle to TCSR syscon register region.
+> +    $ref: /schemas/types.yaml#/definitions/cell
 
-Acked-by: Rob Herring <robh@kernel.org>
+s/cell/phandle/
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
