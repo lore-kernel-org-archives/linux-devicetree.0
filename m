@@ -2,103 +2,96 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E17C352A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055B4C33CAC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C438221741
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE93920838
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 08:45:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D64mGAuM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgBFIHG (ORCPT
+        id S1727861AbgBFIp2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:07:06 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43558 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgBFIHG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 03:07:06 -0500
-Received: by mail-ot1-f66.google.com with SMTP id p8so4631757oth.10;
-        Thu, 06 Feb 2020 00:07:05 -0800 (PST)
+        Thu, 6 Feb 2020 03:45:28 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36221 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgBFIp1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 03:45:27 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 185so2759869pfv.3;
+        Thu, 06 Feb 2020 00:45:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wHMzzdNcx5RlxuI3hSgHWmzifyCl/PTTXZRqGI2clPQ=;
+        b=D64mGAuMmnR2djNUWp5EZ7ubeKQnN6ZYsoV0ViYEt0JDt+r2Jsql3hBBWbx++lAZ7T
+         Ada7ebyqIuMTibgrGITxYzL1l7naC3KI4Eu/vOvU/LLzZG46XGs7bhyJS3LvJZmpmKJA
+         TEaVK3m3SaPGQ3KuE/DM8T2PkUhWReIFHXycGGuOGptfcxxzSGFjH5/sbf3Poc+nHpJP
+         IAL6iW0Xlm7pbKB31qo1hJsDRuWFR1wjJrKCelGmb8hwLEBv7CLuSFVl9g4D1fPU9aR0
+         rVAtVSekNL6FKjPLO3ZteeM9OnbxwyEFN8xJZSKpbX0I9JmphszodLrc21bltHJOP72O
+         AboQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Id5Si7PsBgV/5UriLIHb4WyiAl4QS9Vzrwa0lTz3goQ=;
-        b=XGAyRUng8Sg/sDTF1w/zOpUHtHRzfOCkHSVl6e6rGri8HmFYsKHhag+27Z542BnGha
-         AFMe3rwN82B7L+vhfl+D0CsHfprN5qAZNFjAJsrm33a/4+5OsABsG2M2DgmDZl5ISDM0
-         4cu7NgwDzWj38wSKqqTg6u+r7e5PSgCsErTiVXeCS6usIYP4KahLAj9kbqvjvU6ZYc7B
-         MF9BU52IZiXgkpyC5EL53agZ9cB+wsBHy9DAFGaUFzLSBeLnKP1ucvAlKUPfkT6/nLaJ
-         /SogXVQwX0kH2T0y3YJCE1Y6YKGE9Qjyf+gUDr1tkM7QLvoCIHWxAmQMX7rV4DtCGIQO
-         /Yew==
-X-Gm-Message-State: APjAAAW2cbFBw8Twvn9Qw7ObXOu+UjpScoHiGJjBWLClj0DAVoGslJDc
-        +RsAIpptSH1QfP2q0aBekRT2lGhRSmxdSO0hTTQ=
-X-Google-Smtp-Source: APXvYqyIaRpVcqlLoNT5REckbKTlfq6ceFveBrFPUMguk47N5cYuEDtZ/dv9fpMrmyvj/GC1jCTFTEfS5c3t7GXjfU4=
-X-Received: by 2002:a9d:7602:: with SMTP id k2mr385248otl.39.1580976425083;
- Thu, 06 Feb 2020 00:07:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20200205194649.31309-1-geert+renesas@glider.be> <20200205225145.5486220730@mail.kernel.org>
-In-Reply-To: <20200205225145.5486220730@mail.kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 6 Feb 2020 09:06:53 +0100
-Message-ID: <CAMuHMdXLFq+Ebtmfsw45=08U7X5Fv9ZvsHO=q-PcNON51HjqaQ@mail.gmail.com>
-Subject: Re: [PATCH] of: clk: Make <linux/of_clk.h> self-contained
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wHMzzdNcx5RlxuI3hSgHWmzifyCl/PTTXZRqGI2clPQ=;
+        b=IcdXxjMUrWxLXRG9YIn978egS7zID/KkuxVfH5ZL0nduIkufBQcV+10T8gcmbaX4qT
+         Phjr1iN6cRHR4jpx75vjRwg81881/++oscLXC+4FQMLA0QrziKGe4sfCVvnildiQGkYi
+         xUud/HpyPpfMkIADw5rqeuryB5kJOjlgTsKbrN3RyCwheZQlYPzVFOkFxBYj8w+73DpE
+         YL/IkBRvBwDuKmx9I4T2oeZlVFvZjydi9DOLiJgQhQRkBjoS0Ks6lNZpbXINEdnKCipZ
+         njMi1pzVl7AeAn03pitNMCryETAUhYQ9nxoM4hzDniSCt7+kyOQexs0B58E7idsCnYNv
+         CVEQ==
+X-Gm-Message-State: APjAAAXpttBwucfZKWpHKQ0v7MjgO5ZjZp4WKZR5I0v6yc+wUyb7LQUP
+        tPS+zhFiNzwZK478UeEBC0nPP6Gg3vbpQQ==
+X-Google-Smtp-Source: APXvYqxc7qVnFyuPuhY12zzAcgvd2WCBFXssIB/cN06U5Zlg36d4O/X97NCgRK8FLmkU8EpsCbqrGg==
+X-Received: by 2002:a63:30c2:: with SMTP id w185mr2516068pgw.307.1580978727038;
+        Thu, 06 Feb 2020 00:45:27 -0800 (PST)
+Received: from localhost.localdomain ([240e:379:947:2855::fa3])
+        by smtp.gmail.com with ESMTPSA id 6sm2638370pgh.0.2020.02.06.00.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 00:45:26 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH resend 0/2] spi: add driver for ar934x spi controller
+Date:   Thu,  6 Feb 2020 16:44:41 +0800
+Message-Id: <20200206084443.209719-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+This controller is a superset of the already supported qca,ar7100-spi.
+Besides the bit-bang mode in spi-ath79.c, this new controller added
+a new "shift register" mode, allowing faster spi operations.
+This mode doesn't need all the bit-bang code in spi-ath79.c and needs
+a different clock setup, so I decided to write a new driver for it
+instead of extending current spi-ath79 driver.
 
-On Wed, Feb 5, 2020 at 11:51 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Geert Uytterhoeven (2020-02-05 11:46:49)
-> > Depending on include order:
-> >
-> >     include/linux/of_clk.h:11:45: warning: \u2018struct device_node\u2019 declared inside parameter list will not be visible outside of this definition or declaration
-> >      unsigned int of_clk_get_parent_count(struct device_node *np);
-> >                                                  ^~~~~~~~~~~
-> >     include/linux/of_clk.h:12:43: warning: \u2018struct device_node\u2019 declared inside parameter list will not be visible outside of this definition or declaration
-> >      const char *of_clk_get_parent_name(struct device_node *np, int index);
-> >                                                ^~~~~~~~~~~
-> >     include/linux/of_clk.h:13:31: warning: \u2018struct of_device_id\u2019 declared inside parameter list will not be visible outside of this definition or declaration
-> >      void of_clk_init(const struct of_device_id *matches);
-> >                                    ^~~~~~~~~~~~
-> >
-> > Fix this by adding forward declarations for struct device_node and
-> > struct of_device_id.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Noticed when cleaning up some platform code.
-> > I am not aware of this being triggered in upstream, but this will become a
-> > dependency for these cleanups.
->
-> So apply for fixes? I'll just throw it in now.
+Resend the patchset because I forgot to CC documentation maintainers
+Chuanhong Guo (2):
+  spi: add driver for ar934x spi controller
+  dt-binding: spi: add bindings for spi-ar934x
 
-Yep.
-
-> Applied to clk-next.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../bindings/spi/qca,ar934x-spi.yaml          |  40 +++
+ drivers/spi/Kconfig                           |   7 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-ar934x.c                      | 230 ++++++++++++++++++
+ 4 files changed, 278 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+ create mode 100644 drivers/spi/spi-ar934x.c
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.24.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
