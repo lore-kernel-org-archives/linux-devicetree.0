@@ -4,83 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8141C35247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8DEC352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847FA21775
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4549D218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021962;
-	bh=54aaFWm6vSsy6JeOe71DruVdr0G8NfOwWrWtYNPjCjU=;
+	s=default; t=1581021970;
+	bh=vqnje4SrK7zmksL6qpw8d1YvwCA2XTOc+khujOgY4kM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wLRB2KaruS1sN9K6IobFQDQ7ZcADMmmkusuPV1uuyR8zFa7vZnlDBUqL0JDuNL8RN
-	 w/cUXhBrnROXC4RUTtxwhxRTRa2vmGm8qDpBcfA4YpznJ+v7+q3YODHvtxW7LanQ9b
-	 Y7yDw66YeWSXaTqw50H871nhuq8kJmtETvSnWdPA=
+	b=kdcG+9nO+IHMt2fLZewPUJD32ANZGK1W5wxhttYU/N5kg2y7/qn7APRemK4YFmj0o
+	 L0fIOoagejCChGpFUXuo0Hn5aQVKAlvdbHSRwT1SUyZ+K5/lVU9bN6JX+u07RrGhjo
+	 bIiNVLs2cDUqzoc4kJc1YUWsjKSmaSRdNRRE5GgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgBFUpz (ORCPT
+        id S1728157AbgBFUqJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:45:55 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33541 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbgBFUpy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:45:54 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m7so657690pjs.0;
-        Thu, 06 Feb 2020 12:45:54 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:09 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33799 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbgBFUqI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:08 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j4so3356516pgi.1;
+        Thu, 06 Feb 2020 12:46:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7t1ZBW9g5wlG8KTvc0XcPIxcORXLml7TZ0TKspaLkvA=;
-        b=q9OA4932fRBBs/TsXt8q30lSQBD94V7DjTuiiQ4m32bl5QoZWafJnWMWf3QMEdsL1Q
-         ZbLiCNdH5CdZZ63jYFYH/DKc9ccoiRXclM0FCcXeysoyqqpkdZMKINb6J0uFbPYrKjHe
-         Kk8LV19TSdiToraMiMZjzlpu5cHVs7vuJ9eYu0xY5TEIW/eVKpFNjLTW94YvJqlPIsmx
-         z2YcNG12yn3uN+4mNqwZ//rsor7Hwt1Scsl10y7wfHODUY3MormEqBgQr8mLhS73pq6N
-         rwiR7Qd/jwr188MdJq8jcEtOxtt5K9l3cZ4fP0lmS6HhNZSAqfeLX2OEJSieYEnfqCAT
-         K+zQ==
-X-Gm-Message-State: APjAAAWc3CicG1y2zXusH8H5z8GkaTkazpjrDa4HFqO/UxJHbRNcyEgs
-        IAV4L2uur5sSWEPWuQT2dg==
-X-Google-Smtp-Source: APXvYqzHq35xMKGzxw/a8MEVmjvvcJB0PiyrMJ12ZZgUVekYH3aTlmRKhxb8cjo4/eurccisZ8lRXw==
-X-Received: by 2002:a17:902:5a44:: with SMTP id f4mr6093219plm.328.1581021953661;
-        Thu, 06 Feb 2020 12:45:53 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=8CEel95Qe0K0FMLgiCiTMequMG6yZDFIWpQ5eQwLax4=;
+        b=qwuTV2bGE5go6Dr3hk/G9xxmRw/YSrJGgeLoMC/iiRzHARB7EdSUgLGnOZ8JhU2Gku
+         Bh17V0Pl0N7l4wP9FW+PsyLFWmV7DSZVxkzSkIwbfnttYiswqubQ6xFWP2MFn3bdcwCc
+         1ChkoSEDaCcK/Rlu+gx6tEHQqZYzKwrRHBgVvpDMB6xk1+KxMDFZ0dLGpcBO8rU0aGs4
+         9aNIYSMfTrAw1uvCfwoFomiQ/kS6xkmDLUkS9cYxoc7iJT9BgvxDzHrCS6qsbhhHDH+z
+         ei/BSlk2JI3D/oh5o4eY/fDwmHuZHXIMEOPADI4UGy1MzrDin1/JTYVGIZxK0q4WhHjA
+         WxlA==
+X-Gm-Message-State: APjAAAV6NYTIp93DnC93iPZ6EVCMy/KuYo/XmbTNRThDB6O/Y77d0O6z
+        EYbXdUEfM3mFuUV5LGna3shnuRpJ5Q==
+X-Google-Smtp-Source: APXvYqx1NnBAhQrChlAlk+joiqFOCP58iYcXSFU1wddrjPp0aH7Qq0MEkUwXPJE9lP0gLPlBBbd93w==
+X-Received: by 2002:a62:8246:: with SMTP id w67mr5850174pfd.107.1581021968038;
+        Thu, 06 Feb 2020 12:46:08 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id z10sm275754pgz.88.2020.02.06.12.45.51
+        by smtp.gmail.com with ESMTPSA id 133sm293844pfy.14.2020.02.06.12.46.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:53 -0800 (PST)
-Received: (nullmailer pid 15150 invoked by uid 1000);
-        Thu, 06 Feb 2020 19:08:40 -0000
-Date:   Thu, 6 Feb 2020 19:08:40 +0000
+        Thu, 06 Feb 2020 12:46:07 -0800 (PST)
+Received: (nullmailer pid 27633 invoked by uid 1000);
+        Thu, 06 Feb 2020 18:30:53 -0000
+Date:   Thu, 6 Feb 2020 18:30:53 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     jic23@kernel.org, robh+dt@kernel.org, olivier.moysan@st.com,
-        mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/4] dt-bindings: iio: adc: sd modulator: add vref support
-Message-ID: <20200206190840.GA15088@bogus>
-References: <20200204101008.11411-1-olivier.moysan@st.com>
- <20200204101008.11411-2-olivier.moysan@st.com>
+To:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+Cc:     linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 1/3] ARM: dts: imx7s: add snvs clock to pwrkey
+Message-ID: <20200206183053.GA27553@bogus>
+References: <20200130204516.4760-1-git@andred.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200204101008.11411-2-olivier.moysan@st.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200130204516.4760-1-git@andred.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 4 Feb 2020 11:10:05 +0100, Olivier Moysan wrote:
-> Add vref supply support to sigma delta modulator.
+On Thu, 30 Jan 2020 20:45:14 +0000, =?UTF-8?q?Andr=C3=A9=20Draszik?= wrote:
+> On i.MX7, the SNVS requires a clock. This is similar to the clock
+> bound to the SNVS RTC node, but if the SNVS RTC driver isn't enabled,
+> then SNVS doesn't work, and as such the pwrkey driver doesn't
+> work (i.e. hangs the kernel, as the clock isn't enabled).
 > 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> Also see commit ec2a844ef7c1
+> ("ARM: dts: imx7s: add snvs rtc clock")
+> for a similar fix.
+> 
+> Signed-off-by: André Draszik <git@andred.net>
+> Cc: Anson Huang <Anson.Huang@nxp.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: "Horia Geantă" <horia.geanta@nxp.com>
+> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-crypto@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-input@vger.kernel.org
 > ---
->  .../devicetree/bindings/iio/adc/sigma-delta-modulator.yaml    | 4 ++++
->  1 file changed, 4 insertions(+)
+>  .../devicetree/bindings/crypto/fsl-sec4.txt     | 17 +++++++++++++++++
+>  arch/arm/boot/dts/imx7s.dtsi                    |  2 ++
+>  2 files changed, 19 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
