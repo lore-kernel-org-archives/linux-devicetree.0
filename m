@@ -2,113 +2,103 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37E5C352A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 12:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD7EC33CAC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 12:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4851217BA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 12:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CB0217BA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 12:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580993976;
+	bh=6OY7DPI2yOZ1X/1zJRZnKqanPxQshh7/EXoL02sHfpY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dWvIJNaLFb3eEDm7qVm1UBr0/638umMjk0Ct7J0dHJo85SHZsAKME1n4ivzgBSd9m
+	 d+TwxGN8u7gzBWW5vRptvDmrhO0TzzJ8IN7zneIzw0ypezR/xVUVnp7Vm/oPTIzWiE
+	 qCirBtTi/71mqUUAb3e/2oszb1nNfm81DQaS51wQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgBFMy6 (ORCPT
+        id S1727305AbgBFM72 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 07:54:58 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37774 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFMy6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 07:54:58 -0500
-Received: from [212.140.138.205] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1izggH-0003AQ-T2; Thu, 06 Feb 2020 13:54:54 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7814A100C31; Thu,  6 Feb 2020 12:54:53 +0000 (GMT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     bage@linutronix.de, devicetree@vger.kernel.org
-Cc:     Bastian Germann <bage@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Benedikt Spranger <b.spranger@linutronix.de>,
-        Jelle de Jong <jelledejong@powercraft.nl>,
-        linux-spdx@vger.kernel.org
-Subject: Re: [PATCH 3/5] ARM: dts: sun7i: lamobo-r1: Use SPDX identifier
-In-Reply-To: <20200206113328.7296-4-bage@linutronix.de>
-References: <20200206113328.7296-1-bage@linutronix.de> <20200206113328.7296-4-bage@linutronix.de>
-Date:   Thu, 06 Feb 2020 12:54:53 +0000
-Message-ID: <87eev7swo2.fsf@nanos.tec.linutronix.de>
+        Thu, 6 Feb 2020 07:59:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726744AbgBFM71 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Feb 2020 07:59:27 -0500
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79DDB2192A;
+        Thu,  6 Feb 2020 12:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580993966;
+        bh=6OY7DPI2yOZ1X/1zJRZnKqanPxQshh7/EXoL02sHfpY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QEFZkBJhSZNCXOTa8av2d4HzjHuE/BqXM9vnRkZ1T0w7nQ/lzWrl9bxK23i0c49nO
+         L+OTfzCqYtSpvJhn8YUlKgo0JM4vJn4NpJCTpRbPqZXHOPrwQRmVlrlhyJwowP0yxM
+         P7GM0LepDBfNTFrz//gR7J0dhEslbO/HNJT8ZGYE=
+Received: by mail-lf1-f41.google.com with SMTP id 9so4016395lfq.10;
+        Thu, 06 Feb 2020 04:59:26 -0800 (PST)
+X-Gm-Message-State: APjAAAVW4/hyoKy9DiR+aAGGIkynoWOWrmHBj+cP+IvG0AnDZARtfdUL
+        8zJw93feOl2w0cIp1TOd0isgkgXR3GHN55ogPtE=
+X-Google-Smtp-Source: APXvYqxXmYq0CkBT0Cjv9peoxswFZXHCgyB59GVNonQ53ahGHtf1ogSPH5YE7w3/aQn7BCzLj014+bBH5621DMrKfcY=
+X-Received: by 2002:ac2:485c:: with SMTP id 28mr1744468lfy.118.1580993964531;
+ Thu, 06 Feb 2020 04:59:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200127215453.15144-1-lukasz.luba@arm.com> <20200127215453.15144-4-lukasz.luba@arm.com>
+ <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
+ <db3f2554-288d-81ab-2373-1447367ba673@arm.com> <20200131204118.GA27284@kozik-lap>
+ <c54e252d-dc55-5fa3-f97f-643d7efbfdc1@arm.com>
+In-Reply-To: <c54e252d-dc55-5fa3-f97f-643d7efbfdc1@arm.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 6 Feb 2020 13:59:13 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPfTjdtNMx=+dPVcQ53RiXx0y-r=KXBRhzA4jS77SHxciQ@mail.gmail.com>
+Message-ID: <CAJKOXPfTjdtNMx=+dPVcQ53RiXx0y-r=KXBRhzA4jS77SHxciQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Bastian,
-
-bage@linutronix.de writes:
-> From: Bastian Germann <bage@linutronix.de>
+On Wed, 5 Feb 2020 at 13:49, Lukasz Luba <lukasz.luba@arm.com> wrote:
+> >> As mentioned in response to patch 1/3. The fist patch would create MC
+> >> domain, something different than Energy Model or EAS. The decisions in
+> >> the scheduler would be different.
+> >>
+> >> I can merge 1/3 and 3/3 if you like, though.
+> >
+> > I understand now that their independent. Still, they are part of one
+> > goal to tune the scheduler for Exynos platform. Splitting these looks
+> > too much, like enabling multiple drivers one after another.
+> >
+> > However if you provide numbers for each of cases (before patches, multi
+> > core scheduler, energy model with DTS), then I see benefit of splitting
+> > it.  Each commit would have its own rationale.  I am not sure if it is
+> > worth such investigation - that's just defconfig... distros might ignore
+> > it anyway.
 >
-> Adopt the SPDX license identifier.
+> Good point, and I agree that it would require more investigation, for
+> which unfortunately I don't have currently spare cycles.
 >
-> The 2nd license text is specified by SPDX as MIT.  So the identifier has
-> to be (GPL-2.0-or-later OR MIT).  SPDX's X11 has an additional advertising
-> clause.
+> Should I merge patch 1/3 and 3/3 and send the v2 with a cover letter
+> which would have the test results?
 
-Yes, the license text of the alternative license is plain MIT.
+Yes, let's do this way.
 
-> @@ -1,43 +1,6 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
->  /*
->   * Copyright 2015 Jelle de Jong <jelledejong@powercraft.nl>
-> - *
-> - * This file is dual-licensed: you can use it either under the terms
-> - * of the GPL or the X11 license, at your option. Note that this dual
-> - * licensing only applies to this file, and not this project as a
-> - * whole.
+Thanks for working on this!
 
-Jelle, can you please clarify your intention here?
-
-> - *  a) This file is free software; you can redistribute it and/or
-> - *     modify it under the terms of the GNU General Public License as
-> - *     published by the Free Software Foundation; either version 2 of the
-> - *     License, or (at your option) any later version.
-> - *
-> - *     This file is distributed in the hope that it will be useful,
-> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *     GNU General Public License for more details.
-> - *
-> - * Or, alternatively,
-> - *
-> - *  b) Permission is hereby granted, free of charge, to any person
-> - *     obtaining a copy of this software and associated documentation
-> - *     files (the "Software"), to deal in the Software without
-> - *     restriction, including without limitation the rights to use,
-> - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> - *     sell copies of the Software, and to permit persons to whom the
-> - *     Software is furnished to do so, subject to the following
-> - *     conditions:
-> - *
-> - *     The above copyright notice and this permission notice shall be
-> - *     included in all copies or substantial portions of the Software.
-> - *
-> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - *     OTHER DEALINGS IN THE SOFTWARE.
->   */
-
-Thanks,
-
-        tglx
+Best regards,
+Krzysztof
