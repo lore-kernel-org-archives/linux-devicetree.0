@@ -7,161 +7,99 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D4CC35247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34910C352A2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647F5218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097F621775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021978;
-	bh=PDqOiQh5CRzgkaDkb+PXm0mylANHd9bs835Cpd0b8WA=;
+	s=default; t=1581021987;
+	bh=Ocj0H6TQmpr7XwjGv77HKUZhpIL7ZWZKic9S5tcam94=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=avf5ntdkNeJlXAm8jWv+FdRMNHqBM2NyV3fwI17r/vQ63OHwecUeifyPECO0e6Gwr
-	 C8OZqzFBzVtVjHQ4ehPxWXxP/pLRLe5VGAy8oq9edSC6q/Mgg41TTuyMkUNoNYxD0W
-	 qG1h25kLJGjx2EqnPaQLQZZ26I0UgESHhr3fNrjE=
+	b=P2EebLnth8HQmwvN4QTa8ki0A1lZDQI3kOwQOc+HVFNWdrjt+px7v1NSCyUoUQIZ+
+	 ABt7fhGJ9+ljGz2xd05aKQafDnMYq6vlu6HZXJlJc5hxirN1GezgNkqj+Hxm6qHd3j
+	 m0j0w4av3QlYX/zbpaC42mxyelJ/3PMk+z78K48o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgBFUqR (ORCPT
+        id S1728174AbgBFUq0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:17 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33299 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbgBFUqM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:12 -0500
-Received: by mail-pl1-f193.google.com with SMTP id ay11so51470plb.0;
-        Thu, 06 Feb 2020 12:46:12 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:26 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40745 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgBFUqZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:25 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z7so3333485pgk.7;
+        Thu, 06 Feb 2020 12:46:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sMMUOJ1dmkcOXYOO3yw5bPGn6S7i93VnJXQW8PuR95g=;
-        b=YZXj+IW++eKcnHShzZe5TITnHdOALEDkU5ga7lcmhn29d/95gRs4zOX3E+/np0iTfS
-         vfs943Qx716q5IDh6xLlkOOv7LI59a7yoyboIWHummRlVj1S8746SyBpl2cCE+Mf8Mtb
-         GLRFDnqhHTfnIYUPCfz4BV5ciRMYxtZSVWlMUXPOuI66jw/iMmyA3GZ468uFcgN/JWVX
-         6FgB/ArqJzZ3UEetB9WXqf27thyIBRolhunjgX2AzyLw4cb23x7wgvgnKBDl+BYp9Deh
-         WmG55shxiXRFoB5iqyqjl/Ze4osganyMWP/dZmdMTBgdcM4uYqSZ/Caklu7oBe5DN6VQ
-         Y3gQ==
-X-Gm-Message-State: APjAAAVPNL1uyx7v1IZsbPNgEG0P159JuNr5YJ4cmnVGb9nZEXbm5ZGJ
-        TmVh2I6sIRoPqddxGIgMFw==
-X-Google-Smtp-Source: APXvYqzGp2S5nKGhFS/AzmjJ2SfKCyJUGc80hTOiA6U59PWgA2OUv3astvinezo/swqiqr6tcm8gbQ==
-X-Received: by 2002:a17:902:bc89:: with SMTP id bb9mr5595992plb.162.1581021972166;
-        Thu, 06 Feb 2020 12:46:12 -0800 (PST)
+        bh=jPtOQdw8vyUeztLpc680CHtZLK6W1JEQ2cHvbgrlY+8=;
+        b=WqXY9MDGqAuSlJ3Htq+iCYlFvm9yzCL2kfMcTGeF6Fm4x7kEg1/X8EivvdBzr3oRew
+         7gHInV7c4+S9g2kIDnKx+40EffR34sc4K8E4NnQ1oxGGaM2UgZ2PbtM3itWF0qk/0LTN
+         ISTe4CXRiZfiQFqAOGy8CbBhOgTOPwyHoVjDXI5FbZTtB/aPUhxHXyzbeO7UP6qf8pIB
+         HR5fC5KKnih6yhfjQsYIUeOmpfZ4nKBY5fr7Yv+jClW2ixtRL0ZkeeJzystO/c/pqJct
+         kNxzqBha1V9aGfMoL2/B1jKkuwxz7XTcXCkQm0Omn45fPoZloF6d71dy1HbpSRekiTpC
+         hAKA==
+X-Gm-Message-State: APjAAAURznOXjApo7kd+BORqDLn+qnYPuIoHyISmXPBIPZcxqTaskEst
+        wB6Qm5XBxp1SoAObeqVebQ==
+X-Google-Smtp-Source: APXvYqxza9xpQ1nh+paMG8H01152jYTBvT3wn55ABgjvQ/4PX2elrh5aIP/rcP6j59uN6+87Rk8oUQ==
+X-Received: by 2002:a63:4b52:: with SMTP id k18mr5635945pgl.371.1581021982840;
+        Thu, 06 Feb 2020 12:46:22 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id i64sm288884pgc.51.2020.02.06.12.46.11
+        by smtp.gmail.com with ESMTPSA id z29sm292462pgc.21.2020.02.06.12.46.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:11 -0800 (PST)
-Received: (nullmailer pid 13714 invoked by uid 1000);
-        Thu, 06 Feb 2020 19:07:58 -0000
-Date:   Thu, 6 Feb 2020 19:07:58 +0000
+        Thu, 06 Feb 2020 12:46:22 -0800 (PST)
+Received: (nullmailer pid 28243 invoked by uid 1000);
+        Thu, 06 Feb 2020 17:56:52 -0000
+Date:   Thu, 6 Feb 2020 17:56:52 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     David Heidelberg <david@ixit.cz>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] dt-bindings: iio: light: add support for
- Dyna-Image AL3320A
-Message-ID: <20200206190758.GA11064@bogus>
-References: <20200204093031.616409-1-david@ixit.cz>
- <20200204093031.616409-2-david@ixit.cz>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
+Subject: Re: [PATCH v3 2/2] dt-bindings: clk: intel: Add bindings document &
+ header file for a new clock driver
+Message-ID: <20200206175652.GA25108@bogus>
+References: <cover.1580373142.git.rahul.tanwar@linux.intel.com>
+ <1c4b7a999f47df4214a60971e27fa9311c8c64b4.1580373142.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204093031.616409-2-david@ixit.cz>
+In-Reply-To: <1c4b7a999f47df4214a60971e27fa9311c8c64b4.1580373142.git.rahul.tanwar@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 10:30:27AM +0100, David Heidelberg wrote:
-> This commit add dt-bindings support to al3320a driver and vendor-prefix
-> dynaimage.
+On Thu, Jan 30, 2020 at 04:54:01PM +0800, Rahul Tanwar wrote:
+> Clock generation unit(CGU) is a clock controller IP of Intel's Lightning
+> Mountain(LGM) SoC. Add DT bindings include file and document for CGU clock
+> controller driver of LGM.
 > 
-> 
-> Signed-off-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 > ---
->  .../bindings/iio/light/al3320a.yaml           | 45 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  2 files changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
+>  .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  40 +++++
+>  include/dt-bindings/clock/intel,lgm-clk.h          | 165 +++++++++++++++++++++
+>  2 files changed, 205 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
+>  create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/al3320a.yaml b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
+> diff --git a/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
 > new file mode 100644
-> index 000000000000..08e7ee4bdf55
+> index 000000000000..e9649fe75435
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only)
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
+> +++ b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/iio/light/al3320a.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dyna-Image AL3320A sensor
-> +
-> +maintainers:
-> +  - David Heidelberg <david@ixit.cz>
-> +
-> +properties:
-> +  compatible:
-> +    const: dynaimage,al3320a
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Regulator that provides power to the sensor
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - vdd-supply
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        al3320a@1c {
+> +$id: http://devicetree.org/schemas/bindings/clock/intel,cgu-lgm.yaml#
 
-light-sensor@1c
+Drop 'bindings'
 
-> +            compatible = "dynaimage,al3320a";
-> +            reg = <0x1c>;
-> +            vdd-supply = <&vdd_reg>;
-> +            interrupts = <0 99 4>;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 9cd52d9e1f7f..8d2ebf3d0aa1 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -267,6 +267,8 @@ patternProperties:
->      description: Dragino Technology Co., Limited
->    "^dserve,.*":
->      description: dServe Technology B.V.
-> +  "^dynaimage,.*":
-> +    description: Dyna-Image
->    "^ea,.*":
->      description: Embedded Artists AB
->    "^ebs-systart,.*":
-> -- 
-> 2.25.0
-> 
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
