@@ -7,85 +7,88 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C48C352A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16F7C352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12922192A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E63A218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021970;
-	bh=K8NDqL+wnhkuqE2/YRWza1zYojsPPRpIOFZACeMnDxc=;
+	s=default; t=1581021973;
+	bh=af4PLSnafY906SvjpN1hR69Go8XQb27ra81bq2aCGyM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eAE3/IfvHpjf/1TNRgPtW9TdmbirArfIaAKlY/Ma50q2nL1/yJyS3SUKjY4aojInN
-	 3prpJDbQUVGUkbHKQQiFMh94dFlIS3h3Lf4c50d/eTdaQG9FOiqYVvIjEsQEb28rQJ
-	 lvcrMdkb3wMrkoPfbqPEyD9eBCvBw0fhzYOS7mRo=
+	b=O7Qr8Z40HKzFhMWDMbFDQOzXZ3//jxvW4ZJRjCRMX8w81YRx4fDiKQqw/8UqTTFTf
+	 RCs1PX60VW2bE8TJFxeAe+XUY0nHiLBLBqmsvYxHyBZY2NorsaGMyseJdzKLawHHdp
+	 6tTMDdqI7UZmypMypVqODtYQ1C0EavB2HhXi+Frc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgBFUqK (ORCPT
+        id S1728176AbgBFUqN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:10 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54757 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728147AbgBFUqI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:08 -0500
-Received: by mail-pj1-f66.google.com with SMTP id dw13so490458pjb.4;
-        Thu, 06 Feb 2020 12:46:06 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:13 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43541 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbgBFUqM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:12 -0500
+Received: by mail-pg1-f196.google.com with SMTP id u131so3333318pgc.10;
+        Thu, 06 Feb 2020 12:46:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=erM7SmpwA1MKSWSGa+I6VYlqmwIja0ZXELObhSYPZBk=;
-        b=Air3Vn0Ce3zJzMxfYzxNsCK02szpJ1WdLGAPc2fxpV7SQqbjCyy0d6qejI6lzz7cOY
-         HWFz5OYX0WJai04dRqNMMJzUeO9IsKM1WQf7j2607WLXInXFZkbsvCQwA5K2Pgq2u1qR
-         8IG4CxG6GQhEqg8F/xcXmByNsIm701QY6GFD2vNp8JTr67gPDZvqCFiEQU6lwI5ve6zA
-         +6I4mWjxzo+TkaZxkv8c/xplanNK0M+88zVytdWbhnH5h+aBr/M4mwDMIEabIFisR41u
-         m9f+cyKrd+V5RkctwzWj+SvamJc1NBhmtCP27ur8lsLqUUZQbC8RaZ+lLe0tZTJKRGVQ
-         13AA==
-X-Gm-Message-State: APjAAAWPQsV2mScrpd/moO8DUIxRj2TaTrx3111XYNBbzPRq6IXA9u3b
-        SCfPsHCfxu1dRk74vZ1zsA==
-X-Google-Smtp-Source: APXvYqyZXwkD06oAd7+l3Qvgat+h1H2DBe2QqzmZLIXYK1Rmzig6oGubMvw+kxxH49rcCRc5SFa3iQ==
-X-Received: by 2002:a17:902:103:: with SMTP id 3mr5959123plb.34.1581021966089;
-        Thu, 06 Feb 2020 12:46:06 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zUJVXEe9nmb8lzTi4rWGnunn6uT7SLbqo7l18w5TMkM=;
+        b=WuqzAx4IQ2bRl4/nWYyFkvAiATskqse55LaTeb1APvx+wWXd8kE6Ib3cdOEjXujLfR
+         b28yo6DDN2s5zYUWqLbTrn1UEiqiwNrQfukIPMqNOGfoOK2xyHhTly2MXGs+Bs4i9MtR
+         i3Fq1BhDz347+78R7RdW9gDseZLKa/180qz9vREqVtbDNYoOgF5BbWHeHHMloOAu9HCY
+         HbqKS2dHeoUzw1n2CLDru3A/XfDbgXHzfF+d52Xj5K0ZH3qX2iWTxGJb/CYjLRRrygi8
+         crC93/AXpEgcZUrFyNe4MeE0w0nVEWwqbrfyGEMwAgdcNWsO19lrAbHEmSuA6S9jNYXW
+         ++5A==
+X-Gm-Message-State: APjAAAVHduqLx+BoVuSJaTqGC0dUGMSKeR+WV4MwuwvCBs9VsFEh7fe5
+        6FNjZDWrfRmT+QKGFQqcNw==
+X-Google-Smtp-Source: APXvYqwPyQbSQo7BMvabDsbXOSck7ihIN04c3RRAFzLU27liOcRjuh4U6Ul11wxJFT9owm46O1L3Mw==
+X-Received: by 2002:a63:e04a:: with SMTP id n10mr5591161pgj.341.1581021970134;
+        Thu, 06 Feb 2020 12:46:10 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id f8sm154710pjg.28.2020.02.06.12.46.04
+        by smtp.gmail.com with ESMTPSA id v10sm292858pgk.24.2020.02.06.12.46.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:05 -0800 (PST)
-Received: (nullmailer pid 23260 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:11:27 -0000
-Date:   Thu, 6 Feb 2020 18:11:27 +0000
+        Thu, 06 Feb 2020 12:46:09 -0800 (PST)
+Received: (nullmailer pid 11196 invoked by uid 1000);
+        Thu, 06 Feb 2020 18:39:05 -0000
+Date:   Thu, 6 Feb 2020 18:39:05 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>, kernel@pengutronix.de,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>,
-        Silvan Murer <silvan.murer@gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: ltc2632: expand for ltc2636 support
-Message-ID: <20200206181127.GA23192@bogus>
-References: <20200130131549.1170-1-u.kleine-koenig@pengutronix.de>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv2 1/2] dt-bindings: watchdog: Convert QCOM watchdog timer
+ bindings to YAML
+Message-ID: <20200206183905.GA11134@bogus>
+References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <2edca4b54ee6b33493e0427c17de983d3ce3012f.1580570160.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200130131549.1170-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <2edca4b54ee6b33493e0427c17de983d3ce3012f.1580570160.git.saiprakash.ranjan@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Jan 2020 14:15:47 +0100, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= wrote:
-> The ltc2636 family of devices is register compatible with the ltc2636
-> chips, it just features 8 instead of 2 channels.
+On Sat,  1 Feb 2020 20:59:48 +0530, Sai Prakash Ranjan wrote:
+> Convert QCOM watchdog timer bindings to DT schema format using
+> json-schema.
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/iio/dac/ltc2632.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 ------------
+>  .../bindings/watchdog/qcom-wdt.yaml           | 44 +++++++++++++++++++
+>  2 files changed, 44 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
