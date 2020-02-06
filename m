@@ -2,114 +2,120 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECD1C352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2219C352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBBE218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BDD21927
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581025652;
+	bh=sC0Omir/ZJR/xzvpdSpxlmgXx1Tv7YvI2oHPK7CsWTg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l+v3Hh49vgqcxl0WeBM8K0LsTQXdPDIvYsnSjBpTZKdUoJy09q23rM5XjQV2p7wmk
+	 4YkLkShsIWfySGRXoL4RZXzsFCXcWyeylhQ1mqTcv7s9aguAQyRaS2Ahy2O+SlVvw/
+	 AhAofI6yWhn0PxrViAfBJxg6qnHFB+10xKLorq3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgBFVoq convert rfc822-to-8bit (ORCPT
+        id S1727456AbgBFVrc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:44:46 -0500
-Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:51102 "EHLO
-        ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbgBFVoq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Feb 2020 16:44:46 -0500
-Received: from [192.168.1.106] (227.146.230.94.awnet.cz [94.230.146.227])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by ixit.cz (Postfix) with ESMTPSA id AC648251E0;
-        Thu,  6 Feb 2020 22:44:42 +0100 (CET)
-Date:   Thu, 06 Feb 2020 22:44:37 +0100
-From:   David Heidelberg <david@ixit.cz>
-Subject: Re: [PATCH v4 1/7] dt-bindings: iio: light: add support for
- Dyna-Image AL3320A
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        =?UTF-8?b?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Message-Id: <1581025477.790008.1@ixit.cz>
-In-Reply-To: <CAL_JsqKQm7rnfm=QZSS+83czgaLoE6Wtg2se9r0ayvMgtfd-ZQ@mail.gmail.com>
-References: <20200204093031.616409-1-david@ixit.cz>
-        <20200204093031.616409-2-david@ixit.cz> <20200206190758.GA11064@bogus>
-        <1581023799.790008.0@ixit.cz>
-        <CAL_JsqKQm7rnfm=QZSS+83czgaLoE6Wtg2se9r0ayvMgtfd-ZQ@mail.gmail.com>
-X-Mailer: geary/3.35.2
+        Thu, 6 Feb 2020 16:47:32 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40552 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFVrc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:47:32 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q8so128604pfh.7;
+        Thu, 06 Feb 2020 13:47:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0++ty3KNqexXxUIh6o0w0NG3K1wrpafmFLgGyyqsx4w=;
+        b=lCinl6OjAC1BsGy7Qc4HJiIKPaYyHIPkIDnBupbWgqlHYfqM8piZM7qOEWnL1GQE+y
+         eJhq0y0zSN27JZA+iUYBu5TetOMK5dWhSE1SsqQ0y2G2ajhtYDoAsYTjQwa16Jt0FSda
+         cm0JQVpsVzKW5p5aMnBfp77xakF2Ut6Z/W+RjRFmzzT2ylLres21qcil4e7VpKdpmaRp
+         pXwG0VPizFP5UJG/v7RTZoVbdeX4rnJZxVi/wpgiT6xHtROZks4PNPQriq9dlzOpyZCV
+         3YlVM0OFwe0H4FLmE33RqXUPupemCJSLk+ikzEfpnqLEf6uQ3GhYefwIWhztH1GLVz1N
+         IJWQ==
+X-Gm-Message-State: APjAAAW5o3aeT+PbZDLdsyNwVXiFTg9aR7js8cO26zteaOyBVLdvKVDA
+        Bx3tJuL/wCPcIGk5mWuNCNJlRkJwCw==
+X-Google-Smtp-Source: APXvYqxfJcovvxDOLT5By1ZcTbnBE5pz9dMGw5xHjf1hSoadJsP1jEbSfQ6mrwOeoburg7PHFcTRJA==
+X-Received: by 2002:a63:306:: with SMTP id 6mr5937668pgd.337.1581025651303;
+        Thu, 06 Feb 2020 13:47:31 -0800 (PST)
+Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
+        by smtp.gmail.com with ESMTPSA id v8sm331103pfn.172.2020.02.06.13.47.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 13:47:30 -0800 (PST)
+Received: (nullmailer pid 3350 invoked by uid 1000);
+        Thu, 06 Feb 2020 21:47:29 -0000
+Date:   Thu, 6 Feb 2020 14:47:29 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] gpio: Avoid kernel.h inclusion where it's possible
+Message-ID: <20200206214729.GA30344@bogus>
+References: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-
-Rob Herring <robh@kernel.org> napsal Čt, 6. úno 2020 v 14∶27:
-> On Thu, Feb 6, 2020 at 2:16 PM David Heidelberg <david@ixit.cz> wrote:
->> 
->> 
->> 
->> 
->>  Rob Herring <robh@kernel.org> napsal Čt, 6. úno 2020 v 19∶07:
->>  > On Tue, Feb 04, 2020 at 10:30:27AM +0100, David Heidelberg wrote:
->>  >>  This commit add dt-bindings support to al3320a driver and
->>  >> vendor-prefix
->>  >>  dynaimage.
->>  >>
->>  >>
->>  >>  Signed-off-by: David Heidelberg <david@ixit.cz>
->>  >>  ---
->>  >>   .../bindings/iio/light/al3320a.yaml           | 45
->>  >> +++++++++++++++++++
->>  >>   .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->>  >>   2 files changed, 47 insertions(+)
->>  >>   create mode 100644
->>  >> Documentation/devicetree/bindings/iio/light/al3320a.yaml
->>  >>
->>  >>  diff --git
->>  >> a/Documentation/devicetree/bindings/iio/light/al3320a.yaml
->>  >> b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
->>  >>  new file mode 100644
->>  >>  index 000000000000..08e7ee4bdf55
->>  >>  --- /dev/null
->>  >>  +++ b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
->>  >>  @@ -0,0 +1,45 @@
->>  >>  +# SPDX-License-Identifier: (GPL-2.0-only)
->>  >
->>  > Dual license new bindings:
->>  >
->>  > (GPL-2.0-only OR BSD-2-Clause)
->> 
->>  It BSD usage in Linux kernel enforced for bindings?
+On Wed, Feb 05, 2020 at 03:43:36PM +0200, Andy Shevchenko wrote:
+> Inclusion of kernel.h increases the mess with the header dependencies.
+> Avoid kernel.h inclusion where it's possible.
 > 
-> Yes, bindings are exported and used by other projects. And may get
-> moved out completely.
+> Besides that, clean up a bit other inclusions inside GPIO subsystem headers.
+> It includes:
+>  - removal pin control bits (forward declaration and header) from linux/gpio.h
+>  - removal of.h from asm-generic/gpio.h
+>  - use of explicit headers in gpio/consumer.h
+>  - add FIXME note with regard to gpio.h inclusion in of_gpio,h
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: Elaborate changes in the commit message (Bartosz)
+>  include/asm-generic/gpio.h    | 4 ++--
+>  include/linux/gpio.h          | 2 --
+>  include/linux/gpio/consumer.h | 5 ++++-
+>  include/linux/of_gpio.h       | 9 ++++++---
+>  4 files changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+> index 19eadac415c4..aea9aee1f3e9 100644
+> --- a/include/asm-generic/gpio.h
+> +++ b/include/asm-generic/gpio.h
+> @@ -2,10 +2,8 @@
+>  #ifndef _ASM_GENERIC_GPIO_H
+>  #define _ASM_GENERIC_GPIO_H
+>  
+> -#include <linux/kernel.h>
+>  #include <linux/types.h>
+>  #include <linux/errno.h>
+> -#include <linux/of.h>
+>  
+>  #ifdef CONFIG_GPIOLIB
+>  
+> @@ -140,6 +138,8 @@ static inline void gpio_unexport(unsigned gpio)
+>  
+>  #else	/* !CONFIG_GPIOLIB */
+>  
+> +#include <linux/kernel.h>
+> +
 
-So do I assume right if I'm not dual licencing also under BSD, patch 
-won't get merged?
+I don't really think moving the includes inside #ifdef's is an 
+improvment.
 
-By principle I don't like to being forced give my work to projects 
-which don't comply with GPL 2. Not much happy about it, but what can I 
-do, when I want this sensors DT merged in...
+But I'll leave it to Linus.
 
-Due to the fact it's simple definition, I'll dual licence it also to 
-BSD for next patch version.
-
->> 
->>  I'd like to publish my code only under GPL if possible.
-
-
+Rob
