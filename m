@@ -1,289 +1,150 @@
 Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7FFC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 10:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF24C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 10:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6ADA217BA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 10:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580986502;
-	bh=Wp2idWCrlZzdwG/OpRC1Wyjz/+P50vmpCtWgHDDf2ns=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jCl6iTuGVy78qb4mYFXdXSlNlSLSfOW57+nw/q69eQz50lbM7mdk2r7X97V/13iJg
-	 0A3MNzs5TMsily48ZcD5jmt5sWTGUxIy3DAeo066nf1mRN4xcvXiTvxV6wh91IGubK
-	 /tggox0YSZx5Wpajwqs94QtI8/NvZ+buGVc9JS0o=
+	by mail.kernel.org (Postfix) with ESMTP id 9773B21741
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 10:57:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R5FZX0iM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgBFKzB (ORCPT
+        id S1727963AbgBFK5Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:55:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbgBFKzB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:55:01 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51CD220658;
-        Thu,  6 Feb 2020 10:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580986499;
-        bh=Wp2idWCrlZzdwG/OpRC1Wyjz/+P50vmpCtWgHDDf2ns=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EDOqEZ7ja3QO9jrWCSxLkc9LbICLlRymcX9PPvcijpDyZyCsljLPAjUmGsbnVRgTH
-         qhbdzVRUAbRoKkMNyY0aCEwDoO8gFcAfE8K08yKhXQSLyeiluY4f1ulHCe8yw0EbSH
-         H6aD9fPIZpb1uNOtZbxUG+jwIMZBxIW/mX6o0c2M=
-Date:   Thu, 6 Feb 2020 10:54:53 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, kernel@pengutronix.de,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>,
-        Silvan Murer <silvan.murer@gmail.com>
-Subject: Re: [PATCH 3/3] iio: dac: ltc2632: add support for LTC2636 family
-Message-ID: <20200206105453.1d99b6ed@archlinux>
-In-Reply-To: <20200202095428.238af727@archlinux>
-References: <20200130131549.1170-1-u.kleine-koenig@pengutronix.de>
-        <20200130131549.1170-3-u.kleine-koenig@pengutronix.de>
-        <20200202095428.238af727@archlinux>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 6 Feb 2020 05:57:25 -0500
+Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:61566
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727698AbgBFK5Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Feb 2020 05:57:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FRRF/TsOUFVifwhfm56aTo3Dki2xAw2PNVG3UcY7522UsB0Z2U1OsNeaR8gJa4qQqJAiHa640QcNO9Gr/ynr+ViFlFGli1zREoFw3LIkoGjFEfGzGEfIZCq96nWYznNeI8Yc/NM03iay37FFZBw/QZifsnSQ4X85PE6J0NeuN9BdVQh6MiqQpO2nOalVkg6JkDtojF0w1wx54LOGV9F2Iy553GvefSh6vZFBRE4VsZ2xuCpB5NaDPXmRNhwqfTy/i011CoaxfoePNQqcpcvhhMJAgmKrIxAQNOFJd3pUXI4PhL8RwaJElWqDMRTanrog5eiPA/d314pdsWDhFz08fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LUUITFqmrpTrBulNn1KbrwxOh/awNv3JleG3gGEIkaQ=;
+ b=E94nREJnsPqyKAyxzvZJLoysWH7gX4wPubjaqUfvC4z0IYFARgHb4tPGLoGowDaq1ERo+ZMmtegVL9ngwjM0FzZ82zW09HcSFiRwgkztTmfASSO7H+CuPVt6drI75B+o+xSJYZ1aX8FXyCF0yDQWLSBOUKtF8I4wujTQf5KQZNRMBcIQ6feY+xfio9+k17uQ+XgBjKCNi0U3U8ORhmtDsm/WrzyDxigxBOYwbQ107LJQBuD49Nd683YRoVY2lhGHZPiC4wAKghtmlGlrLnhiDN3Zb3Sx6gjwc4+YNocoS5zu9UsSG8HT5+fywFoPGQwdbN2tEwdUatfOjFLootPtwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LUUITFqmrpTrBulNn1KbrwxOh/awNv3JleG3gGEIkaQ=;
+ b=R5FZX0iMpoSfJIJVEX2NC0QfBEEKeeh+GC+XlmkVQPJii19G29FnxVECvLH0g0wgljoLL/PuH8+jVt5FucudAKwwT22dqahXiMhX++gWQVpACNGq8NlMQ+Pk0DQ2MKNifV3ApDUcV6FN2ZrhjNq7sQ8w4LH3W7QM1YMQYzM0XGA=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6732.eurprd04.prod.outlook.com (20.179.251.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Thu, 6 Feb 2020 10:57:22 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
+ 10:57:21 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Olof Johansson <olof@lixom.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Topic: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Index: AQHVn1Tsfp+9ZVhNFU2th1+s/za9wae4ifkAgAU/LmCAJo7igIAAGaaAgCh8UlA=
+Date:   Thu, 6 Feb 2020 10:57:21 +0000
+Message-ID: <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+In-Reply-To: <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 764ab8d2-64a1-471f-bc82-08d7aaf35798
+x-ms-traffictypediagnostic: DB8PR04MB6732:|DB8PR04MB6732:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6732A0523DE19CF114AD1CFA841D0@DB8PR04MB6732.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0305463112
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(39860400002)(396003)(366004)(136003)(346002)(376002)(199004)(189003)(6506007)(53546011)(8936002)(81166006)(81156014)(8676002)(110136005)(54906003)(316002)(64756008)(71200400001)(66476007)(52536014)(66556008)(66946007)(5660300002)(76116006)(66446008)(9686003)(4326008)(55016002)(7696005)(33656002)(2906002)(186003)(86362001)(26005)(7416002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6732;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RgEQ561lZXehOH8R3AOSRNcjETKSaS3WFglDHqgcC0uXR+3W/4w9c+chKHDBy1X+Q/tbfvtcONQmnRuyN6evGAQva9U+D2UXYxv5VqN+TxUMu8KZQZLUXRUejQCORtbC8Oaeb0+Pw+UWVW534Fn/etCEPL06iRN4BdleUniZUKIDi2ma8FFB1KWU91xUDRYmDInevb0Km3//qwdHNro2s+1+7MUlNY+sCWjXP8mt/hp/OcFynZpIkAu8/Vq6c/FZ0r1iyExHm8Lc2cV4XmNcFlEkUljm8CGlDJxZ1+6tdIFZXb+kYo9PWTPyutzAr0m+JnUwOyRjWn/5kP0eCCH/rXr2YWnyxErONdAji8yHe1+hf+cgthfNaTWp4xKVrt95xMHrodkOGSxDlRukusVQnDiKXgHkgr9Pyjmtrs08WIfVxJ00HuKT66r91W5FsCvW
+x-ms-exchange-antispam-messagedata: yCZ/EtPRPoV8kV/Tta2hG2kW8PpoZnTQohevi5BHIjSyOeqPZ7gZhnVA83SA3pxIvD4wQ9iCr36T2PBHSpX99LLSVt3j6Zlyi/o2zLk9oSf7XJIUanX1V4lZM7XH5ER0Twt+lbLaSNaT4qbqabKB+Q==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 764ab8d2-64a1-471f-bc82-08d7aaf35798
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 10:57:21.7098
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fXTo6qZuSDlZMq2ERXcz3MKIQ+CeX41rlojxWuEwHeR3D2wnXBZCg+7ooc5U9gZv+zEycT9dLBWIeJIpzZj30w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6732
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 2 Feb 2020 09:54:28 +0000
-Jonathan Cameron <jic23@kernel.org> wrote:
-
-> On Thu, 30 Jan 2020 14:15:49 +0100
-> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote:
->=20
-> > The only difference between LTC2632 and LTC2636 is that the former has
-> > two DAC channels while the latter has eight.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =
-=20
-> Looks good to me. I'd like to give a little time for Maxime and Silvan
-> to have a look if they wish.
->=20
-> If I seem to have lost this in a few weeks, give me a poke!
-
-Applied thanks,
-
-Jonathan
-
->=20
-> Thanks,
->=20
-> Jonathan
->=20
-> > ---
-> >  drivers/iio/dac/Kconfig   |  5 ++-
-> >  drivers/iio/dac/ltc2632.c | 77 +++++++++++++++++++++++++++++++++++++--
-> >  2 files changed, 77 insertions(+), 5 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-> > index cc42219a64f7..33a35ebe4fed 100644
-> > --- a/drivers/iio/dac/Kconfig
-> > +++ b/drivers/iio/dac/Kconfig
-> > @@ -132,11 +132,12 @@ config LTC1660
-> >  	  module will be called ltc1660.
-> > =20
-> >  config LTC2632
-> > -	tristate "Linear Technology LTC2632-12/10/8 DAC spi driver"
-> > +	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC s=
-pi driver"
-> >  	depends on SPI
-> >  	help
-> >  	  Say yes here to build support for Linear Technology
-> > -	  LTC2632-12, LTC2632-10, LTC2632-8 converters (DAC).
-> > +	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
-> > +	  LTC2636-8 converters (DAC).
-> > =20
-> >  	  To compile this driver as a module, choose M here: the
-> >  	  module will be called ltc2632.
-> > diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
-> > index 7ab92e178496..1e7ffa0f6071 100644
-> > --- a/drivers/iio/dac/ltc2632.c
-> > +++ b/drivers/iio/dac/ltc2632.c
-> > @@ -12,8 +12,6 @@
-> >  #include <linux/iio/iio.h>
-> >  #include <linux/regulator/consumer.h>
-> > =20
-> > -#define LTC2632_DAC_CHANNELS                    2
-> > -
-> >  #define LTC2632_ADDR_DAC0                       0x0
-> >  #define LTC2632_ADDR_DAC1                       0x1
-> > =20
-> > @@ -33,6 +31,7 @@
-> >   */
-> >  struct ltc2632_chip_info {
-> >  	const struct iio_chan_spec *channels;
-> > +	const size_t num_channels;
-> >  	const int vref_mv;
-> >  };
-> > =20
-> > @@ -57,6 +56,12 @@ enum ltc2632_supported_device_ids {
-> >  	ID_LTC2632H12,
-> >  	ID_LTC2632H10,
-> >  	ID_LTC2632H8,
-> > +	ID_LTC2636L12,
-> > +	ID_LTC2636L10,
-> > +	ID_LTC2636L8,
-> > +	ID_LTC2636H12,
-> > +	ID_LTC2636H10,
-> > +	ID_LTC2636H8,
-> >  };
-> > =20
-> >  static int ltc2632_spi_write(struct spi_device *spi,
-> > @@ -190,6 +195,12 @@ static const struct iio_chan_spec_ext_info ltc2632=
-_ext_info[] =3D {
-> >  	const struct iio_chan_spec _name ## _channels[] =3D { \
-> >  		LTC2632_CHANNEL(0, _bits), \
-> >  		LTC2632_CHANNEL(1, _bits), \
-> > +		LTC2632_CHANNEL(2, _bits), \
-> > +		LTC2632_CHANNEL(3, _bits), \
-> > +		LTC2632_CHANNEL(4, _bits), \
-> > +		LTC2632_CHANNEL(5, _bits), \
-> > +		LTC2632_CHANNEL(6, _bits), \
-> > +		LTC2632_CHANNEL(7, _bits), \
-> >  	}
-> > =20
-> >  static DECLARE_LTC2632_CHANNELS(ltc2632x12, 12);
-> > @@ -199,26 +210,62 @@ static DECLARE_LTC2632_CHANNELS(ltc2632x8, 8);
-> >  static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] =3D {
-> >  	[ID_LTC2632L12] =3D {
-> >  		.channels	=3D ltc2632x12_channels,
-> > +		.num_channels	=3D 2,
-> >  		.vref_mv	=3D 2500,
-> >  	},
-> >  	[ID_LTC2632L10] =3D {
-> >  		.channels	=3D ltc2632x10_channels,
-> > +		.num_channels	=3D 2,
-> >  		.vref_mv	=3D 2500,
-> >  	},
-> >  	[ID_LTC2632L8] =3D  {
-> >  		.channels	=3D ltc2632x8_channels,
-> > +		.num_channels	=3D 2,
-> >  		.vref_mv	=3D 2500,
-> >  	},
-> >  	[ID_LTC2632H12] =3D {
-> >  		.channels	=3D ltc2632x12_channels,
-> > +		.num_channels	=3D 2,
-> >  		.vref_mv	=3D 4096,
-> >  	},
-> >  	[ID_LTC2632H10] =3D {
-> >  		.channels	=3D ltc2632x10_channels,
-> > +		.num_channels	=3D 2,
-> >  		.vref_mv	=3D 4096,
-> >  	},
-> >  	[ID_LTC2632H8] =3D  {
-> >  		.channels	=3D ltc2632x8_channels,
-> > +		.num_channels	=3D 2,
-> > +		.vref_mv	=3D 4096,
-> > +	},
-> > +	[ID_LTC2636L12] =3D {
-> > +		.channels	=3D ltc2632x12_channels,
-> > +		.num_channels	=3D 8,
-> > +		.vref_mv	=3D 2500,
-> > +	},
-> > +	[ID_LTC2636L10] =3D {
-> > +		.channels	=3D ltc2632x10_channels,
-> > +		.num_channels	=3D 8,
-> > +		.vref_mv	=3D 2500,
-> > +	},
-> > +	[ID_LTC2636L8] =3D  {
-> > +		.channels	=3D ltc2632x8_channels,
-> > +		.num_channels	=3D 8,
-> > +		.vref_mv	=3D 2500,
-> > +	},
-> > +	[ID_LTC2636H12] =3D {
-> > +		.channels	=3D ltc2632x12_channels,
-> > +		.num_channels	=3D 8,
-> > +		.vref_mv	=3D 4096,
-> > +	},
-> > +	[ID_LTC2636H10] =3D {
-> > +		.channels	=3D ltc2632x10_channels,
-> > +		.num_channels	=3D 8,
-> > +		.vref_mv	=3D 4096,
-> > +	},
-> > +	[ID_LTC2636H8] =3D  {
-> > +		.channels	=3D ltc2632x8_channels,
-> > +		.num_channels	=3D 8,
-> >  		.vref_mv	=3D 4096,
-> >  	},
-> >  };
-> > @@ -287,7 +334,7 @@ static int ltc2632_probe(struct spi_device *spi)
-> >  	indio_dev->info =3D &ltc2632_info;
-> >  	indio_dev->modes =3D INDIO_DIRECT_MODE;
-> >  	indio_dev->channels =3D chip_info->channels;
-> > -	indio_dev->num_channels =3D LTC2632_DAC_CHANNELS;
-> > +	indio_dev->num_channels =3D chip_info->num_channels;
-> > =20
-> >  	return iio_device_register(indio_dev);
-> >  }
-> > @@ -312,6 +359,12 @@ static const struct spi_device_id ltc2632_id[] =3D=
- {
-> >  	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12=
-] },
-> >  	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10=
-] },
-> >  	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] =
-},
-> > +	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12=
-] },
-> > +	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10=
-] },
-> > +	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] =
-},
-> > +	{ "ltc2636-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H12=
-] },
-> > +	{ "ltc2636-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H10=
-] },
-> > +	{ "ltc2636-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636H8] =
-},
-> >  	{}
-> >  };
-> >  MODULE_DEVICE_TABLE(spi, ltc2632_id);
-> > @@ -335,6 +388,24 @@ static const struct of_device_id ltc2632_of_match[=
-] =3D {
-> >  	}, {
-> >  		.compatible =3D "lltc,ltc2632-h8",
-> >  		.data =3D &ltc2632_chip_info_tbl[ID_LTC2632H8]
-> > +	}, {
-> > +		.compatible =3D "lltc,ltc2636-l12",
-> > +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636L12]
-> > +	}, {
-> > +		.compatible =3D "lltc,ltc2636-l10",
-> > +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636L10]
-> > +	}, {
-> > +		.compatible =3D "lltc,ltc2636-l8",
-> > +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636L8]
-> > +	}, {
-> > +		.compatible =3D "lltc,ltc2636-h12",
-> > +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636H12]
-> > +	}, {
-> > +		.compatible =3D "lltc,ltc2636-h10",
-> > +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636H10]
-> > +	}, {
-> > +		.compatible =3D "lltc,ltc2636-h8",
-> > +		.data =3D &ltc2632_chip_info_tbl[ID_LTC2636H8]
-> >  	},
-> >  	{}
-> >  }; =20
->=20
-
+SGkgT2xvZiwNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KQW5kIHNvcnJ5IGZv
+ciBteSBkZWxheSByZXNwb25kIQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IE9sb2YgSm9oYW5zc29uIDxvbG9mQGxpeG9tLm5ldD4NCj4gU2VudDogMjAyMOW5tDHmnIgx
+MeaXpSAxOjA2DQo+IFRvOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJt
+LmNvbT4NCj4gQ2M6IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGJoZWxnYWFzQGdv
+b2dsZS5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgYXJuZEBhcm5k
+Yi5kZTsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28u
+aW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IG0ua2FydGhpa2V5YW5AbW9iaXZlaWwuY28uaW47
+IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207
+IHdpbGwuZGVhY29uQGFybS5jb207IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsNCj4gTWluZ2thaSBI
+dSA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+
+Ow0KPiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSHY5IDAwLzEyXSBQQ0k6IFJlY29kZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIEdl
+bjQNCj4gZHJpdmVyIGZvciBOWFAgTGF5ZXJzY2FwZSBTb0NzDQo+IA0KPiBPbiBGcmksIEphbiAx
+MCwgMjAyMCBhdCA3OjMzIEFNIExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBh
+cm0uY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IE9uIFR1ZSwgRGVjIDE3LCAyMDE5IGF0IDAyOjUw
+OjE1QU0gKzAwMDAsIFoucS4gSG91IHdyb3RlOg0KPiA+ID4gSGkgTG9yZW56bywNCj4gPiA+DQo+
+ID4gPiBUaGUgdjkgcGF0Y2hlcyBoYXZlIGFkZHJlc3NlZCB0aGUgY29tbWVudHMgZnJvbSBBbmRy
+ZXcsIGFuZCBpdCBoYXMNCj4gPiA+IGJlZW4gZHJpZWQgYWJvdXQgMSBtb250aCwgY2FuIHlvdSBo
+ZWxwIHRvIGFwcGx5IHRoZW0/DQo+ID4NCj4gPiBXZSBzaGFsbCBoYXZlIGEgbG9vayBiZWdpbm5p
+bmcgb2YgbmV4dCB3ZWVrLCBzb3JyeSBmb3IgdGhlIGRlbGF5IGluDQo+ID4gZ2V0dGluZyBiYWNr
+IHRvIHlvdS4NCj4gDQo+IE5vdGUgdGhhdCB0aGUgcGF0Y2ggc2V0IG5vIGxvbmdlciBhcHBsaWVz
+IHNpbmNlIHRoZSByZWZhY3RvcmluZ3MgY29uZmxpY3Qgd2l0aA0KPiBuZXcgZGV2ZWxvcG1lbnQg
+Ynkgb3RoZXJzLg0KPiANCj4gWmhpcWlhbmcsIGNhbiB5b3UgcmViYXNlIGFuZCBwb3N0IGEgbmV3
+IHZlcnNpb24gb2YgdGhlIHBhdGNoIHNldD8NCg0KWWVzLCBJIHdpbGwgcmViYXNlIHRoZSBwYXRj
+aGVzIHRvIHRoZSBsYXRlc3QgY29kZSBiYXNlLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQogDQo+
+IA0KPiAtT2xvZg0K
