@@ -2,99 +2,265 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA891C352A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 11:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155E3C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 11:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B546F21775
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 11:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04D2217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 11:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580989775;
-	bh=aeh2bnGaIQasagmj+LRJPLVBSVmtzVWOfHGUZwOPl9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A7wohLztWrIlPucStVsl5tIwoDltPP0MHmSWSD4V6hP8t1ychLYOMKnJUGjZQeoyr
-	 kcdOeWYK8Kg/Nk+c4y2lKfk09KsfKuS/AhTNbVazjUpoh2+w3QYJABYjH4EccR0PTZ
-	 MAEPt3UsskKFDT+g5XngS3wCgwjfJyKUlbhOp+pY=
+	s=default; t=1580989920;
+	bh=FfucpD21SYPRRyYr/CL+PNRZSDEZk6xLwRJ2CsCmcXE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2NxroivoVFkFHNsSIj0Ax+oD6eNDwYCWhcVs3DRkWRrDOsQEQB/EOyw0YKbv5CDYo
+	 M+2VGVGJo2OtrRBGDra3fQXXcGQv6W3ojIvh4uw/6VY53HTq5RaVH6rsB5TcSl7fB/
+	 atxNo9WrnXY9zUPNSiaXhw91vygwLG1HjTDALdYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgBFLtf (ORCPT
+        id S1727511AbgBFLwA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:49:35 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59312 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgBFLtf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 06:49:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aeh2bnGaIQasagmj+LRJPLVBSVmtzVWOfHGUZwOPl9k=; b=uzMAt5emOT/DsoAgMGDNx0ij9
-        tuZOOxrxBl7YfrZ7Noe82a9tTttXG8/pzRK1mI8sousbwvv2GX0Bmkb2gfV7Ua9/Zljmiej4jNAIX
-        DeFeYfFPWNLFNZuMalqtWdpZ0c+4KKrajxqsP+hHOyg0uMxoOe8gQS3kp4sjLgGUCTxcE=;
-Received: from fw-tnat-cam3.arm.com ([217.140.106.51] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1izfey-0001aU-5A; Thu, 06 Feb 2020 11:49:28 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id D10C3D01D7F; Thu,  6 Feb 2020 11:49:27 +0000 (GMT)
-Date:   Thu, 6 Feb 2020 11:49:27 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Wen Su <Wen.Su@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH v2 1/4] dt-bindings: regulator: Add document for MT6359
- regulator
-Message-ID: <20200206114927.GN3897@sirena.org.uk>
-References: <1580958411-2478-1-git-send-email-Wen.Su@mediatek.com>
- <1580958411-2478-2-git-send-email-Wen.Su@mediatek.com>
+        Thu, 6 Feb 2020 06:52:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbgBFLwA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:52:00 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68E2A206CC;
+        Thu,  6 Feb 2020 11:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580989919;
+        bh=FfucpD21SYPRRyYr/CL+PNRZSDEZk6xLwRJ2CsCmcXE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QpA+wzlrmU7DqGnT3zr6Q0Mqbqe0XvYoLsyVybj066nVxy9Q1w9CJ2NJhRG64is73
+         HodyqIPzp2aqksm5vUtY2qMGWnb0gkqJHP/0x1gSfw+cZ4RVpHgr3xUHsZ+7fjdEed
+         IEJ3wURy1nmHg4v+mj+ynaKxr01h4usNCSWaRNRY=
+Date:   Thu, 6 Feb 2020 11:51:55 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/6] iio: imu: inv_mpu6050: cleanup of/acpi support
+Message-ID: <20200206115155.42dca690@archlinux>
+In-Reply-To: <20200206103105.23666-2-jmaneyrol@invensense.com>
+References: <20200206103105.23666-1-jmaneyrol@invensense.com>
+        <20200206103105.23666-2-jmaneyrol@invensense.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WW66Wv25qHMoYYLs"
-Content-Disposition: inline
-In-Reply-To: <1580958411-2478-2-git-send-email-Wen.Su@mediatek.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu,  6 Feb 2020 11:31:00 +0100
+Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
 
---WW66Wv25qHMoYYLs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Use device_get_match_data for using of and acpi tables.
+> In spi support add missing mpu6515 and of match table.
+> Reorganize Kconfig to display chips grouped by generations.
+> 
+> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Great.
 
-On Thu, Feb 06, 2020 at 11:06:48AM +0800, Wen Su wrote:
+Applied to the togreg branch of iio.git.  Clearly I took this
+one very quickly after posting, but note it's not in a non rebasing
+tree so I can still change that if anyone else has comments!
 
-> +Required properties:
-> +- compatible: "mediatek,mt6359-regulator"
+Thanks
 
-Why does this need a compatible string - it looks like it's just
-encoding the way Linux splits devices up into the DT, not
-providing some reusable IP block.
+Jonathan
 
---WW66Wv25qHMoYYLs
-Content-Type: application/pgp-signature; name="signature.asc"
+> ---
+>  drivers/iio/imu/inv_mpu6050/Kconfig       |  8 ++---
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c | 26 +++-----------
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c | 44 +++++++++++++++++++++--
+>  3 files changed, 50 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/inv_mpu6050/Kconfig b/drivers/iio/imu/inv_mpu6050/Kconfig
+> index 017bc0fcc365..003134734646 100644
+> --- a/drivers/iio/imu/inv_mpu6050/Kconfig
+> +++ b/drivers/iio/imu/inv_mpu6050/Kconfig
+> @@ -15,8 +15,8 @@ config INV_MPU6050_I2C
+>  	select INV_MPU6050_IIO
+>  	select REGMAP_I2C
+>  	help
+> -	  This driver supports the Invensense MPU6050/6500/6515,
+> -	  MPU9150/9250/9255 and ICM20608/20602 motion tracking devices
+> +	  This driver supports the Invensense MPU6050/9150,
+> +	  MPU6500/6515/9250/9255, ICM20608 and ICM20602 motion tracking devices
+>  	  over I2C.
+>  	  This driver can be built as a module. The module will be called
+>  	  inv-mpu6050-i2c.
+> @@ -27,8 +27,8 @@ config INV_MPU6050_SPI
+>  	select INV_MPU6050_IIO
+>  	select REGMAP_SPI
+>  	help
+> -	  This driver supports the Invensense MPU6000/6500/6515,
+> -	  MPU9250/9255 and ICM20608/20602 motion tracking devices
+> +	  This driver supports the Invensense MPU6000,
+> +	  MPU6500/6515/9250/9255, ICM20608 and ICM20602 motion tracking devices
+>  	  over SPI.
+>  	  This driver can be built as a module. The module will be called
+>  	  inv-mpu6050-spi.
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+> index f47a28b4be23..49e9aa777ba4 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> +#include <linux/property.h>
+>  #include "inv_mpu_iio.h"
+>  
+>  static const struct regmap_config inv_mpu_regmap_config = {
+> @@ -54,20 +55,6 @@ static int inv_mpu6050_deselect_bypass(struct i2c_mux_core *muxc, u32 chan_id)
+>  	return 0;
+>  }
+>  
+> -static const char *inv_mpu_match_acpi_device(struct device *dev,
+> -					     enum inv_devices *chip_id)
+> -{
+> -	const struct acpi_device_id *id;
+> -
+> -	id = acpi_match_device(dev->driver->acpi_match_table, dev);
+> -	if (!id)
+> -		return NULL;
+> -
+> -	*chip_id = (int)id->driver_data;
+> -
+> -	return dev_name(dev);
+> -}
+> -
+>  static bool inv_mpu_i2c_aux_bus(struct device *dev)
+>  {
+>  	struct inv_mpu6050_state *st = iio_priv(dev_get_drvdata(dev));
+> @@ -130,6 +117,7 @@ static int inv_mpu_magn_disable(struct iio_dev *indio_dev)
+>  static int inv_mpu_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+> +	const void *match;
+>  	struct inv_mpu6050_state *st;
+>  	int result;
+>  	enum inv_devices chip_type;
+> @@ -140,18 +128,14 @@ static int inv_mpu_probe(struct i2c_client *client,
+>  				     I2C_FUNC_SMBUS_I2C_BLOCK))
+>  		return -EOPNOTSUPP;
+>  
+> -	if (client->dev.of_node) {
+> -		chip_type = (enum inv_devices)
+> -			of_device_get_match_data(&client->dev);
+> +	match = device_get_match_data(&client->dev);
+> +	if (match) {
+> +		chip_type = (enum inv_devices)match;
+>  		name = client->name;
+>  	} else if (id) {
+>  		chip_type = (enum inv_devices)
+>  			id->driver_data;
+>  		name = id->name;
+> -	} else if (ACPI_HANDLE(&client->dev)) {
+> -		name = inv_mpu_match_acpi_device(&client->dev, &chip_type);
+> -		if (!name)
+> -			return -ENODEV;
+>  	} else {
+>  		return -ENOSYS;
+>  	}
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+> index ec102d5a5c77..834bfa8e8684 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+> @@ -4,6 +4,8 @@
+>  */
+>  #include <linux/module.h>
+>  #include <linux/acpi.h>
+> +#include <linux/of.h>
+> +#include <linux/property.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/regmap.h>
+>  #include <linux/iio/iio.h>
+> @@ -41,17 +43,18 @@ static int inv_mpu_i2c_disable(struct iio_dev *indio_dev)
+>  
+>  static int inv_mpu_probe(struct spi_device *spi)
+>  {
+> +	const void *match;
+>  	struct regmap *regmap;
+>  	const struct spi_device_id *spi_id;
+> -	const struct acpi_device_id *acpi_id;
+>  	const char *name = NULL;
+>  	enum inv_devices chip_type;
+>  
+>  	if ((spi_id = spi_get_device_id(spi))) {
+>  		chip_type = (enum inv_devices)spi_id->driver_data;
+>  		name = spi_id->name;
+> -	} else if ((acpi_id = acpi_match_device(spi->dev.driver->acpi_match_table, &spi->dev))) {
+> -		chip_type = (enum inv_devices)acpi_id->driver_data;
+> +	} else if ((match = device_get_match_data(&spi->dev))) {
+> +		chip_type = (enum inv_devices)match;
+> +		name = dev_name(&spi->dev);
+>  	} else {
+>  		return -ENODEV;
+>  	}
+> @@ -74,6 +77,7 @@ static int inv_mpu_probe(struct spi_device *spi)
+>  static const struct spi_device_id inv_mpu_id[] = {
+>  	{"mpu6000", INV_MPU6000},
+>  	{"mpu6500", INV_MPU6500},
+> +	{"mpu6515", INV_MPU6515},
+>  	{"mpu9250", INV_MPU9250},
+>  	{"mpu9255", INV_MPU9255},
+>  	{"icm20608", INV_ICM20608},
+> @@ -83,6 +87,39 @@ static const struct spi_device_id inv_mpu_id[] = {
+>  
+>  MODULE_DEVICE_TABLE(spi, inv_mpu_id);
+>  
+> +static const struct of_device_id inv_of_match[] = {
+> +	{
+> +		.compatible = "invensense,mpu6000",
+> +		.data = (void *)INV_MPU6000
+> +	},
+> +	{
+> +		.compatible = "invensense,mpu6500",
+> +		.data = (void *)INV_MPU6500
+> +	},
+> +	{
+> +		.compatible = "invensense,mpu6515",
+> +		.data = (void *)INV_MPU6515
+> +	},
+> +	{
+> +		.compatible = "invensense,mpu9250",
+> +		.data = (void *)INV_MPU9250
+> +	},
+> +	{
+> +		.compatible = "invensense,mpu9255",
+> +		.data = (void *)INV_MPU9255
+> +	},
+> +	{
+> +		.compatible = "invensense,icm20608",
+> +		.data = (void *)INV_ICM20608
+> +	},
+> +	{
+> +		.compatible = "invensense,icm20602",
+> +		.data = (void *)INV_ICM20602
+> +	},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, inv_of_match);
+> +
+>  static const struct acpi_device_id inv_acpi_match[] = {
+>  	{"INVN6000", INV_MPU6000},
+>  	{ },
+> @@ -93,6 +130,7 @@ static struct spi_driver inv_mpu_driver = {
+>  	.probe		=	inv_mpu_probe,
+>  	.id_table	=	inv_mpu_id,
+>  	.driver = {
+> +		.of_match_table = inv_of_match,
+>  		.acpi_match_table = ACPI_PTR(inv_acpi_match),
+>  		.name	=	"inv-mpu6000-spi",
+>  		.pm     =       &inv_mpu_pmops,
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl47/UcACgkQJNaLcl1U
-h9AGqAf/ei5s8WFL5nFhQ5WtOwQKyMl6BzjPHZGCXguSsSzU+Bs45Cq1viLBg3ww
-H/gXJ2VJxUuY4EU3kr3iP6Haxhe/h9TGEobGG917mADI9ZBScIkY6l7AGQPe44mQ
-oCiBKl73LxwZtRu8DNFg7k1W13eAOKi0TLwQ0KaC4GalJ1loAnttpbgxUvBLVR02
-BxiROqhvkQsNI1q+oh1Dnyvd0rFFT12QXDIgw0sbR6DEVkEvHFnvB9C720P5L9ld
-4iFDo6hOqqSwZIecmI3G36JIpFEY3vE+f2plbZCRaf01Fd91TZPZX0YQlBSr4Qbk
-uJ85eR2wboqLgi77IS+mzYNgxwg5vw==
-=vTbL
------END PGP SIGNATURE-----
-
---WW66Wv25qHMoYYLs--
