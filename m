@@ -2,335 +2,179 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81565C2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535B6C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42665217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F2A20661
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 13:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FShUL4OR"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IsV6bFDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgBFNG6 (ORCPT
+        id S1727626AbgBFNZI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:06:58 -0500
-Received: from mail-eopbgr00087.outbound.protection.outlook.com ([40.107.0.87]:14266
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        Thu, 6 Feb 2020 08:25:08 -0500
+Received: from mail-eopbgr80043.outbound.protection.outlook.com ([40.107.8.43]:13632
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726744AbgBFNG6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:06:58 -0500
+        id S1726765AbgBFNZI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Feb 2020 08:25:08 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mkmPpLO1z+7JKHceMSsuhgQl+2WjpQby7xoQnyqTDm0pWvo9XcPBINT5uAikKf8cSqUYyRIrviNweF1VHtzdMTHGgcy806VCD7M5V4TgPBkWX2mBuBWQYGB0IqKSmnGgvHKrRckgNiJt3wwrhY+8fJzxHco4v/xlOWSx2FsbMRp0ionTw+zDIncxHHqa7C6KTnijfwXgwcFIdYrfxUvVOarMG4CfOs1t/bFcLiA13KHNtvngdy+71oJGMcfVujrrWxYyfUwhSJgLcoVluJzcsnRbIfFA6uLdRbb5d8LGSojwrz/w/N7I9jyO4dNRMV5pmFf96qc9xnAD6p6ae2MO0w==
+ b=HE6mxxMvE2rwxeWtKsR1g9U4YYSmakQzN8X+Hq+JcAK1fe7OPQGu2gVawtyvDBfHd62uP65oN0x1S4J/86PTZ9kgYXtaGcMkhlWrb2q/I8V3P2OeYc4gfdBdxKa9kNmvAOHHB4bJBbKm2bkBOtFMzN/6vT+J2b5pdQFm+Szjszgv5LWdod7GuvtuZG+AIA9YbibYwcqMEIAwe9d7AxjPGgOLYgPvL8dUET5tjuh1t97Bj9ZLZD6ExmIFPFTXpWUF2iiPtnPg6NwmQJouXXQiC2pnpgnwdgM6fMOJY49VA+rJuzZyasFPlS6U8ai7zu7GMzNGQNCTf1x2MTnRaI8rzg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iotzgHbZD9ulvzIr8pJaQIA7otuy967+Ctx8fwyyszg=;
- b=hyW38Gjt4wPMiey8O963iowNmOl02a3Q0OvJ30GaE625Q28Vd42llskxz5xA2Up+NSn0GbZA8z+DhsI0YtVIY524RtbpDglvSekHr0O+e77hRjvOtVp7xdDN7/yDiby3MyrqyrR9tkmtaEaacFyG6+Ym8Q8Ctwh3u9pYqf4OoiwryIbaATgLBDRPiaqSaZt3GmeJ5PbL1KNdufxQw7wOz5sFYIBYN9A/6EqArH85HgJ0FuFdUThT4lhFPPQyN1yQRLaqIqjgv2Wm0xEVBnpurybpm+ju1qab7M31LYSjstBEvRCpSylsgl0oGLOFFp3tazUBCJc/766Rx90j7HNd0Q==
+ bh=H92zA+wvQ+Gt+9vOoCleHdPzJfx5IPVi5eu3Ly+S9G0=;
+ b=erMRp5j55M/Z19n8grVbJkMHt28DYOnIGcFzyqboEhc7yid3ANELj7SZRrhukG4a+b+ix3kV8jjqcwPBQvbjtnt57v9O9p11/SiXcPhHR+L6oEKGCsLaslKrR/Rx6IQoree1J8mAV+PBqzngG8YyqI8OHeYlPaSNBs2ASUG+poBcZrAvAm8N4V8XT8hhzepe7X7Ki1PYk5wKMWD3WhaCHbI5JNYlSu/SxJLwezAzUHE+0ctHCjz34tbA1hWicP8zrVFMe5LRHnyVaaWVvHFXjUm0LhV1b8mxlZqFdF1E3d0/5CcexmYU7uVsfieL4oQp7E25hsuHy8cqLfWO6PjRpQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iotzgHbZD9ulvzIr8pJaQIA7otuy967+Ctx8fwyyszg=;
- b=FShUL4ORArsVPwIZtVVGDZyh2hDOU8GfZmX36j/GaGI5BEAOuxl5mdbreippPN/5jrCBIBWKNBA3lRhhu/0RiSR+Sl2JRpet5tsEAv3tiLvKxscYL6/jjEZHZUyTuD1mBSBIlTsR96F9GPRkG+zg2+RghruZORyI0EsMNHlHsus=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4770.eurprd04.prod.outlook.com (20.177.41.154) with Microsoft SMTP
+ bh=H92zA+wvQ+Gt+9vOoCleHdPzJfx5IPVi5eu3Ly+S9G0=;
+ b=IsV6bFDlMBJHcfubVMn+1keW8AUHaFEx6KRF5aOX723uEbqbVcz5sbgDFZXAmXiMV7PFbzTCH55YPnWaE98cV3z4Vll7FlPZYuHHPsD92lx2fkvvD7SkfqG95J2tWOhgKIQzg+JCmat+KnVP1cjQFWrzEm1ISje5j3vFdqNZI2I=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6844.eurprd04.prod.outlook.com (52.133.240.87) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.32; Thu, 6 Feb 2020 13:06:54 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.020; Thu, 6 Feb 2020
- 13:06:54 +0000
-From:   peng.fan@nxp.com
-To:     sudeep.holla@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andre.przywara@arm.com,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 2/2] firmware: arm_scmi: add smc/hvc transports
-Date:   Thu,  6 Feb 2020 21:01:26 +0800
-Message-Id: <1580994086-17850-3-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
-References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: HK2PR02CA0136.apcprd02.prod.outlook.com
- (2603:1096:202:16::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-MIME-Version: 1.0
-Received: from localhost.localdomain (119.31.174.66) by HK2PR02CA0136.apcprd02.prod.outlook.com (2603:1096:202:16::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2707.21 via Frontend Transport; Thu, 6 Feb 2020 13:06:50 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 66beea81-a4ee-46ac-6394-08d7ab056ffb
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4770:|AM0PR04MB4770:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB4770AC93CE9FB88502222A15881D0@AM0PR04MB4770.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-Forefront-PRVS: 0305463112
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(189003)(199004)(86362001)(2616005)(956004)(36756003)(6486002)(6506007)(4326008)(6666004)(6512007)(9686003)(69590400006)(498600001)(26005)(186003)(16526019)(2906002)(66946007)(5660300002)(66476007)(52116002)(81166006)(81156014)(8676002)(8936002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4770;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ 15.20.2686.29; Thu, 6 Feb 2020 13:25:03 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2686.035; Thu, 6 Feb 2020
+ 13:25:03 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv9 05/12] PCI: mobiveil: Add callback function for
+ interrupt initialization
+Thread-Topic: [PATCHv9 05/12] PCI: mobiveil: Add callback function for
+ interrupt initialization
+Thread-Index: AQHVn1UA2UYxNg2IeEqKBDKnWsGYwqfox/sAgCRXGfA=
+Date:   Thu, 6 Feb 2020 13:25:03 +0000
+Message-ID: <DB8PR04MB6747A2DA879805DF7B516968841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <20191120034451.30102-6-Zhiqiang.Hou@nxp.com>
+ <20200113111929.GK42593@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20200113111929.GK42593@e119886-lin.cambridge.arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: afbb7dc2-f2af-481c-eff6-08d7ab07f95d
+x-ms-traffictypediagnostic: DB8PR04MB6844:|DB8PR04MB6844:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB6844641AAC1823A4F2A32DA5841D0@DB8PR04MB6844.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0305463112
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(4326008)(7696005)(86362001)(8676002)(66946007)(66476007)(66556008)(81156014)(26005)(81166006)(76116006)(66446008)(64756008)(6506007)(53546011)(478600001)(52536014)(6916009)(316002)(54906003)(33656002)(2906002)(8936002)(9686003)(7416002)(55016002)(5660300002)(71200400001)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6844;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5/orxjnrtLCgOgHD4a0o9Vt7hqZmBRSY3xh6iTuCMe6FzOoehNfCl1D28KBowixTSOh0Ej5bsRQhFQwu1w/6U/suUe9tA9DvomhrggPAXhS4Smk6uQcsTlqHjhRWuh50JDpGbY8AQbn0iQ7Lmgl4loodLb4Ot8+i197H1+PMG+G/yy0rlWA4+7ssYClfnRwFiMmklMyDaeUIP68QCUea9QfZkOMpbZvrHAhNq7WSwpU4DZuLZhpEazTDCD2p4Gka4msUUD82cAYLN9Nl+dvFd49HW9GRgVtPIB0QZxnOe9b5O1YNwaAP8EPtJoV067S1F11X01u0CccfsSX1/WL2GVGr91Ck9XUoBhROJ3vCtAe1Okz921hCN+j2DfF40teszo7F9NMr3sNMqW054fFIQHIE2a5eLsLN3FbDS0I5/KLqtnQCKjTJURU85SnDJCXZ4RaA0l7BumrU38RSR9PA/u3RbjSE8lWCOIgO9z8S+HC7Hgu9No4a9sCkOLlpINVNvaZ+KROFG8HFd3fMOCvGQETNogFWBhAtezSKf2sn9jE=
-X-MS-Exchange-AntiSpam-MessageData: qaU7TAe9Gx5TEMtLK9094Q2/s96QdsOVFWuGcX90bhIMjoEsCZ9n8s7/K5kltqe4SsE1Ohwjqii7BKpM9NdDt1VpFjDgVPbjr+cAzO+kasrs1hno9s1pBFv5IrU7cgNOu6nA99WNJ/KzX/dtxuNoDQ==
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: o5tvY3WrBo5PQ42YGLKWxeNmF/hFuqlponinPYSXmvXLBNTQuvck8jeVagv0256T+ggrA2I5R8e8ZTZT2+y3M4LujDxMaXAU7ch6OyIAa7z9B5mBGnXdu1fLgW8P9CrHS5HaxB34Tk93CufWQPMdms2zQ8rHrdI9jSPENYlqmm5BB4jHjJDx3dRwD1jP5Lvges117CNFZ8/RFYZGgeGUdr9NkcvWwY/W4ONBXvxkEGgIEY6bh40ZkizRDohYj+18pNOf2YOkiX4JtGdJXYB2NS5uDXraYKNRirRs3+zl1ob358gzwm1L5hy62Emj81ERb7eiNohTm9T0ifL+xaZPSBQJZZ5Um4ylF1rOPEfDYyrBDrMRNVzYKhq09pQ7rnBSw7+EeD72sZDrnbjL6ywEcTo5EdW8g1o0SV9gDzQJpkZV99LfB7OSusF6PKVEYmAe
+x-ms-exchange-antispam-messagedata: bxVsNbvJ4GcJBXWSXlR27V/qVo/yGTPLiyqDs0OyXWKX5I8Bo51VZhT4kU30pgHdS933CFnq12NA1p2bzmWpycdNgexY/sKVzJ6firpP2Pym5XhEyhKqJa8ywmbo+YBkgDTOZDXZTif6HpWIvyodOA==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66beea81-a4ee-46ac-6394-08d7ab056ffb
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 13:06:54.1784
+X-MS-Exchange-CrossTenant-Network-Message-Id: afbb7dc2-f2af-481c-eff6-08d7ab07f95d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2020 13:25:03.1849
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6c43rapjI4fbPLSB+ywngKForM1p5Q0vIOMf7S6VfsfW/gFzNOcNlKpacf6ZECEghVCkdLzdOMUJN3ptJ8B5eA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4770
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bfHJQMyzwT4jZdYQrIuMK2pbBrV56ztkHI5X6an9v3oY0GRUhZ3FilBGYwQTc0vriGF/tjxtUf0xQ9bLMpVk1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6844
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
-
-Add SCMI smc/hvc transports support.
-
-Each protocol could have its own smc/hvc id, or share the same id.
-There is no Rx, only Tx because of smc/hvc not support Rx.
-
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/firmware/arm_scmi/Makefile |   2 +-
- drivers/firmware/arm_scmi/common.h |   1 +
- drivers/firmware/arm_scmi/driver.c |   1 +
- drivers/firmware/arm_scmi/smc.c    | 177 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 180 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/arm_scmi/smc.c
-
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 6694d0d908d6..6b1b0d6c6d0e 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -2,6 +2,6 @@
- obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o scmi-transport.o
- scmi-bus-y = bus.o
- scmi-driver-y = driver.o
--scmi-transport-y = mailbox.o shmem.o
-+scmi-transport-y = mailbox.o shmem.o smc.o
- scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
- obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 5df262a564a4..f9ff5cdb68be 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -207,6 +207,7 @@ struct scmi_desc {
- };
- 
- extern const struct scmi_desc scmi_mailbox_desc;
-+extern const struct scmi_desc scmi_smc_desc;
- 
- void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
- void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index dbec767222e9..c759dd094374 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -827,6 +827,7 @@ ATTRIBUTE_GROUPS(versions);
- /* Each compatible listed below must have descriptor associated with it */
- static const struct of_device_id scmi_of_match[] = {
- 	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
-+	{ .compatible = "arm,scmi-smc", .data = &scmi_smc_desc },
- 	{ /* Sentinel */ },
- };
- 
-diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
-new file mode 100644
-index 000000000000..4af0bbc4c827
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/smc.c
-@@ -0,0 +1,177 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * System Control and Management Interface (SCMI) Message SMC/HVC
-+ * Transport driver
-+ *
-+ * Copyright 2020 NXP
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+
-+#include "common.h"
-+
-+/**
-+ * struct scmi_smc - Structure representing a SCMI smc transport
-+ *
-+ * @cinfo: SCMI channel info
-+ * @shmem: Transmit/Receive shared memory area
-+ * @func_id: smc/hvc call function id
-+ * @smc: Indicate it is smc channel or hvc channel
-+ */
-+
-+struct scmi_smc {
-+	struct scmi_chan_info *cinfo;
-+	struct scmi_shared_mem __iomem *shmem;
-+	u32 func_id;
-+	bool smc;
-+};
-+
-+#define client_to_scmi_smc(c) container_of(c, struct scmi_smc, cl)
-+
-+static bool smc_chan_available(struct device *dev, int idx)
-+{
-+	return true;
-+}
-+
-+static int smc_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
-+			  bool tx)
-+{
-+	struct device *cdev = cinfo->dev;
-+	struct scmi_smc *scmi_info;
-+	struct device_node *shmem;
-+	resource_size_t size;
-+	struct resource res;
-+	u32 func_id;
-+	int ret;
-+
-+	if (!tx)
-+		return -ENODEV;
-+
-+	scmi_info = devm_kzalloc(dev, sizeof(*scmi_info), GFP_KERNEL);
-+	if (!scmi_info)
-+		return -ENOMEM;
-+
-+	shmem = of_parse_phandle(cdev->of_node, "shmem", 0);
-+	if (!shmem)
-+		shmem = of_parse_phandle(dev->of_node, "shmem", 0);
-+	ret = of_address_to_resource(shmem, 0, &res);
-+	of_node_put(shmem);
-+	if (ret) {
-+		dev_err(cdev, "failed to get SCMI Tx shared memory\n");
-+		return ret;
-+	}
-+
-+	size = resource_size(&res);
-+	scmi_info->shmem = devm_ioremap(dev, res.start, size);
-+	if (!scmi_info->shmem) {
-+		dev_err(dev, "failed to ioremap SCMI Tx shared memory\n");
-+		return -EADDRNOTAVAIL;
-+	}
-+
-+	ret = of_property_read_u32(cdev->of_node, "arm,smc-id", &func_id);
-+	if (ret)
-+		ret = of_property_read_u32(dev->of_node, "arm,smc-id",
-+					   &func_id);
-+	if (!ret) {
-+		scmi_info->smc = true;
-+	} else {
-+		ret = of_property_read_u32(cdev->of_node, "arm,hvc-id",
-+					   &func_id);
-+		if (ret)
-+			ret = of_property_read_u32(dev->of_node,
-+						   "arm,hvc-id",
-+						   &func_id);
-+
-+		if (ret) {
-+			dev_err(dev, "failed to get SCMI arm,smc/hvc_id\n");
-+			return ret;
-+		}
-+		scmi_info->smc = false;
-+	}
-+
-+	scmi_info->func_id = func_id;
-+	scmi_info->cinfo = cinfo;
-+	cinfo->transport_info = scmi_info;
-+
-+	iowrite32(BIT(0), &scmi_info->shmem->channel_status);
-+
-+	return 0;
-+}
-+
-+static int smc_chan_free(int id, void *p, void *data)
-+{
-+	struct scmi_chan_info *cinfo = p;
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	cinfo->transport_info = NULL;
-+	scmi_info->cinfo = NULL;
-+
-+	scmi_free_channel(cinfo, data, id);
-+
-+	return 0;
-+}
-+
-+static int smc_send_message(struct scmi_chan_info *cinfo,
-+			    struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+	struct arm_smccc_res res;
-+	int ret;
-+
-+	shmem_tx_prepare(scmi_info->shmem, xfer);
-+
-+	if (scmi_info->smc)
-+		arm_smccc_smc(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
-+	else
-+		arm_smccc_hvc(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
-+
-+	ret = res.a0;
-+	if (ret > 0)
-+		ret = 0;
-+
-+	scmi_rx_callback(scmi_info->cinfo, shmem_read_header(scmi_info->shmem));
-+
-+	return ret;
-+}
-+
-+static void smc_mark_txdone(struct scmi_chan_info *cinfo, int ret)
-+{
-+}
-+
-+static void smc_fetch_response(struct scmi_chan_info *cinfo,
-+			       struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	shmem_fetch_response(scmi_info->shmem, xfer);
-+}
-+
-+static bool
-+smc_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	return shmem_poll_done(scmi_info->shmem, xfer);
-+}
-+
-+static struct scmi_transport_ops scmi_smc_ops = {
-+	.chan_available = smc_chan_available,
-+	.chan_setup = smc_chan_setup,
-+	.chan_free = smc_chan_free,
-+	.send_message = smc_send_message,
-+	.mark_txdone = smc_mark_txdone,
-+	.fetch_response = smc_fetch_response,
-+	.poll_done = smc_poll_done,
-+};
-+
-+const struct scmi_desc scmi_smc_desc = {
-+	.ops = &scmi_smc_ops,
-+	.max_rx_timeout_ms = 30,
-+	.max_msg = 1,
-+	.max_msg_size = 128,
-+};
--- 
-2.16.4
-
+SGkgQW5kcmV3LA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJh
+eUBhcm0uY29tPg0KPiBTZW50OiAyMDIwxOox1MIxM8jVIDE5OjIwDQo+IFRvOiBaLnEuIEhvdSA8
+emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBiaGVsZ2Fhc0Bnb29n
+bGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IGFybmRAYXJuZGIuZGU7DQo+IG1hcmsucnV0bGFu
+ZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluOw0KPiBzaGF3bmd1b0BrZXJu
+ZWwub3JnOyBtLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluOyBMZW8gTGkNCj4gPGxlb3lhbmcu
+bGlAbnhwLmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+IGNhdGFsaW4ubWFyaW5h
+c0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1
+QG54cC5jb20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IFhpYW93ZWkgQmFv
+DQo+IDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjkgMDUvMTJd
+IFBDSTogbW9iaXZlaWw6IEFkZCBjYWxsYmFjayBmdW5jdGlvbiBmb3INCj4gaW50ZXJydXB0IGlu
+aXRpYWxpemF0aW9uDQo+IA0KPiBPbiBXZWQsIE5vdiAyMCwgMjAxOSBhdCAwMzo0NTo1MEFNICsw
+MDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhv
+dUBueHAuY29tPg0KPiA+DQo+ID4gVGhlIE1vYml2ZWlsIEdQRVggaW50ZXJuYWwgTVNJL0lOVHgg
+Y29udHJvbGxlciBtYXkgbm90IGJlIHVzZWQgYnkNCj4gPiBvdGhlciBwbGF0Zm9ybXMgaW4gd2hp
+Y2ggdGhlIE1vYml2ZWlsIEdQRVggaXMgaW50ZWdyYXRlZC4NCj4gPiBUaGlzIHBhdGNoIGlzIHRv
+IGFsbG93IHRoZXNlIHBsYXRmb3JtcyB0byBpbXBsZW1lbnQgdGhlaXIgc3BlY2lmaWMNCj4gPiBp
+bnRlcnJ1cHQgaW5pdGlhbGl6YXRpb24uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhp
+cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IFY5Og0KPiA+ICAtIE5l
+dyBwYXRjaCBzcGxpdGVkIGZyb20gdGhlICMxIG9mIFY4IHBhdGNoZXMgdG8gbWFrZSBpdCBlYXN5
+IHRvIHJldmlldy4NCj4gPg0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3Bj
+aWUtbW9iaXZlaWwtaG9zdC5jIHwgMyArKysNCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9t
+b2JpdmVpbC9wY2llLW1vYml2ZWlsLmggICAgICB8IDcgKysrKysrKw0KPiA+ICAyIGZpbGVzIGNo
+YW5nZWQsIDEwIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bj
+aS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQo+ID4gYi9kcml2ZXJz
+L3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQo+ID4gaW5kZXgg
+MmNjNDI0ZTc4ZDMzLi4zY2Q5M2RmNmZlNmUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLWhvc3QuYw0KPiA+ICsrKyBiL2RyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1ob3N0LmMNCj4gPiBAQCAt
+NTA3LDYgKzUwNyw5IEBAIHN0YXRpYyBpbnQgbW9iaXZlaWxfcGNpZV9pbnRlcnJ1cHRfaW5pdChz
+dHJ1Y3QNCj4gbW9iaXZlaWxfcGNpZSAqcGNpZSkNCj4gPiAgCXN0cnVjdCByZXNvdXJjZSAqcmVz
+Ow0KPiA+ICAJaW50IHJldDsNCj4gPg0KPiA+ICsJaWYgKHJwLT5vcHMtPmludGVycnVwdF9pbml0
+KQ0KPiA+ICsJCXJldHVybiBycC0+b3BzLT5pbnRlcnJ1cHRfaW5pdChwY2llKTsNCj4gPiArDQo+
+IA0KPiBUaGlzIG1heSBiZSBjbGVhbmVyIGlmIHlvdSBoYXZlIGEgaGVscGVyIGZ1bmN0aW9uIG5h
+bWVkDQo+ICJtb2JpdmVpbF9wY2llX2ludGVycnVwdF9pbml0IiB3aGVyZSBpdCBlaXRoZXIgY2Fs
+bHMgaW50ZXJydXB0X2luaXQgaWYgcHJlc2VudCBvcg0KPiBjYWxscyB0aGlzIGN1cnJlbnQgZnVu
+Y3Rpb24gcmVuYW1lZCB0bw0KPiAibW9iaXZlaWxfcGNpZV9pbnRlZ3JhdGVkX2ludGVycnVwdF9p
+bml0Ig0KPiBvciBzaW1pbGFyLg0KPiANCj4gQSBiaXQgbGlrZSB0aGUgRFdDIGR3X3BjaWVfcmRf
+b3duX2NvbmYgZnVuY3Rpb24uDQoNCkdvb2Qgc3VnZ2VzdGlvbiEgV2lsbCBjaGFuZ2UgaW4gdjEw
+Lg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBBbmRyZXcgTXVy
+cmF5DQo+IA0KPiA+ICAJLyogbWFwIE1TSSBjb25maWcgcmVzb3VyY2UgKi8NCj4gPiAgCXJlcyA9
+IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0sDQo+ICJh
+cGJfY3NyIik7DQo+ID4gIAlwY2llLT5hcGJfY3NyX2Jhc2UgPSBkZXZtX3BjaV9yZW1hcF9jZmdf
+cmVzb3VyY2UoZGV2LCByZXMpOyBkaWZmDQo+ID4gLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9s
+bGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiBpbmRleCBlMzE0ODA3OGU5ZGQuLjE4ZDg1
+ODA2YTdmYyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWls
+L3BjaWUtbW9iaXZlaWwuaA0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZl
+aWwvcGNpZS1tb2JpdmVpbC5oDQo+ID4gQEAgLTEzMCwxMCArMTMwLDE3IEBAIHN0cnVjdCBtb2Jp
+dmVpbF9tc2kgewkJCS8qIE1TSQ0KPiBpbmZvcm1hdGlvbiAqLw0KPiA+ICAJREVDTEFSRV9CSVRN
+QVAobXNpX2lycV9pbl91c2UsIFBDSV9OVU1fTVNJKTsgIH07DQo+ID4NCj4gPiArc3RydWN0IG1v
+Yml2ZWlsX3BjaWU7DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgbW9iaXZlaWxfcnBfb3BzIHsNCj4gPiAr
+CWludCAoKmludGVycnVwdF9pbml0KShzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSk7IH07DQo+
+ID4gKw0KPiA+ICBzdHJ1Y3Qgcm9vdF9wb3J0IHsNCj4gPiAgCWNoYXIgcm9vdF9idXNfbnI7DQo+
+ID4gIAl2b2lkIF9faW9tZW0gKmNvbmZpZ19heGlfc2xhdmVfYmFzZTsJLyogZW5kcG9pbnQgY29u
+ZmlnIGJhc2UgKi8NCj4gPiAgCXN0cnVjdCByZXNvdXJjZSAqb2JfaW9fcmVzOw0KPiA+ICsJc3Ry
+dWN0IG1vYml2ZWlsX3JwX29wcyAqb3BzOw0KPiA+ICAJaW50IGlycTsNCj4gPiAgCXJhd19zcGlu
+bG9ja190IGludHhfbWFza19sb2NrOw0KPiA+ICAJc3RydWN0IGlycV9kb21haW4gKmludHhfZG9t
+YWluOw0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
