@@ -4,118 +4,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2219C352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D630C35247
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BDD21927
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CE721775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 21:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581025652;
-	bh=sC0Omir/ZJR/xzvpdSpxlmgXx1Tv7YvI2oHPK7CsWTg=;
+	s=default; t=1581025801;
+	bh=PNLeOa/B2GLhZdzCuPeHzTPi1Ot/5D1FhqRvKDQafoY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l+v3Hh49vgqcxl0WeBM8K0LsTQXdPDIvYsnSjBpTZKdUoJy09q23rM5XjQV2p7wmk
-	 4YkLkShsIWfySGRXoL4RZXzsFCXcWyeylhQ1mqTcv7s9aguAQyRaS2Ahy2O+SlVvw/
-	 AhAofI6yWhn0PxrViAfBJxg6qnHFB+10xKLorq3s=
+	b=hlxTjkijGE3ePbcj73Z+xo1kzVGlPfXcwupNWu4AG6CEk3win/VpUzIF21p8oDb1x
+	 bJB1O/6UCziiu1dt7a4EVXXkCKdDkuqbjO3p6K2kSJKwhIezHyvTu1NCnHY+VWGarN
+	 u9mwSkowsFiZfw1qOdjw16AbxhL6+fEbwtaMHOZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgBFVrc (ORCPT
+        id S1727499AbgBFVt4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:47:32 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40552 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFVrc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:47:32 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q8so128604pfh.7;
-        Thu, 06 Feb 2020 13:47:31 -0800 (PST)
+        Thu, 6 Feb 2020 16:49:56 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35937 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFVt4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 16:49:56 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gv17so12795pjb.1;
+        Thu, 06 Feb 2020 13:49:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0++ty3KNqexXxUIh6o0w0NG3K1wrpafmFLgGyyqsx4w=;
-        b=lCinl6OjAC1BsGy7Qc4HJiIKPaYyHIPkIDnBupbWgqlHYfqM8piZM7qOEWnL1GQE+y
-         eJhq0y0zSN27JZA+iUYBu5TetOMK5dWhSE1SsqQ0y2G2ajhtYDoAsYTjQwa16Jt0FSda
-         cm0JQVpsVzKW5p5aMnBfp77xakF2Ut6Z/W+RjRFmzzT2ylLres21qcil4e7VpKdpmaRp
-         pXwG0VPizFP5UJG/v7RTZoVbdeX4rnJZxVi/wpgiT6xHtROZks4PNPQriq9dlzOpyZCV
-         3YlVM0OFwe0H4FLmE33RqXUPupemCJSLk+ikzEfpnqLEf6uQ3GhYefwIWhztH1GLVz1N
-         IJWQ==
-X-Gm-Message-State: APjAAAW5o3aeT+PbZDLdsyNwVXiFTg9aR7js8cO26zteaOyBVLdvKVDA
-        Bx3tJuL/wCPcIGk5mWuNCNJlRkJwCw==
-X-Google-Smtp-Source: APXvYqxfJcovvxDOLT5By1ZcTbnBE5pz9dMGw5xHjf1hSoadJsP1jEbSfQ6mrwOeoburg7PHFcTRJA==
-X-Received: by 2002:a63:306:: with SMTP id 6mr5937668pgd.337.1581025651303;
-        Thu, 06 Feb 2020 13:47:31 -0800 (PST)
+        bh=rLHr9RkGPW2j2XQRzleEq5XgRf6xszSSLPZxWj4wwdQ=;
+        b=TNfKDmob8zK8gBVpftfEL0XJhSAS9qQmRvggNoWraApLqX/8e20VDHhZeD/RGC6cb9
+         bEcu0c22U2RAF0dYIN+vk+4VcUKlq+Wcqfx0h+SA64vD3B7aigXx7b7KxcIsCwPqEe5P
+         ehmSuk5cQK6D3NqWqmMZmG1AFyAMGsygGeluz0tyqf4riU8qV3GgyqMoL8Shdvn5hEd+
+         TLJweBslDFF/shjzqFB+xaCe2xFE8/NwYyFMwPEBWCoE9IZ5+/6qztg21Pz5fsjhxF0z
+         Kje8vGJaeV5rX4DSva5kWMBiznxbfgZHHcNAV19TbQDmIHs1ta6S/+4AOg7LOI+4RuO6
+         LMjA==
+X-Gm-Message-State: APjAAAX9rniwNUEVNwzFruTD0vsfmKbhqEkPRZ3Do8jLWPK+EpNFOGgJ
+        4OrgBVZWQmmcWKszdk09bQ==
+X-Google-Smtp-Source: APXvYqwkwapEilpTs36vHDOSSgYgt04Nnz3fqFepzi44J73hw88iaNQ98Bk3mxxDhgjhBse4LxyTew==
+X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr5937233plv.297.1581025795514;
+        Thu, 06 Feb 2020 13:49:55 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id v8sm331103pfn.172.2020.02.06.13.47.30
+        by smtp.gmail.com with ESMTPSA id 84sm350093pgg.90.2020.02.06.13.49.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 13:47:30 -0800 (PST)
-Received: (nullmailer pid 3350 invoked by uid 1000);
-        Thu, 06 Feb 2020 21:47:29 -0000
-Date:   Thu, 6 Feb 2020 14:47:29 -0700
+        Thu, 06 Feb 2020 13:49:55 -0800 (PST)
+Received: (nullmailer pid 7220 invoked by uid 1000);
+        Thu, 06 Feb 2020 21:49:53 -0000
+Date:   Thu, 6 Feb 2020 14:49:53 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] gpio: Avoid kernel.h inclusion where it's possible
-Message-ID: <20200206214729.GA30344@bogus>
-References: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, helen.koike@collabora.com, sboyd@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 3/6] dt-binding: tegra: Add VI and CSI bindings
+Message-ID: <20200206214953.GA4995@bogus>
+References: <1580937806-17376-1-git-send-email-skomatineni@nvidia.com>
+ <1580937806-17376-4-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <1580937806-17376-4-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 03:43:36PM +0200, Andy Shevchenko wrote:
-> Inclusion of kernel.h increases the mess with the header dependencies.
-> Avoid kernel.h inclusion where it's possible.
+On Wed, Feb 05, 2020 at 01:23:23PM -0800, Sowjanya Komatineni wrote:
+> Tegra contains VI controller which can support up to 6 MIPI CSI
+> camera sensors.
 > 
-> Besides that, clean up a bit other inclusions inside GPIO subsystem headers.
-> It includes:
->  - removal pin control bits (forward declaration and header) from linux/gpio.h
->  - removal of.h from asm-generic/gpio.h
->  - use of explicit headers in gpio/consumer.h
->  - add FIXME note with regard to gpio.h inclusion in of_gpio,h
+> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+> VI channel and can capture from an external camera sensor or
+> from built-in test pattern generator.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> This patch adds dt-bindings for Tegra VI and CSI.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
-> v2: Elaborate changes in the commit message (Bartosz)
->  include/asm-generic/gpio.h    | 4 ++--
->  include/linux/gpio.h          | 2 --
->  include/linux/gpio/consumer.h | 5 ++++-
->  include/linux/of_gpio.h       | 9 ++++++---
->  4 files changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
-> index 19eadac415c4..aea9aee1f3e9 100644
-> --- a/include/asm-generic/gpio.h
-> +++ b/include/asm-generic/gpio.h
-> @@ -2,10 +2,8 @@
->  #ifndef _ASM_GENERIC_GPIO_H
->  #define _ASM_GENERIC_GPIO_H
->  
-> -#include <linux/kernel.h>
->  #include <linux/types.h>
->  #include <linux/errno.h>
-> -#include <linux/of.h>
->  
->  #ifdef CONFIG_GPIOLIB
->  
-> @@ -140,6 +138,8 @@ static inline void gpio_unexport(unsigned gpio)
->  
->  #else	/* !CONFIG_GPIOLIB */
->  
-> +#include <linux/kernel.h>
-> +
+>  .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
+>  1 file changed, 47 insertions(+), 8 deletions(-)
 
-I don't really think moving the includes inside #ifdef's is an 
-improvment.
-
-But I'll leave it to Linus.
+Thierry is working on converting this to schema, so you'll need to 
+coordinate.
 
 Rob
+
+> 
+> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> index 9999255ac5b6..3d0ed540a646 100644
+> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> @@ -40,14 +40,24 @@ of the following host1x client modules:
+>  
+>    Required properties:
+>    - compatible: "nvidia,tegra<chip>-vi"
+> -  - reg: Physical base address and length of the controller's registers.
+> +  - reg: Physical base address and length of the controller registers.
+>    - interrupts: The interrupt outputs from the controller.
+> -  - clocks: Must contain one entry, for the module clock.
+> +  - clocks: Must contain an entry for the module clock "vi"
+>      See ../clocks/clock-bindings.txt for details.
+>    - resets: Must contain an entry for each entry in reset-names.
+>      See ../reset/reset.txt for details.
+> -  - reset-names: Must include the following entries:
+> -    - vi
+> +  - reset-names: Must include the entry "vi"
+> +
+> +  Tegra210 has CSI part of VI sharing same host interface and register
+> +  space. So, VI device node should have CSI child node.
+> +
+> +  - csi: mipi csi interface to vi
+> +
+> +    Required properties:
+> +    - compatible: "nvidia,tegra<chip>-csi"
+> +    - reg: Physical base address and length of the controller registers.
+> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
+> +      See ../clocks/clock-bindings.txt for details.
+>  
+>  - epp: encoder pre-processor
+>  
+> @@ -310,12 +320,41 @@ Example:
+>  		};
+>  
+>  		vi {
+> -			compatible = "nvidia,tegra20-vi";
+> -			reg = <0x54080000 0x00040000>;
+> +			compatible = "nvidia,tegra210-vi";
+> +			reg = <0x0 0x54080000 0x0 0x700>;
+>  			interrupts = <0 69 0x04>;
+> -			clocks = <&tegra_car TEGRA20_CLK_VI>;
+> -			resets = <&tegra_car 100>;
+> +			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
+> +			clocks = <&tegra_car TEGRA210_CLK_VI>;
+> +			clock-names = "vi";
+> +			resets = <&tegra_car 20>;
+>  			reset-names = "vi";
+> +
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +
+> +			ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
+> +
+> +			csi@0x54080838 {
+> +				compatible = "nvidia,tegra210-csi";
+> +				reg = <0x0 0x54080838 0x0 0x2000>;
+> +				status = "disabled";
+> +				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
+> +						  <&tegra_car TEGRA210_CLK_CILCD>,
+> +						  <&tegra_car TEGRA210_CLK_CILE>;
+> +				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
+> +							 <&tegra_car TEGRA210_CLK_PLL_P>,
+> +							 <&tegra_car TEGRA210_CLK_PLL_P>;
+> +				assigned-clock-rates = <102000000>,
+> +						       <102000000>,
+> +						       <102000000>;
+> +				clocks = <&tegra_car TEGRA210_CLK_CSI>,
+> +					 <&tegra_car TEGRA210_CLK_CILAB>,
+> +					 <&tegra_car TEGRA210_CLK_CILCD>,
+> +					 <&tegra_car TEGRA210_CLK_CILE>;
+> +				clock-names = "csi", "cilab", "cilcd", "cile";
+> +			};
+> +
+>  		};
+>  
+>  		epp {
+> -- 
+> 2.7.4
+> 
