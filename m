@@ -2,128 +2,96 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91908C47409
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF17C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6778A21927
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D23321D7D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581022012;
-	bh=jlrgbcL3A7WUALPOOnfR78+nRHZ1zmecPt6NXQ+9MuU=;
+	s=default; t=1581022016;
+	bh=wJGGvyC/2zFwga7d5RzXye80kSwmtv+erjyW5SewCeI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=exs/ZurJ67qtPk9vXt0xHgvRUSh0Hl3DuhAydLM0ZQpo7PLo/44OqQIqj31GuWCNC
-	 /I4s8Y2OyazaevhrKxleWDJ/UvyAN601oMORgsGMrGRFN++HGx5503pc4fj/+AJ3ez
-	 munEp5jzRC5telmWCaPo6F3xLk96GJ3mMpqV8864=
+	b=yON8g4h1c9FzcHTN8jQpsBeDaE27+Uwrv5oO632mDUcdG5L+/AIvdU6n6NBkg8+RS
+	 69G716NqC2qu7P3wDSDflBX17K8eXEAsjilUoA3lSPplk8QYRJrY2oYErFQHVPkIbb
+	 ldFTBky7Bh3fNoPExWvZGgzYSX741+DdOR6kKhaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgBFUqu (ORCPT
+        id S1728191AbgBFUqS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:50 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33075 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728193AbgBFUqT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:19 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 6so3358617pgk.0;
-        Thu, 06 Feb 2020 12:46:18 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:18 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45183 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbgBFUqP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 15:46:15 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so24455pls.12;
+        Thu, 06 Feb 2020 12:46:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OMFNCbQ2YO6A1Z0/9//8yj3l6sKmNNuU0vkSgP75wls=;
-        b=pAgicw6kLfYLDepjVg5ydX2FNhYma5pLivSQyzTRebhtAqH5eEcBepMKR/4XzxKaZp
-         LK5O4beOkYjO8iRXVshWXTleNGwJrqPlyyAeiRHlgb0MEWOgibL6lxt+99ppdxWqsknf
-         3ML6TcXgx89/U3G3o9FGxWRcZQSxpmulfMCh6rWpF636clareLNIdoP6JM7TgZKgY5Jv
-         KmHxYORz6oCT7S+W3YRhOwbekgFe9gu/Rh7LVt167o/MXdCRs4gHfh3wRWPUoRwMORbh
-         aazkeItuZi+9rXd1+dd+27uslySWkiyAROeQv/8QYgXgxZrbPD5igAad05lI7g1yhKtj
-         TlGw==
-X-Gm-Message-State: APjAAAVLjM3ky8I6xwTFmPOtpb68h0IhwuSTZNk1k07sj2WJT5iC6MJj
-        atfJFTpOfg1KSPgXsjFK0Q==
-X-Google-Smtp-Source: APXvYqwH78fxlFILftQEY20o54bUm9mztPia+dIoyrhMNnALF+J3ZEFdR49H/rI11iwOjeJV6j3e4w==
-X-Received: by 2002:aa7:86c2:: with SMTP id h2mr5915628pfo.45.1581021978524;
-        Thu, 06 Feb 2020 12:46:18 -0800 (PST)
+        bh=l5FvaNiAtzMYswvlFr6v0YaM1iOHco5V/a0AR5TCzVA=;
+        b=MBoLmzT3ZZzQt+/uPW8SzAM3Q59ulAD7xZSAaN2ynAgX18hbbzn7hiwp1Sd/Pko9je
+         2WyNbPKxWlw+4aiMnDRqCkxFueVvgEjF+S/BfJsDOSDG0CmhIUsEZjH8U7p4iIcQPWQ2
+         Qkmb9hUQIRBW7nhGtRgCJ1QVoVS4QfyEqIpnWZ0q44TLq4UW2sTzF8C4Xls4He66UbBv
+         kdzUwM82PglsKIvSEdCOXEe+ObDJ0kzRO0n2rQ8cnkgIdkpiBW7I9VAAconAhlQTMies
+         YxkS0f/fBhm1u6r/3ukPoeGgttOYgqM0NpOD5GB1K7A+Mx8f/vHnSBc1vWd4ORLv38qw
+         M7Kw==
+X-Gm-Message-State: APjAAAUwDPmf7fkXpgWjgdadkbZ53m7zJmoul2jGa4WdTatLXWR3K2UT
+        zIDDSequ6RgqjcIyfBOKfg==
+X-Google-Smtp-Source: APXvYqwvDRaorolz00MleJCnJNgdTgpyUgIq0k/Rh07UG3JXyWjdd+l7GKasnxQgNLs9FQRIpoGJVQ==
+X-Received: by 2002:a17:902:8d91:: with SMTP id v17mr5698026plo.53.1581021974341;
+        Thu, 06 Feb 2020 12:46:14 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id w11sm292136pfn.4.2020.02.06.12.46.17
+        by smtp.gmail.com with ESMTPSA id u7sm265881pfh.128.2020.02.06.12.46.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:18 -0800 (PST)
-Received: (nullmailer pid 9330 invoked by uid 1000);
-        Thu, 06 Feb 2020 18:38:08 -0000
-Date:   Thu, 6 Feb 2020 18:38:08 +0000
+        Thu, 06 Feb 2020 12:46:13 -0800 (PST)
+Received: (nullmailer pid 32672 invoked by uid 1000);
+        Thu, 06 Feb 2020 17:24:52 -0000
+Date:   Thu, 6 Feb 2020 17:24:52 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCHv2 2/2] dt-bindings: watchdog: Add compatible for QCS404,
- SC7180, SDM845, SM8150
-Message-ID: <20200206183808.GA5019@bogus>
-References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
- <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     l.stach@pengutronix.de, linux+etnaviv@armlinux.org.uk,
+        christian.gmeiner@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, mark.rutland@arm.com, maxime@cerno.tech,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        philippe.cornu@st.com, pierre-yves.mordret@st.com,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v3] dt-bindings: display: Convert etnaviv to json-schema
+Message-ID: <20200206172452.GA32579@bogus>
+References: <20200129085613.3036-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20200129085613.3036-1-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Feb 01, 2020 at 08:59:49PM +0530, Sai Prakash Ranjan wrote:
-> Add missing compatible for watchdog timer on QCS404,
-> SC7180, SDM845 and SM8150 SoCs.
-
-That's not what the commit does. You are changing what's valid.
-
-One string was valid, now 2 are required.
-
+On Wed, 29 Jan 2020 09:56:13 +0100, Benjamin Gaignard wrote:
+> Convert etnaviv bindings to yaml format.
+> Move bindings file from display to gpu folder.
 > 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  .../bindings/watchdog/qcom-wdt.yaml           | 21 ++++++++++++-------
->  1 file changed, 13 insertions(+), 8 deletions(-)
+> version 3:
+> - describe clock-names as enum to allow all possible mix
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> index 5448cc537a03..7180c64f54fb 100644
-> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> @@ -14,14 +14,19 @@ allOf:
->  
->  properties:
->    compatible:
-> -    enum:
-> -      - qcom,kpss-timer
-> -      - qcom,kpss-wdt
-> -      - qcom,kpss-wdt-apq8064
-> -      - qcom,kpss-wdt-ipq4019
-> -      - qcom,kpss-wdt-ipq8064
-> -      - qcom,kpss-wdt-msm8960
-> -      - qcom,scss-timer
-> +    items:
-> +      - enum:
-> +          - qcom,apss-wdt-qcs404
-> +          - qcom,apss-wdt-sc7180
-> +          - qcom,apss-wdt-sdm845
-> +          - qcom,apss-wdt-sm8150
-> +          - qcom,kpss-timer
-> +          - qcom,kpss-wdt-apq8064
-> +          - qcom,kpss-wdt-ipq4019
-> +          - qcom,kpss-wdt-ipq8064
-> +          - qcom,kpss-wdt-msm8960
-> +          - qcom,scss-timer
-> +      - const: qcom,kpss-wdt
->  
->    reg:
->      maxItems: 1
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+> version 2:
+> - move bindings file from display to gpu folder
+>  .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
+>  .../devicetree/bindings/gpu/vivante,gc.yaml        | 69 ++++++++++++++++++++++
+>  2 files changed, 69 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpu/vivante,gc.yaml
 > 
+
+Applied, thanks.
+
+Rob
