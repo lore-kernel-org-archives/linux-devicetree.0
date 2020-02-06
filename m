@@ -2,255 +2,87 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC45C35247
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 22:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3376C352A4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 22:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233FE20658
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 22:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581026806;
-	bh=v31/YJn+ggEQsxwtDL4yB8oaMd0jQK4sdR90PkaTxhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jIOjcwaKAw/DIS94QWccJLRrk/nOrNsE3NhoEzqtmwD2GrymkhYIths2YtXsDkZq8
-	 v5oExsMKetEpphzuwp13/GNwqigwcpfx+2PPzvmjhKuYwmi8tTE2WSx3c7LNYEeOWd
-	 gmz6M1BNwtSq2nq37HujZjpeihTMbwZxvQFG+i90=
+	by mail.kernel.org (Postfix) with ESMTP id B88A620658
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 22:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBFWGm (ORCPT
+        id S1727826AbgBFWHd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:06:42 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37081 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBFWGm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 17:06:42 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z12so28064pgl.4;
-        Thu, 06 Feb 2020 14:06:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l+xsy+e2MiIYtNBrIyrqdyfGDG8iY0hLdKQLctRhiwQ=;
-        b=iuzMUBjJ99Yco7KgcNzAC0Jeor9ar8XBhCeiRZtt7R+L3fgz52R6wwoL6GBPJBaQLg
-         LjmFC0yZycVKZvq9oQbMmgHdc6qoQtrXD1Vio4F0HAQ/+qaak/Icysaw+QPrLQs8hVsR
-         r5Kd+UbfDXLhrfwZ6sOshNGdOagfWSwmJgnYuX0IipDum7vc2d1rxqyxIHJlHB6G9oO1
-         RTHekq30Hv45DWNvbNKMbS5DH0+/B8CDY1ZSSnKjX8+hyf/mF9hSJ9TWpK3OA8LkwSiW
-         XfqAb/2E1MGZPIalnJ6cOl7+3dz/PZTAJfuiRqXcP/ru1yXlzmb/AJ8Hph7ZYOhHfuL9
-         faCQ==
-X-Gm-Message-State: APjAAAVxwMB1Ng63Q6AzqxXqp6rJaXfP0qk87aB44c3wkedHXqffyO4n
-        h7FgsZMeo+ViXrNObSm2RQ==
-X-Google-Smtp-Source: APXvYqzC7Okgc6IGJX3X/XtZ5GX7hI/RTTnn/MrDM5Og+S7UdZVwwp9ofbMYGxoOuB+pn3OQB0yacg==
-X-Received: by 2002:aa7:8582:: with SMTP id w2mr6041556pfn.89.1581026801476;
-        Thu, 06 Feb 2020 14:06:41 -0800 (PST)
-Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id i64sm373190pgc.51.2020.02.06.14.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 14:06:40 -0800 (PST)
-Received: (nullmailer pid 2119 invoked by uid 1000);
-        Thu, 06 Feb 2020 22:06:38 -0000
-Date:   Thu, 6 Feb 2020 15:06:38 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rnayak@codeaurora.org
-Subject: Re: [PATCH V3 1/2] mfd: qcom-spmi-pmic: Convert bindings to .yaml
- format
-Message-ID: <20200206220638.GA28227@bogus>
-References: <1580997328-16365-1-git-send-email-kgunda@codeaurora.org>
- <5e3c63d0.1c69fb81.c2bba.0957@mx.google.com>
+        Thu, 6 Feb 2020 17:07:33 -0500
+Received: from mga14.intel.com ([192.55.52.115]:64123 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727802AbgBFWHd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Feb 2020 17:07:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 14:07:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,411,1574150400"; 
+   d="scan'208";a="279800666"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Feb 2020 14:07:31 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1izpJ6-0005n9-Qm; Fri, 07 Feb 2020 00:07:32 +0200
+Date:   Fri, 7 Feb 2020 00:07:32 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] gpio: Avoid kernel.h inclusion where it's possible
+Message-ID: <20200206220732.GF10400@smile.fi.intel.com>
+References: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
+ <20200206214729.GA30344@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5e3c63d0.1c69fb81.c2bba.0957@mx.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200206214729.GA30344@bogus>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 11:06:55AM -0800, Stephen Boyd wrote:
-> Quoting Kiran Gunda (2020-02-06 05:55:26)
-> > Convert the bindings from .txt to .yaml format.
-> > 
-> > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> > ---
-> 
-> Did something change? Is there a cover letter?
-> 
-> > diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> > new file mode 100644
-> > index 0000000..affc169
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> > @@ -0,0 +1,115 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bindings/mfd/qcom,spmi-pmic.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm SPMI PMICs multi-function device bindings
-> > +
-> > +maintainers:
-> > +  - Lee Jones <lee.jones@linaro.org>
-> > +  - Stephen Boyd <sboyd@codeaurora.org>
-> 
-> Please change this to sboyd@kernel.org
+On Thu, Feb 06, 2020 at 02:47:29PM -0700, Rob Herring wrote:
+> On Wed, Feb 05, 2020 at 03:43:36PM +0200, Andy Shevchenko wrote:
+> > Inclusion of kernel.h increases the mess with the header dependencies.
+> > Avoid kernel.h inclusion where it's possible.
 
-Should be the h/w owner, not applier of changes.
+> > Besides that, clean up a bit other inclusions inside GPIO subsystem headers.
+> > It includes:
+> >  - removal pin control bits (forward declaration and header) from linux/gpio.h
+> >  - removal of.h from asm-generic/gpio.h
+> >  - use of explicit headers in gpio/consumer.h
+> >  - add FIXME note with regard to gpio.h inclusion in of_gpio,h
 
-> 
-> > +
-> > +description: |
-> > +  The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA8084
-> > +  PMICs.  These PMICs use a QPNP scheme through SPMI interface.
-> 
-> This first sentence will need continual updating. Please drop it.
-> 
-> > +  QPNP is effectively a partitioning scheme for dividing the SPMI extended
-> > +  register space up into logical pieces, and set of fixed register
-> > +  locations/definitions within these regions, with some of these regions
-> > +  specifically used for interrupt handling.
-> > +
-> > +  The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, and are
-> > +  interfaced to the chip via the SPMI (System Power Management Interface) bus.
-> > +  Support for multiple independent functions are implemented by splitting the
-> > +  16-bit SPMI slave address space into 256 smaller fixed-size regions, 256 bytes
-> > +  each. A function can consume one or more of these fixed-size register regions.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - qcom,pm8941
-> > +      - qcom,pm8841
-> > +      - qcom,pma8084
-> > +      - qcom,pm8019
-> > +      - qcom,pm8226
-> > +      - qcom,pm8110
-> > +      - qcom,pma8084
-> > +      - qcom,pmi8962
-> > +      - qcom,pmd9635
-> > +      - qcom,pm8994
-> > +      - qcom,pmi8994
-> > +      - qcom,pm8916
-> > +      - qcom,pm8004
-> > +      - qcom,pm8909
-> > +      - qcom,pm8950
-> > +      - qcom,pmi8950
-> > +      - qcom,pm8998
-> > +      - qcom,pmi8998
-> > +      - qcom,pm8005
-> > +      - qcom,spmi-pmic
-> 
-> I think we want qcom,spmi-pmic to be there always. To do that we need it
-> to look like:
-> 
->   compatible:
->     items:
->       enum:
->         - qcom,pm8941
->         ...
->       enum:
->         - qcom,spmi-pmic
+...
 
-Yes, but missing '-' before the enum's.
+> >  #else	/* !CONFIG_GPIOLIB */
+> >  
+> > +#include <linux/kernel.h>
+> > +
+> 
+> I don't really think moving the includes inside #ifdef's is an 
+> improvment.
 
-> 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description:
-> > +      Specifies the SPMI USID slave address for this device.
-> > +      For more information see Documentation/devicetree/bindings/spmi/spmi.txt
-> > +
-> > +patternProperties:
-> > +  "^.*@[0-9a-f]+$":
+I also not a big fun, but for now it removes in most cases when
+CONFIG_GPIOLIB=y. And this is already an improvement. Next step is to replace
+it with newly created (when it will be created) header might_sleep.h.
 
-You are going to need to define the specific child nodes with the 
-schemas for them, but a SPMI bus schema may be useful.
+> But I'll leave it to Linus.
 
-> > +    type: object
-> > +    description:
-> > +      Each child node of SPMI slave id represents a function of the PMIC. In the
-> > +      example below the rtc device node represents a peripheral of pm8941
-> > +      SID = 0. The regulator device node represents a peripheral of pm8941 SID = 1.
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        description:
-> > +          Compatible of the PMIC device.
-> > +
-> > +      interrupts:
-> > +        maxItems: 2
-> > +        description:
-> > +          Interrupts are specified as a 4-tuple. For more information
-> > +          see Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-> 
-> Just make this bindings/spmi/qcom,spmi-pmic-arb.txt so that  we don't
-> have to worry about it. Why is max items 2? Isn't it 4? Is this property
-> supposed to be specified at all?
-> 
-> > +
-> > +      interrupt-names:
-> > +        description:
-> > +          Corresponding interrupt name to the interrupts property
-> 
-> Does this need to be specified either?
-> 
-> > +
-> > +    required:
-> > +      - compatible
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    spmi {
-> > +        compatible = "qcom,spmi-pmic-arb";
-> > +        #address-cells = <2>;
-> > +        #size-cells = <0>;
-> > +
-> > +       pm8941@0 {
-> 
-> pmic@0
-> 
-> > +         compatible = "qcom,pm8941";
-> > +         reg = <0x0 0x0>;
-> 
-> Why not include the header file to get the SPMI_USID macro?
-> 
-> > +
-> > +         rtc {
-> > +           compatible = "qcom,rtc";
-> > +           interrupts = <0x0 0x61 0x1 0x1>;
-> > +           interrupt-names = "alarm";
-> > +         };
-> > +       };
-> > +
-> > +       pm8941@1 {
-> 
-> pmic@1
-> 
-> > +         compatible = "qcom,pm8941";
-> > +         reg = <0x1 0x0>;
-> > +
-> > +         regulator {
-> > +           compatible = "qcom,regulator";
-> > +           regulator-name = "8941_boost";
-> > +         };
-> > +       };
-> > +    };
-> > +...
-> > -- 
-> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> >  a Linux Foundation Collaborative Project
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
