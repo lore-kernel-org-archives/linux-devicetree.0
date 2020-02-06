@@ -2,258 +2,117 @@ Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F028C352A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 11:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A255FC2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 11:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C6F217BA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 11:53:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580989994;
-	bh=Y0zcuvej+wYwlwnvVjgoexVWAmLWuOF09qAEInsLiOM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=j0Ni0Karh2NmGLcZ+7TipbEhdg3RhkBzzo9zNxRLLR8K4rAsqPpm6nFgh3+voJvLH
-	 Kl039Ingal/mwRrc5NnYc7il6kNNk+Bzkce5g5NYxUfoQSTun1e0ycXmulmD7bHGvL
-	 G6cxFjI2wgTj2bGXZGwQMTJYjaPFP5tILedzTLek=
+	by mail.kernel.org (Postfix) with ESMTP id 74E92217BA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 11:56:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UNGce86v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgBFLxN (ORCPT
+        id S1727697AbgBFL45 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:53:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727634AbgBFLxN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:53:13 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A9CD206CC;
-        Thu,  6 Feb 2020 11:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580989992;
-        bh=Y0zcuvej+wYwlwnvVjgoexVWAmLWuOF09qAEInsLiOM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WmTzrmJn31ZmMEk1IcPO097byx3AiAATBirmASws11DYkmRl/lTGGsH/CU38cWuz3
-         VpYBmPj36QNgR8INKEacQ7ArfqjlsNIAajre/sf75QGTYi/GLBOg7xFNnac+OhVAeq
-         L96bVIEiXpeNCRPARce9nqguiRV9dOK7x9PYBujY=
-Date:   Thu, 6 Feb 2020 11:53:06 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/6] iio: imu: inv_mpu6050: add support of ICM20609 &
- ICM20689
-Message-ID: <20200206115306.300fa06b@archlinux>
-In-Reply-To: <20200206103105.23666-3-jmaneyrol@invensense.com>
-References: <20200206103105.23666-1-jmaneyrol@invensense.com>
-        <20200206103105.23666-3-jmaneyrol@invensense.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 6 Feb 2020 06:56:57 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15793 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgBFL44 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 06:56:56 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3bfecd0002>; Thu, 06 Feb 2020 03:55:57 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Feb 2020 03:56:55 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 03:56:55 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Feb
+ 2020 11:56:50 +0000
+CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+Subject: Re: [PATCH v2 2/9] ASoC: tegra: add support for CIF programming
+To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-3-git-send-email-spujar@nvidia.com>
+ <7239e858-16b7-609f-c4e3-8135bee8450b@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <1305a6db-a492-eec2-111e-ddc801d58d86@nvidia.com>
+Date:   Thu, 6 Feb 2020 17:26:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <7239e858-16b7-609f-c4e3-8135bee8450b@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580990157; bh=iUPSM/V3A6BDAos6dKxs2BKrINIHdwVPZkEK84cY18A=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=UNGce86vrwf7dXG5TzHsshBC2TH6e5MSnJTd0nTqelKJky6+SVbyxdoLrNIywYqJx
+         rhXe+cpscMFAV0uoL/m2pt3cOeQvGqlouFD/A01FtR1cKyHHS1HnsNCT0K2Bf5NcqK
+         d8x7+/4ERSIGioKxr9qLmuiQ8EFkW49PPQQA4GNTJgiI732PtsthfhGWQVUPlk0tFj
+         Y3GhITrPqld7KVF7lt7HYlb9MTIFrHAv2W0VLKb2KeRvTCaaBm7NjfbqdFCO3sAOkR
+         ID1mc05uhPU0BNbJBHX+9UFq5aakQ4CvYCKMaLff9YIosSJ1A7Es2QKZlvrXYPsT4f
+         KVHvK31ejK+Yg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu,  6 Feb 2020 11:31:01 +0100
-Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
 
-> They are similar to ICM20608 chip.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+On 2/5/2020 10:32 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> +#include <linux/module.h>
+>> +#include <linux/regmap.h>
+>> +#include "tegra_cif.h"
+>> +
+>> +void tegra_set_cif(struct regmap *regmap, unsigned int reg,
+>> +                struct tegra_cif_conf *conf)
+>> +{
+>> +     unsigned int value;
+>> +
+>> +     value =3D (conf->threshold << TEGRA_ACIF_CTRL_FIFO_TH_SHIFT) |
+>> +             ((conf->audio_ch - 1) << TEGRA_ACIF_CTRL_AUDIO_CH_SHIFT) |
+>> +             ((conf->client_ch - 1) << TEGRA_ACIF_CTRL_CLIENT_CH_SHIFT)=
+ |
+>> +             (conf->audio_bits << TEGRA_ACIF_CTRL_AUDIO_BITS_SHIFT) |
+>> +             (conf->client_bits << TEGRA_ACIF_CTRL_CLIENT_BITS_SHIFT) |
+>> +             (conf->expand << TEGRA_ACIF_CTRL_EXPAND_SHIFT) |
+>> +             (conf->stereo_conv << TEGRA_ACIF_CTRL_STEREO_CONV_SHIFT) |
+>> +             (conf->replicate << TEGRA_ACIF_CTRL_REPLICATE_SHIFT) |
+>> +             (conf->truncate << TEGRA_ACIF_CTRL_TRUNCATE_SHIFT) |
+>> +             (conf->mono_conv << TEGRA_ACIF_CTRL_MONO_CONV_SHIFT);
+>> +
+>> +     regmap_update_bits(regmap, reg, TEGRA_ACIF_UPDATE_MASK, value);
+>> +}
+>> +EXPORT_SYMBOL_GPL(tegra_set_cif);
+> Are you going to add more stuff into this source file later on?
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/imu/inv_mpu6050/Kconfig        |  8 +++----
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 26 ++++++++++++++++++----
->  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  | 12 ++++++++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  5 +++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  | 10 +++++++++
->  5 files changed, 53 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/inv_mpu6050/Kconfig b/drivers/iio/imu/inv_mpu6050/Kconfig
-> index 003134734646..e933db3a5a89 100644
-> --- a/drivers/iio/imu/inv_mpu6050/Kconfig
-> +++ b/drivers/iio/imu/inv_mpu6050/Kconfig
-> @@ -16,8 +16,8 @@ config INV_MPU6050_I2C
->  	select REGMAP_I2C
->  	help
->  	  This driver supports the Invensense MPU6050/9150,
-> -	  MPU6500/6515/9250/9255, ICM20608 and ICM20602 motion tracking devices
-> -	  over I2C.
-> +	  MPU6500/6515/9250/9255, ICM20608/20609/20689 and ICM20602
-> +	  motion tracking devices over I2C.
->  	  This driver can be built as a module. The module will be called
->  	  inv-mpu6050-i2c.
->  
-> @@ -28,7 +28,7 @@ config INV_MPU6050_SPI
->  	select REGMAP_SPI
->  	help
->  	  This driver supports the Invensense MPU6000,
-> -	  MPU6500/6515/9250/9255, ICM20608 and ICM20602 motion tracking devices
-> -	  over SPI.
-> +	  MPU6500/6515/9250/9255, ICM20608/20609/20689 and ICM20602
-> +	  motion tracking devices over SPI.
->  	  This driver can be built as a module. The module will be called
->  	  inv-mpu6050-spi.
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> index 5096fc49012d..5fd57a1bee90 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> @@ -176,6 +176,22 @@ static const struct inv_mpu6050_hw hw_info[] = {
->  		.fifo_size = 512,
->  		.temp = {INV_ICM20608_TEMP_OFFSET, INV_ICM20608_TEMP_SCALE},
->  	},
-> +	{
-> +		.whoami = INV_ICM20609_WHOAMI_VALUE,
-> +		.name = "ICM20609",
-> +		.reg = &reg_set_6500,
-> +		.config = &chip_config_6050,
-> +		.fifo_size = 4 * 1024,
-> +		.temp = {INV_ICM20608_TEMP_OFFSET, INV_ICM20608_TEMP_SCALE},
-> +	},
-> +	{
-> +		.whoami = INV_ICM20689_WHOAMI_VALUE,
-> +		.name = "ICM20689",
-> +		.reg = &reg_set_6500,
-> +		.config = &chip_config_6050,
-> +		.fifo_size = 4 * 1024,
-> +		.temp = {INV_ICM20608_TEMP_OFFSET, INV_ICM20608_TEMP_SCALE},
-> +	},
->  	{
->  		.whoami = INV_ICM20602_WHOAMI_VALUE,
->  		.name = "ICM20602",
-> @@ -286,20 +302,22 @@ static int inv_mpu6050_set_lpf_regs(struct inv_mpu6050_state *st,
->  	if (result)
->  		return result;
->  
-> +	/* set accel lpf */
->  	switch (st->chip_type) {
->  	case INV_MPU6050:
->  	case INV_MPU6000:
->  	case INV_MPU9150:
->  		/* old chips, nothing to do */
-> -		result = 0;
-> +		return 0;
-> +	case INV_ICM20689:
-> +		/* set FIFO size to maximum value */
-> +		val |= INV_ICM20689_BITS_FIFO_SIZE_MAX;
->  		break;
->  	default:
-> -		/* set accel lpf */
-> -		result = regmap_write(st->map, st->reg->accel_lpf, val);
->  		break;
->  	}
->  
-> -	return result;
-> +	return regmap_write(st->map, st->reg->accel_lpf, val);
->  }
->  
->  /**
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> index 49e9aa777ba4..dd054e21216a 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> @@ -61,6 +61,8 @@ static bool inv_mpu_i2c_aux_bus(struct device *dev)
->  
->  	switch (st->chip_type) {
->  	case INV_ICM20608:
-> +	case INV_ICM20609:
-> +	case INV_ICM20689:
->  	case INV_ICM20602:
->  		/* no i2c auxiliary bus on the chip */
->  		return false;
-> @@ -202,6 +204,8 @@ static const struct i2c_device_id inv_mpu_id[] = {
->  	{"mpu9250", INV_MPU9250},
->  	{"mpu9255", INV_MPU9255},
->  	{"icm20608", INV_ICM20608},
-> +	{"icm20609", INV_ICM20609},
-> +	{"icm20689", INV_ICM20689},
->  	{"icm20602", INV_ICM20602},
->  	{}
->  };
-> @@ -237,6 +241,14 @@ static const struct of_device_id inv_of_match[] = {
->  		.compatible = "invensense,icm20608",
->  		.data = (void *)INV_ICM20608
->  	},
-> +	{
-> +		.compatible = "invensense,icm20609",
-> +		.data = (void *)INV_ICM20609
-> +	},
-> +	{
-> +		.compatible = "invensense,icm20689",
-> +		.data = (void *)INV_ICM20689
-> +	},
->  	{
->  		.compatible = "invensense,icm20602",
->  		.data = (void *)INV_ICM20602
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> index 6158fca7f70e..75b8903450eb 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> @@ -75,6 +75,8 @@ enum inv_devices {
->  	INV_MPU9250,
->  	INV_MPU9255,
->  	INV_ICM20608,
-> +	INV_ICM20609,
-> +	INV_ICM20689,
->  	INV_ICM20602,
->  	INV_NUM_PARTS
->  };
-> @@ -276,6 +278,7 @@ struct inv_mpu6050_state {
->  
->  /* mpu6500 registers */
->  #define INV_MPU6500_REG_ACCEL_CONFIG_2      0x1D
-> +#define INV_ICM20689_BITS_FIFO_SIZE_MAX     0xC0
->  #define INV_MPU6500_REG_ACCEL_OFFSET        0x77
->  
->  /* delay time in milliseconds */
-> @@ -340,6 +343,8 @@ struct inv_mpu6050_state {
->  #define INV_MPU9255_WHOAMI_VALUE		0x73
->  #define INV_MPU6515_WHOAMI_VALUE		0x74
->  #define INV_ICM20608_WHOAMI_VALUE		0xAF
-> +#define INV_ICM20609_WHOAMI_VALUE		0xA6
-> +#define INV_ICM20689_WHOAMI_VALUE		0x98
->  #define INV_ICM20602_WHOAMI_VALUE		0x12
->  
->  /* scan element definition for generic MPU6xxx devices */
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-> index 834bfa8e8684..3803c40e7b24 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-> @@ -81,6 +81,8 @@ static const struct spi_device_id inv_mpu_id[] = {
->  	{"mpu9250", INV_MPU9250},
->  	{"mpu9255", INV_MPU9255},
->  	{"icm20608", INV_ICM20608},
-> +	{"icm20609", INV_ICM20609},
-> +	{"icm20689", INV_ICM20689},
->  	{"icm20602", INV_ICM20602},
->  	{}
->  };
-> @@ -112,6 +114,14 @@ static const struct of_device_id inv_of_match[] = {
->  		.compatible = "invensense,icm20608",
->  		.data = (void *)INV_ICM20608
->  	},
-> +	{
-> +		.compatible = "invensense,icm20609",
-> +		.data = (void *)INV_ICM20609
-> +	},
-> +	{
-> +		.compatible = "invensense,icm20689",
-> +		.data = (void *)INV_ICM20689
-> +	},
->  	{
->  		.compatible = "invensense,icm20602",
->  		.data = (void *)INV_ICM20602
+Yes I plan to add Tegra30 and Tegra124 CIF functions in this. Anything=20
+related to CIF can be moved here.
+>
+> If not, then it's too much to have a separate driver module just for a
+> single tiny function, you should move it into the header file (make it
+> inline).
 
