@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98975C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 20:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA44C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 20:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFEF20838
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 20:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402F420838
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 20:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kyovkwhU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JwxmWksO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgBGUje (ORCPT
+        id S1727303AbgBGUlD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:39:34 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44167 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgBGUje (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 15:39:34 -0500
-Received: by mail-pg1-f195.google.com with SMTP id g3so357247pgs.11
-        for <devicetree@vger.kernel.org>; Fri, 07 Feb 2020 12:39:34 -0800 (PST)
+        Fri, 7 Feb 2020 15:41:03 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34007 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgBGUlD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 15:41:03 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j4so387700pgi.1
+        for <devicetree@vger.kernel.org>; Fri, 07 Feb 2020 12:41:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=r/3HQWF35ivl3fkO172M9O1viQmjTTJED1CtfoRt15k=;
-        b=kyovkwhUgtT8TT1uUvaC6AuyI4FyJwhKnP2lWDRHoS0VSvI15vlplW1mblQYhsbbrs
-         tQHoBxPZ57xwafBkBirfvb049NzgtoHnbdZ8Ut+hRDCnttl58lPSi9KyN/ekvVKNLVsY
-         IIkQR4r2wZQ9ILD71ApdxVFwEh5YGL7kgWv+o=
+        bh=fJEOJNcA+fwXSE2ASg2XWfgMK53pB9pLJfwJKn+783U=;
+        b=JwxmWksO0x2TqzckZU4XDokNyyzrEcA5T2JfRsxS/c1chCjxpXiE5vkoMoG8ZnU0J3
+         5QtzpamlSY+NFcmJBaZwAzrPCGQWaBNpTgVMTWMU4Fux+cceoRLMKjmBJUAHTVcklwIj
+         hYR2gp+4iRszkjeublr/orGOheeiMC7HOUwNk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=r/3HQWF35ivl3fkO172M9O1viQmjTTJED1CtfoRt15k=;
-        b=DwhRVnLmJ4UKeVecoFiXUqyTiVziE7XCIF5x7nJi1gGLAxN0eCwQLV3kWcesCJVrTn
-         PPtT2uO3kgKu88XLAiQ9bNkwQtm9ISajVUD5wMQl8swHUgcL//stqecx9h0lXvNZSJCM
-         bH4fy585RDkpvyDNpixVqIKu+SdLDpqKsOlpTHjPlgB2R+vJFrlqZXPN6e1b7CwNVySe
-         sNgCRGnB2z2Sfm0a+iKoRGrZ69sydKolRkEyO92YytIilH/II9OCf3I2cYyfNcg/3IWo
-         hoDRtrgR9BUOwUXyhlkdaDBzZD0xZhFao8aLdBdJ7iC84Xle3Y72JMiUAi/CzU64nruD
-         TT8A==
-X-Gm-Message-State: APjAAAWJ+fDGBQiHQmox2FOecl5UBzL7CcUWJgfIJOOgwQZKZaNKLMGl
-        jfB2BMAwrLNUqgv/upHU3QrFYF9QoR0=
-X-Google-Smtp-Source: APXvYqy9YVlC5Lo5de3O6H+Tzla/M3k33LZB+4zXlSllG7vpr8NBR9lXsDjqxybmpzmvkf3nETwnOw==
-X-Received: by 2002:a62:1a97:: with SMTP id a145mr713986pfa.244.1581107973858;
-        Fri, 07 Feb 2020 12:39:33 -0800 (PST)
+        bh=fJEOJNcA+fwXSE2ASg2XWfgMK53pB9pLJfwJKn+783U=;
+        b=H7FY7I+sAL4HPu3HqJxiwbCsUcG0W21QnwBZADJ8sXh7AqrPdGcC16HqUUnKuNWi9G
+         wiWpef8oy6A3Sxwq6fR/AG5zAAkRPeIyWcpc8IcOunoU/vVF/u1YI4ly3zVvxIckN1SD
+         1eJxSXCAo+HEKO6TeZhLrfhLbYOwpI0mWZqs+MN6Jf3c8tz0PFXqVNN6+rtsiaTMhUr7
+         6yJvctITQPtGayAfTlp8aK/icc+kd0u9JikaUe7S3MGUemJKUN8mvKVce9S9/RpYJSug
+         3BC6I434tdxo/1in+cVjSX96NWCV2x6yYoi8mdRMrHRBVZlNHmJ1UNvL9gEuom6W//Tj
+         y/Pg==
+X-Gm-Message-State: APjAAAWe1/BPymUSxGYWrArIz4F45kmAvBI0WUrFr2dGAytYpgU6d/6o
+        T3MVPxz0baZhmr7pErD7Acf2hOzoJFo=
+X-Google-Smtp-Source: APXvYqxKQdtxQ4U0pJntfiPpNcj2x81nqSM6Aoj1GAf2ULT1ZlZFoivrc30y+5LgY2cryZQ8fXnxEg==
+X-Received: by 2002:a63:3245:: with SMTP id y66mr1029144pgy.234.1581108062567;
+        Fri, 07 Feb 2020 12:41:02 -0800 (PST)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id 4sm4051001pfn.90.2020.02.07.12.39.33
+        by smtp.gmail.com with ESMTPSA id 4sm4051001pfn.90.2020.02.07.12.41.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:39:33 -0800 (PST)
+        Fri, 07 Feb 2020 12:41:02 -0800 (PST)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
@@ -60,9 +60,9 @@ Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
         DEVICE TREE BINDINGS), Guenter Roeck <groeck@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
-Date:   Fri,  7 Feb 2020 12:37:44 -0800
-Message-Id: <20200207203752.209296-2-pmalani@chromium.org>
+Subject: [PATCH v2 2/4] platform/chrome: Add Type C connector class driver
+Date:   Fri,  7 Feb 2020 12:37:46 -0800
+Message-Id: <20200207203752.209296-3-pmalani@chromium.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200207203752.209296-1-pmalani@chromium.org>
 References: <20200207203752.209296-1-pmalani@chromium.org>
@@ -73,106 +73,295 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some Chrome OS devices with Embedded Controllers (EC) can read and
-modify Type C port state.
+Add a driver to implement the Type C connector class for Chrome OS
+devices with ECs (Embedded Controllers).
 
-Add an entry in the DT Bindings documentation that lists out the logical
-device and describes the relevant port information, to be used by the
-corresponding driver.
+The driver relies on firmware device specifications for various port
+attributes. On ACPI platforms, this is specified using the logical
+device with HID GOOG0014. On DT platforms, this is specified using the
+DT node with compatible string "google,cros-ec-typec".
+
+This patch reads the device FW node and uses the port attributes to
+register the typec ports with the Type C connector class framework, but
+doesn't do much else.
+
+Subsequent patches will add more functionality to the driver, including
+obtaining current port information (polarity, vconn role, current power
+role etc.) after querying the EC.
 
 Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
 
 Changes in v2:
-- No changes. Patch first introduced in v2 of series.
+- Updated Kconfig to default to MFD_CROS_EC_DEV.
+- Fixed code comments.
+- Moved get_num_ports() code into probe().
+- Added module author.
 
- .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+ drivers/platform/chrome/Kconfig         |  11 ++
+ drivers/platform/chrome/Makefile        |   1 +
+ drivers/platform/chrome/cros_ec_typec.c | 218 ++++++++++++++++++++++++
+ 3 files changed, 230 insertions(+)
+ create mode 100644 drivers/platform/chrome/cros_ec_typec.c
 
-diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index 5f57282a28da00..2320a4f0d93019 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -214,6 +214,17 @@ config CROS_EC_SYSFS
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cros_ec_sysfs.
+ 
++config CROS_EC_TYPEC
++	tristate "ChromeOS EC Type-C Connector Control"
++	depends on MFD_CROS_EC_DEV && TYPEC
++	default MFD_CROS_EC_DEV
++	help
++	  If you say Y here, you get support for accessing Type C connector
++	  information from the Chrome OS EC.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called cros_ec_typec.
++
+ config CROS_USBPD_LOGGER
+ 	tristate "Logging driver for USB PD charger"
+ 	depends on CHARGER_CROS_USBPD
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index aacd5920d8a180..caf2a9cdb5e6d1 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
+ obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
+ obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
+ cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
++obj-$(CONFIG_CROS_EC_TYPEC)		+= cros_ec_typec.o
+ obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+ obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+ obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
 new file mode 100644
-index 00000000000000..46ebcbe76db3c2
+index 00000000000000..8374ccfe784f3b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -0,0 +1,218 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright 2020 Google LLC
++ *
++ * This driver provides the ability to view and manage Type C ports through the
++ * Chrome OS EC.
++ */
 +
-+title: Google Chrome OS EC(Embedded Controller) Type C port driver.
++#include <linux/acpi.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_device.h>
++#include <linux/usb/typec.h>
 +
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Prashant Malani <pmalani@chromium.org>
++#define DRV_NAME "cros-ec-typec"
 +
-+description:
-+  Chrome OS devices have an Embedded Controller(EC) which has access to
-+  Type C port state. This node is intended to allow the host to read and
-+  control the Type C ports. The node for this device should be under a
-+  cros-ec node like google,cros-ec-spi.
++/* Platform-specific data for the Chrome OS EC Type C controller. */
++struct cros_typec_data {
++	struct device *dev;
++	struct cros_ec_device *ec;
++	int num_ports;
++	/* Array of ports, indexed by port number. */
++	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
++};
 +
-+properties:
-+  compatible:
-+    const: google,cros-ec-typec
++static int cros_typec_parse_port_props(struct typec_capability *cap,
++				       struct fwnode_handle *fwnode,
++				       struct device *dev)
++{
++	const char *buf;
++	int ret;
 +
-+  port:
-+    description: A node that represents a physical Type C port on the
-+      device.
-+    type: object
-+    properties:
-+      port-number:
-+        description: The number used by the Chrome OS EC to identify
-+          this type C port.
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+      power-role:
-+        description: Determines the power role that the Type C port will
-+          adopt.
-+        oneOf:
-+          - items:
-+            - const: sink
-+            - const: source
-+            - const: dual
-+      data-role:
-+        description: Determines the data role that the Type C port will
-+          adopt.
-+        oneOf:
-+          - items:
-+            - const: host
-+            - const: device
-+            - const: dual
-+      try-power-role:
-+        description: Determines the preferred power role of the Type C port.
-+        oneOf:
-+          - items:
-+            - const: sink
-+            - const: source
-+            - const: dual
++	memset(cap, 0, sizeof(*cap));
++	ret = fwnode_property_read_string(fwnode, "power-role", &buf);
++	if (ret) {
++		dev_err(dev, "power-role not found: %d\n", ret);
++		return ret;
++	}
 +
-+    required:
-+      - port-number
-+      - power-role
-+      - data-role
-+      - try-power-role
++	ret = typec_find_port_power_role(buf);
++	if (ret < 0)
++		return ret;
++	cap->type = ret;
 +
-+required:
-+  - compatible
-+  - port
++	ret = fwnode_property_read_string(fwnode, "data-role", &buf);
++	if (ret) {
++		dev_err(dev, "data-role not found: %d\n", ret);
++		return ret;
++	}
 +
-+examples:
-+  - |+
-+    typec {
-+      compatible = "google,cros-ec-typec";
++	ret = typec_find_port_data_role(buf);
++	if (ret < 0)
++		return ret;
++	cap->data = ret;
 +
-+      port@0 {
-+        port-number = <0>;
-+        power-role = "dual";
-+        data-role = "dual";
-+        try-power-role = "source";
-+      };
-+    };
++	ret = fwnode_property_read_string(fwnode, "try-power-role", &buf);
++	if (ret) {
++		dev_err(dev, "try-power-role not found: %d\n", ret);
++		return ret;
++	}
++
++	ret = typec_find_power_role(buf);
++	if (ret < 0)
++		return ret;
++	cap->prefer_role = ret;
++
++	cap->fwnode = fwnode;
++
++	return 0;
++}
++
++static int cros_typec_init_ports(struct cros_typec_data *typec)
++{
++	struct device *dev = typec->dev;
++	struct typec_capability cap;
++	struct fwnode_handle *fwnode;
++	int ret;
++	int i;
++	int nports;
++	u32 port_num;
++
++	nports = device_get_child_node_count(dev);
++	if (nports == 0) {
++		dev_err(dev, "No port entries found.\n");
++		return -ENODEV;
++	}
++
++	device_for_each_child_node(dev, fwnode) {
++		if (fwnode_property_read_u32(fwnode, "port-number",
++					     &port_num)) {
++			dev_err(dev, "No port-number for port, skipping.\n");
++			ret = -EINVAL;
++			goto unregister_ports;
++		}
++
++		if (port_num >= typec->num_ports) {
++			dev_err(dev, "Invalid port number.\n");
++			ret = -EINVAL;
++			goto unregister_ports;
++		}
++
++		dev_dbg(dev, "Registering port %d\n", port_num);
++		ret = cros_typec_parse_port_props(&cap, fwnode, dev);
++		if (ret < 0)
++			goto unregister_ports;
++		typec->ports[port_num] = typec_register_port(dev, &cap);
++		if (IS_ERR(typec->ports[port_num])) {
++			dev_err(dev, "Failed to register port %d\n", port_num);
++			ret = PTR_ERR(typec->ports[port_num]);
++			goto unregister_ports;
++		}
++	}
++
++	return 0;
++
++unregister_ports:
++	for (i = 0; i < typec->num_ports; i++)
++		typec_unregister_port(typec->ports[i]);
++	return ret;
++}
++
++static int cros_typec_ec_command(struct cros_typec_data *typec,
++				 unsigned int version,
++				 unsigned int command,
++				 void *outdata,
++				 unsigned int outsize,
++				 void *indata,
++				 unsigned int insize)
++{
++	struct cros_ec_command *msg;
++	int ret;
++
++	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++
++	msg->version = version;
++	msg->command = command;
++	msg->outsize = outsize;
++	msg->insize = insize;
++
++	if (outsize)
++		memcpy(msg->data, outdata, outsize);
++
++	ret = cros_ec_cmd_xfer_status(typec->ec, msg);
++	if (ret >= 0 && insize)
++		memcpy(indata, msg->data, insize);
++
++	kfree(msg);
++	return ret;
++}
++
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id cros_typec_acpi_id[] = {
++	{ "GOOG0014", 0 },
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, cros_typec_acpi_id);
++#endif
++
++#ifdef CONFIG_OF
++static const struct of_device_id cros_typec_of_match[] = {
++	{ .compatible = "google,cros-ec-typec", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, cros_typec_of_match);
++#endif
++
++static int cros_typec_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cros_typec_data *typec;
++	struct ec_response_usb_pd_ports resp;
++	int ret;
++
++	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
++	if (!typec)
++		return -ENOMEM;
++	typec->dev = dev;
++	typec->ec = dev_get_drvdata(pdev->dev.parent);
++	platform_set_drvdata(pdev, typec);
++
++	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
++				    &resp, sizeof(resp));
++	if (ret < 0)
++		return ret;
++
++	typec->num_ports = resp.num_ports;
++	if (typec->num_ports > EC_USB_PD_MAX_PORTS) {
++		dev_warn(typec->dev,
++			 "Too many ports reported: %d, limiting to max: %d\n",
++			 typec->num_ports, EC_USB_PD_MAX_PORTS);
++		typec->num_ports = EC_USB_PD_MAX_PORTS;
++	}
++
++	ret = cros_typec_init_ports(typec);
++	if (!ret)
++		return ret;
++
++	return 0;
++}
++
++static struct platform_driver cros_typec_driver = {
++	.driver	= {
++		.name = DRV_NAME,
++		.acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
++		.of_match_table = of_match_ptr(cros_typec_of_match),
++	},
++	.probe = cros_typec_probe,
++};
++
++module_platform_driver(cros_typec_driver);
++
++MODULE_AUTHOR("Prashant Malani <pmalani@chromium.org>");
++MODULE_DESCRIPTION("Chrome OS EC Type C control");
++MODULE_LICENSE("GPL");
 -- 
 2.25.0.341.g760bfbb309-goog
 
