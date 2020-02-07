@@ -2,209 +2,170 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7407BC352A3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 02:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB939C352A3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 02:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B000214AF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 02:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADEB520715
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 02:04:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xxaqmQbE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n54HafII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgBGB7N (ORCPT
+        id S1727003AbgBGCES (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 20:59:13 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54112 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbgBGB7K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 20:59:10 -0500
-Received: by mail-wm1-f65.google.com with SMTP id s10so931597wmh.3
-        for <devicetree@vger.kernel.org>; Thu, 06 Feb 2020 17:59:09 -0800 (PST)
+        Thu, 6 Feb 2020 21:04:18 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:42851 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgBGCES (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 21:04:18 -0500
+Received: by mail-qv1-f65.google.com with SMTP id dc14so272890qvb.9
+        for <devicetree@vger.kernel.org>; Thu, 06 Feb 2020 18:04:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=x0ouoTkt3Ut5OXKfPgK1h53EOxbNSeKO18hqFnETzgE=;
-        b=xxaqmQbEoLyw2VX94sWCfxoccm4DVkt3AtuAjNLsMLbahf/lh84uoU6FOzY9HhIeHm
-         +gnmplDrpc6DnEyN59m1UyeLpznuDhHmKxf3nepX75ORqXwL6A3qb0vdyVDwo+PaepzS
-         9wkvQ/dK7Drevn0JnZxhi6C1w7vPfJCSixzXCbJ8GLfzJrchLTd9MScRWgNhek6tGeLJ
-         eNfHsAt/LZCnQZAJAsDJDBqd6BNbrthbySIBtA11tFwmJyibyy+cUvVQYWzHQEDFWvmO
-         hNXAfpKNTl8z7/dI1HcLGqkZsy+fJ/fNpEzR7X/bYMka5nNaUa3sU1yr+hZhjAiHlCjh
-         S53w==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=f/k2mGN9MY7NNfoOb4gMqNsjIZIFXh28kOhlDVSQmA0=;
+        b=n54HafII/Lex3YLQXDbmveG7TRPxgfQUwWoNXykBlSczgnFnbEiABU6Nlwne2EnVqZ
+         BLZNg9eH05yf+6HnfQFJWO3Ox35KsJoJtLmFEwLlc7LmqfuMonfkWKrE2MVp0ijf+rlC
+         pgFHFzmYKEZYMyZMpnzqCt5JXY3Du2ndL/p2s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=x0ouoTkt3Ut5OXKfPgK1h53EOxbNSeKO18hqFnETzgE=;
-        b=Ppu4+JybhM7LIBfjuqgSzQc4WXhFnOqEdUGUBweZD9dQ03ZkhPfW2WhChVw5wxIxBt
-         cD5hZvouL51pune0eHs6Mfqdhi7eUBlCyhdhdgrc56GWnXbHYm6saZo94PYz04039Nk/
-         8Q0PRKYDEn4mNDEwrGLxahkDaf+acV6HGQ5JQqrODoNoEvHI4j+BQpRKdrSZERMulzCx
-         yF02zqtoAIyiQlHB12vgl/B8UtFL3EIkmDBT6R+2WNpRzA0CR6wGfow/pkQBG0gnlt14
-         5gBSLcQcTDPhHysyfXIrvzDYznkAAcFLgjGszA3m8FcPm9ObXX6e0BB/OUVOy3D3a17x
-         OYPw==
-X-Gm-Message-State: APjAAAXLHT+FY6HRaOnBiLnj1snnl2+QRw/Ci/9g8DB2xiu0+Rx0AosC
-        wZl0ZuAfEXSp6mh/gmlAqpB9IQ==
-X-Google-Smtp-Source: APXvYqz3mobXNYpdd1zNAXlNv8hUbwJ2a3HIClYJTpvmbPOMsdGCxCeHeLWpQrOr/+n7+AIrWNjung==
-X-Received: by 2002:a1c:660a:: with SMTP id a10mr963549wmc.122.1581040748600;
-        Thu, 06 Feb 2020 17:59:08 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id a62sm1490095wmh.33.2020.02.06.17.59.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 17:59:07 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        Anu Ramanathan <anur@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=f/k2mGN9MY7NNfoOb4gMqNsjIZIFXh28kOhlDVSQmA0=;
+        b=fr411P74IsNPzMoYxXrsmCI3apCS1qsnMGolwgpuCZG2dWt5PeJy8glkEoMxpk1Ox/
+         tT5M/Xx4wLiUUrFPbRb4Wk2RCZ1WNb+xlzKUbRK7e9aWtuG4Dl6aLu9Toa09TkrkRpkI
+         swV6wEC6ScO220ZnQbOfMDgwCwKCxH70A0t/t7ZI1UvUCelb9j5Xc9VqhyPm0haLP6Lc
+         r78b/bKCbhqDuCjuzWExa0gliNQxHhmwzKOkaNr0My9hob9k2KhJwV6IZZ9B3KmHQplQ
+         xYG5kpuztHzqCv4VfZUwSdOjyvdj6IiPafMDhLeO0LyOqAzE8dixbKf32CUaaSIdW9gv
+         xSAw==
+X-Gm-Message-State: APjAAAVRog9Pl8YI0Mu47VI92gj2k9iNiseK55xFrMXel3I2pJkMM1/0
+        mL8ShnBnkvHhBmki4JbPBztPF0nkDvLGMD12um0DBw==
+X-Google-Smtp-Source: APXvYqy6BPTxmJROJmd8xpRbLnJsPInZlt9zqkAt5bAH9XGkXglHOonteC+kQPoH8wbuH3FDnIt6xkHqcmjd+EAPUBo=
+X-Received: by 2002:ad4:5a48:: with SMTP id ej8mr4977078qvb.187.1581041055375;
+ Thu, 06 Feb 2020 18:04:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-6-drinkcat@chromium.org>
+ <b58a8cf9-3275-cf89-6dff-596aceeb8000@arm.com> <CANMq1KBcNr=1_poBHrA_SDo_h-5i3e5TMqASEVaDj5LevsRcOQ@mail.gmail.com>
+ <CAPDyKFr4Vz1ihuFQNnhDLEnOs=BZ1n2wzw3CATgPcDXs9g54uA@mail.gmail.com>
+In-Reply-To: <CAPDyKFr4Vz1ihuFQNnhDLEnOs=BZ1n2wzw3CATgPcDXs9g54uA@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 7 Feb 2020 10:04:04 +0800
+Message-ID: <CANMq1KBCd0wNgVAxAzxBwafHoafPExz07wKFhEWQFViAc0LL1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] drm/panfrost: Add support for multiple power
+ domain support
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Steven Price <steven.price@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
-        devicetree@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH v4 02/18] dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed USB PHY binding
-Date:   Fri,  7 Feb 2020 01:58:51 +0000
-Message-Id: <20200207015907.242991-3-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200207015907.242991-1-bryan.odonoghue@linaro.org>
-References: <20200207015907.242991-1-bryan.odonoghue@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Devicetree List <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Sriharsha Allenki <sallenki@codeaurora.org>
+Hi Ulf,
 
-Adds bindings for Qualcomm's 28 nm USB PHY supporting Low-Speed, Full-Speed
-and Hi-Speed USB connectivity on Qualcomm chipsets.
+On Mon, Jan 27, 2020 at 3:55 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Fri, 10 Jan 2020 at 02:53, Nicolas Boichat <drinkcat@chromium.org> wro=
+te:
+> >
+> > +Ulf to keep me honest on the power domains
+> >
+> > On Thu, Jan 9, 2020 at 10:08 PM Steven Price <steven.price@arm.com> wro=
+te:
+> > >
+> > > On 08/01/2020 05:23, Nicolas Boichat wrote:
+> > > > When there is a single power domain per device, the core will
+> > > > ensure the power domains are all switched on.
+> > > >
+> > > > However, when there are multiple ones, as in MT8183 Bifrost GPU,
+> > > > we need to handle them in driver code.
+> > > >
+> > > >
+> > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > > ---
+> > > >
+> > > > The downstream driver we use on chromeos-4.19 currently uses 2
+> > > > additional devices in device tree to accomodate for this [1], but
+> > > > I believe this solution is cleaner.
+> > >
+> > > I'm not sure what is best, but it seems odd to encode this into the P=
+anfrost driver itself - it doesn't have any knowledge of what to do with th=
+ese power domains. The naming of the domains looks suspiciously like someon=
+e thought that e.g. only half of the cores could be powered, but it doesn't=
+ look like that was implemented in the chromeos driver linked and anyway th=
+at is *meant* to be automatic in the hardware! (I.e. if you only power up o=
+ne cores in one core stack then the PDC should only enable the power domain=
+ for that set of cores).
+> >
+> > This is actually implemented in the Chrome OS driver [1]. IMHO power
+> > domains are a bit confusing [2]:
+> >  i. If there's only 1 power domain in the device, then the core takes
+> > care of power on the domain (based on pm_runtime)
+> >  ii. If there's more than 1 power domain, then the device needs to
+> > link the domains manually.
+> >
+> > So the Chrome OS [1] driver takes approach (i), by creating 3 devices,
+> > each with 1 power domain that is switched on/off automatically using
+> > pm_runtime.
+> >
+> > This patch takes approach (ii) with device links to handle the extra do=
+mains.
+> >
+> > I believe the latter is more upstream-friendly, but, as always,
+> > suggestions welcome.
+>
+> Apologies for the late reply. A few comments below.
 
-[bod: Converted to YAML. Changed name dropping snps, 28nm components]
+No worries, than for the helpful reply!
 
-Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- .../bindings/phy/qcom,usb-hs-28nm.yaml        | 90 +++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
+> If the device is partitioned across multiple PM domains (it may need
+> several power rails), then that should be described with the "multi PM
+> domain" approach in the DTS. As in (ii).
+>
+> Using "device links" is however optional, as it may depend on the use
+> case. If all multiple PM domains needs to be powered on/off together,
+> then it's certainly recommended to use device links.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
-new file mode 100644
-index 000000000000..ca6a0836b53c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/qcom,usb-hs-28nm.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm Synopsys DesignWare Core 28nm High-Speed PHY
-+
-+maintainers:
-+  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-+
-+description: |
-+  Qualcomm Low-Speed, Full-Speed, Hi-Speed 28nm USB PHY
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,usb-hs-28nm-femtophy
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    items:
-+      - description: rpmcc ref clock
-+      - description: PHY AHB clock
-+      - description: Rentention clock
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+      - const: ahb
-+      - const: sleep
-+
-+  resets:
-+    items:
-+      - description: PHY core reset
-+      - description: POR reset
-+
-+  reset-names:
-+    items:
-+      - const: phy
-+      - const: por
-+
-+  vdd-supply:
-+    description: phandle to the regulator VDD supply node.
-+
-+  vdda1p8-supply:
-+    description: phandle to the regulator 1.8V supply node.
-+
-+  vdda3p3-supply:
-+    description: phandle to the regulator 3.3V supply node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - vdd-supply
-+  - vdda1p8-supply
-+  - vdda3p3-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
-+    #include <dt-bindings/clock/qcom,rpmcc.h>
-+    usb2_phy_prim: phy@7a000 {
-+        compatible = "qcom,usb-hs-28nm-femtophy";
-+        reg = <0x0007a000 0x200>;
-+        #phy-cells = <0>;
-+        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
-+                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-+                 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
-+        clock-names = "ref", "ahb", "sleep";
-+        resets = <&gcc GCC_USB_HS_PHY_CFG_AHB_BCR>,
-+                 <&gcc GCC_USB2A_PHY_BCR>;
-+        reset-names = "phy", "por";
-+        vdd-supply = <&vreg_l4_1p2>;
-+        vdda1p8-supply = <&vreg_l5_1p8>;
-+        vdda3p3-supply = <&vreg_l12_3p3>;
-+    };
-+...
--- 
-2.25.0
+That's the case here, there's no support for turning on/off the
+domains individually.
 
+> However, if the PM domains can be powered on/off independently (one
+> can be on while another is off), then it's probably easier to operate
+> directly with runtime PM, on the returned struct *device from
+> dev_pm_domain_attach_by_id().
+>
+> Also note, there is dev_pm_domain_attach_by_name(), which allows us to
+> specify a name for the PM domain in the DTS, rather than using an
+> index. This may be more future proof to use.
+
+Agree, probably better to have actual names than just "counting" the
+number of domains like I do, especially as we have a compatible struct
+anyway. I'll update the patch.
+
+> [...]
+>
+> Hope this helps.
+>
+> Kind regards
+> Uffe
