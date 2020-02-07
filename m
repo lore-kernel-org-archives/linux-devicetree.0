@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9BFC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 18:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80752C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 18:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AF3222D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 18:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F3F222D9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 18:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVFjTA0m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUjft++C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgBGSXG (ORCPT
+        id S1727005AbgBGSZp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:23:06 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36315 "EHLO
+        Fri, 7 Feb 2020 13:25:45 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43568 "EHLO
         mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgBGSXG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 13:23:06 -0500
-Received: by mail-ed1-f67.google.com with SMTP id j17so543842edp.3;
-        Fri, 07 Feb 2020 10:23:04 -0800 (PST)
+        with ESMTP id S1726951AbgBGSZp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 13:25:45 -0500
+Received: by mail-ed1-f67.google.com with SMTP id dc19so503672edb.10;
+        Fri, 07 Feb 2020 10:25:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2rEL+fZ+atRGcdqc0v6HR9KvKwcDJaTmCDh9SEZyi2k=;
-        b=CVFjTA0mdflE33CmzdBoRt7RrT5W9DMHFpCIEmHOUSFpJQJ0oxYa4sqdU+jFJDlinh
-         NYDIAkS58ouzX5NyhERarOe6g5KVJ3pqwSnAB9Fvt+cTTNKawK+enONTCTutSRTu0SWq
-         M/Pz51Yte9XeHMccGnIfpPvQwFFgPoqU+x55OkyXSRbhLEVtlfSj+VZXd1WDa2PuS0Kc
-         5p9bYFmcE6Obyp5xw3Ui+SKIWfZRLtJraYc60ZALpB1sO9DTousQznQiU/b9GXrJ5b/y
-         Xw65cQWZDyb+9j6KjPIzC4oUhz9L9/1Rx04gvj9CAYPoFLmKmXK0yfS7FFp7esFWMSSk
-         2IzQ==
+        bh=GMiZo8m6MVwteC6MTZZKLG6FimFuIinamHp+P+KB9FQ=;
+        b=mUjft++CBTt8AY80NHTjS5UiGF6uZzqJ3gy2o49fQU4PnoKfCu4IEwEQYdrXH+5XwP
+         u7E2bN4mIOO/YZ88FwT0gmMwwabzhE7a96vAcQL+umRxmXlh3M0oaN7oJ7xyUF73rE5h
+         nv0jIE5TZldSEs8X3pEHGG2LTUmmur5JgSsOT+YG5QAHKCqDtRPSQzmV2cSnHIumhhqw
+         w1Gi2F4uIp4EItav1Verw+mqidD9pAf63TpEU45IFe0QxS7GyilJwXuZU/UX2/cvTE7X
+         xT2eyZ3xEEpSiQyz/wfIXlcITyW250WsMg9Z9y/fgsnSYbmmaWC32pmooOM/yu5rQgNq
+         C86g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=2rEL+fZ+atRGcdqc0v6HR9KvKwcDJaTmCDh9SEZyi2k=;
-        b=qJdRi9vfVYdb0zgzUJXCSkDNEf88Tu4rnmFjjiGKYo1owKMAGsDyZnKRKU2KndYq88
-         9LhdtIZtIt954Qe71oOgXZBhAXqwHjIz+MAo6gqdJVVsETMmgfbLw8iYQxy4yIpbcz30
-         BZLcUr6QR3YcT7lxboamAcUV9YECpML+WVh3irkYVKoStwI1/OikUoiJTAiQeNHZzrX2
-         41MV8bBnibgBfD99HNlm9KgA8VH+5CphWevpmqaWgHeqeb4x3iJsqy43KvZck85VvoLe
-         WkyI/VBva+//TGHKuntNMr+JNtf4rbMeoMyOc8CYN8/vLU5ydsmoIA6Lvb3/BlwNBri7
-         L/7Q==
-X-Gm-Message-State: APjAAAWXEvOcMPGHDyV0tWilx7KLyWJMkFWxYV7K8H1nPo4KnvQWbJX4
-        E+lUYoH5MCbmHw72a2gPLBA=
-X-Google-Smtp-Source: APXvYqwwT93CRJa4E1zobDD7odgAbkjWITZXCmyEkFHpgxyLmhB3dllkCjhnWXfogkZpMI/yf2i94A==
-X-Received: by 2002:a17:906:4ecc:: with SMTP id i12mr501758ejv.227.1581099783984;
-        Fri, 07 Feb 2020 10:23:03 -0800 (PST)
+        bh=GMiZo8m6MVwteC6MTZZKLG6FimFuIinamHp+P+KB9FQ=;
+        b=fc3U7a5Tzkg3d6lV0BIgVrRl9nI4WKpy8fN+BNQW2LDhwMNPb9NiL8WeK3X1ueSXR7
+         xR5LQ30kCda7Od4J5O2633QM4c9rbHceL2A9BgprLkTtyk4ngFxI57NgEillU1KXBEIM
+         +Z1MQUbtu0nR/1+xGMys97IbaD0zybu8ZRU+mRUs7ESFbf25Dr5787QIFVo2M7KWi0KI
+         +7oqb1JRLNGIndClGn8thcrL59nlWksC/Yrdjea5YMVYje8ZDzheoB0eM4zl15Nww+KE
+         zmKPYOqDlcJ58TcHQafrn03K4gbQ4gt+LlqVEM0W8JiCNq6WjVq0DvTApHhp//yRLDZ4
+         CS/Q==
+X-Gm-Message-State: APjAAAU6+VFIet2HJap8mAXDivL6f3b5FXMuBx9Se8Aus0m+lxiRRZa+
+        13E2kOO9AyPJ3YI5qJELQiA=
+X-Google-Smtp-Source: APXvYqw49WYYptXF2zK5xUtZHkEq6r6YXGLC4FRv/vjzsmj8o/wuALuNtCAWaKdWWXv/Vj7W5EaEaQ==
+X-Received: by 2002:aa7:c71a:: with SMTP id i26mr203017edq.300.1581099943747;
+        Fri, 07 Feb 2020 10:25:43 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id i26sm452051ejx.8.2020.02.07.10.23.02
+        by smtp.googlemail.com with ESMTPSA id e24sm208276edy.93.2020.02.07.10.25.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2020 10:23:03 -0800 (PST)
-Subject: Re: [PATCH v2 6/9] ASoC: tegra: add Tegra186 based DSPK driver
+        Fri, 07 Feb 2020 10:25:43 -0800 (PST)
+Subject: Re: [PATCH v2 0/9] add ASoC components for AHUB
 To:     Sameer Pujar <spujar@nvidia.com>
 Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
         broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
@@ -66,16 +66,15 @@ Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
         mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
         dramesh@nvidia.com, atalambedu@nvidia.com
 References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-7-git-send-email-spujar@nvidia.com>
- <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
- <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
+ <fcab0af1-fe84-6028-701b-ab101feaa8de@gmail.com>
+ <d17b2654-a888-8251-468d-12ef1451cd4b@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
-Date:   Fri, 7 Feb 2020 21:22:51 +0300
+Message-ID: <40a4d544-7c33-3f28-0b9c-384bc9fe3b53@gmail.com>
+Date:   Fri, 7 Feb 2020 21:25:41 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
+In-Reply-To: <d17b2654-a888-8251-468d-12ef1451cd4b@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -84,25 +83,19 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-07.02.2020 14:26, Sameer Pujar пишет:
+07.02.2020 14:30, Sameer Pujar пишет:
 > 
 > 
-> On 2/6/2020 10:45 PM, Dmitry Osipenko wrote:
+> On 2/6/2020 11:06 PM, Dmitry Osipenko wrote:
 >> External email: Use caution opening links or attachments
 >>
 >>
 >> 30.01.2020 13:33, Sameer Pujar пишет:
->>> +static const struct dev_pm_ops tegra186_dspk_pm_ops = {
->>> +     SET_RUNTIME_PM_OPS(tegra186_dspk_runtime_suspend,
->>> +                        tegra186_dspk_runtime_resume, NULL)
->>> +     SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->>> +                                  pm_runtime_force_resume)
->>> +};
->> Could you please explain why drivers need the "late" system sleep?
+>> ...
+>>>   sound/soc/tegra/Kconfig                            |  56 ++
+>> Probably won't hurt to enable the new drivers in the
+>> arch/arm64/configs/defconfig?
 > 
-> It was done to ensure core drivers are suspended first and defer the
-> codec driver suspend
+> Do you mean, if drivers can be enabled?
 
-Suspend order is opposite to the drivers registration order. If there is
-no real problem with that, then you should use the default suspend
-level. Please don't try to fix a non-existent problems.
+Yes, I mean to enable them in the default kernel configuration.
