@@ -2,303 +2,127 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66DEC352A2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 08:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0719C352A2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E17214AF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 08:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3AC82082E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:02:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kcW4yQ1d"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V11ZRlSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgBGIrN (ORCPT
+        id S1726573AbgBGJCq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:47:13 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61439 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgBGIrN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 03:47:13 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0178hw0U010097;
-        Fri, 7 Feb 2020 09:47:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=+IugkoOSPneMXOwW11LDlQwXU4lKUTtwdA6iRSssH6c=;
- b=kcW4yQ1d1msQtwa7OAqlywQAGg8q3ZQvqsb13EzuHveaH3/EkT2GkE0TqOseMWeDXU5z
- XN5qzoXRC8RmHmugrjhfkMGV8tXGUeXDnXcXPeig71CIRdykrqj8ciCAgDz1NCEqLg5r
- iUTuhyZlsmkcnM2OvKTBn1nhWk/NeqdmJ+Am9mQ+0G1Q6BBypEjmOyQqvYQAm/v/fNvZ
- iVfpYmpKtC/Y5JoiEF/XwdEG2rtNil9Xjpo4IZnEnL4GBycZ3J1ElaVytlPWaiuXiv3m
- J2PlSR2j981KvUnSsXsglW9k1N0gBveQN4PflWsQk+1RSP9R5J3tVPbh9FxQqLb1Rn3z pQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhk8sche-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 09:47:04 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D447010002A;
-        Fri,  7 Feb 2020 09:46:59 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BD165222C83;
-        Fri,  7 Feb 2020 09:46:59 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 7 Feb 2020 09:46:59
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <megous@megous.com>,
-        <mylene.josserand@bootlin.com>
-CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3] dt-bindings: touchscreen: Convert edt-ft5x06 to json-schema
-Date:   Fri, 7 Feb 2020 09:46:57 +0100
-Message-ID: <20200207084657.31195-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 7 Feb 2020 04:02:46 -0500
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:35634 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgBGJCp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 04:02:45 -0500
+Received: by mail-pf1-f169.google.com with SMTP id y73so953860pfg.2
+        for <devicetree@vger.kernel.org>; Fri, 07 Feb 2020 01:02:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=op1HXNhATyHRgyyhvfgTZxFzh1I8MPtGuBHJSPNyYOk=;
+        b=V11ZRlSVoy8l/X+8crvCfDhWVEeNs7U6MYjmhE5PH3dH/QgD5ZXbfebDNDY+TVuxS2
+         EF3b24coOyyCvvlqkO2mz17Pdt1JPDmLGRFZyjnK4KtDkGILDVe4ZEvAT+LAPlLhWDkf
+         nB7KDKdqJTaxNX4qtPaYyp522JBRelU6OJr8U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=op1HXNhATyHRgyyhvfgTZxFzh1I8MPtGuBHJSPNyYOk=;
+        b=ojwaHhxCJgFsKw8KWJ0Nxe0LhWIB1H/wrCrCdFDQV3dSV1X3MeaZDMmQh84zeCRGDn
+         gsAVmAD6ex/8t+S77466Szf4Rd3Q293rbxZRELsUvDxx232dwRfIjDEQr7nDG83dZTPH
+         PhsyJ2b2ovUkyrUBYI48hQYhHhqGcFajkUmT4HZcIx4iETdBGRdhNdCHKR2bgPTjE4mx
+         ydYeCLb3M6hoxo4s5VUKTaH3qk+V8kCDNjCJ+Vw2GFMIIurjSaoQBhLvawM0UEQPIEo1
+         HsxxtrUMymiKfGMWSkgU7gQRJFW8MdXuxBIMi1WO2zyA+FAupG7fFXXBpL8ourD3EHd/
+         2ucA==
+X-Gm-Message-State: APjAAAX0uZiJ0rEWU88cUIjV/TLcQRvOuzGKgiVaX/EB5JEH+9s8KMS+
+        NKTm+SQqJafyz+pkFEWR8a2g7g==
+X-Google-Smtp-Source: APXvYqxN/ldFiwGp0nM9WRPRSNpu6gFYZl5ZXHD3UiPJnYNWxmaakrmXDFCuyvReK7SQz/hZZl3wKg==
+X-Received: by 2002:a62:1a97:: with SMTP id a145mr9181514pfa.244.1581066165016;
+        Fri, 07 Feb 2020 01:02:45 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id w6sm2309463pfq.99.2020.02.07.01.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 01:02:44 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Subject: [PATCH v6 0/5] Add mt8173 elm and hana board
+Date:   Fri,  7 Feb 2020 17:02:23 +0800
+Message-Id: <20200207090227.250720-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the EDT-FT5x06 to DT schema using json-schema.
+This series adds devicetree and binding document for Acer Chromebook R13 (elm)
+and Lenovo Chromebook (hana), which are using mt8173 as SoC.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-version 3:
-- rebased on top of input tree
-- add wakeup-source
- .../bindings/input/touchscreen/edt-ft5x06.txt      |  77 -------------
- .../bindings/input/touchscreen/edt-ft5x06.yaml     | 125 +++++++++++++++++++++
- 2 files changed, 125 insertions(+), 77 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+Changes in v6:
+- fix several unit name warnings in mt8173.dtsi and mt8173-elm.dtsi
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-deleted file mode 100644
-index 0e57315e9cbd..000000000000
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-+++ /dev/null
-@@ -1,77 +0,0 @@
--FocalTech EDT-FT5x06 Polytouch driver
--=====================================
--
--There are 5 variants of the chip for various touch panel sizes
--FT5206GE1  2.8" .. 3.8"
--FT5306DE4  4.3" .. 7"
--FT5406EE8  7"   .. 8.9"
--FT5506EEG  7"   .. 8.9"
--FT5726NEI  5.7” .. 11.6"
--
--The software interface is identical for all those chips, so that
--currently there is no need for the driver to distinguish between the
--different chips. Nevertheless distinct compatible strings are used so
--that a distinction can be added if necessary without changing the DT
--bindings.
--
--
--Required properties:
-- - compatible:  "edt,edt-ft5206"
--           or:  "edt,edt-ft5306"
--           or:  "edt,edt-ft5406"
--           or:  "edt,edt-ft5506"
--           or:  "evervision,ev-ft5726"
--           or:  "focaltech,ft6236"
--
-- - reg:         I2C slave address of the chip (0x38)
-- - interrupts:       interrupt specification for the touchdetect
--                     interrupt
--
--Optional properties:
-- - reset-gpios: GPIO specification for the RESET input
-- - wake-gpios:  GPIO specification for the WAKE input
-- - vcc-supply:  Regulator that supplies the touchscreen
--
-- - pinctrl-names: should be "default"
-- - pinctrl-0:   a phandle pointing to the pin settings for the
--                control gpios
--
-- - wakeup-source: If present the device will act as wakeup-source
--
-- - threshold:   allows setting the "click"-threshold in the range
--                from 0 to 80.
--
-- - gain:        allows setting the sensitivity in the range from 0 to
--                31. Note that lower values indicate higher
--                sensitivity.
--
-- - offset:      allows setting the edge compensation in the range from
--                0 to 31.
--
-- - offset-x:    Same as offset, but applies only to the horizontal position.
--                Range from 0 to 80, only supported by evervision,ev-ft5726
--                devices.
--
-- - offset-y:    Same as offset, but applies only to the vertical position.
--                Range from 0 to 80, only supported by evervision,ev-ft5726
--                devices.
--
-- - touchscreen-size-x	   : See touchscreen.txt
-- - touchscreen-size-y	   : See touchscreen.txt
-- - touchscreen-fuzz-x      : See touchscreen.txt
-- - touchscreen-fuzz-y      : See touchscreen.txt
-- - touchscreen-inverted-x  : See touchscreen.txt
-- - touchscreen-inverted-y  : See touchscreen.txt
-- - touchscreen-swapped-x-y : See touchscreen.txt
--
--Example:
--	polytouch: edt-ft5x06@38 {
--		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
--		reg = <0x38>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&edt_ft5x06_pins>;
--		interrupt-parent = <&gpio2>;
--		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
--		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
--		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
--	};
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-new file mode 100644
-index 000000000000..8d58709d4b47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-@@ -0,0 +1,125 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/edt-ft5x06.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: FocalTech EDT-FT5x06 Polytouch Bindings
-+
-+description: |
-+             There are 5 variants of the chip for various touch panel sizes
-+              FT5206GE1  2.8" .. 3.8"
-+              FT5306DE4  4.3" .. 7"
-+              FT5406EE8  7"   .. 8.9"
-+              FT5506EEG  7"   .. 8.9"
-+              FT5726NEI  5.7” .. 11.6"
-+
-+maintainers:
-+  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+  - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - evervision,ev-ft5726
-+
-+    then:
-+      properties:
-+        offset-x: true
-+        offset-y: true
-+
-+properties:
-+  compatible:
-+    enum:
-+      - edt,edt-ft5206
-+      - edt,edt-ft5306
-+      - edt,edt-ft5406
-+      - edt,edt-ft5506
-+      - evervision,ev-ft5726
-+      - focaltech,ft6236
-+
-+  reg:
-+    const: 0x38
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  wake-gpios:
-+    maxItems: 1
-+
-+  wakeup-source: true
-+
-+  vcc-supply:
-+    maxItems: 1
-+
-+  gain:
-+    description: Allows setting the sensitivity in the range from 0 to 31.
-+                 Note that lower values indicate higher sensitivity.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 31
-+
-+  offset:
-+    description: Allows setting the edge compensation in the range from 0 to 31.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 31
-+
-+  offset-x:
-+    description: Same as offset, but applies only to the horizontal position.
-+                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 80
-+
-+  offset-y:
-+    description: Same as offset, but applies only to the vertical position.
-+                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 80
-+
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-fuzz-x: true
-+  touchscreen-fuzz-y: true
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-swapped-x-y: true
-+  interrupt-controller: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    i2c@00000000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      edt-ft5x06@38 {
-+        compatible = "edt,edt-ft5406";
-+        reg = <0x38>;
-+        interrupt-parent = <&gpio2>;
-+        interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-+        reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+        wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-+      };
-+    };
-+
-+...
+Changes in v5:
+- add gpio-line-names for gpio controller
+
+Changes in v4:
+- fix dtbs_check errors on cros-ec-keyboard
+- add comments for second source touchscreen and trackpad
+
+Changes in v3:
+- address comments in v2, major changes include:
+  * move uart aliases from mt8173-elm.dtsi to mt8173.dtsi
+  * remove brightness-levels in backlight
+  * add interrupt for da9211
+  * move pinmux for sdio_fixed_3v3 from mmc3_pins_default
+  * remove some non upstream property
+  * checked on schematic, cd-gpio in mmc1 should be GPIO_ACTIVE_LOW
+
+Changes in v2:
+- fix mediatek.yaml
+- fixup some nodes and remove unused nodes in dts
+
+
+Hsin-Yi Wang (5):
+  dt-bindings: arm64: dts: mediatek: Add mt8173 elm and hana
+  arm64: dts: mt8173: add uart aliases
+  arm64: dts: mt8173: fix unit name warnings
+  arm64: dts: mediatek: add mt8173 elm and hana board
+  media: mtk-mdp: Use correct aliases name
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   22 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    3 +
+ .../dts/mediatek/mt8173-elm-hana-rev7.dts     |   27 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dts     |   14 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dtsi    |   70 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dts   |   14 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  | 1166 +++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi      |   43 +-
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |    8 +-
+ 9 files changed, 1343 insertions(+), 24 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+
 -- 
-2.15.0
+2.25.0.225.g125e21ebc7-goog
 
