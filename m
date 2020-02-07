@@ -2,124 +2,102 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403FDC2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 06:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3D0C2D0B1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 06:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EFA20726
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 06:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEEDC20726
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 06:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XnW4hdba"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rA+pSDl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgBGGKz (ORCPT
+        id S1726587AbgBGGPz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 01:10:55 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:61071 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgBGGKy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 01:10:54 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581055854; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=9dWo6uK9jKsDwewb71Iojt0lLBywexIt8UvMHWOd8gc=;
- b=XnW4hdba3zk5PVObVx1j7XUEbanIUE+lJ75O/y7BbjeQUkNXK49ryd0TPDna37VzXmyqvVYu
- jRHw4MulyOjV1q0iXS9PzOkKcU7/ryOEXUKJagKIvqjYu7hLI4FaKVIGTTQaUk+3dq6fidxk
- 4w2B/Dyh3LHxpiZQthkjgEj9Ojk=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3cff6a.7f53327aeb58-smtp-out-n03;
- Fri, 07 Feb 2020 06:10:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 24B6BC4479C; Fri,  7 Feb 2020 06:10:50 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6F35C43383;
-        Fri,  7 Feb 2020 06:10:49 +0000 (UTC)
+        Fri, 7 Feb 2020 01:15:55 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45270 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgBGGPy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 01:15:54 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so560869pgk.12;
+        Thu, 06 Feb 2020 22:15:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oIWvQKjeURh41o5jLiCm8zK/D7CveIajHCiTf3CbOf4=;
+        b=rA+pSDl2UEhU7r4KgW1R90UuKoei0GVpzWqpQaPSMYl2XN5+EDo808cRepHaOfuBZ8
+         dcRRQTfA4Bsg0lwBPH8y14tiFReDeFMEqjPUvmkDKULpNjklhJFmVJrj3ieP3lMRqUiV
+         y7gUJMY3bH5vfJphpztQP8nfga0zqcOx/o7ogozY/KpM99WizPdRiIqD9CdQJzwARfjF
+         hqLOxksfH4Vk920UA2YRyjiT+VzAxgV3wk6CM/6Dt83hH1JGLfLVsQ2nGC6YOS5kD58G
+         90/i7fIc8yOOnzbpWeLFRkN86nUPJlcVMLUT512gN48G4IWeRWjw+7Hxiz+J28T1pRpy
+         lxyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oIWvQKjeURh41o5jLiCm8zK/D7CveIajHCiTf3CbOf4=;
+        b=FfkhxRcm049Wrp+zKwpdxluPvHoergZr67XmLMHuF1DtE82CCxCz9WgXC4U2jQDJlE
+         /oiC5Rqz3ZgyzeGJRnJs38ODS4Fi4KvYopa65rDQEiGkDFV7sGbc+CsUGbuRGa3KtTk8
+         DEc1tC6ratIe/uqMoJ8U+DLC19ixperARjMDQETEZv8X8uD23XtT0eg3qaVPTnHW+zIY
+         tFGAYPs83YvnPVrLiCsQ+8UyrzUYBITy9laks69HB8LF7Sn0cRwh3VxyiGNjhgmeMdYW
+         hX5xrMktD60/6Juw6urxRmk2wLfk5nSp0LQ61cMbYnoiuUa/9dv5ge2j6dfycOlO2dfT
+         KnTw==
+X-Gm-Message-State: APjAAAUQ2XA/Wo4l29hAxXJtFVZ2YQp784gTDMhQvUa6nVxyamFu43LX
+        z4f+kr2+qrA4gcKAKlEhGat9k+Y2JRfhxg==
+X-Google-Smtp-Source: APXvYqwd6QSW6mUkT1II/pwo9nRPlkyFskOSSckbiAzAKYrTCZR/KF0Tj//AWGcLBv0zW9hwbxa0Jg==
+X-Received: by 2002:a63:f0a:: with SMTP id e10mr7170520pgl.402.1581056152556;
+        Thu, 06 Feb 2020 22:15:52 -0800 (PST)
+Received: from localhost.localdomain ([2001:19f0:7001:2668:5400:1ff:fe62:2bbd])
+        by smtp.gmail.com with ESMTPSA id gc1sm1127414pjb.20.2020.02.06.22.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 22:15:51 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH v3 0/2] spi: add driver for ar934x spi controller
+Date:   Fri,  7 Feb 2020 14:14:04 +0800
+Message-Id: <20200207061406.1735079-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Feb 2020 11:40:49 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree-owner@vger.kernel.org
-Subject: Re: [PATCHv2 2/2] dt-bindings: watchdog: Add compatible for QCS404,
- SC7180, SDM845, SM8150
-In-Reply-To: <20200206183808.GA5019@bogus>
-References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
- <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
- <20200206183808.GA5019@bogus>
-Message-ID: <f26464226f74dffe2db0583b9482a489@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+This controller is a superset of the already supported qca,ar7100-spi.
+Besides the bit-bang mode in spi-ath79.c, this new controller added
+a new "shift register" mode, allowing faster spi operations.
+This mode doesn't need all the bit-bang code in spi-ath79.c and needs
+a different clock setup, so I decided to write a new driver for it
+instead of extending current spi-ath79 driver.
 
-On 2020-02-07 00:08, Rob Herring wrote:
-> On Sat, Feb 01, 2020 at 08:59:49PM +0530, Sai Prakash Ranjan wrote:
->> Add missing compatible for watchdog timer on QCS404,
->> SC7180, SDM845 and SM8150 SoCs.
-> 
-> That's not what the commit does. You are changing what's valid.
-> 
-> One string was valid, now 2 are required.
-> 
+Change since v2:
+fix binding documentation check.
 
-Does this look good?
+Changes since v1:
+1. change comment at the beginning to C++ style
+2. rename ar934x_spi_transfer_one to ar934x_spi_transfer_one_message
 
-diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml 
-b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-index 46d6aad5786a..3378244b67cd 100644
---- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-@@ -14,19 +14,22 @@ allOf:
+Chuanhong Guo (2):
+  spi: add driver for ar934x spi controller
+  dt-binding: spi: add bindings for spi-ar934x
 
-  properties:
-    compatible:
--    items:
-+    oneOf:
-        - enum:
-            - qcom,apss-wdt-qcs404
-            - qcom,apss-wdt-sc7180
-            - qcom,apss-wdt-sdm845
-            - qcom,apss-wdt-sm8150
--          - qcom,kpss-timer
--          - qcom,kpss-wdt
-            - qcom,kpss-wdt-apq8064
-            - qcom,kpss-wdt-ipq4019
-            - qcom,kpss-wdt-ipq8064
-            - qcom,kpss-wdt-msm8960
-+          - qcom,kpss-timer
-+          - qcom,kpss-wdt
-            - qcom,scss-timer
-+      - const: qcom,kpss-timer
-+      - const: qcom,kpss-wdt
-+      - const: qcom,scss-timer
-
-    reg:
-      maxItems: 1
-
-Thanks,
-Sai
+ .../bindings/spi/qca,ar934x-spi.yaml          |  40 +++
+ drivers/spi/Kconfig                           |   7 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-ar934x.c                      | 229 ++++++++++++++++++
+ 4 files changed, 277 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+ create mode 100644 drivers/spi/spi-ar934x.c
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.24.1
+
