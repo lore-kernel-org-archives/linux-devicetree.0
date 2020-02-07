@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE835C352A3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2821FC352A2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2239217BA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CA721741
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fn+OG7lu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="apIyMSSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgBGJDC (ORCPT
+        id S1727113AbgBGJDI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:03:02 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41793 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgBGJDB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 04:03:01 -0500
-Received: by mail-pf1-f193.google.com with SMTP id j9so933400pfa.8
-        for <devicetree@vger.kernel.org>; Fri, 07 Feb 2020 01:03:00 -0800 (PST)
+        Fri, 7 Feb 2020 04:03:08 -0500
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:38256 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgBGJCz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 04:02:55 -0500
+Received: by mail-pg1-f172.google.com with SMTP id a33so794836pgm.5
+        for <devicetree@vger.kernel.org>; Fri, 07 Feb 2020 01:02:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=U4T1sUZ5d5/lE7jdAROdnSabgnZhFUdcqE+KF1UFLYs=;
-        b=Fn+OG7luKfdpaUPbm4ZGXmPEqV3LZyqVgV0nfHGsdtPTUzhxhdSATo8QnpvDaYb2q6
-         DTPqGj/6KU5giBg6vcgCoA902QAvFzhJaHSKdzfQX2nHZEwnpkIc9oaXtunz5P5KAgtQ
-         ckRDvto5jiIeXjaZOcNpQffkaCh4SGfGOnDVI=
+        bh=hyAZ9vYdcLRitaWkueSPpRE9ACzjySSGPJECXo05uy8=;
+        b=apIyMSSZ4jYtNfFDRJB4/7iIklUgN/HYdWCZgfb5sA1QFK9ejxCzko2FEKnJaX8YoL
+         iREwkNhnJIsuRx3nWjH8Tvfob+WwiJLMED3G3JwgzpLIHx/U7duUDf2jDf/7pv3CgX5x
+         alEEunHcwPcP4HaZmtHClbGnOnWQDIMINPmMM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U4T1sUZ5d5/lE7jdAROdnSabgnZhFUdcqE+KF1UFLYs=;
-        b=MHrvUA9G+fKQ7GL6dftYRD0c8kAl0aUneATibfx7d9eXqXi4qSuBSLPW8SYKPhybwE
-         OHve8TNnjQAFvK8hwWnuJ4pa48XHdQvdj/cJ30uE8/RR48K5LbmBbb5ReCM6V+HLKq9A
-         4L36SJEDwGbZxUBuTpUO12bsnDxOSObX5MCH8Y+fqRdwokfyq2oiwEPBhMfF8lRJ8st/
-         RaMl65dpOMoI8s1wIMbVsdL3wFpgpWAuwCdUBd8cLjuo4wHcaYYJVIj5ckYnsfeQbQWu
-         T+XKoK7Ol0Ad0UrPCxjhJshTdmpIit2Cql/xlHl8t2ng5/0aiylmXywFYWILytPCE3kJ
-         eGQA==
-X-Gm-Message-State: APjAAAVIMluVwnNykzvQzKu89eswNxdynS4ipV/CXr0+DkZ/aLYjURsL
-        YrtBUUElTFXZXSetBds6MqZQRA==
-X-Google-Smtp-Source: APXvYqwt2xS7dRaSk9li7XQLco0yTFU/LJq7YNSPtj1ygZ/Wtqk85YoLi78cgiUvBFNXikSZvzMZ3A==
-X-Received: by 2002:a63:a807:: with SMTP id o7mr8178878pgf.407.1581066180243;
-        Fri, 07 Feb 2020 01:03:00 -0800 (PST)
+        bh=hyAZ9vYdcLRitaWkueSPpRE9ACzjySSGPJECXo05uy8=;
+        b=PF0nn0aozGQxn1nq7GrLBx5X2G2RdU1zEiqIKxelA+f1UHyCPDgb20im+39VJ1B9xm
+         At9McCnq/akvtWodwvY0fq3df7SdcuAgHvs7Sap+ly7lDwYJANhXb7F6McPjNwSAlc8S
+         xJfhQmZgoPP6mPo4K8fQiWVU2zw0k1/B+oQISnFZL6M0EzMnCBqJJvVI65dg5MnOjOnw
+         xIubAkVZ40qw8hf0wglkJ677loq+iSDXuLsc4YdMbZXJQEjZdybKdLzrN0v4tVJok2Eg
+         1aME+Scaqfe52gGSheKF3hTUOxqsLcQnFUlXwFUQAh5gdAp8oPiOV8RgvINqdSlwe+ME
+         am7g==
+X-Gm-Message-State: APjAAAVpvYfQL+klj/+D0gHhsaoNV944T3/HJ3ZuC63RHJr/NBu9TiTt
+        hbFjBml9Fl4rIfwecqFhZbQjUg==
+X-Google-Smtp-Source: APXvYqyAdlphOjBQWx0IcPgDO3Cm1fli8wvyJ4OJ0h/6ogXLLzS88sG63L6kGFfFGTgTfsxEQZgT6w==
+X-Received: by 2002:a63:eb02:: with SMTP id t2mr8516311pgh.289.1581066173726;
+        Fri, 07 Feb 2020 01:02:53 -0800 (PST)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id w6sm2309463pfq.99.2020.02.07.01.02.58
+        by smtp.gmail.com with ESMTPSA id w6sm2309463pfq.99.2020.02.07.01.02.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 01:02:59 -0800 (PST)
+        Fri, 07 Feb 2020 01:02:53 -0800 (PST)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -62,9 +62,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Nicolas Boichat <drinkcat@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH v6 5/5] media: mtk-mdp: Use correct aliases name
-Date:   Fri,  7 Feb 2020 17:02:28 +0800
-Message-Id: <20200207090227.250720-6-hsinyi@chromium.org>
+Subject: [PATCH v6 3/5] arm64: dts: mt8173: fix unit name warnings
+Date:   Fri,  7 Feb 2020 17:02:26 +0800
+Message-Id: <20200207090227.250720-4-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
 In-Reply-To: <20200207090227.250720-1-hsinyi@chromium.org>
 References: <20200207090227.250720-1-hsinyi@chromium.org>
@@ -75,33 +75,144 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-aliases property name must include only lowercase and '-'. Fix in dts
-and driver.
+Fixing several unit name warnings:
+
+Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
+Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
+Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
- drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 38 ++++++++++++------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-index 9afe8161a8c0..0c4788af78dd 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-@@ -15,10 +15,10 @@
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 790cd64aa447..2b7f566fb407 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -42,14 +42,14 @@ aliases {
+ 		dpi0 = &dpi0;
+ 		dsi0 = &dsi0;
+ 		dsi1 = &dsi1;
+-		mdp_rdma0 = &mdp_rdma0;
+-		mdp_rdma1 = &mdp_rdma1;
+-		mdp_rsz0 = &mdp_rsz0;
+-		mdp_rsz1 = &mdp_rsz1;
+-		mdp_rsz2 = &mdp_rsz2;
+-		mdp_wdma0 = &mdp_wdma0;
+-		mdp_wrot0 = &mdp_wrot0;
+-		mdp_wrot1 = &mdp_wrot1;
++		mdp-rdma0 = &mdp_rdma0;
++		mdp-rdma1 = &mdp_rdma1;
++		mdp-rsz0 = &mdp_rsz0;
++		mdp-rsz1 = &mdp_rsz1;
++		mdp-rsz2 = &mdp_rsz2;
++		mdp-wdma0 = &mdp_wdma0;
++		mdp-wrot0 = &mdp_wrot0;
++		mdp-wrot1 = &mdp_wrot1;
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
+ 		serial2 = &uart2;
+@@ -246,21 +246,21 @@ psci {
+ 		cpu_on	      = <0x84000003>;
+ 	};
  
+-	clk26m: oscillator@0 {
++	clk26m: oscillator0 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <26000000>;
+ 		clock-output-names = "clk26m";
+ 	};
  
- static const char * const mtk_mdp_comp_stem[MTK_MDP_COMP_TYPE_MAX] = {
--	"mdp_rdma",
--	"mdp_rsz",
--	"mdp_wdma",
--	"mdp_wrot",
-+	"mdp-rdma",
-+	"mdp-rsz",
-+	"mdp-wdma",
-+	"mdp-wrot",
- };
+-	clk32k: oscillator@1 {
++	clk32k: oscillator1 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <32000>;
+ 		clock-output-names = "clk32k";
+ 	};
  
- struct mtk_mdp_comp_match {
+-	cpum_ck: oscillator@2 {
++	cpum_ck: oscillator2 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <0>;
+@@ -276,19 +276,19 @@ cpu_thermal: cpu_thermal {
+ 			sustainable-power = <1500>; /* milliwatts */
+ 
+ 			trips {
+-				threshold: trip-point@0 {
++				threshold: trip-point0 {
+ 					temperature = <68000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				target: trip-point@1 {
++				target: trip-point1 {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu_crit: cpu_crit@0 {
++				cpu_crit: cpu_crit0 {
+ 					temperature = <115000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -296,13 +296,13 @@ cpu_crit: cpu_crit@0 {
+ 			};
+ 
+ 			cooling-maps {
+-				map@0 {
++				map0 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu0 0 0>,
+ 							 <&cpu1 0 0>;
+ 					contribution = <3072>;
+ 				};
+-				map@1 {
++				map1 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu2 0 0>,
+ 							 <&cpu3 0 0>;
+@@ -316,7 +316,7 @@ reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
+-		vpu_dma_reserved: vpu_dma_mem_region {
++		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
+ 			compatible = "shared-dma-pool";
+ 			reg = <0 0xb7000000 0 0x500000>;
+ 			alignment = <0x1000>;
+@@ -368,7 +368,7 @@ syscfg_pctl_a: syscfg_pctl_a@10005000 {
+ 			reg = <0 0x10005000 0 0x1000>;
+ 		};
+ 
+-		pio: pinctrl@10005000 {
++		pio: pinctrl@1000b000 {
+ 			compatible = "mediatek,mt8173-pinctrl";
+ 			reg = <0 0x1000b000 0 0x1000>;
+ 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
+@@ -575,7 +575,7 @@ mipi_tx1: mipi-dphy@10216000 {
+ 			status = "disabled";
+ 		};
+ 
+-		gic: interrupt-controller@10220000 {
++		gic: interrupt-controller@10221000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
+ 			interrupt-parent = <&gic>;
 -- 
 2.25.0.225.g125e21ebc7-goog
 
