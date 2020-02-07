@@ -2,88 +2,101 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD698C47409
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 13:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93535C04EB5
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 14:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B218220720
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 13:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D03321775
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 14:11:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiThLvRa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgBGNw6 (ORCPT
+        id S1726860AbgBGOLH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:52:58 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53548 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgBGNw5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 08:52:57 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: alyssa)
-        with ESMTPSA id 0478629567D
-Date:   Fri, 7 Feb 2020 08:52:51 -0500
-From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        ulf.hansson@linaro.org
-Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power
- domains
-Message-ID: <20200207135251.GA2952@kevin>
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-6-drinkcat@chromium.org>
+        Fri, 7 Feb 2020 09:11:07 -0500
+Received: from mail-io1-f42.google.com ([209.85.166.42]:41641 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgBGOLH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 09:11:07 -0500
+Received: by mail-io1-f42.google.com with SMTP id m25so2299624ioo.8;
+        Fri, 07 Feb 2020 06:11:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hwAVc8buUw/sXi4l5AGn5t8v/Of6qVn4+kM7CimiWbs=;
+        b=RiThLvRaLcY+VY1nLgFfR8Wc7ihO/J62UUWv3LUtuTcFUBZfZCQF9Db7FXUxLoxK1C
+         MvU9Z3ZTiELbj071a88cJKvn106vCNg7tFw+35XrbOrgfQ1m7ZBDZ9tlc1Mt+HV4TgfZ
+         xBsn5/FxnhZ7cZqQmjCc03kKSe0O1SJl7A+E41hp5Qg58Sj8/eixwP9rZrj2fJT5Ps2+
+         rHVvQYpZMaOqfhMCiKWYivGnJY+rV38VK1kfUfoWETqfaa2ZUU/U/feyqdsy0tTiWGtw
+         arb9C21VMXHDNZAlH6y/vlbRmDtE59FkdRmkyxayDazwYJuuUE8gs6/lfwQsR0SILMDV
+         0yew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hwAVc8buUw/sXi4l5AGn5t8v/Of6qVn4+kM7CimiWbs=;
+        b=h6E6I1tkZoBDrMGlVRcuvuI9SPyWwrZLajUI4uck9J4Bwlj0DtQVsUPwuleTMuwZy/
+         dI8OZ9BVkcnBLHe7aDWoTH1dTPbUJDS4fOAP0DzUv96dIcN0vT8w3lnEMvPFe2uafGrg
+         CImfn2GRUDaJhyYZBpSa/pgNo7BCmCp3KqjrRYUs9az1hpxTHs7Qr7F3ig+v7OK9T4yO
+         R0HWCLMAIgIdJENAgJWxdjjg37fk4w6u/GYSS4ttoTNQIbySC8Prdwbhw70IF5J+s5dI
+         KxT+H0Z/MJYxfY47D0LywxmqBLBq2uPVckeWr/FMMOrxn9/MOAUgZWvl0b1jQQeNepmw
+         sP7g==
+X-Gm-Message-State: APjAAAU20wMUaMv4VFp6BBuLL1VdJ5W4NvvbkaTgaBSBKSJLkEk3cIVD
+        UqcE62eEUzBip5R0w7SBQuRWsmTpvpa43YVSkLY=
+X-Google-Smtp-Source: APXvYqx3j7zH+QaAUuEIZqF5KOX67+KACiYeFAz54D60MjqYLdvguyv/8mRyGFXbS5DW7jigB5BO9WpWi0BjLQzMaTc=
+X-Received: by 2002:a5d:8c89:: with SMTP id g9mr3170240ion.178.1581084666491;
+ Fri, 07 Feb 2020 06:11:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
-Content-Disposition: inline
-In-Reply-To: <20200207052627.130118-6-drinkcat@chromium.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
+ <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com> <2f5abc857910f70faa119fea5bda81d7@codeaurora.org>
+In-Reply-To: <2f5abc857910f70faa119fea5bda81d7@codeaurora.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 7 Feb 2020 07:10:55 -0700
+Message-ID: <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
+>
+> On 2020-02-06 20:29, Jeffrey Hugo wrote:
+> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
+> > wrote:
+> >>
+> >> For a given byte clock, if VCO recalc value is exactly same as
+> >> vco set rate value, vco_set_rate does not get called assuming
+> >> VCO is already set to required value. But Due to GDSC toggle,
+> >> VCO values are erased in the HW. To make sure VCO is programmed
+> >> correctly, we forcefully call set_rate from vco_prepare.
+> >
+> > Is this specific to certain SoCs? I don't think I've observed this.
+>
+> As far as Qualcomm SOCs are concerned, since pll is analog and the value
+> is directly read from hardware if we get recalc value same as set rate
+> value, the vco_set_rate will not be invoked. We checked in our idp
+> device which has the same SOC but it works there since the rates are
+> different.
 
---VbJkn9YxBvnuCH5J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-> +	for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
-> +		if (!pfdev->pm_domain_devs[i])
-> +			break;
-
-I'm not totally familiar with this code, but should this be a break or
-just a continue?
-
-
---VbJkn9YxBvnuCH5J
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl49a6kACgkQ/v5QWgr1
-WA1bjxAAnLaxUD3zjRv8cz282ucvOS+zEVrsYCEtVHJXAXsVa6qH9W4rTswmRCnU
-0xfwIFqVmUch1QzZgxsqX42RrVZPNU20eN1qspQgEfXnIttVsTSzvgnEwHw22TCn
-nr/f+tKDnIRFzz4PZ9ywTyzLBJNYJwR00QoMKTg//184tvoAWDrm0k0h7iVx7X96
-mymCuf6jWpfB24TlTTvcXTCDUcoPVWZqJ1rppHtVV10E0a6VRKRURli75q6d4uBU
-T4yqc02JSUvyaOm8KF5LNce0FOGeEMiQFfEG4jRP1y5FYVuPOoJciB3Gtv7JSeaa
-Tg0PCBs7BYNbIlkLcxYyPjnwD60L5l1IxD5lKzF0DJJucuqoRQP1gpz5kZaLmEOj
-kvXi8P0Bx87ZaF2ghgX+l/IKFLiwHpLfE4BzG6VMLUSE/Nher4Tcvz7+3AbsTBhD
-pJ5tcommgF4KYUkEZ7rfNDD1G5f6h+c7yNMpeUOIadPyMY47NIpr3TBCpZJGiJ02
-nSwt3k/7Y5Hig0OZxypHVgqyBD3FycMPoQpelBC4/gZH4w59DKlE42VBqc8977m/
-dv1vv3QPS0w0RNKO4FnH+N63RnHovNNsUbNAsQkS7GldSGnbCQymGHXRniSdO7XT
-cbs14xJbzZ09gdyTGmybAsL1RKMT1YqGG1/3RSeS7bSOwyFX8Wg=
-=dMt0
------END PGP SIGNATURE-----
-
---VbJkn9YxBvnuCH5J--
+This doesn't seem to be an answer to my question.  What Qualcomm SoCs
+does this issue apply to?  Everything implementing the 10nm pll?  One
+specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
+so I'm interested to know what is the actual impact here.  I don't see
+an "IDP" SoC in the IP catalog, so I really have no idea what you are
+referring to.
