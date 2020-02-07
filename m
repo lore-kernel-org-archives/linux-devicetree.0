@@ -2,176 +2,109 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751FEC352A3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 01:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D231C352A3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 01:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568FC21741
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 01:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D431A214AF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 01:59:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ph/ceQJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgBGBPW (ORCPT
+        id S1727721AbgBGB73 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 20:15:22 -0500
-Received: from mx.socionext.com ([202.248.49.38]:2700 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgBGBPV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Feb 2020 20:15:21 -0500
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 07 Feb 2020 10:15:20 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 3B949180237;
-        Fri,  7 Feb 2020 10:15:20 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 7 Feb 2020 10:15:20 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id B18EA40365;
-        Fri,  7 Feb 2020 10:15:19 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 780A3120133;
-        Fri,  7 Feb 2020 10:15:19 +0900 (JST)
-Date:   Fri, 07 Feb 2020 10:15:19 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-In-Reply-To: <20200206175458.GA12845@bogus>
-References: <1580362048-28455-2-git-send-email-hayashi.kunihiko@socionext.com> <20200206175458.GA12845@bogus>
-Message-Id: <20200207101519.6F78.4A936039@socionext.com>
+        Thu, 6 Feb 2020 20:59:29 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35024 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727697AbgBGB73 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 20:59:29 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b17so1010461wmb.0
+        for <devicetree@vger.kernel.org>; Thu, 06 Feb 2020 17:59:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GxnmQXYbPrwwDf1YSEYt6X6fG7RNrO9V3k1o149cooA=;
+        b=Ph/ceQJBkbfcaN2157vp1LsLvms4t8gRLjruxE0+ZYUYxSz9CF4i6n3ysHGgZXvOnj
+         nXoUAoKnAVWL15mrTFqyDJO/Qm1F+EXvHDFvCbnVigDDqPXhqJ2QF2pLpsOKC7caM279
+         u/IkyIqsM6YZVobJaeS2dGFbatI/q7BDqEvcDJtvZO0MfMa64s3dpwCgKMy8C7tCyiqh
+         /qzJYn9ueunXKKYkPP1qgmNiQHgZ9HOY+0mC0f6gmqf5+FHsLCTxfLgJwqsKPKtH6COj
+         cNi/UBuBbNuYsxKZeuNXh0113n5iwRQjlCCph8NVd5AAn8LjaBaXAbk1yi2VJtjcXO+V
+         pYfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GxnmQXYbPrwwDf1YSEYt6X6fG7RNrO9V3k1o149cooA=;
+        b=YxwDNGtbhJg4LwNvJFrJblyQhES7acNihIplgAqkOkrQfPLsnwN8oVj5pmuyanPjjo
+         ponSX8o2JKBWT51DVcOKxMZz03UJWsu3su2Erq0CJUzFCARmkM3HXmHvTC/v218yxOwE
+         7ASLwOVG1Pq9lM5Qrtnq7K+HPZpylm+vErZP0tGQOVNHqGIYQ3gOdVZpIcbQE/nRtVtH
+         LlCYOw9qN/osQ9kEmHmQy6xiWGlo2Boi41l13Gi7F36WP5CbCS9SYmiXrv2d6UbZdmC4
+         LxfFIQN27DnwxFTKu/hZ0rr7jAVSKTt4D9b074CLE65AEXTcmBWv2BTx7jWe5AowgPo4
+         ibNg==
+X-Gm-Message-State: APjAAAWQjCtu/ih1dTZ4H6PutFdjryRWvF1CnGo4kqOIzS0WU2p2Lpjj
+        or6+g/0EsI4DAM90sWyBnvNImQ==
+X-Google-Smtp-Source: APXvYqzRCnHwCvNpDLkgCsTiWvatIyOa3bRtPAr2/syZ37Q0Ryuo260neou5/AukdGISrddCaXKjJg==
+X-Received: by 2002:a1c:ded7:: with SMTP id v206mr1007653wmg.106.1581040767193;
+        Thu, 06 Feb 2020 17:59:27 -0800 (PST)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id a62sm1490095wmh.33.2020.02.06.17.59.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 17:59:26 -0800 (PST)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH v4 16/18] arm64: dts: qcom: qcs404-evb: Raise vreg_l12_3p3 minimum voltage
+Date:   Fri,  7 Feb 2020 01:59:05 +0000
+Message-Id: <20200207015907.242991-17-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200207015907.242991-1-bryan.odonoghue@linaro.org>
+References: <20200207015907.242991-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Rather than set the minimum microvolt for this regulator in the USB SS PHY
+driver, set it in the DTS.
 
-Thank you for reviewing.
-Your comments are helpful as I'm not familiar with the new bindings yet.
-
-On Thu, 6 Feb 2020 17:54:58 +0000 <robh@kernel.org> wrote:
-
-> On Thu, Jan 30, 2020 at 02:27:27PM +0900, Kunihiko Hayashi wrote:
-> > Add devicetree binding documentation for external DMA controller
-> > implemented on Socionext UniPhier SoCs.
-> > 
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > ---
-> >  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 57 ++++++++++++++++++++++
-> >  1 file changed, 57 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> > new file mode 100644
-> > index 00000000..32abf18
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> > @@ -0,0 +1,57 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> 
-> Dual license new bindings:
-> 
-> (GPL-2.0-only OR BSD-2-Clause)
-
-I'll replace with it.
-
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/socionext,uniphier-xdmac.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Socionext UniPhier external DMA controller
-> > +
-> > +description: |
-> > +  This describes the devicetree bindings for an external DMA engine to perform
-> > +  memory-to-memory or peripheral-to-memory data transfer capable of supporting
-> > +  16 channels, implemented in Socionext UniPhier SoCs.
-> > +
-> > +maintainers:
-> > +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > +
-> > +allOf:
-> > +  - $ref: "dma-controller.yaml#"
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: socionext,uniphier-xdmac
-> 
-> You can drop 'items' for a single item.
-
-I see.
-I found some documents didn't have expression for a compatible string.
-
-> > +
-> > +  reg:
-> > +    minItems: 1
-> > +    maxItems: 2
-> 
-> You need to say what each entry is:
-> 
-> items:
->   - description: ...
->   - description: ...
-
-Surely there must be descriotions here.
-
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  "#dma-cells":
-> > +    const: 2
-> > +    description: |
-> > +      DMA request from clients consists of 2 cells:
-> > +        1. Channel index
-> > +        2. Transfer request factor number, If no transfer factor, use 0.
-> > +           The number is SoC-specific, and this should be specified with
-> > +           relation to the device to use the DMA controller.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - "#dma-cells"
-> 
-> Add:
-> 
-> additionalProperties: false
-
-I'll add it.
-
-> > +
-> > +examples:
-> > +  - |
-> > +    xdmac: dma-controller@5fc10000 {
-> > +        compatible = "socionext,uniphier-xdmac";
-> > +        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
-> > +        interrupts = <0 188 4>;
-> > +        #dma-cells = <2>;
-> > +        dma-channels = <16>;
-> 
-> Not documented. You need at least 'dma-channels: true' to indicate 
-> you're using this. But you should be able to have some constraints such 
-> as 'maximum: 16'.
-
-I forgot to document 'dma-channels'. I'll add it.
-
-Thank you,
-
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
-Best Regards,
-Kunihiko Hayashi
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 01ef59e8e5b7..0fff50f755ef 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -199,7 +199,7 @@ vreg_l11_sdc2: l11 {
+ 		};
+ 
+ 		vreg_l12_3p3: l12 {
+-			regulator-min-microvolt = <2968000>;
++			regulator-min-microvolt = <3050000>;
+ 			regulator-max-microvolt = <3300000>;
+ 		};
+ 
+-- 
+2.25.0
 
