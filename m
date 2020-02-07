@@ -2,99 +2,103 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4D4C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 17:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257BEC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 17:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9DB21741
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 17:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1702082E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 17:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgBGRIU (ORCPT
+        id S1726951AbgBGRZN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:08:20 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:57065 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgBGRIU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 12:08:20 -0500
-Received: from mail-lj1-f174.google.com ([209.85.208.174]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MN5W7-1jGPTj1UO5-00J5cC; Fri, 07 Feb 2020 18:08:18 +0100
-Received: by mail-lj1-f174.google.com with SMTP id d10so42636ljl.9;
-        Fri, 07 Feb 2020 09:08:18 -0800 (PST)
-X-Gm-Message-State: APjAAAVG+HQjcCudOoMKOtklYFVo0H2f2va+Q5TUdse1BQZJvhZ/4iRd
-        HBxOuhz1sy5wNEtN/aj4CSLlJr1jINKtQ5Uxxqg=
-X-Google-Smtp-Source: APXvYqw9u3WcxbpVw6rO3j9Ozu9XMB+H2m1FoTnlA7ltWTv2RF4oTSzNzORrzx5UZNelPR7iZjN33BiBam2VYEndX7Q=
-X-Received: by 2002:a2e:5056:: with SMTP id v22mr142178ljd.164.1581095297786;
- Fri, 07 Feb 2020 09:08:17 -0800 (PST)
+        Fri, 7 Feb 2020 12:25:13 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48986 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726874AbgBGRZN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Feb 2020 12:25:13 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5B9AAAF57;
+        Fri,  7 Feb 2020 17:25:11 +0000 (UTC)
+Message-ID: <9b0f8daeb12ad4e5be74ff93e64c38087af199cf.camel@suse.de>
+Subject: Re: [PATCH] overlays: dwc2: Increase RX FIFO size
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Pavel Hofman <pavel.hofman@ivitera.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Date:   Fri, 07 Feb 2020 18:25:09 +0100
+In-Reply-To: <43db1d9c-6fa2-88bd-11df-6ae2f48a4ac9@ivitera.com>
+References: <43db1d9c-6fa2-88bd-11df-6ae2f48a4ac9@ivitera.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-yTpRgBYomwJsP1mAJVk/"
+User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
-References: <20200203095325.24c3ab1c@cakuba.hsd1.ca.comcast.net>
- <C11859E1-BE71-494F-81E2-9B27E27E60EE@xenosoft.de> <87tv441gg1.fsf@mpe.ellerman.id.au>
- <42888ad2-71e0-6d03-ddff-3de6f0ee5d43@xenosoft.de>
-In-Reply-To: <42888ad2-71e0-6d03-ddff-3de6f0ee5d43@xenosoft.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 7 Feb 2020 17:08:06 +0000
-X-Gmail-Original-Message-ID: <CAK8P3a39L5i4aEbKe9CiW6unbioL=T8GqXC007mXxUu+_j84FA@mail.gmail.com>
-Message-ID: <CAK8P3a39L5i4aEbKe9CiW6unbioL=T8GqXC007mXxUu+_j84FA@mail.gmail.com>
-Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
- ioctl for device
-To:     Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        DTML <devicetree@vger.kernel.org>,
-        Darren Stevens <darren@stevens-zone.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@ozlabs.org, "contact@a-eon.com" <contact@a-eon.com>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
-        mad skateman <madskateman@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Christian Zigotzky <info@xenosoft.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:v2NzRURWLNpNd5Vze0NOfOG4ZOZI6pKd6oWf7SO7mXuEZ0uoq11
- KIi7GIY9VO6IemzyHMrVkk3L/+sEJALYga7ggOoqu41gIyuPangzZ85ag2fGOYOLXfj/V3B
- KM6ZABN5SojVwgP5IyTRC4koA0GQgVTFfleZnoZsj4VbZZ7kh94akKt2pa29f1yTbXEs452
- +cxQF9hCDz6ciVAl4ia9Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:16TBwXtvMN0=:qj5wbBvyRHNYDWfCZ3BwpA
- qStdA9EFKDLUeL/ZGWvDz3mniWDrTvEBPhJtQeL4qy4I94TEOIYFuC2MVyZkVHqYLw7u78Cqt
- oUIM/FNGMD7OMxizSxJpRCUebYacCpHVdGA/ZDCoUZIji0ijFQj2FiHsKIqKAoJFuVAOVZwX1
- ukZ1z2S9FWHJxzOfTgBOLWdgkNIiTjLRqTJi+ofrTBaEghh2ApLBgT3ro2aU21Nw8/6jMJ5nr
- AKAdr29Mk8Pu5FWZYUUvSKHgyhcTknjtn+LzUv6TiCYA96rm7vn+yofxCZFK51BQ85SAWObdx
- WggGIUnZYkcJWmRvZcMA7zeuWgqBfsLV+0dAgJtz+ls6WBtQkOxT/MGksnJJ1u1OMi4wa4+cY
- DN2gjHIX0uHWJ/Aw16Hi3BhMLwp2vpFyKxJ4tUdGWC3I5xR0AR3HZ0DcUnBabmiHCpw8Qj+9A
- 3Epyj6TjxJKbvGvnrJKH84SW/12CgsyKsMi50gP2+2x4bFSXtFuRQmm/sm+om5wBxGn/bxSUc
- q0tCu5ptcBcD6M+tq3H2UiFb+9FvrYnDEJNVltp533eKm+NrR4CuuryA51DzWu/wW1o2TFzoG
- 05GEfPMRwlR5yFfgZ/4CNIeN0wOueVJZIu2K1mQXq8oUZ1gt5bobybPl05+abGodTrqZRYUW7
- yB97MwPfdj6GA82JJ8jETSqnFeMvY6zk8HCcKjz+Nyl3y67qTgJg/hwx6Z3PNcGgV9MGdI/cD
- CzvbKtaDGXpKZBx7iAQxr5wasH69V0xCge4Zn/fexNjse+iD38J+9CcWuTYX/pN08DLBtSdsc
- EJtiJltwArGHWfypdLLs2zJolInjMeNS+sq6kivFpOn4tbiPdw=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 3:34 PM Christian Zigotzky
-<chzigotzky@xenosoft.de> wrote:
->
-> Hello Arnd,
->
-> We regularly compile and test Linux kernels every day during the merge
-> window. Since Thursday last week we have very high CPU usage because of
-> the avahi daemon on our desktop Linux systems (Ubuntu, Debian etc). The
-> avahi daemon produces a lot of the following log message. This generates
-> high CPU usage.
->
-> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
->
-> strace /usr/sbin/avahi-daemon:
->
 
-Thanks a lot for the detailed analysis, with this I immediately saw
-what went wrong in my
-original commit and I sent you a fix. Please test to ensure that this
-correctly addresses
-the problem.
+--=-yTpRgBYomwJsP1mAJVk/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-        Arnd
+Hi Pavel,
+Could you change the patch title to something like this (see other patches
+changing the device-trees, you'll see it's the common pattern):
+
+	ARM: dts: bcm283x: increase dwc2's RX FIFO size
+
+On Fri, 2020-02-07 at 17:30 +0100, Pavel Hofman wrote:
+> The previous version of the dwc2 overlay set the RX FIFO size to
+> 256 4-byte words. This sounds large enough for a 1024 byte packet (the
+> largest isochronous high speed packet allowed), but it doesn't take
+> into account some extra space needed by the hardware.
+>=20
+> Minas Harutyunyan at Synopsys (the source of the DWC OTG design)
+> came up with a more correct value, 301, but since there is spare packet
+> RAM this can be increased to 558 to allow two packets per frame.
+
+I suggest making a short summary of your github explanation[1] instead of j=
+ust
+citing Minas. On one hand Minas' memory might get fuzzy after some time (or=
+ not
+be able to access the documentation) and...
+
+> See: https://github.com/raspberrypi/linux/issues/3447
+
+...you're assuming this link will be always available. Which is unlikely. A=
+fter
+properly explaining the issue, you won't need the link anyway. Ultimately a
+patch description should be as self-contained/self-explanatory as possible.
+
+Other than that the patch looks good.
+Thanks!
+Nicolas
+
+[1] https://github.com/raspberrypi/linux/issues/3447#issuecomment-581815066
+
+
+--=-yTpRgBYomwJsP1mAJVk/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl49nXUACgkQlfZmHno8
+x/64+Af9GVsNsm3NPhMpW0qCLhpsj/VtaeNiM9S+OrLw/5WVKaOalPDpGp+w7qrk
+bZ5VPmFCpIxjJX0fY6lnJWuOPlrMAi7w9PL+h3WFtSqmhRDELUktdg3cnvLYxaxm
+SykV6fdYnhB5u4YXRIky9Ox+Whz95P3LDg67IZE7PX/QQTbYm8+slwdkkTRWZSuZ
+8eb1J4rSDxPcE7rY7uPLNJVvMsFL6kPZiEqX4VvdIbwZ+5kJiyELEs/FbBKQlxFK
+dS8Xkc0VoS9UinK2i+M27haWJ39Z26Bgl7DWNEV4OSf4URECcLPwt/f9Lp5s4izo
+RCM/CL9ocnu6cS1723xHouvaYbKnKw==
+=nK9S
+-----END PGP SIGNATURE-----
+
+--=-yTpRgBYomwJsP1mAJVk/--
+
