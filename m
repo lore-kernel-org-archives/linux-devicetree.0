@@ -2,113 +2,145 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24A7C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 11:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E6EC352A2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 11:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B6B217BA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 11:06:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RiBDDr5x"
+	by mail.kernel.org (Postfix) with ESMTP id 92DA7222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 11:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581073795;
+	bh=YtjeGCn68V/W0a9LzM3q6bLhd/qtIlFq6rULUBv7KcU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MYLX8edpgAahGy1JcEkrDT1PoqAW16IOyiN0P1qHcD7OmW4aWq3z4vuDh9BqffRXx
+	 MP1Y4KatvTexotMVPXVxQA03JI/jCFHrhoPfrYBjfg3INJ6JtzrZxaRw9PtG0ooKmI
+	 xwAk76kHVAZ1AQO+QEe45wnlQKqL62Cw8TyRbbOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgBGLGd (ORCPT
+        id S1726867AbgBGLJw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:06:33 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17405 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGLGd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 06:06:33 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3d44aa0000>; Fri, 07 Feb 2020 03:06:18 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Feb 2020 03:06:32 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Feb 2020 03:06:32 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 11:06:27 +0000
-CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH v2 3/9] ASoC: tegra: add Tegra210 based DMIC driver
-To:     Dmitry Osipenko <digetx@gmail.com>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-4-git-send-email-spujar@nvidia.com>
- <9ada4090-169e-0767-db5d-739f6e621812@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <3e89e75d-2f5a-dc42-98f7-8e1262afe380@nvidia.com>
-Date:   Fri, 7 Feb 2020 16:36:24 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 7 Feb 2020 06:09:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbgBGLJv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Feb 2020 06:09:51 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D25320720;
+        Fri,  7 Feb 2020 11:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581073790;
+        bh=YtjeGCn68V/W0a9LzM3q6bLhd/qtIlFq6rULUBv7KcU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Tk5hFyqLF7Lwyb8GIAxvdOqUCLSt9+nWA/f58u7fk6oB0Uk5vh/77OrtCccUaSKJi
+         tUUERm4UmMVStUrK6mUeUxXImz5fIPdgFMw3WG8YgZmKrBb0JRakYr/lkrAbm2k2VY
+         8XbjT4SCQekNlRz0tiV3Hq13GBeY2hpo0nVJDqTU=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j01W8-003W5T-RP; Fri, 07 Feb 2020 11:09:48 +0000
 MIME-Version: 1.0
-In-Reply-To: <9ada4090-169e-0767-db5d-739f6e621812@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581073578; bh=3R4H2IZWw7cTPGDMdPoqMKekUyJM+BtKnjJ790Z/Zqo=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=RiBDDr5xvmcO6DXh82HHBPn9OlvxmrN84Ur8NAesELWcxhWHETz2Qpwo349cijTe1
-         QjoUYMgDdWdh+navso0UWpxkqK07SM3YLwwJm4vxYcuSF+FZzgNhr0GxxrFKsa080o
-         oVYcP/MXaPYi+9wg0P4bQAW4N16lOmYMdVyIsroHaaFyr2nswdnmJ8EAXbJKRmN9f6
-         Q8MZ026nkP9lw/HMi9CIG4rQYQ1+eOi80nooxaG+W8IFZ/wHsktWY02gQiFft3mIYx
-         t7GXZpdxMgIR48hbR4euPfqJgOytS2V7I9ppkWKhmxHLBqMhe8s2OJOE81qaz+61nj
-         5QJCcY9AKwGLA==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 07 Feb 2020 11:09:48 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        f.fainelli@gmail.com, viresh.kumar@linaro.org,
+        linux-kernel@vger.kernel.org, dl-linux-imx <linux-imx@nxp.com>,
+        andre.przywara@arm.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+In-Reply-To: <AM0PR04MB44815F11C94E5F35AE7B0B21881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
+ <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
+ <7875e2533c4ba23b8ca0a2a296699497@kernel.org> <20200207104736.GB36345@bogus>
+ <5a073c37e877d23977e440de52dba6e0@kernel.org>
+ <AM0PR04MB44815F11C94E5F35AE7B0B21881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Message-ID: <ce775af0803d174fa2ad5dfc797592d9@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: peng.fan@nxp.com, sudeep.holla@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, andre.przywara@arm.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2020-02-07 11:00, Peng Fan wrote:
+>> Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc 
+>> transports
+>> 
+>> On 2020-02-07 10:47, Sudeep Holla wrote:
+>> > On Fri, Feb 07, 2020 at 10:08:36AM +0000, Marc Zyngier wrote:
+>> >> On 2020-02-06 13:01, peng.fan@nxp.com wrote:
+>> >> > From: Peng Fan <peng.fan@nxp.com>
+>> >> >
+>> >> > SCMI could use SMC/HVC as tranports, so add into devicetree binding
+>> >> > doc.
+>> >> >
+>> >> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>> >> > ---
+>> >> >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
+>> >> >  1 file changed, 3 insertions(+), 1 deletion(-)
+>> >> >
+>> >> > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+>> >> > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+>> >> > index f493d69e6194..03cff8b55a93 100644
+>> >> > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+>> >> > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+>> >> > @@ -14,7 +14,7 @@ Required properties:
+>> >> >
+>> >> >  The scmi node with the following properties shall be under the
+>> >> > /firmware/ node.
+>> >> >
+>> >> > -- compatible : shall be "arm,scmi"
+>> >> > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
+>> >> >  - mboxes: List of phandle and mailbox channel specifiers. It
+>> >> > should contain
+>> >> >  	  exactly one or two mailboxes, one for transmitting messages("tx")
+>> >> >  	  and another optional for receiving the notifications("rx") if
+>> >> > @@ -25,6 +25,8 @@ The scmi node with the following properties shall
+>> >> > be under the /firmware/ node.
+>> >> >  	  protocol identifier for a given sub-node.
+>> >> >  - #size-cells : should be '0' as 'reg' property doesn't have any size
+>> >> >  	  associated with it.
+>> >> > +- arm,smc-id : SMC id required when using smc transports
+>> >> > +- arm,hvc-id : HVC id required when using hvc transports
+>> >> >
+>> >> >  Optional properties:
+>> >>
+>> >> Not directly related to DT: Why do we need to distinguish between SMC
+>> >> and HVC?
+>> >
+>> > IIUC you want just one property to get the function ID ? Does that
+>> > align with what you are saying ? I wanted to ask the same question and
+>> > I see no need for 2 different properties.
+>> 
+>> Exactly. Using SMC or HVC should come from the context, and there is 
+>> zero
+>> value in having different different IDs, depending on the conduit.
+>> 
+>> We *really* want SMC and HVC to behave the same way. Any attempt to
+>> make them different should just be NAKed.
+> 
+> ok. Then just like psci node,
+> Add a "method" property for each protocol, and add "arm,func-id" to
+> indicate the ID.
+> 
+> How about this?
 
+Or rather just a function ID, full stop. the conduit *MUST* be inherited
+from the PSCI context.
 
-On 2/6/2020 10:23 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
->> +static const struct reg_default tegra210_dmic_reg_defaults[] =3D {
->> +     { TEGRA210_DMIC_TX_INT_MASK, 0x00000001},
->> +     { TEGRA210_DMIC_TX_CIF_CTRL, 0x00007700},
->> +     { TEGRA210_DMIC_CG, 0x1},
->> +     { TEGRA210_DMIC_CTRL, 0x00000301},
->> +     /* Below enables all filters - DCR, LP and SC */
->> +     { TEGRA210_DMIC_DBG_CTRL, 0xe },
->> +     /* Below as per latest POR value */
->> +     { TEGRA210_DMIC_DCR_BIQUAD_0_COEF_4, 0x0},
->> +     /* LP filter is configured for pass through and used to apply gain=
- */
->> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_0, 0x00800000},
->> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_1, 0x0},
->> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_2, 0x0},
->> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_3, 0x0},
->> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_4, 0x0},
->> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_0, 0x00800000},
->> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_1, 0x0},
->> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_2, 0x0},
->> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_3, 0x0},
->> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_4, 0x0},
->> +};
-> I'd add a space on the right side of `}`, for consistency with the left.
-
-Do you mean like this?
-{ TEGRA210_DMIC_TX_INT_MASK, 0x00000001 },
-{ TEGRA210_DMIC_TX_CIF_CTRL, 0x00007700 },
- =C2=A0=C2=A0=C2=A0 . . .
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
