@@ -2,130 +2,110 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4739AC352A2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 10:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F66C352A2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 10:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197842082E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 10:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="glNHT850"
+	by mail.kernel.org (Postfix) with ESMTP id 1D91B206CC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 10:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgBGKlR (ORCPT
+        id S1726819AbgBGKrk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 05:41:17 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:21853 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726798AbgBGKlR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 05:41:17 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581072076; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=hLgWxsUO0f7PfEGVtDAhwFiQbp4XE3t/VhLuSCZCzBA=; b=glNHT850+x2LiwZ9ub83QoTBbyLaO4HCXV8YsY1PUXqMAj3o+l3X57ED1x5DSw1tZNEGo07U
- W2QM9Dl2X3uRCf4V9/6uFGXGvO60QRXbf0O59KH194vfvy4Qi5G5pwZybiAmeb1ZfvY7yj23
- 4L4cVYN/C3ouofGGudYkzjPKQDc=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3d3ec8.7f4ec8e2ded8-smtp-out-n02;
- Fri, 07 Feb 2020 10:41:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 94106C43383; Fri,  7 Feb 2020 10:41:12 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D3B3C433CB;
-        Fri,  7 Feb 2020 10:41:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D3B3C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>,
-        robh@kernel.org
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 2/2]  clk: qcom: gpucc: Add support for GX GDSC for SC7180
-Date:   Fri,  7 Feb 2020 16:09:19 +0530
-Message-Id: <1581071959-29492-2-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581071959-29492-1-git-send-email-tdas@codeaurora.org>
-References: <1581071959-29492-1-git-send-email-tdas@codeaurora.org>
+        Fri, 7 Feb 2020 05:47:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:38734 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbgBGKrk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Feb 2020 05:47:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3CC130E;
+        Fri,  7 Feb 2020 02:47:39 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 409953F52E;
+        Fri,  7 Feb 2020 02:47:38 -0800 (PST)
+Date:   Fri, 7 Feb 2020 10:47:36 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     peng.fan@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, f.fainelli@gmail.com,
+        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, andre.przywara@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+Message-ID: <20200207104736.GB36345@bogus>
+References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
+ <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
+ <7875e2533c4ba23b8ca0a2a296699497@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7875e2533c4ba23b8ca0a2a296699497@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
- Most of the time the CPU should not be touching the GX domain on the
- GPU
- except for a very special use case when the CPU needs to force the GX
- headswitch off. Add a dummy enable function for the GX gdsc to simulate
- success so that the pm_runtime reference counting is correct.
+On Fri, Feb 07, 2020 at 10:08:36AM +0000, Marc Zyngier wrote:
+> On 2020-02-06 13:01, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > SCMI could use SMC/HVC as tranports, so add into devicetree
+> > binding doc.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > index f493d69e6194..03cff8b55a93 100644
+> > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > @@ -14,7 +14,7 @@ Required properties:
+> >
+> >  The scmi node with the following properties shall be under the
+> > /firmware/ node.
+> >
+> > -- compatible : shall be "arm,scmi"
+> > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
+> >  - mboxes: List of phandle and mailbox channel specifiers. It should
+> > contain
+> >  	  exactly one or two mailboxes, one for transmitting messages("tx")
+> >  	  and another optional for receiving the notifications("rx") if
+> > @@ -25,6 +25,8 @@ The scmi node with the following properties shall be
+> > under the /firmware/ node.
+> >  	  protocol identifier for a given sub-node.
+> >  - #size-cells : should be '0' as 'reg' property doesn't have any size
+> >  	  associated with it.
+> > +- arm,smc-id : SMC id required when using smc transports
+> > +- arm,hvc-id : HVC id required when using hvc transports
+> >
+> >  Optional properties:
+>
+> Not directly related to DT: Why do we need to distinguish between SMC and
+> HVC?
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/gpucc-sc7180.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+IIUC you want just one property to get the function ID ? Does that align
+with what you are saying ? I wanted to ask the same question and I see
+no need for 2 different properties.
 
-diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
-index ec61194..3b29f19 100644
---- a/drivers/clk/qcom/gpucc-sc7180.c
-+++ b/drivers/clk/qcom/gpucc-sc7180.c
-@@ -172,8 +172,45 @@ static struct gdsc cx_gdsc = {
- 	.flags = VOTABLE,
- };
+> Other SMC/HVC capable protocols are able to pick the right one based on the
+> PSCI conduit.
+>
 
-+/*
-+ * On SC7180 the GPU GX domain is *almost* entirely controlled by the GMU
-+ * running in the CX domain so the CPU doesn't need to know anything about the
-+ * GX domain EXCEPT....
-+ *
-+ * Hardware constraints dictate that the GX be powered down before the CX. If
-+ * the GMU crashes it could leave the GX on. In order to successfully bring back
-+ * the device the CPU needs to disable the GX headswitch. There being no sane
-+ * way to reach in and touch that register from deep inside the GPU driver we
-+ * need to set up the infrastructure to be able to ensure that the GPU can
-+ * ensure that the GX is off during this super special case. We do this by
-+ * defining a GX gdsc with a dummy enable function and a "default" disable
-+ * function.
-+ *
-+ * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
-+ * driver. During power up, nothing will happen from the CPU (and the GMU will
-+ * power up normally but during power down this will ensure that the GX domain
-+ * is *really* off - this gives us a semi standard way of doing what we need.
-+ */
-+static int gx_gdsc_enable(struct generic_pm_domain *domain)
-+{
-+	/* Do nothing but give genpd the impression that we were successful */
-+	return 0;
-+}
-+
-+static struct gdsc gx_gdsc = {
-+	.gdscr = 0x100c,
-+	.clamp_io_ctrl = 0x1508,
-+	.pd = {
-+		.name = "gpu_gx_gdsc",
-+		.power_on = gx_gdsc_enable,
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = CLAMP_IO,
-+};
-+
- static struct gdsc *gpu_cc_sc7180_gdscs[] = {
- 	[CX_GDSC] = &cx_gdsc,
-+	[GX_GDSC] = &gx_gdsc,
- };
+This make it clear, but I am asking to  be sure.
 
- static struct clk_regmap *gpu_cc_sc7180_clocks[] = {
+> This is how the Spectre mitigations work already. Why is that any different?
+>
+
+I don't see any need for it to be different.
+
 --
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+Regards,
+Sudeep
