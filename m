@@ -5,76 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C166C352A2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 02:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EB4C35247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 02:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1D9214AF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 02:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29843214AF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 02:00:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n0b0tFSc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xgg6woM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgBGCAX (ORCPT
+        id S1726956AbgBGCAh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:00:23 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52609 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727549AbgBGB7R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 20:59:17 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so941056wmc.2
-        for <devicetree@vger.kernel.org>; Thu, 06 Feb 2020 17:59:15 -0800 (PST)
+        Thu, 6 Feb 2020 21:00:37 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37952 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727538AbgBGB7P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 20:59:15 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a9so966634wmj.3
+        for <devicetree@vger.kernel.org>; Thu, 06 Feb 2020 17:59:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aNxCHFze4kscTaJVwGz/JVtOi18g0Hoekh9gPln3UFg=;
-        b=n0b0tFScXxh/TS5PP1Mjw7R+D+EAZGLgBEKT0FxStNFAn8Nc9xccFod2PH3U8Rc4AR
-         L/qSjA/bWgid/UyG9hXIAULw1eleyfotFHRflHijOAVyn5+Ojrl865FHtlUe7ts6CoYU
-         UTadayntaT0A6YVjNSBouLBaDCbTQ41/zA58K3IZFZfu5Eb+dqopNZKm2dKO0ob/k8UJ
-         XlQWnj4rDHL4KA9SATN9JNnOLB1tOAiz+VGCor3iHPhWR2/x1nPf4Q5HkbVMShZ8rxaU
-         9D7cfKt1N3hxcZR4Suivy2ti5p1e5a42FKJi9YbvNZOO/Qx/xaBtIrcY/RN+SJ+ALB0p
-         +m2g==
+        bh=uiB9oi1d6cb2tytj3R3C6lZe2r0DaI1xlBmtpgD+bqM=;
+        b=Xgg6woM57hmJr4iXfd4nkjm6o9xnLTD5nNVaNQ7ArA1wNVbeYlBKb93436H+62szG3
+         vlEK74d/uejUOdmXOI38yX7dPBlsr5m9n2Yu/ho8IyKdErxAHcR1w69cqVMICX/eiVYf
+         I5RH9ei0QDjyN1h1eR3VKhFWp404gnfUNk4uAAtUbFHhRgp7XCj6eVKJ6GJw+4yxubOX
+         QNDTeO3Wc1+Qq+Vki+DQg6DZoBIxI+kZbOAeodk867NCaVwR/pjZJiVXYFVU4VRUh5tU
+         ZrqH9etazqXvVEa/AI+osvZQ79GNpcAurAE0CROltbdiraPgrIwPfizJS21O+2jLMaBU
+         NNtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aNxCHFze4kscTaJVwGz/JVtOi18g0Hoekh9gPln3UFg=;
-        b=DRPwaJu0poyvbjDQwsaeTCiyMokqOcQebY3bT0OBnTYLXyh4oyEZeb/uogON/kzthu
-         WHz++6vlTz/kRoB2LhfmT1KwkmvRA/0uJtUz9gLp9pJEw+jSZcA/DMIxqZnxznh2y1/4
-         74ukLx7I5/tHVBO9xWZ+ZXPcumVJBNi1lXntKwLXs2MpQTGH8nAePwies0sHvfzzdK3t
-         5XUjfzNkiY4kr7wZn9MrEZSnu75+X45C4QRihNAhUyHF4Tun87fiqyeSKVu0skAMf9FX
-         PRGhR878RxIwya+E7H92fVLKYWJeGUYKdMXQvKcuKLY2LJiAs4FnXHmffMX5V9A/pJbo
-         CmfQ==
-X-Gm-Message-State: APjAAAWaWp+qmy7dohodlIxN7tjKaNS/3YLmhuD8oEAETZ+otUrfCCqA
-        jFKo5/uGd2gYcHG/v0DwNLWLAw==
-X-Google-Smtp-Source: APXvYqyqPgIavNh0dhBuzZyltyOc0ygm0j/3naAUDTzQsuYyWqTXvUQVXfC711k6f7z15UxgNYH5RQ==
-X-Received: by 2002:a7b:c3d1:: with SMTP id t17mr947048wmj.27.1581040754682;
-        Thu, 06 Feb 2020 17:59:14 -0800 (PST)
+        bh=uiB9oi1d6cb2tytj3R3C6lZe2r0DaI1xlBmtpgD+bqM=;
+        b=AIgxcY4AY5k/kSpL9mam0/jDiehuaRbSQA8A/87PNiA7wZc1m4whfku+PQkVJY63Rl
+         dmTgSVV9co9kDc+2FFWvIq49zp++HUkyKsp17lQOUvhiZ9Wh6WXr3Wje0rV/btJOoT7V
+         bpMlBiQFP1YN3InCXl5bpUXi1N1IC8iMOYlakQTspyRR0ydIBWzHvuQXZR208geuNwv7
+         UTr0MMXOZH/+RdQhoCayK3b61NqZxZlp7XFQTQn119VzMAMb19iVYZFlWZXljDD8rfPa
+         byTz5g6tUbP2xFHZHwcs2/lyEpWE/CbjFC5RFw1dxp/7unT8o1UfYHr40ntMfus0dw4V
+         WtMg==
+X-Gm-Message-State: APjAAAWeJ8VfevcfpMaqavE5dCIOuOPi4sbFGGf8P1o21Z5FIdUHakGv
+        bTGfu+AFjBZr7ziEJ1jdmNKhczBle5Q=
+X-Google-Smtp-Source: APXvYqzZZokcswbNueE39cC9uHE92/zHoeVvkv70eaKx0sDTqO88vw1M81GS0hgjdK38X4DcmDClVw==
+X-Received: by 2002:a05:600c:145:: with SMTP id w5mr902318wmm.157.1581040751787;
+        Thu, 06 Feb 2020 17:59:11 -0800 (PST)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id a62sm1490095wmh.33.2020.02.06.17.59.13
+        by smtp.gmail.com with ESMTPSA id a62sm1490095wmh.33.2020.02.06.17.59.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 17:59:14 -0800 (PST)
+        Thu, 06 Feb 2020 17:59:11 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
         bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, Yu Chen <chenyu56@huawei.com>,
+Cc:     linux-kernel@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        devicetree@vger.kernel.org,
         Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH v4 06/18] usb: dwc3: Registering a role switch in the DRD code.
-Date:   Fri,  7 Feb 2020 01:58:55 +0000
-Message-Id: <20200207015907.242991-7-bryan.odonoghue@linaro.org>
+Subject: [PATCH v4 04/18] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
+Date:   Fri,  7 Feb 2020 01:58:53 +0000
+Message-Id: <20200207015907.242991-5-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200207015907.242991-1-bryan.odonoghue@linaro.org>
 References: <20200207015907.242991-1-bryan.odonoghue@linaro.org>
@@ -85,166 +79,119 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-The Type-C drivers use USB role switch API to inform the
-system about the negotiated data role, so registering a role
-switch in the DRD code in order to support platforms with
-USB Type-C connectors.
+Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed PHY. This PHY
+appears in a number of SoCs on various flavors of 20nm and 28nm nodes.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+definitions.
+
+[bod: converted to yaml format]
+
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: linux-usb@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
 Cc: devicetree@vger.kernel.org
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- drivers/usb/dwc3/core.h |  3 ++
- drivers/usb/dwc3/drd.c  | 75 ++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 77 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 83 +++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 77c4a9abe365..a99e57636172 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -25,6 +25,7 @@
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
- #include <linux/usb/otg.h>
-+#include <linux/usb/role.h>
- #include <linux/ulpi/interface.h>
- 
- #include <linux/phy/phy.h>
-@@ -953,6 +954,7 @@ struct dwc3_scratchpad_array {
-  * @hsphy_mode: UTMI phy mode, one of following:
-  *		- USBPHY_INTERFACE_MODE_UTMI
-  *		- USBPHY_INTERFACE_MODE_UTMIW
-+ * @role_sw: usb_role_switch handle
-  * @usb2_phy: pointer to USB2 PHY
-  * @usb3_phy: pointer to USB3 PHY
-  * @usb2_generic_phy: pointer to USB2 PHY
-@@ -1086,6 +1088,7 @@ struct dwc3 {
- 	struct extcon_dev	*edev;
- 	struct notifier_block	edev_nb;
- 	enum usb_phy_interface	hsphy_mode;
-+	struct usb_role_switch	*role_sw;
- 
- 	u32			fladj;
- 	u32			irq_gadget;
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index c946d64142ad..c355166793d0 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -476,6 +476,71 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
- 	return edev;
- }
- 
-+#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
-+static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-+{
-+	struct dwc3 *dwc = dev_get_drvdata(dev);
-+	u32 mode;
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+new file mode 100644
+index 000000000000..377b9e1e39d3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom,usb-ss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+	switch (role) {
-+	case USB_ROLE_HOST:
-+		mode = DWC3_GCTL_PRTCAP_HOST;
-+		break;
-+	case USB_ROLE_DEVICE:
-+		mode = DWC3_GCTL_PRTCAP_DEVICE;
-+		break;
-+	default:
-+		mode = DWC3_GCTL_PRTCAP_DEVICE;
-+		break;
-+	}
++title: Qualcomm Synopsys 1.0.0 SuperSpeed USB PHY
 +
-+	dwc3_set_mode(dwc, mode);
-+	return 0;
-+}
++maintainers:
++  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 +
-+static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-+{
-+	struct dwc3 *dwc = dev_get_drvdata(dev);
-+	unsigned long flags;
-+	enum usb_role role;
++description: |
++  Qualcomm Synopsys 1.0.0 SuperSpeed USB PHY
 +
-+	spin_lock_irqsave(&dwc->lock, flags);
-+	switch (dwc->current_dr_role) {
-+	case DWC3_GCTL_PRTCAP_HOST:
-+		role = USB_ROLE_HOST;
-+		break;
-+	case DWC3_GCTL_PRTCAP_DEVICE:
-+		role = USB_ROLE_DEVICE;
-+		break;
-+	case DWC3_GCTL_PRTCAP_OTG:
-+		role = dwc->current_otg_role;
-+		break;
-+	default:
-+		role = USB_ROLE_DEVICE;
-+		break;
-+	}
-+	spin_unlock_irqrestore(&dwc->lock, flags);
-+	return role;
-+}
++properties:
++  compatible:
++    enum:
++      - qcom,usb-ssphy
 +
-+static int dwc3_setup_role_switch(struct dwc3 *dwc)
-+{
-+	struct usb_role_switch_desc dwc3_role_switch = {NULL};
++  reg:
++    maxItems: 1
 +
-+	dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
-+	dwc3_role_switch.set = dwc3_usb_role_switch_set;
-+	dwc3_role_switch.get = dwc3_usb_role_switch_get;
-+	dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
-+	if (IS_ERR(dwc->role_sw))
-+		return PTR_ERR(dwc->role_sw);
++  "#phy-cells":
++    const: 0
 +
-+	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
-+	return 0;
-+}
-+#else
-+#define dwc3_setup_role_switch(x) 0
-+#endif
++  clocks:
++    items:
++      - description: rpmcc clock
++      - description: PHY AHB clock
++      - description: SuperSpeed pipe clock
 +
- int dwc3_drd_init(struct dwc3 *dwc)
- {
- 	int ret, irq;
-@@ -484,7 +549,12 @@ int dwc3_drd_init(struct dwc3 *dwc)
- 	if (IS_ERR(dwc->edev))
- 		return PTR_ERR(dwc->edev);
- 
--	if (dwc->edev) {
-+	if (IS_ENABLED(CONFIG_USB_ROLE_SWITCH) &&
-+	    device_property_read_bool(dwc->dev, "usb-role-switch")) {
-+		ret = dwc3_setup_role_switch(dwc);
-+		if (ret < 0)
-+			return ret;
-+	} else if (dwc->edev) {
- 		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
- 		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
- 					       &dwc->edev_nb);
-@@ -531,6 +601,9 @@ void dwc3_drd_exit(struct dwc3 *dwc)
- {
- 	unsigned long flags;
- 
-+	if (dwc->role_sw)
-+		usb_role_switch_unregister(dwc->role_sw);
++  clock-names:
++    items:
++      - const: ref
++      - const: ahb
++      - const: pipe
 +
- 	if (dwc->edev)
- 		extcon_unregister_notifier(dwc->edev, EXTCON_USB_HOST,
- 					   &dwc->edev_nb);
++  vdd-supply:
++    description: phandle to the regulator VDD supply node.
++
++  vdda1p8-supply:
++    description: phandle to the regulator 1.8V supply node.
++
++  resets:
++    items:
++      - description: COM reset
++      - description: PHY reset line
++
++  reset-names:
++    items:
++      - const: com
++      - const: phy
++
++required:
++  - compatible
++  - reg
++  - "#phy-cells"
++  - clocks
++  - clock-names
++  - vdd-supply
++  - vdda1p8-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++    #include <dt-bindings/clock/qcom,rpmcc.h>
++    usb3_phy: usb3-phy@78000 {
++        compatible = "qcom,usb-ssphy";
++        reg = <0x78000 0x400>;
++        #phy-cells = <0>;
++        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
++                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
++                 <&gcc GCC_USB3_PHY_PIPE_CLK>;
++        clock-names = "ref", "ahb", "pipe";
++        resets = <&gcc GCC_USB3_PHY_BCR>,
++                 <&gcc GCC_USB3PHY_PHY_BCR>;
++        reset-names = "com", "phy";
++        vdd-supply = <&vreg_l3_1p05>;
++        vdda1p8-supply = <&vreg_l5_1p8>;
++    };
++...
 -- 
 2.25.0
 
