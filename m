@@ -2,138 +2,145 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C602DC352A2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 11:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F12CC352A2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 11:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E5620720
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 11:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mnxEeVCj"
+	by mail.kernel.org (Postfix) with ESMTP id 78C1620720
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 11:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgBGLDO (ORCPT
+        id S1726798AbgBGLGG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:03:14 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17227 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgBGLDO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 06:03:14 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3d43e20000>; Fri, 07 Feb 2020 03:02:59 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Feb 2020 03:03:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Feb 2020 03:03:13 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 11:03:08 +0000
-CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH v2 2/9] ASoC: tegra: add support for CIF programming
-To:     Dmitry Osipenko <digetx@gmail.com>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-3-git-send-email-spujar@nvidia.com>
- <7239e858-16b7-609f-c4e3-8135bee8450b@gmail.com>
- <1305a6db-a492-eec2-111e-ddc801d58d86@nvidia.com>
- <fb0a96bd-ac3c-0916-0337-0c86de196527@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <bb2ab8e1-a42c-6a03-1ffa-495565c8e914@nvidia.com>
-Date:   Fri, 7 Feb 2020 16:33:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 7 Feb 2020 06:06:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:38970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbgBGLGG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Feb 2020 06:06:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B091930E;
+        Fri,  7 Feb 2020 03:06:05 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BFED3F68E;
+        Fri,  7 Feb 2020 03:06:04 -0800 (PST)
+Date:   Fri, 7 Feb 2020 11:06:02 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+Message-ID: <20200207110602.GE36345@bogus>
+References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
+ <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
+ <7875e2533c4ba23b8ca0a2a296699497@kernel.org>
+ <20200207104736.GB36345@bogus>
+ <AM0PR04MB4481B1D5E2725E85BC6D6D71881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <fb0a96bd-ac3c-0916-0337-0c86de196527@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581073379; bh=DroXT/1lQUGa+TG9wgFQbKxKmkZF3WHBeukmNqYO5pI=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=mnxEeVCjfYHbbS/VgYjYRqCVpptFPlXV9vjGSSEzPW75dvpSXTDLVO0HLTFXbKudJ
-         GSOUAsM1S42wvnlakqKfn0vNJcb+fNU4KvCxV+h+hcWb4GWrYnd2yLlzS44qW2hHvj
-         n00Ci9VULOf2ihAUFk9lk0pjdH6qa/i9bKHYqlnMOpGhI49tIWlzmK+uKKCovHJSKX
-         jhP2/WrONzqdFCBG3CwSQYRPley3yH4JHVts8WRoVYaZ8h1+TrDSmnLMIKCmOAZonQ
-         iw8MEEZzaQ7HfjvzQy01/ZEfbTrnWwB171z1y4aFlFPbG7dCWhT5ZIXZTp30NCcY32
-         kFRvWv0zENgCg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4481B1D5E2725E85BC6D6D71881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 2/6/2020 10:19 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
+On Fri, Feb 07, 2020 at 10:55:44AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+> >
+> > On Fri, Feb 07, 2020 at 10:08:36AM +0000, Marc Zyngier wrote:
+> > > On 2020-02-06 13:01, peng.fan@nxp.com wrote:
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > SCMI could use SMC/HVC as tranports, so add into devicetree binding
+> > > > doc.
+> > > >
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
+> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > > > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > > > index f493d69e6194..03cff8b55a93 100644
+> > > > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > > > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > > > @@ -14,7 +14,7 @@ Required properties:
+> > > >
+> > > >  The scmi node with the following properties shall be under the
+> > > > /firmware/ node.
+> > > >
+> > > > -- compatible : shall be "arm,scmi"
+> > > > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
+> > > >  - mboxes: List of phandle and mailbox channel specifiers. It should
+> > > > contain
+> > > >  	  exactly one or two mailboxes, one for transmitting messages("tx")
+> > > >  	  and another optional for receiving the notifications("rx") if @@
+> > > > -25,6 +25,8 @@ The scmi node with the following properties shall be
+> > > > under the /firmware/ node.
+> > > >  	  protocol identifier for a given sub-node.
+> > > >  - #size-cells : should be '0' as 'reg' property doesn't have any size
+> > > >  	  associated with it.
+> > > > +- arm,smc-id : SMC id required when using smc transports
+> > > > +- arm,hvc-id : HVC id required when using hvc transports
+> > > >
+> > > >  Optional properties:
+> > >
+> > > Not directly related to DT: Why do we need to distinguish between SMC
+> > > and HVC?
+> >
+> > IIUC you want just one property to get the function ID ? Does that align with
+> > what you are saying ? I wanted to ask the same question and I see no need for
+> > 2 different properties.
 >
+> The multiple protocols might use SMC or HVC. Saying
 >
-> 06.02.2020 14:56, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 2/5/2020 10:32 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>> +#include <linux/module.h>
->>>> +#include <linux/regmap.h>
->>>> +#include "tegra_cif.h"
->>>> +
->>>> +void tegra_set_cif(struct regmap *regmap, unsigned int reg,
->>>> +                struct tegra_cif_conf *conf)
->>>> +{
->>>> +     unsigned int value;
->>>> +
->>>> +     value =3D (conf->threshold << TEGRA_ACIF_CTRL_FIFO_TH_SHIFT) |
->>>> +             ((conf->audio_ch - 1) << TEGRA_ACIF_CTRL_AUDIO_CH_SHIFT)=
- |
->>>> +             ((conf->client_ch - 1) <<
->>>> TEGRA_ACIF_CTRL_CLIENT_CH_SHIFT) |
->>>> +             (conf->audio_bits << TEGRA_ACIF_CTRL_AUDIO_BITS_SHIFT) |
->>>> +             (conf->client_bits << TEGRA_ACIF_CTRL_CLIENT_BITS_SHIFT)=
- |
->>>> +             (conf->expand << TEGRA_ACIF_CTRL_EXPAND_SHIFT) |
->>>> +             (conf->stereo_conv << TEGRA_ACIF_CTRL_STEREO_CONV_SHIFT)=
- |
->>>> +             (conf->replicate << TEGRA_ACIF_CTRL_REPLICATE_SHIFT) |
->>>> +             (conf->truncate << TEGRA_ACIF_CTRL_TRUNCATE_SHIFT) |
->>>> +             (conf->mono_conv << TEGRA_ACIF_CTRL_MONO_CONV_SHIFT);
->>>> +
->>>> +     regmap_update_bits(regmap, reg, TEGRA_ACIF_UPDATE_MASK, value);
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(tegra_set_cif);
->>> Are you going to add more stuff into this source file later on?
->> Yes I plan to add Tegra30 and Tegra124 CIF functions in this. Anything
->> related to CIF can be moved here.
->>> If not, then it's too much to have a separate driver module just for a
->>> single tiny function, you should move it into the header file (make it
->>> inline).
-> You should consider whether it's worth to move anything else to this
-> module first, because if the functions are not reusable by the drivers,
-> then the movement won't bring any benefits and final result could be
-> negative in regards to the code's organization.
+>  Protocol@x {
+>     method="smc";
+>     arm,func-id=<0x....>
+>  };
+>  Protocol@y {
+>     method="hvc";
+>     arm,func-id=<0x....>
+>  };
 >
-> I suggest to start clean and easy, without the driver module. You will
-> be able to factor code into module later on, once there will a real need
-> to do that.
 
-Tegra124 can reuse above CIF function. Tegra30 will continue to use the=20
-same function. For consistency all CIF related helpers can be grouped at=20
-one place. But this is for later. I will start with inline function.
+Wow, stop there. Please don't do that. You either use SMC or HVC consistently.
+Not both at the same time. Any particular reasons for trying such crazy things.
 
+> With my propose:
+>
+> Protocol@x {
+>     arm,smc-id=<0x....>
+>  };
+>  Protocol@y {
+>     arm,hvc-id=<0x....>
+>  };
+>
+> No need an extra method property to indicate it is smc or hvc.
+> The driver use take arm,smc-id as SMC, arm,hvc-id as HVC.
+>
+
+NACK, just have one function ID, I am not very particular on the name
+'smc-id' is just fine for me. But only one function ID for any conduit
+used and that is chosen by PSCI/SMCCC.
+
+If you need multiple channels(unique per protocol) then I suggest go for
+an channel ID or you can even manage just with shmem associated with it
+(I prefer latter but again I am fine either way)
+
+--
+Regards,
+Sudeep
