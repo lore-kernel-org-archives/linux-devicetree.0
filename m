@@ -1,108 +1,107 @@
-Return-Path: <SRS0=gpjL=32=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4FCC352A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 23:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64C3C35247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 00:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBDFA20730
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Feb 2020 23:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C5A20838
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 00:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jb02RUjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgBFXo3 (ORCPT
+        id S1726628AbgBGATt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 18:44:29 -0500
-Received: from [65.157.77.67] ([65.157.77.67]:24832 "HELO ubuntu.localdomain"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1726543AbgBFXo3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Feb 2020 18:44:29 -0500
-Received: by ubuntu.localdomain (Postfix, from userid 1000)
-        id D8602465309; Thu,  6 Feb 2020 16:44:27 -0700 (MST)
-From:   Mike Jones <michael-a1.jones@analog.com>
-To:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org,
-        corbet@lwn.net, Mike Jones <michael-a1.jones@analog.com>
-Subject: [PATCH 2/2] bindings: (hwmon/ltc2978.txt): add support for more parts.
-Date:   Thu,  6 Feb 2020 16:44:14 -0700
-Message-Id: <1581032654-4330-2-git-send-email-michael-a1.jones@analog.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581032654-4330-1-git-send-email-michael-a1.jones@analog.com>
-References: <1581032654-4330-1-git-send-email-michael-a1.jones@analog.com>
+        Thu, 6 Feb 2020 19:19:49 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33530 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgBGATt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 19:19:49 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so186306pgk.0;
+        Thu, 06 Feb 2020 16:19:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4ULN0dOs41v4AFU42LCYrXImvmGcJJ+nEhgWQs+WaF0=;
+        b=Jb02RUjCRO1WBhEXD4M45oPkWbA8RdtMVLeiXMh2bOl/o3kwwLYv80KWHyaSE9fR4u
+         QQBry5cF6Uq0feJiazpbf+nLeaFpAqIx4XrYLuntlMphAKBhTNqUx+bxokhLjXKCeqx6
+         HQ1dfL9VNIUVBE3/Do4995JnC6VJU4DWeXNDunW3R5+Fxxs2OwBIlyFjKRbo+Lh5NF4h
+         yUz/m2RodCTa7UnmEpmet8hpagPRrcRCtAGj4YpPJ8q8BcQsw3TM5aBOrQIBY0a7eui9
+         0BdibrDv+cAeF2Q1gOnZ6Dw0He0aO7QbghbTZn24rA2AAsMoH6a3LRHCo00+/l0JfqHj
+         G/BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4ULN0dOs41v4AFU42LCYrXImvmGcJJ+nEhgWQs+WaF0=;
+        b=JOE/uB0WJ4NfHBKLyWwt2W93062Ep2Y/BOtzMfsbvk7BGA1/ns0L2qyHm4xAQvN48Z
+         qLzoKa2ihzAxJK3UEQ9fm7QNPAmZy+QlQA3KO+BwqBQ2Jt5tT2nn+/er3WqodVlclKoz
+         rEj2HCb6BWPkImLRlBezr5C6elaEZkbhQqBUqtBElFaFw6L/Sp0c8aweElQtbz2AghiG
+         pRsIz52Mu+gsoLaVQea7P5WXbjadQa/mI9siujd6EXzvYteqarNCbb0a3bSG6QXXoeh6
+         xQENOoJOnSKFnFDXF5m7nstVfG5lPYYDsoHH7pyK0a3iVpr6ByyOmYFgRK2Oex7PdctB
+         gt/g==
+X-Gm-Message-State: APjAAAWP24ZDp3UaGtx3MmY+kd6VLQ0q2W+Hwnr+Tvj4X6j/EiUZfpHy
+        Q6rexQCSkmqZSweWDYXHNVs=
+X-Google-Smtp-Source: APXvYqyVKoCLhy2pjZELtPe821UwLoUgy5d1FWUfDJpW3OdBUDzmV+PG1SctoF4qWmiL58YIM0F4OQ==
+X-Received: by 2002:aa7:96c7:: with SMTP id h7mr6627072pfq.211.1581034788765;
+        Thu, 06 Feb 2020 16:19:48 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id z64sm541925pfz.23.2020.02.06.16.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 16:19:48 -0800 (PST)
+Date:   Thu, 6 Feb 2020 16:19:46 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, megous@megous.com,
+        mylene.josserand@bootlin.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: touchscreen: Convert edt-ft5x06 to
+ json-schema
+Message-ID: <20200207001946.GI184237@dtor-ws>
+References: <20200206101434.30209-1-benjamin.gaignard@st.com>
+ <20200206215322.GA12956@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206215322.GA12956@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-LTC2972, LTC2979, LTC3884, LTC3889, LTC7880, LTM4664, LTM4677,
-LTM4678, LTM4680, LTM4700.
+On Thu, Feb 06, 2020 at 02:53:22PM -0700, Rob Herring wrote:
+> On Thu, 6 Feb 2020 11:14:34 +0100, Benjamin Gaignard wrote:
+> > Convert the EDT-FT5x06 to DT schema using json-schema.
+> > 
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > ---
+> > version 2:
+> > - preserve formatting in description
+> > - use 'const' rather than 'enum' for reg property
+> > - fix max/min issues 
+> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
+> >  .../bindings/input/touchscreen/edt-ft5x06.yaml     | 123 +++++++++++++++++++++
+> >  2 files changed, 123 insertions(+), 75 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> > 
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
----
- .../devicetree/bindings/hwmon/ltc2978.txt          | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+Unfortunately this does not apply as the latest binding was extended to
+document "wakeup-source" property. Could you please refresh against
+mainline or my tree?
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-index b428a70..4e7f621 100644
---- a/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-+++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-@@ -2,20 +2,30 @@ ltc2978
- 
- Required properties:
- - compatible: should contain one of:
-+  * "lltc,ltc2972"
-   * "lltc,ltc2974"
-   * "lltc,ltc2975"
-   * "lltc,ltc2977"
-   * "lltc,ltc2978"
-+  * "lltc,ltc2979"
-   * "lltc,ltc2980"
-   * "lltc,ltc3880"
-   * "lltc,ltc3882"
-   * "lltc,ltc3883"
-+  * "lltc,ltc3884"
-   * "lltc,ltc3886"
-   * "lltc,ltc3887"
-+  * "lltc,ltc3889"
-+  * "lltc,ltc7880"
-   * "lltc,ltm2987"
-+  * "lltc,ltm4664"
-   * "lltc,ltm4675"
-   * "lltc,ltm4676"
-+  * "lltc,ltm4677"
-+  * "lltc,ltm4678"
-+  * "lltc,ltm4680"
-   * "lltc,ltm4686"
-+  * "lltc,ltm4700"
- - reg: I2C slave address
- 
- Optional properties:
-@@ -25,13 +35,17 @@ Optional properties:
-   standard binding for regulators; see regulator.txt.
- 
- Valid names of regulators depend on number of supplies supported per device:
-+  * ltc2972 vout0 - vout1
-   * ltc2974, ltc2975 : vout0 - vout3
--  * ltc2977, ltc2980, ltm2987 : vout0 - vout7
-+  * ltc2977, ltc2979, ltc2980, ltm2987 : vout0 - vout7
-   * ltc2978 : vout0 - vout7
--  * ltc3880, ltc3882, ltc3886 : vout0 - vout1
-+  * ltc3880, ltc3882, ltc3884, ltc3886, ltc3887, ltc3889 : vout0 - vout1
-+  * ltc7880 : vout0 - vout1
-   * ltc3883 : vout0
--  * ltm4676 : vout0 - vout1
--  * ltm4686 : vout0 - vout1
-+  * ltm4664 : vout0 - vout1
-+  * ltm4675, ltm4676, ltm4677, ltm4678 : vout0 - vout1
-+  * ltm4680, ltm4686 : vout0 - vout1
-+  * ltm4700 : vout0 - vout1
- 
- Example:
- ltc2978@5e {
+Thanks.
+
 -- 
-2.7.4
-
+Dmitry
