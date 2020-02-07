@@ -2,104 +2,117 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D06C2D0B1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 06:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B893C352A3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 07:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5122B2082E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 06:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7039214AF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 07:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IniC4+/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgBGGvL (ORCPT
+        id S1726619AbgBGHYl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 01:51:11 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39537 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbgBGGvL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 01:51:11 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1izxTj-0003LT-Qk; Fri, 07 Feb 2020 07:51:03 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1izxTj-0002T1-Ct; Fri, 07 Feb 2020 07:51:03 +0100
-Date:   Fri, 7 Feb 2020 07:51:03 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
-        lee.jones@linaro.org, stwiss.opensource@diasemi.com,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 3/3] watchdog: da9062: add power management ops
-Message-ID: <20200207065103.o5liyfdrl5fudxvh@pengutronix.de>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-4-m.felsch@pengutronix.de>
- <20200123205132.GA13377@roeck-us.net>
- <20200206090010.ya6p2kvab452kedr@pengutronix.de>
- <a5d61822-c4fa-d5d3-c3ef-174b57a651bc@roeck-us.net>
+        Fri, 7 Feb 2020 02:24:41 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:15904 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726626AbgBGHYl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 02:24:41 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581060280; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=yvIzAXlCUWtw8UVrvAHXcMI4NqUI2Q/iSLZWcJmbwuM=;
+ b=IniC4+/3MAISHauTXlDUWa3Bu6BBoStzWefpCOha0xYi1J4rqiimuGGapT/xqq4nNndmS28F
+ yljH/3QQ0WVtZHds7Zb46Es9OXbdOy30FTyu3jrkncDgAXKNyDmIZnA8HsSL0JHBSJoQ6BR1
+ 6A7wi318J6fiEKjsoHrBS1zYKcg=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3d10ac.7f2e68c81340-smtp-out-n03;
+ Fri, 07 Feb 2020 07:24:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 04C79C4479C; Fri,  7 Feb 2020 07:24:27 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04154C433CB;
+        Fri,  7 Feb 2020 07:24:26 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5d61822-c4fa-d5d3-c3ef-174b57a651bc@roeck-us.net>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:48:05 up 83 days, 22:06, 86 users,  load average: 0.09, 0.12,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 07 Feb 2020 12:54:25 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?Q?Michael_Turquette_=C2=A0?= <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Add modem Clock controller (MSS CC) driver for
+ SC7180
+In-Reply-To: <1580357923-19783-1-git-send-email-tdas@codeaurora.org>
+References: <1580357923-19783-1-git-send-email-tdas@codeaurora.org>
+Message-ID: <ba110478a0dba14e12665d7060712f4c@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-02-06 06:45, Guenter Roeck wrote:
-> On 2/6/20 1:00 AM, Marco Felsch wrote:
-> > Hi Guenter,
-> > 
-> > On 20-01-23 12:51, Guenter Roeck wrote:
-> > > On Wed, Jan 08, 2020 at 10:57:04AM +0100, Marco Felsch wrote:
-> > > > Disable the watchdog during suspend if it is enabled and re-enable it on
-> > > > resume. So we can sleep without the interruptions.
-> > > > 
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> > > 
-> > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > 
-> > I got an kbuild email so I checked the linux-next master tree. On
-> > linux-next this patch isn't used instead the old v1 was used...
-> > 
+On 2020-01-30 09:48, Taniya Das wrote:
+> [v3]
+>   * Add clocks/clock-names required for the MSS clock controller.
+>   * Add pm_ops to enable/disable the required dependent clock.
+>   * Add parent_data for the MSS clocks.
+>   * Update the GCC MSS clocks from _CBCR to _CLK.
 > 
-> Yes, it appears that I picked the wrong version as well, and Wim picked it
-> up from there. But, really, what do you expect if you don't tag your
-> submissions with version numbers ?
-
-Pls check the cover-letter I said sorry their. As I said it was a
-mistake.
-
-> I would suggest to send a follow-up patch to fix what is in -next.
-
-A 'real' patch or should I send a 'fixup!' patch?
-
-Regards,
-  Marco
-
-> Guenter
+> [v2]
+>   * Update the license for the documentation and fix minor comments in 
+> the
+>     YAML bindings.
 > 
+> [v1]
+>   * Add driver support for Modem clock controller for SC7180 and also
+>     update device tree bindings for the various clocks supported in the
+>     clock controller.
+> 
+> Taniya Das (3):
+>   dt-bindings: clock: Add YAML schemas for the QCOM MSS clock bindings
+>   dt-bindings: clock: Introduce QCOM Modem clock bindings
+>   clk: qcom: Add modem clock controller driver for SC7180
+
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+
+> 
+>  .../devicetree/bindings/clock/qcom,mss.yaml        |  58 +++++++++
+>  drivers/clk/qcom/Kconfig                           |   9 ++
+>  drivers/clk/qcom/Makefile                          |   1 +
+>  drivers/clk/qcom/gcc-sc7180.c                      |  70 ++++++++++
+>  drivers/clk/qcom/mss-sc7180.c                      | 143 
+> +++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h        |   5 +
+>  include/dt-bindings/clock/qcom,mss-sc7180.h        |  12 ++
+>  7 files changed, 298 insertions(+)
+>  create mode 100644 
+> Documentation/devicetree/bindings/clock/qcom,mss.yaml
+>  create mode 100644 drivers/clk/qcom/mss-sc7180.c
+>  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+> 
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a 
+> member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
