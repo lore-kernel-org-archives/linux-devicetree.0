@@ -2,362 +2,158 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B25C35242
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 20:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDF2C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 21:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3F7222D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 20:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12AF321741
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 21:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="YmszpOIY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ivitera.com header.i=@ivitera.com header.b="EM3+GpOB";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ivitera.com header.i=@ivitera.com header.b="ZV4WN0uT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgBGU7P (ORCPT
+        id S1727071AbgBGVMv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:59:15 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:46966 "EHLO
-        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgBGU6p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 15:58:45 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 783A0D00732;
-        Fri,  7 Feb 2020 20:51:08 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at serbinski.com
-Received: from mail.serbinski.com ([127.0.0.1])
-        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aw0PiKosRpDL; Fri,  7 Feb 2020 15:50:56 -0500 (EST)
-Received: from anet (ipagstaticip-7ac5353e-e7de-3a0d-ff65-4540e9bc137f.sdsl.bell.ca [142.112.15.192])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mail.serbinski.com (Postfix) with ESMTPSA id D9218D0071B;
-        Fri,  7 Feb 2020 15:50:29 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com D9218D0071B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581108629;
-        bh=Li+7uO9ANVGhw/mLvHKkrDnYRFTrSj70ZU/KaJjHjjc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YmszpOIYsuFlKSA30erbiFhMiDo442nZhtP3XnqleqhzpuyZseknQuy5nTjQfCqAn
-         MegrA4ojKOX4BBZQnmwO9aFGF4zWdS8gaNJyueaDgng68Gbwc5fXMqAKYsos8MidX2
-         tuIhKxBwRfO03R9nfmd17zuzk/te04cHSeembVJs=
-From:   Adam Serbinski <adam@serbinski.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Fri, 7 Feb 2020 16:12:51 -0500
+Received: from cable.insite.cz ([84.242.75.189]:56877 "EHLO cable.insite.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbgBGVMv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Feb 2020 16:12:51 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by cable.insite.cz (Postfix) with ESMTP id D29A2A1A40B05;
+        Fri,  7 Feb 2020 22:12:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ivitera.com; s=mail;
+        t=1581109966; bh=vjLjZRimaLLdXirEYigexl5ECe4JAQKBxtDHAHr0fkA=;
+        h=From:Subject:To:Date:From;
+        b=EM3+GpOBcRrrMKJJbXiJt8IVWUvAiBlP8bptXOGVKEfmcpVYbgThkCAKNDryo3QFx
+         prx5MEXezvSbsrjqiqIeEGmhJDVFfWwEUMrbkBqHdKrPBBn6oTkrQ8xKiHZuRtwnTd
+         zMw6zQ7RD9KKz0RNHiiH08yGyNIUFOlnfyZp/xhw=
+Received: from cable.insite.cz ([84.242.75.189])
+        by localhost (server.insite.cz [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 4OWGe8gPi5rn; Fri,  7 Feb 2020 22:12:41 +0100 (CET)
+Received: from [192.168.105.151] (ip28.insite.cz [81.0.237.28])
+        (Authenticated sender: pavel)
+        by cable.insite.cz (Postfix) with ESMTPSA id 656E4A1A40B08;
+        Fri,  7 Feb 2020 22:12:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ivitera.com; s=mail;
+        t=1581109961; bh=vjLjZRimaLLdXirEYigexl5ECe4JAQKBxtDHAHr0fkA=;
+        h=From:Subject:To:Date:From;
+        b=ZV4WN0uTlKZ3FOmRERUXyVtK5rWH45ea/8XfajTHqwoM5MFOWHQaQ5+5cXbTunXgn
+         K4+pfL3kHfdoTSeOI2OqbXYHpY0U5RXAY1e7tG3sWR77oRuzRnJUNuAX3tF8jpZ7Tx
+         Byf5kL4eVaEid9g+bRVAGfT5mg0BuKCdpqh+IQsk=
+From:   Pavel Hofman <pavel.hofman@ivitera.com>
+Subject: [PATCH] ARM: dts: bcm283x: increase dwc2's RX FIFO size
+To:     Minas Harutyunyan <hminas@synopsys.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Adam Serbinski <adam@serbinski.com>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/8] ASoC: qdsp6: q6afe-dai: add support to pcm port dais
-Date:   Fri,  7 Feb 2020 15:50:08 -0500
-Message-Id: <20200207205013.12274-4-adam@serbinski.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200207205013.12274-1-adam@serbinski.com>
-References: <20200207205013.12274-1-adam@serbinski.com>
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+Message-ID: <22beb919-a3c6-33c0-8d3f-070061a6c853@ivitera.com>
+Date:   Fri, 7 Feb 2020 22:12:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support of AFE DAI for PCM port.
+The previous version of the dwc2 overlay set the RX FIFO size to
+256 4-byte words. This is not enough for 1024 bytes of the largest
+isochronous high speed packet allowed, because it doesn't take into
+account extra space needed by dwc2.
 
-Signed-off-by: Adam Serbinski <adam@serbinski.com>
-CC: Andy Gross <agross@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Liam Girdwood <lgirdwood@gmail.com>
-CC: Patrick Lai <plai@codeaurora.org>
-CC: Banajit Goswami <bgoswami@codeaurora.org>
-CC: Jaroslav Kysela <perex@perex.cz>
-CC: Takashi Iwai <tiwai@suse.com>
-CC: alsa-devel@alsa-project.org
-CC: linux-arm-msm@vger.kernel.org
-CC: devicetree@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
+Below is a detailed calculation which arises from dwc2 documentation:
+
+* RAM for SETUP Packets: 4 * n + 6 locations in Scatter/Gather DMA mode
+and 5 * n+8 locations in Slave and Buffer DMA mode must be reserved in
+the RxFIFO to receive up to n SETUP packets on control endpoints, where n
+is the number of control endpoints the device controller supports.
+
+bcm283x: 5*n+8. The Broadcom core has 1 control EP (n=1), so 13 locations
+
+* One location for Global OUT NAK
+
+bcm283x: 1 location
+
+* Status information is written to the FIFO along with each received
+packet. Therefore, a minimum space of (Largest Packet Size / 4) + 1 must
+be allotted to receive packets. If a high-bandwidth endpoint is enabled,
+or multiple isochronous endpoints are enabled, then at least two (Largest
+Packet Size / 4) + 1 spaces must be allotted to receive back-to-back
+packets. Typically, two (Largest Packet Size / 4) + 1 spaces are
+recommended so that when the previous packet is being transferred to AHB,
+the USB can receive the subsequent packet. If AHB latency is high, you
+must allocate enough space to receive multiple packets. This is critical
+to prevent dropping of any isochronous packets.
+
+bcm283x: (1024/4) +1 = 257 locations. For MC >1: 2 * 257 = 514 locations
+
+* Along with last packet of each endpoint, transfer complete status
+information is also pushed in to the FIFO.
+
+bcm283x: The core should have 5 IN and 5 OUT EP's.
+1 location for each EP - 10 locations.
+
+It's for the case when all EPs are simultaneously completing transfers.
+
+* An additional location for EPDisable status for each endpoint is
+also required.
+
+bcm283x: 1 location for each EP - 10 EP's - 10 locations
+It's for case if EP simultaneously disabled.
+
+* Typically, two locations for each OUT endpoint is recommended.
+
+bcm283x: 5*2 = 10 locations
+
+Total: 13 + 1 + 257 + 10 +10 + 10 = 301 locations
+
+Safer is 301 + 257 (for MC>1) = 558 locations.
+
+Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+Signed-off-by: Pavel Hofman <pavel.hofman@ivitera.com>
 ---
- sound/soc/qcom/qdsp6/q6afe-dai.c | 198 ++++++++++++++++++++++++++++++-
- 1 file changed, 197 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi        | 2 +-
+ arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
-index c1a7624eaf17..23b29591ef47 100644
---- a/sound/soc/qcom/qdsp6/q6afe-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
-@@ -151,6 +151,28 @@ static int q6hdmi_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
-+static int q6pcm_hw_params(struct snd_pcm_substream *substream,
-+			   struct snd_pcm_hw_params *params,
-+			   struct snd_soc_dai *dai)
-+{
-+	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-+	struct q6afe_pcm_cfg *pcm = &dai_data->port_config[dai->id].pcm_cfg;
-+
-+	pcm->sample_rate = params_rate(params);
-+
-+	return 0;
-+}
-+
-+static int q6pcm_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-+{
-+	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-+	struct q6afe_pcm_cfg *pcm = &dai_data->port_config[dai->id].pcm_cfg;
-+
-+	pcm->fmt = fmt;
-+
-+	return 0;
-+}
-+
- static int q6i2s_hw_params(struct snd_pcm_substream *substream,
- 			   struct snd_pcm_hw_params *params,
- 			   struct snd_soc_dai *dai)
-@@ -358,6 +380,15 @@ static int q6afe_dai_prepare(struct snd_pcm_substream *substream,
- 			return rc;
- 		}
- 		break;
-+	case PRIMARY_PCM_RX ... QUATERNARY_PCM_TX:
-+		rc = q6afe_pcm_port_prepare(dai_data->port[dai->id],
-+				&dai_data->port_config[dai->id].pcm_cfg);
-+		if (rc < 0) {
-+			dev_err(dai->dev, "fail to prepare AFE port %x\n",
-+				dai->id);
-+			return rc;
-+		}
-+		break;
- 	case PRIMARY_TDM_RX_0 ... QUINARY_TDM_TX_7:
- 		q6afe_tdm_port_prepare(dai_data->port[dai->id],
- 					&dai_data->port_config[dai->id].tdm);
-@@ -429,11 +460,32 @@ static int q6afe_mi2s_set_sysclk(struct snd_soc_dai *dai,
- 					     Q6AFE_LPASS_CLK_ROOT_DEFAULT,
- 					     freq, dir);
- 	case Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT ... Q6AFE_LPASS_CLK_ID_QUI_MI2S_OSR:
-+	case Q6AFE_LPASS_CLK_ID_PRI_PCM_IBIT ... Q6AFE_LPASS_CLK_ID_QUI_PCM_OSR:
- 	case Q6AFE_LPASS_CLK_ID_MCLK_1 ... Q6AFE_LPASS_CLK_ID_INT_MCLK_1:
- 		return q6afe_port_set_sysclk(port, clk_id,
- 					     Q6AFE_LPASS_CLK_ATTRIBUTE_COUPLE_NO,
- 					     Q6AFE_LPASS_CLK_ROOT_DEFAULT,
- 					     freq, dir);
-+	}
-+
-+	return 0;
-+}
-+
-+static int q6afe_tdm_set_sysclk(struct snd_soc_dai *dai,
-+		int clk_id, unsigned int freq, int dir)
-+{
-+	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-+	struct q6afe_port *port = dai_data->port[dai->id];
-+
-+	switch (clk_id) {
-+	case LPAIF_DIG_CLK:
-+		return q6afe_port_set_sysclk(port, clk_id, 0, 5, freq, dir);
-+	case LPAIF_BIT_CLK:
-+	case LPAIF_OSR_CLK:
-+		return q6afe_port_set_sysclk(port, clk_id,
-+					     Q6AFE_LPASS_CLK_SRC_INTERNAL,
-+					     Q6AFE_LPASS_CLK_ROOT_DEFAULT,
-+					     freq, dir);
- 	case Q6AFE_LPASS_CLK_ID_PRI_TDM_IBIT ... Q6AFE_LPASS_CLK_ID_QUIN_TDM_EBIT:
- 		return q6afe_port_set_sysclk(port, clk_id,
- 					     Q6AFE_LPASS_CLK_ATTRIBUTE_INVERT_COUPLE_NO,
-@@ -468,6 +520,11 @@ static const struct snd_soc_dapm_route q6afe_dapm_routes[] = {
- 	{"Tertiary MI2S Playback", NULL, "TERT_MI2S_RX"},
- 	{"Quaternary MI2S Playback", NULL, "QUAT_MI2S_RX"},
- 
-+	{"Primary PCM Playback", NULL, "PRI_PCM_RX"},
-+	{"Secondary PCM Playback", NULL, "SEC_PCM_RX"},
-+	{"Tertiary PCM Playback", NULL, "TERT_PCM_RX"},
-+	{"Quaternary PCM Playback", NULL, "QUAT_PCM_RX"},
-+
- 	{"Primary TDM0 Playback", NULL, "PRIMARY_TDM_RX_0"},
- 	{"Primary TDM1 Playback", NULL, "PRIMARY_TDM_RX_1"},
- 	{"Primary TDM2 Playback", NULL, "PRIMARY_TDM_RX_2"},
-@@ -562,6 +619,11 @@ static const struct snd_soc_dapm_route q6afe_dapm_routes[] = {
- 	{"PRI_MI2S_TX", NULL, "Primary MI2S Capture"},
- 	{"SEC_MI2S_TX", NULL, "Secondary MI2S Capture"},
- 	{"QUAT_MI2S_TX", NULL, "Quaternary MI2S Capture"},
-+
-+	{"PRI_PCM_TX", NULL, "Primary PCM Capture"},
-+	{"SEC_PCM_TX", NULL, "Secondary PCM Capture"},
-+	{"TERT_PCM_TX", NULL, "Tertiary PCM Capture"},
-+	{"QUAT_PCM_TX", NULL, "Quaternary PCM Capture"},
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi
+b/arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi
+index e2fd961..20322de 100644
+--- a/arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi
++++ b/arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ &usb {
+ 	dr_mode = "otg";
+-	g-rx-fifo-size = <256>;
++	g-rx-fifo-size = <558>;
+ 	g-np-tx-fifo-size = <32>;
+ 	/*
+ 	 * According to dwc2 the sum of all device EP
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+b/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+index 0ff0e9e..1409d1b 100644
+--- a/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
++++ b/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ &usb {
+ 	dr_mode = "peripheral";
+-	g-rx-fifo-size = <256>;
++	g-rx-fifo-size = <558>;
+ 	g-np-tx-fifo-size = <32>;
+ 	g-tx-fifo-size = <256 256 512 512 512 768 768>;
  };
- 
- static const struct snd_soc_dai_ops q6hdmi_ops = {
-@@ -578,6 +640,14 @@ static const struct snd_soc_dai_ops q6i2s_ops = {
- 	.set_sysclk	= q6afe_mi2s_set_sysclk,
- };
- 
-+static const struct snd_soc_dai_ops q6pcm_ops = {
-+	.prepare	= q6afe_dai_prepare,
-+	.hw_params	= q6pcm_hw_params,
-+	.set_fmt	= q6pcm_set_fmt,
-+	.shutdown	= q6afe_dai_shutdown,
-+	.set_sysclk	= q6afe_mi2s_set_sysclk,
-+};
-+
- static const struct snd_soc_dai_ops q6slim_ops = {
- 	.prepare	= q6afe_dai_prepare,
- 	.hw_params	= q6slim_hw_params,
-@@ -588,7 +658,7 @@ static const struct snd_soc_dai_ops q6slim_ops = {
- static const struct snd_soc_dai_ops q6tdm_ops = {
- 	.prepare	= q6afe_dai_prepare,
- 	.shutdown	= q6afe_dai_shutdown,
--	.set_sysclk	= q6afe_mi2s_set_sysclk,
-+	.set_sysclk	= q6afe_tdm_set_sysclk,
- 	.set_tdm_slot     = q6tdm_set_tdm_slot,
- 	.set_channel_map  = q6tdm_set_channel_map,
- 	.hw_params        = q6tdm_hw_params,
-@@ -1012,6 +1082,115 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 		.ops = &q6i2s_ops,
- 		.probe = msm_dai_q6_dai_probe,
- 		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.playback = {
-+			.stream_name = "Primary PCM Playback",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.rate_min =     8000,
-+			.rate_max =     16000,
-+		},
-+		.id = PRIMARY_PCM_RX,
-+		.name = "PRI_PCM_RX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.capture = {
-+			.stream_name = "Primary PCM Capture",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.rate_min =     8000,
-+			.rate_max =     16000,
-+		},
-+		.id = PRIMARY_PCM_TX,
-+		.name = "PRI_PCM_TX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.playback = {
-+			.stream_name = "Secondary PCM Playback",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.rate_min =     8000,
-+			.rate_max =     16000,
-+		},
-+		.name = "SEC_PCM_RX",
-+		.id = SECONDARY_PCM_RX,
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.capture = {
-+			.stream_name = "Secondary PCM Capture",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.rate_min =     8000,
-+			.rate_max =     16000,
-+		},
-+		.id = SECONDARY_PCM_TX,
-+		.name = "SEC_PCM_TX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.playback = {
-+			.stream_name = "Tertiary PCM Playback",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.rate_min =     8000,
-+			.rate_max =     16000,
-+		},
-+		.name = "TERT_PCM_RX",
-+		.id = TERTIARY_PCM_RX,
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.capture = {
-+			.stream_name = "Tertiary PCM Capture",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.rate_min =     8000,
-+			.rate_max =     16000,
-+		},
-+		.id = TERTIARY_PCM_TX,
-+		.name = "TERT_PCM_TX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.playback = {
-+			.stream_name = "Quaternary PCM Playback",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.rate_min =     8000,
-+			.rate_max =     16000,
-+		},
-+		.name = "QUAT_PCM_RX",
-+		.id = QUATERNARY_PCM_RX,
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.capture = {
-+			.stream_name = "Quaternary PCM Capture",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.rate_min =     8000,
-+			.rate_max =     16000,
-+		},
-+		.id = QUATERNARY_PCM_TX,
-+		.name = "QUAT_PCM_TX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
- 	},
- 	Q6AFE_TDM_PB_DAI("Primary", 0, PRIMARY_TDM_RX_0),
- 	Q6AFE_TDM_PB_DAI("Primary", 1, PRIMARY_TDM_RX_1),
-@@ -1169,6 +1348,23 @@ static const struct snd_soc_dapm_widget q6afe_dai_widgets[] = {
- 	SND_SOC_DAPM_AIF_OUT("PRI_MI2S_TX", NULL,
- 						0, 0, 0, 0),
- 
-+	SND_SOC_DAPM_AIF_IN("QUAT_PCM_RX", NULL,
-+			    0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("QUAT_PCM_TX", NULL,
-+			     0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("TERT_PCM_RX", NULL,
-+			    0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("TERT_PCM_TX", NULL,
-+			     0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SEC_PCM_RX", NULL,
-+			    0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SEC_PCM_TX", NULL,
-+			     0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("PRI_PCM_RX", NULL,
-+			    0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("PRI_PCM_TX", NULL,
-+			     0, 0, 0, 0),
-+
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_0", NULL,
- 			     0, 0, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_1", NULL,
 -- 
-2.21.1
+1.9.1
+
 
