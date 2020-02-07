@@ -2,106 +2,177 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64C3C35247
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 00:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE5DC35247
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 00:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C5A20838
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 00:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 699842082E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 00:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jb02RUjC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sU8FpCBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgBGATt (ORCPT
+        id S1726673AbgBGAt3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Feb 2020 19:19:49 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33530 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgBGATt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 19:19:49 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so186306pgk.0;
-        Thu, 06 Feb 2020 16:19:49 -0800 (PST)
+        Thu, 6 Feb 2020 19:49:29 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:42263 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBGAt3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Feb 2020 19:49:29 -0500
+Received: by mail-qv1-f67.google.com with SMTP id dc14so205931qvb.9;
+        Thu, 06 Feb 2020 16:49:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4ULN0dOs41v4AFU42LCYrXImvmGcJJ+nEhgWQs+WaF0=;
-        b=Jb02RUjCRO1WBhEXD4M45oPkWbA8RdtMVLeiXMh2bOl/o3kwwLYv80KWHyaSE9fR4u
-         QQBry5cF6Uq0feJiazpbf+nLeaFpAqIx4XrYLuntlMphAKBhTNqUx+bxokhLjXKCeqx6
-         HQ1dfL9VNIUVBE3/Do4995JnC6VJU4DWeXNDunW3R5+Fxxs2OwBIlyFjKRbo+Lh5NF4h
-         yUz/m2RodCTa7UnmEpmet8hpagPRrcRCtAGj4YpPJ8q8BcQsw3TM5aBOrQIBY0a7eui9
-         0BdibrDv+cAeF2Q1gOnZ6Dw0He0aO7QbghbTZn24rA2AAsMoH6a3LRHCo00+/l0JfqHj
-         G/BQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P6oOvkFZ9CSC5ckdz/CdZgJ1/qpX15ssCumnuFtMEW8=;
+        b=sU8FpCBau1A8Sy5WiXmDeb7GJAtyl1hXaM0E4yNnUqb2GFL/UJDceg4Qu02bpkKxnu
+         c4HNOxX8Xy2FMaH1AmGERnW7cXO3DLKOjD+6Vo08BL1il37Gqr4w5RrKATCgzeo/lpnz
+         Dbmw+EsIjDlb3F48fWOOUUF6q/7aaSwKUfIee6faLLOvRJJPPdGvHTe1w8Q1ZoLSf0F5
+         WhQVPfuvlm15hZVmjEKLEJAfz5bgtGSi/G1TuZbhXHzoN4N072nkC9e5MFL1S/7SBkfB
+         wGDHVmcfktx1DECmrtb+V0uFxKj8LZlDgyRpWIvEINIqt6UzwPCI1QoqSWBTxUDZ1O32
+         3KXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4ULN0dOs41v4AFU42LCYrXImvmGcJJ+nEhgWQs+WaF0=;
-        b=JOE/uB0WJ4NfHBKLyWwt2W93062Ep2Y/BOtzMfsbvk7BGA1/ns0L2qyHm4xAQvN48Z
-         qLzoKa2ihzAxJK3UEQ9fm7QNPAmZy+QlQA3KO+BwqBQ2Jt5tT2nn+/er3WqodVlclKoz
-         rEj2HCb6BWPkImLRlBezr5C6elaEZkbhQqBUqtBElFaFw6L/Sp0c8aweElQtbz2AghiG
-         pRsIz52Mu+gsoLaVQea7P5WXbjadQa/mI9siujd6EXzvYteqarNCbb0a3bSG6QXXoeh6
-         xQENOoJOnSKFnFDXF5m7nstVfG5lPYYDsoHH7pyK0a3iVpr6ByyOmYFgRK2Oex7PdctB
-         gt/g==
-X-Gm-Message-State: APjAAAWP24ZDp3UaGtx3MmY+kd6VLQ0q2W+Hwnr+Tvj4X6j/EiUZfpHy
-        Q6rexQCSkmqZSweWDYXHNVs=
-X-Google-Smtp-Source: APXvYqyVKoCLhy2pjZELtPe821UwLoUgy5d1FWUfDJpW3OdBUDzmV+PG1SctoF4qWmiL58YIM0F4OQ==
-X-Received: by 2002:aa7:96c7:: with SMTP id h7mr6627072pfq.211.1581034788765;
-        Thu, 06 Feb 2020 16:19:48 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id z64sm541925pfz.23.2020.02.06.16.19.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 16:19:48 -0800 (PST)
-Date:   Thu, 6 Feb 2020 16:19:46 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, megous@megous.com,
-        mylene.josserand@bootlin.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: touchscreen: Convert edt-ft5x06 to
- json-schema
-Message-ID: <20200207001946.GI184237@dtor-ws>
-References: <20200206101434.30209-1-benjamin.gaignard@st.com>
- <20200206215322.GA12956@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P6oOvkFZ9CSC5ckdz/CdZgJ1/qpX15ssCumnuFtMEW8=;
+        b=JZI87+jKKW8yO4wo03YwYpRj9Ic6hNsJsdYSjjSODquNjuAny+yTh69tt+5K7Smw9s
+         z4zeKeV7ulv/62J80zoFCDbXdTNmZkJ57NvMNn44MLO0ciJ2ksfMh9WTIY0CV4ED5a5R
+         7wliOQ0dvP2RQWofwCFCmDEHsl+0Ex4JZXw3vb778+24puBLikG6rKR0wnYTQgizTXo6
+         MlVLr9WViPjRkzZAAx9MxsF0AfPBb9kld0IfQFTfNetmoImfY3q613KY3vXGb643uY0y
+         Su1IupMIUGfkPuuk4ThWw3XFXwDAaWfcDMWv7EAt/4HqqcnkzeIdYSmozHy0pWzcTfNC
+         bBgg==
+X-Gm-Message-State: APjAAAUDFyR3y98RCflu+D7vSIaQ8Bamw0iVCkhCgMtVCYxb+VkPeHiH
+        +TjkCKoVi2HzciQ8wYqVWcuXGwxPJqZE8xlIaDk=
+X-Google-Smtp-Source: APXvYqxFDtQytKEWKhZPcxgNl3MkZD9ZoQpITSB46YTjUU2thEd25m9XiMt60ChqrBM9fJtNdT3BY4EUL7SDZEWKwSY=
+X-Received: by 2002:ad4:55ec:: with SMTP id bu12mr4857664qvb.107.1581036567753;
+ Thu, 06 Feb 2020 16:49:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206215322.GA12956@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191219172823.1652600-1-anarsoul@gmail.com> <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
+In-Reply-To: <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Thu, 6 Feb 2020 16:49:01 -0800
+Message-ID: <CA+E=qVf1wVLgJ3_4K3nbZtgkRUVfmfgArwssPXu2Qb0NHAB+GA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 02:53:22PM -0700, Rob Herring wrote:
-> On Thu, 6 Feb 2020 11:14:34 +0100, Benjamin Gaignard wrote:
-> > Convert the EDT-FT5x06 to DT schema using json-schema.
-> > 
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > ---
-> > version 2:
-> > - preserve formatting in description
-> > - use 'const' rather than 'enum' for reg property
-> > - fix max/min issues 
-> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
-> >  .../bindings/input/touchscreen/edt-ft5x06.yaml     | 123 +++++++++++++++++++++
-> >  2 files changed, 123 insertions(+), 75 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> > 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Thu, Feb 6, 2020 at 6:14 AM Amit Kucheria
+<amit.kucheria@verdurent.com> wrote:
+>
+> Hi Vasily,
+>
+> For this entire series, the DTS files don't contain any trip points.
+> Did I miss some other series?
 
-Unfortunately this does not apply as the latest binding was extended to
-document "wakeup-source" property. Could you please refresh against
-mainline or my tree?
+See https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/commit/?h=sunxi/dt-for-5.6&id=e1c3804a177418fe14d95f0c4ccba5ae66f73d82
+for A64
 
-Thanks.
+> At a minimum, you should add some "hot" or "critical" trip points
+> since then don't require a cooling-map with throttling actions. If you
+> have "passive" trip points, then you need to provide cooling-maps.
+>
+> Since this series has been merged, could you please follow up with a
+> fixup series to add the trip points?
 
--- 
-Dmitry
+A64 has already made it into linux-next, I believe there's other
+series in flight at least for H6 from Yangtao Li and for H5 from
+Chen-Yu Tsai
+
+> Regards,
+> Amit
+> p.s. We should catch all this automatically, I'll send out yaml
+> bindings for the thermal framework soon that should catch this stuff.
+>
+> On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> >
+> > This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > H6 and R40 SoCs.
+> >
+> > v8:
+> >         - [vasily] Address more Maxime's comments for dt-schema
+> >         - [vasily] Add myself to MAINTAINERS for the driver and schema
+> >         - [vasily] Round calibration data size to word boundary for H6 and A64
+> >         - [vasily] Change offset for A64 since it reports too low temp otherwise.
+> >                    Likely conversion formula in user manual is not correct.
+> >
+> > v7:
+> >         - [vasily] Address Maxime's comments for dt-schema
+> >         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
+> >         - [vasily] Add Maxime's a-b to the driver patch
+> >
+> > v6:
+> >         - [ondrej, vasily] Squash all driver related changes into a
+> >                            single patch
+> >         - [ondrej] Rename calib -> calibration
+> >         - [ondrej] Fix thermal zone registration check
+> >         - [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
+> >         - [ondrej] Rework scale/offset values, H6 calibration
+> >         - [ondrej] Explicitly set mod clock to 24 MHz
+> >         - [ondrej] Set undocumented bits in CTRL0 for H6
+> >         - [ondrej] Add support for A83T
+> >         - [ondrej] Add dts changes for A83T, H3, H5, H6
+> >         - [vasily] Add dts changes for A64
+> >         - [vasily] Address Maxime's comments for YAML scheme
+> >         - [vasily] Make .calc_temp callback mandatory
+> >         - [vasily] Set .max_register in regmap config, so regs can be
+> >                    inspected using debugfs
+> >
+> > Ondrej Jirman (4):
+> >   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+> >   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+> >   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+> >   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
+> >
+> > Vasily Khoruzhick (1):
+> >   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
+> >
+> > Yangtao Li (2):
+> >   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
+> >   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+> >     bindings
+> >
+> >  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
+> >  MAINTAINERS                                   |   8 +
+> >  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+> >  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
+> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
+> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+> >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+> >  drivers/thermal/Kconfig                       |  14 +
+> >  drivers/thermal/Makefile                      |   1 +
+> >  drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
+> >  11 files changed, 985 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> >  create mode 100644 drivers/thermal/sun8i_thermal.c
+> >
+> > --
+> > 2.24.1
+> >
