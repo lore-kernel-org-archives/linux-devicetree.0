@@ -2,103 +2,107 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257BEC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 17:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9BFC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 18:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1702082E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 17:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4AF3222D9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 18:23:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVFjTA0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgBGRZN (ORCPT
+        id S1727144AbgBGSXG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:25:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48986 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgBGRZN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:25:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5B9AAAF57;
-        Fri,  7 Feb 2020 17:25:11 +0000 (UTC)
-Message-ID: <9b0f8daeb12ad4e5be74ff93e64c38087af199cf.camel@suse.de>
-Subject: Re: [PATCH] overlays: dwc2: Increase RX FIFO size
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Pavel Hofman <pavel.hofman@ivitera.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
-Date:   Fri, 07 Feb 2020 18:25:09 +0100
-In-Reply-To: <43db1d9c-6fa2-88bd-11df-6ae2f48a4ac9@ivitera.com>
-References: <43db1d9c-6fa2-88bd-11df-6ae2f48a4ac9@ivitera.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-yTpRgBYomwJsP1mAJVk/"
-User-Agent: Evolution 3.34.3 
+        Fri, 7 Feb 2020 13:23:06 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36315 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgBGSXG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 13:23:06 -0500
+Received: by mail-ed1-f67.google.com with SMTP id j17so543842edp.3;
+        Fri, 07 Feb 2020 10:23:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2rEL+fZ+atRGcdqc0v6HR9KvKwcDJaTmCDh9SEZyi2k=;
+        b=CVFjTA0mdflE33CmzdBoRt7RrT5W9DMHFpCIEmHOUSFpJQJ0oxYa4sqdU+jFJDlinh
+         NYDIAkS58ouzX5NyhERarOe6g5KVJ3pqwSnAB9Fvt+cTTNKawK+enONTCTutSRTu0SWq
+         M/Pz51Yte9XeHMccGnIfpPvQwFFgPoqU+x55OkyXSRbhLEVtlfSj+VZXd1WDa2PuS0Kc
+         5p9bYFmcE6Obyp5xw3Ui+SKIWfZRLtJraYc60ZALpB1sO9DTousQznQiU/b9GXrJ5b/y
+         Xw65cQWZDyb+9j6KjPIzC4oUhz9L9/1Rx04gvj9CAYPoFLmKmXK0yfS7FFp7esFWMSSk
+         2IzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2rEL+fZ+atRGcdqc0v6HR9KvKwcDJaTmCDh9SEZyi2k=;
+        b=qJdRi9vfVYdb0zgzUJXCSkDNEf88Tu4rnmFjjiGKYo1owKMAGsDyZnKRKU2KndYq88
+         9LhdtIZtIt954Qe71oOgXZBhAXqwHjIz+MAo6gqdJVVsETMmgfbLw8iYQxy4yIpbcz30
+         BZLcUr6QR3YcT7lxboamAcUV9YECpML+WVh3irkYVKoStwI1/OikUoiJTAiQeNHZzrX2
+         41MV8bBnibgBfD99HNlm9KgA8VH+5CphWevpmqaWgHeqeb4x3iJsqy43KvZck85VvoLe
+         WkyI/VBva+//TGHKuntNMr+JNtf4rbMeoMyOc8CYN8/vLU5ydsmoIA6Lvb3/BlwNBri7
+         L/7Q==
+X-Gm-Message-State: APjAAAWXEvOcMPGHDyV0tWilx7KLyWJMkFWxYV7K8H1nPo4KnvQWbJX4
+        E+lUYoH5MCbmHw72a2gPLBA=
+X-Google-Smtp-Source: APXvYqwwT93CRJa4E1zobDD7odgAbkjWITZXCmyEkFHpgxyLmhB3dllkCjhnWXfogkZpMI/yf2i94A==
+X-Received: by 2002:a17:906:4ecc:: with SMTP id i12mr501758ejv.227.1581099783984;
+        Fri, 07 Feb 2020 10:23:03 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i26sm452051ejx.8.2020.02.07.10.23.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 10:23:03 -0800 (PST)
+Subject: Re: [PATCH v2 6/9] ASoC: tegra: add Tegra186 based DSPK driver
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-7-git-send-email-spujar@nvidia.com>
+ <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
+ <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
+Date:   Fri, 7 Feb 2020 21:22:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+07.02.2020 14:26, Sameer Pujar пишет:
+> 
+> 
+> On 2/6/2020 10:45 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 30.01.2020 13:33, Sameer Pujar пишет:
+>>> +static const struct dev_pm_ops tegra186_dspk_pm_ops = {
+>>> +     SET_RUNTIME_PM_OPS(tegra186_dspk_runtime_suspend,
+>>> +                        tegra186_dspk_runtime_resume, NULL)
+>>> +     SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>> +                                  pm_runtime_force_resume)
+>>> +};
+>> Could you please explain why drivers need the "late" system sleep?
+> 
+> It was done to ensure core drivers are suspended first and defer the
+> codec driver suspend
 
---=-yTpRgBYomwJsP1mAJVk/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Pavel,
-Could you change the patch title to something like this (see other patches
-changing the device-trees, you'll see it's the common pattern):
-
-	ARM: dts: bcm283x: increase dwc2's RX FIFO size
-
-On Fri, 2020-02-07 at 17:30 +0100, Pavel Hofman wrote:
-> The previous version of the dwc2 overlay set the RX FIFO size to
-> 256 4-byte words. This sounds large enough for a 1024 byte packet (the
-> largest isochronous high speed packet allowed), but it doesn't take
-> into account some extra space needed by the hardware.
->=20
-> Minas Harutyunyan at Synopsys (the source of the DWC OTG design)
-> came up with a more correct value, 301, but since there is spare packet
-> RAM this can be increased to 558 to allow two packets per frame.
-
-I suggest making a short summary of your github explanation[1] instead of j=
-ust
-citing Minas. On one hand Minas' memory might get fuzzy after some time (or=
- not
-be able to access the documentation) and...
-
-> See: https://github.com/raspberrypi/linux/issues/3447
-
-...you're assuming this link will be always available. Which is unlikely. A=
-fter
-properly explaining the issue, you won't need the link anyway. Ultimately a
-patch description should be as self-contained/self-explanatory as possible.
-
-Other than that the patch looks good.
-Thanks!
-Nicolas
-
-[1] https://github.com/raspberrypi/linux/issues/3447#issuecomment-581815066
-
-
---=-yTpRgBYomwJsP1mAJVk/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl49nXUACgkQlfZmHno8
-x/64+Af9GVsNsm3NPhMpW0qCLhpsj/VtaeNiM9S+OrLw/5WVKaOalPDpGp+w7qrk
-bZ5VPmFCpIxjJX0fY6lnJWuOPlrMAi7w9PL+h3WFtSqmhRDELUktdg3cnvLYxaxm
-SykV6fdYnhB5u4YXRIky9Ox+Whz95P3LDg67IZE7PX/QQTbYm8+slwdkkTRWZSuZ
-8eb1J4rSDxPcE7rY7uPLNJVvMsFL6kPZiEqX4VvdIbwZ+5kJiyELEs/FbBKQlxFK
-dS8Xkc0VoS9UinK2i+M27haWJ39Z26Bgl7DWNEV4OSf4URECcLPwt/f9Lp5s4izo
-RCM/CL9ocnu6cS1723xHouvaYbKnKw==
-=nK9S
------END PGP SIGNATURE-----
-
---=-yTpRgBYomwJsP1mAJVk/--
-
+Suspend order is opposite to the drivers registration order. If there is
+no real problem with that, then you should use the default suspend
+level. Please don't try to fix a non-existent problems.
