@@ -2,309 +2,152 @@ Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C156C352A2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16F9C352A2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5893321741
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5C920726
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 09:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BmEZkG8z"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IuS7DkoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgBGJbX (ORCPT
+        id S1726573AbgBGJfL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:31:23 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33132 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgBGJbX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 04:31:23 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m10so2758618wmc.0
-        for <devicetree@vger.kernel.org>; Fri, 07 Feb 2020 01:31:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1iUBzNMidsA87bA3dZRKX5y6urM8a6Elhxwk8/0320E=;
-        b=BmEZkG8zulsJCwtECXx7gQ9o597Z+QDoO1RQZYBIpDVeYQL1yj8KuSHQq/iKQgGm3b
-         c/0Bdp3okKKoZZ0L0yOvnoTM53uvl3YaM2lq7cTR0S2VjNRkFy2koiOrJbRORRf/Cu/M
-         YDzm8/CFz0ILP8vOVwYu8PhBgJs39aPhv2vDDwN8K3wUYHiD7SiJ9zOHbwyCp79dcgqO
-         ViGJ4YcIlmDWPWqxrOGhis9Wfbiva1ljGZc2wcpq2EumLGa4r5h7I6sKK+9U4q/Ivpbc
-         VC/2JJuuPf9rp38hSyLRgBZRMuZI5a5n4vngJnO51An84Jnw99LZSOzzRBbbR6Id75dI
-         idCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1iUBzNMidsA87bA3dZRKX5y6urM8a6Elhxwk8/0320E=;
-        b=Vzsoifkqxa5qmjeHorY8+61Wd42dPzI58hQPJY3uWBt+9yJ26i1zp3ioII4ay/fnhD
-         TRalNcKZ7FXt90SCnDeGb9/olsuvcKjLJeg4Qra94vkCGeJ0HXOSBvniJyOz2nJ3JVpA
-         D9OkTHv2vcgtC5DPIQiQc+YvSBs06akyN1jsvOyNegsFaVU6TXRNSpXHTLVD1npbokxj
-         xHd8XZNNzSpdZmSfFvZaGw7PCSHijpbH+zGBnebRau2t2ZgY+fHRQiPvzoJ0wd8R50bY
-         bx5oG/0OoVIw+sCpkWEDZo9weW3AHIoaGy7fG+YtpNdt3s/dJdB4ja8rtj6j7wk2+Alc
-         dsCg==
-X-Gm-Message-State: APjAAAV8Mbg3PxcluEy/6weNI4EXxZuh9HdmcYPszPGIwnnZXjR4JAtv
-        R/pI9fPSzZkbzUsVybDXdHhGMA==
-X-Google-Smtp-Source: APXvYqz9IRC039rNyH870WEKuoTpjZJ/6rVgLdeJdTVoPnQhGbaodA4Svpxw1D2jz17A4jna4pMWdA==
-X-Received: by 2002:a1c:6a15:: with SMTP id f21mr3301225wmc.126.1581067880648;
-        Fri, 07 Feb 2020 01:31:20 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:1d4:3aa1:f3b4:32a2? ([2a01:e34:ed2f:f020:1d4:3aa1:f3b4:32a2])
-        by smtp.googlemail.com with ESMTPSA id w26sm2598510wmi.8.2020.02.07.01.31.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2020 01:31:20 -0800 (PST)
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
- <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
- <af5383b5-2dd4-92ab-ded2-f1cde48bb21a@linaro.org>
- <CAHLCerPir-7DEpweGZ9qoowm+u3BtDdLyB-B18KibMo9y+Q_DQ@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <451416a9-3caa-50d7-832d-9188a53e76ab@linaro.org>
-Date:   Fri, 7 Feb 2020 10:31:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAHLCerPir-7DEpweGZ9qoowm+u3BtDdLyB-B18KibMo9y+Q_DQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 7 Feb 2020 04:35:11 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:33142 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726451AbgBGJfK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 04:35:10 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0179RUDx013874;
+        Fri, 7 Feb 2020 10:34:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=bUFEdxgHJ3uF5fxlnj+Oz6ttTEQRedQ3ZUNqy8lCUjU=;
+ b=IuS7DkoJEon3mMJ3lk5szh26gy3yt0ZaYpUkiXVkhDScwV65SGAkmHmGfVoXq0QMBhsH
+ l9rk1ZLGTQUjt31ryiQZSs+fGhNHUIDdhsBOxX1+ARrGvnC1ByGOL8+YeiLxqdHnFUES
+ 0pwwvmAdzmW/UCbbihnIXmMbe9/t1CH4cC8h/Vm0JR3vEuDTMES5GgDC1lVFppK8UZ9O
+ /feJ68sudoOhgtaNaCWo7B2sNaOsllbabbAICEepLfAGMqjh+1O3EGk2i0m5FyFDfDhs
+ I89fXriFMPsPC+he+yQEctPcJYNzKWCAKYyzz1YCgVEP8NmxmTOLCWTN0+am1dKkYwMt AA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xyhm003tt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Feb 2020 10:34:53 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 22DE2100034;
+        Fri,  7 Feb 2020 10:34:48 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E81192A8FA2;
+        Fri,  7 Feb 2020 10:34:47 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 7 Feb
+ 2020 10:34:47 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Fri, 7 Feb 2020 10:34:47 +0100
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] dt-bindings: panel: Convert orisetech,otm8009a to
+ json-schema
+Thread-Topic: [PATCH v4 3/3] dt-bindings: panel: Convert orisetech,otm8009a to
+ json-schema
+Thread-Index: AQHV3PIRgJ4AtMRmk0Ke4l0B2y5xt6gPaP+A
+Date:   Fri, 7 Feb 2020 09:34:47 +0000
+Message-ID: <80b5cd29-166c-f3a2-891f-762c45dd203b@st.com>
+References: <20200206133344.724-1-benjamin.gaignard@st.com>
+ <20200206133344.724-4-benjamin.gaignard@st.com>
+In-Reply-To: <20200206133344.724-4-benjamin.gaignard@st.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8804B4F629350A48B86A7680318AF44E@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-07_01:2020-02-07,2020-02-06 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/02/2020 20:23, Amit Kucheria wrote:
-> On Thu, Feb 6, 2020 at 10:16 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->>
->>
->> Hi Amit,
->>
->> On 06/02/2020 15:13, Amit Kucheria wrote:
->>> Hi Vasily,
->>>
->>> For this entire series, the DTS files don't contain any trip points.
->>> Did I miss some other series?
->>>
->>> At a minimum, you should add some "hot" or "critical" trip points
->>> since then don't require a cooling-map with throttling actions. If you
->>> have "passive" trip points, then you need to provide cooling-maps.
->>
->> Except I'm misunderstanding the bindings, a thermal zone must define
->> these required properties:
->>
->> - polling-delay
->> - polling-delay-passive
->> - thermal-sensors
->> - trips
->> - cooling-maps
-> 
-> Right, except for the cooling-maps. Those are exempted if there is the
-> trip type is not passive. That is my understanding of the existing
-> bindings.
-
-The binding is ambiguous.
-
-For me it states the cooling maps must be defined as it is a required
-node of the thermal zone.
-
-We may not have an active or passive cooling device for the thermal
-zone, thus we can not comply with the dt binding and strictly speaking
-we shouldn't add this thermal zone.
-
-But the logic of having a 'hot' or a 'critical' trip point without a
-cooling device is correct.
-
-As we move this binding to a schema, we shall clarify the cooling-maps
-is required if there are active or passive trip points otherwise it is
-optional.
-
-
-> Trip type critical triggers a shutdown and trip type hot only triggers
-> a notification - see thermal_core.c:handle_critical_trips(). So we
-> only need cooling maps for passive trip types.
-> 
->>> Since this series has been merged, could you please follow up with a
->>> fixup series to add the trip points?
->>>
->>> Regards,
->>> Amit
->>> p.s. We should catch all this automatically, I'll send out yaml
->>> bindings for the thermal framework soon that should catch this stuff.
->>
->> +1
->>
->> There was a small discussion about converting the binding to a schema:
->>
->> https://www.spinics.net/lists/devicetree/msg332424.html
-> 
-> 
-> Aah, I missed that. I started working on something last week that
-> looks similar to your discussion. Pushed a WIP branch here[1], it
-> looks like I had a similar idea on how to split the bindings. Hope to
-> finish this up tomorrow for an RFC.
-
-Great, thanks for taking care of that.
-
-
-> [1] https://github.com/idlethread/linux/commits/up/thermal/yaml-conversion-v1
-> 
->>> On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->>>>
->>>> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
->>>> H6 and R40 SoCs.
->>>>
->>>> v8:
->>>>         - [vasily] Address more Maxime's comments for dt-schema
->>>>         - [vasily] Add myself to MAINTAINERS for the driver and schema
->>>>         - [vasily] Round calibration data size to word boundary for H6 and A64
->>>>         - [vasily] Change offset for A64 since it reports too low temp otherwise.
->>>>                    Likely conversion formula in user manual is not correct.
->>>>
->>>> v7:
->>>>         - [vasily] Address Maxime's comments for dt-schema
->>>>         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
->>>>         - [vasily] Add Maxime's a-b to the driver patch
->>>>
->>>> v6:
->>>>         - [ondrej, vasily] Squash all driver related changes into a
->>>>                            single patch
->>>>         - [ondrej] Rename calib -> calibration
->>>>         - [ondrej] Fix thermal zone registration check
->>>>         - [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
->>>>         - [ondrej] Rework scale/offset values, H6 calibration
->>>>         - [ondrej] Explicitly set mod clock to 24 MHz
->>>>         - [ondrej] Set undocumented bits in CTRL0 for H6
->>>>         - [ondrej] Add support for A83T
->>>>         - [ondrej] Add dts changes for A83T, H3, H5, H6
->>>>         - [vasily] Add dts changes for A64
->>>>         - [vasily] Address Maxime's comments for YAML scheme
->>>>         - [vasily] Make .calc_temp callback mandatory
->>>>         - [vasily] Set .max_register in regmap config, so regs can be
->>>>                    inspected using debugfs
->>>>
->>>> Ondrej Jirman (4):
->>>>   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
->>>>   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
->>>>   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
->>>>   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
->>>>
->>>> Vasily Khoruzhick (1):
->>>>   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
->>>>
->>>> Yangtao Li (2):
->>>>   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
->>>>   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
->>>>     bindings
->>>>
->>>>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
->>>>  MAINTAINERS                                   |   8 +
->>>>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
->>>>  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
->>>>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
->>>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
->>>>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
->>>>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
->>>>  drivers/thermal/Kconfig                       |  14 +
->>>>  drivers/thermal/Makefile                      |   1 +
->>>>  drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
->>>>  11 files changed, 985 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
->>>>  create mode 100644 drivers/thermal/sun8i_thermal.c
->>>>
->>>> --
->>>> 2.24.1
->>>>
->>
->>
->> --
->>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
->>
->> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
->> <http://twitter.com/#!/linaroorg> Twitter |
->> <http://www.linaro.org/linaro-blog/> Blog
->>
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+SGkgQmVuamFtaW4sDQoNCk9uIDIvNi8yMCAyOjMzIFBNLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90
+ZToNCj4gQ29udmVydCBvcmlzZXRlY2gsb3RtODAwOWEgdG8ganNvbi1zY2hlbWEuDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29t
+Pg0KPiAtLS0NCj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vcmlzZXRlY2gsb3RtODAw
+OWEudHh0ICB8IDIzIC0tLS0tLS0tLS0NCj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9v
+cmlzZXRlY2gsb3RtODAwOWEueWFtbCB8IDUzICsrKysrKysrKysrKysrKysrKysrKysNCj4gICAy
+IGZpbGVzIGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKyksIDIzIGRlbGV0aW9ucygtKQ0KPiAgIGRl
+bGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9wYW5lbC9vcmlzZXRlY2gsb3RtODAwOWEudHh0DQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29yaXNldGVjaCxv
+dG04MDA5YS55YW1sDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dCBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5
+YS50eHQNCj4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDIwM2IwM2VlZmI2OC4u
+MDAwMDAwMDAwMDAwDQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQNCj4gKysrIC9kZXYvbnVsbA0KPiBA
+QCAtMSwyMyArMCwwIEBADQo+IC1PcmlzZSBUZWNoIE9UTTgwMDlBIDMuOTciIDQ4MHg4MDAgVEZU
+IExDRCBwYW5lbCAoTUlQSS1EU0kgdmlkZW8gbW9kZSkNCj4gLQ0KPiAtVGhlIE9yaXNlIFRlY2gg
+T1RNODAwOUEgaXMgYSAzLjk3IiA0ODB4ODAwIFRGVCBMQ0QgcGFuZWwgY29ubmVjdGVkIHVzaW5n
+DQo+IC1hIE1JUEktRFNJIHZpZGVvIGludGVyZmFjZS4gSXRzIGJhY2tsaWdodCBpcyBtYW5hZ2Vk
+IHRocm91Z2ggdGhlIERTSSBsaW5rLg0KPiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAt
+ICAtIGNvbXBhdGlibGU6ICJvcmlzZXRlY2gsb3RtODAwOWEiDQo+IC0gIC0gcmVnOiB0aGUgdmly
+dHVhbCBjaGFubmVsIG51bWJlciBvZiBhIERTSSBwZXJpcGhlcmFsDQo+IC0NCj4gLU9wdGlvbmFs
+IHByb3BlcnRpZXM6DQo+IC0gIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVz
+ZXQgcGluIChhY3RpdmUgbG93KS4NCj4gLSAgLSBwb3dlci1zdXBwbHk6IHBoYW5kbGUgb2YgdGhl
+IHJlZ3VsYXRvciB0aGF0IHByb3ZpZGVzIHRoZSBzdXBwbHkgdm9sdGFnZS4NCj4gLQ0KPiAtRXhh
+bXBsZToNCj4gLSZkc2kgew0KPiAtCS4uLg0KPiAtCXBhbmVsQDAgew0KPiAtCQljb21wYXRpYmxl
+ID0gIm9yaXNldGVjaCxvdG04MDA5YSI7DQo+IC0JCXJlZyA9IDwwPjsNCj4gLQkJcmVzZXQtZ3Bp
+b3MgPSA8JmdwaW9oIDcgR1BJT19BQ1RJVkVfTE9XPjsNCj4gLQkJcG93ZXItc3VwcGx5ID0gPCZ2
+MXY4PjsNCj4gLQl9Ow0KPiAtfTsNCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS55YW1sIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90
+bTgwMDlhLnlhbWwNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAw
+Li42ZTZhYzk5NWMyN2INCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vcmlzZXRlY2gsb3RtODAwOWEueWFtbA0K
+PiBAQCAtMCwwICsxLDUzIEBADQo+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIu
+MC1vbmx5IG9yIEJTRC0yLUNsYXVzZSkNCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICskaWQ6IGh0
+dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgw
+MDlhLnlhbWwjDQo+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFz
+L2NvcmUueWFtbCMNCj4gKw0KPiArdGl0bGU6IE9yaXNlIFRlY2ggT1RNODAwOUEgMy45NyIgNDgw
+eDgwMCBURlQgTENEIHBhbmVsIChNSVBJLURTSSB2aWRlbyBtb2RlKQ0KPiArDQo+ICttYWludGFp
+bmVyczoNCj4gKyAgLSBQaGlsaXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KPiAr
+DQo+ICtkZXNjcmlwdGlvbjogfA0KPiArICAgICAgICAgICAgIFRoZSBPcmlzZSBUZWNoIE9UTTgw
+MDlBIGlzIGEgMy45NyIgNDgweDgwMCBURlQgTENEIHBhbmVsIGNvbm5lY3RlZCB1c2luZw0KPiAr
+ICAgICAgICAgICAgIGEgTUlQSS1EU0kgdmlkZW8gaW50ZXJmYWNlLiBJdHMgYmFja2xpZ2h0IGlz
+IG1hbmFnZWQgdGhyb3VnaCB0aGUgRFNJIGxpbmsuDQo+ICthbGxPZjoNCj4gKyAgLSAkcmVmOiBw
+YW5lbC1jb21tb24ueWFtbCMNCj4gKw0KPiArcHJvcGVydGllczoNCj4gKw0KPiArICBjb21wYXRp
+YmxlOg0KPiArICAgIGNvbnN0OiBvcmlzZXRlY2gsb3RtODAwOWENCj4gKw0KPiArICByZWc6DQo+
+ICsgICAgbWF4SXRlbXM6IDENCj4gKyAgICBkZXNjcmlwdGlvbjogRFNJIHZpcnR1YWwgY2hhbm5l
+bA0KPiArDQo+ICsgIGVuYWJsZS1ncGlvczogdHJ1ZQ0KPiArICBwb3J0OiB0cnVlDQo+ICsgIHBv
+d2VyLXN1cHBseTogdHJ1ZQ0KPiArDQo+ICsgIHJlc2V0LWdwaW9zOg0KPiArICAgIG1heEl0ZW1z
+OiAxDQo+ICsNCj4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiArDQo+ICtyZXF1aXJl
+ZDoNCj4gKyAgLSBjb21wYXRpYmxlDQo+ICsgIC0gcmVnDQo+ICsNCj4gK2V4YW1wbGVzOg0KPiAr
+ICAtIHwNCj4gKyAgICBkc2lAMCB7DQo+ICsgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4g
+KyAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiArICAgICAgcGFuZWxAMCB7DQo+ICsgICAgICAg
+IGNvbXBhdGlibGUgPSAib3Jpc2V0ZWNoLG90bTgwMDlhIjsNCj4gKyAgICAgICAgcmVnID0gPDA+
+Ow0KPiArICAgICAgICByZXNldC1ncGlvcyA9IDwmZ3Bpb2YgMTUgMD47DQo+ICsgICAgICAgIHBv
+d2VyLXN1cHBseSA9IDwmdjF2OD47DQo+ICsgICAgICB9Ow0KPiArICAgIH07DQo+ICsuLi4NCj4g
+Kw0KPiANCg0KUmV2aWV3ZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5j
+b20+DQpUaGFuayB5b3UNClBoaWxpcHBlIDotKQ==
