@@ -7,157 +7,211 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379B9C352A2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA156C352A2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E27218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B380521741
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Do9F9n5k"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="j5eYJ8iZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgBGIKH (ORCPT
+        id S1726903AbgBGIK3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:10:07 -0500
-Received: from mail-eopbgr10069.outbound.protection.outlook.com ([40.107.1.69]:60998
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        Fri, 7 Feb 2020 03:10:29 -0500
+Received: from mail-eopbgr00089.outbound.protection.outlook.com ([40.107.0.89]:12707
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726130AbgBGIKH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:10:07 -0500
+        id S1726130AbgBGIK2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Feb 2020 03:10:28 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oY+B483WdC342YJYtOe3VRA1mJkm5lyNXLoalUWAn4iLrxr1FYXUgnKoC3cIR3ICNxuflWz3S4fpEfvyLSgFrYv3+YUkQXh6ICEOvhd7BC/JHtV2nvnAF0Gpbtr7Ar6qC2xnXnHbURrGgQXo88AR/RrVTvzRkXMmPHgEcw2Hdo7StK3yWHHaNotDzQADljvB24VGx4XSDAZs6/CsN7V1RRiCJTU7KEy0Jl7Ox166/7raqQghQg4KLYlZUaCq8gyU9k+h3ZLhJhenbbWdHnjLZ2M6EJwRd5BCuZELEtB5d5TvxDtVtpcDZ+vMXCfLiIs5JlzkiN9jAtmYrn06ERDsZQ==
+ b=CclBG4vWG8BW28zU4IStJ11FWF51MZOFpA7XxtralPBXaXTjjP3uRxpFbsiVyLZy+gBvNHZVtQwftJGe9zatlhlS+kgS+8jJpqxkuCmneLRvzmiyMBiDde0HNNdGs63EvzPIz1bTV2FNPfG2XMPrzYojTcoEchqWMYItYWCnQMKZzYWo7rLyoVEYJNmJYOto/FHJl4YuYotXn/2MEcEQ0JEn9F/ggL2edz5OrEaOMVbPW9ehKP07zoaBpxdPAQiIBwJYxLZXP7l1m4UZa6i0AUnCrjRwISLc4YxHExPQ3kSMVESAaLGtSoR9c73fnLsmDbsdrFCVbPveqofWPCbmvw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vm2qQDRi4CdJZgeXjh8rOQogakt8ZwShO1TlNwOvZgo=;
- b=Ii4nr+Lya2hVfddLbZBmydVJ3Q/YfxuNtRpVRyzjubMP1ioUgJPsulHZPcp0Z2UVx0zB7BgxjFhwZvIZTDktbwckFTYhK/AlXxDDFtM2V0uhh+395KspgM0qEyQQcX8hicPvaN9/H6OffI72WIwhcmM2IoqGTpkMFetsmN+TDCDm6Cz6EFG4JUrXwh7ubQxxk14Ar2y6I0MyAWRHPmUA2q+kaJ9JlTBTcgBuu0Z/oKj0f8ZOcDmV+hKiXMDzZJvoLzp5fkDJFvxaG4lYfFFaO+SKkohuKOtWZs8D69KpX5q3CNiNiIUIPe1GQQh5D7k7SY54+2jNeeuqVDcsUDYcsA==
+ bh=tWpfQjQ8kJI8DTUzc69VkE9kwzJn0d+di+JsZZZjwtQ=;
+ b=AfRWFwJWBsRt+4dJanhkUCn0kdfMqWw2WkHMERKi8CB6H1E3hp8+4XGHxfZ12gyaZOK3F+Sglt1WPYK/G5VVqoMKRh3ApgCNop/TavSu+cZ0YodccY6rL+ZxZrCMloTiPi4M1LR38lvrrerb4Mzh3neMCUNYyWj2pMKtb5SN0HCCqrfjOslwj4BTSwh8MMA7utJFnCG2EAfAlsyC45XyTj4/TWzedUeQCxW0aPNS2898PUEV1eqx38SkZy1q9kPwU95RWDnpDV+ILyuYN/NFY7m9izH83+S+KvNB7Ri/00TcGn98yuTTLqSIKtf5zvE+IM0w+VWQ0EewUALn704CHQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vm2qQDRi4CdJZgeXjh8rOQogakt8ZwShO1TlNwOvZgo=;
- b=Do9F9n5klovC/a9I2ocxXbrGeBL3zF+I0H+zLt8FyHslZxXif4Dm85Oj9vWysANKdCdiGlQZXErVMIEp4mP6q2a4OtAvAvAeoB2bMHRCD9fUr+xQLDUkZ3bLtahwaD7b0xXtwtpLpl5FN59wIkO3V1Cm8Eroy9k201yiHctsub8=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6722.eurprd04.prod.outlook.com (20.179.252.21) with Microsoft SMTP
+ bh=tWpfQjQ8kJI8DTUzc69VkE9kwzJn0d+di+JsZZZjwtQ=;
+ b=j5eYJ8iZjZjCEfv/RtWhOgQYhxhfnDwxYXX/RLcP/cXmwaX0JgoGYriW73vuZdHqTjYo/1LOPbZUz3y7POpMTOViUZuy5LCOaTYSMJoN7sjBzObyyrCpb9WdXHBgeDMmoDoqhk62yv593nFAXgdJAaaCLWmKeMnFXY4sj0WWCwM=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB2831.eurprd04.prod.outlook.com (10.175.23.136) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.24; Fri, 7 Feb 2020 08:10:01 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
- 08:10:01 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ 15.20.2707.21; Fri, 7 Feb 2020 08:10:22 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
+ 08:10:22 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     =?iso-8859-2?Q?Andr=E9_Draszik?= <git@andred.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Anson Huang <anson.huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>
-Subject: RE: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
-Thread-Topic: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
-Thread-Index: AQHV3O5LIqtUB1cLq0qKBDDFKN5B7qgOt6GAgACqKrA=
-Date:   Fri, 7 Feb 2020 08:10:01 +0000
-Message-ID: <AM0PR04MB4481D3F304E1F17FAFE8D592881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
- <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
- <20200206215947.GA21514@bogus>
-In-Reply-To: <20200206215947.GA21514@bogus>
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
+Thread-Topic: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
+Thread-Index: AQHV164yHhXoESmTiUqzHJu+3DHGMA==
+Date:   Fri, 7 Feb 2020 08:10:22 +0000
+Message-ID: <VI1PR0402MB3485EC2F82DDE52DC5CA0795981C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20200130204516.4760-1-git@andred.net>
+ <20200130204516.4760-2-git@andred.net>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 508996e6-52c8-406c-9c41-08d7aba5213c
-x-ms-traffictypediagnostic: AM0PR04MB6722:|AM0PR04MB6722:
+x-ms-office365-filtering-correlation-id: 8580592e-cffa-4e3d-d394-08d7aba52de4
+x-ms-traffictypediagnostic: VI1PR0402MB2831:|VI1PR0402MB2831:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6722EF62B57859E58BF16F3E881C0@AM0PR04MB6722.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-microsoft-antispam-prvs: <VI1PR0402MB28313F3E7789B81307AFE51A981C0@VI1PR0402MB2831.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 0306EE2ED4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(189003)(199004)(6916009)(316002)(81156014)(8676002)(2906002)(44832011)(81166006)(4326008)(6506007)(55016002)(66946007)(66476007)(52536014)(186003)(66446008)(7696005)(86362001)(66556008)(71200400001)(9686003)(26005)(64756008)(54906003)(76116006)(478600001)(8936002)(33656002)(5660300002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6722;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(366004)(346002)(39860400002)(199004)(189003)(44832011)(71200400001)(478600001)(54906003)(110136005)(86362001)(52536014)(5660300002)(6506007)(53546011)(33656002)(7696005)(9686003)(7416002)(26005)(55016002)(2906002)(186003)(316002)(8676002)(4326008)(66446008)(76116006)(66476007)(91956017)(81156014)(66946007)(64756008)(66556008)(81166006)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2831;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OXCXRN0DhVVcTvkYLONrBUIxaVH9t8T6D716QTCdNKn/dYSbKkIe3BUjSpQr5TNyzgWK4T9m4inXbYvn/t0uJf1y73QCEReJ8lkhZfSCY4GsBw+M/8vr9qfvPJhQBTaxxwRlJA7CGNRGYD6TxlG6a2eQWdYiCJVYWHmWzZmiWdgLHCS87r35k21athVb2ypkPpHGonOh6K1A71P9kSWrpawKzTLAN6NbrjwywHQID+OAMxJ4bZeWC/MHrF0qKpOiksKivZw5DbsuYSS9E7hBeLC83iXt7cVZkZESO8HlmZV6I6ukwtnV+rdSgWZO732jl0PrngvU3xurItjdxKSKQIf52pZcrTxHOdd7otC4jt9DtK9UhggjaYiN6tvS3PwTHD6lyomDN1lf5JSZx7WtJcR9buoaAxx2aSL+t3nf0cWEaQe26ahcS/mXgwqjRWJ1UW7uksTrtaoaFarFWPvhUerSXJuT51q+UkP2RoBnnQD154PUu2yGb3KYgyI8T/Rq
-x-ms-exchange-antispam-messagedata: hAM3WQc3kfPx0oAx6MIt3AgiaxV4n8T+qvcBj/rHVhoCkETELH/QaqTSkOu8aWRNVhM0RLKcZm01BMMMY6O5H1Q1r1daxjpoeXD7KSGomee+CEPnEsShSO0G8v0ztemlGVAtcm9usoQsY2C3GL0jRw==
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: 5i593SuVIV9VlrFODnta1JRZxl64VhMc52UqyZNe/iHQ3TjHU/NZK6KvXsgBuk1i8M0egru7iTPEX44Sr9M7qhGv5mqGR0qx7J0AqY63U2eRYS1zbh9PeSuTuX0h1dNVaSEA/zaWhdwZt31JcVMxwag3Owsf+DABF1VJnr15OjS7QwxG9sUNwmVG+TLolAg+oFolZTbbDQj2YRmO6tmOhMj5PxvwxuaxH8vbyBMwluDsyk1EANm20UHPVhq0PvCA304kHcqJvAYNhw+BWspLo8q6hpq9nf4QeseM2Ar2LWtucXSzq4CK156/h4LtYcXAwVzlsVXQkKcxma7P9awkSwHQA/ILXGw0DGBcq1I7B0L9nEErB2PqCWZ0Ca6DolBsKpeT5u4FOY+PKNjwbUW3cWS6QDT+98cnnhyhaiqQO2Swd3Cy087rsEzr3yc9jDck
+x-ms-exchange-antispam-messagedata: Bhp15MSc5oNhXwm9ztodemqNFKrR8LMyHqD0nq9Qe9HfUVi4abqGMgiz82+N9FDrfNeKX9AVklGOBCVvMmSubnGct0j432qeIQBvoyr+jLNDez5oQiAx5ck0q9xdXutmMGgZmKfLKqd1upQrQPJZqQ==
+Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 508996e6-52c8-406c-9c41-08d7aba5213c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 08:10:01.1008
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8580592e-cffa-4e3d-d394-08d7aba52de4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 08:10:22.3029
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OMBeasp8AeF9QuOplVNSaR7rUwczzfKpvXXSPN/lWp/HcdKH3snj0Zq9V4R+m621vWXkRt9D1mVtRqztiLSGRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6722
+X-MS-Exchange-CrossTenant-userprincipalname: Xb7V0opFCYwMk2eE4+4oWGRLomzYNRU0HQQnyoOW28xmUxdsbRHOSjCbWA2Z3PXxsZ0MDZ40JCigQ3+cVkeoow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2831
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transpor=
-ts
->=20
-> On Thu, Feb 06, 2020 at 09:01:25PM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > SCMI could use SMC/HVC as tranports, so add into devicetree binding
-> > doc.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > index f493d69e6194..03cff8b55a93 100644
-> > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > @@ -14,7 +14,7 @@ Required properties:
-> >
-> >  The scmi node with the following properties shall be under the /firmwa=
-re/
-> node.
-> >
-> > -- compatible : shall be "arm,scmi"
-> > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
-> >  - mboxes: List of phandle and mailbox channel specifiers. It should co=
-ntain
-> >  	  exactly one or two mailboxes, one for transmitting messages("tx")
-> >  	  and another optional for receiving the notifications("rx") if @@
-> > -25,6 +25,8 @@ The scmi node with the following properties shall be und=
-er
-> the /firmware/ node.
-> >  	  protocol identifier for a given sub-node.
-> >  - #size-cells : should be '0' as 'reg' property doesn't have any size
-> >  	  associated with it.
-> > +- arm,smc-id : SMC id required when using smc transports
-> > +- arm,hvc-id : HVC id required when using hvc transports
->=20
-> Don't the SMC ids get standardized?
-
-For now, there is no standard SCMI SMC/HVC ID.
-
-Sudeep, Is there any plan from ARM? Or how you think about this patch?
-
-Thanks,
-Peng.
-
->=20
-> >
-> >  Optional properties:
-> >
-> > --
-> > 2.16.4
-> >
+On 1/30/2020 10:45 PM, Andr=E9 Draszik wrote:=0A=
+> At the moment, enabling this driver without the SNVS RTC driver=0A=
+> being active will hang the kernel as soon as the power button=0A=
+> is pressed.=0A=
+> =0A=
+> The reason is that in that case the SNVS isn't enabled, and=0A=
+> any attempt to read the SNVS registers will simply hang forever.=0A=
+> =0A=
+> Ensure the clock is enabled (during the interrupt handler) to=0A=
+> make this driver work.=0A=
+> =0A=
+> Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")=
+=0A=
+> and commit edb190cb1734=0A=
+> ("rtc: snvs: make sure clock is enabled for interrupt handle")=0A=
+> for similar updates to the snvs rtc driver.=0A=
+> =0A=
+> Signed-off-by: Andr=E9 Draszik <git@andred.net>=0A=
+> Cc: Anson Huang <Anson.Huang@nxp.com>=0A=
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>=0A=
+> Cc: "Horia Geant=E3" <horia.geanta@nxp.com>=0A=
+> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>=0A=
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
+> Cc: "David S. Miller" <davem@davemloft.net>=0A=
+> Cc: Rob Herring <robh+dt@kernel.org>=0A=
+> Cc: Mark Rutland <mark.rutland@arm.com>=0A=
+> Cc: linux-crypto@vger.kernel.org=0A=
+> Cc: devicetree@vger.kernel.org=0A=
+> Cc: linux-input@vger.kernel.org=0A=
+> ---=0A=
+>  drivers/input/keyboard/snvs_pwrkey.c | 27 +++++++++++++++++++++++++++=0A=
+>  1 file changed, 27 insertions(+)=0A=
+> =0A=
+> diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboar=
+d/snvs_pwrkey.c=0A=
+> index 2f5e3ab5ed63..c29711d8735c 100644=0A=
+> --- a/drivers/input/keyboard/snvs_pwrkey.c=0A=
+> +++ b/drivers/input/keyboard/snvs_pwrkey.c=0A=
+> @@ -16,6 +16,7 @@=0A=
+>  #include <linux/of_address.h>=0A=
+>  #include <linux/platform_device.h>=0A=
+>  #include <linux/pm_wakeirq.h>=0A=
+> +#include <linux/clk.h>=0A=
+>  #include <linux/mfd/syscon.h>=0A=
+>  #include <linux/regmap.h>=0A=
+>  =0A=
+> @@ -38,6 +39,7 @@ struct pwrkey_drv_data {=0A=
+>  	int wakeup;=0A=
+>  	struct timer_list check_timer;=0A=
+>  	struct input_dev *input;=0A=
+> +	struct clk *clk;=0A=
+>  	u8 minor_rev;=0A=
+>  };=0A=
+>  =0A=
+> @@ -72,6 +74,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, v=
+oid *dev_id)=0A=
+>  	struct input_dev *input =3D pdata->input;=0A=
+>  	u32 lp_status;=0A=
+>  =0A=
+> +	if (pdata->clk)=0A=
+> +		clk_enable(pdata->clk);=0A=
+> +=0A=
+clk framework handles NULL pointers internally, the check is redundant.=0A=
+=0A=
+>  	pm_wakeup_event(input->dev.parent, 0);=0A=
+>  =0A=
+>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);=0A=
+> @@ -96,6 +101,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, =
+void *dev_id)=0A=
+>  	/* clear SPO status */=0A=
+>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);=0A=
+>  =0A=
+> +	if (pdata->clk)=0A=
+> +		clk_disable(pdata->clk);=0A=
+> +=0A=
+>  	return IRQ_HANDLED;=0A=
+>  }=0A=
+>  =0A=
+> @@ -140,6 +148,25 @@ static int imx_snvs_pwrkey_probe(struct platform_dev=
+ice *pdev)=0A=
+>  	if (pdata->irq < 0)=0A=
+>  		return -EINVAL;=0A=
+>  =0A=
+> +	pdata->clk =3D devm_clk_get(&pdev->dev, "snvs-pwrkey");=0A=
+> +	if (IS_ERR(pdata->clk)) {=0A=
+> +		pdata->clk =3D NULL;=0A=
+Using devm_clk_get_optional() would simplify error handling.=0A=
+=0A=
+> +	} else {=0A=
+> +		error =3D clk_prepare_enable(pdata->clk);=0A=
+> +		if (error) {=0A=
+> +			dev_err(&pdev->dev,=0A=
+> +				"Could not prepare or enable the snvs clock\n");=0A=
+> +			return error;=0A=
+> +		}=0A=
+> +		error =3D devm_add_action_or_reset(&pdev->dev,=0A=
+> +				(void(*)(void *))clk_disable_unprepare,=0A=
+> +				pdata->clk);=0A=
+> +		if (error) {=0A=
+> +			dev_err(&pdev->dev, "failed to add reset action on 'snvs-pwrkey'");=
+=0A=
+> +			return error;=0A=
+> +		}=0A=
+> +	}=0A=
+> +=0A=
+>  	regmap_read(pdata->snvs, SNVS_HPVIDR1_REG, &vid);=0A=
+>  	pdata->minor_rev =3D vid & 0xff;=0A=
+>  =0A=
+> =0A=
