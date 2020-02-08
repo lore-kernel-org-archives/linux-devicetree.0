@@ -1,173 +1,553 @@
-Return-Path: <SRS0=EXmG=33=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=jtT8=34=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDF5C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 23:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF76C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 00:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECD920656
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Feb 2020 23:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B446C22314
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 00:42:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IR4+cctV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ARPqqEad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgBGXyx (ORCPT
+        id S1727071AbgBHAm0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Feb 2020 18:54:53 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38222 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgBGXyx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 18:54:53 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x185so577778pfc.5;
-        Fri, 07 Feb 2020 15:54:52 -0800 (PST)
+        Fri, 7 Feb 2020 19:42:26 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41747 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbgBHAm0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Feb 2020 19:42:26 -0500
+Received: by mail-pf1-f196.google.com with SMTP id j9so615486pfa.8
+        for <devicetree@vger.kernel.org>; Fri, 07 Feb 2020 16:42:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5qMbFWATYyhNriIA227P4Y2/H9QOdX8jfCqbFm5qb5k=;
-        b=IR4+cctVsdvXWUYSJR4OmnDjjcOOBUkeIT9S5vKntCpzrtS8CFJXFKk0S69KQ5Th6q
-         EitQXCp6+MwtTM7/aO7bJFupy5VZQqlU24P22dnMdYdJOZWsLHCapABeL/oGT0zgnVro
-         xh3JTeynpoSdCWhzfMa0cUnXMiIafksNgf/8o0XwY2T60mqNOMoSBvo9VNKsQEfgUlkk
-         TQDEzCKElc8Uj4m5thuwxloxEA+0OBXuNy45fNz06XE3NiA4UvJR0EZYDejuMkGo12Sy
-         C+VaIKV6f13j2QZftyCLJVXxVofnmDZkEVCCWtgRuT0kNey61kieYjI+svNZWeaP69a5
-         YfNg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SNBobnLCfm/DOPJ2Jlz1Eo0/Gawxt5hzaTm+RPtNFQ8=;
+        b=ARPqqEads/7g+3bLP/eQ1MWqpLTzEMk0LG1jCHqe/61ErmKP6Tcvxk38JAs/i7XrNf
+         dj5jGIzKxZ2meCw4Lg4KoHn7e9IorrK5o9b+86jzehrWUFkjW1ytGRmGrO5slEyZ9RXk
+         Urr1gM0kSDyB+RNABNpteVJOv6xSYJ8N11AkU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=5qMbFWATYyhNriIA227P4Y2/H9QOdX8jfCqbFm5qb5k=;
-        b=i/pGy27xSrb9iyJdG+ihVgGHkfZ2N8p85+R8HBDIHriu//vbMJwu7D/+pBPk4SxjAJ
-         pofZlAe4jAzYsZj+K1D2K1eY89O+xZqWjcBhOUVzX5DAl6me9lch8Z/cSaJh6IM6xcpP
-         PmTBpPKSelRp5rGNOtRvWhJ8xhVOLb3IRRT+mVilnh368in20nrMCpStgh/5b/Atz2Af
-         rUtH42WqBLQ8+WkYq/FrAPQMIRZClznA+CRNNJ1RHBfZb8WqQk4NRZ9PGLwDg4iRyGdC
-         gJniv/h06ZeFtqkX+7pfBijA9bttc1749KeH61p37m+QAEve8BSICQvD8ZNddupFMB0I
-         712g==
-X-Gm-Message-State: APjAAAWawMwkzQc4VP/+sAa+SwI7kDWE/yqsgJmmnPw6Wo6b6b0oE84N
-        dYAU4PsXj3z7MjxuXs2ld9S61hu/
-X-Google-Smtp-Source: APXvYqwdaKzitIMr9zdfpJbOs+cXOstH3wgSGoQBz9sE4GE4qRxI9aerDwcavmA8LnwoBZqjI601ug==
-X-Received: by 2002:aa7:9301:: with SMTP id 1mr1351551pfj.156.1581119692237;
-        Fri, 07 Feb 2020 15:54:52 -0800 (PST)
-Received: from [10.67.50.115] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id g24sm4272399pfk.92.2020.02.07.15.54.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SNBobnLCfm/DOPJ2Jlz1Eo0/Gawxt5hzaTm+RPtNFQ8=;
+        b=Noi+dajgq4aPlYUZLvzYHfg0EcMHqPJhsGYWW0C+zSwcECsPEmUx+cNjSWI7Gu/Fk8
+         2l6+2cKrx60CgUA8bp0jy4VGgOUdX29QMxPT1j0bHlN7Z+c6vpasfB90Q5cX8msT5l15
+         NxripxZpxBEOiZNK/hG/b5GWgzuc8dUbHUT2YsrsYo0D8Y8ZyfRgnta3siCDPxot98rM
+         LMNZEXO9DSHijroDTr6b+lUNtFGkfGZjNcoxe+xMzNHdPFsvAWn+y5tPoM2mXxgLY73y
+         S8IwMugGUI5le7pAtVvuW8NZvlmF7gK+X3sDMZePaO1RkjmkuOL/rd2OZeK57rG/kyBM
+         Cj8w==
+X-Gm-Message-State: APjAAAX2XXAqQwfuzzri9KdIrTpNe5Ld6StWPcJRH/IsDhFWHCLG4YbT
+        qAGbn48ySx4CC/gmqmdjsDpPGQ==
+X-Google-Smtp-Source: APXvYqyxC19x9SSSULYcNDXW0It/01dOtZwzjnv0pyTzwx5xMYbTldxSfPiV7qzNzP79SJRfx25AuQ==
+X-Received: by 2002:aa7:971c:: with SMTP id a28mr1573828pfg.152.1581122545466;
+        Fri, 07 Feb 2020 16:42:25 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id f3sm4197363pfg.115.2020.02.07.16.42.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2020 15:54:51 -0800 (PST)
-Subject: Re: [PATCH v2 2/2] dt-binding: spi: add bindings for spi-ar934x
-To:     Chuanhong Guo <gch981213@gmail.com>, Rob Herring <robh@kernel.org>
-Cc:     linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20200206150626.708649-1-gch981213@gmail.com>
- <20200206150626.708649-3-gch981213@gmail.com> <20200206205551.GA15172@bogus>
- <CAJsYDVKXvAkQawwayX8JVrjvEKPuTyQXE8rw=BRiyVROKrdWrg@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
- 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
- S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
- 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
- r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
- IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
- Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
- b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
- JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
- cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
- +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
- BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
- Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
- WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
- P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
- 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
- C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
- es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
- 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
- zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
- 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
- skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
- 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
- 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
- SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
- PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
- WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
- nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
- gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
- rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
- QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
- BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
- PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
- hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
- OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
- Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
- LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
- RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
- k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
- uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
- 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
- HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
- TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <7f53a397-0237-4c68-e284-d92adf19c368@gmail.com>
-Date:   Fri, 7 Feb 2020 15:54:45 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 07 Feb 2020 16:42:24 -0800 (PST)
+Date:   Fri, 7 Feb 2020 16:42:22 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Pradeep P V K <ppvk@codeaurora.org>
+Cc:     adrian.hunter@intel.com, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        linux-mmc-owner@vger.kernel.org,
+        Subhash Jadavani <subhashj@codeaurora.org>
+Subject: Re: [RFC v3 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
+ scaling support
+Message-ID: <20200208004222.GC18972@google.com>
+References: <1581086695-16645-1-git-send-email-ppvk@codeaurora.org>
+ <1581086695-16645-2-git-send-email-ppvk@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <CAJsYDVKXvAkQawwayX8JVrjvEKPuTyQXE8rw=BRiyVROKrdWrg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1581086695-16645-2-git-send-email-ppvk@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/6/20 9:55 PM, Chuanhong Guo wrote:
-> On Fri, Feb 7, 2020 at 4:55 AM Rob Herring <robh@kernel.org> wrote:
->>
->> On Thu,  6 Feb 2020 23:06:26 +0800, Chuanhong Guo wrote:
->>> Add binding documentation for SPI controller in Qualcomm Atheros
->>> AR934x/QCA95xx SoCs.
->>>
->>> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
->>> ---
->>> Changes since v1: none
->>>  .../bindings/spi/qca,ar934x-spi.yaml          | 40 +++++++++++++++++++
->>>  1 file changed, 40 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
->>>
->>
->> My bot found errors running 'make dt_binding_check' on your patch:
->>
->> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
->> Error: Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dts:20.28-29 syntax error
->> FATAL ERROR: Unable to parse input tree
->> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dt.yaml' failed
->> make[1]: *** [Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dt.yaml] Error 1
->> Makefile:1263: recipe for target 'dt_binding_check' failed
->> make: *** [dt_binding_check] Error 2
->>
->> See https://patchwork.ozlabs.org/patch/1234394
->> Please check and re-submit.
-> 
-> It's caused by "clocks = <&pll ATH79_CLK_AHB>" where ATH79_CLK_AHB
-> isn't defined without a include of dt-bindings/clock/ath79-clk.h
-> I'll replace this with a bogus "clocks = <&spi_clock>" instead in v3.
+Hi Pradeep,
 
-You can include ath79-clk.h in your example, see for instance
-Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
--- 
-Florian
+On Fri, Feb 07, 2020 at 08:14:54PM +0530, Pradeep P V K wrote:
+> Add interconnect bandwidths for SDHC driver using OPP framework that
+> is required by SDHC driver based on the clock frequency and bus width
+> of the card. Otherwise, the system clocks may run at minimum clock
+> speed and thus affecting the performance.
+> 
+> This change is based on Georgi Djakov [RFC]
+> (https://lkml.org/lkml/2018/10/11/499) and
+> 
+> Saravana Kannan [PATCH v6]
+> (https://lkml.org/lkml/2019/12/6/740)
+> 
+> change from RFC v2 -> v3 changes:
+> - Modified interconnect bandwidth support using OPP framework.
+> - Addressed review comments on v2.
+> 
+> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
+> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 251 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 247 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 71f29ba..f061cd8 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -11,8 +11,10 @@
+>  #include <linux/mmc/mmc.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/slab.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/pm_opp.h>
+>  
+>  #include "sdhci-pltfm.h"
+>  
+> @@ -229,6 +231,14 @@ struct sdhci_msm_variant_info {
+>  	const struct sdhci_msm_offset *offset;
+>  };
+>  
+> +struct sdhci_msm_bus_vote_data {
+> +
+> +	struct icc_path *sdhc_to_ddr;
+> +	struct icc_path *cpu_to_sdhc;
+> +	bool skip_bus_bw_voting;
+
+nit: the name is somewhat redundant given the name of the containing
+struct. 'skip_vote' or 'skip_voting' would be sufficient IMO.
+
+> +	u32 curr_freq;
+> +};
+> +
+>  struct sdhci_msm_host {
+>  	struct platform_device *pdev;
+>  	void __iomem *core_mem;	/* MSM SDCC mapped address */
+> @@ -255,8 +265,11 @@ struct sdhci_msm_host {
+>  	bool use_cdr;
+>  	u32 transfer_mode;
+>  	bool updated_ddr_cfg;
+> +	struct sdhci_msm_bus_vote_data *bus_vote_data;
+>  };
+>  
+> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable);
+> +
+>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> @@ -1564,6 +1577,7 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+>  
+>  	msm_set_clock_rate_for_bus_mode(host, clock);
+>  out:
+> +	sdhci_msm_bus_voting(host, !!clock);
+>  	__sdhci_msm_set_clock(host, clock);
+>  }
+>  
+> @@ -1685,6 +1699,219 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>  }
+>  
+> +/*
+> + * Returns required bandwidth in Bytes per Sec
+> + */
+> +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
+> +					struct mmc_ios *ios)
+> +{
+> +	unsigned long bw;
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +
+> +	bw = msm_host->clk_rate;
+
+nit: you could declare 'bw' last and do the assignment together with the
+declaration.
+
+> +
+> +	if (ios->bus_width == MMC_BUS_WIDTH_4)
+> +		bw /= 2;
+> +	else if (ios->bus_width == MMC_BUS_WIDTH_1)
+> +		bw /= 8;
+> +
+> +	return bw;
+> +}
+> +
+> +/*
+> + * Helper function to parse the exact OPP node
+> + * Returns OPP pointer on success else NULL on error
+> + */
+> +static struct dev_pm_opp *find_opp_for_freq(struct sdhci_msm_host *msm_host,
+> +							unsigned long bw)
+> +{
+> +	struct dev_pm_opp *opp;
+> +	struct sdhci_host *host = mmc_priv(msm_host->mmc);
+> +	unsigned int freq = bw;
+> +	struct device *dev = &msm_host->pdev->dev;
+> +
+> +
+> +	if (!freq)
+> +		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
+> +	else
+> +		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
+> +
+> +	/* Max Bandwidth vote */
+
+s/Bandwidth/bandwidth/
+
+> +	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
+> +		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
+> +
+> +	if (IS_ERR(opp)) {
+> +		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
+> +				freq, PTR_ERR(opp));
+> +		return NULL;
+> +	}
+> +	return opp;
+> +}
+> +
+> +/*
+> + * This function sets the interconnect bus bandwidth
+> + * vote based on bw (bandwidth) argument.
+> + */
+> +#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
+> +static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
+> +						unsigned int bw)
+> +{
+> +	int i;
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
+> +	struct dev_pm_opp *opp;
+> +	unsigned long freq = bw;
+> +	unsigned long ib[BUS_INTERCONNECT_PATHS], ab[BUS_INTERCONNECT_PATHS];
+
+the names are not very expressive, how about peak_bw and avg_bw?
+
+> +	int ddr_rc = 0, cpu_rc = 0;
+
+initialization is not needed
+
+> +
+> +	if (!msm_host->bus_vote_data->sdhc_to_ddr ||
+> +			!msm_host->bus_vote_data->cpu_to_sdhc)
+> +		return;
+> +
+> +	if (bw != vote_data->curr_freq) {
+
+  	if (bw == vote_data->curr_freq)
+		return;
+
+
+> +		for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
+> +			opp = find_opp_for_freq(msm_host, freq);
+> +			if (opp) {
+> +				ab[i] =	dev_pm_opp_get_bw(opp, &ib[i]);
+> +				freq += 1; /* Next Band width vote */
+
+s/Band width/bandwidth/
+
+> +				dev_pm_opp_put(opp);
+> +			}
+> +		}
+> +		pr_debug("%s: freq:%d sdhc_to_ddr ab:%lu ib:%lu cpu_to_sdhc ab:%lu ib:%lu\n",
+> +				mmc_hostname(host->mmc), bw, ab[0], ib[0],
+> +				ab[1], ib[1]);
+> +		ddr_rc = icc_set_bw(vote_data->sdhc_to_ddr, 0, ib[0]);
+> +		cpu_rc = icc_set_bw(vote_data->cpu_to_sdhc, 0, ib[1]);
+> +		if (ddr_rc || cpu_rc) {
+> +			pr_err("%s: icc_set() failed ddr_rc_err:%d cpu_rc_err:%d\n",
+> +				mmc_hostname(host->mmc), ddr_rc, cpu_rc);
+> +			return;
+> +		}
+> +		vote_data->curr_freq = bw;
+> +	}
+> +}
+> +
+> +/*
+> + * This function registers the device to OPP framework and
+> + * parses few optional parameters from the device tree node.
+> + * Returns NULL bvd pointer on error else a valid bvd pointer.
+> + */
+> +static struct sdhci_msm_bus_vote_data *sdhci_msm_get_bus_vote_data(struct device
+> +				       *dev, struct sdhci_msm_host *host)
+> +
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct sdhci_msm_bus_vote_data *vote_data = NULL;
+> +	int ret = 0;
+
+initialization of 'vote_data' and 'ret' is not needed.
+
+> +
+> +	if (!pdev) {
+> +		dev_err(dev, "Null platform device!\n");
+> +		return NULL;
+> +	}
+
+It's probably safe to assume that the device is a platform device?
+
+> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
+> +	if (!vote_data)
+> +		return vote_data;
+
+  		return ERR_PTR(-ENOMEM); ?
+
+> +
+> +	ret = dev_pm_opp_of_add_table(dev);
+> +	if (ret) {
+> +		if (ret == -ENODEV || ret == -ENODATA) {
+> +			dev_dbg(dev, "OPP not found. Skip bus voting!!:%d\n",
+> +					ret);
+> +			vote_data->skip_bus_bw_voting = true;
+> +		} else {
+> +			dev_dbg(dev, "OPP regestration failed:%d\n", ret);
+
+s/regestration/registration/
+
+Depending on the consequences of this failure (e.g. probe() fails) you
+probably want to use dev_warn() or dev_err() here.
+
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return vote_data;
+> +err:
+> +	devm_kfree(dev, vote_data);
+> +	vote_data = NULL;
+
+not needed
+
+> +	return vote_data;
+
+  	return NULL;
+
+> +}
+> +
+> +/*
+> + * Helper function to register for OPP and interconnect
+> + * frameworks.
+> + */
+> +static int sdhci_msm_bus_register(struct sdhci_msm_host *host,
+> +				struct platform_device *pdev)
+> +{
+> +	struct sdhci_msm_bus_vote_data *vote_data;
+> +	struct device *dev = &pdev->dev;
+> +	int ret = 0;
+> +
+> +	vote_data = sdhci_msm_get_bus_vote_data(dev, host);
+> +	if (!vote_data) {
+> +		dev_dbg(&pdev->dev, "Failed to get bus_scale data\n");
+
+In general I'm not convinced about the use of dev_dbg() in the error
+paths. Maybe there is some signal you can use to determine if there
+should be a valid bus scaling information (e.g. some DT property
+exists). If it exists you proceed with obtaining the necessary
+information and complain loudly if something goes wrong, otherwise you
+don't even try to obtain it and omit the debug logs.
+
+> +		host->bus_vote_data = NULL;
+
+IIUC struct sdhci_msm_host is zero initialized by sdhci_pltfm_init(),
+hence the assignment to NULL is not needed.
+
+> +		return -EINVAL;
+
+Use the error returned by sdhci_msm_get_bus_vote_data().
+
+> +	}
+> +	host->bus_vote_data = vote_data;
+> +
+> +	vote_data->sdhc_to_ddr = of_icc_get(&pdev->dev, "sdhc-ddr");
+
+This could be the signal I mentioned above. If this entry does not
+exist it is pointless to proceed. You could check this before
+sdhci_msm_get_bus_vote_data() and abort with a dev_info() message in
+case it doesn't exist. If it exists any error afterwards will be
+reported with dev_err().
+
+> +	if (!vote_data->sdhc_to_ddr) {
+> +		dev_dbg(&pdev->dev, "DT property for path %s missing\n",
+> +				"sdhc-ddr");
+> +		return -ENOENT;
+> +	} else if (IS_ERR(vote_data->sdhc_to_ddr) {
+> +		dev_dbg(&pdev->dev, "(%ld): failed getting %s path\n",
+> +				PTR_ERR(vote_data->sdhc_to_ddr), "sdhc-ddr");
+> +		ret = PTR_ERR(vote_data->sdhc_to_ddr);
+> +		vote_data->sdhc_to_ddr = NULL;
+> +		return ret;
+
+if there is an error probe() should probably be aborted. If that's the
+case you can replace the above three lines with 'return PTR_ERR(vote_data->sdhc_to_ddr);'
+
+> +	}
+> +	vote_data->cpu_to_sdhc = of_icc_get(&pdev->dev, "cpu-sdhc");
+> +	if (!vote_data->cpu_to_sdhc) {
+> +		dev_dbg(&pdev->dev, "DT property for path %s missing\n",
+> +					"cpu_to_sdhc");
+> +		return -ENOENT;
+> +	} else if (IS_ERR(vote_data->cpu_to_sdhc)) {
+> +		dev_dbg(&pdev->dev, "(%ld): failed getting %s path\n",
+> +				PTR_ERR(vote_data->cpu_to_sdhc), "cpu-sdhc");
+> +		ret = PTR_ERR(vote_data->cpu_to_sdhc);
+> +		vote_data->cpu_to_sdhc = NULL;
+> +		return ret;
+
+same comment as above
+
+> +	}
+> +	return ret;
+
+no error if we get to this point, hence:
+
+	return 0;
+
+> +}
+> +
+> +static void sdhci_msm_bus_unregister(struct device *dev,
+> +				struct sdhci_msm_host *host)
+> +{
+> +	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
+> +
+> +	if (vote_data->skip_bus_bw_voting ||
+> +		!vote_data->sdhc_to_ddr ||
+> +		!vote_data->cpu_to_sdhc)
+> +		return;
+> +
+> +	icc_put(vote_data->sdhc_to_ddr);
+> +	icc_put(vote_data->cpu_to_sdhc);
+> +}
+> +
+> +#define MSM_MMC_BUS_VOTING_DELAY        200 /* msecs */
+> +
+> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable)
+
+s/u32/bool/ ?
+
+> +{
+> +	struct mmc_ios *ios = &host->mmc->ios;
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	unsigned int bw;
+> +
+> +	if (msm_host->bus_vote_data->skip_bus_bw_voting)
+> +		return;
+> +
+> +	if (enable) {
+> +		bw = sdhci_get_bw_required(host, ios);
+> +		sdhci_msm_bus_set_vote(host, bw);
+> +	} else
+> +		sdhci_msm_bus_set_vote(host, 0);
+> +}
+> +
+>  static const struct sdhci_msm_variant_ops mci_var_ops = {
+>  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+> @@ -1845,11 +2072,20 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  		dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
+>  	}
+>  
+> +	ret = sdhci_msm_bus_register(msm_host, pdev);
+> +	if (ret && msm_host->bus_vote_data &&
+> +			!msm_host->bus_vote_data->skip_bus_bw_voting) {
+> +		dev_err(&pdev->dev, "Bus registration failed (%d)\n", ret);
+> +		goto clk_disable;
+> +	}
+> +
+> +	sdhci_msm_bus_voting(host, 1);
+
+s/1/true/
+
+> +
+>  	if (!msm_host->mci_removed) {
+>  		msm_host->core_mem = devm_platform_ioremap_resource(pdev, 1);
+>  		if (IS_ERR(msm_host->core_mem)) {
+>  			ret = PTR_ERR(msm_host->core_mem);
+> -			goto clk_disable;
+> +			goto bus_unregister;
+>  		}
+>  	}
+>  
+> @@ -1924,7 +2160,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
+>  	if (msm_host->pwr_irq < 0) {
+>  		ret = msm_host->pwr_irq;
+> -		goto clk_disable;
+> +		goto bus_unregister;
+>  	}
+>  
+>  	sdhci_msm_init_pwr_irq_wait(msm_host);
+> @@ -1937,7 +2173,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  					dev_name(&pdev->dev), host);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Request IRQ failed (%d)\n", ret);
+> -		goto clk_disable;
+> +		goto bus_unregister;
+>  	}
+>  
+>  	pm_runtime_get_noresume(&pdev->dev);
+> @@ -1962,6 +2198,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  	pm_runtime_disable(&pdev->dev);
+>  	pm_runtime_set_suspended(&pdev->dev);
+>  	pm_runtime_put_noidle(&pdev->dev);
+> +bus_unregister:
+> +	sdhci_msm_bus_voting(host, 0);
+
+s/0/false/
+
+> +	sdhci_msm_bus_unregister(&pdev->dev, msm_host);
+>  clk_disable:
+>  	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>  				   msm_host->bulk_clks);
+> @@ -1991,6 +2230,9 @@ static int sdhci_msm_remove(struct platform_device *pdev)
+>  				   msm_host->bulk_clks);
+>  	if (!IS_ERR(msm_host->bus_clk))
+>  		clk_disable_unprepare(msm_host->bus_clk);
+> +
+> +	sdhci_msm_bus_voting(host, 0);
+
+s/0/false/
+
+> +	sdhci_msm_bus_unregister(&pdev->dev, msm_host);
+>  	sdhci_pltfm_free(pdev);
+>  	return 0;
+>  }
+> @@ -2003,7 +2245,7 @@ static __maybe_unused int sdhci_msm_runtime_suspend(struct device *dev)
+>  
+>  	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>  				   msm_host->bulk_clks);
+> -
+> +	sdhci_msm_bus_voting(host, 0);
+
+s/0/false/
+
+>  	return 0;
+>  }
+>  
+> @@ -2025,6 +2267,7 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+>  	if (msm_host->restore_dll_config && msm_host->clk_rate)
+>  		return sdhci_msm_restore_sdr_dll_config(host);
+>  
+> +	sdhci_msm_bus_voting(host, 1);
+
+s/0/true/
+
+Thanks
+
+Matthias
