@@ -2,103 +2,114 @@ Return-Path: <SRS0=jtT8=34=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2AEC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 16:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD25C352A1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 16:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E045E22522
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 16:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581177905;
-	bh=Euyw5YRT5MdLDsoMxRjF1gQchnvFaODdk1aaTO+peYM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UJJzd1LI05kylVx7h1E5FVaH7FLgv5BVuTqmDIdrjqVqn0C5UOpPlvJyaX6C8QwPi
-	 rrJvzDOSdysDTR1FAo1mfm2OTNdQNvOoGENCJpZNsw2KMJSNU6kjOZlFIDntgh5jbr
-	 J97NJ5Pc7DRcDskO/w7e2TFFMJtcr3EC5chUR1KQ=
+	by mail.kernel.org (Postfix) with ESMTP id D4A0A21741
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 16:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="AEAUaxNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgBHQFE (ORCPT
+        id S1727340AbgBHQLs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Feb 2020 11:05:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbgBHQFE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Feb 2020 11:05:04 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CB8021775;
-        Sat,  8 Feb 2020 16:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581177899;
-        bh=Euyw5YRT5MdLDsoMxRjF1gQchnvFaODdk1aaTO+peYM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I+IdUU7oB1pSPUncTKinXOjnafiCdiuY0GQwjCJZdsn0treXSpxmi9pPMiVZkZXsa
-         uKtTbctn0wx59Zg4drSSoyQBLngCXC+wraY2H25POLakUFeA1rFaeWSLeLebfvblHA
-         c4ui79vD/0uKZwhsZnNdadb4UAW3APjn4E+N8gQM=
-Date:   Sat, 8 Feb 2020 16:04:54 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <devicetree@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/4] dt-bindings: iio: adc: sd modulator: add vref
- support
-Message-ID: <20200208160454.0f153bfb@archlinux>
-In-Reply-To: <20200204101008.11411-2-olivier.moysan@st.com>
-References: <20200204101008.11411-1-olivier.moysan@st.com>
-        <20200204101008.11411-2-olivier.moysan@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 8 Feb 2020 11:11:48 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:19299 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727303AbgBHQLs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Feb 2020 11:11:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581178306;
+        s=strato-dkim-0002; d=xenosoft.de;
+        h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=PdihAqfeKD54YbNb2He1peHtwOFZYOu4uAedog826qA=;
+        b=AEAUaxNbKley/K+oKhuXYA2tWJik6bk72dVOauWRCwLBvaQUgtJRxLTlEMPNEtzc+H
+        e5oMnN52VcSbuVcqAigGPQdkVqff+nVAGuaBGsp2w6IBPfuhG9FeaTf4RMoFdbgETZJy
+        4/9DKqqWeRwsaTATZZNGtgeqOCGJwwx1lHgKThFvqwQcZPCHOimUiQ4BG7vwxCl1leNr
+        GojqKLT+6+m7+DypD7vwDM0Cu6r+sJ4bHP+DiEWVo2Z6ht3vMFg8T8h0XKDw0Iagofti
+        obxBIS8Q2VTdB1NWRAuKHynthhBIYtjj69HAXxTTMJ/BzLFqY1l/HdMZ3axQ/ODW0IAG
+        xpFw==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgBLiaxlASBVL8WJv/OkCrDe9HRcQ=="
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2a02:8109:89c0:ebfc:b8e6:ddd1:f1d2:d845]
+        by smtp.strato.de (RZmta 46.1.12 AUTH)
+        with ESMTPSA id 40bcf3w18G8eit4
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sat, 8 Feb 2020 17:08:40 +0100 (CET)
+Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
+ ioctl for device
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        DTML <devicetree@vger.kernel.org>,
+        Darren Stevens <darren@stevens-zone.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@ozlabs.org, "contact@a-eon.com" <contact@a-eon.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
+        mad skateman <madskateman@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Christian Zigotzky <info@xenosoft.de>
+References: <CAK8P3a39L5i4aEbKe9CiW6unbioL=T8GqXC007mXxUu+_j84FA@mail.gmail.com>
+ <834D35CA-F0D5-43EC-97B2-2E97B4DA7703@xenosoft.de>
+Message-ID: <b8e3a03c-4aeb-5582-78df-144450b03927@xenosoft.de>
+Date:   Sat, 8 Feb 2020 17:08:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <834D35CA-F0D5-43EC-97B2-2E97B4DA7703@xenosoft.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: de-DE
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 4 Feb 2020 11:10:05 +0100
-Olivier Moysan <olivier.moysan@st.com> wrote:
+On 08 February 2020 at 07:59 am, Christian Zigotzky wrote:
+>
+>> On 7. Feb 2020, at 18:08, Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> ﻿On Fri, Feb 7, 2020 at 3:34 PM Christian Zigotzky
+>> <chzigotzky@xenosoft.de> wrote:
+>>> Hello Arnd,
+>>>
+>>> We regularly compile and test Linux kernels every day during the merge
+>>> window. Since Thursday last week we have very high CPU usage because of
+>>> the avahi daemon on our desktop Linux systems (Ubuntu, Debian etc). The
+>>> avahi daemon produces a lot of the following log message. This generates
+>>> high CPU usage.
+>>>
+>>> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
+>>>
+>>> strace /usr/sbin/avahi-daemon:
+>>>
+>> Thanks a lot for the detailed analysis, with this I immediately saw
+>> what went wrong in my
+>> original commit and I sent you a fix. Please test to ensure that this
+>> correctly addresses
+>> the problem.
+>>
+>>         Arnd
+> Hi Arnd,
+>
+> Thanks a lot for your patch! I will test it as soon as possible.
+>
+> Cheers,
+> Christian
 
-> Add vref supply support to sigma delta modulator.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
->  .../devicetree/bindings/iio/adc/sigma-delta-modulator.yaml    | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> index a390343d0c2a..2afe0765e971 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> @@ -8,6 +8,7 @@ title: Device-Tree bindings for sigma delta modulator
->  
->  maintainers:
->    - Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> +  - Olivier Moysan <olivier.moysan@st.com>
->  
->  properties:
->    compatible:
-> @@ -21,6 +22,9 @@ properties:
->    '#io-channel-cells':
->      const: 0
->  
-> +  vref-supply:
-> +    description: Phandle to the vref input analog reference voltage.
-I note this in review of patch 2 but in general I'm not sure we should
-be introducing this for generic devices.   It's fine if we have an
-explicit compatible but there is no reason to assume a generic sd-modulator
-uses an external reference.
+Hi Arnd,
 
-Jonathan
+I successfully compiled the latest Git kernel with your patch today. The 
+avahi daemon works fine now. That means your patch has solved the avahi 
+issue.
 
-> +
->  required:
->    - compatible
->    - '#io-channel-cells'
+Thanks for your patch and have a nice weekend!
 
+Cheers,
+Christian
