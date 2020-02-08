@@ -2,27 +2,26 @@ Return-Path: <SRS0=jtT8=34=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299A7C352A1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 13:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78D7C3B185
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 13:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EDF20726
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 13:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E5022314
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 13:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgBHNDe (ORCPT
+        id S1727196AbgBHNDg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Feb 2020 08:03:34 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:39473 "EHLO
+        Sat, 8 Feb 2020 08:03:36 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:51007 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbgBHNDe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Feb 2020 08:03:34 -0500
+        with ESMTP id S1727129AbgBHNDf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Feb 2020 08:03:35 -0500
 Received: from localhost.localdomain ([37.4.249.150]) by
  mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1N4yNG-1jhDG63lHY-010xUE; Sat, 08 Feb 2020 14:03:19 +0100
+ id 1Mk1BG-1jORvL3bXk-00kOXK; Sat, 08 Feb 2020 14:03:20 +0100
 From:   Stefan Wahren <stefan.wahren@i2se.com>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -32,160 +31,125 @@ To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 2/4] pinctrl: bcm2835: Refactor platform data
-Date:   Sat,  8 Feb 2020 14:02:53 +0100
-Message-Id: <1581166975-22949-3-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 4/4] ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
+Date:   Sat,  8 Feb 2020 14:02:55 +0100
+Message-Id: <1581166975-22949-5-git-send-email-stefan.wahren@i2se.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com>
 References: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com>
-X-Provags-ID: V03:K1:uGjHYXYsoUjn7jcdElSEse07P4rKkudkAWc75trRLVK7NNyLgPs
- T+EAYDcjQyv2ng5IJ6G1ooPLNRU+i+UqfAgOlvRghOYExKScy9bWF5hEZx4myvVDgukqtgH
- G7JJylsxITYmpHfq4pTH1rsrKJG9AOS45G2eaDoGkjJetfFKCb5ZweFPWLLrTfm3falruzr
- UloZe3+Dimm54S23tCszw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:14f1Up/WEKY=:PT3+SP10fiNt/Lqu2fyEMJ
- pUI3is9ANn/SR8uU9YwW0DTC5Tz4GiNiiizxtMKocQzqCq+rSZfb9wAze4enakuH/s3/7dZiE
- JVT3ZMvX/ZtOA8AXx7fN8ckc7QCk1u7LOtZbocCbDEP9HdI6W4SE7LFChl7Ocmu6dMc5SbDHf
- XSgW/LNEWe2aOuauhIkAlIwnDYA1eDNzdI7q14jezejK4o9Ahj361VDA9STpKg8oVnacQ+uF6
- TDWhyTGm/Bam+gMnMnUF1BI3b2bK5MgR6FFTnLxlLa/Q/tDjsIv7DF8iQXqpQ/cYhqU+cbp6y
- lmYX5KKIue48BSLRtGYB0J8rKs1l75C6IKjhlYNE1C5jE7k2p+9sGiShUA+/N0rTfxIQEC8Js
- w9sTe7U/eGiBaO+wOxZjg0DJm4IqjelNb/40KO8W+AL7ND0AUpT7BYPH87357k9fmyJ4S+HR5
- hkRze67/3Av+R71/m0wzcVA0tJMcrRMh7rO/q8SIVQkhsrWCIuO4xPepVaLCiQgf98dTOchgq
- 4v97hwAFDFmedW44cqjn0bYhyZcuU4EaS3qQl3jbJW/cxuH9Ypld+S/uePKIIhnVkB4fZqdId
- hR798M+/mnIbsEBUTj61+Df8CAr2uub2bL/300cmWu35XM9NWY+I6uNSesCNdS/Dy216JR+l2
- CyOVQhdQjDSCRGnT7jqFra9F1xl518QQarYCu7LSD/KF3necKcYPz5aUVsSmWtnpawb6e8AVF
- wTdZQrGwrDoXkVDAyMLtaozQnBPMsuI4XqkcNZoFBXvhjutRJhAX1Z0JA7J5sonetk736e4Zy
- TrtV7sooEN4qnynOEDi5VHDNQnJyttgqlDl4HzEP0dlaQPeXL2ZM28gkiUiKd7MMii3iiPl
+X-Provags-ID: V03:K1:Uf6ddeH+Q5wU3A4iBHbQL6kw6jhHXupWbDnedDbnjV6Sm0OvoL+
+ 0aiJDtkaX9pxbPkeBOuQ4JmMWw+XD7KZ+F9sU+5aHuZy/6fLbFudCprCJMvvJnOtiIJ3jr1
+ B+7BL9xVHLGsFROXiW9Wgi09sxB0wh34pzksdAQ5hvcm5AvKiM6t8b0dPd+vOjkjeVl+PHy
+ W7Rl7txfWj9h4O4xX6r8w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:L6KhevTF5eo=:kVi0/hnHVHoDdWEm8JG5c0
+ Whuq8qda1JXLC+G8nGXZ0o2IeeNV0wpBLvxYUbfUAh44CRunuZK3v12klyoBZ9dJCpxy70Ul7
+ 41EMdotulajfRWzLx+j6ZCwCEbgMIU6h5C28XzmsC9PMPs/z4kOu8m75gC1Y+lgdk4x3umLyp
+ L2SVF3lPNukgvVUkaWhSR90Obf8pKKhJ2sH7awlWJOodxEaotOlApZW1eB1jpqw0rKgbgIG2E
+ BBnC16WnCNdydLgJp1UzokVFUpfW72K8fwdj/SFFuhcWkzGxludPEDZP7y8g+gUhWEebp5OaB
+ /69pIBlKi4z8izFZ52Y4uG5ZVGD6JrqNqwJu1RO5xMkJ577S3n9BorpNKnGfCeSuuxRW96pSr
+ /cCsVIF0E79Rk2g80Q3sYdaYzyAKElDrR6fSBIPrEDAhMXdyhNu3xMrt5GXGVYdrNisg7WzBB
+ qTIpRWxduGLpQvE37HOs88QP6At6sNGaIDS1mCpmSIaskusgw64djCS7h6OwrJh3pmkw1UdpA
+ PavqlbmlEhm+j9N3lkG3PS8iKnfC6VOrpQ5V66a+/urmqLuUlJc9VFWeLNXjZeIqWbmaGHHvY
+ HYby8QaW+oIPhaxUXDaMVYLpvN4IBqXL+5RvnCu/OnBR6T0Gn+DuDONHIR2HhJjWREIvAUF8I
+ /+Nvo3VCQZSg2ErAb53uAP0+x3Q5u5XaAbGIpr55Ko6WqQqZW7dft59cXqElK6iL4eFEP4kB5
+ HbLPEGKLbOZRbabRcgrvnUxLkX2/NSUsuUMW+rcWLtvxzRbSFDfsXTDDvpewjJJ83p/DdQx0t
+ YUeC4OM5/bf+3g5l4A8wprQrNyXylHtrxfar4+5h7VDbfIzUorTk5wroQy3I8fOz+2+nfpE
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This prepares the platform data to be easier to extend for more GPIOs.
-Except of this there is no functional change.
+This adds the labels for all the SoC GPIOs on the Raspberry Pi 4.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 57 +++++++++++++++++++++++++++--------
- 1 file changed, 44 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 73 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 3fc2638..7f0a9c6 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -82,6 +82,7 @@ struct bcm2835_pinctrl {
- 
- 	struct pinctrl_dev *pctl_dev;
- 	struct gpio_chip gpio_chip;
-+	struct pinctrl_desc pctl_desc;
- 	struct pinctrl_gpio_range gpio_range;
- 
- 	raw_spinlock_t irq_lock[BCM2835_NUM_BANKS];
-@@ -1051,7 +1052,7 @@ static const struct pinconf_ops bcm2711_pinconf_ops = {
- 	.pin_config_set = bcm2711_pinconf_set,
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+index 1b5a835..cb33852 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -71,6 +71,79 @@
+ 	};
  };
  
--static struct pinctrl_desc bcm2835_pinctrl_desc = {
-+static const struct pinctrl_desc bcm2835_pinctrl_desc = {
- 	.name = MODULE_NAME,
- 	.pins = bcm2835_gpio_pins,
- 	.npins = ARRAY_SIZE(bcm2835_gpio_pins),
-@@ -1061,19 +1062,47 @@ static struct pinctrl_desc bcm2835_pinctrl_desc = {
- 	.owner = THIS_MODULE,
- };
- 
--static struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
-+static const struct pinctrl_desc bcm2711_pinctrl_desc = {
-+	.name = MODULE_NAME,
-+	.pins = bcm2835_gpio_pins,
-+	.npins = ARRAY_SIZE(bcm2835_gpio_pins),
-+	.pctlops = &bcm2835_pctl_ops,
-+	.pmxops = &bcm2835_pmx_ops,
-+	.confops = &bcm2711_pinconf_ops,
-+	.owner = THIS_MODULE,
++&gpio {
++	/*
++	 * Parts taken from rpi_SCH_4b_4p0_reduced.pdf and
++	 * the official GPU firmware DT blob.
++	 *
++	 * Legend:
++	 * "FOO" = GPIO line named "FOO" on the schematic
++	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
++	 */
++	gpio-line-names = "ID_SDA",
++			  "ID_SCL",
++			  "SDA1",
++			  "SCL1",
++			  "GPIO_GCLK",
++			  "GPIO5",
++			  "GPIO6",
++			  "SPI_CE1_N",
++			  "SPI_CE0_N",
++			  "SPI_MISO",
++			  "SPI_MOSI",
++			  "SPI_SCLK",
++			  "GPIO12",
++			  "GPIO13",
++			  /* Serial port */
++			  "TXD1",
++			  "RXD1",
++			  "GPIO16",
++			  "GPIO17",
++			  "GPIO18",
++			  "GPIO19",
++			  "GPIO20",
++			  "GPIO21",
++			  "GPIO22",
++			  "GPIO23",
++			  "GPIO24",
++			  "GPIO25",
++			  "GPIO26",
++			  "GPIO27",
++			  "RGMII_MDIO",
++			  "RGMIO_MDC",
++			  /* Used by BT module */
++			  "CTS0",
++			  "RTS0",
++			  "TXD0",
++			  "RXD0",
++			  /* Used by Wifi */
++			  "SD1_CLK",
++			  "SD1_CMD",
++			  "SD1_DATA0",
++			  "SD1_DATA1",
++			  "SD1_DATA2",
++			  "SD1_DATA3",
++			  /* Shared with SPI flash */
++			  "PWM0_MISO",
++			  "PWM1_MOSI",
++			  "STATUS_LED_G_CLK",
++			  "SPIFLASH_CE_N",
++			  "SDA0",
++			  "SCL0",
++			  "RGMII_RXCLK",
++			  "RGMII_RXCTL",
++			  "RGMII_RXD0",
++			  "RGMII_RXD1",
++			  "RGMII_RXD2",
++			  "RGMII_RXD3",
++			  "RGMII_TXCLK",
++			  "RGMII_TXCTL",
++			  "RGMII_TXD0",
++			  "RGMII_TXD1",
++			  "RGMII_TXD2",
++			  "RGMII_TXD3";
 +};
 +
-+static const struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
- 	.name = MODULE_NAME,
- 	.npins = BCM2835_NUM_GPIOS,
- };
- 
-+struct bcm_plat_data {
-+	const struct gpio_chip *gpio_chip;
-+	const struct pinctrl_desc *pctl_desc;
-+	const struct pinctrl_gpio_range *gpio_range;
-+};
-+
-+static const struct bcm_plat_data bcm2835_plat_data = {
-+	.gpio_chip = &bcm2835_gpio_chip,
-+	.pctl_desc = &bcm2835_pinctrl_desc,
-+	.gpio_range = &bcm2835_pinctrl_gpio_range,
-+};
-+
-+static const struct bcm_plat_data bcm2711_plat_data = {
-+	.gpio_chip = &bcm2835_gpio_chip,
-+	.pctl_desc = &bcm2711_pinctrl_desc,
-+	.gpio_range = &bcm2835_pinctrl_gpio_range,
-+};
-+
- static const struct of_device_id bcm2835_pinctrl_match[] = {
- 	{
- 		.compatible = "brcm,bcm2835-gpio",
--		.data = &bcm2835_pinconf_ops,
-+		.data = &bcm2835_plat_data,
- 	},
- 	{
- 		.compatible = "brcm,bcm2711-gpio",
--		.data = &bcm2711_pinconf_ops,
-+		.data = &bcm2711_plat_data,
- 	},
- 	{}
- };
-@@ -1082,6 +1111,7 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
-+	const struct bcm_plat_data *pdata;
- 	struct bcm2835_pinctrl *pc;
- 	struct gpio_irq_chip *girq;
- 	struct resource iomem;
-@@ -1108,7 +1138,13 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	if (IS_ERR(pc->base))
- 		return PTR_ERR(pc->base);
- 
--	pc->gpio_chip = bcm2835_gpio_chip;
-+	match = of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
-+	if (!match)
-+		return -EINVAL;
-+
-+	pdata = match->data;
-+
-+	pc->gpio_chip = *pdata->gpio_chip;
- 	pc->gpio_chip.parent = dev;
- 	pc->gpio_chip.of_node = np;
- 
-@@ -1159,19 +1195,14 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
--	match = of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
--	if (match) {
--		bcm2835_pinctrl_desc.confops =
--			(const struct pinconf_ops *)match->data;
--	}
--
--	pc->pctl_dev = devm_pinctrl_register(dev, &bcm2835_pinctrl_desc, pc);
-+	pc->pctl_desc = *pdata->pctl_desc;
-+	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
- 	if (IS_ERR(pc->pctl_dev)) {
- 		gpiochip_remove(&pc->gpio_chip);
- 		return PTR_ERR(pc->pctl_dev);
- 	}
- 
--	pc->gpio_range = bcm2835_pinctrl_gpio_range;
-+	pc->gpio_range = *pdata->gpio_range;
- 	pc->gpio_range.base = pc->gpio_chip.base;
- 	pc->gpio_range.gc = &pc->gpio_chip;
- 	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+ &pwm1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pwm1_0_gpio40 &pwm1_1_gpio41>;
 -- 
 2.7.4
 
