@@ -2,115 +2,85 @@ Return-Path: <SRS0=jtT8=34=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E61C35242
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 19:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3BCC35254
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 19:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE1122522
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 19:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A642464B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 19:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="w0JdVEgT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="snzIgWIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgBHTHi (ORCPT
+        id S1727518AbgBHTL3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Feb 2020 14:07:38 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34915 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbgBHTHi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Feb 2020 14:07:38 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q8so2787138ljb.2
-        for <devicetree@vger.kernel.org>; Sat, 08 Feb 2020 11:07:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=q+vjXU2SW2HOdfOFCkX7livwJmowb74J31opeMZWUCA=;
-        b=w0JdVEgTe4SS+T8Svfog6mLAmWZXFIwgC71xGQqk2YbPV+MgtSYLwJCUnqbuKx8+Uh
-         u50q+ll5mqnMS7iOwjH6yhEL/+AOxKXpVOH4bxJadba4hQQkudbbwW2yJbbVJ1dED4gK
-         wrt0X/U8D0gjOIz71tSYEotpqYiQROKSBzbW38Nq6uMuBT2TNTaKFuevQjHPf28VsNhM
-         d76Ue5OuvTSg/91VKorHegpXZpdC8A/4USXNauaeNukjXZXGDmEN/fVCi0/bnOUB/UKo
-         Q8WtQgNlSbo2zvGBKClFIRFrKxMbg1VPI3r10Bf5XYITJw1QX3ls88Y9F7c82MgDDm67
-         KtHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=q+vjXU2SW2HOdfOFCkX7livwJmowb74J31opeMZWUCA=;
-        b=Dk4GWb/sbmDiuVPNXTYgosDd2wTAxTw1aRygJeOxVkLXQp0Oyn39irSzfiQcKp2cGX
-         Kbx1jhNvdElaMwv2+lte22P7+aLcY8MHc8/pzhohhiijqXFKO8pfWVXy3EvFVgLaO+Wo
-         PTFAscCuXMkn9QDUG8a+VJBiK0Z9PmEv9peBtAf7BHFFssNFc3WhcfU7jQRNzwrLHMaE
-         L2W4Jj81IyEvni87/zrWxQQaXtkjQUFcvD49Xxnl61SgVT0ABQvks7F4lSrxGOMZNu4O
-         hWRxPwWcGgoWjKrIllCg6bNrKbKfyOGhbx2zj3tMJv1F05hw/iHnBR1dG3WMT2jESYiQ
-         +3sA==
-X-Gm-Message-State: APjAAAWU7qsdHw3DoSPe2F/4cG06djulkqaaV+CDU4keUteLYkdeqdcu
-        nGNB9fla/OuVgcuFKUZ2Mr8bvQ==
-X-Google-Smtp-Source: APXvYqw+hv9rxpIg4ETFyGzRDGxPLYofUNYjHEUqHuRFb3fygBzmWxL7+wK/VYmQ6OV/4Fn5/LcxYw==
-X-Received: by 2002:a2e:9696:: with SMTP id q22mr3229986lji.54.1581188856412;
-        Sat, 08 Feb 2020 11:07:36 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:48a2:c7a4:1f8a:70c9:2c66:3e73])
-        by smtp.gmail.com with ESMTPSA id w9sm3508790ljh.106.2020.02.08.11.07.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Feb 2020 11:07:35 -0800 (PST)
-Subject: Re: [PATCH v4 2/6] PCI: rcar: Fix calculating mask for PCIEPAMR
- register
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200208183641.6674-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200208183641.6674-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <374e26ca-cd3d-fd12-edad-5f24622b9d3d@cogentembedded.com>
-Date:   Sat, 8 Feb 2020 22:07:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
-MIME-Version: 1.0
-In-Reply-To: <20200208183641.6674-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+        Sat, 8 Feb 2020 14:11:29 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60725 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727473AbgBHTL3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Feb 2020 14:11:29 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581189089; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=/HxkQzhW7L7OZwhqFoizyzpl+I4D8Ypqu7tyljpCpjs=; b=snzIgWIFQu3juKcU5xMbuRzX4jgx9uxmVlRjnUg6/8egqBzBXSZrvlffMuiOXObjfLsLvxi1
+ z4qhZszZwfV0bMsWt0A1yGbnX4yjlLz9UIU/1Wlrd8f4f6YWQDlB+Zs+R7YzHcE2G77yB84J
+ 4c2r7WuokrKfVSeRkgF6/FFKST8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3f07df.7f8d7a797e68-smtp-out-n01;
+ Sat, 08 Feb 2020 19:11:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C1AF5C4479D; Sat,  8 Feb 2020 19:11:26 +0000 (UTC)
+Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 139CCC43383;
+        Sat,  8 Feb 2020 19:11:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 139CCC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH v5] sc7180: Add A618 GPU bindings
+Date:   Sun,  9 Feb 2020 00:40:58 +0530
+Message-Id: <1581189059-14400-1-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+I used this branch qcom/arm64-for-5.6-to-be-rebased as suggested by Matthias.
+This patch needs the clock patches and the clock patches have not yet landed, so
+please apply the following series and patches in order
 
-On 02/08/2020 09:36 PM, Lad Prabhakar wrote:
+a) All patches from https://patchwork.kernel.org/project/linux-clk/list/?series=203517&state=%2a&archive=both
+b) Patches 1 and 2 from https://patchwork.kernel.org/project/linux-clk/list/?series=203527&archive=both&state=%2a
+c) All patches from https://patchwork.kernel.org/project/linux-clk/list/?series=221739&archive=both&state=%2a
+d) https://lore.kernel.org/linux-arm-msm/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59%40changeid/raw
+e) This patch "arm64: dts: qcom: sc7180: Add A618 gpu dt blob"
 
-> The mask value was calculated incorrectly for PCIEPAMR register if the
-> size was less the 128bytes, this patch fixes the above by adding a check
+v3: Addressed review comments from previous submits. Also removed the
+interconnect bindings from this patch and I will submit as a new patch with its
+dependencies listed. Also I will be sending a new patch for updating the
+bindings documentation.
 
-   Less than, perhaps?
+v4: Add GX_GDSC power domain binding for GMU
 
-> on size.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-[...]
+v5: Change to a dummy GX_GDSC binding for faster landing
 
-MBR, Sergei
+Sharat Masetty (1):
+  arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 102 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+
+--
+1.9.1
