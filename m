@@ -2,228 +2,280 @@ Return-Path: <SRS0=jtT8=34=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7E2C352A1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 16:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDAAC352A1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 17:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B1022464
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 16:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156682253D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 17:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581179703;
-	bh=e2fw8bf8Gyx/i3xoGvZFehCnIvBaBc/lzwGV+T5ccDM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=09rvTXZ2A/r6LZUdJ6uAfSA19dhpW6MQntrWMIqbC5DKEpLUj4yYarZHbZ/TphZJk
-	 Wystz3JJ1Cle14kyQS5FnDveCLsMYIlgoDxsdeWKmS4ZGEeiIARuxuBi5lGQrsOGQG
-	 Ueg/IpWHKewyFJUcIhUScV9DE6rV1n/ub2NhwcOw=
+	s=default; t=1581182724;
+	bh=Hn8ogQ7PMeebgcoGZ7IqHhieWdq8yOPtFPaWFRdQLFU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=oqbWPikaQSRyVigQpt/oJrL4n1PKrCAKdRZinDHNVK9U73Z/r7pvxorTe1EpFsLDL
+	 rFj7XNjYv4jVgaJNrHn/SzHo5Pss7xTjnzjEClqJkb6Z0R6N3fhn6bjQoS1hr55uLL
+	 1uW7C2GdPOnJ4AvphudEu9ZpBBphv5vAEGoMsqFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgBHQfD (ORCPT
+        id S1727392AbgBHRZX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Feb 2020 11:35:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41404 "EHLO mail.kernel.org"
+        Sat, 8 Feb 2020 12:25:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbgBHQfC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Feb 2020 11:35:02 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727303AbgBHRZX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Feb 2020 12:25:23 -0500
+Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25ED42082E;
-        Sat,  8 Feb 2020 16:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBF2220658;
+        Sat,  8 Feb 2020 17:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581179701;
-        bh=e2fw8bf8Gyx/i3xoGvZFehCnIvBaBc/lzwGV+T5ccDM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dOWGw1VJrDAMrr/3bALrxUMDLzJMkkBi20/Zu8dI6VRJ9iTv8KlcIrs36AI7Mk2si
-         uXxovVBiz6P1KGnnQv/ME8F3+GtXq6qaKhOxN1s8YIF2tV/2bXBfM+4OduMDPHUqOe
-         jjzJt+3TZqYa5iPjrNs46qSZgiNJIQ1hb4IKV4t4=
-Date:   Sat, 8 Feb 2020 16:34:58 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] dt-bindings: iio: chemical: consolidate
- atlas-sensor docs
-Message-ID: <20200208163458.15ec07a4@archlinux>
-In-Reply-To: <20200206061332.20427-4-matt.ranostay@konsulko.com>
-References: <20200206061332.20427-1-matt.ranostay@konsulko.com>
-        <20200206061332.20427-4-matt.ranostay@konsulko.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1581182721;
+        bh=Hn8ogQ7PMeebgcoGZ7IqHhieWdq8yOPtFPaWFRdQLFU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=G1DKwQcRDNeUXuRLquSwrIStexDj/OBaiNb7Ho004leq02ISI8xXh9B9RT4z6wcnM
+         M2tKSD9xdA4xhJAX+Y5YqekeICGdFoI+2oe/Xt4Kqa0mYJB5nd9ZnZqzdk2x3feE0x
+         atXxN9Lrp3dNG0qmoQxqiT0QgVw4TOeLoQruQOck=
+From:   jic23@kernel.org
+To:     linux-iio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH] dt-bindings: iio: adc: max1363 etc i2c ADC binding conversion
+Date:   Sat,  8 Feb 2020 17:23:12 +0000
+Message-Id: <20200208172312.467454-1-jic23@kernel.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  5 Feb 2020 22:13:32 -0800
-Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> Since Atlas Scientific device support only varies from the compatible
-> string is ideal all the respective docs are merged into a single doc
-> named atlas,sensor.yaml
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
-> ---
->  .../bindings/iio/chemical/atlas,ec-sm.txt     | 21 --------
->  .../bindings/iio/chemical/atlas,orp-sm.txt    | 21 --------
->  .../bindings/iio/chemical/atlas,ph-sm.txt     | 21 --------
->  .../bindings/iio/chemical/atlas,sensor.yaml   | 53 +++++++++++++++++++
->  4 files changed, 53 insertions(+), 63 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
->  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
->  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
-> deleted file mode 100644
-> index f4320595b851..000000000000
-> --- a/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
-> +++ /dev/null
-> @@ -1,21 +0,0 @@
-> -* Atlas Scientific EC-SM OEM sensor
-> -
-> -http://www.atlas-scientific.com/_files/_datasheets/_oem/EC_oem_datasheet.pdf
-> -
-> -Required properties:
-> -
-> -  - compatible: must be "atlas,ec-sm"
-> -  - reg: the I2C address of the sensor
-> -  - interrupts: the sole interrupt generated by the device
-> -
-> -  Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> -  node bindings.
-> -
-> -Example:
-> -
-> -atlas@64 {
-> -	compatible = "atlas,ec-sm";
-> -	reg = <0x64>;
-> -	interrupt-parent = <&gpio1>;
-> -	interrupts = <16 2>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
-> deleted file mode 100644
-> index af1f5a9aa4da..000000000000
-> --- a/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
-> +++ /dev/null
-> @@ -1,21 +0,0 @@
-> -* Atlas Scientific ORP-SM OEM sensor
-> -
-> -https://www.atlas-scientific.com/_files/_datasheets/_oem/ORP_oem_datasheet.pdf
-> -
-> -Required properties:
-> -
-> -  - compatible: must be "atlas,orp-sm"
-> -  - reg: the I2C address of the sensor
-> -  - interrupts: the sole interrupt generated by the device
-> -
-> -  Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> -  node bindings.
-> -
-> -Example:
-> -
-> -atlas@66 {
-> -	compatible = "atlas,orp-sm";
-> -	reg = <0x66>;
-> -	interrupt-parent = <&gpio1>;
-> -	interrupts = <16 2>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
-> deleted file mode 100644
-> index 79d90f060327..000000000000
-> --- a/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
-> +++ /dev/null
-> @@ -1,21 +0,0 @@
-> -* Atlas Scientific pH-SM OEM sensor
-> -
-> -http://www.atlas-scientific.com/_files/_datasheets/_oem/pH_oem_datasheet.pdf
-> -
-> -Required properties:
-> -
-> -  - compatible: must be "atlas,ph-sm"
-> -  - reg: the I2C address of the sensor
-> -  - interrupts: the sole interrupt generated by the device
-> -
-> -  Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> -  node bindings.
-> -
-> -Example:
-> -
-> -atlas@65 {
-> -	compatible = "atlas,ph-sm";
-> -	reg = <0x65>;
-> -	interrupt-parent = <&gpio1>;
-> -	interrupts = <16 2>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
-> new file mode 100644
-> index 000000000000..1b0c476838d1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Split the binding in two to reflect the threshold monitor capabilities
+and hence interrupts vs the more straight forward parts that
+don't have this facility.
 
-Given this is entirely your binding, would you mind using the dual
-license with GPL and BSD that is preferred for new bindings?
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ .../devicetree/bindings/iio/adc/max1363.txt   | 63 ---------------
+ .../bindings/iio/adc/maxim,max1238.yaml       | 76 +++++++++++++++++++
+ .../bindings/iio/adc/maxim,max1363.yaml       | 50 ++++++++++++
+ 3 files changed, 126 insertions(+), 63 deletions(-)
 
-Otherwise looks good to me.
-
-Jonathan
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/chemical/atlas,sensor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atlas Scientific OEM sensors
-> +
-> +maintainers:
-> +  - Matt Ranostay <matt.ranostay@konsulko.com>
-> +
-> +description: |
-> +  Atlas Scientific OEM sensors connected via I2C
-> +
-> +  Datasheets:
-> +    http://www.atlas-scientific.com/_files/_datasheets/_oem/DO_oem_datasheet.pdf
-> +    http://www.atlas-scientific.com/_files/_datasheets/_oem/EC_oem_datasheet.pdf
-> +    http://www.atlas-scientific.com/_files/_datasheets/_oem/ORP_oem_datasheet.pdf
-> +    http://www.atlas-scientific.com/_files/_datasheets/_oem/pH_oem_datasheet.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atlas,do-sm
-> +      - atlas,ec-sm
-> +      - atlas,orp-sm
-> +      - atlas,ph-sm
-> +
-> +  reg:
-> +     maxItems: 1
-> +
-> +  interrupts:
-> +     maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      atlas@66 {
-> +        compatible = "atlas,orp-sm";
-> +        reg = <0x66>;
-> +        interrupt-parent = <&gpio1>;
-> +        interrupts = <16 2>;
-> +      };
-> +    };
+diff --git a/Documentation/devicetree/bindings/iio/adc/max1363.txt b/Documentation/devicetree/bindings/iio/adc/max1363.txt
+deleted file mode 100644
+index 94a9011dd860..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/max1363.txt
++++ /dev/null
+@@ -1,63 +0,0 @@
+-* Maxim 1x3x/136x/116xx Analog to Digital Converter (ADC)
+-
+-The node for this driver must be a child node of a I2C controller, hence
+-all mandatory properties for your controller must be specified. See directory:
+-
+-        Documentation/devicetree/bindings/i2c
+-
+-for more details.
+-
+-Required properties:
+-  - compatible: Should be one of
+-		"maxim,max1361"
+-		"maxim,max1362"
+-		"maxim,max1363"
+-		"maxim,max1364"
+-		"maxim,max1036"
+-		"maxim,max1037"
+-		"maxim,max1038"
+-		"maxim,max1039"
+-		"maxim,max1136"
+-		"maxim,max1137"
+-		"maxim,max1138"
+-		"maxim,max1139"
+-		"maxim,max1236"
+-		"maxim,max1237"
+-		"maxim,max1238"
+-		"maxim,max1239"
+-		"maxim,max11600"
+-		"maxim,max11601"
+-		"maxim,max11602"
+-		"maxim,max11603"
+-		"maxim,max11604"
+-		"maxim,max11605"
+-		"maxim,max11606"
+-		"maxim,max11607"
+-		"maxim,max11608"
+-		"maxim,max11609"
+-		"maxim,max11610"
+-		"maxim,max11611"
+-		"maxim,max11612"
+-		"maxim,max11613"
+-		"maxim,max11614"
+-		"maxim,max11615"
+-		"maxim,max11616"
+-		"maxim,max11617"
+-		"maxim,max11644"
+-		"maxim,max11645"
+-		"maxim,max11646"
+-		"maxim,max11647"
+-  - reg: Should contain the ADC I2C address
+-
+-Optional properties:
+-  - vcc-supply: phandle to the regulator that provides power to the ADC.
+-  - vref-supply: phandle to the regulator for ADC reference voltage.
+-  - interrupts: IRQ line for the ADC. If not used the driver will use
+-    polling.
+-
+-Example:
+-adc: max11644@36 {
+-	compatible = "maxim,max11644";
+-	reg = <0x36>;
+-	vref-supply = <&adc_vref>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1238.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1238.yaml
+new file mode 100644
+index 000000000000..a0ebb4680140
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1238.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/maxim,max1238.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim MAX1238 and similar ADCs
++
++maintainers:
++  - Jonathan Cameron <jic23@kernel.org>
++
++description: |
++   Family of simple ADCs with i2c inteface and internal references.
++
++properties:
++  compatible:
++    enum:
++      - maxim,max1036
++      - maxim,max1037
++      - maxim,max1038
++      - maxim,max1039
++      - maxim,max1136
++      - maxim,max1137
++      - maxim,max1138
++      - maxim,max1139
++      - maxim,max1236
++      - maxim,max1237
++      - maxim,max1238
++      - maxim,max1239
++      - maxim,max11600
++      - maxim,max11601
++      - maxim,max11602
++      - maxim,max11603
++      - maxim,max11604
++      - maxim,max11605
++      - maxim,max11606
++      - maxim,max11607
++      - maxim,max11608
++      - maxim,max11609
++      - maxim,max11610
++      - maxim,max11611
++      - maxim,max11612
++      - maxim,max11613
++      - maxim,max11614
++      - maxim,max11615
++      - maxim,max11616
++      - maxim,max11617
++      - maxim,max11644
++      - maxim,max11645
++      - maxim,max11646
++      - maxim,max11647
++
++  reg:
++    maxItems: 1
++
++  vcc-supply: true
++  vref-supply:
++    description: Optional external reference.  If not supplied, internal
++      reference will be used.
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@36 {
++            compatible = "maxim,max1238";
++            reg = <0x36>;
++        };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1363.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1363.yaml
+new file mode 100644
+index 000000000000..01706b4ccb1a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1363.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/maxim,max1363.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim MAX1363 and similar ADCs
++
++maintainers:
++  - Jonathan Cameron <jic23@kernel.org>
++
++description: |
++   Family of ADCs with i2c inteface, internal references and threshold
++   monitoring.
++
++properties:
++  compatible:
++    enum:
++      - maxim,max1361,
++      - maxim,max1362
++      - maxim,max1363
++      - maxim,max1364
++
++  reg:
++    maxItems: 1
++
++  vcc-supply: true
++  vref-supply:
++    description: Optional external reference.  If not supplied, internal
++      reference will be used.
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@36 {
++            compatible = "maxim,max1363";
++            reg = <0x36>;
++        };
++    };
++...
+-- 
+2.25.0
 
