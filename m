@@ -2,191 +2,142 @@ Return-Path: <SRS0=ahG+=35=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CE4C35250
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 12:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ABDC35250
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3171220726
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 12:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CDC20726
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k1JVxZ8G"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="nvy5+Hxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgBIMuW (ORCPT
+        id S1727661AbgBIP1w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Feb 2020 07:50:22 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33552 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbgBIMuW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Feb 2020 07:50:22 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d5so3130305qto.0
-        for <devicetree@vger.kernel.org>; Sun, 09 Feb 2020 04:50:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UUxkIo4yxkeRP+bZrwjD/FNTFLHW7fMlloVtMLr4fIw=;
-        b=k1JVxZ8GdaxEZGeieGrpnm15pZ4+JPC8+bYPE/sod5qDCs/0UmRUfHu0wy4MINXpOW
-         DihXo/5r07fOxQ6dMJP4lLbq78/jS89B0S3UYF9bGi0QnnLCHvKmJAgk8IwGJsOr0H26
-         FaQH3KFacAlpODxXd2voo6Yh1qvW4pzy/NNYg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UUxkIo4yxkeRP+bZrwjD/FNTFLHW7fMlloVtMLr4fIw=;
-        b=g+OKyYna2P0j4Z5WCUpz0nRMUaVhhXUL923JsqoDxx1+XsJ++D8PPlvFg41reHnBrO
-         NsgdSkiz7NV9CJlRt7s/wABXwZcwPZyoH118Q3d65fPSK6KzGAbcTzpaL9CEn3bQkbGm
-         weR1ZwbQ31MPEUPiC8f3zyMfbr5olSzRsiI+9reqOL3flPs2XmCh2lPTFWpQ+1rSRx05
-         VnHT45i7TrkRuubZr4o99T6PYEwUAwOoz+am5FCvIfenBXl8zyFOmA9BiOsyjBuib9zf
-         ty8JzJscw9Aq7mZd17KLb9oWa3ecQH3qwnmdzlCvmvlVUWD5+3oIcr6ayH9qIvB3f2a7
-         MoWQ==
-X-Gm-Message-State: APjAAAUSnBssFJrfRG4V4D9n+XE6BONHiVzgxmMshfwSO/l6lgtNYqTE
-        cZOD8/Fj4K/KkyNh0MxZQciz3EREGS02gx8D/neFyA==
-X-Google-Smtp-Source: APXvYqwL0HPYs/DVRlaJsVp3prBvI/t5NO1gP07ODLr8nGv9P4GfIkkmBVpz1yzFJ54MiCuGem5H75+HZritEl9gP4M=
-X-Received: by 2002:ac8:3946:: with SMTP id t6mr6142797qtb.278.1581252621106;
- Sun, 09 Feb 2020 04:50:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-6-drinkcat@chromium.org> <CAPDyKFoz0gUkoofWkd6dFuOkRWqeeCDrv84UHyYYowAAgTiitw@mail.gmail.com>
-In-Reply-To: <CAPDyKFoz0gUkoofWkd6dFuOkRWqeeCDrv84UHyYYowAAgTiitw@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Sun, 9 Feb 2020 20:50:23 +0800
-Message-ID: <CANMq1KA+3O+G+_r=xY98eK-in5i3HWg+4B4-ONk-6qWS3a9=0g@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Sun, 9 Feb 2020 10:27:52 -0500
+Received: from mail.z3ntu.xyz ([128.199.32.197]:51030 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727514AbgBIP1w (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Feb 2020 10:27:52 -0500
+X-Greylist: delayed 444 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Feb 2020 10:27:50 EST
+Received: from localhost.localdomain (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 00E4DC1E6F;
+        Sun,  9 Feb 2020 15:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1581261625; bh=yU5+GbnKv24kCO8ScL2Ee8KtKAa6j8RtJf1mj6xw9tg=;
+        h=From:To:Cc:Subject:Date;
+        b=nvy5+HxvKgqPca59Ke/8b/MWJn6wdmZNuW45zMihRHDSVzKrRr2l7eisM5GsOaD6m
+         h3YslYNtbyNyGdKHI5KohpQqil8G+WKNwaACejW/ZdfmXxJqlj8WrS9HXD1H55Tqls
+         YtlyPJ8e8vq6Yj6WEp8fk16RMKBsLcbj9q/w+KRA=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-input@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        Marek Vasut <marex@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Input: ili210x - add ili2120 support
+Date:   Sun,  9 Feb 2020 16:19:03 +0100
+Message-Id: <20200209151904.661210-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 10:26 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Fri, 7 Feb 2020 at 06:27, Nicolas Boichat <drinkcat@chromium.org> wrote:
-> >
-> > When there is a single power domain per device, the core will
-> > ensure the power domain is switched on (so it is technically
-> > equivalent to having not power domain specified at all).
-> >
-> > However, when there are multiple domains, as in MT8183 Bifrost
-> > GPU, we need to handle them in driver code.
-> >
-> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
->
-> Besides a minor nitpick, feel free to add:
->
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
->
-> Kind regards
-> Uffe
->
-> [snip]
-> > +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
-> > +{
-> > +       int err;
-> > +       int i, num_domains;
-> > +
-> > +       num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
-> > +                                                "power-domains",
-> > +                                                "#power-domain-cells");
-> > +
-> > +       /*
-> > +        * Single domain is handled by the core, and, if only a single power
-> > +        * the power domain is requested, the property is optional.
-> > +        */
-> > +       if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
-> > +               return 0;
-> > +
-> > +       if (num_domains != pfdev->comp->num_pm_domains) {
-> > +               dev_err(pfdev->dev,
-> > +                       "Incorrect number of power domains: %d provided, %d needed\n",
-> > +                       num_domains, pfdev->comp->num_pm_domains);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
-> > +                       "Too many supplies in compatible structure.\n"))
->
-> Nitpick:
-> Not sure this deserves a WARN. Perhaps a regular dev_err() is sufficient.
+This adds support for the Ilitek ili2120 touchscreen found in the
+Fairphone 2 smartphone.
 
-Ah well I had a BUG_ON before so presumably this is already a little better ,-)
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+Changes from v1:
+- Rebase on master, adjust for upstream changes
 
-You can only reach there if you set pfdev->comp->num_pm_domains >
-MAX_PM_DOMAINS in the currently matched struct panfrost_compatible
-(pfdev->comp->num_pm_domains == num_domains, and see below too), so
-the kernel code would actually be actually broken (not the device
-tree, nor anything that could be probed). So I'm wondering if the
-loudness of a WARN is better in this case? Arguable ,-)
+ .../bindings/input/ilitek,ili2xxx.txt         |  3 +-
+ drivers/input/touchscreen/ili210x.c           | 32 +++++++++++++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
 
-> > +               return -EINVAL;
-> [snip]
-> > --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> > @@ -21,6 +21,7 @@ struct panfrost_perfcnt;
-> >
-> >  #define NUM_JOB_SLOTS 3
-> >  #define MAX_REGULATORS 2
-> > +#define MAX_PM_DOMAINS 3
-> >
-> >  struct panfrost_features {
-> >         u16 id;
-> > @@ -61,6 +62,13 @@ struct panfrost_compatible {
-> >         /* Supplies count and names. */
-> >         int num_supplies;
-> >         const char * const *supply_names;
-> > +       /*
-> > +        * Number of power domains required, note that values 0 and 1 are
-> > +        * handled identically, as only values > 1 need special handling.
-> > +        */
-> > +       int num_pm_domains;
-> > +       /* Only required if num_pm_domains > 1. */
-> > +       const char * const *pm_domain_names;
-> >  };
-> >
-> >  struct panfrost_device {
-> > @@ -73,6 +81,9 @@ struct panfrost_device {
-> >         struct clk *bus_clock;
-> >         struct regulator_bulk_data regulators[MAX_REGULATORS];
-> >         struct reset_control *rstc;
-> > +       /* pm_domains for devices with more than one. */
-> > +       struct device *pm_domain_devs[MAX_PM_DOMAINS];
-> > +       struct device_link *pm_domain_links[MAX_PM_DOMAINS];
-> >
-> >         struct panfrost_features features;
-> >         const struct panfrost_compatible *comp;
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> > index 4d08507526239f2..a6e162236d67fdf 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> > @@ -663,6 +663,8 @@ const char * const default_supplies[] = { "mali" };
-> >  static const struct panfrost_compatible default_data = {
-> >         .num_supplies = ARRAY_SIZE(default_supplies),
-> >         .supply_names = default_supplies,
-> > +       .num_pm_domains = 1, /* optional */
-> > +       .pm_domain_names = NULL,
-> >  };
-> >
-> >  static const struct of_device_id dt_match[] = {
-> > --
-> > 2.25.0.341.g760bfbb309-goog
-> >
+diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+index dc194b2c151a..cdcaa3f52d25 100644
+--- a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
++++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+@@ -1,9 +1,10 @@
+-Ilitek ILI210x/ILI2117/ILI251x touchscreen controller
++Ilitek ILI210x/ILI2117/ILI2120/ILI251x touchscreen controller
+ 
+ Required properties:
+ - compatible:
+     ilitek,ili210x for ILI210x
+     ilitek,ili2117 for ILI2117
++    ilitek,ili2120 for ILI2120
+     ilitek,ili251x for ILI251x
+ 
+ - reg: The I2C address of the device
+diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+index 84bf51d79888..199cf3daec10 100644
+--- a/drivers/input/touchscreen/ili210x.c
++++ b/drivers/input/touchscreen/ili210x.c
+@@ -167,6 +167,36 @@ static const struct ili2xxx_chip ili211x_chip = {
+ 	.resolution		= 2048,
+ };
+ 
++static bool ili212x_touchdata_to_coords(const u8 *touchdata,
++					unsigned int finger,
++					unsigned int *x, unsigned int *y)
++{
++	u16 val;
++
++	val = get_unaligned_be16(touchdata + 3 + (finger * 5) + 0);
++	if (!(val & BIT(15)))	/* Touch indication */
++		return false;
++
++	*x = val & 0x3fff;
++	*y = get_unaligned_be16(touchdata + 3 + (finger * 5) + 2);
++
++	return true;
++}
++
++static bool ili212x_check_continue_polling(const u8 *data, bool touch)
++{
++	return touch;
++}
++
++static const struct ili2xxx_chip ili212x_chip = {
++	.read_reg		= ili210x_read_reg,
++	.get_touch_data		= ili210x_read_touch_data,
++	.parse_touch_data	= ili212x_touchdata_to_coords,
++	.continue_polling	= ili212x_check_continue_polling,
++	.max_touches		= 10,
++	.has_calibrate_reg	= true,
++};
++
+ static int ili251x_read_reg(struct i2c_client *client,
+ 			    u8 reg, void *buf, size_t len)
+ {
+@@ -447,6 +477,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ static const struct i2c_device_id ili210x_i2c_id[] = {
+ 	{ "ili210x", (long)&ili210x_chip },
+ 	{ "ili2117", (long)&ili211x_chip },
++	{ "ili2120", (long)&ili212x_chip },
+ 	{ "ili251x", (long)&ili251x_chip },
+ 	{ }
+ };
+@@ -455,6 +486,7 @@ MODULE_DEVICE_TABLE(i2c, ili210x_i2c_id);
+ static const struct of_device_id ili210x_dt_ids[] = {
+ 	{ .compatible = "ilitek,ili210x", .data = &ili210x_chip },
+ 	{ .compatible = "ilitek,ili2117", .data = &ili211x_chip },
++	{ .compatible = "ilitek,ili2120", .data = &ili212x_chip },
+ 	{ .compatible = "ilitek,ili251x", .data = &ili251x_chip },
+ 	{ }
+ };
+-- 
+2.25.0
+
