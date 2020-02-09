@@ -2,204 +2,205 @@ Return-Path: <SRS0=ahG+=35=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4638C352A4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 08:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C454C35250
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 08:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A509820733
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 08:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70072072A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 08:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgBIIbo (ORCPT
+        id S1725900AbgBIIgm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Feb 2020 03:31:44 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:41096 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgBIIbn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Feb 2020 03:31:43 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 843EF20022;
-        Sun,  9 Feb 2020 09:31:39 +0100 (CET)
-Date:   Sun, 9 Feb 2020 09:31:38 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        sean@poorly.run, seanpaul@chromium.org
-Subject: Re: [PATCHv3 1/2] dt-bindings: display: add visionox rm69299 panel
- variant
-Message-ID: <20200209083138.GC5321@ravnborg.org>
-References: <1580907990-32108-1-git-send-email-harigovi@codeaurora.org>
- <1580907990-32108-2-git-send-email-harigovi@codeaurora.org>
+        Sun, 9 Feb 2020 03:36:42 -0500
+Received: from smtprelay0132.hostedemail.com ([216.40.44.132]:50727 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725856AbgBIIgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Feb 2020 03:36:42 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 9E428182CED2A;
+        Sun,  9 Feb 2020 08:36:40 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: grain87_3a29ca9f95620
+X-Filterd-Recvd-Size: 6270
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  9 Feb 2020 08:36:39 +0000 (UTC)
+Message-ID: <0d0c4ad9e15ce696ad4b470d724fb0d1423f26c0.camel@perches.com>
+Subject: Re: checkpatch - "DT binding docs and includes should be a separate
+ patch"
+From:   Joe Perches <joe@perches.com>
+To:     Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date:   Sun, 09 Feb 2020 00:35:26 -0800
+In-Reply-To: <20200209081931.GA5321@ravnborg.org>
+References: <20200209081931.GA5321@ravnborg.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580907990-32108-2-git-send-email-harigovi@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8
-        a=gEfo2CItAAAA:8 a=rUAlzMgn7VfAsfAmY-cA:9 a=2aNtAtRbR_R-ZWdM:21
-        a=at3rOJuKAjAUH52G:21 a=CjuIK1q_8ugA:10 a=pioyyrs4ZptJ924tMmac:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Harigovindan
-
-On Wed, Feb 05, 2020 at 06:36:29PM +0530, Harigovindan P wrote:
-> Add bindings for visionox rm69299 panel.
+On Sun, 2020-02-09 at 09:19 +0100, Sam Ravnborg wrote:
+> Hi Joe.
 > 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> The following warnings triggers on the patch below:
+> 
+> c55d0a554843 (HEAD -> drm-misc-next) dt-bindings: panel: Convert orisetech,otm8009a to json-schema
+> -:15: WARNING:FILE_PATH_CHANGES: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #15:
+> deleted file mode 100644
+> 
+> -:18: WARNING:DT_SPLIT_BINDING_PATCH: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.txt
+> 
+> -:43: WARNING:DT_SPLIT_BINDING_PATCH: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.txt
+> 
+> total: 0 errors, 3 warnings, 0 checks, 53 lines checked
+> 
+> 1)
+> yaml files include maintainer information in the file.
+> I dunno if this replaces/overrules MAINTAINERS - so first warning may be
+> OK. Also because we delete a file it seems semi relevant.
+> 
+> 2)
+> As the patch only touches files in Documentation/devicetree/bindings the
+> warning about a separate patch seems wrong.
+
+Rob Herring wrote that bit.  He's now cc'd.  lkml too.
+
+> 
+> But the general feedback - in this very special case - is that
+> checkpatch seems a bit too noisy.
+> 
+> If we as a bonus could get a warning when new yaml files do not
+> use:
+> # SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> That would be great.
+
+Submitted here:
+
+https://lkml.org/lkml/2020/1/29/292
+
+> It is recommended but not mandatory to use the combi license for new yaml
+> files.
+> 
+> I did not try to dive into this myself - in the hope someone more versed
+> in checkpatch internals (aka you) could improve it.
+> 
+> 	Sam
+> 
+> From c55d0a554843f2c4dfb44d0c8a99a1670c32c33d Mon Sep 17 00:00:00 2001
+> From: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Date: Thu, 6 Feb 2020 14:33:44 +0100
+> Subject: [PATCH 3/3] dt-bindings: panel: Convert orisetech,otm8009a to
+>  json-schema
+> 
+> Convert orisetech,otm8009a to json-schema.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Link: https://patchwork.freedesktop.org/patch/msgid/20200206133344.724-4-benjamin.gaignard@st.com
 > ---
+>  .../display/panel/orisetech,otm8009a.txt      | 23 --------
+>  .../display/panel/orisetech,otm8009a.yaml     | 53 +++++++++++++++++++
+>  2 files changed, 53 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
 > 
-> Changes in v1:
-> 	- Added a compatible string to support sc7180 panel version.
-> Changes in v2:
-> 	- Removed unwanted properties from description.
-> 	- Creating source files without execute permissions(Rob Herring).
-> Changes in v3:
-> 	- Changing txt file into yaml
-Thanks for changing to DT Schema.
-
-
-> 
->  .../bindings/display/visionox,rm69299.yaml         | 109 +++++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/visionox,rm69299.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/visionox,rm69299.yaml b/Documentation/devicetree/bindings/display/visionox,rm69299.yaml
+> diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
+> deleted file mode 100644
+> index 203b03eefb68..000000000000
+> --- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
+> +++ /dev/null
+> @@ -1,23 +0,0 @@
+> -Orise Tech OTM8009A 3.97" 480x800 TFT LCD panel (MIPI-DSI video mode)
+> -
+> -The Orise Tech OTM8009A is a 3.97" 480x800 TFT LCD panel connected using
+> -a MIPI-DSI video interface. Its backlight is managed through the DSI link.
+> -
+> -Required properties:
+> -  - compatible: "orisetech,otm8009a"
+> -  - reg: the virtual channel number of a DSI peripheral
+> -
+> -Optional properties:
+> -  - reset-gpios: a GPIO spec for the reset pin (active low).
+> -  - power-supply: phandle of the regulator that provides the supply voltage.
+> -
+> -Example:
+> -&dsi {
+> -	...
+> -	panel@0 {
+> -		compatible = "orisetech,otm8009a";
+> -		reg = <0>;
+> -		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
+> -		power-supply = <&v1v8>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
 > new file mode 100644
-> index 0000000..bfcd46d
+> index 000000000000..6e6ac995c27b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/visionox,rm69299.yaml
-
-This is a binding for a panel - and thus belongs in the panel/
-directory.
-
-> @@ -0,0 +1,109 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-The preferred license for new bindings are (GPL-2.0-only or BSD-2-Clause)
-
+> +++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/display/visionox,rm69299.yaml#
+> +$id: http://devicetree.org/schemas/display/panel/orisetech,otm8009a.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Visionox model RM69299 Panels Device Tree Bindings
+> +title: Orise Tech OTM8009A 3.97" 480x800 TFT LCD panel (MIPI-DSI video mode)
 > +
 > +maintainers:
-> +  - Harigovindan P <harigovi@codeaurora.org>
-> +  - Kalyan Thota <kalyan_t@codeaurora.org>
-> +  - Vishnuvardhan Prodduturi <vproddut@codeaurora.org>
+> +  - Philippe CORNU <philippe.cornu@st.com>
 > +
-> +description:
-> +  This binding is for display panels using a Visionox RM692999 panel.
+> +description: |
+> +             The Orise Tech OTM8009A is a 3.97" 480x800 TFT LCD panel connected using
+> +             a MIPI-DSI video interface. Its backlight is managed through the DSI link.
+> +allOf:
+> +  - $ref: panel-common.yaml#
 > +
-
-Use:
-allOf:
-  - $ref: panel-common.yaml#
-
-Then you have access to all properties described there.
-
-
-> +patternProperties:
-> +  "^(panel|panel-dsi)@[0-9]$":
-> +    type: object
-> +    description:
-> +      A node containing the panel or bridge description as documented in
-> +      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-
-The panel shall not document the parent node.
-See how other panels do it.
-In general - start with the compatible.
-
-This will also simplify your list of required properties.
-
-> +    properties:
-> +      compatible:
-> +        const: visionox,rm69299-1080p-display
+> +properties:
 > +
-> +      reg:
-> +        maxItems: 1
+> +  compatible:
+> +    const: orisetech,otm8009a
 > +
-> +      vdda-supply:
-> +        description:
-> +          Phandle of the regulator that provides the vdda supply voltage.
+> +  reg:
+> +    maxItems: 1
+> +    description: DSI virtual channel
 > +
-> +      vdd3p3-supply:
-> +        description:
-> +          Phandle of the regulator that provides the vdd3p3 supply voltage.
+> +  enable-gpios: true
+> +  port: true
+> +  power-supply: true
 > +
-> +      pinctrl-names:
-> +        items:
-> +          - const: default
-> +          - const: suspend
+> +  reset-gpios:
+> +    maxItems: 1
 > +
-> +      pinctrl-0:
-> +        items:
-> +          - const: Display default pin
-> +          - const: Display default pin
-
-pinctrl are not needed for the panel. They belong to the display driver.
-
-> +
-> +      ports:
-> +        type: object
-> +        description:
-> +          A node containing DSI input & output port nodes with endpoint
-> +          definitions as documented in
-> +          Documentation/devicetree/bindings/media/video-interfaces.txt
-> +          Documentation/devicetree/bindings/graph.txt
-> +        properties:
-> +          port@0:
-> +            type: object
-> +            description:
-> +              DSI input port node.
-> +
-A
-       port: true
-should do the trick here.
-
-
-
-
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-Not required.
+> +additionalProperties: false
 > +
 > +required:
-> +  - "#address-cells"
-> +  - "#size-cells"
 > +  - compatible
 > +  - reg
-> +  - vdda-supply
-> +  - vdd3p3-supply
-> +  - pinctrl-names
-> +  - pinctrl-0
-> +  - pinctrl-1
-> +  - reset-gpios
+> +
+> +examples:
+> +  - |
+> +    dsi@0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      panel@0 {
+> +        compatible = "orisetech,otm8009a";
+> +        reg = <0>;
+> +        reset-gpios = <&gpiof 15 0>;
+> +        power-supply = <&v1v8>;
+> +      };
+> +    };
+> +...
+> +
 
-reset-gpios are not documented in the above.
-
-Add
-      reset-gpios: true
-
-
-Please give it a spin more.
-And preferably give it a "make dt_binding_check" whirl.
-If you cannot get this part working I can do so for you in next
-reviision.
-
-	Sam
