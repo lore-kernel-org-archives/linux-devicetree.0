@@ -2,50 +2,68 @@ Return-Path: <SRS0=ahG+=35=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ABDC35250
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F756C3B184
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CDC20726
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2783E20820
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="nvy5+Hxv"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="jKbwn2xW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbgBIP1w (ORCPT
+        id S1727781AbgBIPsT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:27:52 -0500
-Received: from mail.z3ntu.xyz ([128.199.32.197]:51030 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727514AbgBIP1w (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Feb 2020 10:27:52 -0500
-X-Greylist: delayed 444 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Feb 2020 10:27:50 EST
-Received: from localhost.localdomain (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 00E4DC1E6F;
-        Sun,  9 Feb 2020 15:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1581261625; bh=yU5+GbnKv24kCO8ScL2Ee8KtKAa6j8RtJf1mj6xw9tg=;
-        h=From:To:Cc:Subject:Date;
-        b=nvy5+HxvKgqPca59Ke/8b/MWJn6wdmZNuW45zMihRHDSVzKrRr2l7eisM5GsOaD6m
-         h3YslYNtbyNyGdKHI5KohpQqil8G+WKNwaACejW/ZdfmXxJqlj8WrS9HXD1H55Tqls
-         YtlyPJ8e8vq6Yj6WEp8fk16RMKBsLcbj9q/w+KRA=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-input@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sun, 9 Feb 2020 10:48:19 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:60924 "EHLO
+        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbgBIPsT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Feb 2020 10:48:19 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id C2536D00721;
+        Sun,  9 Feb 2020 15:48:17 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at serbinski.com
+Received: from mail.serbinski.com ([127.0.0.1])
+        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fK_TCpBGIyr1; Sun,  9 Feb 2020 10:48:08 -0500 (EST)
+Received: from anet (23-233-80-73.cpe.pppoe.ca [23.233.80.73])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mail.serbinski.com (Postfix) with ESMTPSA id E5ED8D006FC;
+        Sun,  9 Feb 2020 10:48:07 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com E5ED8D006FC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
+        s=default; t=1581263288;
+        bh=eajbKqGkxZ7eyaNOIY0gFw9T3e78d/CAluEu3zjDsX8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jKbwn2xWq2g+5yFX3dvPgYwsQ/mvKhtGSmB0mPUDOQly9wKZFs+QYjVWB/XzS6IFa
+         NYHUBWDZBoiUmMyLfM9+StZBFy0L1bAfreDDL7Le31eSxqb7LMF74/jfbCTYp6Uh5N
+         UnRSByqKQunKOEYJhTfWYjxeB8NH6ki9XJuAzFUo=
+From:   Adam Serbinski <adam@serbinski.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Adam Serbinski <adam@serbinski.com>,
+        Andy Gross <agross@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Marek Vasut <marex@denx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Input: ili210x - add ili2120 support
-Date:   Sun,  9 Feb 2020 16:19:03 +0100
-Message-Id: <20200209151904.661210-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.25.0
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/8] ASoC: qdsp6: q6routing: add pcm port routing
+Date:   Sun,  9 Feb 2020 10:47:44 -0500
+Message-Id: <20200209154748.3015-5-adam@serbinski.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200209154748.3015-1-adam@serbinski.com>
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -53,91 +71,108 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds support for the Ilitek ili2120 touchscreen found in the
-Fairphone 2 smartphone.
+This patch adds support to PCM_PORT mixers required to
+select path between ASM stream and AFE ports.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Signed-off-by: Adam Serbinski <adam@serbinski.com>
+CC: Andy Gross <agross@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Liam Girdwood <lgirdwood@gmail.com>
+CC: Patrick Lai <plai@codeaurora.org>
+CC: Banajit Goswami <bgoswami@codeaurora.org>
+CC: Jaroslav Kysela <perex@perex.cz>
+CC: Takashi Iwai <tiwai@suse.com>
+CC: alsa-devel@alsa-project.org
+CC: linux-arm-msm@vger.kernel.org
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
 ---
-Changes from v1:
-- Rebase on master, adjust for upstream changes
+ sound/soc/qcom/qdsp6/q6routing.c | 44 ++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
- .../bindings/input/ilitek,ili2xxx.txt         |  3 +-
- drivers/input/touchscreen/ili210x.c           | 32 +++++++++++++++++++
- 2 files changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-index dc194b2c151a..cdcaa3f52d25 100644
---- a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-+++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-@@ -1,9 +1,10 @@
--Ilitek ILI210x/ILI2117/ILI251x touchscreen controller
-+Ilitek ILI210x/ILI2117/ILI2120/ILI251x touchscreen controller
+diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
+index 20724102e85a..3a81d2161707 100644
+--- a/sound/soc/qcom/qdsp6/q6routing.c
++++ b/sound/soc/qcom/qdsp6/q6routing.c
+@@ -67,6 +67,10 @@
+ 	{ mix_name, "SEC_MI2S_TX", "SEC_MI2S_TX" },	\
+ 	{ mix_name, "QUAT_MI2S_TX", "QUAT_MI2S_TX" },	\
+ 	{ mix_name, "TERT_MI2S_TX", "TERT_MI2S_TX" },		\
++	{ mix_name, "PRI_PCM_TX", "PRI_PCM_TX" },		\
++	{ mix_name, "SEC_PCM_TX", "SEC_PCM_TX" },		\
++	{ mix_name, "TERT_PCM_TX", "TERT_PCM_TX" },		\
++	{ mix_name, "QUAT_PCM_TX", "QUAT_PCM_TX" },		\
+ 	{ mix_name, "SLIMBUS_0_TX", "SLIMBUS_0_TX" },		\
+ 	{ mix_name, "SLIMBUS_1_TX", "SLIMBUS_1_TX" },		\
+ 	{ mix_name, "SLIMBUS_2_TX", "SLIMBUS_2_TX" },		\
+@@ -128,6 +132,18 @@
+ 	SOC_SINGLE_EXT("QUAT_MI2S_TX", QUATERNARY_MI2S_TX,		\
+ 		id, 1, 0, msm_routing_get_audio_mixer,			\
+ 		msm_routing_put_audio_mixer),				\
++	SOC_SINGLE_EXT("PRI_PCM_TX", PRIMARY_PCM_TX,			\
++		id, 1, 0, msm_routing_get_audio_mixer,			\
++		msm_routing_put_audio_mixer),				\
++	SOC_SINGLE_EXT("SEC_PCM_TX", SECONDARY_PCM_TX,			\
++		id, 1, 0, msm_routing_get_audio_mixer,			\
++		msm_routing_put_audio_mixer),				\
++	SOC_SINGLE_EXT("TERT_PCM_TX", TERTIARY_PCM_TX,			\
++		id, 1, 0, msm_routing_get_audio_mixer,			\
++		msm_routing_put_audio_mixer),				\
++	SOC_SINGLE_EXT("QUAT_PCM_TX", QUATERNARY_PCM_TX,		\
++		id, 1, 0, msm_routing_get_audio_mixer,			\
++		msm_routing_put_audio_mixer),				\
+ 	SOC_SINGLE_EXT("SLIMBUS_0_TX", SLIMBUS_0_TX,			\
+ 		id, 1, 0, msm_routing_get_audio_mixer,			\
+ 		msm_routing_put_audio_mixer),				\
+@@ -468,6 +484,18 @@ static const struct snd_kcontrol_new quaternary_mi2s_rx_mixer_controls[] = {
+ static const struct snd_kcontrol_new tertiary_mi2s_rx_mixer_controls[] = {
+ 	Q6ROUTING_RX_MIXERS(TERTIARY_MI2S_RX) };
  
- Required properties:
- - compatible:
-     ilitek,ili210x for ILI210x
-     ilitek,ili2117 for ILI2117
-+    ilitek,ili2120 for ILI2120
-     ilitek,ili251x for ILI251x
++static const struct snd_kcontrol_new primary_pcm_rx_mixer_controls[] = {
++	Q6ROUTING_RX_MIXERS(PRIMARY_PCM_RX) };
++
++static const struct snd_kcontrol_new secondary_pcm_rx_mixer_controls[] = {
++	Q6ROUTING_RX_MIXERS(SECONDARY_PCM_RX) };
++
++static const struct snd_kcontrol_new tertiary_pcm_rx_mixer_controls[] = {
++	Q6ROUTING_RX_MIXERS(TERTIARY_PCM_RX) };
++
++static const struct snd_kcontrol_new quaternary_pcm_rx_mixer_controls[] = {
++	Q6ROUTING_RX_MIXERS(QUATERNARY_PCM_RX) };
++
+ static const struct snd_kcontrol_new slimbus_rx_mixer_controls[] = {
+ 	Q6ROUTING_RX_MIXERS(SLIMBUS_0_RX) };
  
- - reg: The I2C address of the device
-diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-index 84bf51d79888..199cf3daec10 100644
---- a/drivers/input/touchscreen/ili210x.c
-+++ b/drivers/input/touchscreen/ili210x.c
-@@ -167,6 +167,36 @@ static const struct ili2xxx_chip ili211x_chip = {
- 	.resolution		= 2048,
- };
- 
-+static bool ili212x_touchdata_to_coords(const u8 *touchdata,
-+					unsigned int finger,
-+					unsigned int *x, unsigned int *y)
-+{
-+	u16 val;
-+
-+	val = get_unaligned_be16(touchdata + 3 + (finger * 5) + 0);
-+	if (!(val & BIT(15)))	/* Touch indication */
-+		return false;
-+
-+	*x = val & 0x3fff;
-+	*y = get_unaligned_be16(touchdata + 3 + (finger * 5) + 2);
-+
-+	return true;
-+}
-+
-+static bool ili212x_check_continue_polling(const u8 *data, bool touch)
-+{
-+	return touch;
-+}
-+
-+static const struct ili2xxx_chip ili212x_chip = {
-+	.read_reg		= ili210x_read_reg,
-+	.get_touch_data		= ili210x_read_touch_data,
-+	.parse_touch_data	= ili212x_touchdata_to_coords,
-+	.continue_polling	= ili212x_check_continue_polling,
-+	.max_touches		= 10,
-+	.has_calibrate_reg	= true,
-+};
-+
- static int ili251x_read_reg(struct i2c_client *client,
- 			    u8 reg, void *buf, size_t len)
- {
-@@ -447,6 +477,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
- static const struct i2c_device_id ili210x_i2c_id[] = {
- 	{ "ili210x", (long)&ili210x_chip },
- 	{ "ili2117", (long)&ili211x_chip },
-+	{ "ili2120", (long)&ili212x_chip },
- 	{ "ili251x", (long)&ili251x_chip },
- 	{ }
- };
-@@ -455,6 +486,7 @@ MODULE_DEVICE_TABLE(i2c, ili210x_i2c_id);
- static const struct of_device_id ili210x_dt_ids[] = {
- 	{ .compatible = "ilitek,ili210x", .data = &ili210x_chip },
- 	{ .compatible = "ilitek,ili2117", .data = &ili211x_chip },
-+	{ .compatible = "ilitek,ili2120", .data = &ili212x_chip },
- 	{ .compatible = "ilitek,ili251x", .data = &ili251x_chip },
- 	{ }
- };
+@@ -695,6 +723,18 @@ static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
+ 	SND_SOC_DAPM_MIXER("TERT_MI2S_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
+ 			   tertiary_mi2s_rx_mixer_controls,
+ 			   ARRAY_SIZE(tertiary_mi2s_rx_mixer_controls)),
++	SND_SOC_DAPM_MIXER("PRI_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
++			   primary_pcm_rx_mixer_controls,
++			   ARRAY_SIZE(primary_pcm_rx_mixer_controls)),
++	SND_SOC_DAPM_MIXER("SEC_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
++			   secondary_pcm_rx_mixer_controls,
++			   ARRAY_SIZE(secondary_pcm_rx_mixer_controls)),
++	SND_SOC_DAPM_MIXER("TERT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
++			   tertiary_pcm_rx_mixer_controls,
++			   ARRAY_SIZE(tertiary_pcm_rx_mixer_controls)),
++	SND_SOC_DAPM_MIXER("QUAT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
++			   quaternary_pcm_rx_mixer_controls,
++			   ARRAY_SIZE(quaternary_pcm_rx_mixer_controls)),
+ 	SND_SOC_DAPM_MIXER("PRIMARY_TDM_RX_0 Audio Mixer", SND_SOC_NOPM, 0, 0,
+ 				pri_tdm_rx_0_mixer_controls,
+ 				ARRAY_SIZE(pri_tdm_rx_0_mixer_controls)),
+@@ -853,6 +893,10 @@ static const struct snd_soc_dapm_route intercon[] = {
+ 	Q6ROUTING_RX_DAPM_ROUTE("TERT_MI2S_RX Audio Mixer", "TERT_MI2S_RX"),
+ 	Q6ROUTING_RX_DAPM_ROUTE("SEC_MI2S_RX Audio Mixer", "SEC_MI2S_RX"),
+ 	Q6ROUTING_RX_DAPM_ROUTE("PRI_MI2S_RX Audio Mixer", "PRI_MI2S_RX"),
++	Q6ROUTING_RX_DAPM_ROUTE("PRI_PCM_RX Audio Mixer", "PRI_PCM_RX"),
++	Q6ROUTING_RX_DAPM_ROUTE("SEC_PCM_RX Audio Mixer", "SEC_PCM_RX"),
++	Q6ROUTING_RX_DAPM_ROUTE("TERT_PCM_RX Audio Mixer", "TERT_PCM_RX"),
++	Q6ROUTING_RX_DAPM_ROUTE("QUAT_PCM_RX Audio Mixer", "QUAT_PCM_RX"),
+ 	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_0 Audio Mixer",
+ 				"PRIMARY_TDM_RX_0"),
+ 	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_1 Audio Mixer",
 -- 
-2.25.0
+2.21.1
 
