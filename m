@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A32C35250
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9C1C47409
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9AD520820
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60DB208C4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="lmYxYZAO"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="vkG/caFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBIPsY (ORCPT
+        id S1727828AbgBIPsg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:48:24 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:32782 "EHLO
+        Sun, 9 Feb 2020 10:48:36 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:32952 "EHLO
         mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbgBIPsY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Feb 2020 10:48:24 -0500
+        with ESMTP id S1727881AbgBIPsg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Feb 2020 10:48:36 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 7ACEAD006FC;
-        Sun,  9 Feb 2020 15:48:23 +0000 (UTC)
+        by mail.serbinski.com (Postfix) with ESMTP id 86E81D00716;
+        Sun,  9 Feb 2020 15:48:33 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at serbinski.com
 Received: from mail.serbinski.com ([127.0.0.1])
         by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xo4SnI5uVEOu; Sun,  9 Feb 2020 10:48:17 -0500 (EST)
+        with ESMTP id j742tjVpCIOM; Sun,  9 Feb 2020 10:48:24 -0500 (EST)
 Received: from anet (23-233-80-73.cpe.pppoe.ca [23.233.80.73])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.serbinski.com (Postfix) with ESMTPSA id 27C4AD00715;
-        Sun,  9 Feb 2020 10:48:09 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 27C4AD00715
+        by mail.serbinski.com (Postfix) with ESMTPSA id 5C22CD00717;
+        Sun,  9 Feb 2020 10:48:10 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 5C22CD00717
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581263289;
-        bh=UQULhBFsFv/7KduXszLvTWU0rPWyMPBaOu3wrDjbjjw=;
+        s=default; t=1581263290;
+        bh=ETimvPxlhSv3UnHdR3sMFlCASzRDsVkv5A46uX4f778=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lmYxYZAOj8MMW1czRIaqj05/8zMgi28X2PT0HhS0wDLeEgMGnBtxDODssGs8ftJpZ
-         SCIgrvkeNGm9IPSJSmu1VY34Z8toTqoaLFvoClrAH2k/ofRcqvowmNfKlt18rMygEj
-         +hNajc5V2o1Mrbq5oBGxhTvLjP+VT49fDKPtbggU=
+        b=vkG/caFnE8m1E/W1a+a64GnTSi1zoYv2sl9AH9dQs5+ng5URuKdFHmgUDCD0d1eag
+         xHralk0esT8FSs+YMIbay8uNkINY4y64fmmc7AxfHY/feKQiohFOdgBVv+DzpzMV/j
+         dJD+IefZGnBM/T3l8QcNfT6vOJJd5KaGrhOy7XNU=
 From:   Adam Serbinski <adam@serbinski.com>
 To:     Mark Brown <broonie@kernel.org>,
         Srini Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -57,9 +57,9 @@ Cc:     Adam Serbinski <adam@serbinski.com>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/8] ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
-Date:   Sun,  9 Feb 2020 10:47:41 -0500
-Message-Id: <20200209154748.3015-2-adam@serbinski.com>
+Subject: [PATCH v2 6/8] ASoC: qcom/common: Use snd-soc-dummy-dai when codec is not specified
+Date:   Sun,  9 Feb 2020 10:47:46 -0500
+Message-Id: <20200209154748.3015-7-adam@serbinski.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200209154748.3015-1-adam@serbinski.com>
 References: <20200207205013.12274-1-adam@serbinski.com>
@@ -71,7 +71,9 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds bindings required for PCM ports on AFE.
+When not specifying a codec, use snd-soc-dummy-dai. This supports
+the case where a fixed configuration codec is attached, such as
+bluetooth hfp.
 
 Signed-off-by: Adam Serbinski <adam@serbinski.com>
 CC: Andy Gross <agross@kernel.org>
@@ -86,28 +88,49 @@ CC: linux-arm-msm@vger.kernel.org
 CC: devicetree@vger.kernel.org
 CC: linux-kernel@vger.kernel.org
 ---
- include/dt-bindings/sound/qcom,q6afe.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/qcom/common.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/include/dt-bindings/sound/qcom,q6afe.h b/include/dt-bindings/sound/qcom,q6afe.h
-index 1df06f8ad5c3..f3a435a112cb 100644
---- a/include/dt-bindings/sound/qcom,q6afe.h
-+++ b/include/dt-bindings/sound/qcom,q6afe.h
-@@ -107,6 +107,14 @@
- #define QUINARY_TDM_RX_7	102
- #define QUINARY_TDM_TX_7	103
- #define DISPLAY_PORT_RX		104
-+#define PRIMARY_PCM_RX		105
-+#define PRIMARY_PCM_TX		106
-+#define SECONDARY_PCM_RX	107
-+#define SECONDARY_PCM_TX	108
-+#define TERTIARY_PCM_RX		109
-+#define TERTIARY_PCM_TX		110
-+#define QUATERNARY_PCM_RX	111
-+#define QUATERNARY_PCM_TX	112
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index 6c20bdd850f3..aa2f2238aca0 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -84,7 +84,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 			goto err;
+ 		}
  
- #endif /* __DT_BINDINGS_Q6_AFE_H__ */
+-		if (codec && platform) {
++		if (platform) {
+ 			link->platforms->of_node = of_parse_phandle(platform,
+ 					"sound-dai",
+ 					0);
+@@ -94,10 +94,22 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 				goto err;
+ 			}
  
+-			ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
+-			if (ret < 0) {
+-				dev_err(card->dev, "%s: codec dai not found\n", link->name);
+-				goto err;
++			if (codec) {
++				ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
++				if (ret < 0) {
++					dev_err(card->dev, "%s: codec dai not found\n", link->name);
++					goto err;
++				}
++			} else {
++				dlc = devm_kzalloc(dev,
++						   sizeof(*dlc), GFP_KERNEL);
++				if (!dlc)
++					return -ENOMEM;
++
++				link->codecs = dlc;
++				link->num_codecs = 1;
++				link->codecs->dai_name = "snd-soc-dummy-dai";
++				link->codecs->name = "snd-soc-dummy";
+ 			}
+ 			link->no_pcm = 1;
+ 			link->ignore_pmdown_time = 1;
 -- 
 2.21.1
 
