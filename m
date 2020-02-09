@@ -1,428 +1,103 @@
-Return-Path: <SRS0=jtT8=34=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=ahG+=35=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320D0C35242
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 23:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A19C352A1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 00:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10902080C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Feb 2020 23:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD0322522
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Feb 2020 00:19:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H65l2JSE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BPbxcNj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgBHXnI (ORCPT
+        id S1727543AbgBIAT1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Feb 2020 18:43:08 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40435 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbgBHXnH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Feb 2020 18:43:07 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so2542471pjb.5
-        for <devicetree@vger.kernel.org>; Sat, 08 Feb 2020 15:43:07 -0800 (PST)
+        Sat, 8 Feb 2020 19:19:27 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33052 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbgBIAT0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Feb 2020 19:19:26 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so1855452pgk.0
+        for <devicetree@vger.kernel.org>; Sat, 08 Feb 2020 16:19:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=9bKVTe4EPYnW80XaiR29zvqneXX7nsNtUaMWPb/m8U4=;
-        b=H65l2JSE2PhRMpq539YzAsWekK8mIqeqNmO7OJi+INifLQvdbictHYzSq6La0KAsAg
-         KYvRHLMEMh8vtZnjlh5ekiiTcdvRtGnMX4wKfrSVw3f8NtcqHx1d08u/c0XVaMImUPfx
-         9dkUNwVR8yXtOH2QIBAO7N4cnfrftY9+hJ7evyTRbT5pJKtW/H41WP4lpuQBCWbQqZWp
-         4dgjm92BFvAxt3B1a0N9K5yxhfpFDlBeKhtcN6tSwXJVetg3lbHHavEA9/bFmvYYkQh4
-         wqsGBLwSPt0OqWI8YejGmuMrFuosbOCelh5RPGJFRrEJsB3eKSWRbh80Dp6MgY9Au5da
-         hLXg==
+        bh=Sstt02xcY3tWivWVDeG5iBViBhgDcepwGoXIUUCRlj4=;
+        b=BPbxcNj6SmiZxSbe75MPs5wgysL/4VNC8ywY9+pPcNVd5S2M8SRDxNwfWfTJyj150R
+         WQNu4RB/bLoGYnZ1Nd3Qpa+8CuWSZ/wHtK7Cc+qKa/R9nhfZ0JQlCMUgiXW/yzDslyH1
+         qlJ7tJ99NjX78Y25d1bG98cJx0SsfoCyM6YYa9vTS3kbi/yJHYXhFSYRBKBIelZVy2Ke
+         0xt6+sGby2W7BOs6AHGa/bFBlKEeUqCFLP2K/rGjPont15exh5IYLTWMj7fmOThiUkOR
+         vmq0E+9ag/9g55KPMYeaLVEVsKewAGhZwpFYWX8twWDStuo+6l0p2FiBwqNDAGV6tbCw
+         UyQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9bKVTe4EPYnW80XaiR29zvqneXX7nsNtUaMWPb/m8U4=;
-        b=i1aPr3D8tSw2hW5XAODSuE2NfcM27mDQrSBA9ccMo7Q9L1MZjd7WG0ng5POHD4/Z4q
-         zj8T9hjbC9kVFup8pAOwGcrrrA1Xg3CdxJBCmIfSOBnIZE0IHAGtfpROoHdemVjQbqjR
-         UKzbAyNL8KXDwOhR0aFnfEK23eiBzafLVkcBN6Mam760X84dnJqnBD7Lh38jLueaHV7G
-         5b2kKZumV4w4GONJi7yDytfPeabSL+N9osgeyiELxsQq8UTxrTED60rgt7oPaVvI1/Xr
-         /wAPvySl9vIn1SBe396cyXLlIFqCJqzN5SxVcS4lFtpvxTC/Tuu3E4hyTcMcV1fl8/na
-         Barg==
-X-Gm-Message-State: APjAAAVh2JCchRIhf0fqadmZDS6XMLcAplLamF4EQG4QFMe7tbFhve6U
-        jWEdAxnpI9Q777G2BxYxPrlBZQ==
-X-Google-Smtp-Source: APXvYqx9pjT5j7DUNhwxkTjw7w84EEDDUh3Nr8lSK05teJZ5U+eZqSgNA0oM5emcrOYXM8dUe+ESdA==
-X-Received: by 2002:a17:902:5ace:: with SMTP id g14mr5735961plm.311.1581205387061;
-        Sat, 08 Feb 2020 15:43:07 -0800 (PST)
+        bh=Sstt02xcY3tWivWVDeG5iBViBhgDcepwGoXIUUCRlj4=;
+        b=lLU3xt6GyX0Y0vIGRddL3UiUFS05aMGNoX8BG2hvSDgx6jBoiv7X3A7821iOemnFTu
+         HdNkPl2xbHX+yB0QA2mmtVOvXIQFIXkcAnx4XbeZ7dHCdV6dNhuVj6NnNYGx4gLkI+Fb
+         /RgvMJHiaUlRr4cwgIa6Lwljb9Ajpc75dnxNINIDAXfvcygWuDRk6l6U6oiG8gs3W7qc
+         4I5NJteybd+mt3ymTkv1ZSLCrpYZg0qLwul9pMocj04G3Ux0WzH7z/WYrR5BsvXYOdNH
+         ++taxFleT8c/27agGkdGz7x2w60M7cOdCpz40J8pOZrqr/71Np23cNn3R+41PVRY1K8y
+         JZSQ==
+X-Gm-Message-State: APjAAAXbBLHueI5tUdzgBAacYvPxAzdMHuVkWyCBRh0epEnRMVJrMLev
+        hT0aYMQ7JPeQjrzRLj+IpYWK0w==
+X-Google-Smtp-Source: APXvYqw/gMmQQJ9ir/gx3iHXpaMoj2RQ1ibv3ZsMai6SyfW/JiBS/hZuYBtLZ3iWedSC6HJ3BYXvpA==
+X-Received: by 2002:a62:1402:: with SMTP id 2mr6355873pfu.126.1581207564844;
+        Sat, 08 Feb 2020 16:19:24 -0800 (PST)
 Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r17sm7535567pgn.36.2020.02.08.15.43.05
+        by smtp.gmail.com with ESMTPSA id w11sm7385129pfn.4.2020.02.08.16.19.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2020 15:43:06 -0800 (PST)
-Date:   Sat, 8 Feb 2020 15:42:20 -0800
+        Sat, 08 Feb 2020 16:19:24 -0800 (PST)
+Date:   Sat, 8 Feb 2020 16:18:38 -0800
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Adam Serbinski <adam@serbinski.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/8] dts: msm8996/db820c: enable primary pcm and
- quaternary i2s
-Message-ID: <20200208234220.GC955802@ripper>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200207205013.12274-8-adam@serbinski.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v4 3/3] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+Message-ID: <20200209001838.GF955802@ripper>
+References: <1580886097-6312-1-git-send-email-smasetty@codeaurora.org>
+ <1580886097-6312-4-git-send-email-smasetty@codeaurora.org>
+ <CAD=FV=Ux9XjUQMy4zzaz9JxZzyuZJvNB_W9ANzE140W_pDmixA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207205013.12274-8-adam@serbinski.com>
+In-Reply-To: <CAD=FV=Ux9XjUQMy4zzaz9JxZzyuZJvNB_W9ANzE140W_pDmixA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 07 Feb 12:50 PST 2020, Adam Serbinski wrote:
+On Wed 05 Feb 11:24 PST 2020, Doug Anderson wrote:
 
-Please make subject
+> Hi,
+> 
+> On Tue, Feb 4, 2020 at 11:02 PM Sharat Masetty <smasetty@codeaurora.org> wrote:
+> >
+> > +                       power-domains = <&gpucc CX_GDSC>, <&gpucc GX_GDSC>;
+> 
+> I should note that this is going to be a PITA to land because the
+> patch adding "GX_GDSC" should technically land in the "clk" tree.
+> Without extra work that's going to mean waiting for a full Linux
+> release before Bjorn and Andy can land.  It might be worth sticking
+> the hardcoded "1" in for now instead of "GX_GDSC".  That's what we
+> often do in cases like this.
+> 
 
-"arm64: dts: qcom: db820c: Enable primary PCM and quaternary I2S"
+I'm fine with the patches using the GX_GDSC define and I will replace it
+if necessary when applying the patch - but either way we this is
+dependent on the clock tree picking up the patch that defines the value.
 
 Regards,
 Bjorn
-
-> This patch adds support to primary pcm and quaternary i2s ports.
-> 
-> Signed-off-by: Adam Serbinski <adam@serbinski.com>
-> CC: Andy Gross <agross@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Liam Girdwood <lgirdwood@gmail.com>
-> CC: Patrick Lai <plai@codeaurora.org>
-> CC: Banajit Goswami <bgoswami@codeaurora.org>
-> CC: Jaroslav Kysela <perex@perex.cz>
-> CC: Takashi Iwai <tiwai@suse.com>
-> CC: alsa-devel@alsa-project.org
-> CC: linux-arm-msm@vger.kernel.org
-> CC: devicetree@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 113 +++++++++++++
->  arch/arm64/boot/dts/qcom/msm8996-pins.dtsi   | 162 +++++++++++++++++++
->  2 files changed, 275 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> index dba3488492f1..4149ac4147a0 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> @@ -683,8 +683,31 @@
->  	};
->  };
->  
-> +/* PRI I2S on QCA6174 and QUAT I2S on LS each uses 2 I2S SD Lines for audio */
-> +&q6afedai {
-> +	pi2s@16 {
-> +		reg = <16>;
-> +		qcom,sd-lines = <1>;
-> +	};
-> +	pi2s@17 {
-> +		reg = <17>;
-> +		qcom,sd-lines = <0>;
-> +	};
-> +	qi2s@22 {
-> +		reg = <22>;
-> +		qcom,sd-lines = <0>;
-> +	};
-> +	qi2s@23 {
-> +		reg = <23>;
-> +		qcom,sd-lines = <1>;
-> +	};
-> +};
-> +
->  &sound {
->  	compatible = "qcom,apq8096-sndcard";
-> +	pinctrl-0 = <&quat_mi2s_active &quat_mi2s_sd0_active &quat_mi2s_sd1_active &pri_mi2s_active &pri_mi2s_sd0_active &pri_mi2s_sd1_active>;
-> +	pinctrl-names = "default";
-> +
->  	model = "DB820c";
->  	audio-routing =	"RX_BIAS", "MCLK";
->  
-> @@ -709,6 +732,41 @@
->  		};
->  	};
->  
-> +	mm4-dai-link {
-> +		link-name = "MultiMedia4";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA4>;
-> +		};
-> +	};
-> +
-> +	mm5-dai-link {
-> +		link-name = "MultiMedia5";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA5>;
-> +		};
-> +	};
-> +
-> +	mm6-dai-link {
-> +		link-name = "MultiMedia6";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA6>;
-> +		};
-> +	};
-> +
-> +	mm7-dai-link {
-> +		link-name = "MultiMedia7";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA7>;
-> +		};
-> +	};
-> +
-> +	mm8-dai-link {
-> +		link-name = "MultiMedia8";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA8>;
-> +		};
-> +	};
-> +
->  	hdmi-dai-link {
->  		link-name = "HDMI";
->  		cpu {
-> @@ -753,4 +811,59 @@
->  			sound-dai = <&wcd9335 1>;
->  		};
->  	};
-> +
-> +	scoplay-dai-link {
-> +		link-name = "SCO-PCM-Playback";
-> +		cpu {
-> +			sound-dai = <&q6afedai PRIMARY_PCM_RX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +	};
-> +
-> +	scocap-dai-link {
-> +		link-name = "SCO-PCM-Capture";
-> +		cpu {
-> +			sound-dai = <&q6afedai PRIMARY_PCM_TX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +	};
-> +
-> +	mi2splay-dai-link {
-> +		link-name = "QUAT-MI2S-Playback";
-> +		cpu {
-> +			sound-dai = <&q6afedai QUATERNARY_MI2S_RX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +
-> +//		EXAMPLE: For adding real codecs
-> +//		codec {
-> +//			sound-dai = <&pcm5142_4c>, <&pcm5142_4d>;
-> +//		};
-> +
-> +	};
-> +
-> +	mi2scap-dai-link {
-> +		link-name = "QUAT-MI2S-Capture";
-> +		cpu {
-> +			sound-dai = <&q6afedai QUATERNARY_MI2S_TX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +
-> +//		EXAMPLE: For adding real codecs
-> +//		codec {
-> +//			sound-dai = <&pcm1865>;
-> +//		};
-> +	};
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-> index ac1ede579361..e8221c4d05f7 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-> @@ -288,6 +288,168 @@
->  		};
->  	};
->  
-> +	pri_mi2s_active: pri_mi2s_active {
-> +		mux {
-> +			pins = "gpio65", "gpio66";
-> +			function = "pri_mi2s";
-> +		};
-> +		config {
-> +			pins = "gpio65", "gpio66";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +			output-high;
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sleep: pri_mi2s_sleep {
-> +		mux {
-> +			pins = "gpio65", "gpio66";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio65", "gpio66";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sd0_sleep: pri_mi2s_sd0_sleep {
-> +		mux {
-> +			pins = "gpio67";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio67";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sd0_active: pri_mi2s_sd0_active {
-> +		mux {
-> +			pins = "gpio67";
-> +			function = "pri_mi2s";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio67";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sd1_sleep: pri_mi2s_sd1_sleep {
-> +		mux {
-> +			pins = "gpio68";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio68";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sd1_active: pri_mi2s_sd1_active {
-> +		mux {
-> +			pins = "gpio68";
-> +			function = "pri_mi2s";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio68";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +		};
-> +	};
-> +
-> +	quat_mi2s_active: quat_mi2s_active {
-> +		mux {
-> +			pins = "gpio58", "gpio59";
-> +			function = "qua_mi2s";
-> +		};
-> +		config {
-> +			pins = "gpio58", "gpio59";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +			output-high;
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sleep: quat_mi2s_sleep {
-> +		mux {
-> +			pins = "gpio58", "gpio59";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio58", "gpio59";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sd0_sleep: quat_mi2s_sd0_sleep {
-> +		mux {
-> +			pins = "gpio60";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio60";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sd0_active: quat_mi2s_sd0_active {
-> +		mux {
-> +			pins = "gpio60";
-> +			function = "qua_mi2s";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio60";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sd1_sleep: quat_mi2s_sd1_sleep {
-> +		mux {
-> +			pins = "gpio61";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio61";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sd1_active: quat_mi2s_sd1_active {
-> +		mux {
-> +			pins = "gpio61";
-> +			function = "qua_mi2s";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio61";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +		};
-> +	};
-> +
->  	sdc2_clk_on: sdc2_clk_on {
->  		config {
->  			pins = "sdc2_clk";
-> -- 
-> 2.21.1
-> 
