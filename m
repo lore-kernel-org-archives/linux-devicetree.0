@@ -2,85 +2,119 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F7DC3B186
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DC8C3B186
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46B42085B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E57F24650
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:21:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oFCfjcLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbgBJVQz (ORCPT
+        id S1727507AbgBJVVp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:16:55 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40303 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgBJVQy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:16:54 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1GQG-0000YA-EO; Mon, 10 Feb 2020 22:16:52 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1GQF-0003sB-Jm; Mon, 10 Feb 2020 22:16:51 +0100
-Date:   Mon, 10 Feb 2020 22:16:51 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     George Hilliard <ghilliard@kopismobile.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] tty: imx serial: Implement support for reversing TX
- and RX polarity
-Message-ID: <20200210211651.5jys7ytgdm72hh6f@pengutronix.de>
-References: <20200210174942.14182-1-ghilliard@kopismobile.com>
- <20200210174942.14182-3-ghilliard@kopismobile.com>
- <20200210181156.fbq66yazb5j5quvn@pengutronix.de>
- <CALM8J=f1HV8BucyLVAz8cje392F98uOPoYdOMTSL0970eJnAcw@mail.gmail.com>
+        Mon, 10 Feb 2020 16:21:45 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:39784 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727435AbgBJVVp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:21:45 -0500
+Received: by mail-vk1-f196.google.com with SMTP id t129so2280410vkg.6
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 13:21:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fk9bdz/2mbXx6dTdvB7EEtvMRvBXPbEaBb56NU9MXvk=;
+        b=oFCfjcLi6FTB8phhz5e5PNBQQK1bvPyU+YLtRi18QmAAzEqnY924oe7J71K/fOfGTo
+         f3gOueqJgdm+vMwJlqJZAnePuZYODm8ZnNni3gHBsL0HBvBbjC8WPRyY4Q5Y++YUloN/
+         CR4c3SmRF9iN7SCYbKhjCYcimn+OrtHdACBgs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fk9bdz/2mbXx6dTdvB7EEtvMRvBXPbEaBb56NU9MXvk=;
+        b=t3Xi3Xv2mn6alec3iTU5pakVeLBENtq6YivXXDBrGBXSP8rRzllORLO/EPRQ7ou2iW
+         JGPnyB6vGAbHf2oUXkDPDqlOZVIsRM4RXcnyGYehibIp9P03ncNSQYshBZBXj3ML5udm
+         a3uESwcDWFsRfcQ0AgfrsnndNrjlaxdlmzntfrBaN1mXm1JotRolekbEHm8q99cqgCFy
+         wl2TXQok2tdJ+nWRcuID6uklzz226q3U3CkeeNJfGPjPWTiTUr0jPAB4B12Slt27jPsY
+         qsUpu0tkkVx4WysasUpjfReXwIiiIFmKszIaassJs20IUj0htzXKdAjswKoi+ovTaw90
+         L4jQ==
+X-Gm-Message-State: APjAAAWmoX9aAqRlfbQF61aMWfEFgHGX2qksnh5N+m+39KPv/llxOtPm
+        EZjQNr7oCo8bm+F1YeL5uhq26zGL7K4=
+X-Google-Smtp-Source: APXvYqxaYKCShhFhOG5+quwtTzcnAO3KYv5MoiHziloHSIPGf4qBt14al3PtdbRu6wFa99GhjytXGQ==
+X-Received: by 2002:a1f:7c0c:: with SMTP id x12mr2259832vkc.41.1581369702431;
+        Mon, 10 Feb 2020 13:21:42 -0800 (PST)
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
+        by smtp.gmail.com with ESMTPSA id 22sm524676vkz.39.2020.02.10.13.21.41
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2020 13:21:41 -0800 (PST)
+Received: by mail-vk1-f171.google.com with SMTP id p191so2272919vkf.8
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 13:21:41 -0800 (PST)
+X-Received: by 2002:a1f:ee45:: with SMTP id m66mr2278489vkh.75.1581369701330;
+ Mon, 10 Feb 2020 13:21:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALM8J=f1HV8BucyLVAz8cje392F98uOPoYdOMTSL0970eJnAcw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <1581320465-15854-1-git-send-email-smasetty@codeaurora.org> <1581320465-15854-2-git-send-email-smasetty@codeaurora.org>
+In-Reply-To: <1581320465-15854-2-git-send-email-smasetty@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 10 Feb 2020 13:21:30 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VH4954bnD_PzOhFPaYRto5sRVCCuOHgm67=uz5Be_b0Q@mail.gmail.com>
+Message-ID: <CAD=FV=VH4954bnD_PzOhFPaYRto5sRVCCuOHgm67=uz5Be_b0Q@mail.gmail.com>
+Subject: Re: [PATCH v6] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi George,
+Hi,
 
-On Mon, Feb 10, 2020 at 12:38:59PM -0600, George Hilliard wrote:
-> On Mon, Feb 10, 2020 at 12:11 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Mon, Feb 10, 2020 at 11:49:42AM -0600, George Hilliard wrote:
-> > > (confidentiality spam)
-> >
-> > Hmm, sad, I would have had some review feedback that should be addressed
-> > before application of the patch. As I only noticed the footer after
-> > looking at the patch, it was already too late to stop me reviewing it.
-> > As I don't have an expressed permission I will at least not share it
-> > (and I expect that Greg will also refuse to apply a patch with such a
-> > footer).
+On Sun, Feb 9, 2020 at 11:41 PM Sharat Masetty <smasetty@codeaurora.org> wrote:
 >
-> This is fixed now. Apologies - added without my knowledge. Should I
-> simply resend a v2 without the notice?  Happy to CC everyone else you
-> included.
+> This patch adds the required dt nodes and properties
+> to enabled A618 GPU.
+>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 
-You did it right. (i.e. yes, resend without the notice is the right
-thing.)
+In v4 I added my tags [1].  Please keep them for future patches unless
+something major changes.  AKA:
 
-Best regards
-Uwe
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 102 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+
+Just to summarize where we are:
+
+* As per my notes in v3 and v4 [1], this can't land until
+"mem_iface_clk" is in the bindings.  Please post a patch for this and
+reply with a link here so others can follow the disucssion.
+
+* This also can't land until the gpucc bindings change from Taniya
+recently [2] lands.
+
+...so we're in limbo waiting for the bindings to be resolved, but
+otherwise this patch looks good.
+
+
+[1] https://lore.kernel.org/r/CAD=FV=UEQ0mOXuDrSZrcJ8g6jb0eLf1Ttn+Mn7T6d2TpCMUcuA@mail.gmail.com
+[2] https://lore.kernel.org/r/1581307266-26989-1-git-send-email-tdas@codeaurora.org
+
+
+-Doug
