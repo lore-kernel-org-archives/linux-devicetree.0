@@ -2,115 +2,109 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67480C352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 10:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8416AC352A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416B4208C4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 10:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0DC2080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxzfVtZR"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bg+TX0Nv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgBJK4K (ORCPT
+        id S1727363AbgBJLPP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:56:10 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40229 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgBJK4K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 05:56:10 -0500
-Received: by mail-il1-f193.google.com with SMTP id i7so5360085ilr.7;
-        Mon, 10 Feb 2020 02:56:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d2IBt4/L/Nkmzl5hW1D/wjWzKHtqUWjVQiav92+TxjY=;
-        b=MxzfVtZRAKUIarDmqF9d8MtEWcqpjh3ZP6t4+CyS8iwJfg0VnRBEN5ecfTDSB/ifw5
-         Oe347EZ7IjQ/Ttkp4C8larMqFO3D5OVo62hVxbh4VB3YtEOic4v59wV2OxqSTcuqaAVZ
-         LSOuY+hEW35bByT0bXCtc6yvB+n7dHLJUDyaSyLv0aadoQKM8mWVpWgp+Cwa53vCsTUw
-         XZrC/jqYPGVltNO292Ad157gdmd/UuL51Qh1NxLP0atu/cJMiPWTUjy57gsZ2DfsD10S
-         NW92pC8NuZwhD0VTS3sLgeUes7Ghgp4jE+43B+Zy+lkj+fhmiFl44cZVQm9/58ycOa2K
-         mYbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d2IBt4/L/Nkmzl5hW1D/wjWzKHtqUWjVQiav92+TxjY=;
-        b=GWiI0lpy1NSXbVswL6dJOXyCDTxlSl10wsOAIbMU4C4Q1iP0xN8xAb4IYgU/4682jb
-         +7Pv9YdSbELTQi2BtshQYKVXrzu1DZnXYr5FTRYwC7jm/L03+BPVuFSYsVEH2flOweHo
-         834sJBB1/vAKRpi1jaHUTMqP6XJyTzXmwRqLbZH5zZ79NOhsJ8TTgp1cWed+ZH7SETLG
-         ZHc+2DnZw7amC47Mtz6tHnl+ugos2eRgsSBwYMwA5zLaCMFYuuRfmtYlMgwM3HmvEPo2
-         e7cLd+Dq2F6xnrf7hLuC7Khbi2C+ezvBMJudUvg5L59yvCy3POevkGSpUviGeGorJDdU
-         zXLw==
-X-Gm-Message-State: APjAAAW39qINGrEF8dtQ6v+uQCrkdT/G96hzcvFi/2iUtXVLWCJw5j6a
-        kuvEJtv+7yVe+PdgClDb/Waxtikhbd9nAoEMkK105Q==
-X-Google-Smtp-Source: APXvYqzSD3AIuSazFlh5pPF5er+MSkw4OA9zMqA91tlC+bDSAj88WNPxzkmfnD9iDxhN7ozPY0QwiaRGDUDo1oQbwSw=
-X-Received: by 2002:a92:5d92:: with SMTP id e18mr761070ilg.75.1581332169369;
- Mon, 10 Feb 2020 02:56:09 -0800 (PST)
+        Mon, 10 Feb 2020 06:15:15 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1236 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgBJLPP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 06:15:15 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e413b030000>; Mon, 10 Feb 2020 03:14:11 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 10 Feb 2020 03:15:14 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 03:15:14 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
+ 2020 11:15:08 +0000
+CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+Subject: Re: [PATCH v2 6/9] ASoC: tegra: add Tegra186 based DSPK driver
+To:     Dmitry Osipenko <digetx@gmail.com>
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-7-git-send-email-spujar@nvidia.com>
+ <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
+ <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
+ <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <3c19ef99-8051-76f7-a4d6-0d61182fe6e4@nvidia.com>
+Date:   Mon, 10 Feb 2020 16:45:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200210105108.1128-1-linux.amoon@gmail.com>
-In-Reply-To: <20200210105108.1128-1-linux.amoon@gmail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 10 Feb 2020 16:26:01 +0530
-Message-ID: <CANAwSgQzwRJE9mK+RwuCjsMaBMmD1f3fx+g-23B5Opo19kywUw@mail.gmail.com>
-Subject: Re: [PATCHv3 0/3] Add support for suspend clk for Exynos5422 SoC
-To:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581333251; bh=WuJ/yXuI1Dh+KZQlZCVWcQ74+5I0SnMra5tYUj5mEvo=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=bg+TX0NvBS/rnU/L9+9F0whahwkuD+eMLwfwyayTBaN9q1wi0PEeOTdUyF/B82lNn
+         vRu66mZnWVm6HOu1uhchVBqVgz54ANkhaIkyXOECSAxcqtlFc57Sh34oPRnhH1o0Ka
+         5j7xN1ivogH8DuQFTD1SN6lcLQ+UpHgCvZQG8ED1lISyv7xVS4njeVlVAllUf0h4cN
+         8A1NrMkDvadFZQEexIu58GqRAvjYyV2nwUivJA1/CK3ZoDvZMOWlib7xM0hWnEPjc7
+         kZ5KF2a8uIHthYW7zYBe49dYFx5I3iMfFojAwmlGfNsLRb8I9sjtThMHVIcMXqhKpj
+         8zI6jS0qpGuew==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
 
-Sorry typo this patch series should be PATCHv1 and not PATCHv3
 
--Anand
+On 2/7/2020 11:52 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 07.02.2020 14:26, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 2/6/2020 10:45 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> +static const struct dev_pm_ops tegra186_dspk_pm_ops =3D {
+>>>> +     SET_RUNTIME_PM_OPS(tegra186_dspk_runtime_suspend,
+>>>> +                        tegra186_dspk_runtime_resume, NULL)
+>>>> +     SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>>> +                                  pm_runtime_force_resume)
+>>>> +};
+>>> Could you please explain why drivers need the "late" system sleep?
+>> It was done to ensure core drivers are suspended first and defer the
+>> codec driver suspend
+> Suspend order is opposite to the drivers registration order. If there is
+> no real problem with that, then you should use the default suspend
 
-On Mon, 10 Feb 2020 at 16:21, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Long time ago I tried to add suspend clk for dwc3 phy
-> which was wrong appoch, see below.
->
-> [0] https://lore.kernel.org/patchwork/patch/837635/
-> [1] https://lore.kernel.org/patchwork/patch/837636/
->
-> This patch series tries to enable suspend clk using
-> exynos dwc3 driver, for this I have added new
-> compatible string "samsung,exynos5420-dwusb3"
-> so that we could add new suspend clk in addition
-> to the core clk. exynos dwc3 driver will help
-> enable/disable these clk.
->
-> -Anand
->
-> Anand Moon (3):
->   devicetree: bindings: exynos: Add new compatible for Exynos5420 dwc3
->     clocks support
->   ARM: dts: exynos: Add missing usbdrd3 suspend clk
->   usb: dwc3: exynos: Add support for Exynos5422 suspend clk
->
->  Documentation/devicetree/bindings/usb/exynos-usb.txt | 4 +++-
->  arch/arm/boot/dts/exynos5420.dtsi                    | 8 ++++----
->  arch/arm/boot/dts/exynos54xx.dtsi                    | 4 ++--
->  drivers/usb/dwc3/dwc3-exynos.c                       | 9 +++++++++
->  4 files changed, 18 insertions(+), 7 deletions(-)
->
-> --
-> 2.25.0
->
+> level. Please don't try to fix a non-existent problems.
+
+No. This was done specifically to allow sound core to first stop any=20
+ongoing audio activity during normal suspend and ensure a safe suspend=20
+of AHUB devices by doing a LATE suspend.
+
