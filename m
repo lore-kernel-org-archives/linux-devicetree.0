@@ -2,227 +2,231 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8586DC3B184
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 05:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6797C35250
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 06:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CE620870
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 05:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581314207;
-	bh=y8WJhCtjiUgmevlVF8bPnBitNPUgs1QbeGeB5mZDx5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SrQRwTSVg5XFbbMA98nme03UcUE7eYYgrSq0A3kOcKTXCQF4ZktkdWw58EANVjQpU
-	 5fbF2s9LzBLvE1wwdib5QTPkowssY/j6bomeLFNGHoN4KqnYNRAUJ9BfKcbaRTnR4c
-	 cib+8viLDBxYf0VK+eGfcOR7A4PASPx199F9iRZA=
+	by mail.kernel.org (Postfix) with ESMTP id A967B214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 06:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgBJF4p (ORCPT
+        id S1726231AbgBJGKy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 00:56:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgBJF4o (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 00:56:44 -0500
-Received: from localhost (unknown [106.201.32.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38D9820661;
-        Mon, 10 Feb 2020 05:56:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581314203;
-        bh=y8WJhCtjiUgmevlVF8bPnBitNPUgs1QbeGeB5mZDx5k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qybtcXfORlwW2sh851QqwW7QwgE5offrIYVPKCK2+7adJuA1yK91UDooJSTbdTcnu
-         HzEtBE8FJiRh7dcx3mo1l1uLAU0Uv1Yd1jRmHZ79h8DlfuxjWUzJtc0+CcLzY3VKMd
-         3oB7ywD7EfdHX6SY79BNWygygdYv7V9/ohuCm3LE=
-Date:   Mon, 10 Feb 2020 11:26:38 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, jshriram@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, psodagud@codeaurora.org,
-        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
-        vnkgutta@codeaurora.org
-Subject: Re: [PATCH v2 4/7] clk: qcom: clk-alpha-pll: Add support for
- controlling Lucid PLLs
-Message-ID: <20200210055638.GT2618@vkoul-mobl>
-References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org>
- <1579905147-12142-5-git-send-email-vnkgutta@codeaurora.org>
- <20200205193353.2BDCC20720@mail.kernel.org>
+        Mon, 10 Feb 2020 01:10:54 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:49295 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgBJGKy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 01:10:54 -0500
+Received: from [10.7.0.4] (10.28.11.250) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server id 15.1.1591.10; Mon, 10 Feb 2020 14:11:25 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH v7 2/5] clk: meson: add support for A1 PLL clock ops
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200120034937.128600-1-jian.hu@amlogic.com>
+ <20200120034937.128600-3-jian.hu@amlogic.com>
+ <1jftfq7ir8.fsf@starbuckisacylon.baylibre.com>
+Message-ID: <ce7d406e-b5bd-44c8-84fb-5edd3b3ffbce@amlogic.com>
+Date:   Mon, 10 Feb 2020 14:11:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205193353.2BDCC20720@mail.kernel.org>
+In-Reply-To: <1jftfq7ir8.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.11.250]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05-02-20, 11:33, Stephen Boyd wrote:
-> Quoting Venkata Narendra Kumar Gutta (2020-01-24 14:32:24)
-> > diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-> > index 1b073b2..4258ab0 100644
-> > --- a/drivers/clk/qcom/clk-alpha-pll.c
-> > +++ b/drivers/clk/qcom/clk-alpha-pll.c
-> > @@ -1367,3 +1388,172 @@ static int clk_alpha_pll_postdiv_fabia_set_rate(struct clk_hw *hw,
-> >         .set_rate = clk_alpha_pll_postdiv_fabia_set_rate,
-> >  };
-> >  EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_fabia_ops);
-> > +
-> > +void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+Hi Jerome
+
+Thanks for your suggestions.
+
+On 2020/2/4 18:24, Jerome Brunet wrote:
 > 
-> Can we get some kernel documentation for this function?
-
-Okay adding
-
-> > +{
-> > +       if (config->l)
-> > +               regmap_write(regmap, PLL_L_VAL(pll), config->l);
-> > +
-> > +       regmap_write(regmap, PLL_CAL_L_VAL(pll), LUCID_PLL_CAL_VAL);
-> > +
-> > +       if (config->alpha)
-> > +               regmap_write(regmap, PLL_ALPHA_VAL(pll), config->alpha);
-> > +
-> > +       if (config->config_ctl_val)
-> > +               regmap_write(regmap, PLL_CONFIG_CTL(pll),
-> > +                            config->config_ctl_val);
-> > +
-> > +       if (config->config_ctl_hi_val)
-> > +               regmap_write(regmap, PLL_CONFIG_CTL_U(pll),
-> > +                            config->config_ctl_hi_val);
-> > +
-> > +       if (config->config_ctl_hi1_val)
-> > +               regmap_write(regmap, PLL_CONFIG_CTL_U1(pll),
-> > +                            config->config_ctl_hi1_val);
-> > +
-> > +       if (config->user_ctl_val)
-> > +               regmap_write(regmap, PLL_USER_CTL(pll),
-> > +                            config->user_ctl_val);
-> > +
-> > +       if (config->user_ctl_hi_val)
-> > +               regmap_write(regmap, PLL_USER_CTL_U(pll),
-> > +                            config->user_ctl_hi_val);
-> > +
-> > +       if (config->user_ctl_hi1_val)
-> > +               regmap_write(regmap, PLL_USER_CTL_U1(pll),
-> > +                            config->user_ctl_hi1_val);
-> > +
-> > +       if (config->test_ctl_val)
-> > +               regmap_write(regmap, PLL_TEST_CTL(pll),
-> > +                            config->test_ctl_val);
-> > +
-> > +       if (config->test_ctl_hi_val)
-> > +               regmap_write(regmap, PLL_TEST_CTL_U(pll),
-> > +                            config->test_ctl_hi_val);
-> > +
-> > +       if (config->test_ctl_hi1_val)
-> > +               regmap_write(regmap, PLL_TEST_CTL_U1(pll),
-> > +                            config->test_ctl_hi1_val);
-> > +
-> > +       regmap_update_bits(regmap, PLL_MODE(pll), PLL_UPDATE_BYPASS,
-> > +                          PLL_UPDATE_BYPASS);
-> > +
-> > +       /* Disable PLL output */
-> > +       regmap_update_bits(regmap, PLL_MODE(pll),  PLL_OUTCTRL, 0);
-> > +
-> > +       /* Set operation mode to OFF */
-> > +       regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
-> > +
-> > +       /* PLL should be in OFF mode before continuing */
-> > +       wmb();
+> On Mon 20 Jan 2020 at 04:49, Jian Hu <jian.hu@amlogic.com> wrote:
 > 
-> How does the write above overtake the write below? This barrier looks
-> wrong.
-
-I think you are correct, it doesnt :), so removing this
-
-> > +static int alpha_pll_lucid_prepare(struct clk_hw *hw)
-> > +{
-> > +       struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
-> > +       u32 regval;
-> > +       int ret;
-> > +
-> > +       /* Return early if calibration is not needed. */
-> > +       regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
-> > +       if (regval & LUCID_PCAL_DONE)
-> > +               return 0;
-> > +
-> > +       ret = clk_trion_pll_enable(hw);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       clk_trion_pll_disable(hw);
-> > +
-> > +       return 0;
+>> Compared with the previous SoCs, self-adaption current module
+>> is newly added for A1, and there is no reset parm except the
+>> fixed pll. In A1 PLL, the PLL enable sequence is different, using
+>> the new power-on sequence to enable the PLL.
 > 
-> Can you write this like:
+> Things are getting clearer thanks to Martin's suggestions and I can
+> understand what your driver is doing now
 > 
-> 	/* On/off to calibrate */
-> 	ret = clk_trion_pll_enable(hw);
-> 	if (!ret)
-> 		clk_trion_pll_disable(hw);
+> However, I still have a problem with the fact that 2 different pll types
+> are getting intertwined in this driver. Parameters mandatory to one is
+> made optional to the other. Nothing clearly shows which needs what and
+> the combinatorial are quickly growing.
 > 
-> 	return ret;
-
-Looks better, updated now.
-
-> > +static int alpha_pll_lucid_set_rate(struct clk_hw *hw, unsigned long rate,
-> > +                                   unsigned long prate)
-> > +{
-> > +       struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
-> > +       unsigned long rrate;
-> > +       u32 regval, l, alpha_width = pll_alpha_width(pll);
-> > +       u64 a;
-> > +       int ret;
-> > +
-> > +       rrate = alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
-> > +
-> > +       /*
-> > +        * Due to a limited number of bits for fractional rate programming, the
-> > +        * rounded up rate could be marginally higher than the requested rate.
-> > +        */
-> > +       if (rrate > (rate + PLL_RATE_MARGIN) || rrate < rate) {
+> Apparently the only real difference is in enable/disable, So I would
+> prefer if the a1 had dedicated function for these ops.
 > 
-> Any chance this can be pushed into the alpha_pll_round_rate() API? It's
-> duplicated in this driver.
-
-Yes here and couple of fabia pll functions. Said that I see
-alpha_pll_round_rate() is also invoked two places,
-alpha_pll_fabia_set_rate() and __clk_alpha_pll_set_rate(), so should we
-let these two also be updated, if you are okay with that I will update
-this
-
-> > +       regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
-> > +       regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
-> > +
-> > +       /* Latch the PLL input */
-> > +       ret = regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
-> > +                                PLL_UPDATE, PLL_UPDATE);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       /* Wait for 2 reference cycles before checking the ACK bit. */
+> I suppose you'll have to submit clk_hw_enable() and clk_hw_disable()
+> to the framework to call the appropriate ops dependind on the SoC.
 > 
-> Are reference cycles 2 * 1 / 19.2MHz?
+I am confused here.
+What does clk_hw_is_enabled/clk_hw_enable/clk_hw_disable use here?
 
-Will check and update on this
+clk_hw_is_enabled is intend to check a parm's existence? But 
+clk_hw_is_enabled which is existed in CCF to check a PLL is locked or
+not. Maybe I understand wrong about your suggestions.
 
+Could you list a example for clk_hw_enable and clk_hw_disable function 
+implementation?
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> ---
+>>   drivers/clk/meson/clk-pll.c | 47 +++++++++++++++++++++++++++++++------
+>>   drivers/clk/meson/clk-pll.h |  2 ++
+>>   2 files changed, 42 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+>> index ddb1e5634739..10926291440f 100644
+>> --- a/drivers/clk/meson/clk-pll.c
+>> +++ b/drivers/clk/meson/clk-pll.c
+>> @@ -283,10 +283,14 @@ static void meson_clk_pll_init(struct clk_hw *hw)
+>>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>   
+>>   	if (pll->init_count) {
+>> -		meson_parm_write(clk->map, &pll->rst, 1);
+>> +		if (MESON_PARM_APPLICABLE(&pll->rst))
+>> +			meson_parm_write(clk->map, &pll->rst, 1);
+>> +
 > 
-> > +       udelay(1);
-> > +       regmap_read(pll->clkr.regmap, PLL_MODE(pll), &regval);
-> > +       if (!(regval & ALPHA_PLL_ACK_LATCH)) {
-> > +               WARN(1, "PLL latch failed. Output may be unstable!\n");
+> replace by
+>          enabled = clk_hw_is_enabled(hw)
+>          if (enabled)
+>             clk_hw_disable(hw)
 > 
-> Do we need a big WARN stack for this? How about pr_warn() instead?
-
-Nope :), will move to a warn print :)
-
--- 
-~Vinod
+clk_hw_is_enabled here is used to check 'pll->rst'?
+>>   		regmap_multi_reg_write(clk->map, pll->init_regs,
+>>   				       pll->init_count);
+>> -		meson_parm_write(clk->map, &pll->rst, 0);
+>> +
+>> +		if (MESON_PARM_APPLICABLE(&pll->rst))
+>> +			meson_parm_write(clk->map, &pll->rst, 0);
+> 
+>         /* restore if necessary */
+>         if (enabled)
+>            clk_hw_enable(hw)
+> 
+>>   	}
+>>   }
+>>   
+>> @@ -295,8 +299,11 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
+>>   	struct clk_regmap *clk = to_clk_regmap(hw);
+>>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>   
+>> -	if (meson_parm_read(clk->map, &pll->rst) ||
+>> -	    !meson_parm_read(clk->map, &pll->en) ||
+>> +	if (MESON_PARM_APPLICABLE(&pll->rst) &&
+>> +	    meson_parm_read(clk->map, &pll->rst))
+>> +		return 0;
+>> +
+>> +	if (!meson_parm_read(clk->map, &pll->en) ||
+>>   	    !meson_parm_read(clk->map, &pll->l))
+>>   		return 0;
+> 
+> I suppose the pll can't be locked if it was in reset, so we could drop
+> the check on `rst` entirely to simplify the function
+> 
+OK, I will drop 'rst' check.
+>>   
+>> @@ -323,13 +330,34 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>>   		return 0;
+>>   
+>>   	/* Make sure the pll is in reset */
+>> -	meson_parm_write(clk->map, &pll->rst, 1);
+>> +	if (MESON_PARM_APPLICABLE(&pll->rst))
+>> +		meson_parm_write(clk->map, &pll->rst, 1);
+>>   
+>>   	/* Enable the pll */
+>>   	meson_parm_write(clk->map, &pll->en, 1);
+>>   
+>>   	/* Take the pll out reset */
+>> -	meson_parm_write(clk->map, &pll->rst, 0);
+>> +	if (MESON_PARM_APPLICABLE(&pll->rst))
+>> +		meson_parm_write(clk->map, &pll->rst, 0);
+>> +
+>> +	/*
+>> +	 * Compared with the previous SoCs, self-adaption current module
+>> +	 * is newly added for A1, keep the new power-on sequence to enable the
+>> +	 * PLL. The sequence is:
+>> +	 * 1. enable the pll, delay for 10us
+>> +	 * 2. enable the pll self-adaption current module, delay for 40us
+>> +	 * 3. enable the lock detect module
+>> +	 */
+>> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>> +		udelay(10);
+>> +		meson_parm_write(clk->map, &pll->current_en, 1);
+>> +		udelay(40);
+>> +	};
+>> +
+>> +	if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
+>> +		meson_parm_write(clk->map, &pll->l_detect, 1);
+>> +		meson_parm_write(clk->map, &pll->l_detect, 0);
+>> +	}
+>>   
+>>   	if (meson_clk_pll_wait_lock(hw))
+>>   		return -EIO;
+>> @@ -343,10 +371,15 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
+>>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>   
+>>   	/* Put the pll is in reset */
+>> -	meson_parm_write(clk->map, &pll->rst, 1);
+>> +	if (MESON_PARM_APPLICABLE(&pll->rst))
+>> +		meson_parm_write(clk->map, &pll->rst, 1);
+>>   
+>>   	/* Disable the pll */
+>>   	meson_parm_write(clk->map, &pll->en, 0);
+>> +
+>> +	/* Disable PLL internal self-adaption current module */
+>> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
+>> +		meson_parm_write(clk->map, &pll->current_en, 0);
+>>   }
+> 
+> With the above clarified, it should be easy to properly split the
+> functions between the legacy type and the a1 type.
+> 
+> You'll need to update meson_clk_pll_set_rate() to call
+>   - clk_hw_is_enabled()
+>   - clk_hw_enable() and clk_hw_disable() (again, you'll need to add
+>   those in the framework first)
+> 
+>>   
+>>   static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+>> index 367efd0f6410..a2228c0fdce5 100644
+>> --- a/drivers/clk/meson/clk-pll.h
+>> +++ b/drivers/clk/meson/clk-pll.h
+>> @@ -36,6 +36,8 @@ struct meson_clk_pll_data {
+>>   	struct parm frac;
+>>   	struct parm l;
+>>   	struct parm rst;
+>> +	struct parm current_en;
+>> +	struct parm l_detect;
+>>   	const struct reg_sequence *init_regs;
+>>   	unsigned int init_count;
+>>   	const struct pll_params_table *table;
+> 
+> .
+> 
