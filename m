@@ -2,148 +2,204 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EB4C352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1027C3B185
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B14D2080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9113F2080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="F8jbaGgZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fEq3Z14v"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EfSsAX3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgBJJl6 (ORCPT
+        id S1726968AbgBJJuf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:41:58 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:51037 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726950AbgBJJl5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:41:57 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4428A21A97;
-        Mon, 10 Feb 2020 04:41:54 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 10 Feb 2020 04:41:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=d9UVYjOFvIhqvu/YHII/qZzXr7G
-        ct38JABDmCn0w5X8=; b=F8jbaGgZDT1zY6FziFyoGrH3wIfbJuPJ73uKI0lkfHv
-        vCi+Pc4X+lIEp08xpgBcD5xGp9t9atMo0Gj0oWynWeNryrVfs/BwlQpSzZcSqAJG
-        vsSBQAdUddK5Lp8vRCwz6khYegKe2o5n7jcnw6BTR5doVtnH60Vhe0ndMTn8+CU3
-        4NAfNmjzEaPup0NiXBymdL8oZmZlIhDw/WjpwVTtKtde5laTJeMmFcvh3oq4HisD
-        +mJTh1Xg1w8gulkp9Um/J6k8Rwj4c3j16QYhtPVx20u0TDsh+dtpbFakhTp5/end
-        WqV/pzp8QopoXaH/8cS1fbQsg75uzzwNz3RFE9/I4gQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=d9UVYj
-        OFvIhqvu/YHII/qZzXr7Gct38JABDmCn0w5X8=; b=fEq3Z14vxDFoPUpI8LNKnT
-        1po7RhhotquPwjoZMoiG522U0RLNM+kL15EwORlMY7ROqKtt1biz6UenZoElBn+P
-        Ongy9vWxFy7Q+0BAjIibG9UYs1TSSLr0t83Q8D7MARwlIiubQD0mH6OfbG6vfi5H
-        Q54LjaYQ61mFDOvBKdvxH9c6ehPf9C+5KElxKLkdSMj9duEtmCr8YXZnkVQ5MnY3
-        8eZFWp6VNlYYuFj6cMTLurWA0apyF7BMO/Fcjw7XlfR8rqA0hNz/frWHGox8qsFF
-        7x0aU/SxygcaB3wGoge15EGHmh4X3QLyun7BV+0BNPodPwqqSDLttE9GJl/t+ALg
-        ==
-X-ME-Sender: <xms:YSVBXrZdgESm-gLNg8o2FjfJ8kFqNc3s10vMd8n0mXnZwWYcp9r2Ug>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedugddtiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehgtderre
-    dttddvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegtvghr
-    nhhordhtvggthheqnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordht
-    vggthh
-X-ME-Proxy: <xmx:YSVBXguuX4srb9zEpsDxIHDKbieKrmlSaTvfNSxo31KSrDqBv5OZQQ>
-    <xmx:YSVBXqpTd2D-cb2Z-ObYq0wSWBgYy7vThsHVJJIRPI4A4JuUbRVvlw>
-    <xmx:YSVBXgTUaMzlrsKvm9yshoBxnRBwLMvjeXyVaPqEp1cahlaCeg9DWg>
-    <xmx:YiVBXmCnnFqkmhuNBJnGYWlcsJGl2vDH_y_SNEEukQenm-d7gt8hJg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6E65D3060717;
-        Mon, 10 Feb 2020 04:41:53 -0500 (EST)
-Date:   Mon, 10 Feb 2020 10:41:51 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     agriveaux@deutnet.info
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: sun5i: Add dts for inet86v_rev2
-Message-ID: <20200210094151.acim7h4yladgluc7@gilmour.lan>
-References: <20200210092736.3208998-1-agriveaux@deutnet.info>
- <20200210092736.3208998-2-agriveaux@deutnet.info>
+        Mon, 10 Feb 2020 04:50:35 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40789 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJJue (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 04:50:34 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t3so6754116wru.7
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 01:50:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VERQvzakQm+SUc0TjMstgU+qiR8Y1gY4yphY2OZ9EGM=;
+        b=EfSsAX3QV1DNfZCmCuqDBNPOS10zQZnQRdZeOVdGqwFG0IfVuILbzKpmcW1NmwPwpT
+         3s7TleYQXKZEmanVquu1Z1+A4R35EFRsV1OneENQOdCQFPz8xRItmcpokgCPLMLOCoMa
+         1hY6Ze5pTZwhBZxodlutd4H6briHJrO3whMgTK4oqFsHulCU3TCxUvhU19fs7JxI3HBe
+         gEcTr5igkuDOwscxkox7GuITeTFTYO+RubTKCtQSpJzbOkiVsShfO8okPzwx2NZz2HJv
+         LbjOSv+ljuRTatKOn4IhFarMHOwcyTreh6VUAXfYqE+UmAaZfzSmr1UY1T6/HJ8M3cGb
+         l7xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VERQvzakQm+SUc0TjMstgU+qiR8Y1gY4yphY2OZ9EGM=;
+        b=PtmE9n7zHN0tcjMh0NRDcEE3d75jJP2EAejt0qpwju54bl6voUdP4tt7715lBV3YOb
+         I4OIsIzfKjZx88x3EM26pkIQQXmjXsm5qTzIhKUUJmudLPz6cE2iNJb/TRkf8Q2zILPz
+         KrcTkvsN/wrB6ApK5bxrpt3m1MFq/V1LPxbdE4lh1ddO5N0X592ZLpb4K3X32Vf/oe1I
+         AA6UyUabBFNmt9sAbl5afjfNVkXZWsRbGWxA3MIG0xryhINorieL2Ts9OOnNO+bVYR1n
+         +wDnbcSa/oRGEl9SSlruLptXGvy/3NgfxsMHMuo1UQ6TkqLHPvX+Lkkb88WIHuPtIT+4
+         iVtA==
+X-Gm-Message-State: APjAAAXSatGvqovlNTbftzCeZsUAC7+9j2SguV67iGkn49/Y394PGaFl
+        NuIsRl5Pu+345UZmJMsUKfonfQ==
+X-Google-Smtp-Source: APXvYqyfFIxizan/1PZVO/45DabLhFxmuPsd7wcpoGFK20hwep1pl3070xeAT7c9kVGZpJ7tUsHJYA==
+X-Received: by 2002:a5d:494f:: with SMTP id r15mr1013142wrs.143.1581328231991;
+        Mon, 10 Feb 2020 01:50:31 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id b17sm15983521wrp.49.2020.02.10.01.50.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2020 01:50:31 -0800 (PST)
+Subject: Re: [PATCH v4 0/2] drm/bridge: Support for Toshiba tc358768 RGB to
+ DSI bridge
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, airlied@linux.ie,
+        daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.hajda@samsung.com
+Cc:     tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net
+References: <20200131111553.472-1-peter.ujfalusi@ti.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT7CwHsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIXOwU0EVid/pAEQAND7AFhr
+ 5faf/EhDP9FSgYd/zgmb7JOpFPje3uw7jz9wFb28Cf0Y3CcncdElYoBNbRlesKvjQRL8mozV
+ 9RN+IUMHdUx1akR/A4BPXNdL7StfzKWOCxZHVS+rIQ/fE3Qz/jRmT6t2ZkpplLxVBpdu95qJ
+ YwSZjuwFXdC+A7MHtQXYi3UfCgKiflj4+/ITcKC6EF32KrmIRqamQwiRsDcUUKlAUjkCLcHL
+ CQvNsDdm2cxdHxC32AVm3Je8VCsH7/qEPMQ+cEZk47HOR3+Ihfn1LEG5LfwsyWE8/JxsU2a1
+ q44LQM2lcK/0AKAL20XDd7ERH/FCBKkNVzi+svYJpyvCZCnWT0TRb72mT+XxLWNwfHTeGALE
+ +1As4jIS72IglvbtONxc2OIid3tR5rX3k2V0iud0P7Hnz/JTdfvSpVj55ZurOl2XAXUpGbq5
+ XRk5CESFuLQV8oqCxgWAEgFyEapI4GwJsvfl/2Er8kLoucYO1Id4mz6N33+omPhaoXfHyLSy
+ dxD+CzNJqN2GdavGtobdvv/2V0wukqj86iKF8toLG2/Fia3DxMaGUxqI7GMOuiGZjXPt/et/
+ qeOySghdQ7Sdpu6fWc8CJXV2mOV6DrSzc6ZVB4SmvdoruBHWWOR6YnMz01ShFE49pPucyU1h
+ Av4jC62El3pdCrDOnWNFMYbbon3vABEBAAHCwn4EGAECAAkFAlYnf6QCGwICKQkQFpq3saTP
+ +K7BXSAEGQECAAYFAlYnf6QACgkQd9zb2sjISdGToxAAkOjSfGxp0ulgHboUAtmxaU3viucV
+ e2Hl1BVDtKSKmbIVZmEUvx9D06IijFaEzqtKD34LXD6fjl4HIyDZvwfeaZCbJbO10j3k7FJE
+ QrBtpdVqkJxme/nYlGOVzcOiKIepNkwvnHVnuVDVPcXyj2wqtsU7VZDDX41z3X4xTQwY3SO1
+ 9nRO+f+i4RmtJcITgregMa2PcB0LvrjJlWroI+KAKCzoTHzSTpCXMJ1U/dEqyc87bFBdc+DI
+ k8mWkPxsccdbs4t+hH0NoE3Kal9xtAl56RCtO/KgBLAQ5M8oToJVatxAjO1SnRYVN1EaAwrR
+ xkHdd97qw6nbg9BMcAoa2NMc0/9MeiaQfbgW6b0reIz/haHhXZ6oYSCl15Knkr4t1o3I2Bqr
+ Mw623gdiTzotgtId8VfLB2Vsatj35OqIn5lVbi2ua6I0gkI6S7xJhqeyrfhDNgzTHdQVHB9/
+ 7jnM0ERXNy1Ket6aDWZWCvM59dTyu37g3VvYzGis8XzrX1oLBU/tTXqo1IFqqIAmvh7lI0Se
+ gCrXz7UanxCwUbQBFjzGn6pooEHJYRLuVGLdBuoApl/I4dLqCZij2AGa4CFzrn9W0cwm3HCO
+ lR43gFyz0dSkMwNUd195FrvfAz7Bjmmi19DnORKnQmlvGe/9xEEfr5zjey1N9+mt3//geDP6
+ clwKBkq0JggA+RTEAELzkgPYKJ3NutoStUAKZGiLOFMpHY6KpItbbHjF2ZKIU1whaRYkHpB2
+ uLQXOzZ0d7x60PUdhqG3VmFnzXSztA4vsnDKk7x2xw0pMSTKhMafpxaPQJf494/jGnwBHyi3
+ h3QGG1RjfhQ/OMTX/HKtAUB2ct3Q8/jBfF0hS5GzT6dYtj0Ci7+8LUsB2VoayhNXMnaBfh+Q
+ pAhaFfRZWTjUFIV4MpDdFDame7PB50s73gF/pfQbjw5Wxtes/0FnqydfId95s+eej+17ldGp
+ lMv1ok7K0H/WJSdr7UwDAHEYU++p4RRTJP6DHWXcByVlpNQ4SSAiivmWiwOt490+Ac7ATQRN
+ WQbPAQgAvIoM384ZRFocFXPCOBir5m2J+96R2tI2XxMgMfyDXGJwFilBNs+fpttJlt2995A8
+ 0JwPj8SFdm6FBcxygmxBBCc7i/BVQuY8aC0Z/w9Vzt3Eo561r6pSHr5JGHe8hwBQUcNPd/9l
+ 2ynP57YTSE9XaGJK8gIuTXWo7pzIkTXfN40Wh5jeCCspj4jNsWiYhljjIbrEj300g8RUT2U0
+ FcEoiV7AjJWWQ5pi8lZJX6nmB0lc69Jw03V6mblgeZ/1oTZmOepkagwy2zLDXxihf0GowUif
+ GphBDeP8elWBNK+ajl5rmpAMNRoKxpN/xR4NzBg62AjyIvigdywa1RehSTfccQARAQABwsBf
+ BBgBAgAJBQJNWQbPAhsMAAoJEBaat7Gkz/iuteIH+wZuRDqK0ysAh+czshtG6JJlLW6eXJJR
+ Vi7dIPpgFic2LcbkSlvB8E25Pcfz/+tW+04Urg4PxxFiTFdFCZO+prfd4Mge7/OvUcwoSub7
+ ZIPo8726ZF5/xXzajahoIu9/hZ4iywWPAHRvprXaim5E/vKjcTeBMJIqZtS4u/UK3EpAX59R
+ XVxVpM8zJPbk535ELUr6I5HQXnihQm8l6rt9TNuf8p2WEDxc8bPAZHLjNyw9a/CdeB97m2Tr
+ zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <ac8f985b-af2c-f314-1b8b-fcfd7abd2dba@baylibre.com>
+Date:   Mon, 10 Feb 2020 10:50:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i5c7nphjkfrh5sot"
-Content-Disposition: inline
-In-Reply-To: <20200210092736.3208998-2-agriveaux@deutnet.info>
+In-Reply-To: <20200131111553.472-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---i5c7nphjkfrh5sot
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Feb 10, 2020 at 10:27:36AM +0100, agriveaux@deutnet.info wrote:
-> From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
->
-> Add Inet 86V Rev 2 support, based upon Inet 86VS.
->
-> Missing things:
-> - Accelerometer (MXC6225X)
-> - Touchpanel (Sitronix SL1536)
-> - Nand (29F32G08CBACA)
-> - Camera (HCWY0308)
-
-Same thing than for U-Boot, you're missing your SoB.
-
+On 31/01/2020 12:15, Peter Ujfalusi wrote:
+> Hi,
+> 
+> Changes since v3:
+> - bindings/example: Fixed the node name
+> - bindings/example: Added include for GPIO_ACTIVE_LOW and fixed up the gpio
+> 		    binding
+> - driver: Moved the label for goto in tc358768_calc_pll()
+> - driver: Replaced the refcounting of enabled with a simple bool as hw_enable()
+>   is only called from one place (tc358768_bridge_pre_enable)
+> - driver: Added Reviewed-by from Andrzej
+> 
+> Changes since v2:
+> - Implement pre_enable and post_disbale callbacks and move code from enable and
+>   disable callbacks.
+> - hw_enable/disable is removed from tc358768_dsi_host_transfer()
+> - Defines for DSI_CONFW accesses
+> - breakout from the loops  (the check for it) is moved one level up in
+>   tc358768_calc_pll()
+> 
+> Changes since v1:
+> DT bindings document:
+> - Removed MaxItems for the regulators
+> - additionalProperties: false added to port@1
+> 
+> Driver:
+> - Year is now 2020
+> - Includes shorted
+> - The three letter members of the private struct documented 0 they are named as
+>   in the datasheet
+> - Error handling for the IO functions is following what sil-sii8620.c does
+> - regmap regcache is disabled along with refcache_sync() and volatile callback
+>   for regmap
+> - The hw enable and disable functions got separated
+> - Taken the suggested simplifactions from Andrzej for tc358768_calc_pll() and
+>   tc358768_dsi_host_transfer()
+> - The driver no longer stores the drm_display_mode, it relies on
+>   priv->bridge.encoder->crtc->state->adjusted_mode where it needs it
+> - tc358768_calc_pll() can be used for verification only to not modify the state
+> - refcounting added for hw enable state as a dsi transfer was shutting down the
+>   bridge when it was already enabled.
+> 
+> Tested on top of drm-next + LED backlight patches + DT patches on dra7-evm with
+> osd101t2045 (panel-simple) and osd101t2587 panel drivers.
+> 
+> Cover letter from v1:
+> TC358768 is a parallel RGB to MIPI DSI bridge.
+> 
+> The initial driver supports MIPI_DSI_MODE_VIDEO, MIPI_DSI_FMT_RGB888 and
+> only write is implemented for mipi_dsi_host_ops.transfer due to lack of hardware
+> where other modes can be tested.
+> 
+> Regards,
+> Peter
 > ---
->  arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
->
-> diff --git a/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts b/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
-> new file mode 100644
-> index 000000000000..e73abb9a1e32
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2020 Alexandre Griveaux <agriveaux@deutnet.info>
-> + *
-> + * Minimal dts file for the iNet 86V
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sun5i-a13.dtsi"
-> +#include "sun5i-reference-design-tablet.dtsi"
-> +
-> +/ {
-> +	model = "iNET 86V Rev 02";
-> +	compatible = "inet,86v-rev2", "allwinner,sun5i-a13";
-> +
-> +};
+> Peter Ujfalusi (2):
+>   dt-bindings: display: bridge: Add documentation for Toshiba tc358768
+>   drm/bridge: Add tc358768 driver
+> 
+>  .../display/bridge/toshiba,tc358768.yaml      |  159 +++
+>  drivers/gpu/drm/bridge/Kconfig                |   10 +
+>  drivers/gpu/drm/bridge/Makefile               |    1 +
+>  drivers/gpu/drm/bridge/tc358768.c             | 1044 +++++++++++++++++
+>  4 files changed, 1214 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+>  create mode 100644 drivers/gpu/drm/bridge/tc358768.c
+> 
 
-If it's exactly the same device, why do we need another device tree?
 
-Maxime
+Applying to drm-misc-next
 
---i5c7nphjkfrh5sot
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkElXwAKCRDj7w1vZxhR
-xVqQAP0WqaoWFqiHegUKPvKlv56b9oGniB5VpWmrxYdYEA2xdAEA72tUhIcb89Xk
-YbyBfShDx6jSAVf/b7hvE/yy2ZX+ogw=
-=YSHF
------END PGP SIGNATURE-----
-
---i5c7nphjkfrh5sot--
+Neil
