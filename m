@@ -2,159 +2,182 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D746C3B188
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 19:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE94C35254
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C760206ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 19:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA96020661
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kopismobile-com.20150623.gappssmtp.com header.i=@kopismobile-com.20150623.gappssmtp.com header.b="PhhG7Vd8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shdUAmJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgBJTaN (ORCPT
+        id S1727840AbgBJTbe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:30:13 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38364 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727588AbgBJTaN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 14:30:13 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l9so10325357oii.5
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 11:30:13 -0800 (PST)
+        Mon, 10 Feb 2020 14:31:34 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45337 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJTbe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 14:31:34 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so4173016pfg.12;
+        Mon, 10 Feb 2020 11:31:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kopismobile-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iAI5wgmrYbvKIAKLYGgin8eu2739AIzeNm/Uwvw/GLM=;
-        b=PhhG7Vd8yMOuysoMiWZ2qvmofGNCttG2XlB4IaRzzOJo2mzlzih5KT2l+9blmYTyaQ
-         rCYwGbUYlVdqW5EZ47Q1kX0rD8dIp1rsAVw1Tq90+XM4QG/sLKBREK1KwKb6aOE0pgGe
-         BCTcDbWvBOZsJ0sboe8mTX0RWfY2eyuXrpEJZCaGj1TbolTtuxATCAmgf5UqNVhdYp2H
-         zKPTnr/xbThSbRNWbbXVMG0ThONDFxER+oRMnpNJY2tqIJBjiMsmQ5OhywNT0zauHBHW
-         09icxa0EaLjX7hWm26CRpEYT4g/fI4AOnIoBgs69KQe309csLpOAWplrcHovy2gpeEYI
-         BEVA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZuPt180kRsjCVRCyZy+KTCJcOp2X4om9PYJBQV60Moc=;
+        b=shdUAmJ14w97aqe7DSTm0HIXz2ZpCws3HjMztJNoydnWz7J6zzufdnzB/MDKNYKzjn
+         Np254hbT6cgaPBn4FZz9ykTV7VmZOWgGY5G4KUBewPJZ+5RTiSSoLznfegSaBWBMTsAx
+         gF4sEnhtnTO9ia+sOMz4eYufu/7D2ttRDIqjD+aWVPaJ6KVgTc7mvboVz3b1+J4ME9Ze
+         s7F4c9JQ+vO4yJKRUNQVKNNIZ+unVmhZdODmaUO3wHnE1HKQpyYeaNm/mneuWgm/uK+0
+         CIeE+sMw+0gmAefHNgRg+orMZZIiObTfERMqDWa9up90fnYoNWCE6hMpkPx71UwbLhCc
+         IC0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iAI5wgmrYbvKIAKLYGgin8eu2739AIzeNm/Uwvw/GLM=;
-        b=T135Sdhg5jaT3d6DUWcUInzl8IDpDb2d8aFW5oo03US2TWr/yZT882mal3+9MdTMKu
-         tQvwvkSOIm8Npr4Dfy+2Z6+q3xQ78mA6Xbh+BX/id8a5EK20nWBG2BVRaW3zQrMmW5jC
-         plRyChmBJ+8FbsHpHPlF0HWQH/HFi4ZSyh7YM0Q5HKwuxfdx7zLvawcT783VJD90PixO
-         SuqGQ289MhPwIWNu5kcMhbff05luEVCNZfmxPL75bgJ/1PnG0/1sQaDzfCGPROXPLzed
-         QOWb7koVhh7kcjYw2PSm4AMnTPJBKBSIKAGgGMbbx6zbXQBp5dbIvyhDM0tEir8IjlL9
-         gOUA==
-X-Gm-Message-State: APjAAAV2fUZz+jkUM7RUly+CYAiHA2+62irfP3cYR02tkOSlOsbbqdP9
-        AG19kvWtuT9N1eYao5poRzm6otm/uGRdQg==
-X-Google-Smtp-Source: APXvYqw5HqSPqVCW0umxVpbQIkPXRMGzqoqIb+C/oTW6MY+Uzvp4UA8GaPqwIqn2eHjM4ae2Uu9zJQ==
-X-Received: by 2002:a05:6808:b29:: with SMTP id t9mr403203oij.69.1581363012734;
-        Mon, 10 Feb 2020 11:30:12 -0800 (PST)
-Received: from farregard-ubuntu.kopismobile.org (c-73-177-17-21.hsd1.ms.comcast.net. [73.177.17.21])
-        by smtp.gmail.com with ESMTPSA id n22sm412163otj.36.2020.02.10.11.30.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 11:30:12 -0800 (PST)
-From:   George Hilliard <ghilliard@kopismobile.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     George Hilliard <ghilliard@kopismobile.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH v2 2/2] tty: imx serial: Implement support for reversing TX and RX polarity
-Date:   Mon, 10 Feb 2020 13:29:49 -0600
-Message-Id: <20200210192949.7338-3-ghilliard@kopismobile.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210192949.7338-1-ghilliard@kopismobile.com>
-References: <20200210192949.7338-1-ghilliard@kopismobile.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZuPt180kRsjCVRCyZy+KTCJcOp2X4om9PYJBQV60Moc=;
+        b=eEFmPV2XyPzhPq/eRH8+RS0X6n4lFcExLm1m0ugO8e1x+cQMSxPzT/H8DUzmNgAJOB
+         eqGNXFG47NwjIjS+pvTiV0CjcWmtYkd+mh3HM1njQTQsYv22jfQRSf13D/IalPakt1Aw
+         qDACsbcP05V2TxuZn0ZFTeB/rYBKFhW6Him1b0h8Cnqp1b5F3gVMBMqUqF1DLaOz/hGc
+         nN0ULJ5gR1NxZscaUb5B7WwbIK7seOHZm45vtp61mLnISsHQWysaZt5kHbf9822GbVpO
+         OneViexVnWHV7fWRKA4uAp2hLzARc0SIQUDsQF5W3ZIV2zEQaf5gzDyTllQU83ofr3Hx
+         8FQw==
+X-Gm-Message-State: APjAAAXc3SL4fKhNyc7qGEOmmffmKg9be8ARvpjCQtaLpCL+w0MiphYy
+        UboqxP/L0eyvflbVtsoj/GM=
+X-Google-Smtp-Source: APXvYqxTAam4vg8YO3HTEwUSpm+D/PTtAnCrM86RpDJMKgUVL7IuukH9eQEDieHTCjyqJRoqovvDwQ==
+X-Received: by 2002:a63:e14b:: with SMTP id h11mr3059825pgk.297.1581363093006;
+        Mon, 10 Feb 2020 11:31:33 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:200::2:87f0])
+        by smtp.gmail.com with ESMTPSA id 28sm895963pgl.42.2020.02.10.11.31.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Feb 2020 11:31:32 -0800 (PST)
+Date:   Mon, 10 Feb 2020 11:31:29 -0800
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Joel Stanley <joel@jms.id.au>, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH 2/3] usb: gadget: aspeed: add ast2600 vhub support
+Message-ID: <20200210193128.GC5346@taoren-ubuntu-R90MNF91>
+References: <20200131222157.20849-1-rentao.bupt@gmail.com>
+ <20200131222157.20849-3-rentao.bupt@gmail.com>
+ <CACPK8XcmUYhnePr1AG2M9P-oGvOM=zCM+r44jWUzPYGxUEGOGw@mail.gmail.com>
+ <b7bf421b5fad397a7ef430af6c0c09602dd66c2a.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7bf421b5fad397a7ef430af6c0c09602dd66c2a.camel@kernel.crashing.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The peripheral has support for inverting its input and/or output
-signals.  This is useful if the hardware flips polarity of the
-peripheral's signal, such as swapped +/- pins on an RS-422 transceiver,
-or an inverting level shifter.  Add support for these control registers
-via the device tree binding.
+On Mon, Feb 10, 2020 at 08:29:22AM +0100, Benjamin Herrenschmidt wrote:
+> On Mon, 2020-02-10 at 02:48 +0000, Joel Stanley wrote:
+> > On Fri, 31 Jan 2020 at 22:22, <rentao.bupt@gmail.com> wrote:
+> > > 
+> > > From: Tao Ren <rentao.bupt@gmail.com>
+> > > 
+> > > Add AST2600 support in aspeed-vhub driver. There are 3 major differences
+> > > between AST2500 and AST2600 vhub:
+> > >   - AST2600 supports 7 downstream ports while AST2500 supports 5.
+> > >   - AST2600 supports 21 generic endpoints while AST2500 supports 15.
+> > >   - EP0 data buffer's 8-byte DMA alignment restriction is removed from
+> > >     AST2600.
+> > > 
+> > > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> 
+> Travelling at the moment so my review might be a bit delayed. Also for
+> some reason I missed your original submission, sorry about that, please
+> poke me next time if I don't reply within a couple of days !
 
-Signed-off-by: George Hilliard <ghilliard@kopismobile.com>
----
-v1..v2: removed confidentiality spam
+No worries Ben and thanks for the review. I thought people was too busy
+during merge window :)
 
- drivers/tty/serial/imx.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+> 
+> One thing to look into as well is the 2600 has revived the "device
+> controller" which looks like a cut down version of a vhub device, so we
+> should break a bit more the linkage between vhub and the underlying
+> devices so the latter can be instanciated standalone...
+> 
+> (Foor for thought, I'm not asking you to do that right now)
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 0c6c63166250..467e78794997 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -195,6 +195,8 @@ struct imx_port {
- 	unsigned int		have_rtscts:1;
- 	unsigned int		have_rtsgpio:1;
- 	unsigned int		dte_mode:1;
-+	unsigned int		inverted_tx:1;
-+	unsigned int		inverted_rx:1;
- 	struct clk		*clk_ipg;
- 	struct clk		*clk_per;
- 	const struct imx_uart_data *devdata;
-@@ -1335,7 +1337,7 @@ static int imx_uart_startup(struct uart_port *port)
- 	int retval, i;
- 	unsigned long flags;
- 	int dma_is_inited = 0;
--	u32 ucr1, ucr2, ucr4;
-+	u32 ucr1, ucr2, ucr3, ucr4;
- 
- 	retval = clk_prepare_enable(sport->clk_per);
- 	if (retval)
-@@ -1390,6 +1392,8 @@ static int imx_uart_startup(struct uart_port *port)
- 	ucr4 = imx_uart_readl(sport, UCR4) & ~UCR4_OREN;
- 	if (!sport->dma_is_enabled)
- 		ucr4 |= UCR4_OREN;
-+	if (sport->inverted_rx)
-+		ucr4 |= UCR4_INVR;
- 	imx_uart_writel(sport, ucr4, UCR4);
- 
- 	ucr2 = imx_uart_readl(sport, UCR2) & ~UCR2_ATEN;
-@@ -1404,19 +1408,17 @@ static int imx_uart_startup(struct uart_port *port)
- 		ucr2 &= ~UCR2_RTSEN;
- 	imx_uart_writel(sport, ucr2, UCR2);
- 
-+	ucr3 = imx_uart_readl(sport, UCR3);
-+	if (sport->inverted_tx)
-+		ucr3 |= UCR3_INVT;
- 	if (!imx_uart_is_imx1(sport)) {
--		u32 ucr3;
--
--		ucr3 = imx_uart_readl(sport, UCR3);
--
- 		ucr3 |= UCR3_DTRDEN | UCR3_RI | UCR3_DCD;
- 
- 		if (sport->dte_mode)
- 			/* disable broken interrupts */
- 			ucr3 &= ~(UCR3_RI | UCR3_DCD);
--
--		imx_uart_writel(sport, ucr3, UCR3);
- 	}
-+	imx_uart_writel(sport, ucr3, UCR3);
- 
- 	/*
- 	 * Enable modem status interrupts
-@@ -2184,6 +2186,12 @@ static int imx_uart_probe_dt(struct imx_port *sport,
- 	if (of_get_property(np, "rts-gpios", NULL))
- 		sport->have_rtsgpio = 1;
- 
-+	if (of_get_property(np, "fsl,inverted-tx", NULL))
-+		sport->inverted_tx = 1;
-+
-+	if (of_get_property(np, "fsl,inverted-rx", NULL))
-+		sport->inverted_rx = 1;
-+
- 	return 0;
- }
- #else
--- 
-2.25.0
+Thanks for sharing your thought. I was actually curious why "device
+controller" was back. Anyways I feel it might be easier to break the
+linkage when we decide to add driver for the "device controller".
 
+
+Cheers,
+
+Tao
+> 
+> Cheers,
+> Ben.
+> 
+> > Reviewed-by: Joel Stanley <joel@jms.id.au>
+> > 
+> > > ---
+> > >  drivers/usb/gadget/udc/aspeed-vhub/Kconfig | 4 ++--
+> > >  drivers/usb/gadget/udc/aspeed-vhub/core.c  | 9 +++++++++
+> > >  2 files changed, 11 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/Kconfig b/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
+> > > index 83ba8a2eb6af..605500b19cf3 100644
+> > > --- a/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
+> > > +++ b/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
+> > > @@ -4,5 +4,5 @@ config USB_ASPEED_VHUB
+> > >         depends on ARCH_ASPEED || COMPILE_TEST
+> > >         depends on USB_LIBCOMPOSITE
+> > >         help
+> > > -         USB peripheral controller for the Aspeed AST2500 family
+> > > -         SoCs supporting the "vHub" functionality and USB2.0
+> > > +         USB peripheral controller for the Aspeed AST2400, AST2500 and
+> > > +         AST2600 family SoCs supporting the "vHub" functionality and USB2.0
+> > > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> > > index 94081cc04113..c827bf420278 100644
+> > > --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> > > +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> > > @@ -42,6 +42,11 @@ static const struct ast_vhub_config ast2400_config = {
+> > >         .max_epns = 15,
+> > >  };
+> > > 
+> > > +static const struct ast_vhub_config ast2600_config = {
+> > > +       .max_ports = 7,
+> > > +       .max_epns = 21,
+> > > +};
+> > > +
+> > >  static const struct of_device_id ast_vhub_dt_ids[] = {
+> > >         {
+> > >                 .compatible = "aspeed,ast2400-usb-vhub",
+> > > @@ -51,6 +56,10 @@ static const struct of_device_id ast_vhub_dt_ids[] = {
+> > >                 .compatible = "aspeed,ast2500-usb-vhub",
+> > >                 .data = &ast2400_config,
+> > >         },
+> > > +       {
+> > > +               .compatible = "aspeed,ast2600-usb-vhub",
+> > > +               .data = &ast2600_config,
+> > > +       },
+> > >         { }
+> > >  };
+> > >  MODULE_DEVICE_TABLE(of, ast_vhub_dt_ids);
+> > > --
+> > > 2.17.1
+> > > 
+> 
