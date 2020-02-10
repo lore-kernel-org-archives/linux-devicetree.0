@@ -2,98 +2,86 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB168C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 15:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DBEC352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 15:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAE42080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 15:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2859C20715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 15:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="R95TpP03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgBJPeD (ORCPT
+        id S1726809AbgBJPpW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:34:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:35286 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727541AbgBJPeD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:34:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 825611FB;
-        Mon, 10 Feb 2020 07:34:02 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C9BF3F68E;
-        Mon, 10 Feb 2020 07:34:00 -0800 (PST)
-Date:   Mon, 10 Feb 2020 15:33:54 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200210153354.GA8911@e121166-lin.cambridge.arm.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+        Mon, 10 Feb 2020 10:45:22 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:53018 "EHLO
+        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJPpW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 10:45:22 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id 8BD69D006F9;
+        Mon, 10 Feb 2020 15:45:20 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at serbinski.com
+Received: from mail.serbinski.com ([127.0.0.1])
+        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RU0dbJpuXSmK; Mon, 10 Feb 2020 10:45:16 -0500 (EST)
+Received: from mail.serbinski.com (localhost [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id 264F5D00693;
+        Mon, 10 Feb 2020 10:45:16 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 264F5D00693
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
+        s=default; t=1581349516;
+        bh=cgzaas0LPv50cOT+2MC0flSgiGLs+1OYFMtEFdzI+9Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=R95TpP03Z2najOK0N607cJhi1GKdKti38DMqwwGSmgYAXHDbUTpNfJy94pKthGMkl
+         VY+b5ALw30rca8MF3RzDpXXmgCF4Ua3ISzhn4la3kag0BP7BSKsGxgAWZtmozbwK0M
+         aWvAj8ofKAwd9n0MZxeaYQo2yJ+PQjJ8C8R/w9ho=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 10 Feb 2020 10:45:16 -0500
+From:   Adam Serbinski <adam@serbinski.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
+In-Reply-To: <20200210133636.GJ7685@sirena.org.uk>
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-9-adam@serbinski.com>
+ <20200210133636.GJ7685@sirena.org.uk>
+User-Agent: Roundcube Webmail/1.4-beta
+Message-ID: <18057b47c76d350f8380f277713e0936@serbinski.com>
+X-Sender: adam@serbinski.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
-> On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> >
-> > Hi Olof,
-> >
-> > Thanks a lot for your comments!
-> > And sorry for my delay respond!
+On 2020-02-10 08:36, Mark Brown wrote:
+> On Sun, Feb 09, 2020 at 10:47:48AM -0500, Adam Serbinski wrote:
+>> This makes it possible for the backend sample rate to be
+>> set to 8000 or 16000 Hz, depending on the needs of the HFP
+>> call being set up.
 > 
-> Actually, they apply with only minor conflicts on top of current -next.
-> 
-> Bjorn, any chance we can get you to pick these up pretty soon? They
-> enable full use of a promising ARM developer system, the SolidRun
-> HoneyComb, and would be quite valuable for me and others to be able to
-> use with mainline or -next without any additional patches applied --
-> which this patchset achieves.
-> 
-> I know there are pending revisions based on feedback. I'll leave it up
-> to you and others to determine if that can be done with incremental
-> patches on top, or if it should be fixed before the initial patchset
-> is applied. But all in all, it's holding up adaption by me and surely
-> others of a very interesting platform -- I'm looking to replace my
-> aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-> before I do.
+> This would seem like an excellent thing to put in the driver for the
+> baseband or bluetooth.
 
-We should be able to merge them for v5.7, I don't know when they
-will land in -next.
-
-Thanks,
-Lorenzo
+The value that must be set to this control is not available to the 
+bluetooth driver. It originates from the bluetooth stack in userspace, 
+typically either blueZ or fluoride, as a result of a negotiation between 
+the two devices participating in the HFP call.
