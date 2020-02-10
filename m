@@ -2,109 +2,150 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97F5C3B186
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56982C35254
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21EB20842
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D26B2080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kopismobile-com.20150623.gappssmtp.com header.i=@kopismobile-com.20150623.gappssmtp.com header.b="OihE4KgC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GabQrhEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgBJRuk (ORCPT
+        id S1727079AbgBJRwB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:50:40 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35813 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgBJRuh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:50:37 -0500
-Received: by mail-oi1-f193.google.com with SMTP id b18so10042427oie.2
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:50:37 -0800 (PST)
+        Mon, 10 Feb 2020 12:52:01 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45481 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbgBJRwA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:52:00 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 2so4041955pfg.12;
+        Mon, 10 Feb 2020 09:52:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kopismobile-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=V32zSJvuwZW0sQ7+BEi24f7xdXL9W83fv79Z3HiobAI=;
-        b=OihE4KgCvjfYq7v1iZQJoeEgpPkT68yCFBmEVtsKAOCNKF+iK5b0vLDlFDLlCnzLf4
-         FJ0Ocm90z9mGQHkRfmbhGIaOAxFRsKlMzqogTKZI3Rg2pNpmQLdOftD+mU/PSQIyvuql
-         T5Dqn+I5lhJdzy7lhqA3M4oKRNR8bGj1/cJTO4OtvuWjAODI2Cx/ZfS8f/W2iU6bofhH
-         R41z6uB8UvNT7Mo91EeOi1a6RU4wmWZD7qgk6n2ktkb5IvVx0sVpT8I6sPOzFy4h5BfE
-         YQdCKGpeResU4x4ulXKCUZbgA6gSeOFJpMEKgbr8dzSbmIwnO6/SqR97PoaTtcjJlQft
-         QyBQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MM7R9V7x4SfJxszh3dZy1asc+0YpWfKxq+33iCkgJuw=;
+        b=GabQrhEI7g1MP+cMV9bvR9dwQktgpfyeF8s92oPxorCxTF65Quy0utpXliSB6ZnQBQ
+         ga5RUyXfhYrcya0a4d2CpRKwdinAK2ZV38KFlbOeqYhaSOxm9DSQWJXNXzXpc4OBCx4O
+         wRnDOReq10omnEy4z76YRO4B/0kIjbanwVaJvE6TSL77zCMPEdgTRxxhPBSGbIs5hfNI
+         Rzz+9PHNUpiaSib5CXqyZMQ+qvEjl+JMwTkwhag4ObuukgdfwLlWNLJVzsFdq13f1dYD
+         wHjtE6RKHL4TxlfDLK2sZ9I4UaEA30lv9sMBMyVIhOMmuXjXUecgiYRm486xs52W0eSn
+         CjYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=V32zSJvuwZW0sQ7+BEi24f7xdXL9W83fv79Z3HiobAI=;
-        b=HWLn1Zumxq/8YGWoCAiXsRtawbhvQ6oahzyEVlQ3TZkZT7L8f3qHKsicZwguS1WACr
-         sbhOx6sPqv4IlzINQp9Yk/4w0OBi7Dvca+RSW0jSNccC8Ke5AdViPNoUWIwEMQBUZ/Ti
-         tC3Py7sF0jM3giQmfSjd7/JXTb4sGiv3tjPY6tQkwUooH4NCjCY+HbTSdRaepdnelqTL
-         NoIiJzp66B0SJbrP2VjFKVbtVz0GTZB9iX9mrr6ZZHaFxIc4Jzqs2s0vV7Dx/E2qnK/C
-         Kmy7ZFj0R1vZxcWRosVIxf0kGNTdJfeEon1igPruRq+Mjs6lWkYRpjtpx9+g7bnEX3L2
-         BO2w==
-X-Gm-Message-State: APjAAAUQKPsY/0e29/k2+z+NNomWYKacz0lxGNbTJuu23JpZuXSplRqk
-        +xFtS1/y7WpFG0BuWiCUcF1c/ArlYxYMp1KggyTepZuQXp5s7Cll7TI4LcO+0PQMaWLRiR8odR1
-        s+hLYPKeab8bnHnrfGIoemGA=
-X-Google-Smtp-Source: APXvYqyZQTwhFMLIcyHQZWJJjvlmTmF8K9VxQoq9g/8gca7rrxoNg8/zDOhrkj5jzh5eJ+rKXAXGIA==
-X-Received: by 2002:aca:1c01:: with SMTP id c1mr172004oic.18.1581357037179;
-        Mon, 10 Feb 2020 09:50:37 -0800 (PST)
-Received: from farregard-ubuntu.kopismobile.org (c-73-177-17-21.hsd1.ms.comcast.net. [73.177.17.21])
-        by smtp.gmail.com with ESMTPSA id r205sm293189oih.54.2020.02.10.09.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 09:50:36 -0800 (PST)
-From:   George Hilliard <ghilliard@kopismobile.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     George Hilliard <ghilliard@kopismobile.com>
-Subject: [PATCH 1/2] dt-bindings: serial: document fsl,inverted-tx and -rx options
-Date:   Mon, 10 Feb 2020 11:49:41 -0600
-Message-Id: <20200210174942.14182-2-ghilliard@kopismobile.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210174942.14182-1-ghilliard@kopismobile.com>
-References: <20200210174942.14182-1-ghilliard@kopismobile.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MM7R9V7x4SfJxszh3dZy1asc+0YpWfKxq+33iCkgJuw=;
+        b=W9nmWdKbEq7hRnV9BM9uNYsIN7vyLtictv+JtAOrBH3Vlph8aPfvyziJUpu6RAyqQk
+         OIhIvjTYlsI4nfGH8QaMyYsWmc/4ybT8UFwf4tHrpfFCpNm+qrPhtV+XTtDA22kRbInA
+         NR43fIMk2Iuybre8MUTkr4wV71XzMUY/mEUUM2FrfrihmFIBX1zyWgQBhaMm/GpyBF2t
+         sZukOTh615zaHPK+4t6b9ngGTX8Ims6Tis5gciQ9iw7Fs8UcyMd4vUMNEZDXpiFClGeg
+         n6E1NBXhs43JWfY0hizw/pYqc9tuujZUu0MbrOpi3ij1+LpuKUU37hrKNarQLFj5Ip9C
+         MIHQ==
+X-Gm-Message-State: APjAAAWtBAPWetwi6s11uvxrOYQekzUVLrSGepohyF3SxCvj5KhtfGPb
+        2ObHr3mxJVT4KA9dfwqE1b0=
+X-Google-Smtp-Source: APXvYqz8OGqGIw6Dj/1NWzwwvsY0TYQ/8+Hmsz8n9Ry0oUOLEEcDPAe0ccT7JEe+q4YdqNfl35R2Iw==
+X-Received: by 2002:a63:7457:: with SMTP id e23mr2869807pgn.386.1581357120158;
+        Mon, 10 Feb 2020 09:52:00 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 70sm795638pgd.28.2020.02.10.09.51.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Feb 2020 09:51:59 -0800 (PST)
+Date:   Mon, 10 Feb 2020 09:51:58 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Mike Jones <michael-a1.jones@analog.com>
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jdelvare@suse.com, robh+dt@kernel.org, corbet@lwn.net
+Subject: Re: [PATCH 2/2] bindings: (hwmon/ltc2978.txt): add support for more
+ parts.
+Message-ID: <20200210175158.GA31186@roeck-us.net>
+References: <1581032654-4330-1-git-send-email-michael-a1.jones@analog.com>
+ <1581032654-4330-2-git-send-email-michael-a1.jones@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581032654-4330-2-git-send-email-michael-a1.jones@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a description for the new fsl,inverted-tx and fsl,inverted-rx
-options for the i.MX UART peripheral.
+On Thu, Feb 06, 2020 at 04:44:14PM -0700, Mike Jones wrote:
+> LTC2972, LTC2979, LTC3884, LTC3889, LTC7880, LTM4664, LTM4677,
+> LTM4678, LTM4680, LTM4700.
+> 
+> Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
 
-Signed-off-by: George Hilliard <ghilliard@kopismobile.com>
----
- Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Conditionally applied to hwmon-next. We'll see if Rob would like to see
+any adjustments.
 
-diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-index 35957cbf1571..c8d677f9491f 100644
---- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-@@ -8,6 +8,10 @@ Required properties:
- Optional properties:
- - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
-                   in DCE mode by default.
-+- fsl,inverted-tx , fsl,inverted-rx : Indicate that the hardware attached
-+  to the peripheral inverts the signal transmitted or received,
-+  respectively, and that the peripheral should invert its output/input
-+  using the INVT/INVR registers.
- - rs485-rts-delay, rs485-rts-active-low, rs485-rx-during-tx,
-   linux,rs485-enabled-at-boot-time: see rs485.txt. Note that for RS485
-   you must enable either the "uart-has-rtscts" or the "rts-gpios"
--- 
-2.25.0
+Thanks,
+Guenter
 
-
--- 
-CONFIDENTIALITY NOTICE: This email and any attachments are for the sole use 
-of the intended recipient and may contain material that is proprietary, 
-confidential, privileged or otherwise legally protected or restricted under 
-applicable government laws. Any review, disclosure, distributing or other 
-use without expressed permission of the sender is strictly prohibited. If 
-you are not the intended recipient, please contact the sender and delete 
-all copies without reading, printing, or saving.
+> ---
+>  .../devicetree/bindings/hwmon/ltc2978.txt          | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> index b428a70..4e7f621 100644
+> --- a/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> @@ -2,20 +2,30 @@ ltc2978
+>  
+>  Required properties:
+>  - compatible: should contain one of:
+> +  * "lltc,ltc2972"
+>    * "lltc,ltc2974"
+>    * "lltc,ltc2975"
+>    * "lltc,ltc2977"
+>    * "lltc,ltc2978"
+> +  * "lltc,ltc2979"
+>    * "lltc,ltc2980"
+>    * "lltc,ltc3880"
+>    * "lltc,ltc3882"
+>    * "lltc,ltc3883"
+> +  * "lltc,ltc3884"
+>    * "lltc,ltc3886"
+>    * "lltc,ltc3887"
+> +  * "lltc,ltc3889"
+> +  * "lltc,ltc7880"
+>    * "lltc,ltm2987"
+> +  * "lltc,ltm4664"
+>    * "lltc,ltm4675"
+>    * "lltc,ltm4676"
+> +  * "lltc,ltm4677"
+> +  * "lltc,ltm4678"
+> +  * "lltc,ltm4680"
+>    * "lltc,ltm4686"
+> +  * "lltc,ltm4700"
+>  - reg: I2C slave address
+>  
+>  Optional properties:
+> @@ -25,13 +35,17 @@ Optional properties:
+>    standard binding for regulators; see regulator.txt.
+>  
+>  Valid names of regulators depend on number of supplies supported per device:
+> +  * ltc2972 vout0 - vout1
+>    * ltc2974, ltc2975 : vout0 - vout3
+> -  * ltc2977, ltc2980, ltm2987 : vout0 - vout7
+> +  * ltc2977, ltc2979, ltc2980, ltm2987 : vout0 - vout7
+>    * ltc2978 : vout0 - vout7
+> -  * ltc3880, ltc3882, ltc3886 : vout0 - vout1
+> +  * ltc3880, ltc3882, ltc3884, ltc3886, ltc3887, ltc3889 : vout0 - vout1
+> +  * ltc7880 : vout0 - vout1
+>    * ltc3883 : vout0
+> -  * ltm4676 : vout0 - vout1
+> -  * ltm4686 : vout0 - vout1
+> +  * ltm4664 : vout0 - vout1
+> +  * ltm4675, ltm4676, ltm4677, ltm4678 : vout0 - vout1
+> +  * ltm4680, ltm4686 : vout0 - vout1
+> +  * ltm4700 : vout0 - vout1
+>  
+>  Example:
+>  ltc2978@5e {
