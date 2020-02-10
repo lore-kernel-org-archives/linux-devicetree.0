@@ -2,200 +2,113 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD44C352A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E34C352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12CD920708
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA4B20708
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbgBJNBB (ORCPT
+        id S1730850AbgBJNI6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:01:01 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:43158 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729836AbgBJNBA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 08:01:00 -0500
-X-AuditID: c0a8fbf4-263ff70000001e6c-80-5e4154095e9f
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id CB.59.07788.904514E5; Mon, 10 Feb 2020 14:00:57 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 10 Feb 2020 14:00:45 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/3] dt_bindings: ROHM BD99954 Charger
-Thread-Topic: [RFC PATCH 1/3] dt_bindings: ROHM BD99954 Charger
-Thread-Index: AQHV4AtGFPiZltGtqU2YXMRYBxAc1KgUU2qA
-Date:   Mon, 10 Feb 2020 13:00:44 +0000
-Message-ID: <fbbacf0597222443941ac1736fbf6de4dccd6d70.camel@fi.rohmeurope.com>
-References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <fc866eb870e1980fd2a5cd37cf02cde5e8fb3d06.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <fc866eb870e1980fd2a5cd37cf02cde5e8fb3d06.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <191E7B9C72D93445AA1A37CEEB47B441@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 10 Feb 2020 08:08:58 -0500
+Received: from pbmsgap01.intersil.com ([192.157.179.201]:36142 "EHLO
+        pbmsgap01.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728726AbgBJNI5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 08:08:57 -0500
+X-Greylist: delayed 2191 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Feb 2020 08:08:57 EST
+Received: from pps.filterd (pbmsgap01.intersil.com [127.0.0.1])
+        by pbmsgap01.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 01ACWEVe027172;
+        Mon, 10 Feb 2020 07:32:14 -0500
+Received: from pbmxdp03.intersil.corp (pbmxdp03.pb.intersil.com [132.158.200.224])
+        by pbmsgap01.intersil.com with ESMTP id 2y1sd3h009-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 07:32:14 -0500
+Received: from pbmxdp02.intersil.corp (132.158.200.223) by
+ pbmxdp03.intersil.corp (132.158.200.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.1531.3; Mon, 10 Feb 2020 07:32:12 -0500
+Received: from localhost.localdomain (132.158.202.108) by
+ pbmxdp02.intersil.corp (132.158.200.223) with Microsoft SMTP Server id
+ 15.1.1531.3 via Frontend Transport; Mon, 10 Feb 2020 07:32:12 -0500
+From:   Chris Brandt <chris.brandt@renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        "Chris Brandt" <chris.brandt@renesas.com>
+Subject: [PATCH v2] ARM: dts: r7s72100: Add SPIBSC clocks
+Date:   Mon, 10 Feb 2020 07:31:53 -0500
+Message-ID: <20200210123153.8257-1-chris.brandt@renesas.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsVyYMXvjbqcIY5xBv9Pm1lMffiEzWL+kXOs
-        FlP+LGeyuLxrDpvF594jjBZLr19kspiz9ASLReveI+wWp3eXOHB6rJm3htFj56y77B6bVnWy
-        edy5tofN4/MmuQDWKG6bpMSSsuDM9Dx9uwTujHPvSwqueVfMbNnE3sB4x7OLkZNDQsBEYm3r
-        ctYuRi4OIYGrjBJ/v21gg3BOMErc+9PJ3MXIwcEmYCPRdZMdxBQRsJTYeFEQpIRZoI1F4vrV
-        v8wgg4QF7CRufJ0MZosI2EtsvXeWHcI2kph84SMriM0ioCpx7Nl1FhCbV8BPYuuWdqhdixkl
-        Fm+8ANbAKZAhcf3oS7BBjAKyEp0N75hAbGYBcYlNz76zQlwtILFkz3lmCFtU4uXjf1BxJYm9
-        Px+ygBzKLKApsX6XPoTpINHf5AcxRVFiSvdDdogTBCVOznzCMoFRbBaSBbMQmmchNM9C0jwL
-        SfMCRtZVjBK5iZk56YklqYZ6RamlekX5GblAKjk/dxMjJG6/7GD8f8jzECMTB+MhRkkOJiVR
-        3iWBjnFCfEn5KZUZicUZ8UWlOanFhxglOJiVRHgtpYFyvCmJlVWpRfkwKWkOFiVxXvWHE2OF
-        BEB2ZaemFqQWwWRlODiUJHjXBgE1ChalpqdWpGXmlCCkmTg4QYZzSYkUp+alpBYllpZkxIMS
-        R3wxMHWApHiA9joGg+wtLkjMBYpCtJ5iNOSY8HLuImaOzXOXAskjIFKIJS8/L1VKnLcZZJ8A
-        SENGaR7culeM4hyMSsK8/0Fe5AEmc7hpr4AWMQEtum7iALKoJBEhJdXAaLfoueWx+wFKp22f
-        siYUPFihqBW/U3P547n6JTMUio5vmvLL3S7ISlEo/NqCuS3hB8NMPuZ+470oPe+9X57b2jxu
-        tz0bmU5mdpZmS86rlN7RvdqgZ9aE9z/PLIt6fGDh4RSBvGf8+y78cazNaWq9udBEktmzSS5m
-        vUKiW8peluiDLD7PNhaFKLEUZyQaajEXFScCADXCefSjAwAA
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-02-10_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002050000 definitions=main-2002100098
+X-Proofpoint-Spam-Reason: mlx
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiBNb24sIDIwMjAtMDItMTAgYXQgMTQ6MTEgKzAyMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90
-ZToNCj4gVGhlIFJPSE0gQkQ5OTk1NCBpcyBhIEJhdHRlcnkgTWFuYWdlbWVudCBMU0kgZm9yIDEt
-NCBjZWxsIExpdGhpdW0tSW9uDQo+IHNlY29uZGFyeSBiYXR0ZXJ5LiBJbnRlbmRlZCB0byBiZSB1
-c2VkIGluIHNwYWNlLWNvbnN0cmFpbnQgZXF1aXBtZW50DQo+IHN1Y2gNCj4gYXMgTG93IHByb2Zp
-bGUgTm90ZWJvb2sgUEMsIFRhYmxldHMgYW5kIG90aGVyIGFwcGxpY2F0aW9ucy4gQkQ5OTk1NA0K
-PiBwcm92aWRlcyBhIER1YWwtc291cmNlIEJhdHRlcnkgQ2hhcmdlciwgdHdvIHBvcnQgQkMxLjIg
-ZGV0ZWN0aW9uIGFuZA0KPiBhDQo+IEJhdHRlcnkgTW9uaXRvci4NCj4gDQo+IERvY3VtZW50IHRo
-ZSBEVCBiaW5kaW5ncyBmb3IgQkQ5OTk1NA0KPiANCj4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFp
-dHRpbmVuIDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+IC0tLQ0KPiBJIHRo
-aW5rIHRoZXNlIHByb3BlcnRpZXMgY291bGQgcHJvYmFibHkgYmUgZ2VuZXJpYyBhbmQgbm90DQo+
-IHZlbmRvciBzcGVjaWZpYywgcmlnaHQ/IElmIHNvLCB0aGVuIEkgY291bGQgdHJ5IGFkZGluZyBw
-YXJzZXINCj4gZnVuY3Rpb24ocykgZm9yIHRoZW0gaW4gcG93ZXIvc3VwcGx5IGZyYW1ld29yay4g
-SG93IGRvIHlvdQ0KPiBndXlzIHNlZSB0aGlzPw0KDQpTb3JyeSBmb2xrcy4gSSB3YXNuJ3QgcmVh
-ZGluZyBleGlzdGluZyBkb2NzIGNhcmVmdWxseSBlbm91Z2guIEkgc2tpcHBlZA0KYmF0dGVyeS50
-eHQgYXMgSSB3YXMgZG9pbmcgZHJpdmVyIGZvciBjaGFyZ2VyLi4uIEkgc2hvdWxkJ3ZlIHVuZGVy
-c3Rvb2QNCnRoYXQgbWFueSBvZiB0aGUgbGltaXRzIGhlcmUgY29tZSBmcm9tIGJhdHRlcnkgcHJv
-cGVydGllcyA6Lw0KDQpTbyByaWdodCBhZnRlciBzZW5kaW5nIHRoaXMgb3V0IEkgaGl0IHRoZSBi
-YXR0cnkudHh0IGJpbmRpbmcgZG9jIGFuZA0KZm9sbG93aW5nIG5vdGUgaW4gcG93ZXJfc3VwcGx5
-X2NsYXNzLnJzdDoNCg0KIkRyaXZlcnMgc2hvdWxkIGNhbGwgcG93ZXJfc3VwcGx5X2dldF9iYXR0
-ZXJ5X2luZm8oKSB0byBvYnRhaW4gYmF0dGVyeQ0KY2hhcmFjdGVyaXN0aWNzIGZyb20gYSBkZXZp
-Y2V0cmVlIGJhdHRlcnkgbm9kZSwgZGVmaW5lZCBpbiB0aGluayB0aGVyZQ0KbXVzdCBiZSBxdWl0
-ZSBhIGZldyBleGFtcGxlcyBvZiB0aGF0IGluLXRyZWUgdG9vLiANCkRvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBwbHkvYmF0dGVyeS50eHQiDQoNCkl0IHNlZW1zIHdl
-IGFscmVhZHkgaGF2ZSBidW5jaCBvZiBjb21tb24gYmluZGluZ3MgYW5kIHRoZSBoZWxwZXIuIEkn
-ZA0KYmV0dGVyIHN0dWR5IHRoZSBjaGFyZ2luZyBwcm9wZXJ0aWVzIGZyb20gYmF0dGVyeS50eHQg
-YW5kIHJlLXVzZSB0aG9zZQ0KSSBjYW4gcmUtdXNlLiBJIHN0aWxsIHNlZSBjb3VwbGUgb2YgdGhp
-bmdzIHdlIG1pZ2h0IHdhbnQgdG8gYWRkPw0KDQooTXkgbmV3IGd1ZXNzIGZvciAidGhlIGNvcnJl
-ZWN0IHRoaW5nIHRvIGRvIiBpcyB0aGF0IHRoZSBjaGFyZ2luZw0KY3VycmVudHMgYW5kIHZvbHRh
-Z2VzIHNob3VsZCBiZSBnaXZlbiBpbiBhIGJhdHRlcnkgbm9kZS4gVGhlIGRyaXZlcg0Kc2hvdWxk
-IHRoZW4gdXNlIHBvd2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKCkgdG8gZXh0cmFjdCB0aGlz
-DQppbmZvcm1hdGlvbiAtIG1ha2VzIHNlbnNlLiBJbnB1dCBjdXJyZW50IGxpbWl0cyBhcmUgc3Rp
-bGwgZGlmZmVyZW50DQp0aGluZykNCg0KPiANCj4gIC4uLi9iaW5kaW5ncy9wb3dlci9zdXBwbHkv
-cm9obSxiZERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wDQo+IG93ZXIvc3VwcGx5
-L2JhdHRlcnkudHh0Ljk5OTV4LnlhbWwgICB8IDExOCArKysrKysrKysrKysrKysrKysNCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAxMTggaW5zZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBwbHkvcm9obSxiZDk5
-OTV4LnlhbWwNCj4gDQo+IGRpZmYgLS1naXQNCj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcG93ZXIvc3VwcGx5L3JvaG0sYmQ5OTk1eC55YW1sDQo+IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3N1cHBseS9yb2htLGJkOTk5NXgueWFtbA0KPiBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLmJhOWZlMWRjM2YyZg0K
-PiAtLS0gL2Rldi9udWxsDQo+ICsrKw0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wb3dlci9zdXBwbHkvcm9obSxiZDk5OTV4LnlhbWwNCj4gQEAgLTAsMCArMSwxMTggQEAN
-Cj4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1
-c2UNCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9z
-Y2hlbWFzL3Bvd2VyL3N1cHBseS9yb2htLGJkOTk5NXgueWFtbCMNCj4gKyRzY2hlbWE6IGh0dHA6
-Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KPiArDQo+ICt0aXRsZTog
-Uk9ITSBCRDk5OTU0IEJhdHRlcnkgY2hhcmdlciBkcml2ZXINCj4gKw0KPiArbWFpbnRhaW5lcnM6
-DQo+ICsgIC0gTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5j
-b20+DQo+ICsgIC0gTWFya3VzIExhaW5lIDxtYXJrdXMubGFpbmVAZmkucm9obWV1cm9wZS5jb20+
-DQo+ICsgIC0gTWlra28gTXV0YW5lbiA8bWlra28ubXV0YW5lbkBmaS5yb2htZXVyb3BlLmNvbT4N
-Cj4gKw0KPiArZGVzY3JpcHRpb246IHwNCj4gKyAgVGhlIFJPSE0gQkQ5OTk1NCBpcyBhIEJhdHRl
-cnkgTWFuYWdlbWVudCBMU0kgZm9yIDEtNCBjZWxsIExpdGhpdW0tDQo+IElvbg0KPiArICBzZWNv
-bmRhcnkgYmF0dGVyeSBpbnRlbmRlZCB0byBiZSB1c2VkIGluIHNwYWNlLWNvbnN0cmFpbnQNCj4g
-ZXF1aXBtZW50IHN1Y2gNCj4gKyAgYXMgTG93IHByb2ZpbGUgTm90ZWJvb2sgUEMsIFRhYmxldHMg
-YW5kIG90aGVyIGFwcGxpY2F0aW9ucy4NCj4gQkQ5OTk1NA0KPiArICBwcm92aWRlcyBhIER1YWwt
-c291cmNlIEJhdHRlcnkgQ2hhcmdlciwgdHdvIHBvcnQgQkMxLjIgZGV0ZWN0aW9uDQo+IGFuZCBh
-DQo+ICsgIEJhdHRlcnkgTW9uaXRvci4NCj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0
-aWJsZToNCj4gKyAgICBjb25zdDogcm9obSxiZDk5OTV4LWNoYXJnZXINCj4gKw0KPiArICByb2ht
-LHZidXMtaW5wdXQtY3VycmVudC1saW1pdC1taWNyb2FtcDoNCj4gKyAgICBkZXNjcmlwdGlvbjoN
-Cj4gKyAgICAgIHN5c3RlbSBzcGVjaWZpYyBWQlVTIGlucHV0IGN1cnJlbnQgbGltaXQgKGluIG1p
-Y3JvYW1wcykuDQo+ICsgICAgbWluaW11bTogMzIwMDANCj4gKyAgICBtYXhpbXVtOiAxNjM1MjAw
-MA0KPiArICAgIG11bHRpcGxlT2Y6IDMyMDAwDQo+ICsNCj4gKyAgcm9obSx2Y2MtaW5wdXQtY3Vy
-cmVudC1saW1pdC1taWNyb2FtcDoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgIHN5c3Rl
-bSBzcGVjaWZpYyBWQ0MvVkFDUCBpbnB1dCBjdXJyZW50IGxpbWl0IChpbiBtaWNyb2FtcHMpLg0K
-PiArICAgIG1pbmltdW06IDMyMDAwDQo+ICsgICAgbWF4aW11bTogMTYzNTIwMDANCj4gKyAgICBt
-dWx0aXBsZU9mOiAzMjAwMA0KDQpJIHRoaW5rIHRoZXNlIGlucHV0IGN1cnJlbnQgbGltaXRzIChp
-bnB1dCBmb3IgY2hhcmdlcikgY2FuJ3QgYmUgaW4NCmJhdHRlcnkgbm9kZS4gVGhlc2UgYXJlIHN5
-c3RlbS9jaGFyZ2VyIGxpbWl0cywgcmlnaHQ/DQoNCj4gKyAgcm9obSx0cmlja2xlLWNoYXJnaW5n
-LWN1cnJlbnQtbWljcm9hbXA6DQpJIHRoaW5rIHRoaXMgc2hvdWxkIGJlIHJlcGxhY2VkIGJ5IHBy
-ZWNoYXJnZS1jdXJyZW50LW1pY3JvYW1wOg0KDQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAg
-ICBiYXR0ZXJ5IHNwZWNpZmljIHZhbHVlIGZvciB0cmlja2xlLWNoYXJnaW5nIGN1cnJlbnQuDQo+
-ICsgICAgbWluaW11bTogNjQwMDANCj4gKyAgICBtYXhpbXVtOiAxMDI0MDAwDQo+ICsgICAgbXVs
-dGlwbGVPZjogNjQwMDANCj4gKw0KPiArICByb2htLHByZS1jaGFyZ2luZy1jdXJyZW50LW1pY3Jv
-YW1wOg0KVGhpcyBzaG91bGQgYmUgcmVwbGFjZWQgYnkgY29uc3RhbnQtY2hhcmdlLWN1cnJlbnQt
-bWF4LW1pY3JvYW1wOg0KDQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAgICBiYXR0ZXJ5IHNw
-ZWNpZmljIHZhbHVlIGZvciBwcmUtY2hhcmdpbmcgY3VycmVudC4NCj4gKyAgICBtaW5pbXVtOiA2
-NDAwMA0KPiArICAgIG1heGltdW06IDEwMjQwMDANCj4gKyAgICBtdWx0aXBsZU9mOiA2NDAwMA0K
-PiArDQo+ICsgIHJvaG0sZmFzdC1jaGFyZ2luZy1yZWd1bGF0aW9uLW1pY3Jvdm9sdDoNClRoaXMg
-c2hvdWxkIGJlIHJlcGxhY2VkIGJ5IGNvbnN0YW50LWNoYXJnZS12b2x0YWdlLW1heC1taWNyb3Zv
-bHQ6DQoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgIGJhdHRlcnkvc3lzdGVtIHNwZWNp
-ZmljIHVwcGVyIGxpbWl0IGZvciBiYXR0cnkvc3lzdGVtIHZvbHRhZ2UuDQo+ICsgICAgbWluaW11
-bTogMjU2MDAwMA0KPiArICAgIG1heGltdW06IDE5MjAwMDAwDQo+ICsgICAgbXVsdGlwbGVPZjog
-MTYwMDANCj4gKw0KPiArICByb2htLHZzeXMtcmVndWxhdGlvbi1taWNyb3ZvbHQ6DQo+ICsgICAg
-ZGVzY3JpcHRpb246DQo+ICsgICAgICBzeXN0ZW0gc3BlY2lmaWMgbG93ZXIgbGltaXQgZm9yIHN5
-c3RlbSB2b2x0YWdlLg0KPiArICAgIG1pbmltdW06IDI1NjAwMDANCj4gKyAgICBtYXhpbXVtOiAx
-OTIwMDAwMA0KPiArICAgIG11bHRpcGxlT2Y6IDY0MDAwDQo+ICsNCj4gKyAgcm9obSxwcmUtY2hh
-cmdlLXZvbHRhZ2UtdGhyZXNob2xkLW1pY3Jvdm9sdDoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4g
-KyAgICAgIHZvbHRhZ2UgbGltaXQgZm9yIGNoYW5naW5nIGZyb20gdHJpY2tsZSB0byBwcmUtY2hh
-cmdpbmcuDQpDYW4gd2UgdXNlIHZvbHRhZ2UtbWluLWRlc2lnbi1taWNyb3ZvbHQ6IGZvciB0aGlz
-IG9yIGludmVudCBhIG5ldyBvbmU/DQoNCj4gKyAgICBtaW5pbXVtOiAyMDQ4MDAwDQo+ICsgICAg
-bWF4aW11bTogMTkyMDAwMDANCj4gKyAgICBtdWx0aXBsZU9mOiA2NDAwMA0KPiArDQo+ICsgIHJv
-aG0scmUtY2hhcmdlLWJhdHRlcnktdm9sdGFnZS1taWNyb3ZvbHQ6DQo+ICsgICAgZGVzY3JpcHRp
-b246DQo+ICsgICAgICB2b2x0YWdlIGxpbWl0IGZvciBhdXRvbWF0aWNhbGx5IHJlLXN0YXJ0aW5n
-IHRoZSBiYXR0ZXJ5IA0KSSBkb24ndCBzZWUgYSBtYXRjaCBmb3IgdGhpcyBlaXRoZXIuDQoNCj4g
-Y2hhcmdpbmcuDQo+ICsgICAgbWluaW11bTogMjU2MDAwMA0KPiArICAgIG1heGltdW06IDE5MjAw
-MDAwDQo+ICsgICAgbXVsdGlwbGVPZjogMTYwMDANCj4gKw0KPiArICByb2htLGJhdHRlcnktb3Zl
-ci12b2x0YWdlLXRocmVzaG9sZC1taWNyb3ZvbHQ6DQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsg
-ICAgICB2b2x0YWdlIGxpbWl0IGZvciBkZXRlY3RpbmcgYmF0dGVyeSBvdmVyIHZvbHRhZ2UuDQpB
-bmQgdGhpcyBpcyBhbHNvIHNvbWV0aGluZyB3ZSBtaWdodCB3YW50IHRvIGFkZD8NCg0KPiArICAg
-IG1pbmltdW06IDI1NjAwMDANCj4gKyAgICBtYXhpbXVtOiAxOTIwMDAwMA0KPiArICAgIG11bHRp
-cGxlT2Y6IDE2MDAwDQo+ICsNCj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGlibGUNCj4gKyAg
-LSByb2htLHZidXMtaW5wdXQtY3VycmVudC1saW1pdC1taWNyb2FtcA0KPiArICAtIHJvaG0sdmNj
-LWlucHV0LWN1cnJlbnQtbGltaXQtbWljcm9hbXANCj4gKyAgLSByb2htLHRyaWNrbGUtY2hhcmdp
-bmctY3VycmVudC1taWNyb2FtcA0KPiArICAtIHJvaG0scHJlLWNoYXJnaW5nLWN1cnJlbnQtbWlj
-cm9hbXANCj4gKyAgLSByb2htLGZhc3QtY2hhcmdpbmctcmVndWxhdGlvbi1taWNyb3ZvbHQNCj4g
-KyAgLSByb2htLHZzeXMtcmVndWxhdGlvbi1taWNyb3ZvbHQNCj4gKyAgLSByb2htLHByZS1jaGFy
-Z2Utdm9sdGFnZS10aHJlc2hvbGQtbWljcm92b2x0DQo+ICsgIC0gcm9obSxyZS1jaGFyZ2UtYmF0
-dGVyeS12b2x0YWdlLW1pY3Jvdm9sdA0KPiArICAtIHJvaG0sYmF0dGVyeS1vdmVyLXZvbHRhZ2Ut
-dGhyZXNob2xkLW1pY3Jvdm9sdA0KPiArDQo+ICtleGFtcGxlczoNCj4gKyAgLSB8DQo+ICsgICAg
-aTJjIHsNCj4gKyAgICAgICAgY2hhcmdlckA5IHsNCj4gKyAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAicm9obSxiZDk5OTV4LWNoYXJnZXIiOw0KPiArICAgICAgICAgICAgcmVnID0gPDB4OT47DQo+
-ICsgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMT47DQo+ICsgICAgICAgICAg
-ICBpbnRlcnJ1cHRzID0gPDI5IDg+Ow0KPiArICAgICAgICAgICAgcm9obSx2c3lzLXJlZ3VsYXRp
-b24tbWljcm92b2x0ID0gPDg5NjAwMDA+Ow0KPiArICAgICAgICAgICAgcm9obSx2YnVzLWlucHV0
-LWN1cnJlbnQtbGltaXQtbWljcm9hbXAgPSA8MTQ3MjAwMD47DQo+ICsgICAgICAgICAgICByb2ht
-LHZjYy1pbnB1dC1jdXJyZW50LWxpbWl0LW1pY3JvYW1wID0gPDE0NzIwMDA+Ow0KPiArICAgICAg
-ICAgICAgcm9obSx0cmlja2xlLWNoYXJnaW5nLWN1cnJlbnQtbWljcm9hbXAgPSA8MjU2MDAwPjsN
-Cj4gKyAgICAgICAgICAgIHJvaG0scHJlLWNoYXJnaW5nLWN1cnJlbnQtbWljcm9hbXAgPSA8MjU2
-MDAwPjsNCj4gKyAgICAgICAgICAgIHJvaG0sZmFzdC1jaGFyZ2luZy1yZWd1bGF0aW9uLW1pY3Jv
-dm9sdCA9IDw4NDAwMDAwPjsNCj4gKyAgICAgICAgICAgIHJvaG0scHJlLWNoYXJnZS12b2x0YWdl
-LXRocmVzaG9sZC1taWNyb3ZvbHQgPSA8MjA0ODAwMD47DQo+ICsgICAgICAgICAgICByb2htLHJl
-LWNoYXJnZS1iYXR0ZXJ5LXZvbHRhZ2UtbWljcm92b2x0ID0gPDgxMTIwMDA+Ow0KPiArICAgICAg
-ICAgICAgcm9obSxiYXR0ZXJ5LW92ZXItdm9sdGFnZS10aHJlc2hvbGQtbWljcm92b2x0ID0NCj4g
-PDg5MTIwMDA+Ow0KPiArICAgICAgICB9Ow0KPiArICAgIH07DQo+IC0tIA0KPiAyLjIxLjANCj4g
-DQo+IA0KDQo=
+Add clocks for SPIBSC blocks.
+
+Also modify the flash node for the GR-PEACH board at the same time
+because now that the SPIBSC clock is identified, if it is not used
+by any driver, it will be turned off at the end of kernel boot.
+That would not work out so well for an XIP system such as GR-PEACH.
+
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+ - Modified flash node for GR-PEACH board
+---
+ arch/arm/boot/dts/r7s72100-gr-peach.dts | 3 +++
+ arch/arm/boot/dts/r7s72100.dtsi         | 5 +++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r7s72100-gr-peach.dts b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+index fe1a4aa4d7cb..2562cc9b5356 100644
+--- a/arch/arm/boot/dts/r7s72100-gr-peach.dts
++++ b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+@@ -41,6 +41,9 @@ flash@18000000 {
+ 		bank-width = <4>;
+ 		device-width = <1>;
+ 
++		clocks = <&mstp9_clks R7S72100_CLK_SPIBSC0>;
++		power-domains = <&cpg_clocks>;
++
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index 75b2796ebfca..0a567d8ebc66 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -467,11 +467,12 @@ mstp9_clks: mstp9_clks@fcfe0438 {
+ 			#clock-cells = <1>;
+ 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0xfcfe0438 4>;
+-			clocks = <&p0_clk>, <&p0_clk>, <&p0_clk>, <&p0_clk>;
++			clocks = <&p0_clk>, <&p0_clk>, <&p0_clk>, <&p0_clk>, <&b_clk>, <&b_clk>;
+ 			clock-indices = <
+ 				R7S72100_CLK_I2C0 R7S72100_CLK_I2C1 R7S72100_CLK_I2C2 R7S72100_CLK_I2C3
++				R7S72100_CLK_SPIBSC0 R7S72100_CLK_SPIBSC1
+ 			>;
+-			clock-output-names = "i2c0", "i2c1", "i2c2", "i2c3";
++			clock-output-names = "i2c0", "i2c1", "i2c2", "i2c3", "spibsc0", "spibsc1";
+ 		};
+ 
+ 		mstp10_clks: mstp10_clks@fcfe043c {
+-- 
+2.24.1
+
