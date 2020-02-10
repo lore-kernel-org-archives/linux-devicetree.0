@@ -2,343 +2,200 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E927DC352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD44C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF15320661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:32:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ww2oRgAS"
+	by mail.kernel.org (Postfix) with ESMTP id 12CD920708
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgBJMbz (ORCPT
+        id S1730434AbgBJNBB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:31:55 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38396 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgBJMbz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 07:31:55 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01ACVkMq023220;
-        Mon, 10 Feb 2020 06:31:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581337906;
-        bh=8UKzchovWQsic5D+IhNkKAsu3YPA30ZLZgLl2grTVhY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ww2oRgASEWczpC2P1dADxThAu8oEuj+OwFnLu6ZfLXEHyRvTgBAI+/+OP7RdlNbOp
-         c4DWuxR2LQCS1TsfriEAzcrSl5XaIuM0BsAIPbwJXseH5S7X8dGIJbuApoDe20iHGi
-         Lo/mlljbb+KUClnx2/XVLYSl73xSNEZJdhHfaylY=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01ACVk7o082926
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Feb 2020 06:31:46 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
- Feb 2020 06:31:46 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 10 Feb 2020 06:31:46 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01ACVaEZ129098;
-        Mon, 10 Feb 2020 06:31:43 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>, Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-CC:     Mark Rutland <mark.rutland@arm.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT schema
-Date:   Mon, 10 Feb 2020 18:05:07 +0530
-Message-ID: <20200210123507.9491-3-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200210123507.9491-1-kishon@ti.com>
-References: <20200210123507.9491-1-kishon@ti.com>
+        Mon, 10 Feb 2020 08:01:01 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:43158 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729836AbgBJNBA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 08:01:00 -0500
+X-AuditID: c0a8fbf4-263ff70000001e6c-80-5e4154095e9f
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id CB.59.07788.904514E5; Mon, 10 Feb 2020 14:00:57 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 10 Feb 2020 14:00:45 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/3] dt_bindings: ROHM BD99954 Charger
+Thread-Topic: [RFC PATCH 1/3] dt_bindings: ROHM BD99954 Charger
+Thread-Index: AQHV4AtGFPiZltGtqU2YXMRYBxAc1KgUU2qA
+Date:   Mon, 10 Feb 2020 13:00:44 +0000
+Message-ID: <fbbacf0597222443941ac1736fbf6de4dccd6d70.camel@fi.rohmeurope.com>
+References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+         <fc866eb870e1980fd2a5cd37cf02cde5e8fb3d06.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <fc866eb870e1980fd2a5cd37cf02cde5e8fb3d06.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <191E7B9C72D93445AA1A37CEEB47B441@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsVyYMXvjbqcIY5xBv9Pm1lMffiEzWL+kXOs
+        FlP+LGeyuLxrDpvF594jjBZLr19kspiz9ASLReveI+wWp3eXOHB6rJm3htFj56y77B6bVnWy
+        edy5tofN4/MmuQDWKG6bpMSSsuDM9Dx9uwTujHPvSwqueVfMbNnE3sB4x7OLkZNDQsBEYm3r
+        ctYuRi4OIYGrjBJ/v21gg3BOMErc+9PJ3MXIwcEmYCPRdZMdxBQRsJTYeFEQpIRZoI1F4vrV
+        v8wgg4QF7CRufJ0MZosI2EtsvXeWHcI2kph84SMriM0ioCpx7Nl1FhCbV8BPYuuWdqhdixkl
+        Fm+8ANbAKZAhcf3oS7BBjAKyEp0N75hAbGYBcYlNz76zQlwtILFkz3lmCFtU4uXjf1BxJYm9
+        Px+ygBzKLKApsX6XPoTpINHf5AcxRVFiSvdDdogTBCVOznzCMoFRbBaSBbMQmmchNM9C0jwL
+        SfMCRtZVjBK5iZk56YklqYZ6RamlekX5GblAKjk/dxMjJG6/7GD8f8jzECMTB+MhRkkOJiVR
+        3iWBjnFCfEn5KZUZicUZ8UWlOanFhxglOJiVRHgtpYFyvCmJlVWpRfkwKWkOFiVxXvWHE2OF
+        BEB2ZaemFqQWwWRlODiUJHjXBgE1ChalpqdWpGXmlCCkmTg4QYZzSYkUp+alpBYllpZkxIMS
+        R3wxMHWApHiA9joGg+wtLkjMBYpCtJ5iNOSY8HLuImaOzXOXAskjIFKIJS8/L1VKnLcZZJ8A
+        SENGaR7culeM4hyMSsK8/0Fe5AEmc7hpr4AWMQEtum7iALKoJBEhJdXAaLfoueWx+wFKp22f
+        siYUPFihqBW/U3P547n6JTMUio5vmvLL3S7ISlEo/NqCuS3hB8NMPuZ+470oPe+9X57b2jxu
+        tz0bmU5mdpZmS86rlN7RvdqgZ9aE9z/PLIt6fGDh4RSBvGf8+y78cazNaWq9udBEktmzSS5m
+        vUKiW8peluiDLD7PNhaFKLEUZyQaajEXFScCADXCefSjAwAA
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Include Cadence core DT schema and define the Cadence platform DT schema
-for both Host and Endpoint mode. Note: The Cadence core DT schema could
-be included for other platforms using Cadence PCIe core.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
- .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
- .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
- .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 5 files changed, 125 insertions(+), 94 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-deleted file mode 100644
-index 4a0475e2ba7e..000000000000
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Cadence PCIe endpoint controller
--
--Required properties:
--- compatible: Should contain "cdns,cdns-pcie-ep" to identify the IP used.
--- reg: Should contain the controller register base address and AXI interface
--  region base address respectively.
--- reg-names: Must be "reg" and "mem" respectively.
--- cdns,max-outbound-regions: Set to maximum number of outbound regions
--
--Optional properties:
--- max-functions: Maximum number of functions that can be configured (default 1).
--- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
--  than one in the list.  If only one PHY listed it must manage all lanes. 
--- phy-names:  List of names to identify the PHY.
--
--Example:
--
--pcie@fc000000 {
--	compatible = "cdns,cdns-pcie-ep";
--	reg = <0x0 0xfc000000 0x0 0x01000000>,
--	      <0x0 0x80000000 0x0 0x40000000>;
--	reg-names = "reg", "mem";
--	cdns,max-outbound-regions = <16>;
--	max-functions = /bits/ 8 <8>;
--	phys = <&ep_phy0 &ep_phy1>;
--	phy-names = "pcie-lane0","pcie-lane1";
--};
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-new file mode 100644
-index 000000000000..016c374cf125
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-ep.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cadence PCIe EP Controller
-+
-+maintainers:
-+  - Tom Joseph <tjoseph@cadence.com>
-+
-+allOf:
-+  - $ref: "cdns-pcie-ep.yaml#"
-+
-+properties:
-+  compatible:
-+    const: cdns,cdns-pcie-ep
-+
-+  reg:
-+    maxItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: reg
-+      - const: mem
-+
-+required:
-+  - reg
-+  - reg-names
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie@fc000000 {
-+                compatible = "cdns,cdns-pcie-ep";
-+                reg = <0x0 0xfc000000 0x0 0x01000000>,
-+                      <0x0 0x80000000 0x0 0x40000000>;
-+                reg-names = "reg", "mem";
-+                cdns,max-outbound-regions = <16>;
-+                max-functions = /bits/ 8 <8>;
-+                phys = <&pcie_phy0>;
-+                phy-names = "pcie-phy";
-+        };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-deleted file mode 100644
-index 91de69c713a9..000000000000
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-+++ /dev/null
-@@ -1,66 +0,0 @@
--* Cadence PCIe host controller
--
--This PCIe controller inherits the base properties defined in
--host-generic-pci.txt.
--
--Required properties:
--- compatible: Should contain "cdns,cdns-pcie-host" to identify the IP used.
--- reg: Should contain the controller register base address, PCIe configuration
--  window base address, and AXI interface region base address respectively.
--- reg-names: Must be "reg", "cfg" and "mem" respectively.
--- #address-cells: Set to <3>
--- #size-cells: Set to <2>
--- device_type: Set to "pci"
--- ranges: Ranges for the PCI memory and I/O regions
--- #interrupt-cells: Set to <1>
--- interrupt-map-mask and interrupt-map: Standard PCI properties to define the
--  mapping of the PCIe interface to interrupt numbers.
--
--Optional properties:
--- cdns,max-outbound-regions: Set to maximum number of outbound regions
--  (default 32)
--- cdns,no-bar-match-nbits: Set into the no BAR match register to configure the
--  number of least significant bits kept during inbound (PCIe -> AXI) address
--  translations (default 32)
--- vendor-id: The PCI vendor ID (16 bits, default is design dependent)
--- device-id: The PCI device ID (16 bits, default is design dependent)
--- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
--  than one in the list.  If only one PHY listed it must manage all lanes. 
--- phy-names:  List of names to identify the PHY.
--
--Example:
--
--pcie@fb000000 {
--	compatible = "cdns,cdns-pcie-host";
--	device_type = "pci";
--	#address-cells = <3>;
--	#size-cells = <2>;
--	bus-range = <0x0 0xff>;
--	linux,pci-domain = <0>;
--	cdns,max-outbound-regions = <16>;
--	cdns,no-bar-match-nbits = <32>;
--	vendor-id = /bits/ 16 <0x17cd>;
--	device-id = /bits/ 16 <0x0200>;
--
--	reg = <0x0 0xfb000000  0x0 0x01000000>,
--	      <0x0 0x41000000  0x0 0x00001000>,
--	      <0x0 0x40000000  0x0 0x04000000>;
--	reg-names = "reg", "cfg", "mem";
--
--	ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
--		 <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
--
--	#interrupt-cells = <0x1>;
--
--	interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
--			 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
--			 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
--			 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
--
--	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
--
--	msi-parent = <&its_pci>;
--
--	phys = <&pcie_phy0>;
--	phy-names = "pcie-phy";
--};
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-new file mode 100644
-index 000000000000..2f605297f862
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cadence PCIe host controller
-+
-+maintainers:
-+  - Tom Joseph <tjoseph@cadence.com>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: "cdns-pcie-host.yaml#"
-+
-+properties:
-+  compatible:
-+    const: cdns,cdns-pcie-host
-+
-+  reg:
-+    maxItems: 3
-+
-+  reg-names:
-+    items:
-+      - const: reg
-+      - const: cfg
-+      - const: mem
-+
-+  msi-parent: true
-+
-+required:
-+  - reg
-+  - reg-names
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie@fb000000 {
-+            compatible = "cdns,cdns-pcie-host";
-+            device_type = "pci";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            bus-range = <0x0 0xff>;
-+            linux,pci-domain = <0>;
-+            cdns,max-outbound-regions = <16>;
-+            cdns,no-bar-match-nbits = <32>;
-+            vendor-id = /bits/ 16 <0x17cd>;
-+            device-id = /bits/ 16 <0x0200>;
-+
-+            reg = <0x0 0xfb000000  0x0 0x01000000>,
-+                  <0x0 0x41000000  0x0 0x00001000>,
-+                  <0x0 0x40000000  0x0 0x04000000>;
-+            reg-names = "reg", "cfg", "mem";
-+
-+            ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-+                     <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-+
-+            #interrupt-cells = <0x1>;
-+
-+            interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1>,
-+                 <0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1>,
-+                 <0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1>,
-+                 <0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
-+
-+            interrupt-map-mask = <0x0 0x0 0x0  0x7>;
-+
-+            msi-parent = <&its_pci>;
-+
-+            phys = <&pcie_phy0>;
-+            phy-names = "pcie-phy";
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 38fe2f3f7b6f..e0402e001edd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12739,7 +12739,7 @@ PCI DRIVER FOR CADENCE PCIE IP
- M:	Tom Joseph <tjoseph@cadence.com>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/pci/cdns,*.txt
-+F:	Documentation/devicetree/bindings/pci/cdns,*
- F:	drivers/pci/controller/pcie-cadence*
- 
- PCI DRIVER FOR FREESCALE LAYERSCAPE
--- 
-2.17.1
-
+DQpPbiBNb24sIDIwMjAtMDItMTAgYXQgMTQ6MTEgKzAyMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90
+ZToNCj4gVGhlIFJPSE0gQkQ5OTk1NCBpcyBhIEJhdHRlcnkgTWFuYWdlbWVudCBMU0kgZm9yIDEt
+NCBjZWxsIExpdGhpdW0tSW9uDQo+IHNlY29uZGFyeSBiYXR0ZXJ5LiBJbnRlbmRlZCB0byBiZSB1
+c2VkIGluIHNwYWNlLWNvbnN0cmFpbnQgZXF1aXBtZW50DQo+IHN1Y2gNCj4gYXMgTG93IHByb2Zp
+bGUgTm90ZWJvb2sgUEMsIFRhYmxldHMgYW5kIG90aGVyIGFwcGxpY2F0aW9ucy4gQkQ5OTk1NA0K
+PiBwcm92aWRlcyBhIER1YWwtc291cmNlIEJhdHRlcnkgQ2hhcmdlciwgdHdvIHBvcnQgQkMxLjIg
+ZGV0ZWN0aW9uIGFuZA0KPiBhDQo+IEJhdHRlcnkgTW9uaXRvci4NCj4gDQo+IERvY3VtZW50IHRo
+ZSBEVCBiaW5kaW5ncyBmb3IgQkQ5OTk1NA0KPiANCj4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFp
+dHRpbmVuIDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+IC0tLQ0KPiBJIHRo
+aW5rIHRoZXNlIHByb3BlcnRpZXMgY291bGQgcHJvYmFibHkgYmUgZ2VuZXJpYyBhbmQgbm90DQo+
+IHZlbmRvciBzcGVjaWZpYywgcmlnaHQ/IElmIHNvLCB0aGVuIEkgY291bGQgdHJ5IGFkZGluZyBw
+YXJzZXINCj4gZnVuY3Rpb24ocykgZm9yIHRoZW0gaW4gcG93ZXIvc3VwcGx5IGZyYW1ld29yay4g
+SG93IGRvIHlvdQ0KPiBndXlzIHNlZSB0aGlzPw0KDQpTb3JyeSBmb2xrcy4gSSB3YXNuJ3QgcmVh
+ZGluZyBleGlzdGluZyBkb2NzIGNhcmVmdWxseSBlbm91Z2guIEkgc2tpcHBlZA0KYmF0dGVyeS50
+eHQgYXMgSSB3YXMgZG9pbmcgZHJpdmVyIGZvciBjaGFyZ2VyLi4uIEkgc2hvdWxkJ3ZlIHVuZGVy
+c3Rvb2QNCnRoYXQgbWFueSBvZiB0aGUgbGltaXRzIGhlcmUgY29tZSBmcm9tIGJhdHRlcnkgcHJv
+cGVydGllcyA6Lw0KDQpTbyByaWdodCBhZnRlciBzZW5kaW5nIHRoaXMgb3V0IEkgaGl0IHRoZSBi
+YXR0cnkudHh0IGJpbmRpbmcgZG9jIGFuZA0KZm9sbG93aW5nIG5vdGUgaW4gcG93ZXJfc3VwcGx5
+X2NsYXNzLnJzdDoNCg0KIkRyaXZlcnMgc2hvdWxkIGNhbGwgcG93ZXJfc3VwcGx5X2dldF9iYXR0
+ZXJ5X2luZm8oKSB0byBvYnRhaW4gYmF0dGVyeQ0KY2hhcmFjdGVyaXN0aWNzIGZyb20gYSBkZXZp
+Y2V0cmVlIGJhdHRlcnkgbm9kZSwgZGVmaW5lZCBpbiB0aGluayB0aGVyZQ0KbXVzdCBiZSBxdWl0
+ZSBhIGZldyBleGFtcGxlcyBvZiB0aGF0IGluLXRyZWUgdG9vLiANCkRvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBwbHkvYmF0dGVyeS50eHQiDQoNCkl0IHNlZW1zIHdl
+IGFscmVhZHkgaGF2ZSBidW5jaCBvZiBjb21tb24gYmluZGluZ3MgYW5kIHRoZSBoZWxwZXIuIEkn
+ZA0KYmV0dGVyIHN0dWR5IHRoZSBjaGFyZ2luZyBwcm9wZXJ0aWVzIGZyb20gYmF0dGVyeS50eHQg
+YW5kIHJlLXVzZSB0aG9zZQ0KSSBjYW4gcmUtdXNlLiBJIHN0aWxsIHNlZSBjb3VwbGUgb2YgdGhp
+bmdzIHdlIG1pZ2h0IHdhbnQgdG8gYWRkPw0KDQooTXkgbmV3IGd1ZXNzIGZvciAidGhlIGNvcnJl
+ZWN0IHRoaW5nIHRvIGRvIiBpcyB0aGF0IHRoZSBjaGFyZ2luZw0KY3VycmVudHMgYW5kIHZvbHRh
+Z2VzIHNob3VsZCBiZSBnaXZlbiBpbiBhIGJhdHRlcnkgbm9kZS4gVGhlIGRyaXZlcg0Kc2hvdWxk
+IHRoZW4gdXNlIHBvd2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKCkgdG8gZXh0cmFjdCB0aGlz
+DQppbmZvcm1hdGlvbiAtIG1ha2VzIHNlbnNlLiBJbnB1dCBjdXJyZW50IGxpbWl0cyBhcmUgc3Rp
+bGwgZGlmZmVyZW50DQp0aGluZykNCg0KPiANCj4gIC4uLi9iaW5kaW5ncy9wb3dlci9zdXBwbHkv
+cm9obSxiZERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wDQo+IG93ZXIvc3VwcGx5
+L2JhdHRlcnkudHh0Ljk5OTV4LnlhbWwgICB8IDExOCArKysrKysrKysrKysrKysrKysNCj4gIDEg
+ZmlsZSBjaGFuZ2VkLCAxMTggaW5zZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBwbHkvcm9obSxiZDk5
+OTV4LnlhbWwNCj4gDQo+IGRpZmYgLS1naXQNCj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcG93ZXIvc3VwcGx5L3JvaG0sYmQ5OTk1eC55YW1sDQo+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3N1cHBseS9yb2htLGJkOTk5NXgueWFtbA0KPiBu
+ZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLmJhOWZlMWRjM2YyZg0K
+PiAtLS0gL2Rldi9udWxsDQo+ICsrKw0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9wb3dlci9zdXBwbHkvcm9obSxiZDk5OTV4LnlhbWwNCj4gQEAgLTAsMCArMSwxMTggQEAN
+Cj4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1
+c2UNCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9z
+Y2hlbWFzL3Bvd2VyL3N1cHBseS9yb2htLGJkOTk5NXgueWFtbCMNCj4gKyRzY2hlbWE6IGh0dHA6
+Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KPiArDQo+ICt0aXRsZTog
+Uk9ITSBCRDk5OTU0IEJhdHRlcnkgY2hhcmdlciBkcml2ZXINCj4gKw0KPiArbWFpbnRhaW5lcnM6
+DQo+ICsgIC0gTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5j
+b20+DQo+ICsgIC0gTWFya3VzIExhaW5lIDxtYXJrdXMubGFpbmVAZmkucm9obWV1cm9wZS5jb20+
+DQo+ICsgIC0gTWlra28gTXV0YW5lbiA8bWlra28ubXV0YW5lbkBmaS5yb2htZXVyb3BlLmNvbT4N
+Cj4gKw0KPiArZGVzY3JpcHRpb246IHwNCj4gKyAgVGhlIFJPSE0gQkQ5OTk1NCBpcyBhIEJhdHRl
+cnkgTWFuYWdlbWVudCBMU0kgZm9yIDEtNCBjZWxsIExpdGhpdW0tDQo+IElvbg0KPiArICBzZWNv
+bmRhcnkgYmF0dGVyeSBpbnRlbmRlZCB0byBiZSB1c2VkIGluIHNwYWNlLWNvbnN0cmFpbnQNCj4g
+ZXF1aXBtZW50IHN1Y2gNCj4gKyAgYXMgTG93IHByb2ZpbGUgTm90ZWJvb2sgUEMsIFRhYmxldHMg
+YW5kIG90aGVyIGFwcGxpY2F0aW9ucy4NCj4gQkQ5OTk1NA0KPiArICBwcm92aWRlcyBhIER1YWwt
+c291cmNlIEJhdHRlcnkgQ2hhcmdlciwgdHdvIHBvcnQgQkMxLjIgZGV0ZWN0aW9uDQo+IGFuZCBh
+DQo+ICsgIEJhdHRlcnkgTW9uaXRvci4NCj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0
+aWJsZToNCj4gKyAgICBjb25zdDogcm9obSxiZDk5OTV4LWNoYXJnZXINCj4gKw0KPiArICByb2ht
+LHZidXMtaW5wdXQtY3VycmVudC1saW1pdC1taWNyb2FtcDoNCj4gKyAgICBkZXNjcmlwdGlvbjoN
+Cj4gKyAgICAgIHN5c3RlbSBzcGVjaWZpYyBWQlVTIGlucHV0IGN1cnJlbnQgbGltaXQgKGluIG1p
+Y3JvYW1wcykuDQo+ICsgICAgbWluaW11bTogMzIwMDANCj4gKyAgICBtYXhpbXVtOiAxNjM1MjAw
+MA0KPiArICAgIG11bHRpcGxlT2Y6IDMyMDAwDQo+ICsNCj4gKyAgcm9obSx2Y2MtaW5wdXQtY3Vy
+cmVudC1saW1pdC1taWNyb2FtcDoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgIHN5c3Rl
+bSBzcGVjaWZpYyBWQ0MvVkFDUCBpbnB1dCBjdXJyZW50IGxpbWl0IChpbiBtaWNyb2FtcHMpLg0K
+PiArICAgIG1pbmltdW06IDMyMDAwDQo+ICsgICAgbWF4aW11bTogMTYzNTIwMDANCj4gKyAgICBt
+dWx0aXBsZU9mOiAzMjAwMA0KDQpJIHRoaW5rIHRoZXNlIGlucHV0IGN1cnJlbnQgbGltaXRzIChp
+bnB1dCBmb3IgY2hhcmdlcikgY2FuJ3QgYmUgaW4NCmJhdHRlcnkgbm9kZS4gVGhlc2UgYXJlIHN5
+c3RlbS9jaGFyZ2VyIGxpbWl0cywgcmlnaHQ/DQoNCj4gKyAgcm9obSx0cmlja2xlLWNoYXJnaW5n
+LWN1cnJlbnQtbWljcm9hbXA6DQpJIHRoaW5rIHRoaXMgc2hvdWxkIGJlIHJlcGxhY2VkIGJ5IHBy
+ZWNoYXJnZS1jdXJyZW50LW1pY3JvYW1wOg0KDQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAg
+ICBiYXR0ZXJ5IHNwZWNpZmljIHZhbHVlIGZvciB0cmlja2xlLWNoYXJnaW5nIGN1cnJlbnQuDQo+
+ICsgICAgbWluaW11bTogNjQwMDANCj4gKyAgICBtYXhpbXVtOiAxMDI0MDAwDQo+ICsgICAgbXVs
+dGlwbGVPZjogNjQwMDANCj4gKw0KPiArICByb2htLHByZS1jaGFyZ2luZy1jdXJyZW50LW1pY3Jv
+YW1wOg0KVGhpcyBzaG91bGQgYmUgcmVwbGFjZWQgYnkgY29uc3RhbnQtY2hhcmdlLWN1cnJlbnQt
+bWF4LW1pY3JvYW1wOg0KDQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAgICBiYXR0ZXJ5IHNw
+ZWNpZmljIHZhbHVlIGZvciBwcmUtY2hhcmdpbmcgY3VycmVudC4NCj4gKyAgICBtaW5pbXVtOiA2
+NDAwMA0KPiArICAgIG1heGltdW06IDEwMjQwMDANCj4gKyAgICBtdWx0aXBsZU9mOiA2NDAwMA0K
+PiArDQo+ICsgIHJvaG0sZmFzdC1jaGFyZ2luZy1yZWd1bGF0aW9uLW1pY3Jvdm9sdDoNClRoaXMg
+c2hvdWxkIGJlIHJlcGxhY2VkIGJ5IGNvbnN0YW50LWNoYXJnZS12b2x0YWdlLW1heC1taWNyb3Zv
+bHQ6DQoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgIGJhdHRlcnkvc3lzdGVtIHNwZWNp
+ZmljIHVwcGVyIGxpbWl0IGZvciBiYXR0cnkvc3lzdGVtIHZvbHRhZ2UuDQo+ICsgICAgbWluaW11
+bTogMjU2MDAwMA0KPiArICAgIG1heGltdW06IDE5MjAwMDAwDQo+ICsgICAgbXVsdGlwbGVPZjog
+MTYwMDANCj4gKw0KPiArICByb2htLHZzeXMtcmVndWxhdGlvbi1taWNyb3ZvbHQ6DQo+ICsgICAg
+ZGVzY3JpcHRpb246DQo+ICsgICAgICBzeXN0ZW0gc3BlY2lmaWMgbG93ZXIgbGltaXQgZm9yIHN5
+c3RlbSB2b2x0YWdlLg0KPiArICAgIG1pbmltdW06IDI1NjAwMDANCj4gKyAgICBtYXhpbXVtOiAx
+OTIwMDAwMA0KPiArICAgIG11bHRpcGxlT2Y6IDY0MDAwDQo+ICsNCj4gKyAgcm9obSxwcmUtY2hh
+cmdlLXZvbHRhZ2UtdGhyZXNob2xkLW1pY3Jvdm9sdDoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4g
+KyAgICAgIHZvbHRhZ2UgbGltaXQgZm9yIGNoYW5naW5nIGZyb20gdHJpY2tsZSB0byBwcmUtY2hh
+cmdpbmcuDQpDYW4gd2UgdXNlIHZvbHRhZ2UtbWluLWRlc2lnbi1taWNyb3ZvbHQ6IGZvciB0aGlz
+IG9yIGludmVudCBhIG5ldyBvbmU/DQoNCj4gKyAgICBtaW5pbXVtOiAyMDQ4MDAwDQo+ICsgICAg
+bWF4aW11bTogMTkyMDAwMDANCj4gKyAgICBtdWx0aXBsZU9mOiA2NDAwMA0KPiArDQo+ICsgIHJv
+aG0scmUtY2hhcmdlLWJhdHRlcnktdm9sdGFnZS1taWNyb3ZvbHQ6DQo+ICsgICAgZGVzY3JpcHRp
+b246DQo+ICsgICAgICB2b2x0YWdlIGxpbWl0IGZvciBhdXRvbWF0aWNhbGx5IHJlLXN0YXJ0aW5n
+IHRoZSBiYXR0ZXJ5IA0KSSBkb24ndCBzZWUgYSBtYXRjaCBmb3IgdGhpcyBlaXRoZXIuDQoNCj4g
+Y2hhcmdpbmcuDQo+ICsgICAgbWluaW11bTogMjU2MDAwMA0KPiArICAgIG1heGltdW06IDE5MjAw
+MDAwDQo+ICsgICAgbXVsdGlwbGVPZjogMTYwMDANCj4gKw0KPiArICByb2htLGJhdHRlcnktb3Zl
+ci12b2x0YWdlLXRocmVzaG9sZC1taWNyb3ZvbHQ6DQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsg
+ICAgICB2b2x0YWdlIGxpbWl0IGZvciBkZXRlY3RpbmcgYmF0dGVyeSBvdmVyIHZvbHRhZ2UuDQpB
+bmQgdGhpcyBpcyBhbHNvIHNvbWV0aGluZyB3ZSBtaWdodCB3YW50IHRvIGFkZD8NCg0KPiArICAg
+IG1pbmltdW06IDI1NjAwMDANCj4gKyAgICBtYXhpbXVtOiAxOTIwMDAwMA0KPiArICAgIG11bHRp
+cGxlT2Y6IDE2MDAwDQo+ICsNCj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGlibGUNCj4gKyAg
+LSByb2htLHZidXMtaW5wdXQtY3VycmVudC1saW1pdC1taWNyb2FtcA0KPiArICAtIHJvaG0sdmNj
+LWlucHV0LWN1cnJlbnQtbGltaXQtbWljcm9hbXANCj4gKyAgLSByb2htLHRyaWNrbGUtY2hhcmdp
+bmctY3VycmVudC1taWNyb2FtcA0KPiArICAtIHJvaG0scHJlLWNoYXJnaW5nLWN1cnJlbnQtbWlj
+cm9hbXANCj4gKyAgLSByb2htLGZhc3QtY2hhcmdpbmctcmVndWxhdGlvbi1taWNyb3ZvbHQNCj4g
+KyAgLSByb2htLHZzeXMtcmVndWxhdGlvbi1taWNyb3ZvbHQNCj4gKyAgLSByb2htLHByZS1jaGFy
+Z2Utdm9sdGFnZS10aHJlc2hvbGQtbWljcm92b2x0DQo+ICsgIC0gcm9obSxyZS1jaGFyZ2UtYmF0
+dGVyeS12b2x0YWdlLW1pY3Jvdm9sdA0KPiArICAtIHJvaG0sYmF0dGVyeS1vdmVyLXZvbHRhZ2Ut
+dGhyZXNob2xkLW1pY3Jvdm9sdA0KPiArDQo+ICtleGFtcGxlczoNCj4gKyAgLSB8DQo+ICsgICAg
+aTJjIHsNCj4gKyAgICAgICAgY2hhcmdlckA5IHsNCj4gKyAgICAgICAgICAgIGNvbXBhdGlibGUg
+PSAicm9obSxiZDk5OTV4LWNoYXJnZXIiOw0KPiArICAgICAgICAgICAgcmVnID0gPDB4OT47DQo+
+ICsgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMT47DQo+ICsgICAgICAgICAg
+ICBpbnRlcnJ1cHRzID0gPDI5IDg+Ow0KPiArICAgICAgICAgICAgcm9obSx2c3lzLXJlZ3VsYXRp
+b24tbWljcm92b2x0ID0gPDg5NjAwMDA+Ow0KPiArICAgICAgICAgICAgcm9obSx2YnVzLWlucHV0
+LWN1cnJlbnQtbGltaXQtbWljcm9hbXAgPSA8MTQ3MjAwMD47DQo+ICsgICAgICAgICAgICByb2ht
+LHZjYy1pbnB1dC1jdXJyZW50LWxpbWl0LW1pY3JvYW1wID0gPDE0NzIwMDA+Ow0KPiArICAgICAg
+ICAgICAgcm9obSx0cmlja2xlLWNoYXJnaW5nLWN1cnJlbnQtbWljcm9hbXAgPSA8MjU2MDAwPjsN
+Cj4gKyAgICAgICAgICAgIHJvaG0scHJlLWNoYXJnaW5nLWN1cnJlbnQtbWljcm9hbXAgPSA8MjU2
+MDAwPjsNCj4gKyAgICAgICAgICAgIHJvaG0sZmFzdC1jaGFyZ2luZy1yZWd1bGF0aW9uLW1pY3Jv
+dm9sdCA9IDw4NDAwMDAwPjsNCj4gKyAgICAgICAgICAgIHJvaG0scHJlLWNoYXJnZS12b2x0YWdl
+LXRocmVzaG9sZC1taWNyb3ZvbHQgPSA8MjA0ODAwMD47DQo+ICsgICAgICAgICAgICByb2htLHJl
+LWNoYXJnZS1iYXR0ZXJ5LXZvbHRhZ2UtbWljcm92b2x0ID0gPDgxMTIwMDA+Ow0KPiArICAgICAg
+ICAgICAgcm9obSxiYXR0ZXJ5LW92ZXItdm9sdGFnZS10aHJlc2hvbGQtbWljcm92b2x0ID0NCj4g
+PDg5MTIwMDA+Ow0KPiArICAgICAgICB9Ow0KPiArICAgIH07DQo+IC0tIA0KPiAyLjIxLjANCj4g
+DQo+IA0KDQo=
