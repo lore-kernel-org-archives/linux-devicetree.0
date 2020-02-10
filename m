@@ -2,137 +2,187 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55D9C352A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E92C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C5520842
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF64420715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:13:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mJ2x+0R0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgBJRLA (ORCPT
+        id S1727934AbgBJRNi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:11:00 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43208 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727872AbgBJRK7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:10:59 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AH9GmH007379;
-        Mon, 10 Feb 2020 12:10:23 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u2dy35m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 12:10:23 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01AH5dYv016782;
-        Mon, 10 Feb 2020 17:10:21 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03wdc.us.ibm.com with ESMTP id 2y1mm63n74-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 17:10:21 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AHAL8X59244978
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 17:10:21 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E51266A058;
-        Mon, 10 Feb 2020 17:10:20 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4CF706A057;
-        Mon, 10 Feb 2020 17:10:20 +0000 (GMT)
-Received: from [9.41.103.158] (unknown [9.41.103.158])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 10 Feb 2020 17:10:20 +0000 (GMT)
-Subject: Re: [PATCH v6 06/12] soc: aspeed: Add XDMA Engine Driver
-To:     Arnd Bergmann <arnd@arndb.de>, Eddie James <eajames@linux.ibm.com>
-Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
+        Mon, 10 Feb 2020 12:13:38 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38493 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727598AbgBJRNi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:13:38 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so8743246wrh.5
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:13:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DSU+tE7/gI2emqC2rIzadepHX0f2kKadx71NAW+DB9c=;
+        b=mJ2x+0R0KG/zW9mIk2M541OD92fCUzci3ZA329+8cFqWKkKoiYinhkyd1Jrxr6rS6o
+         XzAdYkfUKOg8fLKFIuQLVAtDlVky8uxBVPPeEZVK1N4BX2ybShGvTRvZtumVm6OHfrIq
+         XOyc0/kGBjxkdPEt41xI+CVY3WQM0UQtYwmrQNC4kp/zAVMslhWKnjTJJnInArcQwtls
+         fY1X5FX7K14iEp44Q/RVA8efFh5NjzSaBfQwNJHRMeMzB57wlDqxplKrCv/I8BdpZTyG
+         XZlOO4zgEJC4kThvpMC/eudPXsSHKe0GwibyEQECmv0IJxekTVidJ9XRo8VGQxZmcClm
+         /FZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DSU+tE7/gI2emqC2rIzadepHX0f2kKadx71NAW+DB9c=;
+        b=rV/9jXHXuVGh2oTppYre25vfLH94qGjGZOJwtOAeTFK3Pje54T//B8RIjzVy28uY/j
+         HGOlBnY4IWpIwijLSEP3UqaMCcdd4aB3UyO/X2D1KJrgN9yH1kqvORfwjiVgUt6OeMRg
+         GOzaXolf+Euce6IablcN2VaZxw8/Btz9JbKQOx1ennz03ID9U9Y9xKmeghUIa7uxf0hL
+         9/m+GJVBKhTmpIKDtxyc1YrFusKZdmLucdL4qNPYAWGYEtmJIuoJUfjMUzoaiQ/a1PIG
+         3S7vKor9FId5ft+gjSTt0mNULSwKcDdTST9Mh4I1pIehUfU3WzEaQqRrKEsBfvITIHMa
+         SDQg==
+X-Gm-Message-State: APjAAAX0RUBJNC0gb8nHhQ+0bLbixQDIciucXwASH7e8d6XHj4m0yHsW
+        UTLWhubtlyNkrkz6Ib4QxrarNg==
+X-Google-Smtp-Source: APXvYqygfM/XPvD44FZpBV06QPyRiPM1bpOlyzUpNUVyAgaDXnrZJoL6ryy34a3DovTGrMav5A6R7w==
+X-Received: by 2002:adf:dfc8:: with SMTP id q8mr3005070wrn.135.1581354814017;
+        Mon, 10 Feb 2020 09:13:34 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id d22sm1344739wmd.39.2020.02.10.09.13.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 09:13:33 -0800 (PST)
+Subject: Re: [PATCH v2 3/8] ASoC: qdsp6: q6afe-dai: add support to pcm port
+ dais
+To:     Adam Serbinski <adam@serbinski.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
- <1579123790-6894-7-git-send-email-eajames@linux.ibm.com>
- <CAK8P3a3HsdpLz0aDGem1BrQsNo2mEJOnOsLcKFcLjaERx9dhGg@mail.gmail.com>
-From:   Eddie James <eajames@linux.vnet.ibm.com>
-Message-ID: <1a303336-9ffb-353f-efe3-7d45ed114fd0@linux.vnet.ibm.com>
-Date:   Mon, 10 Feb 2020 11:10:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-4-adam@serbinski.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <d0437f6d-84c8-e1cd-b6f5-c1009e00245d@linaro.org>
+Date:   Mon, 10 Feb 2020 17:13:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3HsdpLz0aDGem1BrQsNo2mEJOnOsLcKFcLjaERx9dhGg@mail.gmail.com>
+In-Reply-To: <20200209154748.3015-4-adam@serbinski.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100129
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Few minor comments
 
-On 2/10/20 10:35 AM, Arnd Bergmann wrote:
-> On Wed, Jan 15, 2020 at 10:31 PM Eddie James <eajames@linux.ibm.com> wrote:
->> The XDMA engine embedded in the AST2500 and AST2600 SOCs performs PCI
->> DMA operations between the SOC (acting as a BMC) and a host processor
->> in a server.
->>
->> This commit adds a driver to control the XDMA engine and adds functions
->> to initialize the hardware and memory and start DMA operations.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Hi Eddie,
->
-> I'm missing the bigger picture in the description here, how does this fit into
-> the PCIe endpoint framework and the dmaengine subsystem?
+On 09/02/2020 15:47, Adam Serbinski wrote:
+> This patch adds support of AFE DAI for PCM port.
+> 
+> Signed-off-by: Adam Serbinski <adam@serbinski.com>
+> CC: Andy Gross <agross@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Liam Girdwood <lgirdwood@gmail.com>
+> CC: Patrick Lai <plai@codeaurora.org>
+> CC: Banajit Goswami <bgoswami@codeaurora.org>
+> CC: Jaroslav Kysela <perex@perex.cz>
+> CC: Takashi Iwai <tiwai@suse.com>
+> CC: alsa-devel@alsa-project.org
+> CC: linux-arm-msm@vger.kernel.org
+> CC: devicetree@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>   sound/soc/qcom/qdsp6/q6afe-dai.c | 198 ++++++++++++++++++++++++++++++-
+>   1 file changed, 197 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
+> index c1a7624eaf17..23b29591ef47 100644
+> --- a/sound/soc/qcom/qdsp6/q6afe-dai.c
+> +++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
+
+...
+
+> +static int q6afe_tdm_set_sysclk(struct snd_soc_dai *dai,
+> +		int clk_id, unsigned int freq, int dir)
+> +{
+
+Why are we adding exactly duplicate function of q6afe_mi2s_set_sysclk here?
+
+> +	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
+> +	struct q6afe_port *port = dai_data->port[dai->id];
+> +
+> +	switch (clk_id) {
+> +	case LPAIF_DIG_CLK:
+> +		return q6afe_port_set_sysclk(port, clk_id, 0, 5, freq, dir);
+> +	case LPAIF_BIT_CLK:
+> +	case LPAIF_OSR_CLK:
+> +		return q6afe_port_set_sysclk(port, clk_id,
+> +					     Q6AFE_LPASS_CLK_SRC_INTERNAL,
+> +					     Q6AFE_LPASS_CLK_ROOT_DEFAULT,
+> +					     freq, dir);
+>   	case Q6AFE_LPASS_CLK_ID_PRI_TDM_IBIT ... Q6AFE_LPASS_CLK_ID_QUIN_TDM_EBIT:
+>   		return q6afe_port_set_sysclk(port, clk_id,
+>   					     Q6AFE_LPASS_CLK_ATTRIBUTE_INVERT_COUPLE_NO,
+> @@ -468,6 +520,11 @@ static const struct snd_soc_dapm_route q6afe_dapm_routes[] = {
+>   	{"Tertiary MI2S Playback", NULL, "TERT_MI2S_RX"},
+>   	{"Quaternary MI2S Playback", NULL, "QUAT_MI2S_RX"},
+>   
+> +	{"Primary PCM Playback", NULL, "PRI_PCM_RX"},
+> +	{"Secondary PCM Playback", NULL, "SEC_PCM_RX"},
+> +	{"Tertiary PCM Playback", NULL, "TERT_PCM_RX"},
+> +	{"Quaternary PCM Playback", NULL, "QUAT_PCM_RX"},
+> +
+>   	{"Primary TDM0 Playback", NULL, "PRIMARY_TDM_RX_0"},
+>   	{"Primary TDM1 Playback", NULL, "PRIMARY_TDM_RX_1"},
+>   	{"Primary TDM2 Playback", NULL, "PRIMARY_TDM_RX_2"},
+> @@ -562,6 +619,11 @@ static const struct snd_soc_dapm_route q6afe_dapm_routes[] = {
+>   	{"PRI_MI2S_TX", NULL, "Primary MI2S Capture"},
+>   	{"SEC_MI2S_TX", NULL, "Secondary MI2S Capture"},
+>   	{"QUAT_MI2S_TX", NULL, "Quaternary MI2S Capture"},
+> +
+> +	{"PRI_PCM_TX", NULL, "Primary PCM Capture"},
+> +	{"SEC_PCM_TX", NULL, "Secondary PCM Capture"},
+> +	{"TERT_PCM_TX", NULL, "Tertiary PCM Capture"},
+> +	{"QUAT_PCM_TX", NULL, "Quaternary PCM Capture"},
+>   };
+>   
+
+...
+
+>   
+> +	SND_SOC_DAPM_AIF_IN("QUAT_PCM_RX", NULL,
+> +			    0, 0, 0, 0),
+
+This can be in single line, same for below
 
 
-Hi,
-
-It doesn't fit into the PCIe endpoint framework. The XDMA engine 
-abstracts all the PCIe details away so the BMC cannot configure any of 
-the things the PCIe endpoint exposes.
-
-It also doesn't fit into the dmaengine subsystem due to the restriction 
-on the ast2500 (and maybe the ast2600) that the XDMA engine can only 
-access certain areas of physical memory. Also problematic would be 
-pausing/resuming/terminating transfers because the XDMA engine can't do 
-those things.
-
-
->
-> Does the AST2500 show up as a PCIe device in the host, or do you just
-> inject DMAs into the host and hope that bypasses the IOMMU?
-> If it shows up as an endpoint, how does the endpoint driver link into the
-> dma driver?
-
-
-The AST2500 and AST2600 have two PCIe devices on them, so these will 
-show up on the host if the BMC enables both of them. Either or both can 
-also be disabled and therefore will not show up. On the host side, in 
-order to receive DMA transfers, its simply a matter of registering a PCI 
-device driver and allocating some coherent DMA.... Not sure about the 
-details of endpoints/dma client driver?
-
-
-Hopefully this answers your questions. Thanks,
-
-Eddie
-
-
->
->       Arnd
+> +	SND_SOC_DAPM_AIF_OUT("QUAT_PCM_TX", NULL,
+> +			     0, 0, 0, 0),
+> +	SND_SOC_DAPM_AIF_IN("TERT_PCM_RX", NULL,
+> +			    0, 0, 0, 0),
+> +	SND_SOC_DAPM_AIF_OUT("TERT_PCM_TX", NULL,
+> +			     0, 0, 0, 0),
+> +	SND_SOC_DAPM_AIF_IN("SEC_PCM_RX", NULL,
+> +			    0, 0, 0, 0),
+> +	SND_SOC_DAPM_AIF_OUT("SEC_PCM_TX", NULL,
+> +			     0, 0, 0, 0),
+> +	SND_SOC_DAPM_AIF_IN("PRI_PCM_RX", NULL,
+> +			    0, 0, 0, 0),
+> +	SND_SOC_DAPM_AIF_OUT("PRI_PCM_TX", NULL,
+> +			     0, 0, 0, 0),
+> +
