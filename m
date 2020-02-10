@@ -2,179 +2,232 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAF7C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9CCC352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FC62082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:08:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kSr7WI5W"
+	by mail.kernel.org (Postfix) with ESMTP id 4E3C52082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:10:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbgBJMIb (ORCPT
+        id S1727662AbgBJMKA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:08:31 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41839 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbgBJMHe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 07:07:34 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so7356106wrw.8
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 04:07:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wfpDvTaP6RkaiP9v3FeD/nKtqOOa/BO0maVgmKq/gnU=;
-        b=kSr7WI5W9H62L9z3BxKflYpL8VXG64WJy+4Lm+hiFdgkgBcNO7g4UVIhcYxpgOjAL6
-         KhxIBsWJn54VdGwkK3DXGEWs0rJdV04dk6jXd/XUUv8UTi0yAEcqCV5SXB/dBrgNJ+5u
-         cGNYssHiZ5PubsByztSuPkggAIUdUPzbIUhJODZDOT7uHsb3by4aujWVuLMLmPQ88MfQ
-         lFZLl4AaqQ8YSJ247XnoRanY1HRUobNXRM6ODHwGszsiODETACsZYgqxci4A+mFfAJMy
-         g1UzjdkSeD6lcJWMmjt4p5LlIt/u/OWdVCYgt8go8VbSvRGJ+CROMNpKnB+gTwL3nsKq
-         XKYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wfpDvTaP6RkaiP9v3FeD/nKtqOOa/BO0maVgmKq/gnU=;
-        b=eNxiBGjleIhPJcR4tBw+KmGjJbPubfzbCeA+hxwhWLiu/isMqeI48sGfnMC+Ie2CsG
-         pRO3Q9p49otsewebs8xmjzzv1GknJeEgiT9I0acD3V6eRtTxirr1rl9mFkO1rf/cBCgJ
-         OVFzJI8GlopuIEWI0LqMvn+W+FpxQqX6qeXm+QdJTe/9Wemp9+YKKTNL2yziOXep7XWz
-         G8xaAgRdvp0M/tdqp/kTt/yi8gIK4jDKt9jWpxBb56x1feOpfXNAltXbKihJhtlkHXQi
-         nPhHL+lX82y6EFNrP4hDECcd4RaMfowpo8MWIAjQO47rj6Vo0yza5so3ix8bPjxUdgv2
-         lzpQ==
-X-Gm-Message-State: APjAAAVJTwwEG07sMIQwQTMaXkBNkVOQ0UXvZKbWJkHZKnc6tgnVr3Gd
-        OsNPOm+XgXkoFpbDT6V9fYNO8g==
-X-Google-Smtp-Source: APXvYqyfiLqBy0qILD6NBDvEhOILasu7ggUCkBdsTDwla9idek1iOpWNgRNUG8J3GeuCyqyJCotjGQ==
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr1645915wrq.176.1581336452913;
-        Mon, 10 Feb 2020 04:07:32 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id i204sm293124wma.44.2020.02.10.04.07.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 04:07:32 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v6 10/18] usb: dwc3: Add support for usb-conn-gpio connectors
-Date:   Mon, 10 Feb 2020 12:07:15 +0000
-Message-Id: <20200210120723.91794-11-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
-References: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
+        Mon, 10 Feb 2020 07:10:00 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56040 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726846AbgBJMKA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:10:00 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 04D39AB87;
+        Mon, 10 Feb 2020 12:09:56 +0000 (UTC)
+Message-ID: <2bd9936d106948210b7a34c8060600572318600c.camel@suse.de>
+Subject: Re: [PATCH] dt-bindings: rng: Convert BCM2835 to DT schema
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" 
+        <nfraprado@protonmail.com>, devicetree@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        linux-rpi-kernel@lists.infradead.org
+Date:   Mon, 10 Feb 2020 13:09:54 +0100
+In-Reply-To: <20200207231347.2908737-1-nfraprado@protonmail.com>
+References: <20200207231347.2908737-1-nfraprado@protonmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-zCBFPwRk+DMEN1eeas6c"
+User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the ability to probe and enumerate a connector based on
-usb-conn-gpio.
 
-You would use usb-conn-gpio when a regulator in your system provides VBUS
-directly to the connector instead of supplying via the USB PHY.
+--=-zCBFPwRk+DMEN1eeas6c
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The parent device must have the "usb-role-switch" property, so that when
-the usb-conn-gpio driver calls usb_role_switch_set_role() the notification
-in dwc3 will run and the block registers will be updated to match the state
-detected at the connector.
+On Fri, 2020-02-07 at 23:14 +0000, N=C3=ADcolas F. R. A. Prado wrote:
+> Convert BCM2835/6368 Random number generator bindings to DT schema.
+>=20
+> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
+> ---
 
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- drivers/usb/dwc3/drd.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index c355166793d0..c1825fd655f6 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -11,6 +11,7 @@
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/of_platform.h>
- 
- #include "debug.h"
- #include "core.h"
-@@ -537,8 +538,29 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
- 	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
- 	return 0;
- }
-+
-+static int dwc3_register_gpio_usb_connector(struct dwc3 *dwc)
-+{
-+	struct device		*dev = dwc->dev;
-+	struct device_node	*np = dev->of_node, *conn_np;
-+	int			ret = 0;
-+
-+	conn_np = of_get_child_by_name(np, "connector");
-+	if (!conn_np) {
-+		dev_dbg(dev, "no connector child node specified\n");
-+		goto done;
-+	}
-+
-+	if (of_device_is_compatible(conn_np, "gpio-usb-b-connector"))
-+		ret = of_platform_populate(np, NULL, NULL, dev);
-+done:
-+	of_node_put(conn_np);
-+	return ret;
-+}
-+
- #else
- #define dwc3_setup_role_switch(x) 0
-+#define dwc3_register_gpio_usb_connector(x) 0
- #endif
- 
- int dwc3_drd_init(struct dwc3 *dwc)
-@@ -554,6 +576,9 @@ int dwc3_drd_init(struct dwc3 *dwc)
- 		ret = dwc3_setup_role_switch(dwc);
- 		if (ret < 0)
- 			return ret;
-+		ret = dwc3_register_gpio_usb_connector(dwc);
-+		if (ret < 0)
-+			return ret;
- 	} else if (dwc->edev) {
- 		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
- 		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
--- 
-2.25.0
+Thanks!
+
+> Hi,
+> wasn't really clear to me who to add as maintainer for this dt-binding.
+> The three names added here as maintainers were based on the get_maintaine=
+r
+> script and on previous commits on this file.
+> Please tell me whether these are the right maintainers for this file or n=
+ot.
+
+Looks OK to me. When in doubt I just trust get_maintainer, never failed me =
+so
+far.
+
+> This patch was tested with:
+> make ARCH=3Darm
+> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+> dt_binding_check
+> make ARCH=3Darm
+> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+> dtbs_check
+>=20
+> Thanks,
+> N=C3=ADcolas
+>=20
+>  .../devicetree/bindings/rng/brcm,bcm2835.txt  | 40 ------------
+>  .../devicetree/bindings/rng/brcm,bcm2835.yaml | 61 +++++++++++++++++++
+>  2 files changed, 61 insertions(+), 40 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.tx=
+t
+>  create mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.ya=
+ml
+>=20
+> diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
+> b/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
+> deleted file mode 100644
+> index aaac7975f61c..000000000000
+> --- a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
+> +++ /dev/null
+> @@ -1,40 +0,0 @@
+> -BCM2835/6368 Random number generator
+> -
+> -Required properties:
+> -
+> -- compatible : should be one of
+> -	"brcm,bcm2835-rng"
+> -	"brcm,bcm-nsp-rng"
+> -	"brcm,bcm5301x-rng" or
+> -	"brcm,bcm6368-rng"
+> -- reg : Specifies base physical address and size of the registers.
+> -
+> -Optional properties:
+> -
+> -- clocks : phandle to clock-controller plus clock-specifier pair
+> -- clock-names : "ipsec" as a clock name
+> -
+> -Optional properties:
+> -
+> -- interrupts: specify the interrupt for the RNG block
+> -
+> -Example:
+> -
+> -rng {
+> -	compatible =3D "brcm,bcm2835-rng";
+> -	reg =3D <0x7e104000 0x10>;
+> -	interrupts =3D <2 29>;
+> -};
+> -
+> -rng@18033000 {
+> -	compatible =3D "brcm,bcm-nsp-rng";
+> -	reg =3D <0x18033000 0x14>;
+> -};
+> -
+> -random: rng@10004180 {
+> -	compatible =3D "brcm,bcm6368-rng";
+> -	reg =3D <0x10004180 0x14>;
+> -
+> -	clocks =3D <&periph_clk 18>;
+> -	clock-names =3D "ipsec";
+> -};
+> diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+> b/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+> new file mode 100644
+> index 000000000000..b1621031721e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rng/brcm,bcm2835.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: BCM2835/6368 Random number generator
+> +
+> +maintainers:
+> +  - Stefan Wahren <stefan.wahren@i2se.com>
+> +  - Florian Fainelli <f.fainelli@gmail.com>
+> +  - Herbert Xu <herbert@gondor.apana.org.au>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - brcm,bcm2835-rng
+> +      - brcm,bcm-nsp-rng
+> +      - brcm,bcm5301x-rng
+> +      - brcm,bcm6368-rng
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: phandle to clock-controller plus clock-specifier pair
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: ipsec
+> +
+> +  interrupts:
+> +    description: specify the interrupt for the RNG block
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    rng {
+> +        compatible =3D "brcm,bcm2835-rng";
+> +        reg =3D <0x7e104000 0x10>;
+> +        interrupts =3D <2 29>;
+> +    };
+> +
+> +  - |
+> +    rng@18033000 {
+> +        compatible =3D "brcm,bcm-nsp-rng";
+> +        reg =3D <0x18033000 0x14>;
+> +    };
+> +
+> +  - |
+> +    random: rng@10004180 {
+> +        compatible =3D "brcm,bcm6368-rng";
+> +        reg =3D <0x10004180 0x14>;
+> +
+> +        clocks =3D <&periph_clk 18>;
+> +        clock-names =3D "ipsec";
+> +    };
+
+
+--=-zCBFPwRk+DMEN1eeas6c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5BSBIACgkQlfZmHno8
+x/538Af9E4Fj5GNcVUndgLxJI32oW02ih5MIyieex2uP1j3je0U/0mUmRyfYHTzE
+VoXDjFd07nq4I+qcNBMCCm/EoZVmhTcYzOwgwkYGpnffvb1y+2xNx0FN0yYJFMAF
+aZKfwp/s5DFeNxJyowh/ejeHQyRZh5lbUrlg4Dhu5f2wJ9pnUzbkQn4qMGmJ5tcJ
+l+HYDtp5LRNdLwgjaI8kPeTHU403RO20ASLGW8XBL12/Rc2MvOj18OcURS+SlB0J
+/eyvAoeVkeB9RBAzpg0LpsC8kF506li/telVa1zKbyFKycY0JoQZP0VvfNUVSjVX
+0bfhLaOaOSn8PWfr8Jwfkko+ZmhI4Q==
+=+aAd
+-----END PGP SIGNATURE-----
+
+--=-zCBFPwRk+DMEN1eeas6c--
 
