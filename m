@@ -2,199 +2,159 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE76AC352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E58DC352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1B620715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1DF20733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qsYguvM9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ETOiw+xW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbgBJRT0 (ORCPT
+        id S1728017AbgBJRVN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:19:26 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35460 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728171AbgBJRTZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:19:25 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b17so100063wmb.0
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:19:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oIl67nxXPIGrGYEprbTExGSvnC9F9nc7bLg95r69g+g=;
-        b=qsYguvM9Y7IZ0vTYqRn6gqe315EVNSNAoXvnU7Il/jEgH6OA5Ex79LfWkPnVQ1Tig6
-         DZkfDWJBkhH8/OU8nsbgj7EJqhFcfE3b9b6ipz/LgM9JJj0yef4v7RAHWEP2iQQ3gcqR
-         9bzcCD5sVgzg+4xYDkJI827X3pNvqolyAEH4cPspelg1J25cUMwhAN8/+2AvU/skRtZ3
-         dBZMbs/BE3whHqrgNZ5gqWsTjBcDbhRy6dnr5p2HunPzxpL4XNNICps0BLJQf8iid0pO
-         eOZInK/0Wx/uPfqdcgiUcKrxjG+V0jaHO4nPzkYx/qsBiaYaDBwdJVTkIzRYzPBID8Zo
-         /fDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oIl67nxXPIGrGYEprbTExGSvnC9F9nc7bLg95r69g+g=;
-        b=hkqgHxth3KfVovJZzNn4tphPF7A+iuC9nezM3busIf20gLaep/4oDiQwbJRwzmf6St
-         VE6UhqJDugZWUxjxRNmJiUisxy1oNYaWYSLgQqdO8Ob3krd3I3Nvr1Dx/MmxzNywTr7B
-         wf4y+qUFvGA7Gc+nnTx7TlqlVI0EprhAo+NZ4DQeS0cAnNW4ryDYX8HrzTW++gl3O5wA
-         HUWSgrSymm2MnGwUEC13Tu6bu+ZBZI9OMh9eyP0lDx/Tn7DleGWS2bvJFfXB3eoZ5uPh
-         sp+svOpBO0+s0BJaKs+uXGww1c++SZVoZ0FLGpDbg1GaYwhdktlPqvcepEWCZ0LsfN9s
-         5XWA==
-X-Gm-Message-State: APjAAAVTs6RZ8obqNpxJuOd/RQZnId31HBCAUFBTHGCeacbK60e/i5uK
-        xKa4EU3qsoSsKalDQrtiyhVnlQ==
-X-Google-Smtp-Source: APXvYqzV9sO34XJZFw6xpwiuFWll4zkKifzTrTiAxP59oZnDpnnijGr7YApsIerKdCCMbKpzqWygRg==
-X-Received: by 2002:a1c:6a16:: with SMTP id f22mr25288wmc.53.1581355157157;
-        Mon, 10 Feb 2020 09:19:17 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id o4sm1409882wrx.25.2020.02.10.09.19.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 09:19:16 -0800 (PST)
-Subject: Re: [PATCH v2 4/8] ASoC: qdsp6: q6routing: add pcm port routing
-To:     Adam Serbinski <adam@serbinski.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-5-adam@serbinski.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a161cfd8-f1ca-4e1c-65b3-a465053c7d20@linaro.org>
-Date:   Mon, 10 Feb 2020 17:19:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 10 Feb 2020 12:21:13 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:36382 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727558AbgBJRVN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:21:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t4A9u108s+DCwr0hGx+ywc3WqZp5mzjjdaDdM2W1OTs=; b=ETOiw+xWo+C4mRGn2DxV0FyMe
+        TGLW+Asu6JZwJdVglJs8GzXtNJPSegQar+XUcaEGwpLs933FgQxTA+y/pX2vydhQa3PB9yhakX+dY
+        C+1aBwFFhQu0NiZaHJWhX/Vk/xtwj+6J84FnaI7VZKKUpBpRamX1l4olBpmrfl4C7BAyW/SH8GZHj
+        YZHyEzqHVP5hGlc68UG7aokC+Pza0voQ8r1Juuk19HUrPPg9l1mMcxiUlkRVUOhowpC8fyPXR7W8Q
+        Tro48k3DARyt1YGlY++WKHOGkz3o1/ZAmOxMTkjgTQJyoeUF1CqQgv5Y7vs0ztsdbgx/fYyNNTrzR
+        AApfoxzjA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:38544)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j1Ck3-00083Y-PP; Mon, 10 Feb 2020 17:21:04 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j1Cjz-000845-Kx; Mon, 10 Feb 2020 17:20:59 +0000
+Date:   Mon, 10 Feb 2020 17:20:59 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20200210172059.GH25745@shell.armlinux.org.uk>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk>
+ <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+ <20200210161553.GE25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200209154748.3015-5-adam@serbinski.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210161553.GE25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 09/02/2020 15:47, Adam Serbinski wrote:
-> This patch adds support to PCM_PORT mixers required to
-> select path between ASM stream and AFE ports.
+On Mon, Feb 10, 2020 at 04:15:53PM +0000, Russell King - ARM Linux admin wrote:
+> On Mon, Feb 10, 2020 at 04:28:23PM +0100, Olof Johansson wrote:
+> > On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
+> > > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > > > >
+> > > > > Hi Olof,
+> > > > >
+> > > > > Thanks a lot for your comments!
+> > > > > And sorry for my delay respond!
+> > > >
+> > > > Actually, they apply with only minor conflicts on top of current -next.
+> > > >
+> > > > Bjorn, any chance we can get you to pick these up pretty soon? They
+> > > > enable full use of a promising ARM developer system, the SolidRun
+> > > > HoneyComb, and would be quite valuable for me and others to be able to
+> > > > use with mainline or -next without any additional patches applied --
+> > > > which this patchset achieves.
+> > > >
+> > > > I know there are pending revisions based on feedback. I'll leave it up
+> > > > to you and others to determine if that can be done with incremental
+> > > > patches on top, or if it should be fixed before the initial patchset
+> > > > is applied. But all in all, it's holding up adaption by me and surely
+> > > > others of a very interesting platform -- I'm looking to replace my
+> > > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
+> > > > before I do.
+> > >
+> > > If you're going to be using NVMe, make sure you use a power-fail safe
+> > > version; I've already had one instance where ext4 failed to mount
+> > > because of a corrupted journal using an XPG SX8200 after the Honeycomb
+> > > Serror'd, and then I powered it down after a few hours before later
+> > > booting it back up.
+> > >
+> > > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
+> > > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
+> > > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
+> > > EXT4-fs (nvme0n1p2): error loading journal
+> > 
+> > Hmm, using btrfs on mine, not sure if the exposure is similar or not.
 > 
-> Signed-off-by: Adam Serbinski <adam@serbinski.com>
-> CC: Andy Gross <agross@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Liam Girdwood <lgirdwood@gmail.com>
-> CC: Patrick Lai <plai@codeaurora.org>
-> CC: Banajit Goswami <bgoswami@codeaurora.org>
-> CC: Jaroslav Kysela <perex@perex.cz>
-> CC: Takashi Iwai <tiwai@suse.com>
-> CC: alsa-devel@alsa-project.org
-> CC: linux-arm-msm@vger.kernel.org
-> CC: devicetree@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->   sound/soc/qcom/qdsp6/q6routing.c | 44 ++++++++++++++++++++++++++++++++
-
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
-
->   1 file changed, 44 insertions(+)
+> As I understand the problem, it isn't a filesystem issue.  It's a data
+> integrity issue with the NVMe over power fail, how they cache the data,
+> and ultimately write it to the nand flash.
 > 
-> diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
-> index 20724102e85a..3a81d2161707 100644
-> --- a/sound/soc/qcom/qdsp6/q6routing.c
-> +++ b/sound/soc/qcom/qdsp6/q6routing.c
-> @@ -67,6 +67,10 @@
->   	{ mix_name, "SEC_MI2S_TX", "SEC_MI2S_TX" },	\
->   	{ mix_name, "QUAT_MI2S_TX", "QUAT_MI2S_TX" },	\
->   	{ mix_name, "TERT_MI2S_TX", "TERT_MI2S_TX" },		\
-> +	{ mix_name, "PRI_PCM_TX", "PRI_PCM_TX" },		\
-> +	{ mix_name, "SEC_PCM_TX", "SEC_PCM_TX" },		\
-> +	{ mix_name, "TERT_PCM_TX", "TERT_PCM_TX" },		\
-> +	{ mix_name, "QUAT_PCM_TX", "QUAT_PCM_TX" },		\
->   	{ mix_name, "SLIMBUS_0_TX", "SLIMBUS_0_TX" },		\
->   	{ mix_name, "SLIMBUS_1_TX", "SLIMBUS_1_TX" },		\
->   	{ mix_name, "SLIMBUS_2_TX", "SLIMBUS_2_TX" },		\
-> @@ -128,6 +132,18 @@
->   	SOC_SINGLE_EXT("QUAT_MI2S_TX", QUATERNARY_MI2S_TX,		\
->   		id, 1, 0, msm_routing_get_audio_mixer,			\
->   		msm_routing_put_audio_mixer),				\
-> +	SOC_SINGLE_EXT("PRI_PCM_TX", PRIMARY_PCM_TX,			\
-> +		id, 1, 0, msm_routing_get_audio_mixer,			\
-> +		msm_routing_put_audio_mixer),				\
-> +	SOC_SINGLE_EXT("SEC_PCM_TX", SECONDARY_PCM_TX,			\
-> +		id, 1, 0, msm_routing_get_audio_mixer,			\
-> +		msm_routing_put_audio_mixer),				\
-> +	SOC_SINGLE_EXT("TERT_PCM_TX", TERTIARY_PCM_TX,			\
-> +		id, 1, 0, msm_routing_get_audio_mixer,			\
-> +		msm_routing_put_audio_mixer),				\
-> +	SOC_SINGLE_EXT("QUAT_PCM_TX", QUATERNARY_PCM_TX,		\
-> +		id, 1, 0, msm_routing_get_audio_mixer,			\
-> +		msm_routing_put_audio_mixer),				\
->   	SOC_SINGLE_EXT("SLIMBUS_0_TX", SLIMBUS_0_TX,			\
->   		id, 1, 0, msm_routing_get_audio_mixer,			\
->   		msm_routing_put_audio_mixer),				\
-> @@ -468,6 +484,18 @@ static const struct snd_kcontrol_new quaternary_mi2s_rx_mixer_controls[] = {
->   static const struct snd_kcontrol_new tertiary_mi2s_rx_mixer_controls[] = {
->   	Q6ROUTING_RX_MIXERS(TERTIARY_MI2S_RX) };
->   
-> +static const struct snd_kcontrol_new primary_pcm_rx_mixer_controls[] = {
-> +	Q6ROUTING_RX_MIXERS(PRIMARY_PCM_RX) };
-> +
-> +static const struct snd_kcontrol_new secondary_pcm_rx_mixer_controls[] = {
-> +	Q6ROUTING_RX_MIXERS(SECONDARY_PCM_RX) };
-> +
-> +static const struct snd_kcontrol_new tertiary_pcm_rx_mixer_controls[] = {
-> +	Q6ROUTING_RX_MIXERS(TERTIARY_PCM_RX) };
-> +
-> +static const struct snd_kcontrol_new quaternary_pcm_rx_mixer_controls[] = {
-> +	Q6ROUTING_RX_MIXERS(QUATERNARY_PCM_RX) };
-> +
->   static const struct snd_kcontrol_new slimbus_rx_mixer_controls[] = {
->   	Q6ROUTING_RX_MIXERS(SLIMBUS_0_RX) };
->   
-> @@ -695,6 +723,18 @@ static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
->   	SND_SOC_DAPM_MIXER("TERT_MI2S_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
->   			   tertiary_mi2s_rx_mixer_controls,
->   			   ARRAY_SIZE(tertiary_mi2s_rx_mixer_controls)),
-> +	SND_SOC_DAPM_MIXER("PRI_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-> +			   primary_pcm_rx_mixer_controls,
-> +			   ARRAY_SIZE(primary_pcm_rx_mixer_controls)),
-> +	SND_SOC_DAPM_MIXER("SEC_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-> +			   secondary_pcm_rx_mixer_controls,
-> +			   ARRAY_SIZE(secondary_pcm_rx_mixer_controls)),
-> +	SND_SOC_DAPM_MIXER("TERT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-> +			   tertiary_pcm_rx_mixer_controls,
-> +			   ARRAY_SIZE(tertiary_pcm_rx_mixer_controls)),
-> +	SND_SOC_DAPM_MIXER("QUAT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-> +			   quaternary_pcm_rx_mixer_controls,
-> +			   ARRAY_SIZE(quaternary_pcm_rx_mixer_controls)),
->   	SND_SOC_DAPM_MIXER("PRIMARY_TDM_RX_0 Audio Mixer", SND_SOC_NOPM, 0, 0,
->   				pri_tdm_rx_0_mixer_controls,
->   				ARRAY_SIZE(pri_tdm_rx_0_mixer_controls)),
-> @@ -853,6 +893,10 @@ static const struct snd_soc_dapm_route intercon[] = {
->   	Q6ROUTING_RX_DAPM_ROUTE("TERT_MI2S_RX Audio Mixer", "TERT_MI2S_RX"),
->   	Q6ROUTING_RX_DAPM_ROUTE("SEC_MI2S_RX Audio Mixer", "SEC_MI2S_RX"),
->   	Q6ROUTING_RX_DAPM_ROUTE("PRI_MI2S_RX Audio Mixer", "PRI_MI2S_RX"),
-> +	Q6ROUTING_RX_DAPM_ROUTE("PRI_PCM_RX Audio Mixer", "PRI_PCM_RX"),
-> +	Q6ROUTING_RX_DAPM_ROUTE("SEC_PCM_RX Audio Mixer", "SEC_PCM_RX"),
-> +	Q6ROUTING_RX_DAPM_ROUTE("TERT_PCM_RX Audio Mixer", "TERT_PCM_RX"),
-> +	Q6ROUTING_RX_DAPM_ROUTE("QUAT_PCM_RX Audio Mixer", "QUAT_PCM_RX"),
->   	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_0 Audio Mixer",
->   				"PRIMARY_TDM_RX_0"),
->   	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_1 Audio Mixer",
+> Have a read of:
 > 
+> https://www.kingston.com/en/solutions/servers-data-centers/ssd-power-loss-protection
+
+This was the link I was actually looking for:
+
+http://industrial.adata.com/en/technology/92
+
+but there's also:
+
+http://industrial.adata.com/en/technology/26
+
+ADATA make the XPG SX8200:
+
+NVME Identify Controller:
+vid       : 0x1cc1
+ssvid     : 0x1cc1
+mn        : ADATA SX8200PNP
+fr        : R0906I
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
