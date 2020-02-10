@@ -2,312 +2,149 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7BEC3B189
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFC9C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 22:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27712082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F32C20733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 22:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxaO7hjn"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="FgTcvQWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgBJVkS (ORCPT
+        id S1727505AbgBJWXr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:40:18 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53615 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbgBJVkS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:40:18 -0500
-Received: by mail-wm1-f65.google.com with SMTP id s10so919243wmh.3
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 13:40:15 -0800 (PST)
+        Mon, 10 Feb 2020 17:23:47 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40668 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgBJWXr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 17:23:47 -0500
+Received: by mail-qk1-f193.google.com with SMTP id b7so8238641qkl.7;
+        Mon, 10 Feb 2020 14:23:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=K/OQ1Jgex7gK828pBxgz7p1Ugpl7TPPOgqjJJN6erjc=;
-        b=YxaO7hjn3Va92T6LP+C4q1uM+KVK1rIts5ZC69DpZIcgmx9dmerd0nxisDkx1toL1V
-         hzFvylRZyX6GBXAcsgih1BY/HI4QUDHM1B5zNw3D8JMroi6mAEsI3enDVbv4RqD5XR/y
-         pVO2tsdvk147GGaVi51tfHc+tSoltj23o74CmgkJMIGOTQpgNjB8+3bq+KqiibU1db/t
-         G3fP/CcRBfsM6eFr7zFouFXqAdv+5BLC1yKtsu+JyTNYkyaqQ/RttnK1VmMbodFTu6nn
-         p02OB24jUF467+1AjHYmKJR7aZF54iXSuyaXbFM2rX52LJFFrukLM5Mbyndh6zQI2f1N
-         WM6w==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vtc2iHO5ssqdQWlZbYpNOYjs7NPN+OkfmGi7EwW4+Cw=;
+        b=FgTcvQWWhvbFryDssRGO6xJWs5roRRi7pj6F2lGuCKhoWUJC2n4I/mNnRGIzEc6x2M
+         MCO3afKZAmymUbSJ2kjINRtbtbNYPLzRMEdJr84duHUQVo5bbZdX2AUMkzTP62MUYXOs
+         JNgdEotYxbmqZrmJZZVFIxEo1beFo2EvE52vI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=K/OQ1Jgex7gK828pBxgz7p1Ugpl7TPPOgqjJJN6erjc=;
-        b=I1nAzEKAV7AbNKj9MXObWs9z9yeVsyxlmke/ZmBoM4Z1OpHWz6qCFUfoqkH7bDJs96
-         MCWtqofD1gYahKjJff34beeXD9zbkp2LNCBq4vPV3/GTdXZ1up8TIQgFie8gieB28l7/
-         vC57d89nXrdUYHD36zHvrFM7pca9/sao/BGNZRu31ZS0Yh85RrDlAAdtsi5EanobkuFQ
-         jUxOzFlBgkXm6ht9SZWLsRfdpYLYw1bQlEqETTJGGyfbjnZP+ld783q6dwwrzpRnDK1Y
-         61hByXpy3a9mvgBK5ra0cbSWLXsoX67RNB/BnalbK9EzwiVNT0HdnzNAEBxkvYqoS/8O
-         GSMQ==
-X-Gm-Message-State: APjAAAXNQwEP6h6Dh6TvaA7mGjTJ+L/LDmt+cckZE1hAw2Zj8H795egc
-        d7BqxHww8lDKMC/2oPD59vkhng==
-X-Google-Smtp-Source: APXvYqxI3JtWODejHFqxpw4DFYd2nl5kw95snTyXr3bSutTTUyjXntP8LRfXqy2WWfBAmA219I33UQ==
-X-Received: by 2002:a7b:c183:: with SMTP id y3mr1038434wmi.0.1581370814718;
-        Mon, 10 Feb 2020 13:40:14 -0800 (PST)
-Received: from linaro.org ([2a00:23c5:6815:3901:a1cf:b00b:5683:ed40])
-        by smtp.gmail.com with ESMTPSA id u14sm2118582wrm.51.2020.02.10.13.40.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 13:40:14 -0800 (PST)
-From:   Mike Leach <mike.leach@linaro.org>
-To:     mike.leach@linaro.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, coresight@lists.linaro.org,
-        linux-doc@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
-        suzuki.poulose@arm.com, robh+dt@kernel.org, maxime@cerno.tech,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, agross@kernel.org, corbet@lwn.net
-Subject: [PATCH v9 14/15] docs: sysfs: coresight: Add sysfs ABI documentation for CTI
-Date:   Mon, 10 Feb 2020 21:39:23 +0000
-Message-Id: <20200210213924.20037-15-mike.leach@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200210213924.20037-1-mike.leach@linaro.org>
-References: <20200210213924.20037-1-mike.leach@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vtc2iHO5ssqdQWlZbYpNOYjs7NPN+OkfmGi7EwW4+Cw=;
+        b=q6tgNJVeXgqLTnC2lHJD43SVtJ3h4tRJSXajgbwbOgLIka6RzrkxJCbUq26qBnaNlg
+         tHLuxRawLcEwWXzVCRPfG+bScKuAhdMMX6FRPGBA1wiSp0vPyz2QcjNhJ4OrFmxP4chp
+         OkgICTQ/vlv4g9eThCGauTHXBp87S8LWCgXNx4c3Nplh2Dec07lQzEGu8iDMWJkzLuzz
+         gQO+IIdZshizPRgUs6NCmXXPIvBd9dLARPy5YtivjO/bfvY4Uo15wQf9K7yhXYantZxe
+         89z0tTgpBslUTt/4RvCWWIo+quIK3txOB5F7AG1OQirwy0VTiKbwQrqpYn+vJjIomuoK
+         LsGg==
+X-Gm-Message-State: APjAAAUogSL+JOxsDB8H9LNLwA88UiCqp62FGKVoiSEbNKqEVuvpZREQ
+        mxOeIuR3sG4feQAp9CFW22GLSGAcmoXRyD3RADQ=
+X-Google-Smtp-Source: APXvYqyZdGpzcKUOEIzHRw7qYRL07DZQdkQJ0/5JSAwE0jE+HVmYKoptJ7wpd88HybHU1+QIrsDGwQWL0h/VjAghNpo=
+X-Received: by 2002:a37:c07:: with SMTP id 7mr107082qkm.414.1581373426189;
+ Mon, 10 Feb 2020 14:23:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20200130214626.2863329-1-vijaykhemka@fb.com>
+In-Reply-To: <20200130214626.2863329-1-vijaykhemka@fb.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 10 Feb 2020 22:23:34 +0000
+Message-ID: <CACPK8Xfo1NcNmORHtpfDQzYQrLV0B=6+_nUtPftiHQoT6GrpPA@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: tiogapass: Add IPMB device
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Vijay Khemka <vijaykhemka@fb.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sai Dasari <sdasari@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add API usage document for sysfs API in CTI driver.
+Hi Rob,
 
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
----
- .../testing/sysfs-bus-coresight-devices-cti   | 221 ++++++++++++++++++
- 1 file changed, 221 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
+On Thu, 30 Jan 2020 at 21:46, Vijay Khemka <vijaykhemka@fb.com> wrote:
+>
+> Adding IPMB devices for facebook tiogapass platform.
+>
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> ---
+>  arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> index fb7f034d5db2..1cb5b9bf468f 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> @@ -5,6 +5,7 @@
+>
+>  #include "aspeed-g5.dtsi"
+>  #include <dt-bindings/gpio/aspeed-gpio.h>
+> +#include <dt-bindings/i2c/i2c.h>
+>
+>  / {
+>         model = "Facebook TiogaPass BMC";
+> @@ -428,6 +429,12 @@
+>  &i2c4 {
+>         status = "okay";
+>         // BMC Debug Header
+> +       multi-master;
+> +       ipmb0@10 {
+> +               compatible = "ipmb-dev";
+> +               reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti b/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
-new file mode 100644
-index 000000000000..5ed54d196a17
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
-@@ -0,0 +1,221 @@
-+What:		/sys/bus/coresight/devices/<cti-name>/enable
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable/Disable the CTI hardware.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/ctmid
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Display the associated CTM ID
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/nr_trigger_cons
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Number of devices connected to triggers on this CTI
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/name
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Name of connected device <N>
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/in_signals
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Input trigger signals from connected device <N>
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/in_types
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Functional types for the input trigger signals
-+		from connected device <N>
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/out_signals
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Output trigger signals to connected device <N>
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/out_types
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Functional types for the output trigger signals
-+		to connected device <N>
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/inout_sel
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Select the index for inen and outen registers.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/inen
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write the CTIINEN register selected by inout_sel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/outen
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write the CTIOUTEN register selected by inout_sel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/gate
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write CTIGATE register.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/asicctl
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write ASICCTL register.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/intack
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write the INTACK register.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/appset
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Set CTIAPPSET register to activate channel. Read back to
-+		determine current value of register.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/appclear
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write APPCLEAR register to deactivate channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/apppulse
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write APPPULSE to pulse a channel active for one clock
-+		cycle.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/chinstatus
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Read current status of channel inputs.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/choutstatus
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of channel outputs.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/triginstatus
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of input trigger signals
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/trigoutstatus
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of output trigger signals.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigin_attach
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Attach a CTI input trigger to a CTM channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigin_detach
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Detach a CTI input trigger from a CTM channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_attach
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Attach a CTI output trigger to a CTM channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_detach
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Detach a CTI output trigger from a CTM channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_gate_enable
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable CTIGATE for single channel (W) or list enabled
-+		channels through the gate (R).
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_gate_disable
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Disable CTIGATE for single channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_set
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Activate a single channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_clear
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Deactivate a single channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_pulse
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Pulse a single channel - activate for a single clock cycle.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_filtered
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) List of output triggers filtered across all connections.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trig_filter_enable
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable or disable trigger output signal filtering.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_inuse
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) show channels with at least one attached trigger signal.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_free
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) show channels with no attached trigger signals.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_view
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Write channel number to select a channel to view, read to
-+		see triggers attached to selected channel on this CTI.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_reset
-+Date:		Jan 2020
-+KernelVersion	5.6
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Clear all channel / trigger programming.
--- 
-2.17.1
+This causes dtc to warn:
 
+../arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.11-525.4:
+Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10: I2C
+bus unit address format error, expected "40000010"
+../arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.3-30:
+Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg:
+I2C address must be less than 10-bits, got "0x40000010"
+
+The bindings mention:
+
+ Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we listen to
+be devices ourselves.
+
+include/dt-bindings/i2c/i2c.h:#define I2C_OWN_SLAVE_ADDRESS     (1 << 30)
+
+It appears dtc needs to be fixed to not warn when seeing this value in
+an i2c reg node?
+
+Cheers,
+
+Joel
+
+
+
+> +               i2c-protocol;
+> +       };
+>  };
+>
+>  &i2c5 {
+> @@ -509,6 +516,12 @@
+>  &i2c9 {
+>         status = "okay";
+>         //USB Debug Connector
+> +       multi-master;
+> +       ipmb0@10 {
+> +               compatible = "ipmb-dev";
+> +               reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
+> +               i2c-protocol;
+> +       };
+>  };
+>
+>  &pwm_tacho {
+> --
+> 2.17.1
+>
