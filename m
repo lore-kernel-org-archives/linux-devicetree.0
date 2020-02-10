@@ -2,96 +2,107 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85661C352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 20:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE87C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8602082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 20:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3022072C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:04:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="njpoTH+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgBJUuG (ORCPT
+        id S1727431AbgBJVEd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:50:06 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58575 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727199AbgBJUuF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 15:50:05 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1G0K-0006VE-3k; Mon, 10 Feb 2020 21:50:04 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1G0J-0001Yq-3k; Mon, 10 Feb 2020 21:50:03 +0100
-Date:   Mon, 10 Feb 2020 21:50:03 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     George Hilliard <ghilliard@kopismobile.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel@pengutronix.de, devicetree@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] tty: imx serial: Implement support for reversing
- TX and RX polarity
-Message-ID: <20200210205003.x7xduj3avwjhimjm@pengutronix.de>
-References: <20200210192949.7338-1-ghilliard@kopismobile.com>
- <20200210192949.7338-3-ghilliard@kopismobile.com>
+        Mon, 10 Feb 2020 16:04:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57344 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbgBJVEd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:04:33 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AL4T2g017421;
+        Mon, 10 Feb 2020 15:04:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581368669;
+        bh=xVzc1mtWpAJafF8U/uk488p/4DSXP1+tfDnXeV8ljHk=;
+        h=From:To:CC:Subject:Date;
+        b=njpoTH+QGlGR4NcAR8+MtqkY0nb4ag20Q59hNN6OrfuJl6EQwCpMVDoZxjRyfcySo
+         k/iGWIVQ7CIMXDuxBdrrIIm7vz9pkO04gjzcorFP5sAAErs7YsyljtF7CK3qmDSjRF
+         GsWQDciKfTDrofGP5wPqo2hZHadH42ZXIP+VCKyY=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AL4TZM051167
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Feb 2020 15:04:29 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
+ Feb 2020 15:04:29 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 10 Feb 2020 15:04:29 -0600
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AL4StC101348;
+        Mon, 10 Feb 2020 15:04:28 -0600
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id 01AL4S325098;
+        Mon, 10 Feb 2020 15:04:28 -0600 (CST)
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Roger Quadros <rogerq@ti.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: [PATCH] ARM: dts: am437x-idk-evm: Fix incorrect OPP node names
+Date:   Mon, 10 Feb 2020 15:04:23 -0600
+Message-ID: <20200210210423.22424-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200210192949.7338-3-ghilliard@kopismobile.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello George,
+The commit 337c6c9a69af ("ARM: dts: am437x-idk-evm: Disable
+OPP50 for MPU") adjusts couple of OPP nodes defined in the
+common am4372.dtsi file, but used outdated node names. This
+results in these getting treated as new OPP nodes with missing
+properties.
 
-On Mon, Feb 10, 2020 at 01:29:49PM -0600, George Hilliard wrote:
-> @@ -1390,6 +1392,8 @@ static int imx_uart_startup(struct uart_port *port)
->  	ucr4 = imx_uart_readl(sport, UCR4) & ~UCR4_OREN;
->  	if (!sport->dma_is_enabled)
->  		ucr4 |= UCR4_OREN;
-> +	if (sport->inverted_rx)
-> +		ucr4 |= UCR4_INVR;
+Fix this properly by using the correct node names as updated in
+commit b9cb2ba71848 ("ARM: dts: Use - instead of @ for DT OPP
+entries for TI SoCs").
 
-You fail to clear this bit if .inverted_rx is false.
+Reported-by: Roger Quadros <rogerq@ti.com>
+Fixes: 337c6c9a69af ("ARM: dts: am437x-idk-evm: Disable OPP50 for MPU")
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ arch/arm/boot/dts/am437x-idk-evm.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->  	imx_uart_writel(sport, ucr4, UCR4);
->  
->  	ucr2 = imx_uart_readl(sport, UCR2) & ~UCR2_ATEN;
-> @@ -1404,19 +1408,17 @@ static int imx_uart_startup(struct uart_port *port)
->  		ucr2 &= ~UCR2_RTSEN;
->  	imx_uart_writel(sport, ucr2, UCR2);
->  
-> +	ucr3 = imx_uart_readl(sport, UCR3);
-> +	if (sport->inverted_tx)
-> +		ucr3 |= UCR3_INVT;
-
-ditto.
-
-Also I think setting this bit here is a bit late because UCR2_TXEN was
-already set so changing UCR3_INVT probably results in a spike?!
-
->  	if (!imx_uart_is_imx1(sport)) {
-> -		u32 ucr3;
-> -
-> -		ucr3 = imx_uart_readl(sport, UCR3);
-> [...]
-
-Best regards
-Uwe
-
+diff --git a/arch/arm/boot/dts/am437x-idk-evm.dts b/arch/arm/boot/dts/am437x-idk-evm.dts
+index f3ced6df0c9b..9f66f96d09c9 100644
+--- a/arch/arm/boot/dts/am437x-idk-evm.dts
++++ b/arch/arm/boot/dts/am437x-idk-evm.dts
+@@ -526,11 +526,11 @@
+ 	 * Supply voltage supervisor on board will not allow opp50 so
+ 	 * disable it and set opp100 as suspend OPP.
+ 	 */
+-	opp50@300000000 {
++	opp50-300000000 {
+ 		status = "disabled";
+ 	};
+ 
+-	opp100@600000000 {
++	opp100-600000000 {
+ 		opp-suspend;
+ 	};
+ };
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.23.0
+
