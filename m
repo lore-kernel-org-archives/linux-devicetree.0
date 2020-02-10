@@ -2,229 +2,135 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501FAC352A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B9FC35254
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 19:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249F2214DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0706420838
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 19:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581361177;
-	bh=6Fuu2gVWcWeVQb3DllydwL2YvE/R2OLUSoeNrJD6TuM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=c85vu85LhYCdW8TN4U5cww0chs1cOVg5BVommxmiaiwqV3Fh7UX+KW469zO9cLZRO
-	 xkLso2wUw17qulDhwwYKBXD3uerB/2nmLh/RWzOy4nbiZkhd5WoAba3b9Y+AWIMWMT
-	 g4LarwDVnnEvfZCLpXB2TXNZrysZzU0FSzDgQp+s=
+	s=default; t=1581361335;
+	bh=HQvf9C9JUKRMovsbBiBUc6zfyh56zjlGJgXiSmdc+e8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UyA8ptblEFxj96zNq6ihxcF7qdVQ3AQ+FLR4MiKaiB4ZXRhnmaNjO84kUvWRcATjh
+	 LioP/Vjj5iJTMUdEnuR3vWduOS8qSQU/h+E8d1YYRQdLxnIA9Urc/WT6QCM+1ttBtj
+	 J8XX+FPCbEWjThO2RL/eAiEKpGmY4Qyb/INz3EVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgBJS7g (ORCPT
+        id S1726957AbgBJTCL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:59:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727331AbgBJS7g (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:59:36 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D5792085B;
-        Mon, 10 Feb 2020 18:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581361175;
-        bh=6Fuu2gVWcWeVQb3DllydwL2YvE/R2OLUSoeNrJD6TuM=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=cfaj5AfOXOxZ5wPsCw89VjpremlGDQ4RprFcdgRuw7UL9dYPF6iFlvco1LjxLAjdq
-         JfAgOg1oSxwkLUYXg0FA+lJxpcglS5L9+v0ID2XvQRnDOri5CtyvkmzaYtrwfjrq08
-         Zg0HjZ2OerZ0ozMMiYHFFKGq0uUHM2Pxs1rVqUAU=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200207044425.32398-3-vigneshr@ti.com>
-References: <20200207044425.32398-1-vigneshr@ti.com> <20200207044425.32398-3-vigneshr@ti.com>
-Subject: Re: [PATCH v2 2/2] clk: keystone: Add new driver to handle syscon based clocks
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
+        Mon, 10 Feb 2020 14:02:11 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38831 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbgBJTCL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 14:02:11 -0500
+Received: by mail-ed1-f68.google.com with SMTP id p23so1617696edr.5;
+        Mon, 10 Feb 2020 11:02:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9cf+4qQjBnlkEW/EJTW7h2vLgsgp1JMVDelx9bM1U3Q=;
+        b=ZtS11vuHhd0zOId95mWyRGX3HsEJ7ltYzXkSSgCuBn0Es8gycoJ6/gspYeBXcrP+iN
+         G5Uzbye3SktOKnpVOeGPe5aAPB1Q8Y5XibaC0+TOzdDrfVShiVmIOCT5ICk8jL0oFexM
+         yGzNMsuJtwOi49ejM1zzN9QKmm2FHAkFBgVkwQOv3uH5d11XRkzfKafOtGvHj/Ja8K/2
+         rzt97/QRbSGWGLtF7ZKzoz7wsWatC7cPPJGZ16I8Gse63rZ3719lgiaH07IzH2qZM7MC
+         pRWcbnxLh4TqOJ749e+c2t34Tz28qPvRlch3hCmsA3P1ZFEK5eVGePEdRiQVxJwx4K1y
+         jWsA==
+X-Gm-Message-State: APjAAAXHz9ZYlXnsIAucY+va5Sn3LNzGmHM3JH+v+KCektru3WvmWQuK
+        ZkH9TnyCcIX1xDxwroSkTWYE8JuB6QY=
+X-Google-Smtp-Source: APXvYqwg0KeN1+Nwj6pBAd2zwMoQwpurX7DGIJkYt84IeruJJh8EyS0rccVKqJspTu7bUwyIu3L+rg==
+X-Received: by 2002:aa7:df04:: with SMTP id c4mr2519354edy.385.1581361328652;
+        Mon, 10 Feb 2020 11:02:08 -0800 (PST)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id r23sm74834edp.15.2020.02.10.11.02.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Feb 2020 11:02:07 -0800 (PST)
+Date:   Mon, 10 Feb 2020 20:02:05 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Date:   Mon, 10 Feb 2020 10:59:34 -0800
-Message-ID: <158136117429.94449.12421902020705390139@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv3 0/3] Add support for suspend clk for Exynos5422 SoC
+Message-ID: <20200210190205.GB16433@kozik-lap>
+References: <20200210105108.1128-1-linux.amoon@gmail.com>
+ <20200210135612.GB2163@pi3>
+ <CANAwSgT9aq123H-pO2u6iN2E8towsWUFcWDsA9TbVqP30j=10w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANAwSgT9aq123H-pO2u6iN2E8towsWUFcWDsA9TbVqP30j=10w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Vignesh Raghavendra (2020-02-06 20:44:25)
-> diff --git a/drivers/clk/keystone/Kconfig b/drivers/clk/keystone/Kconfig
-> index 38aeefb1e808..69ca3db1a99e 100644
-> --- a/drivers/clk/keystone/Kconfig
-> +++ b/drivers/clk/keystone/Kconfig
-> @@ -26,3 +26,11 @@ config TI_SCI_CLK_PROBE_FROM_FW
->           This is mostly only useful for debugging purposes, and will
->           increase the boot time of the device. If you want the clocks pr=
-obed
->           from firmware, say Y. Otherwise, say N.
-> +
-> +config TI_SYSCON_CLK
-> +       tristate "Syscon based clock driver for K2/K3 SoCs"
-> +       depends on (ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST) && OF
-> +       default (ARCH_KEYSTONE || ARCH_K3)
+On Mon, Feb 10, 2020 at 10:38:52PM +0530, Anand Moon wrote:
+> Hi Krzysztof,
+> 
+> On Mon, 10 Feb 2020 at 19:26, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Mon, Feb 10, 2020 at 10:51:05AM +0000, Anand Moon wrote:
+> > > Long time ago I tried to add suspend clk for dwc3 phy
+> > > which was wrong appoch, see below.
+> > >
+> > > [0] https://lore.kernel.org/patchwork/patch/837635/
+> > > [1] https://lore.kernel.org/patchwork/patch/837636/
+> > >
+> >
+> 
+> Thanks for your review comments.
+> 
+> > You ignored parts of my review from these previous patches. I asked for
+> > describing WHY are you doing this and WHAT problem are you trying to
+> > solve. I asked for this multiple times. Unfortunately I cannot find the
+> > answers to my questions in this patchset...
+> >
+> > Best regards,
+> > Krzysztof
+> 
+> I dont know how to resolve this issue, but I want to re-post
+> some of my changes back for review. let me try again.
+> 
+> My future goal is to add #power-domain for FSYS and FSYS2
+> which I am trying to resolve some issue.
+> Also add run-time power management for USB3 drivers.
 
-Drop parenthesis. It's not useful. Also, not sure why OF is a build
-dependency. Please drop it.
+You can start by describing why FSYS and FSYS2 power domains cannot be
+added right now. Maybe this patchset allows this later?
 
-	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
-	default ARCH_KEYSTONE || ARCH_K3
+> 
+> Here is the clk diagram for FSYS clk as per Exynos5422 user manual.
+> [0] https://imgur.com/gallery/zAiBoyh
+> 
+> As per the USB 3.0 Architecture T I.
+> 
+> 2.13.1 PHY Power Management
+> The SS PHY has power states P0, P1, P2, and P3, corresponding to the
+> SS LPM states of U0, U1, U2,and U3. In the P3 state,SS PHY does not drive
+> the default functional clock,instead, the *susp_clk* is used in its place.
+> 
+> So enable the suspend clk help control the power management
+> states for the DWC3 controller.
 
-> +       help
-> +         This adds clock driver support for syscon based gate
-> +         clocks on TI's K2 and K3 SoCs.
-> diff --git a/drivers/clk/keystone/Makefile b/drivers/clk/keystone/Makefile
-> index d044de6f965c..0e426e648f7c 100644
-> --- a/drivers/clk/keystone/Makefile
-> +++ b/drivers/clk/keystone/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_COMMON_CLK_KEYSTONE)      +=3D pll.o gate.o
->  obj-$(CONFIG_TI_SCI_CLK)               +=3D sci-clk.o
-> +obj-$(CONFIG_TI_SYSCON_CLK)            +=3D syscon-clk.o
-> diff --git a/drivers/clk/keystone/syscon-clk.c b/drivers/clk/keystone/sys=
-con-clk.c
-> new file mode 100644
-> index 000000000000..42e7416371ff
-> --- /dev/null
-> +++ b/drivers/clk/keystone/syscon-clk.c
-> @@ -0,0 +1,177 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> +//
+That's too vague because clock usually cannot "help"... The wording is
+wrong and the actual problem is not described.
 
-These last three comment lines should be normal kernel style. /* */
+I could guess from your description and driver behavior that SCLK has to
+be on during USB DRD suspend.
 
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clk.h>
+Best regards,
+Krzysztof
 
-Is this used?
-
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-
-Hopefully these two includes aren't needed.
-
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-[...]
-> +
-> +static int ti_syscon_gate_clk_probe(struct platform_device *pdev)
-> +{
-> +       const struct ti_syscon_gate_clk_data *data, *p;
-> +       struct clk_hw_onecell_data *hw_data;
-> +       struct device *dev =3D &pdev->dev;
-> +       struct regmap *regmap;
-> +       int num_clks =3D 0;
-
-Please don't initialize here.
-
-> +       int i;
-> +
-> +       data =3D of_device_get_match_data(dev);
-
-Use device_get_match_data() instead?
-
-> +       if (!data)
-> +               return -EINVAL;
-> +
-> +       regmap =3D syscon_regmap_lookup_by_phandle(dev->of_node,
-> +                                                "ti,tbclk-syscon");
-> +       if (IS_ERR(regmap)) {
-> +               if (PTR_ERR(regmap) =3D=3D -EPROBE_DEFER)
-> +                       return -EPROBE_DEFER;
-> +               dev_err(dev, "failed to find parent regmap\n");
-> +               return PTR_ERR(regmap);
-> +       }
-> +
-> +       for (p =3D data; p->name; p++)
-
-Initialize num_clks here so we know it's a loop that's counting.
-
-> +               num_clks++;
-> +
-> +       hw_data =3D devm_kzalloc(dev, struct_size(hw_data, hws, num_clks),
-> +                              GFP_KERNEL);
-> +       if (!hw_data)
-> +               return -ENOMEM;
-> +
-> +       hw_data->num =3D num_clks;
-> +
-> +       for (i =3D 0; i < num_clks; i++) {
-> +               hw_data->hws[i] =3D ti_syscon_gate_clk_register(dev, regm=
-ap,
-> +                                                             &data[i]);
-> +               if (IS_ERR(hw_data->hws[i]))
-> +                       dev_err(dev, "failed to register %s",
-
-Add a newline?
-
-> +                               data[i].name);
-
-And we don't fail? So it really isn't a problem? Maybe dev_warn()
-instead?
-
-> +       }
-> +
-> +       return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-> +                                          hw_data);
-> +}
-> +
-> +#define TI_SYSCON_CLK_GATE(_name, _offset, _bit_idx)   \
-> +       {                                               \
-> +               .name =3D _name,                          \
-> +               .offset =3D (_offset),                    \
-> +               .bit_idx =3D (_bit_idx),                  \
-> +       }
-> +
-> +static const struct ti_syscon_gate_clk_data am654_clk_data[] =3D {
-> +       TI_SYSCON_CLK_GATE("ehrpwm_tbclk0", 0x0, 0),
-> +       TI_SYSCON_CLK_GATE("ehrpwm_tbclk1", 0x4, 0),
-> +       TI_SYSCON_CLK_GATE("ehrpwm_tbclk2", 0x8, 0),
-> +       TI_SYSCON_CLK_GATE("ehrpwm_tbclk3", 0xc, 0),
-> +       TI_SYSCON_CLK_GATE("ehrpwm_tbclk4", 0x10, 0),
-> +       TI_SYSCON_CLK_GATE("ehrpwm_tbclk5", 0x14, 0),
-> +       { /* Sentinel */ },
-> +};
-> +
-> +static const struct of_device_id ti_syscon_gate_clk_ids[] =3D {
-> +       {
-> +               .compatible =3D "ti,am654-ehrpwm-tbclk",
-> +               .data =3D &am654_clk_data,
-> +       },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, ti_syscon_gate_clk_ids);
-> +
-> +static struct platform_driver ti_syscon_gate_clk_driver =3D {
-> +       .probe =3D ti_syscon_gate_clk_probe,
-> +       .driver =3D {
-> +               .name =3D "ti-syscon-gate-clk",
-> +               .of_match_table =3D ti_syscon_gate_clk_ids,
-> +       },
-> +};
-> +
-
-Nitpick: Drop the newline.
-
-> +module_platform_driver(ti_syscon_gate_clk_driver);
-> +
