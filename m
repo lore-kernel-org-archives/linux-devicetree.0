@@ -2,204 +2,141 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1027C3B185
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30450C352A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9113F2080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1478214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EfSsAX3Q"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="XPgPkPgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgBJJuf (ORCPT
+        id S1726792AbgBJJ6g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:50:35 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40789 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgBJJue (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 04:50:34 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t3so6754116wru.7
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 01:50:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VERQvzakQm+SUc0TjMstgU+qiR8Y1gY4yphY2OZ9EGM=;
-        b=EfSsAX3QV1DNfZCmCuqDBNPOS10zQZnQRdZeOVdGqwFG0IfVuILbzKpmcW1NmwPwpT
-         3s7TleYQXKZEmanVquu1Z1+A4R35EFRsV1OneENQOdCQFPz8xRItmcpokgCPLMLOCoMa
-         1hY6Ze5pTZwhBZxodlutd4H6briHJrO3whMgTK4oqFsHulCU3TCxUvhU19fs7JxI3HBe
-         gEcTr5igkuDOwscxkox7GuITeTFTYO+RubTKCtQSpJzbOkiVsShfO8okPzwx2NZz2HJv
-         LbjOSv+ljuRTatKOn4IhFarMHOwcyTreh6VUAXfYqE+UmAaZfzSmr1UY1T6/HJ8M3cGb
-         l7xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=VERQvzakQm+SUc0TjMstgU+qiR8Y1gY4yphY2OZ9EGM=;
-        b=PtmE9n7zHN0tcjMh0NRDcEE3d75jJP2EAejt0qpwju54bl6voUdP4tt7715lBV3YOb
-         I4OIsIzfKjZx88x3EM26pkIQQXmjXsm5qTzIhKUUJmudLPz6cE2iNJb/TRkf8Q2zILPz
-         KrcTkvsN/wrB6ApK5bxrpt3m1MFq/V1LPxbdE4lh1ddO5N0X592ZLpb4K3X32Vf/oe1I
-         AA6UyUabBFNmt9sAbl5afjfNVkXZWsRbGWxA3MIG0xryhINorieL2Ts9OOnNO+bVYR1n
-         +wDnbcSa/oRGEl9SSlruLptXGvy/3NgfxsMHMuo1UQ6TkqLHPvX+Lkkb88WIHuPtIT+4
-         iVtA==
-X-Gm-Message-State: APjAAAXSatGvqovlNTbftzCeZsUAC7+9j2SguV67iGkn49/Y394PGaFl
-        NuIsRl5Pu+345UZmJMsUKfonfQ==
-X-Google-Smtp-Source: APXvYqyfFIxizan/1PZVO/45DabLhFxmuPsd7wcpoGFK20hwep1pl3070xeAT7c9kVGZpJ7tUsHJYA==
-X-Received: by 2002:a5d:494f:: with SMTP id r15mr1013142wrs.143.1581328231991;
-        Mon, 10 Feb 2020 01:50:31 -0800 (PST)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id b17sm15983521wrp.49.2020.02.10.01.50.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2020 01:50:31 -0800 (PST)
-Subject: Re: [PATCH v4 0/2] drm/bridge: Support for Toshiba tc358768 RGB to
- DSI bridge
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, airlied@linux.ie,
-        daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.hajda@samsung.com
-Cc:     tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net
-References: <20200131111553.472-1-peter.ujfalusi@ti.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <ac8f985b-af2c-f314-1b8b-fcfd7abd2dba@baylibre.com>
-Date:   Mon, 10 Feb 2020 10:50:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 04:58:36 -0500
+Received: from mail-eopbgr60062.outbound.protection.outlook.com ([40.107.6.62]:26564
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726118AbgBJJ6g (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 04:58:36 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LfwYWm2ZBV7ok506aZFm/h93ezxurEYt/kF61edYZwDkYmglHkdBFwXHc2IcdxUPqvP5N4bmd1M2LaAyHR66FtdWg+Oodsan/hGcm7tXeHqfXbmlBeifswDyDQ66Mg8/4c8p/OGjCr/W9llvxob0sW2f/G6c2jE91fPedYhTBX8y8eslA33QCP79mD9OzLc0BGDqiDoQpLu2YEWaixG7OeVqeEqGAIbTZ7ywvCb09WqxezPWkL2FJjMvVkN/eCHyyA/CuFxZrll+Zo/ur2tKLTn/d3OVpLzkwzfH+r7v2+5rcLptpsXW1e3U4xKsFbvDC46+uVTPX6s4Ckcx8XVkxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9newka8DUzdEUfBPt6VyZKt/vTiY2CUFOj4luSiW6O4=;
+ b=DAwLiV1nn8mHYmMIpIrY026TRT4km8762U8UxtCcGlndmmJOObJDeXujpUsOKTy1MIorgmKo3L7cVXtqeDeDsTzT9d75Eo1SoD+zwk3t0y2PAiy1Zk7EPAmHWi9CnnSsnbpbI7V2Y30pg724Spdqj8lwKzSH1hkRAgkflvoGO2T7j9OWkfFaTn+3qe+UbtTUN3kK0fgU1FoHXM7X50oDjwbdqHNAfXpzbnWy7T323+HAbVUinWhAqOdHS5zGtBVatDyl32lIwXJA3ToRBp9fgaA2YiUYtIXlk37UrFRevY5sxTOTJYvf+kT2sHfZxBJAmwbhK9pwCY02wWL65PzVZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9newka8DUzdEUfBPt6VyZKt/vTiY2CUFOj4luSiW6O4=;
+ b=XPgPkPgZAZrl3Z3HBuKeBSaLCGlTft8cxa3gh4PcyzpqpOEVM8Vwd3qpZIyyf9x6lQWYNOZ652o9LBeZySUX52RtuZR1/gT3SkZ0E3a95N/Ql+a/B5jMV5KVKNUEzizgz4JQ1HLCLrT8KHdDSf/6pTQ4AVMyxMBKkKN8FWDqVZs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@oss.nxp.com; 
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
+ VI1PR0402MB3423.eurprd04.prod.outlook.com (52.134.4.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Mon, 10 Feb 2020 09:58:33 +0000
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1%4]) with mapi id 15.20.2707.028; Mon, 10 Feb 2020
+ 09:58:33 +0000
+From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
+To:     broonie@kernel.org, robh+dt@kernel.org
+Cc:     festevam@gmail.com, alsa-devel@alsa-project.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [RESEND 0/4] Add a better separation between i.MX8 families
+Date:   Mon, 10 Feb 2020 11:58:13 +0200
+Message-Id: <20200210095817.13226-1-daniel.baluta@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM3PR07CA0076.eurprd07.prod.outlook.com
+ (2603:10a6:207:4::34) To VI1PR0402MB3839.eurprd04.prod.outlook.com
+ (2603:10a6:803:21::19)
 MIME-Version: 1.0
-In-Reply-To: <20200131111553.472-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM3PR07CA0076.eurprd07.prod.outlook.com (2603:10a6:207:4::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.9 via Frontend Transport; Mon, 10 Feb 2020 09:58:31 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5fda7b2f-882f-468e-f6e9-08d7ae0fc992
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3423:|VI1PR0402MB3423:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB342359E33DF46047D7BD4CC3B8190@VI1PR0402MB3423.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 03094A4065
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(366004)(346002)(39860400002)(189003)(199004)(66556008)(66946007)(66476007)(1076003)(5660300002)(6666004)(44832011)(2616005)(956004)(8936002)(6512007)(6486002)(81166006)(81156014)(6506007)(316002)(16526019)(186003)(8676002)(4326008)(26005)(2906002)(478600001)(86362001)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3423;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KiNYC3U5OneanyGs5XaTA6qKUltIyXnl3AMwlgbT3YZFZFN4kGWG3RvSe/CN2A/duNf4IY6k3mqsIlmqqf2O23y6mnvo6SawsLkOC14buBIbsD7rihaIE2PE+nh8/GWHPZhARjbJLv3xIgOl+aDE/BQQDF89E114BaPYsFd6+9najhlNy9UYbQqoRbxSVWfNV81MattsruHtc/00RdfqQG4R6KX44pRfNXJJ7W2luXNlA8wXbg5yfEEe+bBmiLi/+aCZzLo7qOYIs1wgBB8KPk+pmDDtvERuYdOWOkROrcnHl7KvvlXhRsfOk//ul0oLqE4qy0X2yTuw9zowRL7sCGQEnUCEk4sD5hTMxc8EGomwDMw4LngKdR5ErWnQiOjKRlQXSLqhIFdLvuRXvo4thDNSW2QqtLsXJoZd8FkOAXarRkgeps6KTvp6+2/2g2AL
+X-MS-Exchange-AntiSpam-MessageData: wtZLns3m0HgJKnJGCG3VmJrG45dNZ+3KC5pCt2g4ZxK00RloUhZsMB4Or53xVeitmKgwWiv7PlUPEgCSDBNUoeGIL5IXm5vmcRdS2D8vOKddHfNb3gvNf2NhM+BP0LXPCS9K88HHMz2iKjsYKQcvuw==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fda7b2f-882f-468e-f6e9-08d7ae0fc992
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2020 09:58:33.0406
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J1wNStzIsaUBQRDVWxf3EeLNNBPqZ1df5wZXo9mCUjNZNzhYR+d0izAUXiBxmQwyQ1/kMxjqlV8rx8M6tuyT2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3423
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 31/01/2020 12:15, Peter Ujfalusi wrote:
-> Hi,
-> 
-> Changes since v3:
-> - bindings/example: Fixed the node name
-> - bindings/example: Added include for GPIO_ACTIVE_LOW and fixed up the gpio
-> 		    binding
-> - driver: Moved the label for goto in tc358768_calc_pll()
-> - driver: Replaced the refcounting of enabled with a simple bool as hw_enable()
->   is only called from one place (tc358768_bridge_pre_enable)
-> - driver: Added Reviewed-by from Andrzej
-> 
-> Changes since v2:
-> - Implement pre_enable and post_disbale callbacks and move code from enable and
->   disable callbacks.
-> - hw_enable/disable is removed from tc358768_dsi_host_transfer()
-> - Defines for DSI_CONFW accesses
-> - breakout from the loops  (the check for it) is moved one level up in
->   tc358768_calc_pll()
-> 
-> Changes since v1:
-> DT bindings document:
-> - Removed MaxItems for the regulators
-> - additionalProperties: false added to port@1
-> 
-> Driver:
-> - Year is now 2020
-> - Includes shorted
-> - The three letter members of the private struct documented 0 they are named as
->   in the datasheet
-> - Error handling for the IO functions is following what sil-sii8620.c does
-> - regmap regcache is disabled along with refcache_sync() and volatile callback
->   for regmap
-> - The hw enable and disable functions got separated
-> - Taken the suggested simplifactions from Andrzej for tc358768_calc_pll() and
->   tc358768_dsi_host_transfer()
-> - The driver no longer stores the drm_display_mode, it relies on
->   priv->bridge.encoder->crtc->state->adjusted_mode where it needs it
-> - tc358768_calc_pll() can be used for verification only to not modify the state
-> - refcounting added for hw enable state as a dsi transfer was shutting down the
->   bridge when it was already enabled.
-> 
-> Tested on top of drm-next + LED backlight patches + DT patches on dra7-evm with
-> osd101t2045 (panel-simple) and osd101t2587 panel drivers.
-> 
-> Cover letter from v1:
-> TC358768 is a parallel RGB to MIPI DSI bridge.
-> 
-> The initial driver supports MIPI_DSI_MODE_VIDEO, MIPI_DSI_FMT_RGB888 and
-> only write is implemented for mipi_dsi_host_ops.transfer due to lack of hardware
-> where other modes can be tested.
-> 
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (2):
->   dt-bindings: display: bridge: Add documentation for Toshiba tc358768
->   drm/bridge: Add tc358768 driver
-> 
->  .../display/bridge/toshiba,tc358768.yaml      |  159 +++
->  drivers/gpu/drm/bridge/Kconfig                |   10 +
->  drivers/gpu/drm/bridge/Makefile               |    1 +
->  drivers/gpu/drm/bridge/tc358768.c             | 1044 +++++++++++++++++
->  4 files changed, 1214 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
->  create mode 100644 drivers/gpu/drm/bridge/tc358768.c
-> 
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
+So far the implementation was designed to support  a generic platform
+named i.MX8. Anyhow, now working with specific i.MX8 instances we need
+to account for the differences.
 
-Applying to drm-misc-next
+i.MX8 naming can be confusing at the first glance, so we need to have
+a clean separation between different platforms.
 
-Neil
+Here is the split of i.MX8 per platforms. Notice that i.MX8 names
+the entire family, but also a sub-family.
+
+imx8
+├── imx8
+│   └── imx8qm (*)
+├── imx8m
+│   ├── imx8mm
+│   ├── imx8mn
+│   ├── imx8mp (*)
+│   └── imx8mq
+└── imx8x
+    └── imx8qxp (*)
+
+Platforms marked with (*) contain a DSP. In the future there might be
+more platforms.
+
+This patchseries does the following:
+	* renames imx8 to imx8x (because the only supported platform now
+        is imx8qxp).
+        * adds support for imx8 (which is imx8qm)
+
+Paul Olaru (4):
+  ASoC: SOF: Rename i.MX8 platform to i.MX8X
+  ASoC: SOF: imx8: Add ops for i.MX8QM
+  ASoC: SOF: Add i.MX8QM device descriptor
+  dt-bindings: dsp: fsl: Add fsl,imx8qm-dsp entry
+
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |  1 +
+ sound/soc/sof/imx/imx8.c                      | 57 ++++++++++++++++++-
+ sound/soc/sof/sof-of-dev.c                    | 10 ++++
+ 3 files changed, 65 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
