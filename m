@@ -2,124 +2,85 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C990C352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F7DC3B186
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB322070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:14:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="WOvn/ALS"
+	by mail.kernel.org (Postfix) with ESMTP id A46B42085B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgBJVOA (ORCPT
+        id S1727422AbgBJVQz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:14:00 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:47700 "EHLO
-        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJVOA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:14:00 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 61398D006F9;
-        Mon, 10 Feb 2020 21:13:58 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at serbinski.com
-Received: from mail.serbinski.com ([127.0.0.1])
-        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Zu_DfRZFKs-n; Mon, 10 Feb 2020 16:13:52 -0500 (EST)
-Received: from mail.serbinski.com (localhost [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 9949FD00693;
-        Mon, 10 Feb 2020 16:13:52 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 9949FD00693
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581369232;
-        bh=I3EkcQkTwwd2J+O4KVzA9fWCbXcpR3MPvY39AeBuXPc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WOvn/ALSo44nlC/+0cDovkez1JTNslVLaIIbhuvoM+/3oa4nBGa1pnceTS0UoWX6c
-         08w+kT2ztltcs1aFhDmLxRRrQlebR647uWLrm5h5kITpI1/Gl9QgmcVGSIoIFTvokp
-         NeLvnj41zH+LetieRTbae51hBYAK18UL2QF9t+xE=
+        Mon, 10 Feb 2020 16:16:55 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40303 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgBJVQy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:16:54 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j1GQG-0000YA-EO; Mon, 10 Feb 2020 22:16:52 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j1GQF-0003sB-Jm; Mon, 10 Feb 2020 22:16:51 +0100
+Date:   Mon, 10 Feb 2020 22:16:51 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     George Hilliard <ghilliard@kopismobile.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/2] tty: imx serial: Implement support for reversing TX
+ and RX polarity
+Message-ID: <20200210211651.5jys7ytgdm72hh6f@pengutronix.de>
+References: <20200210174942.14182-1-ghilliard@kopismobile.com>
+ <20200210174942.14182-3-ghilliard@kopismobile.com>
+ <20200210181156.fbq66yazb5j5quvn@pengutronix.de>
+ <CALM8J=f1HV8BucyLVAz8cje392F98uOPoYdOMTSL0970eJnAcw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 10 Feb 2020 16:13:52 -0500
-From:   Adam Serbinski <adam@serbinski.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
-In-Reply-To: <20200210200839.GG14166@sirena.org.uk>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-9-adam@serbinski.com>
- <20200210133636.GJ7685@sirena.org.uk>
- <18057b47c76d350f8380f277713e0936@serbinski.com>
- <20200210182609.GA14166@sirena.org.uk>
- <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
- <20200210200839.GG14166@sirena.org.uk>
-User-Agent: Roundcube Webmail/1.4-beta
-Message-ID: <7c57801d8f671c40d4c6094e5ce89681@serbinski.com>
-X-Sender: adam@serbinski.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALM8J=f1HV8BucyLVAz8cje392F98uOPoYdOMTSL0970eJnAcw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-02-10 15:08, Mark Brown wrote:
-> On Mon, Feb 10, 2020 at 03:00:55PM -0500, Adam Serbinski wrote:
->> On 2020-02-10 13:26, Mark Brown wrote:
-> 
->> > To repeat my comment on another patch in the series there should still
->> > be some representation of the DAI for this device in the kernel.
-> 
->> Respectfully, I'm not sure I understand what it is that you are 
->> suggesting.
-> 
->> Is it your intention to suggest that instead of adding controls to the
->> machine driver, I should instead write a codec driver to contain those
->> controls?
-> 
-> I have already separately said that you should write a CODEC driver for
-> this CODEC.  I'm saying that this seems like the sort of thing that
-> might fit in that CODEC driver.
+Hi George,
 
-I see. My initial thought with respect to the codec driver would be just 
-to use bt-sco.c, which is a dummy codec. I can certainly implement a new 
-codec driver.
+On Mon, Feb 10, 2020 at 12:38:59PM -0600, George Hilliard wrote:
+> On Mon, Feb 10, 2020 at 12:11 PM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Mon, Feb 10, 2020 at 11:49:42AM -0600, George Hilliard wrote:
+> > > (confidentiality spam)
+> >
+> > Hmm, sad, I would have had some review feedback that should be addressed
+> > before application of the patch. As I only noticed the footer after
+> > looking at the patch, it was already too late to stop me reviewing it.
+> > As I don't have an expressed permission I will at least not share it
+> > (and I expect that Greg will also refuse to apply a patch with such a
+> > footer).
+>
+> This is fixed now. Apologies - added without my knowledge. Should I
+> simply resend a v2 without the notice?  Happy to CC everyone else you
+> included.
 
->> Or is it your intention to suggest that something within the kernel is
->> already aware of the rate to be set, and it is that which should set 
->> the
->> rate rather than a control?
-> 
-> That would be one example of how such a CODEC driver could be
-> configured, and is how other baseband/BT devices have ended up going
-> (see cx20442.c for example).
+You did it right. (i.e. yes, resend without the notice is the right
+thing.)
 
-I am not aware of how this could be done for bluetooth, since the value 
-still has to originate from userspace. The driver you referred to 
-supports only a single sample rate, whereas for bluetooth, 2 sample 
-rates are required, and nothing in the kernel is aware of the 
-appropriate rate, at least in the case of the qca6174a I'm working with 
-right now, or for that matter, TI Wilink 8, which I've also worked with.
+Best regards
+Uwe
 
-My concern with implementing this in a new codec driver, is that this 
-codec driver will be bound to qdsp6, since its purpose is to work around 
-a characteristic of this DSP. Under simple-card, for instance, it would 
-be redundant, since in that case, the parameters userspace uses to open 
-the pcm will be propagated to the port. But under qdsp6, userspace could 
-open the pcm at 44.1 kHz, yet the backend port is still set to 8 or 16 
-kHz, and the DSP resamples between them, so the sole purpose of this 
-change is to allow userspace to deliver the required sample rate to the 
-back end of qdsp6.
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
