@@ -2,252 +2,116 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33A8C352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0CBC352A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF862080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805602080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:03:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="D5V7BBkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725468AbgBJIRu (ORCPT
+        id S1726968AbgBJJDI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 03:17:50 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47226 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgBJIRu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 03:17:50 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tomeu)
-        with ESMTPSA id B7231283D5B
-Subject: Re: [PATCH v4 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <5237381b-c232-7087-a3d6-78d6358d80bf@collabora.com>
- <CANMq1KCD1U7iym_fFWAd-Xa6ipxHmF_FAYxDL5WqGzDnA0KKLw@mail.gmail.com>
- <93aec9ae-00fc-bf55-1d6c-9bd715b78344@collabora.com>
- <CANMq1KC_nN4MQ8LKPCCNGPPeHRP18n3USXg6DRPousivn_J3aw@mail.gmail.com>
-From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Message-ID: <7e1ffa57-20c7-02cc-47f6-bfaebb772956@collabora.com>
-Date:   Mon, 10 Feb 2020 09:17:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <CANMq1KC_nN4MQ8LKPCCNGPPeHRP18n3USXg6DRPousivn_J3aw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 10 Feb 2020 04:03:08 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4050 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726796AbgBJJDI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 04:03:08 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01A8mLPn001938;
+        Mon, 10 Feb 2020 10:02:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=H3rjV2A7fROz9cnfk/NtpzzXf8VAhOt6rYAt5Ftt45U=;
+ b=D5V7BBkvCc0kUybXL+upTzZgl75lCiYEW+mg1iyuSGZCPHhDqvHoOLqEIwWAHpsvx3JT
+ lvYZvivPSRavo5I9BBLtWVpiBqbpSFtNLa5TUve6Sr8ggCN5Hcu6D7PowvHqmhZ9lZ9G
+ vDepXpzaLOSvrHOH/kYlLUCn8WG1xVCKPykOH0L3Ry0LCAQuGllUluzwr9X0RWoA44rs
+ aEhtdrV6O2OgcpZ2A3Sa0gKshHV458DIZuhKJqmGcCM1HKSo7z9m8vsTEc8PoCjFFGst
+ Cyb1vC6w20bsewVzwgofcOqKYauilVE+Ms51/8SvoIYyPnd6sbaOSkqgAreHz5+QKCaa kg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1urgr6gv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 10:02:41 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EAD0010002A;
+        Mon, 10 Feb 2020 10:02:36 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D059F2B793A;
+        Mon, 10 Feb 2020 10:02:36 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
+ 2020 10:02:36 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Mon, 10 Feb 2020 10:02:36 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v3 0/2] clockevent: add low power STM32 timer
+Thread-Topic: [PATCH v3 0/2] clockevent: add low power STM32 timer
+Thread-Index: AQHV1dN0ASRe/0fvOUqwQX9rlF1+nagUJUGA
+Date:   Mon, 10 Feb 2020 09:02:36 +0000
+Message-ID: <7d062f5b-9272-c7db-7a9e-b908870dd8b4@st.com>
+References: <20200128120702.26166-1-benjamin.gaignard@st.com>
+In-Reply-To: <20200128120702.26166-1-benjamin.gaignard@st.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5AF5E50E0266274A90729B9F125EDBE9@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_02:2020-02-07,2020-02-10 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/10/20 4:39 AM, Nicolas Boichat wrote:
-> On Fri, Feb 7, 2020 at 4:13 PM Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
->>
->> On 2/7/20 8:42 AM, Nicolas Boichat wrote:
->>> On Fri, Feb 7, 2020 at 2:18 PM Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
->>>>
->>>>> Some more changes are still required to get devfreq working, and of course
->>>>> I do not have a userspace driver to test this with.
->>>>
->>>> Have you tried the Panfrost tests in IGT? They are atm quite basic, but
->>>> could be interesting to check that the different HW units are correctly
->>>> powered on.
->>>
->>> I haven't, you mean this right?
->>> https://gitlab.freedesktop.org/tomeu/igt-gpu-tools/tree/panfrost
->>
->> Yes, though may be better to use the upstream repo:
->>
->> https://gitlab.freedesktop.org/drm/igt-gpu-tools
->>
->>> Any specific test you have in mind?
->>
->> All the panfrost ones, but looks like panfrost_prime:gem-prime-import is
->> failing atm:
->>
->> https://lava.collabora.co.uk/scheduler/job/2214987
-> 
-> (I first removed opp table from device tree to avoid constant spew
-> about devfreq not supporting 2 regulators, I should get around to fix
-> that...)
-> 
-> # /usr/libexec/igt-gpu-tools/panfrost_gem_new
-> IGT-Version: 1.24-gd4d574a4 (arm) (Linux: 4.19.99 aarch64)
-> Starting subtest: gem-new-4096
-> Subtest gem-new-4096: SUCCESS (0.000s)
-> Starting subtest: gem-new-0
-> Subtest gem-new-0: SUCCESS (0.000s)
-> Starting subtest: gem-new-zeroed
-> Subtest gem-new-zeroed: SUCCESS (0.001s)
-> # /usr/libexec/igt-gpu-tools/panfrost_get_param
-> IGT-Version: 1.24-gd4d574a4 (arm) (Linux: 4.19.99 aarch64)
-> Starting subtest: base-params
-> Subtest base-params: SUCCESS (0.000s)
-> Starting subtest: get-bad-param
-> Subtest get-bad-param: SUCCESS (0.000s)
-> Starting subtest: get-bad-padding
-> Subtest get-bad-padding: SUCCESS (0.000s)
-> # /usr/libexec/igt-gpu-tools/panfrost_prime
-> IGT-Version: 1.24-gd4d574a4 (arm) (Linux: 4.19.99 aarch64)
-> Starting subtest: gem-prime-import
-> (panfrost_prime:1527) ioctl_wrappers-CRITICAL: Test assertion failure
-> function prime_fd_to_handle, file
-> ../igt-gpu-tools-9999/lib/ioctl_wrappers.c:1336:
-> (panfrost_prime:1527) ioctl_wrappers-CRITICAL: Failed assertion:
-> igt_ioctl((fd), ((((2U|1U) << (((0+8)+8)+14)) | ((('d')) << (0+8)) |
-> (((0x2e)) << 0) | ((((sizeof(struct drm_prime_handle)))) <<
-> ((0+8)+8)))), (&args)) == 0
-> (panfrost_prime:1527) ioctl_wrappers-CRITICAL: Last errno: 95,
-> Operation not supported
-> (panfrost_prime:1527) ioctl_wrappers-CRITICAL: error: -1 != 0
-> Stack trace:
-> Subtest gem-prime-import failed.
-> Subtest gem-prime-import: FAIL (0.004s)
-> (but that looks expected?)
-
-Yep, haven't gotten to investigate yet.
-
-> Now the trickier ones, I guess we're either missing something, or my
-> dirty 4.19 backport is very broken:
-
-Damn, looks like the simple job we use to test submits doesn't work as-is 
-on your GPU.
-
-But things seem to work otherwise, so probably the kernel driver is fully 
-functional with your changes.
-
-Cheers,
-
-Tomeu
-
-> # /usr/libexec/igt-gpu-tools/panfrost_submit
-> IGT-Version: 1.24-gd4d574a4 (arm) (Linux: 4.19.99 aarch64)
-> Starting subtest: pan-submit
-> (panfrost_submit:1643) CRITICAL: Test assertion failure function
-> __real_main86, file ../igt-gpu-tools-9999/tests/panfrost_submit.c:103:
-> (panfrost_submit:1643) CRITICAL: Failed assertion: syncobj_wait(fd,
-> &submit->args->out_sync, 1, abs_timeout(SHORT_TIME_NSEC), 0, NULL)
-> Stack trace:
-> Subtest pan-submit failed.
-> **** DEBUG ****
-> (panfrost_submit:1643) CRITICAL: Test assertion failure function
-> __real_main86, file ../igt-gpu-tools-9999/tests/panfrost_submit.c:103:
-> (panfrost_submit:1643) CRITICAL: Failed assertion: syncobj_wait(fd,
-> &submit->args->out_sync, 1, abs_timeout(SHORT_TIME_NSEC), 0, NULL)
-> (panfrost_submit:1643) igt_core-INFO: Stack trace:
-> ****  END  ****
-> Subtest pan-submit: FAIL (0.119s)
-> Starting subtest: pan-submit-error-no-jc
-> Subtest pan-submit-error-no-jc: SUCCESS (0.000s)
-> Starting subtest: pan-submit-error-bad-in-syncs
-> Subtest pan-submit-error-bad-in-syncs: SUCCESS (0.012s)
-> Starting subtest: pan-submit-error-bad-bo-handles
-> Subtest pan-submit-error-bad-bo-handles: SUCCESS (0.012s)
-> Starting subtest: pan-submit-error-bad-requirements
-> Subtest pan-submit-error-bad-requirements: SUCCESS (0.012s)
-> Starting subtest: pan-submit-error-bad-out-sync
-> Subtest pan-submit-error-bad-out-sync: SUCCESS (0.012s)
-> Starting subtest: pan-reset
-> (panfrost_submit:1643) CRITICAL: Test assertion failure function
-> __real_main86, file ../igt-gpu-tools-9999/tests/panfrost_submit.c:173:
-> (panfrost_submit:1643) CRITICAL: Failed assertion: syncobj_wait(fd,
-> &submit->args->out_sync, 1, abs_timeout(BAD_JOB_TIME_NSEC), 0, NULL)
-> Stack trace:
-> Subtest pan-reset failed.
-> **** DEBUG ****
-> (panfrost_submit:1643) CRITICAL: Test assertion failure function
-> __real_main86, file ../igt-gpu-tools-9999/tests/panfrost_submit.c:173:
-> (panfrost_submit:1643) CRITICAL: Failed assertion: syncobj_wait(fd,
-> &submit->args->out_sync, 1, abs_timeout(BAD_JOB_TIME_NSEC), 0, NULL)
-> (panfrost_submit:1643) igt_core-INFO: Stack trace:
-> ****  END  ****
-> Subtest pan-reset: FAIL (0.840s)
-> 
-> The pan-submit case causes an MMU fault:
-> (full log: https://gist.github.com/drinkcat/1ae36cb1b1b71f30cc4fc29759612d76)
-> 
-> [ 1215.234937] [IGT] panfrost_submit: executing
-> [ 1215.318446] [IGT] panfrost_submit: starting subtest pan-submit
-> ...
-> [ 1215.338644] panfrost 13040000.gpu: Unhandled Page fault in AS0 at
-> VA 0x000000FF00000000
->                 Reason: TODO
->                 raw fault status: 0xA002C0
->                 decoded fault status: SLAVE FAULT
->                 exception type 0xC0: UNKNOWN
->                 access type 0x2: READ
->                 source id 0xA0
-> [ 1215.444504] [IGT] panfrost_submit: exiting, ret=98
-> ...
-> [ 1215.446902] panfrost 13040000.gpu: js fault, js=0,
-> status=JOB_BUS_FAULT, head=0x300b000, tail=0x300b000
-> [ 1215.446935] panfrost 13040000.gpu: Unhandled Page fault in AS0 at
-> VA 0x000000FF00000000
-> Reason: TODO
-> raw fault status: 0xA002C0
-> decoded fault status: SLAVE FAULT
-> exception type 0xC0: UNKNOWN
-> access type 0x2: READ
-> source id 0xA0
-> 
-> pan-reset failure looks similar:
-> https://gist.github.com/drinkcat/2d336d57e6b95262d83e7a28a409bc5b
-> 
-> Thanks,
-> 
->> Cheers,
->>
->> Tomeu
->>
->>> Thanks,
->>>
->>>> Regards,
->>>>
->>>> Tomeu
->>>>
->>>>> I believe at least patches 1, 2, and 3 can be merged. 4 and 5 are mostly
->>>>> useful in conjunction with 6 and 7 (which are not ready yet), so I'll let
->>>>> maintainers decide.
->>>>>
->>>>> Thanks!
->>>>>
->>>>> Nicolas Boichat (7):
->>>>>      dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
->>>>>      arm64: dts: mt8183: Add node for the Mali GPU
->>>>>      drm/panfrost: Improve error reporting in panfrost_gpu_power_on
->>>>>      drm/panfrost: Add support for multiple regulators
->>>>>      drm/panfrost: Add support for multiple power domains
->>>>>      RFC: drm/panfrost: Add mt8183-mali compatible string
->>>>>      RFC: drm/panfrost: devfreq: Add support for 2 regulators
->>>>>
->>>>>     .../bindings/gpu/arm,mali-bifrost.yaml        |  25 ++++
->>>>>     arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   7 +
->>>>>     arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 105 +++++++++++++++
->>>>>     drivers/gpu/drm/panfrost/panfrost_devfreq.c   |  17 +++
->>>>>     drivers/gpu/drm/panfrost/panfrost_device.c    | 123 +++++++++++++++---
->>>>>     drivers/gpu/drm/panfrost/panfrost_device.h    |  27 +++-
->>>>>     drivers/gpu/drm/panfrost/panfrost_drv.c       |  41 ++++--
->>>>>     drivers/gpu/drm/panfrost/panfrost_gpu.c       |  11 +-
->>>>>     8 files changed, 326 insertions(+), 30 deletions(-)
->>>>>
+DQpPbiAxLzI4LzIwIDE6MDcgUE0sIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPiBUaGlzIHNl
+cmllcyBhZGQgbG93IHBvd2VyIHRpbWVyIGFzIGJvYWRjYXN0IGNsb2NrZXZlbnQgZGV2aWNlLg0K
+PiBMb3cgcG93ZXIgdGltZXIgY291bGQgcnVucyBldmVuIHdoZW4gQ1BVcyBhcmUgaW4gaWRsZSBt
+b2RlIGFuZA0KPiBjb3VsZCB3YWtldXAgdGhlbS4NCg0KR2VudGxlIHBpbmcgdG8gcmV2aWV3ZXJz
+Lg0KDQpUaGFua3MsDQoNCkJlbmphbWluDQoNCj4NCj4gdmVyc2lvbiAzOg0KPiAtIGZpeCB0aW1l
+ciBzZXQgc2VxdWVuY2UNCj4gLSBkb24ndCBmb3JnZXQgdG8gZnJlZSBpcnEgb24gcmVtb3ZlIGZ1
+bmN0aW9uDQo+IC0gdXNlIGRldm1fa3phbGxvYyB0byBzaW1wbGlmeSBlcnJvcnMgaGFuZGxpbmcg
+aW4gcHJvYmUgZnVuY3Rpb24NCj4NCj4gdmVyc2lvbiAyOg0KPiAtIHN0bTMyIGNsa2V2ZW50IGRy
+aXZlciBpcyBub3cgYSBjaGlsZCBvZiB0aGUgc3RtMzIgbHAgdGltZXIgbm9kZQ0KPiAtIGFkZCBh
+IHByb2JlIGZ1bmN0aW9uIGFuZCBhZHBhdCB0aGUgZHJpdmVyIHRvIHVzZSByZWdtYXAgcHJvdmlk
+ZQ0KPiAgICBieSBpdCBwYXJlbnQNCj4gLSBzdG9wIHVzaW5nIHRpbWVyX29mIGhlbHBlcnMNCj4g
+LSBkb2N1bWVudCB0aGUgYmluZGluZ3MgaW5zaWRlIHN0bTMyIGxwdGltZXIgeWFtbA0KPg0KPiBC
+ZW5qYW1pbiBHYWlnbmFyZCAoMik6DQo+ICAgIGR0LWJpbmRpbmdzOiBtZmQ6IERvY3VtZW50IFNU
+TTMyIGxvdyBwb3dlciBjbGtldmVudCBiaW5kaW5ncw0KPiAgICBjbG9ja3NvdXJjZTogQWRkIExv
+dyBQb3dlciBTVE0zMiB0aW1lcnMgZHJpdmVyDQo+DQo+ICAgLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWZkL3N0LHN0bTMyLWxwdGltZXIueWFtbCAgfCAgMTQgKysNCj4gICBkcml2ZXJzL2Nsb2Nr
+c291cmNlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNCArDQo+ICAgZHJpdmVy
+cy9jbG9ja3NvdXJjZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiAg
+IGRyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItc3RtMzItbHAuYyAgICAgICAgICAgICAgIHwgMjQ4
+ICsrKysrKysrKysrKysrKysrKysrKw0KPiAgIDQgZmlsZXMgY2hhbmdlZCwgMjY3IGluc2VydGlv
+bnMoKykNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1z
+dG0zMi1scC5jDQo+
