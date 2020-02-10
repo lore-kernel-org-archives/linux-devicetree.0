@@ -2,114 +2,165 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BFEC47409
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E293AC352A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECEC206ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAA62080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:49:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FQ5SjqjI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iuoXF5sp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgBJRlE (ORCPT
+        id S1727056AbgBJRtk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:41:04 -0500
-Received: from mail-wr1-f53.google.com ([209.85.221.53]:36491 "EHLO
-        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBJRlD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:41:03 -0500
-Received: by mail-wr1-f53.google.com with SMTP id z3so8884233wru.3
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:41:02 -0800 (PST)
+        Mon, 10 Feb 2020 12:49:40 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:33975 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJRtk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:49:40 -0500
+Received: by mail-vs1-f66.google.com with SMTP id g15so4737737vsf.1
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:49:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3gIUz/+oLLuaq19t30k8Jz+s5aA2PVpnAzXQO10cT/Y=;
-        b=FQ5SjqjI8mESjcAV3hk0fQYB1DIjyI3CqJt/Aw53H9qwncQV+lCBRMSjQ9ez4AuPS9
-         TO7MkvREuIQeW/8B7MTc602yDlTEDGJeJW2aW15lFEJSUDTv2cwNH3coJVWJL3uztvdQ
-         8eHriud893T21Xf6LGypKFQcYCVPSKUIVcn9fWTNO9j2jF7Gi+iZQB+cDdbI9YZ6YoZP
-         CEWpAt/4hPKW5geh6ytp1UpQN70S1ciZz061CDJL/aboGKgm4pnl8PidJ06uNY+3yli9
-         DN8AeGMPwJZDOSEWRrpTIa0PI6WclosM+d3+AeBamTiIZPLsF35gyimD/PAgQIksG9ab
-         r2iw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/jOz9D1OkZvcqdZyOY6mXklx7SmskxabXR6YSkl7lkk=;
+        b=iuoXF5spBCzwt9gZYU5z+rgSWG1JCXbT6h0ByYtuED8LuMAd4/HGkib5WlZgt/7i9U
+         7q05cz0GAK+hsLGFfuBUWQOTZ6i768GlleT//AR3gkC9LMA5HftOnVNnkMt3hLJ0AlKH
+         rzAePrzCeuNvsClhAXqPjLWeBysoVkh6BwyBo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3gIUz/+oLLuaq19t30k8Jz+s5aA2PVpnAzXQO10cT/Y=;
-        b=TT6l6DvxUMFNGq5Mp3acPFRsNRWKouFJgFgquCf3TXv0PasPs2nIC2j/blV/5gQxJc
-         zDQlCj8MHWGn6EAvKweDx8P1+PygT7d5wUYngcbD7CVI5Xm7u/h+ytpmSbAcqXEJQvVj
-         EbA9xuezPsS4+0SJESQ4+Y2Y+c5o79o9VUy5d+957D9Z00sFkcWSfdO9QuWdZfm1rAX3
-         UNDjv5QvguQ2hWECNuBvD4/jFEw8vaGQArALicw6H5dpHRr++MrKt17OKayZ3LJuRZeB
-         ow4uG7Aun4Kr/jF76MOeoZ4K3Ip4nAb+Xu96u9CJAwIknw1+RxAUrRS/LSG0k8xInwFr
-         aSuA==
-X-Gm-Message-State: APjAAAVMx6ProKZ9MmdR6+eDHkpRn2KB6RvaG0rmWnFXR1luxGRS+PI4
-        7YgHwXtsHDcwH3gJVMXIeO+JiQ==
-X-Google-Smtp-Source: APXvYqwbPVn4r/e2i10UW5NrTzU1jT70XhhtfiutTlrnJyFJyV3h+DHyidgLZwaetvsInEsC+lSh5Q==
-X-Received: by 2002:a5d:6292:: with SMTP id k18mr3078880wru.256.1581356461456;
-        Mon, 10 Feb 2020 09:41:01 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id o15sm1401166wra.83.2020.02.10.09.41.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 09:41:00 -0800 (PST)
-Subject: Re: [PATCH v2 3/8] ASoC: qdsp6: q6afe-dai: add support to pcm port
- dais
-To:     Adam Serbinski <adam@serbinski.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-4-adam@serbinski.com>
- <d0437f6d-84c8-e1cd-b6f5-c1009e00245d@linaro.org>
- <616e3042f46cb7f052fc71e0ba4919a2@serbinski.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <5464ab87-f711-4aa6-3f22-f27bf4819998@linaro.org>
-Date:   Mon, 10 Feb 2020 17:40:59 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/jOz9D1OkZvcqdZyOY6mXklx7SmskxabXR6YSkl7lkk=;
+        b=QLm1kVrd5kMJbk4OjTQBOZNGnVQrEaUtsNJ8B78t0+FMvrRV6ZvanZZEigVEbju++K
+         3Jz7udAIkUp3jujA7+U+TEttS0E5B0YA5PmvUtq8FqaZShiQWN50dBEc1D7dAN9BAyxa
+         5C8DbpgodU4b7qZBkGiW14Q+jD4k+vyZp4p0FC9ZiLWNlxW/APJrx+1vRX8FGeHBlryf
+         lKkJ2apNkZYLNalK7fxxjXmkLBDPypCc+oaKaBI4Tko7arnMD/Ot8BJI4PQlRFOM7bnw
+         KmbrZfyE95SxjXvYKcF+oJsp7b93pnGzlHASwEZlqHgrpY5q5ixZZL/n2r5HEkEDyFS5
+         YfRg==
+X-Gm-Message-State: APjAAAUfr+8sP8eG8t/JE1aNpUawWATTEbGt8D2FTIoRHoGwZnpMhoee
+        N8MLsFfCaMabwAcseVDMAYahuLYVZLU=
+X-Google-Smtp-Source: APXvYqxVmzzgWGXflX0DM/UBFso3fc7HszqnKJxdykD0iMJOiSeGFlj39KQ1VkClreSNSOVd65FWWQ==
+X-Received: by 2002:a67:2c15:: with SMTP id s21mr7073634vss.104.1581356977396;
+        Mon, 10 Feb 2020 09:49:37 -0800 (PST)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id f9sm336110vkl.21.2020.02.10.09.49.36
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2020 09:49:36 -0800 (PST)
+Received: by mail-vs1-f42.google.com with SMTP id p14so4711848vsq.6
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:49:36 -0800 (PST)
+X-Received: by 2002:a67:e342:: with SMTP id s2mr7152359vsm.198.1581356975599;
+ Mon, 10 Feb 2020 09:49:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <616e3042f46cb7f052fc71e0ba4919a2@serbinski.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1581307266-26989-1-git-send-email-tdas@codeaurora.org> <1581307266-26989-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1581307266-26989-2-git-send-email-tdas@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 10 Feb 2020 09:49:24 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VqRAVZ19gSbtxbmdRCBbPRr+CMxWVR29diWtfX5mL3jw@mail.gmail.com>
+Message-ID: <CAD=FV=VqRAVZ19gSbtxbmdRCBbPRr+CMxWVR29diWtfX5mL3jw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] clk: qcom: gpucc: Add support for GX GDSC for SC7180
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
+
+On Sun, Feb 9, 2020 at 8:01 PM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> Most of the time the CPU should not be touching the GX domain on the
+> GPU except for a very special use case when the CPU needs to force the
+> GX headswitch off. Add the GX domain for that use case.  As part of
+> this add a dummy enable function for the GX gdsc to simulate success
+> so that the pm_runtime reference counting is correct.  This matches
+> what was done in sdm845 in commit 85a3d920d30a ("clk: qcom: Add a
+> dummy enable function for GX gdsc").
+>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+For future reference, if you have someone's tag in your commit message
+it's nice to CC them on the email.
 
 
-On 10/02/2020 17:22, Adam Serbinski wrote:
->>>
->>
->> Why are we adding exactly duplicate function of q6afe_mi2s_set_sysclk 
->> here?
-> 
-> It isn't an exact duplicate.
-> 
-> The reason I split off the new function is because the clock IDs for PCM
-> overlap/duplicate the clock IDs for TDM, yet the parameters to
-> q6afe_port_set_sysclk are not the same for PCM and TDM.
-> 
-we should be able to use dai->id to make that decision.
+> ---
+>  drivers/clk/qcom/gpucc-sc7180.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>
+> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
+> index a96c0b9..7b656b6 100644
+> --- a/drivers/clk/qcom/gpucc-sc7180.c
+> +++ b/drivers/clk/qcom/gpucc-sc7180.c
+> @@ -170,8 +170,45 @@ static struct gdsc cx_gdsc = {
+>         .flags = VOTABLE,
+>  };
+>
+> +/*
+> + * On SC7180 the GPU GX domain is *almost* entirely controlled by the GMU
+> + * running in the CX domain so the CPU doesn't need to know anything about the
+> + * GX domain EXCEPT....
+> + *
+> + * Hardware constraints dictate that the GX be powered down before the CX. If
+> + * the GMU crashes it could leave the GX on. In order to successfully bring back
+> + * the device the CPU needs to disable the GX headswitch. There being no sane
+> + * way to reach in and touch that register from deep inside the GPU driver we
+> + * need to set up the infrastructure to be able to ensure that the GPU can
+> + * ensure that the GX is off during this super special case. We do this by
+> + * defining a GX gdsc with a dummy enable function and a "default" disable
+> + * function.
+> + *
+> + * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
+> + * driver. During power up, nothing will happen from the CPU (and the GMU will
+> + * power up normally but during power down this will ensure that the GX domain
+> + * is *really* off - this gives us a semi standard way of doing what we need.
+> + */
+> +static int gx_gdsc_enable(struct generic_pm_domain *domain)
+> +{
+> +       /* Do nothing but give genpd the impression that we were successful */
+> +       return 0;
+> +}
+> +
+> +static struct gdsc gx_gdsc = {
+> +       .gdscr = 0x100c,
+> +       .clamp_io_ctrl = 0x1508,
+> +       .pd = {
+> +               .name = "gx_gdsc",
+> +               .power_on = gx_gdsc_enable,
+> +       },
+> +       .pwrsts = PWRSTS_OFF_ON,
+> +       .flags = CLAMP_IO,
 
---srini
+In my previous reply [1], I asked about these flags and if it was
+intentional that they were different from sdm845.  I did see a private
+response, but no public one.  In the future note that it's good to
+reply publicly so everyone understands what happened.  In this case, I
+was told "the GDSC's on 845 and SC7180 are different and hence the
+change in flags is expected".  That answers my question and thus I'm
+fine with my tag being here.  It also looks like you took my other
+review feedback on v1, which is nice.
 
 
+-Doug
 
 
-> 
->>>   +    SND_SOC_DAPM_AIF_IN("QUAT_PCM_RX", NULL,
->>> +                0, 0, 0, 0),
+[1] https://lore.kernel.org/r/CAD=FV=V6yM7UJwu0ZLPCqmDgV9FS4=g+wcLg0TV51b72zvWT9Q@mail.gmail.com
