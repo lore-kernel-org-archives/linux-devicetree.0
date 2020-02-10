@@ -3,63 +3,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A69C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 16:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D75FC352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810F220838
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 16:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DEF82080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgBJQzA (ORCPT
+        id S1727003AbgBJRHN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:55:00 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:50447 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbgBJQzA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 11:55:00 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4AE06E0005;
-        Mon, 10 Feb 2020 16:54:56 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 17:54:56 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH] arm: at91: dts: Kill off "simple-panel" compatibles
-Message-ID: <20200210165456.GD3878@piout.net>
-References: <20200117230845.25190-1-robh@kernel.org>
+        Mon, 10 Feb 2020 12:07:13 -0500
+Received: from mailoutvs19.siol.net ([185.57.226.210]:47066 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727558AbgBJRHN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:07:13 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 12934521B5F;
+        Mon, 10 Feb 2020 18:07:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id xnyPHZsLLLki; Mon, 10 Feb 2020 18:07:09 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id B727E521AFF;
+        Mon, 10 Feb 2020 18:07:09 +0100 (CET)
+Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 03CA2521467;
+        Mon, 10 Feb 2020 18:07:04 +0100 (CET)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: [PATCH v2 0/5] arm64: dts: allwinner: a64: Enable deinterlace core
+Date:   Mon, 10 Feb 2020 18:06:51 +0100
+Message-Id: <20200210170656.82265-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117230845.25190-1-robh@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17/01/2020 17:08:45-0600, Rob Herring wrote:
-> "simple-panel" is a Linux driver and has never been an accepted upstream
-> compatible string, so remove it.
-> 
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi | 2 +-
->  arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts   | 2 +-
->  arch/arm/boot/dts/at91sam9n12ek.dts           | 2 +-
->  arch/arm/boot/dts/at91sam9x5dm.dtsi           | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-Applied, thanks.
+Allwinner A64 contains deinterlace core, compatible to the one found in
+H3. It can be used in combination with VPU to playback interlaced videos.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Please take a look.
+
+Best regards,
+Jernej
+
+Changes from v1:
+- use number instead of macro in patch 3
+
+Jernej Skrabec (5):
+  dt-bindings: interconnect: sunxi: Add A64 MBUS compatible
+  clk: sunxi-ng: a64: Export MBUS clock
+  arm64: dts: allwinner: a64: Add MBUS controller node
+  media: dt-bindings: media: Add Allwinner A64 deinterlace compatible
+  arm64: dts: allwinner: a64: Add deinterlace core node
+
+ .../arm/sunxi/allwinner,sun4i-a10-mbus.yaml   |  1 +
+ .../media/allwinner,sun8i-h3-deinterlace.yaml |  6 ++++-
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 22 +++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.h         |  4 ----
+ include/dt-bindings/clock/sun50i-a64-ccu.h    |  2 +-
+ 5 files changed, 29 insertions(+), 6 deletions(-)
+
+--=20
+2.25.0
+
