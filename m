@@ -2,130 +2,194 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30090C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25CCC352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A602080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F2820661
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 12:31:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kEr69vlC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iVdDqKNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbgBJMXC (ORCPT
+        id S1727430AbgBJMbv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:23:02 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13834 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgBJMXC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 07:23:02 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e414b170000>; Mon, 10 Feb 2020 04:22:47 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 10 Feb 2020 04:23:01 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 04:23:01 -0800
-Received: from [10.26.11.122] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 12:22:57 +0000
-Subject: Re: [PATCH v2 6/9] ASoC: tegra: add Tegra186 based DSPK driver
-To:     Sameer Pujar <spujar@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <alsa-devel@alsa-project.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <atalambedu@nvidia.com>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-7-git-send-email-spujar@nvidia.com>
- <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
- <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
- <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
- <3c19ef99-8051-76f7-a4d6-0d61182fe6e4@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4c75fc51-fbfd-158f-a096-d4f178921ee3@nvidia.com>
-Date:   Mon, 10 Feb 2020 12:22:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 07:31:51 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59288 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbgBJMbv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 07:31:51 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01ACVhkg018887;
+        Mon, 10 Feb 2020 06:31:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581337903;
+        bh=HKeSEpQoO/SGc5nk+DUofK5aOsYsEWsIlq8ACd32sQw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=iVdDqKNTQtqDKVIVhvpqGDMP8/NwBM8TZoCscGmRzgSbRPPRvWzrNPN2ZKtiByN52
+         zb6JG/Y0hmEjhfX3Bkjn2MPPeq0PEPaDwwZpC1VZ2cjDT6sDGi1m3EgUfjemXIElhX
+         nKsE57yzTCGOv5bEIdi6su08/asq3rie1CLqn0JA=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01ACVh2l112308;
+        Mon, 10 Feb 2020 06:31:43 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
+ Feb 2020 06:31:43 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 10 Feb 2020 06:31:43 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01ACVaEY129098;
+        Mon, 10 Feb 2020 06:31:40 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>, Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 1/2] dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+Date:   Mon, 10 Feb 2020 18:05:06 +0530
+Message-ID: <20200210123507.9491-2-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200210123507.9491-1-kishon@ti.com>
+References: <20200210123507.9491-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <3c19ef99-8051-76f7-a4d6-0d61182fe6e4@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581337367; bh=Q48ZjXxd5DyM/9JMirpECQ8alliDV1CVCfS6foToQeA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=kEr69vlCpsxam1NKtiahRg1il9jAuXxuZ3oT9M0TD5rImRvxPfBOHBbFNzdDwte7b
-         7hxAs5gV4FlqUJH11XHtAYKHMuUCj4FkG4UVMWpltLJgODLouT3GHtseNzgaxF2g7n
-         AB+P9S107xnFkO1ZO2kpe6d9pc95z4xFqlnZ04UZTo277pQ6/s6lbepsDrz/w2ujLw
-         NezAMoshkD0PN+MCpvIzTTB2rWdKVorZ8zgxT/Zv9VRDXdf2bZN1EaozYlVAKT5waD
-         4NZmjOlZva9xPTUPWqoNrD9TXFCDYJvvnCC51eZN8uXvN/VS7404KLEpD/azEY5ika
-         msjzsMHDopLTg==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add PCIe Host (RC) and Endpoint (EP) device tree schema for Cadence
+PCIe core library. Platforms using Cadence PCIe core can include the
+schemas added here in the platform specific schemas.
 
-On 10/02/2020 11:15, Sameer Pujar wrote:
->=20
->=20
-> On 2/7/2020 11:52 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 07.02.2020 14:26, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>
->>> On 2/6/2020 10:45 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> +static const struct dev_pm_ops tegra186_dspk_pm_ops =3D {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 SET_RUNTIME_PM_OPS(tegra186_dspk_runtime_su=
-spend,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 te=
-gra186_dspk_runtime_resume, NULL)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_for=
-ce_suspend,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_force_=
-resume)
->>>>> +};
->>>> Could you please explain why drivers need the "late" system sleep?
->>> It was done to ensure core drivers are suspended first and defer the
->>> codec driver suspend
->> Suspend order is opposite to the drivers registration order. If there is
->> no real problem with that, then you should use the default suspend
->=20
->> level. Please don't try to fix a non-existent problems.
->=20
-> No. This was done specifically to allow sound core to first stop any
-> ongoing audio activity during normal suspend and ensure a safe suspend
-> of AHUB devices by doing a LATE suspend.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 19 ++++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 27 +++++++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 45 +++++++++++++++++++
+ 3 files changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
 
-What Dmitry is saying is that if the DSPK driver is registered after the
-sound core then we will not need to suspend in the late phase. The DSPK
-device should only be registered once the sound core is loaded, because
-otherwise we should fail to register it with the sound core. So I don't
-think we need this to be late afterall.
+diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+new file mode 100644
+index 000000000000..b9b0b0a5cd88
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+@@ -0,0 +1,19 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence PCIe Endpoint
++
++maintainers:
++  - Tom Joseph <tjoseph@cadence.com>
++
++allOf:
++  - $ref: "cdns-pcie.yaml#"
++
++properties:
++  max-functions:
++    description: Maximum number of functions that can be configured (default 1)
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint8
+diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+new file mode 100644
+index 000000000000..e05c1497ddec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+@@ -0,0 +1,27 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/pci/cdns-pcie-host.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence PCIe Host
++
++maintainers:
++  - Tom Joseph <tjoseph@cadence.com>
++
++allOf:
++  - $ref: "/schemas/pci/pci-bus.yaml#"
++  - $ref: "cdns-pcie.yaml#"
++
++properties:
++  cdns,no-bar-match-nbits:
++    description:
++      Set into the no BAR match register to configure the number of least
++      significant bits kept during inbound (PCIe -> AXI) address translations
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 32
++    default: 32
++
++  msi-parent: true
+diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+new file mode 100644
+index 000000000000..25c49d43f5cd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/pci/cdns-pcie.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence PCIe Core
++
++maintainers:
++  - Tom Joseph <tjoseph@cadence.com>
++
++properties:
++  max-link-speed:
++    description: maximum link speed
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 4
++
++  num-lanes:
++    description: maximum number of lanes
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 2
++
++  cdns,max-outbound-regions:
++    description: maximum number of outbound regions
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 32
++    default: 32
++
++  phys:
++    description:
++      One per lane if more than one in the list. If only one PHY listed it must
++      manage all lanes.
++    minItems: 1
++    maxItems: 16
++
++  phy-names:
++    items:
++      - const: pcie-phy
++    # FIXME: names when more than 1
+-- 
+2.17.1
 
-Jon
-
---=20
-nvpublic
