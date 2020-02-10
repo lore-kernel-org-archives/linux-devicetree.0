@@ -2,116 +2,163 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0CBC352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096D1C352A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805602080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCBD208C4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="D5V7BBkv"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cj04F7Qq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgBJJDI (ORCPT
+        id S1727121AbgBJJJz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:03:08 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4050 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726796AbgBJJDI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:03:08 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01A8mLPn001938;
-        Mon, 10 Feb 2020 10:02:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=H3rjV2A7fROz9cnfk/NtpzzXf8VAhOt6rYAt5Ftt45U=;
- b=D5V7BBkvCc0kUybXL+upTzZgl75lCiYEW+mg1iyuSGZCPHhDqvHoOLqEIwWAHpsvx3JT
- lvYZvivPSRavo5I9BBLtWVpiBqbpSFtNLa5TUve6Sr8ggCN5Hcu6D7PowvHqmhZ9lZ9G
- vDepXpzaLOSvrHOH/kYlLUCn8WG1xVCKPykOH0L3Ry0LCAQuGllUluzwr9X0RWoA44rs
- aEhtdrV6O2OgcpZ2A3Sa0gKshHV458DIZuhKJqmGcCM1HKSo7z9m8vsTEc8PoCjFFGst
- Cyb1vC6w20bsewVzwgofcOqKYauilVE+Ms51/8SvoIYyPnd6sbaOSkqgAreHz5+QKCaa kg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1urgr6gv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 10:02:41 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EAD0010002A;
-        Mon, 10 Feb 2020 10:02:36 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D059F2B793A;
-        Mon, 10 Feb 2020 10:02:36 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 10:02:36 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Mon, 10 Feb 2020 10:02:36 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v3 0/2] clockevent: add low power STM32 timer
-Thread-Topic: [PATCH v3 0/2] clockevent: add low power STM32 timer
-Thread-Index: AQHV1dN0ASRe/0fvOUqwQX9rlF1+nagUJUGA
-Date:   Mon, 10 Feb 2020 09:02:36 +0000
-Message-ID: <7d062f5b-9272-c7db-7a9e-b908870dd8b4@st.com>
-References: <20200128120702.26166-1-benjamin.gaignard@st.com>
-In-Reply-To: <20200128120702.26166-1-benjamin.gaignard@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5AF5E50E0266274A90729B9F125EDBE9@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 10 Feb 2020 04:09:55 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33880 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgBJJJy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 04:09:54 -0500
+Received: by mail-wm1-f65.google.com with SMTP id s144so7951347wme.1
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 01:09:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hiN25+AuZUOD7nLG3XRw5oRZLkD1tYcKOb9tb7FzUVM=;
+        b=cj04F7QqzbIH+jDzqVCmtG9GphWm0hCcyVJByGVaUDkGro89nOYNs52/W1vediKKHP
+         0R8igLfZJ++4c1AceZbfjkz4oaWNan9EDUadR0XELjSSo2a9UjR/bmqmMV6gvNttTwUY
+         LEMf5zPgXLO7ByQx/cSc/a3s1IrQ0tsvOIVWf2NmqQCWTahHLQ12GQx3yavQ9ZlbN7Wk
+         I5tsCrEIN9aDn9GlBks8FKNdMXD758wTzbJcu2qf7lF6DCY2XmtA/p5eSdGYuyLMhV1c
+         H9q3H4ZbwtDMH3hYPVLZm4V2DIxiaXlVaSFIICGAchCt5j4XeY7PHg5OgQEWGRS0lMEC
+         bhiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hiN25+AuZUOD7nLG3XRw5oRZLkD1tYcKOb9tb7FzUVM=;
+        b=gkNUChasYq0LEs5daALCYfZHaXOl9rQzgD9IyU4l9tv1Q1idXIkOKOSlBZwLnE4gef
+         nlbiZLkMXjlAyYzkWJt3AYoTFwqPxhYxKY0b3W6na1v7TF2qZatbsOme1xV/AS2nBnKY
+         tPWQ0QhhdQ+qO7N1eELLnGOhasySX1H4m+bm63aBLWBkwhDXWMkVT3p1S5Axi6KiPNXa
+         iuATBO+Xd5oWb/FxhdpYbWU1rcHeAVRWfomKzl/LIU2t6p4tYNSfM8WC8lDaNRT0hhXj
+         TZ7JGLRcrb4U0kx7UySSrwJL82M5uUEMEyxW5HKhmOnLQHTykPeLU7A9F5NsPB1/Z9Zn
+         qQ0A==
+X-Gm-Message-State: APjAAAWYMS9wxEh23QABrYgXu0b7FGExP9g5Obj7GGVhM8B83QKv2Fh1
+        V0CrbH6EXmSDTOsKnZeyO9evTQ==
+X-Google-Smtp-Source: APXvYqxIU4RIvJ7PNGWe4RKaF1AKjfwOEmvOWyEX/CnY+rJkjs7MP3l681gbgSHM3XHjpMRG6BYhrg==
+X-Received: by 2002:a7b:cf08:: with SMTP id l8mr13997403wmg.169.1581325791996;
+        Mon, 10 Feb 2020 01:09:51 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id a198sm14442434wme.12.2020.02.10.01.09.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2020 01:09:51 -0800 (PST)
+Subject: Re: [PATCH 2/3] dt-bindings: it6251: add bindings for IT6251
+ LVDS-to-eDP bridge
+To:     Sam Ravnborg <sam@ravnborg.org>, Marek Vasut <marex@denx.de>
+Cc:     devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org
+References: <20200127022023.379080-1-marex@denx.de>
+ <20200127022023.379080-2-marex@denx.de> <20200202182346.GA18495@ravnborg.org>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <427b001c-9187-9c5d-64de-58e9e7c231fe@baylibre.com>
+Date:   Mon, 10 Feb 2020 10:09:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_02:2020-02-07,2020-02-10 signatures=0
+In-Reply-To: <20200202182346.GA18495@ravnborg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiAxLzI4LzIwIDE6MDcgUE0sIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPiBUaGlzIHNl
-cmllcyBhZGQgbG93IHBvd2VyIHRpbWVyIGFzIGJvYWRjYXN0IGNsb2NrZXZlbnQgZGV2aWNlLg0K
-PiBMb3cgcG93ZXIgdGltZXIgY291bGQgcnVucyBldmVuIHdoZW4gQ1BVcyBhcmUgaW4gaWRsZSBt
-b2RlIGFuZA0KPiBjb3VsZCB3YWtldXAgdGhlbS4NCg0KR2VudGxlIHBpbmcgdG8gcmV2aWV3ZXJz
-Lg0KDQpUaGFua3MsDQoNCkJlbmphbWluDQoNCj4NCj4gdmVyc2lvbiAzOg0KPiAtIGZpeCB0aW1l
-ciBzZXQgc2VxdWVuY2UNCj4gLSBkb24ndCBmb3JnZXQgdG8gZnJlZSBpcnEgb24gcmVtb3ZlIGZ1
-bmN0aW9uDQo+IC0gdXNlIGRldm1fa3phbGxvYyB0byBzaW1wbGlmeSBlcnJvcnMgaGFuZGxpbmcg
-aW4gcHJvYmUgZnVuY3Rpb24NCj4NCj4gdmVyc2lvbiAyOg0KPiAtIHN0bTMyIGNsa2V2ZW50IGRy
-aXZlciBpcyBub3cgYSBjaGlsZCBvZiB0aGUgc3RtMzIgbHAgdGltZXIgbm9kZQ0KPiAtIGFkZCBh
-IHByb2JlIGZ1bmN0aW9uIGFuZCBhZHBhdCB0aGUgZHJpdmVyIHRvIHVzZSByZWdtYXAgcHJvdmlk
-ZQ0KPiAgICBieSBpdCBwYXJlbnQNCj4gLSBzdG9wIHVzaW5nIHRpbWVyX29mIGhlbHBlcnMNCj4g
-LSBkb2N1bWVudCB0aGUgYmluZGluZ3MgaW5zaWRlIHN0bTMyIGxwdGltZXIgeWFtbA0KPg0KPiBC
-ZW5qYW1pbiBHYWlnbmFyZCAoMik6DQo+ICAgIGR0LWJpbmRpbmdzOiBtZmQ6IERvY3VtZW50IFNU
-TTMyIGxvdyBwb3dlciBjbGtldmVudCBiaW5kaW5ncw0KPiAgICBjbG9ja3NvdXJjZTogQWRkIExv
-dyBQb3dlciBTVE0zMiB0aW1lcnMgZHJpdmVyDQo+DQo+ICAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWZkL3N0LHN0bTMyLWxwdGltZXIueWFtbCAgfCAgMTQgKysNCj4gICBkcml2ZXJzL2Nsb2Nr
-c291cmNlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNCArDQo+ICAgZHJpdmVy
-cy9jbG9ja3NvdXJjZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiAg
-IGRyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItc3RtMzItbHAuYyAgICAgICAgICAgICAgIHwgMjQ4
-ICsrKysrKysrKysrKysrKysrKysrKw0KPiAgIDQgZmlsZXMgY2hhbmdlZCwgMjY3IGluc2VydGlv
-bnMoKykNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1z
-dG0zMi1scC5jDQo+
+Hi,
+
+On 02/02/2020 19:23, Sam Ravnborg wrote:
+> Hi Marek.
+> 
+> On Mon, Jan 27, 2020 at 03:20:22AM +0100, Marek Vasut wrote:
+>> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
+>>
+>> Signed-off-by: Marek Vasut <marex@denx.de>
+>> Cc: Daniel Vetter <daniel@ffwll.ch>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Sean Cross <xobs@kosagi.com>
+>> Cc: devicetree@vger.kernel.org
+>> To: dri-devel@lists.freedesktop.org
+>> ---
+>>  .../bindings/display/bridge/ite,it6251.txt    | 35 +++++++++++++++++++
+> 
+> Any chance you could make this follow the DT Schema (.yaml) syntax
+> so we get better verification of the DT files?
+
+Indeed, please use DT Schema for new bindings.
+
+Neil
+
+> 
+> 	Sam
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+
