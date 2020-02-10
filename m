@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7463C352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DF2C3B18D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD222082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C01920733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:40:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m595dQRG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aSrq8oWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgBJVkE (ORCPT
+        id S1727563AbgBJVkA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:40:04 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40027 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgBJVkD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:40:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so947985wmi.5
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 13:40:02 -0800 (PST)
+        Mon, 10 Feb 2020 16:40:00 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43048 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727523AbgBJVkA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:40:00 -0500
+Received: by mail-wr1-f67.google.com with SMTP id r11so6411429wrq.10
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 13:39:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=C1WY7m7LZykVt5uJs3pBqs/4NQKr7Ot6cOn9UjLkSJM=;
-        b=m595dQRGCxQ2u1fqafnlK1isvgOXjuOK0l1YeRCmEj/cI7AepSdtOBx7DD9hML0QkY
-         xBx31A5vdqNkk7kpLz2N+0pqvSSmEomEt6LsZM3N/G+dqzU9xA9+YyjUiCEI+/Q96+hE
-         163z38xlu4D5R/8ypttpnbU1QbbZdAjBvfFE4HRM0j9queioaJW9pv8OoJAovbbGIVH7
-         a5WaMiBg2tUsv/CZDBoBI75mPYSFxU3fDtH4KoQQz7B8nXCPkMOt69IvVj7jeWLvXWm7
-         HTxO8ruYjBPTix13y7P3V26UvoAoOCn3ubhB+dKb7uqMSZLx1h14r66rY/ppD+zqR6CN
-         m9Xg==
+        bh=IlHE1TPPaatr6L2aGQ0CeRRs3v4udZLopKfPEEns2S4=;
+        b=aSrq8oWawLbSp7nXF+4WPJ4h8U4gbxQJHcfXaeAYsG76+pBxzm+kyIv+59ghhd9OZp
+         WE5nRLrZ5AOpX7sgQRMznf+B5eMzZJfQSXzkiYm2B06M+aXF70xnm7Gm8Ng21qGlx/Kp
+         HLTQoMTsKuTuUrUS0F4aYPcFG5aPckfZSluGbAfm6vTmvO/KFWfI7kcbDH3TEHBfLUJg
+         iN/AwiVq+d+wioKnfiLSHedGqHgsxsch1WXEPvdd0DGyKW6Y1X1GWCNMDmg7+HLy2xH3
+         R5ZQqDzP+qOJE+tnXbKCfrP7gTl17Pp9C7EuAt+60mAf5/dUnomClZ7u+wP8yWcMJjJb
+         Pw+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=C1WY7m7LZykVt5uJs3pBqs/4NQKr7Ot6cOn9UjLkSJM=;
-        b=GzmWBrbkAGENuuYVoMYTNwMdfQ+2bf4+ADFwoL3XRcgUWL1V0NJ/d3Pl4ulbU4C+cj
-         j7BJmVXrt7Mx9XlxIRjatzk/ymlV0JKVtcRO9bfgR1OsDQ1+pjcNxamdsAqiBv3dglta
-         1fVMwCDYMfHKEflvjBSPkbkTs93JU2xBTzrV1q/5Jw69LZAYEh+/z9bLlc6Z6u7SS/kQ
-         XPTmJi/fCzkmv/qcmjcXV/plsyBobUsey2DkoZzlvZIufmqFFJuNkWBUpYUNTQnsVnJI
-         +KjIj5REVew+S4qKdYMi5io40hB4uKqEAQMDjqnyBOh6+Z3uhKp+reyTIzoR8jR3fOHc
-         PwRA==
-X-Gm-Message-State: APjAAAUiJYSaYzn7bENi0VFDAs/LcAE/qi2OlENJmw0r0knfXOScEZQ6
-        UafQVTYpFk4W4yroZmroX7MU1w==
-X-Google-Smtp-Source: APXvYqzXmPFVDvYGGO1lCbsNxXyqlxO/kA1C/Zdq1de/H66qIAbSiiNtf3Ha+C06PxLj3o/ajaSvhw==
-X-Received: by 2002:a1c:67c3:: with SMTP id b186mr1016506wmc.36.1581370802162;
-        Mon, 10 Feb 2020 13:40:02 -0800 (PST)
+        bh=IlHE1TPPaatr6L2aGQ0CeRRs3v4udZLopKfPEEns2S4=;
+        b=bLCi3wCZmtrjf8sefN4hC9ZzgrPu2O1B4k5XcfyxJaj5bot5gTAnjIlQu6u6kBjQpf
+         tTar3z7s5qGZL544YMfa3mLH4lf6Ype1+BK+8ateRphTmjmJlW7OXR2Fjg09OE54hxnK
+         +dP1NlsGiLdV4m9LPZD0+mA9F/wGthvodYI1cIg5ParC1Tv+9YrXJXDuZDTdx9tkVn/0
+         03U7fyDeGlrXakaW5TTI8Zop6hn1yzeCp4sungQ6PucpzIHRYKObhoDIaNDnAEjIU8JD
+         vuTs79Rjq6yyZ8bVUHKcetAuKYMHt4/tOB3Q96cRCD/AkvjMiaGxlhcvctFwvBLspjbU
+         INCQ==
+X-Gm-Message-State: APjAAAVO9WTGyfVkVUCG0gkN9XhRXdf/RZ+Q2XQgD6yQa2SMw2mxvatT
+        RG4CGuM/Vx4DQ+KJqI95+/hUKw==
+X-Google-Smtp-Source: APXvYqyzkfAWZOsaXCZQXt0VB3CHdieyCn8JbJJ4uk+9fDAbyTspT6sjwNrsWLOrXoLnNfsQi9sNug==
+X-Received: by 2002:adf:f586:: with SMTP id f6mr3831218wro.46.1581370798133;
+        Mon, 10 Feb 2020 13:39:58 -0800 (PST)
 Received: from linaro.org ([2a00:23c5:6815:3901:a1cf:b00b:5683:ed40])
-        by smtp.gmail.com with ESMTPSA id u14sm2118582wrm.51.2020.02.10.13.40.00
+        by smtp.gmail.com with ESMTPSA id u14sm2118582wrm.51.2020.02.10.13.39.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 13:40:01 -0800 (PST)
+        Mon, 10 Feb 2020 13:39:57 -0800 (PST)
 From:   Mike Leach <mike.leach@linaro.org>
 To:     mike.leach@linaro.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, coresight@lists.linaro.org,
@@ -62,9 +62,9 @@ Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
         suzuki.poulose@arm.com, robh+dt@kernel.org, maxime@cerno.tech,
         liviu.dudau@arm.com, sudeep.holla@arm.com,
         lorenzo.pieralisi@arm.com, agross@kernel.org, corbet@lwn.net
-Subject: [PATCH v9 10/15] dt-bindings: qcom: Add CTI options for qcom msm8916
-Date:   Mon, 10 Feb 2020 21:39:19 +0000
-Message-Id: <20200210213924.20037-11-mike.leach@linaro.org>
+Subject: [PATCH v9 07/15] coresight: cti: Add device tree support for custom CTI.
+Date:   Mon, 10 Feb 2020 21:39:16 +0000
+Message-Id: <20200210213924.20037-8-mike.leach@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200210213924.20037-1-mike.leach@linaro.org>
 References: <20200210213924.20037-1-mike.leach@linaro.org>
@@ -73,148 +73,318 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds system and CPU bound CTI definitions for Qualcom msm8916 platform
-(Dragonboard DB410C).
-System CTIs 2-11 are omitted as no information available at present.
+Adds support for CTIs whose connections are implementation defined at
+hardware design time, and not constrained by v8 architecture.
+
+These CTIs have no standard connection setup, all the settings have to
+be defined in the device tree files. The patch creates a set of connections
+and trigger signals based on the information provided.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 85 +++++++++++++++++++++++++--
- 1 file changed, 81 insertions(+), 4 deletions(-)
+ .../coresight/coresight-cti-platform.c        | 235 +++++++++++++++++-
+ .../hwtracing/coresight/coresight-cti-sysfs.c |  11 +
+ 2 files changed, 242 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9f31064f2374..d13b5fb5c4d6 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/reset/qcom,gcc-msm8916.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/arm/coresight-cti-dt.h>
+diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
+index 36a276eda50a..b44d83142b62 100644
+--- a/drivers/hwtracing/coresight/coresight-cti-platform.c
++++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
+@@ -13,9 +13,19 @@
+ #define NR_V8PE_OUT_SIGS	3
+ #define NR_V8ETM_INOUT_SIGS	4
  
- / {
- 	interrupt-parent = <&intc>;
-@@ -1409,7 +1410,7 @@
- 			cpu = <&CPU3>;
- 		};
++/* CTI device tree trigger connection node keyword */
++#define CTI_DT_CONNS		"trig-conns"
++
+ /* CTI device tree connection property keywords */
+ #define CTI_DT_V8ARCH_COMPAT	"arm,coresight-cti-v8-arch"
+ #define CTI_DT_CSDEV_ASSOC	"arm,cs-dev-assoc"
++#define CTI_DT_TRIGIN_SIGS	"arm,trig-in-sigs"
++#define CTI_DT_TRIGOUT_SIGS	"arm,trig-out-sigs"
++#define CTI_DT_TRIGIN_TYPES	"arm,trig-in-types"
++#define CTI_DT_TRIGOUT_TYPES	"arm,trig-out-types"
++#define CTI_DT_FILTER_OUT_SIGS	"arm,trig-filters"
++#define CTI_DT_CONN_NAME	"arm,trig-conn-name"
++#define CTI_DT_CTM_ID		"arm,cti-ctm-id"
  
--		etm@85c000 {
-+		etm0: etm@85c000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x85c000 0x1000>;
+ #ifdef CONFIG_OF
+ /*
+@@ -87,6 +97,14 @@ cti_plat_get_csdev_or_node_name(struct fwnode_handle *fwnode,
+ 	return name;
+ }
  
-@@ -1427,7 +1428,7 @@
- 			};
- 		};
++static bool cti_plat_node_name_eq(struct fwnode_handle *fwnode,
++				  const char *name)
++{
++	if (is_of_node(fwnode))
++		return of_node_name_eq(to_of_node(fwnode), name);
++	return false;
++}
++
+ static int cti_plat_create_v8_etm_connection(struct device *dev,
+ 					     struct cti_drvdata *drvdata)
+ {
+@@ -205,6 +223,211 @@ static int cti_plat_check_v8_arch_compatible(struct device *dev)
+ 	return 0;
+ }
  
--		etm@85d000 {
-+		etm1: etm@85d000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x85d000 0x1000>;
++static int cti_plat_count_sig_elements(const struct fwnode_handle *fwnode,
++				       const char *name)
++{
++	int nr_elem = fwnode_property_count_u32(fwnode, name);
++
++	return (nr_elem < 0 ? 0 : nr_elem);
++}
++
++static int cti_plat_read_trig_group(struct cti_trig_grp *tgrp,
++				    const struct fwnode_handle *fwnode,
++				    const char *grp_name)
++{
++	int idx, err = 0;
++	u32 *values;
++
++	if (!tgrp->nr_sigs)
++		return 0;
++
++	values = kcalloc(tgrp->nr_sigs, sizeof(u32), GFP_KERNEL);
++	if (!values)
++		return -ENOMEM;
++
++	err = fwnode_property_read_u32_array(fwnode, grp_name,
++					     values, tgrp->nr_sigs);
++
++	if (!err) {
++		/* set the signal usage mask */
++		for (idx = 0; idx < tgrp->nr_sigs; idx++)
++			tgrp->used_mask |= BIT(values[idx]);
++	}
++
++	kfree(values);
++	return err;
++}
++
++static int cti_plat_read_trig_types(struct cti_trig_grp *tgrp,
++				    const struct fwnode_handle *fwnode,
++				    const char *type_name)
++{
++	int items, err = 0, nr_sigs;
++	u32 *values = NULL, i;
++
++	/* allocate an array according to number of signals in connection */
++	nr_sigs = tgrp->nr_sigs;
++	if (!nr_sigs)
++		return 0;
++
++	/* see if any types have been included in the device description */
++	items = cti_plat_count_sig_elements(fwnode, type_name);
++	if (items > nr_sigs)
++		return -EINVAL;
++
++	/* need an array to store the values iff there are any */
++	if (items) {
++		values = kcalloc(items, sizeof(u32), GFP_KERNEL);
++		if (!values)
++			return -ENOMEM;
++
++		err = fwnode_property_read_u32_array(fwnode, type_name,
++						     values, items);
++		if (err)
++			goto read_trig_types_out;
++	}
++
++	/*
++	 * Match type id to signal index, 1st type to 1st index etc.
++	 * If fewer types than signals default remainder to GEN_IO.
++	 */
++	for (i = 0; i < nr_sigs; i++) {
++		if (i < items) {
++			tgrp->sig_types[i] =
++				values[i] < CTI_TRIG_MAX ? values[i] : GEN_IO;
++		} else {
++			tgrp->sig_types[i] = GEN_IO;
++		}
++	}
++
++read_trig_types_out:
++	kfree(values);
++	return err;
++}
++
++static int cti_plat_process_filter_sigs(struct cti_drvdata *drvdata,
++					const struct fwnode_handle *fwnode)
++{
++	struct cti_trig_grp *tg = NULL;
++	int err = 0, nr_filter_sigs;
++
++	nr_filter_sigs = cti_plat_count_sig_elements(fwnode,
++						     CTI_DT_FILTER_OUT_SIGS);
++	if (nr_filter_sigs == 0)
++		return 0;
++
++	if (nr_filter_sigs > drvdata->config.nr_trig_max)
++		return -EINVAL;
++
++	tg = kzalloc(sizeof(*tg), GFP_KERNEL);
++	if (!tg)
++		return -ENOMEM;
++
++	err = cti_plat_read_trig_group(tg, fwnode, CTI_DT_FILTER_OUT_SIGS);
++	if (!err)
++		drvdata->config.trig_out_filter |= tg->used_mask;
++
++	kfree(tg);
++	return err;
++}
++
++static int cti_plat_create_connection(struct device *dev,
++				      struct cti_drvdata *drvdata,
++				      struct fwnode_handle *fwnode)
++{
++	struct cti_trig_con *tc = NULL;
++	int cpuid = -1, err = 0;
++	struct fwnode_handle *cs_fwnode = NULL;
++	struct coresight_device *csdev = NULL;
++	const char *assoc_name = "unknown";
++	char cpu_name_str[16];
++	int nr_sigs_in, nr_sigs_out;
++
++	/* look to see how many in and out signals we have */
++	nr_sigs_in = cti_plat_count_sig_elements(fwnode, CTI_DT_TRIGIN_SIGS);
++	nr_sigs_out = cti_plat_count_sig_elements(fwnode, CTI_DT_TRIGOUT_SIGS);
++
++	if ((nr_sigs_in > drvdata->config.nr_trig_max) ||
++	    (nr_sigs_out > drvdata->config.nr_trig_max))
++		return -EINVAL;
++
++	tc = cti_allocate_trig_con(dev, nr_sigs_in, nr_sigs_out);
++	if (!tc)
++		return -ENOMEM;
++
++	/* look for the signals properties. */
++	err = cti_plat_read_trig_group(tc->con_in, fwnode,
++				       CTI_DT_TRIGIN_SIGS);
++	if (err)
++		goto create_con_err;
++
++	err = cti_plat_read_trig_types(tc->con_in, fwnode,
++				       CTI_DT_TRIGIN_TYPES);
++	if (err)
++		goto create_con_err;
++
++	err = cti_plat_read_trig_group(tc->con_out, fwnode,
++				       CTI_DT_TRIGOUT_SIGS);
++	if (err)
++		goto create_con_err;
++
++	err = cti_plat_read_trig_types(tc->con_out, fwnode,
++				       CTI_DT_TRIGOUT_TYPES);
++	if (err)
++		goto create_con_err;
++
++	err = cti_plat_process_filter_sigs(drvdata, fwnode);
++	if (err)
++		goto create_con_err;
++
++	/* read the connection name if set - may be overridden by later */
++	fwnode_property_read_string(fwnode, CTI_DT_CONN_NAME, &assoc_name);
++
++	/* associated cpu ? */
++	cpuid = cti_plat_get_cpu_at_node(fwnode);
++	if (cpuid >= 0) {
++		drvdata->ctidev.cpu = cpuid;
++		scnprintf(cpu_name_str, sizeof(cpu_name_str), "cpu%d", cpuid);
++		assoc_name = cpu_name_str;
++	} else {
++		/* associated device ? */
++		cs_fwnode = fwnode_find_reference(fwnode,
++						  CTI_DT_CSDEV_ASSOC, 0);
++		if (!IS_ERR_OR_NULL(cs_fwnode)) {
++			assoc_name = cti_plat_get_csdev_or_node_name(cs_fwnode,
++								     &csdev);
++			fwnode_handle_put(cs_fwnode);
++		}
++	}
++	/* set up a connection */
++	err = cti_add_connection_entry(dev, drvdata, tc, csdev, assoc_name);
++
++create_con_err:
++	return err;
++}
++
++static int cti_plat_create_impdef_connections(struct device *dev,
++					      struct cti_drvdata *drvdata)
++{
++	int rc = 0;
++	struct fwnode_handle *fwnode = dev_fwnode(dev);
++	struct fwnode_handle *child = NULL;
++
++	if (IS_ERR_OR_NULL(fwnode))
++		return -EINVAL;
++
++	fwnode_for_each_child_node(fwnode, child) {
++		if (cti_plat_node_name_eq(child, CTI_DT_CONNS))
++			rc = cti_plat_create_connection(dev, drvdata,
++							child);
++		if (rc != 0)
++			break;
++	}
++	fwnode_handle_put(child);
++
++	return rc;
++}
++
+ /* get the hardware configuration & connection data. */
+ int cti_plat_get_hw_data(struct device *dev,
+ 			 struct cti_drvdata *drvdata)
+@@ -212,12 +435,16 @@ int cti_plat_get_hw_data(struct device *dev,
+ 	int rc = 0;
+ 	struct cti_device *cti_dev = &drvdata->ctidev;
  
-@@ -1445,7 +1446,7 @@
- 			};
- 		};
++	/* get any CTM ID - defaults to 0 */
++	device_property_read_u32(dev, CTI_DT_CTM_ID, &cti_dev->ctm_id);
++
+ 	/* check for a v8 architectural CTI device */
+-	if (cti_plat_check_v8_arch_compatible(dev)) {
++	if (cti_plat_check_v8_arch_compatible(dev))
+ 		rc = cti_plat_create_v8_connections(dev, drvdata);
+-		if (rc)
+-			return rc;
+-	}
++	else
++		rc = cti_plat_create_impdef_connections(dev, drvdata);
++	if (rc)
++		return rc;
  
--		etm@85e000 {
-+		etm2: etm@85e000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x85e000 0x1000>;
+ 	/* if no connections, just add a single default based on max IN-OUT */
+ 	if (cti_dev->nr_trig_con == 0)
+diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+index 37e71724b67b..8af1986ed69f 100644
+--- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+@@ -56,9 +56,20 @@ static ssize_t enable_store(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(enable);
  
-@@ -1463,7 +1464,7 @@
- 			};
- 		};
++static ssize_t ctmid_show(struct device *dev,
++			  struct device_attribute *attr,
++			  char *buf)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++
++	return scnprintf(buf, PAGE_SIZE, "%d\n", drvdata->ctidev.ctm_id);
++}
++static DEVICE_ATTR_RO(ctmid);
++
+ /* attribute and group sysfs tables. */
+ static struct attribute *coresight_cti_attrs[] = {
+ 	&dev_attr_enable.attr,
++	&dev_attr_ctmid.attr,
+ 	NULL,
+ };
  
--		etm@85f000 {
-+		etm3: etm@85f000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x85f000 0x1000>;
- 
-@@ -1481,6 +1482,82 @@
- 			};
- 		};
- 
-+		/* System CTIs */
-+		/* CTI 0 - TMC connections */
-+		cti@810000 {
-+			compatible = "arm,coresight-cti", "arm,primecell";
-+			reg = <0x810000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		/* CTI 1 - TPIU connections */
-+		cti@811000 {
-+			compatible = "arm,coresight-cti", "arm,primecell";
-+			reg = <0x811000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		/* CTIs 2-11 - no information - not instantiated */
-+
-+		/* Core CTIs; CTIs 12-15 */
-+		/* CTI - CPU-0 */
-+		cti@858000 {
-+			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+				     "arm,primecell";
-+			reg = <0x858000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU0>;
-+			arm,cs-dev-assoc = <&etm0>;
-+
-+		};
-+
-+		/* CTI - CPU-1 */
-+		cti@859000 {
-+			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+				     "arm,primecell";
-+			reg = <0x859000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU1>;
-+			arm,cs-dev-assoc = <&etm1>;
-+		};
-+
-+		/* CTI - CPU-2 */
-+		cti@85a000 {
-+			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+				     "arm,primecell";
-+			reg = <0x85a000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU2>;
-+			arm,cs-dev-assoc = <&etm2>;
-+		};
-+
-+		/* CTI - CPU-3 */
-+		cti@85b000 {
-+			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+				     "arm,primecell";
-+			reg = <0x85b000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU3>;
-+			arm,cs-dev-assoc = <&etm3>;
-+		};
-+
-+
- 		venus: video-codec@1d00000 {
- 			compatible = "qcom,msm8916-venus";
- 			reg = <0x01d00000 0xff000>;
 -- 
 2.17.1
 
