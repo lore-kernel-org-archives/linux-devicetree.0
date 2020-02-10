@@ -2,163 +2,110 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096D1C352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C676DC352A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCBD208C4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA0920733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 09:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cj04F7Qq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KYrIt4bM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgBJJJz (ORCPT
+        id S1726584AbgBJJ1Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:09:55 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33880 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgBJJJy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 04:09:54 -0500
-Received: by mail-wm1-f65.google.com with SMTP id s144so7951347wme.1
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 01:09:52 -0800 (PST)
+        Mon, 10 Feb 2020 04:27:24 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42629 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgBJJ1Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 04:27:24 -0500
+Received: by mail-lj1-f196.google.com with SMTP id d10so6273168ljl.9
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 01:27:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=hiN25+AuZUOD7nLG3XRw5oRZLkD1tYcKOb9tb7FzUVM=;
-        b=cj04F7QqzbIH+jDzqVCmtG9GphWm0hCcyVJByGVaUDkGro89nOYNs52/W1vediKKHP
-         0R8igLfZJ++4c1AceZbfjkz4oaWNan9EDUadR0XELjSSo2a9UjR/bmqmMV6gvNttTwUY
-         LEMf5zPgXLO7ByQx/cSc/a3s1IrQ0tsvOIVWf2NmqQCWTahHLQ12GQx3yavQ9ZlbN7Wk
-         I5tsCrEIN9aDn9GlBks8FKNdMXD758wTzbJcu2qf7lF6DCY2XmtA/p5eSdGYuyLMhV1c
-         H9q3H4ZbwtDMH3hYPVLZm4V2DIxiaXlVaSFIICGAchCt5j4XeY7PHg5OgQEWGRS0lMEC
-         bhiQ==
+        bh=JIg5+OltZz+qNz0RRuDFM1jB49i8ZdwPwOhAKksmf8Y=;
+        b=KYrIt4bM5BqpJ4+bdw8Ouh+iYEIZvhloTC4PoEaeWXraXTicwzhSJjVriL2dK0QHpc
+         MzWKC4cXOMEo7BpxcXlvm1+NLMbo688OL+7QAOtUw06/+tbPj1xtiStQ+GIdM6O2ufNH
+         wv+46GX/V1tkQdRzBdEpeKmtkI5OYd1kF6SKqn7YSmbOpJsMxOM/59zJYoicCcvzhbZf
+         ewqkYL3GblFJew+0V7a7KBWQsvI1IWqIZXOOoA4zCssdGuD0AcKfZjAqRuHtCfukNQwR
+         fUsMYJIUH5PvwdQNgsBvMm0knq9gsh0Z+z33TcfZ5WRKgjD7B9SqFUxeYBc+nHrxiQFi
+         Twiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=hiN25+AuZUOD7nLG3XRw5oRZLkD1tYcKOb9tb7FzUVM=;
-        b=gkNUChasYq0LEs5daALCYfZHaXOl9rQzgD9IyU4l9tv1Q1idXIkOKOSlBZwLnE4gef
-         nlbiZLkMXjlAyYzkWJt3AYoTFwqPxhYxKY0b3W6na1v7TF2qZatbsOme1xV/AS2nBnKY
-         tPWQ0QhhdQ+qO7N1eELLnGOhasySX1H4m+bm63aBLWBkwhDXWMkVT3p1S5Axi6KiPNXa
-         iuATBO+Xd5oWb/FxhdpYbWU1rcHeAVRWfomKzl/LIU2t6p4tYNSfM8WC8lDaNRT0hhXj
-         TZ7JGLRcrb4U0kx7UySSrwJL82M5uUEMEyxW5HKhmOnLQHTykPeLU7A9F5NsPB1/Z9Zn
-         qQ0A==
-X-Gm-Message-State: APjAAAWYMS9wxEh23QABrYgXu0b7FGExP9g5Obj7GGVhM8B83QKv2Fh1
-        V0CrbH6EXmSDTOsKnZeyO9evTQ==
-X-Google-Smtp-Source: APXvYqxIU4RIvJ7PNGWe4RKaF1AKjfwOEmvOWyEX/CnY+rJkjs7MP3l681gbgSHM3XHjpMRG6BYhrg==
-X-Received: by 2002:a7b:cf08:: with SMTP id l8mr13997403wmg.169.1581325791996;
-        Mon, 10 Feb 2020 01:09:51 -0800 (PST)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a198sm14442434wme.12.2020.02.10.01.09.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2020 01:09:51 -0800 (PST)
-Subject: Re: [PATCH 2/3] dt-bindings: it6251: add bindings for IT6251
- LVDS-to-eDP bridge
-To:     Sam Ravnborg <sam@ravnborg.org>, Marek Vasut <marex@denx.de>
-Cc:     devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org
-References: <20200127022023.379080-1-marex@denx.de>
- <20200127022023.379080-2-marex@denx.de> <20200202182346.GA18495@ravnborg.org>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <427b001c-9187-9c5d-64de-58e9e7c231fe@baylibre.com>
-Date:   Mon, 10 Feb 2020 10:09:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JIg5+OltZz+qNz0RRuDFM1jB49i8ZdwPwOhAKksmf8Y=;
+        b=b1ucjnR7OOvpbKVKUWcmNE1G8xJxHr10JKN/RT00ky0Vvkyw9hj3XJaLDd9UKwBBqn
+         QOif11+62aXio1ZEBfGgmXu4obebHPQSfHeyayWpEeuklhsU1Mx6ao92STk4NQ1cVqrt
+         e3SDV5xmldo9hd2zvyW242FJNge/sgw7Gj9popD/glopQMui4fvcegVWVqRRRzX5QhNh
+         SUXe9xb9j6APLikQhdlY9+7vuvwuM4wz8RvZObjpecbpzwZG/afYr1Wf6A2HPVHdQztT
+         XI1JopKrsx3/NViIoSwICWOAaZDS6fqbLE6iY34romZsWiXfuNdVqEt5WgI0zKxth6/o
+         bwZg==
+X-Gm-Message-State: APjAAAVTPXBsenP2dBD2ogKRtY+KHdhN8+2ftoLgVf7knF3YQ5p+QhX1
+        Yr5MonEw5nneRIVqtwiOySlTSSlmrIM=
+X-Google-Smtp-Source: APXvYqwDUwBuUFIFKY/t/OmKsowDf9RX0RJ5xHbraCkJAtapJJCM9EAJ02li8HubtWZBMbPRHfo4fQ==
+X-Received: by 2002:a2e:8119:: with SMTP id d25mr336354ljg.76.1581326841707;
+        Mon, 10 Feb 2020 01:27:21 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id d9sm5989882lja.73.2020.02.10.01.27.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 01:27:21 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 0/7] dt-bindings: Convert the ARM Boards to YAML
+Date:   Mon, 10 Feb 2020 10:27:06 +0100
+Message-Id: <20200210092713.279105-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20200202182346.GA18495@ravnborg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+This converts the ARM reference designs to use YAML schema
+to verify the top-level and in some cases some basic nodes
+in the device tree as well.
 
-On 02/02/2020 19:23, Sam Ravnborg wrote:
-> Hi Marek.
-> 
-> On Mon, Jan 27, 2020 at 03:20:22AM +0100, Marek Vasut wrote:
->> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
->>
->> Signed-off-by: Marek Vasut <marex@denx.de>
->> Cc: Daniel Vetter <daniel@ffwll.ch>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Sean Cross <xobs@kosagi.com>
->> Cc: devicetree@vger.kernel.org
->> To: dri-devel@lists.freedesktop.org
->> ---
->>  .../bindings/display/bridge/ite,it6251.txt    | 35 +++++++++++++++++++
-> 
-> Any chance you could make this follow the DT Schema (.yaml) syntax
-> so we get better verification of the DT files?
+Rob requested me to get this done: let's get it done.
 
-Indeed, please use DT Schema for new bindings.
+Rob: when you're happy I can merge this through ARM SoC so the
+minor cleanups go in first, unless you prefer another
+merge path.
 
-Neil
+Linus Walleij (7):
+  ARM: dts: Versatile: Use syscon as node name for IB2
+  ARM: dts: RealView: Fix the name of the SoC node
+  dt-bindings: arm: Add Integrator YAML schema
+  dt-bindings: arm: Add Versatile YAML schema
+  dt-bindings: arm: Add RealView YAML schema
+  dt-bindings: arm: Add Versatile Express and Juno YAML schema
+  dt-bindings: arm: Drop the non-YAML bindings
 
-> 
-> 	Sam
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+ .../bindings/arm/arm,integrator.yaml          |  85 +++++++
+ .../devicetree/bindings/arm/arm,realview.yaml | 123 +++++++++
+ .../bindings/arm/arm,versatile.yaml           |  69 +++++
+ .../bindings/arm/arm,vexpress-juno.yaml       | 118 +++++++++
+ .../devicetree/bindings/arm/arm-boards        | 237 ------------------
+ .../devicetree/bindings/arm/vexpress.txt      | 229 -----------------
+ arch/arm/boot/dts/arm-realview-pbx.dtsi       |   2 +-
+ arch/arm/boot/dts/versatile-ab-ib2.dts        |   2 +-
+ 8 files changed, 397 insertions(+), 468 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,integrator.yaml
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,realview.yaml
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,versatile.yaml
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,vexpress-juno.yaml
+ delete mode 100644 Documentation/devicetree/bindings/arm/arm-boards
+ delete mode 100644 Documentation/devicetree/bindings/arm/vexpress.txt
+
+-- 
+2.23.0
 
