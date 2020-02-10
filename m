@@ -2,128 +2,162 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B2DC35254
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBB1C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8F120715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6EB20870
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581360351;
-	bh=1HEo325uKcJScMqA1TBMxTyz69hQ2kusxwb1WY+5d6w=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=IBmPq6vOZ2kIkluro1kKScMqNC00NzV1Jf1vDPIhQ2LvAd9yd236nRXS4bizOYT46
-	 B8FJUpzycOiEdXKHIASD15GNtbCmIOMI3iuM4/wrsnH+nBND73QzfwAtTNgv2g3ks4
-	 OPVf6hiOZSNNiODtash8Tsdi8rxD/uvL7W8+gxAE=
+	s=default; t=1581360907;
+	bh=6pgtcQndcROYmWBHJTcegWLxUbTrUDy+hULdIFfEwTw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2bxj2wbLWm3Fvqo87N9CYyZJVCzOdSGAArskIVOosQhSHxVYS9B6I0LLAI91vMS/4
+	 4ITV379T1APpavJzv4uttgDLX7AJHQSGNGwJQhytYqV01LbVi5jXOSJ+eUiIFNZOsa
+	 W9I7ZJ19TZlb1LuVVXdJc8aFc5oZQHygEgH49e5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbgBJSps (ORCPT
+        id S1727056AbgBJSzD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:45:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbgBJSps (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:45:48 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FE6B20715;
-        Mon, 10 Feb 2020 18:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581360347;
-        bh=1HEo325uKcJScMqA1TBMxTyz69hQ2kusxwb1WY+5d6w=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=NdKqBThhzMhuAHRe2+WtUZ1+wejRl1ueQ6kv59onPhamqyc+lX6JIkIxnZ96amPkw
-         H+p42TwWdhwtBxbUDFDh0UW2ZwTa2JGVxwnV3vCVXju5Ku3/obTgujV8sDjDrI3IQo
-         xeiGrx+9qOrOv/fccDCB8NpQMziZ4n8mEMAhYtrI=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200207044425.32398-2-vigneshr@ti.com>
-References: <20200207044425.32398-1-vigneshr@ti.com> <20200207044425.32398-2-vigneshr@ti.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: Add binding documentation for TI syscon gate clock
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
+        Mon, 10 Feb 2020 13:55:03 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40278 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbgBJSzD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 13:55:03 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p3so1575211edx.7;
+        Mon, 10 Feb 2020 10:55:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jlkep5BMgERBHRiRFRjnqMtZPt75n7yCPDHspM4Vr4s=;
+        b=pEvR8ABTtQkrO9u6pVgAlLHW7KBW3peH1uZYJ2eqTKxZ7Tj9nedUCZoATzhRnostW7
+         PloRMJ5o9wcPZcJXjgPNKdbuky18rMhsSGVmFO8owtO5mFJgCsZFYisCdC2a6oOSkYBR
+         JkrT4YL2WjB/6zdE6xNLDf3hMxGM7PTaJQ+uLpuSFBK/r1W+sQrbHSEiA556+//b836t
+         zkQHNc1Bzt1A6syHSrSDc5qBNMip1Om8XdpActNsX1mSFIrVmzDpHI4cWsJTG33dq98C
+         ZceSe3ZscFFJ2G6+Ke53h4hNBPtL13Ntu0OdAmTDtQx4GqNy1QrkELIgsf+YYq7D4zcw
+         xteQ==
+X-Gm-Message-State: APjAAAWptcotSWc9c73ehDLs8lMSVydvighn6UcGldlIxYcFQzrXJUE5
+        f9OAg4YzH/KBJfapeDs6ddY=
+X-Google-Smtp-Source: APXvYqw0gOeAueOeG/UOMWpy/5re47tSz7mLAaISIcnPIQ/kq1PJH7gsUfZZce4d+I4k2uUUDYoxfQ==
+X-Received: by 2002:a05:6402:14d6:: with SMTP id f22mr2415351edx.59.1581360901336;
+        Mon, 10 Feb 2020 10:55:01 -0800 (PST)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id j21sm74756eds.8.2020.02.10.10.54.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Feb 2020 10:55:00 -0800 (PST)
+Date:   Mon, 10 Feb 2020 19:54:58 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Date:   Mon, 10 Feb 2020 10:45:46 -0800
-Message-ID: <158136034652.94449.4389789192412792346@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv3 2/3] ARM: dts: exynos: Add missing usbdrd3 suspend clk
+Message-ID: <20200210185458.GA16433@kozik-lap>
+References: <20200210105108.1128-1-linux.amoon@gmail.com>
+ <20200210105108.1128-3-linux.amoon@gmail.com>
+ <20200210135008.GA2163@pi3>
+ <CANAwSgT9_8JhjyN9yfZ6=AUE7kVhrrTwdK1KFQLwxuNSYyBKKA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANAwSgT9_8JhjyN9yfZ6=AUE7kVhrrTwdK1KFQLwxuNSYyBKKA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Vignesh Raghavendra (2020-02-06 20:44:24)
-> diff --git a/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbcl=
-k.yaml b/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
-> new file mode 100644
-> index 000000000000..98fcac2b41f3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/ti,am654-ehrpwm-tbclk.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI syscon gate clock driver
-> +
-> +maintainers:
-> +  - Vignesh Raghavendra <vigneshr@ti.com>
-> +
-> +description: |
-> +
-> +  This binding uses common clock bindings
-> +  Documentation/devicetree/bindings/clock/clock-bindings.txt
+On Mon, Feb 10, 2020 at 10:43:45PM +0530, Anand Moon wrote:
+> Hi Krzysztof,
+> 
+> Thanks for your review comments.
+> 
+> On Mon, 10 Feb 2020 at 19:20, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Mon, Feb 10, 2020 at 10:51:07AM +0000, Anand Moon wrote:
+> > > This patch adds new combatible strings for USBDRD3
+> > > for adding missing suspend clk, exynos5422 usbdrd3
+> > > support two clk USBD300 and SCLK_USBD300, so add missing
+> > > suspemd_clk for Exynos542x DWC3 nodes.
+> > >
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > ---
+> > >  arch/arm/boot/dts/exynos5420.dtsi | 8 ++++----
+> > >  arch/arm/boot/dts/exynos54xx.dtsi | 4 ++--
+> > >  2 files changed, 6 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> > > index b672080e7469..bd505256a223 100644
+> > > --- a/arch/arm/boot/dts/exynos5420.dtsi
+> > > +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> > > @@ -1372,8 +1372,8 @@ &trng {
+> > >  };
+> > >
+> > >  &usbdrd3_0 {
+> > > -     clocks = <&clock CLK_USBD300>;
+> > > -     clock-names = "usbdrd30";
+> > > +     clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
+> > > +     clock-names = "usbdrd30", "usbdrd30_susp_clk";
+> > >  };
+> > >
+> > >  &usbdrd_phy0 {
+> > > @@ -1383,8 +1383,8 @@ &usbdrd_phy0 {
+> > >  };
+> > >
+> > >  &usbdrd3_1 {
+> > > -     clocks = <&clock CLK_USBD301>;
+> > > -     clock-names = "usbdrd30";
+> > > +     clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
+> > > +     clock-names = "usbdrd30", "usbdrd30_susp_clk";
+> > >  };
+> > >
+> > >  &usbdrd_dwc3_1 {
+> > > diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+> > > index 8aa5117e58ce..0aac6255de5d 100644
+> > > --- a/arch/arm/boot/dts/exynos54xx.dtsi
+> > > +++ b/arch/arm/boot/dts/exynos54xx.dtsi
+> > > @@ -143,7 +143,7 @@ hsi2c_7: i2c@12cd0000 {
+> > >               };
+> > >
+> > >               usbdrd3_0: usb3-0 {
+> > > -                     compatible = "samsung,exynos5250-dwusb3";
+> > > +                     compatible = "samsung,exynos5420-dwusb3";
+> > >                       #address-cells = <1>;
+> > >                       #size-cells = <1>;
+> > >                       ranges;
+> > > @@ -165,7 +165,7 @@ usbdrd_phy0: phy@12100000 {
+> > >               };
+> > >
+> > >               usbdrd3_1: usb3-1 {
+> > > -                     compatible = "samsung,exynos5250-dwusb3";
+> > > +                     compatible = "samsung,exynos5420-dwusb3";
+> >
+> > This affects also Exynos5410 but you do not add new clock there.
+> >
+> > Best regards,
+> > Krzysztof
+> >
+> 
+> Ok I will update this Exynos5410 dts.
+> 
+> Is samsung,exynos54xx-dwusb3 is valid compatible string
+> for both the SoC.
 
-Maybe have a real description instead of this line which is mostly
-useless.
+The compatible should not be wildcard so keep it as
+samsung,exynos5420-dwusb3.
 
-> +
-> +properties:
-> +  compatible:
-> +    items:
+Best regards,
+Krzysztof
 
-I think you can drop items.
-
-> +      - const: ti,am654-ehrpwm-tbclk
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  ti,tbclk-syscon:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to the system controller node that has bits to
-> +      control eHRPWM's TBCLK
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - ti,tbclk-syscon
-> +
-> +examples:
-> +  - |
-> +    tbclk_ctrl: tbclk_ctrl@4140 {
-> +        compatible =3D "syscon";
-> +        reg =3D <0x4140 0x18>;
-> +    };
-> +
-> +    ehrpwm_tbclk: clk0 {
-> +        compatible =3D "ti,am654-ehrpwm-tbclk";
-> +        #clock-cells =3D <1>;
-> +        ti,tbclk-syscon =3D <&tbclk_ctrl>;
-> +    };
-
-I don't understand the binding. Why can't the syscon node register clks
-and have #clock-cells?
