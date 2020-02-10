@@ -2,86 +2,137 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F825C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E00C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE3F2070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="vvcUgFrb"
+	by mail.kernel.org (Postfix) with ESMTP id DEE562070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 13:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581342616;
+	bh=A4cl3SC6S8mfUywUBJUlbl+RXxvceSSnWkxnrhJxtHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T2WyY+kZU1DZd+Nh1M1Wbmhjpy7poRuDCEUMKz1eJ2n7ZJMYa908jl48r1XzFAlfk
+	 AOfiCxI/jPSrA4QiYIXYOLezArdGMaoZRCXvx8fQLj5ErSsKZADxMEleLBBpKzJMCT
+	 HZInJTMawg3e9LZkF6iei7WaD8qSgnMX34cuyMDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgBJNoh (ORCPT
+        id S1727795AbgBJNuN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:44:37 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:34280 "EHLO
-        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbgBJNoh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 08:44:37 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 0DB0AD006F9;
-        Mon, 10 Feb 2020 13:44:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at serbinski.com
-Received: from mail.serbinski.com ([127.0.0.1])
-        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CtK7mfW-1BDu; Mon, 10 Feb 2020 08:44:31 -0500 (EST)
-Received: from mail.serbinski.com (localhost [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id B5D6DD00693;
-        Mon, 10 Feb 2020 08:44:31 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com B5D6DD00693
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581342271;
-        bh=zoaUdtUdAwbS6W/qIOBURXTRFBcaTr0B8ofCyG3hjjw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vvcUgFrbvvVbBiV8cAwNiGEhy7uaAKlWb93nxC7EAozNJol/8FnH6LclBYzz9RWM3
-         Gch97PXEEO9SY26Glk7blM68U4i1+UL1IieXWRg+6pm31uNkDVPlz2HortA8N5H61H
-         2wKj988HcHOKIs2dJMG/uu5MraB0px8kCJo2J72E=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 10 Feb 2020 08:44:31 -0500
-From:   Adam Serbinski <adam@serbinski.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mon, 10 Feb 2020 08:50:13 -0500
+Received: from mail-ed1-f52.google.com ([209.85.208.52]:43427 "EHLO
+        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgBJNuN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 08:50:13 -0500
+Received: by mail-ed1-f52.google.com with SMTP id dc19so306631edb.10;
+        Mon, 10 Feb 2020 05:50:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oUh/ndXbaDqp+3tPebK12Mbm+ONI7sh2CQOdtDK1Y1Q=;
+        b=omWazMTgJKzRRnL4XyFfYUbjw0QfgQaEYnOM/sZFP1eblVhI2iUEulVac1koKlMCUl
+         JOT9DFpPJ2mkRSWnOsit1oAgW6MHtOj4ETt9Ywc9yNL++WAW4r6t9Xh0vwWvGcVCBh3Y
+         3kXfgO87NfSg4fsliLunLB40iit+RkkXH3/VZuFLFOAqfVOVvDMvtPV3SiN4jgq1GaaU
+         u+hRQtMafv07ZGZ9VyEEJFsIST6Va3BVvQmGVZiKCZU/aHMe4KE4tYpv8gUq3TFm39OF
+         KM+Ict+t4Iym6Sl6N+fjClzdzSyGwkNysY3l/RcHD1iyqenYUFun8Q+MHYrg5Fs3D5FK
+         o+Zg==
+X-Gm-Message-State: APjAAAV6bQfcqMZoCbRP6QkD2XYnlb5MMhT0vlHDMOr3MlQsKgJ/wCku
+        UTJG7bS7Cy/mTUPEOrlDEEk=
+X-Google-Smtp-Source: APXvYqyn2t288jmOkFcP+OP9icXtvKT/eVN8DeIO76jSB5/gUw5aD8FBkeSGATGBn0SU9NvUvANfQw==
+X-Received: by 2002:a17:906:23e2:: with SMTP id j2mr1165391ejg.257.1581342611234;
+        Mon, 10 Feb 2020 05:50:11 -0800 (PST)
+Received: from pi3 ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id qw15sm43828ejb.92.2020.02.10.05.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 05:50:10 -0800 (PST)
+Date:   Mon, 10 Feb 2020 14:50:08 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] ASoC: qdsp6: db820c: Add support for external and
- bluetooth audio
-In-Reply-To: <20200210121747.GB7685@sirena.org.uk>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200210121747.GB7685@sirena.org.uk>
-User-Agent: Roundcube Webmail/1.4-beta
-Message-ID: <007098fa20e161bf94d65e248955ff6c@serbinski.com>
-X-Sender: adam@serbinski.com
+        Felipe Balbi <balbi@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 2/3] ARM: dts: exynos: Add missing usbdrd3 suspend clk
+Message-ID: <20200210135008.GA2163@pi3>
+References: <20200210105108.1128-1-linux.amoon@gmail.com>
+ <20200210105108.1128-3-linux.amoon@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200210105108.1128-3-linux.amoon@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-02-10 07:17, Mark Brown wrote:
-> On Sun, Feb 09, 2020 at 10:47:40AM -0500, Adam Serbinski wrote:
->> Changes from V1:
->> 
->> 	Rename patch:
->> 		from: dts: msm8996/db820c: enable primary pcm and quaternary i2s
+On Mon, Feb 10, 2020 at 10:51:07AM +0000, Anand Moon wrote:
+> This patch adds new combatible strings for USBDRD3
+> for adding missing suspend clk, exynos5422 usbdrd3
+> support two clk USBD300 and SCLK_USBD300, so add missing
+> suspemd_clk for Exynos542x DWC3 nodes.
 > 
-> Please don't send new serieses in reply to old ones, it can make it
-> confusing what's going on and what the current version is.
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi | 8 ++++----
+>  arch/arm/boot/dts/exynos54xx.dtsi | 4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index b672080e7469..bd505256a223 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -1372,8 +1372,8 @@ &trng {
+>  };
+>  
+>  &usbdrd3_0 {
+> -	clocks = <&clock CLK_USBD300>;
+> -	clock-names = "usbdrd30";
+> +	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
+> +	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+>  };
+>  
+>  &usbdrd_phy0 {
+> @@ -1383,8 +1383,8 @@ &usbdrd_phy0 {
+>  };
+>  
+>  &usbdrd3_1 {
+> -	clocks = <&clock CLK_USBD301>;
+> -	clock-names = "usbdrd30";
+> +	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
+> +	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+>  };
+>  
+>  &usbdrd_dwc3_1 {
+> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+> index 8aa5117e58ce..0aac6255de5d 100644
+> --- a/arch/arm/boot/dts/exynos54xx.dtsi
+> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
+> @@ -143,7 +143,7 @@ hsi2c_7: i2c@12cd0000 {
+>  		};
+>  
+>  		usbdrd3_0: usb3-0 {
+> -			compatible = "samsung,exynos5250-dwusb3";
+> +			compatible = "samsung,exynos5420-dwusb3";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> @@ -165,7 +165,7 @@ usbdrd_phy0: phy@12100000 {
+>  		};
+>  
+>  		usbdrd3_1: usb3-1 {
+> -			compatible = "samsung,exynos5250-dwusb3";
+> +			compatible = "samsung,exynos5420-dwusb3";
 
-My apologies. Its my first time doing this. Thank you for the advice.
+This affects also Exynos5410 but you do not add new clock there.
 
--Adam
+Best regards,
+Krzysztof
+
