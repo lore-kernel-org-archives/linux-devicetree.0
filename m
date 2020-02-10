@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8416AC352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F4C352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0DC2080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43DA20842
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:22:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bg+TX0Nv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Dv5g3JHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgBJLPP (ORCPT
+        id S1727447AbgBJLWt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:15:15 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1236 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgBJLPP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 06:15:15 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e413b030000>; Mon, 10 Feb 2020 03:14:11 -0800
+        Mon, 10 Feb 2020 06:22:49 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10831 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJLWt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 06:22:49 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e413cfa0000>; Mon, 10 Feb 2020 03:22:34 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 10 Feb 2020 03:15:14 -0800
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 10 Feb 2020 03:22:48 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 03:15:14 -0800
+        by hqpgpgate102.nvidia.com on Mon, 10 Feb 2020 03:22:48 -0800
 Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 11:15:08 +0000
+ 2020 11:22:43 +0000
 CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
         <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -40,20 +40,19 @@ CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
         <sharadg@nvidia.com>, <mkumard@nvidia.com>,
         <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
         <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH v2 6/9] ASoC: tegra: add Tegra186 based DSPK driver
+Subject: Re: [PATCH v2 0/9] add ASoC components for AHUB
 To:     Dmitry Osipenko <digetx@gmail.com>
 References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-7-git-send-email-spujar@nvidia.com>
- <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
- <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
- <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
+ <fcab0af1-fe84-6028-701b-ab101feaa8de@gmail.com>
+ <d17b2654-a888-8251-468d-12ef1451cd4b@nvidia.com>
+ <40a4d544-7c33-3f28-0b9c-384bc9fe3b53@gmail.com>
 From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <3c19ef99-8051-76f7-a4d6-0d61182fe6e4@nvidia.com>
-Date:   Mon, 10 Feb 2020 16:45:05 +0530
+Message-ID: <3cb0642f-46be-26e0-4090-f82981538a09@nvidia.com>
+Date:   Mon, 10 Feb 2020 16:52:39 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
+In-Reply-To: <40a4d544-7c33-3f28-0b9c-384bc9fe3b53@gmail.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -61,17 +60,17 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-GB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581333251; bh=WuJ/yXuI1Dh+KZQlZCVWcQ74+5I0SnMra5tYUj5mEvo=;
+        t=1581333754; bh=D0y6xeonACafAuD+vXIgDjhVKU1a9PB64HFqz8+HmFs=;
         h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
          Content-Language;
-        b=bg+TX0NvBS/rnU/L9+9F0whahwkuD+eMLwfwyayTBaN9q1wi0PEeOTdUyF/B82lNn
-         vRu66mZnWVm6HOu1uhchVBqVgz54ANkhaIkyXOECSAxcqtlFc57Sh34oPRnhH1o0Ka
-         5j7xN1ivogH8DuQFTD1SN6lcLQ+UpHgCvZQG8ED1lISyv7xVS4njeVlVAllUf0h4cN
-         8A1NrMkDvadFZQEexIu58GqRAvjYyV2nwUivJA1/CK3ZoDvZMOWlib7xM0hWnEPjc7
-         kZ5KF2a8uIHthYW7zYBe49dYFx5I3iMfFojAwmlGfNsLRb8I9sjtThMHVIcMXqhKpj
-         8zI6jS0qpGuew==
+        b=Dv5g3JHfPme0U1x/ORxA4oCce9xyttHVQXD0j5xoFs+aLm48ch9H+pAjWSuWdcWdk
+         r+LsPCy2yiXMjnSbVTtZdri/kh/o9509s3MHd1nLsC2olV9tqPuEOdK0KAHXuVbDOD
+         4DI0YEtWXgk+uYbREBCO1po1FmGp+cfovfajz6aPAxA0o5LNKBHfdvJ3Kl+2k9Es9g
+         fGtQQ6ClCV6GH93GFDfbGY930t+a/g3rS3D1Acn6ihQMIXxopsWYt6rOSAgOqPUIpp
+         vFd2r/5OeHfK7TzehQm1ISfC0xPBmXVyt/AiAYtg2YJz1c5vyk1ULhmxQXAKD0oxT5
+         d2y7DBi8tyk2w==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -79,32 +78,24 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 2/7/2020 11:52 PM, Dmitry Osipenko wrote:
+On 2/7/2020 11:55 PM, Dmitry Osipenko wrote:
 > External email: Use caution opening links or attachments
 >
 >
-> 07.02.2020 14:26, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> 07.02.2020 14:30, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 >>
->> On 2/6/2020 10:45 PM, Dmitry Osipenko wrote:
+>> On 2/6/2020 11:06 PM, Dmitry Osipenko wrote:
 >>> External email: Use caution opening links or attachments
 >>>
 >>>
 >>> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> +static const struct dev_pm_ops tegra186_dspk_pm_ops =3D {
->>>> +     SET_RUNTIME_PM_OPS(tegra186_dspk_runtime_suspend,
->>>> +                        tegra186_dspk_runtime_resume, NULL)
->>>> +     SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->>>> +                                  pm_runtime_force_resume)
->>>> +};
->>> Could you please explain why drivers need the "late" system sleep?
->> It was done to ensure core drivers are suspended first and defer the
->> codec driver suspend
-> Suspend order is opposite to the drivers registration order. If there is
-> no real problem with that, then you should use the default suspend
+>>> ...
+>>>>    sound/soc/tegra/Kconfig                            |=C2=A0 56 ++
+>>> Probably won't hurt to enable the new drivers in the
+>>> arch/arm64/configs/defconfig?
+>> Do you mean, if drivers can be enabled?
+> Yes, I mean to enable them in the default kernel configuration.
 
-> level. Please don't try to fix a non-existent problems.
-
-No. This was done specifically to allow sound core to first stop any=20
-ongoing audio activity during normal suspend and ensure a safe suspend=20
-of AHUB devices by doing a LATE suspend.
+Yes these can be enabled by default. I can push a defconfig patch, if=20
+that is what you were referring in the beginning.
 
