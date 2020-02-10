@@ -2,53 +2,80 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA375C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 10:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CE9C352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 10:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AA62070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 10:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D681E20863
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 10:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="QXIKRKzj"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="AUDYwrrM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rx9mXnhF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbgBJKES (ORCPT
+        id S1727567AbgBJKEW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:04:18 -0500
-Received: from srv1.deutnet.info ([116.203.153.70]:47860 "EHLO
-        srv1.deutnet.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbgBJKER (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 05:04:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deutnet.info; s=default; h=In-Reply-To:Message-Id:Date:Subject:Cc:To:From;
-         bh=3Ciuxvpq/QgkL4EE+nmSla5AVI07VMG5GvViEqviaBw=; b=QXIKRKzj2jZBrINaRH8wb1ds4
-        UIxerPh66Uh6wFQdEZiNV3dKXxyxFrmM9fEbA6tahtn/+Vf+3JdbCvwJAjN8iO/UQFF3w5eQk6IiG
-        aY5G3SZnYK3ZPlpn45BXw9owc8jcWPclOsTOkVT9cIBLahyw0QtuezPjLvpvIN+NHYqe7yVYRDlWe
-        t2ma5N8D/Gxdt3nwNjqJXRas64gu9f6kMBIjymL6CEjOcOciVFwAwhR0kDe9ouVTEri+0UiyqACwW
-        HGDivztK3FRW9Io0dEBMsbpQrgzJaBDK7czmbY+pXjhXNyjNvHfqZ5Wg7vqLY4P1Ff6iCsKzpAYGE
-        f6QbYeVEw==;
-Received: from [2001:bc8:3dc9::1] (helo=srv100.deutnet.info)
-        by srv1.deutnet.info with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1j15Ma-0007ft-1d; Mon, 10 Feb 2020 10:28:20 +0100
-Received: from agriveaux by srv100.deutnet.info with local (Exim 4.92)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1j15MZ-00DSp5-N2; Mon, 10 Feb 2020 10:28:19 +0100
-From:   agriveaux@deutnet.info
-To:     robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        wens@csie.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        agriveaux@deutnet.info
-Subject: [PATCH] ARM: dts: sun5i: Add dts for inet86v_rev2
-Date:   Mon, 10 Feb 2020 10:27:36 +0100
-Message-Id: <20200210092736.3208998-2-agriveaux@deutnet.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200210092736.3208998-1-agriveaux@deutnet.info>
-References: <20200210092736.3208998-1-agriveaux@deutnet.info>
+        Mon, 10 Feb 2020 05:04:22 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50019 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727061AbgBJKEV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 05:04:21 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id BFA4D1C28;
+        Mon, 10 Feb 2020 05:04:20 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 10 Feb 2020 05:04:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=aFqJHi2DxkxEhthklRhVe9pAV9
+        MnZcHeB0F11l4pfqQ=; b=AUDYwrrMA0q0yfov4T3x/hofaL6gtCUu1viGTdTT9N
+        vpzVTMt7J7ro6OchNXo69nKoTOMP+k3mS4nQzX0pX30yoFFV4n/Yr33hRU1wrNVu
+        53AiSIPEdOvofULxLieFkDGrJVZPsmKYlm0OtxNy2jQAwJqbn9p5Uuk6bSd4JbGY
+        4QNXNwghPJz0cZoMeC+rSxFVEw4Tsf1ydNdYNTro3I7nV4+Ok/vvctmNOE08eRdP
+        a7RyO2tUS6LVgOYtNwBX4isEHWTOelMNXewg77Cgy4sXPS9OaLXjvJVaOJ3Fn/u/
+        /qH+w6eTwlb6p7Noq6NcuAOw2Q+86th1n+nEFm/7e9nQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=aFqJHi2DxkxEhthkl
+        RhVe9pAV9MnZcHeB0F11l4pfqQ=; b=rx9mXnhFWcLsQilC1Xm0TIfT8AVKlEOB0
+        6LOmDZOtPhiqaDXT6Nx0Or2HblJGEzfwnoOGhJMkZXGvhJGw5NCDmlK7GfsoWu71
+        mp90kJR+sQHvZIofrEBFrIloHuWOOumCkPcpKTdqgfl0Pqgei2YYTcbanf12N/8g
+        BUPJuviPHfu/y7gV4Ssd4isOfzGpkVbIDd/RZtMjffMA6vs6helP/KBipWkgA8zJ
+        NCF2CmaOzNb0AU7x3wRClMKrJ+RnE1YycFLp3xKFBkx3v1dcaBVWXu/baHO8nxtD
+        YYF30YyCBhCzAamqdLw9j6MB2YxfvrOoIoNbE+eSn8cMJ8nEnoogA==
+X-ME-Sender: <xms:oypBXt18sxPnzpQkl9kpJnyAEReV6_plzQW6E-kH7aDdexM9FlG7Rw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedugddutdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucft
+    ihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrdekle
+    drieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:oypBXvHIMtmjPaNZ9JWzqB6AvIQK-kEBbdZW1ROsi42GiUU1q3h1Xw>
+    <xmx:oypBXkhnHCbTtnqt463RC0mpP0nIpNiWlmqkK2jrBz8HXL8EEy0ECQ>
+    <xmx:oypBXoe7i2TJ6IsAkKYYHzlSdpDROxyoD45_jjUo_saMMRBCcnRIhQ>
+    <xmx:pCpBXjA30VkQgO6b-Gi9-xH2rNizDoeKWTcySJL7fmzsoHMLhcnAhw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9596C3280066;
+        Mon, 10 Feb 2020 05:04:19 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        sakari.ailus@linux.intel.com
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        mchehab+huawei@kernel.org, linux-media@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 1/2] dt-bindings: media: csi: Add interconnects properties
+Date:   Mon, 10 Feb 2020 11:04:16 +0100
+Message-Id: <20200210100417.78583-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -56,43 +83,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+The Allwinner CSI controller is sitting beside the MBUS that is represented
+as an interconnect.
 
-Add Inet 86V Rev 2 support, based upon Inet 86VS.
+Make sure that the interconnect properties are valid in the binding.
 
-Missing things:
-- Accelerometer (MXC6225X)
-- Touchpanel (Sitronix SL1536)
-- Nand (29F32G08CBACA)
-- Camera (HCWY0308)
+Fixes: 7866d6903ce8 ("media: dt-bindings: media: sun4i-csi: Add compatible for CSI0 on R40")
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
+ .../bindings/media/allwinner,sun4i-a10-csi.yaml        | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts b/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
-new file mode 100644
-index 000000000000..e73abb9a1e32
---- /dev/null
-+++ b/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2020 Alexandre Griveaux <agriveaux@deutnet.info>
-+ *
-+ * Minimal dts file for the iNet 86V
-+ */
+diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+index 9af873b43acd..afde17d9dab1 100644
+--- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
++++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+@@ -51,6 +51,16 @@ properties:
+   resets:
+     maxItems: 1
+ 
++  # FIXME: This should be made required eventually once every SoC will
++  # have the MBUS declared.
++  interconnects:
++    maxItems: 1
 +
-+/dts-v1/;
++  # FIXME: This should be made required eventually once every SoC will
++  # have the MBUS declared.
++  interconnect-names:
++    const: dma-mem
 +
-+#include "sun5i-a13.dtsi"
-+#include "sun5i-reference-design-tablet.dtsi"
-+
-+/ {
-+	model = "iNET 86V Rev 02";
-+	compatible = "inet,86v-rev2", "allwinner,sun5i-a13";
-+
-+};
+   # See ./video-interfaces.txt for details
+   port:
+     type: object
 -- 
-2.20.1
+2.24.1
 
