@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1820C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE24C352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43D420842
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E232121569
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgBJRKF (ORCPT
+        id S1728180AbgBJRKM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:10:05 -0500
+        Mon, 10 Feb 2020 12:10:12 -0500
 Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:36755 "EHLO
         herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727536AbgBJRKE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:10:04 -0500
+        with ESMTP id S1728162AbgBJRKM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:10:12 -0500
 X-Greylist: delayed 2425 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Feb 2020 12:09:57 EST
 Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 01AGT8JK011300;
-        Mon, 10 Feb 2020 18:29:08 +0200
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 01AGT3Ua011285;
+        Mon, 10 Feb 2020 18:29:03 +0200
 Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 820EB6032E; Mon, 10 Feb 2020 18:29:08 +0200 (IST)
+        id 650AC6032E; Mon, 10 Feb 2020 18:29:03 +0200 (IST)
 From:   amirmizi6@gmail.com
 To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
         oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
@@ -37,9 +37,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
         shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
         Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v3 6/7] dt-bindings: tpm: Add YAML schema for TPM TIS I2C options
-Date:   Mon, 10 Feb 2020 18:28:37 +0200
-Message-Id: <20200210162838.173903-7-amirmizi6@gmail.com>
+Subject: [PATCH v3 1/7] char: tpm: Make implementation of read16 read32 write32 optional
+Date:   Mon, 10 Feb 2020 18:28:32 +0200
+Message-Id: <20200210162838.173903-2-amirmizi6@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200210162838.173903-1-amirmizi6@gmail.com>
 References: <20200210162838.173903-1-amirmizi6@gmail.com>
@@ -52,70 +52,140 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Amir Mizinski <amirmizi6@gmail.com>
 
-Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c
- PTP based physical layer.
+Only tpm_tis has a faster way to access multiple bytes at once, every other
+driver will just fall back to read_bytes/write_bytes. Therefore, move this
+common code out of tpm_tis_spi into tpm_tis_core, so that it is
+automatically used when low-level drivers do not implement the specialized
+methods.
 
-This patch adds the documentation for corresponding device tree bindings of
- I2C based Physical TPM.
-Refer to the 'I2C Interface Definition' section in
- 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
- for specification.
+This commit is based on previous work by Alexander Steffen.
 
 Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 ---
- .../bindings/security/tpm/tpm-tis-i2c.yaml         | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+ drivers/char/tpm/tpm_tis_core.h | 38 +++++++++++++++++++++++++++++++++++---
+ drivers/char/tpm/tpm_tis_spi.c  | 41 -----------------------------------------
+ 2 files changed, 35 insertions(+), 44 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-new file mode 100644
-index 0000000..ca16b59
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index 7337819..d06c65b 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -122,13 +122,35 @@ static inline int tpm_tis_read8(struct tpm_tis_data *data, u32 addr, u8 *result)
+ static inline int tpm_tis_read16(struct tpm_tis_data *data, u32 addr,
+ 				 u16 *result)
+ {
+-	return data->phy_ops->read16(data, addr, result);
++	__le16 result_le;
++	int rc;
 +
-+title: I2C PTP based TPM Device Tree Bindings
++	if (data->phy_ops->read16)
++		return data->phy_ops->read16(data, addr, result);
 +
-+maintainers:
-+  - Amir Mizinski <amirmizi6@gmail.com>
++	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
++				       (u8 *)&result_le);
++	if (!rc)
++		*result = le16_to_cpu(result_le);
 +
-+description:
-+  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
++	return rc;
+ }
+ 
+ static inline int tpm_tis_read32(struct tpm_tis_data *data, u32 addr,
+ 				 u32 *result)
+ {
+-	return data->phy_ops->read32(data, addr, result);
++	__le32 result_le;
++	int rc;
 +
-+properties:
-+  compatible:
-+    contains:
-+      const: tcg,tpm-tis-i2c
++	if (data->phy_ops->read32)
++		return data->phy_ops->read32(data, addr, result);
 +
-+  reg:
-+    maxItems: 1
++	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
++				       (u8 *)&result_le);
++	if (!rc)
++		*result = le32_to_cpu(result_le);
 +
-+  interrupts:
-+    maxItems: 1
++	return rc;
+ }
+ 
+ static inline int tpm_tis_write_bytes(struct tpm_tis_data *data, u32 addr,
+@@ -145,7 +167,17 @@ static inline int tpm_tis_write8(struct tpm_tis_data *data, u32 addr, u8 value)
+ static inline int tpm_tis_write32(struct tpm_tis_data *data, u32 addr,
+ 				  u32 value)
+ {
+-	return data->phy_ops->write32(data, addr, value);
++	__le32 value_le;
++	int rc;
 +
-+  crc-checksum:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      CRC checksum enable.
++	if (data->phy_ops->write32)
++		return data->phy_ops->write32(data, addr, value);
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
++	value_le = cpu_to_le32(value);
++	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
++					(u8 *)&value_le);
 +
-+examples:
-+  - |
-+    tpm-tis-i2c: tpm-tis-i2c@2e {
-+       compatible = "tcg,tpm-tis-i2c";
-+       reg = <0x2e>;
-+       interrupts = <&gpio 24 GPIO_ACTIVE_HIGH>;
-+       crc-checksum;
-+    };
++	return rc;
+ }
+ 
+ static inline bool is_bsw(void)
+diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
+index d1754fd..95fef9d 100644
+--- a/drivers/char/tpm/tpm_tis_spi.c
++++ b/drivers/char/tpm/tpm_tis_spi.c
+@@ -152,44 +152,6 @@ static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
+ 	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
+ }
+ 
+-int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
+-{
+-	__le16 result_le;
+-	int rc;
+-
+-	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
+-				       (u8 *)&result_le);
+-	if (!rc)
+-		*result = le16_to_cpu(result_le);
+-
+-	return rc;
+-}
+-
+-int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
+-{
+-	__le32 result_le;
+-	int rc;
+-
+-	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
+-				       (u8 *)&result_le);
+-	if (!rc)
+-		*result = le32_to_cpu(result_le);
+-
+-	return rc;
+-}
+-
+-int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
+-{
+-	__le32 value_le;
+-	int rc;
+-
+-	value_le = cpu_to_le32(value);
+-	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
+-					(u8 *)&value_le);
+-
+-	return rc;
+-}
+-
+ int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
+ 		     int irq, const struct tpm_tis_phy_ops *phy_ops)
+ {
+@@ -205,9 +167,6 @@ int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
+ static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
+ 	.read_bytes = tpm_tis_spi_read_bytes,
+ 	.write_bytes = tpm_tis_spi_write_bytes,
+-	.read16 = tpm_tis_spi_read16,
+-	.read32 = tpm_tis_spi_read32,
+-	.write32 = tpm_tis_spi_write32,
+ };
+ 
+ static int tpm_tis_spi_probe(struct spi_device *dev)
 -- 
 2.7.4
 
