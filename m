@@ -2,78 +2,93 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF48C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C91C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A7A20842
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBB820842
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kb3gKJZr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g43EkP4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgBJL5l (ORCPT
+        id S1727008AbgBJL7v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:57:41 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:54610 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726950AbgBJL5l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 06:57:41 -0500
-X-UUID: 915e6ba8374342e6b6f48b9375edab1d-20200210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=sYoKY2Ak/uSkSw4Bm97gJwImBKKIl01gw2RaEsy53FM=;
-        b=kb3gKJZrjCW/QU1S67/47XGSuE75rkFuod9821Fpb514ooZCzamn1tPY+uziPT9SanAPdy7k/hkOUj1sfTYWctqUTnFevq7Coo1cXQVUlASnVbg+DH/OfKOJV95EQiYFEyD9uiODmQNxSZVnXjvl4Xxya5qN47/K+KG3qLbFGcg=;
-X-UUID: 915e6ba8374342e6b6f48b9375edab1d-20200210
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <wen.su@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 512373413; Mon, 10 Feb 2020 19:57:36 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 10 Feb 2020 19:56:47 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 10 Feb 2020 19:56:44 +0800
-Message-ID: <1581335854.16783.1.camel@mtkswgap22>
-Subject: Re: [PATCH v2 1/4] dt-bindings: regulator: Add document for MT6359
- regulator
-From:   Wen Su <Wen.Su@mediatek.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 10 Feb 2020 19:57:34 +0800
-In-Reply-To: <20200206114927.GN3897@sirena.org.uk>
-References: <1580958411-2478-1-git-send-email-Wen.Su@mediatek.com>
-         <1580958411-2478-2-git-send-email-Wen.Su@mediatek.com>
-         <20200206114927.GN3897@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 10 Feb 2020 06:59:51 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38926 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgBJL7u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 06:59:50 -0500
+Received: by mail-lj1-f196.google.com with SMTP id o15so6809557ljg.6
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 03:59:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N8ri1HdVPDzljdnoSaEAm04oUJIH8kMn84nyxZZBtKo=;
+        b=g43EkP4TbcJv19phmkl5303wP1GAzi/ow/vV/dXqWPvtosCf0QlPvzt+zBYAgWAO/N
+         dezbjWY0uhR0ryk00PKNWID6U9hNziz6EJGSzHWr2qslYSgJhLeGIp/rksWaMP51gg8R
+         LmfI+CzoVVAuvGh1+8uMeIAE1wxkoq47wyRFD2UsgcLWg/cwVZdbZQTQdRRw6g4ANQUc
+         HvEIHjbSqWGDgOaglqyuIcjc+kpexvUdNSmmQjto7RdWJiOkKkdyP/F4tP4s73D1zD1C
+         qdCU0yC3dR0qbeLBSbwreIEuziNGPmVnNVC48ZizBlsz9kyiJ1M5IPc+H8o/0Ly5ptBw
+         D4lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N8ri1HdVPDzljdnoSaEAm04oUJIH8kMn84nyxZZBtKo=;
+        b=DSO6vOtjL6FvAlFT2yT6HJv1wbPns9pY+zzO7i7GbEn9oGsqveEg3CKUdmFb5uilfK
+         GZjTAzo0MZlqfC6P/JG4YzNBgzd0beTaVdKHdWphka05WuW0fQ1H8UFDCBtoC7S/ocFH
+         30ZedvBIXGo+Lp51K95cBKthyJGSD6rNW1+gWp55PQcnEBF4FhgeB2kc8ABTHtPWTgN9
+         LL9NtARJ888Ru4rTeCmZ5l1u1w6mGxhqkrxQl5+VKSjKJkEBM/sGFhV9L+iHxN/goC5E
+         tcxLBym0WxD0qAeO07f2UmazrsvcfKehhpsS2g7UhwgDTkLB4m0tsL6PwmzvK+iVceP0
+         YNbw==
+X-Gm-Message-State: APjAAAXfwMaxehBJE9FL0C39ehhxT5dEsSvchyRO2Om+Jel/JqmcmVT1
+        xhc6743VP7+jmpU/TX44cIkwCoySggv4Q0ts/0fOsA==
+X-Google-Smtp-Source: APXvYqwglVmXCBtqHmbsVj4LnQ6hKh9b/iLCxpT3Sd3eo1f5NK1zSVEncR7qmMFyYJgpThGlN6KNwGwe8ZZpiFsMTec=
+X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr686115ljo.125.1581335988714;
+ Mon, 10 Feb 2020 03:59:48 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 10 Feb 2020 12:59:37 +0100
+Message-ID: <CACRpkdZqfz6Dbu879aC=FdQxkZB6E8cYxQvEnTOsfJRjjFeMKg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: Avoid kernel.h inclusion where it's possible
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIA0KDQpPbiBUaHUsIDIwMjAtMDItMDYgYXQgMTE6NDkgKzAwMDAsIE1hcmsgQnJvd24gd3Jv
-dGU6DQo+IE9uIFRodSwgRmViIDA2LCAyMDIwIGF0IDExOjA2OjQ4QU0gKzA4MDAsIFdlbiBTdSB3
-cm90ZToNCj4gDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZTog
-Im1lZGlhdGVrLG10NjM1OS1yZWd1bGF0b3IiDQo+IA0KPiBXaHkgZG9lcyB0aGlzIG5lZWQgYSBj
-b21wYXRpYmxlIHN0cmluZyAtIGl0IGxvb2tzIGxpa2UgaXQncyBqdXN0DQo+IGVuY29kaW5nIHRo
-ZSB3YXkgTGludXggc3BsaXRzIGRldmljZXMgdXAgaW50byB0aGUgRFQsIG5vdA0KPiBwcm92aWRp
-bmcgc29tZSByZXVzYWJsZSBJUCBibG9jay4NCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0K
-SSB3aWxsIHJlbW92ZSBpdCBpbiB0aGUgbmV4dCBwYXRjaC4NCg0KPiBfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBMaW51eC1tZWRpYXRlayBtYWlsaW5n
-IGxpc3QNCj4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQoNCg==
+On Wed, Feb 5, 2020 at 2:43 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
+> Inclusion of kernel.h increases the mess with the header dependencies.
+> Avoid kernel.h inclusion where it's possible.
+>
+> Besides that, clean up a bit other inclusions inside GPIO subsystem headers.
+> It includes:
+>  - removal pin control bits (forward declaration and header) from linux/gpio.h
+>  - removal of.h from asm-generic/gpio.h
+>  - use of explicit headers in gpio/consumer.h
+>  - add FIXME note with regard to gpio.h inclusion in of_gpio,h
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: Elaborate changes in the commit message (Bartosz)
+
+Patch applied as clearly the kernel looks better after this patch
+than before this patch.
+
+Thanks!
+Linus Walleij
