@@ -2,89 +2,144 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BE1C352A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F647C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE47D20656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:39:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kopismobile-com.20150623.gappssmtp.com header.i=@kopismobile-com.20150623.gappssmtp.com header.b="f41NLCMZ"
+	by mail.kernel.org (Postfix) with ESMTP id 7CE7320715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgBJSjO (ORCPT
+        id S1727652AbgBJSmD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:39:14 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35682 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbgBJSjO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 13:39:14 -0500
-Received: by mail-vs1-f68.google.com with SMTP id x123so4846927vsc.2
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 10:39:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kopismobile-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kkofZ98GV9LrfTaHrQ4QXlvW8pxoiPCKhSeZwyB4myE=;
-        b=f41NLCMZXey4Ys9A7uP5rM9ZV2mSGKtW4NtWxbjNETiTUOUdIJNqz8nbHeSOvyv2wh
-         61gNGEMmqTXeEtKWvlalwKkev2VYjDsl9ytHugeSN4WTO9AdMo8NsrVQIb9bcy3iyxs6
-         da1077AlGkSdO+VrqL3xsuHnOs2DV+kaKX+o8WWTCRQGgiLatxztTE++MOfAyBcS5+uT
-         0A6uBB6NM+HS1/0iM0aVAzcb3KA1SwMB7LGd3d+z3H5NehWluDsDk/0f6qh4hFMTTdzw
-         Hm2JQ/XucerYluY1Fpi7W6WHWcV99glkrmsZZxhdQmcc1G5c+QFXR/VqAlEKkjt1b231
-         df/g==
+        Mon, 10 Feb 2020 13:42:03 -0500
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:42521 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727569AbgBJSmC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 13:42:02 -0500
+Received: by mail-ot1-f49.google.com with SMTP id 66so7374491otd.9;
+        Mon, 10 Feb 2020 10:42:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kkofZ98GV9LrfTaHrQ4QXlvW8pxoiPCKhSeZwyB4myE=;
-        b=UjaR3dpmA69vNRbGnYIGrVzGXI5r9gAph9/yAhbjwdiBCWYtQfv/IZlwHtmAu9b3ji
-         udc71JgGmtCTVBExHd4kZRQMREAW2imyMHfpMIrEgjHhEqNlCXDEFhvb47buxLTZ3DHd
-         97QFkJ1YskZaKbTvCY2DOyhG+Mt3tgJ0nvBbm5YOAMz2AMHpqWZH4wZDi6k8sud5bO90
-         rLMqod5b6b4WJRVm0FPcAkT9rqmxZkglU9/25h8vo4J2d8t3TI8v6b+Bj5YJ8NQUotAZ
-         jW/TGuhHb8FqhG8YTepykJ3AzuRzFE7z6y265dWBvCrBkwfb/R85ZdmMGHSqaxPZxP/Z
-         MdYw==
-X-Gm-Message-State: APjAAAW/QMXFhkKEQUnEx+P0cvNWiqXWv6UAdyNOz+U7CVGmOhJQikQF
-        03dwVdp2o8Ej4pwRLjqYebSxMjsO+mIeUY1zdC8n3g==
-X-Google-Smtp-Source: APXvYqylS31EeYY2TQEyhA2fZwtOWVmw0I810y+f36CA662rAeY9S7L2kcOPcBQ2w32A7f/Jm9+pPA3P3wkATxmK+F8=
-X-Received: by 2002:a05:6102:22e7:: with SMTP id b7mr7433450vsh.57.1581359950389;
- Mon, 10 Feb 2020 10:39:10 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=W1ciCgvuqEnDoMA1edbjKiXo9M8YGhJpnNcRvscMaLU=;
+        b=PcmSuOkMmbExl3F+r4HQqNhWT8Y14mRQ0X4V9tX5IHB2F8+Ok+8X8UdWFETWVcKNVi
+         abE1ZLhubasaF2iPbJxhNLCweZTwGWYvw9sQ67CcE9nFRDSHb6cKgx8BU00CKXKj8+qE
+         l1SAzIxNXlrOuuxWfxYyxt+4wJLhmENTVobCwxuV3meP4wqmUaaPLGqhdhbyYejcvRZe
+         FdVvuv1ofVCNp0o52cGWrvzK1lNmMsLdpluYOwS2kDvA0kXZp0CNed2we/brry+LR4vT
+         3KZNkkzB2SRymtqnvJ2g53KrzNC3xOxISxPwNfUboISHYnHD3jwjFwp48LNRQOFQdvC9
+         p2yA==
+X-Gm-Message-State: APjAAAXJ2jFR8+6mHDsjjbFHL1kW8XhbRB1JgOQ9FuJlO5R/qOBtJ5kT
+        daclSMrOZbEJLTth08d73IDsr9wlIbs=
+X-Google-Smtp-Source: APXvYqwKNisCdkOSR/XlF15KXhaatwymHt8MAUo0YxW+V4/RdjmQzLcaua4DoS7M6RRTSRyjggVhag==
+X-Received: by 2002:a9d:7:: with SMTP id 7mr2031823ota.26.1581360121296;
+        Mon, 10 Feb 2020 10:42:01 -0800 (PST)
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
+        by smtp.gmail.com with ESMTPSA id q5sm312248oia.21.2020.02.10.10.42.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2020 10:42:00 -0800 (PST)
+Received: by mail-oi1-f181.google.com with SMTP id j132so10161980oih.9;
+        Mon, 10 Feb 2020 10:42:00 -0800 (PST)
+X-Received: by 2002:aca:3f8b:: with SMTP id m133mr269681oia.51.1581360120170;
+ Mon, 10 Feb 2020 10:42:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20200210174942.14182-1-ghilliard@kopismobile.com>
- <20200210174942.14182-3-ghilliard@kopismobile.com> <20200210181156.fbq66yazb5j5quvn@pengutronix.de>
-In-Reply-To: <20200210181156.fbq66yazb5j5quvn@pengutronix.de>
-From:   George Hilliard <ghilliard@kopismobile.com>
-Date:   Mon, 10 Feb 2020 12:38:59 -0600
-Message-ID: <CALM8J=f1HV8BucyLVAz8cje392F98uOPoYdOMTSL0970eJnAcw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tty: imx serial: Implement support for reversing TX
- and RX polarity
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk> <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+In-Reply-To: <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Mon, 10 Feb 2020 12:41:49 -0600
+X-Gmail-Original-Message-ID: <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
+Message-ID: <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     Olof Johansson <olof@lixom.net>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 12:11 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Mon, Feb 10, 2020 at 11:49:42AM -0600, George Hilliard wrote:
-> > (confidentiality spam)
+On Mon, Feb 10, 2020 at 9:32 AM Olof Johansson <olof@lixom.net> wrote:
 >
-> Hmm, sad, I would have had some review feedback that should be addressed
-> before application of the patch. As I only noticed the footer after
-> looking at the patch, it was already too late to stop me reviewing it.
-> As I don't have an expressed permission I will at least not share it
-> (and I expect that Greg will also refuse to apply a patch with such a
-> footer).
+> On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
+> > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > > >
+> > > > Hi Olof,
+> > > >
+> > > > Thanks a lot for your comments!
+> > > > And sorry for my delay respond!
+> > >
+> > > Actually, they apply with only minor conflicts on top of current -next.
+> > >
+> > > Bjorn, any chance we can get you to pick these up pretty soon? They
+> > > enable full use of a promising ARM developer system, the SolidRun
+> > > HoneyComb, and would be quite valuable for me and others to be able to
+> > > use with mainline or -next without any additional patches applied --
+> > > which this patchset achieves.
+> > >
+> > > I know there are pending revisions based on feedback. I'll leave it up
+> > > to you and others to determine if that can be done with incremental
+> > > patches on top, or if it should be fixed before the initial patchset
+> > > is applied. But all in all, it's holding up adaption by me and surely
+> > > others of a very interesting platform -- I'm looking to replace my
+> > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
+> > > before I do.
+> >
+> > If you're going to be using NVMe, make sure you use a power-fail safe
+> > version; I've already had one instance where ext4 failed to mount
+> > because of a corrupted journal using an XPG SX8200 after the Honeycomb
+> > Serror'd, and then I powered it down after a few hours before later
+> > booting it back up.
+> >
+> > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
+> > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
+> > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
+> > EXT4-fs (nvme0n1p2): error loading journal
 >
-This is fixed now. Apologies - added without my knowledge. Should I
-simply resend a v2 without the notice?  Happy to CC everyone else you
-included.
+> Hmm, using btrfs on mine, not sure if the exposure is similar or not.
+>
+> Do you know if the SErr was due to a known issue and/or if it's
+> something that's fixed in production silicon?
+>
+> (I still can't enable SMMU since across a warm reboot it fails
+> *completely*, with nothing coming up and working. NXP folks, you
+> listening? :)
 
-George
+This is a known issue about DPAA2 MC bus not working well with SMMU
+based IO mapping.  Adding Laurentiu to the chain who has been looking
+into this issue.
+
+Regards,
+Leo
