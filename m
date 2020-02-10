@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C233EC3B186
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A63C3B184
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC6521739
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4005B21739
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Jman5/1H"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lAH+8G2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgBJINX (ORCPT
+        id S1727793AbgBJINB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 03:13:23 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8943 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727916AbgBJINW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 03:13:22 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4110860001>; Mon, 10 Feb 2020 00:12:54 -0800
+        Mon, 10 Feb 2020 03:13:01 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18259 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727764AbgBJINA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 03:13:00 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e41107d0001>; Mon, 10 Feb 2020 00:12:45 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 10 Feb 2020 00:13:21 -0800
+  Mon, 10 Feb 2020 00:12:59 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 00:13:21 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 08:13:21 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 10 Feb 2020 08:13:21 +0000
+        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 00:12:59 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
+ 2020 08:12:59 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 10 Feb 2020 08:12:59 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e41109d0002>; Mon, 10 Feb 2020 00:13:20 -0800
+        id <B5e4110880001>; Mon, 10 Feb 2020 00:12:58 -0800
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -44,9 +44,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V5 16/21] arm64: tegra: Enable xudc on Jetson TX1
-Date:   Mon, 10 Feb 2020 13:41:42 +0530
-Message-ID: <1581322307-11140-17-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V5 10/21] usb: gadget: tegra-xudc: Add usb-phy support
+Date:   Mon, 10 Feb 2020 13:41:36 +0530
+Message-ID: <1581322307-11140-11-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
 References: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
@@ -54,59 +54,134 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581322374; bh=O648suuc7pwl1UfqstZ7+SjnSB81z42SoRVKMt3f/+I=;
+        t=1581322365; bh=fM3ZAjPUPkY9CGZ1xeMcfY9eoH1/576Ng/4psDfAtjk=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Jman5/1HMU2/EiLkib3/tyz83d+INCxVARaAfgu9VZpBXITau9TV8PFSrceeXL9Uy
-         zLMuttIoNbFp/53g4lZFAEkaqNyE9/vCfN8whZbpi0uZoNLywjySLLoUjUcouQGjXC
-         gsCiqzfz7+wxpJvOegCg7DPT1OaScpnJveKgxcJgLtY9oYfMaPiUMQBOmUFjzuiWuv
-         qHWSjCzIfQ/Noj+u5BFiz00A70rs/TIHKMFLihP1STdAi/5uOv5jx8A9vaFkoDqjfI
-         /emFOOEt2H98bfxjeqJEdaY2IRyBlUEFz95iYbh9jLV9O2QwQ1zE2vl3aDDYJwsKG0
-         ICNJUR9mPB2Uw==
+        b=lAH+8G2cLInkZY2vGi41FsrbwhCtv57O8Jbx2lGWXMjWg5PfYsbFmEMXZYAtKpG6+
+         gB9R/8bac+UXihE1KyvfyKWXr1WiNs4J+lDf7pn+uGQ/xpZPsGD8HYepoPAQDMiiFX
+         48i8mGZ3P/DYw8aoqQOtzP5zXS8FhEUMhG45ca/Ydfx+05Al+JbwIj6H/xafomwh8Q
+         hnk2abgpIVXF/a4sxD1cul0sraBMphYQ6Ju4Pg5sG894FGSs/A8JaEoTsaIPlsHo0G
+         9AoCKQ5PK/f0ikNo6eWS5SjehozLF6NsdV9eLsK/BvfJ9lgEk0GVjzIYF0jgrI0GC0
+         eNOm7Uwihxr6A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable XUSB device mode driver for USB 2-0 slot on Jetson TX1.
+usb-phy is used to get notified on the USB role changes. Get usb-phy from
+the UTMI PHY.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 ---
-V2-V5:
+V5:
+ - No changes.
+---
+V4:
+ - Addressed nit comments from Thierry.
+ - usb_phy_event is used to detect device mode instead of usb_role.
+---
+V2-V3:
  - No changes in this version
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/udc/tegra-xudc.c | 48 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 45 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-index 18c0610..49a2a82 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1361,7 +1361,7 @@
- 				status = "okay";
+diff --git a/drivers/usb/gadget/udc/tegra-xudc.c b/drivers/usb/gadget/udc/tegra-xudc.c
+index acecdcf..7411dd15 100644
+--- a/drivers/usb/gadget/udc/tegra-xudc.c
++++ b/drivers/usb/gadget/udc/tegra-xudc.c
+@@ -26,7 +26,9 @@
+ #include <linux/reset.h>
+ #include <linux/usb/ch9.h>
+ #include <linux/usb/gadget.h>
++#include <linux/usb/otg.h>
+ #include <linux/usb/role.h>
++#include <linux/usb/phy.h>
+ #include <linux/workqueue.h>
  
- 				lanes {
--					usb2-0 {
-+					micro_b: usb2-0 {
- 						nvidia,function = "xusb";
- 						status = "okay";
- 					};
-@@ -1494,6 +1494,14 @@
- 		vmmc-supply = <&vdd_3v3_sd>;
- 	};
+ /* XUSB_DEV registers */
+@@ -487,6 +489,9 @@ struct tegra_xudc {
+ 	bool suspended;
+ 	bool powergated;
  
-+	usb@700d0000 {
-+		status = "okay";
-+		phys = <&micro_b>;
-+		phy-names = "usb2-0";
-+		avddio-usb-supply = <&vdd_3v3_sys>;
-+		hvdd-usb-supply = <&vdd_1v8>;
-+	};
++	struct usb_phy *usbphy;
++	struct notifier_block vbus_nb;
 +
- 	regulators {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
+ 	struct completion disconnect_complete;
+ 
+ 	bool selfpowered;
+@@ -669,6 +674,31 @@ static void tegra_xudc_usb_role_sw_work(struct work_struct *work)
+ 		tegra_xudc_device_mode_off(xudc);
+ }
+ 
++static int tegra_xudc_vbus_notify(struct notifier_block *nb,
++					 unsigned long action, void *data)
++{
++	struct tegra_xudc *xudc = container_of(nb, struct tegra_xudc,
++					       vbus_nb);
++	struct usb_phy *usbphy = (struct usb_phy *)data;
++
++	dev_dbg(xudc->dev, "%s(): event is %d\n", __func__, usbphy->last_event);
++
++	if ((xudc->device_mode && usbphy->last_event == USB_EVENT_VBUS) ||
++	    (!xudc->device_mode && usbphy->last_event != USB_EVENT_VBUS)) {
++		dev_dbg(xudc->dev, "Same role(%d) received. Ignore",
++			xudc->device_mode);
++		return NOTIFY_OK;
++	}
++
++	xudc->device_mode = (usbphy->last_event == USB_EVENT_VBUS) ? true :
++								     false;
++
++	if (!xudc->suspended)
++		schedule_work(&xudc->usb_role_sw_work);
++
++	return NOTIFY_OK;
++}
++
+ static void tegra_xudc_plc_reset_work(struct work_struct *work)
+ {
+ 	struct delayed_work *dwork = to_delayed_work(work);
+@@ -1937,6 +1967,9 @@ static int tegra_xudc_gadget_start(struct usb_gadget *gadget,
+ 		xudc_writel(xudc, val, CTRL);
+ 	}
+ 
++	if (xudc->usbphy)
++		otg_set_peripheral(xudc->usbphy->otg, gadget);
++
+ 	xudc->driver = driver;
+ unlock:
+ 	dev_dbg(xudc->dev, "%s: ret value is %d", __func__, ret);
+@@ -1957,6 +1990,9 @@ static int tegra_xudc_gadget_stop(struct usb_gadget *gadget)
+ 
+ 	spin_lock_irqsave(&xudc->lock, flags);
+ 
++	if (xudc->usbphy)
++		otg_set_peripheral(xudc->usbphy->otg, NULL);
++
+ 	val = xudc_readl(xudc, CTRL);
+ 	val &= ~(CTRL_IE | CTRL_ENABLE);
+ 	xudc_writel(xudc, val, CTRL);
+@@ -3561,9 +3597,15 @@ static int tegra_xudc_probe(struct platform_device *pdev)
+ 	INIT_DELAYED_WORK(&xudc->port_reset_war_work,
+ 				tegra_xudc_port_reset_war_work);
+ 
+-	/* Set the mode as device mode and this keeps phy always ON */
+-	xudc->device_mode = true;
+-	schedule_work(&xudc->usb_role_sw_work);
++	xudc->vbus_nb.notifier_call = tegra_xudc_vbus_notify;
++	xudc->usbphy = devm_usb_get_phy_by_node(xudc->dev,
++						xudc->utmi_phy->dev.of_node,
++						&xudc->vbus_nb);
++	if (IS_ERR(xudc->usbphy)) {
++		err = PTR_ERR(xudc->usbphy);
++		dev_err(xudc->dev, "failed to get USB PHY: %d\n", err);
++		goto free_eps;
++	}
+ 
+ 	pm_runtime_enable(&pdev->dev);
+ 
 -- 
 2.7.4
 
