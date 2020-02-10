@@ -2,88 +2,114 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D768EC35254
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BFEC47409
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54212080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ECEC206ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:41:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FQ5SjqjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbgBJRkR (ORCPT
+        id S1728137AbgBJRlE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:40:17 -0500
-Received: from mailoutvs42.siol.net ([185.57.226.233]:32867 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727054AbgBJRkR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:40:17 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 82FA6521C36;
-        Mon, 10 Feb 2020 18:40:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Y_pJR8agbzzQ; Mon, 10 Feb 2020 18:40:14 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 34FE5521C76;
-        Mon, 10 Feb 2020 18:40:14 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 9E060521C36;
-        Mon, 10 Feb 2020 18:40:13 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: [PATCH v2] arm64: dts: allwinner: h6: orangepi-3: Add eMMC node
-Date:   Mon, 10 Feb 2020 18:40:07 +0100
-Message-Id: <20200210174007.118575-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.0
+        Mon, 10 Feb 2020 12:41:04 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:36491 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBJRlD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:41:03 -0500
+Received: by mail-wr1-f53.google.com with SMTP id z3so8884233wru.3
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:41:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3gIUz/+oLLuaq19t30k8Jz+s5aA2PVpnAzXQO10cT/Y=;
+        b=FQ5SjqjI8mESjcAV3hk0fQYB1DIjyI3CqJt/Aw53H9qwncQV+lCBRMSjQ9ez4AuPS9
+         TO7MkvREuIQeW/8B7MTc602yDlTEDGJeJW2aW15lFEJSUDTv2cwNH3coJVWJL3uztvdQ
+         8eHriud893T21Xf6LGypKFQcYCVPSKUIVcn9fWTNO9j2jF7Gi+iZQB+cDdbI9YZ6YoZP
+         CEWpAt/4hPKW5geh6ytp1UpQN70S1ciZz061CDJL/aboGKgm4pnl8PidJ06uNY+3yli9
+         DN8AeGMPwJZDOSEWRrpTIa0PI6WclosM+d3+AeBamTiIZPLsF35gyimD/PAgQIksG9ab
+         r2iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3gIUz/+oLLuaq19t30k8Jz+s5aA2PVpnAzXQO10cT/Y=;
+        b=TT6l6DvxUMFNGq5Mp3acPFRsNRWKouFJgFgquCf3TXv0PasPs2nIC2j/blV/5gQxJc
+         zDQlCj8MHWGn6EAvKweDx8P1+PygT7d5wUYngcbD7CVI5Xm7u/h+ytpmSbAcqXEJQvVj
+         EbA9xuezPsS4+0SJESQ4+Y2Y+c5o79o9VUy5d+957D9Z00sFkcWSfdO9QuWdZfm1rAX3
+         UNDjv5QvguQ2hWECNuBvD4/jFEw8vaGQArALicw6H5dpHRr++MrKt17OKayZ3LJuRZeB
+         ow4uG7Aun4Kr/jF76MOeoZ4K3Ip4nAb+Xu96u9CJAwIknw1+RxAUrRS/LSG0k8xInwFr
+         aSuA==
+X-Gm-Message-State: APjAAAVMx6ProKZ9MmdR6+eDHkpRn2KB6RvaG0rmWnFXR1luxGRS+PI4
+        7YgHwXtsHDcwH3gJVMXIeO+JiQ==
+X-Google-Smtp-Source: APXvYqwbPVn4r/e2i10UW5NrTzU1jT70XhhtfiutTlrnJyFJyV3h+DHyidgLZwaetvsInEsC+lSh5Q==
+X-Received: by 2002:a5d:6292:: with SMTP id k18mr3078880wru.256.1581356461456;
+        Mon, 10 Feb 2020 09:41:01 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id o15sm1401166wra.83.2020.02.10.09.41.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 09:41:00 -0800 (PST)
+Subject: Re: [PATCH v2 3/8] ASoC: qdsp6: q6afe-dai: add support to pcm port
+ dais
+To:     Adam Serbinski <adam@serbinski.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-4-adam@serbinski.com>
+ <d0437f6d-84c8-e1cd-b6f5-c1009e00245d@linaro.org>
+ <616e3042f46cb7f052fc71e0ba4919a2@serbinski.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <5464ab87-f711-4aa6-3f22-f27bf4819998@linaro.org>
+Date:   Mon, 10 Feb 2020 17:40:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <616e3042f46cb7f052fc71e0ba4919a2@serbinski.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-OrangePi 3 can optionally have 8 GiB eMMC (soldered on board). Because
-those pins are dedicated to eMMC exclusively, node can be added for both
-variants (with and without eMMC). Kernel will then scan bus for presence
-of eMMC and act accordingly.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
-Changes since v1:
-- don't make separate DT just for -emmc variant - add node to existing
-  orangepi 3 DT
 
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 10/02/2020 17:22, Adam Serbinski wrote:
+>>>
+>>
+>> Why are we adding exactly duplicate function of q6afe_mi2s_set_sysclk 
+>> here?
+> 
+> It isn't an exact duplicate.
+> 
+> The reason I split off the new function is because the clock IDs for PCM
+> overlap/duplicate the clock IDs for TDM, yet the parameters to
+> q6afe_port_set_sysclk are not the same for PCM and TDM.
+> 
+we should be able to use dai->id to make that decision.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arc=
-h/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index c311eee52a35..1e0abd9d047f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -144,6 +144,15 @@ brcm: sdio-wifi@1 {
- 	};
- };
-=20
-+&mmc2 {
-+	vmmc-supply =3D <&reg_cldo1>;
-+	vqmmc-supply =3D <&reg_bldo2>;
-+	cap-mmc-hw-reset;
-+	non-removable;
-+	bus-width =3D <8>;
-+	status =3D "okay";
-+};
-+
- &ohci0 {
- 	status =3D "okay";
- };
---=20
-2.25.0
+--srini
 
+
+
+
+> 
+>>>   +    SND_SOC_DAPM_AIF_IN("QUAT_PCM_RX", NULL,
+>>> +                0, 0, 0, 0),
