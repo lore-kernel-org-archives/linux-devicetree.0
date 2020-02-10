@@ -2,107 +2,124 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE87C352A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C990C352A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3022072C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB322070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 21:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="njpoTH+Q"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="WOvn/ALS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgBJVEd (ORCPT
+        id S1727121AbgBJVOA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:04:33 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57344 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgBJVEd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:04:33 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AL4T2g017421;
-        Mon, 10 Feb 2020 15:04:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581368669;
-        bh=xVzc1mtWpAJafF8U/uk488p/4DSXP1+tfDnXeV8ljHk=;
-        h=From:To:CC:Subject:Date;
-        b=njpoTH+QGlGR4NcAR8+MtqkY0nb4ag20Q59hNN6OrfuJl6EQwCpMVDoZxjRyfcySo
-         k/iGWIVQ7CIMXDuxBdrrIIm7vz9pkO04gjzcorFP5sAAErs7YsyljtF7CK3qmDSjRF
-         GsWQDciKfTDrofGP5wPqo2hZHadH42ZXIP+VCKyY=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AL4TZM051167
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Feb 2020 15:04:29 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
- Feb 2020 15:04:29 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 10 Feb 2020 15:04:29 -0600
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AL4StC101348;
-        Mon, 10 Feb 2020 15:04:28 -0600
-Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id 01AL4S325098;
-        Mon, 10 Feb 2020 15:04:28 -0600 (CST)
-From:   Suman Anna <s-anna@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Dave Gerlach <d-gerlach@ti.com>, Roger Quadros <rogerq@ti.com>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>
-Subject: [PATCH] ARM: dts: am437x-idk-evm: Fix incorrect OPP node names
-Date:   Mon, 10 Feb 2020 15:04:23 -0600
-Message-ID: <20200210210423.22424-1-s-anna@ti.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 10 Feb 2020 16:14:00 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:47700 "EHLO
+        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJVOA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 16:14:00 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id 61398D006F9;
+        Mon, 10 Feb 2020 21:13:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at serbinski.com
+Received: from mail.serbinski.com ([127.0.0.1])
+        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Zu_DfRZFKs-n; Mon, 10 Feb 2020 16:13:52 -0500 (EST)
+Received: from mail.serbinski.com (localhost [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id 9949FD00693;
+        Mon, 10 Feb 2020 16:13:52 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 9949FD00693
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
+        s=default; t=1581369232;
+        bh=I3EkcQkTwwd2J+O4KVzA9fWCbXcpR3MPvY39AeBuXPc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WOvn/ALSo44nlC/+0cDovkez1JTNslVLaIIbhuvoM+/3oa4nBGa1pnceTS0UoWX6c
+         08w+kT2ztltcs1aFhDmLxRRrQlebR647uWLrm5h5kITpI1/Gl9QgmcVGSIoIFTvokp
+         NeLvnj41zH+LetieRTbae51hBYAK18UL2QF9t+xE=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 10 Feb 2020 16:13:52 -0500
+From:   Adam Serbinski <adam@serbinski.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
+In-Reply-To: <20200210200839.GG14166@sirena.org.uk>
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-9-adam@serbinski.com>
+ <20200210133636.GJ7685@sirena.org.uk>
+ <18057b47c76d350f8380f277713e0936@serbinski.com>
+ <20200210182609.GA14166@sirena.org.uk>
+ <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
+ <20200210200839.GG14166@sirena.org.uk>
+User-Agent: Roundcube Webmail/1.4-beta
+Message-ID: <7c57801d8f671c40d4c6094e5ce89681@serbinski.com>
+X-Sender: adam@serbinski.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The commit 337c6c9a69af ("ARM: dts: am437x-idk-evm: Disable
-OPP50 for MPU") adjusts couple of OPP nodes defined in the
-common am4372.dtsi file, but used outdated node names. This
-results in these getting treated as new OPP nodes with missing
-properties.
+On 2020-02-10 15:08, Mark Brown wrote:
+> On Mon, Feb 10, 2020 at 03:00:55PM -0500, Adam Serbinski wrote:
+>> On 2020-02-10 13:26, Mark Brown wrote:
+> 
+>> > To repeat my comment on another patch in the series there should still
+>> > be some representation of the DAI for this device in the kernel.
+> 
+>> Respectfully, I'm not sure I understand what it is that you are 
+>> suggesting.
+> 
+>> Is it your intention to suggest that instead of adding controls to the
+>> machine driver, I should instead write a codec driver to contain those
+>> controls?
+> 
+> I have already separately said that you should write a CODEC driver for
+> this CODEC.  I'm saying that this seems like the sort of thing that
+> might fit in that CODEC driver.
 
-Fix this properly by using the correct node names as updated in
-commit b9cb2ba71848 ("ARM: dts: Use - instead of @ for DT OPP
-entries for TI SoCs").
+I see. My initial thought with respect to the codec driver would be just 
+to use bt-sco.c, which is a dummy codec. I can certainly implement a new 
+codec driver.
 
-Reported-by: Roger Quadros <rogerq@ti.com>
-Fixes: 337c6c9a69af ("ARM: dts: am437x-idk-evm: Disable OPP50 for MPU")
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/am437x-idk-evm.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>> Or is it your intention to suggest that something within the kernel is
+>> already aware of the rate to be set, and it is that which should set 
+>> the
+>> rate rather than a control?
+> 
+> That would be one example of how such a CODEC driver could be
+> configured, and is how other baseband/BT devices have ended up going
+> (see cx20442.c for example).
 
-diff --git a/arch/arm/boot/dts/am437x-idk-evm.dts b/arch/arm/boot/dts/am437x-idk-evm.dts
-index f3ced6df0c9b..9f66f96d09c9 100644
---- a/arch/arm/boot/dts/am437x-idk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-idk-evm.dts
-@@ -526,11 +526,11 @@
- 	 * Supply voltage supervisor on board will not allow opp50 so
- 	 * disable it and set opp100 as suspend OPP.
- 	 */
--	opp50@300000000 {
-+	opp50-300000000 {
- 		status = "disabled";
- 	};
- 
--	opp100@600000000 {
-+	opp100-600000000 {
- 		opp-suspend;
- 	};
- };
--- 
-2.23.0
+I am not aware of how this could be done for bluetooth, since the value 
+still has to originate from userspace. The driver you referred to 
+supports only a single sample rate, whereas for bluetooth, 2 sample 
+rates are required, and nothing in the kernel is aware of the 
+appropriate rate, at least in the case of the qca6174a I'm working with 
+right now, or for that matter, TI Wilink 8, which I've also worked with.
 
+My concern with implementing this in a new codec driver, is that this 
+codec driver will be bound to qdsp6, since its purpose is to work around 
+a characteristic of this DSP. Under simple-card, for instance, it would 
+be redundant, since in that case, the parameters userspace uses to open 
+the pcm will be propagated to the port. But under qdsp6, userspace could 
+open the pcm at 44.1 kHz, yet the backend port is still set to 8 or 16 
+kHz, and the DSP resamples between them, so the sole purpose of this 
+change is to allow userspace to deliver the required sample rate to the 
+back end of qdsp6.
