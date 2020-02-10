@@ -2,101 +2,227 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D01CC352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8586DC3B184
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 05:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0747220870
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CE620870
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 05:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581314207;
+	bh=y8WJhCtjiUgmevlVF8bPnBitNPUgs1QbeGeB5mZDx5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SrQRwTSVg5XFbbMA98nme03UcUE7eYYgrSq0A3kOcKTXCQF4ZktkdWw58EANVjQpU
+	 5fbF2s9LzBLvE1wwdib5QTPkowssY/j6bomeLFNGHoN4KqnYNRAUJ9BfKcbaRTnR4c
+	 cib+8viLDBxYf0VK+eGfcOR7A4PASPx199F9iRZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbgBJEB3 (ORCPT
+        id S1726167AbgBJF4p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Feb 2020 23:01:29 -0500
-Received: from muru.com ([72.249.23.125]:54122 "EHLO muru.com"
+        Mon, 10 Feb 2020 00:56:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727435AbgBJEB1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Feb 2020 23:01:27 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 424C180F5;
-        Mon, 10 Feb 2020 04:02:10 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Rob Herring <robh@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] dt-bindings: mfd: motmdm: Add binding for motorola-mdm
-Date:   Sun,  9 Feb 2020 20:01:05 -0800
-Message-Id: <20200210040107.10306-4-tony@atomide.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210040107.10306-1-tony@atomide.com>
-References: <20200210040107.10306-1-tony@atomide.com>
+        id S1726061AbgBJF4o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 00:56:44 -0500
+Received: from localhost (unknown [106.201.32.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D9820661;
+        Mon, 10 Feb 2020 05:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581314203;
+        bh=y8WJhCtjiUgmevlVF8bPnBitNPUgs1QbeGeB5mZDx5k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qybtcXfORlwW2sh851QqwW7QwgE5offrIYVPKCK2+7adJuA1yK91UDooJSTbdTcnu
+         HzEtBE8FJiRh7dcx3mo1l1uLAU0Uv1Yd1jRmHZ79h8DlfuxjWUzJtc0+CcLzY3VKMd
+         3oB7ywD7EfdHX6SY79BNWygygdYv7V9/ohuCm3LE=
+Date:   Mon, 10 Feb 2020 11:26:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jshriram@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, psodagud@codeaurora.org,
+        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
+        vnkgutta@codeaurora.org
+Subject: Re: [PATCH v2 4/7] clk: qcom: clk-alpha-pll: Add support for
+ controlling Lucid PLLs
+Message-ID: <20200210055638.GT2618@vkoul-mobl>
+References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org>
+ <1579905147-12142-5-git-send-email-vnkgutta@codeaurora.org>
+ <20200205193353.2BDCC20720@mail.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205193353.2BDCC20720@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a binding document for Motorola modems controllable by
-TS 27.010 UART line discipline using serdev drivers.
+On 05-02-20, 11:33, Stephen Boyd wrote:
+> Quoting Venkata Narendra Kumar Gutta (2020-01-24 14:32:24)
+> > diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+> > index 1b073b2..4258ab0 100644
+> > --- a/drivers/clk/qcom/clk-alpha-pll.c
+> > +++ b/drivers/clk/qcom/clk-alpha-pll.c
+> > @@ -1367,3 +1388,172 @@ static int clk_alpha_pll_postdiv_fabia_set_rate(struct clk_hw *hw,
+> >         .set_rate = clk_alpha_pll_postdiv_fabia_set_rate,
+> >  };
+> >  EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_fabia_ops);
+> > +
+> > +void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+> 
+> Can we get some kernel documentation for this function?
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- .../mfd/motorola,mapphone-mdm6600.yaml        | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+Okay adding
 
-diff --git a/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml b/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
-new file mode 100644
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/motorola,mapphone-mdm6600.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Motorola Mapphone MDM6600 Modem
-+
-+maintainers:
-+  - Tony Lindgren <tony@atomide.com>
-+
-+allOf:
-+  - $ref: "motorola,mapphone-mdm6600.yaml#"
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: motorola,mapphone-mdm6600-serial
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    const: usb
-+
-+required:
-+  - compatible
-+  - phys
-+  - phy-names
-+
-+examples:
-+  - |
-+    modem {
-+        compatible = "motorola,mapphone-mdm6600-serial";
-+        phys = <&fsusb1_phy>;
-+        phy-names = "usb";
-+    };
+> > +{
+> > +       if (config->l)
+> > +               regmap_write(regmap, PLL_L_VAL(pll), config->l);
+> > +
+> > +       regmap_write(regmap, PLL_CAL_L_VAL(pll), LUCID_PLL_CAL_VAL);
+> > +
+> > +       if (config->alpha)
+> > +               regmap_write(regmap, PLL_ALPHA_VAL(pll), config->alpha);
+> > +
+> > +       if (config->config_ctl_val)
+> > +               regmap_write(regmap, PLL_CONFIG_CTL(pll),
+> > +                            config->config_ctl_val);
+> > +
+> > +       if (config->config_ctl_hi_val)
+> > +               regmap_write(regmap, PLL_CONFIG_CTL_U(pll),
+> > +                            config->config_ctl_hi_val);
+> > +
+> > +       if (config->config_ctl_hi1_val)
+> > +               regmap_write(regmap, PLL_CONFIG_CTL_U1(pll),
+> > +                            config->config_ctl_hi1_val);
+> > +
+> > +       if (config->user_ctl_val)
+> > +               regmap_write(regmap, PLL_USER_CTL(pll),
+> > +                            config->user_ctl_val);
+> > +
+> > +       if (config->user_ctl_hi_val)
+> > +               regmap_write(regmap, PLL_USER_CTL_U(pll),
+> > +                            config->user_ctl_hi_val);
+> > +
+> > +       if (config->user_ctl_hi1_val)
+> > +               regmap_write(regmap, PLL_USER_CTL_U1(pll),
+> > +                            config->user_ctl_hi1_val);
+> > +
+> > +       if (config->test_ctl_val)
+> > +               regmap_write(regmap, PLL_TEST_CTL(pll),
+> > +                            config->test_ctl_val);
+> > +
+> > +       if (config->test_ctl_hi_val)
+> > +               regmap_write(regmap, PLL_TEST_CTL_U(pll),
+> > +                            config->test_ctl_hi_val);
+> > +
+> > +       if (config->test_ctl_hi1_val)
+> > +               regmap_write(regmap, PLL_TEST_CTL_U1(pll),
+> > +                            config->test_ctl_hi1_val);
+> > +
+> > +       regmap_update_bits(regmap, PLL_MODE(pll), PLL_UPDATE_BYPASS,
+> > +                          PLL_UPDATE_BYPASS);
+> > +
+> > +       /* Disable PLL output */
+> > +       regmap_update_bits(regmap, PLL_MODE(pll),  PLL_OUTCTRL, 0);
+> > +
+> > +       /* Set operation mode to OFF */
+> > +       regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
+> > +
+> > +       /* PLL should be in OFF mode before continuing */
+> > +       wmb();
+> 
+> How does the write above overtake the write below? This barrier looks
+> wrong.
+
+I think you are correct, it doesnt :), so removing this
+
+> > +static int alpha_pll_lucid_prepare(struct clk_hw *hw)
+> > +{
+> > +       struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+> > +       u32 regval;
+> > +       int ret;
+> > +
+> > +       /* Return early if calibration is not needed. */
+> > +       regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
+> > +       if (regval & LUCID_PCAL_DONE)
+> > +               return 0;
+> > +
+> > +       ret = clk_trion_pll_enable(hw);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       clk_trion_pll_disable(hw);
+> > +
+> > +       return 0;
+> 
+> Can you write this like:
+> 
+> 	/* On/off to calibrate */
+> 	ret = clk_trion_pll_enable(hw);
+> 	if (!ret)
+> 		clk_trion_pll_disable(hw);
+> 
+> 	return ret;
+
+Looks better, updated now.
+
+> > +static int alpha_pll_lucid_set_rate(struct clk_hw *hw, unsigned long rate,
+> > +                                   unsigned long prate)
+> > +{
+> > +       struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+> > +       unsigned long rrate;
+> > +       u32 regval, l, alpha_width = pll_alpha_width(pll);
+> > +       u64 a;
+> > +       int ret;
+> > +
+> > +       rrate = alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
+> > +
+> > +       /*
+> > +        * Due to a limited number of bits for fractional rate programming, the
+> > +        * rounded up rate could be marginally higher than the requested rate.
+> > +        */
+> > +       if (rrate > (rate + PLL_RATE_MARGIN) || rrate < rate) {
+> 
+> Any chance this can be pushed into the alpha_pll_round_rate() API? It's
+> duplicated in this driver.
+
+Yes here and couple of fabia pll functions. Said that I see
+alpha_pll_round_rate() is also invoked two places,
+alpha_pll_fabia_set_rate() and __clk_alpha_pll_set_rate(), so should we
+let these two also be updated, if you are okay with that I will update
+this
+
+> > +       regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
+> > +       regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
+> > +
+> > +       /* Latch the PLL input */
+> > +       ret = regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
+> > +                                PLL_UPDATE, PLL_UPDATE);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       /* Wait for 2 reference cycles before checking the ACK bit. */
+> 
+> Are reference cycles 2 * 1 / 19.2MHz?
+
+Will check and update on this
+
+> 
+> > +       udelay(1);
+> > +       regmap_read(pll->clkr.regmap, PLL_MODE(pll), &regval);
+> > +       if (!(regval & ALPHA_PLL_ACK_LATCH)) {
+> > +               WARN(1, "PLL latch failed. Output may be unstable!\n");
+> 
+> Do we need a big WARN stack for this? How about pr_warn() instead?
+
+Nope :), will move to a warn print :)
+
 -- 
-2.25.0
+~Vinod
