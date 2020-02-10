@@ -2,100 +2,111 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F4C352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EF2C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43DA20842
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4349820863
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 11:31:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Dv5g3JHf"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="VKWjTPso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgBJLWt (ORCPT
+        id S1727429AbgBJLbE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:22:49 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10831 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgBJLWt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 06:22:49 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e413cfa0000>; Mon, 10 Feb 2020 03:22:34 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 10 Feb 2020 03:22:48 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 10 Feb 2020 03:22:48 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 11:22:43 +0000
-CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH v2 0/9] add ASoC components for AHUB
-To:     Dmitry Osipenko <digetx@gmail.com>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <fcab0af1-fe84-6028-701b-ab101feaa8de@gmail.com>
- <d17b2654-a888-8251-468d-12ef1451cd4b@nvidia.com>
- <40a4d544-7c33-3f28-0b9c-384bc9fe3b53@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <3cb0642f-46be-26e0-4090-f82981538a09@nvidia.com>
-Date:   Mon, 10 Feb 2020 16:52:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 10 Feb 2020 06:31:04 -0500
+Received: from mail-eopbgr1400138.outbound.protection.outlook.com ([40.107.140.138]:34715
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726796AbgBJLbE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 06:31:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CZdREvM/sZT8/lxmrWJrGibiPt4D9n31EbQFABu80E2AoCVghDm0SzSlpICZfHyj3ei2oFwvMTtiaLu3QGsfvtfkgrEH5T4la4yWh8CKYseXH6kw80pGYQDxVa/U8kHRfJLZi8yhnjLvZOv327lWGtIZCTMXFmIJbirgisqYuxIhVWTzoq/5DJV0iadLlr3W/eQZTLKS0hTEsYWbiOfbV9Unr0Tsjzim8WF02iuXiUOR9QCDo8T2XRGuRffIyqcU3x4FaN1Z/9wa8P73yGM7A56HCGSVmELB2FndiC0n/YzqeTO3KszdIldi/ylBn+rtUYMfH8+561rL/dP5n7mWyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KUbVSEzUGj+Dac+fCZTB1uTFN0J7IC/+NfNwk4ecQ8E=;
+ b=atcsCOr1wZJvYbXH8VXhAUBNw2l3cBuBC2FDVeDuV/ZFrkX+QbCfjQu6K6v9CUBxIDbWkN6T0ck87CC+WTvZmbD7mOzlf9pnoSG6a7r+FyOirV+1Vt27/DezDoQgyGU+VLokMfJdbVQqc4jGDblet9SaO2yc+oKkKPb1lA+VFmn4xt0SP9zesRu4djJie8fi9s2BQLkBIkcWxjIb9e/OY8VYtbql8KSzcwyl31eyLx/7VZGoOMWoVVftRb3VJ5jD1n6LjhcEDnVIq/GWcBwjtMcPTETpg1ORFFrMJ0v0VQRlsK+AUwCf99aV1p64hcBBdx5UGfaLobZV5Pmy0NMzdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KUbVSEzUGj+Dac+fCZTB1uTFN0J7IC/+NfNwk4ecQ8E=;
+ b=VKWjTPso+YIbnCOjhpM/RtQk5QM/OL8EhrCsZkVRuTIRee/7EbKOA8HhBkUu/bmIX5trLYHEZ1EjuzwF75X0YdcPox1DdipYq32ejUe3dClR6gKIO1vBp0c51G/+oo//g5eQbJBEwc2h7pMDTLugNMMpMVsWOQMmd5oKpPT8AEM=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1609.jpnprd01.prod.outlook.com (52.133.163.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Mon, 10 Feb 2020 11:31:00 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::8870:97e4:a63c:67ea]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::8870:97e4:a63c:67ea%7]) with mapi id 15.20.2707.028; Mon, 10 Feb 2020
+ 11:31:00 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH] ARM: dts: r7s72100: Add SPIBSC clocks
+Thread-Topic: [PATCH] ARM: dts: r7s72100: Add SPIBSC clocks
+Thread-Index: AQHV3dN9T9Vt0u1WzECd32yImKJz2agUGE0AgAA2ZKA=
+Date:   Mon, 10 Feb 2020 11:31:00 +0000
+Message-ID: <TY1PR01MB1562D7E98F1200B868A91F928A190@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20200207162704.18914-1-chris.brandt@renesas.com>
+ <CAMuHMdXdgcs0pgmeVR+DW_oxsUcR159i-=ZL+LLoqpQoAvq6fA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXdgcs0pgmeVR+DW_oxsUcR159i-=ZL+LLoqpQoAvq6fA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctY2ZmZDdjOTYtNGJmOC0xMWVhLWFhNWItOTRlNmY3Njc5M2FlXGFtZS10ZXN0XGNmZmQ3Yzk4LTRiZjgtMTFlYS1hYTViLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNTEwIiB0PSIxMzIyNTgwNzg2MTIzNTM3MzgiIGg9IjhkMEJHeWg4bWttVXlseWZObk8ra2RRU2syRT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7861042a-e960-4963-7f5e-08d7ae1cb4a6
+x-ms-traffictypediagnostic: TY1PR01MB1609:
+x-microsoft-antispam-prvs: <TY1PR01MB16098A99913F68AFE426DA9C8A190@TY1PR01MB1609.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 03094A4065
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(39860400002)(396003)(136003)(376002)(189003)(199004)(8676002)(316002)(186003)(26005)(4326008)(8936002)(55016002)(9686003)(81166006)(81156014)(54906003)(6506007)(76116006)(478600001)(7696005)(86362001)(2906002)(71200400001)(52536014)(66476007)(66556008)(64756008)(66946007)(66446008)(5660300002)(4744005)(6916009)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1609;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yDfRFcvipQLRsSmKoPVk7dXlJiV0nXozNxtNTL9AO1qKFMyrbnzsmtA5vSKY+AVcxFoTL575WBZwm/pPjlu7oGiTjBzX/Oqj5H9a83ZVX+N91bBa8lHXdME7qGyTZFy4fR9UOp2v4BOKB5HZZMfQVNigK9AHG3GrUKLqnxqo+EAKD5lq0aBxpkd7hvIXaxZ6FEtrQWVedJZjVf3B7Hk6C9B9huwclv8M6ctsjCC4f1mHxDy0VAW1hYy+aUH5P8tSqpZKA+U55T28LydOHkmt59Vst0D1eD31NbwDalDm9RcdsQDUicVbfOrjaEBcArJLrKSUPPp48VfjAN4ByHWhNWGeVJbi+lSKuGb2BTEQlWXbFE12ecViHA8ZOaRoLUu5CwfevMpqmEpcdUIae1uWnIGcSxD8M9rZdZO6QjAyuKFTrhJsed7CSAelhXLQ2s3o
+x-ms-exchange-antispam-messagedata: Cu55gHSCf8UAMLWzVra+s3kRVp3+283LU4QmfkHkaWzeT7GDU4LlWrGc/3D2kXFwBeKhiBvZxCqhVCVCaeFoTOCQZHiaIba3RiOeQ8mdtc+1InsqE/ub+kQZrATJcTQzy9v0oVTBAMQUZU7A3N6tsw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <40a4d544-7c33-3f28-0b9c-384bc9fe3b53@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581333754; bh=D0y6xeonACafAuD+vXIgDjhVKU1a9PB64HFqz8+HmFs=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Dv5g3JHfPme0U1x/ORxA4oCce9xyttHVQXD0j5xoFs+aLm48ch9H+pAjWSuWdcWdk
-         r+LsPCy2yiXMjnSbVTtZdri/kh/o9509s3MHd1nLsC2olV9tqPuEOdK0KAHXuVbDOD
-         4DI0YEtWXgk+uYbREBCO1po1FmGp+cfovfajz6aPAxA0o5LNKBHfdvJ3Kl+2k9Es9g
-         fGtQQ6ClCV6GH93GFDfbGY930t+a/g3rS3D1Acn6ihQMIXxopsWYt6rOSAgOqPUIpp
-         vFd2r/5OeHfK7TzehQm1ISfC0xPBmXVyt/AiAYtg2YJz1c5vyk1ULhmxQXAKD0oxT5
-         d2y7DBi8tyk2w==
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7861042a-e960-4963-7f5e-08d7ae1cb4a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2020 11:31:00.7473
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Cli0qaAemJIlfQpYowQL5F4C8ipRBqvzinG0vbkZep8iP+nFQGNroSbrBR1cRM9u7LyoZC/TCfJYGlUYbdkbfK1dS5uFN47kFqPLHgK1Wcc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1609
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 2/7/2020 11:55 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 07.02.2020 14:30, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 2/6/2020 11:06 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>>    sound/soc/tegra/Kconfig                            |=C2=A0 56 ++
->>> Probably won't hurt to enable the new drivers in the
->>> arch/arm64/configs/defconfig?
->> Do you mean, if drivers can be enabled?
-> Yes, I mean to enable them in the default kernel configuration.
-
-Yes these can be enabled by default. I can push a defconfig patch, if=20
-that is what you were referring in the beginning.
-
+SGkgR2VlcnQsDQoNCk9uIE1vbiwgRmViIDEwLCAyMDIwLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
+dGU6DQo+IEhvd2V2ZXIsIEkgYmVsaWV2ZSBJIGNhbm5vdCBxdWV1ZSB0aGlzIGluIHJlbmVzYXMt
+ZGV2ZWwgeWV0LCBhcyB0byBhdm9pZA0KPiBhIHJlZ3Jlc3Npb24sIHRoZSBmbGFzaCBub2RlIGlu
+IHI3czcyMTAwLWdyLXBlYWNoLmR0cyBzaG91bGQgZ2Fpbg0KPiBhcHByb3ByaWF0ZSBjbG9jayBh
+bmQgcG93ZXItZG9tYWlucyBwcm9wZXJ0aWVzLg0KPiBBbmQgdG8gYXZvaWQgYmlzZWN0aW9uIGlz
+c3VlcywgdGhhdCBzaG91bGQgYmUgY29tYmluZWQgd2l0aCB0aGlzIHBhdGNoLA0KPiByaWdodD8N
+Cg0KQXJlIHlvdSBzYXlpbmcgYSBwYXRjaCBzZXJpZXM/IE9yIDEgcGF0Y2ggdGhhdCBlZGl0cyBi
+b3RoIGZpbGVzPw0KDQpUaGFua3MsDQpDaHJpcw0KDQo=
