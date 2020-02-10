@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90369C3B186
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DACC3B184
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6923E21927
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF64F21739
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 08:14:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YZiedpkZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fmB8vTIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgBJIM5 (ORCPT
+        id S1727588AbgBJIMu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 03:12:57 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18242 "EHLO
+        Mon, 10 Feb 2020 03:12:50 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18218 "EHLO
         hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727764AbgBJIM4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 03:12:56 -0500
+        with ESMTP id S1727707AbgBJIMu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 03:12:50 -0500
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4110790000>; Mon, 10 Feb 2020 00:12:41 -0800
+        id <B5e4110720000>; Mon, 10 Feb 2020 00:12:34 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 10 Feb 2020 00:12:56 -0800
+  Mon, 10 Feb 2020 00:12:48 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 00:12:56 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 08:12:55 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 10 Feb 2020 08:12:55 +0000
+        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 00:12:48 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
+ 2020 08:12:47 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 10 Feb 2020 08:12:47 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e4110840000>; Mon, 10 Feb 2020 00:12:54 -0800
+        id <B5e41107c0001>; Mon, 10 Feb 2020 00:12:47 -0800
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -44,9 +44,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V5 09/21] usb: gadget: tegra-xudc: Remove usb-role-switch support
-Date:   Mon, 10 Feb 2020 13:41:35 +0530
-Message-ID: <1581322307-11140-10-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V5 07/21] phy: tegra: xusb: Add set_mode support for UTMI phy on Tegra186
+Date:   Mon, 10 Feb 2020 13:41:33 +0530
+Message-ID: <1581322307-11140-8-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
 References: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
@@ -54,173 +54,179 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581322362; bh=F9vQgzsrM3kGG03RRSDPm8098j3JFB30K8kaLkDTeHc=;
+        t=1581322354; bh=Y389Vbo0qSoZ7bEjswVj6WBVgDKXBxnfWfVQytx9TXQ=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=YZiedpkZcKA69wJDQVtNn2rXNEmYFzH9sD92Gc6RoIxUTHIXcnafXG11TkuwchMTq
-         rwPE0yPvyNnpW1YqtF3YQqwWdOpcwD61Jd9d5eVIGJ3lwD0aWwVnGk9Yr00Yj/4ZdD
-         AGkyh7q/RxXSXn2/Sjgf7/bVWHRoIpAYVu+Exi6OI27uGsiD8uiR/sQvJPAuHl5XsM
-         D+crI/qFhCO4vgx4GyoU93MbHmh37EDH9GmWshJ+khmC5mnwIfMwd3PhVRoOsWAYuD
-         30RYxdhSju1A/LipVBeCdy4MRTlregg9wvMtdsAstwbyauOIIkD70lArSLSHBByTWw
-         kgrm4aAA3Hlzw==
+        b=fmB8vTIV47+KexiFUE1IeSs6EU1t97acpRtjWo2P4aej61nVuGGnicbbC2YoompI0
+         TZCr9Y4Z381rx4X3u11EYZ6NcWAwZEXN06AsckYrDOCf0Dy+WPD3e5spXEt50bQsf0
+         msxRoBqijJSi8ze58GVIwAacinr+TDueVOg3COFkLiPOIFWO4C3nxAuLvRfpj8NT6A
+         btP6afPG6EBcJBZDeOFaHrWe8xbDyPuuZ2KwSMBkAhwWItB0+GoOrjHlfAoOHuc2vO
+         LeG+ouGH9i9SNTvsrlok68JMhjKGo02UrjGlYGo98Z4syC+hVbOSRtXDT8AioXPVC2
+         XduJNL+wKPD1A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Padctl driver will act as a central driver to receive USB role changes via
-usb-role-switch. This is updated to corresponding host, device drivers.
-Hence remove usb-role-switch from XUDC driver.
+Add support for set_mode on UTMI phy. This allow XUSB host/device mode
+drivers to configure the hardware to corresponding modes.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
 V5:
- - Removed select USB_ROLE_SWITCH from Kconfig.
+ - No changes.
 ---
-V4
- - Updated device_mode variable with usb_role and remove role variable.
- - Removed debug log related to always on.
+V4:
+ - Added comment for conditional regulator disable.
+ - Added Acked-by info.
 ---
 V2-V3:
  - No changes in this version
 ---
- drivers/usb/gadget/udc/tegra-xudc.c | 58 +++++--------------------------------
- 2 files changed, 7 insertions(+), 52 deletions(-)
+ drivers/phy/tegra/xusb-tegra186.c | 114 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 92 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
-index 797d6ac..ae70ce2 100644
---- a/drivers/usb/gadget/udc/Kconfig
-+++ b/drivers/usb/gadget/udc/Kconfig
-@@ -445,7 +445,6 @@ config USB_TEGRA_XUDC
- 	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
- 	depends on ARCH_TEGRA || COMPILE_TEST
- 	depends on PHY_TEGRA_XUSB
--	select USB_ROLE_SWITCH
- 	help
- 	 Enables NVIDIA Tegra USB 3.0 device mode controller driver.
- 
-diff --git a/drivers/usb/gadget/udc/tegra-xudc.c b/drivers/usb/gadget/udc/tegra-xudc.c
-index 634c2c1..acecdcf 100644
---- a/drivers/usb/gadget/udc/tegra-xudc.c
-+++ b/drivers/usb/gadget/udc/tegra-xudc.c
-@@ -477,8 +477,7 @@ struct tegra_xudc {
- 
- 	struct clk_bulk_data *clks;
- 
--	enum usb_role device_mode;
--	struct usb_role_switch *usb_role_sw;
-+	bool device_mode;
- 	struct work_struct usb_role_sw_work;
- 
- 	struct phy *usb3_phy;
-@@ -609,8 +608,6 @@ static void tegra_xudc_device_mode_on(struct tegra_xudc *xudc)
- 	dev_dbg(xudc->dev, "device mode on\n");
- 
- 	tegra_xusb_padctl_set_vbus_override(xudc->padctl, true);
--
--	xudc->device_mode = USB_ROLE_DEVICE;
+diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
+index 84c2739..ea62251 100644
+--- a/drivers/phy/tegra/xusb-tegra186.c
++++ b/drivers/phy/tegra/xusb-tegra186.c
+@@ -301,6 +301,97 @@ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
+ 	tegra186_utmi_bias_pad_power_off(padctl);
  }
  
- static void tegra_xudc_device_mode_off(struct tegra_xudc *xudc)
-@@ -643,8 +640,6 @@ static void tegra_xudc_device_mode_off(struct tegra_xudc *xudc)
- 		xudc_writel(xudc, val, PORTSC);
- 	}
++static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
++					       bool status)
++{
++	u32 value;
++
++	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
++
++	value = padctl_readl(padctl, USB2_VBUS_ID);
++
++	if (status) {
++		value |= VBUS_OVERRIDE;
++		value &= ~ID_OVERRIDE(~0);
++		value |= ID_OVERRIDE_FLOATING;
++	} else {
++		value &= ~VBUS_OVERRIDE;
++	}
++
++	padctl_writel(padctl, value, USB2_VBUS_ID);
++
++	return 0;
++}
++
++static int tegra186_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
++					    bool status)
++{
++	u32 value;
++
++	dev_dbg(padctl->dev, "%s id override\n", status ? "set" : "clear");
++
++	value = padctl_readl(padctl, USB2_VBUS_ID);
++
++	if (status) {
++		if (value & VBUS_OVERRIDE) {
++			value &= ~VBUS_OVERRIDE;
++			padctl_writel(padctl, value, USB2_VBUS_ID);
++			usleep_range(1000, 2000);
++
++			value = padctl_readl(padctl, USB2_VBUS_ID);
++		}
++
++		value &= ~ID_OVERRIDE(~0);
++		value |= ID_OVERRIDE_GROUNDED;
++	} else {
++		value &= ~ID_OVERRIDE(~0);
++		value |= ID_OVERRIDE_FLOATING;
++	}
++
++	padctl_writel(padctl, value, USB2_VBUS_ID);
++
++	return 0;
++}
++
++static int tegra186_utmi_phy_set_mode(struct phy *phy, enum phy_mode mode,
++				      int submode)
++{
++	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
++	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
++	struct tegra_xusb_usb2_port *port = tegra_xusb_find_usb2_port(padctl,
++								lane->index);
++	int err = 0;
++
++	mutex_lock(&padctl->lock);
++
++	dev_dbg(&port->base.dev, "%s: mode %d", __func__, mode);
++
++	if (mode == PHY_MODE_USB_OTG) {
++		if (submode == USB_ROLE_HOST) {
++			tegra186_xusb_padctl_id_override(padctl, true);
++
++			err = regulator_enable(port->supply);
++		} else if (submode == USB_ROLE_DEVICE) {
++			tegra186_xusb_padctl_vbus_override(padctl, true);
++		} else if (submode == USB_ROLE_NONE) {
++			/*
++			 * When port is peripheral only or role transitions to
++			 * USB_ROLE_NONE from USB_ROLE_DEVICE, regulator is not
++			 * enabled.
++			 */
++			if (regulator_is_enabled(port->supply))
++				regulator_disable(port->supply);
++
++			tegra186_xusb_padctl_id_override(padctl, false);
++			tegra186_xusb_padctl_vbus_override(padctl, false);
++		}
++	}
++
++	mutex_unlock(&padctl->lock);
++
++	return err;
++}
++
+ static int tegra186_utmi_phy_power_on(struct phy *phy)
+ {
+ 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+@@ -439,6 +530,7 @@ static const struct phy_ops utmi_phy_ops = {
+ 	.exit = tegra186_utmi_phy_exit,
+ 	.power_on = tegra186_utmi_phy_power_on,
+ 	.power_off = tegra186_utmi_phy_power_off,
++	.set_mode = tegra186_utmi_phy_set_mode,
+ 	.owner = THIS_MODULE,
+ };
  
--	xudc->device_mode = USB_ROLE_NONE;
--
- 	/* Wait for disconnect event. */
- 	if (connected)
- 		wait_for_completion(&xudc->disconnect_complete);
-@@ -668,29 +663,10 @@ static void tegra_xudc_usb_role_sw_work(struct work_struct *work)
- 	struct tegra_xudc *xudc = container_of(work, struct tegra_xudc,
- 					       usb_role_sw_work);
+@@ -857,28 +949,6 @@ static void tegra186_xusb_padctl_remove(struct tegra_xusb_padctl *padctl)
+ {
+ }
  
--	if (!xudc->usb_role_sw ||
--		usb_role_switch_get_role(xudc->usb_role_sw) == USB_ROLE_DEVICE)
-+	if (xudc->device_mode)
- 		tegra_xudc_device_mode_on(xudc);
- 	else
- 		tegra_xudc_device_mode_off(xudc);
--
--}
--
--static int tegra_xudc_usb_role_sw_set(struct device *dev, enum usb_role role)
+-static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
+-					       bool status)
 -{
--	struct tegra_xudc *xudc = dev_get_drvdata(dev);
--	unsigned long flags;
+-	u32 value;
 -
--	dev_dbg(dev, "%s role is %d\n", __func__, role);
+-	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
 -
--	spin_lock_irqsave(&xudc->lock, flags);
+-	value = padctl_readl(padctl, USB2_VBUS_ID);
 -
--	if (!xudc->suspended)
--		schedule_work(&xudc->usb_role_sw_work);
+-	if (status) {
+-		value |= VBUS_OVERRIDE;
+-		value &= ~ID_OVERRIDE(~0);
+-		value |= ID_OVERRIDE_FLOATING;
+-	} else {
+-		value &= ~VBUS_OVERRIDE;
+-	}
 -
--	spin_unlock_irqrestore(&xudc->lock, flags);
+-	padctl_writel(padctl, value, USB2_VBUS_ID);
 -
 -	return 0;
- }
- 
- static void tegra_xudc_plc_reset_work(struct work_struct *work)
-@@ -729,8 +705,7 @@ static void tegra_xudc_port_reset_war_work(struct work_struct *work)
- 
- 	spin_lock_irqsave(&xudc->lock, flags);
- 
--	if ((xudc->device_mode == USB_ROLE_DEVICE)
--			      && xudc->wait_for_sec_prc) {
-+	if (xudc->device_mode && xudc->wait_for_sec_prc) {
- 		pls = (xudc_readl(xudc, PORTSC) & PORTSC_PLS_MASK) >>
- 			PORTSC_PLS_SHIFT;
- 		dev_dbg(xudc->dev, "pls = %x\n", pls);
-@@ -3457,7 +3432,6 @@ static int tegra_xudc_probe(struct platform_device *pdev)
- {
- 	struct tegra_xudc *xudc;
- 	struct resource *res;
--	struct usb_role_switch_desc role_sx_desc = { 0 };
- 	unsigned int i;
- 	int err;
- 
-@@ -3587,23 +3561,9 @@ static int tegra_xudc_probe(struct platform_device *pdev)
- 	INIT_DELAYED_WORK(&xudc->port_reset_war_work,
- 				tegra_xudc_port_reset_war_work);
- 
--	if (of_property_read_bool(xudc->dev->of_node, "usb-role-switch")) {
--		role_sx_desc.set = tegra_xudc_usb_role_sw_set;
--		role_sx_desc.fwnode = dev_fwnode(xudc->dev);
+-}
 -
--		xudc->usb_role_sw = usb_role_switch_register(xudc->dev,
--							&role_sx_desc);
--		if (IS_ERR(xudc->usb_role_sw)) {
--			err = PTR_ERR(xudc->usb_role_sw);
--			dev_err(xudc->dev, "Failed to register USB role SW: %d",
--					   err);
--			goto free_eps;
--		}
--	} else {
--		/* Set the mode as device mode and this keeps phy always ON */
--		dev_info(xudc->dev, "Set usb role to device mode always");
--		schedule_work(&xudc->usb_role_sw_work);
--	}
-+	/* Set the mode as device mode and this keeps phy always ON */
-+	xudc->device_mode = true;
-+	schedule_work(&xudc->usb_role_sw_work);
- 
- 	pm_runtime_enable(&pdev->dev);
- 
-@@ -3643,11 +3603,7 @@ static int tegra_xudc_remove(struct platform_device *pdev)
- 	pm_runtime_get_sync(xudc->dev);
- 
- 	cancel_delayed_work(&xudc->plc_reset_work);
--
--	if (xudc->usb_role_sw) {
--		usb_role_switch_unregister(xudc->usb_role_sw);
--		cancel_work_sync(&xudc->usb_role_sw_work);
--	}
-+	cancel_work_sync(&xudc->usb_role_sw_work);
- 
- 	usb_del_gadget_udc(&xudc->gadget);
- 
+ static const struct tegra_xusb_padctl_ops tegra186_xusb_padctl_ops = {
+ 	.probe = tegra186_xusb_padctl_probe,
+ 	.remove = tegra186_xusb_padctl_remove,
 -- 
 2.7.4
 
