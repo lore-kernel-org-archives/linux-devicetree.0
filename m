@@ -2,150 +2,105 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56982C35254
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB30C352A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D26B2080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285C920715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 17:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GabQrhEI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TH0vCFNj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgBJRwB (ORCPT
+        id S1727347AbgBJRzg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:52:01 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45481 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgBJRwA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:52:00 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so4041955pfg.12;
-        Mon, 10 Feb 2020 09:52:00 -0800 (PST)
+        Mon, 10 Feb 2020 12:55:36 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:37884 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbgBJRzg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 12:55:36 -0500
+Received: by mail-vs1-f65.google.com with SMTP id x18so4738216vsq.4
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:55:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MM7R9V7x4SfJxszh3dZy1asc+0YpWfKxq+33iCkgJuw=;
-        b=GabQrhEI7g1MP+cMV9bvR9dwQktgpfyeF8s92oPxorCxTF65Quy0utpXliSB6ZnQBQ
-         ga5RUyXfhYrcya0a4d2CpRKwdinAK2ZV38KFlbOeqYhaSOxm9DSQWJXNXzXpc4OBCx4O
-         wRnDOReq10omnEy4z76YRO4B/0kIjbanwVaJvE6TSL77zCMPEdgTRxxhPBSGbIs5hfNI
-         Rzz+9PHNUpiaSib5CXqyZMQ+qvEjl+JMwTkwhag4ObuukgdfwLlWNLJVzsFdq13f1dYD
-         wHjtE6RKHL4TxlfDLK2sZ9I4UaEA30lv9sMBMyVIhOMmuXjXUecgiYRm486xs52W0eSn
-         CjYA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=siKHOuO8wOb9sw6P22vlsxiKOGFhLZkeTDhUG0eBw1U=;
+        b=TH0vCFNjQCF7itW9+Z6ZYFb493fIZyD8YVn4iSK9fy1/KDtpK9dmmj5bVy6JE2ilET
+         kjwJPnFS/rOWJ7+jJzyyoiPCUJV+1GpGlAMyPz6u/zxhXBymGsTgm+bsdoWkcDBaToiZ
+         7+3z8uxOlnEAnw8r3bdd1mP4fIBTimHEgdSH8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MM7R9V7x4SfJxszh3dZy1asc+0YpWfKxq+33iCkgJuw=;
-        b=W9nmWdKbEq7hRnV9BM9uNYsIN7vyLtictv+JtAOrBH3Vlph8aPfvyziJUpu6RAyqQk
-         OIhIvjTYlsI4nfGH8QaMyYsWmc/4ybT8UFwf4tHrpfFCpNm+qrPhtV+XTtDA22kRbInA
-         NR43fIMk2Iuybre8MUTkr4wV71XzMUY/mEUUM2FrfrihmFIBX1zyWgQBhaMm/GpyBF2t
-         sZukOTh615zaHPK+4t6b9ngGTX8Ims6Tis5gciQ9iw7Fs8UcyMd4vUMNEZDXpiFClGeg
-         n6E1NBXhs43JWfY0hizw/pYqc9tuujZUu0MbrOpi3ij1+LpuKUU37hrKNarQLFj5Ip9C
-         MIHQ==
-X-Gm-Message-State: APjAAAWtBAPWetwi6s11uvxrOYQekzUVLrSGepohyF3SxCvj5KhtfGPb
-        2ObHr3mxJVT4KA9dfwqE1b0=
-X-Google-Smtp-Source: APXvYqz8OGqGIw6Dj/1NWzwwvsY0TYQ/8+Hmsz8n9Ry0oUOLEEcDPAe0ccT7JEe+q4YdqNfl35R2Iw==
-X-Received: by 2002:a63:7457:: with SMTP id e23mr2869807pgn.386.1581357120158;
-        Mon, 10 Feb 2020 09:52:00 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 70sm795638pgd.28.2020.02.10.09.51.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Feb 2020 09:51:59 -0800 (PST)
-Date:   Mon, 10 Feb 2020 09:51:58 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mike Jones <michael-a1.jones@analog.com>
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jdelvare@suse.com, robh+dt@kernel.org, corbet@lwn.net
-Subject: Re: [PATCH 2/2] bindings: (hwmon/ltc2978.txt): add support for more
- parts.
-Message-ID: <20200210175158.GA31186@roeck-us.net>
-References: <1581032654-4330-1-git-send-email-michael-a1.jones@analog.com>
- <1581032654-4330-2-git-send-email-michael-a1.jones@analog.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=siKHOuO8wOb9sw6P22vlsxiKOGFhLZkeTDhUG0eBw1U=;
+        b=FpQudc3MmQ6qY5K+vuZam98MDFUnx1zCXyfHM/j5RTipDI81GbiFfjVbQwY3/W/Lva
+         274PubQ40t47LlH2/TaRNH6HccY4zGdKEfwenj1JZb4lpHyLgR6dR471YhP27Gmqrt3B
+         Se41Knbp2jPKrWBAXW51OeU4WgbnmZcZC4yaSD7p4nziZUU1xHk1y9Aoh5ugDO+LdaqN
+         pFphNm5sXhXVdZQsSgW3LpmxKBHqEeBJSfMDZ0y68BwZhOTeRjYs+M7zn8dJgeD0830Q
+         +0oipk3d+20JhPeardguIlLQ7EO3upTFyScOh540bg6m3Ph9o+L4JkZnpPeRaRFEqILF
+         FoZA==
+X-Gm-Message-State: APjAAAVZ4VFMG1Vq+ZtMsYaKbMveNmWzEOP8m3vWtN3SF7vB2OKcpk69
+        c0lrQ4yTAzI8JluqXpQ3dFaG37K19rU=
+X-Google-Smtp-Source: APXvYqxc6Lsc7lmRQ1MmcxOku6Bo17xR4rF7JCHP9BMccs7fxYhyRexLNEw17g66DNPjtjbFt2ZEBQ==
+X-Received: by 2002:a67:ed93:: with SMTP id d19mr7379896vsp.60.1581357334537;
+        Mon, 10 Feb 2020 09:55:34 -0800 (PST)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id m11sm329552vkm.52.2020.02.10.09.55.32
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2020 09:55:33 -0800 (PST)
+Received: by mail-ua1-f54.google.com with SMTP id y3so2816147uae.3
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 09:55:32 -0800 (PST)
+X-Received: by 2002:a9f:300a:: with SMTP id h10mr1454266uab.91.1581357332297;
+ Mon, 10 Feb 2020 09:55:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581032654-4330-2-git-send-email-michael-a1.jones@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1581307266-26989-1-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1581307266-26989-1-git-send-email-tdas@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 10 Feb 2020 09:55:21 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=X-URWfbe8vNqtjHZPo6Rokwkede8oSagJu1KiD18a8EQ@mail.gmail.com>
+Message-ID: <CAD=FV=X-URWfbe8vNqtjHZPo6Rokwkede8oSagJu1KiD18a8EQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clk: qcom: Add support for GPU GX GDSCR
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 04:44:14PM -0700, Mike Jones wrote:
-> LTC2972, LTC2979, LTC3884, LTC3889, LTC7880, LTM4664, LTM4677,
-> LTM4678, LTM4680, LTM4700.
-> 
-> Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
+Hi,
 
-Conditionally applied to hwmon-next. We'll see if Rob would like to see
-any adjustments.
-
-Thanks,
-Guenter
-
+On Sun, Feb 9, 2020 at 8:01 PM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> In the cases where the GPU SW requires to use the GX GDSCR add
+> support for the same.
+>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
->  .../devicetree/bindings/hwmon/ltc2978.txt          | 22 ++++++++++++++++++----
->  1 file changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> index b428a70..4e7f621 100644
-> --- a/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> @@ -2,20 +2,30 @@ ltc2978
->  
->  Required properties:
->  - compatible: should contain one of:
-> +  * "lltc,ltc2972"
->    * "lltc,ltc2974"
->    * "lltc,ltc2975"
->    * "lltc,ltc2977"
->    * "lltc,ltc2978"
-> +  * "lltc,ltc2979"
->    * "lltc,ltc2980"
->    * "lltc,ltc3880"
->    * "lltc,ltc3882"
->    * "lltc,ltc3883"
-> +  * "lltc,ltc3884"
->    * "lltc,ltc3886"
->    * "lltc,ltc3887"
-> +  * "lltc,ltc3889"
-> +  * "lltc,ltc7880"
->    * "lltc,ltm2987"
-> +  * "lltc,ltm4664"
->    * "lltc,ltm4675"
->    * "lltc,ltm4676"
-> +  * "lltc,ltm4677"
-> +  * "lltc,ltm4678"
-> +  * "lltc,ltm4680"
->    * "lltc,ltm4686"
-> +  * "lltc,ltm4700"
->  - reg: I2C slave address
->  
->  Optional properties:
-> @@ -25,13 +35,17 @@ Optional properties:
->    standard binding for regulators; see regulator.txt.
->  
->  Valid names of regulators depend on number of supplies supported per device:
-> +  * ltc2972 vout0 - vout1
->    * ltc2974, ltc2975 : vout0 - vout3
-> -  * ltc2977, ltc2980, ltm2987 : vout0 - vout7
-> +  * ltc2977, ltc2979, ltc2980, ltm2987 : vout0 - vout7
->    * ltc2978 : vout0 - vout7
-> -  * ltc3880, ltc3882, ltc3886 : vout0 - vout1
-> +  * ltc3880, ltc3882, ltc3884, ltc3886, ltc3887, ltc3889 : vout0 - vout1
-> +  * ltc7880 : vout0 - vout1
->    * ltc3883 : vout0
-> -  * ltm4676 : vout0 - vout1
-> -  * ltm4686 : vout0 - vout1
-> +  * ltm4664 : vout0 - vout1
-> +  * ltm4675, ltm4676, ltm4677, ltm4678 : vout0 - vout1
-> +  * ltm4680, ltm4686 : vout0 - vout1
-> +  * ltm4700 : vout0 - vout1
->  
->  Example:
->  ltc2978@5e {
+>  include/dt-bindings/clock/qcom,gpucc-sc7180.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+
+I already added my tag to this exact same patch in:
+
+https://lore.kernel.org/linux-arm-msm/CAD=FV=VeMaKq3KR=t7dbG+VyVs5DS=gHasSdJQSqNQreTUoZig@mail.gmail.com/
+
+Please make sure to carry forward tags unless something major has
+changed.  In any case, re-adding my tag:
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
