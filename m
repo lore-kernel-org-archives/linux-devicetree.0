@@ -2,92 +2,92 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447FAC352A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 14:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F0C352A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 14:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10297206ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 14:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC6920714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 14:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581343218;
-	bh=FdBYsn7ehxVf2vxq0CzmRwF7qeqYi0ygZVOOuUiyPJk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=du0yrfHRpv49KqR1vmufQnV0nrKNd33M30qR1fEqmzV1ETFB7W9W5z/+qCor0Yq7x
-	 E14r+uyD0QCAz7F25hUDYMuPEe31TBn2WipkhYMosIQL118y6Met/SJwBzlAw5etzM
-	 cZOvAbEojBnEBWlt5J7F/ra4gQ6UDbgrMlYJSI3Q=
+	s=default; t=1581343473;
+	bh=7fRbMVB8UtpzAcwDa2C7GH4fqkKZBT/U7iNhVYXR1BE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UWQVyOzlNlexrii8tZ1XdD3SPeBpkI3thxkKKPVbRIyg1hExsqQ9hqcdLXT6g86H/
+	 Hb4xQwkVbyFXl19jhb0OzfXjCTVJBAYxKfsbNZ1C5OBfzddkweiUJbBljLu49y1JQL
+	 MCfHd3VvC2PfdVQspxpCFmFyPP2UhHNKL92+cclY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgBJOAR (ORCPT
+        id S1728217AbgBJOEd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:00:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:34224 "EHLO foss.arm.com"
+        Mon, 10 Feb 2020 09:04:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbgBJOAR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:00:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAD291FB;
-        Mon, 10 Feb 2020 06:00:16 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EC1E3F68E;
-        Mon, 10 Feb 2020 06:00:16 -0800 (PST)
-Date:   Mon, 10 Feb 2020 14:00:15 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        id S1726846AbgBJOEd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 09:04:33 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31925206D6;
+        Mon, 10 Feb 2020 14:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581343472;
+        bh=7fRbMVB8UtpzAcwDa2C7GH4fqkKZBT/U7iNhVYXR1BE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tdLgfvi+MwEhD3EQ+OniSWgk5rxOMfpVefeowW9T4nkdFrXEhdP6oXDnqCoBEBuYx
+         ObgGrQX7aD137yvFDvLp/DvlFnPPR41dotnWtS4p66QYZc61/ci3ujJXjRHqXebhvT
+         PYQIRQ1cI6OMpIXLdo/ewczjp9CCuYx9d6Oj11n8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        ulf.hansson@linaro.org
-Subject: Re: [PATCH v4 4/7] drm/panfrost: Add support for multiple regulators
-Message-ID: <20200210140015.GM7685@sirena.org.uk>
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-5-drinkcat@chromium.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bZ2MuwyI/0uB8yuJ"
-Content-Disposition: inline
-In-Reply-To: <20200207052627.130118-5-drinkcat@chromium.org>
-X-Cookie: Avoid gunfire in the bathroom tonight.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Anand Moon <linux.amoon@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH] dt-bindings: usb: exynos-usb: Document clock names for DWC3 bindings
+Date:   Mon, 10 Feb 2020 15:04:16 +0100
+Message-Id: <1581343456-18900-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The Exynos DWC3 driver expects certain clock names, depending on used
+compatible.  Document this explicitly in the bindings.
 
---bZ2MuwyI/0uB8yuJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ Documentation/devicetree/bindings/usb/exynos-usb.txt | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-On Fri, Feb 07, 2020 at 01:26:24PM +0800, Nicolas Boichat wrote:
-> Some GPUs, namely, the bifrost/g72 part on MT8183, have a second
-> regulator for their SRAM, let's add support for that.
+diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+index 66c394f9e11f..6aae1544f240 100644
+--- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
++++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+@@ -78,7 +78,14 @@ Required properties:
+  - ranges: allows valid 1:1 translation between child's address space and
+ 	   parent's address space
+  - clocks: Clock IDs array as required by the controller.
+- - clock-names: names of clocks correseponding to IDs in the clock property
++ - clock-names: Names of clocks corresponding to IDs in the clock property.
++                Following clock names shall be provided for different
++                compatibles:
++                 - samsung,exynos5250-dwusb3: "usbdrd30",
++                 - samsung,exynos5433-dwusb3: "aclk", "susp_clk", "pipe_pclk",
++                                              "phyclk",
++                 - samsung,exynos7-dwusb3: "usbdrd30", "usbdrd30_susp_clk",
++                                           "usbdrd30_axius_clk"
+  - vdd10-supply: 1.0V powr supply
+  - vdd33-supply: 3.0V/3.3V power supply
+ 
+-- 
+2.7.4
 
-Reviwed-by: Mark Brown <broonie@kernel.org>
-
-
---bZ2MuwyI/0uB8yuJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5BYe4ACgkQJNaLcl1U
-h9CfMQf/QzQ87xi7iHEnbkDh0DvfRVBElMOh5yZEs/7vrCKXq48DQSPhy5qTSNe0
-ELgi8tL9ZNzBSrkpyMdv8p/CS1J0sFo84mWLhKCukEMsBUzk5xzH0Bl8IaIq12ia
-zV3bz3qMfraesjQ4Epu79BurC/81bsk+7Yr51OIajamncY7iePAnJOUdA3KsCNVa
-89Klh4Je02sA9pUAg88IEA72n+YJ1Cm7S7xtA5FbJJf0EzNyD9WKY6tF3lF9bqts
-5w7iGUDPe102X5urJGl38NliUpk8nkjFvREH4kDcOoyo07yZv14YGpiiqCcC3KD2
-4NbAUoMEmAh9tXfdABSgDX/n414tSw==
-=gI44
------END PGP SIGNATURE-----
-
---bZ2MuwyI/0uB8yuJ--
