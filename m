@@ -2,144 +2,128 @@ Return-Path: <SRS0=E/bd=36=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F647C352A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B2DC35254
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE7320715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8F120715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 18:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581360351;
+	bh=1HEo325uKcJScMqA1TBMxTyz69hQ2kusxwb1WY+5d6w=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=IBmPq6vOZ2kIkluro1kKScMqNC00NzV1Jf1vDPIhQ2LvAd9yd236nRXS4bizOYT46
+	 B8FJUpzycOiEdXKHIASD15GNtbCmIOMI3iuM4/wrsnH+nBND73QzfwAtTNgv2g3ks4
+	 OPVf6hiOZSNNiODtash8Tsdi8rxD/uvL7W8+gxAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgBJSmD (ORCPT
+        id S1727584AbgBJSps (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:42:03 -0500
-Received: from mail-ot1-f49.google.com ([209.85.210.49]:42521 "EHLO
-        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbgBJSmC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 13:42:02 -0500
-Received: by mail-ot1-f49.google.com with SMTP id 66so7374491otd.9;
-        Mon, 10 Feb 2020 10:42:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W1ciCgvuqEnDoMA1edbjKiXo9M8YGhJpnNcRvscMaLU=;
-        b=PcmSuOkMmbExl3F+r4HQqNhWT8Y14mRQ0X4V9tX5IHB2F8+Ok+8X8UdWFETWVcKNVi
-         abE1ZLhubasaF2iPbJxhNLCweZTwGWYvw9sQ67CcE9nFRDSHb6cKgx8BU00CKXKj8+qE
-         l1SAzIxNXlrOuuxWfxYyxt+4wJLhmENTVobCwxuV3meP4wqmUaaPLGqhdhbyYejcvRZe
-         FdVvuv1ofVCNp0o52cGWrvzK1lNmMsLdpluYOwS2kDvA0kXZp0CNed2we/brry+LR4vT
-         3KZNkkzB2SRymtqnvJ2g53KrzNC3xOxISxPwNfUboISHYnHD3jwjFwp48LNRQOFQdvC9
-         p2yA==
-X-Gm-Message-State: APjAAAXJ2jFR8+6mHDsjjbFHL1kW8XhbRB1JgOQ9FuJlO5R/qOBtJ5kT
-        daclSMrOZbEJLTth08d73IDsr9wlIbs=
-X-Google-Smtp-Source: APXvYqwKNisCdkOSR/XlF15KXhaatwymHt8MAUo0YxW+V4/RdjmQzLcaua4DoS7M6RRTSRyjggVhag==
-X-Received: by 2002:a9d:7:: with SMTP id 7mr2031823ota.26.1581360121296;
-        Mon, 10 Feb 2020 10:42:01 -0800 (PST)
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
-        by smtp.gmail.com with ESMTPSA id q5sm312248oia.21.2020.02.10.10.42.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2020 10:42:00 -0800 (PST)
-Received: by mail-oi1-f181.google.com with SMTP id j132so10161980oih.9;
-        Mon, 10 Feb 2020 10:42:00 -0800 (PST)
-X-Received: by 2002:aca:3f8b:: with SMTP id m133mr269681oia.51.1581360120170;
- Mon, 10 Feb 2020 10:42:00 -0800 (PST)
+        Mon, 10 Feb 2020 13:45:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgBJSps (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:45:48 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE6B20715;
+        Mon, 10 Feb 2020 18:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581360347;
+        bh=1HEo325uKcJScMqA1TBMxTyz69hQ2kusxwb1WY+5d6w=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=NdKqBThhzMhuAHRe2+WtUZ1+wejRl1ueQ6kv59onPhamqyc+lX6JIkIxnZ96amPkw
+         H+p42TwWdhwtBxbUDFDh0UW2ZwTa2JGVxwnV3vCVXju5Ku3/obTgujV8sDjDrI3IQo
+         xeiGrx+9qOrOv/fccDCB8NpQMziZ4n8mEMAhYtrI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk> <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
-In-Reply-To: <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Mon, 10 Feb 2020 12:41:49 -0600
-X-Gmail-Original-Message-ID: <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
-Message-ID: <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     Olof Johansson <olof@lixom.net>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200207044425.32398-2-vigneshr@ti.com>
+References: <20200207044425.32398-1-vigneshr@ti.com> <20200207044425.32398-2-vigneshr@ti.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: Add binding documentation for TI syscon gate clock
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Date:   Mon, 10 Feb 2020 10:45:46 -0800
+Message-ID: <158136034652.94449.4389789192412792346@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 9:32 AM Olof Johansson <olof@lixom.net> wrote:
->
-> On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
-> > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> > > >
-> > > > Hi Olof,
-> > > >
-> > > > Thanks a lot for your comments!
-> > > > And sorry for my delay respond!
-> > >
-> > > Actually, they apply with only minor conflicts on top of current -next.
-> > >
-> > > Bjorn, any chance we can get you to pick these up pretty soon? They
-> > > enable full use of a promising ARM developer system, the SolidRun
-> > > HoneyComb, and would be quite valuable for me and others to be able to
-> > > use with mainline or -next without any additional patches applied --
-> > > which this patchset achieves.
-> > >
-> > > I know there are pending revisions based on feedback. I'll leave it up
-> > > to you and others to determine if that can be done with incremental
-> > > patches on top, or if it should be fixed before the initial patchset
-> > > is applied. But all in all, it's holding up adaption by me and surely
-> > > others of a very interesting platform -- I'm looking to replace my
-> > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-> > > before I do.
-> >
-> > If you're going to be using NVMe, make sure you use a power-fail safe
-> > version; I've already had one instance where ext4 failed to mount
-> > because of a corrupted journal using an XPG SX8200 after the Honeycomb
-> > Serror'd, and then I powered it down after a few hours before later
-> > booting it back up.
-> >
-> > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
-> > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
-> > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
-> > EXT4-fs (nvme0n1p2): error loading journal
->
-> Hmm, using btrfs on mine, not sure if the exposure is similar or not.
->
-> Do you know if the SErr was due to a known issue and/or if it's
-> something that's fixed in production silicon?
->
-> (I still can't enable SMMU since across a warm reboot it fails
-> *completely*, with nothing coming up and working. NXP folks, you
-> listening? :)
+Quoting Vignesh Raghavendra (2020-02-06 20:44:24)
+> diff --git a/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbcl=
+k.yaml b/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
+> new file mode 100644
+> index 000000000000..98fcac2b41f3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/ti,am654-ehrpwm-tbclk.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI syscon gate clock driver
+> +
+> +maintainers:
+> +  - Vignesh Raghavendra <vigneshr@ti.com>
+> +
+> +description: |
+> +
+> +  This binding uses common clock bindings
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt
 
-This is a known issue about DPAA2 MC bus not working well with SMMU
-based IO mapping.  Adding Laurentiu to the chain who has been looking
-into this issue.
+Maybe have a real description instead of this line which is mostly
+useless.
 
-Regards,
-Leo
+> +
+> +properties:
+> +  compatible:
+> +    items:
+
+I think you can drop items.
+
+> +      - const: ti,am654-ehrpwm-tbclk
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  ti,tbclk-syscon:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the system controller node that has bits to
+> +      control eHRPWM's TBCLK
+> +
+> +required:
+> +  - compatible
+> +  - "#clock-cells"
+> +  - ti,tbclk-syscon
+> +
+> +examples:
+> +  - |
+> +    tbclk_ctrl: tbclk_ctrl@4140 {
+> +        compatible =3D "syscon";
+> +        reg =3D <0x4140 0x18>;
+> +    };
+> +
+> +    ehrpwm_tbclk: clk0 {
+> +        compatible =3D "ti,am654-ehrpwm-tbclk";
+> +        #clock-cells =3D <1>;
+> +        ti,tbclk-syscon =3D <&tbclk_ctrl>;
+> +    };
+
+I don't understand the binding. Why can't the syscon node register clks
+and have #clock-cells?
