@@ -6,117 +6,146 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29C0C352A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 07:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCABC352A4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 07:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7606320733
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 07:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B78820661
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Feb 2020 07:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SRusOU6z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zhxEE/Uk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QsC4PDi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgBJHp3 (ORCPT
+        id S1726118AbgBJHvC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 02:45:29 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:48407 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726118AbgBJHp2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 02:45:28 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id DE2D521B74;
-        Mon, 10 Feb 2020 02:45:27 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 10 Feb 2020 02:45:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=zKviTYwNtOAF1i7vdc+J8aezp5Z
-        qvneeGlj2Jeyenw8=; b=SRusOU6zGkRixLRFfJR9faflBt4YqrKln+G2yKPV9re
-        IcQ7u79sX47HNW6ddmjyXgNfBgifrlMeHWRaEYS8KwhOI9LH2vn75Y7HJPSzUU3y
-        O0nvllLEounmmDH8ghSO9eZpm11wEe79gdbzWSG6q/n8ipMCpArH5fEcKr+NB8yd
-        9FDhTeOEh6O1+w7TvxwL5+03bBLrq+Ytub/yQsztjbpLV7BjhZQ3St+8kBUzm9e+
-        SQrM1cZlT5lU06TydAO+zobYk0Sj1jitCkRTFpfns30M9rRK4c7MUJaVcbZt5pFF
-        VM96QQ49bvv1NGX8fAFLrGHX6pk4vyiye4pTLnQTvDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zKviTY
-        wNtOAF1i7vdc+J8aezp5ZqvneeGlj2Jeyenw8=; b=zhxEE/Uk0p6h+fmhZ9QO8w
-        gJweMLGYuQQN4iGqBADuJnaEVXQGPMD4p17kwSVQlJaGlxwhs4rtqJLgmGEi0//D
-        GPvnOguAqZNijUCZQt4lMUXD+mJtn+QsmGPS55+sff7ebE0hC0vEpYTRP3nJrDd4
-        6HWDBFZkvw76Xs8aG+OqL0drMRwdCmF7t0qknF8+H+9BaCkBSOVRKLxTvrXnhk54
-        ymgRYVcts61f5tWsi0X5lX08MCrdySJ5MXBI/vhfugS/bofxwB5sV4c7dS7pmf3g
-        lGkp1RvB3DUsqRuR3zEFeAqRqOFcNf83vIGwVZDtJWOBm5oh7n7FDV7YYSxfZoEg
-        ==
-X-ME-Sender: <xms:FwpBXmbMdGreOvBMEhtdhtUc5a1z9hNrfcL3HIH7tCssbWgkUN5wBQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedtgdektdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:FwpBXuq0ZTS-ALZiRph6gbtkCCn2xPGHNjf4HIrPutHnewWjaUbYWw>
-    <xmx:FwpBXirjIzyh4-p-evrIELC5pxOybrxCfLPV2ZMMYtTwzkeKpooUYg>
-    <xmx:FwpBXg1rYOQaq0vFaBeYnhwJ-ZflDIaAXRxLQ_mwjutujbu9KGhmLQ>
-    <xmx:FwpBXjv9EKesr1slgpQ2uVNhmd9FBRi8MV5_0qagkuaza9CN2sh_Sw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 37E1630606E9;
-        Mon, 10 Feb 2020 02:45:27 -0500 (EST)
-Date:   Mon, 10 Feb 2020 08:45:25 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     bage@linutronix.de
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benedikt Spranger <b.spranger@linutronix.de>
-Subject: Re: [PATCH 4/5] ARM: dts: sun7i: lamobo-r1: Split out commons
-Message-ID: <20200210074525.xloszrupb37gcl6p@gilmour.lan>
-References: <20200206113328.7296-1-bage@linutronix.de>
- <20200206113328.7296-5-bage@linutronix.de>
+        Mon, 10 Feb 2020 02:51:02 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35726 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgBJHvC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 02:51:02 -0500
+Received: by mail-vs1-f65.google.com with SMTP id x123so3513918vsc.2
+        for <devicetree@vger.kernel.org>; Sun, 09 Feb 2020 23:51:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u3O+szgfwEJKuo4yzEkWiTVNHGumVBlqNQZE9NfjV7I=;
+        b=QsC4PDi5ZlYbAjfw6pBUa0KPphhE/VVoGj6kVK1MAL7QZqo9wjmEBLb9Ikbb7Fp770
+         o5u/R5ApawhiT5Waee9rnPrac69HShLMufZLupjUjI/CMI3snfnPnH5LdDWGPL7q39dr
+         Evp1CxZoX8gCVNOonqGfUiXeiuwNtbZ+WegCEVukUffQd+2gilW7icSVWUk6sIYv749b
+         slMXTUuMoGaFUwlQwE/ldzraKsne3DiELel3X/Jp70Dz80496OwgjZdM776TADILQLuO
+         yAjl54QHAMbG0F+Y6cIXjrS11+kCEVl5NN47dW7kpuL4QC9qVts5HHxcSN5tLZgx3jY5
+         Purg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u3O+szgfwEJKuo4yzEkWiTVNHGumVBlqNQZE9NfjV7I=;
+        b=agqER0cqVG0uFsrVju+3snvUjnTxi4nHxP/9hkjb8tKR02SVE2fuh6CnBcmdQs/AjT
+         uYZXVXm68lNMEwJh7B902GRw5FlKuZkKIdD7P9PsL2DMkXnOeGujePqkoCfHj58yZDpC
+         OefZxBSVZG8EK/A9FhsulaIhQGzoMttEeG2PAZbxbRIp+wQqYAJmijAdn/ZJLpFLOkgY
+         yJHV/SYpmKWZKrMidK2JkgHd2fDNlZnqEZngpmV9tO5n23IauvnxjpL712oIGQfB9dKK
+         R810yySHy63SAK+5ET1MobBO5IZfMaL/0I61NKRjWp9GYQ7Nms6GKi5agbWIoWeOX+vh
+         sloA==
+X-Gm-Message-State: APjAAAUztZACF2aIAOi6pg0v2RixFzvSjw3VSftrP1eAl7XqxOCeKY5T
+        z3Ut/Ud7qfijIIzWPq5uF5VPZGnC2XmJKhYialgqFg==
+X-Google-Smtp-Source: APXvYqypbI21Yfdn+EA6ub6ed50JBoiEO60Ni/AfECIKY1ZvJ0o8EXmbyp6DUzxmNBzjRT7iyDPYhJySfgC8H0ANL9s=
+X-Received: by 2002:a67:ee02:: with SMTP id f2mr5601456vsp.165.1581321061313;
+ Sun, 09 Feb 2020 23:51:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hyya4fcrpatydi7p"
-Content-Disposition: inline
-In-Reply-To: <20200206113328.7296-5-bage@linutronix.de>
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-6-drinkcat@chromium.org> <CAPDyKFoz0gUkoofWkd6dFuOkRWqeeCDrv84UHyYYowAAgTiitw@mail.gmail.com>
+ <CANMq1KA+3O+G+_r=xY98eK-in5i3HWg+4B4-ONk-6qWS3a9=0g@mail.gmail.com>
+In-Reply-To: <CANMq1KA+3O+G+_r=xY98eK-in5i3HWg+4B4-ONk-6qWS3a9=0g@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 10 Feb 2020 08:50:25 +0100
+Message-ID: <CAPDyKFrq5KQ7CHnMSCv7GqzpQyVfDQgLYjUVzeweTwKR3AmM4g@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---hyya4fcrpatydi7p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Thu, Feb 06, 2020 at 12:33:26PM +0100, bage@linutronix.de wrote:
-> From: Bastian Germann <bage@linutronix.de>
+On Sun, 9 Feb 2020 at 13:50, Nicolas Boichat <drinkcat@chromium.org> wrote:
 >
-> Split out common parts of the Lamobo R1 board to enable using them for
-> Linutronix Testbox board integration.
+> On Fri, Feb 7, 2020 at 10:26 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Fri, 7 Feb 2020 at 06:27, Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > >
+> > > When there is a single power domain per device, the core will
+> > > ensure the power domain is switched on (so it is technically
+> > > equivalent to having not power domain specified at all).
+> > >
+> > > However, when there are multiple domains, as in MT8183 Bifrost
+> > > GPU, we need to handle them in driver code.
+> > >
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> >
+> > Besides a minor nitpick, feel free to add:
+> >
+> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> >
+> > Kind regards
+> > Uffe
+> >
+> > [snip]
+> > > +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> > > +{
+> > > +       int err;
+> > > +       int i, num_domains;
+> > > +
+> > > +       num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> > > +                                                "power-domains",
+> > > +                                                "#power-domain-cells");
+> > > +
+> > > +       /*
+> > > +        * Single domain is handled by the core, and, if only a single power
+> > > +        * the power domain is requested, the property is optional.
+> > > +        */
+> > > +       if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> > > +               return 0;
+> > > +
+> > > +       if (num_domains != pfdev->comp->num_pm_domains) {
+> > > +               dev_err(pfdev->dev,
+> > > +                       "Incorrect number of power domains: %d provided, %d needed\n",
+> > > +                       num_domains, pfdev->comp->num_pm_domains);
+> > > +               return -EINVAL;
+> > > +       }
+> > > +
+> > > +       if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
+> > > +                       "Too many supplies in compatible structure.\n"))
+> >
+> > Nitpick:
+> > Not sure this deserves a WARN. Perhaps a regular dev_err() is sufficient.
 >
-> Co-developed-by: Benedikt Spranger <b.spranger@linutronix.de>
-> Signed-off-by: Benedikt Spranger <b.spranger@linutronix.de>
-> Signed-off-by: Bastian Germann <bage@linutronix.de>
+> Ah well I had a BUG_ON before so presumably this is already a little better ,-)
+>
+> You can only reach there if you set pfdev->comp->num_pm_domains >
+> MAX_PM_DOMAINS in the currently matched struct panfrost_compatible
+> (pfdev->comp->num_pm_domains == num_domains, and see below too), so
+> the kernel code would actually be actually broken (not the device
+> tree, nor anything that could be probed). So I'm wondering if the
+> loudness of a WARN is better in this case? Arguable ,-)
 
-Looking at the board, it looks like it's just a daughter board to the
-lamobo-r1?
+I see. It's not a big a deal, so feel free to keep as is.
 
-If so, you can just include its DTS directly, there's no need to
-create a DTSI (an overlay is an option as well).
+[...]
 
-Maxime
-
---hyya4fcrpatydi7p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkEKFQAKCRDj7w1vZxhR
-xV7XAP9IuMT+pK1W4BlZA+yUO5fiwre81zA/synSncgzMnp9YAEAqev9jgs1BoHH
-/YNnm7sUo9yrvJ0iIaTTTANGIdc6/wc=
-=7/nb
------END PGP SIGNATURE-----
-
---hyya4fcrpatydi7p--
+Kind regards
+Uffe
