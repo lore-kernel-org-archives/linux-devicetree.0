@@ -2,218 +2,244 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1EAC35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBD0C35242
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 19:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6BB920848
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:39:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581446399;
-	bh=8M/DAG01uY5J9fd/tBLodsJqKBMrf7Ga37UsLPhdF40=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BIvO8r8b1o7C6AL5Z+XDPDnJHltbsoJPA4Ng4i5/nztmx/9VetzBYtf1IRTizTVK2
-	 1mNCXFQZphtzaLzNoJKKpw8BcID4+bdgH3Yy5YGIL5oihH8r5h0aPJEQAb4uGdGI4f
-	 1ua2phoChv6I3vtNvCyKNAl4dHhalITioh3CPh2s=
+	by mail.kernel.org (Postfix) with ESMTP id C66C924650
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 19:02:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J9JXf+ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbgBKSj7 (ORCPT
+        id S1729537AbgBKTCA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:39:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbgBKSj7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:39:59 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4921F21D7D;
-        Tue, 11 Feb 2020 18:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581446398;
-        bh=8M/DAG01uY5J9fd/tBLodsJqKBMrf7Ga37UsLPhdF40=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Yfk9Aym71n7UY3UN+lE89eXVArMALR9RRSHjbU15nRwqPGHFXoA1ja8mq0zCDu7dz
-         cv2te3hN261YhwgJ10ebBHRilfffIdsTNqcNVRWvxX0TU9Hzil0PMwUjOlsYlxxhlr
-         rP+mcFu9cI0LU1orG7grfVpIZhfV8oQvpb2Jyi5w=
-Received: by mail-qt1-f179.google.com with SMTP id d18so8716950qtj.10;
-        Tue, 11 Feb 2020 10:39:58 -0800 (PST)
-X-Gm-Message-State: APjAAAURRG7PxfC6lUuzI/d3gzYvUNwOoSCQAoug+q5qn3mAWQ0Oyz7c
-        huGRVKqPOhxKhxQ6Nk4TpY9tPCSdMB5H0tJW2w==
-X-Google-Smtp-Source: APXvYqxq3NT0xWbTbROx8zhNE6oXAj1noFgXpEXEkK4QFM7vJR0BN9sVbCnbiqH/hOyqmUsIGCM+GWUAroGve6ESwsc=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr3808050qtj.300.1581446397230;
- Tue, 11 Feb 2020 10:39:57 -0800 (PST)
+        Tue, 11 Feb 2020 14:02:00 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36037 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730572AbgBKTCA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 14:02:00 -0500
+Received: by mail-qt1-f195.google.com with SMTP id t13so8829177qto.3
+        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 11:01:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v8ElLutl/m0ZH3q/Jagn5Sm+o4lBHaVCMWC2w+7i5dQ=;
+        b=J9JXf+efOVR0SzD70t/aui7ZMlj9gDR5dOzMNHqIi3LnZA939xxuLrhEUjLovPPR6r
+         saDD3EshQmGnPX294Pi+A4dLvQrAYlLtt2KovymDgkzXqEYBrke6MqaUadLRIzzT0OQe
+         KJ5ow30BgnINxPHCoZbay5J1cCeJjgpQp44/w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v8ElLutl/m0ZH3q/Jagn5Sm+o4lBHaVCMWC2w+7i5dQ=;
+        b=HUzXYlApWE7ZhGCIkVyPDZQ+42ewHjZA2fSCEoqj6M28t8n9EADdqtoVAfC0zF5cEu
+         vggoyTBb26m5i+O7Pp66VwmuIe67XOl5Lg03LGZbADRi3xUcC2ZuoKItZw525M/ggbUn
+         8I+1AvMx8MG5ISCqqvKbgRpOm8YetIvqxsrUMQbw9cnTPsNFqhmguhK4z7j7oecktx+c
+         z1HcJzN3Ogs9Uh7vwbLDPWPTCq2xablpfQN/8wbU6QgznDu5weLNJcGTThZYDkAPwMTo
+         X6tEkpKiNNVUMZYy7w4NuRY+BxoxxyZ3g9X1K6a2Zg8IqELIyt7t25zwCH3KQqmO1MBS
+         W4cg==
+X-Gm-Message-State: APjAAAWhxcbQ4LN3Fz8fHs6F2HJUYRi90ZLLQyb9vVHPOiY4QzYTzBI1
+        Ot612ZVQuizwQTRcLjYMXRgdBzQwADmvazVvNXDgJw==
+X-Google-Smtp-Source: APXvYqzmkg+zFNZFV+4XiRoVMucGNuL9B4PTIUZALU995dSqbzMrvzrX9103Tqq3ReaFYomO3EipG7KbvJpkCDjbUKM=
+X-Received: by 2002:ac8:5457:: with SMTP id d23mr3594214qtq.93.1581447717756;
+ Tue, 11 Feb 2020 11:01:57 -0800 (PST)
 MIME-Version: 1.0
-References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
- <1580650021-8578-2-git-send-email-hadar.gat@arm.com> <20200206185651.GA14044@bogus>
- <AM5PR0801MB16657EDAA54655B7CBA46AF5E91E0@AM5PR0801MB1665.eurprd08.prod.outlook.com>
-In-Reply-To: <AM5PR0801MB16657EDAA54655B7CBA46AF5E91E0@AM5PR0801MB1665.eurprd08.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 12:39:46 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+F8mW7oUBCXMgzEVb3Bz2pHxU=bFjo97QisMZN92PaQw@mail.gmail.com>
-Message-ID: <CAL_Jsq+F8mW7oUBCXMgzEVb3Bz2pHxU=bFjo97QisMZN92PaQw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add device tree binding for Arm
- CryptoCell trng engine
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+References: <20200207203752.209296-1-pmalani@chromium.org> <20200207203752.209296-2-pmalani@chromium.org>
+ <dd9a8fa7-db6b-87a0-889d-b56a626a3078@collabora.com> <CACeCKac-OjvCLZ4FefsGbH9JR_suB3nL5CVLa_N0o9qnSqi3-g@mail.gmail.com>
+In-Reply-To: <CACeCKac-OjvCLZ4FefsGbH9JR_suB3nL5CVLa_N0o9qnSqi3-g@mail.gmail.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Tue, 11 Feb 2020 11:01:46 -0800
+Message-ID: <CACeCKaeXQK8KCwyZb2JBkLyCYA=+hRAHzdGr5Ycd1mAioAmNPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        heikki.krogerus@intel.com, Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 9, 2020 at 3:34 AM Hadar Gat <Hadar.Gat@arm.com> wrote:
+Resending (because I didn't send it in PlainText mode, so the MLs
+blocked the email). Sorry.
+
+
+On Tue, Feb 11, 2020 at 11:00 AM Prashant Malani <pmalani@chromium.org> wrote:
 >
-> Hi Rob,
-> Thanks for remarks.
-> Please see my answers.
-> Hadar
+> Hi Enric,
 >
-> > On Sun, Feb 02, 2020 at 03:26:59PM +0200, Hadar Gat wrote:
-> > > The Arm CryptoCell is a hardware security engine. This patch adds DT
-> > > bindings for its TRNG (True Random Number Generator) engine.
-> > >
-> > > Signed-off-by: Hadar Gat <hadar.gat@arm.com>
-> > > ---
-> > >  .../devicetree/bindings/rng/arm-cctrng.yaml        | 51
-> > ++++++++++++++++++++++
-> > >  1 file changed, 51 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> > > b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> > > new file mode 100644
-> > > index 0000000..fe9422e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> > > @@ -0,0 +1,51 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > Dual license new bindings:
-> >
-> > (GPL-2.0-only OR BSD-2-Clause)
-> >
-> Okay.
+> Thanks as always for reviewing the patch. Kindly see my responses inline:
 >
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Arm ZrustZone CryptoCell TRNG engine
-> > > +
-> > > +maintainers:
-> > > +  - Hadar Gat <hadar.gat@arm.com>
-> > > +
-> > > +description: |+
-> > > +  Arm ZrustZone CryptoCell TRNG (True Random Number Generator)
-> > engine.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    description: Should be "arm,cryptocell-7x3-trng"
-> >
-> > Drop. That's what the schema says.
-> >
-> Okay.
+> On Tue, Feb 11, 2020 at 2:28 AM Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+>>
+>> Hi Prashant,
+>>
+>> On 7/2/20 21:37, Prashant Malani wrote:
+>> > Some Chrome OS devices with Embedded Controllers (EC) can read and
+>> > modify Type C port state.
+>> >
+>> > Add an entry in the DT Bindings documentation that lists out the logical
+>> > device and describes the relevant port information, to be used by the
+>> > corresponding driver.
+>> >
+>> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+>> > ---
+>> >
+>> > Changes in v2:
+>> > - No changes. Patch first introduced in v2 of series.
+>> >
+>> >  .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
+>> >  1 file changed, 77 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+>> > new file mode 100644
+>> > index 00000000000000..46ebcbe76db3c2
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+>> > @@ -0,0 +1,77 @@
+>> > +# SPDX-License-Identifier: GPL-2.0
+>>
+>> I think that Google is fine with the dual licensing here. Would be good if this
+>> can be (GPL-2.0-only OR BSD-2-Clause)
 >
-> > > +    const: arm,cryptocell-7x3-trng
-> >
-> > Is 'x' a wildcard? We don't do wildcards unless you have other ways to get the
-> > specific version.
-> >
-> Kind of a wildcard. It stands for either 703 or 713.
-> Should I fix this to the specific versions?
-> OR,
-> Since the specific version doesn't matter to the driver, should it changed?
-
-Maybe not now, but both will always have the same errata and features?
-2 is not a large number, so just do 2.
-
-Of course, errata can vary by revision. Most Arm IP has version
-registers, so I assume that's true here. If not, we'd need per SoC
-implementation compatible strings here.
-
-> (checking out other rng drivers, I see this example in Samsung,exynos4.yaml:
->   - samsung,exynos4-rng # for Exynos4210 and Exynos4412 )
-
-Well, there's lots of bad examples, and also, some Samsung bindings
-are declared to not be stable.
-
 >
-> > > +
-> > > +  interrupts:
-> > > +    description: Interrupt number for the device.
-> >
-> > Drop. That's all 'interrupts'.
-> >
-> Okay.
+> Thanks for catching this. I will update it in the next version.
+>>
+>>
+>> > +%YAML 1.2
+>> > +---
+>> > +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
+>> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> > +
+>> > +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
+>> > +
+>> > +maintainers:
+>> > +  - Benson Leung <bleung@chromium.org>
+>> > +  - Prashant Malani <pmalani@chromium.org>
+>> > +
+>> > +description:
+>> > +  Chrome OS devices have an Embedded Controller(EC) which has access to
+>> > +  Type C port state. This node is intended to allow the host to read and
+>> > +  control the Type C ports. The node for this device should be under a
+>> > +  cros-ec node like google,cros-ec-spi.
+>> > +
+>> > +properties:
+>> > +  compatible:
+>> > +    const: google,cros-ec-typec
+>> > +
+>> > +  port:
+>> > +    description: A node that represents a physical Type C port on the
+>> > +      device.
+>> > +    type: object
+>> > +    properties:
+>> > +      port-number:
+>> > +        description: The number used by the Chrome OS EC to identify
+>> > +          this type C port.
+>> > +        $ref: /schemas/types.yaml#/definitions/uint32
+>>
+>> Any range of values allowed? 0 is okay?
 >
-> > > +    maxItems: 1
-> > > +
-> > > +  reg:
-> > > +    description: Base physical address of the engine and length of memory
-> > > +                 mapped region.
-> >
-> > Drop.
-> >
-> Okay.
 >
-> > > +    maxItems: 1
-> > > +
-> > > +  rosc-ratio:
-> > > +    description: Sampling ratio values from calibration for 4 ring oscillators.
-> > > +    maxItems: 1
-> >
-> > Is this an array?
-> >
-> Yes, array of 4. (I'll mention in the description)
-
-Don't need a description as that's constraints the schema should express.
-
-> > Needs a vendor prefix, a type ref and any constraints you can come up with.
-> >
-> Do you mean in the name? instead of "rosc-ratio"?
-
-arm,rosc-ratio:
-  allOf:
-    - $ref: /schemas/types.yaml#/definitions/uint32-array
-  maxItems: 4
-
-> I didn't find anything about it in the documentation or examples in other rng drivers..
+> 0 is acceptable. Looks like Chrome OS EC numbers the ports as 0 to (num_ports - 1).
+> Actually, looking at it more closely, the port info EC command struct uses uint8_t (https://elixir.bootlin.com/linux/latest/source/include/linux/platform_data/cros_ec_commands.h#L4879)
+> Also, num_ports cannot be larger than: https://elixir.bootlin.com/linux/latest/ident/EC_USB_PD_MAX_PORTS
 >
-> > > +
-> > > +  clocks:
-> > > +    description: Reference to the crypto engine clock.
-> >
-> > How many clocks?
-> >
-> One clock. (I will change clocks --> clock)
-
-No, the property name is always 'clocks'. You need just 'maxItems: 1'
-if there's a single clock.
-
-Rob
+> So perhaps this should be updated to say it can be any value from 0 - EC_USB_PD_MAX_PORTS ? (Not sure if I can reference #defines from header files in the DT bindings file....)
+>>
+>>
+>> > +      power-role:
+>>
+>> Sorry if this question is silly, aren't this and below properties the same as
+>> provided by usb-connector?  Can't this be usb-c-connector?
+>>
+>> Documentation/devicetree/bindings/connector/usb-connector.txt
+>
+>
+> That's correct, it is the same. I think there is a slight difference between the properties of usb-connector (what properties are defined as optional and required) so I don't know if we can re-use usb-connector.
+> TBH I wasn't sure about this myself. I am also not sure whether there will be an issue with usb-c-connector being "claimed" by another driver. I think Heikki could perhaps guide us here.
+>>
+>>
+>> > +        description: Determines the power role that the Type C port will
+>> > +          adopt.
+>> > +        oneOf:
+>> > +          - items:
+>> > +            - const: sink
+>> > +            - const: source
+>> > +            - const: dual
+>> > +      data-role:
+>> > +        description: Determines the data role that the Type C port will
+>> > +          adopt.
+>> > +        oneOf:
+>> > +          - items:
+>> > +            - const: host
+>> > +            - const: device
+>> > +            - const: dual
+>> > +      try-power-role:
+>> > +        description: Determines the preferred power role of the Type C port.
+>> > +        oneOf:
+>> > +          - items:
+>> > +            - const: sink
+>> > +            - const: source
+>> > +            - const: dual
+>> > +
+>> > +    required:
+>> > +      - port-number
+>> > +      - power-role
+>> > +      - data-role
+>> > +      - try-power-role
+>> > +
+>> > +required:
+>> > +  - compatible
+>> > +  - port
+>> > +
+>> > +examples:
+>> > +  - |+
+>>
+>> Rob can confirm, but I think is a good practice add the parent node, so add the
+>> cros-ec-spi node here?
+>
+> Done. Will add it in the next version.
+>>
+>>
+>> > +    typec {
+>> > +      compatible = "google,cros-ec-typec";
+>> > +
+>> > +      port@0 {
+>>
+>> You can run:
+>>
+>>   make dt_binding_check DT_SCHEMA_FILES=<...>/chrome/google,cros-ec-typec.yaml
+>>
+>> And you'll get an error:
+>>
+>>  typec: 'port' is a required property
+>
+> Noted. I will run this check before pushing next time and fix the error.
+>>
+>>
+>> > +        port-number = <0>;
+>> > +        power-role = "dual";
+>> > +        data-role = "dual";
+>> > +        try-power-role = "source";
+>> > +      };
+>> > +    };
+>> >
+>> Thanks,
+>>
+>>  Enric
+>
+>
+>
+> Thanks,
+>
+> -Prashant
