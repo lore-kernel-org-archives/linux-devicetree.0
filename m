@@ -2,245 +2,345 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C825C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D88C352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3933620714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eQIwnywM"
+	by mail.kernel.org (Postfix) with ESMTP id C16B4206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgBKLUE (ORCPT
+        id S1727722AbgBKL1A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:20:04 -0500
-Received: from mail-eopbgr60081.outbound.protection.outlook.com ([40.107.6.81]:51893
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727728AbgBKLUE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:20:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L003uP/i4JgN9fd9iiGCpPKMRWhzpyyNi8K1HuJ6p4FweOe2oGIRkuuIdK5Rsm7PuiXhSsTQwu4gPtpQASYLuyjtfDrzbnXXzX+nruyatp1lTir5JqmgxQOibdZtB9vmedKqeYXNNtvU5CRQMsTVpxP8z2e9gzvCGKdgeay1YJqGap61wO+pMDxPEHsqnSImsr4mxKEmD/UXlbKM9om88ed4oeOlTUT+4J804hjoDcutRfuKg+60CiPg3V6kA0yWEjwVBhZh0E98cmYVu3wYUideWzGfggaiiawouUqy9+HUSILY0210pWMjGhjsy0l2yIwH6H9cYwRDclJ31a3kMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w8ozEKb8UyDmZo/XcWm5mA0o5h4lpmjzBOPgzdwHQYc=;
- b=QRcg5a7NkTh2g591UWD53v/U9ECl0Q6rvGxe92UUks0ZLohKT1zdz0QqEnO9YZuMT7LS9PD91ltDtrIoPrf2vio+cFfoj0SswDXbxht0DxP6iMCqS4y4ywDN1Gs9ZdBNfl5vAtQh+BUMESREz5oRTmj/yzD1WK/+KKUxEoNrd1juu+Jcz3+KT81RWUrnDuVNmXh9VJoUGepOSBFQlQeu8YB7JAiri2by1eMAoqxmGWPYynlUvFV3HQM7NVdDKop0BhnNAuRlvSRMBW+Dy4UFcdSgpk0Qh8PzFzb0CmdHLDbTADefoBkCeZLKxMFbsXU2g58dUO6qTfwk6Qvg4SJZ8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w8ozEKb8UyDmZo/XcWm5mA0o5h4lpmjzBOPgzdwHQYc=;
- b=eQIwnywMnYrjZGRZvZHpJs7UZH203LZJV5qJM5P5Dom916SomeJSSQC4hh4NM8wqcsswJjlUAbdPOW+aKp8hOZjPXeCJumhPXVJMlkYgkhbm3kn6FbRZMqX79VhGBgBqLLXFh9pS+W/NUcQzuXRdrvfENvllPFoSrZD2ArdpQbU=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3739.eurprd04.prod.outlook.com (52.134.67.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.23; Tue, 11 Feb 2020 11:19:58 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 11:19:58 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to
- json-schema
-Thread-Topic: [PATCH V3 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to
- json-schema
-Thread-Index: AQHVy0QBqb7dMjHEe0ep62v7pdO1zaf1wF6AgCBCgBA=
-Date:   Tue, 11 Feb 2020 11:19:57 +0000
-Message-ID: <DB3PR0402MB3916ED6C3FCA9BCA224A5936F5180@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
- <20200121223807.GA24850@bogus>
-In-Reply-To: <20200121223807.GA24850@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [110.85.133.115]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7222be99-ac0a-4dcb-d07c-08d7aee453ef
-x-ms-traffictypediagnostic: DB3PR0402MB3739:|DB3PR0402MB3739:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3739D1CDDC1CF23146E67F09F5180@DB3PR0402MB3739.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(366004)(136003)(39860400002)(376002)(346002)(396003)(189003)(199004)(316002)(44832011)(81166006)(64756008)(2906002)(81156014)(66446008)(66476007)(7696005)(66556008)(66946007)(71200400001)(52536014)(478600001)(55016002)(33656002)(86362001)(9686003)(7416002)(76116006)(45080400002)(5660300002)(8936002)(186003)(6506007)(6916009)(8676002)(4326008)(54906003)(26005)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3739;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aXakA9qxemum+6sLyJfE1VCMH9EDeFWRs3ZbrzGInF0XYzCGDOg7gDHi+21wHJOIQOE6CXCck2Z70gNo+wBYc+rT9Vxf4dDwLkYToJU4PCr54OC1g+D8TsQaJFMo06gY9rfMxLapK3snSayr9zuGU/E/UzrZ3g2A+/3KOE/L47OOh9JWCaGaBDPoSPm88ZOmZl00YXHolZN5A6QmEggaC5HxsLL1M+sjKok0t6l81HyGR8viWS0ms5ixUMhZi9C482aF49r71oXBfsmkw+YN14JnuhndlQXa1d94xa/k66me6hGgduhYG4V2PO3TNWATV22anMsU7O+SV3X3fU2Da0p5p1gvJy7jZL58eu/dl6TgKwlzDDzKOWMVJLGBgN+n35PN68VZ4NphXKaFUqjDsRtJBJ458Qhw4WVRk4v6HBfJizi30irUsQrc6mAccaHmyEG6XTjR1dd7TO1AxtZHzGPPKYtHvyYdOYWhQ1GVpgrJmTiXPOimQNPt3mTqs7rxzsv0VcVMinRxd6JXQ0AcWFgupogiLCxKZF8dXtzY3VJmpbVz9zj45osmfyG8F8f64NFvP2ED0ZG8KIDm1yNWClGkZWv/LOw2TyfmQt/65v4jb/8BsaRTnx2Rxp8TH27YS7SXLRNMHTmhwlI/VSdK1JhCyXsmZGtfJA9T/MCjAdTaKwoIGfR/LjdUnl4Sbh0A
-x-ms-exchange-antispam-messagedata: Pq9MEVpV1FO6h+biOnXdkrOdKLHU8JC3tfkD2bAnVYVIXq2TFvTNtmWcY/JAftFlHTBqvIiX5Jp3uJzYQZkNT7QYHlXU+nBPP8lAPaDpnI6F7O66eXQGA0hOxZXCyHQXKRtYkAdtnC7QAOC4YNzFSg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 11 Feb 2020 06:27:00 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34182 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgBKL1A (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 06:27:00 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C8D2C28A178
+Subject: Re: [PATCH v2 2/4] platform/chrome: Add Type C connector class driver
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@intel.com, bleung@chromium.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200207203752.209296-1-pmalani@chromium.org>
+ <20200207203752.209296-3-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <ac5676d4-4198-6d5d-3607-45b23d817f39@collabora.com>
+Date:   Tue, 11 Feb 2020 12:26:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7222be99-ac0a-4dcb-d07c-08d7aee453ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 11:19:57.8877
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0MAfOTenxxWtisSq5gpHMa5suc5/HC/H20mqcFojqfNzLKxytQZx8O7ReTrtZ3rOaeCcFjjKCJq+c9izka8EqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3739
+In-Reply-To: <20200207203752.209296-3-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIFJvYg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMS8zXSBkdC1iaW5kaW5nczogcGlu
-Y3RybDogQ29udmVydCBpLk1YOE1RIHRvIGpzb24tDQo+IHNjaGVtYQ0KPiANCj4gT24gV2VkLCBK
-YW4gMTUsIDIwMjAgYXQgMDk6MzA6NDNBTSArMDgwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4g
-Q29udmVydCB0aGUgaS5NWDhNUSBwaW5jdHJsIGJpbmRpbmcgdG8gRFQgc2NoZW1hIGZvcm1hdCB1
-c2luZw0KPiA+IGpzb24tc2NoZW1hDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFu
-ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNlIFYyOg0K
-PiA+IAktIHRoZSBsaXNlbmNlIHNob3VsZCBiZSBHUEwtMi4wLg0KPiA+IC0tLQ0KPiA+ICAuLi4v
-YmluZGluZ3MvcGluY3RybC9mc2wsaW14OG1xLXBpbmN0cmwudHh0ICAgICAgICB8IDM2IC0tLS0t
-LS0tLS0tDQo+ID4gIC4uLi9iaW5kaW5ncy9waW5jdHJsL2ZzbCxpbXg4bXEtcGluY3RybC55YW1s
-ICAgICAgIHwgNjkNCj4gKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5n
-ZWQsIDY5IGluc2VydGlvbnMoKyksIDM2IGRlbGV0aW9ucygtKSAgZGVsZXRlIG1vZGUNCj4gPiAx
-MDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9mc2ws
-aW14OG1xLXBpbmN0cmwudHh0DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2ZzbCxpbXg4bXEtcGluY3RybC55YW1s
-DQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGluY3RybC9mc2wsaW14OG1xLXBpbmN0cmwudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9mc2wsaW14OG1xLXBpbmN0cmwudHh0DQo+ID4g
-ZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggNjZkZTc1MC4uMDAwMDAwMA0KPiA+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2ZzbCxpbXg4
-bXEtcGluY3RybC50eHQNCj4gPiArKysgL2Rldi9udWxsDQo+ID4gQEAgLTEsMzYgKzAsMCBAQA0K
-PiA+IC0qIEZyZWVzY2FsZSBJTVg4TVEgSU9NVVggQ29udHJvbGxlcg0KPiA+IC0NCj4gPiAtUGxl
-YXNlIHJlZmVyIHRvIGZzbCxpbXgtcGluY3RybC50eHQgYW5kIHBpbmN0cmwtYmluZGluZ3MudHh0
-IGluIHRoaXMNCj4gPiBkaXJlY3RvcnkgLWZvciBjb21tb24gYmluZGluZyBwYXJ0IGFuZCB1c2Fn
-ZS4NCj4gPiAtDQo+ID4gLVJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gLS0gY29tcGF0aWJsZTog
-ImZzbCxpbXg4bXEtaW9tdXhjIg0KPiA+IC0tIHJlZzogc2hvdWxkIGNvbnRhaW4gdGhlIGJhc2Ug
-cGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUNCj4gPiBpb211eGMNCj4gPiAtICByZWdp
-c3RlcnMuDQo+ID4gLQ0KPiA+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHN1Yi1ub2RlczoNCj4g
-PiAtLSBmc2wscGluczogZWFjaCBlbnRyeSBjb25zaXN0cyBvZiA2IGludGVnZXJzIGFuZCByZXBy
-ZXNlbnRzIHRoZSBtdXgNCj4gPiBhbmQgY29uZmlnDQo+ID4gLSAgc2V0dGluZyBmb3Igb25lIHBp
-bi4gIFRoZSBmaXJzdCA1IGludGVnZXJzIDxtdXhfcmVnIGNvbmZfcmVnDQo+ID4gaW5wdXRfcmVn
-IG11eF92YWwNCj4gPiAtICBpbnB1dF92YWw+IGFyZSBzcGVjaWZpZWQgdXNpbmcgYSBQSU5fRlVO
-Q19JRCBtYWNybywgd2hpY2ggY2FuIGJlDQo+ID4gZm91bmQgaW4NCj4gPiAtICBpbXg4bXEtcGlu
-ZnVuYy5oIHVuZGVyIGRldmljZSB0cmVlIHNvdXJjZSBmb2xkZXIuICBUaGUgbGFzdCBpbnRlZ2Vy
-DQo+ID4gQ09ORklHIGlzDQo+ID4gLSAgdGhlIHBhZCBzZXR0aW5nIHZhbHVlIGxpa2UgcHVsbC11
-cCBvbiB0aGlzIHBpbi4gIFBsZWFzZSByZWZlciB0bw0KPiA+IGkuTVg4TSBRdWFkDQo+ID4gLSAg
-UmVmZXJlbmNlIE1hbnVhbCBmb3IgZGV0YWlsZWQgQ09ORklHIHNldHRpbmdzLg0KPiA+IC0NCj4g
-PiAtRXhhbXBsZXM6DQo+ID4gLQ0KPiA+IC0mdWFydDEgew0KPiA+IC0gICAgICAgcGluY3RybC1u
-YW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAtICAgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF91YXJ0
-MT47DQo+ID4gLX07DQo+ID4gLQ0KPiA+IC1pb211eGM6IHBpbmN0cmxAMzAzMzAwMDAgew0KPiA+
-IC0gICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1pb211eGMiOw0KPiA+IC0gICAgICAg
-IHJlZyA9IDwweDAgMHgzMDMzMDAwMCAweDAgMHgxMDAwMD47DQo+ID4gLQ0KPiA+IC0gICAgICAg
-IHBpbmN0cmxfdWFydDE6IHVhcnQxZ3JwIHsNCj4gPiAtICAgICAgICAgICAgICAgIGZzbCxwaW5z
-ID0gPA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICBNWDhNUV9JT01VWENfVUFSVDFfUlhE
-X1VBUlQxX0RDRV9SWCAgICAgICAgICAgICAweDQ5DQo+ID4gLSAgICAgICAgICAgICAgICAgICAg
-ICAgIE1YOE1RX0lPTVVYQ19VQVJUMV9UWERfVUFSVDFfRENFX1RYICAgICAgICAgICAgIDB4NDkN
-Cj4gPiAtICAgICAgICAgICAgICAgID47DQo+ID4gLSAgICAgICAgfTsNCj4gPiAtfTsNCj4gPiBk
-aWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3Ry
-bC9mc2wsaW14OG1xLXBpbmN0cmwueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3BpbmN0cmwvZnNsLGlteDhtcS1waW5jdHJsLnlhbWwNCj4gPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmUwMTA4MDgNCj4gPiAtLS0gL2Rldi9udWxs
-DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvZnNs
-LGlteDhtcS1waW5jdHJsLnlhbQ0KPiA+ICsrKyBsDQo+ID4gQEAgLTAsMCArMSw2OSBAQA0KPiA+
-ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4gKyVZQU1MIDEuMg0KPiA+
-ICstLS0NCj4gPiArJGlkOg0KPiA+ICtodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9u
-Lm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRmRldmkNCj4gPiArY2V0cmVlLm9yZyUyRnNj
-aGVtYXMlMkZwaW5jdHJsJTJGZnNsJTJDaW14OG1xLQ0KPiBwaW5jdHJsLnlhbWwlMjMmYW1wO2Rh
-dA0KPiA+DQo+ICthPTAyJTdDMDElN0NBbnNvbi5IdWFuZyU0MG54cC5jb20lN0M4NDcxZWM1YzBm
-Njg0OGVhZmUwZTA4ZDc5DQo+IGVjMjk3ZGIlDQo+ID4NCj4gKzdDNjg2ZWExZDNiYzJiNGM2ZmE5
-MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNzE1MjQzMDkxNjM1Njk2DQo+IDMmYW1wO3MNCj4g
-Pg0KPiArZGF0YT0zU0V5dGFjektBUXpBbGdJM1hKQU5LdXhSanVaajBOekk4ZWVtRm9QTWVVJTNE
-JmFtcDtyZXNlcnZlDQo+IGQ9MA0KPiA+ICskc2NoZW1hOg0KPiA+ICtodHRwczovL2V1cjAxLnNh
-ZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRmRldmkNCj4g
-PiArY2V0cmVlLm9yZyUyRm1ldGEtDQo+IHNjaGVtYXMlMkZjb3JlLnlhbWwlMjMmYW1wO2RhdGE9
-MDIlN0MwMSU3Q0Fuc29uLkh1YQ0KPiA+DQo+ICtuZyU0MG54cC5jb20lN0M4NDcxZWM1YzBmNjg0
-OGVhZmUwZTA4ZDc5ZWMyOTdkYiU3QzY4NmVhMWQzYmMyYg0KPiA0YzZmYTkyDQo+ID4NCj4gK2Nk
-OTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNzE1MjQzMDkxNjM1Njk2MyZhbXA7c2RhdGE9VjR1bCUy
-RnENCj4gQ05Oa0tYbVgNCj4gPiArMjcwSE5iaFljaTRhVHdPdlRDVHBEM05xUUFVb1ElM0QmYW1w
-O3Jlc2VydmVkPTANCj4gPiArDQo+ID4gK3RpdGxlOiBGcmVlc2NhbGUgSU1YOE1RIElPTVVYIENv
-bnRyb2xsZXINCj4gPiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gQW5zb24gSHVhbmcg
-PEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlvbjoNCj4gPiArICBQ
-bGVhc2UgcmVmZXIgdG8gZnNsLGlteC1waW5jdHJsLnR4dCBhbmQgcGluY3RybC1iaW5kaW5ncy50
-eHQgaW4NCj4gPiArdGhpcyBkaXJlY3RvcnkNCj4gPiArICBmb3IgY29tbW9uIGJpbmRpbmcgcGFy
-dCBhbmQgdXNhZ2UuDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBhdGlibGU6
-DQo+ID4gKyAgICBjb25zdDogZnNsLGlteDhtcS1pb211eGMNCj4gPiArDQo+ID4gKyAgcmVnOg0K
-PiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gKyMgQ2xpZW50IGRldmljZSBzdWJub2Rl
-J3MgcHJvcGVydGllcw0KPiA+ICtwYXR0ZXJuUHJvcGVydGllczoNCj4gPiArICAnZ3JwJCc6DQo+
-ID4gKyAgICB0eXBlOiBvYmplY3QNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBQ
-aW5jdHJsIG5vZGUncyBjbGllbnQgZGV2aWNlcyB1c2Ugc3Vibm9kZXMgZm9yIGRlc2lyZWQgcGlu
-IGNvbmZpZ3VyYXRpb24uDQo+ID4gKyAgICAgIENsaWVudCBkZXZpY2Ugc3Vibm9kZXMgdXNlIGJl
-bG93IHN0YW5kYXJkIHByb3BlcnRpZXMuDQo+ID4gKw0KPiA+ICsgICAgcHJvcGVydGllczoNCj4g
-PiArICAgICAgZnNsLHBpbnM6DQo+ID4gKyAgICAgICAgYWxsT2Y6DQo+ID4gKyAgICAgICAgICAt
-ICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1hcnJheQ0KPiA+
-ICsgICAgICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICAgICAgZWFjaCBlbnRyeSBjb25zaXN0
-cyBvZiA2IGludGVnZXJzIGFuZCByZXByZXNlbnRzIHRoZSBtdXggYW5kIGNvbmZpZw0KPiA+ICsg
-ICAgICAgICAgc2V0dGluZyBmb3Igb25lIHBpbi4gVGhlIGZpcnN0IDUgaW50ZWdlcnMgPG11eF9y
-ZWcgY29uZl9yZWcgaW5wdXRfcmVnDQo+ID4gKyAgICAgICAgICBtdXhfdmFsIGlucHV0X3ZhbD4g
-YXJlIHNwZWNpZmllZCB1c2luZyBhIFBJTl9GVU5DX0lEIG1hY3JvLCB3aGljaA0KPiBjYW4NCj4g
-PiArICAgICAgICAgIGJlIGZvdW5kIGluIDxhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
-bXg4bXEtcGluZnVuYy5oPi4NCj4gVGhlIGxhc3QNCj4gPiArICAgICAgICAgIGludGVnZXIgQ09O
-RklHIGlzIHRoZSBwYWQgc2V0dGluZyB2YWx1ZSBsaWtlIHB1bGwtdXAgb24gdGhpcyBwaW4uDQo+
-IFBsZWFzZQ0KPiA+ICsgICAgICAgICAgcmVmZXIgdG8gaS5NWDhNIFF1YWQgUmVmZXJlbmNlIE1h
-bnVhbCBmb3IgZGV0YWlsZWQgQ09ORklHDQo+IHNldHRpbmdzLg0KPiANCj4gQmFzZWQgb24gdGhl
-IGRlc2NyaXB0aW9uLCBJIHRoaW5rIHRoaXMgc2hvdWxkIGJlIGFuIHVpbnQzMi1tYXRyaXggdHlw
-ZSBpbnN0ZWFkDQo+IHdpdGggYSBzY2hlbWEgbGlrZSB0aGlzOg0KPiANCj4gaXRlbXM6DQo+ICAg
-aXRlbXM6DQo+ICAgICAtIGRlc2NyaXB0aW9uOiBtdXhfcmVnDQo+ICAgICAtIGRlc2NyaXB0aW9u
-OiBjb25mX3JlZw0KPiAgICAgLSBkZXNjcmlwdGlvbjogaW5wdXRfcmVnDQo+ICAgICAtIGRlc2Ny
-aXB0aW9uOiBtdXhfdmFsDQo+ICAgICAtIGRlc2NyaXB0aW9uOiBpbnB1dF92YWwNCj4gICAgIC0g
-ZGVzY3JpcHRpb246IHBhZCBzZXR0aW5nDQo+IA0KPiAoV2l0aCBiZXR0ZXIgZGVzY3JpcHRpb25z
-IHByZWZlcnJhYmx5KQ0KDQpJIHdpbGwgdXNlIHNvbWV0aGluZyBsaWtlIGJlbG93Og0KDQorICAg
-ICAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyLW1h
-dHJpeA0KKyAgICAgICAgICAtIGl0ZW1zOg0KKyAgICAgICAgICAgICAgaXRlbXM6DQorICAgICAg
-ICAgICAgICAgIC0gZGVzY3JpcHRpb246IHwNCisgICAgICAgICAgICAgICAgICAgICJtdXhfcmVn
-IiBpbmRpY2F0ZXMgdGhlIG9mZnNldCBvZiBtdXggcmVnaXN0ZXIuDQorICAgICAgICAgICAgICAg
-IC0gZGVzY3JpcHRpb246IHwNCisgICAgICAgICAgICAgICAgICAgICJjb25mX3JlZyIgaW5kaWNh
-dGVzIHRoZSBvZmZzZXQgb2YgcGFkIGNvbmZpZ3VyYXRpb24gcmVnaXN0ZXIuDQorICAgICAgICAg
-ICAgICAgIC0gZGVzY3JpcHRpb246IHwNCisgICAgICAgICAgICAgICAgICAgICJpbnB1dF9yZWci
-IGluZGljYXRlcyB0aGUgb2Zmc2V0IG9mIHNlbGVjdCBpbnB1dCByZWdpc3Rlci4NCisgICAgICAg
-ICAgICAgICAgLSBkZXNjcmlwdGlvbjogfA0KKyAgICAgICAgICAgICAgICAgICAgIm11eF92YWwi
-IGluZGljYXRlcyB0aGUgbXV4IHZhbHVlIHRvIGJlIGFwcGxpZWQuDQorICAgICAgICAgICAgICAg
-IC0gZGVzY3JpcHRpb246IHwNCisgICAgICAgICAgICAgICAgICAgICJpbnB1dF92YWwiIGdpdmVz
-IHRoZSBzZWxlY3QgaW5wdXQgdmFsdWUgdG8gYmUgYXBwbGllZC4NCisgICAgICAgICAgICAgICAg
-LSBkZXNjcmlwdGlvbjogfA0KKyAgICAgICAgICAgICAgICAgICAgInBhZF9zZXR0aW5nIiBnaXZl
-cyB0aGUgcGFkIGNvbmZpZ3VyYXRpb24gdmFsdWUgdG8gYmUgYXBwbGllZC4NCg0KDQo+IA0KPiBU
-aGUgZHRzIGZpbGVzIHNob3VsZCB0aGVuIGJlIGJyYWNrZXRlZCBhY2NvcmRpbmdseS4NCg0KU29y
-cnksIHdoYXQgZG8geW91IG1lYW4gb2YgImR0cyBmaWxlcyBzaG91bGQgdGhlbiBiZSBicmFja2V0
-ZWQgYWNjb3JkaW5nbHkiPw0KRG8geW91IG1lYW4gZHRzIGZpbGUgbmVlZHMgdG8gYmUgdXBkYXRl
-ZD8gSSBzYXcgYmVsb3cgZXhhbXBsZSBhbHJlYWR5IGhhcyAiPD4iIGZvcg0KVGhpcyBtYXRyaXg6
-DQoNCisgICAgICAgICAgICBmc2wscGlucyA9IDwNCisgICAgICAgICAgICAgICAgMHgyMzQgMHg0
-OUMgMHg0RjQgMHgwIDB4MAkweDQ5DQorICAgICAgICAgICAgICAgIDB4MjM4IDB4NEEwIDB4NEY0
-IDB4MCAweDAJMHg0OQ0KKyAgICAgICAgICAgID47DQoNCkNhbiB5b3UgcGxlYXNlIGFkdmlzZSBh
-bmQgcHJvdmlkZSBhIHNpbXBsZSBleGFtcGxlLCBJIHRoaW5rIHdlIHNob3VsZCBhdm9pZCBjaGFu
-Z2VzDQpJbiBkdHMgZmlsZS4NCg0KVGhhbmtzLA0KQW5zb24NCg0KPiANCj4gPiArDQo+ID4gKyAg
-ICByZXF1aXJlZDoNCj4gPiArICAgICAgLSBmc2wscGlucw0KPiA+ICsNCj4gPiArICAgIGFkZGl0
-aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAgLSBj
-b21wYXRpYmxlDQo+ID4gKyAgLSByZWcNCj4gPiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVz
-OiBmYWxzZQ0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgIyBQaW5tdXggY29udHJvbGxl
-ciBub2RlDQo+ID4gKyAgLSB8DQo+ID4gKyAgICBpb211eGM6IHBpbmN0cmxAMzAzMzAwMDAgew0K
-PiA+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1pb211eGMiOw0KPiA+ICsgICAg
-ICAgIHJlZyA9IDwweDMwMzMwMDAwIDB4MTAwMDA+Ow0KPiA+ICsNCj4gPiArICAgICAgICBwaW5j
-dHJsX3VhcnQxOiB1YXJ0MWdycCB7DQo+ID4gKyAgICAgICAgICAgIGZzbCxwaW5zID0gPA0KPiA+
-ICsgICAgICAgICAgICAgICAgMHgyMzQgMHg0OUMgMHg0RjQgMHgwIDB4MAkweDQ5DQo+ID4gKyAg
-ICAgICAgICAgICAgICAweDIzOCAweDRBMCAweDRGNCAweDAgMHgwCTB4NDkNCj4gPiArICAgICAg
-ICAgICAgPjsNCj4gPiArICAgICAgICB9Ow0KPiA+ICsgICAgfTsNCj4gPiArDQo+ID4gKy4uLg0K
-PiA+IC0tDQo+ID4gMi43LjQNCj4gPg0K
+Hi Prashant, Heikki
+
+On 7/2/20 21:37, Prashant Malani wrote:
+> Add a driver to implement the Type C connector class for Chrome OS
+> devices with ECs (Embedded Controllers).
+> 
+> The driver relies on firmware device specifications for various port
+> attributes. On ACPI platforms, this is specified using the logical
+> device with HID GOOG0014. On DT platforms, this is specified using the
+> DT node with compatible string "google,cros-ec-typec".
+> 
+> This patch reads the device FW node and uses the port attributes to
+> register the typec ports with the Type C connector class framework, but
+> doesn't do much else.
+> 
+> Subsequent patches will add more functionality to the driver, including
+> obtaining current port information (polarity, vconn role, current power
+> role etc.) after querying the EC.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+
+Would be good a review from Heikki if possible.
+
+> 
+> Changes in v2:
+> - Updated Kconfig to default to MFD_CROS_EC_DEV.
+> - Fixed code comments.
+> - Moved get_num_ports() code into probe().
+> - Added module author.
+> 
+>  drivers/platform/chrome/Kconfig         |  11 ++
+>  drivers/platform/chrome/Makefile        |   1 +
+>  drivers/platform/chrome/cros_ec_typec.c | 218 ++++++++++++++++++++++++
+>  3 files changed, 230 insertions(+)
+>  create mode 100644 drivers/platform/chrome/cros_ec_typec.c
+> 
+> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+> index 5f57282a28da00..2320a4f0d93019 100644
+> --- a/drivers/platform/chrome/Kconfig
+> +++ b/drivers/platform/chrome/Kconfig
+> @@ -214,6 +214,17 @@ config CROS_EC_SYSFS
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called cros_ec_sysfs.
+>  
+> +config CROS_EC_TYPEC
+> +	tristate "ChromeOS EC Type-C Connector Control"
+> +	depends on MFD_CROS_EC_DEV && TYPEC
+> +	default MFD_CROS_EC_DEV
+> +	help
+> +	  If you say Y here, you get support for accessing Type C connector
+> +	  information from the Chrome OS EC.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called cros_ec_typec.
+> +
+>  config CROS_USBPD_LOGGER
+>  	tristate "Logging driver for USB PD charger"
+>  	depends on CHARGER_CROS_USBPD
+> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+> index aacd5920d8a180..caf2a9cdb5e6d1 100644
+> --- a/drivers/platform/chrome/Makefile
+> +++ b/drivers/platform/chrome/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
+>  obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
+>  obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
+>  cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
+> +obj-$(CONFIG_CROS_EC_TYPEC)		+= cros_ec_typec.o
+>  obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+>  obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+>  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> new file mode 100644
+> index 00000000000000..8374ccfe784f3b
+> --- /dev/null
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -0,0 +1,218 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2020 Google LLC
+> + *
+> + * This driver provides the ability to view and manage Type C ports through the
+> + * Chrome OS EC.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_data/cros_ec_commands.h>
+> +#include <linux/platform_data/cros_ec_proto.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/typec.h>
+> +
+> +#define DRV_NAME "cros-ec-typec"
+> +
+> +/* Platform-specific data for the Chrome OS EC Type C controller. */
+> +struct cros_typec_data {
+> +	struct device *dev;
+> +	struct cros_ec_device *ec;
+> +	int num_ports;
+> +	/* Array of ports, indexed by port number. */
+> +	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
+> +};
+> +
+> +static int cros_typec_parse_port_props(struct typec_capability *cap,
+> +				       struct fwnode_handle *fwnode,
+> +				       struct device *dev)
+> +{
+> +	const char *buf;
+> +	int ret;
+> +
+> +	memset(cap, 0, sizeof(*cap));
+> +	ret = fwnode_property_read_string(fwnode, "power-role", &buf);
+> +	if (ret) {
+> +		dev_err(dev, "power-role not found: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = typec_find_port_power_role(buf);
+> +	if (ret < 0)
+> +		return ret;
+> +	cap->type = ret;
+> +
+> +	ret = fwnode_property_read_string(fwnode, "data-role", &buf);
+> +	if (ret) {
+> +		dev_err(dev, "data-role not found: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = typec_find_port_data_role(buf);
+> +	if (ret < 0)
+> +		return ret;
+> +	cap->data = ret;
+> +
+> +	ret = fwnode_property_read_string(fwnode, "try-power-role", &buf);
+> +	if (ret) {
+> +		dev_err(dev, "try-power-role not found: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = typec_find_power_role(buf);
+> +	if (ret < 0)
+> +		return ret;
+> +	cap->prefer_role = ret;
+> +
+> +	cap->fwnode = fwnode;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cros_typec_init_ports(struct cros_typec_data *typec)
+> +{
+> +	struct device *dev = typec->dev;
+> +	struct typec_capability cap;
+> +	struct fwnode_handle *fwnode;
+> +	int ret;
+> +	int i;
+> +	int nports;
+> +	u32 port_num;
+> +
+> +	nports = device_get_child_node_count(dev);
+> +	if (nports == 0) {
+> +		dev_err(dev, "No port entries found.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	device_for_each_child_node(dev, fwnode) {
+> +		if (fwnode_property_read_u32(fwnode, "port-number",
+> +					     &port_num)) {
+> +			dev_err(dev, "No port-number for port, skipping.\n");
+> +			ret = -EINVAL;
+> +			goto unregister_ports;
+> +		}
+> +
+> +		if (port_num >= typec->num_ports) {
+> +			dev_err(dev, "Invalid port number.\n");
+> +			ret = -EINVAL;
+> +			goto unregister_ports;
+> +		}
+> +
+> +		dev_dbg(dev, "Registering port %d\n", port_num);
+> +		ret = cros_typec_parse_port_props(&cap, fwnode, dev);
+> +		if (ret < 0)
+> +			goto unregister_ports;
+> +		typec->ports[port_num] = typec_register_port(dev, &cap);
+> +		if (IS_ERR(typec->ports[port_num])) {
+> +			dev_err(dev, "Failed to register port %d\n", port_num);
+> +			ret = PTR_ERR(typec->ports[port_num]);
+> +			goto unregister_ports;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +unregister_ports:
+> +	for (i = 0; i < typec->num_ports; i++)
+> +		typec_unregister_port(typec->ports[i]);
+> +	return ret;
+> +}
+> +
+> +static int cros_typec_ec_command(struct cros_typec_data *typec,
+> +				 unsigned int version,
+> +				 unsigned int command,
+> +				 void *outdata,
+> +				 unsigned int outsize,
+> +				 void *indata,
+> +				 unsigned int insize)
+> +{
+> +	struct cros_ec_command *msg;
+> +	int ret;
+> +
+> +	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	msg->version = version;
+> +	msg->command = command;
+> +	msg->outsize = outsize;
+> +	msg->insize = insize;
+> +
+> +	if (outsize)
+> +		memcpy(msg->data, outdata, outsize);
+> +
+> +	ret = cros_ec_cmd_xfer_status(typec->ec, msg);
+> +	if (ret >= 0 && insize)
+> +		memcpy(indata, msg->data, insize);
+> +
+> +	kfree(msg);
+> +	return ret;
+> +}
+> +
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id cros_typec_acpi_id[] = {
+> +	{ "GOOG0014", 0 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, cros_typec_acpi_id);
+> +#endif
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id cros_typec_of_match[] = {
+> +	{ .compatible = "google,cros-ec-typec", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, cros_typec_of_match);
+> +#endif
+> +
+> +static int cros_typec_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct cros_typec_data *typec;
+> +	struct ec_response_usb_pd_ports resp;
+> +	int ret;
+> +
+> +	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
+> +	if (!typec)
+> +		return -ENOMEM;
+> +	typec->dev = dev;
+> +	typec->ec = dev_get_drvdata(pdev->dev.parent);
+> +	platform_set_drvdata(pdev, typec);
+> +
+> +	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
+> +				    &resp, sizeof(resp));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	typec->num_ports = resp.num_ports;
+> +	if (typec->num_ports > EC_USB_PD_MAX_PORTS) {
+> +		dev_warn(typec->dev,
+> +			 "Too many ports reported: %d, limiting to max: %d\n",
+> +			 typec->num_ports, EC_USB_PD_MAX_PORTS);
+> +		typec->num_ports = EC_USB_PD_MAX_PORTS;
+> +	}
+> +
+> +	ret = cros_typec_init_ports(typec);
+> +	if (!ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver cros_typec_driver = {
+> +	.driver	= {
+> +		.name = DRV_NAME,
+> +		.acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
+> +		.of_match_table = of_match_ptr(cros_typec_of_match),
+> +	},
+> +	.probe = cros_typec_probe,
+> +};
+> +
+> +module_platform_driver(cros_typec_driver);
+> +
+> +MODULE_AUTHOR("Prashant Malani <pmalani@chromium.org>");
+> +MODULE_DESCRIPTION("Chrome OS EC Type C control");
+> +MODULE_LICENSE("GPL");
+> 
