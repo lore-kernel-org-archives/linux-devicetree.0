@@ -2,133 +2,108 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EE0C3B187
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2415FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF53A2070A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3C72082F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ifPYaYNn"
+	dkim=pass (2048-bit key) header.d=kopismobile-com.20150623.gappssmtp.com header.i=@kopismobile-com.20150623.gappssmtp.com header.b="y7FoXWC3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgBKQNq (ORCPT
+        id S1729702AbgBKQSZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:13:46 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56456 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgBKQNq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 11:13:46 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BGDYsa130008;
-        Tue, 11 Feb 2020 10:13:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581437614;
-        bh=+YQn6d++LnKsoiX4gIm/QgTgNjhIwQZrZR2DxKRa0/g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ifPYaYNneQzRaXjQmGShH9PVUTt2Ee9pN/wZkrsyi29QPdmQYdDp1sYAv0p4EbwCn
-         I7yLgo2zqMsdQZqEKtQgONdQ8daBPI/donjzM4JzC7o/WKEdZqwg5YT+n3A2Dz8Niy
-         BQ2Ag3WAIyD1TpBWEHYpDAqKNsYkEebcl2+mDDds=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BGDY7w005133;
-        Tue, 11 Feb 2020 10:13:34 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
- Feb 2020 10:13:34 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 11 Feb 2020 10:13:34 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BGDV39125254;
-        Tue, 11 Feb 2020 10:13:32 -0600
-Subject: Re: [PATCH 2/3] ARM: dts: am437x-gp/epos-evm: drop unused panel
- timings
-To:     Tony Lindgren <tony@atomide.com>,
-        Merlijn Wajer <merlijn@wizzup.org>
-CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>
-References: <20191114093950.4101-3-tomi.valkeinen@ti.com>
- <20191202130459.GH4929@pendragon.ideasonboard.com>
- <20191211165331.GC43123@atomide.com>
- <45dae8f7-2f5e-6948-5a05-dc8a09ace1fa@ti.com>
- <20191212203550.GB4892@pendragon.ideasonboard.com>
- <add3d8af-6977-68e6-fb77-2fa748c4714a@ti.com>
- <b39e52f1-3e73-5f26-6206-0956cf482631@ti.com>
- <20200211110712.GB28355@pendragon.ideasonboard.com>
- <3b4d10c6-7cb2-af53-3a39-31eef441bfdd@ti.com>
- <98da360f-880b-af56-b285-4d9b39f8a342@wizzup.org>
- <20200211160524.GE64767@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <87b1111e-af06-1e2a-8baa-c3f9a15f1874@ti.com>
-Date:   Tue, 11 Feb 2020 18:13:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 11:18:25 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:39851 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgBKQSZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 11:18:25 -0500
+Received: by mail-ua1-f67.google.com with SMTP id 73so4157798uac.6
+        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 08:18:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kopismobile-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=r+dhJtros61nMlqvN6u+WCwHtQAEek+hNMl0AfxFAgY=;
+        b=y7FoXWC3+x5msas+5aDzeR9sbPiCYfofLR87Kc/ruDtp8EvuO5lcplL6FI4P1wv0fm
+         FAortV7wJ9ppiUO6Ns4F8z2YYj++lZIoElbPaVXdSFsBM77YCFmxorhUVRm643ZNm+vP
+         VFuvANMrUFSwH0uffXiAZZcidp27EGSzflCQIotSolG002Dson8oRPBqXII/4+ghePYJ
+         7lntFHN0B09kV21DFWvlkU76gnGEdbkSwRG9DGHtRhQIQrcQb/0QHrs3iWQ/jxcV/CFm
+         +Q18ym4EaiZQQJnJRiQxMQm+vx3CSqyxVKATRK3UtboksACC944zopuy5vNN6AkJbo8A
+         FLqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=r+dhJtros61nMlqvN6u+WCwHtQAEek+hNMl0AfxFAgY=;
+        b=ZeaibdbYh2/Z559XTdGKVkP6xLRFSm4GMdss5sMJ8hU9UHgUMqFpKAs9eh9O8lV9qQ
+         3BAxU6xaDY/sCXyRn1dhKfcbvXFvFlodC6mNGb4oMjpPDPLjueWMuixunhfcEl51eUpd
+         fgLy9xYJdxNQ2g1wyED0jdnZ+FPhyxKKjT6MqM+ZZZVl+GpAaH4ecA28UD/aUVGwTi2G
+         D7nLQkA3EeBjU1BJ2QNFitM8JHrJtdMufOzk9dQPjJohJZsXU7Aq0nxWnwGnugksxpgh
+         8UPY88MBEncuJ/9kACX2CBTYzj6KcT70LrORZlhyG4doa2gYnDf7eS4HKz3M4gEBQnIB
+         Q+Qw==
+X-Gm-Message-State: APjAAAV8OMTOubV6syyhmby30sArzkAIEdLyVmmHtP1FxKMy7NoMI9Kt
+        JMGETaPLgTSd2au+s8sC31R3bjamTq3uVBrnVHe4hw==
+X-Google-Smtp-Source: APXvYqyue1Nzk42xzuVYhYGNU6JzBZuhDlCPPrCcto25F/bNM00SBZAcT1FIn+z1dTtOU0yagP3ZeR1IvG5K6j9f6ik=
+X-Received: by 2002:ab0:740e:: with SMTP id r14mr2130887uap.104.1581437903740;
+ Tue, 11 Feb 2020 08:18:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211160524.GE64767@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200210192949.7338-1-ghilliard@kopismobile.com>
+ <20200210192949.7338-3-ghilliard@kopismobile.com> <20200210205003.x7xduj3avwjhimjm@pengutronix.de>
+ <CALM8J=dZjK9C+-yMOC_DKp+6m2MaKJsNXaz_+enDVtkgj32U+A@mail.gmail.com> <20200211073834.ndtusa7vvmvsydz4@pengutronix.de>
+In-Reply-To: <20200211073834.ndtusa7vvmvsydz4@pengutronix.de>
+From:   George Hilliard <ghilliard@kopismobile.com>
+Date:   Tue, 11 Feb 2020 10:18:12 -0600
+Message-ID: <CALM8J=dy2yRxJHYEhAyXwCwmubuRCGwd3W5gvGH=kYgxCgKASQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] tty: imx serial: Implement support for reversing
+ TX and RX polarity
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de, devicetree@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/02/2020 18:05, Tony Lindgren wrote:
-> * Merlijn Wajer <merlijn@wizzup.org> [200211 12:54]:
->> Hi,
->>
->> On 11/02/2020 12:08, Tomi Valkeinen wrote:
->>> On 11/02/2020 13:07, Laurent Pinchart wrote:
->>>
->>>>> Hopefully soon (in five years? =) we can say that omapdrm supports all
->>>>> the boards, and we can deprecate omapfb.
->>>>
->>>> I'd love to send a patch to remove omapfb, but I'll let you do the
->>>> honours :-)
->>>
->>> Not before we add DSI support to omapdrm...
-> 
-> Hmm do your mean RFBI? The DSI support we already have :)
+On Tue, Feb 11, 2020 at 1:38 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello George,
+>
+> On Mon, Feb 10, 2020 at 05:03:14PM -0600, George Hilliard wrote:
+> > On Mon, Feb 10, 2020 at 2:50 PM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Mon, Feb 10, 2020 at 01:29:49PM -0600, George Hilliard wrote:
+> > > > @@ -1390,6 +1392,8 @@ static int imx_uart_startup(struct uart_port =
+*port)
+> > > >       ucr4 =3D imx_uart_readl(sport, UCR4) & ~UCR4_OREN;
+> > > >       if (!sport->dma_is_enabled)
+> > > >               ucr4 |=3D UCR4_OREN;
+> > > > +     if (sport->inverted_rx)
+> > > > +             ucr4 |=3D UCR4_INVR;
+> > >
+> > > You fail to clear this bit if .inverted_rx is false.
+> >
+> > I believe this is taken care of by the SRST asserted slightly above
+> > this - UCR* is reset by this.
+>
+> The i.MX6 manual states: Reset the transmit and receive state machines,
+> all FIFOs and register USR1, USR2, UBIR, UBMR, UBRC, URXD, UTXD and
+> UTS[6-3]. UCR* isn't mentioned here. So please at least confirm your
+> belief experimentally.
 
-Oh, I didn't even remember RFBI... But it is not supported in omapfb either, so it's not blocking 
-removal of omapfb.
+Oh, I see now - I misread "S" vs "C".  You are correct; I will send v3
+with both changes.
+Even with experimental evidence, there's no guarantee made by NXP, so
+I'll handle it.
 
-We are still missing DSI command mode support, and moving it to the common DRM model.
-
->> This is probably known, but for devices that would like use PowerVR SGX,
->> there sometimes is only userspace available that works with omap(l)fb,
->> and not with DRM. The Nokia N900 is such an example.
->>
->> There might be a newer release of (closed) userspace coming for the
->> aging device(s), but as it stands, I don't think it's possible to do 3D
->> with PowerVR SGX on omapdrm currently.
->>
->> But I might be wrong...
-> 
-> Yes SGX is a bottleneck currently for omap3 users. And I think
-> RFBI is blocking n8x0 from moving to omapdrm and finally leaving
-> drivers/video/fbdev/omap2 behind.
-> 
-> With those blockers fixed, I'd also be happy to just get rid of
-> drivers/video/fbdev/omap2 as there should be no reason to
-> keep using it.
-
-I don't know what to do about SGX, but if someone sends patches to omapdrm to allow using SGX, I'll 
-review =).
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
+George
