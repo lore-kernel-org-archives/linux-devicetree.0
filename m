@@ -2,378 +2,390 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5513DC352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5EEC352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0A5206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519782086A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ogRYCTSs"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="M2vj00wq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgBKMNV (ORCPT
+        id S1728664AbgBKMNc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:13:21 -0500
-Received: from mail-am6eur05on2048.outbound.protection.outlook.com ([40.107.22.48]:64424
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728628AbgBKMNV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:13:21 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JV/qwuwu/WCguYcODDlcFE5exZQ01/RWTBRr00Hs41pE9dR00U5Fuc3E4ifuE+H83c1aa/L+8eOMVl6Pz9qTfcyUbhDc4l1V4OhqxWJ4Y44xBFxEUKlXrYGhJIJkJ1q29eMivzzfdCqXHzlryiyXfaY26vhyBnMDMZlnLrVdRsQurmI14KdG9QmkFTDzSdRbrAc8FJ9zo3coHUwVpT3Q36i8wFK/oETdHAB8lPD7SrpPA0+jAsWsadXV8TO9gems/PI0UFv1e56dih8QdEfXwVkPx73E775b/hrWKnscljysuYQyuq0TiLiXLKBeK9RFNiDCt2ZUB+zxakEIR7eZ4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cxh+EnN4+cibLXb+KgscpYB7TuSJ/RzEWyL8XD7AEXo=;
- b=EIMZfGwF4qlRQOci21z/iEP26EGLOFHeaVYMAitWJNMGfYn/M7yx1UqyIeD7uCPa9bvBGgXNFk1XBHcIQGNAXH+zovvM9L1Tkl2RaHeAAy+Twz92bhe9VlhFnRdmzmTzlud0Z6ZYEMH9MtvkkKooWOE/j/3mng0lClekNtQf1n0tfLKGmlB6/+6NccfJjDDu1mH7Fr1UN7AX4vIaxoEUg6R6T7mEerYEeKMJILMx6KcITHoSs3LVZkoso0xFYmZRwAvI97BOwpiQatCnKRLElIcsCcxSqx4y0diBYa7ejduVgw6V1lMY1TVZmhe1gUtuXqT2zWf3qEgiHT9WldsuuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cxh+EnN4+cibLXb+KgscpYB7TuSJ/RzEWyL8XD7AEXo=;
- b=ogRYCTSs4ExME8+/VUYAbNdC5jCDNrPuXvS+Fg4wycAo43jldoQZ3pBKgHv497581QAjQ6dHjQO1PzdPGia2VX6Lj0WNDIIyT910+bHis1oazohelPVsFhXV2UYjH5ZNX9LkKeMQyaiuHgHdREX1dF3ETVB9ATypFCu5edXm/Tk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-Received: from AM6PR04MB5878.eurprd04.prod.outlook.com (20.179.0.89) by
- AM6PR04MB4071.eurprd04.prod.outlook.com (52.135.164.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Tue, 11 Feb 2020 12:13:12 +0000
-Received: from AM6PR04MB5878.eurprd04.prod.outlook.com
- ([fe80::bcef:1c59:7d27:d0e]) by AM6PR04MB5878.eurprd04.prod.outlook.com
- ([fe80::bcef:1c59:7d27:d0e%6]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 12:13:11 +0000
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     Li Yang <leoyang.li@nxp.com>, Olof Johansson <olof@lixom.net>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
- <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Message-ID: <da4dcdc7-c022-db67-cda2-f90f086b729e@nxp.com>
-Date:   Tue, 11 Feb 2020 14:13:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
-Content-Type: multipart/mixed;
- boundary="------------AE161A00404C95FFAA71826B"
-Content-Language: en-US
-X-ClientProxiedBy: AM6P194CA0099.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:209:8f::40) To AM6PR04MB5878.eurprd04.prod.outlook.com
- (2603:10a6:20b:a2::25)
+        Tue, 11 Feb 2020 07:13:32 -0500
+Received: from onstation.org ([52.200.56.107]:58266 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728650AbgBKMNb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:13:31 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id F140E3EEE2;
+        Tue, 11 Feb 2020 12:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1581423210;
+        bh=b3IUOPqfY2MybW1m3lU6UDCxmEHwN8InA9qZiTJlLH0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=M2vj00wqGyvnyldw1lqB2IDTJvb+dNRWeSV/UO4fZ2LtiV+yYgNQuqjn+OdDVlPj8
+         egbumkMt4+zZNulKfbaLafWubsWcX5bRN2vgD4JQhUSFY/1Hcr78XlLbMNEKxkbCMr
+         3ZVH5WvmPKS0ZUhNl7SL16KE25a+kp0c2FwcpxJo=
+From:   Brian Masney <masneyb@onstation.org>
+To:     dmitry.torokhov@gmail.com
+Cc:     linux-input@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 2/2] Input: remove msm-vibrator driver
+Date:   Tue, 11 Feb 2020 07:13:18 -0500
+Message-Id: <20200211121318.144067-3-masneyb@onstation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200211121318.144067-1-masneyb@onstation.org>
+References: <20200211121318.144067-1-masneyb@onstation.org>
 MIME-Version: 1.0
-Received: from [10.171.82.13] (89.37.124.34) by AM6P194CA0099.EURP194.PROD.OUTLOOK.COM (2603:10a6:209:8f::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23 via Frontend Transport; Tue, 11 Feb 2020 12:13:10 +0000
-X-Originating-IP: [89.37.124.34]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2a61e0cc-c5fc-4682-bbb0-08d7aeebc377
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4071:|AM6PR04MB4071:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB407152F8935A151FB48449E6EC180@AM6PR04MB4071.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0310C78181
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(376002)(346002)(366004)(136003)(39860400002)(396003)(199004)(189003)(966005)(52116002)(36756003)(478600001)(54906003)(110136005)(31696002)(16576012)(2616005)(956004)(235185007)(44832011)(8936002)(8676002)(316002)(81166006)(81156014)(4326008)(5660300002)(31686004)(6486002)(66476007)(66576008)(66946007)(66556008)(33964004)(26005)(16526019)(53546011)(186003)(86362001)(7416002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4071;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yJtZmnNwo0/Eqp67vG4qYtNNkUlRuDIYgOWjvkRudyM0x+HhiLT2JGpt4WlqB+dRdHM/diBJwL7Kxx5F3QmfQF4ObYzT/yeH8WxdRW3UE/RQtf9ykwQHfFJpr74Vtff0T/gvsksstw2+pITKHt5C4T+dm33EwI5U2ACyKNrl/st1OQAcQDOm5c6yML6mMU1tU8xiB53N2aEckiPodWXnPjZRgEJ+LFKjDiNHnSsz2hZZavLmsW6kWgZfLKcm0a22npAUjRRMrwZbb4lzr8WhpsAjfhxB41aCBLbAN+1lpfkxwAvZf3A9ALlvJlaiXTFhLoJyctmUBF5nngKvqth9bD6GPLJwshp3FViiEb9IlC/IEuWNlJ06YtGKGdvJOmcz+jvSCxSrZLxOP7l8dJajB4UlVhFs/HWe3PFTDbHezzINMDgMCXKl5kNqf2GI+efPraqJ1bB18xYaSzy4mvH1i2fqwURTBp7RACpnXppEol77cHh2q/LU9JY8u6lMVFvpXtR5WPGt4QRnmZJEDtMDSw==
-X-MS-Exchange-AntiSpam-MessageData: Ad/9kJQsfoJBhfvPfG+aek2/BIqOG3EiLDSEG382jd+ndJab0If10IPcraBu8cOBbgyaEjI3q4cLBUQu2eZW2EiPn1kTiFbQUCmIf/cecSdyk3J5GNbPnlRefuRR0pIosurVA8/yzbDR5BBpgKmQ3Q==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a61e0cc-c5fc-4682-bbb0-08d7aeebc377
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 12:13:11.7965
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +58NJqrX3PaKJIfLITJ6SUfPdHDGbgCtw7Oqg/1XDN+73kXWO7cOH72TOcJQRLwhKtfQNBgrpVH5atasdLT7Ew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4071
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---------------AE161A00404C95FFAA71826B
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+The address referenced by this driver is within the Qualcomm Clock
+namespace so let's drop the msm-vibrator bindings so that a more generic
+solution can be used instead.  No one is currently using driver so this
+won't affect any users.
 
-
-
-On 10.02.2020 20:41, Li Yang wrote:
-> On Mon, Feb 10, 2020 at 9:32 AM Olof Johansson <olof@lixom.net> wrote:
->>
->> On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
->> <linux@armlinux.org.uk> wrote:
->>>
->>> On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
->>>> On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
->>>>>
->>>>> Hi Olof,
->>>>>
->>>>> Thanks a lot for your comments!
->>>>> And sorry for my delay respond!
->>>>
->>>> Actually, they apply with only minor conflicts on top of current -next.
->>>>
->>>> Bjorn, any chance we can get you to pick these up pretty soon? They
->>>> enable full use of a promising ARM developer system, the SolidRun
->>>> HoneyComb, and would be quite valuable for me and others to be able to
->>>> use with mainline or -next without any additional patches applied --
->>>> which this patchset achieves.
->>>>
->>>> I know there are pending revisions based on feedback. I'll leave it up
->>>> to you and others to determine if that can be done with incremental
->>>> patches on top, or if it should be fixed before the initial patchset
->>>> is applied. But all in all, it's holding up adaption by me and surely
->>>> others of a very interesting platform -- I'm looking to replace my
->>>> aging MacchiatoBin with one of these and would need PCIe/NVMe to work
->>>> before I do.
->>>
->>> If you're going to be using NVMe, make sure you use a power-fail safe
->>> version; I've already had one instance where ext4 failed to mount
->>> because of a corrupted journal using an XPG SX8200 after the Honeycomb
->>> Serror'd, and then I powered it down after a few hours before later
->>> booting it back up.
->>>
->>> EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
->>> EXT4-fs (nvme0n1p2): write access will be enabled during recovery
->>> JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
->>> EXT4-fs (nvme0n1p2): error loading journal
->>
->> Hmm, using btrfs on mine, not sure if the exposure is similar or not.
->>
->> Do you know if the SErr was due to a known issue and/or if it's
->> something that's fixed in production silicon?
->>
->> (I still can't enable SMMU since across a warm reboot it fails
->> *completely*, with nothing coming up and working. NXP folks, you
->> listening? :)
-> 
-> This is a known issue about DPAA2 MC bus not working well with SMMU
-> based IO mapping.  Adding Laurentiu to the chain who has been looking
-> into this issue.
-
-Yes, I'm closely following the issue. I actually have a workaround 
-(attached) but haven't submitted as it will probably raise a lot of 
-eyebrows. In the mean time I'm following some discussions [1][2][3] on 
-the iommu list which seem to try to tackle what appears to be a similar 
-issue but with framebuffers. My hope is that we will be able to leverage 
-whatever turns out.
-In the mean time, can you try the workaround Leo suggested?
-
-[1] https://patchwork.kernel.org/patch/11327667/
-[2] https://patchwork.kernel.org/patch/10967729/
-[3] https://patchwork.kernel.org/cover/11279577/
-
+Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
-Best Regards, Laurentiu
+ drivers/input/misc/Kconfig        |  10 --
+ drivers/input/misc/Makefile       |   1 -
+ drivers/input/misc/msm-vibrator.c | 281 ------------------------------
+ 3 files changed, 292 deletions(-)
+ delete mode 100644 drivers/input/misc/msm-vibrator.c
 
---------------AE161A00404C95FFAA71826B
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-arm64-dts-lx2160a-add-iommus-property-for-mc-node.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-arm64-dts-lx2160a-add-iommus-property-for-mc-node.patch"
-
-From 75dcd4a7bdf51db65dc5553a255b277f9d126e30 Mon Sep 17 00:00:00 2001
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Date: Tue, 19 Nov 2019 17:01:39 +0200
-Subject: [PATCH 1/2] arm64: dts: lx2160a: add iommus property for mc node
-Content-Type: text/plain; charset="us-ascii"
-
-Enable SMMU management for the MC firmware by adding the required
-iommus property in the device tree node.
-
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index b032f3890c8c..f46f0d0905b5 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -868,6 +868,7 @@
- 			msi-parent = <&its>;
- 			/* iommu-map property is fixed up by u-boot */
- 			iommu-map = <0 &smmu 0 0>;
-+			iommus = <&smmu 0x4000>;
- 			dma-coherent;
- 			#address-cells = <3>;
- 			#size-cells = <1>;
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 7e2e658d551c..b56da7a5efb9 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -117,16 +117,6 @@ config INPUT_E3X0_BUTTON
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called e3x0_button.
+ 
+-config INPUT_MSM_VIBRATOR
+-	tristate "Qualcomm MSM vibrator driver"
+-	select INPUT_FF_MEMLESS
+-	help
+-	  Support for the vibrator that is found on various Qualcomm MSM
+-	  SOCs.
+-
+-	  To compile this driver as a module, choose M here: the module
+-	  will be called msm_vibrator.
+-
+ config INPUT_PCSPKR
+ 	tristate "PC Speaker support"
+ 	depends on PCSPKR_PLATFORM
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 8fd187f314bd..e6768b61a955 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -50,7 +50,6 @@ obj-$(CONFIG_INPUT_MAX8925_ONKEY)	+= max8925_onkey.o
+ obj-$(CONFIG_INPUT_MAX8997_HAPTIC)	+= max8997_haptic.o
+ obj-$(CONFIG_INPUT_MC13783_PWRBUTTON)	+= mc13783-pwrbutton.o
+ obj-$(CONFIG_INPUT_MMA8450)		+= mma8450.o
+-obj-$(CONFIG_INPUT_MSM_VIBRATOR)	+= msm-vibrator.o
+ obj-$(CONFIG_INPUT_PALMAS_PWRBUTTON)	+= palmas-pwrbutton.o
+ obj-$(CONFIG_INPUT_PCAP)		+= pcap_keys.o
+ obj-$(CONFIG_INPUT_PCF50633_PMU)	+= pcf50633-input.o
+diff --git a/drivers/input/misc/msm-vibrator.c b/drivers/input/misc/msm-vibrator.c
+deleted file mode 100644
+index b60f1aaee705..000000000000
+--- a/drivers/input/misc/msm-vibrator.c
++++ /dev/null
+@@ -1,281 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * Qualcomm MSM vibrator driver
+- *
+- * Copyright (c) 2018 Brian Masney <masneyb@onstation.org>
+- *
+- * Based on qcom,pwm-vibrator.c from:
+- * Copyright (c) 2018 Jonathan Marek <jonathan@marek.ca>
+- *
+- * Based on msm_pwm_vibrator.c from downstream Android sources:
+- * Copyright (C) 2009-2014 LGE, Inc.
+- */
+-
+-#include <linux/clk.h>
+-#include <linux/err.h>
+-#include <linux/gpio/consumer.h>
+-#include <linux/input.h>
+-#include <linux/io.h>
+-#include <linux/module.h>
+-#include <linux/of.h>
+-#include <linux/platform_device.h>
+-#include <linux/regulator/consumer.h>
+-
+-#define REG_CMD_RCGR           0x00
+-#define REG_CFG_RCGR           0x04
+-#define REG_M                  0x08
+-#define REG_N                  0x0C
+-#define REG_D                  0x10
+-#define REG_CBCR               0x24
+-#define MMSS_CC_M_DEFAULT      1
+-
+-struct msm_vibrator {
+-	struct input_dev *input;
+-	struct mutex mutex;
+-	struct work_struct worker;
+-	void __iomem *base;
+-	struct regulator *vcc;
+-	struct clk *clk;
+-	struct gpio_desc *enable_gpio;
+-	u16 magnitude;
+-	bool enabled;
+-};
+-
+-static void msm_vibrator_write(struct msm_vibrator *vibrator, int offset,
+-			       u32 value)
+-{
+-	writel(value, vibrator->base + offset);
+-}
+-
+-static int msm_vibrator_start(struct msm_vibrator *vibrator)
+-{
+-	int d_reg_val, ret = 0;
+-
+-	mutex_lock(&vibrator->mutex);
+-
+-	if (!vibrator->enabled) {
+-		ret = clk_set_rate(vibrator->clk, 24000);
+-		if (ret) {
+-			dev_err(&vibrator->input->dev,
+-				"Failed to set clock rate: %d\n", ret);
+-			goto unlock;
+-		}
+-
+-		ret = clk_prepare_enable(vibrator->clk);
+-		if (ret) {
+-			dev_err(&vibrator->input->dev,
+-				"Failed to enable clock: %d\n", ret);
+-			goto unlock;
+-		}
+-
+-		ret = regulator_enable(vibrator->vcc);
+-		if (ret) {
+-			dev_err(&vibrator->input->dev,
+-				"Failed to enable regulator: %d\n", ret);
+-			clk_disable(vibrator->clk);
+-			goto unlock;
+-		}
+-
+-		gpiod_set_value_cansleep(vibrator->enable_gpio, 1);
+-
+-		vibrator->enabled = true;
+-	}
+-
+-	d_reg_val = 127 - ((126 * vibrator->magnitude) / 0xffff);
+-	msm_vibrator_write(vibrator, REG_CFG_RCGR,
+-			   (2 << 12) | /* dual edge mode */
+-			   (0 << 8) |  /* cxo */
+-			   (7 << 0));
+-	msm_vibrator_write(vibrator, REG_M, 1);
+-	msm_vibrator_write(vibrator, REG_N, 128);
+-	msm_vibrator_write(vibrator, REG_D, d_reg_val);
+-	msm_vibrator_write(vibrator, REG_CMD_RCGR, 1);
+-	msm_vibrator_write(vibrator, REG_CBCR, 1);
+-
+-unlock:
+-	mutex_unlock(&vibrator->mutex);
+-
+-	return ret;
+-}
+-
+-static void msm_vibrator_stop(struct msm_vibrator *vibrator)
+-{
+-	mutex_lock(&vibrator->mutex);
+-
+-	if (vibrator->enabled) {
+-		gpiod_set_value_cansleep(vibrator->enable_gpio, 0);
+-		regulator_disable(vibrator->vcc);
+-		clk_disable(vibrator->clk);
+-		vibrator->enabled = false;
+-	}
+-
+-	mutex_unlock(&vibrator->mutex);
+-}
+-
+-static void msm_vibrator_worker(struct work_struct *work)
+-{
+-	struct msm_vibrator *vibrator = container_of(work,
+-						     struct msm_vibrator,
+-						     worker);
+-
+-	if (vibrator->magnitude)
+-		msm_vibrator_start(vibrator);
+-	else
+-		msm_vibrator_stop(vibrator);
+-}
+-
+-static int msm_vibrator_play_effect(struct input_dev *dev, void *data,
+-				    struct ff_effect *effect)
+-{
+-	struct msm_vibrator *vibrator = input_get_drvdata(dev);
+-
+-	mutex_lock(&vibrator->mutex);
+-
+-	if (effect->u.rumble.strong_magnitude > 0)
+-		vibrator->magnitude = effect->u.rumble.strong_magnitude;
+-	else
+-		vibrator->magnitude = effect->u.rumble.weak_magnitude;
+-
+-	mutex_unlock(&vibrator->mutex);
+-
+-	schedule_work(&vibrator->worker);
+-
+-	return 0;
+-}
+-
+-static void msm_vibrator_close(struct input_dev *input)
+-{
+-	struct msm_vibrator *vibrator = input_get_drvdata(input);
+-
+-	cancel_work_sync(&vibrator->worker);
+-	msm_vibrator_stop(vibrator);
+-}
+-
+-static int msm_vibrator_probe(struct platform_device *pdev)
+-{
+-	struct msm_vibrator *vibrator;
+-	struct resource *res;
+-	int ret;
+-
+-	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
+-	if (!vibrator)
+-		return -ENOMEM;
+-
+-	vibrator->input = devm_input_allocate_device(&pdev->dev);
+-	if (!vibrator->input)
+-		return -ENOMEM;
+-
+-	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+-	if (IS_ERR(vibrator->vcc)) {
+-		if (PTR_ERR(vibrator->vcc) != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Failed to get regulator: %ld\n",
+-				PTR_ERR(vibrator->vcc));
+-		return PTR_ERR(vibrator->vcc);
+-	}
+-
+-	vibrator->enable_gpio = devm_gpiod_get(&pdev->dev, "enable",
+-					       GPIOD_OUT_LOW);
+-	if (IS_ERR(vibrator->enable_gpio)) {
+-		if (PTR_ERR(vibrator->enable_gpio) != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Failed to get enable gpio: %ld\n",
+-				PTR_ERR(vibrator->enable_gpio));
+-		return PTR_ERR(vibrator->enable_gpio);
+-	}
+-
+-	vibrator->clk = devm_clk_get(&pdev->dev, "pwm");
+-	if (IS_ERR(vibrator->clk)) {
+-		if (PTR_ERR(vibrator->clk) != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Failed to lookup pwm clock: %ld\n",
+-				PTR_ERR(vibrator->clk));
+-		return PTR_ERR(vibrator->clk);
+-	}
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(&pdev->dev, "Failed to get platform resource\n");
+-		return -ENODEV;
+-	}
+-
+-	vibrator->base = devm_ioremap(&pdev->dev, res->start,
+-				     resource_size(res));
+-	if (!vibrator->base) {
+-		dev_err(&pdev->dev, "Failed to iomap resource.\n");
+-		return -ENOMEM;
+-	}
+-
+-	vibrator->enabled = false;
+-	mutex_init(&vibrator->mutex);
+-	INIT_WORK(&vibrator->worker, msm_vibrator_worker);
+-
+-	vibrator->input->name = "msm-vibrator";
+-	vibrator->input->id.bustype = BUS_HOST;
+-	vibrator->input->close = msm_vibrator_close;
+-
+-	input_set_drvdata(vibrator->input, vibrator);
+-	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
+-
+-	ret = input_ff_create_memless(vibrator->input, NULL,
+-				      msm_vibrator_play_effect);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to create ff memless: %d", ret);
+-		return ret;
+-	}
+-
+-	ret = input_register_device(vibrator->input);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to register input device: %d", ret);
+-		return ret;
+-	}
+-
+-	platform_set_drvdata(pdev, vibrator);
+-
+-	return 0;
+-}
+-
+-static int __maybe_unused msm_vibrator_suspend(struct device *dev)
+-{
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct msm_vibrator *vibrator = platform_get_drvdata(pdev);
+-
+-	cancel_work_sync(&vibrator->worker);
+-
+-	if (vibrator->enabled)
+-		msm_vibrator_stop(vibrator);
+-
+-	return 0;
+-}
+-
+-static int __maybe_unused msm_vibrator_resume(struct device *dev)
+-{
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct msm_vibrator *vibrator = platform_get_drvdata(pdev);
+-
+-	if (vibrator->enabled)
+-		msm_vibrator_start(vibrator);
+-
+-	return 0;
+-}
+-
+-static SIMPLE_DEV_PM_OPS(msm_vibrator_pm_ops, msm_vibrator_suspend,
+-			 msm_vibrator_resume);
+-
+-static const struct of_device_id msm_vibrator_of_match[] = {
+-	{ .compatible = "qcom,msm8226-vibrator" },
+-	{ .compatible = "qcom,msm8974-vibrator" },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, msm_vibrator_of_match);
+-
+-static struct platform_driver msm_vibrator_driver = {
+-	.probe	= msm_vibrator_probe,
+-	.driver	= {
+-		.name = "msm-vibrator",
+-		.pm = &msm_vibrator_pm_ops,
+-		.of_match_table = of_match_ptr(msm_vibrator_of_match),
+-	},
+-};
+-module_platform_driver(msm_vibrator_driver);
+-
+-MODULE_AUTHOR("Brian Masney <masneyb@onstation.org>");
+-MODULE_DESCRIPTION("Qualcomm MSM vibrator driver");
+-MODULE_LICENSE("GPL");
 -- 
-2.17.1
+2.24.1
 
-
---------------AE161A00404C95FFAA71826B
-Content-Type: text/x-patch; charset=UTF-8;
- name="0002-bus-fsl-mc-make-mc-work-with-smmu-disable-bypass-on.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0002-bus-fsl-mc-make-mc-work-with-smmu-disable-bypass-on.pat";
- filename*1="ch"
-
-From 46ccd2291e259c906b449f789ee62e03598fe4d7 Mon Sep 17 00:00:00 2001
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Date: Tue, 1 Oct 2019 16:22:48 +0300
-Subject: [PATCH 2/2] bus: fsl-mc: make mc work with smmu disable bypass on
-Content-Type: text/plain; charset="us-ascii"
-
-Since this commit [1] booting kernel on MC based chips started to
-fail because this firmware starts before the kernel and as soon as
-SMMU is probed it starts to trigger contiguous faults.
-This is a workaround that allows MC firmware to run with SMMU
-in disable bypass mode. It consists of the following steps:
- 1. pause the firmware at early boot to get a chance to setup SMMU
- 2. request direct mapping for MC device
- 3. resume the firmware
-The workaround relies on the fact that no state is lost when
-pausing / resuming firmware, as per the docs.
-With this patch, platforms with MC firmware can now boot without
-having to change the default config to set:
-  CONFIG_ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=n
-
-[1] 954a03be033 ("iommu/arm-smmu: Break insecure users by disabling bypass by default")
-
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
----
- drivers/bus/fsl-mc/fsl-mc-bus.c | 51 +++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-index fec394a28891..f9bc9c384ab5 100644
---- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-@@ -18,6 +18,8 @@
- #include <linux/bitops.h>
- #include <linux/msi.h>
- #include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include <linux/iommu.h>
- 
- #include "fsl-mc-private.h"
- 
-@@ -889,6 +891,12 @@ static int get_mc_addr_translation_ranges(struct device *dev,
- 	return 0;
- }
- 
-+#define FSL_MC_GCR1	0x0
-+#define GCR1_P1_STOP	BIT(31)
-+
-+static u32 boot_gcr1;
-+static void __iomem *fsl_mc_regs;
-+
- /**
-  * fsl_mc_bus_probe - callback invoked when the root MC bus is being
-  * added
-@@ -906,6 +914,19 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
- 	struct mc_version mc_version;
- 	struct resource res;
- 
-+	/*
-+	 * The MC firmware requires full access to the whole address space plus
-+	 * it has no way of dealing with any kind of address translation, so
-+	 * request direct mapping for it.
-+	 */
-+	error = iommu_request_dm_for_dev(&pdev->dev);
-+	if (error)
-+		dev_warn(&pdev->dev, "iommu_request_dm_for_dev() failed: %d\n",
-+			 error);
-+
-+	/* Resume the firmware */
-+	writel(boot_gcr1 & ~GCR1_P1_STOP, fsl_mc_regs + FSL_MC_GCR1);
-+
- 	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
- 	if (!mc)
- 		return -ENOMEM;
-@@ -990,6 +1011,13 @@ static int fsl_mc_bus_remove(struct platform_device *pdev)
- 	if (!fsl_mc_is_root_dprc(&mc->root_mc_bus_dev->dev))
- 		return -EINVAL;
- 
-+	/*
-+	 * Pause back the firmware so that it doesn't trigger faults by the
-+	 * time SMMU gets brought down.
-+	 */
-+	writel(boot_gcr1 | GCR1_P1_STOP, fsl_mc_regs + FSL_MC_GCR1);
-+	iounmap(fsl_mc_regs);
-+
- 	fsl_mc_device_remove(mc->root_mc_bus_dev);
- 
- 	fsl_destroy_mc_io(mc->root_mc_bus_dev->mc_io);
-@@ -1018,6 +1046,8 @@ static struct platform_driver fsl_mc_bus_driver = {
- static int __init fsl_mc_bus_driver_init(void)
- {
- 	int error;
-+	struct device_node *np;
-+	struct resource res;
- 
- 	error = bus_register(&fsl_mc_bus_type);
- 	if (error < 0) {
-@@ -1039,9 +1069,30 @@ static int __init fsl_mc_bus_driver_init(void)
- 	if (error < 0)
- 		goto error_cleanup_dprc_driver;
- 
-+	np = of_find_matching_node(NULL, fsl_mc_bus_match_table);
-+	if (!of_device_is_available(np))
-+		goto error_cleanup_dprc_driver;
-+	error = of_address_to_resource(np, 1, &res);
-+	if (error)
-+		goto error_cleanup_dprc_driver;
-+	fsl_mc_regs = ioremap(res.start, resource_size(&res));
-+	if (!fsl_mc_regs) {
-+		error = -ENXIO;
-+		goto error_cleanup_dprc_driver;
-+	}
-+
-+	boot_gcr1 = readl(fsl_mc_regs + FSL_MC_GCR1);
-+	/*
-+	 * If found running, pause MC firmware in order to get a chance
-+	 * to setup SMMU for it.
-+	 */
-+	if (!(boot_gcr1 & GCR1_P1_STOP))
-+		writel(boot_gcr1 | GCR1_P1_STOP,  fsl_mc_regs + FSL_MC_GCR1);
-+
- 	return 0;
- 
- error_cleanup_dprc_driver:
-+	iounmap(fsl_mc_regs);
- 	dprc_driver_exit();
- 
- error_cleanup_driver:
--- 
-2.17.1
-
-
---------------AE161A00404C95FFAA71826B--
