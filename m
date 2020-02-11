@@ -2,155 +2,124 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85368C35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 05:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05491C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 05:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FB3206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 05:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF76920848
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 05:58:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Eg0EGebO"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qGpCAFOU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgBKFFr (ORCPT
+        id S1728023AbgBKF6P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 00:05:47 -0500
-Received: from mail-eopbgr80052.outbound.protection.outlook.com ([40.107.8.52]:1325
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728019AbgBKFFr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 00:05:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MaFTqhr1vjc1Ntb+1o1SsR2gssufBySL0MEomJLSAxaapMqUjVWi//S1wQ6qrnFQqeEoCvvLp5UWLqm7Z5hXWpCXbR7KIWafTcIiR3lHeZe773tx0R8/UAiJmxilUhq1aQXkX/KDJLWftrGSpehjbJZrpxPU9uT/X7hqNcdyvjGO2vcV8HWiChQ2nWbPRlZNRWkh8trZ8fYZFYl4Zldzlp2gN5AbN5ofgVkHEZnlUcari7brcqvnl4KIM7QIg9Mfk9Bn/dgaJugKz2vl4jSdB0Kx+gVSViMxyU8B+omE71gw3RFpVcG8a1BIFcMfbTU5bAB1e5kkq8B0s2WPpzY+mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M0aDlr3daBnB01IYNZHJnhYlvDJPErOzfHxiKqdS4og=;
- b=HjxfQEMtKVCr5Gl/ZdxNJX3V8G3Iye9tnAmdN2TcCqA2nQRe71NwSBDRkGdoWS1Bww6yxzO/5iEUrjCkZSvnt7QmqjnH9+vXAfT0NwHOeKFiMI+Ps4mVlQsGpH71FDIqlaQm38rgLNC7vUu2zMMMEiW/6T/T0MQjO7/FrFncGIaaM/GrIsCuDc7Yb/L33+uialUvF+mFL40wXJWUMqGGMxb5CBRzPQFmtY/WD4AAYs4WFRFKlu76Z5A0N9RksK/wFv7sWSXYZ62FJO0TAnhupUuX6zkpaUUMvj4Xeva7F7afeZflTZ7hp29DDESg0kNN20HKws2AHfhANDTUfHmHcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M0aDlr3daBnB01IYNZHJnhYlvDJPErOzfHxiKqdS4og=;
- b=Eg0EGebOSl3WfA9UWpb9SW9usGTKLgfIzxvJ5wtDSoYPvkHz1VF60jq01qdOJk36vzMn9lGKPkpdWatc1vsKyaASIBIXMMEzpK7W5E6n5LF8EadPvtOgOSBb0SXzWUEItxrQ33v+7c0SR6jnA9QymDIAEzROM97W9PgL6FhACeQ=
-Received: from AM7PR04MB6885.eurprd04.prod.outlook.com (10.141.174.88) by
- AM7PR04MB7190.eurprd04.prod.outlook.com (52.135.56.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Tue, 11 Feb 2020 05:05:44 +0000
-Received: from AM7PR04MB6885.eurprd04.prod.outlook.com
- ([fe80::8a5:3800:3341:c064]) by AM7PR04MB6885.eurprd04.prod.outlook.com
- ([fe80::8a5:3800:3341:c064%7]) with mapi id 15.20.2707.028; Tue, 11 Feb 2020
- 05:05:44 +0000
-From:   "Y.b. Lu" <yangbo.lu@nxp.com>
-To:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: RE: [PATCH] arm64: dts: ls1088a: support eMMC HS200 speed mode for
- RDB board
-Thread-Topic: [PATCH] arm64: dts: ls1088a: support eMMC HS200 speed mode for
- RDB board
-Thread-Index: AQHV2xE41KpYu0AHxEOqeh0APNS/1KgVeyDQ
-Date:   Tue, 11 Feb 2020 05:05:44 +0000
-Message-ID: <AM7PR04MB6885669DCE6306B3309DB669F8180@AM7PR04MB6885.eurprd04.prod.outlook.com>
-References: <20200204040928.32320-1-yangbo.lu@nxp.com>
-In-Reply-To: <20200204040928.32320-1-yangbo.lu@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yangbo.lu@nxp.com; 
-x-originating-ip: [223.72.61.127]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: afa15340-bfe6-4be9-4ab8-08d7aeb00c63
-x-ms-traffictypediagnostic: AM7PR04MB7190:|AM7PR04MB7190:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM7PR04MB71900D6B573072E19737BC0FF8180@AM7PR04MB7190.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(189003)(199004)(86362001)(7696005)(478600001)(4326008)(71200400001)(8936002)(6506007)(53546011)(76116006)(66556008)(55016002)(66446008)(110136005)(54906003)(6636002)(52536014)(66946007)(316002)(66476007)(9686003)(64756008)(26005)(2906002)(186003)(8676002)(5660300002)(33656002)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB7190;H:AM7PR04MB6885.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pN9o4N/nGoApEet6I1yNDhPCf6zP7mZrjhAOVrKCAj1m2t3aTMrwboj5UhubjHZGNqWbs5mS4RZXjes6Glbge2v+Nb2xv+ULkI3DjXKAiJZmC9a/CzijdRCAl7ko5V4r8JaC3D8th6FYSSr0fskggJLWXwSvSyd8Pt57utxkY5+KGR+NubuuY9xImP4J9I1KI8uCnz8GrPMfUyyr7WDNJIkiBQZV1Yum1B6ZfdBYLHQGdURLTRAZmg8W9qqoAIWKy5T5gPk9BPPZqAApjMKIa5AliGAWsVFt46FUoEcDh1mx3cG803ujPWormKj0INqAGwyWn5emD9ilom6HGlWw2OvdbjKVp099YbIEzcoYbM7VaSZKZa2axTOQcR/hPpP90P4IuB+GBEIz/3bKOSd+RNTGaYk+TMVEAxVven1HsgxcUo76QXhrkdHhfWlrtipa
-x-ms-exchange-antispam-messagedata: DN39uAeTmTxM+aRewfDVgZsaswH5Xanycw3hc/lajKgpjOq/pRl0djLguCPIQgJGvy/6m5U+toiyREIfp5w5OD47wULCnY57llZJ5rckL8rakJp6Cj+ETCvMt9vIkjMFAj9bkt788HniIW/cpi9aBQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 11 Feb 2020 00:58:15 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:22817 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726942AbgBKF6O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 00:58:14 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581400694; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=90LwSLciKSX0tDR6UyVjm6zI/ZPE7pQez+xZZMUCPQw=;
+ b=qGpCAFOU5jUGdYrkhnmSTMpNeYpeA72Txvhez9IU2/1yqzlQGYwx8i6MAKgdz7xpjeUwF6nP
+ +CqoAaF2tUJgLlTn82RqJET6g+bjiWAkKsRzza47iO07KyxgbiEGokRfQG/BHN9tOIa2/B1v
+ iiEPrJ4UNufgORthA4Tvb98G9nA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e424275.7faea0ea1030-smtp-out-n01;
+ Tue, 11 Feb 2020 05:58:13 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E05DCC4479C; Tue, 11 Feb 2020 05:58:12 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: harigovi)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29BE2C43383;
+        Tue, 11 Feb 2020 05:58:12 +0000 (UTC)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afa15340-bfe6-4be9-4ab8-08d7aeb00c63
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 05:05:44.0559
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RPnjEADDNDAItS+CTOsaNq8UbTzfdWAYfgfiLMzJ4tTOHLBIn9uM7bFDH5MXMzsHN6WYphtQiUjN8dAydLhPcA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7190
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 11 Feb 2020 11:28:12 +0530
+From:   harigovi@codeaurora.org
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>
+Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
+In-Reply-To: <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
+References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
+ <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
+ <2f5abc857910f70faa119fea5bda81d7@codeaurora.org>
+ <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
+Message-ID: <1d201377996e16ce25acb640867e1214@codeaurora.org>
+X-Sender: harigovi@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Any comments? Thanks!
+On 2020-02-07 19:40, Jeffrey Hugo wrote:
+> On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
+>> 
+>> On 2020-02-06 20:29, Jeffrey Hugo wrote:
+>> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
+>> > wrote:
+>> >>
+>> >> For a given byte clock, if VCO recalc value is exactly same as
+>> >> vco set rate value, vco_set_rate does not get called assuming
+>> >> VCO is already set to required value. But Due to GDSC toggle,
+>> >> VCO values are erased in the HW. To make sure VCO is programmed
+>> >> correctly, we forcefully call set_rate from vco_prepare.
+>> >
+>> > Is this specific to certain SoCs? I don't think I've observed this.
+>> 
+>> As far as Qualcomm SOCs are concerned, since pll is analog and the 
+>> value
+>> is directly read from hardware if we get recalc value same as set rate
+>> value, the vco_set_rate will not be invoked. We checked in our idp
+>> device which has the same SOC but it works there since the rates are
+>> different.
+> 
+> This doesn't seem to be an answer to my question.  What Qualcomm SoCs
+> does this issue apply to?  Everything implementing the 10nm pll?  One
+> specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
+> so I'm interested to know what is the actual impact here.  I don't see
+> an "IDP" SoC in the IP catalog, so I really have no idea what you are
+> referring to.
 
-> -----Original Message-----
-> From: Yangbo Lu <yangbo.lu@nxp.com>
-> Sent: Tuesday, February 4, 2020 12:09 PM
-> To: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Shawn Guo <shawnguo@kernel.org>; Leo Li
-> <leoyang.li@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Y.b. Lu <yangbo.lu@nxp.com>
-> Subject: [PATCH] arm64: dts: ls1088a: support eMMC HS200 speed mode for
-> RDB board
->=20
-> This patch is to add eMMC HS200 speed mode support on ls1088ardb
-> whose controller and peripheral circut support such capability.
-> And clocks dts property is needed for driver to get peripheral
-> clock value used for this speed mode.
->=20
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts | 1 +
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 1 +
->  2 files changed, 2 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> index 4d77b34..5633e59 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> @@ -83,6 +83,7 @@
->  };
->=20
->  &esdhc {
-> +	mmc-hs200-1_8v;
->  	status =3D "okay";
->  };
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 5945662..ec6013a 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -393,6 +393,7 @@
->  			reg =3D <0x0 0x2140000 0x0 0x10000>;
->  			interrupts =3D <0 28 0x4>; /* Level high type */
->  			clock-frequency =3D <0>;
-> +			clocks =3D <&clockgen 2 1>;
->  			voltage-ranges =3D <1800 1800 3300 3300>;
->  			sdhci,auto-cmd12;
->  			little-endian;
-> --
-> 2.7.4
 
+This is not 10nm specific. It is applicable for other nms also.
+Its specific to the frequency being set. If vco_recalc returns the same 
+value as being set by vco_set_rate,
+vco_set_rate will not be invoked second time onwards.
+
+For example: Lets take below devices:
+
+Cheza is based on SDM845 which is 10nm only.
+Clk frequency:206016
+dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
+dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
+
+Trogdor is based on sc7180 which is also 10nm.
+Clk frequency:69300
+dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
+dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
+
+In same trogdor device, we slightly changed the clock frequency and the 
+values actually differ which will not cause any issue.
+Clk frequency:69310
+dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
+dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
