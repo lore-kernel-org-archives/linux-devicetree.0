@@ -2,139 +2,101 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2C8C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2661EC352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9A720714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA79206ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3FXu4Dc"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="Ssoit/C7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgBKNsz (ORCPT
+        id S1729302AbgBKNwb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:48:55 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40036 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgBKNsz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 08:48:55 -0500
-Received: by mail-qt1-f194.google.com with SMTP id v25so7933018qto.7;
-        Tue, 11 Feb 2020 05:48:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JIZHRdZLqtLorXZfrYCSPItmC1Dc+HGHwOIzP/XDImY=;
-        b=d3FXu4DcpsHeeo7NBsq1Ec3f7OKhc4SsvQnIJenSnOtjREel9IF+kdR8ma1SWkO5OR
-         Ou4s2dnBv7WOxC4OPWNV6d8KIVpBRVtM/ukAKzN6d3zx7MvBtQz1N27NoDx/a7ujHsmS
-         jvZYtEEc8DToM7semtrIS3CUfnR8Jxni2Z/6WUP8wvMdDT8C1m2PB78zzz+BFas4vec2
-         VRg0vXB9eGeEdlGGMFCs2IJ9nbGhw7o3VA3WFY8plHWMmjNInC6fLgpMiA40FBmv4BzV
-         G9slDIDonCBacDdi6tPT8KEVnytqC8eiltqCoEj+hq8mYECNDQpWUjWhJQ4KRRh1aoXi
-         oAuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JIZHRdZLqtLorXZfrYCSPItmC1Dc+HGHwOIzP/XDImY=;
-        b=NL05IKKlW0LRFfZSq9ut6eSJDrNbVU6q4I4cLgMv6I8VSNguF2YLNynIHoLWfHthje
-         ELxXSX7j/7L1/gT0WLrrJboYLPswI2nh/vsMtvXYaf4A6MSsBXV+q2VMxyfQHoDS9TJ/
-         Bldxb1Rp7V2VgsW2RpkSqVXBfk3sXJXwTnJAD4UEcz27E731ykiqzoghTKOvnOzhXCB2
-         dkeVLp9Eg44fU80qhdSTaM1nki0yrh/DIV3f1QKvl7sY35URfj3KjgK017vS3Kh9BzW5
-         BVlh3BPeGlBxJJwDF/FgC+/rYmU15Q/czs16lyqC3k06rd0hNq1W2SeI+mZxg44iFQjE
-         JJYA==
-X-Gm-Message-State: APjAAAV+zLtDn+UgHtw3f2XRNVyNruGv8v4oGnfEKaIrULyGNfWsQmjQ
-        bz7So9gjuT9jrNWdnxfMyO0=
-X-Google-Smtp-Source: APXvYqybhzOEAAvHZbhKNes/s71zGxqa2omF1pXH9nVpHWlE7KVvcXMkRtBbOlD4T9UG/KxmmcCT+w==
-X-Received: by 2002:ac8:7caf:: with SMTP id z15mr14892626qtv.68.1581428933199;
-        Tue, 11 Feb 2020 05:48:53 -0800 (PST)
-Received: from NXL86673.nxp.com ([177.221.114.206])
-        by smtp.googlemail.com with ESMTPSA id h6sm2158936qtr.33.2020.02.11.05.48.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 05:48:52 -0800 (PST)
-From:   Alifer Moraes <alifer.wsdm@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     festevam@gmail.com, marco.franchi@nxp.com, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Alifer Moraes <alifer.wsdm@gmail.com>
-Subject: [PATCH] arm64: dts: imx8mq-phanbell: Add support for ethernet
-Date:   Tue, 11 Feb 2020 10:48:28 -0300
-Message-Id: <20200211134828.138-1-alifer.wsdm@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 11 Feb 2020 08:52:31 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:54546 "EHLO
+        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728624AbgBKNwa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 08:52:30 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id CADA7D006F9;
+        Tue, 11 Feb 2020 13:52:28 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at serbinski.com
+Received: from mail.serbinski.com ([127.0.0.1])
+        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MnOnwGJcKCEn; Tue, 11 Feb 2020 08:52:23 -0500 (EST)
+Received: from mail.serbinski.com (localhost [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id 4F86CD00693;
+        Tue, 11 Feb 2020 08:52:23 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 4F86CD00693
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
+        s=default; t=1581429143;
+        bh=4UgsNF2DfSAJSAEAuD7fkyhncR/ncVh8kAIH7kgJv2A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ssoit/C7jtU+uEyLBQlHyTfLDiONn8FBviOZQ0wZQ7bzpeDh/52Y6RjL0hK95iw6w
+         CAsfhZGI5lqAnLqnO/pA3fRbCr2t+TeGXKjon6ZvGiVTc+vduNIAZmmKhNUTBOCw0b
+         nwYbCqj3d60oW8U+tkAROVgAxx84Q5ivNylYa9tA=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 11 Feb 2020 08:52:23 -0500
+From:   Adam Serbinski <adam@serbinski.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
+In-Reply-To: <20200211114256.GC4543@sirena.org.uk>
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-9-adam@serbinski.com>
+ <20200210133636.GJ7685@sirena.org.uk>
+ <18057b47c76d350f8380f277713e0936@serbinski.com>
+ <20200210182609.GA14166@sirena.org.uk>
+ <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
+ <20200210200839.GG14166@sirena.org.uk>
+ <7c57801d8f671c40d4c6094e5ce89681@serbinski.com>
+ <20200211114256.GC4543@sirena.org.uk>
+User-Agent: Roundcube Webmail/1.4-beta
+Message-ID: <b386237a1c21a417afb25f79a8b3d4ce@serbinski.com>
+X-Sender: adam@serbinski.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for ethernet on Google's i.MX 8MQ Phanbell
+On 2020-02-11 06:42, Mark Brown wrote:
+> On Mon, Feb 10, 2020 at 04:13:52PM -0500, Adam Serbinski wrote:
+> 
+>> I am not aware of how this could be done for bluetooth, since the 
+>> value
+>> still has to originate from userspace. The driver you referred to 
+>> supports
+>> only a single sample rate, whereas for bluetooth, 2 sample rates are
+>> required, and nothing in the kernel is aware of the appropriate rate, 
+>> at
+>> least in the case of the qca6174a I'm working with right now, or for 
+>> that
+>> matter, TI Wilink 8, which I've also worked with.
+> 
+> There's generic support in the CODEC<->CODEC link code for setting the
+> DAI configuration from userspace.
 
-Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
----
- .../boot/dts/freescale/imx8mq-phanbell.dts    | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+Ok. Its going to take some time to get my head around that, so for the 
+time being I'm going to drop this feature and get the rest fixed for 
+inclusion.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 3f2a489a4ad8..16ed13c44a47 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -201,6 +201,27 @@
- 	};
- };
- 
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-+	phy-reset-duration = <10>;
-+	phy-reset-post-delay = <30>;
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+	};
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-@@ -254,6 +275,26 @@
- };
- 
- &iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
-+			MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO		0x23
-+			MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
-+			MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
-+			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
-+			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
-+			MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
-+			MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
-+			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
-+			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
-+			MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
-+			MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
-+			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-+			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-+			MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
--- 
-2.17.1
-
+Thanks.
