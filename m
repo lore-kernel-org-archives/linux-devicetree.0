@@ -2,99 +2,182 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCFFC35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 22:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68029C35242
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 23:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8642073C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 22:26:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="osmpEyyb"
+	by mail.kernel.org (Postfix) with ESMTP id 3961B20842
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 23:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581463528;
+	bh=8+QEMo0KaGrsQjqAphm6GxLxfHtuCWMrnJmpQjbwK/g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JbJq86ewrevOLoRTiEBIh515lN6CLJplsiCfy0BlAaoNqtA9ybqGUxLAiQQQD4pc5
+	 cduHNbqeMKRDT9SHHH/K9svi2fAq2eovaI8gYOkkKu7Sx6mqWSvEYK4GzHRDeFk49j
+	 6y1i+LEdwjCmgy8O19ocMVr5coh5VONt0re9KXdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgBKW0J (ORCPT
+        id S1727798AbgBKXZ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 17:26:09 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:41948 "EHLO vps0.lunn.ch"
+        Tue, 11 Feb 2020 18:25:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727613AbgBKW0J (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 17:26:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=FTbc6NWScTx2sMAyMo0DXlq+GgMPVN13Zi2VFXkQ5NQ=; b=osmpEyybgIujO885bvEjDsmCfE
-        rKPM5qtQkwuJ5S+jzyGh+X20JBzUCJpD4L5chAuCV6Iq3sfnOmZxf4P6XDBSfCY7Y5FK938LtFVLV
-        4dZYvibf2P2pNxgItfmFVMP53Y0y3/4hNROve54Z1zPdzOG60mvjXVFxbyni7oVcZ7pg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j1dxq-0003J4-92; Tue, 11 Feb 2020 23:25:06 +0100
-Date:   Tue, 11 Feb 2020 23:25:06 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        Alex Smith <alex.smith@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: Re: [PATCH 03/14] net: davicom: dm9000: allow to pass MAC address
- through mac_addr module parameter
-Message-ID: <20200211222506.GP19213@lunn.ch>
-References: <cover.1581457290.git.hns@goldelico.com>
- <4e11dd4183da55012198824ca7b8933b1eb57e4a.1581457290.git.hns@goldelico.com>
+        id S1727597AbgBKXZ1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 18:25:27 -0500
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 886FF20842;
+        Tue, 11 Feb 2020 23:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581463526;
+        bh=8+QEMo0KaGrsQjqAphm6GxLxfHtuCWMrnJmpQjbwK/g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U5XTL5riMETDn7faoSi8Pnp1Px8TtrAUjPASWkZ48Csm8C17M0h/f5H02c1oTu7Bj
+         YLCaTDvUcL0k0QGpOtCw1hr4BFTTipSyF4zvsxGjFqNkpCQz6svyCfp+ycKAnP8zjp
+         XJPgTZqSgSJ75nAOl+T1YBlRCwO8V2cunXC07l4k=
+Received: by mail-qt1-f176.google.com with SMTP id e21so187717qtp.13;
+        Tue, 11 Feb 2020 15:25:26 -0800 (PST)
+X-Gm-Message-State: APjAAAXrkuJynduuEysHq34SG0pNlSXqutZ3CubcImPyAY4MoyNh3HxD
+        aGW9ZKWy4UU3ZuDG6dCFTHoOowoRwB9INARm/g==
+X-Google-Smtp-Source: APXvYqxNVEgCDQaNqwwCDpPOOn1rWM3YviMqI1BKXSNbUv+rnUKBni0IKUOeGhgwCvMRU7d2XppHctvfNrj2CeTDLd0=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr4831678qtj.300.1581463525519;
+ Tue, 11 Feb 2020 15:25:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e11dd4183da55012198824ca7b8933b1eb57e4a.1581457290.git.hns@goldelico.com>
+References: <20200207203752.209296-1-pmalani@chromium.org> <20200207203752.209296-2-pmalani@chromium.org>
+In-Reply-To: <20200207203752.209296-2-pmalani@chromium.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 11 Feb 2020 17:25:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
+Message-ID: <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        heikki.krogerus@intel.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 10:41:20PM +0100, H. Nikolaus Schaller wrote:
-> This is needed to give the MIPS Ingenic CI20 board a stable MAC address
-> which can be optionally provided by vendor U-Boot.
-> 
-> For get_mac_addr() we use an adapted copy of from ksz884x.c which
-> has very similar functionality.
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+On Fri, Feb 7, 2020 at 2:39 PM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Some Chrome OS devices with Embedded Controllers (EC) can read and
+> modify Type C port state.
+>
+> Add an entry in the DT Bindings documentation that lists out the logical
+> device and describes the relevant port information, to be used by the
+> corresponding driver.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>
+> Changes in v2:
+> - No changes. Patch first introduced in v2 of series.
+>
+>  .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> new file mode 100644
+> index 00000000000000..46ebcbe76db3c2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
+> +
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Prashant Malani <pmalani@chromium.org>
+> +
+> +description:
+> +  Chrome OS devices have an Embedded Controller(EC) which has access to
+> +  Type C port state. This node is intended to allow the host to read and
+> +  control the Type C ports. The node for this device should be under a
+> +  cros-ec node like google,cros-ec-spi.
+> +
+> +properties:
+> +  compatible:
+> +    const: google,cros-ec-typec
+> +
+> +  port:
+> +    description: A node that represents a physical Type C port on the
+> +      device.
+> +    type: object
+> +    properties:
+> +      port-number:
+> +        description: The number used by the Chrome OS EC to identify
+> +          this type C port.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +      power-role:
+> +        description: Determines the power role that the Type C port will
+> +          adopt.
+> +        oneOf:
+> +          - items:
+> +            - const: sink
+> +            - const: source
+> +            - const: dual
+> +      data-role:
+> +        description: Determines the data role that the Type C port will
+> +          adopt.
+> +        oneOf:
+> +          - items:
+> +            - const: host
+> +            - const: device
+> +            - const: dual
+> +      try-power-role:
+> +        description: Determines the preferred power role of the Type C port.
+> +        oneOf:
+> +          - items:
+> +            - const: sink
+> +            - const: source
+> +            - const: dual
+> +
+> +    required:
+> +      - port-number
+> +      - power-role
+> +      - data-role
+> +      - try-power-role
+> +
+> +required:
+> +  - compatible
+> +  - port
+> +
+> +examples:
+> +  - |+
+> +    typec {
+> +      compatible = "google,cros-ec-typec";
+> +
+> +      port@0 {
 
-Hi Nikolaus
+'port' is reserved for OF graph binding which this is not.
 
-Please split these patches by subsystem. So this one patch needs to go
-via netdev.
+> +        port-number = <0>;
+> +        power-role = "dual";
+> +        data-role = "dual";
+> +        try-power-role = "source";
 
-> +static char *mac_addr = ":";
-> +module_param(mac_addr, charp, 0);
-> +MODULE_PARM_DESC(mac_addr, "MAC address");
+These are usb-connector binding properties, but this is not a
+usb-connector node. However, I think it should be. The main thing to
+work out seems to be have multiple connectors.
 
-Module parameters are not liked.
+With your binding, how does one associate the USB host controller with
+each port/connector? That's a solved problem with the connector
+binding.
 
-Can it be passed via device tree? The driver already has code to get
-it out of the device tree.
-
-   Andrew
+Rob
