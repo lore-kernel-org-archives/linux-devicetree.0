@@ -2,140 +2,139 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DD0C35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165DFC3B187
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E72214DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBEC206D6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581444972;
-	bh=ZiipSWDzgeHjJz2WH9FL395eNO0cu9ekXYQl99Q8TGU=;
+	s=default; t=1581445491;
+	bh=15RkB8/lsxkdGVyrfUT3PmibNwKSs3pakIPq9O2QKGA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=l6W7JuAhokm5OAs2lsmiR+lS1hkFWWN3a3sbUyAVy/KWP8d6jXrkCeHJxPIIVWYr5
-	 HbCz/4lf1y0NhfJFIvb00oUxWc5TEEg664dO0qx6OUXsCuq/ekTIO/SczAcbuRoNvn
-	 QcxwGbSz5jKKbzqm4Ojz5MQBkSHArEvBR+VyZsZE=
+	b=gE+IoaM9yui0c24gxmn3CjiCrtfwq93sx43eztY6OiKhHXb1sLlbn+KrFie5Qlebr
+	 X+nPDP5KdvUG4GbvaiWsmdx0TdgKelF7okwh24XxQ2FRBYrmubyYw2AgXFzsH/jiO4
+	 74u5wvae5kkxQQ2JjtUwqVkTdZyLYDXJKfEMidSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgBKSQG (ORCPT
+        id S1729791AbgBKSYr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:16:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44094 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 13:24:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbgBKSQG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:16:06 -0500
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+        id S1729169AbgBKSYr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:24:47 -0500
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7886920708;
-        Tue, 11 Feb 2020 18:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D8F21569;
+        Tue, 11 Feb 2020 18:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581444965;
-        bh=ZiipSWDzgeHjJz2WH9FL395eNO0cu9ekXYQl99Q8TGU=;
+        s=default; t=1581445486;
+        bh=15RkB8/lsxkdGVyrfUT3PmibNwKSs3pakIPq9O2QKGA=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WYxW6t8G73ZXqPoAZrUSFtPqrtlwKARwA85m1jL6Z3ZedBgHQ3XaEFu2wG412mXbq
-         lRdAsBCdeoQ3loqvdpsBxWXv3lKkaB0pTIYA7Y0mE6asS0iRix/G4zEMBB3ACwhKIM
-         WfUEr2u4/mD+oq0aX7UbAlLPduKjQYQIC3j5M58w=
-Received: by mail-qv1-f41.google.com with SMTP id dc14so5422982qvb.9;
-        Tue, 11 Feb 2020 10:16:05 -0800 (PST)
-X-Gm-Message-State: APjAAAUxvG7mM9VtV4oWSiXmMgDHXg8mGn8zgl9U+e0yObSYvQswFwwY
-        CKnAlkPm7KEJlhuE0ucRdpada54KCqIahwzDjQ==
-X-Google-Smtp-Source: APXvYqz7/HTjD/gmg7y3b1mBaiiVOST5LC3rVQ1S5d9nr8xvkVknjzihFw+CABsBG25SKvfgK9kM5f/8APejN+nuOaU=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr3796364qvu.136.1581444964504;
- Tue, 11 Feb 2020 10:16:04 -0800 (PST)
+        b=A8Zqm6fJP2FLzduLIBDokEhN/2d/UrH1tTPxjD5ihd4BFsmr4U+TmlhZKIyLl5OeE
+         y8tyZK1Z+LwxdaT3JO7a63fwdEV45iurNjgynCzt3Az2dG8qrc/SS5bt9W9L6m3vm8
+         E4RlmQ+12GEi7n7znDshSniOcw1AMCbrmborQU5w=
+Received: by mail-qv1-f52.google.com with SMTP id m5so5451862qvv.4;
+        Tue, 11 Feb 2020 10:24:46 -0800 (PST)
+X-Gm-Message-State: APjAAAVWVPt0aQfAjtZ+25pKee02DYuBkCsSHZvoTSb/5yltM791ECxQ
+        DVFgRweIAJZ8wRqtiX/KlHfI0kJzeI87u4hfPw==
+X-Google-Smtp-Source: APXvYqxfEK6hEL7IX2KvoJP4sjzXqu7vc6OB5e1z94Q1gXnPXU2WIumcI1fS/UN5s1vfda4olh8aSlNY95DTbeSQkqo=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr4114530qvv.85.1581445485691;
+ Tue, 11 Feb 2020 10:24:45 -0800 (PST)
 MIME-Version: 1.0
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-2-git-send-email-spujar@nvidia.com> <20200206181045.GA31521@bogus>
- <af58b6b2-25b2-e968-73c9-d87e1a9e2746@nvidia.com>
-In-Reply-To: <af58b6b2-25b2-e968-73c9-d87e1a9e2746@nvidia.com>
+References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <20200206183808.GA5019@bogus> <f26464226f74dffe2db0583b9482a489@codeaurora.org>
+In-Reply-To: <f26464226f74dffe2db0583b9482a489@codeaurora.org>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 12:15:53 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKCzR5DXm_ip-mrrPyeAUcZJRWi_cQEhPd7agp9T_uumA@mail.gmail.com>
-Message-ID: <CAL_JsqKCzR5DXm_ip-mrrPyeAUcZJRWi_cQEhPd7agp9T_uumA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: sound: tegra: add DT binding for AHUB
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>,
+Date:   Tue, 11 Feb 2020 12:24:34 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
+Message-ID: <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
+Subject: Re: [PATCHv2 2/2] dt-bindings: watchdog: Add compatible for QCS404,
+ SC7180, SDM845, SM8150
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
-        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree-owner@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 5:31 AM Sameer Pujar <spujar@nvidia.com> wrote:
+On Fri, Feb 7, 2020 at 12:10 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
 >
+> Hi Rob,
 >
->
-> On 2/6/2020 11:40 PM, Rob Herring wrote:
-> > External email: Use caution opening links or attachments
+> On 2020-02-07 00:08, Rob Herring wrote:
+> > On Sat, Feb 01, 2020 at 08:59:49PM +0530, Sai Prakash Ranjan wrote:
+> >> Add missing compatible for watchdog timer on QCS404,
+> >> SC7180, SDM845 and SM8150 SoCs.
 > >
+> > That's not what the commit does. You are changing what's valid.
 > >
-> > On Thu, Jan 30, 2020 at 04:03:34PM +0530, Sameer Pujar wrote:
-> >> Audio Hub (AHUB) comprises a collection of hardware accelerators for audio
-> >> pre-processing and post-processing and a programmable full crossbar for
-> >> audio routing across these accelerators. This patch adds YAML schema for DT
-> >> binding of AHUB and few of its following components. These devices will be
-> >> registered as ASoC components.
-> >>   * ADMAIF
-> >>   * I2S
-> >>   * DMIC
-> >>   * DSPK
-> >>
-> >> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> >> ---
-> >>   .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++++++++++++
-> >>   .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 +++++++++++++++++++++
-> >>   .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 ++++++++++++++++
-> >>   .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++++++++++++
-> >>   .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 ++++++++++++++
-> >>   5 files changed, 617 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> >> new file mode 100644
-> >> index 0000000..dc9fef3
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-> >> @@ -0,0 +1,105 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0)
-> . . .
-> >> +    items:
-> >> +      - description: initial module clock rate
-> >> +
-> >> +  "#sound-dai-cells":
-> >> +    const: 1
-> >> +
-> >> +  sound-name-prefix:
-> >> +    $ref: /schemas/types.yaml#/definitions/string
-> >> +    description:
-> >> +      Used as prefix for sink/source names of the component. Must be a
-> >> +      unique string among multiple instances of the same component.
-> >> +      The name can be "DSPK1" or "DSPKx", where x depends on the maximum
-> > Sounds like a constraint.
+> > One string was valid, now 2 are required.
+> >
 >
-> Is there a better way to convey the recommended strings above?
+> Does this look good?
 
-pattern: '^DSPK[1-9]$'
+No. First of all, what's the base for the diff? It's not what you
+originally had nor incremental on top of this patch.
 
-Adjusting the number range regex as you need.
+Second, a value of 'qcom,kpss-timer' or 'qcom,kpss-wdt' or
+'qcom,scss-timer' will fail validation because 2 clauses of 'oneOf'
+will be true.
 
-(And $ref will need to be under an 'allOf')
-
-Rob
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> index 46d6aad5786a..3378244b67cd 100644
+> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> @@ -14,19 +14,22 @@ allOf:
+>
+>   properties:
+>     compatible:
+> -    items:
+> +    oneOf:
+>         - enum:
+>             - qcom,apss-wdt-qcs404
+>             - qcom,apss-wdt-sc7180
+>             - qcom,apss-wdt-sdm845
+>             - qcom,apss-wdt-sm8150
+> -          - qcom,kpss-timer
+> -          - qcom,kpss-wdt
+>             - qcom,kpss-wdt-apq8064
+>             - qcom,kpss-wdt-ipq4019
+>             - qcom,kpss-wdt-ipq8064
+>             - qcom,kpss-wdt-msm8960
+> +          - qcom,kpss-timer
+> +          - qcom,kpss-wdt
+>             - qcom,scss-timer
+> +      - const: qcom,kpss-timer
+> +      - const: qcom,kpss-wdt
+> +      - const: qcom,scss-timer
+>
+>     reg:
+>       maxItems: 1
+>
+> Thanks,
+> Sai
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member
+> of Code Aurora Forum, hosted by The Linux Foundation
