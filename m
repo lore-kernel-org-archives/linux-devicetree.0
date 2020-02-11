@@ -2,139 +2,218 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165DFC3B187
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1EAC35242
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFBEC206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6BB920848
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581445491;
-	bh=15RkB8/lsxkdGVyrfUT3PmibNwKSs3pakIPq9O2QKGA=;
+	s=default; t=1581446399;
+	bh=8M/DAG01uY5J9fd/tBLodsJqKBMrf7Ga37UsLPhdF40=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gE+IoaM9yui0c24gxmn3CjiCrtfwq93sx43eztY6OiKhHXb1sLlbn+KrFie5Qlebr
-	 X+nPDP5KdvUG4GbvaiWsmdx0TdgKelF7okwh24XxQ2FRBYrmubyYw2AgXFzsH/jiO4
-	 74u5wvae5kkxQQ2JjtUwqVkTdZyLYDXJKfEMidSk=
+	b=BIvO8r8b1o7C6AL5Z+XDPDnJHltbsoJPA4Ng4i5/nztmx/9VetzBYtf1IRTizTVK2
+	 1mNCXFQZphtzaLzNoJKKpw8BcID4+bdgH3Yy5YGIL5oihH8r5h0aPJEQAb4uGdGI4f
+	 1ua2phoChv6I3vtNvCyKNAl4dHhalITioh3CPh2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbgBKSYr (ORCPT
+        id S1730686AbgBKSj7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:24:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53262 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 13:39:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbgBKSYr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:24:47 -0500
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        id S1728375AbgBKSj7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:39:59 -0500
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95D8F21569;
-        Tue, 11 Feb 2020 18:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4921F21D7D;
+        Tue, 11 Feb 2020 18:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581445486;
-        bh=15RkB8/lsxkdGVyrfUT3PmibNwKSs3pakIPq9O2QKGA=;
+        s=default; t=1581446398;
+        bh=8M/DAG01uY5J9fd/tBLodsJqKBMrf7Ga37UsLPhdF40=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=A8Zqm6fJP2FLzduLIBDokEhN/2d/UrH1tTPxjD5ihd4BFsmr4U+TmlhZKIyLl5OeE
-         y8tyZK1Z+LwxdaT3JO7a63fwdEV45iurNjgynCzt3Az2dG8qrc/SS5bt9W9L6m3vm8
-         E4RlmQ+12GEi7n7znDshSniOcw1AMCbrmborQU5w=
-Received: by mail-qv1-f52.google.com with SMTP id m5so5451862qvv.4;
-        Tue, 11 Feb 2020 10:24:46 -0800 (PST)
-X-Gm-Message-State: APjAAAVWVPt0aQfAjtZ+25pKee02DYuBkCsSHZvoTSb/5yltM791ECxQ
-        DVFgRweIAJZ8wRqtiX/KlHfI0kJzeI87u4hfPw==
-X-Google-Smtp-Source: APXvYqxfEK6hEL7IX2KvoJP4sjzXqu7vc6OB5e1z94Q1gXnPXU2WIumcI1fS/UN5s1vfda4olh8aSlNY95DTbeSQkqo=
-X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr4114530qvv.85.1581445485691;
- Tue, 11 Feb 2020 10:24:45 -0800 (PST)
+        b=Yfk9Aym71n7UY3UN+lE89eXVArMALR9RRSHjbU15nRwqPGHFXoA1ja8mq0zCDu7dz
+         cv2te3hN261YhwgJ10ebBHRilfffIdsTNqcNVRWvxX0TU9Hzil0PMwUjOlsYlxxhlr
+         rP+mcFu9cI0LU1orG7grfVpIZhfV8oQvpb2Jyi5w=
+Received: by mail-qt1-f179.google.com with SMTP id d18so8716950qtj.10;
+        Tue, 11 Feb 2020 10:39:58 -0800 (PST)
+X-Gm-Message-State: APjAAAURRG7PxfC6lUuzI/d3gzYvUNwOoSCQAoug+q5qn3mAWQ0Oyz7c
+        huGRVKqPOhxKhxQ6Nk4TpY9tPCSdMB5H0tJW2w==
+X-Google-Smtp-Source: APXvYqxq3NT0xWbTbROx8zhNE6oXAj1noFgXpEXEkK4QFM7vJR0BN9sVbCnbiqH/hOyqmUsIGCM+GWUAroGve6ESwsc=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr3808050qtj.300.1581446397230;
+ Tue, 11 Feb 2020 10:39:57 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
- <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
- <20200206183808.GA5019@bogus> <f26464226f74dffe2db0583b9482a489@codeaurora.org>
-In-Reply-To: <f26464226f74dffe2db0583b9482a489@codeaurora.org>
+References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
+ <1580650021-8578-2-git-send-email-hadar.gat@arm.com> <20200206185651.GA14044@bogus>
+ <AM5PR0801MB16657EDAA54655B7CBA46AF5E91E0@AM5PR0801MB1665.eurprd08.prod.outlook.com>
+In-Reply-To: <AM5PR0801MB16657EDAA54655B7CBA46AF5E91E0@AM5PR0801MB1665.eurprd08.prod.outlook.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 12:24:34 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
-Message-ID: <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] dt-bindings: watchdog: Add compatible for QCS404,
- SC7180, SDM845, SM8150
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+Date:   Tue, 11 Feb 2020 12:39:46 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+F8mW7oUBCXMgzEVb3Bz2pHxU=bFjo97QisMZN92PaQw@mail.gmail.com>
+Message-ID: <CAL_Jsq+F8mW7oUBCXMgzEVb3Bz2pHxU=bFjo97QisMZN92PaQw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add device tree binding for Arm
+ CryptoCell trng engine
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Weili Qian <qianweili@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree-owner@vger.kernel.org
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 12:10 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
+On Sun, Feb 9, 2020 at 3:34 AM Hadar Gat <Hadar.Gat@arm.com> wrote:
 >
 > Hi Rob,
+> Thanks for remarks.
+> Please see my answers.
+> Hadar
 >
-> On 2020-02-07 00:08, Rob Herring wrote:
-> > On Sat, Feb 01, 2020 at 08:59:49PM +0530, Sai Prakash Ranjan wrote:
-> >> Add missing compatible for watchdog timer on QCS404,
-> >> SC7180, SDM845 and SM8150 SoCs.
+> > On Sun, Feb 02, 2020 at 03:26:59PM +0200, Hadar Gat wrote:
+> > > The Arm CryptoCell is a hardware security engine. This patch adds DT
+> > > bindings for its TRNG (True Random Number Generator) engine.
+> > >
+> > > Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> > > ---
+> > >  .../devicetree/bindings/rng/arm-cctrng.yaml        | 51
+> > ++++++++++++++++++++++
+> > >  1 file changed, 51 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > new file mode 100644
+> > > index 0000000..fe9422e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> > > @@ -0,0 +1,51 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
 > >
-> > That's not what the commit does. You are changing what's valid.
+> > Dual license new bindings:
 > >
-> > One string was valid, now 2 are required.
+> > (GPL-2.0-only OR BSD-2-Clause)
 > >
+> Okay.
 >
-> Does this look good?
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Arm ZrustZone CryptoCell TRNG engine
+> > > +
+> > > +maintainers:
+> > > +  - Hadar Gat <hadar.gat@arm.com>
+> > > +
+> > > +description: |+
+> > > +  Arm ZrustZone CryptoCell TRNG (True Random Number Generator)
+> > engine.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    description: Should be "arm,cryptocell-7x3-trng"
+> >
+> > Drop. That's what the schema says.
+> >
+> Okay.
+>
+> > > +    const: arm,cryptocell-7x3-trng
+> >
+> > Is 'x' a wildcard? We don't do wildcards unless you have other ways to get the
+> > specific version.
+> >
+> Kind of a wildcard. It stands for either 703 or 713.
+> Should I fix this to the specific versions?
+> OR,
+> Since the specific version doesn't matter to the driver, should it changed?
 
-No. First of all, what's the base for the diff? It's not what you
-originally had nor incremental on top of this patch.
+Maybe not now, but both will always have the same errata and features?
+2 is not a large number, so just do 2.
 
-Second, a value of 'qcom,kpss-timer' or 'qcom,kpss-wdt' or
-'qcom,scss-timer' will fail validation because 2 clauses of 'oneOf'
-will be true.
+Of course, errata can vary by revision. Most Arm IP has version
+registers, so I assume that's true here. If not, we'd need per SoC
+implementation compatible strings here.
+
+> (checking out other rng drivers, I see this example in Samsung,exynos4.yaml:
+>   - samsung,exynos4-rng # for Exynos4210 and Exynos4412 )
+
+Well, there's lots of bad examples, and also, some Samsung bindings
+are declared to not be stable.
 
 >
-> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> index 46d6aad5786a..3378244b67cd 100644
-> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> @@ -14,19 +14,22 @@ allOf:
+> > > +
+> > > +  interrupts:
+> > > +    description: Interrupt number for the device.
+> >
+> > Drop. That's all 'interrupts'.
+> >
+> Okay.
 >
->   properties:
->     compatible:
-> -    items:
-> +    oneOf:
->         - enum:
->             - qcom,apss-wdt-qcs404
->             - qcom,apss-wdt-sc7180
->             - qcom,apss-wdt-sdm845
->             - qcom,apss-wdt-sm8150
-> -          - qcom,kpss-timer
-> -          - qcom,kpss-wdt
->             - qcom,kpss-wdt-apq8064
->             - qcom,kpss-wdt-ipq4019
->             - qcom,kpss-wdt-ipq8064
->             - qcom,kpss-wdt-msm8960
-> +          - qcom,kpss-timer
-> +          - qcom,kpss-wdt
->             - qcom,scss-timer
-> +      - const: qcom,kpss-timer
-> +      - const: qcom,kpss-wdt
-> +      - const: qcom,scss-timer
+> > > +    maxItems: 1
+> > > +
+> > > +  reg:
+> > > +    description: Base physical address of the engine and length of memory
+> > > +                 mapped region.
+> >
+> > Drop.
+> >
+> Okay.
 >
->     reg:
->       maxItems: 1
+> > > +    maxItems: 1
+> > > +
+> > > +  rosc-ratio:
+> > > +    description: Sampling ratio values from calibration for 4 ring oscillators.
+> > > +    maxItems: 1
+> >
+> > Is this an array?
+> >
+> Yes, array of 4. (I'll mention in the description)
+
+Don't need a description as that's constraints the schema should express.
+
+> > Needs a vendor prefix, a type ref and any constraints you can come up with.
+> >
+> Do you mean in the name? instead of "rosc-ratio"?
+
+arm,rosc-ratio:
+  allOf:
+    - $ref: /schemas/types.yaml#/definitions/uint32-array
+  maxItems: 4
+
+> I didn't find anything about it in the documentation or examples in other rng drivers..
 >
-> Thanks,
-> Sai
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member
-> of Code Aurora Forum, hosted by The Linux Foundation
+> > > +
+> > > +  clocks:
+> > > +    description: Reference to the crypto engine clock.
+> >
+> > How many clocks?
+> >
+> One clock. (I will change clocks --> clock)
+
+No, the property name is always 'clocks'. You need just 'maxItems: 1'
+if there's a single clock.
+
+Rob
