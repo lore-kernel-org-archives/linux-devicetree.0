@@ -7,298 +7,135 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A3DC35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DD0C35242
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC1220714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E72214DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581444805;
-	bh=3riax90X3cB1LTgwegasbmXkNo83BsShz5HQj87AsSg=;
+	s=default; t=1581444972;
+	bh=ZiipSWDzgeHjJz2WH9FL395eNO0cu9ekXYQl99Q8TGU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jxyyklJnZuXKy0JXbHzTgdkaGwxpLen6Jcj4DqL8xIFC59uh/AHtbhvcBchDGw8ZA
-	 ddk4qzac24epoVuF4pHHLSV1cddFqnMktmQaZsks/eza3cpznkiVNchG5P6HIopXF6
-	 8XHL3TX2COZkvMiwOmXP7Ai9D+OLxXZWqm4C+2JM=
+	b=l6W7JuAhokm5OAs2lsmiR+lS1hkFWWN3a3sbUyAVy/KWP8d6jXrkCeHJxPIIVWYr5
+	 HbCz/4lf1y0NhfJFIvb00oUxWc5TEEg664dO0qx6OUXsCuq/ekTIO/SczAcbuRoNvn
+	 QcxwGbSz5jKKbzqm4Ojz5MQBkSHArEvBR+VyZsZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgBKSNZ (ORCPT
+        id S1729373AbgBKSQG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:13:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42644 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 13:16:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727764AbgBKSNY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:13:24 -0500
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        id S1728619AbgBKSQG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:16:06 -0500
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9525D20848;
-        Tue, 11 Feb 2020 18:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7886920708;
+        Tue, 11 Feb 2020 18:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581444803;
-        bh=3riax90X3cB1LTgwegasbmXkNo83BsShz5HQj87AsSg=;
+        s=default; t=1581444965;
+        bh=ZiipSWDzgeHjJz2WH9FL395eNO0cu9ekXYQl99Q8TGU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vKBQdf7sq8abEa5O+/jfAR/LrlO09VRq0Z8A4pR8a4/sVqTwKbBjz0b+jF4mKUjJz
-         cbaIxk3EQNVW6V0EEQQtrPeEUrmfiWllfOzuhSsW7m9ur/R0BZ0zlVs25gOQg+kvxl
-         W33tqbKqHX0dSPBeI6mowsfPGrsH3gclSmBnKwmI=
-Received: by mail-qk1-f181.google.com with SMTP id z19so7970084qkj.5;
-        Tue, 11 Feb 2020 10:13:23 -0800 (PST)
-X-Gm-Message-State: APjAAAWG3QoKc+KzhcdfRy/wKBv0TJ2tG6+7dqEUajKaolfEUHHLwY+c
-        ZLROSV2rixCO2iSyFLcyMB30ZELotSYPEYho5g==
-X-Google-Smtp-Source: APXvYqwRNNy+ur96m7q6c3i3fkxvIT/TIzcSWdajVPSiLV011854FY1lIs7P3ivinO4cTTgIv5XuOleMFRvHINxetz0=
-X-Received: by 2002:a37:6042:: with SMTP id u63mr6765137qkb.119.1581444802651;
- Tue, 11 Feb 2020 10:13:22 -0800 (PST)
+        b=WYxW6t8G73ZXqPoAZrUSFtPqrtlwKARwA85m1jL6Z3ZedBgHQ3XaEFu2wG412mXbq
+         lRdAsBCdeoQ3loqvdpsBxWXv3lKkaB0pTIYA7Y0mE6asS0iRix/G4zEMBB3ACwhKIM
+         WfUEr2u4/mD+oq0aX7UbAlLPduKjQYQIC3j5M58w=
+Received: by mail-qv1-f41.google.com with SMTP id dc14so5422982qvb.9;
+        Tue, 11 Feb 2020 10:16:05 -0800 (PST)
+X-Gm-Message-State: APjAAAUxvG7mM9VtV4oWSiXmMgDHXg8mGn8zgl9U+e0yObSYvQswFwwY
+        CKnAlkPm7KEJlhuE0ucRdpada54KCqIahwzDjQ==
+X-Google-Smtp-Source: APXvYqz7/HTjD/gmg7y3b1mBaiiVOST5LC3rVQ1S5d9nr8xvkVknjzihFw+CABsBG25SKvfgK9kM5f/8APejN+nuOaU=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr3796364qvu.136.1581444964504;
+ Tue, 11 Feb 2020 10:16:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200130135040.22575-1-olivier.moysan@st.com> <20200206182125.GA23274@bogus>
- <843b9213-99c0-ec9f-bde6-4745a9cb6221@st.com>
-In-Reply-To: <843b9213-99c0-ec9f-bde6-4745a9cb6221@st.com>
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-2-git-send-email-spujar@nvidia.com> <20200206181045.GA31521@bogus>
+ <af58b6b2-25b2-e968-73c9-d87e1a9e2746@nvidia.com>
+In-Reply-To: <af58b6b2-25b2-e968-73c9-d87e1a9e2746@nvidia.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 12:13:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJECUKkvZ1rt=4p5sMku3id973drEqLDvMZp8Fr+wx9tA@mail.gmail.com>
-Message-ID: <CAL_JsqJECUKkvZ1rt=4p5sMku3id973drEqLDvMZp8Fr+wx9tA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: dt-bindings: stm32: convert sai to json-schema
-To:     Olivier MOYSAN <olivier.moysan@st.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 11 Feb 2020 12:15:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKCzR5DXm_ip-mrrPyeAUcZJRWi_cQEhPd7agp9T_uumA@mail.gmail.com>
+Message-ID: <CAL_JsqKCzR5DXm_ip-mrrPyeAUcZJRWi_cQEhPd7agp9T_uumA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: sound: tegra: add DT binding for AHUB
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
+        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 7:42 AM Olivier MOYSAN <olivier.moysan@st.com> wrote:
+On Mon, Feb 10, 2020 at 5:31 AM Sameer Pujar <spujar@nvidia.com> wrote:
 >
-> Hi Rob,
 >
-> On 2/6/20 7:21 PM, Rob Herring wrote:
-> > On Thu, Jan 30, 2020 at 02:50:40PM +0100, Olivier Moysan wrote:
-> >> Convert the STM32 SAI bindings to DT schema format using json-schema.
+>
+> On 2/6/2020 11:40 PM, Rob Herring wrote:
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > On Thu, Jan 30, 2020 at 04:03:34PM +0530, Sameer Pujar wrote:
+> >> Audio Hub (AHUB) comprises a collection of hardware accelerators for audio
+> >> pre-processing and post-processing and a programmable full crossbar for
+> >> audio routing across these accelerators. This patch adds YAML schema for DT
+> >> binding of AHUB and few of its following components. These devices will be
+> >> registered as ASoC components.
+> >>   * ADMAIF
+> >>   * I2S
+> >>   * DMIC
+> >>   * DSPK
 > >>
-> >> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> >> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
 > >> ---
-> >>   .../bindings/sound/st,stm32-sai.txt           | 107 ----------
-> >>   .../bindings/sound/st,stm32-sai.yaml          | 193 ++++++++++++++++++
-> >>   2 files changed, 193 insertions(+), 107 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
-> >
-> >> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+> >>   .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++++++++++++
+> >>   .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 +++++++++++++++++++++
+> >>   .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 ++++++++++++++++
+> >>   .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++++++++++++
+> >>   .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 ++++++++++++++
+> >>   5 files changed, 617 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
+> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
+> >>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
 > >> new file mode 100644
-> >> index 000000000000..33dca007fc86
+> >> index 0000000..dc9fef3
 > >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
-> >> @@ -0,0 +1,193 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/sound/st,stm32-sai.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: STMicroelectronics STM32 Serial Audio Interface (SAI)
-> >> +
-> >> +maintainers:
-> >> +  - Olivier Moysan <olivier.moysan@st.com>
-> >> +
-> >> +description:
-> >> +  The SAI interface (Serial Audio Interface) offers a wide set of audio
-> >> +  protocols as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
-> >> +  The SAI contains two independent audio sub-blocks. Each sub-block has
-> >> +  its own clock generator and I/O lines controller.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - st,stm32f4-sai
-> >> +      - st,stm32h7-sai
-> >> +
-> >> +  reg:
+> >> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+> >> @@ -0,0 +1,105 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0)
+> . . .
 > >> +    items:
-> >> +      - description: Base address and size of SAI common register set.
-> >> +      - description: Base address and size of SAI identification register set.
-> >> +    minItems: 1
-> >> +    maxItems: 2
+> >> +      - description: initial module clock rate
 > >> +
-> >> +  ranges:
-> >> +    maxItems: 1
-> >> +
-> >> +  interrupts:
-> >> +    maxItems: 1
-> >> +
-> >> +  resets:
-> >> +    maxItems: 1
-> >> +
-> >> +  "#address-cells":
+> >> +  "#sound-dai-cells":
 > >> +    const: 1
 > >> +
-> >> +  "#size-cells":
-> >> +    const: 1
-> >> +
-> >> +  clocks:
-> >> +    items:
-> >> +      - description: pclk feeds the peripheral bus interface.
-> >> +      - description: x8k, SAI parent clock for sampling rates multiple of 8kHz.
-> >> +      - description: x11k, SAI parent clock for sampling rates multiple of 11.025kHz.
-> >> +
-> >> +  clock-names:
-> >> +    items:
-> >> +      enum: [ pclk, x8k, x11k ]
-> >> +    minItems: 3
-> >> +    maxItems: 3
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - ranges
-> >> +  - "#address-cells"
-> >> +  - "#size-cells"
-> >> +  - clocks
-> >> +  - clock-names
-> >> +
-> >> +patternProperties:
-> >> +  "^audio-controller@[0-9a-f]+$":
-> >> +    type: object
+> >> +  sound-name-prefix:
+> >> +    $ref: /schemas/types.yaml#/definitions/string
 > >> +    description:
-> >> +      Two subnodes corresponding to SAI sub-block instances A et B
-> >> +      can be defined. Subnode can be omitted for unsused sub-block.
-> >> +
-> >> +    properties:
-> >> +      compatible:
-> >> +        description: Compatible for SAI sub-block A or B.
-> >> +        enum:
-> >> +          - st,stm32-sai-sub-a
-> >> +          - st,stm32-sai-sub-b
-> > pattern: 'st,stm32-sai-sub-[ab]'
-> I will change this in v2
-> >> +
-> >> +      "#sound-dai-cells":
-> >> +        const: 0
-> >> +
-> >> +      reg:
-> >> +        maxItems: 1
-> >> +
-> >> +      clocks:
-> >> +        items:
-> >> +          - description: sai_ck clock feeding the internal clock generator.
-> >> +          - description: MCLK clock from a SAI set as master clock provider.
-> >> +        minItems: 1
-> >> +        maxItems: 2
-> >> +
-> >> +      clock-names:
-> >> +        items:
-> >> +          - const: sai_ck
-> >> +          - const: MCLK
-> >> +        minItems: 1
-> >> +        maxItems: 2
-> >> +
-> >> +      dmas:
-> >> +        items:
-> >> +          - description: SAI sub-block is configured as a capture DAI.
-> >> +          - description: SAI sub-block is configured as a playback DAI.
-> >> +        minItems: 1
-> >> +        maxItems: 1
-> > This is defining that dmas has 2 entries, but then limits it to the 1st
-> > entry only.
-> dma can be either "rx" or "tx", but not both.
-> Maybe, the following syntax is more appropriate:
+> >> +      Used as prefix for sink/source names of the component. Must be a
+> >> +      unique string among multiple instances of the same component.
+> >> +      The name can be "DSPK1" or "DSPKx", where x depends on the maximum
+> > Sounds like a constraint.
 >
->        dmas:
->          maxItems: 1
->
->        dma-names:
->          description: |
->            rx: SAI sub-block is configured as a capture DAI.
->            tx: SAI sub-block is configured as a playback DAI.
->          items:
->            - enum: [ rx, tx ]
+> Is there a better way to convey the recommended strings above?
 
-Yes, but for a single entry you can drop 'items'.
+pattern: '^DSPK[1-9]$'
 
->
-> >> +
-> >> +      dma-names:
-> >> +        items:
-> >> +          - enum: [ rx, tx ]
-> >> +
-> >> +      st,sync:
-> >> +        description:
-> >> +          Configure the SAI sub-block as slave of another SAI sub-block.
-> >> +          By default SAI sub-block is in asynchronous mode.
-> >> +          Must contain the phandle and index of the SAI sub-block providing
-> >> +          the synchronization.
-> >> +        allOf:
-> >> +          - $ref: /schemas/types.yaml#definitions/phandle-array
-> >> +          - maxItems: 1
-> >> +
-> >> +      st,iec60958:
-> >> +        description:
-> >> +          If set, support S/PDIF IEC6958 protocol for playback.
-> >> +          IEC60958 protocol is not available for capture.
-> >> +          By default, custom protocol is assumed, meaning that protocol is
-> >> +          configured according to protocol defined in related DAI link node,
-> >> +          such as i2s, left justified, right justified, dsp and pdm protocols.
-> >> +        allOf:
-> >> +          - $ref: /schemas/types.yaml#definitions/flag
-> >> +
-> >> +      "#clock-cells":
-> >> +        description: Configure the SAI device as master clock provider.
-> >> +        const: 0
-> >> +
-> >> +    required:
-> >> +      - compatible
-> >> +      - "#sound-dai-cells"
-> >> +      - reg
-> >> +      - clocks
-> >> +      - clock-names
-> >> +      - dmas
-> >> +      - dma-names
-> >         additionalProperties: false.
-> >
-> >> +
-> >> +allOf:
-> >> +  - if:
-> >> +      properties:
-> >> +        compatible:
-> >> +          contains:
-> >> +            const: st,stm32f4-sai
-> >> +
-> >> +  - then:
-> >> +      properties:
-> >> +        clocks:
-> >> +          minItems: 2
-> >> +          maxItems: 2
-> >> +
-> >> +        clock-names:
-> >> +          items:
-> >> +            enum: [ x8k, x11k ]
-> > Define the order.
-> >
-> Do you mean, adding in clocks property  :
->            items:
->              - description: x8k, SAI parent clock for sampling rates
-> multiple of 8kHz.
->              - description: x11k, SAI parent clock for sampling rates
-> multiple of 11.025kHz.
+Adjusting the number range regex as you need.
 
-That too, but for clocks you need:
-
-clock-names:
-  items:
-    - const: x8k
-    - const: x11k
-
-> But, it seems to me that this is redundant with previous definition of
-> clocks property.
-
-It's not because it's clocks in different positions.
+(And $ref will need to be under an 'allOf')
 
 Rob
