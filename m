@@ -2,158 +2,373 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80553C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 14:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B76C3B187
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5733C20675
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 14:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A8B2086A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ICHeqN1h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vezmg+e2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgBKOxt (ORCPT
+        id S1728135AbgBKPNo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:53:49 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:50696 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbgBKOxt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 09:53:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581432827; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=V41n7jOHB7QPynsif3J/pnhegI5IrC8I/pI86s+EjUs=;
-        b=ICHeqN1houPtwMeLwhsY2oyaC4llFZddxcnJ6etRDyLXujpFzFQLexpMGzPChWE8eqMi2c
-        PvaVg5Ubu1hY3AHsQpzWbb7AL0U0lsgVRdkBinmVGk7n5W92p2V8/0BWv+loFheEiSSvjW
-        B2Aal3PHKFWeN/TuTX/JxDOT5Jvj5kc=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        stable@vger.kernel.org
-Subject: [PATCH] MIPS: ingenic: DTS: Fix watchdog nodes
-Date:   Tue, 11 Feb 2020 11:53:37 -0300
-Message-Id: <20200211145337.16311-1-paul@crapouillou.net>
+        Tue, 11 Feb 2020 10:13:44 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38256 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728537AbgBKPNo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 10:13:44 -0500
+Received: by mail-ua1-f67.google.com with SMTP id c7so4071924uaf.5
+        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 07:13:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GUARnD6k50jzUsw10kMIXjV4VmujixpGyNZoQ1+vFIw=;
+        b=vezmg+e2zVcCqvOz1QNUIhR6b4psUJ7GBjXUl/w5u3TKKW5m2at+Dkenjv6Z4DUTFI
+         Tk0wTGDgR75xfdMkdy0hvZZojCjOVrXPeyjV/zwyKx+3mGrbq9y2tRX9+HwnygydMFO/
+         95NDXx1CjgmBO9SLKD/eIx0AzfTj81rp4frsf+iGJYx3sH5Y/yJXRL7UxmdiFGMEddYx
+         S4EhjTxhAEKrLig/K5wUNsDw902thoBRCv9xdoV7euC7E/BlQrPQn6BpDHxeHNf8YAJE
+         EZ3gSfrwgeri4HLwd9vjx75vhLrxHqm/bJ0m5JfdhE0FMIHxPc2Qdd1eAVbTja/NN4dX
+         wONA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GUARnD6k50jzUsw10kMIXjV4VmujixpGyNZoQ1+vFIw=;
+        b=Yl/7SLrxatUGobesBdyBqh1HEMsm01m3q+BzdIZWT9vj06B+crmW/A0Iw82J9l1hTF
+         U0OqsBmFC+tchC+jT2Ep0JrPcO33U6CccfQhJ8Op6OEProkAsBMDBP8xVSs7FG1BQxYa
+         VP7eOzy0/7kxGAO5LJ9PHtZaY5eHGDOOogOYuH1QHkJXz/HEFCwL4+Ny/+NMst5tRnIb
+         3ONiAyptFlJ/0W8veP1i4P3ocZlojwWI6lbq6VVnZ68gzFTK66+e/nwmJBBhzZWwivLW
+         LJ5FrAqZN+0za6dzIxmFquLLRlbbZxVY79YfoNGpJqP9nn7xJMO0e+y2Lp0PD+FMU6DS
+         geNQ==
+X-Gm-Message-State: APjAAAXj1bcgBQRPgZWGC3wPZgr+HJsrOU6feBumLvYBuiUn7oS0BN+9
+        1Xj0Zjzrk8hG5eDojkfyiyKxki0oYLwG5YAG2Ut0pQ==
+X-Google-Smtp-Source: APXvYqzE310oyVlFxDykq0yJMv5V52vUJ/aZlRdz88ytg55ClBK5PqlR6olX6sPJIZQLvU4FVZaHf/beaLIbPl6zeIY=
+X-Received: by 2002:ab0:e16:: with SMTP id g22mr1849367uak.129.1581434022257;
+ Tue, 11 Feb 2020 07:13:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1578495250-10672-1-git-send-email-sbhanu@codeaurora.org> <25a96f3f-c4cd-4ff1-3ce6-d894fb1c20fe@codeaurora.org>
+In-Reply-To: <25a96f3f-c4cd-4ff1-3ce6-d894fb1c20fe@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 11 Feb 2020 16:13:05 +0100
+Message-ID: <CAPDyKFqxDWhPAxo56D1LCCCxNTgwfCmjLd=6_5jNiDGJx==EYg@mail.gmail.com>
+Subject: Re: [PATCH V3] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD card
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The devicetree ABI was broken on purpose by commit 6d532143c915
-("watchdog: jz4740: Use regmap provided by TCU driver"), and
-commit 1d9c30745455 ("watchdog: jz4740: Use WDT clock provided
-by TCU driver"). The commit message of the latter explains why the ABI
-was broken.
+On Tue, 11 Feb 2020 at 15:30, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> ping!
+>
 
-However, the current devicetree files were not updated to the new ABI
-described in Documentation/devicetree/bindings/timer/ingenic,tcu.txt,
-so the watchdog driver would not probe.
+I think you need to ping the SoC maintainers, this isn't something
+that I normally pick up via the mmc subsystem.
 
-Fix this problem by updating the watchdog nodes to comply with the new
-ABI.
+Kind regards
+Uffe
 
-Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU
-driver")
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Cc: stable@vger.kernel.org
----
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 17 +++++++++--------
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 +++++++++--------
- 2 files changed, 18 insertions(+), 16 deletions(-)
-
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 5accda2767be..a3301bab9231 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4740-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -45,14 +46,6 @@ cgu: jz4740-cgu@10000000 {
- 		#clock-cells = <1>;
- 	};
- 
--	watchdog: watchdog@10002000 {
--		compatible = "ingenic,jz4740-watchdog";
--		reg = <0x10002000 0x10>;
--
--		clocks = <&cgu JZ4740_CLK_RTC>;
--		clock-names = "rtc";
--	};
--
- 	tcu: timer@10002000 {
- 		compatible = "ingenic,jz4740-tcu", "simple-mfd";
- 		reg = <0x10002000 0x1000>;
-@@ -73,6 +66,14 @@ &cgu JZ4740_CLK_PCLK
- 
- 		interrupt-parent = <&intc>;
- 		interrupts = <23 22 21>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4740-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
- 	};
- 
- 	rtc_dev: rtc@10003000 {
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329b034b..bb89653d16a3 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4780-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/dma/jz4780-dma.h>
- 
- / {
-@@ -67,6 +68,14 @@ &cgu JZ4780_CLK_EXCLK
- 
- 		interrupt-parent = <&intc>;
- 		interrupts = <27 26 25>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4780-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
- 	};
- 
- 	rtc_dev: rtc@10003000 {
-@@ -348,14 +357,6 @@ i2c4: i2c@10054000 {
- 		status = "disabled";
- 	};
- 
--	watchdog: watchdog@10002000 {
--		compatible = "ingenic,jz4780-watchdog";
--		reg = <0x10002000 0x10>;
--
--		clocks = <&cgu JZ4780_CLK_RTCLK>;
--		clock-names = "rtc";
--	};
--
- 	nemc: nemc@13410000 {
- 		compatible = "ingenic,jz4780-nemc";
- 		reg = <0x13410000 0x10000>;
--- 
-2.25.0
-
+> On 1/8/2020 8:24 PM, Shaik Sajida Bhanu wrote:
+> > From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> >
+> > Add sdhc instances for supporting eMMC and SD-card on sc7180.
+> > The regulators should be in HPM state for proper functionality of
+> > eMMC and SD-card. Updating corresponding regulators accordingly.
+> >
+> > Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+> > ---
+> > Changes since V2:
+> >       - Added cmdq register space and support-cqe flag.
+> >       - Incorporated review comments by Matthias Kaehlcke.
+> >
+> > Changes since V1:
+> >       - Updated the regulator min, max voltages as per
+> >         eMMC/SD-card voltage requirements
+> >       - Enabled IOMMU for eMMC and SD-card.
+> >       - Added pull and drive strength to SD-card cd-gpio.
+> >       - Incorporated review comments by Matthias Kaehlcke.
+> > ---
+> >   arch/arm64/boot/dts/qcom/sc7180-idp.dts |  47 +++++++---
+> >   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 148 ++++++++++++++++++++++++++++++++
+> >   2 files changed, 183 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 388f50a..a790d82 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -7,6 +7,7 @@
+> >
+> >   /dts-v1/;
+> >
+> > +#include <dt-bindings/gpio/gpio.h>
+> >   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> >   #include "sc7180.dtsi"
+> >   #include "pm6150.dtsi"
+> > @@ -101,9 +102,9 @@
+> >               };
+> >
+> >               vreg_l12a_1p8: ldo12 {
+> > -                     regulator-min-microvolt = <1696000>;
+> > -                     regulator-max-microvolt = <1952000>;
+> > -                     regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> > +                     regulator-min-microvolt = <1800000>;
+> > +                     regulator-max-microvolt = <1800000>;
+> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> >               };
+> >
+> >               vreg_l13a_1p8: ldo13 {
+> > @@ -143,9 +144,9 @@
+> >               };
+> >
+> >               vreg_l19a_2p9: ldo19 {
+> > -                     regulator-min-microvolt = <2696000>;
+> > -                     regulator-max-microvolt = <3304000>;
+> > -                     regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> > +                     regulator-min-microvolt = <2960000>;
+> > +                     regulator-max-microvolt = <2960000>;
+> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> >               };
+> >       };
+> >
+> > @@ -189,9 +190,9 @@
+> >               };
+> >
+> >               vreg_l6c_2p9: ldo6 {
+> > -                     regulator-min-microvolt = <2696000>;
+> > -                     regulator-max-microvolt = <3304000>;
+> > -                     regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> > +                     regulator-min-microvolt = <1800000>;
+> > +                     regulator-max-microvolt = <2950000>;
+> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> >               };
+> >
+> >               vreg_l7c_3p0: ldo7 {
+> > @@ -207,9 +208,9 @@
+> >               };
+> >
+> >               vreg_l9c_2p9: ldo9 {
+> > -                     regulator-min-microvolt = <2952000>;
+> > -                     regulator-max-microvolt = <3304000>;
+> > -                     regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> > +                     regulator-min-microvolt = <2960000>;
+> > +                     regulator-max-microvolt = <2960000>;
+> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> >               };
+> >
+> >               vreg_l10c_3p3: ldo10 {
+> > @@ -254,6 +255,28 @@
+> >       status = "okay";
+> >   };
+> >
+> > +&sdhc_1 {
+> > +     status = "okay";
+> > +
+> > +     pinctrl-names = "default", "sleep";
+> > +     pinctrl-0 = <&sdc1_on>;
+> > +     pinctrl-1 = <&sdc1_off>;
+> > +     vmmc-supply = <&vreg_l19a_2p9>;
+> > +     vqmmc-supply = <&vreg_l12a_1p8>;
+> > +};
+> > +
+> > +&sdhc_2 {
+> > +     status = "okay";
+> > +
+> > +     pinctrl-names = "default","sleep";
+> > +     pinctrl-0 = <&sdc2_on>;
+> > +     pinctrl-1 = <&sdc2_off>;
+> > +     vmmc-supply  = <&vreg_l9c_2p9>;
+> > +     vqmmc-supply = <&vreg_l6c_2p9>;
+> > +
+> > +     cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
+> > +};
+> > +
+> >   &uart3 {
+> >       status = "okay";
+> >   };
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 3676bfd..525bc02 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -226,6 +226,33 @@
+> >                       };
+> >               };
+> >
+> > +             sdhc_1: sdhci@7c4000 {
+> > +                     compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> > +                     reg = <0 0x7c4000 0 0x1000>,
+> > +                             <0 0x07c5000 0 0x1000>;
+> > +                     reg-names = "hc_mem", "cqhci_mem";
+> > +
+> > +                     iommus = <&apps_smmu 0x60 0x0>;
+> > +                     interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                     <GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     interrupt-names = "hc_irq", "pwr_irq";
+> > +
+> > +                     clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+> > +                                     <&gcc GCC_SDCC1_AHB_CLK>;
+> > +                     clock-names = "core", "iface";
+> > +
+> > +                     bus-width = <8>;
+> > +                     non-removable;
+> > +                     supports-cqe;
+> > +
+> > +                     mmc-ddr-1_8v;
+> > +                     mmc-hs200-1_8v;
+> > +                     mmc-hs400-1_8v;
+> > +                     mmc-hs400-enhanced-strobe;
+> > +
+> > +                     status = "disabled";
+> > +             };
+> > +
+> >               qupv3_id_0: geniqup@8c0000 {
+> >                       compatible = "qcom,geni-se-qup";
+> >                       reg = <0 0x008c0000 0 0x6000>;
+> > @@ -929,6 +956,127 @@
+> >                                       function = "qup15";
+> >                               };
+> >                       };
+> > +
+> > +                     sdc1_on: sdc1-on {
+> > +                             pinconf-clk {
+> > +                                     pins = "sdc1_clk";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <16>;
+> > +                             };
+> > +
+> > +                             pinconf-cmd {
+> > +                                     pins = "sdc1_cmd";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <10>;
+> > +                             };
+> > +
+> > +                             pinconf-data {
+> > +                                     pins = "sdc1_data";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <10>;
+> > +                             };
+> > +
+> > +                             pinconf-rclk {
+> > +                                     pins = "sdc1_rclk";
+> > +                                     bias-pull-down;
+> > +                             };
+> > +                     };
+> > +
+> > +                     sdc1_off: sdc1-off {
+> > +                             pinconf-clk {
+> > +                                     pins = "sdc1_clk";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-cmd {
+> > +                                     pins = "sdc1_cmd";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-data {
+> > +                                     pins = "sdc1_data";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-rclk {
+> > +                                     pins = "sdc1_rclk";
+> > +                                     bias-pull-down;
+> > +                             };
+> > +                     };
+> > +
+> > +                     sdc2_on: sdc2-on {
+> > +                             pinconf-clk {
+> > +                                     pins = "sdc2_clk";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <16>;
+> > +                             };
+> > +
+> > +                             pinconf-cmd {
+> > +                                     pins = "sdc2_cmd";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <10>;
+> > +                             };
+> > +
+> > +                             pinconf-data {
+> > +                                     pins = "sdc2_data";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <10>;
+> > +                             };
+> > +
+> > +                             pinconf-sd-cd {
+> > +                                     pins = "gpio69";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +                     };
+> > +
+> > +                     sdc2_off: sdc2-off {
+> > +                             pinconf-clk {
+> > +                                     pins = "sdc2_clk";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-cmd {
+> > +                                     pins = "sdc2_cmd";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-data {
+> > +                                     pins = "sdc2_data";
+> > +                                     bias-pull-up;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +
+> > +                             pinconf-sd-cd {
+> > +                                     pins = "gpio69";
+> > +                                     bias-disable;
+> > +                                     drive-strength = <2>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             sdhc_2: sdhci@8804000 {
+> > +                     compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> > +                     reg = <0 0x08804000 0 0x1000>;
+> > +                     reg-names = "hc_mem";
+> > +
+> > +                     iommus = <&apps_smmu 0x80 0>;
+> > +                     interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                     <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     interrupt-names = "hc_irq", "pwr_irq";
+> > +
+> > +                     clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+> > +                                     <&gcc GCC_SDCC2_AHB_CLK>;
+> > +                     clock-names = "core", "iface";
+> > +
+> > +                     bus-width = <4>;
+> > +
+> > +                     status = "disabled";
+> >               };
+> >
+> >               qspi: spi@88dc000 {
