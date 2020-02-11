@@ -2,117 +2,104 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF31C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7507BC352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758E020848
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53101206D6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:42:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RH32kiQs"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WOnWH855"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbgBKRd0 (ORCPT
+        id S1729755AbgBKRmk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:33:26 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43250 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729132AbgBKRd0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 12:33:26 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s1so5800961pfh.10
-        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 09:33:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lH4EbrzVbu3CvaS8sns78JlEG0bpnC0mv7bE+liJ2nA=;
-        b=RH32kiQsCKo1Gs+FkFdDvj1Kq3PKeLTjbRXjVS542Tg6Gb8IzEOXCl8KrAydPkosHL
-         SYGwlAdLYd5do6FGm6AtvSvYjLsBhTB3Zd2J02IAI1lWNxUZQ/5+ah4appWH9FO9tCfN
-         4dmS1PhdaopzWfZZudmSODT/lwSAYlGW8ZyJE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lH4EbrzVbu3CvaS8sns78JlEG0bpnC0mv7bE+liJ2nA=;
-        b=ncUeSu7vvhCuosgG7uP258KGxWV2hPH221ioYu7s4+VGCibGJTFFmycZ6AThtxmKhg
-         Tw13m192gad6eVQNx1AJnFBj8g06iHfC7Xp2BDddvdniD03v5uIioAxqSWKUiTrtZGmb
-         g1xowPxKak087tDtexQ2TqWowjoOs/w269s0hQFZLmnkwDXG9wad3K0we+xMdfD2SW/c
-         Fv48H613UzK9qA0/OaegijvFHPTACN3cANTp5U8S4aiRVsWGh/g//itv6bo3My+xJKSY
-         6iSvYwf8L/tIkYg2ANGg5xfp9USF6AcXwAQYThDDJGkRcsjV0NgDMsXGogkSBZKWJFOf
-         MyWA==
-X-Gm-Message-State: APjAAAVJiwrsDaibZ/cTh8NYV5Hf8PEA/eWzRyAPv4jCxiSiBY3rPfLk
-        oE4iWIRjQBD950FtGTJslTdLsQ==
-X-Google-Smtp-Source: APXvYqxk99B0t8EHkrjFPb34havVNfFdZ7CHuqxMGO1VQir/2llQ9LuL+WBmfTO4aiFx3jXiqWC3cg==
-X-Received: by 2002:a63:6c82:: with SMTP id h124mr7923471pgc.328.1581442405558;
-        Tue, 11 Feb 2020 09:33:25 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id c26sm5104896pfj.8.2020.02.11.09.33.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2020 09:33:25 -0800 (PST)
-Date:   Tue, 11 Feb 2020 09:33:23 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, hemantg@codeaurora.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, gubbaven@codeaurora.org
-Subject: Re: [PATCH v1] arm64: dts: qcom: sc7180: Add node for bluetooth soc
- wcn3990
-Message-ID: <20200211173323.GE18972@google.com>
-References: <20200211121612.29075-1-bgodavar@codeaurora.org>
+        Tue, 11 Feb 2020 12:42:40 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34294 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728797AbgBKRmk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 12:42:40 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BHgTGV007804;
+        Tue, 11 Feb 2020 18:42:30 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=RDDGxzn9ujSpMGf3xyClXU8q9LiJT2dp9a7bhWHwHaE=;
+ b=WOnWH8557Fafslre+IfU0FrL6wbdVb1sKjSWV37mfbkF9SY2IINGpl5FcdrcLcGNyzHN
+ SIaQe+OlGU6/SC96BtMmz75WZVCqG58cuFcNrnCh8CSwAh4ae8UrEzeR4+4oveGp80V4
+ SaMQK2g5sEi/1ShRtcwsBjPpas5AzmR9QwPe8alPjQfyztB+2rtPQJnkT76u2yIKoTk2
+ /61HchnUFmPsTW9e42jsk+Oq9mKWhUFuRCgvM557mzvjkR9WK57WdHQFxpsyqjTjLhHN
+ Dq8I+ZyUOcredGxtC0NkWFQbQvbvLF00qFSbohBBK646ZwRB7n8olJjDeBeEejmapCip Dg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1ufh7phr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Feb 2020 18:42:30 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D1AAB10005C;
+        Tue, 11 Feb 2020 18:42:22 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B6E1E2C8E8C;
+        Tue, 11 Feb 2020 18:42:22 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Feb 2020 18:42:22
+ +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        <arnaud.pouliquen@st.com>, Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v5 0/3] add support for co-processor loaded and booted before kernel
+Date:   Tue, 11 Feb 2020 18:42:02 +0100
+Message-ID: <20200211174205.22247-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200211121612.29075-1-bgodavar@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-11_05:2020-02-10,2020-02-11 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 05:46:12PM +0530, Balakrishna Godavarthi wrote:
+This series introduce the support of a preloaded firmware. In this case
+the load of the firmware is skipped. It is platform driver responsibility
+to implement the right firmware load ops according to HW specificities.
 
-> subject: arm64: dts: qcom: sc7180: Add node for bluetooth soc wcn3990
+V4[1] to V5 update:
+  - add stm32 platform implementation  
 
-Preferably say in the subjct that the node is added for the IDP board.
+[1]. https://patchwork.kernel.org/patch/11265869/
 
-> Add node for bluetooth soc wcn3990.
-> 
-> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 388f50ad4fde..19f82ddc1f09 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -19,6 +19,7 @@
->  	aliases {
->  		hsuart0 = &uart3;
->  		serial0 = &uart8;
-> +		bluetooth0 = &bluetooth;
->  	};
->  
->  	chosen {
-> @@ -256,6 +257,16 @@
->  
->  &uart3 {
->  	status = "okay";
+Arnaud Pouliquen (1):
+  dt-bindings: remoteproc: stm32: add syscon bindings preloaded fw
+    support
 
-nit: add a blank line
+Fabien Dessenne (1):
+  remoteproc: stm32: add support for co-processor booted before kernel
 
-> +	bluetooth: wcn3990-bt {
-> +		compatible = "qcom,wcn3990-bt";
-> +		vddio-supply = <&vreg_l10a_1p8>;
-> +		vddxo-supply = <&vreg_l1c_1p8>;
-> +		vddrf-supply = <&vreg_l2c_1p3>;
-> +		vddch0-supply = <&vreg_l10c_3p3>;
-> +		max-speed = <3200000>;
-> +		clocks = <&rpmhcc RPMH_RF_CLK2>;
-> +		status = "okay";
+Loic Pallardy (1):
+  remoteproc: add support for co-processor loaded and booted before
+    kernel
 
-status is not needed here AFAIK.
+ .../bindings/remoteproc/st,stm32-rproc.yaml   |  21 ++
+ drivers/remoteproc/remoteproc_core.c          |  67 ++++--
+ drivers/remoteproc/stm32_rproc.c              | 205 ++++++++++++++++--
+ include/linux/remoteproc.h                    |   2 +
+ 4 files changed, 267 insertions(+), 28 deletions(-)
+
+-- 
+2.17.1
+
