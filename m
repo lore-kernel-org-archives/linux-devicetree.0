@@ -2,47 +2,49 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AB0C35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AB5C3B187
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06EE206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 21:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19990206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="T7u/i1e3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="IQytAEHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgBKVly (ORCPT
+        id S1727414AbgBKVtV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:41:54 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:10098 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgBKVly (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 16:41:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457309;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=v3anE5b2foHTOj2GJ8iyGcibKBz905Yhze/9YVRQ/TQ=;
-        b=T7u/i1e3RmfgbspBSEr7DxIzL7WVAgF3PK3cr45pNCDLR/23YnmLoZ9ROXwnwLeju2
-        m9vsIr9VrBkUUA8pD7pWA0LIY4/vBX4TAV4c15hhdK09QY0rAPJxnjBAwDyMdC8O1HIk
-        g2JNinDEhm5nO1/klr8qxKr74GoSdUy1KcIA8OeHMFPm5PODfOGzSgQ9KcCVMRrkQEZl
-        iRW/W67nTFUIzqVrirgz758Pefbi/+K0oBwtZSDJKZ/YBgEbPaUuIenUg5nukXC/6eAQ
-        S+JgLDJqu/cQNK2ZtmD+r9GFQqgOIZ9u8cMhs1ASfOjZeyFYh1bFZVp+W5YIFhcMm2vQ
-        xyDg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1BLfZ0EJ
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 11 Feb 2020 22:41:35 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
+        Tue, 11 Feb 2020 16:49:21 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:45244 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727043AbgBKVtU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 16:49:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1jBWyPqMrzGV+HgABFq6zy5XXPza8yinORW6h9VLx9o=; b=IQytAEHkFWeDt0l+Eixp3Mc8E
+        FD8nT06U5+KhlqrSIhE5LA7e2YNmJ+8PuNxuytAwQexxw32EIjZIQeX4Ajc37jkTTKhmhOKkXNol5
+        Kr3ts38EX4B811dW5iJwdpYrDiCshDcrUG0nX4/F+SXNiNgjrGAWhMQ2xIDP3wTle0KRM=;
+Received: from p200300ccff0bd500e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0b:d500:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j1dOj-0004Pf-Fl; Tue, 11 Feb 2020 22:48:49 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j1dOi-0003ve-P9; Tue, 11 Feb 2020 22:48:48 +0100
+Date:   Tue, 11 Feb 2020 22:48:40 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
         Alex Smith <alex.smith@imgtec.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -54,104 +56,72 @@ To:     Paul Cercueil <paul@crapouillou.net>,
         Daniel Vetter <daniel@ffwll.ch>,
         "David S. Miller" <davem@davemloft.net>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
         Andi Kleen <ak@linux.intel.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Petr =?UTF-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
         Richard Fontana <rfontana@redhat.com>,
         Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-mips@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
         kernel@pyra-handheld.com
-Subject: [PATCH 03/14] net: davicom: dm9000: allow to pass MAC address through mac_addr module parameter
-Date:   Tue, 11 Feb 2020 22:41:20 +0100
-Message-Id: <4e11dd4183da55012198824ca7b8933b1eb57e4a.1581457290.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1581457290.git.hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH 07/14] MIPS: DTS: CI20: fix PMU
+ definitions for ACT8600
+Message-ID: <20200211224840.40bf549d@kemnade.info>
+In-Reply-To: <aa9725056a1d2bfb490a1c912f34302de0e27fad.1581457290.git.hns@goldelico.com>
 References: <cover.1581457290.git.hns@goldelico.com>
+        <aa9725056a1d2bfb490a1c912f34302de0e27fad.1581457290.git.hns@goldelico.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/tv7EBQvO_xk_m_DPrEdmChx"; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is needed to give the MIPS Ingenic CI20 board a stable MAC address
-which can be optionally provided by vendor U-Boot.
+--Sig_/tv7EBQvO_xk_m_DPrEdmChx
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For get_mac_addr() we use an adapted copy of from ksz884x.c which
-has very similar functionality.
+On Tue, 11 Feb 2020 22:41:24 +0100
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/net/ethernet/davicom/dm9000.c | 42 +++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+> There is a ACT8600 on the CI20 board and the bindings of the
+> ACT8865 driver have changed without updating the CI20 device
+> tree. Therefore the PMU can not be probed successfully and
+> is running in power-on reset state.
+>=20
+> Fix DT to match the latest act8865-regulator bindings.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+hmm, what about a Fixes: tag here? Sounds like a regression.
 
-diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
-index 1ea3372775e6..7402030b0352 100644
---- a/drivers/net/ethernet/davicom/dm9000.c
-+++ b/drivers/net/ethernet/davicom/dm9000.c
-@@ -1409,6 +1409,43 @@ static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
- 	return pdata;
- }
- 
-+static char *mac_addr = ":";
-+module_param(mac_addr, charp, 0);
-+MODULE_PARM_DESC(mac_addr, "MAC address");
-+
-+static void get_mac_addr(struct net_device *ndev, char *macaddr)
-+{
-+	int i = 0;
-+	int j = 0;
-+	int got_num = 0;
-+	int num = 0;
-+
-+	while (j < ETH_ALEN) {
-+		if (macaddr[i]) {
-+			int digit;
-+
-+			got_num = 1;
-+			digit = hex_to_bin(macaddr[i]);
-+			if (digit >= 0)
-+				num = num * 16 + digit;
-+			else if (':' == macaddr[i])
-+				got_num = 2;
-+			else
-+				break;
-+		} else if (got_num) {
-+			got_num = 2;
-+		} else {
-+			break;
-+		}
-+		if (got_num == 2) {
-+			ndev->dev_addr[j++] = (u8)num;
-+			num = 0;
-+			got_num = 0;
-+		}
-+		i++;
-+	}
-+}
-+
- /*
-  * Search DM9000 board, allocate space and register it
-  */
-@@ -1679,6 +1716,11 @@ dm9000_probe(struct platform_device *pdev)
- 			ndev->dev_addr[i] = ior(db, i+DM9000_PAR);
- 	}
- 
-+	if (!is_valid_ether_addr(ndev->dev_addr)) {
-+		mac_src = "param";
-+		get_mac_addr(ndev, mac_addr);
-+	}
-+
- 	if (!is_valid_ether_addr(ndev->dev_addr)) {
- 		inv_mac_addr = true;
- 		eth_hw_addr_random(ndev);
--- 
-2.23.0
+Regards,
+Andreas
 
+--Sig_/tv7EBQvO_xk_m_DPrEdmChx
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5DITkACgkQl4jFM1s/
+ye+rRw/+LUooQ7fIDcxBsFY9+xZRq6snbWx9wkMgAycU5UuVyjUZEzYUizVNm8pT
+FfSwVCGf0hHXaz+2Xnm8d6Igp0ii2IWf7LQmE+eoLOOPWeEGIN74eIWXZ+OkJcG8
+33+weHfRRx5Lx0SpRKx8g6nIQbGPXs9fWYB3ZjJwei+9DelyNKUqTbJY5xbAxeP5
+C6qzOVgO9Py459cXYEXH3HsmW6vATceC+wZQO737h0IF3rclYsdTtNjBhELIT4xG
+EgirCfreDPbCn3Y6g2AnAjqk151ssuhEF/p2JWu8VeNIegpksj2BbIRvKG3uWXc6
+1sG6EkJ+E8gCdDOhc500PeLdWVPCWk9h9m7w/KMAuCqEr00uY313ya0nfp7EpDSu
+oznxzkbQoP1Sy+zUYoaMJ759HELay07sHqI9juk7sLX7DXYeOKdxsoqOk45hEN0o
+jU67WS/h6GvsKUgRBKxX0NidVnIikg1/XiMLjBaPyF+Hwq6eq4VL7DTc/86+6u6h
+Anv+s3/C0hWq/de/Wr95j+yHtQQy8DMZ73bo8IwaihXbvuaW3IcgWj+lhACwvOjD
+nEyj+GAnnBERn7rhRVrGdYgF8Uyq7u9yjOt87EjSPOfRxsOBW4zLFRG8GRiFAmbF
+PQtd/UwQ17zKvCf3dezqrXcfQ3rOs9nxHT33IRmzbcPx5hiPwaA=
+=WkOg
+-----END PGP SIGNATURE-----
+
+--Sig_/tv7EBQvO_xk_m_DPrEdmChx--
