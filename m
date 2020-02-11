@@ -2,124 +2,111 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05491C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 05:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0009AC352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 06:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF76920848
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 05:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C482120708
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 06:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qGpCAFOU"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gFq6btPz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X1enKO5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgBKF6P (ORCPT
+        id S1727575AbgBKGtc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 00:58:15 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:22817 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726942AbgBKF6O (ORCPT
+        Tue, 11 Feb 2020 01:49:32 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54009 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727481AbgBKGtb (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 00:58:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581400694; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=90LwSLciKSX0tDR6UyVjm6zI/ZPE7pQez+xZZMUCPQw=;
- b=qGpCAFOU5jUGdYrkhnmSTMpNeYpeA72Txvhez9IU2/1yqzlQGYwx8i6MAKgdz7xpjeUwF6nP
- +CqoAaF2tUJgLlTn82RqJET6g+bjiWAkKsRzza47iO07KyxgbiEGokRfQG/BHN9tOIa2/B1v
- iiEPrJ4UNufgORthA4Tvb98G9nA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e424275.7faea0ea1030-smtp-out-n01;
- Tue, 11 Feb 2020 05:58:13 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E05DCC4479C; Tue, 11 Feb 2020 05:58:12 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: harigovi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29BE2C43383;
-        Tue, 11 Feb 2020 05:58:12 +0000 (UTC)
+        Tue, 11 Feb 2020 01:49:31 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 32CC221FC6;
+        Tue, 11 Feb 2020 01:49:30 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 11 Feb 2020 01:49:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=XdztXMV9iyXzMFlJWwifunfdijp
+        ZRx0c+G9mn+c5wW4=; b=gFq6btPzW+RpRULrPtwkrOzprABO+88TuN7FjK6PjiH
+        cuZDuxURE2jMWvg3+zXYfbf/za4X06QjtSbnWYgGeWN0RszLy7jXbz3wDI8g2y+Y
+        A39qbWuCOiwp00cVxNqYXBXQCDqeCiyERsvuXRGF2MWEtD3C9aQkAOD0+hceOuY4
+        j7oVjR2xUPp2u4OTrL5RCb3IyCbd9IaGuQQUPI9JdV0TDJifDBNcHE5Y3D+/0zUo
+        GsxSi1jQjopXopwAtfgWx9RpSiWC9gt1gOjzNDaJm1cL+UhjiHBNnFLdrlWFN5oB
+        OpqfpaFS+GGZl3u+45p2ZEbVvCmQZ/NQ4GHbtB+lu/w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=XdztXM
+        V9iyXzMFlJWwifunfdijpZRx0c+G9mn+c5wW4=; b=X1enKO5gTifLFa1Tyq39P9
+        IZomnM1+PMGLA6dOvBmOrZmJrAySBoNu4wYwDa9w9vq8Tz1Oxv5VR0C2c+A6uPR3
+        SnMfFFWBKnGO9tBRcMAENzappH5aE0Dt5x0x9rJvGQo+tT0D+GZ4ZWzOUexCw/qv
+        qX2ArAqCqF6GVWMDEq0fWogXSjmZ3Lvwry0hqVCK/eEV4V48lMFy/2Ms8ni6CPV7
+        6SC8sob0bYo9p74F3e46OgBGt8SDrcjP82gxRe/iQWxNeBwOMyRsCnkLu880wJ0w
+        IGsEPfxTyYrfOxK2SUv3cCKtn8xahZvKZvDuCPq4JCTbhayPKUMdkVE97mf8tIeQ
+        ==
+X-ME-Sender: <xms:eE5CXsffZtlZVleiv-xYIOb7dSUU1tXVbmXaqhLacrcVX6rLcc3bkA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedvgdellecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:eE5CXizdT_P2cmtLz9-0qpl2aw-5W7Jrx13LktK0vfB6p5hQE5pWZA>
+    <xmx:eE5CXi8394U4vLUXdnborBVnucisXG-X3X23NwonmszUeDGO2WXt6w>
+    <xmx:eE5CXkkhGSrQzszh99htJax3bgSvKJc5p0ydGn0nDzdTs1hHC0woug>
+    <xmx:ek5CXna2lWWhM6KBrYlE2fM7k798qQytAwxLRhg2a5cS6V1jJm1ipA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 491B3328005D;
+        Tue, 11 Feb 2020 01:49:28 -0500 (EST)
+Date:   Tue, 11 Feb 2020 07:49:26 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, mchehab@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 0/5] arm64: dts: allwinner: a64: Enable deinterlace
+ core
+Message-ID: <20200211064926.muxnaphoq4nbrs72@gilmour.lan>
+References: <20200210170656.82265-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 11 Feb 2020 11:28:12 +0530
-From:   harigovi@codeaurora.org
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>
-Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
-In-Reply-To: <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
-References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
- <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
- <2f5abc857910f70faa119fea5bda81d7@codeaurora.org>
- <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
-Message-ID: <1d201377996e16ce25acb640867e1214@codeaurora.org>
-X-Sender: harigovi@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwr2mhgisf5go3ox"
+Content-Disposition: inline
+In-Reply-To: <20200210170656.82265-1-jernej.skrabec@siol.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-02-07 19:40, Jeffrey Hugo wrote:
-> On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
->> 
->> On 2020-02-06 20:29, Jeffrey Hugo wrote:
->> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
->> > wrote:
->> >>
->> >> For a given byte clock, if VCO recalc value is exactly same as
->> >> vco set rate value, vco_set_rate does not get called assuming
->> >> VCO is already set to required value. But Due to GDSC toggle,
->> >> VCO values are erased in the HW. To make sure VCO is programmed
->> >> correctly, we forcefully call set_rate from vco_prepare.
->> >
->> > Is this specific to certain SoCs? I don't think I've observed this.
->> 
->> As far as Qualcomm SOCs are concerned, since pll is analog and the 
->> value
->> is directly read from hardware if we get recalc value same as set rate
->> value, the vco_set_rate will not be invoked. We checked in our idp
->> device which has the same SOC but it works there since the rates are
->> different.
-> 
-> This doesn't seem to be an answer to my question.  What Qualcomm SoCs
-> does this issue apply to?  Everything implementing the 10nm pll?  One
-> specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
-> so I'm interested to know what is the actual impact here.  I don't see
-> an "IDP" SoC in the IP catalog, so I really have no idea what you are
-> referring to.
 
+--rwr2mhgisf5go3ox
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is not 10nm specific. It is applicable for other nms also.
-Its specific to the frequency being set. If vco_recalc returns the same 
-value as being set by vco_set_rate,
-vco_set_rate will not be invoked second time onwards.
+On Mon, Feb 10, 2020 at 06:06:51PM +0100, Jernej Skrabec wrote:
+> Allwinner A64 contains deinterlace core, compatible to the one found in
+> H3. It can be used in combination with VPU to playback interlaced videos.
+>
+> Please take a look.
 
-For example: Lets take below devices:
+Applied, thanks!
+Maxime
 
-Cheza is based on SDM845 which is 10nm only.
-Clk frequency:206016
-dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
-dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
+--rwr2mhgisf5go3ox
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Trogdor is based on sc7180 which is also 10nm.
-Clk frequency:69300
-dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
-dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
+-----BEGIN PGP SIGNATURE-----
 
-In same trogdor device, we slightly changed the clock frequency and the 
-values actually differ which will not cause any issue.
-Clk frequency:69310
-dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
-dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkJOdgAKCRDj7w1vZxhR
+xU35AQD3LjdGbe0ijT1ImTTyhYz9dseJPfQ+YsQLd+m3QBvTEwD8DJEmtNRM/8AC
+3IZoFJmm5wKb4si4CoYWpoVwsaHnnwk=
+=dTRv
+-----END PGP SIGNATURE-----
+
+--rwr2mhgisf5go3ox--
