@@ -2,115 +2,117 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C434C3B187
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF31C352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 388452051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758E020848
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OEhJ8oas"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RH32kiQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgBKRW1 (ORCPT
+        id S1729513AbgBKRd0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 12:22:27 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58140 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727954AbgBKRW1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 12:22:27 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BHMHHh016490;
-        Tue, 11 Feb 2020 11:22:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581441737;
-        bh=Ciau4l7lH9ehGuqtt4pYzI7MkoU0dWlQUVaGwzDYBzo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OEhJ8oasBb5W0WCyLq/KycmJH/4M+nF/2rBw+X6G9OPoTkx+4XpsIUXuApZDzutx+
-         pWvog7ugrfeBB5E2RrM3D//qi6gnuefSsPmljOgVwsKFglxW8NUMSGsd4Ev5uDEdfy
-         G9D6OrCl/mITbVKlYrpLTbXFkXaW0mKkKYnv9a8o=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01BHMHL4084821
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Feb 2020 11:22:17 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
- Feb 2020 11:22:17 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 11 Feb 2020 11:22:17 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BHMEkp130466;
-        Tue, 11 Feb 2020 11:22:15 -0600
-Subject: Re: [PATCH 2/3] ARM: dts: am437x-gp/epos-evm: drop unused panel
- timings
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Merlijn Wajer <merlijn@wizzup.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Sebastian Reichel <sre@kernel.org>
-References: <20191211165331.GC43123@atomide.com>
- <45dae8f7-2f5e-6948-5a05-dc8a09ace1fa@ti.com>
- <20191212203550.GB4892@pendragon.ideasonboard.com>
- <add3d8af-6977-68e6-fb77-2fa748c4714a@ti.com>
- <b39e52f1-3e73-5f26-6206-0956cf482631@ti.com>
- <20200211110712.GB28355@pendragon.ideasonboard.com>
- <3b4d10c6-7cb2-af53-3a39-31eef441bfdd@ti.com>
- <98da360f-880b-af56-b285-4d9b39f8a342@wizzup.org>
- <20200211160524.GE64767@atomide.com>
- <87b1111e-af06-1e2a-8baa-c3f9a15f1874@ti.com>
- <20200211162719.GF64767@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <d7e51d54-ffb3-2792-8bdb-73fc627fd675@ti.com>
-Date:   Tue, 11 Feb 2020 19:22:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 11 Feb 2020 12:33:26 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43250 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbgBKRd0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 12:33:26 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s1so5800961pfh.10
+        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 09:33:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lH4EbrzVbu3CvaS8sns78JlEG0bpnC0mv7bE+liJ2nA=;
+        b=RH32kiQsCKo1Gs+FkFdDvj1Kq3PKeLTjbRXjVS542Tg6Gb8IzEOXCl8KrAydPkosHL
+         SYGwlAdLYd5do6FGm6AtvSvYjLsBhTB3Zd2J02IAI1lWNxUZQ/5+ah4appWH9FO9tCfN
+         4dmS1PhdaopzWfZZudmSODT/lwSAYlGW8ZyJE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lH4EbrzVbu3CvaS8sns78JlEG0bpnC0mv7bE+liJ2nA=;
+        b=ncUeSu7vvhCuosgG7uP258KGxWV2hPH221ioYu7s4+VGCibGJTFFmycZ6AThtxmKhg
+         Tw13m192gad6eVQNx1AJnFBj8g06iHfC7Xp2BDddvdniD03v5uIioAxqSWKUiTrtZGmb
+         g1xowPxKak087tDtexQ2TqWowjoOs/w269s0hQFZLmnkwDXG9wad3K0we+xMdfD2SW/c
+         Fv48H613UzK9qA0/OaegijvFHPTACN3cANTp5U8S4aiRVsWGh/g//itv6bo3My+xJKSY
+         6iSvYwf8L/tIkYg2ANGg5xfp9USF6AcXwAQYThDDJGkRcsjV0NgDMsXGogkSBZKWJFOf
+         MyWA==
+X-Gm-Message-State: APjAAAVJiwrsDaibZ/cTh8NYV5Hf8PEA/eWzRyAPv4jCxiSiBY3rPfLk
+        oE4iWIRjQBD950FtGTJslTdLsQ==
+X-Google-Smtp-Source: APXvYqxk99B0t8EHkrjFPb34havVNfFdZ7CHuqxMGO1VQir/2llQ9LuL+WBmfTO4aiFx3jXiqWC3cg==
+X-Received: by 2002:a63:6c82:: with SMTP id h124mr7923471pgc.328.1581442405558;
+        Tue, 11 Feb 2020 09:33:25 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id c26sm5104896pfj.8.2020.02.11.09.33.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2020 09:33:25 -0800 (PST)
+Date:   Tue, 11 Feb 2020 09:33:23 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, hemantg@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, gubbaven@codeaurora.org
+Subject: Re: [PATCH v1] arm64: dts: qcom: sc7180: Add node for bluetooth soc
+ wcn3990
+Message-ID: <20200211173323.GE18972@google.com>
+References: <20200211121612.29075-1-bgodavar@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200211162719.GF64767@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200211121612.29075-1-bgodavar@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/02/2020 18:27, Tony Lindgren wrote:
+On Tue, Feb 11, 2020 at 05:46:12PM +0530, Balakrishna Godavarthi wrote:
 
->> We are still missing DSI command mode support, and moving it to the common DRM model.
+> subject: arm64: dts: qcom: sc7180: Add node for bluetooth soc wcn3990
+
+Preferably say in the subjct that the node is added for the IDP board.
+
+> Add node for bluetooth soc wcn3990.
 > 
-> Nope, DSI command mode support has been working just fine for
-> a while now :) And Sebastian has a WIP git tree of the common DRM
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50ad4fde..19f82ddc1f09 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -19,6 +19,7 @@
+>  	aliases {
+>  		hsuart0 = &uart3;
+>  		serial0 = &uart8;
+> +		bluetooth0 = &bluetooth;
+>  	};
+>  
+>  	chosen {
+> @@ -256,6 +257,16 @@
+>  
+>  &uart3 {
+>  	status = "okay";
 
-Indeed... It had been going on for so long that now my mind is stuck at dsi-command-mode-not-yet-in =).
+nit: add a blank line
 
-> model changes for it. I don't think we have devices with DSI
-> command mode working for omapfb but not for omapdrm?
+> +	bluetooth: wcn3990-bt {
+> +		compatible = "qcom,wcn3990-bt";
+> +		vddio-supply = <&vreg_l10a_1p8>;
+> +		vddxo-supply = <&vreg_l1c_1p8>;
+> +		vddrf-supply = <&vreg_l2c_1p3>;
+> +		vddch0-supply = <&vreg_l10c_3p3>;
+> +		max-speed = <3200000>;
+> +		clocks = <&rpmhcc RPMH_RF_CLK2>;
+> +		status = "okay";
 
-Yes, I think that is true.
-
-> What got missed for v5.6-rc1 is the LCD backlight patch though,
-> I think the only issue there is default-brightness vs more common
-> default-brightness-value usage if you have any input to that.
-
-At least for some boards a power supply is needed, and I think there was no conclusion on who should 
-enable that. It didn't seem to fit in anywhere...
-
-But need to check on the latest status. I wasn't following that work closely, as JJ was working on it.
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+status is not needed here AFAIK.
