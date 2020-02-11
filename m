@@ -2,116 +2,165 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFABC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 00:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD917C3B186
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 01:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0846B2072C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 00:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B5F20838
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 01:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mIaz93TX"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZU6u33OJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgBKAwJ (ORCPT
+        id S1727692AbgBKBzG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:52:09 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36111 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbgBKAwJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 19:52:09 -0500
-Received: by mail-pj1-f67.google.com with SMTP id gv17so499951pjb.1
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 16:52:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0qshz8xwSd4T4FUHpWJz/DB4ZEip4P7ef+7ElzXa5GA=;
-        b=mIaz93TXepkqADCr5HGIgvgmepWNBxiGh2cT3pj61KSGgQW4osPx7h0OabLbTDSe7K
-         YmMV2F50gE0XtqHWjzv4pvWu3Xmd9MiRMTe99E/KoJB2UIz+EQ77PUpC3IbBtTW4ccPA
-         a5k/IDorLbzGz0sOyTBsk2HscLeGnFzH3TRo0433XtLuKvH2jvQm1VpkY37+yltgOlnc
-         2YCwaa6g3XY+aVkDZKfP0Twz1duHOnMYfIfVZkYeiZaJSD4gUwsOO2bzZHKcu3FpjV9B
-         fXLhju52XtNPzmk7xQZxc57v5N71m+CN6/AZB+QogB4SiZHLY5VA1Ko06nfX5QOPbGqR
-         oCIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0qshz8xwSd4T4FUHpWJz/DB4ZEip4P7ef+7ElzXa5GA=;
-        b=n+lc/elF/lwzDvq/0oPOeTTpsKMnAF0jtwH3zhmxnzm8gllGig75ZT9+SXn1XGybEN
-         uT1uzRttwHAylZCq/rLEHYqyIjCNl2InJEl3EGG/C5UJ+5kbmNS3f5ZGCIaCKnoWLOhw
-         dxyjrV6RAcelyGlHuF0O4ail8v7IGNty4/SvBEloq5YKZZrIj5TnJBn+3egvxHYV2hA+
-         uJ7oznS2GXg7u05UxBBrF7aUSzfpza0SE3PfX6V+9dvHDZDTmu4U8iZtu9TvwBl3Vaxp
-         dupDZt6ppSifK6VDIMMv+6msk40S+KK+pdhaCiK16g6/i1Yd5+ZWmWb1A3yvCB+fenVW
-         fK7Q==
-X-Gm-Message-State: APjAAAUlN1iKjrBwKN1vNsLXW4MGsdo2v3bMHxxGjIvc06ndS1lqqAVn
-        kBl8NNH3D2wRyllJY/sLzTOYZA==
-X-Google-Smtp-Source: APXvYqxRJngePboQPpSuuFdNF1/zNebVt2MFq5knTCNVk1TYpTs72imk/T9Sgld8ACAq3hmBxXEBOw==
-X-Received: by 2002:a17:902:9b93:: with SMTP id y19mr15434992plp.89.1581382328743;
-        Mon, 10 Feb 2020 16:52:08 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q21sm1538480pff.105.2020.02.10.16.52.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 16:52:08 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mon, 10 Feb 2020 20:55:06 -0500
+Received: from mail-eopbgr00061.outbound.protection.outlook.com ([40.107.0.61]:49796
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727523AbgBKBzG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Feb 2020 20:55:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jgsj0gpUJRdeUXOrx1oLdgNp4NizwxCFbb+jEqOyU3Te/nupQUQ4ImMmcrHBHjZrpKH2DmsvCssS27l9pfeNr9K5pOEX+g+mUEHlNlullW+1uNKNo8odYRut2akE254gkVsiOmF/AyEA1NX3VKfJDQ+qjtYZ0p/x0cfBtubx9QzVX4IxyVdlZzpSr0pH1+qUavv06R4LwEcg6GhxVOqKL0Zaeox4TLHvqBtNiECnV3xSHo5eGD1iWaTd1V5PujCdS36vIgF+J87mXzo7ZCHpnf4xlidD27JXL8KCWTstP4loCSXoQZuwzq3nl2c3dmJGXvYEqSfeUgIDxp94paE05w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fxum1+IpCCZTxdp8D35uJeDkiqFLu9/uSRqDIZ2wFeE=;
+ b=g40lcWleb5AYiPuOT5OZZDX0VK+poOWwnwi38BpbowjJ1t6BJ+/vAZ5g6RWNsPDjtq9J2JIv06UQCzq1Fe7n37PwnKODrhR/x8LnbymgJlkpXN0k0kCdvvAG7tPu0utRyhFcFStiDluXfMqwRUbuPstqrqU08x/CR0IUPo0+ncCRelfsWmy/g8vVFerju3uECYDACzUMRQhHwtS/m50/mE9xT52XlnsgCh8KgyG5RiKrSzKwGX2acQs9ZX441cg2sdusmr0Wmkr/Nx2lhH2DpyTQLmbjttPQSDbqirl1WQF9VTSW0Y8Wlf9DAypnOOZ+amkN76X3GqD92SeXUmTLlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fxum1+IpCCZTxdp8D35uJeDkiqFLu9/uSRqDIZ2wFeE=;
+ b=ZU6u33OJbsvViAWLbyexp5VehfuVpxcM7+Y0cImu+SkS1EPpf8q1SGEuDhu8FbB8CmrX4cLQmy+ES1tSSl0m1K4zft98wXa3OWaN+XAnihc5/lcuEojcyVlV1kPaWEl+//h2p0hCYhI90RPjNqEKWXA/UP2m1AUQke+yPY767+A=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6622.eurprd04.prod.outlook.com (20.179.234.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.26; Tue, 11 Feb 2020 01:54:58 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
+ 01:54:58 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>
+CC:     =?iso-8859-1?Q?Andr=E9_Draszik?= <git@andred.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH v3 0/8] remoteproc: qcom: post mortem debug support
-Date:   Mon, 10 Feb 2020 16:50:51 -0800
-Message-Id: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
+Thread-Topic: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
+Thread-Index: AQHV164yHhXoESmTiUqzHJu+3DHGMKgUx1EAgACAgDA=
+Date:   Tue, 11 Feb 2020 01:54:58 +0000
+Message-ID: <VE1PR04MB6638761F5F8549C6528FE6B989180@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20200130204516.4760-1-git@andred.net>
+ <20200130204516.4760-2-git@andred.net>
+ <VI1PR0402MB3485EC2F82DDE52DC5CA0795981C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <20200209223836.GA199269@dtor-ws>
+ <VE1PR04MB6638A4F4E3BABE0ED0CD4A5189190@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <VI1PR0402MB34851857F012286250BF3BBE98190@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <20200210175554.GB199269@dtor-ws>
+In-Reply-To: <20200210175554.GB199269@dtor-ws>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [183.192.236.243]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 22d6f061-3abd-4e88-420f-08d7ae95663a
+x-ms-traffictypediagnostic: VE1PR04MB6622:|VE1PR04MB6622:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB662280CA99F21E679E2B60F389180@VE1PR04MB6622.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0310C78181
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(199004)(189003)(316002)(81156014)(7416002)(8676002)(81166006)(52536014)(54906003)(110136005)(8936002)(7696005)(4326008)(5660300002)(6506007)(64756008)(478600001)(53546011)(66446008)(66556008)(66476007)(66946007)(33656002)(71200400001)(76116006)(86362001)(55016002)(9686003)(26005)(6636002)(2906002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6622;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0SmoLZG+Z6MExrUdWiHqSf6eafMF7PzuSliuHT6XsUe5mxjKlC5EZBOm/PyGntYXGnEv5B8I8xNDNA6HvksiDtiOt8rUK+7yYbH36NxPRAT5aaNsRI13001NZGbrMdH8HYOCd66I+bTsZsO4sXWhFj4jiaY6F6QzcuSQyV8iXlM6Jrp8k430BLsMckUe7ENeq8vY93whcQB+cyC4Id0Z8pAN8eNr//hp0W9W04+bWYiVLLwhJJuinGpt01lZ4fV6KDcmBr/a834AHa0haFAOZMsBMez5B7etBAMOFejxwA7U6GcvzhwqatDVPltzVNVdPmnHo+H0YiyERa8VxKkuz0D4ZwUHbVHteNlGhm5M92HfSmUPsVl0N+i+t2KfFcFnTXJEot3S3MYDb+uwOC7y1SgVch7rHV10ptQ/GxfUw5tmNO9uxHWXMkIpkFmA1sPy
+x-ms-exchange-antispam-messagedata: sfT+q0Vj+WfYYHhQo0S7etbqyte/Vg5n9G6S00EymduV+Y1K3b0RRw6qsA/yiZTtEc0BwVO1l491aYs6s8yoY6WCte/OOtW3vGTaHebgKNaYxt6Jdy2ygWN0vhWvk6oqp5fvd7CRYE0ntShGpPSj4Q==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22d6f061-3abd-4e88-420f-08d7ae95663a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 01:54:58.2899
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SDKdS+Kg9QIn69fKMBWJrwTd7u6OeZv3wMJeZQmUuxTa1XNFs5DgfQc/b9g+Pm7mctNNk8/ecdMu+0sz0c03bw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6622
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The following series introduces two components that aids in post mortem
-debugging of Qualcomm systems. The first part is used to store information
-about loaded images in IMEM, for post mortem tools to know where the kernel
-loaded the remoteproc firmware. The second part invokes a stop operation on the
-remoteprocs during a kernel panic, in order to trigger them to flush caches
-etc.
-
-Bjorn Andersson (8):
-  dt-bindings: remoteproc: Add Qualcomm PIL info binding
-  remoteproc: qcom: Introduce driver to store pil info in IMEM
-  remoteproc: qcom: Update IMEM PIL info on load
-  arm64: dts: qcom: qcs404: Add IMEM and PIL info region
-  arm64: dts: qcom: sdm845: Add IMEM and PIL info region
-  remoteproc: Introduce "panic" callback in ops
-  remoteproc: qcom: q6v5: Add common panic handler
-  remoteproc: qcom: Introduce panic handler for PAS and ADSP
-
- .../bindings/remoteproc/qcom,pil-info.yaml    |  42 +++++
- arch/arm64/boot/dts/qcom/qcs404.dtsi          |  13 ++
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |  13 ++
- drivers/remoteproc/Kconfig                    |   6 +
- drivers/remoteproc/Makefile                   |   1 +
- drivers/remoteproc/qcom_pil_info.c            | 168 ++++++++++++++++++
- drivers/remoteproc/qcom_pil_info.h            |   8 +
- drivers/remoteproc/qcom_q6v5.c                |  20 +++
- drivers/remoteproc/qcom_q6v5.h                |   1 +
- drivers/remoteproc/qcom_q6v5_adsp.c           |  27 ++-
- drivers/remoteproc/qcom_q6v5_mss.c            |   6 +
- drivers/remoteproc/qcom_q6v5_pas.c            |  26 ++-
- drivers/remoteproc/qcom_wcnss.c               |  17 +-
- drivers/remoteproc/remoteproc_core.c          |  46 +++++
- include/linux/remoteproc.h                    |   3 +
- 15 files changed, 388 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
- create mode 100644 drivers/remoteproc/qcom_pil_info.c
- create mode 100644 drivers/remoteproc/qcom_pil_info.h
-
--- 
-2.24.0
-
+On 2020/02/11 Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:=20
+> On Mon, Feb 10, 2020 at 06:33:30AM +0000, Horia Geanta wrote:
+> > On 2/10/2020 4:03 AM, Robin Gong wrote:
+> > > On 2020/02/10 Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> > >> On Fri, Feb 07, 2020 at 08:10:22AM +0000, Horia Geanta wrote:
+> > >>> On 1/30/2020 10:45 PM, Andr=E9 Draszik wrote:
+> > >>>> @@ -140,6 +148,25 @@ static int imx_snvs_pwrkey_probe(struct
+> > >> platform_device *pdev)
+> > >>>>  	if (pdata->irq < 0)
+> > >>>>  		return -EINVAL;
+> > >>>>
+> > >>>> +	pdata->clk =3D devm_clk_get(&pdev->dev, "snvs-pwrkey");
+> > >>>> +	if (IS_ERR(pdata->clk)) {
+> > >>>> +		pdata->clk =3D NULL;
+> > >>> Using devm_clk_get_optional() would simplify error handling.
+> > >>
+> > >> It sounds to me that this clock is not at all optional and the
+> > >> driver currently "works" only by accident and therefore optional is =
+not
+> suitable here.
+> > > Yes, then we need to add all snvs clk in dts for on legacy i.MX
+> > > chips in this patchset to avoid any potential function broken.
+>=20
+> How many are there? I am not too terribly opposed of having the driver ha=
+ndle
+> missing clk if there are very many legacy DTSes out there. But then we ne=
+ed to
+> handle it properly (i.e. current iteration does not handle referral prope=
+rly for
+> example).
+There are four dtsi which have clock support in snvs-rtc  including i.mx7s/=
+i.mx8mq/8mm/8mn. So for this patch set, it's better update
+i.mx8mX dtsi except i.mx7s.
+>=20
+> > In that case the DT binding should be updated too, to make the clock
+> > mandatory.
+>=20
+> I think this should be done in either case, as as far I understand the pa=
+rt can not
+> function without the clock and it worked purely by chance on some systems=
+ as
+> something else was turning the clock on.
+Yes, for all chips snvs clk management added, snvs clock also has to been a=
+dd
+in snvs_pwrkey dts, but for others legacy chips like i.mx6X which have no s=
+nvs
+clk management, snvs clock is always on, so no need such clk in snvs_pwrkey
+dts either, optional is better.
+>=20
+> Thanks.
+>=20
+> --
+> Dmitry
