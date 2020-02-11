@@ -2,137 +2,120 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D8FC352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 10:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E5EC352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C32320870
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 10:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FC120714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCcZP1t+"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HsqMyuSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBKKtw (ORCPT
+        id S1728011AbgBKLH3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:49:52 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36212 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbgBKKtw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 05:49:52 -0500
-Received: by mail-il1-f196.google.com with SMTP id b15so3047289iln.3;
-        Tue, 11 Feb 2020 02:49:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eHqxkFhOftXeIrIg8vUiaV+dk3ty7YkSnlLZYLlo5Ko=;
-        b=qCcZP1t+3ytI3YacltBjs5aKyI9mSEFglR48Tb8Mrub6EIG2JXT27BMmeSwlJsMmE5
-         nD3++mwLzkcVxY5Sdec9Mubfc/z4ZWB5alqUoO8Sn6YnKKM/R3iQtfo+iXt6ALg/ukhj
-         urQg/71GNxQoYQeiUcku2HlWH5uhLitfmxayfbJbMfkPReSc9D0lvKNilG/HXLcI3TMZ
-         U6yHFwNBJociSPqISHUoLEssn8rQ5Z5YHScHZKxEjflOdHHWll4yHLuD+NNMjUWQ1wC+
-         KODO6dsc8Z7WswM0+DXXxwwRQ4iqg2N6q1tj3zBW31JmM/W0BSZQhcOuJ5SCenFgRdfO
-         HELA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eHqxkFhOftXeIrIg8vUiaV+dk3ty7YkSnlLZYLlo5Ko=;
-        b=rRMmp85JxsbyG4MeYtxYw24Aclv0aUyFDJIv8d1T8mDCr76IcDuVC6wZZB61++qZSV
-         g43KU3D3QUqk4x1SDWwI+phzAFGwD30ToO6RWt39hVf4b1agdNEzoq4T4MjhnIQqtGcK
-         tMUncrAWs1MrKflSvf+uG3freRFiIbuNIPytgZExI5+SOkV7mG0VanMPMZJUbqQ8d99J
-         k/gjThCBBCQ+tiOyko1S+VT83ZwW/ps4ioegqptKtkMjGC6TnHAf0200biLp/pgh69l8
-         trVkZj50ztwTkeZUsl6mxBkjMQG002ynovMPZmbdUg4VnBZBNBVg8P65l2o9P+L+omRu
-         Ot0w==
-X-Gm-Message-State: APjAAAXVRS8DVbHAeA9wmDFGkbLS5AZGjTEqwF/KJ13PRmMAH5VjB3Xw
-        SQvgpIaF5xf8HJarTt7NWyuMwTMrsJGQ+GONRuw=
-X-Google-Smtp-Source: APXvYqyV+gu2TZnHhPamDm/mFEOi79lFtDv1oEvHa0mxrqSPfvikSLJ/I2MVcG7LFj84tE+XHcvU+qhf4aKcVcfBz3k=
-X-Received: by 2002:a92:350d:: with SMTP id c13mr6001818ila.205.1581418191475;
- Tue, 11 Feb 2020 02:49:51 -0800 (PST)
+        Tue, 11 Feb 2020 06:07:29 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46568 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbgBKLH3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 06:07:29 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C7ECE52A;
+        Tue, 11 Feb 2020 12:07:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1581419247;
+        bh=pBTt/u7T3z2+TO23AZgfk6mLR2REE3Psxm7jHS2oWcc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HsqMyuSsu9+ikDDmWp1U+jfXsGr4562qnPs5W9HoPv9TbJB3kxOWl0cr4TFB9bV37
+         +O5Fzr7CsRL2YLhwH1Wz0bYHnM5BfRrI5/OiGon4UWZKdJp2rrHCars+lEnMK42ct4
+         dZRZRDKzw3MwOC5PQKA8hI3TzMJ4qkaIo1jTR45s=
+Date:   Tue, 11 Feb 2020 13:07:12 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jyri Sarha <jsarha@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 2/3] ARM: dts: am437x-gp/epos-evm: drop unused panel
+ timings
+Message-ID: <20200211110712.GB28355@pendragon.ideasonboard.com>
+References: <20191114093950.4101-1-tomi.valkeinen@ti.com>
+ <20191114093950.4101-3-tomi.valkeinen@ti.com>
+ <20191202130459.GH4929@pendragon.ideasonboard.com>
+ <20191211165331.GC43123@atomide.com>
+ <45dae8f7-2f5e-6948-5a05-dc8a09ace1fa@ti.com>
+ <20191212203550.GB4892@pendragon.ideasonboard.com>
+ <add3d8af-6977-68e6-fb77-2fa748c4714a@ti.com>
+ <b39e52f1-3e73-5f26-6206-0956cf482631@ti.com>
 MIME-Version: 1.0
-References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-4-aford173@gmail.com>
- <20200206184030.GA11381@bogus>
-In-Reply-To: <20200206184030.GA11381@bogus>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 11 Feb 2020 04:49:39 -0600
-Message-ID: <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
-Subject: Re: [PATCH V2 4/5] dt-bindings: spi: spi-nxp-fspi: Add support for
- imx8mm, imx8qxp
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b39e52f1-3e73-5f26-6206-0956cf482631@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 2:46 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Sun, Feb 02, 2020 at 06:59:49AM -0600, Adam Ford wrote:
-> > Add support for nxp,imx8qxp-fspi and nxp,imx8mm-fspi do the bindings
->
-> s/do/to/
+Hi Tomi,
 
-Oops.  Thanks for catching that.
+On Tue, Feb 11, 2020 at 12:01:31PM +0200, Tomi Valkeinen wrote:
+> On 13/01/2020 14:01, Tomi Valkeinen wrote:
+> > On 12/12/2019 22:35, Laurent Pinchart wrote:
+> >> On Thu, Dec 12, 2019 at 11:37:51AM +0200, Tomi Valkeinen wrote:
+> >>> On 11/12/2019 18:53, Tony Lindgren wrote:
+> >>>> * Laurent Pinchart <laurent.pinchart@ideasonboard.com> [191202 13:05]:
+> >>>>> Hi Tomi,
+> >>>>>
+> >>>>> Thank you for the patch.
+> >>>>>
+> >>>>> On Thu, Nov 14, 2019 at 11:39:49AM +0200, Tomi Valkeinen wrote:
+> >>>>>> panel-simple now handled panel osd070t1718-19ts, and we no longer need
+> >>>>>> the panel timings in the DT file. So remove them.
+> >>>>>
+> >>>>> Should you in that case drop the panel-dpi compatible string too, as the
+> >>>>> panel-dpi bindings require panel timings in DT ?
+> >>>>
+> >>>> Yeah sounds like if panel-dpi is no longer usable for this device it
+> >>>> should be dropped from the compatible list.
+> >>>
+> >>> Ok, I agree.
+> >>>
+> >>> Looking at the dts files, panel-dpi is used in a bunch of boards. But
+> >>> we even have 3 dts files with panel-dpi, without the detailed panel
+> >>> model in compatible...
+> >>>
+> >>> Fixing those will break the compatibility with old dtbs and new
+> >>> kernel, unless we add timings-from-dt to a panel driver that handles
+> >>> panel-dpi.
+> >>
+> >> I know, and I don't have a perfect answer for this :-( I don't see a
+> >> third option, it's either breaking DT backward compatibility or adding
+> >> timings parsing to a panel driver (either a new panel-dpi driver or to
+> >> panel-simple). What's your preferred option ?
+> > 
+> > Hmm, I just realized that changing these will break omapfb. It
+> > relies on panel-dpi and timings from DT...
+> 
+> If no one objects, I think we should just drop the timings from the
+> .dts, and say that these boards are no longer supported with omapfb. I
+> don't think there's much point in trying to keep omapfb working fine
+> for boards that are fully supported by omapdrm.
 
->
-> > document.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > V2: No change
-> >
-> > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > index 2cd67eb727d4..7ac60d9fe357 100644
-> > --- a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > @@ -2,6 +2,9 @@
-> >
-> >  Required properties:
-> >    - compatible : Should be "nxp,lx2160a-fspi"
-> > +                         "nxp,imx8qxp-fspi"
-> > +                         "nxp,imx8mm-fspi"
->
-> All 3 are different and no compatibility?
+No objection from me.
 
-This was all based on a series from NXP's repo where they have some
-data tables all associated to the various compatible entries, and they
-created a place holder for quirks.  Based on an older NXP repo, it
-seems like there might be some quirks associated to the different
-families, but the newer repo where I got this patch series didn't
-implement them, however, it's possible the quirks may enhance
-functionality later. If that's true, I think this is the best solution
-for future enhancements without having to change the compatibility
-names down the road.  Maybe someone from NXP can comment?  I am just
-trying to help push things upstream so we can support QSPI flash.  I
-would prefer to keep them separate for now, because we might have
-these improvements later. However, I'll do what you request.  Do you
-want me to drop the additional compatible flags and just use the
-original, or create a new one that's a bit more generic?
+> Hopefully soon (in five years? =) we can say that omapdrm supports all
+> the boards, and we can deprecate omapfb.
 
-adam
+I'd love to send a patch to remove omapfb, but I'll let you do the
+honours :-)
 
+-- 
+Regards,
 
-adam
->
-> > +
-> >    - reg :        First contains the register location and length,
-> >                   Second contains the memory mapping address and length
-> >    - reg-names :  Should contain the resource reg names:
-> > --
-> > 2.24.0
-> >
+Laurent Pinchart
