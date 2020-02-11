@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A232C3B186
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAA3C3B189
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFF82082F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD27A2082F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgBKMyR (ORCPT
+        id S1728421AbgBKMyW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:54:17 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:48932 "EHLO inva020.nxp.com"
+        Tue, 11 Feb 2020 07:54:22 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:49054 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727567AbgBKMyQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:54:16 -0500
+        id S1728396AbgBKMyV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:54:21 -0500
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F6831A355E;
-        Tue, 11 Feb 2020 13:54:14 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B62711A3557;
+        Tue, 11 Feb 2020 13:54:20 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A20C1A354D;
-        Tue, 11 Feb 2020 13:53:59 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 344C91A1CD7;
+        Tue, 11 Feb 2020 13:54:05 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CB51F40297;
-        Tue, 11 Feb 2020 20:53:45 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 12F8B402E0;
+        Tue, 11 Feb 2020 20:53:52 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
         shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
@@ -42,43 +42,45 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 1/4] dt-bindings: spi: imx: Add i.MX8MM/i.MX8MN/i.MX8MP compatible
-Date:   Tue, 11 Feb 2020 20:48:24 +0800
-Message-Id: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V3 4/4] dt-bindings: arm: imx: Add the i.MX8MP EVK board
+Date:   Tue, 11 Feb 2020 20:48:27 +0800
+Message-Id: <1581425307-18567-4-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
+References: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add compatible for imx8mm/imx8mn/imx8mp.
+Add board binding for i.MX8MP EVK board.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes since V2:
-	- fix typo in commit message, compatbile -> compatible.
+No change.
 ---
- Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 2d32641..33bc58f 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -10,7 +10,10 @@ Required properties:
-   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
-   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
-   - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
--  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8M
-+  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
-+  - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
-+  - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
-+  - "fsl,imx8mp-ecspi" for SPI compatible with the one integrated on i.MX8MP
- - reg : Offset and length of the register set for the device
- - interrupts : Should contain CSPI/eCSPI interrupt
- - clocks : Clock specifiers for both ipg and per clocks.
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index c5b0270..b8c8c72b 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -324,6 +324,12 @@ properties:
+               - fsl,imx8mn-evk            # i.MX8MN LPDDR4 EVK Board
+           - const: fsl,imx8mn
+ 
++      - description: i.MX8MP based Boards
++        items:
++          - enum:
++              - fsl,imx8mp-evk            # i.MX8MP EVK Board
++          - const: fsl,imx8mp
++
+       - description: i.MX8MQ based Boards
+         items:
+           - enum:
 -- 
 2.7.4
 
