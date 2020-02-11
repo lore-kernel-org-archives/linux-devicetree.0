@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E73C352A4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9053C3B186
 	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 00:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D14320870
+	by mail.kernel.org (Postfix) with ESMTP id B30952082F
 	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 00:52:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x8yLEeAJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="krxFBIuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgBKAwQ (ORCPT
+        id S1727696AbgBKAwR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 19:52:16 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34966 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727690AbgBKAwP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 19:52:15 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so3536052plt.2
-        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 16:52:14 -0800 (PST)
+        Mon, 10 Feb 2020 19:52:17 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35546 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbgBKAwQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Feb 2020 19:52:16 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y73so4574550pfg.2
+        for <devicetree@vger.kernel.org>; Mon, 10 Feb 2020 16:52:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=usB5IoDyLwWY36+AuSkvkbrGcg49AWldfTwBCrrtmpU=;
-        b=x8yLEeAJm5pg44gCh19Xinxc52LnzVmwZBRkJFm2t+blF3Kx8ux8OLeeQTKtqyZJh7
-         v43NbY/nF8f4JoFBX+I+mlu8+VJnZem3CbyjRUNAJpJecBPJXslIhd5FHYtVk5Hmkt2J
-         e01TAgFVetot9Jeq4x2df5WUV5Jv4S8cBsHbPCKxrio8pvWw1vFrD6DLB2Mwk57nmry1
-         AaMId8w0OC3YuuzcHw5wo4C0BCABvmzadCE98WJ4GoVysMT+pRKhL1slWvJzduJpnrVL
-         82tyDGYgnXlUv7I5Jsorp7bwjFlD58W8D8tcrpiQ+7/t3/G7V+fIH9IN2UNgUCRQxmdB
-         5FQQ==
+        bh=M8+iy7pVN4WE3jutHz5qWVqRqdhsfXVc/4DMY70bYKQ=;
+        b=krxFBIuL7oKSbZcqFj1jVnlp3lrMP84d2IGovq34cVVYAhbvsdfo2xtjVTuHRHzcHW
+         Ul+m25Diga040b2BWpWkTKMuejH24MHC0kNpWlKeJwBi3MP+dMUEqF3MEl8/CBnBC3zW
+         j2n+5n9RHv5Sb0Q0QX0XqOn9Y0AajR7nTvj4/oy0ApKii9/kxslgo6ryTuzKttiA3Zly
+         Ymv+snierXvMsL+GsvI2XTVOIn0mV9aJoFfJJBlB1XaUMnagRi/2QabexTPgGnBmVCga
+         lgoOfBo9Mz7BvDwu9YUlpEfdRWYuyYnkOqex7849I5GyGINClDwrfnkM8So0t/cIYNro
+         Limg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=usB5IoDyLwWY36+AuSkvkbrGcg49AWldfTwBCrrtmpU=;
-        b=cYEkxS8VOyozt0Jq7oIRwi49gfqmyttGGfG0FW8U5DLAQt8nff9T0U55LKW5JBB94O
-         0TlMqHZjMZ9Ur9ySb21Hx8eV92M2oXoqU1gpsDmW+INpvBggHypTGwkKs9KslhLagOPq
-         MjaxhcgGhKmMsINg/FJs85pthjK/WQHr/LXPpL5T3CrGIQsWCKUQRp2znJStmXp4tNkg
-         zq5bQHigDN4BiPV9vN+dXEBUyOyAAguz9uwqyP4xDcfDp9exddqecjq7Vew4snCDIMS2
-         OZTkOPoqCZZKlWNrQgzyW2SR9RGbpUaWTgc0M/QdG8TQpkmFJNprDE+EQZUAS3mWMBgg
-         yS6w==
-X-Gm-Message-State: APjAAAV150af+FsowhKxmfalWSVGWGj88YEz6YZLio8E3gvjEHbqZy9+
-        Hkd85Hyzi45vgRigXwWwNWKwww==
-X-Google-Smtp-Source: APXvYqzBLJhl4yfx6CRhp1php6TZrHLUEmZeDDuor9FiyoO4g8yRWY7V1J8l3ohfRc3nP4NIgJzOWQ==
-X-Received: by 2002:a17:90a:b010:: with SMTP id x16mr669765pjq.130.1581382334401;
-        Mon, 10 Feb 2020 16:52:14 -0800 (PST)
+        bh=M8+iy7pVN4WE3jutHz5qWVqRqdhsfXVc/4DMY70bYKQ=;
+        b=MmWaSMt7UwedBBL8OkiUhkHtNcfWlm9s03Z6u6ayrQHWev7ASraJZ1TE+W906pXkzM
+         z7Xuqtu90muKnHMUdlYC0/3lpO/1zQaz+nWbR0ukum4IHdFEHRUTDiFrsG2MLzTKgDGP
+         h1Y3DTWhljXVcyl5Afs7ntCDUWiXOz9A8/+BWPX+UpepareycJRS5krQAzAyyGDh9mkD
+         5ixOxkBR7yfTnMpgZPvWGZ4QwFGEsux6JvEJV44vZ8bd1LRT3Hcr1S5d4Z3usgThxt0g
+         QSbaPa3IriARtrARGaaKuv6aeqloobN9+sIZS6vXJE6n37RjdC2NgGUTtt/vex8FuwvW
+         qytQ==
+X-Gm-Message-State: APjAAAUeKPXDIz2RT4OCr9S5i/U09mn2h/W0DouLly/tx/pWAp3n8PKc
+        Yg8xG6npK0oxtqIE2CXzgVM23A==
+X-Google-Smtp-Source: APXvYqwzEs01mneR4MjC/kY7F3XwSiwiWb6bslc15hzLTqaoTFJRvKVCPb8EQ9uh+djJtwD3r9r7kQ==
+X-Received: by 2002:a63:2f46:: with SMTP id v67mr4526056pgv.220.1581382335751;
+        Mon, 10 Feb 2020 16:52:15 -0800 (PST)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q21sm1538480pff.105.2020.02.10.16.52.13
+        by smtp.gmail.com with ESMTPSA id q21sm1538480pff.105.2020.02.10.16.52.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 16:52:13 -0800 (PST)
+        Mon, 10 Feb 2020 16:52:15 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -65,9 +65,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sibi Sankar <sibis@codeaurora.org>,
         Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH v3 4/8] arm64: dts: qcom: qcs404: Add IMEM and PIL info region
-Date:   Mon, 10 Feb 2020 16:50:55 -0800
-Message-Id: <20200211005059.1377279-5-bjorn.andersson@linaro.org>
+Subject: [PATCH v3 5/8] arm64: dts: qcom: sdm845: Add IMEM and PIL info region
+Date:   Mon, 10 Feb 2020 16:50:56 -0800
+Message-Id: <20200211005059.1377279-6-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
 References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
@@ -78,7 +78,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a simple-mfd representing IMEM on QCS404 and define the PIL
+Add a simple-mfd representing IMEM on SDM845 and define the PIL
 relocation info region, so that post mortem tools will be able to locate
 the loaded remoteprocs.
 
@@ -88,20 +88,20 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Changes since v2:
 - Replace offset with reg
 
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 13 +++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 13 +++++++++++++
  1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 4ee1e3d5f123..f539293b875c 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -997,6 +997,19 @@ blsp2_spi0: spi@7af5000 {
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index d42302b8889b..3443d989976c 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3018,6 +3018,19 @@ spmi_bus: spmi@c440000 {
+ 			cell-index = <0>;
  		};
  
-+		imem@8600000 {
++		imem@146bf000 {
 +			compatible = "syscon", "simple-mfd";
-+			reg = <0x08600000 0x1000>;
++			reg = <0 0x146bf000 0 0x1000>;
 +
 +			#address-cells = <1>;
 +			#size-cells = <1>;
@@ -112,9 +112,9 @@ index 4ee1e3d5f123..f539293b875c 100644
 +			};
 +		};
 +
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
+ 		apps_smmu: iommu@15000000 {
+ 			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+ 			reg = <0 0x15000000 0 0x80000>;
 -- 
 2.24.0
 
