@@ -2,159 +2,161 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A1FC352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 08:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF04C352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 08:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D92E120675
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 08:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF51020714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 08:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="p2Bj3or5"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mOhmXSeH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FTWAl0a3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgBKIH3 (ORCPT
+        id S1727561AbgBKIfn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 03:07:29 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:51743 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgBKIHZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 03:07:25 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: xo7oi8CpGu8AV8FCIcFcLMOZjhD0V0gjo5eeAKpMmaZkLxOfdL7yFt821jXWbOecJFaIFF+BY7
- JFZztmGfNqwRCYcbY6Xz6ZQa+DiX36II7sbNlodPgY2/K7wYnoQxBm9aijxnGe66LiDvYx69eK
- DMdwMAPSiGUND9pL4EI+Ny1/joNOj7m1jJ18/9cyAcrjHyO0jQ8BW26noh53fJB18WF+1cXZ4r
- xgqlGFr6q1i3D1S3qOg2ybclX6SH6dRbeFt3pzjz3QNgjdR93QrhA5WW/QZ3Pwj6cklqOxZPLz
- aIw=
-X-IronPort-AV: E=Sophos;i="5.70,428,1574146800"; 
-   d="scan'208";a="68013464"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Feb 2020 01:07:17 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 11 Feb 2020 01:07:16 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 11 Feb 2020 01:07:16 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LIp6WFhQkdULodYrIjbqgRpEznd2ijwkUBn6ngIiy6IIgqePRvTTPExL/vqP5tlt//VhlIM7NkxwzPm7fdShXL7v/ZLTQibjiOZfmDPfcFwflwFTMCFDO8g+GfMgXNIyFEeIVW3MXTaij57zFcexCdk9WIws1FFuRu3UoAZx8WvSAeqOKHBygbKoH7hWaIp0irnVa6UOSEpJepGVEM5fAU0MG4Ht70E2/GnuD9Lzy/v2omYAHO/x0yoOYenu8Frw5JjOxAFKZerEWr6edcvC0S334+SFUqTVim/CXnUvn1lXBfR4CHXvgQ30sceYo74VdymrivO9+p570GWzDLUgKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZMg1z7j/gBQsHjeJVZBW6Nj2qcWmFAX5Fe/vhxY6WnY=;
- b=ajrdExMTpf5s5VsWKp9GmfPno9PITmW29fXNm8bQtZYogKt+Xx+RJECR/nP5TTBRyTqpLxRFQOY+LhW5ODIBteKpIrLXI/yi990AU9VA360IGRwjWEBtSP+1QZ89LxnBS7X8sB8pf5AnhIITEpmgsnrePMxbB26zORVDRXQIOXTZqyAcLRLwD0rjXQT1w2a8T0reU4TUYf810Sa3UfwHqxKiFhRIyosgHtPm6LP5RUKzKcjvT+FaYKNc/E3rkAv+3nG8ddjjapaDPyktZ8JbFhfTdHqkrPPGc9jKXDMMkDCNjTD6p9W+MCAbpml2jkMHqxpUhCofssRrVOYfZzY7GQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZMg1z7j/gBQsHjeJVZBW6Nj2qcWmFAX5Fe/vhxY6WnY=;
- b=p2Bj3or5sjxJFlTqkkBAMt0U+5VObtA83ZXjVd/dYT8oy5uzoXcxIwVW35qLrUMFyxMZMVLklzhEw+8R7mWurEm2V+FS9bXwfuobIG0i3gJiBcz12MBEyQ6KSLii1b5sm+Bz/o2oo7A8NrOHyfsMZ9MU5FuI3arr4Vq/mUzrbVE=
-Received: from DM6PR11MB4123.namprd11.prod.outlook.com (20.176.125.204) by
- DM6PR11MB4011.namprd11.prod.outlook.com (20.176.127.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.23; Tue, 11 Feb 2020 08:07:15 +0000
-Received: from DM6PR11MB4123.namprd11.prod.outlook.com
- ([fe80::85db:d80e:e645:ac17]) by DM6PR11MB4123.namprd11.prod.outlook.com
- ([fe80::85db:d80e:e645:ac17%2]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 08:07:15 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>
-CC:     <Nicolas.Ferre@microchip.com>, <robh+dt@kernel.org>,
-        <Claudiu.Beznea@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Eugen.Hristev@microchip.com>
-Subject: [PATCH 3/3] ARM: configs: at91: enable sama5d4 compatible watchdog
-Thread-Topic: [PATCH 3/3] ARM: configs: at91: enable sama5d4 compatible
- watchdog
-Thread-Index: AQHV4LJFeseR12rGk0yZaOTkf/LqOA==
-Date:   Tue, 11 Feb 2020 08:07:15 +0000
-Message-ID: <1581408369-14469-3-git-send-email-eugen.hristev@microchip.com>
-References: <1581408369-14469-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1581408369-14469-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 58387fe1-fdc2-428a-19f1-08d7aec9682e
-x-ms-traffictypediagnostic: DM6PR11MB4011:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB4011A104B562AEFEAB800080E8180@DM6PR11MB4011.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:576;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(346002)(376002)(39860400002)(189003)(199004)(107886003)(5660300002)(6506007)(6636002)(86362001)(26005)(110136005)(54906003)(71200400001)(478600001)(6512007)(186003)(316002)(36756003)(8676002)(4326008)(8936002)(66476007)(66946007)(81156014)(64756008)(66446008)(66556008)(2906002)(2616005)(6486002)(81166006)(76116006)(4744005)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB4011;H:DM6PR11MB4123.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jGs2edRMKiGrHUDSnBQpwT/ekRHaG01tkrU+J6zeg2fLggo9OOwGah+Vznm30lFMsH8+obSW9Q+wmVqMdNpGhCLgK29NwUsMqh/4DA+yjYm99fk+oqkbqBvDYZkBh8qpyvf3ByGGJ9J8+fuDg3h9r5wR6iSRAbn5y2NeSB52mQExPfwYKAJmtqcnKP/9X0U+rTzUjxD/te5Tp+rFJhubbopftQkXzfHDOGcYCVCkKDXDmurOcd9pmfMOCObYT2DtsrPCDqb2AN9m5S3WgV9OQS6ZN8fxahojlq8tVsiyGtmJI2ozwVTpYlxQQjD0favy+uFPYgTyHPC7uvCJAK7TvxYpY81Yew57ptHlqHfKZ8M+rOXHTkCWIz26tj8qd6AgRensc0xrV8zrtQ8TAa9dA0Q7fZR8UAqQPsRB9wwrHmdDCN9IH/w/K8+zcf4UxaEg
-x-ms-exchange-antispam-messagedata: +mA4hYUYSEYcPpT/8fX4LaGyvFUJh6Wjg7VRXtlfoRh+KwDnSDBTed0Wc93VuPjDKYdfeMk3v/yAauWU8GZGJhth6n7onKEJqG7ebrgF+rtVDTyUPXCX5waipz84JSFnXajK3+nPWWlsV9uyUxncbA==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 11 Feb 2020 03:35:43 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:56291 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727264AbgBKIfm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 03:35:42 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id EC04C21FBC;
+        Tue, 11 Feb 2020 03:35:41 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 11 Feb 2020 03:35:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=hFJPLcnX8s+3qIibRSJBHtz36o0
+        Xcn/sOE9MnHdM2nc=; b=mOhmXSeHq26+QkB6NNaPcF7iJe+NUrPjcs9h1UM6HxE
+        1v4f1t/E8wrLAIyGQ6+4xpAw6/ClNPhfwZ8JJtz8eZEZ56cv2hrEoen6A/KU2P+6
+        9cZyEMTTkNacGdzqHakFT2uVb67N7EQIAX5dcagKxOab2+MPjcAhFKvxtzOUyCCr
+        DrnNckO8RO9Y47OamqAz2Dcf2U83fLVYffzN8DVFZXdz+6Vp4cpQQfGetn36bj/m
+        4r30osjF+/3S6HVkgJasOOhRRE38JOv6+P7eN8ZmQH003lRpUJ2k8q3wiUiNU5N8
+        Rnd/BJmZamIC4Eg+gGpq2EoEmynSbgHmL3mIIEn2HDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=hFJPLc
+        nX8s+3qIibRSJBHtz36o0Xcn/sOE9MnHdM2nc=; b=FTWAl0a3DGQCpyOaobOCBY
+        ldmAheX1HeEtYFHQtS5RklwF6RtaAcle/jG/0TqpmSAhZwzbPKl/g+fL6OMJFbpx
+        PQ3DqTA992mPk93syf2j2zKRRM1yh/oBMvALa56U9kC4ayH3YZTKlwrnkLsbOL4P
+        c0oDJ/MJza5snqrRyAvi/Jp+wL7v46KpmF5ixZNdv5OJAFpAEE/7ZGsAtHlPYzmo
+        hsJ/Bx3Rzbglb4iKGpzefXu0eC/kjQMvKIvAqOcip3eV/G8tk9xO2rwbawn2H6Oq
+        YiXQkqv4awjVLAOQK3ADsV6P7gWj23H+vv0BKVyxlxEuTF2obzBoy2ukqlVxTYeg
+        ==
+X-ME-Sender: <xms:XWdCXpZogL5KTOSweHyx6aZx_aDEzRF__be1i8TpE611rjsVJu-3xg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedvgdduvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:XWdCXty0q4wMncxGba1tOZQp_hv4opMhLG0T0vqlX4drutiF74HOUA>
+    <xmx:XWdCXle6226wyAmAowvxW7zI-oYNboOYdO1mjvowJ0VcUBJx-FrDZg>
+    <xmx:XWdCXi5Dp2A7YN6SFIRW_xiXIwj2MeLfFa0bpj3tPZnKK5kwXRbBqw>
+    <xmx:XWdCXhg_vFke7fRwPoFxzH-xhpZpfMTdNuxnI1RwFZtBzRP7JOfdtA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1EDF3328005A;
+        Tue, 11 Feb 2020 03:35:41 -0500 (EST)
+Date:   Tue, 11 Feb 2020 09:35:39 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2] arm64: dts: allwinner: h6: orangepi-3: Add eMMC node
+Message-ID: <20200211083539.wciujb6zgjxnwkio@gilmour.lan>
+References: <20200210174007.118575-1-jernej.skrabec@siol.net>
+ <20200211065141.2kn2gsg5kvzu7kl6@gilmour.lan>
+ <5325319.DvuYhMxLoT@jernej-laptop>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58387fe1-fdc2-428a-19f1-08d7aec9682e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 08:07:15.4026
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aZqV47e6agAx0+/UH14w5+Qt84G8/aNnGa0yO8QDjpMv545f/RvfmDikdHSkInn82EU7K+ULu+q+DIh7Ya9BS68lUVfUXxE9nZihDS5l0qw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4011
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gz5taobraj7y6ke5"
+Content-Disposition: inline
+In-Reply-To: <5325319.DvuYhMxLoT@jernej-laptop>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Enable CONFIG_SAMA5D4_WATCHDOG. This driver is compatible with sam9x60
-watchdog timer block.
+--gz5taobraj7y6ke5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- arch/arm/configs/at91_dt_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, Feb 11, 2020 at 08:09:57AM +0100, Jernej =C5=A0krabec wrote:
+> Hi!
+>
+> Dne torek, 11. februar 2020 ob 07:51:41 CET je Maxime Ripard napisal(a):
+> > On Mon, Feb 10, 2020 at 06:40:07PM +0100, Jernej Skrabec wrote:
+> > > OrangePi 3 can optionally have 8 GiB eMMC (soldered on board). Because
+> > > those pins are dedicated to eMMC exclusively, node can be added for b=
+oth
+> > > variants (with and without eMMC). Kernel will then scan bus for prese=
+nce
+> > > of eMMC and act accordingly.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > > Changes since v1:
+> > > - don't make separate DT just for -emmc variant - add node to existing
+> > >
+> > >   orangepi 3 DT
+> > >
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > > b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts index
+> > > c311eee52a35..1e0abd9d047f 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > > @@ -144,6 +144,15 @@ brcm: sdio-wifi@1 {
+> > >
+> > >  	};
+> > >
+> > >  };
+> > >
+> > > +&mmc2 {
+> > > +	vmmc-supply =3D <&reg_cldo1>;
+> > > +	vqmmc-supply =3D <&reg_bldo2>;
+> > > +	cap-mmc-hw-reset;
+> > > +	non-removable;
+> >
+> > Given that non-removable is documented as "Non-removable slot (like
+> > eMMC); assume always present.", we should probably get rid of that
+> > property?
+>
+> I checked mmc core code and this property means that bus will be scanned =
+only
+> once. In this form, node doesn't tell what kind of device is connected, so
+> core has to scan it no matter if "non-removable" property is present or n=
+ot. I
+> maybe missed something though, so it would be great if someone can check =
+it
+> again.
 
-diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_=
-defconfig
-index f66bb98..4a0ba2a 100644
---- a/arch/arm/configs/at91_dt_defconfig
-+++ b/arch/arm/configs/at91_dt_defconfig
-@@ -118,6 +118,7 @@ CONFIG_POWER_SUPPLY=3Dy
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=3Dy
- CONFIG_AT91SAM9X_WATCHDOG=3Dy
-+CONFIG_SAMA5D4_WATCHDOG=3Dy
- CONFIG_MFD_ATMEL_FLEXCOM=3Dy
- CONFIG_MFD_ATMEL_HLCDC=3Dy
- CONFIG_REGULATOR=3Dy
---=20
-2.7.4
+It looks like it does indeed :)
+
+I've applied that patch, thanks!
+Maxime
+
+--gz5taobraj7y6ke5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkJnWwAKCRDj7w1vZxhR
+xQ9DAPwKsJ5NfkwTvuzamY+OX8zTm78ylv/XrhL2Zjagyt1lSAEAiV+LhGVcTzyw
+qAB87cY7DepYjwV8j3ucYDyOZ57UYgM=
+=UejU
+-----END PGP SIGNATURE-----
+
+--gz5taobraj7y6ke5--
