@@ -2,126 +2,116 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AB5C3B187
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811F1C35242
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 22:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19990206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 21:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A7E20714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 22:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="IQytAEHk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bnBCptL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgBKVtV (ORCPT
+        id S1727111AbgBKWCv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 16:49:21 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:45244 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727043AbgBKVtU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:49:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1jBWyPqMrzGV+HgABFq6zy5XXPza8yinORW6h9VLx9o=; b=IQytAEHkFWeDt0l+Eixp3Mc8E
-        FD8nT06U5+KhlqrSIhE5LA7e2YNmJ+8PuNxuytAwQexxw32EIjZIQeX4Ajc37jkTTKhmhOKkXNol5
-        Kr3ts38EX4B811dW5iJwdpYrDiCshDcrUG0nX4/F+SXNiNgjrGAWhMQ2xIDP3wTle0KRM=;
-Received: from p200300ccff0bd500e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0b:d500:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j1dOj-0004Pf-Fl; Tue, 11 Feb 2020 22:48:49 +0100
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j1dOi-0003ve-P9; Tue, 11 Feb 2020 22:48:48 +0100
-Date:   Tue, 11 Feb 2020 22:48:40 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        Alex Smith <alex.smith@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Petr =?UTF-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-mips@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        kernel@pyra-handheld.com
-Subject: Re: [Letux-kernel] [PATCH 07/14] MIPS: DTS: CI20: fix PMU
- definitions for ACT8600
-Message-ID: <20200211224840.40bf549d@kemnade.info>
-In-Reply-To: <aa9725056a1d2bfb490a1c912f34302de0e27fad.1581457290.git.hns@goldelico.com>
-References: <cover.1581457290.git.hns@goldelico.com>
-        <aa9725056a1d2bfb490a1c912f34302de0e27fad.1581457290.git.hns@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        Tue, 11 Feb 2020 17:02:51 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:29033 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727052AbgBKWCv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 17:02:51 -0500
+X-Greylist: delayed 310 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 17:02:49 EST
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581458570; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=jWU1cgqaUBb34RjRYJOYQVzFk/Z6wfMiJoxum7QsqVU=;
+ b=bnBCptL7q2HEOs/9sCg55Mb3jZKtYgDMs8UQLbotz5ip6qQh07eg7c2NhYsSzmG6Civuranb
+ ljaD3HsTQJ6bMsRnX1ae02tMYwrlS9QYxt24mRSGu/La2wiflnmOwJQlbQcKRx6r8A563yMs
+ eVh1zPWCMKZnvG2ur8ycFsxmQbI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e43234e.7fd09eb3ae30-smtp-out-n03;
+ Tue, 11 Feb 2020 21:57:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D0813C447A2; Tue, 11 Feb 2020 21:57:33 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28EA1C43383;
+        Tue, 11 Feb 2020 21:57:32 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/tv7EBQvO_xk_m_DPrEdmChx"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 12 Feb 2020 03:27:32 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree-owner@vger.kernel.org
+Subject: Re: [PATCHv2 2/2] dt-bindings: watchdog: Add compatible for QCS404,
+ SC7180, SDM845, SM8150
+In-Reply-To: <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
+References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <ff71077aa09c489b2b072c6f5605dccb96f60051.1580570160.git.saiprakash.ranjan@codeaurora.org>
+ <20200206183808.GA5019@bogus>
+ <f26464226f74dffe2db0583b9482a489@codeaurora.org>
+ <CAL_JsqKeytW=k5efjcfcuK6vbGggdO9nVdwq7YGNtMpzPQHWMg@mail.gmail.com>
+Message-ID: <a48fc9fd93826b63777bad71d9b2d7c4@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/tv7EBQvO_xk_m_DPrEdmChx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020-02-11 23:54, Rob Herring wrote:
+> On Fri, Feb 7, 2020 at 12:10 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Hi Rob,
+>> 
+>> On 2020-02-07 00:08, Rob Herring wrote:
+>> > On Sat, Feb 01, 2020 at 08:59:49PM +0530, Sai Prakash Ranjan wrote:
+>> >> Add missing compatible for watchdog timer on QCS404,
+>> >> SC7180, SDM845 and SM8150 SoCs.
+>> >
+>> > That's not what the commit does. You are changing what's valid.
+>> >
+>> > One string was valid, now 2 are required.
+>> >
+>> 
+>> Does this look good?
+> 
+> No. First of all, what's the base for the diff? It's not what you
+> originally had nor incremental on top of this patch.
+> 
 
-On Tue, 11 Feb 2020 22:41:24 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+It was an incremental on top of this patch.
 
-> There is a ACT8600 on the CI20 board and the bindings of the
-> ACT8865 driver have changed without updating the CI20 device
-> tree. Therefore the PMU can not be probed successfully and
-> is running in power-on reset state.
->=20
-> Fix DT to match the latest act8865-regulator bindings.
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-hmm, what about a Fixes: tag here? Sounds like a regression.
+> Second, a value of 'qcom,kpss-timer' or 'qcom,kpss-wdt' or
+> 'qcom,scss-timer' will fail validation because 2 clauses of 'oneOf'
+> will be true.
+> 
 
-Regards,
-Andreas
+I will just remove oneOf and add the missing compatibles to the enum.
 
---Sig_/tv7EBQvO_xk_m_DPrEdmChx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks,
+Sai
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5DITkACgkQl4jFM1s/
-ye+rRw/+LUooQ7fIDcxBsFY9+xZRq6snbWx9wkMgAycU5UuVyjUZEzYUizVNm8pT
-FfSwVCGf0hHXaz+2Xnm8d6Igp0ii2IWf7LQmE+eoLOOPWeEGIN74eIWXZ+OkJcG8
-33+weHfRRx5Lx0SpRKx8g6nIQbGPXs9fWYB3ZjJwei+9DelyNKUqTbJY5xbAxeP5
-C6qzOVgO9Py459cXYEXH3HsmW6vATceC+wZQO737h0IF3rclYsdTtNjBhELIT4xG
-EgirCfreDPbCn3Y6g2AnAjqk151ssuhEF/p2JWu8VeNIegpksj2BbIRvKG3uWXc6
-1sG6EkJ+E8gCdDOhc500PeLdWVPCWk9h9m7w/KMAuCqEr00uY313ya0nfp7EpDSu
-oznxzkbQoP1Sy+zUYoaMJ759HELay07sHqI9juk7sLX7DXYeOKdxsoqOk45hEN0o
-jU67WS/h6GvsKUgRBKxX0NidVnIikg1/XiMLjBaPyF+Hwq6eq4VL7DTc/86+6u6h
-Anv+s3/C0hWq/de/Wr95j+yHtQQy8DMZ73bo8IwaihXbvuaW3IcgWj+lhACwvOjD
-nEyj+GAnnBERn7rhRVrGdYgF8Uyq7u9yjOt87EjSPOfRxsOBW4zLFRG8GRiFAmbF
-PQtd/UwQ17zKvCf3dezqrXcfQ3rOs9nxHT33IRmzbcPx5hiPwaA=
-=WkOg
------END PGP SIGNATURE-----
-
---Sig_/tv7EBQvO_xk_m_DPrEdmChx--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
