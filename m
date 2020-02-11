@@ -2,244 +2,99 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBD0C35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 19:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E62C35242
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66C924650
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 19:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J9JXf+ef"
+	by mail.kernel.org (Postfix) with ESMTP id E9E5A20870
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 19:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581447981;
+	bh=nrvRIWnQUnk1P/L5m9G2XIN8KKI3HWQAciY5bRTbzJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c5pp7EgaPY8TTeRlDvy9xE6Jy5KhoD2YC08Bee7dFf9EjEz4LshgAMJI/IxtagicX
+	 OMSUHcx9Qdn+iYrfeDlXJIJMcBeHpccqTjZrzdLbAJYnsQ/BHic04PZxjy83DN7Vs+
+	 o17TQ18XcoYwNcE/pYG+8K3kUh83sL0Kyf4Rn3fE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgBKTCA (ORCPT
+        id S1730842AbgBKTGR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 14:02:00 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36037 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730572AbgBKTCA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 14:02:00 -0500
-Received: by mail-qt1-f195.google.com with SMTP id t13so8829177qto.3
-        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 11:01:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v8ElLutl/m0ZH3q/Jagn5Sm+o4lBHaVCMWC2w+7i5dQ=;
-        b=J9JXf+efOVR0SzD70t/aui7ZMlj9gDR5dOzMNHqIi3LnZA939xxuLrhEUjLovPPR6r
-         saDD3EshQmGnPX294Pi+A4dLvQrAYlLtt2KovymDgkzXqEYBrke6MqaUadLRIzzT0OQe
-         KJ5ow30BgnINxPHCoZbay5J1cCeJjgpQp44/w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v8ElLutl/m0ZH3q/Jagn5Sm+o4lBHaVCMWC2w+7i5dQ=;
-        b=HUzXYlApWE7ZhGCIkVyPDZQ+42ewHjZA2fSCEoqj6M28t8n9EADdqtoVAfC0zF5cEu
-         vggoyTBb26m5i+O7Pp66VwmuIe67XOl5Lg03LGZbADRi3xUcC2ZuoKItZw525M/ggbUn
-         8I+1AvMx8MG5ISCqqvKbgRpOm8YetIvqxsrUMQbw9cnTPsNFqhmguhK4z7j7oecktx+c
-         z1HcJzN3Ogs9Uh7vwbLDPWPTCq2xablpfQN/8wbU6QgznDu5weLNJcGTThZYDkAPwMTo
-         X6tEkpKiNNVUMZYy7w4NuRY+BxoxxyZ3g9X1K6a2Zg8IqELIyt7t25zwCH3KQqmO1MBS
-         W4cg==
-X-Gm-Message-State: APjAAAWhxcbQ4LN3Fz8fHs6F2HJUYRi90ZLLQyb9vVHPOiY4QzYTzBI1
-        Ot612ZVQuizwQTRcLjYMXRgdBzQwADmvazVvNXDgJw==
-X-Google-Smtp-Source: APXvYqzmkg+zFNZFV+4XiRoVMucGNuL9B4PTIUZALU995dSqbzMrvzrX9103Tqq3ReaFYomO3EipG7KbvJpkCDjbUKM=
-X-Received: by 2002:ac8:5457:: with SMTP id d23mr3594214qtq.93.1581447717756;
- Tue, 11 Feb 2020 11:01:57 -0800 (PST)
+        Tue, 11 Feb 2020 14:06:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:52708 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728503AbgBKTGR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 14:06:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 447741FB;
+        Tue, 11 Feb 2020 11:06:16 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD8913F68F;
+        Tue, 11 Feb 2020 11:06:15 -0800 (PST)
+Date:   Tue, 11 Feb 2020 19:06:14 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, mikko.mutanen@fi.rohmeurope.com,
+        markus.laine@fi.rohmeurope.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
+Message-ID: <20200211190614.GP4543@sirena.org.uk>
+References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+ <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20200207203752.209296-1-pmalani@chromium.org> <20200207203752.209296-2-pmalani@chromium.org>
- <dd9a8fa7-db6b-87a0-889d-b56a626a3078@collabora.com> <CACeCKac-OjvCLZ4FefsGbH9JR_suB3nL5CVLa_N0o9qnSqi3-g@mail.gmail.com>
-In-Reply-To: <CACeCKac-OjvCLZ4FefsGbH9JR_suB3nL5CVLa_N0o9qnSqi3-g@mail.gmail.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Tue, 11 Feb 2020 11:01:46 -0800
-Message-ID: <CACeCKaeXQK8KCwyZb2JBkLyCYA=+hRAHzdGr5Ycd1mAioAmNPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        heikki.krogerus@intel.com, Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ftQmbtOmUf2cr8rB"
+Content-Disposition: inline
+In-Reply-To: <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: Hire the morally handicapped.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Resending (because I didn't send it in PlainText mode, so the MLs
-blocked the email). Sorry.
 
+--ftQmbtOmUf2cr8rB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Feb 11, 2020 at 11:00 AM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Hi Enric,
->
-> Thanks as always for reviewing the patch. Kindly see my responses inline:
->
-> On Tue, Feb 11, 2020 at 2:28 AM Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
->>
->> Hi Prashant,
->>
->> On 7/2/20 21:37, Prashant Malani wrote:
->> > Some Chrome OS devices with Embedded Controllers (EC) can read and
->> > modify Type C port state.
->> >
->> > Add an entry in the DT Bindings documentation that lists out the logical
->> > device and describes the relevant port information, to be used by the
->> > corresponding driver.
->> >
->> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
->> > ---
->> >
->> > Changes in v2:
->> > - No changes. Patch first introduced in v2 of series.
->> >
->> >  .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
->> >  1 file changed, 77 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
->> >
->> > diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
->> > new file mode 100644
->> > index 00000000000000..46ebcbe76db3c2
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
->> > @@ -0,0 +1,77 @@
->> > +# SPDX-License-Identifier: GPL-2.0
->>
->> I think that Google is fine with the dual licensing here. Would be good if this
->> can be (GPL-2.0-only OR BSD-2-Clause)
->
->
-> Thanks for catching this. I will update it in the next version.
->>
->>
->> > +%YAML 1.2
->> > +---
->> > +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
->> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> > +
->> > +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
->> > +
->> > +maintainers:
->> > +  - Benson Leung <bleung@chromium.org>
->> > +  - Prashant Malani <pmalani@chromium.org>
->> > +
->> > +description:
->> > +  Chrome OS devices have an Embedded Controller(EC) which has access to
->> > +  Type C port state. This node is intended to allow the host to read and
->> > +  control the Type C ports. The node for this device should be under a
->> > +  cros-ec node like google,cros-ec-spi.
->> > +
->> > +properties:
->> > +  compatible:
->> > +    const: google,cros-ec-typec
->> > +
->> > +  port:
->> > +    description: A node that represents a physical Type C port on the
->> > +      device.
->> > +    type: object
->> > +    properties:
->> > +      port-number:
->> > +        description: The number used by the Chrome OS EC to identify
->> > +          this type C port.
->> > +        $ref: /schemas/types.yaml#/definitions/uint32
->>
->> Any range of values allowed? 0 is okay?
->
->
-> 0 is acceptable. Looks like Chrome OS EC numbers the ports as 0 to (num_ports - 1).
-> Actually, looking at it more closely, the port info EC command struct uses uint8_t (https://elixir.bootlin.com/linux/latest/source/include/linux/platform_data/cros_ec_commands.h#L4879)
-> Also, num_ports cannot be larger than: https://elixir.bootlin.com/linux/latest/ident/EC_USB_PD_MAX_PORTS
->
-> So perhaps this should be updated to say it can be any value from 0 - EC_USB_PD_MAX_PORTS ? (Not sure if I can reference #defines from header files in the DT bindings file....)
->>
->>
->> > +      power-role:
->>
->> Sorry if this question is silly, aren't this and below properties the same as
->> provided by usb-connector?  Can't this be usb-c-connector?
->>
->> Documentation/devicetree/bindings/connector/usb-connector.txt
->
->
-> That's correct, it is the same. I think there is a slight difference between the properties of usb-connector (what properties are defined as optional and required) so I don't know if we can re-use usb-connector.
-> TBH I wasn't sure about this myself. I am also not sure whether there will be an issue with usb-c-connector being "claimed" by another driver. I think Heikki could perhaps guide us here.
->>
->>
->> > +        description: Determines the power role that the Type C port will
->> > +          adopt.
->> > +        oneOf:
->> > +          - items:
->> > +            - const: sink
->> > +            - const: source
->> > +            - const: dual
->> > +      data-role:
->> > +        description: Determines the data role that the Type C port will
->> > +          adopt.
->> > +        oneOf:
->> > +          - items:
->> > +            - const: host
->> > +            - const: device
->> > +            - const: dual
->> > +      try-power-role:
->> > +        description: Determines the preferred power role of the Type C port.
->> > +        oneOf:
->> > +          - items:
->> > +            - const: sink
->> > +            - const: source
->> > +            - const: dual
->> > +
->> > +    required:
->> > +      - port-number
->> > +      - power-role
->> > +      - data-role
->> > +      - try-power-role
->> > +
->> > +required:
->> > +  - compatible
->> > +  - port
->> > +
->> > +examples:
->> > +  - |+
->>
->> Rob can confirm, but I think is a good practice add the parent node, so add the
->> cros-ec-spi node here?
->
-> Done. Will add it in the next version.
->>
->>
->> > +    typec {
->> > +      compatible = "google,cros-ec-typec";
->> > +
->> > +      port@0 {
->>
->> You can run:
->>
->>   make dt_binding_check DT_SCHEMA_FILES=<...>/chrome/google,cros-ec-typec.yaml
->>
->> And you'll get an error:
->>
->>  typec: 'port' is a required property
->
-> Noted. I will run this check before pushing next time and fix the error.
->>
->>
->> > +        port-number = <0>;
->> > +        power-role = "dual";
->> > +        data-role = "dual";
->> > +        try-power-role = "source";
->> > +      };
->> > +    };
->> >
->> Thanks,
->>
->>  Enric
->
->
->
-> Thanks,
->
-> -Prashant
+On Mon, Feb 10, 2020 at 02:13:13PM +0200, Matti Vaittinen wrote:
+
+> Provide a linear_range helper which can do conversion from user value
+> to register value 'selector'.
+
+> Mark, this is loosely bound to register handling... Do you think
+> the regmap could host these helpers?
+
+There's no real tie to regmap here, something like this could quite
+happily be used by memory mapped devices where regmap has limited uses
+and would be a lot to pull in.  A separate library would probably make
+more sense.  Not sure how many users there would be outside of power
+related stuff, I don't recall seeing the pattern elsewhere.
+
+Note also that we already have quite extensive helpers for this sort of
+stuff in the regulator API which I sense may have been involved in this
+implementation and to an extent in ALSA which takes a different approach
+with TLVs since it baked selectors directly into the ABI.
+
+--ftQmbtOmUf2cr8rB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5C+yUACgkQJNaLcl1U
+h9BvKAf/RRzCbi0uxTdR1wgKG+fIeGPs3TkKagNkbWs4xD+Ppm3RpSu7lGNVDe2P
+pNzxz4qP/9Q46Dm6iRplC5CsAARbYKjkflALvQ1TvuZB+vss5jc/9ARdOeKpRuhJ
+T9kFP6CfRPh5JgDPwqqk/lUhe9fe5Ta26uoegdG9wZsn8J/vW5pnY7EDUkV4axPt
+43zEvmzeyYnSBMARnvl9jdj4ysDEh6YpGy/lKGV9wvUMN8JmwtuEqbXgrtrVFzBd
+dS12KPckixezMm7VwMrcZ9ain+W5knJt1yh/fjnBCqjd73rsWvsD8ijNNn7U0wPR
+NdkkyrqpvCiXu7Om10I9uS2DhFOfYg==
+=hzV/
+-----END PGP SIGNATURE-----
+
+--ftQmbtOmUf2cr8rB--
