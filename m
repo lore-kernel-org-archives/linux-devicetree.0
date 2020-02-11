@@ -2,130 +2,101 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082F6C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0030DC352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC03A20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC76420848
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 17:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581441333;
+	bh=NFP+GkcvKn1TghMtqg0aTQVPXT827ABPxl10ddw+pB8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ozjLNOiQpPOZzu9uozTmry9K5AwpWJNUTAjr7AiY3k2UNQS+Kac0p/k/TL7np5/Q/
+	 I8Y1QX9Cq7t3Lnqy0HT20gQzydEz8WtZuMvUsy+dtVdHjHITLpJSP9YZNb7ID8jcob
+	 y77VD5SPLym/A8Ln73k+HzPfquPvwveMvBHeRfeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgBKQoS (ORCPT
+        id S1728684AbgBKRPd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:44:18 -0500
-Received: from muru.com ([72.249.23.125]:54706 "EHLO muru.com"
+        Tue, 11 Feb 2020 12:15:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgBKQoS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:44:18 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 5564E80D4;
-        Tue, 11 Feb 2020 16:45:00 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 08:44:13 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Rob Herring <robh@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] mfd: motmdm: Add Motorola TS 27.010 serdev modem
- driver for droid4
-Message-ID: <20200211164413.GG64767@atomide.com>
-References: <20200210040107.10306-1-tony@atomide.com>
- <20200210040107.10306-3-tony@atomide.com>
+        id S1728078AbgBKRPd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 12:15:33 -0500
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 841CD20848
+        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 17:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581441332;
+        bh=NFP+GkcvKn1TghMtqg0aTQVPXT827ABPxl10ddw+pB8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bJlPHF1EJvyFtpSwsCbRnoZQHUIHwO46rSG1klBJVb2IavJW8USQPuVo+Tg8hR9Ul
+         axzP/wm0T07aOaZLdIKAxhpmI911F3ScoZt4e5DrFHsm8KkIDt1Dzk7xxMS/PLaXUb
+         E7gvX/LoxIWXmyXwvkFECKjFzAuDmqe7xmEkWZQw=
+Received: by mail-qk1-f179.google.com with SMTP id g195so10780076qke.13
+        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 09:15:32 -0800 (PST)
+X-Gm-Message-State: APjAAAWqGQHGfgJmp9MLIvFmgoF7tMZQfra6pIQkb/ZIFKwirk2Vmhc7
+        cwdtzKw6wxaPsRvDdb4V5lhpOA/Lknbrvl9MXA==
+X-Google-Smtp-Source: APXvYqyWKQeqpFVRNZhOQFHnvB0d/oetTLA9uewWxSJnz33oLogqcGENofESStJaAB8QilLhPv/RwlBh325G2oQpd2k=
+X-Received: by 2002:a37:6457:: with SMTP id y84mr7310974qkb.254.1581441331614;
+ Tue, 11 Feb 2020 09:15:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210040107.10306-3-tony@atomide.com>
+References: <20200206113328.7296-1-bage@linutronix.de> <20200206113328.7296-2-bage@linutronix.de>
+ <20200210074310.c6adwjegqouzs6uc@gilmour.lan>
+In-Reply-To: <20200210074310.c6adwjegqouzs6uc@gilmour.lan>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 11 Feb 2020 11:15:20 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ3QCMFygQiKMvnPQ8wJALaKtPS4ykZKA1vgzbo8wSY5A@mail.gmail.com>
+Message-ID: <CAL_JsqJ3QCMFygQiKMvnPQ8wJALaKtPS4ykZKA1vgzbo8wSY5A@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: Add vendor prefix lx for Linutronix
+To:     Maxime Ripard <maxime@cerno.tech>, bage@linutronix.de
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Benedikt Spranger <b.spranger@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200210 04:02]:
-> --- /dev/null
-> +++ b/drivers/mfd/motorola-mdm.c
-...
-> +struct motmdm_dlci {
-> +	struct gsm_serdev_dlci gsm_dlci;
-> +	struct list_head node;
-> +	wait_queue_head_t read_queue;
-> +	struct kfifo read_fifo;
-> +	int line;
-> +	u16 id;
-> +	int (*send_command)(struct device *dev, struct motmdm_dlci *mot_dlci,
-> +			    unsigned long timeout_ms, const unsigned char *cmd,
-> +			    size_t cmdlen,
-> +			    unsigned char *rsp, size_t rsplen);
+On Mon, Feb 10, 2020 at 1:43 AM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Thu, Feb 06, 2020 at 12:33:23PM +0100, bage@linutronix.de wrote:
+> > From: Bastian Germann <bage@linutronix.de>
+> >
+> > Add a vendor prefix for lx, known as Linutronix GmbH.
+> > Website: https://linutronix.de/
+> >
+> > Co-developed-by: Benedikt Spranger <b.spranger@linutronix.de>
+> > Signed-off-by: Benedikt Spranger <b.spranger@linutronix.de>
+> > Signed-off-by: Bastian Germann <bage@linutronix.de>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > index 7fcd48adc276..f6fea38b0848 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > @@ -561,6 +561,8 @@ patternProperties:
+> >      description: LSI Corp. (LSI Logic)
+> >    "^lwn,.*":
+> >      description: Liebherr-Werk Nenzing GmbH
+> > +  "^lx,.*":
+> > +    description: Linutronix GmbH
+>
+> Vendor names are usually either the vendor name itself or the stock
+> name, so you should really use linutronix here
 
-Looks like the send_command above is now useless and can be
-left out, incremental patch below for reference.
+Good point.
 
-I'll be sending out v3 series of patches after waiting few days
-for comments.
+I hadn't pushed this out, so I've dropped it until sorted.
 
-Regards,
-
-Tony
-
-8< ------------------
-diff --git a/drivers/mfd/motorola-mdm.c b/drivers/mfd/motorola-mdm.c
---- a/drivers/mfd/motorola-mdm.c
-+++ b/drivers/mfd/motorola-mdm.c
-@@ -92,10 +92,6 @@ struct motmdm_dlci {
- 	struct kfifo read_fifo;
- 	int line;
- 	u16 id;
--	int (*send_command)(struct device *dev, struct motmdm_dlci *mot_dlci,
--			    unsigned long timeout_ms, const unsigned char *cmd,
--			    size_t cmdlen,
--			    unsigned char *rsp, size_t rsplen);
- 	struct list_head list;
- 	void *privdata;		/* Do not use, internal data */
- 	void *drvdata;		/* Available for consumer drivers */
-@@ -419,11 +415,11 @@ static int motmdm_write(struct device *dev, struct motmdm_dlci *mot_dlci,
-  * Helper for child device drivers to send a command to a DLCI and wait
-  * for result with a matching packet ID.
-  */
--static int motmdm_dlci_send_command(struct device *dev,
--				    struct motmdm_dlci *mot_dlci,
--				    unsigned long timeout_ms,
--				    const unsigned char *cmd, size_t cmdlen,
--				    unsigned char *rsp, size_t rsplen)
-+static int motmdm_send_command(struct device *dev,
-+			       struct motmdm_dlci *mot_dlci,
-+			       unsigned long timeout_ms,
-+			       const unsigned char *cmd, size_t cmdlen,
-+			       unsigned char *rsp, size_t rsplen)
- {
- 	struct motmdm_response *resp, *tmp;
- 	struct list_head *pos, *q;
-@@ -502,7 +498,6 @@ static int motmdm_register_dlci(struct device *dev,
- 	ddata = gsm_serdev_get_drvdata(dev);
- 	gsd = &ddata->gsd;
- 	gsm_dlci = &mot_dlci->gsm_dlci;
--	mot_dlci->send_command = motmdm_dlci_send_command;
- 	INIT_LIST_HEAD(&mot_dlci->list);
- 	init_waitqueue_head(&mot_dlci->read_queue);
- 	gsm_dlci->line = mot_dlci->line;
-@@ -929,9 +924,8 @@ static int motmdm_check_revision(struct device *dev)
- 		goto free_buf;
- 
- 	while (retries--) {
--		err = motmdm_dlci_send_command(dev, mot_dlci, 1000,
--					       cmd, strlen(cmd),
--					       buf, PAGE_SIZE);
-+		err = motmdm_send_command(dev, mot_dlci, 1000, cmd, strlen(cmd),
-+					  buf, PAGE_SIZE);
- 		if (err >= 0) {
- 			msleep(100);
- 			break;
--- 
-2.25.0
+Rob
