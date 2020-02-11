@@ -4,135 +4,301 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58873C35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A3DC35242
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CA0215A4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC1220714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 18:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581444315;
-	bh=6PE1cQDVRluOgEBrX4BbGhN0yYnAPz0zqhe0TovaI5o=;
+	s=default; t=1581444805;
+	bh=3riax90X3cB1LTgwegasbmXkNo83BsShz5HQj87AsSg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o7ouzhH42reG457AsQioMgFyM4I0Zpr5qxhYGg8Heu4Y6BLOw3lZGzDKLQMbIJQuM
-	 7oH3tjKnHksaEeOOf2+GFPOAzHm3bfecvx6lTvpDhzMjLEvwtxh/lNrrS8mtYP5LcY
-	 cdHqIWHTv3js0sqjCxcb1lV8sb9gAkDrzhJinlqI=
+	b=jxyyklJnZuXKy0JXbHzTgdkaGwxpLen6Jcj4DqL8xIFC59uh/AHtbhvcBchDGw8ZA
+	 ddk4qzac24epoVuF4pHHLSV1cddFqnMktmQaZsks/eza3cpznkiVNchG5P6HIopXF6
+	 8XHL3TX2COZkvMiwOmXP7Ai9D+OLxXZWqm4C+2JM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbgBKSFO (ORCPT
+        id S1728563AbgBKSNZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 13:05:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
+        Tue, 11 Feb 2020 13:13:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731149AbgBKSFO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 13:05:14 -0500
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        id S1727764AbgBKSNY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 13:13:24 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91814208C3;
-        Tue, 11 Feb 2020 18:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9525D20848;
+        Tue, 11 Feb 2020 18:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581444313;
-        bh=6PE1cQDVRluOgEBrX4BbGhN0yYnAPz0zqhe0TovaI5o=;
+        s=default; t=1581444803;
+        bh=3riax90X3cB1LTgwegasbmXkNo83BsShz5HQj87AsSg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=l1Sa6LV29Nk2K2rAs5pOGEdWBrK7blZ394zkXkcKtGeTSea4pto6xOb1UC68LvoCb
-         rQcQkopTRHIkdvHboYFj7gcwFDBRV0Ay8v9AXIo6AahAcEAMIjHAGoo+hvdXaboJ8K
-         /FUJ5aUHuqo8wnpZQT4pyg7N6GzSzhJ0h0lMCm4M=
-Received: by mail-qk1-f175.google.com with SMTP id z19so7940554qkj.5;
-        Tue, 11 Feb 2020 10:05:13 -0800 (PST)
-X-Gm-Message-State: APjAAAUerb4PgCnHvqiurxiUKNCN4ViBEFdeAoWL/EKVCNB4guzu5ron
-        cES1qOx3XUZE2lpGa2Jvg21D8B/6Vx5vCs37pw==
-X-Google-Smtp-Source: APXvYqzAAdsaAknJAJ5NQJ1yPYP+6XiEu2QBieclv1o0pXq2SzMkQhREIj0fKiHyiUC2B4XLKseSBuDPfByqgqJIuII=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr7476483qkd.223.1581444312635;
- Tue, 11 Feb 2020 10:05:12 -0800 (PST)
+        b=vKBQdf7sq8abEa5O+/jfAR/LrlO09VRq0Z8A4pR8a4/sVqTwKbBjz0b+jF4mKUjJz
+         cbaIxk3EQNVW6V0EEQQtrPeEUrmfiWllfOzuhSsW7m9ur/R0BZ0zlVs25gOQg+kvxl
+         W33tqbKqHX0dSPBeI6mowsfPGrsH3gclSmBnKwmI=
+Received: by mail-qk1-f181.google.com with SMTP id z19so7970084qkj.5;
+        Tue, 11 Feb 2020 10:13:23 -0800 (PST)
+X-Gm-Message-State: APjAAAWG3QoKc+KzhcdfRy/wKBv0TJ2tG6+7dqEUajKaolfEUHHLwY+c
+        ZLROSV2rixCO2iSyFLcyMB30ZELotSYPEYho5g==
+X-Google-Smtp-Source: APXvYqwRNNy+ur96m7q6c3i3fkxvIT/TIzcSWdajVPSiLV011854FY1lIs7P3ivinO4cTTgIv5XuOleMFRvHINxetz0=
+X-Received: by 2002:a37:6042:: with SMTP id u63mr6765137qkb.119.1581444802651;
+ Tue, 11 Feb 2020 10:13:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-4-aford173@gmail.com>
- <20200206184030.GA11381@bogus> <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
-In-Reply-To: <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
+References: <20200130135040.22575-1-olivier.moysan@st.com> <20200206182125.GA23274@bogus>
+ <843b9213-99c0-ec9f-bde6-4745a9cb6221@st.com>
+In-Reply-To: <843b9213-99c0-ec9f-bde6-4745a9cb6221@st.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 12:05:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLJweVLgYhoU-3cmg1aFwRNtAehx2-Euy-cwUsRy2jsgw@mail.gmail.com>
-Message-ID: <CAL_JsqLJweVLgYhoU-3cmg1aFwRNtAehx2-Euy-cwUsRy2jsgw@mail.gmail.com>
-Subject: Re: [PATCH V2 4/5] dt-bindings: spi: spi-nxp-fspi: Add support for
- imx8mm, imx8qxp
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 11 Feb 2020 12:13:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJECUKkvZ1rt=4p5sMku3id973drEqLDvMZp8Fr+wx9tA@mail.gmail.com>
+Message-ID: <CAL_JsqJECUKkvZ1rt=4p5sMku3id973drEqLDvMZp8Fr+wx9tA@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: dt-bindings: stm32: convert sai to json-schema
+To:     Olivier MOYSAN <olivier.moysan@st.com>
+Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 4:49 AM Adam Ford <aford173@gmail.com> wrote:
+On Fri, Feb 7, 2020 at 7:42 AM Olivier MOYSAN <olivier.moysan@st.com> wrote:
 >
-> On Thu, Feb 6, 2020 at 2:46 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sun, Feb 02, 2020 at 06:59:49AM -0600, Adam Ford wrote:
-> > > Add support for nxp,imx8qxp-fspi and nxp,imx8mm-fspi do the bindings
-> >
-> > s/do/to/
+> Hi Rob,
 >
-> Oops.  Thanks for catching that.
->
+> On 2/6/20 7:21 PM, Rob Herring wrote:
+> > On Thu, Jan 30, 2020 at 02:50:40PM +0100, Olivier Moysan wrote:
+> >> Convert the STM32 SAI bindings to DT schema format using json-schema.
+> >>
+> >> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> >> ---
+> >>   .../bindings/sound/st,stm32-sai.txt           | 107 ----------
+> >>   .../bindings/sound/st,stm32-sai.yaml          | 193 ++++++++++++++++++
+> >>   2 files changed, 193 insertions(+), 107 deletions(-)
+> >>   delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> >>   create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
 > >
-> > > document.
-> > >
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > > ---
-> > > V2: No change
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > > index 2cd67eb727d4..7ac60d9fe357 100644
-> > > --- a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > > @@ -2,6 +2,9 @@
-> > >
-> > >  Required properties:
-> > >    - compatible : Should be "nxp,lx2160a-fspi"
-> > > +                         "nxp,imx8qxp-fspi"
-> > > +                         "nxp,imx8mm-fspi"
-> >
-> > All 3 are different and no compatibility?
+> >> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+> >> new file mode 100644
+> >> index 000000000000..33dca007fc86
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+> >> @@ -0,0 +1,193 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/sound/st,stm32-sai.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: STMicroelectronics STM32 Serial Audio Interface (SAI)
+> >> +
+> >> +maintainers:
+> >> +  - Olivier Moysan <olivier.moysan@st.com>
+> >> +
+> >> +description:
+> >> +  The SAI interface (Serial Audio Interface) offers a wide set of audio
+> >> +  protocols as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
+> >> +  The SAI contains two independent audio sub-blocks. Each sub-block has
+> >> +  its own clock generator and I/O lines controller.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    enum:
+> >> +      - st,stm32f4-sai
+> >> +      - st,stm32h7-sai
+> >> +
+> >> +  reg:
+> >> +    items:
+> >> +      - description: Base address and size of SAI common register set.
+> >> +      - description: Base address and size of SAI identification register set.
+> >> +    minItems: 1
+> >> +    maxItems: 2
+> >> +
+> >> +  ranges:
+> >> +    maxItems: 1
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+> >> +  resets:
+> >> +    maxItems: 1
+> >> +
+> >> +  "#address-cells":
+> >> +    const: 1
+> >> +
+> >> +  "#size-cells":
+> >> +    const: 1
+> >> +
+> >> +  clocks:
+> >> +    items:
+> >> +      - description: pclk feeds the peripheral bus interface.
+> >> +      - description: x8k, SAI parent clock for sampling rates multiple of 8kHz.
+> >> +      - description: x11k, SAI parent clock for sampling rates multiple of 11.025kHz.
+> >> +
+> >> +  clock-names:
+> >> +    items:
+> >> +      enum: [ pclk, x8k, x11k ]
+> >> +    minItems: 3
+> >> +    maxItems: 3
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - ranges
+> >> +  - "#address-cells"
+> >> +  - "#size-cells"
+> >> +  - clocks
+> >> +  - clock-names
+> >> +
+> >> +patternProperties:
+> >> +  "^audio-controller@[0-9a-f]+$":
+> >> +    type: object
+> >> +    description:
+> >> +      Two subnodes corresponding to SAI sub-block instances A et B
+> >> +      can be defined. Subnode can be omitted for unsused sub-block.
+> >> +
+> >> +    properties:
+> >> +      compatible:
+> >> +        description: Compatible for SAI sub-block A or B.
+> >> +        enum:
+> >> +          - st,stm32-sai-sub-a
+> >> +          - st,stm32-sai-sub-b
+> > pattern: 'st,stm32-sai-sub-[ab]'
+> I will change this in v2
+> >> +
+> >> +      "#sound-dai-cells":
+> >> +        const: 0
+> >> +
+> >> +      reg:
+> >> +        maxItems: 1
+> >> +
+> >> +      clocks:
+> >> +        items:
+> >> +          - description: sai_ck clock feeding the internal clock generator.
+> >> +          - description: MCLK clock from a SAI set as master clock provider.
+> >> +        minItems: 1
+> >> +        maxItems: 2
+> >> +
+> >> +      clock-names:
+> >> +        items:
+> >> +          - const: sai_ck
+> >> +          - const: MCLK
+> >> +        minItems: 1
+> >> +        maxItems: 2
+> >> +
+> >> +      dmas:
+> >> +        items:
+> >> +          - description: SAI sub-block is configured as a capture DAI.
+> >> +          - description: SAI sub-block is configured as a playback DAI.
+> >> +        minItems: 1
+> >> +        maxItems: 1
+> > This is defining that dmas has 2 entries, but then limits it to the 1st
+> > entry only.
+> dma can be either "rx" or "tx", but not both.
+> Maybe, the following syntax is more appropriate:
 >
-> This was all based on a series from NXP's repo where they have some
-> data tables all associated to the various compatible entries, and they
-> created a place holder for quirks.  Based on an older NXP repo, it
-> seems like there might be some quirks associated to the different
-> families, but the newer repo where I got this patch series didn't
-> implement them, however, it's possible the quirks may enhance
-> functionality later. If that's true, I think this is the best solution
-> for future enhancements without having to change the compatibility
-> names down the road.  Maybe someone from NXP can comment?  I am just
-> trying to help push things upstream so we can support QSPI flash.  I
-> would prefer to keep them separate for now, because we might have
-> these improvements later. However, I'll do what you request.  Do you
-> want me to drop the additional compatible flags and just use the
-> original, or create a new one that's a bit more generic?
+>        dmas:
+>          maxItems: 1
+>
+>        dma-names:
+>          description: |
+>            rx: SAI sub-block is configured as a capture DAI.
+>            tx: SAI sub-block is configured as a playback DAI.
+>          items:
+>            - enum: [ rx, tx ]
 
-Neither.
+Yes, but for a single entry you can drop 'items'.
 
-If you already know that they have differences, then as-is is fine.
+>
+> >> +
+> >> +      dma-names:
+> >> +        items:
+> >> +          - enum: [ rx, tx ]
+> >> +
+> >> +      st,sync:
+> >> +        description:
+> >> +          Configure the SAI sub-block as slave of another SAI sub-block.
+> >> +          By default SAI sub-block is in asynchronous mode.
+> >> +          Must contain the phandle and index of the SAI sub-block providing
+> >> +          the synchronization.
+> >> +        allOf:
+> >> +          - $ref: /schemas/types.yaml#definitions/phandle-array
+> >> +          - maxItems: 1
+> >> +
+> >> +      st,iec60958:
+> >> +        description:
+> >> +          If set, support S/PDIF IEC6958 protocol for playback.
+> >> +          IEC60958 protocol is not available for capture.
+> >> +          By default, custom protocol is assumed, meaning that protocol is
+> >> +          configured according to protocol defined in related DAI link node,
+> >> +          such as i2s, left justified, right justified, dsp and pdm protocols.
+> >> +        allOf:
+> >> +          - $ref: /schemas/types.yaml#definitions/flag
+> >> +
+> >> +      "#clock-cells":
+> >> +        description: Configure the SAI device as master clock provider.
+> >> +        const: 0
+> >> +
+> >> +    required:
+> >> +      - compatible
+> >> +      - "#sound-dai-cells"
+> >> +      - reg
+> >> +      - clocks
+> >> +      - clock-names
+> >> +      - dmas
+> >> +      - dma-names
+> >         additionalProperties: false.
+> >
+> >> +
+> >> +allOf:
+> >> +  - if:
+> >> +      properties:
+> >> +        compatible:
+> >> +          contains:
+> >> +            const: st,stm32f4-sai
+> >> +
+> >> +  - then:
+> >> +      properties:
+> >> +        clocks:
+> >> +          minItems: 2
+> >> +          maxItems: 2
+> >> +
+> >> +        clock-names:
+> >> +          items:
+> >> +            enum: [ x8k, x11k ]
+> > Define the order.
+> >
+> Do you mean, adding in clocks property  :
+>            items:
+>              - description: x8k, SAI parent clock for sampling rates
+> multiple of 8kHz.
+>              - description: x11k, SAI parent clock for sampling rates
+> multiple of 11.025kHz.
 
-If they are believed to be 'the same', then you do:
+That too, but for clocks you need:
 
-compatible = "nxp,imx8qxp-fspi", "nxp,imx8mm-fspi";
+clock-names:
+  items:
+    - const: x8k
+    - const: x11k
 
-assuming i.MX8MM was the first version.
+> But, it seems to me that this is redundant with previous definition of
+> clocks property.
 
-This allows a MX8QXP to work without OS changes if the driver already
-supports the previous chip. And if any quirks are found, then the OS
-can handle them without a DT change.
+It's not because it's clocks in different positions.
 
 Rob
