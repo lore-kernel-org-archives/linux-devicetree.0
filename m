@@ -2,82 +2,91 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80278C3B18B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04295C352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACDE206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA5A2082F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="aUXniMUD"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eXretsJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbgBKMNa (ORCPT
+        id S1727966AbgBKMOO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:13:30 -0500
-Received: from onstation.org ([52.200.56.107]:58246 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgBKMNa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:13:30 -0500
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Tue, 11 Feb 2020 07:14:14 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:36470 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727802AbgBKMOO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 07:14:14 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581423253; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=oRKfcwP++zy8LjliDmJ593dnq9AHGwth3BPAylfi5co=; b=eXretsJ+/mj+G0N5DCMlWwXqf9AwitKhUaJn+SndTHH6LELzjGfpexGcsvldqxYwKMFI7/58
+ fDdsnA+XuEdFNlLv3arLLhkVKokF+wW22EEATFnK7bSEYplF4B+hk0exzX/Tp3g3uv8ibsLr
+ kFVgthr0paor276yMAFeWbd2i/M=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e429a90.7f39cbc3ec70-smtp-out-n01;
+ Tue, 11 Feb 2020 12:14:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AA515C4479D; Tue, 11 Feb 2020 12:14:08 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 513463E955;
-        Tue, 11 Feb 2020 12:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1581423209;
-        bh=Yaag2vNG13oaTjnQhFARRRVSPgpOAMZBTu/94Jo7vwE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=aUXniMUDkl5e2GeGgFVmFYepCVWDbUUVUpMWyyBptqL+TKp9kxYQ+2a42wzSbF3M4
-         vCnE7bjI6l51LscHQgEO5w4c2mr4YGELt41I7LMRyAjho9RbftX5PwMavr6aav6KeU
-         aB4imnNm65+zEaUi7r9Vs4fzNhauSTjWGFwiWXTc=
-From:   Brian Masney <masneyb@onstation.org>
-To:     dmitry.torokhov@gmail.com
-Cc:     linux-input@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 0/2] Input: remove msm-vibrator driver and bindings
-Date:   Tue, 11 Feb 2020 07:13:16 -0500
-Message-Id: <20200211121318.144067-1-masneyb@onstation.org>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A6A3C43383;
+        Tue, 11 Feb 2020 12:14:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A6A3C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>,
+        robh@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 1/2] clk: qcom: videocc: Update the clock flag for video_cc_vcodec0_core_clk
+Date:   Tue, 11 Feb 2020 17:43:55 +0530
+Message-Id: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Here's a small patch series that removes the msm-vibrator driver and
-bindings. These two patches are broken out from this patch series:
+The clock disable signal for video_cc_vcodec0_core_clk is tied to
+vcodec0_gdsc which is supported in the HW control mode. Thus turning off
+the clock would be taken care automatically when the GDSC turns OFF by
+hardware and clock driver does not require to poll on the CLK_OFF bit.
 
-https://lore.kernel.org/lkml/20191205002503.13088-5-masneyb@onstation.org/
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ drivers/clk/qcom/videocc-sc7180.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In a nutshell, I'm waiting for someone from Qualcomm to either post a
-patch to support setting the clock duty cycle or someone to post
-information about the m,n,d registers for the clocks. Once that's done,
-no other changes should be needed in the input subsystem.
+diff --git a/drivers/clk/qcom/videocc-sc7180.c b/drivers/clk/qcom/videocc-sc7180.c
+index c363c3c..276e5ec 100644
+--- a/drivers/clk/qcom/videocc-sc7180.c
++++ b/drivers/clk/qcom/videocc-sc7180.c
+@@ -97,7 +97,7 @@ static struct clk_branch video_cc_vcodec0_axi_clk = {
 
-In the mean time, the msm-vibrator driver needs to be removed from
-upstream.
-
-Changes since v1:
-- Updated commit messages to remove references to clk-vibrator.
-
-Brian Masney (2):
-  dt-bindings: Input: remove msm-vibrator
-  Input: remove msm-vibrator driver
-
- .../bindings/input/msm-vibrator.txt           |  36 ---
- drivers/input/misc/Kconfig                    |  10 -
- drivers/input/misc/Makefile                   |   1 -
- drivers/input/misc/msm-vibrator.c             | 281 ------------------
- 4 files changed, 328 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/msm-vibrator.txt
- delete mode 100644 drivers/input/misc/msm-vibrator.c
-
--- 
-2.24.1
-
+ static struct clk_branch video_cc_vcodec0_core_clk = {
+ 	.halt_reg = 0x890,
+-	.halt_check = BRANCH_HALT,
++	.halt_check = BRANCH_HALT_VOTED,
+ 	.clkr = {
+ 		.enable_reg = 0x890,
+ 		.enable_mask = BIT(0),
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
