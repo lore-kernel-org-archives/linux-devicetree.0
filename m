@@ -4,47 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BE2C3B187
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE6BC3B187
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447AE20708
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61792168B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581436283;
-	bh=Mtx1xU/E0k84g5iO+oGAnMEJw4O0SfA58856oXy0qXk=;
+	s=default; t=1581436306;
+	bh=0QZvdUfJgkvZk+81kwPbo00lEghQRRk4tPsxsErjKOQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=feQVuu3MI49/zp66UeF7Ha4JP6sW7HTmvRSafiyGEPjQcrZ7GwbaKJz0f8tQ2OHoW
-	 E34MRs6rLQvxXd/nf6X88PSOoi7Af+gAB1Y7DC/wLOUPStNuQto2rnkU0YvnVAD9wl
-	 V8npxBiJl7Ma/ZCGXvOi2Ukw4lvw5OV9eqKaK/IA=
+	b=KAA5hR8afQ8tBiHP5T3Ul7psKZwSMGjt1b6CVr7qWOMk9vqLoTyicP3zN2CvOHo8a
+	 1CaetB9gjrNoVCZ8fxmivPXY5BAeSwwRQHg2DLS9fk01YBXkApxfUhZ9GO2lQPYO63
+	 9i2OtSi0qY1wFyserwH/v9c5Fi+PKME6zwo6eitA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgBKPvW (ORCPT
+        id S1730453AbgBKPvp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:51:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:48782 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 10:51:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:48906 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbgBKPvW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:51:22 -0500
+        id S1730613AbgBKPvo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:51:44 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B23230E;
-        Tue, 11 Feb 2020 07:51:22 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D193131B;
+        Tue, 11 Feb 2020 07:51:43 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4B933F68E;
-        Tue, 11 Feb 2020 07:51:21 -0800 (PST)
-Date:   Tue, 11 Feb 2020 15:51:20 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 579803F68E;
+        Tue, 11 Feb 2020 07:51:43 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:51:41 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     broonie@kernel.org, davem@davemloft.net,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mark.rutland@arm.com, mchehab+samsung@kernel.org,
-        robh+dt@kernel.org, sravanhome@gmail.com
-Subject: Applied "MAINTAINERS: Add entry for mp5416 PMIC driver" to the regulator tree
-In-Reply-To: <20200204110419.25933-4-sravanhome@gmail.com>
-Message-Id: <applied-20200204110419.25933-4-sravanhome@gmail.com>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "dt-binding: spi: add bindings for spi-ar934x" to the spi tree
+In-Reply-To: <20200210034152.49063-3-gch981213@gmail.com>
+Message-Id: <applied-20200210034152.49063-3-gch981213@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -53,11 +51,11 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   MAINTAINERS: Add entry for mp5416 PMIC driver
+   dt-binding: spi: add bindings for spi-ar934x
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.7
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -78,34 +76,69 @@ to this mail.
 Thanks,
 Mark
 
-From c1e1fa0ae5ba99f502bd2f5a4fd34d0ea22f1fdf Mon Sep 17 00:00:00 2001
-From: Saravanan Sekar <sravanhome@gmail.com>
-Date: Tue, 4 Feb 2020 12:04:19 +0100
-Subject: [PATCH] MAINTAINERS: Add entry for mp5416 PMIC driver
+From 78af6edf180d4f007561fba735d0c5dbd1739e90 Mon Sep 17 00:00:00 2001
+From: Chuanhong Guo <gch981213@gmail.com>
+Date: Mon, 10 Feb 2020 11:41:52 +0800
+Subject: [PATCH] dt-binding: spi: add bindings for spi-ar934x
 
-Add MAINTAINERS entry for Monolithic Power Systems mp5416 PMIC driver.
+Add binding documentation for SPI controller in Qualcomm Atheros
+AR934x/QCA95xx SoCs.
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-Link: https://lore.kernel.org/r/20200204110419.25933-4-sravanhome@gmail.com
+Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+Link: https://lore.kernel.org/r/20200210034152.49063-3-gch981213@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../bindings/spi/qca,ar934x-spi.yaml          | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 38fe2f3f7b6f..060d48e5615c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11259,7 +11259,8 @@ F:	drivers/tty/mxser.*
- MONOLITHIC POWER SYSTEM PMIC DRIVER
- M:	Saravanan Sekar <sravanhome@gmail.com>
- S:	Maintained
--F:	Documentation/devicetree/bindings/regulator/mpq7920.yaml
-+F:	Documentation/devicetree/bindings/regulator/mps,mp*.yaml
-+F:	drivers/regulator/mp5416.c
- F:	drivers/regulator/mpq7920.c
- F:	drivers/regulator/mpq7920.h
- 
+diff --git a/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+new file mode 100644
+index 000000000000..2aa766759d59
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/qca,ar934x-spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Atheros AR934x/QCA95xx SoC SPI controller
++
++maintainers:
++  - Chuanhong Guo <gch981213@gmail.com>
++
++allOf:
++  - $ref: spi-controller.yaml#
++
++properties:
++  compatible:
++    const: qca,ar934x-spi
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#address-cells'
++  - '#size-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/ath79-clk.h>
++    spi: spi@1f000000 {
++        compatible = "qca,ar934x-spi";
++        reg = <0x1f000000 0x1c>;
++        clocks = <&pll ATH79_CLK_AHB>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
 -- 
 2.20.1
 
