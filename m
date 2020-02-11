@@ -4,115 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3F8C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20DEC3B187
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534BF206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6EE206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 12:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PP2l1s3L"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W4SkM/fN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgBKMO2 (ORCPT
+        id S1728312AbgBKMQc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 07:14:28 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:36470 "EHLO
+        Tue, 11 Feb 2020 07:16:32 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:61819 "EHLO
         mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727960AbgBKMO2 (ORCPT
+        by vger.kernel.org with ESMTP id S1728057AbgBKMQc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 07:14:28 -0500
+        Tue, 11 Feb 2020 07:16:32 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581423267; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=u1q5C/3e5zHh/x52XPH51N6g1G9jstuQCCgJKVOicgY=; b=PP2l1s3L1ZxWuILZbwINjoONJQaPz4zoR+f2EwhsP0+i8XVifdo2BOiRcYeBq4yUw9M6q9D1
- 9EOnTDU6nD3cLimboJx/cLq2vyFMrG+kd6Md+QJ5rY3cd4IteC9Far5Dj2jKHDgZfoEfXXh0
- cSQAGBjgB6Q8htyOCVETsb73r/o=
+ s=smtp; t=1581423391; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=O4Uzm0kXYS5RWZJf/jv6Ip8Srev+mpFkK4pytBqAReM=; b=W4SkM/fN5PjlhZ0B1ihHe4h9Ar/ZMle0PNsJ7fF+iLC5SuG+xyTUGsUlu5S+ZwLJuCBSeplp
+ LcO+HmoYKMd0DD70b2e145h1+P59J6C2fIJe4OA8UPg+9OEejyZuSMKYM78BGSy9oxoyEYnq
+ 4BYqKdzheeO76SZlBnmMxq8mKXw=
 X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e429a9e.7f5331baa378-smtp-out-n03;
- Tue, 11 Feb 2020 12:14:22 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e429b17.7f533cb2a420-smtp-out-n03;
+ Tue, 11 Feb 2020 12:16:23 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B42E8C4479D; Tue, 11 Feb 2020 12:14:22 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        id CB549C447A2; Tue, 11 Feb 2020 12:16:23 +0000 (UTC)
+Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A51A4C43383;
-        Tue, 11 Feb 2020 12:14:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A51A4C43383
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B739FC43383;
+        Tue, 11 Feb 2020 12:16:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B739FC43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>,
-        robh@kernel.org
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 2/2] clk: qcom: dispcc: Remove support of disp_cc_mdss_rscc_ahb_clk
-Date:   Tue, 11 Feb 2020 17:43:56 +0530
-Message-Id: <1581423236-21341-2-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
-References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mka@chromium.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        hemantg@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        gubbaven@codeaurora.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: [PATCH v1] arm64: dts: qcom: sc7180: Add node for bluetooth soc wcn3990
+Date:   Tue, 11 Feb 2020 17:46:12 +0530
+Message-Id: <20200211121612.29075-1-bgodavar@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The disp_cc_mdss_rscc_ahb_clk is default enabled from hardware and thus
-does not require to be marked CRITICAL. This which would allow the RCG to
-be turned OFF when the display turns OFF and not blocking XO.
+Add node for bluetooth soc wcn3990.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 ---
- drivers/clk/qcom/dispcc-sc7180.c | 19 -------------------
- 1 file changed, 19 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
-index dd7af41..0a5d395 100644
---- a/drivers/clk/qcom/dispcc-sc7180.c
-+++ b/drivers/clk/qcom/dispcc-sc7180.c
-@@ -592,24 +592,6 @@ static struct clk_branch disp_cc_mdss_rot_clk = {
- 	},
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50ad4fde..19f82ddc1f09 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -19,6 +19,7 @@
+ 	aliases {
+ 		hsuart0 = &uart3;
+ 		serial0 = &uart8;
++		bluetooth0 = &bluetooth;
+ 	};
+ 
+ 	chosen {
+@@ -256,6 +257,16 @@
+ 
+ &uart3 {
+ 	status = "okay";
++	bluetooth: wcn3990-bt {
++		compatible = "qcom,wcn3990-bt";
++		vddio-supply = <&vreg_l10a_1p8>;
++		vddxo-supply = <&vreg_l1c_1p8>;
++		vddrf-supply = <&vreg_l2c_1p3>;
++		vddch0-supply = <&vreg_l10c_3p3>;
++		max-speed = <3200000>;
++		clocks = <&rpmhcc RPMH_RF_CLK2>;
++		status = "okay";
++	};
  };
-
--static struct clk_branch disp_cc_mdss_rscc_ahb_clk = {
--	.halt_reg = 0x400c,
--	.halt_check = BRANCH_HALT,
--	.clkr = {
--		.enable_reg = 0x400c,
--		.enable_mask = BIT(0),
--		.hw.init = &(struct clk_init_data){
--			.name = "disp_cc_mdss_rscc_ahb_clk",
--			.parent_data = &(const struct clk_parent_data){
--				.hw = &disp_cc_mdss_ahb_clk_src.clkr.hw,
--			},
--			.num_parents = 1,
--			.flags = CLK_IS_CRITICAL | CLK_SET_RATE_PARENT,
--			.ops = &clk_branch2_ops,
--		},
--	},
--};
--
- static struct clk_branch disp_cc_mdss_rscc_vsync_clk = {
- 	.halt_reg = 0x4008,
- 	.halt_check = BRANCH_HALT,
-@@ -687,7 +669,6 @@ static struct clk_regmap *disp_cc_sc7180_clocks[] = {
- 	[DISP_CC_MDSS_PCLK0_CLK_SRC] = &disp_cc_mdss_pclk0_clk_src.clkr,
- 	[DISP_CC_MDSS_ROT_CLK] = &disp_cc_mdss_rot_clk.clkr,
- 	[DISP_CC_MDSS_ROT_CLK_SRC] = &disp_cc_mdss_rot_clk_src.clkr,
--	[DISP_CC_MDSS_RSCC_AHB_CLK] = &disp_cc_mdss_rscc_ahb_clk.clkr,
- 	[DISP_CC_MDSS_RSCC_VSYNC_CLK] = &disp_cc_mdss_rscc_vsync_clk.clkr,
- 	[DISP_CC_MDSS_VSYNC_CLK] = &disp_cc_mdss_vsync_clk.clkr,
- 	[DISP_CC_MDSS_VSYNC_CLK_SRC] = &disp_cc_mdss_vsync_clk_src.clkr,
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+ 
+ &uart8 {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
