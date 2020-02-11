@@ -2,123 +2,139 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAE5C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2C8C352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F52A20637
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9A720714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hKmAjTBX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gIhFm9Xi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3FXu4Dc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgBKNPV (ORCPT
+        id S1728588AbgBKNsz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:15:21 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:53937 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727111AbgBKNPU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:15:20 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0909921EA0;
-        Tue, 11 Feb 2020 08:15:20 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 11 Feb 2020 08:15:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=yVbF4foO66tk7oEeIZR06TCxnf1
-        3LrD2gieXWTmEk58=; b=hKmAjTBXoWv8ggoLwqIkUnMixNGduzTFn21ZswnJhUa
-        z+1DqpcqcHLWxgK6F+3867zPX8POVpXOhyTEo/lcCk9usWjm5C5cteHYssLRzP4C
-        bPxovzgavQdac8m58EgdnrF4eAakUmtVbS+k8nES8UtTOz5CPcJux/NsOrxdGaVS
-        C7P4BRjPkHFKdwMqr1Hf2rBsUoSUCUmMG1ZtJDLSIG1y9V8lOx0TEcFks+yHxnOM
-        28u2BjE5K1UDeWG2AgmbcnO/RPLsryHotd3UJygT9oFWh3nTPEE99LWIXi1Tw88J
-        cvp2npUYVy0tlosmd4j+Xgmw+Y62RWCUz6MMEranCCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yVbF4f
-        oO66tk7oEeIZR06TCxnf13LrD2gieXWTmEk58=; b=gIhFm9XiUnebwgiYXxOpWX
-        D7HNOLc7o6JYZFsqgCSx9xn2IRLnXOJ1hVS06WJG5Qi+4gCO8IHuY2gKJff84FRb
-        5LINOtjQjPFx1Ap6X8OzfGCy+eVBkUCJywzU3FBico/lwbC3/WFFWB6GNmeWt3rW
-        Gl2mHgO0/m43JWJmqD0dEf+Q8RxvRnWbNUlbHgn0ySu7J4U1so8l/N/0GeK9jt04
-        Z6d5lb+2C5qeRglr3Aseej/cSLZYuua0sEepM1FGYGjbkfjwobwmIHCD6MaWtR7z
-        i1g46joV1zoYXsFEnv4CPvGoL/oPGBEqEPw1u5g11hGW/PB48W7CRMe1iWBdQmsw
-        ==
-X-ME-Sender: <xms:56hCXuXm5x3tnIdlJ6s7AKnllRyQK2bCQ8vmioT38WT8oYgJ43zonQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieefgdehudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehgtderre
-    dttddvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegtvghr
-    nhhordhtvggthheqnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordht
-    vggthh
-X-ME-Proxy: <xmx:56hCXhnOeelM6FcFMTvflb8y_yCKu7ngWrHGo-3WS4EzhjfeJBjLQQ>
-    <xmx:56hCXnZE_fIIGzrNsQYswC4AqbxZVVKHjgfV7YqMCadk6yu6EQ0KMQ>
-    <xmx:56hCXkM4QEvJB6fZ76eL0p61uWd8Kj7uxm-bzyjRcZjvi02EY3SbMg>
-    <xmx:6KhCXknONb451L3j89kWYt0UEBctt0bMeMauzUHGu1_fmvsIaSQ3JA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 128433280062;
-        Tue, 11 Feb 2020 08:15:18 -0500 (EST)
-Date:   Tue, 11 Feb 2020 14:15:17 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     agriveaux@deutnet.info
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: sun5i: Add dts for inet86v_rev2
-Message-ID: <20200211131517.e7lpjtz2njekadee@gilmour.lan>
-References: <20200210103552.3210406-1-agriveaux@deutnet.info>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="exjtvn6out2zqnif"
-Content-Disposition: inline
-In-Reply-To: <20200210103552.3210406-1-agriveaux@deutnet.info>
+        Tue, 11 Feb 2020 08:48:55 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40036 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbgBKNsz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 08:48:55 -0500
+Received: by mail-qt1-f194.google.com with SMTP id v25so7933018qto.7;
+        Tue, 11 Feb 2020 05:48:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=JIZHRdZLqtLorXZfrYCSPItmC1Dc+HGHwOIzP/XDImY=;
+        b=d3FXu4DcpsHeeo7NBsq1Ec3f7OKhc4SsvQnIJenSnOtjREel9IF+kdR8ma1SWkO5OR
+         Ou4s2dnBv7WOxC4OPWNV6d8KIVpBRVtM/ukAKzN6d3zx7MvBtQz1N27NoDx/a7ujHsmS
+         jvZYtEEc8DToM7semtrIS3CUfnR8Jxni2Z/6WUP8wvMdDT8C1m2PB78zzz+BFas4vec2
+         VRg0vXB9eGeEdlGGMFCs2IJ9nbGhw7o3VA3WFY8plHWMmjNInC6fLgpMiA40FBmv4BzV
+         G9slDIDonCBacDdi6tPT8KEVnytqC8eiltqCoEj+hq8mYECNDQpWUjWhJQ4KRRh1aoXi
+         oAuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JIZHRdZLqtLorXZfrYCSPItmC1Dc+HGHwOIzP/XDImY=;
+        b=NL05IKKlW0LRFfZSq9ut6eSJDrNbVU6q4I4cLgMv6I8VSNguF2YLNynIHoLWfHthje
+         ELxXSX7j/7L1/gT0WLrrJboYLPswI2nh/vsMtvXYaf4A6MSsBXV+q2VMxyfQHoDS9TJ/
+         Bldxb1Rp7V2VgsW2RpkSqVXBfk3sXJXwTnJAD4UEcz27E731ykiqzoghTKOvnOzhXCB2
+         dkeVLp9Eg44fU80qhdSTaM1nki0yrh/DIV3f1QKvl7sY35URfj3KjgK017vS3Kh9BzW5
+         BVlh3BPeGlBxJJwDF/FgC+/rYmU15Q/czs16lyqC3k06rd0hNq1W2SeI+mZxg44iFQjE
+         JJYA==
+X-Gm-Message-State: APjAAAV+zLtDn+UgHtw3f2XRNVyNruGv8v4oGnfEKaIrULyGNfWsQmjQ
+        bz7So9gjuT9jrNWdnxfMyO0=
+X-Google-Smtp-Source: APXvYqybhzOEAAvHZbhKNes/s71zGxqa2omF1pXH9nVpHWlE7KVvcXMkRtBbOlD4T9UG/KxmmcCT+w==
+X-Received: by 2002:ac8:7caf:: with SMTP id z15mr14892626qtv.68.1581428933199;
+        Tue, 11 Feb 2020 05:48:53 -0800 (PST)
+Received: from NXL86673.nxp.com ([177.221.114.206])
+        by smtp.googlemail.com with ESMTPSA id h6sm2158936qtr.33.2020.02.11.05.48.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 05:48:52 -0800 (PST)
+From:   Alifer Moraes <alifer.wsdm@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     festevam@gmail.com, marco.franchi@nxp.com, mark.rutland@arm.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Alifer Moraes <alifer.wsdm@gmail.com>
+Subject: [PATCH] arm64: dts: imx8mq-phanbell: Add support for ethernet
+Date:   Tue, 11 Feb 2020 10:48:28 -0300
+Message-Id: <20200211134828.138-1-alifer.wsdm@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add support for ethernet on Google's i.MX 8MQ Phanbell
 
---exjtvn6out2zqnif
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
+---
+ .../boot/dts/freescale/imx8mq-phanbell.dts    | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-On Mon, Feb 10, 2020 at 11:35:52AM +0100, agriveaux@deutnet.info wrote:
-> From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
->
-> Add Inet 86V Rev 2 support, based upon Inet 86VS.
->
-> Missing things:
-> - Accelerometer (MXC6225X)
-> - Touchpanel (Sitronix SL1536)
-> - Nand (29F32G08CBACA)
-> - Camera (HCWY0308)
->
-> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+index 3f2a489a4ad8..16ed13c44a47 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
+@@ -201,6 +201,27 @@
+ 	};
+ };
+ 
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	phy-mode = "rgmii-id";
++	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
++	phy-reset-duration = <10>;
++	phy-reset-post-delay = <30>;
++	phy-handle = <&ethphy0>;
++	fsl,magic-packet;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		ethphy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++		};
++	};
++};
++
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
+@@ -254,6 +275,26 @@
+ };
+ 
+ &iomuxc {
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
++			MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO		0x23
++			MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
++			MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
++			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
++			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
++			MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
++			MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
++			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
++			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
++			MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
++			MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
++			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
++			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
++			MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
++		>;
++	};
++
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+ 			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
+-- 
+2.17.1
 
-Please read the documentation I sent you yesterday. In particular,
-when submitting multiple versions, you should remove have the version
-number in the title and a changelog.
-
-Also, please ask questions if you're unsure about something, or
-discuss something you do not agree with instead of ignoring the
-comment.
-
-Maxime
-
---exjtvn6out2zqnif
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkKo5QAKCRDj7w1vZxhR
-xSq1AP9Ki+pyoW9cDq2noR16u9LyNomV39YK3+wRQ6m3F2eQHAD/UNkPJcRNzZS8
-yH+3zSrdbi9oP5vhChFBgilvZToV3Qs=
-=lf/Y
------END PGP SIGNATURE-----
-
---exjtvn6out2zqnif--
