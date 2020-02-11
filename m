@@ -2,104 +2,59 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BE9C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42241C3B187
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBDA220842
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581421379;
-	bh=2VkS/4wvT5SEgArGFq9wfNHLH54BccDXdeJQLd7wKoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xgiolWH+ymemStMLoIfCnIGeahyLGSGTo12mFTzrSbgcAdxe0dpOQ2J9ctp2dOD8U
-	 X3nDqM4JPrKLb9GZbxaaxbmgbtRWCmmqhRb7sYAjmflkMN8yAL89QWsMaiR8X2g8od
-	 cPRrauNkf9ww7qX1vUn8ZNbfI2nl63n1lBlKz6Us=
+	by mail.kernel.org (Postfix) with ESMTP id 2496120873
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 11:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgBKLm7 (ORCPT
+        id S1727931AbgBKL7K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 06:42:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:44432 "EHLO foss.arm.com"
+        Tue, 11 Feb 2020 06:59:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:44626 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbgBKLm7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 06:42:59 -0500
+        id S1727669AbgBKL7K (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 06:59:10 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F48231B;
-        Tue, 11 Feb 2020 03:42:58 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C78C33F6CF;
-        Tue, 11 Feb 2020 03:42:57 -0800 (PST)
-Date:   Tue, 11 Feb 2020 11:42:56 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Serbinski <adam@serbinski.com>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
-Message-ID: <20200211114256.GC4543@sirena.org.uk>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-9-adam@serbinski.com>
- <20200210133636.GJ7685@sirena.org.uk>
- <18057b47c76d350f8380f277713e0936@serbinski.com>
- <20200210182609.GA14166@sirena.org.uk>
- <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
- <20200210200839.GG14166@sirena.org.uk>
- <7c57801d8f671c40d4c6094e5ce89681@serbinski.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF5131FB;
+        Tue, 11 Feb 2020 03:59:09 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC8A93F6CF;
+        Tue, 11 Feb 2020 03:59:07 -0800 (PST)
+Date:   Tue, 11 Feb 2020 11:59:03 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        coresight@lists.linaro.org, linux-doc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, robh+dt@kernel.org, maxime@cerno.tech,
+        liviu.dudau@arm.com, lorenzo.pieralisi@arm.com, agross@kernel.org,
+        corbet@lwn.net, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v9 11/15] dt-bindings: arm: Juno platform - add CTI
+ entries to device tree.
+Message-ID: <20200211115852.GA52147@bogus>
+References: <20200210213924.20037-1-mike.leach@linaro.org>
+ <20200210213924.20037-12-mike.leach@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ctP54qlpMx3WjD+/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7c57801d8f671c40d4c6094e5ce89681@serbinski.com>
-X-Cookie: Hire the morally handicapped.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200210213924.20037-12-mike.leach@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 09:39:20PM +0000, Mike Leach wrote:
+> Add in CTI entries for Juno r0, r1 and r2 to device tree entries.
+>
 
---ctP54qlpMx3WjD+/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I can take this patch alone unless you have plans to take all in go.
 
-On Mon, Feb 10, 2020 at 04:13:52PM -0500, Adam Serbinski wrote:
-
-> I am not aware of how this could be done for bluetooth, since the value
-> still has to originate from userspace. The driver you referred to supports
-> only a single sample rate, whereas for bluetooth, 2 sample rates are
-> required, and nothing in the kernel is aware of the appropriate rate, at
-> least in the case of the qca6174a I'm working with right now, or for that
-> matter, TI Wilink 8, which I've also worked with.
-
-There's generic support in the CODEC<->CODEC link code for setting the
-DAI configuration from userspace.
-
---ctP54qlpMx3WjD+/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Ckz8ACgkQJNaLcl1U
-h9ALGQf/Ss3ZIdJmQ7t1NLJpgkPvfgCHptgk+NO5wYCwd0pQJbzaflRdG45mcDPG
-bQRKfEaZEqvPWxASdTQTiFdmJg6zLqlvkQYPcor4DCPcB1bCkPS9hkeOSUxXSsOa
-ICLmJPQyoUqNyb6pHa6ghgfdVRPIr+GWPn0Zob/QpwybzWKBA7VHKmTEnxGDIq0z
-pLzYVaV03fmVkJUowVTUdZ40LP8mjTWVcXnk/NzM1qEs3T39Q6DmAUyR7IemHBBf
-wJr/MPk4Nr/9nPsmtD+5eJIG6m68tUximFPFeYIfid+WrHlY68RVcpgOBUG4LuvT
-ENG+UsqfuA8Olmmq+tnZG3Imx6tmzg==
-=pysG
------END PGP SIGNATURE-----
-
---ctP54qlpMx3WjD+/--
+--
+Regards,
+Sudeep
