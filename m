@@ -2,172 +2,86 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37E7C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D754C352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 14:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13CD24672
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 13:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10F42070A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 14:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g1t2BGTG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nA3IxTQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbgBKNza (ORCPT
+        id S1729363AbgBKOX2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 08:55:30 -0500
-Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:2167
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729728AbgBKNz2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:55:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O8SMXDLv95fz+PPZK0PSOhdZoQWu067TbiYIgnBod+F3Uq3PxI0uiK7vCI+Jlv++j+cAyGFlnyuwahxmaOqMOQQDQTbujmhPvRW3rzfAlPY6TqSNzuViTcFWgHQE26Jt/G+LR42Lm96Nzc0R6H60Mpw20BQT8MGSeAsDWVcqULtrO7h7V8OaHNuonNl5cmoE0sFxJm4rNZn2Mq5kH6QwGAASbb7ZIf3oSSrTDpDR/ToPjxu10Fgva/mfWp3HggXp6DVWy5ph3KFSW8xPNIQp/pNEps/bs/om57ZWf8DBgneeFQPZb4/a4VFQvJzqn0vUC5wskqCGWoMJgzLGnqpnRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GnvDDsjv8utb67OlAZqt+PpsW2P4WIynQMWEWfZalzE=;
- b=Q0NKslzo/WzkwNdbWGy/xnev+kN3LbFqlu7ektpbj8/Jps21mznSKShB0BDeTI26kaIz93ObLW6jFGzB2VWnKbXf2nqdwf8hf3qu7iZYqSNuLzpGv8rmcfVLxZAhWvGBsoVskIYvCRY0V212YxjA+OZEgV08Wpjl56XcHx0QS+mmXFBQn0fYVksCWk7uzV8vf5/8lPZ/DNzJC6F7U06UqGIOBRvhtDsu2a3zZ4SphDswjAHUZYvZ2Q5UEDaI4mRRh0C3nclzpoXEnhuKUSUrUCTVtQS1IPoGrmSa4+O95lzXnGnLb/jcovgoyObvoT2hfQecZvRcQ1jNQ9ldvz9PTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GnvDDsjv8utb67OlAZqt+PpsW2P4WIynQMWEWfZalzE=;
- b=g1t2BGTGysXp78pJoR5Ds92d6uQkReD5MBua1LphZqceW/UeefbrGaPN73ZaJzf8JC6Uo6fkhcOhdaIZJarT8cz42oZsmPHae7OGFf8QzGd3v/OAgU3t6d5bzgMonxDYQfbB0oMkYtdk0A0SI33M1qq284ortijuWCVPEPF6NH0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-Received: from AM6PR04MB5878.eurprd04.prod.outlook.com (20.179.0.89) by
- AM6PR04MB5734.eurprd04.prod.outlook.com (20.178.87.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.25; Tue, 11 Feb 2020 13:55:24 +0000
-Received: from AM6PR04MB5878.eurprd04.prod.outlook.com
- ([fe80::bcef:1c59:7d27:d0e]) by AM6PR04MB5878.eurprd04.prod.outlook.com
- ([fe80::bcef:1c59:7d27:d0e%6]) with mapi id 15.20.2707.030; Tue, 11 Feb 2020
- 13:55:24 +0000
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     Robin Murphy <robin.murphy@arm.com>, Li Yang <leoyang.li@nxp.com>,
-        Olof Johansson <olof@lixom.net>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
- <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
- <da4dcdc7-c022-db67-cda2-f90f086b729e@nxp.com>
- <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Message-ID: <27e0acfc-0782-bd97-a80e-1143f1315891@nxp.com>
-Date:   Tue, 11 Feb 2020 15:55:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <aec47903-50e4-c61b-6aec-63e3e9bc9332@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LNXP123CA0018.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::30) To AM6PR04MB5878.eurprd04.prod.outlook.com
- (2603:10a6:20b:a2::25)
+        Tue, 11 Feb 2020 09:23:28 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:51637 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727963AbgBKOX2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 09:23:28 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581431007; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=CCfMU7sbr4eW0hoz5ecQOYNZ5Pq4hUp0qTnvqU/rbss=;
+ b=nA3IxTQk7oF76dANH0mbDoyaCOlsO9s9wG6BZAtN3+sCHfyx6fyvnq5rHUiQSUSCVsR9lee6
+ t0ViPh9XBUzM8HNzqIxYmZvg3I6+BKZ5WkFdEu/5RWI1Cb8AAw/hdOAhuan4jp+2AROp6lhr
+ ppFQQZWAT60qQnlcUh/OrlxZbcI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e42b8df.7f0b91a365a8-smtp-out-n02;
+ Tue, 11 Feb 2020 14:23:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 546B4C433A2; Tue, 11 Feb 2020 14:23:26 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CB3E8C43383;
+        Tue, 11 Feb 2020 14:23:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CB3E8C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Received: from [10.171.82.13] (89.37.124.34) by LNXP123CA0018.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23 via Frontend Transport; Tue, 11 Feb 2020 13:55:22 +0000
-X-Originating-IP: [89.37.124.34]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 93f3a63c-5f17-44c6-771e-08d7aefa0a55
-X-MS-TrafficTypeDiagnostic: AM6PR04MB5734:|AM6PR04MB5734:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB5734802C02AE5FA70C212F98EC180@AM6PR04MB5734.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0310C78181
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(199004)(189003)(2906002)(16526019)(186003)(54906003)(44832011)(110136005)(2616005)(956004)(81156014)(316002)(81166006)(8936002)(8676002)(16576012)(31686004)(52116002)(478600001)(5660300002)(6486002)(36756003)(4326008)(31696002)(86362001)(66476007)(66946007)(7416002)(66556008)(26005)(53546011)(11634003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5734;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5Va7D8uyZr2ZQJgTL2VClD4gO4c2KFrHu1m+xvDPe0M6crf3CxICXtgoIaQfhNvH3twPRFFRl5J0/6aczZf70ijSXAq7HXt9aq3Imu9HL/A4pTwXhUCdCWhBT6DM9kUordA6nMb2mH0dBm3ZpvJvghJf+b1QOsmTSHgRhQHNxZ3T8my4I8W0dy6Kd25Y0PG/HR0Cnc/48A9qMh2y3OE6r//90YkUYyeweQZfoaJQHbEgYIP3Ov9k3/1Yw9AWw4N0jwp0jRIaRR8x1jHnpx7PERovyePLThHg1Yr/rw5rg9NPTHAXMT27ztTp0imRowNVNYYjbiIW1AzFPJhHaRkV04h6RTyMk5v+D/1vhl45GdIRoeI3hvvpqoGx0kxRzlmDQBrX5VVFt7/PLqO0a1WDRw7ZmCyZ1RdKMBKotluoLtb5WipdVBnh8tG5BbVoMwE+AShGwrllavXyTuQry9gQCfZUS1DFpfIGD0F23s0RCCy2wes7SAgCWi0COumunmBF
-X-MS-Exchange-AntiSpam-MessageData: z3kyprvyf8AczE6ke7SbnmLLhNXJRJj8P3k1esD1Ncx7XLa0sMpV2YIppyA9icOqGuCqcbeav67WKS2y3UpQqXPJ4DyN8PPzv1sttXu5RnGzJYNLFiHlLTO00iwe7QJtSykfA63L36t8g/S1e3SpgQ==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93f3a63c-5f17-44c6-771e-08d7aefa0a55
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2020 13:55:24.0241
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uK2KU5Bcm5m/IW271CaIPeNZbycKs3re6viMQG3pe411HHY0F1TEK2M54emdh0Mcmc53Jn7zfSfxESmLYx9TAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5734
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCHv2 1/2] dt-bindings: ath10k: Add new dt entries to identify
+ coex support
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <1580152736-18654-1-git-send-email-tamizhr@codeaurora.org>
+References: <1580152736-18654-1-git-send-email-tamizhr@codeaurora.org>
+To:     Tamizh Chelvam <tamizhr@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-wireless@vger.kernel.org,
+        Tamizh Chelvam <tamizhr@codeaurora.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200211142326.546B4C433A2@smtp.codeaurora.org>
+Date:   Tue, 11 Feb 2020 14:23:26 +0000 (UTC)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Tamizh Chelvam <tamizhr@codeaurora.org> wrote:
 
-
-On 11.02.2020 15:04, Robin Murphy wrote:
-> On 2020-02-11 12:13 pm, Laurentiu Tudor wrote:
-> [...]
->>> This is a known issue about DPAA2 MC bus not working well with SMMU
->>> based IO mapping.  Adding Laurentiu to the chain who has been looking
->>> into this issue.
->>
->> Yes, I'm closely following the issue. I actually have a workaround 
->> (attached) but haven't submitted as it will probably raise a lot of 
->> eyebrows. In the mean time I'm following some discussions [1][2][3] on 
->> the iommu list which seem to try to tackle what appears to be a 
->> similar issue but with framebuffers. My hope is that we will be able 
->> to leverage whatever turns out.
+> This adds new dt entries qcom,coexist-support and qcom,coexist-gpio-pin
+> which will be used by ath10k driver to identify coex support
+> of a hardware and notify wifi firmware the gpio pin number.
+> This pin number information is needed for the hardware QCA4019.
 > 
-> Indeed it's more general than framebuffers - in fact there was a 
-> specific requirement from the IORT side to accommodate network/storage 
-> controllers with in-memory firmware/configuration data/whatever set up 
-> by the bootloader that want to be handed off 'live' to Linux because the 
-> overhead of stopping and restarting them is impractical. Thus this DPAA2 
-> setup is very much within scope of the desired solution, so please feel 
-> free to join in (particularly on the DT parts) :)
+> Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Will sure do. Seems that the 2nd approach (the one with list of 
-compatibles in arm-smmu) fits really well with our scenario. Will this 
-be the way to go forward?
+2 patches applied to ath-next branch of ath.git, thanks.
 
-> As for right now, note that your patch would only be a partial 
-> mitigation to slightly reduce the fault window but not remove it 
-> entirely. To be robust the SMMU driver *has* to know about live streams 
-> before the first arm_smmu_reset() - hence the need for generic firmware 
-> bindings - so doing anything from the MC driver is already too late (and 
-> indeed the current iommu_request_dm_for_dev() mechanism is itself a 
-> microcosm of the same problem).
+7354de9c6e2c dt-bindings: ath10k: Add new dt entries to identify coex support
+9f83993e1a92 ath10k: Add support to read btcoex related data from DT
 
-I think you might have missed in the patch that it pauses the firmware 
-at early boot, in its driver init and it resumes it only after 
-iommu_request_dm_for_dev() has completed. :)
+-- 
+https://patchwork.kernel.org/patch/11353153/
 
----
-Best Regards, Laurentiu
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
