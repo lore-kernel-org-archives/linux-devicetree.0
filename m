@@ -2,212 +2,175 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E692C352A4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 02:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802F7C3B186
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 02:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC17E2070A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 02:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A11C2080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 02:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rw9bjGqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgBKCn0 (ORCPT
+        id S1727858AbgBKCvD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Feb 2020 21:43:26 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.4]:42367 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727493AbgBKCn0 (ORCPT
+        Mon, 10 Feb 2020 21:51:03 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:46183 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727836AbgBKCvD (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Feb 2020 21:43:26 -0500
-Received: from [100.112.192.239] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-a.eu-west-1.aws.symcld.net id E3/40-38240-AC4124E5; Tue, 11 Feb 2020 02:43:22 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRWlGSWpSXmKPExsVy8MN7Xd2TIk5
-  xBk83m1vMP3KO1eLwoheMFjc/fWO1uLxrDpvF0usXmSxa9x5hd2DzWDNvDaPHzll32T02repk
-  8/i8SS6AJYo1My8pvyKBNWPvjrqCXs2KN/O8GhgnKHUxcnEICaxllFh+8zBTFyMnkFMpsfTSZ
-  dYuRg4OXoEIiVN/xUHCnAJmEod73zBDlJhKbL73nhXEZhPQkXg0cz1YK4uAqsTFib/A4sICIR
-  IPpkPUiAiUSxz4OJMVZBezwDRGiT0fD4MN4hUQlDg58wkLiM0sICFx8MULqAVaEufWrGKcwMg
-  7C0nZLCRlCxiZVjFaJBVlpmeU5CZm5ugaGhjoGhoa6RpamugaWhjqJVbpJuqlluqWpxaX6AK5
-  5cV6xZW5yTkpenmpJZsYgYGaUnBo6w7GLfPf6x1ilORgUhLl3XDYMU6ILyk/pTIjsTgjvqg0J
-  7X4EKMMB4eSBO81Yac4IcGi1PTUirTMHGDUwKQlOHiURHhdQdK8xQWJucWZ6RCpU4zGHGf/zV
-  vEzPF7w5JFzEIsefl5qVLivBNBSgVASjNK8+AGwaL5EqOslDAvIwMDgxBPQWpRbmYJqvwrRnE
-  ORiVhXl+QKTyZeSVw+14BncIEdMp1EweQU0oSEVJSDUyy4QI338+72Ch1/IOZ1peMi5+vXaup
-  8PF4vqF778XSzTH5TaJmUfWH2UO3VjatkL9ikLlvgdO88iXWHHG1Uw8/WV/7b7lM/nfbtkUnd
-  vlO4Fvrt5FpyvXd/RbuwZsl4reJ9LUt6lpqUvF0l1NEa/CJ41+i7efa7TXvOSu2b6fo+TDBFy
-  t0V53l/p8mP9czP0BOtfSeg8JGj41Gu+RcN4j1vwh5Kb7gnrKh/efiGW2uvMdW33lUMp8/ePn
-  2MK1+kTtB23ffF+Gt0Ap8v3b6zAVfF0fnM9WJXI32T02YsfyT6XVvjkeuq//PKHb4evdbwba3
-  Gq+VjugITdwmZ3Rq87aUxmzfJRdWnraOdTi2zipFiaU4I9FQi7moOBEAiFyKNGEDAAA=
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-15.tower-262.messagelabs.com!1581389001!1529582!1
-X-Originating-IP: [193.240.239.45]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 6580 invoked from network); 11 Feb 2020 02:43:21 -0000
-Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
-  by server-15.tower-262.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 11 Feb 2020 02:43:21 -0000
-Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Tue, 11 Feb 2020 03:43:20 +0100
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 2853913F673; Tue, 11 Feb 2020 11:43:19 +0900 (KST)
-Message-ID: <306f2542a3315d72a8143255b53e65e3d2eb8746.1581383604.git.Roy.Im@diasemi.com>
-In-Reply-To: <cover.1581383604.git.Roy.Im@diasemi.com>
-References: <cover.1581383604.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Tue, 11 Feb 2020 10:13:24 +0900
-Subject: [RESEND PATCH V8 2/3] dt-bindings: input: Add document bindings for
- DA7280
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Mon, 10 Feb 2020 21:51:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581389462; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=DwinruQUTHVtb433tEVtKSujUuJq0mr9jS6Gc9Jj1Ik=; b=rw9bjGqn+AodRX6+M2IE7HvNyfNU2a4dd5qel93jBLPTpiB0iWFpu3pySRlDh59cF3ji199c
+ H1zeNfftKfiHjC7KopSKJiGc1AGD+y/+G2T2NwigQHYTy0saegGUGNRbzuqgpGamVaiup/iS
+ 6hQ2FV2wGylaLS3i6cLg2KIj5fI=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e421696.7fa215564b90-smtp-out-n01;
+ Tue, 11 Feb 2020 02:51:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DC8E7C4479D; Tue, 11 Feb 2020 02:51:00 +0000 (UTC)
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4AE8FC43383;
+        Tue, 11 Feb 2020 02:50:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4AE8FC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 2/2] clk: qcom: gpucc: Add support for GX GDSC for
+ SC7180
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+References: <1581307266-26989-1-git-send-email-tdas@codeaurora.org>
+ <1581307266-26989-2-git-send-email-tdas@codeaurora.org>
+ <CAD=FV=VqRAVZ19gSbtxbmdRCBbPRr+CMxWVR29diWtfX5mL3jw@mail.gmail.com>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <9ac184a0-03a7-1354-1f18-890f3b66cdcb@codeaurora.org>
+Date:   Tue, 11 Feb 2020 08:20:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAD=FV=VqRAVZ19gSbtxbmdRCBbPRr+CMxWVR29diWtfX5mL3jw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for DA7280 haptic driver.
-Example bindings for DA7280 are added.
+Hi Doug,
 
-Reviewed-by: Rob Herring <robh@kernel.org>.
+On 2/10/2020 11:19 PM, Doug Anderson wrote:
+> Hi,
+> 
+> On Sun, Feb 9, 2020 at 8:01 PM Taniya Das <tdas@codeaurora.org> wrote:
+>>
+>> Most of the time the CPU should not be touching the GX domain on the
+>> GPU except for a very special use case when the CPU needs to force the
+>> GX headswitch off. Add the GX domain for that use case.  As part of
+>> this add a dummy enable function for the GX gdsc to simulate success
+>> so that the pm_runtime reference counting is correct.  This matches
+>> what was done in sdm845 in commit 85a3d920d30a ("clk: qcom: Add a
+>> dummy enable function for GX gdsc").
+>>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> 
+> For future reference, if you have someone's tag in your commit message
+> it's nice to CC them on the email.
+> 
+> 
 
-Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+My bad my miss.
 
----
-v8: Updated descriptions for new properties.
-v7: No changes.
-v6: No changes.
-v5: Updated descriptions and fixed errors.
-v4: Fixed commit message, properties.
-v3: Fixed subject format.
-v2: No changes
+>> ---
+>>   drivers/clk/qcom/gpucc-sc7180.c | 37 +++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
+>> index a96c0b9..7b656b6 100644
+>> --- a/drivers/clk/qcom/gpucc-sc7180.c
+>> +++ b/drivers/clk/qcom/gpucc-sc7180.c
+>> @@ -170,8 +170,45 @@ static struct gdsc cx_gdsc = {
+>>          .flags = VOTABLE,
+>>   };
+>>
+>> +/*
+>> + * On SC7180 the GPU GX domain is *almost* entirely controlled by the GMU
+>> + * running in the CX domain so the CPU doesn't need to know anything about the
+>> + * GX domain EXCEPT....
+>> + *
+>> + * Hardware constraints dictate that the GX be powered down before the CX. If
+>> + * the GMU crashes it could leave the GX on. In order to successfully bring back
+>> + * the device the CPU needs to disable the GX headswitch. There being no sane
+>> + * way to reach in and touch that register from deep inside the GPU driver we
+>> + * need to set up the infrastructure to be able to ensure that the GPU can
+>> + * ensure that the GX is off during this super special case. We do this by
+>> + * defining a GX gdsc with a dummy enable function and a "default" disable
+>> + * function.
+>> + *
+>> + * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
+>> + * driver. During power up, nothing will happen from the CPU (and the GMU will
+>> + * power up normally but during power down this will ensure that the GX domain
+>> + * is *really* off - this gives us a semi standard way of doing what we need.
+>> + */
+>> +static int gx_gdsc_enable(struct generic_pm_domain *domain)
+>> +{
+>> +       /* Do nothing but give genpd the impression that we were successful */
+>> +       return 0;
+>> +}
+>> +
+>> +static struct gdsc gx_gdsc = {
+>> +       .gdscr = 0x100c,
+>> +       .clamp_io_ctrl = 0x1508,
+>> +       .pd = {
+>> +               .name = "gx_gdsc",
+>> +               .power_on = gx_gdsc_enable,
+>> +       },
+>> +       .pwrsts = PWRSTS_OFF_ON,
+>> +       .flags = CLAMP_IO,
+> 
+> In my previous reply [1], I asked about these flags and if it was
+> intentional that they were different from sdm845.  I did see a private
+> response, but no public one.  In the future note that it's good to
+> reply publicly so everyone understands what happened.  In this case, I
+> was told "the GDSC's on 845 and SC7180 are different and hence the
+> change in flags is expected".  That answers my question and thus I'm
+> fine with my tag being here.  It also looks like you took my other
+> review feedback on v1, which is nice.
+> 
+> 
+> -Doug
+> 
 
+I am unable to respond to the other thread, thus we put out the reply.
 
- .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+> 
+> [1] https://lore.kernel.org/r/CAD=FV=V6yM7UJwu0ZLPCqmDgV9FS4=g+wcLg0TV51b72zvWT9Q@mail.gmail.com
+> 
 
-diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-new file mode 100644
-index 0000000..e6b719d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-@@ -0,0 +1,109 @@
-+Dialog Semiconductor DA7280 Haptics bindings
-+
-+Required properties:
-+- compatible: Should be "dlg,da7280".
-+- reg: Specifies the I2C slave address.
-+
-+- interrupt-parent : Specifies the phandle of the interrupt controller to
-+  which the IRQs from DA7280 are delivered to.
-+
-+- dlg,actuator-type: Set Actuator type. it should be one of:
-+  "LRA" - Linear Resonance Actuator type.
-+  "ERM-bar" - Bar type Eccentric Rotating Mass.
-+  "ERM-coin" - Coin type Eccentric Rotating Mass.
-+
-+- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
-+  Possible values:
-+	1 - Direct register override(DRO) mode triggered by i2c(default),
-+	2 - PWM data source mode controlled by PWM duty,
-+- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
-+  Possible values:
-+	1 - Register triggered waveform memory(RTWM) mode, the pattern
-+	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
-+	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
-+	    control are required to enable/disable and it needs to keep
-+	    device enabled by sending magnitude (X > 0),
-+	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
-+	The default value is 1 for both of the operation modes.
-+	For more details, please see the datasheet.
-+
-+- dlg,nom-microvolt: Nominal actuator voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,imax-microamp: Actuator max current rating.
-+  Valid values: 0 - 252000.
-+  Default: 130000.
-+- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
-+  Valid values: 0 - 1500000000.
-+
-+Optional properties:
-+- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
-+  PWM properties should be named "pwms". And number of cell is different
-+  for each pwm device.
-+  (See Documentation/devicetree/bindings/pwm/pwm.txt
-+   for further information relating to pwm properties)
-+
-+- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
-+  to play back when RTWM-MODE is enabled.
-+  Valid range: 0 - 15.
-+- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
-+  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
-+  when gpi0 is triggered, 'N' must be 0 - 2.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-mode: the pattern mode which can select either
-+  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
-+- dlg,gpiN-polarity: gpiN polarity which can be chosen among
-+  "Rising-edge", "Falling-edge" and "Both-edge",
-+  'N' must be 0 - 2
-+  Haptic will work by this edge option in case of ETWM mode.
-+
-+- dlg,resonant-freq-hz: use in case of LRA.
-+  the frequency range: 50 - 300.
-+  Default: 205.
-+
-+- dlg,bemf-sens-enable: Enable for internal loop computations.
-+- dlg,freq-track-enable: Enable for resonant frequency tracking.
-+- dlg,acc-enable: Enable for active acceleration.
-+- dlg,rapid-stop-enable: Enable for rapid stop.
-+- dlg,amp-pid-enable: Enable for the amplitude PID.
-+- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
-+  the device during initialization. This is an array of 100 values(u8).
-+
-+For further information, see device datasheet.
-+
-+======
-+
-+Example:
-+
-+	haptics: da7280-haptics@4a {
-+		compatible = "dlg,da7280";
-+		reg = <0x4a>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		dlg,actuator-type = "LRA";
-+		dlg,dlg,const-op-mode = <1>;
-+		dlg,dlg,periodic-op-mode = <1>;
-+		dlg,nom-microvolt = <2000000>;
-+		dlg,abs-max-microvolt = <2000000>;
-+		dlg,imax-microamp = <170000>;
-+		dlg,resonant-freq-hz = <180>;
-+		dlg,impd-micro-ohms = <10500000>;
-+		dlg,freq-track-enable;
-+		dlg,rapid-stop-enable;
-+		dlg,mem-array = <
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+		>;
-+
-+	};
 -- 
-end-of-patch for RESEND PATCH V8
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
