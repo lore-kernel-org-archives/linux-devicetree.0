@@ -2,182 +2,137 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F082AC352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 10:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D8FC352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 10:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE71220848
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 10:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C32320870
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 10:49:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCcZP1t+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgBKK2W (ORCPT
+        id S1727930AbgBKKtw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 05:28:22 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33500 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbgBKK2W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 05:28:22 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9F6E22909F8
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@intel.com, bleung@chromium.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200207203752.209296-1-pmalani@chromium.org>
- <20200207203752.209296-2-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <dd9a8fa7-db6b-87a0-889d-b56a626a3078@collabora.com>
-Date:   Tue, 11 Feb 2020 11:28:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 11 Feb 2020 05:49:52 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36212 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727805AbgBKKtw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 05:49:52 -0500
+Received: by mail-il1-f196.google.com with SMTP id b15so3047289iln.3;
+        Tue, 11 Feb 2020 02:49:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eHqxkFhOftXeIrIg8vUiaV+dk3ty7YkSnlLZYLlo5Ko=;
+        b=qCcZP1t+3ytI3YacltBjs5aKyI9mSEFglR48Tb8Mrub6EIG2JXT27BMmeSwlJsMmE5
+         nD3++mwLzkcVxY5Sdec9Mubfc/z4ZWB5alqUoO8Sn6YnKKM/R3iQtfo+iXt6ALg/ukhj
+         urQg/71GNxQoYQeiUcku2HlWH5uhLitfmxayfbJbMfkPReSc9D0lvKNilG/HXLcI3TMZ
+         U6yHFwNBJociSPqISHUoLEssn8rQ5Z5YHScHZKxEjflOdHHWll4yHLuD+NNMjUWQ1wC+
+         KODO6dsc8Z7WswM0+DXXxwwRQ4iqg2N6q1tj3zBW31JmM/W0BSZQhcOuJ5SCenFgRdfO
+         HELA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eHqxkFhOftXeIrIg8vUiaV+dk3ty7YkSnlLZYLlo5Ko=;
+        b=rRMmp85JxsbyG4MeYtxYw24Aclv0aUyFDJIv8d1T8mDCr76IcDuVC6wZZB61++qZSV
+         g43KU3D3QUqk4x1SDWwI+phzAFGwD30ToO6RWt39hVf4b1agdNEzoq4T4MjhnIQqtGcK
+         tMUncrAWs1MrKflSvf+uG3freRFiIbuNIPytgZExI5+SOkV7mG0VanMPMZJUbqQ8d99J
+         k/gjThCBBCQ+tiOyko1S+VT83ZwW/ps4ioegqptKtkMjGC6TnHAf0200biLp/pgh69l8
+         trVkZj50ztwTkeZUsl6mxBkjMQG002ynovMPZmbdUg4VnBZBNBVg8P65l2o9P+L+omRu
+         Ot0w==
+X-Gm-Message-State: APjAAAXVRS8DVbHAeA9wmDFGkbLS5AZGjTEqwF/KJ13PRmMAH5VjB3Xw
+        SQvgpIaF5xf8HJarTt7NWyuMwTMrsJGQ+GONRuw=
+X-Google-Smtp-Source: APXvYqyV+gu2TZnHhPamDm/mFEOi79lFtDv1oEvHa0mxrqSPfvikSLJ/I2MVcG7LFj84tE+XHcvU+qhf4aKcVcfBz3k=
+X-Received: by 2002:a92:350d:: with SMTP id c13mr6001818ila.205.1581418191475;
+ Tue, 11 Feb 2020 02:49:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200207203752.209296-2-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-4-aford173@gmail.com>
+ <20200206184030.GA11381@bogus>
+In-Reply-To: <20200206184030.GA11381@bogus>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Tue, 11 Feb 2020 04:49:39 -0600
+Message-ID: <CAHCN7x+uCwyJ60ZG_0m5SgNmqUAyEwxqXVTL7nQzJLXxXrh+Tw@mail.gmail.com>
+Subject: Re: [PATCH V2 4/5] dt-bindings: spi: spi-nxp-fspi: Add support for
+ imx8mm, imx8qxp
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prashant,
+On Thu, Feb 6, 2020 at 2:46 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sun, Feb 02, 2020 at 06:59:49AM -0600, Adam Ford wrote:
+> > Add support for nxp,imx8qxp-fspi and nxp,imx8mm-fspi do the bindings
+>
+> s/do/to/
 
-On 7/2/20 21:37, Prashant Malani wrote:
-> Some Chrome OS devices with Embedded Controllers (EC) can read and
-> modify Type C port state.
-> 
-> Add an entry in the DT Bindings documentation that lists out the logical
-> device and describes the relevant port information, to be used by the
-> corresponding driver.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
-> 
-> Changes in v2:
-> - No changes. Patch first introduced in v2 of series.
-> 
->  .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> new file mode 100644
-> index 00000000000000..46ebcbe76db3c2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Oops.  Thanks for catching that.
 
-I think that Google is fine with the dual licensing here. Would be good if this
-can be (GPL-2.0-only OR BSD-2-Clause)
+>
+> > document.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > ---
+> > V2: No change
+> >
+> > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > index 2cd67eb727d4..7ac60d9fe357 100644
+> > --- a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > @@ -2,6 +2,9 @@
+> >
+> >  Required properties:
+> >    - compatible : Should be "nxp,lx2160a-fspi"
+> > +                         "nxp,imx8qxp-fspi"
+> > +                         "nxp,imx8mm-fspi"
+>
+> All 3 are different and no compatibility?
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Prashant Malani <pmalani@chromium.org>
-> +
-> +description:
-> +  Chrome OS devices have an Embedded Controller(EC) which has access to
-> +  Type C port state. This node is intended to allow the host to read and
-> +  control the Type C ports. The node for this device should be under a
-> +  cros-ec node like google,cros-ec-spi.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-typec
-> +
-> +  port:
-> +    description: A node that represents a physical Type C port on the
-> +      device.
-> +    type: object
-> +    properties:
-> +      port-number:
-> +        description: The number used by the Chrome OS EC to identify
-> +          this type C port.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
+This was all based on a series from NXP's repo where they have some
+data tables all associated to the various compatible entries, and they
+created a place holder for quirks.  Based on an older NXP repo, it
+seems like there might be some quirks associated to the different
+families, but the newer repo where I got this patch series didn't
+implement them, however, it's possible the quirks may enhance
+functionality later. If that's true, I think this is the best solution
+for future enhancements without having to change the compatibility
+names down the road.  Maybe someone from NXP can comment?  I am just
+trying to help push things upstream so we can support QSPI flash.  I
+would prefer to keep them separate for now, because we might have
+these improvements later. However, I'll do what you request.  Do you
+want me to drop the additional compatible flags and just use the
+original, or create a new one that's a bit more generic?
 
-Any range of values allowed? 0 is okay?
+adam
 
-> +      power-role:
 
-Sorry if this question is silly, aren't this and below properties the same as
-provided by usb-connector?  Can't this be usb-c-connector?
-
-Documentation/devicetree/bindings/connector/usb-connector.txt
-
-> +        description: Determines the power role that the Type C port will
-> +          adopt.
-> +        oneOf:
-> +          - items:
-> +            - const: sink
-> +            - const: source
-> +            - const: dual
-> +      data-role:
-> +        description: Determines the data role that the Type C port will
-> +          adopt.
-> +        oneOf:
-> +          - items:
-> +            - const: host
-> +            - const: device
-> +            - const: dual
-> +      try-power-role:
-> +        description: Determines the preferred power role of the Type C port.
-> +        oneOf:
-> +          - items:
-> +            - const: sink
-> +            - const: source
-> +            - const: dual
-> +
-> +    required:
-> +      - port-number
-> +      - power-role
-> +      - data-role
-> +      - try-power-role
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +examples:
-> +  - |+
-
-Rob can confirm, but I think is a good practice add the parent node, so add the
-cros-ec-spi node here?
-
-> +    typec {
-> +      compatible = "google,cros-ec-typec";
-> +
-> +      port@0 {
-
-You can run:
-
-  make dt_binding_check DT_SCHEMA_FILES=<...>/chrome/google,cros-ec-typec.yaml
-
-And you'll get an error:
-
- typec: 'port' is a required property
-
-> +        port-number = <0>;
-> +        power-role = "dual";
-> +        data-role = "dual";
-> +        try-power-role = "source";
-> +      };
-> +    };
-> 
-Thanks,
-
- Enric
+adam
+>
+> > +
+> >    - reg :        First contains the register location and length,
+> >                   Second contains the memory mapping address and length
+> >    - reg-names :  Should contain the resource reg names:
+> > --
+> > 2.24.0
+> >
