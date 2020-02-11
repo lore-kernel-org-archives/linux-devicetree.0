@@ -2,118 +2,137 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C459C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8494BC352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4E620708
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D0020848
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 16:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WqyC94s0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbgBKQ1Y (ORCPT
+        id S1728049AbgBKQmT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 11:27:24 -0500
-Received: from muru.com ([72.249.23.125]:54676 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729133AbgBKQ1Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 11:27:24 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D85E180D4;
-        Tue, 11 Feb 2020 16:28:06 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 08:27:19 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 2/3] ARM: dts: am437x-gp/epos-evm: drop unused panel
- timings
-Message-ID: <20200211162719.GF64767@atomide.com>
-References: <20191211165331.GC43123@atomide.com>
- <45dae8f7-2f5e-6948-5a05-dc8a09ace1fa@ti.com>
- <20191212203550.GB4892@pendragon.ideasonboard.com>
- <add3d8af-6977-68e6-fb77-2fa748c4714a@ti.com>
- <b39e52f1-3e73-5f26-6206-0956cf482631@ti.com>
- <20200211110712.GB28355@pendragon.ideasonboard.com>
- <3b4d10c6-7cb2-af53-3a39-31eef441bfdd@ti.com>
- <98da360f-880b-af56-b285-4d9b39f8a342@wizzup.org>
- <20200211160524.GE64767@atomide.com>
- <87b1111e-af06-1e2a-8baa-c3f9a15f1874@ti.com>
+        Tue, 11 Feb 2020 11:42:19 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35764 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbgBKQmQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 11:42:16 -0500
+Received: by mail-vs1-f67.google.com with SMTP id x123so6729585vsc.2
+        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 08:42:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KHkfZzNh1B4XmJZnXfgIQNWZsT5whG1kE8qQBYWXMgc=;
+        b=WqyC94s0CD5d0ZPRr4dlQ93j+b50OoCaoHuxaKOKZ9lGE/26eG7Zpz10axDbzf5cxb
+         agJY2MIEOmDQnmVeVxsWhCyJlffhvrtK79hVkzi4usTyPTyl3c9gdHucQAN6P9UAgoYx
+         nArWP2wSBEJ1rS5b1O2lHsPS6x/yo/iTXctxezgmJsdLoyJlqvpWzge5pVPLcoU06f8E
+         G6oLEE7mUeGdksmjfGbnMX+hoNNlbG4oxSYRlzwIb/R52rtvOPBSDc2MY48vpEV+dG97
+         55ylTus7812YtsujzGDOnd4LmnifnC4HV86nRK0NaOuphuOpMPKW+5WOtR80XRx0/onh
+         4xJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KHkfZzNh1B4XmJZnXfgIQNWZsT5whG1kE8qQBYWXMgc=;
+        b=IqOwkBweMSUzHN8c9lLk+jKFQ/FyNE3aTCgS9aihPyOk+Ces+M2ltt8iZPq2xc4vyJ
+         IEPncuwznGnuT00uN+uFzQbRzlNAPBCn0WOjrZiN7j3KrWLd7k/LvqXCmeN2OE+38Ivo
+         u+Go025IuitavrW2M81S/Y8QRR50zzxMTLH26X1SvPEBrs/hGdPqGmJnS5w+vrjnw1n2
+         zE5FyrwPsLyXjQG9wOLsVGQoxinEn8Ogd9PDHH6EOCxwGAoydO0WnvSwi+13uP7GGlrV
+         KhnCIJpD/bEMBsvbjz9rQhuo1zLIrQiz737dDZ3gnIvc3ORa5BLkysMkyJN/hdktqqFu
+         HW+g==
+X-Gm-Message-State: APjAAAX2owDMoWhDDCnpZ94My/5/nDZZ6R/tv+V9kUcXUrDs6AFJcvu4
+        5TXbFup1l9bHoa2OZnuohtj59RHN//f1vcb72ucl8Q==
+X-Google-Smtp-Source: APXvYqxqMq+ejXxPsl9/xIf55OXMeWrD7wxRfObKKoy3oMAN0UARPc8I0EQfK/M1BGYcb9ZuENsUbz+LrH8gmb00USk=
+X-Received: by 2002:a67:fa1a:: with SMTP id i26mr9638813vsq.169.1581439335360;
+ Tue, 11 Feb 2020 08:42:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87b1111e-af06-1e2a-8baa-c3f9a15f1874@ti.com>
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+From:   Doug Anderson <dianders@google.com>
+Date:   Tue, 11 Feb 2020 08:42:01 -0800
+Message-ID: <CAD=FV=X6-aWM_fSfLE0ySuM04FvQCTKpM-A87k3xMXBMRzNXFQ@mail.gmail.com>
+Subject: Re: [PATCH V1] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [200211 16:14]:
-> On 11/02/2020 18:05, Tony Lindgren wrote:
-> > * Merlijn Wajer <merlijn@wizzup.org> [200211 12:54]:
-> > > Hi,
-> > > 
-> > > On 11/02/2020 12:08, Tomi Valkeinen wrote:
-> > > > On 11/02/2020 13:07, Laurent Pinchart wrote:
-> > > > 
-> > > > > > Hopefully soon (in five years? =) we can say that omapdrm supports all
-> > > > > > the boards, and we can deprecate omapfb.
-> > > > > 
-> > > > > I'd love to send a patch to remove omapfb, but I'll let you do the
-> > > > > honours :-)
-> > > > 
-> > > > Not before we add DSI support to omapdrm...
-> > 
-> > Hmm do your mean RFBI? The DSI support we already have :)
-> 
-> Oh, I didn't even remember RFBI... But it is not supported in omapfb either,
-> so it's not blocking removal of omapfb.
+Hi,
 
-Oh OK.
+On Tue, Feb 11, 2020 at 7:29 AM Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> CQE feature has been enabled on sdhci-msm. Add CQE reg map
+> that needs to be supplied for supporting CQE feature.
+>
+> Change-Id: I788c4bd5b7cbca16bc1030a410cc5550ed7204e1
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 7ee639b..eaa0998 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -27,6 +27,11 @@ Required properties:
+>  - reg: Base address and length of the register in the following order:
+>         - Host controller register map (required)
+>         - SD Core register map (required for msm-v4 and below)
+> +       - CQE register map (Optional, needed only for eMMC and msm-v4.2 above)
 
-> We are still missing DSI command mode support, and moving it to the common DRM model.
+I did a quick search and it appears that SD cards implementing 6.0 of
+the spec can also use CQE.  Is that correct?  If so, maybe remove the
+part about "eMMC"?
 
-Nope, DSI command mode support has been working just fine for
-a while now :) And Sebastian has a WIP git tree of the common DRM
-model changes for it. I don't think we have devices with DSI
-command mode working for omapfb but not for omapdrm?
+Maybe also change "needed" to "useful" to make it clear that this
+entry isn't actually required for all msm-v4.2 controllers?
 
-What got missed for v5.6-rc1 is the LCD backlight patch though,
-I think the only issue there is default-brightness vs more common
-default-brightness-value usage if you have any input to that.
 
-> > > This is probably known, but for devices that would like use PowerVR SGX,
-> > > there sometimes is only userspace available that works with omap(l)fb,
-> > > and not with DRM. The Nokia N900 is such an example.
-> > > 
-> > > There might be a newer release of (closed) userspace coming for the
-> > > aging device(s), but as it stands, I don't think it's possible to do 3D
-> > > with PowerVR SGX on omapdrm currently.
-> > > 
-> > > But I might be wrong...
-> > 
-> > Yes SGX is a bottleneck currently for omap3 users. And I think
-> > RFBI is blocking n8x0 from moving to omapdrm and finally leaving
-> > drivers/video/fbdev/omap2 behind.
-> > 
-> > With those blockers fixed, I'd also be happy to just get rid of
-> > drivers/video/fbdev/omap2 as there should be no reason to
-> > keep using it.
-> 
-> I don't know what to do about SGX, but if someone sends patches to omapdrm
-> to allow using SGX, I'll review =).
+> +- reg-names: When CQE register map is supplied, below reg-names are required
+> +       - "hc_mem" for Host controller register map
+> +       - "core_mem" for SD cpre regoster map
 
-OK so then the only blocker seems to be the lack of SGX blobs
-for omap3 devices which seems to be in process of getting fixed.
+s/regoster/register
 
-Regards,
 
-Tony
+> +       - "cqhci_mem" for CQE register map
+
+I'm at least slightly confused.  You say that reg-names are there only
+if CQE register map is supplied.  ...and that requires 4.2 and above.
+...but "core_mem" is only there on 4.0 and below.  So there should
+never be a "core_mem" entry?
+
+Trying to specify that sanely in free-form text seems like it's gonna
+be hard and not worth it.  You should probably transition to yaml
+first?
+
+
+I will also note that Rob isn't a huge fan of "reg-names".  In a
+different conversation I think you mentioned you had a reason for
+having it.  I guess just be prepared to defend yourself against Rob if
+you feel strongly about keeping reg-names.
+
+
+-Doug
