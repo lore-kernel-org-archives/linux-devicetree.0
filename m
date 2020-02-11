@@ -2,86 +2,154 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D754C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 14:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FF4C352A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 14:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10F42070A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 14:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2243F20714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 14:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nA3IxTQk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="o1bh+BjL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgBKOX2 (ORCPT
+        id S1729606AbgBKO01 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 09:23:28 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51637 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727963AbgBKOX2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 09:23:28 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581431007; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=CCfMU7sbr4eW0hoz5ecQOYNZ5Pq4hUp0qTnvqU/rbss=;
- b=nA3IxTQk7oF76dANH0mbDoyaCOlsO9s9wG6BZAtN3+sCHfyx6fyvnq5rHUiQSUSCVsR9lee6
- t0ViPh9XBUzM8HNzqIxYmZvg3I6+BKZ5WkFdEu/5RWI1Cb8AAw/hdOAhuan4jp+2AROp6lhr
- ppFQQZWAT60qQnlcUh/OrlxZbcI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e42b8df.7f0b91a365a8-smtp-out-n02;
- Tue, 11 Feb 2020 14:23:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 546B4C433A2; Tue, 11 Feb 2020 14:23:26 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CB3E8C43383;
-        Tue, 11 Feb 2020 14:23:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CB3E8C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 11 Feb 2020 09:26:27 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:44812 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728091AbgBKO01 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 09:26:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581431184; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=lNyFn7pjcFZ0vmhffreKXcbtBIzwxVQo2+89cwEz84k=;
+        b=o1bh+BjL9E1IYSWRb1c4MSikxQr4kuslOj2dPccAWLR/MxlypJgkx4KFIAt9Z6Yk4iZDuH
+        HIR5Gum58m7TXb/zv3+7I1mpagecWlgUP4nLHx1IKP/l5j/e5NPH0R7tzO5O7lDstdnGAk
+        VjLwD8F6URh2ZqmjPEyt1aXhfK7fUmc=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v5 1/5] dt-bindings: Document JZ47xx VPU auxiliary processor
+Date:   Tue, 11 Feb 2020 11:26:09 -0300
+Message-Id: <20200211142614.13567-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCHv2 1/2] dt-bindings: ath10k: Add new dt entries to identify
- coex support
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1580152736-18654-1-git-send-email-tamizhr@codeaurora.org>
-References: <1580152736-18654-1-git-send-email-tamizhr@codeaurora.org>
-To:     Tamizh Chelvam <tamizhr@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        Tamizh Chelvam <tamizhr@codeaurora.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200211142326.546B4C433A2@smtp.codeaurora.org>
-Date:   Tue, 11 Feb 2020 14:23:26 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tamizh Chelvam <tamizhr@codeaurora.org> wrote:
+Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+Ingenic is a second Xburst MIPS CPU very similar to the main core.
+This document describes the devicetree bindings for this auxiliary
+processor.
 
-> This adds new dt entries qcom,coexist-support and qcom,coexist-gpio-pin
-> which will be used by ath10k driver to identify coex support
-> of a hardware and notify wifi firmware the gpio pin number.
-> This pin number information is needed for the hardware QCA4019.
-> 
-> Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-2 patches applied to ath-next branch of ath.git, thanks.
+Notes:
+    v2: Update TCSM0 address in example
+    v3: Change node name to 'video-decoder'
+    v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
+    v5: - Fix 'reg' not in <addr, len> pairs
+        - Add missing include to devicetree example
 
-7354de9c6e2c dt-bindings: ath10k: Add new dt entries to identify coex support
-9f83993e1a92 ath10k: Add support to read btcoex related data from DT
+ .../bindings/remoteproc/ingenic,vpu.yaml      | 77 +++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
 
+diff --git a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+new file mode 100644
+index 000000000000..c019f9fbe916
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/remoteproc/ingenic,vpu.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Ingenic Video Processing Unit bindings
++
++description:
++  Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
++  Ingenic is a second Xburst MIPS CPU very similar to the main core.
++  This document describes the devicetree bindings for this auxiliary
++  processor.
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  compatible:
++    const: ingenic,jz4770-vpu-rproc
++
++  reg:
++    items:
++      - description: aux registers
++      - description: tcsm0 registers
++      - description: tcsm1 registers
++      - description: sram registers
++
++  reg-names:
++    items:
++      - const: aux
++      - const: tcsm0
++      - const: tcsm1
++      - const: sram
++
++  clocks:
++    items:
++      - description: aux clock
++      - description: vpu clock
++
++  clock-names:
++    items:
++      - const: aux
++      - const: vpu
++
++  interrupts:
++    description: VPU hardware interrupt
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4770-cgu.h>
++
++    vpu: video-decoder@132a0000 {
++      compatible = "ingenic,jz4770-vpu-rproc";
++
++      reg = <0x132a0000 0x20>, /* AUX */
++            <0x132b0000 0x4000>, /* TCSM0 */
++            <0x132c0000 0xc000>, /* TCSM1 */
++            <0x132f0000 0x7000>; /* SRAM */
++      reg-names = "aux", "tcsm0", "tcsm1", "sram";
++
++      clocks = <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
++      clock-names = "aux", "vpu";
++
++      interrupt-parent = <&cpuintc>;
++      interrupts = <3>;
++    };
 -- 
-https://patchwork.kernel.org/patch/11353153/
+2.25.0
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
