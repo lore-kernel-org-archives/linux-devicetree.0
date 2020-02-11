@@ -2,128 +2,110 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B88BC352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BE2C3B187
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5111020656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O9ztT96W"
+	by mail.kernel.org (Postfix) with ESMTP id 447AE20708
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581436283;
+	bh=Mtx1xU/E0k84g5iO+oGAnMEJw4O0SfA58856oXy0qXk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=feQVuu3MI49/zp66UeF7Ha4JP6sW7HTmvRSafiyGEPjQcrZ7GwbaKJz0f8tQ2OHoW
+	 E34MRs6rLQvxXd/nf6X88PSOoi7Af+gAB1Y7DC/wLOUPStNuQto2rnkU0YvnVAD9wl
+	 V8npxBiJl7Ma/ZCGXvOi2Ukw4lvw5OV9eqKaK/IA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgBKPvU (ORCPT
+        id S1729426AbgBKPvW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:51:20 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52454 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbgBKPvT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 10:51:19 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BFpGJT118865;
-        Tue, 11 Feb 2020 09:51:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581436276;
-        bh=vv4zoH/nm3fq4NMB86OifWyuiibLHNCHiWQsiTJUeFI=;
-        h=From:To:CC:Subject:Date;
-        b=O9ztT96Wpp251DqB8cqfs/QA6uCLhLollfo45U4lss+IW4oSzdsCvXWGlhV22e5ta
-         4IL6kQMNZZUSKFykD37kk4bZllm6CwTWzXWWYcM0lvWRUwZHhVABaKGxBFJiWm2X2F
-         bfD7WrOWiVXxwGZZ+umpf/5aEzQWMwO/eZEjyaf0=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01BFpGEN015469
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Feb 2020 09:51:16 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
- Feb 2020 09:51:15 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 11 Feb 2020 09:51:16 -0600
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BFpFtf084713;
-        Tue, 11 Feb 2020 09:51:16 -0600
-Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id 01BFpF300146;
-        Tue, 11 Feb 2020 09:51:15 -0600 (CST)
-From:   Suman Anna <s-anna@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH] ARM: dts: dra7xx-clocks: Fixup IPU1 mux clock parent source
-Date:   Tue, 11 Feb 2020 09:51:03 -0600
-Message-ID: <20200211155103.23973-1-s-anna@ti.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 11 Feb 2020 10:51:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:48782 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727838AbgBKPvW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:51:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B23230E;
+        Tue, 11 Feb 2020 07:51:22 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4B933F68E;
+        Tue, 11 Feb 2020 07:51:21 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:51:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     broonie@kernel.org, davem@davemloft.net,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        mark.rutland@arm.com, mchehab+samsung@kernel.org,
+        robh+dt@kernel.org, sravanhome@gmail.com
+Subject: Applied "MAINTAINERS: Add entry for mp5416 PMIC driver" to the regulator tree
+In-Reply-To: <20200204110419.25933-4-sravanhome@gmail.com>
+Message-Id: <applied-20200204110419.25933-4-sravanhome@gmail.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The IPU1 functional clock is the output of a mux clock (represented
-by ipu1_gfclk_mux previously) and the clock source for this has been
-updated to be sourced from dpll_core_h22x2_ck in commit 39879c7d963e
-("ARM: dts: dra7xx-clocks: Source IPU1 functional clock from CORE DPLL").
-ipu1_gfclk_mux is an obsolete clock now with the clkctrl conversion,
-and this clock source parenting is lost during the new clkctrl layout
-conversion.
+The patch
 
-Remove this stale clock and fix up the clock source for this mux
-clock using the latest equivalent clkctrl clock. This restores the
-previous logic and ensures that the IPU1 continues to run at the
-same frequency of IPU2 and independent of the ABE DPLL.
+   MAINTAINERS: Add entry for mp5416 PMIC driver
 
-Fixes: b5f8ffbb6fad ("ARM: dts: dra7: convert to use new clkctrl layout")
-Signed-off-by: Suman Anna <s-anna@ti.com>
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.7
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From c1e1fa0ae5ba99f502bd2f5a4fd34d0ea22f1fdf Mon Sep 17 00:00:00 2001
+From: Saravanan Sekar <sravanhome@gmail.com>
+Date: Tue, 4 Feb 2020 12:04:19 +0100
+Subject: [PATCH] MAINTAINERS: Add entry for mp5416 PMIC driver
+
+Add MAINTAINERS entry for Monolithic Power Systems mp5416 PMIC driver.
+
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+Link: https://lore.kernel.org/r/20200204110419.25933-4-sravanhome@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-Hi Tony,
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Patch on top of 5.6-rc1. Appreciate it if you can include it for the 5.6-rc
-cycle.
-
-regards
-Suman
-
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index 55cef4cac5f1..dc0a93bccbf1 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -796,16 +796,6 @@
- 		clock-div = <1>;
- 	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 38fe2f3f7b6f..060d48e5615c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11259,7 +11259,8 @@ F:	drivers/tty/mxser.*
+ MONOLITHIC POWER SYSTEM PMIC DRIVER
+ M:	Saravanan Sekar <sravanhome@gmail.com>
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/regulator/mpq7920.yaml
++F:	Documentation/devicetree/bindings/regulator/mps,mp*.yaml
++F:	drivers/regulator/mp5416.c
+ F:	drivers/regulator/mpq7920.c
+ F:	drivers/regulator/mpq7920.h
  
--	ipu1_gfclk_mux: ipu1_gfclk_mux@520 {
--		#clock-cells = <0>;
--		compatible = "ti,mux-clock";
--		clocks = <&dpll_abe_m2x2_ck>, <&dpll_core_h22x2_ck>;
--		ti,bit-shift = <24>;
--		reg = <0x0520>;
--		assigned-clocks = <&ipu1_gfclk_mux>;
--		assigned-clock-parents = <&dpll_core_h22x2_ck>;
--	};
--
- 	dummy_ck: dummy_ck {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -1564,6 +1554,8 @@
- 			compatible = "ti,clkctrl";
- 			reg = <0x20 0x4>;
- 			#clock-cells = <2>;
-+			assigned-clocks = <&ipu1_clkctrl DRA7_IPU1_MMU_IPU1_CLKCTRL 24>;
-+			assigned-clock-parents = <&dpll_core_h22x2_ck>;
- 		};
- 
- 		ipu_clkctrl: ipu-clkctrl@50 {
 -- 
-2.23.0
+2.20.1
 
