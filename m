@@ -2,143 +2,132 @@ Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF03C352A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487D2C3B186
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C32920656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:44:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvQExPCB"
+	by mail.kernel.org (Postfix) with ESMTP id 1EC1520656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 15:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581436160;
+	bh=l4fldM31ofLcGdjk8qjnVDm4LED4hJPi2Vn87fAKGHQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=KOAtg8VDpp1R+NIzqvLcM2sNXF5DXpgfcdII/wP/f73QmlpeW7VyKRdGk8M8lkXd7
+	 Zw41y2dR2R3Kw0iOwrgFQWEWvNeBKfdb4yXSvw/IoBHyLq+y1rdZAt3Kfp5nDC00oi
+	 GaDnINWoMUgy7A50zzCIusctZryw7fmxLqVv1J1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgBKPoW (ORCPT
+        id S1730111AbgBKPtT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 10:44:22 -0500
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:45033 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbgBKPoW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 10:44:22 -0500
-Received: by mail-ed1-f43.google.com with SMTP id g19so5157361eds.11;
-        Tue, 11 Feb 2020 07:44:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xlR00ADJradjotkCl4UlmMojkVu0xcxZBqzsuQumm74=;
-        b=NvQExPCB8DI0IP1gFi+4sXuJgnDnc+3sGrABcCQBUhEtdW8umNWi+t6DLqUPNGUeCK
-         +2Fo1BxAKf9Ge7XhKz0zsotmk3csdx0+aPVkukynRe0EUzkmvsRViU4D71ZYDFtnj86Q
-         g3jqxsr8lTzrutSK3BNOyGpevnnnWU+qUZuxplWXAkvlgvm+mGS2e6uoZzslvqJ86mTS
-         to4PLxgKuZS5+2D7SttIzvMzyl8v9YPdyNeLJdICpVJ2t36bCNV6O4Nkf29KFl9yrt4P
-         VdHGJUulikhpW5WwkpQF3vYcZROgf72tQ09vs5ydiDKiMjgq0Cq9GM5CFHRHF8wzzW5F
-         as6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xlR00ADJradjotkCl4UlmMojkVu0xcxZBqzsuQumm74=;
-        b=SMl5Zu4w1wTLSdtKHmtWlbnmAszmWsTCOV5kXz1fhpm4cItRq97GRfKFq7uo/6mL9X
-         q1uos7JmRGKBPv8dRzWqg9hZqCDlmslb6J3yr2KbjkPsJbB3gQUTtsMQiQJRZiLxQfU6
-         5vGVpw3htb2S4kA63Y6j3/ZLUjZXJ9P0XWZBfJdPZQEDEsfcLpaD8qFjeThUK5yiHwkO
-         8vzGPiVFu0uDBVQs9o6KRFz+0ZyXI1e0dqVTeyMAw9iqkHzdB+/gmeHRy3iXiXVoWMTC
-         CVpOhe+MMmHAyKQ407FCXlO6ob3ZvgX2iP47FlH4maNPHdb11AuGTKFtQvDStZ6JQEgr
-         JWFg==
-X-Gm-Message-State: APjAAAW2kmtQADOf/oKmkWeMfzSTbJ7B0PBFnUpWsi6J4H+UCsrh/DjJ
-        3577snIB4CChfVJjOgxCTaptbBBX2rc9bEVMjjo=
-X-Google-Smtp-Source: APXvYqyCzdecpsQM0lw4triJNxJwSEFMbxi4XZz3qtjCH0Quta/P/aV1VGix4DQ+ffz64Nm+arwNBPjkvBa9ztigP+U=
-X-Received: by 2002:aa7:c6c5:: with SMTP id b5mr6258346eds.281.1581435860509;
- Tue, 11 Feb 2020 07:44:20 -0800 (PST)
-MIME-Version: 1.0
-References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
- <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
- <2f5abc857910f70faa119fea5bda81d7@codeaurora.org> <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
- <1d201377996e16ce25acb640867e1214@codeaurora.org>
-In-Reply-To: <1d201377996e16ce25acb640867e1214@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 11 Feb 2020 07:44:09 -0800
-Message-ID: <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 11 Feb 2020 10:49:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:48446 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728655AbgBKPtS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 10:49:18 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA0E012FC;
+        Tue, 11 Feb 2020 07:49:17 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FC773F68E;
+        Tue, 11 Feb 2020 07:49:17 -0800 (PST)
+Date:   Tue, 11 Feb 2020 15:49:15 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Paul Olaru <paul.olaru@nxp.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        devicetree@vger.kernel.org, festevam@gmail.com, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        robh+dt@kernel.org
+Subject: Applied "ASoC: SOF: Add i.MX8QM device descriptor" to the asoc tree
+In-Reply-To: <20200210095817.13226-4-daniel.baluta@oss.nxp.com>
+Message-Id: <applied-20200210095817.13226-4-daniel.baluta@oss.nxp.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
->
-> On 2020-02-07 19:40, Jeffrey Hugo wrote:
-> > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
-> >>
-> >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
-> >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
-> >> > wrote:
-> >> >>
-> >> >> For a given byte clock, if VCO recalc value is exactly same as
-> >> >> vco set rate value, vco_set_rate does not get called assuming
-> >> >> VCO is already set to required value. But Due to GDSC toggle,
-> >> >> VCO values are erased in the HW. To make sure VCO is programmed
-> >> >> correctly, we forcefully call set_rate from vco_prepare.
-> >> >
-> >> > Is this specific to certain SoCs? I don't think I've observed this.
-> >>
-> >> As far as Qualcomm SOCs are concerned, since pll is analog and the
-> >> value
-> >> is directly read from hardware if we get recalc value same as set rate
-> >> value, the vco_set_rate will not be invoked. We checked in our idp
-> >> device which has the same SOC but it works there since the rates are
-> >> different.
-> >
-> > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
-> > does this issue apply to?  Everything implementing the 10nm pll?  One
-> > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
-> > so I'm interested to know what is the actual impact here.  I don't see
-> > an "IDP" SoC in the IP catalog, so I really have no idea what you are
-> > referring to.
->
->
-> This is not 10nm specific. It is applicable for other nms also.
-> Its specific to the frequency being set. If vco_recalc returns the same
-> value as being set by vco_set_rate,
-> vco_set_rate will not be invoked second time onwards.
->
-> For example: Lets take below devices:
->
-> Cheza is based on SDM845 which is 10nm only.
-> Clk frequency:206016
-> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
-> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
->
-> Trogdor is based on sc7180 which is also 10nm.
-> Clk frequency:69300
-> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
-> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
->
-> In same trogdor device, we slightly changed the clock frequency and the
-> values actually differ which will not cause any issue.
-> Clk frequency:69310
-> dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
-> dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
+The patch
 
+   ASoC: SOF: Add i.MX8QM device descriptor
 
-tbh, loosing state when power is off is kind of the behavior that I'd
-expect.  It kinda makes me wonder if things are not getting powered
-off all the way on some SoCs?
+has been applied to the asoc tree at
 
-jhugo, are you worried that this patch will cause problems on other
-users of the 10nm pll?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
 
-BR,
--R
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From f831ebf2faa598793a7ec327847c61dbeabba601 Mon Sep 17 00:00:00 2001
+From: Paul Olaru <paul.olaru@nxp.com>
+Date: Mon, 10 Feb 2020 11:58:16 +0200
+Subject: [PATCH] ASoC: SOF: Add i.MX8QM device descriptor
+
+Add SOF device and DT descriptors for i.MX8QM platform.
+
+Signed-off-by: Paul Olaru <paul.olaru@nxp.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200210095817.13226-4-daniel.baluta@oss.nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/sof/sof-of-dev.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/sound/soc/sof/sof-of-dev.c b/sound/soc/sof/sof-of-dev.c
+index 2da1bd859d98..16e49f2ee629 100644
+--- a/sound/soc/sof/sof-of-dev.c
++++ b/sound/soc/sof/sof-of-dev.c
+@@ -13,6 +13,7 @@
+ #include "ops.h"
+ 
+ extern struct snd_sof_dsp_ops sof_imx8_ops;
++extern struct snd_sof_dsp_ops sof_imx8x_ops;
+ 
+ /* platform specific devices */
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
+@@ -23,6 +24,14 @@ static struct sof_dev_desc sof_of_imx8qxp_desc = {
+ 	.nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
+ 	.ops = &sof_imx8x_ops,
+ };
++
++static struct sof_dev_desc sof_of_imx8qm_desc = {
++	.default_fw_path = "imx/sof",
++	.default_tplg_path = "imx/sof-tplg",
++	.default_fw_filename = "sof-imx8.ri",
++	.nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
++	.ops = &sof_imx8_ops,
++};
+ #endif
+ 
+ static const struct dev_pm_ops sof_of_pm = {
+@@ -103,6 +112,7 @@ static int sof_of_remove(struct platform_device *pdev)
+ static const struct of_device_id sof_of_ids[] = {
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
+ 	{ .compatible = "fsl,imx8qxp-dsp", .data = &sof_of_imx8qxp_desc},
++	{ .compatible = "fsl,imx8qm-dsp", .data = &sof_of_imx8qm_desc},
+ #endif
+ 	{ }
+ };
+-- 
+2.20.1
+
