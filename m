@@ -2,108 +2,95 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F40EC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 12:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6261DC3B186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 12:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A4C21739
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 12:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="nqRz0MyG"
+	by mail.kernel.org (Postfix) with ESMTP id 42EB220714
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 12:09:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbgBLMID (ORCPT
+        id S1727756AbgBLMJu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 07:08:03 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:55886 "EHLO
-        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbgBLMIC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 07:08:02 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 466BDD006F9;
-        Wed, 12 Feb 2020 12:08:01 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at serbinski.com
-Received: from mail.serbinski.com ([127.0.0.1])
-        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id deXudkH907vE; Wed, 12 Feb 2020 07:07:56 -0500 (EST)
-Received: from mail.serbinski.com (localhost [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 83312D00693;
-        Wed, 12 Feb 2020 07:07:56 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 83312D00693
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581509276;
-        bh=X01imo3rNxuo1cF/d14QGPIrzjN/5R3N1tchGdwIcuM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nqRz0MyG1yj3DNcgdIf2qJfu1oOkEQn7Ym3BuVi5yhlRzpQQPtL2jW93ZI/8XnaQ5
-         0bW0hvRbhDsG4mbB20QDLJ1/y0hq+puU4mrVmkUsBcdr5vIkxnwTVaxXlVwJVwZd3X
-         jA0EUmFJmqQNNUYc0zU07mVp7isl1EeaMGKNqWwI=
+        Wed, 12 Feb 2020 07:09:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:60372 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbgBLMJu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 07:09:50 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 271F930E;
+        Wed, 12 Feb 2020 04:09:50 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44B4C3F6CF;
+        Wed, 12 Feb 2020 04:09:48 -0800 (PST)
+Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Roger Quadros <rogerq@ti.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+Cc:     "vigneshr@ti.com" <vigneshr@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
+References: <20200206111728.6703-1-rogerq@ti.com>
+ <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
+ <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
+ <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
+ <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
+ <2a527d21087b4f959c7f95895d70b669@AcuMS.aculab.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2f82cd89-a1c2-cf47-97df-3acac0798c85@arm.com>
+Date:   Wed, 12 Feb 2020 12:09:49 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 12 Feb 2020 07:07:56 -0500
-From:   Adam Serbinski <adam@serbinski.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
- documentation
-In-Reply-To: <b5c1328a-e3ca-826d-9ff0-f2bbce24ac22@linaro.org>
-References: <20200212015222.8229-1-adam@serbinski.com>
- <20200212015222.8229-7-adam@serbinski.com>
- <579e0ae1-f257-7af3-eac9-c8e3ab3b52c7@linaro.org>
- <2989c09149976a28d13d4b4eb10b7c7e@serbinski.com>
- <b5c1328a-e3ca-826d-9ff0-f2bbce24ac22@linaro.org>
-User-Agent: Roundcube Webmail/1.4-beta
-Message-ID: <d4e16b7944adbd8859c8287673da3417@serbinski.com>
-X-Sender: adam@serbinski.com
+In-Reply-To: <2a527d21087b4f959c7f95895d70b669@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-02-12 06:43, Srinivas Kandagatla wrote:
-> On 12/02/2020 11:01, Adam Serbinski wrote:
->>>> 
->>>> +
->>>> + - qcom,pcm-slot-mapping
->>>> +    Usage: required for pcm interface
->>> 
->>> Are these not specific to 8k and 16k mode ?
->>> We should probably list values for both modes here.
->> 
->> No, this is just the offset that the audio sample is placed in with 
->> respect to a maximum of 4 slots, 16 bits wide, beginning with the sync 
->> pulse.
+On 2020-02-12 11:56 am, David Laight wrote:
+> From: Robin Murphy
+>> Sent: 12 February 2020 11:43
+> ...
+>> If the device *is* inherently 64-bit capable, then setting 64-bit masks
+>> in the driver is correct - if a 64-bit IP block happens to have been
+>> integrated with only 32 address bits wired up, but the system has memory
+>> above the 32-bit boundary, then that should be described via
+>> "dma-ranges", which should then end up being used to further constrain
+>> the device masks internally to the DMA API.
 > 
+> Given how often this happens (please can I shoot some more
+> hardware engineers - he says while compiling some VHDL)
+> is it possible to allocate some memory pages that are
+> aliases if the address bits over 31 are ignored?
 > 
-> That's not true atleast by the QDSP documentation,
-> according to it we will use more slots to transfer at higher sample 
-> rate. ex:
-> 16 kHz data can be transferred using 8 kHz samples in two
-> slots.
+> Then (at least some) drivers could to a run-time probe
+> reading to the high address and checking the data didn't
+> appear in the low address.
 > 
-> Also there are 32 slots for each of 4 supported channels for PCM AFE 
-> port.
+> Only one such set of pages is needed - access can be locked.
+> But they'd need to be reserved early on.
 
-Ok, if that's the case, then it sounds like someone else is going to 
-have to implement it. I have no way to test that kind of a 
-configuration, so attempting to implement it would be futile.
+(Oh, for that much control over page allocation!)
 
-> 
-> 
->> 
->> When switching between 8 and 16k sample rate, it is just the sync 
->> pulse rate that is changed. The audio sample will be delivered in the 
->> same slot, just at a different frequency.
+It's a fun idea, but there's no guarantee that the platform memory map 
+is actually suitable (AMD Seattle is the go-to counterexample), and 
+having an opt-in test that every driver has to implement individually 
+sounds like a maintenance nightmare. I think it's far better all round 
+to just expect the firmware-provided machine description - be it 
+devicetree, ACPI, or whatever - to correctly describe the integration.
+
+Robin.
