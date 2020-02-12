@@ -2,177 +2,102 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9135C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 16:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE99BC3B186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 16:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DAE2168B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 16:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8614421569
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 16:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NlaN8NZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbgBLQ41 (ORCPT
+        id S1728781AbgBLQ6u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:56:27 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50242 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgBLQ40 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 11:56:26 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id D61BF290ADB
-Subject: Re: [PATCH v3] dt-bindings: extcon: usbc-cros-ec: convert
- extcon-usbc-cros-ec.txt to yaml format
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        devicetree@vger.kernel.org
-Cc:     myungjoo.ham@samsung.com, cw00.choi@samsung.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
-        groeck@chromium.org, linux-kernel@vger.kernel.org,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-References: <20200212155155.14210-1-dafna.hirschfeld@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <f01756ae-d66b-f7e1-2aaf-b554426dd6c1@collabora.com>
-Date:   Wed, 12 Feb 2020 17:55:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 11:58:50 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40185 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgBLQ6u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 11:58:50 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q8so1522846pfh.7
+        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 08:58:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=bK+cvl8zl3lFOBR7bGFC49ixHUgxXY0M1LIjl6eCa7g=;
+        b=NlaN8NZnHVoC2MsosIgILZ3NWppGuVSUhrH+t3G+ZjgTaeU9geNHIZoJ4yrqViRc4S
+         GuvHMdMQsjB2d7o2umi7zud7ryWUw8IRQTdPeV3ucViDk0QkOJLkT0XQHyI9toUPWM1h
+         TlTmAY+Eu0E3f0YiwnQMZ3xGlVVIEQiapH5bg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=bK+cvl8zl3lFOBR7bGFC49ixHUgxXY0M1LIjl6eCa7g=;
+        b=F0Fhc16n1urfOne5sKI/+51H756BUISIjEJJ2xGOyyFmxocVnEMg1DRuhCgXv/wxLs
+         Q+XnCtBCHWPi1bkxwphLx0mkQMFrTxsyU6wbvhvDtGbIoop/7WnM2U6rWWeE5ghQGFtE
+         G+M4v43EYfLE/NVfO1YOSMaH8u7mivwnaPzw9hm+BykRKYWi3XBbRQx+cGSoRP1zRmBB
+         Zbc9JIQUL+yMRHBm6swo/HoEPmD8irNuexyowMEp2iQIB2t4Aaa5kvMH0qfRkb4vtmC+
+         HqdIx8qen1X2sPdTHe79wVCJMzbGyjIP6HGm5VRYn0/2cHmmw2x2ZeOyq2i1ZXqovNT4
+         JLrg==
+X-Gm-Message-State: APjAAAWl3o2XLInbCI17N8VgqPgKAKsx9yb2k/58Suz/WUfyP2DFBqPq
+        QcH9Yx36hKR31WhEO0Y8FEwJmw==
+X-Google-Smtp-Source: APXvYqydHiVqEawLuj0kN/UatDCVMzDQCKH2Edo9QUQTHOVoTBw6W167ZCYnwSPn4e1U0H9BAmp+Iw==
+X-Received: by 2002:aa7:951c:: with SMTP id b28mr9136009pfp.97.1581526728668;
+        Wed, 12 Feb 2020 08:58:48 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 13sm1497030pfj.68.2020.02.12.08.58.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2020 08:58:48 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200212155155.14210-1-dafna.hirschfeld@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1581492673-27295-1-git-send-email-sbhanu@codeaurora.org>
+References: <1581492673-27295-1-git-send-email-sbhanu@codeaurora.org>
+Subject: Re: [PATCH V3] mmc: sdhci-msm: Update system suspend/resume callbacks of sdhci-msm platform driver
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        vbadigan@codeaurora.org, rampraka@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
+        adrian.hunter@intel.com, mka@chromium.org, robh+dt@kernel.org,
+        ulf.hansson@linaro.org
+Date:   Wed, 12 Feb 2020 08:58:47 -0800
+Message-ID: <158152672736.121156.11425666862560332951@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dafna,
+Quoting Shaik Sajida Bhanu (2020-02-11 23:31:13)
+> The existing suspend/resume callbacks of sdhci-msm driver are just
+> gating/un-gating the clocks. During suspend cycle more can be done
+> like disabling controller, disabling card detection, enabling wake-up eve=
+nts.
+>=20
+> So updating the system pm callbacks for performing these extra
+> actions besides controlling the clocks.
+>=20
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
 
-On 12/2/20 16:51, Dafna Hirschfeld wrote:
-> convert the binding file extcon-usbc-cros-ec.txt to
-> yaml format extcon-usbc-cros-ec.yaml
-> 
-> This was tested and verified on ARM with:
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+
+>=20
+> Changes since V2:
+>     Removed disabling/enabling pwr-irq from system pm ops.
+>=20
+> Changes since V1:
+>     Invoking pm_runtime_force_suspend/resume instead of
+>     sdhci_msm_runtime_suepend/resume.
 > ---
-> Changes since v1:
-> 1 - changing the license to (GPL-2.0-only OR BSD-2-Clause)
-> 2 - changing the maintainers
-> 3 - changing the google,usb-port-id property to have minimum 0 and maximum 255
-> 
-> Changes since v2:
-> 1 - Changing the patch subject to start with "dt-bindings: extcon: usbc-cros-ec:"
-> 2 - In the example, adding a parent isp node, a reg field to cros-ec@0
-> and adding nodes 'extcon0/1' instead of one node 'extcon'.
-> 
->  .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 --------
->  .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 56 +++++++++++++++++++
->  2 files changed, 56 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-> deleted file mode 100644
-> index 8e8625c00dfa..000000000000
-> --- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -ChromeOS EC USB Type-C cable and accessories detection
-> -
-> -On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
-> -able to detect the state of external accessories such as display adapters
-> -or USB devices when said accessories are attached or detached.
-> -
-> -The node for this device must be under a cros-ec node like google,cros-ec-spi
-> -or google,cros-ec-i2c.
-> -
-> -Required properties:
-> -- compatible:		Should be "google,extcon-usbc-cros-ec".
-> -- google,usb-port-id:	Specifies the USB port ID to use.
-> -
-> -Example:
-> -	cros-ec@0 {
-> -		compatible = "google,cros-ec-i2c";
-> -
-> -		...
-> -
-> -		extcon {
-> -			compatible = "google,extcon-usbc-cros-ec";
-> -			google,usb-port-id = <0>;
-> -		};
-> -	}
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> new file mode 100644
-> index 000000000000..d7a2fc544c4d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ChromeOS EC USB Type-C cable and accessories detection
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> +
-> +description: |
-> +  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
-> +  able to detect the state of external accessories such as display adapters
-> +  or USB devices when said accessories are attached or detached.
-> +  The node for this device must be under a cros-ec node like google,cros-ec-spi
-> +  or google,cros-ec-i2c.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,extcon-usbc-cros-ec
-> +
-> +  google,usb-port-id:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: the port id
-> +    minimum: 0
-> +    maximum: 255
-> +
-> +required:
-> +  - compatible
-> +  - google,usb-port-id
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    isp1 {
 
-I think you mean 'spi' here ( spi0 or spi1 )?
-
-With that fixed,
-
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        cros-ec@0 {
-> +            compatible = "google,cros-ec-spi";
-> +            reg = <0>;
-> +
-> +            usbc_extcon0: extcon0 {
-> +                compatible = "google,extcon-usbc-cros-ec";
-> +                google,usb-port-id = <0>;
-> +            };
-> +
-> +            usbc_extcon1: extcon1 {
-> +                compatible = "google,extcon-usbc-cros-ec";
-> +                google,usb-port-id = <1>;
-> +            };
-> +        };
-> +    };
-> 
+This triple dash should come right after the SoB line.
