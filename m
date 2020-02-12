@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A0DC3B186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEB3C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8A1206D7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B4820658
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xo3polnJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYGyzxcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgBLRJ7 (ORCPT
+        id S1728673AbgBLRKF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:09:59 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46493 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgBLRJ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 12:09:58 -0500
-Received: by mail-lj1-f195.google.com with SMTP id x14so3153959ljd.13;
-        Wed, 12 Feb 2020 09:09:56 -0800 (PST)
+        Wed, 12 Feb 2020 12:10:05 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34506 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBLRKF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 12:10:05 -0500
+Received: by mail-lf1-f68.google.com with SMTP id l18so2160468lfc.1;
+        Wed, 12 Feb 2020 09:10:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hqQgPcOhiYzRs4iHLwBqYk79r31vuxUTCA9qlX1GVQY=;
-        b=Xo3polnJ9iGYck3I4GhJkFbW6nvaAq319H05p5nasV/o0Z7jj92BY5BQBiNQx3L4MN
-         99J3CmizebKQ+pQkGoc81jasfq1CcdV1vfh0kFry73cR12HzXZHwekGzuRjI4c7xdM6H
-         YLxlzqPgijv0sq8zX40FWcNiZUUZ3Mo9sNU85AgYr2djMWlsGAhY8SFSm6zflpT0MLiT
-         czxZkjktrVZg/bnfMnF+hwH9kijpEf0tufX1+4NF9HAxKUZlLluZDnRcbfpyG9wy5h3n
-         0N1dPrrhTlHdii6EJfDRO0jEwi/hwpT7c/tbZO8VKgWrZO8VfyA8Ezl6sBt1TyvzB+FY
-         h//w==
+        bh=cjHiT6RRFXiQSDQh4c1GDiVmntAwjJ8KdHguwFFGoXg=;
+        b=nYGyzxclTFrvD3tO5D4Eepi4o6/d5y1RX6rQtbAFr2lCFeoQXrJGaVVwBIbMhG9BPs
+         9Ezut2DvJP/+/BduqEvSOjS/46jcImXTzjohhIpWAX+kRvY31SgTubuW0WJCZ1Spz+gQ
+         xUwNPiXJkxXh/hgB1PGVhUtOEMlSvJqJ8aNC3X+Bz6+vet6wC7mP/DtMNNtq6yZ0+SXU
+         7qqYAA+aALa77JBXeKh8P2PwRDoX7CbqiVZnYvZgaqd3synCOyZo/HGJzH0JHC5Mlrnd
+         4/wR+PrHJzh9bxASG/AABS8xlvOyvODW0rpW/GWc7cesATesbyiJ+LatXeLxeGNzmzFO
+         QxyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hqQgPcOhiYzRs4iHLwBqYk79r31vuxUTCA9qlX1GVQY=;
-        b=Yy+WRKD+s9gDff+MCQPrXrWDcecmwWI616gnUSaeBt7vY7KQotKbstnm2Ow78Ky7me
-         5gu5ystkBIjCNtDJiTWVVC7zsdq+qleuK1ekqItHjcsUn/uAuHzkZYEMZsuKbCuMJuiA
-         U9XYahIsWLH44zdPXhxidkYzkPBAmrQ83yW8zhTkipGzL7cdmWbZ3zUkA1P9SWJLORMR
-         mNsGuVtovYXPk40hPudUNaw3xpTxUl0GjIsBoIqaVIP2k7OC7xA1wjvzfLmc9/jnEnrr
-         zq3GQvA5Vj5vlprpksE/xrc6+RL+lA0SvsSQrdVeR8G2SluNA7xM4WBs7CtXvt5NsjTi
-         sSpQ==
-X-Gm-Message-State: APjAAAU4oJyalk7bbdilAMnNCeNPc2v/HZTx9juZbwscGGqwVdaFvKvT
-        m8n+sQ8KTUebmvLAFZElhqZImCWL68s=
-X-Google-Smtp-Source: APXvYqyvAFg8zxLLDerPnXYzXavj9gdvqYLZpHj/gsLSGHINKAb8lWhBDRIVCUtix0AF3b7rZsE30Q==
-X-Received: by 2002:a2e:7207:: with SMTP id n7mr7892032ljc.242.1581527396111;
-        Wed, 12 Feb 2020 09:09:56 -0800 (PST)
+        bh=cjHiT6RRFXiQSDQh4c1GDiVmntAwjJ8KdHguwFFGoXg=;
+        b=Y6lZEWuQrcFOyjaRwLDnyp1hoS9W7kDQ+BNSIGmXfeH4VgXcETB2rv5y36QRzow7Uk
+         Wx0zZaF4I39YXJiwsGBDFJV2Rrdee+sd7VhoDkk195BcQYVWpDl6FpdEwICTc4ZWMU/0
+         2jixKZHu6bVhs+4Oxd5wEym84Al/T6vGceviBwtVSH9DB/hSFvJdpGuRD/Ml921RF1Ir
+         tZoEjLH+9LWtUGDFYkKNq5MMFYHFbZZ693l4N6rYkMH6UUDYocWpk5wt0FlFbhxYNBEf
+         lj4yZo8XCI3B3zwTF0r6LbJM0KLzn5pmc3cTxd+AqruwIrI7rbTpGczKdNvHkcEMguO4
+         wyDQ==
+X-Gm-Message-State: APjAAAUEuVyZdBBIH4UHlpRSNyzO+Iiu1Pb2OpO4bmRJeM3bxLoY5V5N
+        jxIzea2aFm0OBN6G8YGzh4Y=
+X-Google-Smtp-Source: APXvYqwwT5ySWGtYWNDd9YZbv0RXnQQoklx1lta9yD2GGySrGTDWNgJEg2MdHlboBXXtkAm/h8Gsag==
+X-Received: by 2002:ac2:47e6:: with SMTP id b6mr7044299lfp.96.1581527403714;
+        Wed, 12 Feb 2020 09:10:03 -0800 (PST)
 Received: from emb-minnehanov-OptiPlex-7060.collabio.net ([77.244.21.162])
-        by smtp.gmail.com with ESMTPSA id b20sm607955ljp.20.2020.02.12.09.09.55
+        by smtp.gmail.com with ESMTPSA id b20sm607955ljp.20.2020.02.12.09.10.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 09:09:55 -0800 (PST)
+        Wed, 12 Feb 2020 09:10:03 -0800 (PST)
 From:   Alexey Minnekhanov <alexey.min@gmail.com>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -63,9 +63,9 @@ Cc:     linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org,
         Alexey Minnekhanov <alexey.min@gmail.com>
-Subject: [PATCH 2/5] dt-bindings: arm: Add kryo260 compatible
-Date:   Wed, 12 Feb 2020 20:09:13 +0300
-Message-Id: <20200212170916.7494-3-alexey.min@gmail.com>
+Subject: [PATCH 3/5] dt-bindings: arm: qcom: Add sdm630 and sdm660 SoCs
+Date:   Wed, 12 Feb 2020 20:09:14 +0300
+Message-Id: <20200212170916.7494-4-alexey.min@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200212170916.7494-1-alexey.min@gmail.com>
 References: <20200212170916.7494-1-alexey.min@gmail.com>
@@ -76,25 +76,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Kryo260 is found in SDM660, so add it in list of cpu compatibles
+Add a SoC strings for the Qualcomm SDM630 and SDM660 SoCs.
+Also document the new xiaomi,lavender compatible used in
+a device tree binding.
 
 Signed-off-by: Alexey Minnekhanov <alexey.min@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index c23c24ff7575..d994c066a8bd 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -155,6 +155,7 @@ properties:
-       - nvidia,tegra194-carmel
-       - qcom,krait
-       - qcom,kryo
-+      - qcom,kryo260
-       - qcom,kryo385
-       - qcom,kryo485
-       - qcom,scorpion
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 529d924931f1..c5af92acd427 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -36,6 +36,8 @@ description: |
+         msm8994
+         msm8996
+         sc7180
++        sdm630
++        sdm660
+         sdm845
+ 
+   The 'board' element must be one of the following strings:
+@@ -125,6 +127,11 @@ properties:
+               - samsung,a5u-eur
+           - const: qcom,msm8916
+ 
++      - items:
++          - enum:
++              - xiaomi,lavender
++          - const: qcom,sdm660
++
+       - items:
+           - const: qcom,msm8996-mtp
+ 
 -- 
 2.20.1
 
