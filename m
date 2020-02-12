@@ -2,131 +2,78 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D909C35242
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0EEC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 03:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4168206ED
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2EC2168B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 03:06:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqDTnVdw"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="h7aDYiZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbgBLCh4 (ORCPT
+        id S1727771AbgBLDG1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:37:56 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34714 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbgBLCh4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 21:37:56 -0500
-Received: by mail-pj1-f66.google.com with SMTP id f2so1358941pjq.1;
-        Tue, 11 Feb 2020 18:37:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vv3NHPZnBve5XiluETZotYu+d3bqwg0qJCx+3uhyaM4=;
-        b=LqDTnVdwykUbgj17vRiSu0wFe6uQuLuoNTYxnt1hV1zA7zQJZ3Bu1dEQt4RI34I1TS
-         Or2/lgMlxpcFQzXW463ugd85BrgR6lgMSKBiGhOmWpfD0H1f7PcEbVJhflRk3lwMfWo3
-         x6wskEcFMMckElySxG0JLuRGy9KCJ0rFQPawyC295ueBCdHjobHOguzNBOOR7WlBwRaR
-         OY5syFDOcpl+E49w1qaBDG105le2WjLWE+eQ6YJg8AubgePkguj0UTz+MB/RBxroaW0n
-         lx2EFjfL5QjrX69I8wUKWAO2/nYbY5A1X27OhsVEa2/65vOy8MgC2ffxYouJxHKW6a/V
-         4QZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vv3NHPZnBve5XiluETZotYu+d3bqwg0qJCx+3uhyaM4=;
-        b=pi3XhKiKMuhRhMiKBvNZIWXiz6wOV6ZRzgsw3FWeRcjHsC7MiVi1Ow3Pg6B2g0C2gP
-         bcPwrAPmdR0RI/oFouP6IyhJ/ESsWbmbNeGWqQx0aOCULa/yrQGOTQKBee4ScRQDEmM3
-         x0+/y+Sv7Dvjt64yhU6EVLnfEf4KefbK+kqvCYd4iflQ37ybWimYl3gPoj3QFnp5v0uh
-         lBq4/uZKweUPN5hbnVInwIYArcVMZoDlbvJKx4q95zkoGwai3cZwiC68qOuKYGVJFPQg
-         0oFkL1speeP6KNw8ChYN/QMy2ToB17XlSnAXuKkBMMhrorSL3HgQrEQkkN3pOeViryZ/
-         LKNg==
-X-Gm-Message-State: APjAAAUKXHd75IvVLU9CRT61H9LeUgIYDnqdsUIBAhz2JIrL2pd2Dpaw
-        nzhUAgtql9LjSoewaDH1ud8=
-X-Google-Smtp-Source: APXvYqyuDguANzB58wFOK/4Z7FCp2UtZ0LngNySWG7JX3V31NtSorTHf3Kf9HvxxX7mtQN6BVwdbmw==
-X-Received: by 2002:a17:90a:c388:: with SMTP id h8mr6993554pjt.83.1581475075299;
-        Tue, 11 Feb 2020 18:37:55 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:200::80a4])
-        by smtp.gmail.com with ESMTPSA id d15sm5740978pgn.6.2020.02.11.18.37.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Feb 2020 18:37:54 -0800 (PST)
-Date:   Tue, 11 Feb 2020 18:37:47 -0800
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        linux-usb@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] usb: gadget: aspeed: read vhub config from
- of_device_id
-Message-ID: <20200212023746.GA9834@taoren-ubuntu-R90MNF91>
-References: <20200131222157.20849-1-rentao.bupt@gmail.com>
- <20200131222157.20849-2-rentao.bupt@gmail.com>
- <CACPK8Xe0b+zVNqf8v5YXOLkzqDeb4JHqec-bqFpaVFGTwHThhA@mail.gmail.com>
- <386e905fb705266efcac0c1b3a10053889c7fead.camel@kernel.crashing.org>
- <20200210190744.GA5346@taoren-ubuntu-R90MNF91>
- <746b08aabf7ea976a382ad2ca30fa10a095e7ed8.camel@kernel.crashing.org>
+        Tue, 11 Feb 2020 22:06:27 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:39374 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727681AbgBLDG1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 22:06:27 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6C51D886BF;
+        Wed, 12 Feb 2020 16:06:23 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1581476783;
+        bh=5Zzd4p0YzB4rRdaFrzvricfO2C3A3m/IaL6u4DjRzpc=;
+        h=From:To:Cc:Subject:Date;
+        b=h7aDYiZAdE7XwdaiY96S+eNZrCHc+z135II3+n6IEBdPfoB9gENjPA/lxfydY4VWa
+         iJ8XY6vvrSft4mI4S9tzkWWs1HgHAyXCy5gQ/FOEe7tK3rABrH0SST7RzEhhZUEV8i
+         mHyoceaSfzL+dYJkjCoBKfXTb6bvCrFz+n/FsCKbb22nnN+tys88APHHi/BSR3MxbY
+         p7IhYjRDkkPHoMmC0yJ4ZOx/6om17WchS8d4UaFw45WTW82R+lCdm+Teg4fD+AfFx2
+         8kuLr1WcZQKT/0m9CL7UIpM91QW3iArqU8UbrombQKtYBIAYLStGMQHkijEco5DZk7
+         8s5hbHmgk8fCQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e436baf0000>; Wed, 12 Feb 2020 16:06:23 +1300
+Received: from henrys-dl.ws.atlnz.lc (henrys-dl.ws.atlnz.lc [10.33.23.26])
+        by smtp (Postfix) with ESMTP id 0E26213EED4;
+        Wed, 12 Feb 2020 16:06:23 +1300 (NZDT)
+Received: by henrys-dl.ws.atlnz.lc (Postfix, from userid 1052)
+        id 351754E1463; Wed, 12 Feb 2020 16:06:23 +1300 (NZDT)
+From:   Henry Shen <henry.shen@alliedtelesis.co.nz>
+To:     robh+dt@kernel.org, mark.rutland@arm.com,
+        guillaume.ligneul@gmail.com, jdelvare@suse.com, linux@roeck-us.net,
+        trivial@kernel.org, venture@google.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org,
+        Henry Shen <henry.shen@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/2] (lm73) Add support for of_match_table
+Date:   Wed, 12 Feb 2020 16:06:13 +1300
+Message-Id: <20200212030615.28537-1-henry.shen@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <746b08aabf7ea976a382ad2ca30fa10a095e7ed8.camel@kernel.crashing.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 09:50:42AM +0100, Benjamin Herrenschmidt wrote:
-> On Mon, 2020-02-10 at 11:07 -0800, Tao Ren wrote:
-> > > > This looks generally okay. We should wait for Ben's ack before
-> > > > applying.
-> > > 
-> > > Shouldn't we instead have DT fields indicating those values ?
-> > 
-> > May I ask why we prefer adding dt fields (such as "aspeed,vhub-max-ports"
-> > and "aspeed,vhub-max-endpoints") instead of assigning these values based
-> > on aspeed family? For example, is it to allow users to set a smaller
-> > number of ports/endpoints?
-> 
-> It's not a strong drive but it makes it more convenient to add support
-> to newer revisions if the only differences are those numbers.
+This series adds documentation and compatible info for the lm73 temperatu=
+re
+sensor.
 
-Got it. Thanks for the clarify. Will send out v2 patches after more
-testing.
+Henry Shen (2):
+  dt-bindings: Add TI LM73 as a trivial device
+  hwmon: (lm73) Add support for of_match_table
 
-> > 
-> > > Also we should add a DT representation for the various ID/strings of
-> > > the hub itself so manufacturers can customize them.
-> > 
-> > Sure. I will add DT nodes for vendor/product/device IDs/strings. As it's
-> > not directly related to ast2600-support, shall I handle it in a separate
-> > patch? Or I can include the patch in this patch series?
-> 
-> Separate. Thanks !
+ Documentation/devicetree/bindings/trivial-devices.yaml |  2 ++
+ drivers/hwmon/lm73.c                                   | 10 ++++++++++
+ 2 files changed, 12 insertions(+)
 
-Will take care of the change once this patch series is accepted.
+--=20
+2.25.0
 
-
-Cheers,
-
-Tao
-> 
-> Cheers,
-> Ben.
-> 
-> 
