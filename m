@@ -2,161 +2,99 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355F6C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 15:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2582AC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 15:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 112482082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 15:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001A3206D7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 15:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgBLPws (ORCPT
+        id S1728676AbgBLPxP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:52:48 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49682 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgBLPws (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 10:52:48 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 2FACD293C13
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-To:     devicetree@vger.kernel.org
-Cc:     myungjoo.ham@samsung.com, cw00.choi@samsung.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        linux-kernel@vger.kernel.org, dafna.hirschfeld@collabora.com,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-Subject: [PATCH v3] dt-bindings: extcon: usbc-cros-ec: convert extcon-usbc-cros-ec.txt to yaml format
-Date:   Wed, 12 Feb 2020 16:51:55 +0100
-Message-Id: <20200212155155.14210-1-dafna.hirschfeld@collabora.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Feb 2020 10:53:15 -0500
+Received: from mga04.intel.com ([192.55.52.120]:37261 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728052AbgBLPxO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:53:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 07:53:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="347535140"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 12 Feb 2020 07:53:10 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 12 Feb 2020 17:53:09 +0200
+Date:   Wed, 12 Feb 2020 17:53:09 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        heikki.krogerus@intel.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
+Message-ID: <20200212155309.GG1498@kuha.fi.intel.com>
+References: <20200207203752.209296-1-pmalani@chromium.org>
+ <20200207203752.209296-2-pmalani@chromium.org>
+ <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-convert the binding file extcon-usbc-cros-ec.txt to
-yaml format extcon-usbc-cros-ec.yaml
+Hi Rob,
 
-This was tested and verified on ARM with:
-make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+On Tue, Feb 11, 2020 at 05:25:13PM -0600, Rob Herring wrote:
+> > +examples:
+> > +  - |+
+> > +    typec {
+> > +      compatible = "google,cros-ec-typec";
+> > +
+> > +      port@0 {
+> 
+> 'port' is reserved for OF graph binding which this is not.
+> 
+> > +        port-number = <0>;
+> > +        power-role = "dual";
+> > +        data-role = "dual";
+> > +        try-power-role = "source";
+> 
+> These are usb-connector binding properties, but this is not a
+> usb-connector node. However, I think it should be. The main thing to
+> work out seems to be have multiple connectors.
+> 
+> With your binding, how does one associate the USB host controller with
+> each port/connector? That's a solved problem with the connector
+> binding.
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
----
-Changes since v1:
-1 - changing the license to (GPL-2.0-only OR BSD-2-Clause)
-2 - changing the maintainers
-3 - changing the google,usb-port-id property to have minimum 0 and maximum 255
+It looks like OF graph is required to be used for that. The plan was
+actually to propose that we use device properties "usb2-port" and
+"usb3-port" that directly reference the port nodes under the USB host
+controller, but I guess that's too late for that.
 
-Changes since v2:
-1 - Changing the patch subject to start with "dt-bindings: extcon: usbc-cros-ec:"
-2 - In the example, adding a parent isp node, a reg field to cros-ec@0
-and adding nodes 'extcon0/1' instead of one node 'extcon'.
+OF graph creates one problem. We are going to need to identify the
+endpoints somehow in the USB Type-C drivers, so how do we know which
+endpoint is for example the USB2 port, which is USB3, which is
+DisplayPort, etc?
 
- .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 --------
- .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 56 +++++++++++++++++++
- 2 files changed, 56 insertions(+), 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+Does the remote-endpoint parent need to have a specific compatible
+property, like the USB2 port needs to have compatible = "usb2-port"
+and so on?
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-deleted file mode 100644
-index 8e8625c00dfa..000000000000
---- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--ChromeOS EC USB Type-C cable and accessories detection
--
--On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
--able to detect the state of external accessories such as display adapters
--or USB devices when said accessories are attached or detached.
--
--The node for this device must be under a cros-ec node like google,cros-ec-spi
--or google,cros-ec-i2c.
--
--Required properties:
--- compatible:		Should be "google,extcon-usbc-cros-ec".
--- google,usb-port-id:	Specifies the USB port ID to use.
--
--Example:
--	cros-ec@0 {
--		compatible = "google,cros-ec-i2c";
--
--		...
--
--		extcon {
--			compatible = "google,extcon-usbc-cros-ec";
--			google,usb-port-id = <0>;
--		};
--	}
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-new file mode 100644
-index 000000000000..d7a2fc544c4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChromeOS EC USB Type-C cable and accessories detection
-+
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+
-+description: |
-+  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
-+  able to detect the state of external accessories such as display adapters
-+  or USB devices when said accessories are attached or detached.
-+  The node for this device must be under a cros-ec node like google,cros-ec-spi
-+  or google,cros-ec-i2c.
-+
-+properties:
-+  compatible:
-+    const: google,extcon-usbc-cros-ec
-+
-+  google,usb-port-id:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description: the port id
-+    minimum: 0
-+    maximum: 255
-+
-+required:
-+  - compatible
-+  - google,usb-port-id
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    isp1 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0>;
-+
-+            usbc_extcon0: extcon0 {
-+                compatible = "google,extcon-usbc-cros-ec";
-+                google,usb-port-id = <0>;
-+            };
-+
-+            usbc_extcon1: extcon1 {
-+                compatible = "google,extcon-usbc-cros-ec";
-+                google,usb-port-id = <1>;
-+            };
-+        };
-+    };
+thanks,
+
 -- 
-2.17.1
-
+heikki
