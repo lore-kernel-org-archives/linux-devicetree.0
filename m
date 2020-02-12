@@ -2,213 +2,285 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530B9C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 04:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFD6C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 04:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B34320842
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 04:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870F62073C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 04:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btedfg0C"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="aeN3ITfQ";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="x1Jk0hN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgBLEF0 (ORCPT
+        id S1727918AbgBLE11 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:05:26 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36324 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbgBLEF0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 23:05:26 -0500
-Received: by mail-io1-f68.google.com with SMTP id d15so670254iog.3;
-        Tue, 11 Feb 2020 20:05:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y56nAJIiZ+uAireBhRTGWvQxGWmhvKQLDXIXjtVT5qc=;
-        b=btedfg0CVADkEXOTQtcBBZceMQ0wFLGxJgZBVU5li97qjEePaciiefJvdqULLnA/49
-         zMpC5uAhdfTlJiSaJN66mnx2yTr/SbCO7ZB+gGOfzgw3TWrS3DIYJ914YDeNLbBE4nml
-         tP8/CmLp6BEGTQfO7tpkVVdTnx8LPJdfKtrsss8NR5NBcbtjZOd8MGySAcH9R7N/DemB
-         uRsmHktaR+dJEhnLRRYEv1wzCEC1OhvlxLsCqESF4fXDlRALAngz/mXIn1WIWn8YfPYB
-         TE2QfHeZSmVbFlJDvb6ayDhyvHSDsewScBKLd18k1Ow2sYeSwDq3w8sBQSZXtqG0+Fsl
-         rNKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y56nAJIiZ+uAireBhRTGWvQxGWmhvKQLDXIXjtVT5qc=;
-        b=hBv0qWnnwC7FhIOqrfi4tqDngOzIBbmhr48tc2PxiJ6LieccG145eGqhV1f6bzQgCw
-         3lYxac1S8xoxPFoJkzM3p9PCzAlkujCzj13TyJHb/t8xsNFOOwCOmWimp71jxIU8m+iy
-         /VD/ekw6Ckne0AkB9o3mUnZH3+N8osVvhA7kQOEENBMJNjZOUG9lJTidIJBJdwVGcEWH
-         pf+OQMjVNtnwgW8hgQWVR+FlAIM1aWTEZ00ay5MfXFXNrAwigibKGkc9CsYBX+toHgG7
-         MFlAOReuUihsKFzuNkjcfVpBCWAbQNkRre2bu9DdONgOGhuLlD/IwsHghXEtJqjJl05H
-         +8zg==
-X-Gm-Message-State: APjAAAUDrJgcLysQmkn/+F+ki6in6Br9+zB9aLBgfBEMpf5uh05zf/oH
-        jqw8UpN9jnyQM2coqQlZ7qqScCqXLTORBCjEMuTkVw==
-X-Google-Smtp-Source: APXvYqxQ0rPC9j2U/jPbaaP/bDv1y9+TQflRxmG+XDXwohv+nLmHusAQF2PA7ecGEs6d59JFIScunvpyDxS2IxIWxPA=
-X-Received: by 2002:a5d:8c89:: with SMTP id g9mr16096170ion.178.1581480323635;
- Tue, 11 Feb 2020 20:05:23 -0800 (PST)
+        Tue, 11 Feb 2020 23:27:27 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:49878 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727904AbgBLE10 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 23:27:26 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01C4Pm0T028917;
+        Tue, 11 Feb 2020 20:27:04 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=dGLmL+Hezq/kfeotyjG/FsxuXIwdei+vvf3WST4MsLQ=;
+ b=aeN3ITfQpWw/wevJUnjk7tUHuRojPavBPF6Wca2bADHsdsBaU2sWNZxbf5A0QgptyoKa
+ eEshzFWEeT6BYM5ULmOJLcZOYFmIhx1KlzQg4Bb28VG0+CcZAqLESh3PZ2K6HDn4Brsq
+ 5l0QKON78yOx4mcWtk9ndHn6YDp1Y2FJu7jTEeO5+RViyaBWaRzO7GBumJvpEBshY4UI
+ V9GEY2DxWUCR3DeMnmwzz8mIWfvK7SXn3E0ifiVjGdzmHMl0wNyBXF95Xm+iGeeux+16
+ tmP0hvLOOaN5t04juHnevVi7G/CHIzpcm6fXpzmkbrr+5tzKBU1Bw49BQLcGDlbPcoRS TQ== 
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2y1u17mxnp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Feb 2020 20:27:04 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mNLzAnzCrfoHm3iurF0+I79vn+heNa61ZC40/XYrTPQtBLMaQ4ZvJBpDVhK1CKocZvvKX4jgjl194fjeQ7AlK7wcNeJGQ47S34uKtky/lPzRKQRTPGbr2GCacBXHRieYmZ6zlg0tqfCOxk45A3zmsPwlj6FDceIyNp8B7+RdeCFj2/QvWKlqYs9mQ6XmX6pBKJGhR2aKiAOhIEPZA83PQil+2pzr8GYJ78wKLKk++2ifzjyqHDmq7rQ/yEgVK6ySpiFVqam7XPuaa2Xp8y48Zl9li6BoOT9s0ylIev1VGAsOWba2++jHG+cI2km6hOJdRCqkEwhSWiKz9fRUHSwEiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dGLmL+Hezq/kfeotyjG/FsxuXIwdei+vvf3WST4MsLQ=;
+ b=lcRgvd+t50NwN0tmS8ea3ERmCzgXF7tdknTnKMQtzDYPDV/LyUQwIl7hFHG9FKO9vY6WeG+a22558zqvDcOa8KsCKcY+Vp5SqDrHg2Hddr8KhSJ0k9NUVOpXB8Ndx2SbHuQs+W3yJLKKZLMQkIOjhlICR35AOdXuuX0YrVh2yo4fOm6PhF1ciAI7IrRI6r/p5YqbccsOnmEB9TO8mkyH6FoQl1+rIy4xh5qgBen4qP4DLTFAcTrg43uT9Vuzj1cg5HgQa8hm33/rgyAvCG8AJJKIQQGI+ovoUIV9hYmKPCoebmuLSG/T2LRDQ7PjExKmAwq1Xas2/RabbIJdb+F/JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.28) smtp.rcpttodomain=linux.ie smtp.mailfrom=cadence.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dGLmL+Hezq/kfeotyjG/FsxuXIwdei+vvf3WST4MsLQ=;
+ b=x1Jk0hN+LlpAMSyVj5kBeZkNVv3PQonLCaH5miJ1ijzt86Ni1oaoT8x38Vxf8O6n7H5F/JLHUXec27n0QAzryP4h0bLdmHDOTYX2du69Td5rCIogciB9DX3ZzPVFT4ZUYy0u4oGzOIsU8e3fUEpK+fY8mwh39dgCG5BamYlARmU=
+Received: from CY1PR07CA0031.namprd07.prod.outlook.com
+ (2a01:111:e400:c60a::41) by BN8PR07MB6132.namprd07.prod.outlook.com
+ (2603:10b6:408:b5::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23; Wed, 12 Feb
+ 2020 04:27:00 +0000
+Received: from MW2NAM12FT044.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5a::206) by CY1PR07CA0031.outlook.office365.com
+ (2a01:111:e400:c60a::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23 via Frontend
+ Transport; Wed, 12 Feb 2020 04:27:00 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.28 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.28; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ MW2NAM12FT044.mail.protection.outlook.com (10.13.180.247) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.10 via Frontend Transport; Wed, 12 Feb 2020 04:26:59 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 01C4Qnka007965
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 11 Feb 2020 23:26:51 -0500
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Wed, 12 Feb 2020 05:26:49 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 12 Feb 2020 05:26:49 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 01C4Qnlc024549;
+        Wed, 12 Feb 2020 05:26:49 +0100
+Received: (from yamonkar@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 01C4Qnqw024548;
+        Wed, 12 Feb 2020 05:26:49 +0100
+From:   Yuti Amonkar <yamonkar@cadence.com>
+To:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>
+CC:     <praneeth@ti.com>, <jsarha@ti.com>, <tomi.valkeinen@ti.com>,
+        <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>
+Subject: [PATCH v5 1/3] dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings.
+Date:   Wed, 12 Feb 2020 05:26:42 +0100
+Message-ID: <1581481604-24499-2-git-send-email-yamonkar@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
+References: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
- <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
- <2f5abc857910f70faa119fea5bda81d7@codeaurora.org> <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
- <1d201377996e16ce25acb640867e1214@codeaurora.org> <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
- <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com> <CAF6AEGvLOWKVCjjmqranEi9TKOpMM+BPK199wQ7f=Ez491uhcA@mail.gmail.com>
-In-Reply-To: <CAF6AEGvLOWKVCjjmqranEi9TKOpMM+BPK199wQ7f=Ez491uhcA@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 11 Feb 2020 21:05:12 -0700
-Message-ID: <CAOCk7NrifMkwartV4rj_v_V4=EHeSkmb28tdBUrxoPHVSX5G5Q@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(39860400002)(36092001)(199004)(189003)(8676002)(6666004)(70206006)(316002)(36756003)(356004)(110136005)(8936002)(42186006)(478600001)(54906003)(2616005)(26005)(426003)(81156014)(70586007)(336012)(186003)(81166006)(86362001)(2906002)(5660300002)(107886003)(7416002)(4326008)(26826003)(921003)(21314003)(1121003)(83996005)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR07MB6132;H:rmmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b0ecd2ad-656a-42a3-325e-08d7af73cd92
+X-MS-TrafficTypeDiagnostic: BN8PR07MB6132:
+X-Microsoft-Antispam-PRVS: <BN8PR07MB6132E4D6DCAEAE3735FCEFBAD21B0@BN8PR07MB6132.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 0311124FA9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5n7OMKVBdBOnvbb0IW/y3FpO1RbB81MAFjwwR30AnnSYTqc7HJdolOYFNCXbKhSHVQS/FIeq/IFvmS5aFMZXZyn8Myx9XJIBxkj3MtfCE7iQI0+eYFqPo/Y5pR2TaArnuP1eY/zC8UzIiSmX00Bj+Lxx0pS3ZpAZGTlOGqYCJg4TW1kFnudQCO5ei0vIItv5/QgU7lqo8/eGd48cT8SyeCq0UYF2IY+TvDtWKMVY7j9p0axe3Wdo8DK1YBP5lH2WQs2Whmp03RjMELm2yectDbKga4KCIOx21VwQx4+Vmqh+DKftCWuyG2pULaEoG/xmX++t0lnsoWzyalI1FSpjOJEVczBIMsUXXfUOUXCw8NeGb+TO0sjgY/2ie2Tg7br3th10uxPavnSSPmQzZkwQQWxca2pqjgYrIlFUrI+ksuidgodhO7z/osSIy3IXdaQQHj56L8rFkVWetEohvAgPKPEj0d8BfOWtG39OcVQ7cvkOfh6OkDtmkk1lgAMdp4/fb+LG3WtemqApX/odf24O2vaRz1ntATb+SyPPXewtg6bmHT9XINlma30+qcOdOQaY2MTeSnx3aRj8crkhbb1+TQfyVs1aB0K3q5XkYejkzck6RXFT/DkMYllF8OLxvWOLGDNEet5YjvUUL8Yg2hGyjpxuAdbHArlUIb7f0efst/E=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 04:26:59.9635
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0ecd2ad-656a-42a3-325e-08d7af73cd92
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR07MB6132
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-11_07:2020-02-11,2020-02-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
+ malwarescore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ mlxlogscore=999 clxscore=1015 mlxscore=0 suspectscore=0 adultscore=0
+ spamscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002120031
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 5:28 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Tue, Feb 11, 2020 at 7:59 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> >
-> > On Tue, Feb 11, 2020 at 8:44 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >
-> > > On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
-> > > >
-> > > > On 2020-02-07 19:40, Jeffrey Hugo wrote:
-> > > > > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
-> > > > >>
-> > > > >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
-> > > > >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
-> > > > >> > wrote:
-> > > > >> >>
-> > > > >> >> For a given byte clock, if VCO recalc value is exactly same as
-> > > > >> >> vco set rate value, vco_set_rate does not get called assuming
-> > > > >> >> VCO is already set to required value. But Due to GDSC toggle,
-> > > > >> >> VCO values are erased in the HW. To make sure VCO is programmed
-> > > > >> >> correctly, we forcefully call set_rate from vco_prepare.
-> > > > >> >
-> > > > >> > Is this specific to certain SoCs? I don't think I've observed this.
-> > > > >>
-> > > > >> As far as Qualcomm SOCs are concerned, since pll is analog and the
-> > > > >> value
-> > > > >> is directly read from hardware if we get recalc value same as set rate
-> > > > >> value, the vco_set_rate will not be invoked. We checked in our idp
-> > > > >> device which has the same SOC but it works there since the rates are
-> > > > >> different.
-> > > > >
-> > > > > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
-> > > > > does this issue apply to?  Everything implementing the 10nm pll?  One
-> > > > > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
-> > > > > so I'm interested to know what is the actual impact here.  I don't see
-> > > > > an "IDP" SoC in the IP catalog, so I really have no idea what you are
-> > > > > referring to.
-> > > >
-> > > >
-> > > > This is not 10nm specific. It is applicable for other nms also.
-> > > > Its specific to the frequency being set. If vco_recalc returns the same
-> > > > value as being set by vco_set_rate,
-> > > > vco_set_rate will not be invoked second time onwards.
-> > > >
-> > > > For example: Lets take below devices:
-> > > >
-> > > > Cheza is based on SDM845 which is 10nm only.
-> > > > Clk frequency:206016
-> > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
-> > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
-> > > >
-> > > > Trogdor is based on sc7180 which is also 10nm.
-> > > > Clk frequency:69300
-> > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
-> > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
-> > > >
-> > > > In same trogdor device, we slightly changed the clock frequency and the
-> > > > values actually differ which will not cause any issue.
-> > > > Clk frequency:69310
-> > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
-> > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
-> > >
-> > >
-> > > tbh, loosing state when power is off is kind of the behavior that I'd
-> > > expect.  It kinda makes me wonder if things are not getting powered
-> > > off all the way on some SoCs?
-> > >
-> > > jhugo, are you worried that this patch will cause problems on other
-> > > users of the 10nm pll?
-> >
-> > Essentially yes.  Conceptually it doesn't seem like this change should
-> > cause any harm, however -
-> >
-> > This sounds like we are trying to work around the clk framework, which
-> > seems wrong.  It feels like we should be able to set a clk flag for
-> > this and make the framework deal with it.
-> >
-> > Also, this fix is 10nm specific, yet this issue affects all
-> > implementations?  Seems like this should perhaps be in common code so
-> > that we don't need to play whack-a-mole by fixing every implementation
-> > piecemeal.
-> >
-> > Finally, the PLLs are notorious for not taking a configuration unless
-> > they are running.  I admit, I haven't looked at this patch in detail
-> > to determine if that is the case here, but there doesn't seem to be
-> > any indication from the commit test or a comment that doing so is
-> > actually valid in all cases.
->
-> I'm not obviously seeing a clk-provider flag for this.. although I
-> won't claim to be a clk expert so maybe I'm looking for the wrong
-> thing..
->
-> On a more practical level, I'd kinda like to get some sort of fix for
-> v5.6, as currently suspend/resume doesn't work (or at least the
-> display does not survive) on trogdor, which is a bit annoying.  It
-> sounds a bit like cheza was just getting lucky (because of rate
-> rounding?)  I'm not sure if it is the same situation on other sdm850
-> devices (yoga c630) or sdm835 devices (are they using the 10mm pll as
-> well?).
+Document the bindings used for the Cadence MHDP DPI/DP bridge in
+yaml format.
 
-sdm835 is the first implementation of the 10nm PLL.  Pretty much
-everything after (including sdm845/850) also uses the 10nm PLL.
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/display/bridge/cdns,mhdp.yaml    | 125 ++++++++++++++++++
+ 1 file changed, 125 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
 
->  I will confess to not really testing s/r on the yoga c630,
-> although maybe someone else has (Bjorn?).
->
-> Possibly this should be pushed up to the clk framework, although not
-> sure if it has a good way to realize the clk provider has lost power?
-> But that sounds like a better thing for v5.7 than v5.6-rc fixes.. ofc
-> if there is a better way that I'm not seeing, I'm all ears.
+diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+new file mode 100644
+index 000000000000..e7f84ed1d2da
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+@@ -0,0 +1,125 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence MHDP bridge
++
++maintainers:
++  - Swapnil Jakhade <sjakhade@cadence.com>
++  - Yuti Amonkar <yamonkar@cadence.com>
++
++properties:
++  compatible:
++    enum:
++      - cdns,mhdp8546
++      - ti,j721e-mhdp8546
++
++  reg:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description:
++          Register block of mhdptx apb registers upto PHY mapped area(AUX_CONFIG_P).
++          The AUX and PMA registers are mapped to associated phy driver.
++      - description:
++          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
++
++  reg-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: mhdptx
++      - const: j721e-intg
++
++  clocks:
++    maxItems: 1
++    description:
++      DP bridge clock, it's used by the IP to know how to translate a number of
++      clock cycles into a time (which is used to comply with DP standard timings
++      and delays).
++
++  phys:
++    description: Phandle to the DisplyPort phy.
++
++  ports:
++    type: object
++    description:
++      Ports as described in Documentation/devicetree/bindings/graph.txt
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++      port@0:
++        type: object
++        description:
++          input port representing the DP bridge input
++
++      port@1:
++        type: object
++        description:
++          output port representing the DP bridge output.
++
++    required:
++      - port@0
++      - port@1
++      - '#address-cells'
++      - '#size-cells'
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: ti,j721e-mhdp8546
++    then:
++      properties:
++        reg:
++          minItems: 2
++        reg-names:
++          minItems: 2
++
++required:
++  - compatible
++  - clocks
++  - reg
++  - reg-names
++  - phys
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    mhdp: dp-bridge@f0fb000000 {
++        compatible = "cdns,mhdp8546";
++        reg = <0xf0 0xfb000000 0x0 0x1000000>;
++        reg-names = "mhdptx";
++        clocks = <&mhdp_clock>;
++        phys = <&dp_phy>;
++
++        ports {
++              #address-cells = <1>;
++              #size-cells = <0>;
++
++              port@0 {
++                     reg = <0>;
++                     dp_bridge_input: endpoint {
++                        remote-endpoint = <&xxx_dpi_output>;
++                     };
++              };
++
++              port@1 {
++                     reg = <1>;
++                     dp_bridge_output: endpoint {
++                        remote-endpoint = <&xxx_dp_connector_input>;
++                     };
++              };
++        };
++    };
++...
+-- 
+2.20.1
 
-There is a suspend/resume sequence in the HPG where VCO isn't lost,
-but that assumes the GDSC isn't turned off.  If GDSC is turned off,
-then we need to go through the entire power-up sequence again.  Feels
-like this should be plumbed into runtime PM based on the
-suspend/resume usecase, but that's probably more complicated then this
-change.
-
-Looking at the HPG for the power up sequence, it seems like we should
-be setting the bias in the middle of the dsi_pll_commit(), so the
-order of operations is slight off, however I somewhat doubt that will
-have a meaningful impact and it does seem like this change is in line
-with the spirit of the HPG.
-
-It wasn't clear to me from the commit message what usecase triggered
-this.  You've made it clear that its suspend/resume (it would be good
-if that was mentioned) and that its impacting an actual target.  To
-me, the current description seemed more theoretical and didn't
-describe the impact that was being addressed.  Overall, it really
-didn't answer the "why should I care if I have this change" question.
-
-Right now, I think my concerns are cosmetic, therefore I don't have
-reservations about it being picked up.  If you like:
-
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
