@@ -2,85 +2,222 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98C2C352A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F838C3B186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806A421734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49446206E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581551096;
-	bh=1M3lO/lf9AWfvIAE3n4hv4ebm9MsTlrPuI3pVt0XwiI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=X7mkcPDKfqtjCBOLFYyzr6LY7PPsmUDTpzxSrdnF+eBc48Dtc0Fx7zgJ7QqFZGh54
-	 Ll9GKNetId6+REyDbRAkSK4ZuMVHTg1iUjHCtp781Qqfn4/5oYVybRsq4wq8ucEY1Y
-	 t6BxgZxZPw28Sj4eQR16G8f5fqNRqEScVBhuv3dM=
+	s=default; t=1581551840;
+	bh=8xewuo6BWjKVFCfLFAyswHuzHdfMQRHxgvLmr32DP2s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=SwEUG/bx1yzxFrZ4lkh1cc6kS6tF0LQFZHcFgdPysNyFWIuj/NI13Rgx8RwWG/wGw
+	 3SVi2lQ5I3FSZ34ik+b1vBmxaG3yyBBvobBQoGPWuvdSjUJbLAES4MN8J+QdqrujJd
+	 T4rLUwo2MiSoaaIkxkjD7wj81vKZOha2GWq2Lb6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbgBLXow (ORCPT
+        id S1729377AbgBLX5Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:44:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59294 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 18:57:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:39726 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbgBLXow (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:44:52 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F90E206B6;
-        Wed, 12 Feb 2020 23:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581551092;
-        bh=1M3lO/lf9AWfvIAE3n4hv4ebm9MsTlrPuI3pVt0XwiI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=gKNmOOaSejM7SuOkKHEMPhUSEUcyDAyifJf7mJT5rapx5BcH6wMPBNWB+oG4mmjET
-         2x/6JgGAIVsMk6Pk35WyNYIXY6DkSk5SnurlOnEoCI3dt6Kn0CivuXKQ+wdi+ZRdTY
-         DaWev8mu0p5NdeznMlDVKHnePkgFoCvSZwd8lHjI=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com>
-References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com>
-Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        mtk01761 <wendell.lin@mediatek.com>
-Date:   Wed, 12 Feb 2020 15:44:51 -0800
-Message-ID: <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        id S1727117AbgBLX5P (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:57:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1009106F;
+        Wed, 12 Feb 2020 15:57:14 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 267453F68E;
+        Wed, 12 Feb 2020 15:57:14 -0800 (PST)
+Date:   Wed, 12 Feb 2020 23:57:12 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     alsa-devel@alsa-project.org, bleung@chromium.org,
+        broonie@kernel.org, cychiang@chromium.org, dafna3@gmail.com,
+        dafna.hirschfeld@collabora.com, devicetree@vger.kernel.org,
+        enric.balletbo@collabora.com, ezequiel@collabora.com,
+        groeck@chromium.org, helen.koike@collabora.com,
+        kernel@collabora.com, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Subject: Applied "dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format." to the asoc tree
+In-Reply-To: <20200127091806.11403-1-dafna.hirschfeld@collabora.com>
+Message-Id: <applied-20200127091806.11403-1-dafna.hirschfeld@collabora.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Macpaul Lin (2020-02-07 01:20:43)
-> This patch adds basic SoC support for Mediatek's new 8-core SoC,
-> MT6765, which is mainly for smartphone application.
+The patch
 
-Clock patches look OK to me. Can you resend them without the defconfig
-and dts patches and address Matthias' question?
+   dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format.
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From eadd54c75f1ef1566a6fe004787c028eb095f8b4 Mon Sep 17 00:00:00 2001
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Date: Mon, 27 Jan 2020 10:18:06 +0100
+Subject: [PATCH] dt-bindings: Convert the binding file google,
+ cros-ec-codec.txt to yaml format.
+
+This was tested and verified with:
+make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200127091806.11403-1-dafna.hirschfeld@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/google,cros-ec-codec.txt   | 44 -------------
+ .../bindings/sound/google,cros-ec-codec.yaml  | 62 +++++++++++++++++++
+ 2 files changed, 62 insertions(+), 44 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
+deleted file mode 100644
+index 8ca52dcc5572..000000000000
+--- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
++++ /dev/null
+@@ -1,44 +0,0 @@
+-Audio codec controlled by ChromeOS EC
+-
+-Google's ChromeOS EC codec is a digital mic codec provided by the
+-Embedded Controller (EC) and is controlled via a host-command interface.
+-
+-An EC codec node should only be found as a sub-node of the EC node (see
+-Documentation/devicetree/bindings/mfd/cros-ec.txt).
+-
+-Required properties:
+-- compatible: Must contain "google,cros-ec-codec"
+-- #sound-dai-cells: Should be 1. The cell specifies number of DAIs.
+-
+-Optional properties:
+-- reg: Pysical base address and length of shared memory region from EC.
+-       It contains 3 unsigned 32-bit integer.  The first 2 integers
+-       combine to become an unsigned 64-bit physical address.  The last
+-       one integer is length of the shared memory.
+-- memory-region: Shared memory region to EC.  A "shared-dma-pool".  See
+-                 ../reserved-memory/reserved-memory.txt for details.
+-
+-Example:
+-
+-{
+-	...
+-
+-	reserved_mem: reserved_mem {
+-		compatible = "shared-dma-pool";
+-		reg = <0 0x52800000 0 0x100000>;
+-		no-map;
+-	};
+-}
+-
+-cros-ec@0 {
+-	compatible = "google,cros-ec-spi";
+-
+-	...
+-
+-	cros_ec_codec: ec-codec {
+-		compatible = "google,cros-ec-codec";
+-		#sound-dai-cells = <1>;
+-		reg = <0x0 0x10500000 0x80000>;
+-		memory-region = <&reserved_mem>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+new file mode 100644
+index 000000000000..94a85d0cbf43
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/google,cros-ec-codec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Audio codec controlled by ChromeOS EC
++
++maintainers:
++  - Cheng-Yi Chiang <cychiang@chromium.org>
++
++description: |
++  Google's ChromeOS EC codec is a digital mic codec provided by the
++  Embedded Controller (EC) and is controlled via a host-command interface.
++  An EC codec node should only be found as a sub-node of the EC node (see
++  Documentation/devicetree/bindings/mfd/cros-ec.txt).
++
++properties:
++  compatible:
++    const: google,cros-ec-codec
++
++  "#sound-dai-cells":
++    const: 1
++
++  reg:
++    items:
++      - description: |
++          Physical base address and length of shared memory region from EC.
++          It contains 3 unsigned 32-bit integer. The first 2 integers
++          combine to become an unsigned 64-bit physical address.
++          The last one integer is the length of the shared memory.
++
++  memory-region:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Shared memory region to EC.  A "shared-dma-pool".
++      See ../reserved-memory/reserved-memory.txt for details.
++
++required:
++  - compatible
++  - '#sound-dai-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    reserved_mem: reserved_mem {
++        compatible = "shared-dma-pool";
++        reg = <0 0x52800000 0 0x100000>;
++        no-map;
++    };
++    cros-ec@0 {
++        compatible = "google,cros-ec-spi";
++        #address-cells = <2>;
++        #size-cells = <1>;
++        cros_ec_codec: ec-codec {
++            compatible = "google,cros-ec-codec";
++            #sound-dai-cells = <1>;
++            reg = <0x0 0x10500000 0x80000>;
++            memory-region = <&reserved_mem>;
++        };
++    };
+-- 
+2.20.1
+
