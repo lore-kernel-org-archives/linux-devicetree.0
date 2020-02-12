@@ -6,40 +6,35 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617ABC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 18:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE42C3B187
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 18:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A4220848
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 18:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CE5218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 18:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgBLSeJ (ORCPT
+        id S1728887AbgBLS5t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 13:34:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59102 "EHLO mx2.suse.de"
+        Wed, 12 Feb 2020 13:57:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37084 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728575AbgBLSeJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 13:34:09 -0500
+        id S1727923AbgBLS5s (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 13:57:48 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A0B5DAE89;
-        Wed, 12 Feb 2020 18:34:06 +0000 (UTC)
-Message-ID: <9a5412d00e7f674b2330133d5c276f4ac6eff8d8.camel@suse.de>
-Subject: Re: [PATCH 3/4] pinctrl: bcm2835: Add support for all GPIOs on
- BCM2711
+        by mx2.suse.de (Postfix) with ESMTP id 518A5AC4B;
+        Wed, 12 Feb 2020 18:57:46 +0000 (UTC)
+Message-ID: <04e1c82b5cb08773ac9e8f0e1c33adc8cbc7c85d.camel@suse.de>
+Subject: Re: [PATCH] ARM: dts: bcm283x: increase dwc2's RX FIFO size
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-Date:   Wed, 12 Feb 2020 19:34:05 +0100
-In-Reply-To: <1581166975-22949-4-git-send-email-stefan.wahren@i2se.com>
-References: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com>
-         <1581166975-22949-4-git-send-email-stefan.wahren@i2se.com>
+To:     Pavel Hofman <pavel.hofman@ivitera.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Date:   Wed, 12 Feb 2020 19:57:43 +0100
+In-Reply-To: <22beb919-a3c6-33c0-8d3f-070061a6c853@ivitera.com>
+References: <22beb919-a3c6-33c0-8d3f-070061a6c853@ivitera.com>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Fbsk2tY5nCejiYEjevA4"
+        protocol="application/pgp-signature"; boundary="=-BbFqBP9cWw8UjvP0rUr/"
 User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
@@ -48,217 +43,143 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---=-Fbsk2tY5nCejiYEjevA4
+--=-BbFqBP9cWw8UjvP0rUr/
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2020-02-08 at 14:02 +0100, Stefan Wahren wrote:
-> The BCM2711 supports 58 GPIOs. So extend pinctrl and GPIOs accordingly.
+Hi Pavel,
+
+On Fri, 2020-02-07 at 22:12 +0100, Pavel Hofman wrote:
+> The previous version of the dwc2 overlay set the RX FIFO size to
+> 256 4-byte words. This is not enough for 1024 bytes of the largest
+> isochronous high speed packet allowed, because it doesn't take into
+> account extra space needed by dwc2.
 >=20
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Below is a detailed calculation which arises from dwc2 documentation:
+>=20
+> * RAM for SETUP Packets: 4 * n + 6 locations in Scatter/Gather DMA mode
+> and 5 * n+8 locations in Slave and Buffer DMA mode must be reserved in
+> the RxFIFO to receive up to n SETUP packets on control endpoints, where n
+> is the number of control endpoints the device controller supports.
+>=20
+> bcm283x: 5*n+8. The Broadcom core has 1 control EP (n=3D1), so 13 locatio=
+ns
+>=20
+> * One location for Global OUT NAK
+>=20
+> bcm283x: 1 location
+>=20
+> * Status information is written to the FIFO along with each received
+> packet. Therefore, a minimum space of (Largest Packet Size / 4) + 1 must
+> be allotted to receive packets. If a high-bandwidth endpoint is enabled,
+> or multiple isochronous endpoints are enabled, then at least two (Largest
+> Packet Size / 4) + 1 spaces must be allotted to receive back-to-back
+> packets. Typically, two (Largest Packet Size / 4) + 1 spaces are
+> recommended so that when the previous packet is being transferred to AHB,
+> the USB can receive the subsequent packet. If AHB latency is high, you
+> must allocate enough space to receive multiple packets. This is critical
+> to prevent dropping of any isochronous packets.
+>=20
+> bcm283x: (1024/4) +1 =3D 257 locations. For MC >1: 2 * 257 =3D 514 locati=
+ons
+>=20
+> * Along with last packet of each endpoint, transfer complete status
+> information is also pushed in to the FIFO.
+>=20
+> bcm283x: The core should have 5 IN and 5 OUT EP's.
+> 1 location for each EP - 10 locations.
+>=20
+> It's for the case when all EPs are simultaneously completing transfers.
+>=20
+> * An additional location for EPDisable status for each endpoint is
+> also required.
+>=20
+> bcm283x: 1 location for each EP - 10 EP's - 10 locations
+> It's for case if EP simultaneously disabled.
+>=20
+> * Typically, two locations for each OUT endpoint is recommended.
+>=20
+> bcm283x: 5*2 =3D 10 locations
+>=20
+> Total: 13 + 1 + 257 + 10 +10 + 10 =3D 301 locations
+>=20
+> Safer is 301 + 257 (for MC>1) =3D 558 locations.
+>=20
+> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> Signed-off-by: Pavel Hofman <pavel.hofman@ivitera.com>
+
+It'd be nice if you summarized a little. Halfway between this and the first
+revision of this patch. For example:
+
+[...]
+
+RX FIFO's size is calculated based on the following (in 4byte words):
+ - 13 location for SETUP packets
+ - 1 location for Global OUT NAK
+ - 2 * 257 locations for status information and the received packet. Note t=
+hat
+   typically two spaces are recommended so that when the previous packet is
+   being transferred to AHB, the USB can receive the subsequent packet.
+ - etc...
+
+Also, what is MC in your description? If in doubt just drop it a stick with=
+ the
+explanation above.
+
+Regards,
+Nicolas
+
 > ---
-
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Thanks!
-
->  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 54 +++++++++++++++++++++++++++--=
------
-> -
->  1 file changed, 42 insertions(+), 12 deletions(-)
+>  arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi        | 2 +-
+>  arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> index 7f0a9c6..061e70e 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> @@ -37,6 +37,7 @@
-> =20
->  #define MODULE_NAME "pinctrl-bcm2835"
->  #define BCM2835_NUM_GPIOS 54
-> +#define BCM2711_NUM_GPIOS 58
->  #define BCM2835_NUM_BANKS 2
->  #define BCM2835_NUM_IRQS  3
-> =20
-> @@ -78,7 +79,7 @@ struct bcm2835_pinctrl {
-> =20
->  	/* note: locking assumes each bank will have its own unsigned long */
->  	unsigned long enabled_irq_map[BCM2835_NUM_BANKS];
-> -	unsigned int irq_type[BCM2835_NUM_GPIOS];
-> +	unsigned int irq_type[BCM2711_NUM_GPIOS];
-> =20
->  	struct pinctrl_dev *pctl_dev;
->  	struct gpio_chip gpio_chip;
-> @@ -145,6 +146,10 @@ static struct pinctrl_pin_desc bcm2835_gpio_pins[] =
-=3D {
->  	BCM2835_GPIO_PIN(51),
->  	BCM2835_GPIO_PIN(52),
->  	BCM2835_GPIO_PIN(53),
-> +	BCM2835_GPIO_PIN(54),
-> +	BCM2835_GPIO_PIN(55),
-> +	BCM2835_GPIO_PIN(56),
-> +	BCM2835_GPIO_PIN(57),
+> diff --git a/arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi
+> b/arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi
+> index e2fd961..20322de 100644
+> --- a/arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x-rpi-usb-otg.dtsi
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  &usb {
+>  	dr_mode =3D "otg";
+> -	g-rx-fifo-size =3D <256>;
+> +	g-rx-fifo-size =3D <558>;
+>  	g-np-tx-fifo-size =3D <32>;
+>  	/*
+>  	 * According to dwc2 the sum of all device EP
+> diff --git a/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+> b/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+> index 0ff0e9e..1409d1b 100644
+> --- a/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  &usb {
+>  	dr_mode =3D "peripheral";
+> -	g-rx-fifo-size =3D <256>;
+> +	g-rx-fifo-size =3D <558>;
+>  	g-np-tx-fifo-size =3D <32>;
+>  	g-tx-fifo-size =3D <256 256 512 512 512 768 768>;
 >  };
-> =20
->  /* one pin per group */
-> @@ -203,6 +208,10 @@ static const char * const bcm2835_gpio_groups[] =3D =
-{
->  	"gpio51",
->  	"gpio52",
->  	"gpio53",
-> +	"gpio54",
-> +	"gpio55",
-> +	"gpio56",
-> +	"gpio57",
->  };
-> =20
->  enum bcm2835_fsel {
-> @@ -353,6 +362,22 @@ static const struct gpio_chip bcm2835_gpio_chip =3D =
-{
->  	.can_sleep =3D false,
->  };
-> =20
-> +static const struct gpio_chip bcm2711_gpio_chip =3D {
-> +	.label =3D "pinctrl-bcm2711",
-> +	.owner =3D THIS_MODULE,
-> +	.request =3D gpiochip_generic_request,
-> +	.free =3D gpiochip_generic_free,
-> +	.direction_input =3D bcm2835_gpio_direction_input,
-> +	.direction_output =3D bcm2835_gpio_direction_output,
-> +	.get_direction =3D bcm2835_gpio_get_direction,
-> +	.get =3D bcm2835_gpio_get,
-> +	.set =3D bcm2835_gpio_set,
-> +	.set_config =3D gpiochip_generic_config,
-> +	.base =3D -1,
-> +	.ngpio =3D BCM2711_NUM_GPIOS,
-> +	.can_sleep =3D false,
-> +};
-> +
->  static void bcm2835_gpio_irq_handle_bank(struct bcm2835_pinctrl *pc,
->  					 unsigned int bank, u32 mask)
->  {
-> @@ -399,7 +424,7 @@ static void bcm2835_gpio_irq_handler(struct irq_desc
-> *desc)
->  		bcm2835_gpio_irq_handle_bank(pc, 0, 0xf0000000);
->  		bcm2835_gpio_irq_handle_bank(pc, 1, 0x00003fff);
->  		break;
-> -	case 2: /* IRQ2 covers GPIOs 46-53 */
-> +	case 2: /* IRQ2 covers GPIOs 46-57 */
->  		bcm2835_gpio_irq_handle_bank(pc, 1, 0x003fc000);
->  		break;
->  	}
-> @@ -618,7 +643,7 @@ static struct irq_chip bcm2835_gpio_irq_chip =3D {
-> =20
->  static int bcm2835_pctl_get_groups_count(struct pinctrl_dev *pctldev)
->  {
-> -	return ARRAY_SIZE(bcm2835_gpio_groups);
-> +	return BCM2835_NUM_GPIOS;
->  }
-> =20
->  static const char *bcm2835_pctl_get_group_name(struct pinctrl_dev *pctld=
-ev,
-> @@ -776,7 +801,7 @@ static int bcm2835_pctl_dt_node_to_map(struct pinctrl=
-_dev
-> *pctldev,
->  		err =3D of_property_read_u32_index(np, "brcm,pins", i, &pin);
->  		if (err)
->  			goto out;
-> -		if (pin >=3D ARRAY_SIZE(bcm2835_gpio_pins)) {
-> +		if (pin >=3D pc->pctl_desc.npins) {
->  			dev_err(pc->dev, "%pOF: invalid brcm,pins value %d\n",
->  				np, pin);
->  			err =3D -EINVAL;
-> @@ -852,7 +877,7 @@ static int bcm2835_pmx_get_function_groups(struct
-> pinctrl_dev *pctldev,
->  {
->  	/* every pin can do every function */
->  	*groups =3D bcm2835_gpio_groups;
-> -	*num_groups =3D ARRAY_SIZE(bcm2835_gpio_groups);
-> +	*num_groups =3D BCM2835_NUM_GPIOS;
-> =20
->  	return 0;
->  }
-> @@ -1055,7 +1080,7 @@ static const struct pinconf_ops bcm2711_pinconf_ops=
- =3D {
->  static const struct pinctrl_desc bcm2835_pinctrl_desc =3D {
->  	.name =3D MODULE_NAME,
->  	.pins =3D bcm2835_gpio_pins,
-> -	.npins =3D ARRAY_SIZE(bcm2835_gpio_pins),
-> +	.npins =3D BCM2835_NUM_GPIOS,
->  	.pctlops =3D &bcm2835_pctl_ops,
->  	.pmxops =3D &bcm2835_pmx_ops,
->  	.confops =3D &bcm2835_pinconf_ops,
-> @@ -1063,9 +1088,9 @@ static const struct pinctrl_desc bcm2835_pinctrl_de=
-sc =3D
-> {
->  };
-> =20
->  static const struct pinctrl_desc bcm2711_pinctrl_desc =3D {
-> -	.name =3D MODULE_NAME,
-> +	.name =3D "pinctrl-bcm2711",
->  	.pins =3D bcm2835_gpio_pins,
-> -	.npins =3D ARRAY_SIZE(bcm2835_gpio_pins),
-> +	.npins =3D BCM2711_NUM_GPIOS,
->  	.pctlops =3D &bcm2835_pctl_ops,
->  	.pmxops =3D &bcm2835_pmx_ops,
->  	.confops =3D &bcm2711_pinconf_ops,
-> @@ -1077,6 +1102,11 @@ static const struct pinctrl_gpio_range
-> bcm2835_pinctrl_gpio_range =3D {
->  	.npins =3D BCM2835_NUM_GPIOS,
->  };
-> =20
-> +static const struct pinctrl_gpio_range bcm2711_pinctrl_gpio_range =3D {
-> +	.name =3D "pinctrl-bcm2711",
-> +	.npins =3D BCM2711_NUM_GPIOS,
-> +};
-> +
->  struct bcm_plat_data {
->  	const struct gpio_chip *gpio_chip;
->  	const struct pinctrl_desc *pctl_desc;
-> @@ -1090,9 +1120,9 @@ static const struct bcm_plat_data bcm2835_plat_data=
- =3D {
->  };
-> =20
->  static const struct bcm_plat_data bcm2711_plat_data =3D {
-> -	.gpio_chip =3D &bcm2835_gpio_chip,
-> +	.gpio_chip =3D &bcm2711_gpio_chip,
->  	.pctl_desc =3D &bcm2711_pinctrl_desc,
-> -	.gpio_range =3D &bcm2835_pinctrl_gpio_range,
-> +	.gpio_range =3D &bcm2711_pinctrl_gpio_range,
->  };
-> =20
->  static const struct of_device_id bcm2835_pinctrl_match[] =3D {
-> @@ -1118,8 +1148,8 @@ static int bcm2835_pinctrl_probe(struct platform_de=
-vice
-> *pdev)
->  	int err, i;
->  	const struct of_device_id *match;
-> =20
-> -	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) !=3D BCM2835_NUM_GPIOS);
-> -	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) !=3D BCM2835_NUM_GPIOS);
-> +	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) !=3D BCM2711_NUM_GPIOS);
-> +	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) !=3D BCM2711_NUM_GPIOS);
-> =20
->  	pc =3D devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
->  	if (!pc)
 
 
---=-Fbsk2tY5nCejiYEjevA4
+--=-BbFqBP9cWw8UjvP0rUr/
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5ERR0ACgkQlfZmHno8
-x/4PUgf9FbUDm9e+5P2tjaxbklEvedw5I+MC1aKYkCbpqgrllWD/1S9III3ObgA6
-UykAv2VcDSfDR4ZG+rcmE8qlmBwOnPO/h7xTLEPrEM0dVeKGgwExbmXOZs69h1t/
-tJXR8e5cfWUc3Vfow3GIIiTCmbu+uDRNOHrh4TA0EOQS+lO/THPdgMieFd/M4cm3
-qqwNXIuDDwpyBtU6rH2Eyc9WxbK6tea2wEYLEE9u8iEBXW/xnIcDoFiX0/gMOlqa
-RUyBpGFAUQkEYrmhJZe24W9VcuXFRJIau+jXqgZ/uAafJWyVVIELSLYH+mDb87PU
-hvjNaFO4ABpuHEJxtgkCfNDK55WnKw==
-=sFe1
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5ESqcACgkQlfZmHno8
+x/69BAf+IvcAygOJxISYiTuhVG7YF6DERXjwAEqqlaRj/g4Na1z/r48bPpgVXSRV
+aoGaoXQ3iPoFfPIeirUN6n5DjAqkfSyIAy+Ldyw/ZnLLFMfHQ0olbXLOON/WH/0f
+3Z0oVVDSYNI0DTa8qph2i08lJg1lbar+sCslVPyzwnVu87rjJjh0NOe5UqXrljwN
+8mP68SaOzLzZKhHSEAU68bQGTvgbbCrI9MjxqKFB9Ac5XondPmuHkm8VwVdNlY1a
+eCVEKAyZspAHEj6P4y3qLF2PGTK/Ltarfpp8xHeev3vqnC4fVNwB5HMgXuLfGw8H
+Z1XySh+4RQG1sA2qcxxbRwNuJlvzmw==
+=ts39
 -----END PGP SIGNATURE-----
 
---=-Fbsk2tY5nCejiYEjevA4--
+--=-BbFqBP9cWw8UjvP0rUr/--
 
