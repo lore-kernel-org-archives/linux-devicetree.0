@@ -2,134 +2,192 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BF2C3B189
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 08:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99976C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 08:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176F72073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 08:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F50E20661
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 08:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="dCpxMepp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OQE3DuQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgBLIOb (ORCPT
+        id S1728516AbgBLItT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 03:14:31 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:30830 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbgBLIOb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 03:14:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581495267;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=uw1pmQHS7f3RyDkV/aP+o5WvUTjTvnxcA78I0t7OepI=;
-        b=dCpxMepp3/hSlUL/kAqXltr8hGfNvBa0TyDBs5h2OcqqeJy5ktnqpCgdL7RyRXwTj9
-        S6b+GDXDdrzqZLQjby7vYx2Jr7IKvgTjR+zvCzMS0vTK85DMUEbJwRyGfv/8xm0gd1Iw
-        Q4QBQYD8K3khPKD8JPp9l50Bs+r1Iswpn3GC13xjARaUN0uigM312xIPxiKq4lFT7C/6
-        UDP24971KNNygPT8a6jiHFBT8Cfzt8MciZQA4sIwE5bdMTFVeNo/YiJSYk2supB7TSIF
-        uliSMbrpk05fhVvmpW3ZDPqvGBA4+tpuPTGLr2Q/vGnECBtgFHqUHxE1CN2eHscv5sbY
-        DX0w==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXAgODw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1C8Ds1dj
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 12 Feb 2020 09:13:54 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH 03/14] net: davicom: dm9000: allow to pass MAC address through mac_addr module parameter
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAMuHMdX6f+aGZjQSQqVjT=npojq5xH2k2Js8qxG5=n26Z4uFBw@mail.gmail.com>
-Date:   Wed, 12 Feb 2020 09:13:52 +0100
-Cc:     Andrew Lunn <andrew@lunn.ch>, Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        Alex Smith <alex.smith@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 12 Feb 2020 03:49:19 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35196 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728457AbgBLItT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 03:49:19 -0500
+Received: by mail-qt1-f194.google.com with SMTP id n17so1022345qtv.2
+        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 00:49:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BPMiAB16vFeuTny9mUeuPkgcErc/c1u/+DPFpZpBO4k=;
+        b=OQE3DuQq8CSnmuvX45YQR0RHiYLUGWs9u/r3JwctxlV8TEpNMLx/YMPZIei1Z67SOj
+         0gEvNwWN+/xeYQZkOHf+6kBok3+slMsYBUX9OkzK4tjvEd0pZDfxbvlMjSBD0n8hDoTF
+         BWP+0WkA8vvCdMDpt2dOH1ibDeLpIIZe+axss=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BPMiAB16vFeuTny9mUeuPkgcErc/c1u/+DPFpZpBO4k=;
+        b=qmUIB7RBjYfoGttEB3tQWkKNJwT9B3CU0f3ZCSrmAE3RrcT4ip5YWXyBxzj4BiWMGD
+         LyWIUuDnLUEr+pkmcK+Zu2ehhifGCHGT+kyTy1O816Q0e0SXhlfvZkHILYIB3D79/mY/
+         rI4nAk39P+0aJPtYrq3bTUIJxpk6ie/vsc8fWmcv9HKSxYDe8kbzzx7aqqItwEi0ImJr
+         Jcb8vanCQB+h+wPe+sUiXov7xN84VLsgwI6wVYFekgskMs/5fu/POzaPP+87pLLb58tD
+         m5DjZuY3hguI1EiXxOBPQmByQbokG0tQpQmwGQhfkizrHlTDvlAXO9gP5V1PkGe8YJ+6
+         1XLw==
+X-Gm-Message-State: APjAAAVKNmFt+XCaXAmj7xp4f5nF/XMw/9HwJ4vAgk3yEvW5XyF4PQwS
+        tf3lVChuLuoHvn6qmbF1XLWdi20juFbMhR9MkuBFJw==
+X-Google-Smtp-Source: APXvYqzmVKHpUTNXqrbIKC3EqSdbu2muveQewCve0sKVxzWsWtlKrXbYUc3Qqq6GrpJeSuO++OcFsP8+K90kFIcIFgk=
+X-Received: by 2002:ac8:4446:: with SMTP id m6mr6253965qtn.159.1581497358305;
+ Wed, 12 Feb 2020 00:49:18 -0800 (PST)
+MIME-Version: 1.0
+References: <20200207052627.130118-1-drinkcat@chromium.org> <20200207052627.130118-8-drinkcat@chromium.org>
+In-Reply-To: <20200207052627.130118-8-drinkcat@chromium.org>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 12 Feb 2020 16:49:07 +0800
+Message-ID: <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
+Subject: Re: [PATCH v4 7/7] RFC: drm/panfrost: devfreq: Add support for 2 regulators
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C7991495-F233-4186-82A2-43C39898C8B3@goldelico.com>
-References: <cover.1581457290.git.hns@goldelico.com> <4e11dd4183da55012198824ca7b8933b1eb57e4a.1581457290.git.hns@goldelico.com> <20200211222506.GP19213@lunn.ch> <CAMuHMdX6f+aGZjQSQqVjT=npojq5xH2k2Js8qxG5=n26Z4uFBw@mail.gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-X-Mailer: Apple Mail (2.3124)
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
++Viresh Kumar +Stephen Boyd for clock advice.
 
-> Am 12.02.2020 um 09:07 schrieb Geert Uytterhoeven =
-<geert@linux-m68k.org>:
->=20
-> On Tue, Feb 11, 2020 at 11:25 PM Andrew Lunn <andrew@lunn.ch> wrote:
->> On Tue, Feb 11, 2020 at 10:41:20PM +0100, H. Nikolaus Schaller wrote:
->>> This is needed to give the MIPS Ingenic CI20 board a stable MAC =
-address
->>> which can be optionally provided by vendor U-Boot.
->>>=20
->>> For get_mac_addr() we use an adapted copy of from ksz884x.c which
->>> has very similar functionality.
->>>=20
->>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>=20
->> Hi Nikolaus
->>=20
->> Please split these patches by subsystem. So this one patch needs to =
-go
->> via netdev.
->>=20
->>> +static char *mac_addr =3D ":";
->>> +module_param(mac_addr, charp, 0);
->>> +MODULE_PARM_DESC(mac_addr, "MAC address");
->>=20
->> Module parameters are not liked.
->>=20
->> Can it be passed via device tree? The driver already has code to get
->> it out of the device tree.
->=20
-> Yep, typically U-Boot adds an appropriate "local-mac-address" property =
-to the
-> network device's device node, based on the "ethernet0" alias.
->=20
-> However, the real clue here may be "vendor U-Boot", i.e. no support =
-for the
-> above?
+On Fri, Feb 7, 2020 at 1:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> The Bifrost GPU on MT8183 uses 2 regulators (core and SRAM) for
+> devfreq, and provides OPP table with 2 sets of voltages.
+>
+> TODO: This is incomplete as we'll need add support for setting
+> a pair of voltages as well.
 
-Yes. It is a fallback solution like it is implemented for ksz884x.c to =
-make it
-work with existing (older) U-Boot installation.
+So all we need for this to work (at least apparently, that is, I can
+change frequency) is this:
+https://lore.kernel.org/patchwork/patch/1192945/
+(ah well, Viresh just replied, so, probably not, I'll check that out
+and use the correct API)
 
-Maybe I should better clarify this in the commit message for v2 (which =
-goes
-to netdev only).
+But then there's a slight problem: panfrost_devfreq uses a bunch of
+clk_get_rate calls, and the clock PLLs (at least on MTK platform) are
+never fully precise, so we get back 299999955 for 300 Mhz and
+799999878 for 800 Mhz. That means that the kernel is unable to keep
+devfreq stats as neither of these values are in the table:
+[ 4802.470952] devfreq devfreq1: Couldn't update frequency transition
+information.
+The kbase driver fixes this by remembering the last set frequency, and
+reporting that to devfreq. Should we do that as well or is there a
+better fix?
 
-BR and thanks,
-Nikolaus
+Another thing that I'm not implementing is the dance that Mediatek
+does in their kbase driver when changing the clock (described in patch
+2/7):
+""
+The binding we use with out-of-tree Mali drivers includes more
+clocks, this is used for devfreq: the out-of-tree driver switches
+clk_mux to clk_sub_parent (26Mhz), adjusts clk_main_parent, then
+switches clk_mux back to clk_main_parent:
+(see https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#423)
+clocks =
+        <&topckgen CLK_TOP_MFGPLL_CK>,
+        <&topckgen CLK_TOP_MUX_MFG>,
+        <&clk26m>,
+        <&mfgcfg CLK_MFG_BG3D>;
+clock-names =
+        "clk_main_parent",
+        "clk_mux",
+        "clk_sub_parent",
+        "subsys_mfg_cg";
+""
+Is there a clean/simple way to implement this in the clock
+framework/device tree? Or should we implement something in the
+panfrost driver?
 
+Thanks!
+
+
+
+>
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 17 +++++++++++++++++
+>  drivers/gpu/drm/panfrost/panfrost_device.h  |  1 +
+>  2 files changed, 18 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> index 413987038fbfccb..9c0987a3d71c597 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> @@ -79,6 +79,21 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
+>         struct devfreq *devfreq;
+>         struct thermal_cooling_device *cooling;
+>
+> +       /* If we have 2 regulator, we need an OPP table with 2 voltages. */
+> +       if (pfdev->comp->num_supplies > 1) {
+> +               pfdev->devfreq.dev_opp_table =
+> +                       dev_pm_opp_set_regulators(dev,
+> +                                       pfdev->comp->supply_names,
+> +                                       pfdev->comp->num_supplies);
+> +               if (IS_ERR(pfdev->devfreq.dev_opp_table)) {
+> +                       ret = PTR_ERR(pfdev->devfreq.dev_opp_table);
+> +                       pfdev->devfreq.dev_opp_table = NULL;
+> +                       dev_err(dev,
+> +                               "Failed to init devfreq opp table: %d\n", ret);
+> +                       return ret;
+> +               }
+> +       }
+> +
+>         ret = dev_pm_opp_of_add_table(dev);
+>         if (ret == -ENODEV) /* Optional, continue without devfreq */
+>                 return 0;
+> @@ -119,6 +134,8 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
+>         if (pfdev->devfreq.cooling)
+>                 devfreq_cooling_unregister(pfdev->devfreq.cooling);
+>         dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
+> +       if (pfdev->devfreq.dev_opp_table)
+> +               dev_pm_opp_put_regulators(pfdev->devfreq.dev_opp_table);
+>  }
+>
+>  void panfrost_devfreq_resume(struct panfrost_device *pfdev)
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+> index c30c719a805940a..5009a8b7c853ea1 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> @@ -110,6 +110,7 @@ struct panfrost_device {
+>         struct {
+>                 struct devfreq *devfreq;
+>                 struct thermal_cooling_device *cooling;
+> +               struct opp_table *dev_opp_table;
+>                 ktime_t busy_time;
+>                 ktime_t idle_time;
+>                 ktime_t time_last_update;
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
