@@ -2,381 +2,233 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B4CC35242
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 01:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99685C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 01:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2B720848
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 01:53:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="jXZThFMh"
+	by mail.kernel.org (Postfix) with ESMTP id 66C4F20848
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 01:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581472719;
+	bh=5xMV5/TVGRr+5n3CDhQK+BAq0L+GSeKCKbxA7n55/wE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1xYiwtS9ZzufHoxtEHBlTkDPdIwHu4w65NdVQF2fjGvvnHp52S1Uz443T/0LiT8hN
+	 D1JoIO1LEjVsNGFMIrStHUYYIW136rjztAkxAJROYUzFJZL9JeKDbOnc2kDYIxyF3b
+	 QfYFKMzX/XDa+9bxh0fcTVYNn0vISLYC7j2olrtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbgBLBxV (ORCPT
+        id S1727434AbgBLB6i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 20:53:21 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:50606 "EHLO
-        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbgBLBxU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 20:53:20 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 679ABD00715;
-        Wed, 12 Feb 2020 01:53:19 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at serbinski.com
-Received: from mail.serbinski.com ([127.0.0.1])
-        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 94Js4DC9Vdse; Tue, 11 Feb 2020 20:52:59 -0500 (EST)
-Received: from anet (23-233-80-73.cpe.pppoe.ca [23.233.80.73])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        Tue, 11 Feb 2020 20:58:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727414AbgBLB6i (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Feb 2020 20:58:38 -0500
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.serbinski.com (Postfix) with ESMTPSA id D3ABAD00716;
-        Tue, 11 Feb 2020 20:52:37 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com D3ABAD00716
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581472357;
-        bh=sCqIaNBg22m4KSr5ybpHHBuJAkr81NYlbS+800oGfyI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jXZThFMhlIlcOd69D22R9GeDM6Zdi+0mmEoYsrFak4ZQKrgNZd2uMhSDxdwxYCnaH
-         1QnXRW+OsPX/cQdjo/nRuVOJ+PAf7fHGNmMUELhTSopbfD4hmb6nZvuKdQ7/Na/JT5
-         EBjnjBS6V8xX7Ld1Qmqqdc+1d3qq7MTK+lzmGTEE=
-From:   Adam Serbinski <adam@serbinski.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Adam Serbinski <adam@serbinski.com>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/6] ASoC: qdsp6: q6afe-dai: add support to pcm port dais
-Date:   Tue, 11 Feb 2020 20:52:19 -0500
-Message-Id: <20200212015222.8229-4-adam@serbinski.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200212015222.8229-1-adam@serbinski.com>
-References: <20200212015222.8229-1-adam@serbinski.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id EDAA7215A4;
+        Wed, 12 Feb 2020 01:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581472717;
+        bh=5xMV5/TVGRr+5n3CDhQK+BAq0L+GSeKCKbxA7n55/wE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2h7KjcUk9Sp8aOwuyZi4JC/C8u8EEDPgWxCQewplP19CLItSG4UXpvP9eb+acJoOl
+         F/TlUc0oQ5Ot12JROwBghL5wRhYNEa38T/MPyEHN9hM+GIbCCFf0OHqcnONKZHNUcq
+         qHkRWYtjr3XzRQ9h52PLmLIwStzBoPna6fKAvWgo=
+Received: by mail-qt1-f180.google.com with SMTP id n17so465958qtv.2;
+        Tue, 11 Feb 2020 17:58:36 -0800 (PST)
+X-Gm-Message-State: APjAAAWe5CDl4iBp0F9kSQnCDlxzbDmag0MVuQ6swbImslYyc04YRWso
+        ra5MVvNWKyfOnwAM4p/EsbF4CmU0AMyvsS8Xkw==
+X-Google-Smtp-Source: APXvYqzJvq766HYoGaDSEwrefuEPoAikZi/pD9TMZnClXZXfoYeHa0Z1pBt1X/JlPhjCMqHKV9W/WdNr2bG7DidQlDY=
+X-Received: by 2002:aed:2344:: with SMTP id i4mr17639114qtc.136.1581472715957;
+ Tue, 11 Feb 2020 17:58:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-6-drinkcat@chromium.org> <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
+ <CAGETcx_3-ZoVAf+Uf0Yo86pUU1nL4S4-jrS0eZi50yvhCO985g@mail.gmail.com>
+In-Reply-To: <CAGETcx_3-ZoVAf+Uf0Yo86pUU1nL4S4-jrS0eZi50yvhCO985g@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 11 Feb 2020 19:58:24 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLw1fyj949KtG6wNRG_Ky6cq2wS3VH2Ku+ZykU3bSap=g@mail.gmail.com>
+Message-ID: <CAL_JsqLw1fyj949KtG6wNRG_Ky6cq2wS3VH2Ku+ZykU3bSap=g@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support of AFE DAI for PCM port.
+On Tue, Feb 11, 2020 at 2:09 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Tue, Feb 11, 2020 at 11:44 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > +Saravana
+> >
+> > On Thu, Feb 6, 2020 at 11:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > >
+> > > When there is a single power domain per device, the core will
+> > > ensure the power domain is switched on (so it is technically
+> > > equivalent to having not power domain specified at all).
+> > >
+> > > However, when there are multiple domains, as in MT8183 Bifrost
+> > > GPU, we need to handle them in driver code.
+> > >
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > >
+> > > ---
+> > >
+> > > The downstream driver we use on chromeos-4.19 currently uses 2
+> > > additional devices in device tree to accomodate for this [1], but
+> > > I believe this solution is cleaner.
+> > >
+> > > [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+> > >
+> > > v4:
+> > >  - Match the exact power domain names as specified in the compatible
+> > >    struct, instead of just matching the number of power domains.
+> > >    [Review: Ulf Hansson]
+> > >  - Dropped print and reordered function [Review: Steven Price]
+> > >  - nits: Run through latest version of checkpatch:
+> > >    - Use WARN instead of BUG_ON.
+> > >    - Drop braces for single expression if block.
+> > > v3:
+> > >  - Use the compatible matching data to specify the number of power
+> > >    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
+> > >    as the core will handle these 2 cases in the exact same way
+> > >    (automatically, without driver intervention), and there should
+> > >    be no adverse consequence in this case (the concern is about
+> > >    switching on only some power domains and not others).
+> > >
+> > >  drivers/gpu/drm/panfrost/panfrost_device.c | 97 ++++++++++++++++++++--
+> > >  drivers/gpu/drm/panfrost/panfrost_device.h | 11 +++
+> > >  drivers/gpu/drm/panfrost/panfrost_drv.c    |  2 +
+> > >  3 files changed, 102 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > > index 3720d50f6d9f965..8136babd3ba9935 100644
+> > > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> > > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > > @@ -5,6 +5,7 @@
+> > >  #include <linux/clk.h>
+> > >  #include <linux/reset.h>
+> > >  #include <linux/platform_device.h>
+> > > +#include <linux/pm_domain.h>
+> > >  #include <linux/regulator/consumer.h>
+> > >
+> > >  #include "panfrost_device.h"
+> > > @@ -120,6 +121,79 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+> > >                         pfdev->regulators);
+> > >  }
+> > >
+> > > +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> > > +{
+> > > +       int i;
+> > > +
+> > > +       for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> > > +               if (!pfdev->pm_domain_devs[i])
+> > > +                       break;
+> > > +
+> > > +               if (pfdev->pm_domain_links[i])
+> > > +                       device_link_del(pfdev->pm_domain_links[i]);
+> > > +
+> > > +               dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> > > +       }
+> > > +}
+> > > +
+> > > +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> > > +{
+> > > +       int err;
+> > > +       int i, num_domains;
+> > > +
+> > > +       num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> > > +                                                "power-domains",
+> > > +                                                "#power-domain-cells");
+> > > +
+> > > +       /*
+> > > +        * Single domain is handled by the core, and, if only a single power
+> > > +        * the power domain is requested, the property is optional.
+> > > +        */
+> > > +       if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> > > +               return 0;
+> > > +
+> > > +       if (num_domains != pfdev->comp->num_pm_domains) {
+> > > +               dev_err(pfdev->dev,
+> > > +                       "Incorrect number of power domains: %d provided, %d needed\n",
+> > > +                       num_domains, pfdev->comp->num_pm_domains);
+> > > +               return -EINVAL;
+> > > +       }
+> > > +
+> > > +       if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
+> > > +                       "Too many supplies in compatible structure.\n"))
+> > > +               return -EINVAL;
+> > > +
+> > > +       for (i = 0; i < num_domains; i++) {
+> > > +               pfdev->pm_domain_devs[i] =
+> > > +                       dev_pm_domain_attach_by_name(pfdev->dev,
+> > > +                                       pfdev->comp->pm_domain_names[i]);
+> > > +               if (IS_ERR_OR_NULL(pfdev->pm_domain_devs[i])) {
+> > > +                       err = PTR_ERR(pfdev->pm_domain_devs[i]) ? : -ENODATA;
+> > > +                       pfdev->pm_domain_devs[i] = NULL;
+> > > +                       dev_err(pfdev->dev,
+> > > +                               "failed to get pm-domain %s(%d): %d\n",
+> > > +                               pfdev->comp->pm_domain_names[i], i, err);
+> > > +                       goto err;
+> > > +               }
+> > > +
+> > > +               pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> > > +                               pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> > > +                               DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> >
+> > We're in the process of adding device links based on DT properties.
+> > Shouldn't we add power domains to that? See drivers/of/property.c for
+> > what's handled.
+>
+> Rob,
+>
+> drivers/of/property.c doesn't enable the RPM_ACTIVE AND PM_RUNTIME
+> flags. Wanted to start off conservative.
 
-Signed-off-by: Adam Serbinski <adam@serbinski.com>
-CC: Andy Gross <agross@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Liam Girdwood <lgirdwood@gmail.com>
-CC: Patrick Lai <plai@codeaurora.org>
-CC: Banajit Goswami <bgoswami@codeaurora.org>
-CC: Jaroslav Kysela <perex@perex.cz>
-CC: Takashi Iwai <tiwai@suse.com>
-CC: alsa-devel@alsa-project.org
-CC: linux-arm-msm@vger.kernel.org
-CC: devicetree@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- sound/soc/qcom/qdsp6/q6afe-dai.c | 210 ++++++++++++++++++++++++++++++-
- 1 file changed, 205 insertions(+), 5 deletions(-)
+I worry that you can't add it later without potentially breaking platforms.
 
-diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
-index c1a7624eaf17..2deb8d6da462 100644
---- a/sound/soc/qcom/qdsp6/q6afe-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
-@@ -63,6 +63,8 @@ struct q6afe_dai_priv_data {
- 	uint32_t invert_sync;
- 	uint32_t data_delay;
- 	uint32_t data_align;
-+	uint32_t quantype;
-+	uint32_t slot_number_mapping[AFE_MAX_PCM_SLOT_COUNT];
- };
- 
- struct q6afe_dai_data {
-@@ -151,6 +153,52 @@ static int q6hdmi_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
-+static int q6pcm_hw_params(struct snd_pcm_substream *substream,
-+			   struct snd_pcm_hw_params *params,
-+			   struct snd_soc_dai *dai)
-+{
-+	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-+	struct q6afe_pcm_cfg *pcm = &dai_data->port_config[dai->id].pcm_cfg;
-+	int i = 0;
-+
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+		pcm->sample_rate = params_rate(params);
-+		break;
-+	default:
-+		dev_err(dai->dev, "invalid sample rate = %u\n",
-+			params_rate(params));
-+		return -EINVAL;
-+	}
-+
-+	pcm->quantype = dai_data->priv[dai->id].quantype;
-+
-+	for (i = 0; i < AFE_MAX_PCM_SLOT_COUNT; i++)
-+		pcm->slot_number_mapping[i] =
-+			dai_data->priv[dai->id].slot_number_mapping[i];
-+
-+	return 0;
-+}
-+
-+static int q6pcm_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-+{
-+	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-+	struct q6afe_pcm_cfg *pcm = &dai_data->port_config[dai->id].pcm_cfg;
-+
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		pcm->fmt = fmt;
-+		break;
-+	default:
-+		dev_err(dai->dev, "unsupported format = %u\n", fmt);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int q6i2s_hw_params(struct snd_pcm_substream *substream,
- 			   struct snd_pcm_hw_params *params,
- 			   struct snd_soc_dai *dai)
-@@ -358,6 +406,15 @@ static int q6afe_dai_prepare(struct snd_pcm_substream *substream,
- 			return rc;
- 		}
- 		break;
-+	case PRIMARY_PCM_RX ... QUATERNARY_PCM_TX:
-+		rc = q6afe_pcm_port_prepare(dai_data->port[dai->id],
-+				&dai_data->port_config[dai->id].pcm_cfg);
-+		if (rc < 0) {
-+			dev_err(dai->dev, "fail to prepare AFE port %x\n",
-+				dai->id);
-+			return rc;
-+		}
-+		break;
- 	case PRIMARY_TDM_RX_0 ... QUINARY_TDM_TX_7:
- 		q6afe_tdm_port_prepare(dai_data->port[dai->id],
- 					&dai_data->port_config[dai->id].tdm);
-@@ -429,16 +486,25 @@ static int q6afe_mi2s_set_sysclk(struct snd_soc_dai *dai,
- 					     Q6AFE_LPASS_CLK_ROOT_DEFAULT,
- 					     freq, dir);
- 	case Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT ... Q6AFE_LPASS_CLK_ID_QUI_MI2S_OSR:
-+	case Q6AFE_LPASS_CLK_ID_PRI_PCM_IBIT ... Q6AFE_LPASS_CLK_ID_QUI_PCM_OSR:
-+		switch (dai->id) {
-+		case PRIMARY_TDM_RX_0 ... QUINARY_TDM_TX_7:
-+			return q6afe_port_set_sysclk(port, clk_id,
-+				Q6AFE_LPASS_CLK_ATTRIBUTE_INVERT_COUPLE_NO,
-+				Q6AFE_LPASS_CLK_ROOT_DEFAULT,
-+				freq, dir);
-+			break;
-+		default:
-+			return q6afe_port_set_sysclk(port, clk_id,
-+				Q6AFE_LPASS_CLK_ATTRIBUTE_COUPLE_NO,
-+				Q6AFE_LPASS_CLK_ROOT_DEFAULT,
-+				freq, dir);
-+		}
- 	case Q6AFE_LPASS_CLK_ID_MCLK_1 ... Q6AFE_LPASS_CLK_ID_INT_MCLK_1:
- 		return q6afe_port_set_sysclk(port, clk_id,
- 					     Q6AFE_LPASS_CLK_ATTRIBUTE_COUPLE_NO,
- 					     Q6AFE_LPASS_CLK_ROOT_DEFAULT,
- 					     freq, dir);
--	case Q6AFE_LPASS_CLK_ID_PRI_TDM_IBIT ... Q6AFE_LPASS_CLK_ID_QUIN_TDM_EBIT:
--		return q6afe_port_set_sysclk(port, clk_id,
--					     Q6AFE_LPASS_CLK_ATTRIBUTE_INVERT_COUPLE_NO,
--					     Q6AFE_LPASS_CLK_ROOT_DEFAULT,
--					     freq, dir);
- 	}
- 
- 	return 0;
-@@ -468,6 +534,11 @@ static const struct snd_soc_dapm_route q6afe_dapm_routes[] = {
- 	{"Tertiary MI2S Playback", NULL, "TERT_MI2S_RX"},
- 	{"Quaternary MI2S Playback", NULL, "QUAT_MI2S_RX"},
- 
-+	{"Primary PCM Playback", NULL, "PRI_PCM_RX"},
-+	{"Secondary PCM Playback", NULL, "SEC_PCM_RX"},
-+	{"Tertiary PCM Playback", NULL, "TERT_PCM_RX"},
-+	{"Quaternary PCM Playback", NULL, "QUAT_PCM_RX"},
-+
- 	{"Primary TDM0 Playback", NULL, "PRIMARY_TDM_RX_0"},
- 	{"Primary TDM1 Playback", NULL, "PRIMARY_TDM_RX_1"},
- 	{"Primary TDM2 Playback", NULL, "PRIMARY_TDM_RX_2"},
-@@ -562,6 +633,11 @@ static const struct snd_soc_dapm_route q6afe_dapm_routes[] = {
- 	{"PRI_MI2S_TX", NULL, "Primary MI2S Capture"},
- 	{"SEC_MI2S_TX", NULL, "Secondary MI2S Capture"},
- 	{"QUAT_MI2S_TX", NULL, "Quaternary MI2S Capture"},
-+
-+	{"PRI_PCM_TX", NULL, "Primary PCM Capture"},
-+	{"SEC_PCM_TX", NULL, "Secondary PCM Capture"},
-+	{"TERT_PCM_TX", NULL, "Tertiary PCM Capture"},
-+	{"QUAT_PCM_TX", NULL, "Quaternary PCM Capture"},
- };
- 
- static const struct snd_soc_dai_ops q6hdmi_ops = {
-@@ -578,6 +654,14 @@ static const struct snd_soc_dai_ops q6i2s_ops = {
- 	.set_sysclk	= q6afe_mi2s_set_sysclk,
- };
- 
-+static const struct snd_soc_dai_ops q6pcm_ops = {
-+	.prepare	= q6afe_dai_prepare,
-+	.hw_params	= q6pcm_hw_params,
-+	.set_fmt	= q6pcm_set_fmt,
-+	.shutdown	= q6afe_dai_shutdown,
-+	.set_sysclk	= q6afe_mi2s_set_sysclk,
-+};
-+
- static const struct snd_soc_dai_ops q6slim_ops = {
- 	.prepare	= q6afe_dai_prepare,
- 	.hw_params	= q6slim_hw_params,
-@@ -1012,6 +1096,94 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 		.ops = &q6i2s_ops,
- 		.probe = msm_dai_q6_dai_probe,
- 		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.playback = {
-+			.stream_name = "Primary PCM Playback",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		},
-+		.id = PRIMARY_PCM_RX,
-+		.name = "PRI_PCM_RX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.capture = {
-+			.stream_name = "Primary PCM Capture",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		},
-+		.id = PRIMARY_PCM_TX,
-+		.name = "PRI_PCM_TX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.playback = {
-+			.stream_name = "Secondary PCM Playback",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		},
-+		.name = "SEC_PCM_RX",
-+		.id = SECONDARY_PCM_RX,
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.capture = {
-+			.stream_name = "Secondary PCM Capture",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		},
-+		.id = SECONDARY_PCM_TX,
-+		.name = "SEC_PCM_TX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.playback = {
-+			.stream_name = "Tertiary PCM Playback",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		},
-+		.name = "TERT_PCM_RX",
-+		.id = TERTIARY_PCM_RX,
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.capture = {
-+			.stream_name = "Tertiary PCM Capture",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		},
-+		.id = TERTIARY_PCM_TX,
-+		.name = "TERT_PCM_TX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.playback = {
-+			.stream_name = "Quaternary PCM Playback",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		},
-+		.name = "QUAT_PCM_RX",
-+		.id = QUATERNARY_PCM_RX,
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	}, {
-+		.capture = {
-+			.stream_name = "Quaternary PCM Capture",
-+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+		},
-+		.id = QUATERNARY_PCM_TX,
-+		.name = "QUAT_PCM_TX",
-+		.ops = &q6pcm_ops,
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
- 	},
- 	Q6AFE_TDM_PB_DAI("Primary", 0, PRIMARY_TDM_RX_0),
- 	Q6AFE_TDM_PB_DAI("Primary", 1, PRIMARY_TDM_RX_1),
-@@ -1169,6 +1341,15 @@ static const struct snd_soc_dapm_widget q6afe_dai_widgets[] = {
- 	SND_SOC_DAPM_AIF_OUT("PRI_MI2S_TX", NULL,
- 						0, 0, 0, 0),
- 
-+	SND_SOC_DAPM_AIF_IN("QUAT_PCM_RX", NULL, 0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("QUAT_PCM_TX", NULL, 0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("TERT_PCM_RX", NULL, 0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("TERT_PCM_TX", NULL, 0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SEC_PCM_RX", NULL, 0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SEC_PCM_TX", NULL, 0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("PRI_PCM_RX", NULL, 0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("PRI_PCM_TX", NULL, 0, 0, 0, 0),
-+
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_0", NULL,
- 			     0, 0, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_1", NULL,
-@@ -1381,6 +1562,25 @@ static void of_q6afe_parse_dai_data(struct device *dev,
- 			for (i = 0; i < num_lines; i++)
- 				priv->sd_line_mask |= BIT(lines[i]);
- 
-+			break;
-+		case PRIMARY_PCM_RX ... QUATERNARY_PCM_TX:
-+			priv = &data->priv[id];
-+			ret = of_property_read_u32(node, "qcom,pcm-quantype",
-+						   &priv->quantype);
-+			if (ret) {
-+				dev_err(dev, "No quantype from DT\n");
-+				break;
-+			}
-+
-+			ret = of_property_read_variable_u32_array(node,
-+						"qcom,pcm-slot-mapping",
-+						priv->slot_number_mapping,
-+						1, AFE_MAX_PCM_SLOT_COUNT);
-+			if (ret < 0) {
-+				dev_err(dev, "No slot mapping from DT\n");
-+				break;
-+			}
-+
- 			break;
- 		case PRIMARY_TDM_RX_0 ... QUINARY_TDM_TX_7:
- 			priv = &data->priv[id];
--- 
-2.21.1
+I haven't checked, but I assume these flags make runtime PM honor
+device links? That seems like the more conservative option (more
+reasons why a device can't suspend).
 
+> But adding command line ops
+> to change the default flags shouldn't be difficult. But before I do
+> that, I want to change of_devlink to
+> fw_devlink=<disabled|permissive|enabled>. May be I can extend that to
+> "disabled, permissive, suspend, runtime".
+
+I think any command line option should be debug primarily. It's kind
+of a big hammer.
+
+Can drivers adjust the flags themselves? Just modify the flags rather
+than trying to create new links?
+
+Rob
