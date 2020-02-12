@@ -2,124 +2,96 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA3BC352A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 21:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D26C352A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 22:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E833420848
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 21:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C7A2082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 22:12:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cu2HVdgF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VresCRs7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgBLV51 (ORCPT
+        id S1728098AbgBLWMd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:57:27 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50911 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgBLV51 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 16:57:27 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so1449921pjb.0;
-        Wed, 12 Feb 2020 13:57:27 -0800 (PST)
+        Wed, 12 Feb 2020 17:12:33 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35112 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbgBLWMd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 17:12:33 -0500
+Received: by mail-il1-f194.google.com with SMTP id g12so3187676ild.2
+        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 14:12:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=fnUhPBKcSJIh4dSE9ZDVA1HmaYlN0KtrojiReV2ykb0=;
-        b=cu2HVdgFsneUjNAodwp0mnQFtoeN6mjv2Ze87w4aV7ChgNbJ8jExut24J2vW66PS6T
-         koVG7aLqf7ULojlqtp726KnUimqivbcuoUV9NtssprL5ko3YprdPY5xvqnlkTdPaIU/r
-         8sM5Sd0Qpm6pjQxOwAl9BQbYkjdRX7X68XoEgg8aDvvtGHrTBoVcR05S8hcmY3wT23FZ
-         T4Q3nCX9mPO7fNbwnOSAJqdM8mt/maw+2dkLhWpkNJSgWQaOGZTea+Jlfky6SrNUIQ4k
-         1gqChzMwo5bt8sp/VLS/L4gnilV6Mhufl+oV3miS3u82WSBHBCTpb3KSoBpHxOn28S+A
-         2UwA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wdP0ovbmvDZYICvamxtqlMozHNpRomdhcvqsRnXUQX4=;
+        b=VresCRs7yf8cbcowW6xFfScuoMordtYPvocPOGgkt/bPIgpHRVM/9mqFXzeGqUPm8B
+         fzEbCFsUglJPKjsqx1S+BS2RbwUajDAmEnKKl9Ck+uVdICJs6q7yyT6ZJNI04OFcVZ6A
+         af7oFXo7sM8ftd8b6CgpWgE4Gq2fNYTpdbWKf9KQMSBAatHRH4GED2NwxqIghtxCeo5E
+         KuG9TSJldrgGFrWBi3KNzAdtka2zX09Z7JRzKzYLF4WCL9PJ5/GICJjfyTabuMD1LxbC
+         /7HhEfbYYRx7CnvW1t5gusqLs2iuymJBqUw7d+wq2nfmY7QBae3V8YekmU3mdfyhR8+N
+         yP3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fnUhPBKcSJIh4dSE9ZDVA1HmaYlN0KtrojiReV2ykb0=;
-        b=LUNAjQn7kxW/oM/CWKbvsctCcnlup/2QXdaFm/96dFVK0Tect7Y8q1ShhuctNriuad
-         uDYiNKhwlgbybZDkyH2zo6UDr7pinw56KYt8Tpuy4+VC0h0m5XnD8Z1gQAXQhu5hP+3p
-         eRfnnVr+e+EmJaaaHLIswDP8caWlaBprkfTD7/VT8mZ3t77oOqtSKdWxlkB2AdmMPXvr
-         Pb4WdpPvl4rsXTpAlmtL99QZdf/veaAtoDcrs+23cyD+KVt/4BJ373Be8qra5Os8a/Bv
-         WTWdONnZyhZ+FvIb4GldTTbBAe1KMxEZK2gFCIqi7jd9LPH1vJXw2NRhDGcgqrD68GO8
-         Npfg==
-X-Gm-Message-State: APjAAAXItVH4eh7If3DSdsY8HG9prW7VymCJkvdIo/JTgtKw5xsiLXEw
-        Js7AkRB7Fw3u4aqz26j3zpg=
-X-Google-Smtp-Source: APXvYqyH1U4B5ayiip+FCyTBRMApO8id3his1NPhWKEoZ9RMaWpVNfNcOs6FCRURmy4EYX2Y/41kVw==
-X-Received: by 2002:a17:90a:fe02:: with SMTP id ck2mr1313325pjb.10.1581544646327;
-        Wed, 12 Feb 2020 13:57:26 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:200::3:533f])
-        by smtp.gmail.com with ESMTPSA id r6sm214431pfh.91.2020.02.12.13.57.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 13:57:25 -0800 (PST)
-From:   rentao.bupt@gmail.com
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v2 0/5] aspeed-g6: enable usb support
-Date:   Wed, 12 Feb 2020 13:57:12 -0800
-Message-Id: <20200212215717.9474-1-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wdP0ovbmvDZYICvamxtqlMozHNpRomdhcvqsRnXUQX4=;
+        b=CQLJDBmdRa6E3ZeGA6yPtqkKx2Opxk6b/Co6tzZSXpyaAxJw+Ox8/W/uXmUhF/wF94
+         kBu9gQ9C61MJalRWyNo7cED3I+U2W9Sa/+ZEr4jA+ErgSCCZmylhCFtRbHLKEMwkstIy
+         Mxk7lOh0JgKW7jQMJMZaVo/z9UY7UKYmRmLgPV7O6G/A0zcIMw2X19KNT91eg0QY5+R6
+         cOvf6m1Q9VRwH1G/iUqcejMQNuSNbXMIntPU/yNpqHFIzSIJEGJQKpQzkr65nA/BzWHl
+         o1+R7lUdZFeCy7LqbDq8F1QqvZkiro+Pb5YsB/bed4qeCswVUeBdln+WuCDIak+NXj6L
+         lmuQ==
+X-Gm-Message-State: APjAAAV1PEHjFs7uIVQlKMYI0NgDjFRzAlPJkbhqIJXkgmqcZ+AH7KCK
+        D24Plfhrj5wCLhuQnjJUSJOhy7T61Njov3toFPSH1A==
+X-Google-Smtp-Source: APXvYqypi6T4y7kMEvHg1Wp3t1NjZK6kQRjwYnUxOcPiraf/Rq4rl1Q7RmE+/7ISPHkiwPO2rJG+YhCvwacW4+TI/18=
+X-Received: by 2002:a92:9f1a:: with SMTP id u26mr13534880ili.72.1581545552462;
+ Wed, 12 Feb 2020 14:12:32 -0800 (PST)
+MIME-Version: 1.0
+References: <20200210213924.20037-1-mike.leach@linaro.org> <20200210213924.20037-12-mike.leach@linaro.org>
+ <20200211115852.GA52147@bogus>
+In-Reply-To: <20200211115852.GA52147@bogus>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 12 Feb 2020 15:12:21 -0700
+Message-ID: <CANLsYkxOK+21JutM7ryz1ux0gHBTa51q5r-9i18kFLvMKouShA@mail.gmail.com>
+Subject: Re: [PATCH v9 11/15] dt-bindings: arm: Juno platform - add CTI
+ entries to device tree.
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, maxime@cerno.tech,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andy Gross <agross@kernel.org>, Jon Corbet <corbet@lwn.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+On Tue, 11 Feb 2020 at 04:59, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Mon, Feb 10, 2020 at 09:39:20PM +0000, Mike Leach wrote:
+> > Add in CTI entries for Juno r0, r1 and r2 to device tree entries.
+> >
+>
+> I can take this patch alone unless you have plans to take all in go.
 
-The patch series aims at enabling USB Host and Gadget support on AST2600
-platforms.
+Please hang on to it for the moment.  I'll get back to you if/when we
+decide to move forward with this set.
 
-Patch #1 replaces hardcoded vhub port/endpoint number with device tree
-properties, so that it's more convenient to add support for ast2600-vhub
-which provides more downstream ports and endpoints.
+Thanks,
+Mathieu
 
-Patch #2 and #3 add vhub port/endpoint properties into aspeed-g4 and
-aspeed-g5 dtsi.
-
-Patch #4 enables ast2600 support in aspeed-vhub usb gadget driver.
-
-Patch #5 adds USB devices and according pin groups in aspeed-g6 dtsi.
-
-The patch series is sanity tested on AST2520 (Yamp) BMC and AST2600-A0
-eval board:
-  - AST2520: created 5 gadget devices with 15 endpoints, and all of them
-    can be enumerated from usb-host side.
-  - AST2600: created 7 gadget devices with 20 endpoints, and all of them
-    can be enumerated from usb-host side.
-
-Tao Ren (5):
-  usb: gadget: aspeed: read vhub properties from device tree
-  ARM: dts: aspeed-g4: add vhub port and endpoint properties
-  ARM: dts: aspeed-g5: add vhub port and endpoint properties
-  usb: gadget: aspeed: add ast2600 vhub support
-  ARM: dts: aspeed-g6: add usb functions
-
- arch/arm/boot/dts/aspeed-g4.dtsi           |  2 +
- arch/arm/boot/dts/aspeed-g5.dtsi           |  2 +
- arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi   | 25 ++++++++
- arch/arm/boot/dts/aspeed-g6.dtsi           | 45 ++++++++++++++
- drivers/usb/gadget/udc/aspeed-vhub/Kconfig |  4 +-
- drivers/usb/gadget/udc/aspeed-vhub/core.c  | 71 ++++++++++++++--------
- drivers/usb/gadget/udc/aspeed-vhub/dev.c   | 30 ++++++---
- drivers/usb/gadget/udc/aspeed-vhub/epn.c   |  4 +-
- drivers/usb/gadget/udc/aspeed-vhub/hub.c   | 26 +++++---
- drivers/usb/gadget/udc/aspeed-vhub/vhub.h  | 23 +++----
- 10 files changed, 170 insertions(+), 62 deletions(-)
-
--- 
-2.17.1
-
+>
+> --
+> Regards,
+> Sudeep
