@@ -2,66 +2,73 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9822C352A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948DC352A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A672168B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 22:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CE121734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:03:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581548623;
+	bh=fU30PkEF5AzebTofCICkBipjj6UxPaHZSLK931dkXp4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=fiz4MqP1dM1sB65a1zWGetITcyXvg3CsiPEUyJ34Ct31tWnMamzKlnXF0Ag2PdbeC
+	 CGbAeHPefDk3GLR64Ykfegnz+L2l4c5+t2BrgU8y/1N5/kMNwA9bbfQpiPl/GczoMS
+	 4C/rW7rKrgDy6tRlxbbS3eq3o3m2t+z3tD/slhHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgBLWZD (ORCPT
+        id S1729237AbgBLXDk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 17:25:03 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:39208 "EHLO gloria.sntech.de"
+        Wed, 12 Feb 2020 18:03:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbgBLWZC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 17:25:02 -0500
-Received: from p508fd8fe.dip0.t-ipconnect.de ([80.143.216.254] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j20RG-0001sh-MZ; Wed, 12 Feb 2020 23:24:58 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        dafna.hirschfeld@collabora.com,
-        Matthias Kaehlcke <mka@chromium.org>,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Brian Norris <briannorris@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rk3399: Remove extcon unit address and extcon-cells from Gru
-Date:   Wed, 12 Feb 2020 23:24:58 +0100
-Message-ID: <3531662.p2XxmjTmOT@phil>
-In-Reply-To: <20200207141324.3188898-1-enric.balletbo@collabora.com>
-References: <20200207141324.3188898-1-enric.balletbo@collabora.com>
+        id S1728447AbgBLXDj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:03:39 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E3DE21569;
+        Wed, 12 Feb 2020 23:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581548619;
+        bh=fU30PkEF5AzebTofCICkBipjj6UxPaHZSLK931dkXp4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=E83cguvoAQC5HFH0GrNnwtJUxEEOFnZ7gorksbX3QSdB/S1P8myeRnzTqSyM7quor
+         ygBTInUWmYxUSatmw6no5B5HC/oZ84l/WoepqBi7Wb92GnlhxKuQLEYqXYzBLsFyS3
+         TtqFSzDf9CCSoabSoU6ptcoTv3lNDP4HgjnL6H00=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
+References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v1 1/2] clk: qcom: videocc: Update the clock flag for video_cc_vcodec0_core_clk
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>, robh@kernel.org
+Date:   Wed, 12 Feb 2020 15:03:38 -0800
+Message-ID: <158154861845.184098.5172409402237427332@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Freitag, 7. Februar 2020, 15:13:24 CET schrieb Enric Balletbo i Serra:
-> The cros-ec-extcon has no reg property so remove the unit address from
-> the DT node to make DT compiler happy.
-> 
-> While here, remove the inexistent extcon-cells property from the extcon
-> nodes.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Quoting Taniya Das (2020-02-11 04:13:55)
+> The clock disable signal for video_cc_vcodec0_core_clk is tied to
+> vcodec0_gdsc which is supported in the HW control mode. Thus turning off
+> the clock would be taken care automatically when the GDSC turns OFF by
+> hardware and clock driver does not require to poll on the CLK_OFF bit.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
-applied for 5.7
-
-Thanks
-Heiko
-
-
+Applied to clk-fixes
