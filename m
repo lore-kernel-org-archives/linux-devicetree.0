@@ -2,360 +2,177 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6AEC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 16:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9135C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 16:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B962168B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 16:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DAE2168B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 16:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgBLQxc (ORCPT
+        id S1727372AbgBLQ41 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 11:53:32 -0500
-Received: from mga03.intel.com ([134.134.136.65]:10299 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbgBLQxb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 11:53:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 08:53:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
-   d="scan'208";a="347546399"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 12 Feb 2020 08:53:26 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 12 Feb 2020 18:53:25 +0200
-Date:   Wed, 12 Feb 2020 18:53:25 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, heikki.krogerus@intel.com,
-        enric.balletbo@collabora.com, bleung@chromium.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/4] platform/chrome: Add Type C connector class driver
-Message-ID: <20200212165325.GJ1498@kuha.fi.intel.com>
-References: <20200207203752.209296-1-pmalani@chromium.org>
- <20200207203752.209296-3-pmalani@chromium.org>
+        Wed, 12 Feb 2020 11:56:27 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50242 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgBLQ40 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 11:56:26 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id D61BF290ADB
+Subject: Re: [PATCH v3] dt-bindings: extcon: usbc-cros-ec: convert
+ extcon-usbc-cros-ec.txt to yaml format
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        devicetree@vger.kernel.org
+Cc:     myungjoo.ham@samsung.com, cw00.choi@samsung.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
+        groeck@chromium.org, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+References: <20200212155155.14210-1-dafna.hirschfeld@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <f01756ae-d66b-f7e1-2aaf-b554426dd6c1@collabora.com>
+Date:   Wed, 12 Feb 2020 17:55:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207203752.209296-3-pmalani@chromium.org>
+In-Reply-To: <20200212155155.14210-1-dafna.hirschfeld@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 12:37:46PM -0800, Prashant Malani wrote:
-> Add a driver to implement the Type C connector class for Chrome OS
-> devices with ECs (Embedded Controllers).
-> 
-> The driver relies on firmware device specifications for various port
-> attributes. On ACPI platforms, this is specified using the logical
-> device with HID GOOG0014. On DT platforms, this is specified using the
-> DT node with compatible string "google,cros-ec-typec".
-> 
-> This patch reads the device FW node and uses the port attributes to
-> register the typec ports with the Type C connector class framework, but
-> doesn't do much else.
-> 
-> Subsequent patches will add more functionality to the driver, including
-> obtaining current port information (polarity, vconn role, current power
-> role etc.) after querying the EC.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Hi Dafna,
 
-Besides the few minor nitpicks below, looks OK to me.
-
+On 12/2/20 16:51, Dafna Hirschfeld wrote:
+> convert the binding file extcon-usbc-cros-ec.txt to
+> yaml format extcon-usbc-cros-ec.yaml
+> 
+> This was tested and verified on ARM with:
+> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+> 
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 > ---
+> Changes since v1:
+> 1 - changing the license to (GPL-2.0-only OR BSD-2-Clause)
+> 2 - changing the maintainers
+> 3 - changing the google,usb-port-id property to have minimum 0 and maximum 255
 > 
-> Changes in v2:
-> - Updated Kconfig to default to MFD_CROS_EC_DEV.
-> - Fixed code comments.
-> - Moved get_num_ports() code into probe().
-> - Added module author.
+> Changes since v2:
+> 1 - Changing the patch subject to start with "dt-bindings: extcon: usbc-cros-ec:"
+> 2 - In the example, adding a parent isp node, a reg field to cros-ec@0
+> and adding nodes 'extcon0/1' instead of one node 'extcon'.
 > 
->  drivers/platform/chrome/Kconfig         |  11 ++
->  drivers/platform/chrome/Makefile        |   1 +
->  drivers/platform/chrome/cros_ec_typec.c | 218 ++++++++++++++++++++++++
->  3 files changed, 230 insertions(+)
->  create mode 100644 drivers/platform/chrome/cros_ec_typec.c
+>  .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 --------
+>  .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 56 +++++++++++++++++++
+>  2 files changed, 56 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
 > 
-> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> index 5f57282a28da00..2320a4f0d93019 100644
-> --- a/drivers/platform/chrome/Kconfig
-> +++ b/drivers/platform/chrome/Kconfig
-> @@ -214,6 +214,17 @@ config CROS_EC_SYSFS
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called cros_ec_sysfs.
->  
-> +config CROS_EC_TYPEC
-> +	tristate "ChromeOS EC Type-C Connector Control"
-> +	depends on MFD_CROS_EC_DEV && TYPEC
-> +	default MFD_CROS_EC_DEV
-> +	help
-> +	  If you say Y here, you get support for accessing Type C connector
-> +	  information from the Chrome OS EC.
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called cros_ec_typec.
-> +
->  config CROS_USBPD_LOGGER
->  	tristate "Logging driver for USB PD charger"
->  	depends on CHARGER_CROS_USBPD
-> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> index aacd5920d8a180..caf2a9cdb5e6d1 100644
-> --- a/drivers/platform/chrome/Makefile
-> +++ b/drivers/platform/chrome/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
->  obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
->  obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
->  cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
-> +obj-$(CONFIG_CROS_EC_TYPEC)		+= cros_ec_typec.o
->  obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
->  obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
->  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+> deleted file mode 100644
+> index 8e8625c00dfa..000000000000
+> --- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -ChromeOS EC USB Type-C cable and accessories detection
+> -
+> -On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+> -able to detect the state of external accessories such as display adapters
+> -or USB devices when said accessories are attached or detached.
+> -
+> -The node for this device must be under a cros-ec node like google,cros-ec-spi
+> -or google,cros-ec-i2c.
+> -
+> -Required properties:
+> -- compatible:		Should be "google,extcon-usbc-cros-ec".
+> -- google,usb-port-id:	Specifies the USB port ID to use.
+> -
+> -Example:
+> -	cros-ec@0 {
+> -		compatible = "google,cros-ec-i2c";
+> -
+> -		...
+> -
+> -		extcon {
+> -			compatible = "google,extcon-usbc-cros-ec";
+> -			google,usb-port-id = <0>;
+> -		};
+> -	}
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
 > new file mode 100644
-> index 00000000000000..8374ccfe784f3b
+> index 000000000000..d7a2fc544c4d
 > --- /dev/null
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -0,0 +1,218 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2020 Google LLC
-> + *
-> + * This driver provides the ability to view and manage Type C ports through the
-> + * Chrome OS EC.
-> + */
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#include <linux/acpi.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_data/cros_ec_commands.h>
-> +#include <linux/platform_data/cros_ec_proto.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/usb/typec.h>
+> +title: ChromeOS EC USB Type-C cable and accessories detection
 > +
-> +#define DRV_NAME "cros-ec-typec"
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > +
-> +/* Platform-specific data for the Chrome OS EC Type C controller. */
-> +struct cros_typec_data {
-> +	struct device *dev;
-> +	struct cros_ec_device *ec;
-> +	int num_ports;
-> +	/* Array of ports, indexed by port number. */
-> +	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
-> +};
+> +description: |
+> +  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+> +  able to detect the state of external accessories such as display adapters
+> +  or USB devices when said accessories are attached or detached.
+> +  The node for this device must be under a cros-ec node like google,cros-ec-spi
+> +  or google,cros-ec-i2c.
 > +
-> +static int cros_typec_parse_port_props(struct typec_capability *cap,
-> +				       struct fwnode_handle *fwnode,
-> +				       struct device *dev)
-> +{
-> +	const char *buf;
-> +	int ret;
+> +properties:
+> +  compatible:
+> +    const: google,extcon-usbc-cros-ec
 > +
-> +	memset(cap, 0, sizeof(*cap));
-> +	ret = fwnode_property_read_string(fwnode, "power-role", &buf);
-> +	if (ret) {
-> +		dev_err(dev, "power-role not found: %d\n", ret);
-> +		return ret;
-> +	}
+> +  google,usb-port-id:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: the port id
+> +    minimum: 0
+> +    maximum: 255
 > +
-> +	ret = typec_find_port_power_role(buf);
-> +	if (ret < 0)
-> +		return ret;
-> +	cap->type = ret;
+> +required:
+> +  - compatible
+> +  - google,usb-port-id
 > +
-> +	ret = fwnode_property_read_string(fwnode, "data-role", &buf);
-> +	if (ret) {
-> +		dev_err(dev, "data-role not found: %d\n", ret);
-> +		return ret;
-> +	}
+> +additionalProperties: false
 > +
-> +	ret = typec_find_port_data_role(buf);
-> +	if (ret < 0)
-> +		return ret;
-> +	cap->data = ret;
-> +
-> +	ret = fwnode_property_read_string(fwnode, "try-power-role", &buf);
-> +	if (ret) {
-> +		dev_err(dev, "try-power-role not found: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = typec_find_power_role(buf);
-> +	if (ret < 0)
-> +		return ret;
-> +	cap->prefer_role = ret;
-> +
-> +	cap->fwnode = fwnode;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cros_typec_init_ports(struct cros_typec_data *typec)
-> +{
-> +	struct device *dev = typec->dev;
-> +	struct typec_capability cap;
-> +	struct fwnode_handle *fwnode;
-> +	int ret;
-> +	int i;
-> +	int nports;
-> +	u32 port_num;
-> +
-> +	nports = device_get_child_node_count(dev);
-> +	if (nports == 0) {
-> +		dev_err(dev, "No port entries found.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	device_for_each_child_node(dev, fwnode) {
-> +		if (fwnode_property_read_u32(fwnode, "port-number",
-> +					     &port_num)) {
-> +			dev_err(dev, "No port-number for port, skipping.\n");
-> +			ret = -EINVAL;
-> +			goto unregister_ports;
-> +		}
-> +
-> +		if (port_num >= typec->num_ports) {
-> +			dev_err(dev, "Invalid port number.\n");
-> +			ret = -EINVAL;
-> +			goto unregister_ports;
-> +		}
-> +
-> +		dev_dbg(dev, "Registering port %d\n", port_num);
+> +examples:
+> +  - |
+> +    isp1 {
 
-Empty line?
+I think you mean 'spi' here ( spi0 or spi1 )?
 
-> +		ret = cros_typec_parse_port_props(&cap, fwnode, dev);
-> +		if (ret < 0)
-> +			goto unregister_ports;
+With that fixed,
 
-ditto
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-> +		typec->ports[port_num] = typec_register_port(dev, &cap);
-> +		if (IS_ERR(typec->ports[port_num])) {
-> +			dev_err(dev, "Failed to register port %d\n", port_num);
-> +			ret = PTR_ERR(typec->ports[port_num]);
-> +			goto unregister_ports;
-> +		}
-> +	}
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        cros-ec@0 {
+> +            compatible = "google,cros-ec-spi";
+> +            reg = <0>;
 > +
-> +	return 0;
+> +            usbc_extcon0: extcon0 {
+> +                compatible = "google,extcon-usbc-cros-ec";
+> +                google,usb-port-id = <0>;
+> +            };
 > +
-> +unregister_ports:
-> +	for (i = 0; i < typec->num_ports; i++)
-> +		typec_unregister_port(typec->ports[i]);
-> +	return ret;
-> +}
-> +
-> +static int cros_typec_ec_command(struct cros_typec_data *typec,
-> +				 unsigned int version,
-> +				 unsigned int command,
-> +				 void *outdata,
-> +				 unsigned int outsize,
-> +				 void *indata,
-> +				 unsigned int insize)
-> +{
-> +	struct cros_ec_command *msg;
-> +	int ret;
-> +
-> +	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-> +	if (!msg)
-> +		return -ENOMEM;
-> +
-> +	msg->version = version;
-> +	msg->command = command;
-> +	msg->outsize = outsize;
-> +	msg->insize = insize;
-> +
-> +	if (outsize)
-> +		memcpy(msg->data, outdata, outsize);
-> +
-> +	ret = cros_ec_cmd_xfer_status(typec->ec, msg);
-> +	if (ret >= 0 && insize)
-> +		memcpy(indata, msg->data, insize);
-> +
-> +	kfree(msg);
-> +	return ret;
-> +}
-> +
-> +#ifdef CONFIG_ACPI
-> +static const struct acpi_device_id cros_typec_acpi_id[] = {
-> +	{ "GOOG0014", 0 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, cros_typec_acpi_id);
-> +#endif
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id cros_typec_of_match[] = {
-> +	{ .compatible = "google,cros-ec-typec", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, cros_typec_of_match);
-> +#endif
-> +
-> +static int cros_typec_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cros_typec_data *typec;
-> +	struct ec_response_usb_pd_ports resp;
-> +	int ret;
-> +
-> +	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
-> +	if (!typec)
-> +		return -ENOMEM;
-
-Empty line here.
-
-> +	typec->dev = dev;
-> +	typec->ec = dev_get_drvdata(pdev->dev.parent);
-> +	platform_set_drvdata(pdev, typec);
-> +
-> +	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
-> +				    &resp, sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	typec->num_ports = resp.num_ports;
-> +	if (typec->num_ports > EC_USB_PD_MAX_PORTS) {
-> +		dev_warn(typec->dev,
-> +			 "Too many ports reported: %d, limiting to max: %d\n",
-> +			 typec->num_ports, EC_USB_PD_MAX_PORTS);
-> +		typec->num_ports = EC_USB_PD_MAX_PORTS;
-> +	}
-> +
-> +	ret = cros_typec_init_ports(typec);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver cros_typec_driver = {
-> +	.driver	= {
-> +		.name = DRV_NAME,
-> +		.acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
-> +		.of_match_table = of_match_ptr(cros_typec_of_match),
-> +	},
-> +	.probe = cros_typec_probe,
-> +};
-> +
-> +module_platform_driver(cros_typec_driver);
-> +
-> +MODULE_AUTHOR("Prashant Malani <pmalani@chromium.org>");
-> +MODULE_DESCRIPTION("Chrome OS EC Type C control");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.25.0.341.g760bfbb309-goog
-
--- 
-heikki
+> +            usbc_extcon1: extcon1 {
+> +                compatible = "google,extcon-usbc-cros-ec";
+> +                google,usb-port-id = <1>;
+> +            };
+> +        };
+> +    };
+> 
