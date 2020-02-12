@@ -8,62 +8,63 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED84C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08684C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86102073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C891F2082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:17:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCwqSg9U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSr3J5Wf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbgBLKPn (ORCPT
+        id S1727558AbgBLKR4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:15:43 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51592 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgBLKPm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 05:15:42 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t23so1470844wmi.1;
-        Wed, 12 Feb 2020 02:15:40 -0800 (PST)
+        Wed, 12 Feb 2020 05:17:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33389 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727535AbgBLKRz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 05:17:55 -0500
+Received: by mail-wr1-f65.google.com with SMTP id u6so1527360wrt.0;
+        Wed, 12 Feb 2020 02:17:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xZhA6P/WyhbXtyr6LF2g4j5CgrZWSC92Rp+z9iszic0=;
-        b=GCwqSg9U3Oxjwp082Jb5aGD3a+Tc2Y5EIaHLFc0osEPMagZ4CWdh4VpRjOcOCK+GGB
-         dHuUA8C1N0RiectY8n/xXoERIQ/SruVetbjsubUZ6bnjsOeIhL1diG5ZJjF56/v+ATyu
-         vx7i/LeRItI251SPorEiyQN2nGNg4mMe0r5vrsFOXvvDg3LssMoUdUQqeTkdr+Zr9/+O
-         xOVBXbFMHYThCduLoMaJa/Gpa4LvI1cYbGwGKFZ/0Itr0ItS4eKdT9aJ9KFzRABwfSi/
-         OoVbwd12CrSaQ7xz9hb4o0WrjSk85EcHv3m7tPWtMNl1hyjKGGm2v4+3ZzwOGKS+8sNX
-         5GGw==
+        bh=RiLSOzSQqH2K+5mtqWU1/VvgqTQPm8zs0bfN/OnhddU=;
+        b=dSr3J5WfjlyUPVN3WpQTYigWQcsG4nTnY53SFJgDeAQI/u+Aq/dZuLAQ7IrWa0YqLF
+         hIjlMf653h/9uixMCu9Tr0tfcxkEWbUNLKNwRCpzsP3PGCT8T6ykrtk3Sbs2wH+jLbm3
+         AGZbSYwwxjbch+iRlfC3nVFSFFurQdFlNcVjaiHLPtnh0Be3HeePPqxkrpV37IDFkxGz
+         VeTJ4T3MLnsQJWzviJxiqunZbeTJWGKD+MsQksoVQKvcIOnmPwcT6C56nFlCk3t4/P2X
+         xWuseD2i6niZGCns+WUKl4/PYIt+7NhHdt55z3jxl9lRXvfavbHM2+WCPxOW14v1HwXe
+         dm2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=xZhA6P/WyhbXtyr6LF2g4j5CgrZWSC92Rp+z9iszic0=;
-        b=J4XnzqeWXoqjjcQ3S+0TqvpgMIGF9JUbwwrNOV3kj9TSKgslOVA3dkMxjbEBYLF6/L
-         deSUeIStA9DZVjZ43qd6/1KEfj2/8fGTBuG7tLiUn6krcyCd4q+ydrro7KK4PBQlpbHN
-         MbjEsYteXjW4tojD0u6SxmCPCG06UcWa22Bj3dh2261rsXa6yj2xjpbDpL6mLL6EKkP9
-         AKaCWDHY+LgPgRB+9WOPYGXaxaPh89Qd/fmZqtVNplTMR8INjRwRX1darx/ruqVA2imy
-         mGAMKaD4wawycf0SY0iRzfibi6zDfJwmrA3Rm6X5Ajpv5cmpY2CkkQXMMhkf2lT/NfgB
-         2RPw==
-X-Gm-Message-State: APjAAAXm5uw5bHmN0BHOiHQ8jlYXR/QnKmk2G3UPjdrTQqhf5jQ4SS5B
-        DidOBLqM/2URUQDqlNYUR/8=
-X-Google-Smtp-Source: APXvYqyqtxAWpKwjnzAMKgCni0ULfftLntT2/0QuQgYjNM4o+bvOdO/htL1mEN1vtSmDDn4nR5K0HQ==
-X-Received: by 2002:a7b:c847:: with SMTP id c7mr11395466wml.3.1581502539504;
-        Wed, 12 Feb 2020 02:15:39 -0800 (PST)
+        bh=RiLSOzSQqH2K+5mtqWU1/VvgqTQPm8zs0bfN/OnhddU=;
+        b=X1EY3WB5Z2S9RvcmxgrVG4n0MhYhn4E96Kps29LG61aBzAs4Bs4eN+mIbGRcZjk2BX
+         O5HCargBGO5dkiCMf8kfwdlBNFOXb5vwi+haiJG10WaQhYwUkZP41jWc4O9UxG5ci9KS
+         ac3AP8XO9LJS+VRFLGE3am/M4H2wWaAd5YCOUfegtwJxHrtY00L5HM7kCxMuv9hQ+1hE
+         tN3hMp6iJ65inrTPbO0UdNQZvjJM8sNfw5U8GFnQyr1bHYaR02xDSMzlxmhPqGkndukZ
+         8b3rZfKPkhNleUcM7dLkjSLV0wkjyVnMiqLUdGc3sbfpEj4xbzK4hCqMJSVfQnHpyWop
+         8ULA==
+X-Gm-Message-State: APjAAAU96lUMatEdfTRN83+oXUcqsS/cqNxuezs78LP3UAjGN2quvOsX
+        aKAbX1pttode5NZUjQHYBkGOqvB1
+X-Google-Smtp-Source: APXvYqy0ppUWHrV4RDKzHlCLXDa/ghFxU/rzeve20LS85XvsmSSgh0TaXxY+2AXb4ZG5uzEbzy6nSg==
+X-Received: by 2002:a5d:4a8c:: with SMTP id o12mr14027627wrq.43.1581502672272;
+        Wed, 12 Feb 2020 02:17:52 -0800 (PST)
 Received: from ziggy.stardust ([37.223.145.31])
-        by smtp.gmail.com with ESMTPSA id z8sm29183wrq.22.2020.02.12.02.15.38
+        by smtp.gmail.com with ESMTPSA id d16sm41220wrg.27.2020.02.12.02.17.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 02:15:38 -0800 (PST)
-Subject: Re: [RESEND,v2,1/1] arm: dts: mediatek: add mt7629 pwm support
-To:     Sam Shih <sam.shih@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <1581474926-28633-1-git-send-email-sam.shih@mediatek.com>
- <1581474926-28633-2-git-send-email-sam.shih@mediatek.com>
+        Wed, 12 Feb 2020 02:17:51 -0800 (PST)
+Subject: Re: [PATCH] arm64: dts: mt8173: add arm,no-tick-in-suspend in timer
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200212060536.156890-1-hsinyi@chromium.org>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -139,12 +140,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <38f2cdcf-2908-33a1-a99f-b5d748c78d82@gmail.com>
-Date:   Wed, 12 Feb 2020 11:15:37 +0100
+Message-ID: <b9d6be0d-a0ea-e0cc-8c87-338fa7e6df0b@gmail.com>
+Date:   Wed, 12 Feb 2020 11:17:50 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1581474926-28633-2-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <20200212060536.156890-1-hsinyi@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -155,51 +156,34 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 12/02/2020 03:35, Sam Shih wrote:
-> This adds pwm support for MT7629.
-
-The information below should not be part of the commit message, the next time
-please put it below the line "---".
-
-> Used:
-> https://patchwork.kernel.org/patch/11160851/
+On 12/02/2020 07:05, Hsin-Yi Wang wrote:
+> Arch timer stops during system suspend. Add arm,no-tick-in-suspend
+> property in timer.
 > 
-> Change since v1:
-> remove unused property num-pwm
+> This is a follow up for d8ec7595a013
+> ("clocksource/drivers/arm_arch_timer: Don't assume clock runs in
+> suspend")
 > 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+
+pushed to v5.6-next/dts64
+
+Thanks!
+
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 > ---
->  arch/arm/boot/dts/mt7629.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> index 867b88103b9d..ce2a30a24017 100644
-> --- a/arch/arm/boot/dts/mt7629.dtsi
-> +++ b/arch/arm/boot/dts/mt7629.dtsi
-> @@ -241,6 +241,20 @@
->  			status = "disabled";
->  		};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 8b4e806d5119..1a9ad90bd7a6 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -331,6 +331,7 @@ timer {
+>  			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>  			     <GIC_PPI 10
+>  			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +		arm,no-tick-in-suspend;
+>  	};
 >  
-> +		pwm: pwm@11006000 {
-> +			compatible = "mediatek,mt7629-pwm";
-> +			reg = <0x11006000 0x1000>;
-> +			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-> +				 <&pericfg CLK_PERI_PWM_PD>,
-> +				 <&pericfg CLK_PERI_PWM1_PD>;
-> +			clock-names = "top", "main", "pwm1";
-> +			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
-> +			assigned-clock-parents =
-> +					<&topckgen CLK_TOP_UNIVPLL2_D4>;
-> +			status = "disabled";
-> +		};
-> +
-
-This does not match the binding description.
-Please fix that.
-
-
->  		i2c: i2c@11007000 {
->  			compatible = "mediatek,mt7629-i2c",
->  				     "mediatek,mt2712-i2c";
+>  	soc {
 > 
