@@ -4,73 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D060DC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852ECC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F31F20873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F672082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581493658;
-	bh=khRNRuCZwxnKABFVYe1snupsbWNrsELF2kP13DYwuWQ=;
+	s=default; t=1581494288;
+	bh=l4Ydi+YAkhSWMA7Xt1/lLVzT50jm4UuMqPacNHvAN7A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vQcrRRlPuRw3GWipxdLXCpHqagQjIIG6gSvxlSrkLHdhpXBHnDVBFu0moCjvHWfb7
-	 Vqnl1CqU4FvRYN58jTYBp9BZRW39wMNlleP+dHKNL6No5taVVQ2Sv+A0klmZnvL3uT
-	 0ti805nZMGhUd1H5WM7N2vUJTPCxwuHuACiV/QoA=
+	b=kXYhbBr8PNN2wt8coVZcSrbstzcW7DfN3mq4aluvFKqk1BCz+HrvZlogScWbKVeaU
+	 +7ML7zxsNQHYe2LFek3iAD2AD7ndxIrzj8WCqs2MnuQ8A/yW3HQyIxNOTDLmQesaih
+	 OTsAG1cSrdh2mH0FxA0E1LC6C+hQkYDYKLY2Scj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgBLHri (ORCPT
+        id S1728268AbgBLH6H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:47:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49886 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 02:58:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728322AbgBLHrh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:47:37 -0500
+        id S1728109AbgBLH6H (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 02:58:07 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9499E206DB;
-        Wed, 12 Feb 2020 07:47:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC058206DB;
+        Wed, 12 Feb 2020 07:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581493657;
-        bh=khRNRuCZwxnKABFVYe1snupsbWNrsELF2kP13DYwuWQ=;
+        s=default; t=1581494287;
+        bh=l4Ydi+YAkhSWMA7Xt1/lLVzT50jm4UuMqPacNHvAN7A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z/XcnxHy23iM4GNy0ATaZ9fXD01JkDVv2jFLkWtBH1hr5bIaQRG2L5y3SZntbR+4w
-         ui4xuR/WJ9uh3d6CPKUWk8Zc8gyBCc/IIQpmDb+0dmzDSK07ZPd9YY0lnR5qgA3AHT
-         uT//b0xogwwtTzSr597rYSqWVx9ahQIK3PW/PtOI=
-Date:   Wed, 12 Feb 2020 15:47:25 +0800
+        b=X8E+xqPwytUirJUKTx6MIE63P70ai95J0dVyl61gmmMC4dlF9IikVo7L5dJUVWEcS
+         lpf8NFiyp1lvekfJMnV0waskC9rcCn2absnEXcPZjEOYc66rkXuYTl9ozmymFG1NsF
+         Eq+EQcOL4vR483ITihCOCkA0kN4uyokPKuwfLocU=
+Date:   Wed, 12 Feb 2020 15:57:59 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, stefan@agner.ch,
-        kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        catalin.marinas@arm.com, will@kernel.org, abel.vesa@nxp.com,
-        bjorn.andersson@linaro.org, olof@lixom.net, maxime@cerno.tech,
-        leonard.crestez@nxp.com, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V9 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by
- default
-Message-ID: <20200212074724.GE11096@dragon>
-References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
- <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/3] dt-bindings: clock: Convert i.MX8MQ to json-schema
+Message-ID: <20200212075758.GF11096@dragon>
+References: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:39:08AM +0800, Anson Huang wrote:
-> Enable CONFIG_PINCTRL_IMX8MP by default to support i.MX8MP
-> pinctrl driver.
+On Tue, Jan 14, 2020 at 09:26:05AM +0800, Anson Huang wrote:
+> Convert the i.MX8MQ clock binding to DT schema format using json-schema
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-Applied, thanks.
+Applied all, thanks.
