@@ -2,184 +2,187 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF360C352A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF665C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD31120714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b29IfQRj"
+	by mail.kernel.org (Postfix) with ESMTP id 850CC20675
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgBLLcT (ORCPT
+        id S1727429AbgBLLhL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:32:19 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51561 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727279AbgBLLcT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:32:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581507137;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yZfKARYhDHAwscJobtxX4OuVdiv8pCmlPkNurxMoTgc=;
-        b=b29IfQRjRogxiNodcuH/Cn8b7UJKKo+n9FxMYuBGnrPIUB0DILLrgmZ2zU1DGo0oIoix05
-        CwAdo8nGP8xoqITAPW9/Mfp0S4KyRv7Oq/mB4ZC5ObXTaZ/FLEbwq/wfvr9chakEzm+5fw
-        FprdNHOVt/7jdzTu8QYG30guL/TlzwQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-MraqtFW3Pn2Rw60sc_nQYA-1; Wed, 12 Feb 2020 06:32:15 -0500
-X-MC-Unique: MraqtFW3Pn2Rw60sc_nQYA-1
-Received: by mail-wr1-f69.google.com with SMTP id t3so675871wrm.23
-        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 03:32:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yZfKARYhDHAwscJobtxX4OuVdiv8pCmlPkNurxMoTgc=;
-        b=YgTKRAxomDWKLdBnMnovTnq73ZGEXzMoG0rCMOOatUqc0aPfbAmxVAl8KT/auhIdly
-         s6AKPc2/E4FvdXl10XzOpqTX1LqEj9QrlDfyy50K7EmgZd4mV5djDuoISo6XogP2wDS5
-         pxJLCVje+UFwUd6G1NMhoDFKq+q9bGbCYUOKvOLSxUiDXQ3lB/vf7Yaq9reTWMuF6MQn
-         81PdhDF2Hw0IW72LXE2xjMEBYBBoyF945etX/PNsKeXjEmBfQ1sCXdxUE+dkx9bXBNmt
-         e21b8xJjubvPXkZFRmZQgkvIJsz7iGIJAqzMA57MiMRh7qMROyvLWqkOXJvXLwlXo2e1
-         MTDA==
-X-Gm-Message-State: APjAAAW9FPhmPZNMTA1wunA7eDyoukVmAyCw9TV5gwJ+6LK3Oqtlu3qG
-        5C99AeYFQpQu6t9Bk+IN5W54dUAQLh6RZCnIMukgIB9n7wM+yIeVdov9BqjpTB+Rq32X8R5/EHs
-        ZKPQYd0mY588l8LqIE2SI3w==
-X-Received: by 2002:adf:db48:: with SMTP id f8mr13970199wrj.146.1581507134356;
-        Wed, 12 Feb 2020 03:32:14 -0800 (PST)
-X-Google-Smtp-Source: APXvYqymdOikcn0q6iSdZabHUxgl+9cWdFUpP0jpg5cIEafgdtGAaLv1tKjeCLeHAmz/EKVsxY5zDA==
-X-Received: by 2002:adf:db48:: with SMTP id f8mr13970177wrj.146.1581507134068;
-        Wed, 12 Feb 2020 03:32:14 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id f207sm398575wme.9.2020.02.12.03.32.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 03:32:13 -0800 (PST)
-Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
-To:     Roger Quadros <rogerq@ti.com>, axboe@kernel.dk
-Cc:     vigneshr@ti.com, nsekhar@ti.com, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        robin.murphy@arm.com, Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
-References: <20200206111728.6703-1-rogerq@ti.com>
- <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
- <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
-Date:   Wed, 12 Feb 2020 12:32:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 12 Feb 2020 06:37:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:59802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgBLLhK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:37:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1800E30E;
+        Wed, 12 Feb 2020 03:37:10 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18F5C3F68F;
+        Wed, 12 Feb 2020 03:37:07 -0800 (PST)
+Subject: Re: dma_mask limited to 32-bits with OF platform device
+To:     Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>
+Cc:     stefan.wahren@i2se.com, afaerber@suse.de, hverkuil@xs4all.nl,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>
+References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
+Date:   Wed, 12 Feb 2020 11:37:06 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+In-Reply-To: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On 2/12/20 12:01 PM, Roger Quadros wrote:
+On 2020-02-12 10:49 am, Roger Quadros wrote:
 > Hi,
 > 
-> On 06/02/2020 13:50, Hans de Goede wrote:
->> Hi,
->>
->> On 2/6/20 12:17 PM, Roger Quadros wrote:
->>> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
->>> Restrict it to 32-bit.
->>>
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>   drivers/ata/ahci_platform.c | 3 +++
->>>   1 file changed, 3 insertions(+)
->>>
->>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->>> index 3aab2e3d57f3..b925dc54cfa5 100644
->>> --- a/drivers/ata/ahci_platform.c
->>> +++ b/drivers/ata/ahci_platform.c
->>> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
->>>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
->>>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
->>> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
->>> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
->>> +
->>
->> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
->> is e.g. also used on some exynos devices. So using that to key the
->> setting of the 32 bit flag seems wrong to me.
->>
->> IMHO it would be better to introduce a TI specific compatible
->> and use that to match on instead (and also adjust the dts files
->> accordingly).
+> I'd like to understand why of_dma_configure() is limiting the dma and 
+> coherent masks
+> instead of overriding them.
 > 
-> Thinking further on this I think it is a bad idea to add a special
-> binding because the IP is not different. It is just that it is
-> wired differently on the TI SoC so DMA range is limited.
+> see commits
+> a5516219b102 ("of/platform: Initialise default DMA masks")
+> ee7b1f31200d ("of: fix DMA mask generation")
 > 
-> IMO the proper solution is to have the right dma-ranges property in the
-> device tree. However, SATA platform driver is doing the wrong thing
-> by overriding the dma masks.
-> i.e. in ahci_platform_init_host() in libahci_platform.c >
->          if (hpriv->cap & HOST_CAP_64) {
->                  rc = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(64));
->                  if (rc) {
->                          rc = dma_coerce_mask_and_coherent(dev,
->                                                            DMA_BIT_MASK(32));
->                          if (rc) {
->                                  dev_err(dev, "Failed to enable 64-bit DMA.\n");
->                                  return rc;
->                          }
->                          dev_warn(dev, "Enable 32-bit DMA instead of 64-bit.\n");
->                  }
->          }
+> In of_platform_device_create_pdata(), we initialize both masks to 
+> 32-bits unconditionally,
+> which is fine to support legacy cases.
 > 
-> This should be removed. Do you agree?
+>  Â Â Â Â dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>  Â Â Â Â Â Â Â  if (!dev->dev.dma_mask)
+>  Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+> 
+> Then in of_dma_configure() we limit it like so.
+> 
+>  Â Â Â Â Â Â Â  dev->coherent_dma_mask &= mask;
+>  Â Â Â Â Â Â Â  *dev->dma_mask &= mask;
+> 
+> This way, legitimate devices which correctly set dma-ranges in DT
+> will never get a dma_mask above 32-bits at all. How is this expected to 
+> work?
 
-I agree with you in principal, but I'm afraid this might cause regressions for
-existing hardware. We only do this if the host has set the CAP_64 flag,
-this code is quite old, it comes from the following commit:
+Because these are still just the *default* masks - although drivers are 
+all expected to call dma_set_mask() and friends explicitly nowadays, 
+there are sure to be some out there for 32-bit devices still assuming 
+the default 32-bit masks are in place. Thus if platform code secretly 
+makes them larger, Bad Things ensue. Making them *smaller* where there 
+are platform limitations shouldn't really matter now that we have the 
+bus_dma_limit mechanism working well, but also doesn't do any harm, so 
+it was left in for good measure.
 
-###
- From cc7a9e27562cd78a1dc885504086fab24addce40 Mon Sep 17 00:00:00 2001
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Date: Thu, 12 Jun 2014 12:40:23 -0500
-Subject: [PATCH v3] ahci: Check and set 64-bit DMA mask for platform AHCI driver
+The current paradigm is that the device masks represent the inherent 
+capability of the device as far as the driver knows, and external 
+interconnect constraints are kept separately as private DMA API 
+internals via the bus limit.
 
-The current platform AHCI driver does not set the dma_mask correctly
-for 64-bit DMA capable AHCI controller. This patch checks the AHCI
-capability bit and set the dma_mask and coherent_dma_mask accordingly.
+> For a test, I added this in dra7.dtsi sata node. (NOTE: CONFIG_ARM_LPAE=y)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 93aa65c75b45..cd8c6cea23d5 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -571,6 +571,8 @@
+>  Â Â Â Â Â Â Â Â  sata: sata@4a141100 {
+>  Â Â Â Â Â Â Â Â Â Â Â Â  compatible = "snps,dwc-ahci";
+>  Â Â Â Â Â Â Â Â Â Â Â Â  reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+> +Â Â Â Â Â Â Â Â Â Â Â  #size-cells = <2>;
+> +Â Â Â Â Â Â Â Â Â Â Â  dma-ranges = <0x00000000 0x00000000 0x10 0x00000000>;
+>  Â Â Â Â Â Â Â Â Â Â Â Â  interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+>  Â Â Â Â Â Â Â Â Â Â Â Â  phys = <&sata_phy>;
+>  Â Â Â Â Â Â Â Â Â Â Â Â  phy-names = "sata-phy";
+> 
+> ----------------------------- drivers/of/device.c 
+> -----------------------------
+> index e9127db7b067..1072cebad57a 100644
+> @@ -95,6 +95,7 @@ int of_dma_configure(struct device *dev, struct 
+> device_node *np, bool force_dma)
+>  Â Â Â Â  const struct iommu_ops *iommu;
+>  Â Â Â Â  u64 mask, end;
+> 
+> +Â Â Â  dev_info(dev, "of_dma_configure\n");
+>  Â Â Â Â  ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>  Â Â Â Â  if (ret < 0) {
+>  Â Â Â Â Â Â Â Â  /*
+> @@ -123,7 +124,8 @@ int of_dma_configure(struct device *dev, struct 
+> device_node *np, bool force_dma)
+>  Â Â Â Â Â Â Â Â Â Â Â Â  dev_err(dev, "Adjusted size 0x%llx invalid\n", size);
+>  Â Â Â Â Â Â Â Â Â Â Â Â  return -EINVAL;
+>  Â Â Â Â Â Â Â Â  }
+> -Â Â Â Â Â Â Â  dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+> +Â Â Â Â Â Â Â  dev_info(dev, "dma %llx paddr %llx size %llx\n", dma_addr, 
+> paddr, size);
+> +Â Â Â Â Â Â Â  dev_info(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>  Â Â Â Â  }
+> 
+>  Â Â Â Â  /*
+> @@ -152,6 +154,8 @@ int of_dma_configure(struct device *dev, struct 
+> device_node *np, bool force_dma)
+>  Â Â Â Â  mask = DMA_BIT_MASK(ilog2(end) + 1);
+>  Â Â Â Â  dev->coherent_dma_mask &= mask;
+>  Â Â Â Â  *dev->dma_mask &= mask;
+> +
+> +Â Â Â  dev_info(dev, "end %llx, mask %llx\n", end, mask);
+>  Â Â Â Â  /* ...but only set bus limit if we found valid dma-ranges earlier */
+>  Â Â Â Â  if (!ret)
+>  Â Â Â Â Â Â Â Â  dev->bus_dma_limit = end;
+> 
+> And I see.
+> 
+> [Â Â Â  1.134294]Â  4a140000.sata: of_platform
+> [Â Â  13.203917] ahci 4a140000.sata: of_dma_configure
+> [Â Â  13.225635] ahci 4a140000.sata: dma 0 paddr 0 size 1000000000
+> [Â Â  13.266178] ahci 4a140000.sata: dma_pfn_offset(0x000000)
+> [Â Â  13.297621] ahci 4a140000.sata: end fffffffff, mask fffffffff
+> [Â Â  13.585499] ahci 4a140000.sata: dma_mask 0xffffffff, coherent_mask 
+> 0xffffffff
+> [Â Â  13.599082] ahci 4a140000.sata: setting 64-bit mask ffffffffffffffff
+> 
+> Truncation of dma_mask and coherent_mask is undesired in this case.
 
-Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Suman Tripathi <stripathi@apm.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-###
+Again, it's only the initial default masks that are truncated, and the 
+driver appropriately replaces them with its 64-bit masks anyway once it 
+probes. However, bus_dma_limit should still reflect that 36-bit upstream 
+constraint, and that's what really matters. If you've found a path 
+through a DMA API implementation which is subsequently failing to 
+respect that limit, that's a bug in that implementation.
 
-Presumably this was added for a reason, I'm guessing this might come
-from AMD's ARM server chips adventures, but I'm afraid that AHCI support
-on other (ARM) SoC's has become to rely on this behavior too.
+> How about fixing it like so?
+> 
+> -Â Â Â Â  dev->coherent_dma_mask &= mask;
+> -Â Â Â  *dev->dma_mask &= mask;
+> +Â Â Â Â  dev->coherent_dma_mask = mask;
+> +Â Â Â Â  *dev->dma_mask = mask;
 
-Maybe we can add a check to see if the mask was not already set and skip
-setting the mask in that case ?
+As above, making the "32-bit default" larger than 32 bits stands to 
+break 32-bit devices with old drivers, and there's nothing to "fix" at 
+this point anyway.
 
-Regards,
+> Also this comment doesn't make sense anymore?
+> 
+>  Â Â Â Â Â Â Â  /*
+>  Â Â Â Â Â Â Â Â  * Limit coherent and dma mask based on size and default mask
+>  Â Â Â Â Â Â Â Â  * set by the driver.
+>  Â Â Â Â Â Â Â Â  */
 
-Hans
+TBH that's never made much sense, unless "driver" was supposed to refer 
+to bus code. Its continued presence is down to inertia more than any 
+other reason :)
 
+Robin.
