@@ -2,99 +2,135 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0F2C35242
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97857C35242
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39AC20848
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581473230;
-	bh=MFsFnlq2S6uxhG9upwC1CR8rSIb7fz6f7VN5OiGDMQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WYBm3ND9v7OX6DiP3VHcDtsPQ2OZsXxvPOkHX5ApLPILfCLq7cHqe3GqkII/kbXCL
-	 QSyWaE1yfGU/eAgFLNwF+7gNo/xwxytqxrK09gIMG0IinGUqYBMCrkHTxuvQi/cco0
-	 2FiWLfsHjLus2z78tOkgLkHMvkoQLLBlkMnJFt3A=
+	by mail.kernel.org (Postfix) with ESMTP id 5F7CD20848
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:08:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ra4CJUVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgBLCHK (ORCPT
+        id S1727558AbgBLCIi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:07:10 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36431 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgBLCHK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 21:07:10 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so545566oic.3;
-        Tue, 11 Feb 2020 18:07:08 -0800 (PST)
+        Tue, 11 Feb 2020 21:08:38 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35000 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgBLCIi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 21:08:38 -0500
+Received: by mail-qk1-f195.google.com with SMTP id v2so622940qkj.2
+        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 18:08:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aO1UKgSaz5CktVcc4Y8RcygWfgexx86iGtyjlHVU3kc=;
+        b=Ra4CJUVRnDxwoRk1QHlRr35m77IrmNP+H+pxr+bZOB0DUqvHsCjOXSRfGg8rh5YTc/
+         bgIS4sXVXPWDN0WSvdb5FMIFOhtL88yKaI01xKq0D1/4ULI+kJq4x8UcjsWQePCqsrs8
+         6+XGOuD6jIhd4dxdCqcpHLWlftWwwtVIkMYXo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yODbBsnTEDmrfdz+vsR05ewOj9Bz3wnTGiDIXd+abU4=;
-        b=NvMpWyrOjmIjdn0RSSwLIR6Bt+jgLk4A5MWlJlQx6sKsfUlSwRttZ/D+AULGrb+9/F
-         u3nGbRMrCa7HLCH7+fY4OEYQbZuUf+OnX2sCWM5b9TGmMz9TC/Bk9Ofnp5bJesYhXgOA
-         TuE8qNTBaBQYLFU/1alZ2Gt7aLMxOMe1bUbh0aBWZKthrh6mynUErtD3/GGlMh/eHYPm
-         RMUwvE5PyOKKNnpdESxBiUZbgLZT1NWPprT4lphbdO+Ns02XnUaQ/S8nQKacnrw99eOa
-         mGwRHxuuRAAwfjtpfNDlS451XbhJeegF+pTudzBOTzRQdlapeArHzKrbKRVoT3hMkvWX
-         yV4g==
-X-Gm-Message-State: APjAAAUV+JnPC9SO1CIvH3c+KxSROVAHhT+sSYi0c0Dxkt2m+LK2wH6O
-        aCv8Fzt4XQrrO+uHuTc2wQ==
-X-Google-Smtp-Source: APXvYqygIdfRIe2XyS98zlK/dv0nnDlqKCmVsF+EZNW/ykEyWFRmyAbAXMn1XkcMuJzgsaZ1u8ZgaA==
-X-Received: by 2002:a05:6808:902:: with SMTP id w2mr4855591oih.170.1581473228069;
-        Tue, 11 Feb 2020 18:07:08 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b15sm1849249otl.60.2020.02.11.18.07.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 18:07:07 -0800 (PST)
-Received: (nullmailer pid 30071 invoked by uid 1000);
-        Wed, 12 Feb 2020 02:07:07 -0000
-Date:   Tue, 11 Feb 2020 20:07:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v5 1/5] dt-bindings: Document JZ47xx VPU auxiliary
- processor
-Message-ID: <20200212020707.GA29808@bogus>
-References: <20200211142614.13567-1-paul@crapouillou.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aO1UKgSaz5CktVcc4Y8RcygWfgexx86iGtyjlHVU3kc=;
+        b=g6sG7LQ6ByFLWEe8zX1O/iIRcmrrvmoonshqr2Q77G9y+l59yN9+LOljI5g8RpMIyO
+         00Ia6o59zRB6Zvpse/bEe2HqKjQOLNgQ0s5GkyWiCF0M96eBUtoEvG/Nr2cgKtGo4hBF
+         Y+fKqjEBxzyuGb6EPuxbu/ysjX+EdZfpEsIKLcBNpz8uZVmGdMTCx+RYuKtV1ACURU7o
+         yYdKYfAaxYKu3RQWYuGsi/rv36VN3FGWlie1hQADRTpE1Pdx3DmF+HRJuQ+MSbWxXVg6
+         UmDP9mqtHZDFpMmSlthI4Zzm2zPLfY0fLbREmDk47CuXx0wqOruUwwPEvUIYCqkuX2SY
+         62hQ==
+X-Gm-Message-State: APjAAAU5TqYCZ+ajBMUV227jW+2Xr5UFiZCWtsYSnGAB0gfqzlAEL0ya
+        1cZhWmFe4GfV4XRcicHziggXgmEIc2+4YShTaoJQnQ==
+X-Google-Smtp-Source: APXvYqwbzvTmz/rK3xPb+7Zh0OWCEANWSI8B0x6aGBv3LzyJNw2pam02x3/hzeuy9xsPHf377lq3HNhZe8a4gYL9G7M=
+X-Received: by 2002:a05:620a:6d7:: with SMTP id 23mr8405839qky.299.1581473317421;
+ Tue, 11 Feb 2020 18:08:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200211142614.13567-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-6-drinkcat@chromium.org> <CAL_JsqLshgzmhGGa+XibosSgk6R_9DQkDf12s793UZcvbQbxKw@mail.gmail.com>
+ <CAGETcx_3-ZoVAf+Uf0Yo86pUU1nL4S4-jrS0eZi50yvhCO985g@mail.gmail.com>
+In-Reply-To: <CAGETcx_3-ZoVAf+Uf0Yo86pUU1nL4S4-jrS0eZi50yvhCO985g@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 12 Feb 2020 10:08:26 +0800
+Message-ID: <CANMq1KC2LEQ2iQzGDVAi+-x4Uy1LLB8JU-grTBVTL-iRej-t4A@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2020 11:26:09 -0300, Paul Cercueil wrote:
-> Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
-> Ingenic is a second Xburst MIPS CPU very similar to the main core.
-> This document describes the devicetree bindings for this auxiliary
-> processor.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: Update TCSM0 address in example
->     v3: Change node name to 'video-decoder'
->     v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
->     v5: - Fix 'reg' not in <addr, len> pairs
->         - Add missing include to devicetree example
-> 
->  .../bindings/remoteproc/ingenic,vpu.yaml      | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
-> 
+On Wed, Feb 12, 2020 at 4:09 AM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Tue, Feb 11, 2020 at 11:44 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > +Saravana
+> >
+> > On Thu, Feb 6, 2020 at 11:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > >
+> > > When there is a single power domain per device, the core will
+> > > ensure the power domain is switched on (so it is technically
+> > > equivalent to having not power domain specified at all).
+> > >
+> > > However, when there are multiple domains, as in MT8183 Bifrost
+> > > GPU, we need to handle them in driver code.
+> > >
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > >
+> > > ---
+> > > [snip]
+> > > +               pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> > > +                               pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> > > +                               DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> >
+> > We're in the process of adding device links based on DT properties.
+> > Shouldn't we add power domains to that? See drivers/of/property.c for
+> > what's handled.
+>
+> Rob,
+>
+> drivers/of/property.c doesn't enable the RPM_ACTIVE AND PM_RUNTIME
+> flags. Wanted to start off conservative. But adding command line ops
+> to change the default flags shouldn't be difficult. But before I do
+> that, I want to change of_devlink to
+> fw_devlink=<disabled|permissive|enabled>. May be I can extend that to
+> "disabled, permissive, suspend, runtime".
+>
+> Nicholas,
+>
+> And the adding and removing of device links for power domains will be
+> a 2 line change. I've been meaning to add a few more bindings like
+> hwspinlocks and pinctrl. I can roll power domains support into that if
+> you want.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Adding power domains makes sense to me, as there are a bunch of other
+users (git grep dev_pm_domain_attach_by_name).
 
-If a tag was not added on purpose, please state why and what changed.
+This seems to be a bit orthogonal to this patch though. If your
+solution lands before this (and not something that is behind a command
+line option), then I'm happy to make use of it. Either way, happy to
+test things.
