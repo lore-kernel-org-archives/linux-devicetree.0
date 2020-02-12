@@ -6,72 +6,70 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F45C352A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD25CC3B187
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D23321734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAE52173E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581548667;
-	bh=Xas629nKaNkMP3pl8V+gk4ItifTZ2wQzypmjOE3x6L8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=B89gfW9tBvW/ZMGrThTp7Ixw5i3yFHvHPHUPeYQwerAIv46xnEfh1KXc+0NRzhhh6
-	 MzYE/8j3VfUkXfhVTsot5uZEa/0lpzTl/d5Sqt2F3gMZvZ701bYr9IJskQfqRcvTDk
-	 enw1Cw2T3sLbMLWnu2Ed0qmP8dnON03fKtN6uCwQ=
+	s=default; t=1581548737;
+	bh=Q8remgjc6BJfSrw0fgvMPAOY8vBJxMRbmu+2Os3kgvw=;
+	h=In-Reply-To:References:Subject:From:To:Date:List-ID:From;
+	b=ltUEDGObK7NWugGivP2ilKxbXGeMbN0ZB1+iaHwt7C8qwpXwP2tQyuTZWYMp3q4yp
+	 Hnq8nwoh0tK03+V65VP3OivRJVGJGF45BJK69pYYi/3L44VGMNs9kVEp5D4C9h9ji1
+	 4kUj1OlH8DjXHFQhFybIIHQ/saqHhNTwLjc5Eg8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgBLXEY (ORCPT
+        id S1729197AbgBLXFh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:04:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47570 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 18:05:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729225AbgBLXEY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:04:24 -0500
+        id S1728674AbgBLXFg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:05:36 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A11A421569;
-        Wed, 12 Feb 2020 23:04:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E9E21569;
+        Wed, 12 Feb 2020 23:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581548663;
-        bh=Xas629nKaNkMP3pl8V+gk4ItifTZ2wQzypmjOE3x6L8=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=hkNI2pKREx/CYysSPb5bjgKG2Ak2OM8hBHJL20LOnxrAc9OvbLeS/vjcydln87LDg
-         j6gfO38Zle+QRF6k0UJOcqw4NHvSGBkdZummwoYfn97YqhW68ee+sXluxuFm6FrV8v
-         YUjl5RokYDo9ENZkKUbk7KkleZFvMRSkIUdFH7kc=
+        s=default; t=1581548736;
+        bh=Q8remgjc6BJfSrw0fgvMPAOY8vBJxMRbmu+2Os3kgvw=;
+        h=In-Reply-To:References:Subject:From:To:Date:From;
+        b=X3zWwdVfdK2Snryjzfd7k41UICO/rrHlitsqdJeg169LZuwibp27/WpzryqWKhU7b
+         pOsLSLOTbvI8e2cQeaBKhOha9j0j7s1/bS/mJ0rMdMGReolL2En4eh0I4KUsthZACF
+         sso8/RjnkjlL/kcM/l5tOFRqYEt/bAHqlDdX3kWg=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1581307266-26989-2-git-send-email-tdas@codeaurora.org>
-References: <1581307266-26989-1-git-send-email-tdas@codeaurora.org> <1581307266-26989-2-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v2 2/2] clk: qcom: gpucc: Add support for GX GDSC for SC7180
+In-Reply-To: <1579905147-12142-3-git-send-email-vnkgutta@codeaurora.org>
+References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org> <1579905147-12142-3-git-send-email-vnkgutta@codeaurora.org>
+Subject: Re: [PATCH v2 2/7] clk: qcom: rpmh: Add support for RPMH clocks on SM8250
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>, robh@kernel.org
-Date:   Wed, 12 Feb 2020 15:04:22 -0800
-Message-ID: <158154866276.184098.1822839509277823452@swboyd.mtv.corp.google.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jshriram@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, psodagud@codeaurora.org,
+        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
+        vinod.koul@linaro.org, vnkgutta@codeaurora.org
+Date:   Wed, 12 Feb 2020 15:05:35 -0800
+Message-ID: <158154873540.184098.7134666264772145812@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2020-02-09 20:01:06)
-> Most of the time the CPU should not be touching the GX domain on the
-> GPU except for a very special use case when the CPU needs to force the
-> GX headswitch off. Add the GX domain for that use case.  As part of
-> this add a dummy enable function for the GX gdsc to simulate success
-> so that the pm_runtime reference counting is correct.  This matches
-> what was done in sdm845 in commit 85a3d920d30a ("clk: qcom: Add a
-> dummy enable function for GX gdsc").
+Quoting Venkata Narendra Kumar Gutta (2020-01-24 14:32:22)
+> From: Taniya Das <tdas@codeaurora.org>
 >=20
+> Add support for RPMH clocks on SM8250.
+>=20
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 > ---
 
 Applied to clk-next
