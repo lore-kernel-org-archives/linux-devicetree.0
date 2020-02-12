@@ -2,114 +2,101 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ADBC3B186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 15:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9D0C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 15:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F18B20873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 15:00:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="n429HJfv"
+	by mail.kernel.org (Postfix) with ESMTP id 470042082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 15:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgBLPAK (ORCPT
+        id S1728393AbgBLPIQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 10:00:10 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:27493 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLPAK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 10:00:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581519607;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3yrlgbwpWQZTwSSfMKPtb8XHqELW1Q2VHBhevB4Ahuo=;
-        b=n429HJfv3UUpI05fIeMj5pZySRovNjCWs/mlTHPY+2+mACKh0bhGjfxbGJrfUAshNP
-        9bR6+nSvSeKKjaLtITuNv/9MnO0ssUXjkmrHv2umT4GRSLLNvZeHudT7H4V5c+z6N6EL
-        zgMBehjnm4A9DyQ40ciyNiO86Z2ga3HJiv6siiI7WFVggOo0gWCoLBhDRnBXsrDRcjPe
-        j1vvF8xgtYRJx9oEvrjFeqCde/2rsitarfdvVILBiwNaUWmpQTYU0jtBjKuXr5XB+zvU
-        BV4CJjcngBim0w6cHTw9yxthudI2coByo3DVCOatFrz+dM+xWKM1gTbEucs67OCYn8ro
-        T80A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXAgODw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1CExt59j
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 12 Feb 2020 15:59:55 +0100 (CET)
+        Wed, 12 Feb 2020 10:08:16 -0500
+Received: from mga12.intel.com ([192.55.52.136]:33488 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728234AbgBLPIQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 10:08:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 07:07:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
+   d="scan'208";a="226891155"
+Received: from mlinda-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.9.85])
+  by orsmga008.jf.intel.com with ESMTP; 12 Feb 2020 07:07:44 -0800
+Date:   Wed, 12 Feb 2020 17:07:42 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v3 1/7] char: tpm: Make implementation of read16 read32
+ write32 optional
+Message-ID: <20200212150742.GA13248@linux.intel.com>
+References: <20200210162838.173903-1-amirmizi6@gmail.com>
+ <20200210162838.173903-2-amirmizi6@gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: i2c: jz4780: silence log flood on txabrt
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200212145356.GB2492@ninjato>
-Date:   Wed, 12 Feb 2020 15:59:55 +0100
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        Alex Smith <alex.smith@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <0C9F4243-159B-418C-B481-4B45B210F9F6@goldelico.com>
-References: <cover.1581457290.git.hns@goldelico.com> <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com> <20200212094628.GB1143@ninjato> <213C52CC-E5DC-4641-BE68-3D5C4FEA1FB5@goldelico.com> <20200212145356.GB2492@ninjato>
-To:     Wolfram Sang <wsa@the-dreams.de>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <20200210162838.173903-2-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 06:28:32PM +0200, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Only tpm_tis has a faster way to access multiple bytes at once, every other
+> driver will just fall back to read_bytes/write_bytes. Therefore, move this
 
-> Am 12.02.2020 um 15:53 schrieb Wolfram Sang <wsa@the-dreams.de>:
-> 
-> Hi,
-> 
->>> Sorry, normally I don't do counter patches. Yet, this time I realized
->>> that it would be faster to actually do what I envisioned than to
->>> describe it in words. I hope you don't feel offended.
->> 
->> No problem. I had thought a little about that myself, but did not
->> dare to solve more than my problem...
-> 
-> Glad you like it. Well, it still kinda solves your problem only, because
-> there are still too many dev_err in there, but I think this is good
-> enough for now.
-> 
->>> Obviously, I can't test, does it work for you?
->> 
->> Yes,it works.
-> 
-> Good!
-> 
->> Do you want to push your patch yourself, or should I add it to my
->> patch series and resubmit in a v2?
-> 
-> I'll apply the patch to my tree directly as a bugfix for 5.6. You can
-> drop the I2C list from V2 then.
+Describe exactly what you mean instead of "faster way" and "multiple
+bytes".
 
-Ok, fine.
+> common code out of tpm_tis_spi into tpm_tis_core, so that it is
+> automatically used when low-level drivers do not implement the specialized
+> methods.
+> 
+> This commit is based on previous work by Alexander Steffen.
+> 
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 
-BR and thanks,
-Nikolaus
+You are missing commas in the short summary message when you list bunch
+of things.
 
+We prefer "tpm:" instead of "char: tpm:" as the tag for this subsystem.
+You are also implying that this would be something global for the TPM
+driver whereas it is only scoped to tpm_tis:
+
+Rephrase it something like:
+
+  "tpm: tpm_tis: Make 32-bit reads and writes optional"
+
+Please, first, take this away:
+
+"
+This commit is based on previous work by Alexander Steffen.
+
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+"
+
+Then, replace it with:
+
+Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+
+/Jarkko
