@@ -2,109 +2,101 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FAFC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD33C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5475F2082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8B32073C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725874AbgBLLyX (ORCPT
+        id S1728260AbgBLL4M convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:54:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57544 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgBLLyW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:54:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B0389AC5C;
-        Wed, 12 Feb 2020 11:54:21 +0000 (UTC)
-From:   Nikolay Borisov <nborisov@suse.com>
-To:     mripard@kernel.org, bjorn.andersson@linaro.org
-Cc:     devicetree@vger.kernel.org, wens@csie.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: [PATCH v3] dt-bindings: hwlock: Document A64 hwspinlock bindings
-Date:   Wed, 12 Feb 2020 13:54:19 +0200
-Message-Id: <20200212115419.29038-1-nborisov@suse.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200211122624.16484-4-nborisov@suse.com>
-References: <20200211122624.16484-4-nborisov@suse.com>
+        Wed, 12 Feb 2020 06:56:12 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:50049 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728139AbgBLL4M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 06:56:12 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-27-6s1ADMqVNEa4MBw75WIRIA-1; Wed, 12 Feb 2020 11:56:07 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 12 Feb 2020 11:56:06 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 12 Feb 2020 11:56:06 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Robin Murphy' <robin.murphy@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Roger Quadros <rogerq@ti.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+CC:     "vigneshr@ti.com" <vigneshr@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?iso-8859-1?Q?P=E9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
+Subject: RE: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
+Thread-Topic: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
+Thread-Index: AQHV4Zmb/DqkVgCd3ECs486jc5D8CqgXcftg
+Date:   Wed, 12 Feb 2020 11:56:06 +0000
+Message-ID: <2a527d21087b4f959c7f95895d70b669@AcuMS.aculab.com>
+References: <20200206111728.6703-1-rogerq@ti.com>
+ <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
+ <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
+ <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
+ <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
+In-Reply-To: <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: 6s1ADMqVNEa4MBw75WIRIA-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding for the hwspinlock found on Allwinner A64 SoC.
+From: Robin Murphy
+> Sent: 12 February 2020 11:43
+...
+> If the device *is* inherently 64-bit capable, then setting 64-bit masks
+> in the driver is correct - if a 64-bit IP block happens to have been
+> integrated with only 32 address bits wired up, but the system has memory
+> above the 32-bit boundary, then that should be described via
+> "dma-ranges", which should then end up being used to further constrain
+> the device masks internally to the DMA API.
 
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
----
+Given how often this happens (please can I shoot some more
+hardware engineers - he says while compiling some VHDL)
+is it possible to allocate some memory pages that are
+aliases if the address bits over 31 are ignored?
 
-V3: Added #include directive. This makes the patch pass schema validation.
+Then (at least some) drivers could to a run-time probe
+reading to the high address and checking the data didn't
+appear in the low address.
 
- .../allwinner,sun50i-a64-hwspinlock.yaml      | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwlock/allwinner,sun50i-a64-hwspinlock.yaml
+Only one such set of pages is needed - access can be locked.
+But they'd need to be reserved early on.
 
-diff --git a/Documentation/devicetree/bindings/hwlock/allwinner,sun50i-a64-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/allwinner,sun50i-a64-hwspinlock.yaml
-new file mode 100644
-index 000000000000..54270c8bb351
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwlock/allwinner,sun50i-a64-hwspinlock.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwlock/allwinner,sun50i-a64-hwspinlock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A64 SoC Hardware Spinlock bindings
-+
-+maintainers:
-+  - Nikolay Borisov <nborisov@suse.com>
-+
-+properties:
-+  "#hwlock-cells":
-+    const: 1
-+
-+  compatible:
-+    const: allwinner,sun50i-a64-hwspinlock
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - "#hwlock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun50i-a64-ccu.h>
-+    #include <dt-bindings/reset/sun50i-a64-ccu.h>
-+    hwspinlock@1c18000 {
-+        compatible = "allwinner,sun50i-a64-hwspinlock";
-+        #hwlock-cells = <1>;
-+        reg = <0x01c18000 0x1000>;
-+        clocks = <&ccu CLK_BUS_SPINLOCK>;
-+        resets = <&ccu RST_BUS_SPINLOCK>;
-+    };
-+
-+...
---
-2.17.1
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
