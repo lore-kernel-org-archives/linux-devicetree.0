@@ -2,101 +2,367 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92501C352A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 19:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC45C352A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 20:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6468B21739
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 19:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23C624677
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 20:16:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LC9x1oP7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IDjXvk3C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgBLTX5 (ORCPT
+        id S1727923AbgBLUQg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 14:23:57 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55435 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLTX4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 14:23:56 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so3615094wmj.5
-        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 11:23:55 -0800 (PST)
+        Wed, 12 Feb 2020 15:16:36 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39925 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbgBLUQg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 15:16:36 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j15so1787264pgm.6
+        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 12:16:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=BxOEBk0OKDVQaQ1jykEnv7FtZWP6/XV6yKSqEx4izqY=;
-        b=LC9x1oP7D6Kv4xPOS5y9ufKAAfofqmoqi2Fc2HzhKWm75lOMR/KkGAYNehp3KWwtke
-         TmnfD2efFR2SBoKaRvOzON/xuA5UDae6/EIOVBH7suBLs8IA4UrBQVtu6pAr0LPfZk4Q
-         B1Pca6eJHx+BiXpgG4N08+bSVW4KlFCgWuOM2ww+hn5nyyGUR2ktv8YTtp1wo7VJLXfM
-         df+gmLChwHixqaHh62sSoLXjiwhpb3VvMguKTI00zlcMfojgQRk+NIo1qcoEv8MAg3su
-         1aAE8KK5rkgj0gvuhSXlwtj9F+cRQB1/hzRmaaolPN2039H6cl0CdvFvaD46SRJvKQAV
-         3CFQ==
+        bh=4cuXzzmmpPcLczy0qmJk/Rn4HY2/+QU6mo8lxNbiZT4=;
+        b=IDjXvk3CUYXG9mtaCYefq9509kGq2mr2Nphq+QyeEay9hJK+wwO0uFqR+n1G0vNwLd
+         k6ZNxgWaltfWzksSdSIw/KJQ+hJ7REPlF/myQCInKojiDc/+aVOj2SjHvWEgPGZm6PS3
+         CmzLpQKY0k1hF4BWDkmqoHgvs5Ulib7KZbreQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BxOEBk0OKDVQaQ1jykEnv7FtZWP6/XV6yKSqEx4izqY=;
-        b=e+4BcpjpzoRpoObPkD1J6gOKrY7xluvYo0c5Dk6c1eb9AhykuTuw5AHotDYyLT3TuK
-         MKc+aOPpSc7kr/6IiHCTjYoKdy/vDOhc+6C6M5VF9cnPmRbHnvfFuom15rYv/84SLgT+
-         3MZKvv61K0YgoWi3//y4uHME+ooHHHuF4IXUzbaRvfl96devHkxDOVtRv43dlez0VaeQ
-         EbrrLvLyMiEpC2L3Zs7YjsnK5K+2cnrTyZLezUiHK5m3E44/tg026zS4rJnso0ZvMCaG
-         r0T1QDOIEN4UtazglPFgqOnUijscItmlVULhK5tju7ig3ojJsyezBgFBdRLezLUc/jD3
-         +TOw==
-X-Gm-Message-State: APjAAAXBoRXyZ1b5UetXGnZ7lUJ3R0zE15RsrAvZ5xMwtZ5W1AaDO/qk
-        6/1jN8TmxHlRYL4hVThoIWH4vw==
-X-Google-Smtp-Source: APXvYqyWqw8BKICcq5QZlIbjaSRydX9hYWd4c1GuAjl40H9iZHJ6iLJuURr569xFagrcOuf+H0w3aA==
-X-Received: by 2002:a1c:7c11:: with SMTP id x17mr651484wmc.168.1581535434685;
-        Wed, 12 Feb 2020 11:23:54 -0800 (PST)
-Received: from linaro.org (14.red-88-14-208.dynamicip.rima-tde.net. [88.14.208.14])
-        by smtp.gmail.com with ESMTPSA id 16sm1940727wmi.0.2020.02.12.11.23.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Feb 2020 11:23:54 -0800 (PST)
-Date:   Wed, 12 Feb 2020 20:23:51 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: mfd: Document STM32 low power
- clkevent bindings
-Message-ID: <20200212192351.GC2949@linaro.org>
-References: <20200128120702.26166-1-benjamin.gaignard@st.com>
- <20200128120702.26166-2-benjamin.gaignard@st.com>
- <20200212165116.GA2949@linaro.org>
- <f25fc32a-7131-6b78-5bf2-d2028e74820e@st.com>
+        bh=4cuXzzmmpPcLczy0qmJk/Rn4HY2/+QU6mo8lxNbiZT4=;
+        b=Oa2pd1csdSG3swPIp5p3PRxQ4nQBWgKgDl7Ae+UlknpHHwIam8UDFoabVbaaIboIJe
+         AjOir7JeDie3Brf4zQdqhsScuRZRqyqoxTzBIsGYxwkjiP2uSD7hBAQtgaRwP2waW8KY
+         Dbl1W3jXxMtBLXPnMJ5eVUZlzQMbWc7F+eck+PYdNPEDwT+8t9JQjUofpwY6rY1drS/z
+         J7TRpnbU2vKi+CApRbvCe7hXwVDxI+o8pBXP25u52q4fxzuwftgIWMXUXG35E1waOK1N
+         k0M85vlRS+uKLk1QVy02leCXC8PjPPIvPMM3aBLvHZRhAXMkHT3Q7wUV6vUsZcLvbAF6
+         Baug==
+X-Gm-Message-State: APjAAAUuKIjSCmPXliFllRgtLP7XH8jTPHKoHIG66dIdbQVOD+ZzdaoP
+        WmHN8y6XboWrR1CXn8YKUK3lRQ==
+X-Google-Smtp-Source: APXvYqy9/lSIxZTxrSAoNKdWNEvaWgClcoOpfpuXtcZ2mTH3lRa8Ax5wU98mkoXfsMblDMJycUQjNA==
+X-Received: by 2002:a63:7c4d:: with SMTP id l13mr14282223pgn.275.1581538595417;
+        Wed, 12 Feb 2020 12:16:35 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id i64sm1401950pgc.51.2020.02.12.12.16.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 12:16:34 -0800 (PST)
+Date:   Wed, 12 Feb 2020 12:16:33 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: phy: qcom,qmp: Convert QMP phy
+ bindings to yaml
+Message-ID: <20200212201633.GB50449@google.com>
+References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
+ <1581506488-26881-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f25fc32a-7131-6b78-5bf2-d2028e74820e@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1581506488-26881-2-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Benjamin,
+Hi Sandeep,
 
-On Wed, Feb 12, 2020 at 05:07:49PM +0000, Benjamin GAIGNARD wrote:
-> On 2/12/20 5:51 PM, Daniel Lezcano wrote:
-> > On Tue, Jan 28, 2020 at 01:07:01PM +0100, Benjamin Gaignard wrote:
-> >> Add a subnode to STM low power timer bindings to support clkevent driver
-> > clkevent is Linux specific.
-> Does 'event' or 'broadcast' would sound better ?
+On Wed, Feb 12, 2020 at 04:51:25PM +0530, Sandeep Maheswaram wrote:
+> Convert QMP phy  bindings to DT schema format using json-schema.
 
-As this describes the timer hardware block of the mfd, I would say 'timer' is
-more appropriate.
+nit: s/phy  bindings/PHY bindings/
 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 283 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 227 -----------------
+>  2 files changed, 283 insertions(+), 227 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> new file mode 100644
+> index 0000000..b39a594
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> @@ -0,0 +1,283 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,qmp-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm QMP PHY controller
+> +
+> +maintainers:
+> +  - Manu Gautam <mgautam@codeaurora.org>
+> +
+> +description:
+> +  QMP phy controller supports physical layer functionality for a number of
+> +  controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,ipq8074-qmp-pcie-phy
+> +      - qcom,msm8996-qmp-pcie-phy
+> +      - qcom,msm8996-qmp-usb3-phy
+> +      - qcom,msm8998-qmp-usb3-phy
+> +      - qcom,msm8998-qmp-ufs-phy
+> +      - qcom,msm8998-qmp-pcie-phy
+> +      - qcom,sdm845-qmp-usb3-phy
+> +      - qcom,sdm845-qmp-usb3-uni-phy
+> +      - qcom,sdm845-qmp-ufs-phy
+> +      - qcom,sm8150-qmp-ufs-phy
+
+nit: sort in alphabetical order (i.e. -pcie, -ufs, -usb3)?
+
+> +
+> +  reg:
+> +    minItems: 1
+> +    items:
+> +      - description: Address and length of PHY's common serdes block.
+> +      - description: Address and length of the DP_COM control block.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: reg-base
+> +      - const: dp_com
+> +
+> +  "#clock-cells":
+> +     enum: [ 1, 2 ]
+> +
+> +  "#address-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  "#size-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  clocks:
+> +    maxItems: 4
+> +    minItems: 1
+
+nit: minItems before maxItems, which is the order humans expect, also
+it is the prevalent order in other .yaml bindings.
+
+Do we actually need min/maxItems? I would expect the below rules for each
+compatible string to take care of it, however I'm not a schema expert.
+
+> +
+> +  clock-names:
+> +    maxItems: 4
+> +    minItems: 1
+> +  resets:
+> +    maxItems: 3
+> +    minItems: 1
+> +
+> +  reset-names:
+> +    maxItems: 3
+> +    minItems: 1
+> +
+> +  vdda-phy-supply:
+> +    description:
+> +        Phandle to a regulator supply to PHY core block.
+> +
+> +  vdda-pll-supply:
+> +    description:
+> +        Phandle to 1.8V regulator supply to PHY refclk pll block.
+> +
+> +  vddp-ref-clk-supply:
+> +    description:
+> +        Phandle to a regulator supply to any specific refclk
+> +        pll block.
+> +
+> +#Required nodes:
+> +patternProperties:
+> +  "^lanes@[0-9a-f]+$":
+> +    type: object
+> +    description:
+> +      Each device node of QMP phy is required to have as many child nodes as
+> +      the number of lanes the PHY has.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#clock-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - vdda-phy-supply
+> +  - vdda-pll-supply
+> +
+> +additionalProperties: false
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +             enum:
+
+fix indentation (2 blanks, not 3)
+
+> +               - qcom,sdm845-qmp-usb3-phy
+> +               - qcom,sdm845-qmp-usb3-uni-phy
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: Phy aux clock.
+> +            - description: Phy config clock.
+> +            - description: 19.2 MHz ref clk.
+> +            - description: Phy common block aux clock.
+> +        clock-names:
+> +          items:
+> +            - const: aux
+> +            - const: cfg_ahb
+> +            - const: ref
+> +            - const: com_aux
+> +        resets:
+> +          items:
+> +            - description: reset of phy block.
+> +            - description: phy common block reset.
+> +        reset-names:
+> +          items:
+> +             - const: phy
+> +             - const: common
+
+fix indentation (3 -> 2)
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +             enum:
+
+fix indentation (3 -> 2)
+
+> +               - qcom,msm8996-qmp-pcie-phy
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: Phy aux clock.
+> +            - description: Phy config clock.
+> +            - description: 19.2 MHz ref clk.
+> +
+
+nit: remove empty line or add it everywhere.
+
+> +        clock-names:
+> +          items:
+> +            - const: aux
+> +            - const: cfg_ahb
+> +            - const: ref
+> +        resets:
+> +          items:
+> +            - description: reset of phy block.
+> +            - description: phy common block reset.
+> +            - description: phy's ahb cfg block reset.
+> +        reset-names:
+> +          items:
+> +             - const: phy
+> +             - const: common
+> +             - const: cfg
+
+fix indentation (3 -> 2)
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +             enum:
+
+fix indentation (3 -> 2)
+
+> +               - qcom,msm8996-qmp-pcie-phy
+> +               - qcom,msm8996-qmp-usb3-phy
+> +               - qcom,msm8998-qmp-pcie-phy
+> +               - qcom,msm8998-qmp-usb3-phy
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: Phy aux clock.
+> +            - description: Phy config clock.
+> +            - description: 19.2 MHz ref clk.
+> +        clock-names:
+> +          items:
+> +            - const: aux
+> +            - const: cfg_ahb
+> +            - const: ref
+> +        resets:
+> +          items:
+> +            - description: reset of phy block.
+> +            - description: phy common block reset.
+> +        reset-names:
+> +          items:
+> +             - const: phy
+> +             - const: common
+
+According to the .txt binding this is not correct for
+'qcom,msm8996-qmp-pcie-phy':
+
+  For "qcom,msm8996-qmp-pcie-phy" must contain:
+			"phy", "common", "cfg".
+
+This also matches the actual use in arch/arm64/boot/dts/qcom/msm8996.dtsi
+
+Also the indentation needs to be fixed (3 -> 2)
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +             enum:
+
+fix indentation (3 -> 2)
+
+> +               - qcom,msm8998-qmp-ufs-phy
+> +               - qcom,sdm845-qmp-ufs-phy
+> +               - qcom,sm8150-qmp-ufs-phy
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: 19.2 MHz ref clk.
+> +            - description: Phy reference aux clock.
+> +        clock-names:
+> +          items:
+> +            - const: ref
+> +            - const: ref_aux
+> +        resets:
+> +          items:
+> +            - description: PHY reset in the UFS controller.
+> +        reset-names:
+> +          items:
+> +            - const: ufsphy
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +             enum:
+
+fix indentation (3 -> 2)
+
+Thanks
+
+Matthias
