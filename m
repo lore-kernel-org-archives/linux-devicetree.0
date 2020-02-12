@@ -4,49 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F838C3B186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F03CC352A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49446206E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348E12173E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581551840;
-	bh=8xewuo6BWjKVFCfLFAyswHuzHdfMQRHxgvLmr32DP2s=;
+	s=default; t=1581551911;
+	bh=/W06AT40qXmLlQCieUOc5ygz5035rUF0Xemf797dpjU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=SwEUG/bx1yzxFrZ4lkh1cc6kS6tF0LQFZHcFgdPysNyFWIuj/NI13Rgx8RwWG/wGw
-	 3SVi2lQ5I3FSZ34ik+b1vBmxaG3yyBBvobBQoGPWuvdSjUJbLAES4MN8J+QdqrujJd
-	 T4rLUwo2MiSoaaIkxkjD7wj81vKZOha2GWq2Lb6Y=
+	b=Y/dc4fhEK8tjDThJgLxjsyXwaDih3oP4EkbjpBDZM5KAwtrgk5Kxn9VfbXZOgNuxr
+	 moC+3q1yQM+1kmUVooSPAL252caen5zJb2s0mg45NiHsxtDsuUwKs36ZLeBrgbsvEC
+	 +koqd7cih9qf+UEzFkPu2czLCLqR/PD1dFqlENZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgBLX5Q (ORCPT
+        id S1727117AbgBLX6a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:57:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:39726 "EHLO foss.arm.com"
+        Wed, 12 Feb 2020 18:58:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:39844 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbgBLX5P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:57:15 -0500
+        id S1729103AbgBLX6a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:58:30 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1009106F;
-        Wed, 12 Feb 2020 15:57:14 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B133C328;
+        Wed, 12 Feb 2020 15:58:29 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 267453F68E;
-        Wed, 12 Feb 2020 15:57:14 -0800 (PST)
-Date:   Wed, 12 Feb 2020 23:57:12 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 355703F68E;
+        Wed, 12 Feb 2020 15:58:29 -0800 (PST)
+Date:   Wed, 12 Feb 2020 23:58:27 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     alsa-devel@alsa-project.org, bleung@chromium.org,
-        broonie@kernel.org, cychiang@chromium.org, dafna3@gmail.com,
-        dafna.hirschfeld@collabora.com, devicetree@vger.kernel.org,
-        enric.balletbo@collabora.com, ezequiel@collabora.com,
-        groeck@chromium.org, helen.koike@collabora.com,
-        kernel@collabora.com, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>, broonie@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         mark.rutland@arm.com, robh+dt@kernel.org
-Subject: Applied "dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format." to the asoc tree
-In-Reply-To: <20200127091806.11403-1-dafna.hirschfeld@collabora.com>
-Message-Id: <applied-20200127091806.11403-1-dafna.hirschfeld@collabora.com>
+Subject: Applied "spi: Add generic SPI multiplexer" to the spi tree
+In-Reply-To: <20200204032838.20739-3-chris.packham@alliedtelesis.co.nz>
+Message-Id: <applied-20200204032838.20739-3-chris.packham@alliedtelesis.co.nz>
 X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -55,11 +51,11 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format.
+   spi: Add generic SPI multiplexer
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -80,144 +76,253 @@ to this mail.
 Thanks,
 Mark
 
-From eadd54c75f1ef1566a6fe004787c028eb095f8b4 Mon Sep 17 00:00:00 2001
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Date: Mon, 27 Jan 2020 10:18:06 +0100
-Subject: [PATCH] dt-bindings: Convert the binding file google,
- cros-ec-codec.txt to yaml format.
+From e9e40543ad5b38b848879768359fd13650529961 Mon Sep 17 00:00:00 2001
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Date: Tue, 4 Feb 2020 16:28:38 +1300
+Subject: [PATCH] spi: Add generic SPI multiplexer
 
-This was tested and verified with:
-make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+Add a SPI device driver that sits in-band and provides a SPI controller
+which supports chip selects via a mux-control. This enables extra SPI
+devices to be connected with limited native chip selects.
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200127091806.11403-1-dafna.hirschfeld@collabora.com
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/20200204032838.20739-3-chris.packham@alliedtelesis.co.nz
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/sound/google,cros-ec-codec.txt   | 44 -------------
- .../bindings/sound/google,cros-ec-codec.yaml  | 62 +++++++++++++++++++
- 2 files changed, 62 insertions(+), 44 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
- create mode 100644 Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+ drivers/spi/Kconfig   |  11 +++
+ drivers/spi/Makefile  |   1 +
+ drivers/spi/spi-mux.c | 187 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 199 insertions(+)
+ create mode 100644 drivers/spi/spi-mux.c
 
-diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
-deleted file mode 100644
-index 8ca52dcc5572..000000000000
---- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
-+++ /dev/null
-@@ -1,44 +0,0 @@
--Audio codec controlled by ChromeOS EC
--
--Google's ChromeOS EC codec is a digital mic codec provided by the
--Embedded Controller (EC) and is controlled via a host-command interface.
--
--An EC codec node should only be found as a sub-node of the EC node (see
--Documentation/devicetree/bindings/mfd/cros-ec.txt).
--
--Required properties:
--- compatible: Must contain "google,cros-ec-codec"
--- #sound-dai-cells: Should be 1. The cell specifies number of DAIs.
--
--Optional properties:
--- reg: Pysical base address and length of shared memory region from EC.
--       It contains 3 unsigned 32-bit integer.  The first 2 integers
--       combine to become an unsigned 64-bit physical address.  The last
--       one integer is length of the shared memory.
--- memory-region: Shared memory region to EC.  A "shared-dma-pool".  See
--                 ../reserved-memory/reserved-memory.txt for details.
--
--Example:
--
--{
--	...
--
--	reserved_mem: reserved_mem {
--		compatible = "shared-dma-pool";
--		reg = <0 0x52800000 0 0x100000>;
--		no-map;
--	};
--}
--
--cros-ec@0 {
--	compatible = "google,cros-ec-spi";
--
--	...
--
--	cros_ec_codec: ec-codec {
--		compatible = "google,cros-ec-codec";
--		#sound-dai-cells = <1>;
--		reg = <0x0 0x10500000 0x80000>;
--		memory-region = <&reserved_mem>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 0434614d8201..887fefe87fd5 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -897,6 +897,17 @@ config SPI_ZYNQMP_GQSPI
+ # Add new SPI master controllers in alphabetical order above this line
+ #
+ 
++comment "SPI Multiplexer support"
++
++config SPI_MUX
++	tristate "SPI multiplexer support"
++	select MULTIPLEXER
++	help
++	  This adds support for SPI multiplexers. Each SPI mux will be
++	  accessible as a SPI controller, the devices behind the mux will appear
++	  to be chip selects on this controller. It is still necessary to
++	  select one or more specific mux-controller drivers.
++
+ #
+ # There are lots of SPI device types, with sensors and memory
+ # being probably the most widely used ones.
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index 9892bdfab15e..74db1f2c3299 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -9,6 +9,7 @@ ccflags-$(CONFIG_SPI_DEBUG) := -DDEBUG
+ # config declarations into driver model code
+ obj-$(CONFIG_SPI_MASTER)		+= spi.o
+ obj-$(CONFIG_SPI_MEM)			+= spi-mem.o
++obj-$(CONFIG_SPI_MUX)			+= spi-mux.o
+ obj-$(CONFIG_SPI_SPIDEV)		+= spidev.o
+ obj-$(CONFIG_SPI_LOOPBACK_TEST)		+= spi-loopback-test.o
+ 
+diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
 new file mode 100644
-index 000000000000..94a85d0cbf43
+index 000000000000..4f94c9127fc1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/google,cros-ec-codec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/spi/spi-mux.c
+@@ -0,0 +1,187 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// General Purpose SPI multiplexer
 +
-+title: Audio codec controlled by ChromeOS EC
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mux/consumer.h>
++#include <linux/slab.h>
++#include <linux/spi/spi.h>
 +
-+maintainers:
-+  - Cheng-Yi Chiang <cychiang@chromium.org>
++#define SPI_MUX_NO_CS	((unsigned int)-1)
 +
-+description: |
-+  Google's ChromeOS EC codec is a digital mic codec provided by the
-+  Embedded Controller (EC) and is controlled via a host-command interface.
-+  An EC codec node should only be found as a sub-node of the EC node (see
-+  Documentation/devicetree/bindings/mfd/cros-ec.txt).
++/**
++ * DOC: Driver description
++ *
++ * This driver supports a MUX on an SPI bus. This can be useful when you need
++ * more chip selects than the hardware peripherals support, or than are
++ * available in a particular board setup.
++ *
++ * The driver will create an additional SPI controller. Devices added under the
++ * mux will be handled as 'chip selects' on this controller.
++ */
 +
-+properties:
-+  compatible:
-+    const: google,cros-ec-codec
++/**
++ * struct spi_mux_priv - the basic spi_mux structure
++ * @spi:		pointer to the device struct attached to the parent
++ *			spi controller
++ * @current_cs:		The current chip select set in the mux
++ * @child_msg_complete: The mux replaces the complete callback in the child's
++ *			message to its own callback; this field is used by the
++ *			driver to store the child's callback during a transfer
++ * @child_msg_context:	Used to store the child's context to the callback
++ * @child_msg_dev:	Used to store the spi_device pointer to the child
++ * @mux:		mux_control structure used to provide chip selects for
++ *			downstream spi devices
++ */
++struct spi_mux_priv {
++	struct spi_device	*spi;
++	unsigned int		current_cs;
 +
-+  "#sound-dai-cells":
-+    const: 1
++	void			(*child_msg_complete)(void *context);
++	void			*child_msg_context;
++	struct spi_device	*child_msg_dev;
++	struct mux_control	*mux;
++};
 +
-+  reg:
-+    items:
-+      - description: |
-+          Physical base address and length of shared memory region from EC.
-+          It contains 3 unsigned 32-bit integer. The first 2 integers
-+          combine to become an unsigned 64-bit physical address.
-+          The last one integer is the length of the shared memory.
++/* should not get called when the parent controller is doing a transfer */
++static int spi_mux_select(struct spi_device *spi)
++{
++	struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
++	int ret;
 +
-+  memory-region:
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+    description: |
-+      Shared memory region to EC.  A "shared-dma-pool".
-+      See ../reserved-memory/reserved-memory.txt for details.
++	if (priv->current_cs == spi->chip_select)
++		return 0;
 +
-+required:
-+  - compatible
-+  - '#sound-dai-cells'
++	dev_dbg(&priv->spi->dev, "setting up the mux for cs %d\n",
++		spi->chip_select);
 +
-+additionalProperties: false
++	/* copy the child device's settings except for the cs */
++	priv->spi->max_speed_hz = spi->max_speed_hz;
++	priv->spi->mode = spi->mode;
++	priv->spi->bits_per_word = spi->bits_per_word;
 +
-+examples:
-+  - |
-+    reserved_mem: reserved_mem {
-+        compatible = "shared-dma-pool";
-+        reg = <0 0x52800000 0 0x100000>;
-+        no-map;
-+    };
-+    cros-ec@0 {
-+        compatible = "google,cros-ec-spi";
-+        #address-cells = <2>;
-+        #size-cells = <1>;
-+        cros_ec_codec: ec-codec {
-+            compatible = "google,cros-ec-codec";
-+            #sound-dai-cells = <1>;
-+            reg = <0x0 0x10500000 0x80000>;
-+            memory-region = <&reserved_mem>;
-+        };
-+    };
++	ret = mux_control_select(priv->mux, spi->chip_select);
++	if (ret)
++		return ret;
++
++	priv->current_cs = spi->chip_select;
++
++	return 0;
++}
++
++static int spi_mux_setup(struct spi_device *spi)
++{
++	struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
++
++	/*
++	 * can be called multiple times, won't do a valid setup now but we will
++	 * change the settings when we do a transfer (necessary because we
++	 * can't predict from which device it will be anyway)
++	 */
++	return spi_setup(priv->spi);
++}
++
++static void spi_mux_complete_cb(void *context)
++{
++	struct spi_mux_priv *priv = (struct spi_mux_priv *)context;
++	struct spi_controller *ctlr = spi_get_drvdata(priv->spi);
++	struct spi_message *m = ctlr->cur_msg;
++
++	m->complete = priv->child_msg_complete;
++	m->context = priv->child_msg_context;
++	m->spi = priv->child_msg_dev;
++	spi_finalize_current_message(ctlr);
++	mux_control_deselect(priv->mux);
++}
++
++static int spi_mux_transfer_one_message(struct spi_controller *ctlr,
++						struct spi_message *m)
++{
++	struct spi_mux_priv *priv = spi_controller_get_devdata(ctlr);
++	struct spi_device *spi = m->spi;
++	int ret;
++
++	ret = spi_mux_select(spi);
++	if (ret)
++		return ret;
++
++	/*
++	 * Replace the complete callback, context and spi_device with our own
++	 * pointers. Save originals
++	 */
++	priv->child_msg_complete = m->complete;
++	priv->child_msg_context = m->context;
++	priv->child_msg_dev = m->spi;
++
++	m->complete = spi_mux_complete_cb;
++	m->context = priv;
++	m->spi = priv->spi;
++
++	/* do the transfer */
++	return spi_async(priv->spi, m);
++}
++
++static int spi_mux_probe(struct spi_device *spi)
++{
++	struct spi_controller *ctlr;
++	struct spi_mux_priv *priv;
++	int ret;
++
++	ctlr = spi_alloc_master(&spi->dev, sizeof(*priv));
++	if (!ctlr)
++		return -ENOMEM;
++
++	spi_set_drvdata(spi, ctlr);
++	priv = spi_controller_get_devdata(ctlr);
++	priv->spi = spi;
++
++	priv->mux = devm_mux_control_get(&spi->dev, NULL);
++	if (IS_ERR(priv->mux)) {
++		ret = PTR_ERR(priv->mux);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&spi->dev, "failed to get control-mux\n");
++		goto err_put_ctlr;
++	}
++
++	priv->current_cs = SPI_MUX_NO_CS;
++
++	/* supported modes are the same as our parent's */
++	ctlr->mode_bits = spi->controller->mode_bits;
++	ctlr->flags = spi->controller->flags;
++	ctlr->transfer_one_message = spi_mux_transfer_one_message;
++	ctlr->setup = spi_mux_setup;
++	ctlr->num_chipselect = mux_control_states(priv->mux);
++	ctlr->bus_num = -1;
++	ctlr->dev.of_node = spi->dev.of_node;
++
++	ret = devm_spi_register_controller(&spi->dev, ctlr);
++	if (ret)
++		goto err_put_ctlr;
++
++	return 0;
++
++err_put_ctlr:
++	spi_controller_put(ctlr);
++
++	return ret;
++}
++
++static const struct of_device_id spi_mux_of_match[] = {
++	{ .compatible = "spi-mux" },
++	{ }
++};
++
++static struct spi_driver spi_mux_driver = {
++	.probe  = spi_mux_probe,
++	.driver = {
++		.name   = "spi-mux",
++		.of_match_table = spi_mux_of_match,
++	},
++};
++
++module_spi_driver(spi_mux_driver);
++
++MODULE_DESCRIPTION("SPI multiplexer");
++MODULE_LICENSE("GPL");
 -- 
 2.20.1
 
