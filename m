@@ -2,77 +2,72 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B43C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 14:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC4EC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 14:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632392082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 14:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581516111;
-	bh=Vl9oWFtrvRnj/ynpV0yaxfYSghDQP0TDSGdD9cWeP2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ad9nYc2mqZjmR1HIy5t3LEDFSIDSKF5PdN0hSmnGLE3tNnaCtErvynqU0DeaBsAe+
-	 jwPOrrUk5MJgNIpL4tThW6OfV6z1fJq5lOVvpBr9L7kVCWzkd4k5GoousV2iHNHf9o
-	 xQyshR38cUbcK+AdFSM1411chvEv0h4dcs8E9VGA=
+	by mail.kernel.org (Postfix) with ESMTP id B12A620873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 14:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgBLOBv (ORCPT
+        id S1728098AbgBLOEg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:01:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53494 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 09:04:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:33286 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgBLOBu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:01:50 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48D3320724;
-        Wed, 12 Feb 2020 14:01:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581516110;
-        bh=Vl9oWFtrvRnj/ynpV0yaxfYSghDQP0TDSGdD9cWeP2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R2lPdg74T8JyrWqBSmco28KW6WbKaFCw05f9VCD9YwUwVSkWPsHQDc6fi29AybgX+
-         6t+oa/ZewL3YmPHruoS5TVRwLUC/WKQf01xseZTMKLSh3M7B8NLmQqyWt9pVYts01w
-         7k1akI/vTDSjxKwnCSVnwA/ockHQD76qFEruUf/w=
-Date:   Wed, 12 Feb 2020 22:01:44 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Voltage monitor on ZII's VF610 boards
-Message-ID: <20200212140142.GH11096@dragon>
-References: <20200114151906.25491-1-andrew.smirnov@gmail.com>
+        id S1725887AbgBLOEg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 09:04:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B43328;
+        Wed, 12 Feb 2020 06:04:35 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 241AA3F6CF;
+        Wed, 12 Feb 2020 06:04:33 -0800 (PST)
+Subject: Re: dma_mask limited to 32-bits with OF platform device
+To:     Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>
+Cc:     stefan.wahren@i2se.com, afaerber@suse.de, hverkuil@xs4all.nl,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>
+References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
+ <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
+ <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
+Date:   Wed, 12 Feb 2020 14:04:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114151906.25491-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 07:19:01AM -0800, Andrey Smirnov wrote:
-> Everyone:
+On 12/02/2020 12:33 pm, Roger Quadros wrote:
+[...]
+> For now, let's say that we limit dma-ranges to 4GB size. with 
+> "dma-ranges = <0x00000000 0x00000000 0x1 0x00000000>;"
+> Then, dma_bus_limit is set correctly to 0xffffffff, SATA driver sets 
+> masks to 64-bit as IP supports that.
 > 
-> This series configures voltage supply rail monitoring on all
-> applicable ZII VF610 boards. Should be pretty straightforward, but let
-> me know if any changes are necessary.
+> [   13.306847] ahci 4a140000.sata: dma_mask 0xffffffffffffffff, 
+> coherent_mask 0xffffffffffffffff, dma_bus_limit 0xffffffff
 > 
-> Thanks,
-> Andrey Smirnov
-> 
-> Andrey Smirnov (5):
->   ARM: dts: vf610-zii-ssmb-spu3: Add voltage monitor DT node
->   ARM: dts: vf610-zii-ssmb-dtu: Add voltage monitor DT node
->   ARM: dts: vf610-zii-spb4: Add voltage monitor DT node
->   ARM: dts: vf610-zii-dev: Add voltage monitor DT node
->   ARM: dts: vf610-zii-cfu1: Add voltage monitor DT node
+> However, the SATA controller still tries to do DMA above 32-bits.
+> dma_alloc() doesn't seem to be taking dma_bus_limit into account?
 
-Applied all, thanks.
+Yay ARM LPAE... Peter and Christoph have already been playing 
+whack-a-mole with other bugs under that config - is this with or without 
+SWIOTLB? (and whichever way, does the other work any better?)
+
+Robin.
