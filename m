@@ -2,132 +2,143 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DEEC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 21:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F77C47409
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 21:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D115324649
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 21:08:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pIoxKMcb"
+	by mail.kernel.org (Postfix) with ESMTP id B749E24650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 21:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgBLVIH (ORCPT
+        id S1729102AbgBLVNZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 16:08:07 -0500
-Received: from mail-eopbgr70044.outbound.protection.outlook.com ([40.107.7.44]:61272
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727138AbgBLVIH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 16:08:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hO8D3K6u2kWLscQv3/wT4PFN/9fZqqwvGp14ivhOpH9AL2rXnP/ic2l+K6otRoTcXJkMHupDGJRpdYVvUa7T/UrsAJ04lXO/pconwZM6d4dfIzHOPMqzsLPffkxnaCWhXhG3N88sgFrsafINTunfiYaN0mATnBH8sgXbC9zHe2zRJl4BKC668b6JjgNCbyD3qnDGrTA74OzCQJdNbYYA4bU5HIfjhBlr9YCDwsiSn5njzYd7qjOSYdgQuJ2FlKz0ZI7RAYRZm+Xw7RaAdiA8U6qB6jF5zvMWZBT1lBfnNhfTx9NGSWGgQVHs0oVz8TvepJOrtC193W1SJEG/DWMcGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RUalFHTmreuyimJusmKyrlY0jZ9TCaTplrUE/OhyEow=;
- b=Q2BoeQ79YMHQHvCVKPfdZeYr1ws/XHTm678Kd3vo+oxtsaWaxYSSM66SwtKZ7e4ow9CcwAXyaQNCUxBkOIBkt11q4e6F85+rn+R+FGf61cnqcNtc5TpGIZwIUqV1wz8R4iJwgyOc0XrVA6LeSFNE4YGpPbpsrQ1ZPoOtZ0/79TX+p91ImwuyuLPrmm0feKAQEtierIjxKgqEX9Jl6k6FX4iykSN+YhYCLIpvOclpxtRiY2vCYabIDLJu1591x8+/rKkUFhVS9tpBCo48DqxeARFzotybuP3Xh3vIETilY2QJ6JS8Zc2AFkLUeGDKzZ9viRf+IwIkLGdqLVTUVM/sAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RUalFHTmreuyimJusmKyrlY0jZ9TCaTplrUE/OhyEow=;
- b=pIoxKMcbqBoc3wph5VAUSQkdILg95YlMrqcFWWgzikXUtzOQwNeeYb9iBC+IKvpd/pD2WvtB/9QaatOHTF6WlaeMDu3eJixF8oZoCG84jxtjxtmhLf3awnSpo3oviDynPjSmZpZudLmYbI3vnUP9W6TjHxio6NqMtYbRHpfEo1o=
-Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com (52.133.50.141) by
- AM0PR0402MB3313.eurprd04.prod.outlook.com (52.133.46.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.24; Wed, 12 Feb 2020 21:08:01 +0000
-Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com
- ([fe80::dc6e:5cc4:dd53:3088]) by AM0PR0402MB3476.eurprd04.prod.outlook.com
- ([fe80::dc6e:5cc4:dd53:3088%5]) with mapi id 15.20.2707.030; Wed, 12 Feb 2020
- 21:08:01 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Abel Vesa <abel.vesa@nxp.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] clk: imx8mn: add snvs clock
-Thread-Topic: [PATCH v2 0/3] clk: imx8mn: add snvs clock
-Thread-Index: AQHVzD/OjZFqJodHNUiVYUZ4iWuZWA==
-Date:   Wed, 12 Feb 2020 21:08:01 +0000
-Message-ID: <AM0PR0402MB3476CCC69A3726CDF4D7CB0B981B0@AM0PR0402MB3476.eurprd04.prod.outlook.com>
-References: <20200116073718.4475-1-horia.geanta@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [84.117.251.185]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a9de6f52-f3db-45f7-0fcc-08d7afffa517
-x-ms-traffictypediagnostic: AM0PR0402MB3313:|AM0PR0402MB3313:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0402MB3313AB1CF3565DE9A5EF268C981B0@AM0PR0402MB3313.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 0311124FA9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(396003)(366004)(136003)(189003)(199004)(44832011)(9686003)(86362001)(53546011)(7696005)(6506007)(81156014)(478600001)(26005)(55016002)(966005)(8676002)(8936002)(54906003)(110136005)(81166006)(186003)(66556008)(66446008)(66476007)(64756008)(76116006)(66946007)(52536014)(71200400001)(33656002)(4744005)(5660300002)(4326008)(2906002)(7416002)(316002)(6636002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3313;H:AM0PR0402MB3476.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kuuohzxJRwcQnZkEiL3ydaeC9iXwHmEbXKK+ga/cqmhrrlS1ZlDstyKOsa8HlZdDFBm1gI8wq4mcC9AsZ6GH/5Hcx1fq++G82zgMCYxLHd1RLBvU8ZFdzRADTwG11R3zbOmAAzLl4uLuVSujVx04E3JNFj25JP1It3YPlXjeShpNCtM8xy3h3HuGhKWWjdUz0Ync3UitwVJEJg2VPms2qyrlJBfMV90j7DNuUW/NjZ546tl9/PB+jzrDAmKqkRwf0Mq42P6Ij1EJHRbl7+y1FpQzFrmXOs/+5SX/KsOZHw6Clf6lDrxqtrMdcbKiodoSccAu11LqPr6IqqJ5PCjTxbD0fFiYk/+NEtRr067h5nlWnmQ7b8Wfcm5ltwVu8aMBvmPEga6FCfdSJAae6vVQ1Y8XK1lvKVGm8Qh9DmByqSISrdPxXK5LxSq//xd8wC70uUb73LKtXiyqEBa+qL6shYj3VdYkBGxuT5bv2YRqE2c1HxuZU2hj72xO+mtQYtVQs8UHyXL23Tm41Fykevn1LiPjMckc6yQqqO80zQr8kDEF8lda7ZFtNGzPThCg1TSS
-x-ms-exchange-antispam-messagedata: 7pSI2MHIob+fl5dstG4ZWlZ6ITz/TA7gCjIj9kH8zwA1Z4T7LMNneMcCT0ytyNibgx9m62/xxzSfCnpL0KIFQIvkmYVt4DM41ncVmcKAvooV7vd4Ki8l8peHsPwd3Ry6C+Tb/edvCqkjRAC2lMTn4w==
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 12 Feb 2020 16:13:25 -0500
+Received: from mga05.intel.com ([192.55.52.43]:60665 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727420AbgBLVNZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 16:13:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Feb 2020 13:13:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,434,1574150400"; 
+   d="scan'208";a="432449589"
+Received: from wendeand-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.52.16])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Feb 2020 13:13:20 -0800
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 0320921D13; Wed, 12 Feb 2020 23:13:17 +0200 (EET)
+Date:   Wed, 12 Feb 2020 23:13:17 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Jacob Chen <cc@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>,
+        Dafna Hirschfeld <dafna3@gmail.com>
+Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
+Message-ID: <20200212211317.GD3087@kekkonen.localdomain>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-6-helen.koike@collabora.com>
+ <20190808091406.GQ21370@paasikivi.fi.intel.com>
+ <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
+ <20190815082422.GM6133@paasikivi.fi.intel.com>
+ <20190815131748.GS6133@paasikivi.fi.intel.com>
+ <78856358-1afd-31a7-86dd-22f7d6d7fb05@collabora.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9de6f52-f3db-45f7-0fcc-08d7afffa517
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Feb 2020 21:08:01.6458
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YMSVD44gSsc32cajtPbA0WS14tVPvfSiT/eCvpbIDZSVM12Oteloe5BrdoDC0PrTg4v/fXSgAtCArSyPR60Bxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3313
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78856358-1afd-31a7-86dd-22f7d6d7fb05@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/16/2020 9:37 AM, Horia Geant=E3 wrote:=0A=
-> v2: add commmit message for trivial patch 1/3=0A=
-> =0A=
-> This patch set adds the clock for snvs module on imx8mn.=0A=
-> DT bindings, clk driver are updated accordingly.=0A=
-> DT for imx8mn (snvs-rtc-lp node) is also updated.=0A=
-> =0A=
-> Horia Geant=E3 (3):=0A=
->   dt-bindings: clock: imx8mn: add SNVS clock=0A=
->   clk: imx8mn: add SNVS clock to clock tree=0A=
->   arm64: dts: imx8mn: add clock for snvs rtc node=0A=
-> =0A=
->  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 1 +=0A=
->  drivers/clk/imx/clk-imx8mn.c              | 1 +=0A=
->  include/dt-bindings/clock/imx8mn-clock.h  | 4 +++-=0A=
->  3 files changed, 5 insertions(+), 1 deletion(-)=0A=
-> =0A=
-Kind reminder.=0A=
-=0A=
-Patch set is here:=0A=
-https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=3D229047=
-&archive=3Dboth&state=3D*=0A=
-Let me know if I should resend it.=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+Hi Dafna,
+
+Apologies for the late reply. I learned the mail had got lost due to mail
+server issues.
+
+On Fri, Jan 31, 2020 at 08:38:34PM +0100, Dafna Hirschfeld wrote:
+> Hi,
+> I (Dafna Hirschfeld) will work in following months with Helen Koike to fix the issues
+> in the TODO file of this driver: drivers/staging/media/rkisp1/TODO
+> 
+> On 15.08.19 15:17, Sakari Ailus wrote:
+> > On Thu, Aug 15, 2019 at 11:24:22AM +0300, Sakari Ailus wrote:
+> > > Hi Helen,
+> > > 
+> > > On Wed, Aug 14, 2019 at 09:58:05PM -0300, Helen Koike wrote:
+> > > 
+> > > ...
+> > > 
+> > > > > > +static int rkisp1_isp_sd_set_fmt(struct v4l2_subdev *sd,
+> > > > > > +				 struct v4l2_subdev_pad_config *cfg,
+> > > > > > +				 struct v4l2_subdev_format *fmt)
+> > > > > > +{
+> > > > > > +	struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
+> > > > > > +	struct rkisp1_isp_subdev *isp_sd = &isp_dev->isp_sdev;
+> > > > > > +	struct v4l2_mbus_framefmt *mf = &fmt->format;
+> > > > > > +
+> > > > > 
+> > > > > Note that for sub-device nodes, the driver is itself responsible for
+> > > > > serialising the access to its data structures.
+> > > > 
+> > > > But looking at subdev_do_ioctl_lock(), it seems that it serializes the
+> > > > ioctl calls for subdevs, no? Or I'm misunderstanding something (which is
+> > > > most probably) ?
+> > > 
+> > > Good question. I had missed this change --- subdev_do_ioctl_lock() is
+> > > relatively new. But setting that lock is still not possible as the struct
+> 
+> 'the struct' - do you mean the 'vdev' struct allocated in
+> 'v4l2_device_register_subdev_nodes' ?
+
+Yes.
+
+> 
+> > > is allocated in the framework and the device is registered before the
+> 
+> > > driver gets hold of it. It's a good idea to provide the same serialisation
+> > > for subdevs as well.
+> > > 
+> > > I'll get back to this later.
+> > 
+> > The main reason is actually that these ops are also called through the
+> > sub-device kAPI, not only through the uAPI, and the locks are only taken
+> > through the calls via uAPI.
+> 
+> actually it seems that although 'subdev_do_ioctl_lock' exit, I wonder if
+> any subdevice uses that vdev->lock in  subdev_do_ioctl_lock.
+> It is not initialized in v4l2_device_register_subdev_nodes where the vdev is allocated
+> and I wonder if any subdevice actually initialize it somewhere else. For example it is null in this
+> driver and in vimc.
+
+It needs to be set before the video device is registered, so indeed, it
+seems no driver can make use it.
+
+> 
+> > 
+> > So adding the locks to uAPI calls alone would not address the issue.
+> 
+> What I can do is add a mutex to every struct of a subdevice and lock it
+> at the beginning of each subdevice operation.
+> Is this an acceptable solution?
+
+Please do. That's what other drivers do at the moment as well.
+
+-- 
+Kind regards,
+
+Sakari Ailus
