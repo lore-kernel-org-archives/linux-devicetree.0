@@ -2,68 +2,64 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB963C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE04C3B186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B962C21D7D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 481A621D7D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581504256;
-	bh=a74Ur2aGwpyLmtSJw/xtsawU+rUAv7FqSD4NhB0pg5U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlnQfqnAiVLwZiAyxSKSA33spjlGuJ5Ldv8qUvYjfPEXmud+Eqs+NuR5975aCXEZ6
-	 P6dAuHECy7H2HtRqZVgw9Ow/NGV5e1HK4RGTGxMNUGqmo7zAGELZZTYzS3XSoOjSk5
-	 wdhNxHKkuHgQXjH9MSXhlnh6lLZqORN4qPVXyoPk=
+	s=default; t=1581504257;
+	bh=3WmScTJz4euc1fE6/Vis4Trrr8L3e+POIZjWyczQr90=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=v7jWbJUHxIQ5YmoCbRnyMy0c0g+C3/Mqqx05bzAOsC5Y6tGf6a2T3qycEry7EpAfO
+	 Qg7P7p0eOxqAeT7crLD9JHVrBRazqUSWDv9zA7VpXgv8yp3ULqjg80IJpIpgP96dWZ
+	 aK6CGhKq3Vwn2AdsOnKDRwzAPajf3sxJmStXXlK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgBLKoD (ORCPT
+        id S1728111AbgBLKoD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 12 Feb 2020 05:44:03 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35923 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbgBLKoC (ORCPT
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43401 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgBLKoC (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 05:44:02 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f24so1257756lfh.3;
+Received: by mail-lj1-f195.google.com with SMTP id a13so1718962ljm.10;
         Wed, 12 Feb 2020 02:44:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rfdJBTNvCTI7BpYX85qLAk9HwyLTmyD1T6kKp6aaYPs=;
-        b=f12MfN6xCIlrVOd/ZCKQQyjygg4gWpIALxSVF6rWneyHGy7FNiH9RyqkUfsETd7LQD
-         XL7HOtpI3AZButlPhUnqHZo8YsZkR1LBeNEXcig5k5DWcWhB3xGjFRIgU6SkWei5mWkS
-         iXvzaijeMOygdHRAAu+r2q85Wyixuc+144w5kWCYzHN9GK2coPpT6rGjQWrJNBLrbvnF
-         /BjBrF8LLc9JKL4UQrmQnVd9EVYxkiQ7Ig0T50XveUuqSgmgA8LrsQcBV9K73i6jTIHm
-         eZiAoG8OYlo1XG5DUPe6+4ipz3cc1dOlUoeSKmFRno+r6LDtN0+QF2drAdyAiaqKRf6s
-         lbxA==
-X-Gm-Message-State: APjAAAXrFJNWcm6mZrQImtXAK5YqA9OsK1wxvNSJ8nGJOQk7TqpEZiLU
-        rOHnJCoq075avrBk1Cv7g3Q=
-X-Google-Smtp-Source: APXvYqzIshsThoHFCzhoumPwFpQqdmQWyTtvhlbbJqwYfwu6qPvpCG83PEOZAQCFyBEPM10yO6VJkA==
-X-Received: by 2002:ac2:4246:: with SMTP id m6mr6415511lfl.165.1581504239993;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xSMdDt84jzVon3FDMXee+uRWwXiN2FB36JLOXBaNo4w=;
+        b=QTa6msXX2SnavS2Cn2/NRdkse4GdWbVAwDUkacif1aGEc5cg36jfxb8JXhgkaIbekh
+         s0zqdz+uGRzl9IJmucVEJ0pT42di64SUzh5Ql7WT94/T1f9X/dNlrXCerfj9Kvq7QMB5
+         LZ2JOTUo/J5GLWNFxLdOpq6uyUHXlae/SferaBk65ZgQrHkrijIPLsXwByybzSMleGX5
+         TFfpEBj08h3zJc/cByN8TtxGly1HsOn6SU6RVug3n15k8nAz9dCgItBqWKxAsc54qVoH
+         hKTxIBi900ItrfBXVaeoaFOtKmm9GFoVGwsfWQAUyTAi4mdv1QBv4jw8I0sclDCj2Zgw
+         WLJQ==
+X-Gm-Message-State: APjAAAWMMkmglnsixXqvMqlQ3hpBFtvCTXxqJcpplNjLuV96DD9sXmlU
+        OyJa2XsQLnzlzPA7VbXSLoyHIFSK
+X-Google-Smtp-Source: APXvYqz0m90S7S3vc/bZc65CJPxi9oF38n9ilCWGT0Pxsc7Hwb+hUwkjC2+zBKXnvZA39KyHwTI/XQ==
+X-Received: by 2002:a2e:7818:: with SMTP id t24mr7180342ljc.195.1581504239548;
         Wed, 12 Feb 2020 02:43:59 -0800 (PST)
 Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id k4sm82303lfo.48.2020.02.12.02.43.58
+        by smtp.gmail.com with ESMTPSA id 3sm17542lja.65.2020.02.12.02.43.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 12 Feb 2020 02:43:58 -0800 (PST)
 Received: from johan by xi.terra with local (Exim 4.92.3)
         (envelope-from <johan@xi.terra>)
-        id 1j1pUs-0005CS-4J; Wed, 12 Feb 2020 11:43:58 +0100
+        id 1j1pUr-0005CO-VW; Wed, 12 Feb 2020 11:43:58 +0100
 From:   Johan Hovold <johan@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Barry Song <Baohua.Song@csr.com>,
-        Johan Hovold <johan@kernel.org>,
-        Zhiwu Song <Zhiwu.Song@csr.com>, Hao Liu <Hao.Liu@csr.com>
-Subject: [PATCH 1/3] ARM: dts: atlas7: fix space in flexnoc compatible strings
-Date:   Wed, 12 Feb 2020 11:43:46 +0100
-Message-Id: <20200212104348.19940-2-johan@kernel.org>
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/3] ARM: dts: atlas7: fix spaces in compatible strings
+Date:   Wed, 12 Feb 2020 11:43:45 +0100
+Message-Id: <20200212104348.19940-1-johan@kernel.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200212104348.19940-1-johan@kernel.org>
-References: <20200212104348.19940-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -71,143 +67,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Drop the space between manufacturer and model in the Arteris FlexNoC
-compatible string in the noc-bus nodes so that it matches the
-recommended format.
+I stumbled over a new driver in 5.6 whose compatible strings did not
+match the corresponding binding due to spaces in the driver compatible
+strings:
 
-Note that there are no in-kernel drivers that use this compatible and it
-is not present in any binding.
+	https://lkml.kernel.org/r/20200212092426.24012-1-johan@kernel.org
 
-Fixes: 7d76d03b9be8 ("ARM: dts: add init dts file for CSR atlas7 SoC")
-Cc: Zhiwu Song <Zhiwu.Song@csr.com>
-Cc: Hao Liu <Hao.Liu@csr.com>
-Cc: Barry Song <Baohua.Song@csr.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- arch/arm/boot/dts/atlas7.dtsi | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+A quick grep revealed that we a couple of devicetrees in mainline with
+similarly malformed compatible strings.
 
-diff --git a/arch/arm/boot/dts/atlas7.dtsi b/arch/arm/boot/dts/atlas7.dtsi
-index 99c9d9d9267f..92b00e4740f6 100644
---- a/arch/arm/boot/dts/atlas7.dtsi
-+++ b/arch/arm/boot/dts/atlas7.dtsi
-@@ -1164,7 +1164,7 @@ vi_vip1_high8bit {
- 		};
- 
- 		pmipc {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x13240000 0x13240000 0x00010000>;
-@@ -1175,7 +1175,7 @@ pmipc@0x13240000 {
- 		};
- 
- 		dramfw {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x10830000 0x10830000 0x18000>;
-@@ -1186,7 +1186,7 @@ dramfw@10820000 {
- 		};
- 
- 		spramfw {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x10250000 0x10250000 0x3000>;
-@@ -1197,7 +1197,7 @@ spramfw@10820000 {
- 		};
- 
- 		cpum {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x10200000 0x10200000 0x3000>;
-@@ -1208,7 +1208,7 @@ cpum@10200000 {
- 		};
- 
- 		cgum {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x18641000 0x18641000 0x3000>,
-@@ -1238,7 +1238,7 @@ pwm: pwm@18630000 {
- 		};
- 
- 		gnssm {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x18000000 0x18000000 0x0000ffff>,
-@@ -1365,7 +1365,7 @@ spi1: spi@18200000 {
- 
- 
- 		gpum {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x13000000 0x13000000 0x3000>,
-@@ -1407,7 +1407,7 @@ sdr@0x13010000 {
- 		};
- 
- 		mediam {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x15000000 0x15000000 0x00600000>,
-@@ -1549,7 +1549,7 @@ i2c0: i2c@17020000 {
- 		};
- 
- 		vdifm {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x13290000 0x13290000 0x3000>,
-@@ -1652,7 +1652,7 @@ sd7: sdhci@14700000 {
- 		};
- 
- 		audiom {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x10d50000 0x10d50000 0x0000ffff>,
-@@ -1767,7 +1767,7 @@ usp2: usp@10d40000 {
- 		};
- 
- 		ddrm {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x10820000 0x10820000 0x3000>,
-@@ -1786,7 +1786,7 @@ memory-controller@0x10800000 {
- 		};
- 
- 		btm {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x11002000 0x11002000 0x0000ffff>,
-@@ -1838,7 +1838,7 @@ btm@11010000 {
- 		};
- 
- 		rtcm {
--			compatible = "arteris, flexnoc", "simple-bus";
-+			compatible = "arteris,flexnoc", "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x18810000 0x18810000 0x3000>,
+Note that there are no in-kernel drivers or bindings that use the
+strings question, so I think simply dropping the spaces would be
+acceptable. This is especially true for the flexnox nodes that also
+specify "simple-bus" so therefore I split the fixes in three patches.
+
+Johan
+
+
+Johan Hovold (3):
+  ARM: dts: atlas7: fix space in flexnoc compatible strings
+  ARM: dts: atlas7: fix space in gmac compatible string
+  ARM: dts: atlas7: fix space in g2d compatible string
+
+ arch/arm/boot/dts/atlas7.dtsi | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
 -- 
 2.24.1
 
