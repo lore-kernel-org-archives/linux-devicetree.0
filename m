@@ -2,141 +2,159 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41117C352A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 20:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB8DC352A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 20:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE2E21739
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 20:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35502468C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 20:52:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JQ53Dbr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgBLUrn (ORCPT
+        id S1729107AbgBLUwt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 15:47:43 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57151 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgBLUrn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 15:47:43 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1yv7-0003Ry-OM; Wed, 12 Feb 2020 21:47:41 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1yv7-00051K-1O; Wed, 12 Feb 2020 21:47:41 +0100
-Date:   Wed, 12 Feb 2020 21:47:40 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     George Hilliard <ghilliard@kopismobile.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de
-Subject: Re: [PATCH v3 2/2] tty: imx serial: Implement support for reversing
- TX and RX polarity
-Message-ID: <20200212204740.wc4pibfajxgi5tfp@pengutronix.de>
-References: <20200212163538.3006-1-ghilliard@kopismobile.com>
- <20200212163538.3006-3-ghilliard@kopismobile.com>
+        Wed, 12 Feb 2020 15:52:49 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:53499 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729059AbgBLUwt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 15:52:49 -0500
+Received: by mail-pj1-f68.google.com with SMTP id n96so1380045pjc.3
+        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 12:52:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5Riei2te89GePxp1E22YfDRMlt9VDR+rVb3GVGaMfJg=;
+        b=JQ53Dbr4gFf+t/4h045U2ePzleTePdzzGco4e5vpYZF/tx6k2lSHmzgFYS9PkNOsPi
+         4hemxsqyRGxAFi+Nj337+XhsLlyLTZatkzxDPNBMmBpCs6FhqOCYc/siI4z1kyxSLWCv
+         33oHiTuAWyyX6COIAf19wNKzJAD9jEX6+GNOs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5Riei2te89GePxp1E22YfDRMlt9VDR+rVb3GVGaMfJg=;
+        b=Sz/LDUggFPJJ7MtvSAYEpRG90EBZlvujK+xUZqPXXNRZ3GrYcUNVMYO6JDGH1BC87q
+         o3kVgzrQgBLXahQpmpVdBcNDNL0flW9tzGRwXBtdeJcnXXtB5/CfwbeXhzMrcj9ov9o6
+         eK24T0jrvXw5El44RlsEG/DNyBgQZ4MNl+bwjN0PwGsmnSUxmBKdhKq5IS/938BalIQ6
+         y2UUJukqcXmX6S62ty5Cm9Ta91AM1gRKiIUXVRmGoRpB+518xD2XLClqB3tIIOVugqSJ
+         UQoyt7p7JnZUTPR6ibf4DbaB7dQsf9OyOStnHs7norv/mq/0qasSWOB50ocoGzRhwXTS
+         izVw==
+X-Gm-Message-State: APjAAAVdKgaKWj/xv42QUvj99bXDIoJAYX4Hfj4lSDmi8WL2F9z/OT5l
+        0KTQRP5Fkv9XNzC/w65/N6y6Xg==
+X-Google-Smtp-Source: APXvYqwRJ/D+5PHCCQimDIaqNZzboSVXpwGADlZL0PQ/ajJ/Nr9Q/V/DtBm9p164OpIJB4ae5vZpMA==
+X-Received: by 2002:a17:90a:20aa:: with SMTP id f39mr1042834pjg.35.1581540768513;
+        Wed, 12 Feb 2020 12:52:48 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id b21sm152679pfp.0.2020.02.12.12.52.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 12:52:48 -0800 (PST)
+Date:   Wed, 12 Feb 2020 12:52:47 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 3/4] phy: qcom-qmp: Add QMP V3 USB3 PHY support for
+ SC7180
+Message-ID: <20200212205247.GD50449@google.com>
+References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
+ <1581506488-26881-4-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200212163538.3006-3-ghilliard@kopismobile.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <1581506488-26881-4-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 10:35:38AM -0600, George Hilliard wrote:
-> The peripheral has support for inverting its input and/or output
-> signals.  This is useful if the hardware flips polarity of the
-> peripheral's signal, such as swapped +/- pins on an RS-422 transceiver,
-> or an inverting level shifter.  Add support for these control registers
-> via the device tree binding.
+On Wed, Feb 12, 2020 at 04:51:27PM +0530, Sandeep Maheswaram wrote:
+> Adding QMP v3 USB3 phy support for SC7180.
+> Adding only usb phy reset in the list to avoid
+> reset of DP block.
 > 
-> Signed-off-by: George Hilliard <ghilliard@kopismobile.com>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
-> v1..v2: Remove confidentiality spam
-> v2..v3: Set *and* clear register, and do it before TX enable
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 38 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 > 
->  drivers/tty/serial/imx.c | 28 +++++++++++++++++++++++-----
->  1 file changed, 23 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-> index 0c6c63166250..205627bcad66 100644
-> --- a/drivers/tty/serial/imx.c
-> +++ b/drivers/tty/serial/imx.c
-> @@ -195,6 +195,8 @@ struct imx_port {
->  	unsigned int		have_rtscts:1;
->  	unsigned int		have_rtsgpio:1;
->  	unsigned int		dte_mode:1;
-> +	unsigned int		inverted_tx:1;
-> +	unsigned int		inverted_rx:1;
->  	struct clk		*clk_ipg;
->  	struct clk		*clk_per;
->  	const struct imx_uart_data *devdata;
-> @@ -1335,7 +1337,7 @@ static int imx_uart_startup(struct uart_port *port)
->  	int retval, i;
->  	unsigned long flags;
->  	int dma_is_inited = 0;
-> -	u32 ucr1, ucr2, ucr4;
-> +	u32 ucr1, ucr2, ucr3, ucr4;
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 7db2a94..dc300a9 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -1139,6 +1139,10 @@ static const char * const msm8996_usb3phy_reset_l[] = {
+>  	"phy", "common",
+>  };
 >  
->  	retval = clk_prepare_enable(sport->clk_per);
->  	if (retval)
-> @@ -1390,8 +1392,22 @@ static int imx_uart_startup(struct uart_port *port)
->  	ucr4 = imx_uart_readl(sport, UCR4) & ~UCR4_OREN;
->  	if (!sport->dma_is_enabled)
->  		ucr4 |= UCR4_OREN;
-> +	if (sport->inverted_rx)
-> +		ucr4 |= UCR4_INVR;
-> +	else
-> +		ucr4 &= ~UCR4_INVR;
-
-Maybe clear UCR4_INVR in the same way as UCR4_OREN is cleared just
-above?
-
->  	imx_uart_writel(sport, ucr4, UCR4);
->  
-> +	/*
-> +	 * configure tx polarity before enabling tx
-> +	 */
-> +	ucr3 = imx_uart_readl(sport, UCR3);
-> +	if (sport->inverted_tx)
-> +		ucr3 |= UCR3_INVT;
-> +	else
-> +		ucr3 &= ~UCR3_INVT;
-> +	imx_uart_writel(sport, ucr3, UCR3);
+> +static const char * const sc7180_usb3phy_reset_l[] = {
+> +	"phy",
+> +};
 > +
->  	ucr2 = imx_uart_readl(sport, UCR2) & ~UCR2_ATEN;
->  	ucr2 |= (UCR2_RXEN | UCR2_TXEN);
->  	if (!sport->have_rtscts)
-> @@ -1405,10 +1421,6 @@ static int imx_uart_startup(struct uart_port *port)
->  	imx_uart_writel(sport, ucr2, UCR2);
+>  /* list of regulators */
+>  static const char * const qmp_phy_vreg_l[] = {
+>  	"vdda-phy", "vdda-pll",
+> @@ -1265,6 +1269,37 @@ static const struct qmp_phy_cfg qmp_v3_usb3phy_cfg = {
+>  	.is_dual_lane_phy	= true,
+>  };
 >  
->  	if (!imx_uart_is_imx1(sport)) {
+> +static const struct qmp_phy_cfg sc7180_usb3phy_cfg = {
+> +	.type			= PHY_TYPE_USB3,
+> +	.nlanes			= 1,
+> +
+> +	.serdes_tbl		= qmp_v3_usb3_serdes_tbl,
+> +	.serdes_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_serdes_tbl),
+> +	.tx_tbl			= qmp_v3_usb3_tx_tbl,
+> +	.tx_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_tx_tbl),
+> +	.rx_tbl			= qmp_v3_usb3_rx_tbl,
+> +	.rx_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_rx_tbl),
+> +	.pcs_tbl		= qmp_v3_usb3_pcs_tbl,
+> +	.pcs_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_pcs_tbl),
+> +	.clk_list		= qmp_v3_phy_clk_l,
+> +	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
+> +	.reset_list		= sc7180_usb3phy_reset_l,
+> +	.num_resets		= ARRAY_SIZE(sc7180_usb3phy_reset_l),
+> +	.vreg_list		= qmp_phy_vreg_l,
+> +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+> +	.regs			= qmp_v3_usb3phy_regs_layout,
+> +
+> +	.start_ctrl		= SERDES_START | PCS_START,
+> +	.pwrdn_ctrl		= SW_PWRDN,
+> +
+> +	.has_pwrdn_delay	= true,
+> +	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
+> +	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
+> +
+> +	.has_phy_dp_com_ctrl	= true,
+> +	.is_dual_lane_phy	= true,
+> +};
+> +
+>  static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
+>  	.type			= PHY_TYPE_USB3,
+>  	.nlanes			= 1,
+> @@ -2103,6 +2138,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+>  		.compatible = "qcom,ipq8074-qmp-pcie-phy",
+>  		.data = &ipq8074_pciephy_cfg,
+>  	}, {
+> +		.compatible = "qcom,sc7180-qmp-usb3-phy",
+> +		.data = &sc7180_usb3phy_cfg,
+> +	}, {
+>  		.compatible = "qcom,sdm845-qmp-usb3-phy",
+>  		.data = &qmp_v3_usb3phy_cfg,
+>  	}, {
 
-If this complete if block would be moved up, you only need to write this
-register once.
+I don't claim to be really knowledgable about this driver, but I confirmed
+that this matches qmp_v3_usb3phy_cfg, except for the resets, since we don't
+want to reset DP from the USB driver.
 
-> -		u32 ucr3;
-> -
-> -		ucr3 = imx_uart_readl(sport, UCR3);
-> -
->  		ucr3 |= UCR3_DTRDEN | UCR3_RI | UCR3_DCD;
->  
->  		if (sport->dte_mode)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
