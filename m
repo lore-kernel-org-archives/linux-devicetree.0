@@ -2,99 +2,94 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A48C35242
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4638C35242
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6D02082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826262082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581472947;
-	bh=htIylF4jROFJ6riEwNwA7KvXmOZ52qqEUUlhJZlLEoc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mUsKlOZ+k+K8UtS9GMzkFCsy7q1hCutG5nbrvH1PY8ZgSeD0ARhAKG5jLs8q6s8q5
-	 CwHEH7jG82jaGajh5FVd+cyIHLFfWkw98OrxCXDuWO0lL00CrsbE9gLYaocfc2GlTy
-	 1Nfbsu0PQFo97qj90OjH4TlVOL2bjt/Oq0xYpyC0=
+	s=default; t=1581473118;
+	bh=FFaMZEc4E/x/xophYACoLJfYNCkVhTJ16jaEkNs90pY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mB5IwJSRllYFUvqjkfAJXaAYSqfPMZVZcnNYYqRYmV3kiaZJnil0gZbGzP4IN1Vx4
+	 AKVKbSFcCXGZiy5y1uAsprRPANto767AwshLqIJnOVxaGo8KWRaB76AbHYDdJERBGE
+	 YXlwDWv4IQ5A8TG6M1Oj8Jn+NazZHBjo0SukeM90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbgBLCC0 (ORCPT
+        id S1727434AbgBLCFR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:02:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgBLCC0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 21:02:26 -0500
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAF5E2082F;
-        Wed, 12 Feb 2020 02:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581472945;
-        bh=htIylF4jROFJ6riEwNwA7KvXmOZ52qqEUUlhJZlLEoc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iCYPiTPYdnB2OI0v+huzasLYRjeRjhcTHmkhFmVrrmovvxZa6iqwp+hdE/5APs6Qq
-         jBu77bwScSQIx3wgiVcysNX+EYw9eqDJNGd2H+xZUfFiv09v2HHMzkvYylf5QYmA1M
-         a/bH3tJijMqMV4d8Ca8xN+gGXgXAyesWY/m8o6WY=
-Received: by mail-qv1-f44.google.com with SMTP id g6so243218qvy.5;
-        Tue, 11 Feb 2020 18:02:25 -0800 (PST)
-X-Gm-Message-State: APjAAAUAA8dkeAnjGBfnurkPVxxFEcZELkDGmUqIHD9G8o13Fh/NOhzA
-        X28u9Svlk5QBMTKzrYu5VYiRqatMtsVn+PpHaQ==
-X-Google-Smtp-Source: APXvYqyZK3Vkicu73sUU5sruUOApIl6NuW57qMDLHWUYWwewOnHbEyttYZ0F4fQksB2kDUYtiSYWzYbNkVpIpCNsWz8=
-X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr5582693qvv.85.1581472944822;
- Tue, 11 Feb 2020 18:02:24 -0800 (PST)
-MIME-Version: 1.0
-References: <20200210123507.9491-1-kishon@ti.com> <20200210123507.9491-3-kishon@ti.com>
- <20200212015900.GA14509@bogus>
-In-Reply-To: <20200212015900.GA14509@bogus>
+        Tue, 11 Feb 2020 21:05:17 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37949 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgBLCFR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 21:05:17 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z9so368329oth.5;
+        Tue, 11 Feb 2020 18:05:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SPSyVH5BY8YlezL4QmTEFwwCly81f3R+OHqr47mHZ/A=;
+        b=AJ3ZzcaKflJxvWw+G9eT9krptto+5XpaC+PXtD7NXtgTY012UngjUzw4GgiuKKZPgr
+         9nxkbqqL2r4THtCQTNhURgNNY6OC3ztG93Rdf0Ki7ZMpkg08eCcLDAE7Cm1HbmE7aZI8
+         NrJ37lgB9v3haFujfB2GWwd6ILzrtSK0+uixF96fLbDtB7oXdsl9FcMKzCYqWRVHM3gp
+         m4dfNxVpYgMtaBaPeYGw/SdE6D0B7z7CczsIJiRbVwTDiuSLeSf0TGMhxRiuCCWna0h1
+         2ePPyYaTZRwduPn7LTwAm/tGHhJDxgrxGGTO9IRkuEdufd74/bAeMRZG1s2ob13FQ3FB
+         yxfw==
+X-Gm-Message-State: APjAAAWavVMEzwutAmZDYyl5C/kibbxnAlyICnyXM/Hf0BcWz+tZgm1n
+        lsYhXlLMl9ozFF4tQdx4oBetzkk=
+X-Google-Smtp-Source: APXvYqwOlhfZZBLT289wJr1MHH4C8G3kp95kP+M607Gu437a4Mn8H6ODIDYqfK5ohNHfNspIQls/CQ==
+X-Received: by 2002:a05:6830:4a4:: with SMTP id l4mr7597940otd.91.1581473114770;
+        Tue, 11 Feb 2020 18:05:14 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n25sm1711611oic.6.2020.02.11.18.05.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 18:05:14 -0800 (PST)
+Received: (nullmailer pid 26689 invoked by uid 1000);
+        Wed, 12 Feb 2020 02:05:13 -0000
+Date:   Tue, 11 Feb 2020 20:05:13 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Feb 2020 20:02:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKozWNJqQOoyMRZzRBsjY9_Y2NkMwRbWP=DPXC7ZYViNg@mail.gmail.com>
-Message-ID: <CAL_JsqKozWNJqQOoyMRZzRBsjY9_Y2NkMwRbWP=DPXC7ZYViNg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
- Cadence platform to DT schema
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] dt-bindings: Document JZ47xx VPU auxiliary
+ processor
+Message-ID: <20200212020513.GA24870@bogus>
+References: <20200211142614.13567-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211142614.13567-1-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 7:59 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, 10 Feb 2020 18:05:07 +0530, Kishon Vijay Abraham I wrote:
-> > Include Cadence core DT schema and define the Cadence platform DT schema
-> > for both Host and Endpoint mode. Note: The Cadence core DT schema could
-> > be included for other platforms using Cadence PCIe core.
-> >
-> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > ---
-> >  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
-> >  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
-> >  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
-> >  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
-> >  MAINTAINERS                                   |  2 +-
-> >  5 files changed, 125 insertions(+), 94 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> >
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.example.dt.yaml: pcie@fc000000: 'device_type' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.example.dt.yaml: pcie@fc000000: 'ranges' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.example.dt.yaml: pcie@fc000000: '#address-cells' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.example.dt.yaml: pcie@fc000000: '#size-cells' is a required property
+On Tue, Feb 11, 2020 at 11:26:09AM -0300, Paul Cercueil wrote:
+> Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+> Ingenic is a second Xburst MIPS CPU very similar to the main core.
+> This document describes the devicetree bindings for this auxiliary
+> processor.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v2: Update TCSM0 address in example
+>     v3: Change node name to 'video-decoder'
+>     v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
+>     v5: - Fix 'reg' not in <addr, len> pairs
+>         - Add missing include to devicetree example
+> 
+>  .../bindings/remoteproc/ingenic,vpu.yaml      | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
 
-Node name needs to be pcie-ep@...
+Reviewed-by: Rob Herring <robh@kernel.org>
