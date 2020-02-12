@@ -2,78 +2,59 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC83C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044B6C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D1D2073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63BF206D7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:27:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgBLLXO (ORCPT
+        id S1725874AbgBLL15 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:23:14 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:45688 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727987AbgBLLXN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:23:13 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 12 Feb 2020 16:51:55 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 12 Feb 2020 16:51:31 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id B996F24FD; Wed, 12 Feb 2020 16:51:30 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v3 0/4] Add QMP V3 USB3 PHY support for SC7180
-Date:   Wed, 12 Feb 2020 16:51:24 +0530
-Message-Id: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 12 Feb 2020 06:27:57 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:60747 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgBLL15 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 06:27:57 -0500
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id DAAAA200008;
+        Wed, 12 Feb 2020 11:27:53 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 12:27:53 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Eugen.Hristev@microchip.com
+Cc:     Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        robh+dt@kernel.org, Claudiu.Beznea@microchip.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ARM: dts: at91: sam9x60: add watchdog node
+Message-ID: <20200212112753.GE3326@piout.net>
+References: <1581408369-14469-1-git-send-email-eugen.hristev@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581408369-14469-1-git-send-email-eugen.hristev@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add QMP V3 USB3 PHY entries for SC7180 in phy driver and
-device tree bindings.
-
-changes in v3:
-*Addressed Rob's comments in yaml file.
-*Sepearated the SC7180 support in yaml patch.
-*corrected the phy reset entries in device tree.
-
-changes in v2:
-*Remove global phy reset in QMP phy.
-*Convert QMP phy bindings to yaml.
-
-Sandeep Maheswaram (4):
-  dt-bindings: phy: qcom,qmp: Convert QMP phy bindings to yaml
-  dt-bindings: phy: qcom,qmp: Add support for SC7180
-  phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
-  arm64: dts: qcom: sc7180: Correct qmp phy reset entries
-
- .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 287 +++++++++++++++++++++
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 227 ----------------
- arch/arm64/boot/dts/qcom/sc7180.dtsi               |   4 +-
- drivers/phy/qualcomm/phy-qcom-qmp.c                |  38 +++
- 4 files changed, 327 insertions(+), 229 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+On 11/02/2020 08:07:14+0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Add node for watchdog timer.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> ---
+>  arch/arm/boot/dts/sam9x60.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+Applied, thanks.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
