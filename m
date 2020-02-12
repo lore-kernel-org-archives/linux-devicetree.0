@@ -2,131 +2,68 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8D0C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBB4C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C69206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC032073C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581492987;
+	bh=/KSK0QZ64G2qHIpfcw85Qp0QWjJYVgwWNgeO7oEdGZw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lyUVjAnlqCMxLYLch5q0D0fKGUx88tbsrO5bUdg92zsW3Eg471oRCptDWch4ic6A6
+	 de+4xG4b5qCD4Xvwz1QBYcigIbPYkzRBl+Y4S45WaZkQUmYibTO3mKQ2D7t2ij6PTG
+	 AFkOf5sBsDmuHA4M2jiovBtTLuHErkCMzI8/oZyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgBLHdG (ORCPT
+        id S1728192AbgBLHg1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:33:06 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:14639 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728192AbgBLHdG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 02:33:06 -0500
-Received: from [10.18.90.120] (10.18.90.120) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 12 Feb
- 2020 15:33:42 +0800
-Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@baylibre.com>
-CC:     Yue Wang <yue.wang@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1581419454-12667-1-git-send-email-hanjie.lin@amlogic.com>
- <1581419454-12667-2-git-send-email-hanjie.lin@amlogic.com>
- <1jpnelb9pe.fsf@starbuckisacylon.baylibre.com>
-From:   Hanjie Lin <hanjie.lin@amlogic.com>
-Message-ID: <f154ef4c-ce3c-2a67-01f3-97a5f0af4520@amlogic.com>
-Date:   Wed, 12 Feb 2020 15:33:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 02:36:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727669AbgBLHg1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 02:36:27 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E31E9206DB;
+        Wed, 12 Feb 2020 07:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581492986;
+        bh=/KSK0QZ64G2qHIpfcw85Qp0QWjJYVgwWNgeO7oEdGZw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iX74qhcaMYomMKagp2ajZF6gSTnay5mhUl3J5yH0y3z4EFWd0qd9lqm1YfdTnn6NO
+         wp+2YkeS+jPZ6mSkHjg0a6V/98sqFwC7VxBjdWaRsS6XJbv1OKVZb4Q1kGz0tv1kOD
+         GnTFaJbtN0+LyxL868gRovypXEPxhOh6KGTfKPT4=
+Date:   Wed, 12 Feb 2020 15:36:19 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, Yuantian Tang <andy.tang@nxp.com>
+Subject: Re: [PATCH v2 3/5] dt-bindings: arm: fsl: add LS1028A based boards
+Message-ID: <20200212073617.GA11096@dragon>
+References: <20191209234350.18994-1-michael@walle.cc>
+ <20191209234350.18994-4-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <1jpnelb9pe.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.90.120]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209234350.18994-4-michael@walle.cc>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 2020/2/11 20:16, Jerome Brunet wrote:
+On Tue, Dec 10, 2019 at 12:43:48AM +0100, Michael Walle wrote:
+> Add the Freescale LS1028A evaluation boards.
 > 
-> On Tue 11 Feb 2020 at 12:10, Hanjie Lin <hanjie.lin@amlogic.com> wrote:
-> 
->> Add the Amlogic A1 Family USB2 PHY Bindings
->>
->> It supports Host mode only.
->>
->> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
->> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>  .../bindings/phy/amlogic,meson-g12a-usb2-phy.yaml         | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
->> index 57d8603..3b7e763 100644
->> --- a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
->> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
->> @@ -14,6 +14,7 @@ properties:
->>    compatible:
->>      enum:
->>        - amlogic,meson-g12a-usb2-phy
->> +      - amlogic,meson-a1-usb2-phy
->>  
->>    reg:
->>      maxItems: 1
->> @@ -49,6 +50,20 @@ required:
->>    - reset-names
->>    - "#phy-cells"
->>  
->> +allOf:
-> 
-> Is 'allOf' really needed when there is only one if clause ?
-> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-Hi jerome:
-
-Yes, this 'allOf' is not necessary here.
-I will remove it.
-
-Thanks,
-Hanjie
-
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          enum:
->> +            - amlogic,meson-a1-usb-ctrl
->> +
->> +    then:
->> +      properties:
->> +        power-domains:
->> +          maxItems: 1
->> +      required:
->> +        - power-domains
->> +
->>  examples:
->>    - |
->>      phy@36000 {
-> 
-> .
-> 
+Applied #3 ~ #5, thanks.
