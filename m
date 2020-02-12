@@ -2,113 +2,400 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91685C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 13:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48598C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 13:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AFF2073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 13:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095C12073C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 13:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwP0fhVr"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ueDX8jK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgBLNJD (ORCPT
+        id S1727857AbgBLNOR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 08:09:03 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42777 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgBLNJC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 08:09:02 -0500
-Received: by mail-il1-f193.google.com with SMTP id x2so1651020ila.9;
-        Wed, 12 Feb 2020 05:09:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lwgzXOkICXCQfXrNHWXrCftoLfH9Scd8moCWKuZ8A7c=;
-        b=uwP0fhVrX+cKaPrA9gZuzCsKp0yddAX94jEyXD+oxpoLTWMMqVteKVFhQIfbax7itw
-         LTgnQhEBPH1h/TZFReuXAGeaSeQs3IeZGCBz9HlL5RRSoErDbx/VHPZz1N9s6W4tavzm
-         tRI7PsSWpP61qEZOKSCUIjyPXdiR1pfk5omo4L+DP4BGIMk76I6FO9jnbIsamlo43As1
-         vE6g7V0GDiRYWnLArr4NKRwoaRkGq92lsMI7sj8ISNP5sQit0d+XhUhDDSwyBqtr8A82
-         nPjSpLQlG48uHNHO8yaTHauwI0bT2iFl7Ih0ObcSXH56oeHLWsj+0PBQvlsD3p8ywO9E
-         l4Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lwgzXOkICXCQfXrNHWXrCftoLfH9Scd8moCWKuZ8A7c=;
-        b=gMSxSAJlcotjlHnEVv4knvm6hBWseH2/ENnizaX0ZtI8nl/eWsHUcAz/OgU9o6igbs
-         BNnsb75X6D0XVW/8ZgCSuNvj0ioGf9tZ9Mek7jVaUsJlUIhT76Fb81YYK8YcRnia7xHl
-         ZS73qHt4U9lJDOZZM5Cvk7pa64DWSkvGmumRaPlyk5UpDtrWZeJE7CC7Q2d4dgtU6EwM
-         XETdltm9CTVNNV6i7WZUIw4d2c+qKNeG0QVCTMG6W2xO7oC9qPm338XfHkpI3Zhr5D68
-         9l0XleyQWrwnzGs8I0GA/GXOfvF3LfEo0IcWLGS9gHp0Tar62FoQHwxnW5Wg0XOA8fZ9
-         H2+w==
-X-Gm-Message-State: APjAAAUr15ZKzOWB+AiyYZpD5asE3nME4W2qHbhruuBef3EBBDkRngd5
-        IshdkEympbD/3S1v1VKaf+E+fK+y1ZGgwkf6gnM=
-X-Google-Smtp-Source: APXvYqzwGZCfLCucPj5npcA6pFh/Daw5mAO0fUTiKusa4iACLpoLiJs+a3YdEul7VJ0Sa7qkhI7BVMm1OAQ3UfESN3g=
-X-Received: by 2002:a92:350d:: with SMTP id c13mr11345711ila.205.1581512940477;
- Wed, 12 Feb 2020 05:09:00 -0800 (PST)
+        Wed, 12 Feb 2020 08:14:17 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21106 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727662AbgBLNOR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 08:14:17 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01CDCo5s006703;
+        Wed, 12 Feb 2020 14:13:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=cMQSvP5y+t4Vew7hK0VJeB3JFY/VZ4Yym6bNVW+GnoE=;
+ b=ueDX8jK4FDD9zhDO10OpFljVEn1+vUtxJiT+ZxQ6OWF5tvh318PDyTEQYiuMAuFiY54L
+ p+cLMuj1lUgtAJ0pqmRxrFChBIsdRypjxYeoVpYWYKqDpkrQ0x2XPHPic4ieKaldfzAm
+ 7IsX1MD0h+cDtVFesLzh5ctezUZivET9N1wXmEv48Ppvr/pW1smzOtClO+9wpqPpF4Zw
+ jX59Evjn3CPvSjdlz1+/RavklZoHbijid2xHt9197kNZXJ4ODoLR9ufmTgU1FRtA79um
+ Na12sY3ggM8JYtRMw0jacl6Way2eqiT4NgvdF6bFoadpW4NsGWzFK3bsIYn7oRCo9yQQ tA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1urhehmu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Feb 2020 14:13:54 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BEC7510002A;
+        Wed, 12 Feb 2020 14:13:46 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 87F5D2B2054;
+        Wed, 12 Feb 2020 14:13:46 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 12 Feb 2020 14:13:45
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <alexandre.torgue@st.com>, <robh@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
+Subject: [PATCH v2] ASoC: dt-bindings: stm32: convert sai to json-schema
+Date:   Wed, 12 Feb 2020 14:12:59 +0100
+Message-ID: <20200212131259.18805-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-2-aford173@gmail.com>
- <CAOMZO5D3emrAk84wDS04qJC-3AyvFnqodhoMsXO-ukHnYsU+PQ@mail.gmail.com>
- <CAHCN7xJyZRwJhnWW2mAbOeGyrMsB7Au_e6AvwiNmNS8gFUfSyw@mail.gmail.com> <20200212120753.GF4028@sirena.org.uk>
-In-Reply-To: <20200212120753.GF4028@sirena.org.uk>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 12 Feb 2020 07:08:49 -0600
-Message-ID: <CAHCN7x+5bACfYVX49Lib+fmNq-dEOkcyi0gXt7rtYxrGaYbH1Q@mail.gmail.com>
-Subject: Re: [PATCH V2 2/5] spi: fspi: dynamically alloc AHB memory
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        linux-spi <linux-spi@vger.kernel.org>, Han Xu <han.xu@nxp.com>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Ashish Kumar <ashish.kumar@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-12_07:2020-02-11,2020-02-12 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 6:07 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Feb 03, 2020 at 04:53:34AM -0600, Adam Ford wrote:
->
-> > My motivation is to get the flexspi on the i.MX8MM to work, and I did
-> > a list of the patches applied on the NXP branch to see what was
-> > applied on top of their 4.19 kernel and this patch series generated
-> > from that list.  Most of the NXP commits are one-line commits, and I
-> > don't know the motivation for what's happening.  NXP did it, and I
-> > know it works on the Flexspi driver.
->
-> Adding new compatibles and so on seems fine but the patches making
-> random changes without explanation like the one for octal mode I just
-> replied to are more worrying, do they work with older versions of the IP
-> or in all use cases for example?  I'd suggest cutting the initial patch
-> series down to the bare minimum needed to get things working and then
-> building on top of that if that's not already been done.
+Convert the STM32 SAI bindings to DT schema format using json-schema.
 
-The original author was copied on the initial commit.  I literally
-generated the patch from NXP's branch,  added my notes, and pushed
-them to the mailing lists after testing them on the  the Linux master
-branch.   I am a bit disappointed that NXP's author hasn't responded
-to any of the comments or feedback.  NXP knows their hardware and
-better understands the details as to what is happening and why.  In
-any case,  I'll try to scale the patch series back to just enough to
-get it working on the i.MX8M Mini.  I'll expand a bit on the commit
-message based on what I've learned about the various in-implemented
-quirks and send a V2 series.
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+Changes in v2:
+- use pattern for compatible of child nodes
+- rework dmas and clocks properties
+- add "additionalProperties"
+---
+ .../bindings/sound/st,stm32-sai.txt           | 107 ----------
+ .../bindings/sound/st,stm32-sai.yaml          | 191 ++++++++++++++++++
+ 2 files changed, 191 insertions(+), 107 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
 
-adam
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+deleted file mode 100644
+index 944743dd9212..000000000000
+--- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
++++ /dev/null
+@@ -1,107 +0,0 @@
+-STMicroelectronics STM32 Serial Audio Interface (SAI).
+-
+-The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
+-as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
+-The SAI contains two independent audio sub-blocks. Each sub-block has
+-its own clock generator and I/O lines controller.
+-
+-Required properties:
+-  - compatible: Should be "st,stm32f4-sai" or "st,stm32h7-sai"
+-  - reg: Base address and size of SAI common register set.
+-  - clocks: Must contain phandle and clock specifier pairs for each entry
+-	in clock-names.
+-  - clock-names: Must contain "pclk" "x8k" and "x11k"
+-	"pclk": Clock which feeds the peripheral bus interface.
+-	        Mandatory for "st,stm32h7-sai" compatible.
+-	        Not used for "st,stm32f4-sai" compatible.
+-	"x8k": SAI parent clock for sampling rates multiple of 8kHz.
+-	"x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
+-  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
+-
+-Optional properties:
+-  - resets: Reference to a reset controller asserting the SAI
+-
+-SAI subnodes:
+-Two subnodes corresponding to SAI sub-block instances A et B can be defined.
+-Subnode can be omitted for unsused sub-block.
+-
+-SAI subnodes required properties:
+-  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
+-	for SAI sub-block A or B respectively.
+-  - reg: Base address and size of SAI sub-block register set.
+-  - clocks: Must contain one phandle and clock specifier pair
+-	for sai_ck which feeds the internal clock generator.
+-	If the SAI shares a master clock, with another SAI set as MCLK
+-	clock provider, SAI provider phandle must be specified here.
+-  - clock-names: Must contain "sai_ck".
+-	Must also contain "MCLK", if SAI shares a master clock,
+-	with a SAI set as MCLK clock provider.
+-  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
+-  - dma-names: identifier string for each DMA request line
+-	"tx": if sai sub-block is configured as playback DAI
+-	"rx": if sai sub-block is configured as capture DAI
+-  - pinctrl-names: should contain only value "default"
+-  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+-
+-SAI subnodes Optional properties:
+-  - st,sync: specify synchronization mode.
+-	By default SAI sub-block is in asynchronous mode.
+-	This property sets SAI sub-block as slave of another SAI sub-block.
+-	Must contain the phandle and index of the sai sub-block providing
+-	the synchronization.
+-  - st,iec60958: support S/PDIF IEC6958 protocol for playback
+-	IEC60958 protocol is not available for capture.
+-	By default, custom protocol is assumed, meaning that protocol is
+-	configured according to protocol defined in related DAI link node,
+-	such as i2s, left justified, right justified, dsp and pdm protocols.
+-	Note: ac97 protocol is not supported by SAI driver
+-   - #clock-cells: should be 0. This property must be present if the SAI device
+-	is a master clock provider, according to clocks bindings, described in
+-	Documentation/devicetree/bindings/clock/clock-bindings.txt.
+-
+-The device node should contain one 'port' child node with one child 'endpoint'
+-node, according to the bindings defined in Documentation/devicetree/bindings/
+-graph.txt.
+-
+-Example:
+-sound_card {
+-	compatible = "audio-graph-card";
+-	dais = <&sai1b_port>;
+-};
+-
+-sai1: sai1@40015800 {
+-	compatible = "st,stm32h7-sai";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	ranges = <0 0x40015800 0x400>;
+-	reg = <0x40015800 0x4>;
+-	clocks = <&rcc SAI1_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
+-	clock-names = "pclk", "x8k", "x11k";
+-	interrupts = <87>;
+-
+-	sai1a: audio-controller@40015804 {
+-		compatible = "st,stm32-sai-sub-a";
+-		reg = <0x4 0x1C>;
+-		clocks = <&rcc SAI1_CK>;
+-		clock-names = "sai_ck";
+-		dmas = <&dmamux1 1 87 0x400 0x0>;
+-		dma-names = "tx";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_sai1a>;
+-
+-		sai1b_port: port {
+-			cpu_endpoint: endpoint {
+-				remote-endpoint = <&codec_endpoint>;
+-				format = "i2s";
+-			};
+-		};
+-	};
+-};
+-
+-audio-codec {
+-	codec_port: port {
+-		codec_endpoint: endpoint {
+-			remote-endpoint = <&cpu_endpoint>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+new file mode 100644
+index 000000000000..51dd2b3bdeb1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+@@ -0,0 +1,191 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/st,stm32-sai.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Serial Audio Interface (SAI)
++
++maintainers:
++  - Olivier Moysan <olivier.moysan@st.com>
++
++description:
++  The SAI interface (Serial Audio Interface) offers a wide set of audio
++  protocols as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
++  The SAI contains two independent audio sub-blocks. Each sub-block has
++  its own clock generator and I/O lines controller.
++
++properties:
++  compatible:
++    enum:
++      - st,stm32f4-sai
++      - st,stm32h7-sai
++
++  reg:
++    items:
++      - description: Base address and size of SAI common register set.
++      - description: Base address and size of SAI identification register set.
++    minItems: 1
++    maxItems: 2
++
++  ranges:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  clocks:
++    items:
++      - description: pclk feeds the peripheral bus interface.
++      - description: x8k, SAI parent clock for sampling rates multiple of 8kHz.
++      - description: x11k, SAI parent clock for sampling rates multiple of 11.025kHz.
++
++  clock-names:
++    items:
++      - const: pclk
++      - const: x8k
++      - const: x11k
++
++required:
++  - compatible
++  - reg
++  - ranges
++  - "#address-cells"
++  - "#size-cells"
++  - clocks
++  - clock-names
++
++patternProperties:
++  "^audio-controller@[0-9a-f]+$":
++    type: object
++    description:
++      Two subnodes corresponding to SAI sub-block instances A et B
++      can be defined. Subnode can be omitted for unsused sub-block.
++
++    properties:
++      compatible:
++        description: Compatible for SAI sub-block A or B.
++        pattern: "st,stm32-sai-sub-[ab]"
++
++      "#sound-dai-cells":
++        const: 0
++
++      reg:
++        maxItems: 1
++
++      clocks:
++        items:
++          - description: sai_ck clock feeding the internal clock generator.
++          - description: MCLK clock from a SAI set as master clock provider.
++        minItems: 1
++        maxItems: 2
++
++      clock-names:
++        items:
++          - const: sai_ck
++          - const: MCLK
++        minItems: 1
++        maxItems: 2
++
++      dmas:
++        maxItems: 1
++
++      dma-names:
++        description: |
++          rx: SAI sub-block is configured as a capture DAI.
++          tx: SAI sub-block is configured as a playback DAI.
++        enum: [ rx, tx ]
++
++      st,sync:
++        description:
++          Configure the SAI sub-block as slave of another SAI sub-block.
++          By default SAI sub-block is in asynchronous mode.
++          Must contain the phandle and index of the SAI sub-block providing
++          the synchronization.
++        allOf:
++          - $ref: /schemas/types.yaml#definitions/phandle-array
++          - maxItems: 1
++
++      st,iec60958:
++        description:
++          If set, support S/PDIF IEC6958 protocol for playback.
++          IEC60958 protocol is not available for capture.
++          By default, custom protocol is assumed, meaning that protocol is
++          configured according to protocol defined in related DAI link node,
++          such as i2s, left justified, right justified, dsp and pdm protocols.
++        allOf:
++          - $ref: /schemas/types.yaml#definitions/flag
++
++      "#clock-cells":
++        description: Configure the SAI device as master clock provider.
++        const: 0
++
++    required:
++      - compatible
++      - "#sound-dai-cells"
++      - reg
++      - clocks
++      - clock-names
++      - dmas
++      - dma-names
++
++    additionalProperties: false
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32f4-sai
++
++  - then:
++      properties:
++        clocks:
++          items:
++            - description: x8k, SAI parent clock for sampling rates multiple of 8kHz.
++            - description: x11k, SAI parent clock for sampling rates multiple of 11.025kHz.        
++
++        clock-names:
++          items:
++            - const: x8k
++            - const: x11k
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    sai1: sai@4400a000 {
++      compatible = "st,stm32h7-sai";
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges = <0 0x4400a000 0x400>;
++      reg = <0x4400a000 0x4>, <0x4400a3f0 0x10>;
++      interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&rcc SAI1>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
++      clock-names = "pclk", "x8k", "x11k";
++      resets = <&rcc SAI1_R>;
++
++      sai1a: audio-controller@4400a004 {
++        compatible = "st,stm32-sai-sub-a";
++        #sound-dai-cells = <0>;
++        reg = <0x4 0x1c>;
++        clocks = <&rcc SAI1_K>;
++        clock-names = "sai_ck";
++        dmas = <&dmamux1 87 0x400 0x01>;
++        dma-names = "tx";
++      };
++    };
++
++...
+-- 
+2.17.1
+
