@@ -2,171 +2,107 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557F6C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 09:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC11AC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 09:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7B620675
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 09:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B70C20714
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 09:52:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QYsqlI9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgBLJqc (ORCPT
+        id S1728738AbgBLJwF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:46:32 -0500
-Received: from sauhun.de ([88.99.104.3]:33658 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbgBLJqc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:46:32 -0500
-Received: from localhost (p54B335A7.dip0.t-ipconnect.de [84.179.53.167])
-        by pokefinder.org (Postfix) with ESMTPSA id 1A98E2C07EB;
-        Wed, 12 Feb 2020 10:46:29 +0100 (CET)
-Date:   Wed, 12 Feb 2020 10:46:28 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        Alex Smith <alex.smith@imgtec.com>,
+        Wed, 12 Feb 2020 04:52:05 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36959 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728712AbgBLJwE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 04:52:04 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so1402568wru.4
+        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 01:52:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=P1BE/J6k12sw+5b4sdZJAqIoEkv4CupE36M6VkS2iPk=;
+        b=QYsqlI9CK3W1WYd+81VRLDbVrXSvTLcqcOtmxlp7DQqLG8nG/Imqsojr2LpIE7SoEf
+         KmLq+Vx+nr7l8mAU5rSKGgywBXGYPFRXb55OR7wPtZ5D089rMiRwyn00uHzZFwZ26/aX
+         E+LJIV2U5RWB9jFrn30qBqiZ5eBQavfsGrVkN8xD8N1XC4MiL0Dqk5DTSjJGAhVcCspk
+         OxEnJpwgOBKG6+uvrk/6Zbh91r+M63HFYDQndyQaDLRNQhm2FLIpoJppJpsG3E374l4E
+         3pq8uu3IAGg6FW2KVCkpM7eh8KDMrsKBA7vSRwrtqqVJq4/YwKNzU2R6l6tC3H6HiLFM
+         1XFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P1BE/J6k12sw+5b4sdZJAqIoEkv4CupE36M6VkS2iPk=;
+        b=G8fnf+G8Rs/9TKu7Wkjiy/7qpjQODNypqHtvBMcLTyS/NgA8IW1iSx3rmYL+niqKNP
+         j6irzoFK3ojNKvBzYZEQ6+aAQDGxp7spzpWePFstFi2tw3cclfJO2Josw6iraaj8IavJ
+         MzQWUkxcrQfEEujMHHK66pk9E3h2hpuIkK4FSmTXHtyfGkxfKx87acLnf2/XAUlvO5u+
+         hG8v2Mb+8oKr7OmyrdEVtSXOg/NOERIw79hS0cVoVduwLILbO4DpltvWMQj3VLqSEwF8
+         FymT8xqOSkFh8uJKuYpEk+H0t8U6YJGX46hB6viUhpFIsMDWInCcZb0NnyvIENPrvvrZ
+         Rk6g==
+X-Gm-Message-State: APjAAAUxWsNAZsFShmkDdkvc1Etv5b+ZYArWlCxMuGm34lvwdclBp1a3
+        CMgEywe+XVtsjmWJm1+Khb1TKw==
+X-Google-Smtp-Source: APXvYqzsQwheQau9uolf3pWBRAMxduG9Z1N4tSP3VvEA0X/qjSw6MaHP8j8sf7/aCCkRVNTE9MxaRQ==
+X-Received: by 2002:adf:97d6:: with SMTP id t22mr14099564wrb.407.1581501122445;
+        Wed, 12 Feb 2020 01:52:02 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id d9sm8887197wrx.94.2020.02.12.01.52.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 01:52:01 -0800 (PST)
+Subject: Re: [PATCH v3 3/6] ASoC: qdsp6: q6afe-dai: add support to pcm port
+ dais
+To:     Adam Serbinski <adam@serbinski.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: i2c: jz4780: silence log flood on txabrt
-Message-ID: <20200212094628.GB1143@ninjato>
-References: <cover.1581457290.git.hns@goldelico.com>
- <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200212015222.8229-1-adam@serbinski.com>
+ <20200212015222.8229-4-adam@serbinski.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <1875fb89-6a25-0d1a-c367-183ae6980ac8@linaro.org>
+Date:   Wed, 12 Feb 2020 09:52:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
-Content-Disposition: inline
-In-Reply-To: <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200212015222.8229-4-adam@serbinski.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
+On 12/02/2020 01:52, Adam Serbinski wrote:
+> +			ret = of_property_read_u32(node, "qcom,pcm-quantype",
+> +						   &priv->quantype);
+> +			if (ret) {
+> +				dev_err(dev, "No quantype from DT\n");
+> +				break;
+> +			}
+> +
+> +			ret = of_property_read_variable_u32_array(node,
+> +						"qcom,pcm-slot-mapping",
+> +						priv->slot_number_mapping,
+> +						1, AFE_MAX_PCM_SLOT_COUNT);
 
-The printout for txabrt is way too talkative. Reduce it to the minimum,
-the rest can be gained by I2C core debugging and datasheet information.
-Also, make it a debug printout, it won't help the regular user.
+These new bindings needs to be documented in 
+Documentation/devicetree/bindings/sound/qcom,q6afe.txt
 
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
----
-
-Sorry, normally I don't do counter patches. Yet, this time I realized
-that it would be faster to actually do what I envisioned than to
-describe it in words. I hope you don't feel offended. This driver has
-way too many dev_err anyhow, so this may be a start.
-
-Obviously, I can't test, does it work for you?
-
- drivers/i2c/busses/i2c-jz4780.c | 36 ++-------------------------------
- 1 file changed, 2 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-jz4780.c b/drivers/i2c/busses/i2c-jz478=
-0.c
-index 16a67a64284a..b426fc956938 100644
---- a/drivers/i2c/busses/i2c-jz4780.c
-+++ b/drivers/i2c/busses/i2c-jz4780.c
-@@ -78,25 +78,6 @@
-=20
- #define X1000_I2C_DC_STOP		BIT(9)
-=20
--static const char * const jz4780_i2c_abrt_src[] =3D {
--	"ABRT_7B_ADDR_NOACK",
--	"ABRT_10ADDR1_NOACK",
--	"ABRT_10ADDR2_NOACK",
--	"ABRT_XDATA_NOACK",
--	"ABRT_GCALL_NOACK",
--	"ABRT_GCALL_READ",
--	"ABRT_HS_ACKD",
--	"SBYTE_ACKDET",
--	"ABRT_HS_NORSTRT",
--	"SBYTE_NORSTRT",
--	"ABRT_10B_RD_NORSTRT",
--	"ABRT_MASTER_DIS",
--	"ARB_LOST",
--	"SLVFLUSH_TXFIFO",
--	"SLV_ARBLOST",
--	"SLVRD_INTX",
--};
--
- #define JZ4780_I2C_INTST_IGC		BIT(11)
- #define JZ4780_I2C_INTST_ISTT		BIT(10)
- #define JZ4780_I2C_INTST_ISTP		BIT(9)
-@@ -576,21 +557,8 @@ static irqreturn_t jz4780_i2c_irq(int irqno, void *dev=
-_id)
-=20
- static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
- {
--	int i;
--
--	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
--	dev_err(&i2c->adap.dev, "device addr=3D%x\n",
--		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
--	dev_err(&i2c->adap.dev, "send cmd count:%d  %d\n",
--		i2c->cmd, i2c->cmd_buf[i2c->cmd]);
--	dev_err(&i2c->adap.dev, "receive data count:%d  %d\n",
--		i2c->cmd, i2c->data_buf[i2c->cmd]);
--
--	for (i =3D 0; i < 16; i++) {
--		if (src & BIT(i))
--			dev_dbg(&i2c->adap.dev, "I2C TXABRT[%d]=3D%s\n",
--				i, jz4780_i2c_abrt_src[i]);
--	}
-+	dev_dbg(&i2c->adap.dev, "txabrt: 0x%08x, cmd: %d, send: %d, recv: %d\n",
-+		src, i2c->cmd, i2c->cmd_buf[i2c->cmd], i2c->data_buf[i2c->cmd]);
- }
-=20
- static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
---=20
-2.20.1
-
-
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5DyXAACgkQFA3kzBSg
-KbYoahAAtIAAtnnBgAg6FGqt5JLhVswxcJnxfAzMxAk708tbDSluUzpyiEXWCa52
-d60BlamWi8++aJOMQ/iZ4k8wdvJX+9AN9JSyLtECMSFGhJVqDygeJGCA7N3qY33S
-XBcvEIf2/OjfaWiTH22XXH9Pt6Hyo7ykrfv0LCD9OQwI5B+OvTfaM4WjXiPMP+dT
-89R9yTKvQPIpV8G6hhj5BKF4TAbkmn2MKMNG+Z6vWlPToTQAGs732p470xXjSX+t
-Oc5fNIt6NchL2pySrVsqDY84+GTRJ6J8by4lKAK3jQUxB3fzYqgri2z+BPBsXUkQ
-IuaqB/a1gvmkAFl8JwfHvvgueeisXevGW5RdpPnWhvNPBDNg5BXgeSSjZDRLJCdA
-rRO+2IUDoRyCLAnu7hV43GtIqiKQSidH8t9WfjLbspxici/1MISwfJPivPvbTBx3
-AVFXKutTSBgR4r3Obtyb5cUZvQbYP+IvKArUHPTcFeVGZPFLhNF1OjgMAd6W/Q05
-uZqYud9prhC71Hk9t3jW6rsXvKUfZkMESrMGsCnH0NUayvBkGv89r+B/HqqurLLn
-5Hx1cO1AZpIxnO9QYaiQya6mCysTJZE7x3lpHznLBt6skM2JonKiqOUeTN8f3m86
-oDJgVd4tkF2kIOweXNSxBWP7K3Xh5tCVqCdeEPz5fG7WlkGdKoI=
-=LWAJ
------END PGP SIGNATURE-----
-
---i9LlY+UWpKt15+FH--
+--srini
