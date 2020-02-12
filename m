@@ -2,161 +2,155 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76213C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D956BC352A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 12:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5D92082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF5B2073C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 12:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YY82rS9M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wcGmpKj9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CWwuR3L1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgBLL40 (ORCPT
+        id S1727007AbgBLMAX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:56:26 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54923 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726775AbgBLL40 (ORCPT
+        Wed, 12 Feb 2020 07:00:23 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:60507 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbgBLMAX (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:56:26 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9A41E21AF2;
-        Wed, 12 Feb 2020 06:56:25 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 12 Feb 2020 06:56:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=ig3VE7Ch1wmeLx6+eFIshUeCqU0
-        kCITiUOshPsali/I=; b=YY82rS9MDXXwvt3mPH0C/r3qvLku5CFAnzoDVuHymO4
-        aJKkn1pOSE7xCyb9cfRtDxrXF2zGWfBrGrwmQ6X8r9suMqmSfsTtXGFy1BI25xL+
-        q1pLicBS9p1em+SkmIvCsCQ8QnGLeVDRgwBQiTkYMzfrXY3czh5fSvrDQ7FkrgIV
-        kAY1v7aj0cPvb42vvRoXoLywULT/wsJTyAWQDhgQ0NvhVnCHzctMJvNYOSyEIEZi
-        s3ojSo8NlOSgKEOI6kEPMaqr7sQsdoBQktbHTKMq/gWzQzXv38/d7shCtTNFKdN0
-        phaMm2tx1O+fnIMzTqS4aUg4zji8tUN0Mxn+cN2ob6g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ig3VE7
-        Ch1wmeLx6+eFIshUeCqU0kCITiUOshPsali/I=; b=wcGmpKj9d5YJEU3dLDyrwV
-        XVSztzMvVvycPfgjouz1aQ7G/cH+dcQJYNJCZYInAhrkpypgBiRXU5Uv37cf+ma6
-        /9shG6/Q2ghnAdXlaxl0wbjav8743a7g2H3OIDD36lzVxDtRBDiN+HLynHlRLmfM
-        66opEHDvAnzAg04K4cSdCfBtbVLinnUyrLttKHFUOzDKM6NNWSWt7NTtSqCqiP+b
-        TtJTlAPS+TJ5wl4SOROmZMiCyatSLQiqoO5ALlXpu252V5u3lpx12CgJgBYXrn+x
-        WKcTYNJ2UDVwgfDJ+2LIv2++0BNgRcFWHRaVunpLmgD0mrARx+eAshJuJ7kCkusw
-        ==
-X-ME-Sender: <xms:6edDXiqHPW2xe6o1DT6dfOevi9tk_ZFiyPTwNWyMhk8wvQvr-BLstw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieehgdefhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epghhithhhuhgsrdgtohhmpdhnrghsuggrqhdrtghomhenucfkphepledtrdekledrieek
-    rdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:6edDXtTrm2pjpBdaJyD4qZvkZCufviFgbL-TTFtBJlDxxtOSUZJrbg>
-    <xmx:6edDXi_PrqihsjBgdiLhQUUAx4Btrxntgo01sLonIqP7_gs3o2RFww>
-    <xmx:6edDXlsnhRzGu-ZfqJodc1Tg8OhadGhi85kQUgqX8korHb2qD0f_Iw>
-    <xmx:6edDXkd_gOGzYJLZzVfiCab1OapiOTDYO4lvYvzTBhqpEIZNEy0YHQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D5780328005E;
-        Wed, 12 Feb 2020 06:56:24 -0500 (EST)
-Date:   Wed, 12 Feb 2020 12:56:22 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Benedikt Spranger <b.spranger@linutronix.de>
-Cc:     bage@linutronix.de, devicetree@vger.kernel.org,
+        Wed, 12 Feb 2020 07:00:23 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581508822; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=RLVnJC/Yp3dxGv33CP0wjpJhPdl/x7brvP9Cxn1hiIY=; b=CWwuR3L1t/UWQrVwFI3jYRUMXViwx+y1tAO0szD8ZFkwqQKR6LIwg3dTEaWjuYur8HGOezAl
+ bvnnQMVXEPT9VWiePwrmiRyWXFu5iuasGBHxRMCdl/aeK0hSjSZmvowHbFHzIvJ8DYvDldv8
+ Yg2AE+9Zxmt9DwLPfGp4qi94b+g=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e43e8c7.7fe49e644fb8-smtp-out-n03;
+ Wed, 12 Feb 2020 12:00:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7C3D9C447A3; Wed, 12 Feb 2020 12:00:07 +0000 (UTC)
+Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8FAFEC433A2;
+        Wed, 12 Feb 2020 12:00:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8FAFEC433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V1] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+To:     Doug Anderson <dianders@google.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/5] dt-bindings: Add vendor prefix lx for Linutronix
-Message-ID: <20200212115622.2vsg4tycbfpdbj5q@gilmour.lan>
-References: <20200206113328.7296-1-bage@linutronix.de>
- <20200206113328.7296-2-bage@linutronix.de>
- <20200210074310.c6adwjegqouzs6uc@gilmour.lan>
- <20200212103942.6f2dc5ec@mitra>
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+ <CAD=FV=X6-aWM_fSfLE0ySuM04FvQCTKpM-A87k3xMXBMRzNXFQ@mail.gmail.com>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <1e3f8fc3-dde9-5aaf-12a9-0eb0bc5ceb83@codeaurora.org>
+Date:   Wed, 12 Feb 2020 17:30:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zxg6crwczmz2arin"
-Content-Disposition: inline
-In-Reply-To: <20200212103942.6f2dc5ec@mitra>
+In-Reply-To: <CAD=FV=X6-aWM_fSfLE0ySuM04FvQCTKpM-A87k3xMXBMRzNXFQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---zxg6crwczmz2arin
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Feb 12, 2020 at 10:39:42AM +0100, Benedikt Spranger wrote:
-> On Mon, 10 Feb 2020 08:43:10 +0100
-> Maxime Ripard <maxime@cerno.tech> wrote:
+On 2/11/2020 10:12 PM, Doug Anderson wrote:
+> Hi,
 >
-> > Vendor names are usually either the vendor name itself or the stock
-> > name, so you should really use linutronix here
+> On Tue, Feb 11, 2020 at 7:29 AM Veerabhadrarao Badiganti
+> <vbadigan@codeaurora.org> wrote:
+>> CQE feature has been enabled on sdhci-msm. Add CQE reg map
+>> that needs to be supplied for supporting CQE feature.
+>>
+>> Change-Id: I788c4bd5b7cbca16bc1030a410cc5550ed7204e1
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index 7ee639b..eaa0998 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -27,6 +27,11 @@ Required properties:
+>>   - reg: Base address and length of the register in the following order:
+>>          - Host controller register map (required)
+>>          - SD Core register map (required for msm-v4 and below)
+>> +       - CQE register map (Optional, needed only for eMMC and msm-v4.2 above)
+> I did a quick search and it appears that SD cards implementing 6.0 of
+> the spec can also use CQE.  Is that correct?  If so, maybe remove the
+> part about "eMMC"?
+On qcom platforms, only SDHC instance meant for eMMC has the CQE support.
+So mentioned that its needed only for eMMC.
 >
-> May you kindly enlighten me why?
+> Maybe also change "needed" to "useful" to make it clear that this
+> entry isn't actually required for all msm-v4.2 controllers?
+sure.
 >
-> "lx" is used internaly and externaly in projects, publications,
-> contracts, etc. as common abbreviation by the Linutronix GmbH.
-> Therefore it was self-evident to use this abbreviation in the device
-> tree.
-
-Googling "linutronix lx" returns approximately 0 meaningful results,
-so it's really not "common", at least externally.
-
-"lx linux" doesn't return much either.
-
-> As I did not found any documented rule in the kernel documentation,
-> which denote a restriction for the vendor abbreviation in the device
-> tree bindings the decision for "lx" was clear.
-
-It's in the devicetree specification:
-https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
-
-Section 2.3: Standard Properties
-
-"The recommended format is "manufacturer,model", where manufacturer is
-a string describing the name of the manufacturer (such as a stock
-ticker symbol)"
-
-> A quick look into
-> "Documentation/devicetree/bindings/vendor-prefixes.yaml"
-> assured me in the decision to use "lx".
-> Here some example not fitting your rule:
-> "^ad,.*":
-> "^adi,.*":
-
-https://www.nasdaq.com/market-activity/stocks/adi
-
-> "^al,.*":
-> "^anvo,.*":
-
-That's the name of the company
-
-> ...
+>> +- reg-names: When CQE register map is supplied, below reg-names are required
+>> +       - "hc_mem" for Host controller register map
+>> +       - "core_mem" for SD cpre regoster map
+> s/regoster/register
 >
-> In summary I would be encouraged if "lx" gets in, as it is *our*
-> abbreviation.
+>
+>> +       - "cqhci_mem" for CQE register map
+> I'm at least slightly confused.  You say that reg-names are there only
+> if CQE register map is supplied.  ...and that requires 4.2 and above.
+> ...but "core_mem" is only there on 4.0 and below.  So there should
+> never be a "core_mem" entry?
+core_mem is present till <v5.0
+cqhci_mem is present on >=v4.2
+Say, for version v4.2 both are present; .... and for v5.0 only cqhci_mem 
+is present.
 
-How using the name of your company that *everybody* knows it by would
-be discouraging?
+Both hc reg-map and core reg-map are being accessed through index.
+So no need to list the reg names 'hc_mem' & 'core_mem' in general.
 
-Maxime
+But coming to cqhci reg-map we can't access it with fixed index, since 
+its index varies between 1/2
+based on controller version.
 
---zxg6crwczmz2arin
-Content-Type: application/pgp-signature; name="signature.asc"
+So we are accessing it through reg-names. Since reg-names has to be 
+associated with corresponding
+reg maps, other two reg-names (hc_mem & core_mem) also need to br listed 
+when cqhci_mem is listed.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkPn5gAKCRDj7w1vZxhR
-xVbHAP44TSwjociYihkBUbtAqeUG73/Gs8eIaXsdMtfjeUcHxgEAsdXP+bjh4sDq
-c5dDoN4CP11voRS33qWeRjfPzl+ktwk=
-=AYd1
------END PGP SIGNATURE-----
-
---zxg6crwczmz2arin--
+That is the reason, I mentioned it like these are needed only cqe reg 
+map is supplied.
+If it is creating confusion, i will remove that statement.
+> Trying to specify that sanely in free-form text seems like it's gonna
+> be hard and not worth it.  You should probably transition to yaml
+> first?
+>
+>
+> I will also note that Rob isn't a huge fan of "reg-names".  In a
+> different conversation I think you mentioned you had a reason for
+> having it.  I guess just be prepared to defend yourself against Rob if
+> you feel strongly about keeping reg-names.
+Sure. Its the same reason mentioned in above comment.
+>
+> -Doug
