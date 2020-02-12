@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948DC352A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DC8C352A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CE121734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F1D21569
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581548623;
-	bh=fU30PkEF5AzebTofCICkBipjj6UxPaHZSLK931dkXp4=;
+	s=default; t=1581548625;
+	bh=jtcsh6nuPtS9l4I/p5Sx9pZFClK7PZ2JjApDIhkYods=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=fiz4MqP1dM1sB65a1zWGetITcyXvg3CsiPEUyJ34Ct31tWnMamzKlnXF0Ag2PdbeC
-	 CGbAeHPefDk3GLR64Ykfegnz+L2l4c5+t2BrgU8y/1N5/kMNwA9bbfQpiPl/GczoMS
-	 4C/rW7rKrgDy6tRlxbbS3eq3o3m2t+z3tD/slhHY=
+	b=0hIPp9D/HDKAlfqf/cNf3hoZvo1wbH1cOTplkdaMVIi8e0L4fKdV6dfSEgoYdmoef
+	 xAiEqQCSPpmdnrbdn5uXKjWOY5/sGLQuXA3xWhgvuEa/LIuGml9RdvZgFraqZu5ePK
+	 aRcT6oCi6hSahEGCFSpphKpL7of81wUOqLYA4qVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgBLXDk (ORCPT
+        id S1729297AbgBLXDo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:03:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 18:03:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbgBLXDj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:03:39 -0500
+        id S1728447AbgBLXDo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 18:03:44 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E3DE21569;
-        Wed, 12 Feb 2020 23:03:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC042168B;
+        Wed, 12 Feb 2020 23:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581548619;
-        bh=fU30PkEF5AzebTofCICkBipjj6UxPaHZSLK931dkXp4=;
+        s=default; t=1581548623;
+        bh=jtcsh6nuPtS9l4I/p5Sx9pZFClK7PZ2JjApDIhkYods=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=E83cguvoAQC5HFH0GrNnwtJUxEEOFnZ7gorksbX3QSdB/S1P8myeRnzTqSyM7quor
-         ygBTInUWmYxUSatmw6no5B5HC/oZ84l/WoepqBi7Wb92GnlhxKuQLEYqXYzBLsFyS3
-         TtqFSzDf9CCSoabSoU6ptcoTv3lNDP4HgjnL6H00=
+        b=O0wDswvxpSY8488QVLUWaxZUTRzUfV+S2ZmCvDy92Pddx59gFQf9WoebxAjJ5vWNR
+         FD9ZSoO+xlj/OEUv5RO91tZKjjxCI5aNbZnIpxtLiidGNHaYJgqe64dTSJUFOVS9P+
+         Hgv9UTcMJpoABAynPDv/j2pZWIyWO62VLufIYBg4=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
-References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v1 1/2] clk: qcom: videocc: Update the clock flag for video_cc_vcodec0_core_clk
+In-Reply-To: <1581423236-21341-2-git-send-email-tdas@codeaurora.org>
+References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org> <1581423236-21341-2-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v1 2/2] clk: qcom: dispcc: Remove support of disp_cc_mdss_rscc_ahb_clk
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     David Brown <david.brown@linaro.org>,
         Rajendra Nayak <rnayak@codeaurora.org>,
@@ -54,19 +54,18 @@ Cc:     David Brown <david.brown@linaro.org>,
         Taniya Das <tdas@codeaurora.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Taniya Das <tdas@codeaurora.org>, robh@kernel.org
-Date:   Wed, 12 Feb 2020 15:03:38 -0800
-Message-ID: <158154861845.184098.5172409402237427332@swboyd.mtv.corp.google.com>
+Date:   Wed, 12 Feb 2020 15:03:42 -0800
+Message-ID: <158154862279.184098.7085051280158509912@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2020-02-11 04:13:55)
-> The clock disable signal for video_cc_vcodec0_core_clk is tied to
-> vcodec0_gdsc which is supported in the HW control mode. Thus turning off
-> the clock would be taken care automatically when the GDSC turns OFF by
-> hardware and clock driver does not require to poll on the CLK_OFF bit.
+Quoting Taniya Das (2020-02-11 04:13:56)
+> The disp_cc_mdss_rscc_ahb_clk is default enabled from hardware and thus
+> does not require to be marked CRITICAL. This which would allow the RCG to
+> be turned OFF when the display turns OFF and not blocking XO.
 >=20
 > Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
