@@ -2,98 +2,87 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B40C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 06:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B7C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 06:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2EE2073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 06:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB21206ED
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 06:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GidHGpfU"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QqKpIGph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbgBLGFt (ORCPT
+        id S1728099AbgBLGIq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 01:05:49 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39627 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgBLGFt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 01:05:49 -0500
-Received: by mail-pj1-f67.google.com with SMTP id e9so408391pjr.4
-        for <devicetree@vger.kernel.org>; Tue, 11 Feb 2020 22:05:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Js4SWp4AxGnmgpS0xpb2r+20hjEB6ZJuleDc08nwvzc=;
-        b=GidHGpfU+1Q586bqtdp7qWIQdqBWX0kfx/pBWtI1uAajniLiy2nPpkxJ7JjnAweVHg
-         ilZrHgwOmIDgE611haEEILEBp4woWOhMLh2UhtBdIbORMMG6SuYfjXk2XjPtQTp5tyr1
-         WkA/POXqdq+jTPxtC+KlqAU+qgfuXQsKGJ1cI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Js4SWp4AxGnmgpS0xpb2r+20hjEB6ZJuleDc08nwvzc=;
-        b=KncWdxxEDDJM7AbV8E/jHHpLimidkaV3WHz7ru+bSIRNgJqc0tnalKzZgbkWBFoNEF
-         z6T96Lle3htOZq4QLLVVTnhO30tqImMyBrEqBsn/ujAKuRMcawTALc235Kg/0+lcK7ar
-         MXFPOCohIIK7I7uM5g3TEmGck3/nCg9hcPJg5Rq/Xcrc+bO+rmK7Gq0VztkIcDQFy1kn
-         Wiokt6vp+qu5n95NoqxfEUSR6dgwrAk5Ue1eyLq4VlBYds/GuEeW1CeplXwenSsTliVd
-         w+oY9GF3OM5K1ij8t9++BWAoLlnjYBwiWxRJ9WQrrD1cqfCcTcTp0d3bZp04/zLcFtmG
-         XqRQ==
-X-Gm-Message-State: APjAAAUsm4sEV0h+OSRJk92Ic9iUeWFiElnbBZ+hwg5dLsMOAXJRpYuy
-        DQS5AvADl5dQ1fAKst0NBboJIA==
-X-Google-Smtp-Source: APXvYqxpyZsLuZkNUFq1aaY5ImmMD5AfRib3xtsrExdV4p76C8R6dTdGEPgJdoE+a7Q4WF+2gH+auA==
-X-Received: by 2002:a17:902:9f88:: with SMTP id g8mr22080796plq.100.1581487546921;
-        Tue, 11 Feb 2020 22:05:46 -0800 (PST)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id d69sm6792163pfd.72.2020.02.11.22.05.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 22:05:46 -0800 (PST)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: mt8173: add arm,no-tick-in-suspend in timer
-Date:   Wed, 12 Feb 2020 14:05:37 +0800
-Message-Id: <20200212060536.156890-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
+        Wed, 12 Feb 2020 01:08:46 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:59215 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725887AbgBLGIq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 01:08:46 -0500
+X-UUID: 84c92f6bafd04e06bc906fd0e676de58-20200212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SWD5TohyT5cMPrdmmo17mXTsqaC7XRDeHZDf6wxl7cY=;
+        b=QqKpIGphIjGohnCyD8IAS+Rvhp6QiGtoKfw21hkpiSgyk0/ISqf3VfrZaZ0I6USNo/u1GDfCNekz+hx3EDXSorL0F2XISXUewfRUb/mRQ2mdNoeFC+kjaX+gkfWQVISej/+WmlJL94L75bGKmyFJ+VvlCm/JQ42qz88verQ3d2c=;
+X-UUID: 84c92f6bafd04e06bc906fd0e676de58-20200212
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 208193523; Wed, 12 Feb 2020 14:08:42 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Feb 2020 14:07:53 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 12 Feb 2020 14:08:49 +0800
+Message-ID: <1581487721.16783.9.camel@mtkswgap22>
+Subject: Re: [PATCH v2 1/4] dt-bindings: regulator: Add document for MT6359
+ regulator
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 12 Feb 2020 14:08:41 +0800
+In-Reply-To: <8398188f-820a-5abf-f52e-b79c0c583704@gmail.com>
+References: <1580958411-2478-1-git-send-email-Wen.Su@mediatek.com>
+         <1580958411-2478-2-git-send-email-Wen.Su@mediatek.com>
+         <20200206114927.GN3897@sirena.org.uk> <1581335854.16783.1.camel@mtkswgap22>
+         <8398188f-820a-5abf-f52e-b79c0c583704@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Arch timer stops during system suspend. Add arm,no-tick-in-suspend
-property in timer.
-
-This is a follow up for d8ec7595a013
-("clocksource/drivers/arm_arch_timer: Don't assume clock runs in
-suspend")
-
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 8b4e806d5119..1a9ad90bd7a6 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -331,6 +331,7 @@ timer {
- 			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10
- 			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+		arm,no-tick-in-suspend;
- 	};
- 
- 	soc {
--- 
-2.25.0.225.g125e21ebc7-goog
+SGksIA0KDQpPbiBUdWUsIDIwMjAtMDItMTEgYXQgMTc6MDYgKzAxMDAsIE1hdHRoaWFzIEJydWdn
+ZXIgd3JvdGU6DQo+IA0KPiBPbiAxMC8wMi8yMDIwIDEyOjU3LCBXZW4gU3Ugd3JvdGU6DQo+ID4g
+SGksIA0KPiA+IA0KPiA+IE9uIFRodSwgMjAyMC0wMi0wNiBhdCAxMTo0OSArMDAwMCwgTWFyayBC
+cm93biB3cm90ZToNCj4gPj4gT24gVGh1LCBGZWIgMDYsIDIwMjAgYXQgMTE6MDY6NDhBTSArMDgw
+MCwgV2VuIFN1IHdyb3RlOg0KPiA+Pg0KPiA+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+
+PiArLSBjb21wYXRpYmxlOiAibWVkaWF0ZWssbXQ2MzU5LXJlZ3VsYXRvciINCj4gPj4NCj4gPj4g
+V2h5IGRvZXMgdGhpcyBuZWVkIGEgY29tcGF0aWJsZSBzdHJpbmcgLSBpdCBsb29rcyBsaWtlIGl0
+J3MganVzdA0KPiA+PiBlbmNvZGluZyB0aGUgd2F5IExpbnV4IHNwbGl0cyBkZXZpY2VzIHVwIGlu
+dG8gdGhlIERULCBub3QNCj4gPj4gcHJvdmlkaW5nIHNvbWUgcmV1c2FibGUgSVAgYmxvY2suDQo+
+ID4gDQo+ID4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KPiA+IEkgd2lsbCByZW1vdmUgaXQg
+aW4gdGhlIG5leHQgcGF0Y2guDQo+ID4gDQo+IA0KPiBJZiB0aGlzIHRoZSB3YXkgdG8gZ28sIHRo
+ZW4gcGxlYXNlIGZpeCBhbGwgdGhlIG90aGVyIE1lZGlhVGVrIGJpbmRpbmcNCj4gZGVzY3JpcHRp
+b24gZm9yIHJlZ3VsYXRvcnMgKCsgdGhlIGR0cykgYXMgdGhpcyBpcyB0aGVuIHdyb25nLg0KPiBU
+aGFua3MhDQo+IE1hdHRoaWFzDQoNClRoZSBtdDYzNTktcmVndWxhdG9yIGRyaXZlciBpcyBzdGls
+bCBhIHJldXNhYmxlIElQIGJsb2NrLkl0IGNvdWxkIGJlDQphZGRpbmcgbW9yZSBvdGhlciBNZWRp
+YVRlayBwbWljIG10NjM1OSBzaW1pbGFyIGNvbXBhdGlibGUgZGV2aWNlLiBCdXQNCmN1cnJlbnRs
+eSB0aGlzIHBhdGNoIG9ubHkgdGVzdGluZyBvbiBwbWljIG10NjM1OS4NCklzIGl0IGFsbG93YWJs
+ZSB0byBrZWVwIGNvbXBhdGlibGUgc3RyaW5nIGluIGJpbmRpbmcgZGVzY3JpcHRpb24gPw0KDQpU
+aGFua3MNCg0K
 
