@@ -1,183 +1,185 @@
-Return-Path: <SRS0=x5QR=37=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68029C35242
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 23:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5376C35242
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 00:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3961B20842
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Feb 2020 23:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581463528;
-	bh=8+QEMo0KaGrsQjqAphm6GxLxfHtuCWMrnJmpQjbwK/g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JbJq86ewrevOLoRTiEBIh515lN6CLJplsiCfy0BlAaoNqtA9ybqGUxLAiQQQD4pc5
-	 cduHNbqeMKRDT9SHHH/K9svi2fAq2eovaI8gYOkkKu7Sx6mqWSvEYK4GzHRDeFk49j
-	 6y1i+LEdwjCmgy8O19ocMVr5coh5VONt0re9KXdk=
+	by mail.kernel.org (Postfix) with ESMTP id 92FCC20873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 00:28:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3m3P7+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgBKXZ1 (ORCPT
+        id S1728041AbgBLA27 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 18:25:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727597AbgBKXZ1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Feb 2020 18:25:27 -0500
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 886FF20842;
-        Tue, 11 Feb 2020 23:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581463526;
-        bh=8+QEMo0KaGrsQjqAphm6GxLxfHtuCWMrnJmpQjbwK/g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U5XTL5riMETDn7faoSi8Pnp1Px8TtrAUjPASWkZ48Csm8C17M0h/f5H02c1oTu7Bj
-         YLCaTDvUcL0k0QGpOtCw1hr4BFTTipSyF4zvsxGjFqNkpCQz6svyCfp+ycKAnP8zjp
-         XJPgTZqSgSJ75nAOl+T1YBlRCwO8V2cunXC07l4k=
-Received: by mail-qt1-f176.google.com with SMTP id e21so187717qtp.13;
-        Tue, 11 Feb 2020 15:25:26 -0800 (PST)
-X-Gm-Message-State: APjAAAXrkuJynduuEysHq34SG0pNlSXqutZ3CubcImPyAY4MoyNh3HxD
-        aGW9ZKWy4UU3ZuDG6dCFTHoOowoRwB9INARm/g==
-X-Google-Smtp-Source: APXvYqxNVEgCDQaNqwwCDpPOOn1rWM3YviMqI1BKXSNbUv+rnUKBni0IKUOeGhgwCvMRU7d2XppHctvfNrj2CeTDLd0=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr4831678qtj.300.1581463525519;
- Tue, 11 Feb 2020 15:25:25 -0800 (PST)
+        Tue, 11 Feb 2020 19:28:59 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37138 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgBLA26 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 19:28:58 -0500
+Received: by mail-ed1-f67.google.com with SMTP id s3so320362edy.4;
+        Tue, 11 Feb 2020 16:28:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5ZyotboeQnfX3ApYlhv3hcCNZzz6LIMW24tRirhDBC0=;
+        b=d3m3P7+n6hZ/F+wWRU4iSoQ7U+slq7kc2DjtKnBbPjHXqtqpexttbO+qNbBGXcYIqS
+         Lt7V8pxV3Xsyuaaze8GFVU58KSHkywNs1GKN/xfeNAaTypvB1U7PPkeajJVbJTGKCfkQ
+         vs3KvfwFFqQPJfZvaUVlZxj5iP5cVAbOVazipcWALqEjyUWXRwaTgGqqsFnJtQdnvdzQ
+         OFYfs5A/tkmNCNDu0jgqIjJXdcgxOrDGoycIUjfvKUUZ9d9g0mnP2qbol2Cd6PJEG4hC
+         W729TZPC1+czKg4orgiGtcGmf0+t9+Vfvl0ZJa244PgEdEVXwmK15lVg2S8NnqtLXe6H
+         Ms8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5ZyotboeQnfX3ApYlhv3hcCNZzz6LIMW24tRirhDBC0=;
+        b=h8iL8s0PjYcXQZYqiFzSEFlxnAYywsCxeFinfDXiRVdvaflFeUJJN9Q2/ElqYBBNQT
+         fTxepm0QUlS1a2lbKViY36DbGM1vQkKTFtbBbTCocV/O1d5TJQMvpzvgwgxzZjmlKDJu
+         wQgaCnqRNHTToA+M1kMhhG1u4d3ktYYMQP9TGoqQyuqtWLCJ2gMFMjQ9oOIpz8NrdfAJ
+         ZJZqjBd9I/2g1bwJaxl6f3Xft82xXOcEpuy2YClCa2xxWZKtnzbwOsdtFPZdgw3IAPpI
+         jve8xOFEkqEgOJfx9FvB01kWwSQlj/hIuS51MlzRHbdm7APZtqUPSZPwnkSQls0Cye/l
+         cR6A==
+X-Gm-Message-State: APjAAAVrLfJ1FUL16CceV3UctWAJZR54i7lD7vRyAiPm1BuQdS9Ytntt
+        GtIQNdjkGvD5gYxxQveP1fucywrmRrQ/FJP1Tjo=
+X-Google-Smtp-Source: APXvYqw4KdNzAga+QI5x4feq8a96q/btCz8UFtzDxNFineH4PDvzVI6XTkyhJS3cLENwNxpu8RtGsiznYmoCFsb05Ks=
+X-Received: by 2002:a05:6402:298:: with SMTP id l24mr8284606edv.70.1581467336302;
+ Tue, 11 Feb 2020 16:28:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20200207203752.209296-1-pmalani@chromium.org> <20200207203752.209296-2-pmalani@chromium.org>
-In-Reply-To: <20200207203752.209296-2-pmalani@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 11 Feb 2020 17:25:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
-Message-ID: <CAL_JsqKnQDhnb14TsOeHhXS0UAX6kexe44pfOntrbEcxB0CC9A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        heikki.krogerus@intel.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>
+References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
+ <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
+ <2f5abc857910f70faa119fea5bda81d7@codeaurora.org> <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
+ <1d201377996e16ce25acb640867e1214@codeaurora.org> <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
+ <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com>
+In-Reply-To: <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 11 Feb 2020 16:28:45 -0800
+Message-ID: <CAF6AEGvLOWKVCjjmqranEi9TKOpMM+BPK199wQ7f=Ez491uhcA@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 2:39 PM Prashant Malani <pmalani@chromium.org> wrote:
+On Tue, Feb 11, 2020 at 7:59 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
 >
-> Some Chrome OS devices with Embedded Controllers (EC) can read and
-> modify Type C port state.
+> On Tue, Feb 11, 2020 at 8:44 AM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
+> > >
+> > > On 2020-02-07 19:40, Jeffrey Hugo wrote:
+> > > > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
+> > > >>
+> > > >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
+> > > >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
+> > > >> > wrote:
+> > > >> >>
+> > > >> >> For a given byte clock, if VCO recalc value is exactly same as
+> > > >> >> vco set rate value, vco_set_rate does not get called assuming
+> > > >> >> VCO is already set to required value. But Due to GDSC toggle,
+> > > >> >> VCO values are erased in the HW. To make sure VCO is programmed
+> > > >> >> correctly, we forcefully call set_rate from vco_prepare.
+> > > >> >
+> > > >> > Is this specific to certain SoCs? I don't think I've observed this.
+> > > >>
+> > > >> As far as Qualcomm SOCs are concerned, since pll is analog and the
+> > > >> value
+> > > >> is directly read from hardware if we get recalc value same as set rate
+> > > >> value, the vco_set_rate will not be invoked. We checked in our idp
+> > > >> device which has the same SOC but it works there since the rates are
+> > > >> different.
+> > > >
+> > > > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
+> > > > does this issue apply to?  Everything implementing the 10nm pll?  One
+> > > > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
+> > > > so I'm interested to know what is the actual impact here.  I don't see
+> > > > an "IDP" SoC in the IP catalog, so I really have no idea what you are
+> > > > referring to.
+> > >
+> > >
+> > > This is not 10nm specific. It is applicable for other nms also.
+> > > Its specific to the frequency being set. If vco_recalc returns the same
+> > > value as being set by vco_set_rate,
+> > > vco_set_rate will not be invoked second time onwards.
+> > >
+> > > For example: Lets take below devices:
+> > >
+> > > Cheza is based on SDM845 which is 10nm only.
+> > > Clk frequency:206016
+> > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
+> > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
+> > >
+> > > Trogdor is based on sc7180 which is also 10nm.
+> > > Clk frequency:69300
+> > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
+> > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
+> > >
+> > > In same trogdor device, we slightly changed the clock frequency and the
+> > > values actually differ which will not cause any issue.
+> > > Clk frequency:69310
+> > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
+> > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
+> >
+> >
+> > tbh, loosing state when power is off is kind of the behavior that I'd
+> > expect.  It kinda makes me wonder if things are not getting powered
+> > off all the way on some SoCs?
+> >
+> > jhugo, are you worried that this patch will cause problems on other
+> > users of the 10nm pll?
 >
-> Add an entry in the DT Bindings documentation that lists out the logical
-> device and describes the relevant port information, to be used by the
-> corresponding driver.
+> Essentially yes.  Conceptually it doesn't seem like this change should
+> cause any harm, however -
 >
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
+> This sounds like we are trying to work around the clk framework, which
+> seems wrong.  It feels like we should be able to set a clk flag for
+> this and make the framework deal with it.
 >
-> Changes in v2:
-> - No changes. Patch first introduced in v2 of series.
+> Also, this fix is 10nm specific, yet this issue affects all
+> implementations?  Seems like this should perhaps be in common code so
+> that we don't need to play whack-a-mole by fixing every implementation
+> piecemeal.
 >
->  .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
->
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> new file mode 100644
-> index 00000000000000..46ebcbe76db3c2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Prashant Malani <pmalani@chromium.org>
-> +
-> +description:
-> +  Chrome OS devices have an Embedded Controller(EC) which has access to
-> +  Type C port state. This node is intended to allow the host to read and
-> +  control the Type C ports. The node for this device should be under a
-> +  cros-ec node like google,cros-ec-spi.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-typec
-> +
-> +  port:
-> +    description: A node that represents a physical Type C port on the
-> +      device.
-> +    type: object
-> +    properties:
-> +      port-number:
-> +        description: The number used by the Chrome OS EC to identify
-> +          this type C port.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +      power-role:
-> +        description: Determines the power role that the Type C port will
-> +          adopt.
-> +        oneOf:
-> +          - items:
-> +            - const: sink
-> +            - const: source
-> +            - const: dual
-> +      data-role:
-> +        description: Determines the data role that the Type C port will
-> +          adopt.
-> +        oneOf:
-> +          - items:
-> +            - const: host
-> +            - const: device
-> +            - const: dual
-> +      try-power-role:
-> +        description: Determines the preferred power role of the Type C port.
-> +        oneOf:
-> +          - items:
-> +            - const: sink
-> +            - const: source
-> +            - const: dual
-> +
-> +    required:
-> +      - port-number
-> +      - power-role
-> +      - data-role
-> +      - try-power-role
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +examples:
-> +  - |+
-> +    typec {
-> +      compatible = "google,cros-ec-typec";
-> +
-> +      port@0 {
+> Finally, the PLLs are notorious for not taking a configuration unless
+> they are running.  I admit, I haven't looked at this patch in detail
+> to determine if that is the case here, but there doesn't seem to be
+> any indication from the commit test or a comment that doing so is
+> actually valid in all cases.
 
-'port' is reserved for OF graph binding which this is not.
+I'm not obviously seeing a clk-provider flag for this.. although I
+won't claim to be a clk expert so maybe I'm looking for the wrong
+thing..
 
-> +        port-number = <0>;
-> +        power-role = "dual";
-> +        data-role = "dual";
-> +        try-power-role = "source";
+On a more practical level, I'd kinda like to get some sort of fix for
+v5.6, as currently suspend/resume doesn't work (or at least the
+display does not survive) on trogdor, which is a bit annoying.  It
+sounds a bit like cheza was just getting lucky (because of rate
+rounding?)  I'm not sure if it is the same situation on other sdm850
+devices (yoga c630) or sdm835 devices (are they using the 10mm pll as
+well?).  I will confess to not really testing s/r on the yoga c630,
+although maybe someone else has (Bjorn?).
 
-These are usb-connector binding properties, but this is not a
-usb-connector node. However, I think it should be. The main thing to
-work out seems to be have multiple connectors.
+Possibly this should be pushed up to the clk framework, although not
+sure if it has a good way to realize the clk provider has lost power?
+But that sounds like a better thing for v5.7 than v5.6-rc fixes.. ofc
+if there is a better way that I'm not seeing, I'm all ears.
 
-With your binding, how does one associate the USB host controller with
-each port/connector? That's a solved problem with the connector
-binding.
-
-Rob
+BR,
+-R
