@@ -2,50 +2,51 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA3C3B187
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 04:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AADC352A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 04:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05852073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 04:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640EB2073C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 04:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Tci3kddI";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZeKH6BUh"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="aRu47TJF";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="48UOBtrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgBLE11 (ORCPT
+        id S1728081AbgBLE1a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 23:27:27 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:63122 "EHLO
+        Tue, 11 Feb 2020 23:27:30 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:36336 "EHLO
         mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727602AbgBLE11 (ORCPT
+        by vger.kernel.org with ESMTP id S1727912AbgBLE11 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Tue, 11 Feb 2020 23:27:27 -0500
 Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01C4PmmC028909;
-        Tue, 11 Feb 2020 20:27:05 -0800
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01C4PmNB028913;
+        Tue, 11 Feb 2020 20:27:06 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=I4geVmil93wUJyOVTJT2LGg0ka0jvsvt7sfzH6Vfuuo=;
- b=Tci3kddIXrs+L6QNjqcN7mwu3EInpaQwIBmEjx2bfUT0melfES/E9cv67K3fjwTUt5D6
- CEVVZRY4lS+DDCu7BiEp0qnDqI0pd31BQpWZcPfvtwULmDJ6p/iYNx37ykR1oMf9BRA8
- uSJtyAcbBrRKz816EdCa+UxxxA1aVjzPF/xtj1jumk5jyo6jSJVjl9ueX4LWC9XQH62O
- p/+5XlYllU09rLC1UGTzCWMyqxxJpfFfOzUE59S7V1jO6BYQE349MGOlVNDc9QDFJyJr
- VLUTJeF02RiKI5PglqZBMxCY+NOOpmmToYYSOun7DwWqcAfQHFctjCAQX8t5GRbIfVqU ng== 
-Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2054.outbound.protection.outlook.com [104.47.45.54])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2y1u17mxns-1
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=o4AdgmXqUqX6lriSNaVhaoth4svMU2IeO+EV7vL06z8=;
+ b=aRu47TJFPWhEsx3KZCk/4TbMTlxKnJyGFkT7RX7kfZ+FDYZLgEIiP0VV7lyzEfSBkZ2n
+ OluCMML77LfyezT9A39rEiC5S1+MIOyMPqoFLAg41r9UAv4bcXeY4JRp8Ei7j0Lz8WXQ
+ SP2Mggw/bSD4Ep3cNVJO8V6eSk/+Vkobq0kDgkiYQnxGVaw0sd3ZAQd7N9qK8+vlWKsY
+ SJXJ5JVNgfGZ/bwOIwEqg3jKhXc7yCU3RmONFBwBEaw93FTfzduTo7EdjrkYH78UAV3y
+ f48snZKMrTmvoxwUEyNwDiyxmEsRgi7P4E1Gz0lgcmmdM33za3TE7NXbUuwi6IQ//cc+ XQ== 
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2053.outbound.protection.outlook.com [104.47.38.53])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2y1u17mxnu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Feb 2020 20:27:05 -0800
+        Tue, 11 Feb 2020 20:27:06 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tv2De1E+gTn5nNlVRRhiOfeYbsOvU+set6iaIy/TdJzFOW7H6ZWlwKG+APd6vdIhiIjSOyUdsLlxWVvb4pPWadTqvB5P059e0sdOrvV7cu0l/UnflccebC+Q2JO8+pK6CdwuUbqLx7aaQLLgnDkYdGNGoI/biBVi3TbAMQJBItOp90ec0zJ/mdAhEcfNLqjZdrTOF4si+NL7tb5e5osjGSKdBhlmYCBWeJqB+Tx9rxz1+5RQB1Zfkmts8Fb0dENYBCYDzVtu+xJfNhdyNYut/ISEELmtSBBHED/As8iDD9YdfFeWUHXsfyxUF+beT2Yd6bOBq9zT0nxC9UwPgHJ6SQ==
+ b=jOMZXEcq6XLgT5VE/sny3vK6yHB3R7rc0LVJ1K0M+vz8ZwkMLwJccOZaHitMHZ8X2At76xwACRMRKLslA2OTvZHwQJMl9A+5GJFf71uUX2bYJTNEG+9DrClvhGyy0vSjjVhJoZtF+oNdSGtKrESyg6gbawbGU0JlyWa2NhtW0zrRaJgB1J+PRes0YW7jd55PHMJScwmGK2BT4O9GF4XtFo2aA9IUzoEjCTN49+IWMvhgQnonVIkNJk6AgyAoxutx0kNOubd2V9d6uTWvZKGaeJ5g5kQr98fZUFGeCGp2mCWzFJtI6ijdiROz/3pDbDFriHQQQZr4Q83dXOLdN6Mh8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I4geVmil93wUJyOVTJT2LGg0ka0jvsvt7sfzH6Vfuuo=;
- b=IrtQdskvf0snN7gRkV9kYN8vHUdhIR+s3HSAQhfzL6F4+lZttDphPt+N7//VjeBalcxBEN72gID7Xg/cUtPD6rrBSLLEzTNicV3JyTJvoN1hy3choIv7sm9jVEuyIHbGAEcEXmmFeWFYdZGuQOtKt3yUhl0NtgbPVsDY4hb+b3IeTgUhmWrue7tFH+f3BE/2kf7YTuuzwLbzK9+VAC5MnjyO/IKjLFKtpRNPZ6QRPrZtyvpRXbUGjRtpkDi88tEt8TJzVZwW+uWpLWwEeq2w28roIZVza7xKTxbJ/ab5FbnGdqlE++epNKq3krYWB+btFchz15pwX7zY8YlSkB4OIQ==
+ bh=o4AdgmXqUqX6lriSNaVhaoth4svMU2IeO+EV7vL06z8=;
+ b=ksLeRGOiYuyJhuIx5/gKNwuNrQ8qV4SFHwXuV3eem7NJYaiTaiuOYIO3u17ZxZeaZBIOfoo18JYyRGmZLGxL4kFyn1lgjCK2EYKkliRFCLeCayQaiWB57RR2qptl1tuhH16/0p9d1Z6nDiZSxb6c5l3HJH/Efn+rWlF0DmudidnHkaDqLt/ttEGlIwyn8mUbwT4LaF6HsvD8VyfQF8FZ4bkp+Nz/ZlxyfjIzrWkvtkX9LtbEugb8oej9j+ZY3YRcD9Jl3WDCibhdvwn07vRJWAc0v7y/PFpBxCUQ8qiZFWsZf9IztwK5dqtZZ4oEr+vQUX4zZ5m7EkBRTcwdeRZjIQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  199.43.4.28) smtp.rcpttodomain=linux.ie smtp.mailfrom=cadence.com; dmarc=pass
  (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
@@ -53,29 +54,29 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I4geVmil93wUJyOVTJT2LGg0ka0jvsvt7sfzH6Vfuuo=;
- b=ZeKH6BUhqUfV8L2Gv9Q+OO/67cC7AyHeVec3M0CzoUHpXMHGILobnMiJ2jf1T4zfZNlAsXxKvnRmkECVekbLBOTQ5uAxcTOLavx4bAP1atLRvUdgGDJjzaKAK8GDOzDu14to0Yt6h66MZC6opzP0hZsd7BJVSxOet0PWYqxPuJU=
-Received: from BYAPR07CA0104.namprd07.prod.outlook.com (2603:10b6:a03:12b::45)
- by BY5PR07MB6643.namprd07.prod.outlook.com (2603:10b6:a03:1a3::14) with
+ bh=o4AdgmXqUqX6lriSNaVhaoth4svMU2IeO+EV7vL06z8=;
+ b=48UOBtrR97rDvOlB2i6uiuCTrBsH5uNPx7rnPq0ULXxJrSnb8LVdUoAAqzhqiYnDOkXCyZ7tSaLRF+DbazmkWsThw1KEg1CmhEbAg2cGiR9DtBDTjxw2snNTbJT8VF4EXovvcX25VxiiipW+8+/W1S3mkB6OSc+Nu3wHYMSRSbM=
+Received: from CH2PR07CA0013.namprd07.prod.outlook.com (2603:10b6:610:20::26)
+ by BYAPR07MB4583.namprd07.prod.outlook.com (2603:10b6:a02:f8::30) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23; Wed, 12 Feb
- 2020 04:27:01 +0000
-Received: from MW2NAM12FT054.eop-nam12.prod.protection.outlook.com
- (2a01:111:f400:fe5a::207) by BYAPR07CA0104.outlook.office365.com
- (2603:10b6:a03:12b::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23 via Frontend
- Transport; Wed, 12 Feb 2020 04:27:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.24; Wed, 12 Feb
+ 2020 04:27:04 +0000
+Received: from MW2NAM12FT009.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5a::209) by CH2PR07CA0013.outlook.office365.com
+ (2603:10b6:610:20::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
+ Transport; Wed, 12 Feb 2020 04:27:03 +0000
 Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
  199.43.4.28 as permitted sender) receiver=protection.outlook.com;
  client-ip=199.43.4.28; helo=rmmaillnx1.cadence.com;
 Received: from rmmaillnx1.cadence.com (199.43.4.28) by
- MW2NAM12FT054.mail.protection.outlook.com (10.13.180.197) with Microsoft SMTP
+ MW2NAM12FT009.mail.protection.outlook.com (10.13.180.76) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.10 via Frontend Transport; Wed, 12 Feb 2020 04:27:00 +0000
+ 15.20.2729.10 via Frontend Transport; Wed, 12 Feb 2020 04:27:03 +0000
 Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 01C4Qnkb007965
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 01C4Qnkd007965
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 11 Feb 2020 23:26:58 -0500
+        Tue, 11 Feb 2020 23:27:01 -0500
 X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
 Received: from maileu3.global.cadence.com (10.160.88.99) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
@@ -84,11 +85,11 @@ Received: from vleu-orange.cadence.com (10.160.88.83) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
  15.0.1367.3 via Frontend Transport; Wed, 12 Feb 2020 05:26:49 +0100
 Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 01C4QmAf024545;
-        Wed, 12 Feb 2020 05:26:48 +0100
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 01C4QnYO024562;
+        Wed, 12 Feb 2020 05:26:49 +0100
 Received: (from yamonkar@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 01C4QiMi024543;
-        Wed, 12 Feb 2020 05:26:44 +0100
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 01C4QnED024561;
+        Wed, 12 Feb 2020 05:26:49 +0100
 From:   Yuti Amonkar <yamonkar@cadence.com>
 To:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
         <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
@@ -99,37 +100,39 @@ To:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
 CC:     <praneeth@ti.com>, <jsarha@ti.com>, <tomi.valkeinen@ti.com>,
         <mparab@cadence.com>, <sjakhade@cadence.com>,
         <yamonkar@cadence.com>
-Subject: [PATCH v5 0/3] drm: Add support for Cadence MHDP DPI/DP bridge and J721E wrapper.
-Date:   Wed, 12 Feb 2020 05:26:41 +0100
-Message-ID: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
+Subject: [PATCH v5 3/3] drm: bridge: cdns-mhdp: add j721e wrapper
+Date:   Wed, 12 Feb 2020 05:26:44 +0100
+Message-ID: <1581481604-24499-4-git-send-email-yamonkar@cadence.com>
 X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
+References: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-OrganizationHeadersPreserved: maileu3.global.cadence.com
 X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(136003)(376002)(189003)(199004)(36092001)(2616005)(86362001)(316002)(7416002)(8936002)(8676002)(5660300002)(426003)(70586007)(70206006)(2906002)(478600001)(26005)(4326008)(107886003)(19627235002)(42186006)(26826003)(81166006)(81156014)(6666004)(110136005)(356004)(966005)(54906003)(36756003)(186003)(336012)(921003)(2101003)(1121003)(83996005);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR07MB6643;H:rmmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(136003)(376002)(36092001)(199004)(189003)(26826003)(36756003)(186003)(110136005)(5660300002)(42186006)(54906003)(316002)(478600001)(966005)(26005)(107886003)(336012)(426003)(2616005)(86362001)(6666004)(356004)(8936002)(70206006)(2906002)(4326008)(81156014)(70586007)(8676002)(81166006)(7416002)(2004002)(921003)(1121003)(83996005)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB4583;H:rmmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5fb2651f-3e1c-4e4b-b894-08d7af73ce06
-X-MS-TrafficTypeDiagnostic: BY5PR07MB6643:
-X-Microsoft-Antispam-PRVS: <BY5PR07MB6643AF35E31BD008747D23FCD21B0@BY5PR07MB6643.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Office365-Filtering-Correlation-Id: e434d2f5-9e50-4f41-c37f-08d7af73cf6b
+X-MS-TrafficTypeDiagnostic: BYAPR07MB4583:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB45835BDB5F43E2C998769D03D21B0@BYAPR07MB4583.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:418;
 X-Forefront-PRVS: 0311124FA9
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Oy8V0hE6JsrMvpYCKBsK2jI9aHMlSEVpdeP3ISz1v6mm+bI7vd+cazUagyV/SEXyEd64SiQL2HoqM7Y8y8fRmtnQgRLmnCMa8EhpLJvZ/dcRL+dR7h3vt8ZnxSvpL7xRxjL7ejT+9AFf2gFVFLOwgD1wYrK2DYP6Wi3yBiMONZaCWcVvfv8a0wgO6loARrIqxds7QAXqjCrRrUcHtzmAP1dL7mFI2LgNgeXL08oqwb6H9F4uViME7hcisQDJ4D47T5T6n8Uc7jW3k2qb3/ZJahZab7wX9E/YEshQ8ZX+bI3iihmrEdWQiGuvhJ3Y4QLJ1Q9ASfAitUyorX9EFnWndkbbOBImee9ACE4uhiq9kphjN8F9Vm0LcbFU1Cu29ShNOj98lt1v2MmS7AcZkAHTS1EkDNbM/F6DuXrGFFynIGdhxQCNJ69RjDArI8yZWGAqRnJxDsAZXt7Z9GJrrqkz/AFdr8OSs7hy2SYJJ8wUFgDVj4cDUHXE4nXEGScvfx2UG+bM8UvOyQMyvxAcNNKmzWkXn9VCtFh5I1jMIMfvV7ydlRyaV9PgjogcA6C+DwZvee1wKgF9mVJT2Wt2jj4zpncDoKppW8rliR4TPc49YmOyCxMzgZnQctPPmhR5E/S9yB8CEUpTDaQoflz+vXeDyg==
+X-Microsoft-Antispam-Message-Info: MIeVj3zwTKhSxgn7d78z3vFZiWY9qjQDQXkTC6ZIB26YbWUNOb9VN8X7LJdmCXrK9/hobcr0BuRrPJ0Ve2b6/NCpj3oROu0MSncywH4kg7KCtTnmP6nY+Iw9M7C+H6awVVuBkIHM2rI/lAWvN8H0idnKkka4qNyNrbegK5a3DV14Bl5P74jpw67dtnhBUc8J6c11H1MJq4yas/i1UATKFn1mHYX0elkQloIur9+RzzPzv2hau2Wo/ZgCk+pYsropzTtXjnrHyKGwTsmArvbTQgRR4xS6DjbciWDs9CL0zpaEBI3NzwWHr9oU/+wECqZMWntum60oVlJ+BMlk+cxedEZzAYLrqnZPe2Rp2ULbOEFtXWPS77bdL+D5QLgje1PnLFCkHd6NpnXymFBPgZxMcHcpt646Jyti+s8gymeuk8WLaRZZbyiHBr1uda2Cseckzmwjz5+omE98FIQYvXk33b9ynBQmE01Dr6Zl7u/cnW3qxncajT9PFihz6fqp6tDGyHxLuQCY/FMgFrmxOpSR+xfBq+AfYJNaHDhnKIIRzJNfWkr7tvrNo+pwqDL3EyiNziC8AcJ52/REXcGM3z5nzXw9fWaRgx/fWs2uxz0qq7EgFW3fk2FzRJ5LH5SjNPy0uYpdbKqEJf6cWOkUac7sZrdSY64gJKQfuPXdkEs8JM8=
 X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 04:27:00.7332
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2020 04:27:03.0741
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fb2651f-3e1c-4e4b-b894-08d7af73ce06
+X-MS-Exchange-CrossTenant-Network-Message-Id: e434d2f5-9e50-4f41-c37f-08d7af73cf6b
 X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB6643
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4583
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-11_07:2020-02-11,2020-02-11 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
  malwarescore=0 phishscore=0 priorityscore=1501 impostorscore=0
- mlxlogscore=999 clxscore=1011 mlxscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 mlxscore=0 suspectscore=0 adultscore=0
  spamscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.12.0-2001150001 definitions=main-2002120031
 Sender: devicetree-owner@vger.kernel.org
@@ -137,83 +140,240 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series adds new DRM driver for Cadence Display Port.
-The Cadence Display Port is also referred as MHDP (Mobile High
-Definition Link, High-Definition Multimedia Interface Display
-Port) Cadence Display Port complies with VESA DisplayPort (DP)
-and embedded Display Port (eDP) standards. This driver implements
-Single Stream Transport (SST) support. Adds Texas Instruments SoC
-J721e specific wrapper and adds the device tree bindings in YAML format.
+Add j721e wrapper for mhdp, which sets up the clock and data muxes.
 
-The patch series has three patches which applies the changes in the below sequence
-1. 001-dt-bindings-drm-bridge-Document-Cadence-MHDP-bridge-bindings
-Documents the bindings in yaml format.
-2. 002-drm-bridge-Add-support-for-Cadence-MHDP-bridge
-This patch adds new DRM driver for Cadence MHDP Display Port. The patch implements
-supports for single stream transport mode.
-3. 003-drm-mhdp-add-j721e-wrapper
-Add Texas Instruments (TI) j721e wrapper for mhdp. The wrapper configures mhdp clocks
-and muxes as required by SoC.
-
-Version History:
-
-v5:
-- Added Signed-off-by: Jyri Sarha <jsarha@ti.com> tag to
-  the code patches.
-
-v4:
-- Added SPDX dual license tag to YAML bindings.
-- Corrected indentation of the child node properties.
-- Removed the maxItems in the conditional statement.
-- Add Reviewed-by: Rob Herring <robh@kernel.org> tag to the
-  Document Cadence MHDP bridge bindings patch.
-- Renamed the DRM driver executable name from mhdp8546 to cdns-mhdp in Makefile.
-- Renamed the DRM driver and header file from cdns-mhdp to cdns-mhdp-core.
-
-v3:
-- Added if / then clause to validate that the reg length is proper
-  based on the value of the compatible property.
-- Updated phy property description in YAML to a generic one.
-- Renamed num_lanes and max_bit_rate property strings to cdns,num-lanes 
-  and cdns,max-bit-rate based on update in PHY series [2].
-
-v2:
-- Use enum in compatible property of YAML file.
-- Add reg-names property to YAML file
-- Add minItems and maxItems to reg property in YAML.
-- Remove cdns_mhdp_link_probe function to remove
-  duplication of reading dpcd capabilities.
-
-This patch series is dependent on PHY DisplayPort configuration patch [1]
-
-[1]
-
-https://lkml.org/lkml/2020/1/6/279
-
-[2]
-
-https://lkml.org/lkml/2020/2/6/15
-
-
-Yuti Amonkar (3):
-  dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings.
-  drm: bridge: Add support for Cadence MHDP DPI/DP bridge
-  drm: bridge: cdns-mhdp: add j721e wrapper
-
- .../bindings/display/bridge/cdns,mhdp.yaml    |  125 +
- drivers/gpu/drm/bridge/Kconfig                |   23 +
- drivers/gpu/drm/bridge/Makefile               |    6 +
- drivers/gpu/drm/bridge/cdns-mhdp-core.c       | 2220 +++++++++++++++++
- drivers/gpu/drm/bridge/cdns-mhdp-core.h       |  381 +++
- drivers/gpu/drm/bridge/cdns-mhdp-j721e.c      |   79 +
- drivers/gpu/drm/bridge/cdns-mhdp-j721e.h      |   55 +
- 7 files changed, 2889 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
- create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-core.c
- create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-core.h
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ drivers/gpu/drm/bridge/Kconfig           | 12 ++++
+ drivers/gpu/drm/bridge/Makefile          |  3 +
+ drivers/gpu/drm/bridge/cdns-mhdp-core.c  | 14 +++++
+ drivers/gpu/drm/bridge/cdns-mhdp-core.h  |  1 +
+ drivers/gpu/drm/bridge/cdns-mhdp-j721e.c | 79 ++++++++++++++++++++++++
+ drivers/gpu/drm/bridge/cdns-mhdp-j721e.h | 55 +++++++++++++++++
+ 6 files changed, 164 insertions(+)
  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
 
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index c66f2ef04f71..32e3bc5edae8 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -38,6 +38,18 @@ config DRM_CDNS_MHDP
+ 	  It takes a DPI stream as input and output it encoded
+ 	  in DP format.
+ 
++if DRM_CDNS_MHDP
++
++config DRM_CDNS_MHDP_J721E
++	bool "J721E Cadence DPI/DP wrapper support"
++	default y
++	help
++	  Support J721E Cadence DPI/DP wrapper. This is a wrapper
++	  which adds support for J721E related platform ops. It
++	  initializes the J721e Display Port and sets up the
++	  clock and data muxes.
++endif
++
+ config DRM_DUMB_VGA_DAC
+ 	tristate "Dumb VGA DAC Bridge support"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 71019088d257..7e6c64f9021f 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -21,3 +21,6 @@ obj-y += analogix/
+ obj-y += synopsys/
+ 
+ cdns-mhdp-objs := cdns-mhdp-core.o
++ifeq ($(CONFIG_DRM_CDNS_MHDP_J721E),y)
++	cdns-mhdp-objs += cdns-mhdp-j721e.o
++endif
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.c b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
+index 51ed9cdee161..8483b6b1023b 100644
+--- a/drivers/gpu/drm/bridge/cdns-mhdp-core.c
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
+@@ -36,8 +36,22 @@
+ 
+ #include "cdns-mhdp-core.h"
+ 
++#include "cdns-mhdp-j721e.h"
++
++#ifdef CONFIG_DRM_CDNS_MHDP_J721E
++static const struct mhdp_platform_ops mhdp_ti_j721e_ops = {
++	.init = cdns_mhdp_j721e_init,
++	.exit = cdns_mhdp_j721e_fini,
++	.enable = cdns_mhdp_j721e_enable,
++	.disable = cdns_mhdp_j721e_disable,
++};
++#endif
++
+ static const struct of_device_id mhdp_ids[] = {
+ 	{ .compatible = "cdns,mhdp8546", },
++#ifdef CONFIG_DRM_CDNS_MHDP_J721E
++	{ .compatible = "ti,j721e-mhdp8546", .data = &mhdp_ti_j721e_ops },
++#endif
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, mhdp_ids);
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.h b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
+index 2f3b67987832..67a99eab5db3 100644
+--- a/drivers/gpu/drm/bridge/cdns-mhdp-core.h
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
+@@ -335,6 +335,7 @@ struct mhdp_platform_ops {
+ 
+ struct cdns_mhdp_device {
+ 	void __iomem *regs;
++	void __iomem *j721e_regs;
+ 
+ 	struct device *dev;
+ 	struct clk *clk;
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+new file mode 100644
+index 000000000000..a87faf55c065
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+@@ -0,0 +1,79 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * TI j721e Cadence MHDP DP wrapper
++ *
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ * Author: Jyri Sarha <jsarha@ti.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/device.h>
++#include <linux/io.h>
++
++#include "cdns-mhdp-j721e.h"
++
++#define	REVISION			0x00
++#define	DPTX_IPCFG			0x04
++#define	ECC_MEM_CFG			0x08
++#define	DPTX_DSC_CFG			0x0c
++#define	DPTX_SRC_CFG			0x10
++#define	DPTX_VIF_SECURE_MODE_CFG	0x14
++#define	DPTX_VIF_CONN_STATUS		0x18
++#define	PHY_CLK_STATUS			0x1c
++
++#define DPTX_SRC_AIF_EN			BIT(16)
++#define DPTX_SRC_VIF_3_IN30B		BIT(11)
++#define DPTX_SRC_VIF_2_IN30B		BIT(10)
++#define DPTX_SRC_VIF_1_IN30B		BIT(9)
++#define DPTX_SRC_VIF_0_IN30B		BIT(8)
++#define DPTX_SRC_VIF_3_SEL_DPI5		BIT(7)
++#define DPTX_SRC_VIF_3_SEL_DPI3		0
++#define DPTX_SRC_VIF_2_SEL_DPI4		BIT(6)
++#define DPTX_SRC_VIF_2_SEL_DPI2		0
++#define DPTX_SRC_VIF_1_SEL_DPI3		BIT(5)
++#define DPTX_SRC_VIF_1_SEL_DPI1		0
++#define DPTX_SRC_VIF_0_SEL_DPI2		BIT(4)
++#define DPTX_SRC_VIF_0_SEL_DPI0		0
++#define DPTX_SRC_VIF_3_EN		BIT(3)
++#define DPTX_SRC_VIF_2_EN		BIT(2)
++#define DPTX_SRC_VIF_1_EN		BIT(1)
++#define DPTX_SRC_VIF_0_EN		BIT(0)
++
++/* TODO turn DPTX_IPCFG fw_mem_clk_en at pm_runtime_suspend. */
++
++int cdns_mhdp_j721e_init(struct cdns_mhdp_device *mhdp)
++{
++	struct platform_device *pdev = to_platform_device(mhdp->dev);
++	struct resource *regs;
++
++	regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	mhdp->j721e_regs = devm_ioremap_resource(&pdev->dev, regs);
++	if (IS_ERR(mhdp->j721e_regs))
++		return PTR_ERR(mhdp->j721e_regs);
++
++	return 0;
++}
++
++void cdns_mhdp_j721e_fini(struct cdns_mhdp_device *mhdp)
++{
++}
++
++void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp)
++{
++	/*
++	 * Eneble VIF_0 and select DPI2 as its input. DSS0 DPI0 is connected
++	 * to eDP DPI2. This is the only supported SST configuration on
++	 * J721E.
++	 */
++	writel(DPTX_SRC_VIF_0_EN | DPTX_SRC_VIF_0_SEL_DPI2,
++	       mhdp->j721e_regs + DPTX_SRC_CFG);
++}
++
++void cdns_mhdp_j721e_disable(struct cdns_mhdp_device *mhdp)
++{
++	/* Put everything to defaults  */
++	writel(0, mhdp->j721e_regs + DPTX_DSC_CFG);
++}
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
+new file mode 100644
+index 000000000000..de0e4e82b58c
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * TI j721e Cadence MHDP DP wrapper
++ *
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ * Author: Jyri Sarha <jsarha@ti.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef CDNS_MHDP_J721E_H
++#define CDNS_MHDP_J721E_H
++
++#include <linux/platform_device.h>
++#include "cdns-mhdp-core.h"
++
++struct cdns_mhdp_j721e_wrap;
++
++#ifdef CONFIG_DRM_CDNS_MHDP_J721E
++
++int cdns_mhdp_j721e_init(struct cdns_mhdp_device *mhdp);
++
++void cdns_mhdp_j721e_fini(struct cdns_mhdp_device *mhdp);
++
++void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp);
++
++void cdns_mhdp_j721e_disable(struct cdns_mhdp_device *mhdp);
++
++#else
++
++static inline
++int cdns_mhdp_j721e_init(struct cdns_mhdp_device *mhdp)
++{
++	return 0;
++}
++
++static inline
++void cdns_mhdp_j721e_fini(struct cdns_mhdp_device *mhdp)
++{
++}
++
++static inline
++void cdns_mhdp_j721e_sst_enable(struct cdns_mhdp_device *mhdp);
++{
++}
++
++static inline
++void cdns_mhdp_j721e_sst_disable(struct cdns_mhdp_device *mhdp)
++{
++}
++#endif /* CONFIG_DRM_CDNS_MHDP_J721E */
++
++#endif /* !CDNS_MHDP_J721E_H */
 -- 
 2.20.1
 
