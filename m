@@ -2,107 +2,121 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6F1C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 09:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC30C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 09:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1EE72073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 09:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4FD2073C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 09:45:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="ERJuHXbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgBLJnU (ORCPT
+        id S1728670AbgBLJpH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 04:43:20 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:33086 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbgBLJnT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 04:43:19 -0500
-Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id 1ljJ2200Q5USYZQ06ljJnX; Wed, 12 Feb 2020 10:43:18 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j1oYA-0000xk-Cl; Wed, 12 Feb 2020 10:43:18 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j1oYA-0000Vp-Am; Wed, 12 Feb 2020 10:43:18 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] of: clk: Make of_clk_get_parent_{count,name}() parameter const
-Date:   Wed, 12 Feb 2020 10:43:17 +0100
-Message-Id: <20200212094317.1150-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Feb 2020 04:45:07 -0500
+Received: from srv1.deutnet.info ([116.203.153.70]:48106 "EHLO
+        srv1.deutnet.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728605AbgBLJpH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 04:45:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deutnet.info; s=default; h=In-Reply-To:Date:Message-ID:From:Cc:To:Subject;
+         bh=TAJr0AondWJzOCdJcDIVwWs7uRbDrPcYBrltHTHHTq0=; b=ERJuHXbzfCXkZNQayCKVCerLa
+        TIf1mb1N4Fd5ov9eFmMS+OIITb5KLI/9nyQs+mSHHVdXXpvgw3W7UHcF0bqbIbNizNJRveGpiewHH
+        V6ZW+Jt1CCpzX+Yxa5C+Vp+H+7siWDEEPwe8cFc3uaWJyGqovnniRIfCsPZa6lMi4gf0ZeVmRpiRp
+        U1ONBOJlzgZHewIoxZXJWw6YWLep2wlKYBcq3bIuU+DTn3a+3HTtQ6m2rthcDeOTstyx5naHxspRE
+        ewRPvQrbz+Arjtq8bBZcAZ1plDWMPCTyGsRf5J7X6suOjAMrErXVhFhdtLJn187y3osg9lKE4kLiK
+        7pxAFUyIw==;
+Received: from [2001:41d0:fe79:6710:be5f:f4ff:fe8b:2fc1]
+        by srv1.deutnet.info with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <agriveaux@deutnet.info>)
+        id 1j1oZs-00053r-Cf; Wed, 12 Feb 2020 10:45:04 +0100
+Subject: Re: [PATCH] ARM: dts: sun5i: Add dts for inet86v_rev2
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200210103552.3210406-1-agriveaux@deutnet.info>
+ <20200211131517.e7lpjtz2njekadee@gilmour.lan>
+From:   Alexandre GRIVEAUX <agriveaux@deutnet.info>
+Message-ID: <864838c2-1b1d-433a-ca04-0d91c8b5b8ca@deutnet.info>
+Date:   Wed, 12 Feb 2020 10:45:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200211131517.e7lpjtz2njekadee@gilmour.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-of_clk_get_parent_count() and of_clk_get_parent_name() never modify the
-device nodes passed, so they can be const.
+Le 11/02/2020 à 14:15, Maxime Ripard a écrit :
+> On Mon, Feb 10, 2020 at 11:35:52AM +0100, agriveaux@deutnet.info wrote:
+>> From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+>>
+>> Add Inet 86V Rev 2 support, based upon Inet 86VS.
+>>
+>> Missing things:
+>> - Accelerometer (MXC6225X)
+>> - Touchpanel (Sitronix SL1536)
+>> - Nand (29F32G08CBACA)
+>> - Camera (HCWY0308)
+>>
+>> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+> Please read the documentation I sent you yesterday. In particular,
+> when submitting multiple versions, you should remove have the version
+> number in the title and a changelog.
+>
+> Also, please ask questions if you're unsure about something, or
+> discuss something you do not agree with instead of ignoring the
+> comment.
+>
+> Maxime
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/clk/clk.c      | 4 ++--
- include/linux/of_clk.h | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Hello,
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index e42145cd996a1f77..b6696c8e02518177 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -4713,7 +4713,7 @@ EXPORT_SYMBOL(of_clk_get_by_name);
-  *
-  * Returns: The number of clocks that are possible parents of this node
-  */
--unsigned int of_clk_get_parent_count(struct device_node *np)
-+unsigned int of_clk_get_parent_count(const struct device_node *np)
- {
- 	int count;
- 
-@@ -4725,7 +4725,7 @@ unsigned int of_clk_get_parent_count(struct device_node *np)
- }
- EXPORT_SYMBOL_GPL(of_clk_get_parent_count);
- 
--const char *of_clk_get_parent_name(struct device_node *np, int index)
-+const char *of_clk_get_parent_name(const struct device_node *np, int index)
- {
- 	struct of_phandle_args clkspec;
- 	struct property *prop;
-diff --git a/include/linux/of_clk.h b/include/linux/of_clk.h
-index c86fcad23fc21725..31b73a0da9db33e8 100644
---- a/include/linux/of_clk.h
-+++ b/include/linux/of_clk.h
-@@ -11,17 +11,17 @@ struct of_device_id;
- 
- #if defined(CONFIG_COMMON_CLK) && defined(CONFIG_OF)
- 
--unsigned int of_clk_get_parent_count(struct device_node *np);
--const char *of_clk_get_parent_name(struct device_node *np, int index);
-+unsigned int of_clk_get_parent_count(const struct device_node *np);
-+const char *of_clk_get_parent_name(const struct device_node *np, int index);
- void of_clk_init(const struct of_device_id *matches);
- 
- #else /* !CONFIG_COMMON_CLK || !CONFIG_OF */
- 
--static inline unsigned int of_clk_get_parent_count(struct device_node *np)
-+static inline unsigned int of_clk_get_parent_count(const struct device_node *np)
- {
- 	return 0;
- }
--static inline const char *of_clk_get_parent_name(struct device_node *np,
-+static inline const char *of_clk_get_parent_name(const struct device_node *np,
- 						 int index)
- {
- 	return NULL;
--- 
-2.17.1
+
+Seem I misusing 'git send-email' because i already changed the subject
+line (same apply to u-boot):
+
+git send-email --from agriveaux@deutnet.info --to
+robh+dt@kernel.org,mark.rutland@arm.com,mripard@kernel.org,wens@csie.org
+--cc
+linux-kernel@vger.kernel.org,devicetree@vger.kernel.org,agriveaux@deutnet.info
+--subject '[v2] ARM: dts: sun5i: Add dts for inet86v_rev2' --compose
+/tmp/linux/0001-ARM-dts-sun5i-Add-dts-for-inet86v_rev2.patch
+
+It's the first time i use git send-email, previously i used mutt to send
+patchsets (on mips mostly).
+
+
+Effectively i've forgot the changelog...
+
+
+At why do we need another device tree:
+
+inet86vs use a GSL1680 touchpanel controller and 4GB nand [0]
+
+inet86vsuse a Sitonix SL1536 touchpanel controller and 8GB nand (can
+have 16GB nand)[1]
+
+
+Seem i've forgot to use:
+
+git format-patch --subject-prefix="PATCH v2"
+
+
+Thanks.
+
+[0]https://fccid.io/2AARJ-AP7S118/Schematics/Schematics-2042312.pdfinet86vs
+schematic
+
+[1]https://fccid.io/XHW026/Schematics/Schematics-1820577.pdfinet86v
+schematic
 
