@@ -2,159 +2,118 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87415C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5187BC3B186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6240720675
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C4120873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 11:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lDfQr6Li"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgBLLnK (ORCPT
+        id S1728242AbgBLLnn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 06:43:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:59850 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgBLLnJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 06:43:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF3F130E;
-        Wed, 12 Feb 2020 03:43:08 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F26533F68F;
-        Wed, 12 Feb 2020 03:43:06 -0800 (PST)
-Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
-To:     Hans de Goede <hdegoede@redhat.com>, Roger Quadros <rogerq@ti.com>,
-        axboe@kernel.dk
-Cc:     vigneshr@ti.com, nsekhar@ti.com, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
-References: <20200206111728.6703-1-rogerq@ti.com>
- <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
- <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
- <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
-Date:   Wed, 12 Feb 2020 11:43:06 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 12 Feb 2020 06:43:43 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52498 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbgBLLnn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 06:43:43 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so1856348wmc.2
+        for <devicetree@vger.kernel.org>; Wed, 12 Feb 2020 03:43:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KOvpD7jZ6dU2lykqqwZ1WffWjcj24MrFs0WAUYdtKH4=;
+        b=lDfQr6Liipb++iFWX6iJLPM9MLax/98YrjUMx2NSCP8nRQEJxYPjeazAW44phauv1J
+         zDMSgxErIqX4lltTO8KyGkxULwpxH6e9bJjady6qCsW+AebfdzEjQF+Mcss/P6lo3+OS
+         FF91PfU0aV/URWm4wh3GjSVnh613RzCiGx7tWGzzdRYi6ewXTPYxFjEv1efuDc7Jqwge
+         zn5xpPgaLdj2zpQqUiy9CKCUKgX907JZl8MXHgLWLPzbAIeBDfLt3go9I+tWL4EHPVdP
+         006LMBAjbJpqTAWatWWABjuhtYLmX8EQ7svmcDYwPWKzjX5P+6qeN/fAarriHxmM6Zfn
+         q7rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KOvpD7jZ6dU2lykqqwZ1WffWjcj24MrFs0WAUYdtKH4=;
+        b=kkAMfxkmaFiaekZ3FrmaPWDsIiNN4hzwp98+eDANBzwtQRa1xptQj13qAz+o3NoBf5
+         e7/h98HXQ+9hypu/mskUBYK2gBx+fpI/aDi/Xq/FDlgHgP1/R5wjCANdNWO0KoXjpJmo
+         hyxC81RGC6cjp9c7RSMgOsoJBoLovVmodH+fJJMxGUUenG9kDWmjWUrxhiQfjN8+FGc4
+         FsNByuetUYbiR43KWV1Yll6JE30YBNb81PVmEGU1Yx4Rxmi+fWyn1tjZABn+XA27YUCT
+         eY5FJ8S5Wvyl2S4kyPUcclq3yWxHRSFygD/8KhadU3hMbaD3RLJZ+CJ/c5hquyxmqj68
+         kc9Q==
+X-Gm-Message-State: APjAAAVx78zpNA2yaY2xOGHvludZBvwenIR2QBACZJ7WwYs//dtvogRY
+        QbwK0Nq0D2iB/mR/DXBiyP6/Fw==
+X-Google-Smtp-Source: APXvYqzE17zeWea41ReY8EYtUfOouJpQCc5O05qfY1oQPGPCmX9DhPfP9NiRKKy53KgUTk1hUJxU6A==
+X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr11846557wmg.167.1581507821024;
+        Wed, 12 Feb 2020 03:43:41 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id q130sm473499wme.19.2020.02.12.03.43.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Feb 2020 03:43:38 -0800 (PST)
+Subject: Re: [PATCH v3 6/6] ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
+ documentation
+To:     Adam Serbinski <adam@serbinski.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200212015222.8229-1-adam@serbinski.com>
+ <20200212015222.8229-7-adam@serbinski.com>
+ <579e0ae1-f257-7af3-eac9-c8e3ab3b52c7@linaro.org>
+ <2989c09149976a28d13d4b4eb10b7c7e@serbinski.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <b5c1328a-e3ca-826d-9ff0-f2bbce24ac22@linaro.org>
+Date:   Wed, 12 Feb 2020 11:43:37 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
+In-Reply-To: <2989c09149976a28d13d4b4eb10b7c7e@serbinski.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-02-12 11:32 am, Hans de Goede wrote:
-> Hi,
-> 
-> On 2/12/20 12:01 PM, Roger Quadros wrote:
->> Hi,
->>
->> On 06/02/2020 13:50, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 2/6/20 12:17 PM, Roger Quadros wrote:
->>>> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
->>>> Restrict it to 32-bit.
->>>>
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>   drivers/ata/ahci_platform.c | 3 +++
->>>>   1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->>>> index 3aab2e3d57f3..b925dc54cfa5 100644
->>>> --- a/drivers/ata/ahci_platform.c
->>>> +++ b/drivers/ata/ahci_platform.c
->>>> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
->>>>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
->>>>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
->>>> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
->>>> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
->>>> +
->>>
->>> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
->>> is e.g. also used on some exynos devices. So using that to key the
->>> setting of the 32 bit flag seems wrong to me.
->>>
->>> IMHO it would be better to introduce a TI specific compatible
->>> and use that to match on instead (and also adjust the dts files
->>> accordingly).
->>
->> Thinking further on this I think it is a bad idea to add a special
->> binding because the IP is not different. It is just that it is
->> wired differently on the TI SoC so DMA range is limited.
->>
->> IMO the proper solution is to have the right dma-ranges property in the
->> device tree. However, SATA platform driver is doing the wrong thing
->> by overriding the dma masks.
->> i.e. in ahci_platform_init_host() in libahci_platform.c >
->>          if (hpriv->cap & HOST_CAP_64) {
->>                  rc = dma_coerce_mask_and_coherent(dev, 
->> DMA_BIT_MASK(64));
->>                  if (rc) {
->>                          rc = dma_coerce_mask_and_coherent(dev,
->>                                                            
->> DMA_BIT_MASK(32));
->>                          if (rc) {
->>                                  dev_err(dev, "Failed to enable 64-bit 
->> DMA.\n");
->>                                  return rc;
->>                          }
->>                          dev_warn(dev, "Enable 32-bit DMA instead of 
->> 64-bit.\n");
->>                  }
->>          }
->>
->> This should be removed. Do you agree?
-> 
-> I agree with you in principal, but I'm afraid this might cause 
-> regressions for
-> existing hardware. We only do this if the host has set the CAP_64 flag,
-> this code is quite old, it comes from the following commit:
-> 
-> ###
->  From cc7a9e27562cd78a1dc885504086fab24addce40 Mon Sep 17 00:00:00 2001
-> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Date: Thu, 12 Jun 2014 12:40:23 -0500
-> Subject: [PATCH v3] ahci: Check and set 64-bit DMA mask for platform 
-> AHCI driver
-> 
-> The current platform AHCI driver does not set the dma_mask correctly
-> for 64-bit DMA capable AHCI controller. This patch checks the AHCI
-> capability bit and set the dma_mask and coherent_dma_mask accordingly.
-> 
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Suman Tripathi <stripathi@apm.com>
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> ###
-> 
-> Presumably this was added for a reason, I'm guessing this might come
-> from AMD's ARM server chips adventures, but I'm afraid that AHCI support
-> on other (ARM) SoC's has become to rely on this behavior too.
-> 
-> Maybe we can add a check to see if the mask was not already set and skip
-> setting the mask in that case ?
 
-If the device *is* inherently 64-bit capable, then setting 64-bit masks 
-in the driver is correct - if a 64-bit IP block happens to have been 
-integrated with only 32 address bits wired up, but the system has memory 
-above the 32-bit boundary, then that should be described via 
-"dma-ranges", which should then end up being used to further constrain 
-the device masks internally to the DMA API.
 
-Robin.
+On 12/02/2020 11:01, Adam Serbinski wrote:
+>>>
+>>> +
+>>> + - qcom,pcm-slot-mapping
+>>> +Â Â Â  Usage: required for pcm interface
+>>
+>> Are these not specific to 8k and 16k mode ?
+>> We should probably list values for both modes here.
+> 
+> No, this is just the offset that the audio sample is placed in with 
+> respect to a maximum of 4 slots, 16 bits wide, beginning with the sync 
+> pulse.
+
+
+That's not true atleast by the QDSP documentation,
+according to it we will use more slots to transfer at higher sample 
+rate. ex:
+16 kHz data can be transferred using 8 kHz samples in two
+slots.
+
+Also there are 32 slots for each of 4 supported channels for PCM AFE port.
+
+
+> 
+> When switching between 8 and 16k sample rate, it is just the sync pulse 
+> rate that is changed. The audio sample will be delivered in the same 
+> slot, just at a different frequency.
