@@ -8,63 +8,72 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08684C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC864C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C891F2082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B098A21D7D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 10:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSr3J5Wf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqYG6iaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgBLKR4 (ORCPT
+        id S1727558AbgBLKiu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 05:17:56 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33389 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgBLKRz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 05:17:55 -0500
-Received: by mail-wr1-f65.google.com with SMTP id u6so1527360wrt.0;
-        Wed, 12 Feb 2020 02:17:53 -0800 (PST)
+        Wed, 12 Feb 2020 05:38:50 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32769 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgBLKiu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 05:38:50 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m10so4382693wmc.0;
+        Wed, 12 Feb 2020 02:38:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RiLSOzSQqH2K+5mtqWU1/VvgqTQPm8zs0bfN/OnhddU=;
-        b=dSr3J5WfjlyUPVN3WpQTYigWQcsG4nTnY53SFJgDeAQI/u+Aq/dZuLAQ7IrWa0YqLF
-         hIjlMf653h/9uixMCu9Tr0tfcxkEWbUNLKNwRCpzsP3PGCT8T6ykrtk3Sbs2wH+jLbm3
-         AGZbSYwwxjbch+iRlfC3nVFSFFurQdFlNcVjaiHLPtnh0Be3HeePPqxkrpV37IDFkxGz
-         VeTJ4T3MLnsQJWzviJxiqunZbeTJWGKD+MsQksoVQKvcIOnmPwcT6C56nFlCk3t4/P2X
-         xWuseD2i6niZGCns+WUKl4/PYIt+7NhHdt55z3jxl9lRXvfavbHM2+WCPxOW14v1HwXe
-         dm2A==
+        bh=rICY2BYf3BHUd/B89iMwKYqIL8b2TdtVE/9rmN7kN9M=;
+        b=nqYG6iaqkPUrWyr+JhMcd9Kjdmvcl6KA3nDCFq0X/kw+EDBcA7cC3V3KqSsRAz9awC
+         4MYwh1eOpGzQT6/Sf09ht31nOMe60dnnR79IYBTJ0NwiH3HKUQfDyF/lEa9WgezIfQdI
+         hRLhKFAmOSox7IrE2Qj4RfTIHLiz/Hxsu3gEs5wZ/F9LugwXIEHjCMEJxGYXH0VpW51i
+         KbTZSMjuwXARSxbslzmLxHM0kAIcTPHmzoZsJZYYu1kGWh4H0vRziuMKdfLKnZI16f61
+         lnLUPyOLfUXtb+veikXO+VBxOzOTkC7bxDYEvAFKmYBdW6qbq9UwDDmSNeJ0jlCQt7+K
+         tUqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=RiLSOzSQqH2K+5mtqWU1/VvgqTQPm8zs0bfN/OnhddU=;
-        b=X1EY3WB5Z2S9RvcmxgrVG4n0MhYhn4E96Kps29LG61aBzAs4Bs4eN+mIbGRcZjk2BX
-         O5HCargBGO5dkiCMf8kfwdlBNFOXb5vwi+haiJG10WaQhYwUkZP41jWc4O9UxG5ci9KS
-         ac3AP8XO9LJS+VRFLGE3am/M4H2wWaAd5YCOUfegtwJxHrtY00L5HM7kCxMuv9hQ+1hE
-         tN3hMp6iJ65inrTPbO0UdNQZvjJM8sNfw5U8GFnQyr1bHYaR02xDSMzlxmhPqGkndukZ
-         8b3rZfKPkhNleUcM7dLkjSLV0wkjyVnMiqLUdGc3sbfpEj4xbzK4hCqMJSVfQnHpyWop
-         8ULA==
-X-Gm-Message-State: APjAAAU96lUMatEdfTRN83+oXUcqsS/cqNxuezs78LP3UAjGN2quvOsX
-        aKAbX1pttode5NZUjQHYBkGOqvB1
-X-Google-Smtp-Source: APXvYqy0ppUWHrV4RDKzHlCLXDa/ghFxU/rzeve20LS85XvsmSSgh0TaXxY+2AXb4ZG5uzEbzy6nSg==
-X-Received: by 2002:a5d:4a8c:: with SMTP id o12mr14027627wrq.43.1581502672272;
-        Wed, 12 Feb 2020 02:17:52 -0800 (PST)
+        bh=rICY2BYf3BHUd/B89iMwKYqIL8b2TdtVE/9rmN7kN9M=;
+        b=kXOhSCa60fGcsYF8oOyPlmGTBg/LZAb3N/TP0+JkGbk797Ss/vzI2pQMXKaODB3FX3
+         4XUoUL5iW7+gmT/FUpJx+zxWkN+E8/KeJcCIfcs41CYsDSV6ZIty45wPxgTnHDt+ez9P
+         gjao46RHmnaiEulkX0qQg7i1Ofloi9SpLFg6xZCBvEMUwqfhNUV39qrBPszUFpqs+HJ/
+         omnbpgLB0PApmhboLlWL6Mhct9EVZGCOedRbdehrsP9WleSbXLucyWOiNe8lRBz8Q0WS
+         kNvWIjOoh1QntGrYbZKqo5/VEWBUPXcD1S4Xbc8bg2lAYKBLiU8NtzRujY5688eaJAaK
+         94GA==
+X-Gm-Message-State: APjAAAU09FzRgpPTXYBYS8qa+y/1x+/7NYN+R7st79OsfTyJz76UvBWi
+        p1wKcAELPIro0rmMR2zy+jQ=
+X-Google-Smtp-Source: APXvYqy1hZO4n8WXf85U1CAeSJKcZGaI+MikAyExdmVCdj3sYxONxe2KEvvYZTPHaQG1qmameSviDg==
+X-Received: by 2002:a7b:cb42:: with SMTP id v2mr12354998wmj.170.1581503926982;
+        Wed, 12 Feb 2020 02:38:46 -0800 (PST)
 Received: from ziggy.stardust ([37.223.145.31])
-        by smtp.gmail.com with ESMTPSA id d16sm41220wrg.27.2020.02.12.02.17.51
+        by smtp.gmail.com with ESMTPSA id d13sm75082wrc.64.2020.02.12.02.38.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2020 02:17:51 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: mt8173: add arm,no-tick-in-suspend in timer
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Wed, 12 Feb 2020 02:38:46 -0800 (PST)
+Subject: Re: [PATCH v4 3/7] drm/panfrost: Improve error reporting in
+ panfrost_gpu_power_on
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200212060536.156890-1-hsinyi@chromium.org>
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        ulf.hansson@linaro.org
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-4-drinkcat@chromium.org>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -140,12 +149,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <b9d6be0d-a0ea-e0cc-8c87-338fa7e6df0b@gmail.com>
-Date:   Wed, 12 Feb 2020 11:17:50 +0100
+Message-ID: <39c6ac7f-dc0d-b178-e804-e05aa7d56316@gmail.com>
+Date:   Wed, 12 Feb 2020 11:38:44 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200212060536.156890-1-hsinyi@chromium.org>
+In-Reply-To: <20200207052627.130118-4-drinkcat@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -156,34 +165,55 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 12/02/2020 07:05, Hsin-Yi Wang wrote:
-> Arch timer stops during system suspend. Add arm,no-tick-in-suspend
-> property in timer.
+On 07/02/2020 06:26, Nicolas Boichat wrote:
+> It is useful to know which component cannot be powered on.
 > 
-> This is a follow up for d8ec7595a013
-> ("clocksource/drivers/arm_arch_timer: Don't assume clock runs in
-> suspend")
-> 
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> Reviewed-by: Steven Price <steven.price@arm.com>
+> Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
 
-pushed to v5.6-next/dts64
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 
-Thanks!
-
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 > ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 8b4e806d5119..1a9ad90bd7a6 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -331,6 +331,7 @@ timer {
->  			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
->  			     <GIC_PPI 10
->  			      (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +		arm,no-tick-in-suspend;
->  	};
+> Was useful when trying to probe Bifrost GPU, to understand what
+> issue we are facing.
+> 
+> v4:
+>  - No change
+> v3:
+>  - Rebased on https://patchwork.kernel.org/patch/11325689/
+> 
+>  drivers/gpu/drm/panfrost/panfrost_gpu.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
+> index 460fc190de6e815..856f2fd1fa8ed27 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
+> @@ -308,17 +308,20 @@ void panfrost_gpu_power_on(struct panfrost_device *pfdev)
+>  	gpu_write(pfdev, L2_PWRON_LO, pfdev->features.l2_present);
+>  	ret = readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
+>  		val, val == pfdev->features.l2_present, 100, 1000);
+> +	if (ret)
+> +		dev_err(pfdev->dev, "error powering up gpu L2");
 >  
->  	soc {
+>  	gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
+> -	ret |= readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
+> +	ret = readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
+>  		val, val == pfdev->features.shader_present, 100, 1000);
+> +	if (ret)
+> +		dev_err(pfdev->dev, "error powering up gpu shader");
+>  
+>  	gpu_write(pfdev, TILER_PWRON_LO, pfdev->features.tiler_present);
+> -	ret |= readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
+> +	ret = readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
+>  		val, val == pfdev->features.tiler_present, 100, 1000);
+> -
+>  	if (ret)
+> -		dev_err(pfdev->dev, "error powering up gpu");
+> +		dev_err(pfdev->dev, "error powering up gpu tiler");
+>  }
+>  
+>  void panfrost_gpu_power_off(struct panfrost_device *pfdev)
 > 
