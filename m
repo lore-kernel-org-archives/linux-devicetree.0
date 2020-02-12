@@ -2,129 +2,182 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE19C3B186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 14:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C868C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 14:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B473B20661
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 14:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581518523;
-	bh=Ph7c857eirFez6JYBKw+nD34hjDRRznioR/hKPDkqX4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GSdGtsPpmkp2Px08aw0tUr+ud69lYsTzWxC2m9pupeViZPOiHOUFW94y/xDhwRfyi
-	 4lVyHuG6ml0mzfnrrOWevZze5t4e3Jo5ajRJLepGJNhHELehVQIc4OPhyV9lm5EPnZ
-	 Lc+kTnLLeI0d4DSrV14RczzwTf4YfYZET3XmP1X0=
+	by mail.kernel.org (Postfix) with ESMTP id A0BB120873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 14:46:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="SCsGmzWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgBLOl7 (ORCPT
+        id S1727372AbgBLOqg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 09:41:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbgBLOl6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 09:41:58 -0500
-Received: from localhost.localdomain (unknown [213.195.124.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8020B20873;
-        Wed, 12 Feb 2020 14:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581518518;
-        bh=Ph7c857eirFez6JYBKw+nD34hjDRRznioR/hKPDkqX4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOvgS3FdeuRKRMI2pJPKem39t6r1MDHwwdqyKWnHVLy2sq3/rhTb+KtFPcwtuziRT
-         s3SE2qM/GQ0JkuV03paHVWxkU0p0sjOjcwX8IlTZPjYMvgArMQ9ineWDpQ4J5F1OiE
-         6o+J6+pPVBkqom/N2WnF/iC90v92z5IkNWl+qQ7Y=
-From:   matthias.bgg@kernel.org
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: mediatek: rename scpsys nodes to power-controller
-Date:   Wed, 12 Feb 2020 15:41:45 +0100
-Message-Id: <20200212144145.25407-2-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200212144145.25407-1-matthias.bgg@kernel.org>
-References: <20200212144145.25407-1-matthias.bgg@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 12 Feb 2020 09:46:36 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:12465 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbgBLOqf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 09:46:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581518792;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=eF0eU+wT6Jz3VQhXmG5csiS9c3rSC4Z9DeL2XQYqdFw=;
+        b=SCsGmzWDrloScq92rU+PXSYfAOu0RbAOZ7agPUad+rT+j1Pxyx3f5duf4L0nRwk5mq
+        Ms349kTulXSgOtFYrxgy9fRdKaWvGo0wMPOlBKgA/pdpUcHZWVOVcazrl+v76CBuSx6n
+        fqmnkzGxlu0fKPkrsui8bbTF7FagUzUESnORojltiAyJMRDel7TpT7MuBuRyfIbEc2sd
+        Bos3qm9owufelou5Uk9Ov8wjoATpYpUcoOtCJ6aB4JfFhJGFr9rztH/9K9rzw3OEKwXh
+        Jf83TygUD4bZ55MZBFg7838F0xDjroI2h4ynbVy5iGY/wF5aNlIa8aO6Y7EmCXVunOWf
+        KqIg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXAgODw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1CEkJ4uk
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 12 Feb 2020 15:46:19 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: i2c: jz4780: silence log flood on txabrt
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200212094628.GB1143@ninjato>
+Date:   Wed, 12 Feb 2020 15:46:19 +0100
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        Alex Smith <alex.smith@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <213C52CC-E5DC-4641-BE68-3D5C4FEA1FB5@goldelico.com>
+References: <cover.1581457290.git.hns@goldelico.com> <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com> <20200212094628.GB1143@ninjato>
+To:     Wolfram Sang <wsa@the-dreams.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg@gmail.com>
+Hi,
 
-The nodes with name scpsys actually implement a power-controller.
-Rename the nodes to match the bindings description.
+> Am 12.02.2020 um 10:46 schrieb Wolfram Sang <wsa@the-dreams.de>:
+>=20
+>=20
+> The printout for txabrt is way too talkative. Reduce it to the =
+minimum,
+> the rest can be gained by I2C core debugging and datasheet =
+information.
+> Also, make it a debug printout, it won't help the regular user.
+>=20
+> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> ---
+>=20
+> Sorry, normally I don't do counter patches. Yet, this time I realized
+> that it would be faster to actually do what I envisioned than to
+> describe it in words. I hope you don't feel offended.
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+No problem. I had thought a little about that myself, but did not
+dare to solve more than my problem...
 
----
+> This driver has
+> way too many dev_err anyhow, so this may be a start.
+>=20
+> Obviously, I can't test, does it work for you?
 
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 2 +-
- arch/arm64/boot/dts/mediatek/mt6797.dtsi  | 2 +-
- arch/arm64/boot/dts/mediatek/mt7622.dtsi  | 2 +-
- arch/arm64/boot/dts/mediatek/mt8173.dtsi  | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Yes,it works.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index 43307bad3f0d..a00c5caa1915 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-@@ -278,7 +278,7 @@ pio: pinctrl@10005000 {
- 		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
--	scpsys: scpsys@10006000 {
-+	scpsys: power-controller@10006000 {
- 		compatible = "mediatek,mt2712-scpsys", "syscon";
- 		#power-domain-cells = <1>;
- 		reg = <0 0x10006000 0 0x1000>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-index 2b2a69c7567f..136ef9527a0d 100644
---- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-@@ -157,7 +157,7 @@ pins1 {
- 		};
- 	};
- 
--	scpsys: scpsys@10006000 {
-+	scpsys: power-controller@10006000 {
- 		compatible = "mediatek,mt6797-scpsys";
- 		#power-domain-cells = <1>;
- 		reg = <0 0x10006000 0 0x1000>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index dac51e98204c..339dc9f88f43 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -230,7 +230,7 @@ pericfg: pericfg@10002000 {
- 		#reset-cells = <1>;
- 	};
- 
--	scpsys: scpsys@10006000 {
-+	scpsys: power-controller@10006000 {
- 		compatible = "mediatek,mt7622-scpsys",
- 			     "syscon";
- 		#power-domain-cells = <1>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 8b4e806d5119..9ab22dac925d 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -436,7 +436,7 @@ pins1 {
- 			};
- 		};
- 
--		scpsys: scpsys@10006000 {
-+		scpsys: power-controller@10006000 {
- 			compatible = "mediatek,mt8173-scpsys";
- 			#power-domain-cells = <1>;
- 			reg = <0 0x10006000 0 0x1000>;
--- 
-2.24.1
+Do you want to push your patch yourself, or should I add it to my
+patch series and resubmit in a v2?
+
+BR and thanks,
+Nikolaus
+
+>=20
+> drivers/i2c/busses/i2c-jz4780.c | 36 ++-------------------------------
+> 1 file changed, 2 insertions(+), 34 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-jz4780.c =
+b/drivers/i2c/busses/i2c-jz4780.c
+> index 16a67a64284a..b426fc956938 100644
+> --- a/drivers/i2c/busses/i2c-jz4780.c
+> +++ b/drivers/i2c/busses/i2c-jz4780.c
+> @@ -78,25 +78,6 @@
+>=20
+> #define X1000_I2C_DC_STOP		BIT(9)
+>=20
+> -static const char * const jz4780_i2c_abrt_src[] =3D {
+> -	"ABRT_7B_ADDR_NOACK",
+> -	"ABRT_10ADDR1_NOACK",
+> -	"ABRT_10ADDR2_NOACK",
+> -	"ABRT_XDATA_NOACK",
+> -	"ABRT_GCALL_NOACK",
+> -	"ABRT_GCALL_READ",
+> -	"ABRT_HS_ACKD",
+> -	"SBYTE_ACKDET",
+> -	"ABRT_HS_NORSTRT",
+> -	"SBYTE_NORSTRT",
+> -	"ABRT_10B_RD_NORSTRT",
+> -	"ABRT_MASTER_DIS",
+> -	"ARB_LOST",
+> -	"SLVFLUSH_TXFIFO",
+> -	"SLV_ARBLOST",
+> -	"SLVRD_INTX",
+> -};
+> -
+> #define JZ4780_I2C_INTST_IGC		BIT(11)
+> #define JZ4780_I2C_INTST_ISTT		BIT(10)
+> #define JZ4780_I2C_INTST_ISTP		BIT(9)
+> @@ -576,21 +557,8 @@ static irqreturn_t jz4780_i2c_irq(int irqno, void =
+*dev_id)
+>=20
+> static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
+> {
+> -	int i;
+> -
+> -	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
+> -	dev_err(&i2c->adap.dev, "device addr=3D%x\n",
+> -		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
+> -	dev_err(&i2c->adap.dev, "send cmd count:%d  %d\n",
+> -		i2c->cmd, i2c->cmd_buf[i2c->cmd]);
+> -	dev_err(&i2c->adap.dev, "receive data count:%d  %d\n",
+> -		i2c->cmd, i2c->data_buf[i2c->cmd]);
+> -
+> -	for (i =3D 0; i < 16; i++) {
+> -		if (src & BIT(i))
+> -			dev_dbg(&i2c->adap.dev, "I2C TXABRT[%d]=3D%s\n",
+> -				i, jz4780_i2c_abrt_src[i]);
+> -	}
+> +	dev_dbg(&i2c->adap.dev, "txabrt: 0x%08x, cmd: %d, send: %d, =
+recv: %d\n",
+> +		src, i2c->cmd, i2c->cmd_buf[i2c->cmd], =
+i2c->data_buf[i2c->cmd]);
+> }
+>=20
+> static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
+> --=20
+> 2.20.1
+>=20
 
