@@ -2,153 +2,159 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A13AC3B188
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A912AC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3256D24650
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6FC2168B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1kW+okF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLVtOPey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgBLRKR (ORCPT
+        id S1727041AbgBLRYx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:10:17 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42855 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728793AbgBLRKR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 12:10:17 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d10so3184375ljl.9;
-        Wed, 12 Feb 2020 09:10:16 -0800 (PST)
+        Wed, 12 Feb 2020 12:24:53 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34767 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgBLRYx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 12:24:53 -0500
+Received: by mail-ua1-f67.google.com with SMTP id 1so1178964uao.1;
+        Wed, 12 Feb 2020 09:24:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OuX98j86Ch4dS0yCqSb2Pt9fzt9ip/SvY8mHAnanoTo=;
-        b=l1kW+okFviwV/mK0Skm3CDhTFSoJMBfU0JWqem3hWGTPh3M6Naixosu1yxCTeNkLNo
-         ZH+TSDvbR8uFQoaPxnhGt3s1zV4j8aF8fvXKtvdjj/1fXby4OdEJ0uyHHTQIcOn8h0Od
-         n545f8ZDX7dKRK3b9Hse2+ZtovEqYTBGh8PD66yue374DPsVvONYdpj5T0jej5Fh7JAe
-         z8xOxtPh7gAxKQbzbVIgxI8z+iV71+Yke/nbvVieHnVE+m901tjmN6LFEUDzystKAqRy
-         7neMz8Cs+0oVupEAx2jVhEWbSjZgx+OjDb1VZmUzAkaEml66oOdrF9N6Z3uTMOVb1TyO
-         w3oA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jCGxfylxy3MldAt/reEr7p2HcESXZ2SEVCL7ze7sb8M=;
+        b=mLVtOPeyTrlGTAOEBO32ZUHoFId8CdOxxgdZYat1MHSCbZKEoRcEDicBnpT71GntOI
+         jE9GscwR8WoZBDG3NW2w5NV4KY4Y8KfFRmaVsjrpAkVgBIy1+dNvlJV4eDDZDPfUqKVK
+         oorEhZlJcQWCPlGU6yTKKyzkjd8lVDC09X8BRQFifOVlbdeW8BUCX8oUY+gdFrqV43ve
+         A7HVKdPyoFHMCkXVqFcQSKxCEkspuET12AzZarmTfBeGT1hUgL0I2kOfIADygzgcXX0I
+         HilyTVF18ofv8eL17GJwyyCw6bLnd7ieFA+NvVspb+P0wA90z7swiFmFjYi2DXaQkKOH
+         2Y2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OuX98j86Ch4dS0yCqSb2Pt9fzt9ip/SvY8mHAnanoTo=;
-        b=EVCXXPhVR7NT5/y1g7Dt3knxkJb6Bf3/TFxkj/w5xaQVOnk1qd9ZALFLzR3z9vf9jL
-         2f2WLA7OJsnZa2Xz6Ep4wI7PK7Y9f/I5o/sl9lltUW3evdW6MYFtJe0t9fEXOiVPxpjr
-         sni1SlYHTGArgQBnLUHjQL2acVD7/npAphtgMw9JvgOwhm7fEBVsMWCIeFLUyorhJ5dD
-         15eI989v/BB8rCwprpTIJpUd0rL0DEgVEmXv/NMPJ1GnPTCfcqz7Xr+bce71W8HEPGZB
-         ybsxCgpKHB3Z6iO4NRyza/jz3Q55lm++8aUoYNBIfPplFWAnwwJluPMXtIRIMfCirVrU
-         kapg==
-X-Gm-Message-State: APjAAAUuvYVqD2cQIKEO1kvtahkP+2kIvO6Pbk2VB06JFt0VToynngUb
-        inrX3r9EAHE70ThXTN3k+Ts=
-X-Google-Smtp-Source: APXvYqwINlL4Q1/ftB7u6oRHMKGAOyh2CjdjmuZXbCSU0F46RUl1Q1a3ffsj0VUCpFxDNoLY1EVa1Q==
-X-Received: by 2002:a05:651c:414:: with SMTP id 20mr7963298lja.165.1581527415378;
-        Wed, 12 Feb 2020 09:10:15 -0800 (PST)
-Received: from emb-minnehanov-OptiPlex-7060.collabio.net ([77.244.21.162])
-        by smtp.gmail.com with ESMTPSA id b20sm607955ljp.20.2020.02.12.09.10.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 09:10:14 -0800 (PST)
-From:   Alexey Minnekhanov <alexey.min@gmail.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Alexey Minnekhanov <alexey.min@gmail.com>
-Subject: [PATCH 5/5] arm64: dts: qcom: Add Xiaomi Redmi Note 7 (lavender)
-Date:   Wed, 12 Feb 2020 20:09:16 +0300
-Message-Id: <20200212170916.7494-6-alexey.min@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200212170916.7494-1-alexey.min@gmail.com>
-References: <20200212170916.7494-1-alexey.min@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jCGxfylxy3MldAt/reEr7p2HcESXZ2SEVCL7ze7sb8M=;
+        b=KBcoofSdsZBPCXwqDwvfsx2OFZGhpGqfvSjS/0luzx4qe9h1NLHCPGcQnMzMEt1Vsd
+         mncszrkchSVB50iY1p2OqxoRKF49UPqyWwI4l01wB9sk5cv/hh5DDftqr5jBPvA4lelZ
+         Fi1xLTcpSjWNP/SzESJyWQvMAVqIA4iNJJTomEPXW65es3jTVgR2Ll1Db9kT32y7V+EV
+         NWV3YC6du45Cxnbta11CpkhKgrYQp4LDVeBeLNmKlyulkpEhowvyD7gVMvOhcQtXthg2
+         UbfI8h25izvycMHsBY6/hgivFTruUhKJVmJt8jQ4a7qfe0V+1vnXfS8jjT7pBVFrUYhM
+         e3Xg==
+X-Gm-Message-State: APjAAAVerJ5jEi5PMl2rK8MVAROpjCnwvpD3isLjRhExSS0aO9f/MEMp
+        aeViCftYeUNFpTc0O9y5sXLhkj5K/ZcYTSID99g=
+X-Google-Smtp-Source: APXvYqyAepvFaN7GJfHPGtS87hCZr+gc51607hAiqYlgiF4eorNgglWZn4G42TMyi4n7UoLDOJ1DHv82wxTfkbU3tGs=
+X-Received: by 2002:ab0:66d6:: with SMTP id d22mr5082237uaq.92.1581528292397;
+ Wed, 12 Feb 2020 09:24:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1581475981.git.shengjiu.wang@nxp.com> <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
+In-Reply-To: <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 12 Feb 2020 14:24:40 -0300
+Message-ID: <CAOMZO5Do=dzh4WXvm44mB7-PeesWuA6qRtMXwHCH9piXd1dZEw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds the initial device tree support for Xiaomi
-Redmi Note 7 (lavender) phone. It is based on SDM660
-SoC. Currently it can be booted into initrd with a
-shell over UART and you can get kernel boot logs
-from a pstore-ramoops.
+On Wed, Feb 12, 2020 at 1:35 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
+>
+> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
+> IP module found on i.MX815.
 
-Signed-off-by: Alexey Minnekhanov <alexey.min@gmail.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../boot/dts/qcom/sdm660-xiaomi-lavender.dts  | 42 +++++++++++++++++++
- 2 files changed, 43 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts
+i.MX815 in an internal terminology. Please avoid it on the commit log.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 973c0f079659..a61b1089bd9a 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -15,6 +15,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts b/arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts
-new file mode 100644
-index 000000000000..676efba0e16b
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts
-@@ -0,0 +1,42 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020, Alexey Minnekhanov <alexey.min@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sdm660.dtsi"
-+
-+/ {
-+	model = "Xiaomi Redmi Note 7";
-+	compatible = "xiaomi,lavender", "qcom,sdm660";
-+
-+	aliases {
-+		serial0 = &blsp1_uart2;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ramoops@a0000000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0xa0000000 0x0 0x400000>;
-+			console-size = <0x20000>;
-+			record-size = <0x20000>;
-+			ftrace-size = <0x0>;
-+			pmsg-size = <0x20000>;
-+		};
-+	};
-+};
-+
-+&blsp1_uart2 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart_console_active>;
-+};
--- 
-2.20.1
-
+>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  .../devicetree/bindings/sound/fsl,easrc.txt   | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.txt b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
+> new file mode 100644
+> index 000000000000..0e8153165e3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
+> @@ -0,0 +1,57 @@
+> +NXP Asynchronous Sample Rate Converter (ASRC) Controller
+> +
+> +The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
+> +signal associated with an input clock into a signal associated with a different
+> +output clock. The driver currently works as a Front End of DPCM with other Back
+> +Ends Audio controller such as ESAI, SSI and SAI. It has four context to support
+> +four substreams within totally 32 channels.
+> +
+> +Required properties:
+> +- compatible:                Contains "fsl,imx8mn-easrc".
+> +
+> +- reg:                       Offset and length of the register set for the
+> +                            device.
+> +
+> +- interrupts:                Contains the asrc interrupt.
+> +
+> +- dmas:                      Generic dma devicetree binding as described in
+> +                            Documentation/devicetree/bindings/dma/dma.txt.
+> +
+> +- dma-names:                 Contains "ctx0_rx", "ctx0_tx",
+> +                                     "ctx1_rx", "ctx1_tx",
+> +                                     "ctx2_rx", "ctx2_tx",
+> +                                     "ctx3_rx", "ctx3_tx".
+> +
+> +- clocks:                    Contains an entry for each entry in clock-names.
+> +
+> +- clock-names:               "mem" - Peripheral clock to driver module.
+> +
+> +- fsl,easrc-ram-script-name: The coefficient table for the filters
+> +
+> +- fsl,asrc-rate:             Defines a mutual sample rate used by DPCM Back
+> +                            Ends.
+> +
+> +- fsl,asrc-width:            Defines a mutual sample width used by DPCM Back
+> +                            Ends.
+> +
+> +Example:
+> +
+> +easrc: easrc@300C0000 {
+> +       compatible = "fsl,imx8mn-easrc";
+> +       reg = <0x0 0x300C0000 0x0 0x10000>;
+> +       interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
+> +       clocks = <&clk IMX8MN_CLK_ASRC_ROOT>;
+> +       clock-names = "mem";
+> +       dmas = <&sdma2 16 23 0> , <&sdma2 17 23 0>,
+> +              <&sdma2 18 23 0> , <&sdma2 19 23 0>,
+> +              <&sdma2 20 23 0> , <&sdma2 21 23 0>,
+> +              <&sdma2 22 23 0> , <&sdma2 23 23 0>;
+> +       dma-names = "ctx0_rx", "ctx0_tx",
+> +                   "ctx1_rx", "ctx1_tx",
+> +                   "ctx2_rx", "ctx2_tx",
+> +                   "ctx3_rx", "ctx3_tx";
+> +       fsl,easrc-ram-script-name = "imx/easrc/easrc-imx8mn.bin";
+> +       fsl,asrc-rate  = <8000>;
+> +       fsl,asrc-width = <16>;
+> +       status = "disabled";
+> +};
+> --
+> 2.21.0
+>
