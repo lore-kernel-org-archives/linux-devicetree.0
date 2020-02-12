@@ -2,137 +2,114 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCCDC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 06:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2295C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A082073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 06:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A358520848
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:07:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwdFiFV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgBLG4v (ORCPT
+        id S1728245AbgBLHHH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 01:56:51 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:50436 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgBLG4v (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 01:56:51 -0500
-X-AuditID: c0a8fbf4-279ff70000001e6c-95-5e43a1b1bc91
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 30.5F.07788.1B1A34E5; Wed, 12 Feb 2020 07:56:49 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Wed, 12 Feb 2020 07:56:38 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Thread-Topic: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Thread-Index: AQHV4At5sLPMospsI0G2S3c08J9KoagWS84AgADGiAA=
-Date:   Wed, 12 Feb 2020 06:56:37 +0000
-Message-ID: <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
-References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200211190614.GP4543@sirena.org.uk>
-In-Reply-To: <20200211190614.GP4543@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1005ABD36C201B4FADF9E58B10F0093B@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 12 Feb 2020 02:07:07 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41555 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbgBLHHG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 02:07:06 -0500
+Received: by mail-qt1-f193.google.com with SMTP id l21so843374qtr.8;
+        Tue, 11 Feb 2020 23:07:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0AxOxOz3N9F0K8mLSxL0hnOp0DZT57bazsTbRp6sLU0=;
+        b=jwdFiFV/SfJKDeMxz405XK6dPGTtFwNKTaHgkG0RaH9AAZhyLyb3UYl8lLUBbog+un
+         Bxr9qpp0GK52dG6zRcljoyLZac2+nISQ7dsMOoR11skKDkTia4fZdTVXnT2ojDov7f3a
+         qDHqO5YuQsucYHMro4CDzLMC624oWN53GIS3OnjhbJqV8sSdmKXvxrTsIVI+tX6Sc2t3
+         AgqJxatpZIQVkjXV5PGTTL6g3jUSHqt4xa2Dvu+9sPdyDu8Ay82093uv13ND0BFsBiyO
+         VaEv96dr4ZagKvEQxY9Y6mHLYXAm5qMMKrElRAOWBfEp/l7IFg5VDrP+vHA1e5CGcOsC
+         TXnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0AxOxOz3N9F0K8mLSxL0hnOp0DZT57bazsTbRp6sLU0=;
+        b=Ohmv/WZYtrXmDbA++3UJwQw5FB8tmO6Z/ddRwBjLcP2LhukJeZucoW+cZ6QUta6cKy
+         80vCgHJGL3IfZ1Fp6+nF15joXye6/eRj+1boJPJWTjiz9NolJqoxL8ww/M6HbTB1UpKm
+         IOuTgcwroI44uOKurErYlHMwZOXcg5EtoTZdqaG0/Yk7FAHrrQ7tolARc1KooO4Hsih5
+         MCrkWzxcUBANIRBH+HF8WHEguguIjja9Ek3q2wBJ89sYH/sSHwtMX259HWjEWwEEstk5
+         8FPXeAjfsl8nsluY+kAzXUWA3N67Ibbr+NzzXmHGlBqKHNOGq5NfX+3jctioVFxEvhHF
+         2uzw==
+X-Gm-Message-State: APjAAAXA6FK92u8RFwgyMzj7GrRJcFV8A52LAXyV68IX3//YV0xN+XD1
+        MRreuUCL7fJDZn01J1bMTWc3NLQ7v0ms5fxtubQ=
+X-Google-Smtp-Source: APXvYqzFAhN/zmGH/qPNyu/UPaVQNVYCHk9/jtr+7frBaquyjhJMAItJOS022rDz7+Fs6rLuRzdouhsz6E39O1t+j3E=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr18086333qte.204.1581491224261;
+ Tue, 11 Feb 2020 23:07:04 -0800 (PST)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBJsWRmVeSWpSXmKPExsVyYMXvTbobFzrHGUw+ymYx9eETNov5R86x
-        Wkz5s5zJ4vKuOWwWn3uPMFosvX6RyWLO0hMsFq17j7BbnN5d4sDpsWbeGkaPnbPusntsWtXJ
-        5nHn2h42j8+b5AJYo7htkhJLyoIz0/P07RK4M7pbulgKbqlUfJl1laWB8YFyFyMnh4SAicTq
-        BdOYuhi5OIQErjJKfNvQww6SEBI4wSjRddq8i5GDg03ARqLrJlhYREBXYuqvxWwg9cwCk1gk
-        Lqz4ywKSEBZwlZj05CozRJGbxMnGi1C2lcTe13/YQGwWAVWJGe+2MYLYvAJ+Ev/PrWKE2HWG
-        UeL7KUcQm1PASOL1hc1gvYwCshKdDe+YQGxmAXGJTc++s0IcLSCxZM95ZghbVOLl439QcSWJ
-        vT8fsoDczCygKbF+lz5Eq4NE65SFjBC2osSU7ofsECcISpyc+YRlAqPYLCQbZiF0z0LSPQtJ
-        9ywk3QsYWVcxSuQmZuakJ5akGuoVpZbqFeVn5AKp5PzcTYyQ2P2yg/H/Ic9DjEwcjIcYJTmY
-        lER5X0Y4xwnxJeWnVGYkFmfEF5XmpBYfYpTgYFYS4RVvBMrxpiRWVqUW5cOkpDlYlMR51R9O
-        jBUSANmVnZpakFoEk5Xh4FCS4GWcD9QoWJSanlqRlplTgpBm4uAEGc4lJVKcmpeSWpRYWpIR
-        D0oe8cXA9AGS4gHaa7sAZG9xQWIuUBSi9RSjOceEl3MXMXOcXLUESG6euxRIHgGRQix5+Xmp
-        UuK8q0DaBEDaMkrz4Ja+YhTnYFQS5p0DkuUBJne4ma+A1jEBrbtu4gCyriQRISXVwKiVUpUS
-        6z/hlJFJxMPqtfEv1XOjV9uVbogJt9Vu1tj2VrTvqkWUoPdDg4k6ydPFzBZd9HJu8Dw732xZ
-        oTfnzUWLMlfetPqS7C8lucZ991S5o+ITl8o3XIjgCMqwt/RZCUwyEYWHr8+13Xkmo7jwm+TZ
-        z4XHtPr2W+ycFmJwWftfdbqHSWm4EktxRqKhFnNRcSIAg8lG9asDAAA=
+References: <cover.1581475981.git.shengjiu.wang@nxp.com> <2ab5cc65-026a-10fd-1216-b0d83baf37a6@infradead.org>
+In-Reply-To: <2ab5cc65-026a-10fd-1216-b0d83baf37a6@infradead.org>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Wed, 12 Feb 2020 15:06:52 +0800
+Message-ID: <CAA+D8ANsA4kaT_48F=3Jey-NjJd5HO+XD38TnQD3XBu9bg2WFQ@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH 0/3] Add new module driver for new ASRC
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, perex@perex.cz,
+        Takashi Iwai <tiwai@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TW9ybmluZyBNYXJrLA0KDQpPbiBUdWUsIDIwMjAtMDItMTEgYXQgMTk6MDYgKzAwMDAsIE1hcmsg
-QnJvd24gd3JvdGU6DQo+IE9uIE1vbiwgRmViIDEwLCAyMDIwIGF0IDAyOjEzOjEzUE0gKzAyMDAs
-IE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gDQo+ID4gUHJvdmlkZSBhIGxpbmVhcl9yYW5nZSBo
-ZWxwZXIgd2hpY2ggY2FuIGRvIGNvbnZlcnNpb24gZnJvbSB1c2VyDQo+ID4gdmFsdWUNCj4gPiB0
-byByZWdpc3RlciB2YWx1ZSAnc2VsZWN0b3InLg0KPiA+IE1hcmssIHRoaXMgaXMgbG9vc2VseSBi
-b3VuZCB0byByZWdpc3RlciBoYW5kbGluZy4uLiBEbyB5b3UgdGhpbmsNCj4gPiB0aGUgcmVnbWFw
-IGNvdWxkIGhvc3QgdGhlc2UgaGVscGVycz8NCj4gDQo+IFRoZXJlJ3Mgbm8gcmVhbCB0aWUgdG8g
-cmVnbWFwIGhlcmUsIHNvbWV0aGluZyBsaWtlIHRoaXMgY291bGQgcXVpdGUNCj4gaGFwcGlseSBi
-ZSB1c2VkIGJ5IG1lbW9yeSBtYXBwZWQgZGV2aWNlcyB3aGVyZSByZWdtYXAgaGFzIGxpbWl0ZWQN
-Cj4gdXNlcw0KPiBhbmQgd291bGQgYmUgYSBsb3QgdG8gcHVsbCBpbi4gIEEgc2VwYXJhdGUgbGli
-cmFyeSB3b3VsZCBwcm9iYWJseQ0KPiBtYWtlDQo+IG1vcmUgc2Vuc2UuDQoNClVnaC4gSSBrbm93
-IHlvdSBhcmUgcmlnaHQuIEkgY2FuIGFkbWl0IHRoYXQgSSBqdXN0IHNhdyBpdCBlYXNpZXIgdG8g
-Z2V0DQp0aGlzIGluY2x1ZGVkIGluIHNvbWV0aGluZyB0aGF0IGlzIGFscmVhZHkgZXhpc3Rpbmcg
-KGJlc2lkZXMsIEkgaGF2ZQ0KZm91bmQgY28tb3BlcmF0aW5nIHdpdGggdGhlIHJlZ21hcC9yZWd1
-bGF0b3IgbWFpbnRhaW5lciBwcmV0dHkNCnN0cmFpZ2h0Zm9yd2FyZCAtIHRoZXJlIGhhcyBiZWVu
-IG5vIGV4dHJhIGhhc3NsZSByZXF1aXJlZCB0byBnZXQgdGhpbmdzDQpkb25lLCBqdXN0IHRoZSBu
-ZWNlc3NhcnkgZml4ZXMpLiBJJ20gYSBiaXQgYWZyYWlkIHRoYXQgYWRkaW5nIGEgbmV3DQpwaWVj
-ZSBvZiBsaWJyYXJ5IGp1c3QgZm9yIHRoaXMgbWlnaHQgcmVxdWlyZSBhIGxvdCBtb3JlIHNvY2lh
-bA0KaW5mbHVlbmNpbmcgXl9eOyBCdXQgeW91IGFyZSBjb3JyZWN0LiBEZXZpY2VzIHdpdGggdGhp
-cyBraW5kIG9mDQpyZWdpc3RlcnMgY2FuIGVhc2lseSBiZSBjb25uZWN0ZWQgdG8gbWVtb3J5IG1h
-cHBlZCBidXMuDQoNCj4gTm90IHN1cmUgaG93IG1hbnkgdXNlcnMgdGhlcmUgd291bGQgYmUgb3V0
-c2lkZSBvZiBwb3dlcg0KPiByZWxhdGVkIHN0dWZmLCBJIGRvbid0IHJlY2FsbCBzZWVpbmcgdGhl
-IHBhdHRlcm4gZWxzZXdoZXJlLg0KDQpJIHRoaW5rIHRoZXJlIG11c3QgYmUgb3RoZXIgc3R1ZmYg
-dG9vLiBCdW5jaCBvZiBOQ09zIChudW1lcmljDQpjb250cm9sbGVyIG9zY2lsbGF0b3JzKSBmcm9t
-IG15IGNsb2NrL3N5bmNocm9uaXphdGlvbiByZWxhdGVkIGNhcmVlcg0KY29tZXMgdG8gbWluZCBm
-aXJzdC4gQUZBSVIgdGhleSBoYWQgbGluZWFyIGZyZXF1ZW5jeSByZXNwb25zZS4gSW4NCmNvbXBh
-cmlzb24gdHVuaW5nIGNsb2NrIHdpdGggREFDIHZvbHRhZ2Ugd2FzIG5vdCBsaW5hciAtIGFsdGhv
-dWdoDQp2b2x0YWdlIGNoYW5nZSB3YXMgbGluZWFyIDopIEJ1dCBJIHdvdWxkIGV4cGVjdCB0aGF0
-IHRoZXJlIGlzIGJ1bmNoIG9mDQp0aGluZ3MgKGFsdGhvdWdoIEkgY2FuIG5vdCBndWFyYW50ZWUg
-aXQpLg0KDQo+IE5vdGUgYWxzbyB0aGF0IHdlIGFscmVhZHkgaGF2ZSBxdWl0ZSBleHRlbnNpdmUg
-aGVscGVycyBmb3IgdGhpcyBzb3J0DQo+IG9mDQo+IHN0dWZmIGluIHRoZSByZWd1bGF0b3IgQVBJ
-IHdoaWNoIEkgc2Vuc2UgbWF5IGhhdmUgYmVlbiBpbnZvbHZlZCBpbg0KPiB0aGlzDQo+IGltcGxl
-bWVudGF0aW9uDQoNCllvdSBzZW5zZSB3ZWxsIHhEDQoNClRoaXMgaGFzIGJlZW4gaW5zcGlyZWQg
-YnkgUkVHVUxBVE9SX0xJTkVBUl9SQU5HRVMgaW4gcmVndWxhdG9yDQpmcmFtZXdvcmsuIEkgdGhv
-dWdodCBJIGRpZCB3cml0ZSB0aGF0IHRvIHNvbWV3aGVyZSBzbyB0aGF0IHRoZSBjcmVkaXRzDQp3
-b3VsZCBnbyB0byByZWd1bGF0b3IgY29kZSA6KSBCdXQgbWF5YmUgSSBkaWQgb25seSB3cml0ZSB0
-aGF0IHdoZW4gSQ0KZmlyc3QgaW50cm9kdWNlZCB0aGlzIGNvZGUgdG8gQkQ3MDUyOCBwb3dlci1z
-dXBwbHkgY29kZS4NCg0KSSB0aG91Z2h0IHRoYXQgd2Ugc2hvdWxkIGFkZCBnZW5lcmljIGhlbHBl
-cnMgYW5kIHRoYXQgdGhlIHJlZ3VsYXRvcg0KZnJhbWV3b3JrIGNvdWxkIHN3aXRjaCB0byB1c2Ug
-dGhlbSBpbnRlcm5hbGx5IGlmIGl0IHNlZW1lZCBsaWtlIGEgZ29vZA0KaWRlYS4NCg0KQnV0IGFu
-b3RoZXIgb3B0aW9uIC0gd2hpY2ggSSB0aG91Z2h0IG9ubHkgbm93IC0gd291bGQgYmUgdG8gc2Vl
-IGlmDQpjdXJyZW50IHJlZ3VsYXRvciBpbXBsZW1lbnRhdGlvbiBjb3VsZCBiZSByZS1uYW1lZCB0
-byBtb3JlIGdlbmVyaWMgYW5kDQpwbGFjZWQgdW5kZXIgc29tZSBtb3JlIGdlbmVyaWMgY29tcG9u
-ZW50IChJIHRob3VnaHQgb2YgcmVnbWFwIGJ1dCBhcw0KeW91IHBvaW50ZWQgb3V0IHRoaXMgaXMg
-ZXF1YWxseSB1c2VmdWxsIGZvciBkZXZpY2VzIGNvbm5lY3RlZCB0byBtZW1vcnkNCm1hcHBlZCBi
-dXNlcyAtIHNvIG1heWJlIHVuZGVyIGxpYiAtIGlmIHN0YXRpYyBpbmxpbmUgZnVuY3Rpb25zIGlu
-IGENCmhlYWRlciBhcmUgbm90IGEgZ29vZCBvcHRpb24pLiBJIGp1c3QgaGF2ZSBhIGZlZWxpbmcg
-dGhhdCB0aGUgbGluZWFyLQ0KcmFuZ2VzIGlzIGN1cnJlbnRseSBraW5kIG9mIGVtYmVkZGVkIGlu
-IHRoZSBjb2RlIHdoaWNoIGlzIGludGVybmFsIHRvDQpyZWd1bGF0b3IgZnJhbWV3b3JrIHNvIGl0
-IGlzIHByb2JhYmx5IG5vdCBlYXNpbHkgZXh0cmFjdGVkIGZyb20NCnJlZ3VsYXRvciBjb2RlPw0K
-DQo+ICBhbmQgdG8gYW4gZXh0ZW50IGluIEFMU0Egd2hpY2ggdGFrZXMgYSBkaWZmZXJlbnQgYXBw
-cm9hY2gNCj4gd2l0aCBUTFZzIHNpbmNlIGl0IGJha2VkIHNlbGVjdG9ycyBkaXJlY3RseSBpbnRv
-IHRoZSBBQkkuDQoNCkkndmUgbmV2ZXIgcGxheWVkIHdpdGggYW55IG1lZGlhIHN1YnN5c3RlbXMu
-IFNvdW5kLCBjYW1lcmEgYW5kIHZpZGVvDQphcmUgY29tcGxldGVseSB1bmtub3duIHRvIG1lIDov
-DQoNClNvIGlmIHdlIGRvIG5vdCBzdGFydCBwdWxsaW5nIHRoZSByYW5nZSBjb2RlIG91dCBvZiBy
-ZWd1bGF0b3IgZnJhbWV3b3JrDQooZm9yIG5vdyBhdCBsZWFzdCkgLSBhbmQgaWYgd2UgZG8gbm90
-IHBsYWNlIHRoaXMgdW5kZXIgcmVnbWFwIC0gdGhlbiBJDQpjYW4gZHJvcCB5b3Ugb3V0IG9mIHRo
-ZSByZWNpcGllbnQgbGlzdCBmb3IgdGhpcyBjaGFyZ2VyIGRyaXZlciBpbiBvcmRlcg0KdG8gbm90
-IHBvbGx1dGUgeW91ciBpbmJveCA7KSBIb3cgZG8geW91IGZlZWwgTWFyaywgZG8geW91IHdhbnQg
-dG8gYmUNCmZvbGxvd2luZyB0aGlzIHNlcmllcz8NCg0KQmVzdCBSZWdhcmRzLA0KCU1hdHRpIFZh
-aXR0aW5lbg0KDQo=
+On Wed, Feb 12, 2020 at 1:13 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 2/11/20 8:30 PM, Shengjiu Wang wrote:
+> > Add new module driver for new ASRC in i.MX815/865
+> >
+> > Shengjiu Wang (3):
+> >   ASoC: fsl_asrc: Move common definition to fsl_asrc_common
+> >   ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+> >   ASoC: fsl_easrc: Add EASRC ASoC CPU DAI and platform drivers
+> >
+> >  .../devicetree/bindings/sound/fsl,easrc.txt   |   57 +
+> >  sound/soc/fsl/fsl_asrc.h                      |   11 +-
+> >  sound/soc/fsl/fsl_asrc_common.h               |   22 +
+> >  sound/soc/fsl/fsl_easrc.c                     | 2265 +++++++++++++++++
+> >  sound/soc/fsl/fsl_easrc.h                     |  668 +++++
+> >  sound/soc/fsl/fsl_easrc_dma.c                 |  440 ++++
+> >  6 files changed, 3453 insertions(+), 10 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
+> >  create mode 100644 sound/soc/fsl/fsl_asrc_common.h
+> >  create mode 100644 sound/soc/fsl/fsl_easrc.c
+> >  create mode 100644 sound/soc/fsl/fsl_easrc.h
+> >  create mode 100644 sound/soc/fsl/fsl_easrc_dma.c
+> >
+>
+> Hi,
+>
+> Is this patch series missing Kconfig, Makefile, and possibly
+> MAINTAINERS patches?
+>
+yes, Kconfig, Makefile is missed, will add in next version, and
+no maintainers patch.
+
+best regards
+wang shengjiu
