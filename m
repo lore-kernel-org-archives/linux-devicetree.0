@@ -7,63 +7,70 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8E5C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D060DC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8658D206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F31F20873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 07:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581493394;
-	bh=Y/lvTukTLmPOkYD/rx8zMVp2+4fDIRR1J9tNyDvhbEM=;
+	s=default; t=1581493658;
+	bh=khRNRuCZwxnKABFVYe1snupsbWNrsELF2kP13DYwuWQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C66/t7gnEulvxwc8QfdA1rl3+owj4xWRTPRkAWmIHndpjiySvKr48ZNfndiW1th9g
-	 SyksfSGlJnmV4h8JDh3pe4EU/mKZyLhsntKRVpID0B5beXvZWEPP1W129c9WuxwVv+
-	 Hr62B9RQfFiXzjBwuLjXwRk03p/IfWY/nDSV2InM=
+	b=vQcrRRlPuRw3GWipxdLXCpHqagQjIIG6gSvxlSrkLHdhpXBHnDVBFu0moCjvHWfb7
+	 Vqnl1CqU4FvRYN58jTYBp9BZRW39wMNlleP+dHKNL6No5taVVQ2Sv+A0klmZnvL3uT
+	 0ti805nZMGhUd1H5WM7N2vUJTPCxwuHuACiV/QoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgBLHnL (ORCPT
+        id S1728363AbgBLHri (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 02:43:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 02:47:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbgBLHnL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 02:43:11 -0500
+        id S1728322AbgBLHrh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 02:47:37 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 699FD20714;
-        Wed, 12 Feb 2020 07:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9499E206DB;
+        Wed, 12 Feb 2020 07:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581493390;
-        bh=Y/lvTukTLmPOkYD/rx8zMVp2+4fDIRR1J9tNyDvhbEM=;
+        s=default; t=1581493657;
+        bh=khRNRuCZwxnKABFVYe1snupsbWNrsELF2kP13DYwuWQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NzZzo+8Ixnt1JdwZyhMjOnqkAtXiIgFTYuaJ/PBsToWIPsFccM9/meR1xNiK4lwsO
-         6kikxucTUYL/LZQ77Iva8UAapB2MDK36vSCza/aPKDrOc9D2BjO63s39z4EzdBqqSN
-         GPyEJRZ/lVbqtVg/N7pYxbmfiSGxAYmk1m8Z9n9I=
-Date:   Wed, 12 Feb 2020 15:43:05 +0800
+        b=z/XcnxHy23iM4GNy0ATaZ9fXD01JkDVv2jFLkWtBH1hr5bIaQRG2L5y3SZntbR+4w
+         ui4xuR/WJ9uh3d6CPKUWk8Zc8gyBCc/IIQpmDb+0dmzDSK07ZPd9YY0lnR5qgA3AHT
+         uT//b0xogwwtTzSr597rYSqWVx9ahQIK3PW/PtOI=
+Date:   Wed, 12 Feb 2020 15:47:25 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Aapo Vienamo <aapo.vienamo@iki.fi>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, stefan@agner.ch,
+        kernel@pengutronix.de, linus.walleij@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        catalin.marinas@arm.com, will@kernel.org, abel.vesa@nxp.com,
+        bjorn.andersson@linaro.org, olof@lixom.net, maxime@cerno.tech,
+        leonard.crestez@nxp.com, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ARM: mxs: Enable usbphy1 and usb1 on apx4devkit DTS
-Message-ID: <20200212074303.GD11096@dragon>
-References: <20200112140039.25420-1-aapo.vienamo@iki.fi>
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V9 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by
+ default
+Message-ID: <20200212074724.GE11096@dragon>
+References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
+ <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200112140039.25420-1-aapo.vienamo@iki.fi>
+In-Reply-To: <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 04:00:39PM +0200, Aapo Vienamo wrote:
-> Enable the USB host port on the APx4 development board.
+On Wed, Jan 15, 2020 at 09:39:08AM +0800, Anson Huang wrote:
+> Enable CONFIG_PINCTRL_IMX8MP by default to support i.MX8MP
+> pinctrl driver.
 > 
-> Signed-off-by: Aapo Vienamo <aapo.vienamo@iki.fi>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
 Applied, thanks.
