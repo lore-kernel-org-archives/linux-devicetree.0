@@ -2,66 +2,141 @@ Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0016CC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1F8C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 18:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D773F20661
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 17:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E77321569
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 18:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581531262;
+	bh=XPutHtfrd9L6DCjKR/i4gzTwtBJqO9VVCF2dsQMhOT0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TPpyizZNDCTvHmF8dKVXSKcpJwU9+ejCZ2Tq7Lc3vgylXTHvdkNwAc+vXNyGNCEds
+	 jTZfCdhzX3tdpfIsoeB3If9ek2eKgpdSgO69UuS9iTU6Qxx5U/KTJQ7qj8Dj9yS5z8
+	 4wjCM1zgOD9LmmjseRZE8iJlPYP1LKaCMvjeycZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgBLR6A (ORCPT
+        id S1727923AbgBLSOW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 12:58:00 -0500
-Received: from verein.lst.de ([213.95.11.211]:39692 "EHLO verein.lst.de"
+        Wed, 12 Feb 2020 13:14:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgBLR6A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 12:58:00 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4718868C65; Wed, 12 Feb 2020 18:57:57 +0100 (CET)
-Date:   Wed, 12 Feb 2020 18:57:56 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>,
-        stefan.wahren@i2se.com, afaerber@suse.de, hverkuil@xs4all.nl,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>
-Subject: Re: dma_mask limited to 32-bits with OF platform device
-Message-ID: <20200212175756.GA6034@lst.de>
-References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com> <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com> <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com> <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
+        id S1727279AbgBLSOW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 13:14:22 -0500
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1351E21569;
+        Wed, 12 Feb 2020 18:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581531261;
+        bh=XPutHtfrd9L6DCjKR/i4gzTwtBJqO9VVCF2dsQMhOT0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H0t1S9X9r5QrGUd7DvAOuSUSqqXDsgdC1XTVAcFbzj4EY2h/S8r/mWZNvB10mdCQa
+         38EaQisKKJidSQ7TOlCXmLvne+3QnPgrSM7v03v8XngdUW7peGivsjAvtTOAtfr4CA
+         wewf/BxAmAKE916HXnBmP76nvVhL3jH9qCPQp3LY=
+Received: by mail-qv1-f42.google.com with SMTP id l14so1341710qvu.12;
+        Wed, 12 Feb 2020 10:14:21 -0800 (PST)
+X-Gm-Message-State: APjAAAWvizwDu3Pmzojt+E/r5DutlCrkK5eWqajftF25OTp/uyq+nl5z
+        fHi7yZtE0E6xw7ny0jjl+8lmTeSSFfqJcYtUFQ==
+X-Google-Smtp-Source: APXvYqwYf7OiqvLmE/STxKkwBxfQm+rxJyw5z6FFooFuohKsTmQUlxLvZAqUvV1R4jPQEGjoiAS5DvHkVqtRkL1b//c=
+X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr8482894qvv.85.1581531260167;
+ Wed, 12 Feb 2020 10:14:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-8-drinkcat@chromium.org> <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
+In-Reply-To: <CANMq1KBL-S2DVKbCB2h_XNpfUro+pZ96-C5ft0p-8GX_tbXELQ@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 12 Feb 2020 12:14:08 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLuo+2G2MjiwS9cwNhMV2pGBojXFGNqEfLv3fP-Y04mfA@mail.gmail.com>
+Message-ID: <CAL_JsqLuo+2G2MjiwS9cwNhMV2pGBojXFGNqEfLv3fP-Y04mfA@mail.gmail.com>
+Subject: Re: [PATCH v4 7/7] RFC: drm/panfrost: devfreq: Add support for 2 regulators
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 02:04:31PM +0000, Robin Murphy wrote:
->> For now, let's say that we limit dma-ranges to 4GB size. with "dma-ranges 
->> = <0x00000000 0x00000000 0x1 0x00000000>;"
->> Then, dma_bus_limit is set correctly to 0xffffffff, SATA driver sets masks 
->> to 64-bit as IP supports that.
->>
->> [   13.306847] ahci 4a140000.sata: dma_mask 0xffffffffffffffff, 
->> coherent_mask 0xffffffffffffffff, dma_bus_limit 0xffffffff
->>
->> However, the SATA controller still tries to do DMA above 32-bits.
->> dma_alloc() doesn't seem to be taking dma_bus_limit into account?
+On Wed, Feb 12, 2020 at 2:49 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
 >
-> Yay ARM LPAE... Peter and Christoph have already been playing whack-a-mole 
-> with other bugs under that config - is this with or without SWIOTLB? (and 
-> whichever way, does the other work any better?)
+> +Viresh Kumar +Stephen Boyd for clock advice.
+>
+> On Fri, Feb 7, 2020 at 1:27 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> >
+> > The Bifrost GPU on MT8183 uses 2 regulators (core and SRAM) for
+> > devfreq, and provides OPP table with 2 sets of voltages.
+> >
+> > TODO: This is incomplete as we'll need add support for setting
+> > a pair of voltages as well.
+>
+> So all we need for this to work (at least apparently, that is, I can
+> change frequency) is this:
+> https://lore.kernel.org/patchwork/patch/1192945/
+> (ah well, Viresh just replied, so, probably not, I'll check that out
+> and use the correct API)
+>
+> But then there's a slight problem: panfrost_devfreq uses a bunch of
+> clk_get_rate calls, and the clock PLLs (at least on MTK platform) are
+> never fully precise, so we get back 299999955 for 300 Mhz and
+> 799999878 for 800 Mhz. That means that the kernel is unable to keep
+> devfreq stats as neither of these values are in the table:
+> [ 4802.470952] devfreq devfreq1: Couldn't update frequency transition
+> information.
+> The kbase driver fixes this by remembering the last set frequency, and
+> reporting that to devfreq. Should we do that as well or is there a
+> better fix?
+>
+> Another thing that I'm not implementing is the dance that Mediatek
+> does in their kbase driver when changing the clock (described in patch
+> 2/7):
+> ""
+> The binding we use with out-of-tree Mali drivers includes more
+> clocks, this is used for devfreq: the out-of-tree driver switches
+> clk_mux to clk_sub_parent (26Mhz), adjusts clk_main_parent, then
+> switches clk_mux back to clk_main_parent:
+> (see https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#423)
+> clocks =
+>         <&topckgen CLK_TOP_MFGPLL_CK>,
+>         <&topckgen CLK_TOP_MUX_MFG>,
+>         <&clk26m>,
+>         <&mfgcfg CLK_MFG_BG3D>;
+> clock-names =
+>         "clk_main_parent",
+>         "clk_mux",
+>         "clk_sub_parent",
+>         "subsys_mfg_cg";
+> ""
+> Is there a clean/simple way to implement this in the clock
+> framework/device tree? Or should we implement something in the
+> panfrost driver?
 
-Hmm.  ARM LPAE still uses the arm legacy dma alloc coherent, and that
-might not be taking the dma_bus_limit into account.  Let me check..
+Putting parent clocks into 'clocks' for a device is a pretty common
+abuse. The 'assigned-clocks' binding is what's used for parent clock
+setup. Not sure that's going to help here though. Is this dance
+because the parent clock frequency can't be changed cleanly? If up to
+me, I'd put that dance in the clock driver. The GPU shouldn't have to
+care.
+
+Rob
