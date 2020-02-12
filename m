@@ -4,92 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4638C35242
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C84C35242
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826262082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C235A20842
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 02:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581473118;
-	bh=FFaMZEc4E/x/xophYACoLJfYNCkVhTJ16jaEkNs90pY=;
+	s=default; t=1581473219;
+	bh=umrSbJk39wy9eXeneTcJHzJq4oJofSkULgg//8oRT/g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mB5IwJSRllYFUvqjkfAJXaAYSqfPMZVZcnNYYqRYmV3kiaZJnil0gZbGzP4IN1Vx4
-	 AKVKbSFcCXGZiy5y1uAsprRPANto767AwshLqIJnOVxaGo8KWRaB76AbHYDdJERBGE
-	 YXlwDWv4IQ5A8TG6M1Oj8Jn+NazZHBjo0SukeM90=
+	b=nvhbYBcK+URcDrdSeabonZJ0puPDTfc9ZAPUEcdd1o8iHvE79JAMENP79K36z2b3M
+	 yBL2TKBE1Ec0nhHvu12l4UMlZOhviHt7xsk34ZVDDS/aSu0auu4RF1HJ9lJtIDpQSB
+	 iI6wev7Ja9NvYacIMRpXHLEl5wgv33zAamD55G6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbgBLCFR (ORCPT
+        id S1727535AbgBLCG4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Feb 2020 21:05:17 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37949 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgBLCFR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 21:05:17 -0500
-Received: by mail-ot1-f66.google.com with SMTP id z9so368329oth.5;
-        Tue, 11 Feb 2020 18:05:15 -0800 (PST)
+        Tue, 11 Feb 2020 21:06:56 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41704 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgBLCGz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Feb 2020 21:06:55 -0500
+Received: by mail-oi1-f195.google.com with SMTP id i1so520014oie.8;
+        Tue, 11 Feb 2020 18:06:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SPSyVH5BY8YlezL4QmTEFwwCly81f3R+OHqr47mHZ/A=;
-        b=AJ3ZzcaKflJxvWw+G9eT9krptto+5XpaC+PXtD7NXtgTY012UngjUzw4GgiuKKZPgr
-         9nxkbqqL2r4THtCQTNhURgNNY6OC3ztG93Rdf0Ki7ZMpkg08eCcLDAE7Cm1HbmE7aZI8
-         NrJ37lgB9v3haFujfB2GWwd6ILzrtSK0+uixF96fLbDtB7oXdsl9FcMKzCYqWRVHM3gp
-         m4dfNxVpYgMtaBaPeYGw/SdE6D0B7z7CczsIJiRbVwTDiuSLeSf0TGMhxRiuCCWna0h1
-         2ePPyYaTZRwduPn7LTwAm/tGHhJDxgrxGGTO9IRkuEdufd74/bAeMRZG1s2ob13FQ3FB
-         yxfw==
-X-Gm-Message-State: APjAAAWavVMEzwutAmZDYyl5C/kibbxnAlyICnyXM/Hf0BcWz+tZgm1n
-        lsYhXlLMl9ozFF4tQdx4oBetzkk=
-X-Google-Smtp-Source: APXvYqwOlhfZZBLT289wJr1MHH4C8G3kp95kP+M607Gu437a4Mn8H6ODIDYqfK5ohNHfNspIQls/CQ==
-X-Received: by 2002:a05:6830:4a4:: with SMTP id l4mr7597940otd.91.1581473114770;
-        Tue, 11 Feb 2020 18:05:14 -0800 (PST)
+        bh=tVXjPjxR9wTAQLJNH5T7mUhjsaEtPI+g7h5Obb2jWnE=;
+        b=VGUefA5ms/wVUzLX4GqnQMVWPuyhylNRL6MVibCxlT4tFErgfTxL/tz5R4JbM/kPLN
+         cXPI0n7RfeeQYxepmLSCTjLk5Psz0W4uJmHmDd+PJ0tG5l/6aU6HgfbUQM4J8uzas34L
+         C8fFLI1Y39dFWkcUv3Z8Fb7GhoKpGCJ2v4T67g/OvLqASETPLPrx546wOC2ohAp6yhGv
+         GIwG5Opav0fykrguET1zRIVNLwb7W+dakf7peIRETuiACmid/49mfl0hMqtOFeBi4pws
+         o6FWFW5eUZmmf9sh81IZUfhSTSFvgVeBNld9IpTK7tHVvjXx3o9tjor0+yS+xrsmwBPX
+         oo4w==
+X-Gm-Message-State: APjAAAX0uvash15Amd4YfusYR21RmVstVLOdvLv57hTQqb6dNnWFjqsC
+        GPRMH0fWCC42ngP19XEhYhUhY1c=
+X-Google-Smtp-Source: APXvYqybQ/XV/KhEd/2JUE85p1PXN4bVy5ZMAraDqMTKCuVg5SpphZnA98DtlRuWcuJmCzIfBzRiMQ==
+X-Received: by 2002:aca:1708:: with SMTP id j8mr4794797oii.166.1581473214862;
+        Tue, 11 Feb 2020 18:06:54 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n25sm1711611oic.6.2020.02.11.18.05.13
+        by smtp.gmail.com with ESMTPSA id 32sm1871958ott.38.2020.02.11.18.06.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2020 18:05:14 -0800 (PST)
-Received: (nullmailer pid 26689 invoked by uid 1000);
-        Wed, 12 Feb 2020 02:05:13 -0000
-Date:   Tue, 11 Feb 2020 20:05:13 -0600
+        Tue, 11 Feb 2020 18:06:54 -0800 (PST)
+Received: (nullmailer pid 29491 invoked by uid 1000);
+        Wed, 12 Feb 2020 02:06:53 -0000
+Date:   Tue, 11 Feb 2020 20:06:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: Document JZ47xx VPU auxiliary
- processor
-Message-ID: <20200212020513.GA24870@bogus>
-References: <20200211142614.13567-1-paul@crapouillou.net>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, afd@ti.com,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        linux-omap@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCHv6 RESEND 01/14] dt-bindings: remoteproc: Add OMAP
+ remoteproc bindings
+Message-ID: <20200212020653.GA27019@bogus>
+References: <20200211152125.23819-2-t-kristo@ti.com>
+ <20200211153313.24072-1-t-kristo@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211142614.13567-1-paul@crapouillou.net>
+In-Reply-To: <20200211153313.24072-1-t-kristo@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:26:09AM -0300, Paul Cercueil wrote:
-> Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
-> Ingenic is a second Xburst MIPS CPU very similar to the main core.
-> This document describes the devicetree bindings for this auxiliary
-> processor.
+On Tue, Feb 11, 2020 at 05:33:13PM +0200, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Add the device tree bindings document for the IPU and DSP
+> remote processor devices on OMAP4+ SoCs.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> [t-kristo@ti.com: converted to schema]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 > ---
+> Quick resend. Missed adding Rob+DT list in CC, git is too clever to get rid of
+> CC fields automatically...
 > 
-> Notes:
->     v2: Update TCSM0 address in example
->     v3: Change node name to 'video-decoder'
->     v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
->     v5: - Fix 'reg' not in <addr, len> pairs
->         - Add missing include to devicetree example
-> 
->  .../bindings/remoteproc/ingenic,vpu.yaml      | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+> v6: made memory-regions property optional
+
+Small enough change to keep my R-by.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> 
+>  .../remoteproc/ti,omap-remoteproc.yaml        | 321 ++++++++++++++++++
+>  1 file changed, 321 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
