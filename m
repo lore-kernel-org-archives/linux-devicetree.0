@@ -2,78 +2,97 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41B5C3B188
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 10:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D141AC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8E1218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 10:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B942073C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:02:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hWw+rIQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbgBMKyU (ORCPT
+        id S1729761AbgBMLCX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:54:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:44846 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgBMKyU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 05:54:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 804641FB;
-        Thu, 13 Feb 2020 02:54:19 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 134BA3F6CF;
-        Thu, 13 Feb 2020 02:54:17 -0800 (PST)
-Date:   Thu, 13 Feb 2020 10:54:13 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     peng.fan@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org,
-        f.fainelli@gmail.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andre.przywara@arm.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
-Message-ID: <20200213105413.GA23374@bogus>
-References: <1581566330-1029-1-git-send-email-peng.fan@nxp.com>
- <1581566330-1029-2-git-send-email-peng.fan@nxp.com>
+        Thu, 13 Feb 2020 06:02:23 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41128 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729511AbgBMLCW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 06:02:22 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01DB2EFf111932;
+        Thu, 13 Feb 2020 05:02:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581591734;
+        bh=28ZV+G9aiHL8+0UPcgwBKCixdQrHOAJ3kWPdgROidOE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hWw+rIQmsQW7yzhJKnbXQSX2a5PodRgs4kzltZJABZ9Ene1GCbCFpIO/cFW02aCgT
+         Gcqqm0xfUJvajrap++QLGZH9CjCaNT8uEwzDIjSZlFMHuh1w7hvNnMitXiVcv/O6Xl
+         ofM1IbfVq4FR0vuTe5KJv+L2EPbIYQl1IWStMj2w=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01DB2DjF000944
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Feb 2020 05:02:13 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
+ Feb 2020 05:02:13 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 13 Feb 2020 05:02:13 -0600
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DB29Mp077470;
+        Thu, 13 Feb 2020 05:02:10 -0600
+Subject: Re: [PATCH 3/4] arm64: dts: ti: am654: Add thermal zones
+To:     Keerthy <j-keerthy@ti.com>, <rui.zhang@intel.com>,
+        <robh+dt@kernel.org>, <daniel.lezcano@linaro.org>
+CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        <amit.kucheria@verdurent.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <t-kristo@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200213102440.20539-1-j-keerthy@ti.com>
+ <20200213102440.20539-4-j-keerthy@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <0d0a5c81-3b85-afbd-7fd6-8c2a6432ec86@ti.com>
+Date:   Thu, 13 Feb 2020 16:31:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581566330-1029-2-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200213102440.20539-4-j-keerthy@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:58:49AM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+
+
+On 13/02/20 3:54 PM, Keerthy wrote:
+> The am654 SoC has three thermal zones namely MPU0, MPU1 and MCU
+> zones
 > 
-> SCMI could use SMC/HVC as tranports. Since there is no
-> standardized id, we need to use vendor specific id. So
-> add into devicetree binding doc.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
 > ---
->  Documentation/devicetree/bindings/arm/arm,scmi.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../boot/dts/ti/am654-industrial-thermal.dtsi | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> index f493d69e6194..dacc62dc248b 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> @@ -25,6 +25,7 @@ The scmi node with the following properties shall be under the /firmware/ node.
->  	  protocol identifier for a given sub-node.
->  - #size-cells : should be '0' as 'reg' property doesn't have any size
->  	  associated with it.
-> +- smc-id : SMC id required when using smc or hvc transports
+> diff --git a/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
+> new file mode 100644
+> index 000000000000..cdc3d40c3f60
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
 
-IIUC, "arm,smc-id" is preferred more.
+Can you rename file to k3-am654-industrial-thermal.dtsi. This will be consistent
+with other k3-am654 dt files.
 
-Why did you drop "arm,scmi-smc" ?
+Thanks and regards,
+Lokesh
 
---
-Regards,
-Sudeep
