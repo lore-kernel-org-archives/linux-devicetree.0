@@ -2,184 +2,108 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A70C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 07:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082DBC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 07:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645C3218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 07:25:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m+c1YDXl"
+	by mail.kernel.org (Postfix) with ESMTP id D12DB2073C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 07:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgBMHZB (ORCPT
+        id S1729757AbgBMH1R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 02:25:01 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59408 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729364AbgBMHZA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 02:25:00 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01D7OiT6053069;
-        Thu, 13 Feb 2020 01:24:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581578684;
-        bh=tdRVGdl7zGcgsD4GIj6ckaPuNZE9tHErFs3YzFk6dw4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=m+c1YDXlgfXLn4ZC49AGdYt+7+HxUW/vssIp4QvnjXridBdfB8Ah4MsW2+WY/Hj4w
-         xmgJvTsITghB0GqPk3S6p7qSyb2YWDM5dgOynk1xNui4FwOyuv5JSdwRVnVyuV3Auc
-         YUtvBKY/cqF9qJCP1TklXgBTlZJMj0nX7udHEhHk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01D7Oi2w060210
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Feb 2020 01:24:44 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
- Feb 2020 01:24:43 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 13 Feb 2020 01:24:43 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01D7Oe6K027910;
-        Thu, 13 Feb 2020 01:24:41 -0600
-Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>, <axboe@kernel.dk>
-CC:     <vigneshr@ti.com>, <nsekhar@ti.com>, <linux-ide@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
-References: <20200206111728.6703-1-rogerq@ti.com>
- <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
- <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
- <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
- <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <543961d5-afc6-31ef-7fa9-cd15597c2988@ti.com>
-Date:   Thu, 13 Feb 2020 09:24:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 02:27:17 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40187 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729735AbgBMH1R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 02:27:17 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j28u0-0005XO-CY; Thu, 13 Feb 2020 08:27:12 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j28ty-0007vn-A1; Thu, 13 Feb 2020 08:27:10 +0100
+Date:   Thu, 13 Feb 2020 08:27:10 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] ARM: dts: imx6sx: Add missing uart mux function
+Message-ID: <20200213072710.4snwbo3i7vfbroqy@pengutronix.de>
+References: <1581576189-20490-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <1581576189-20490-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/02/2020 13:43, Robin Murphy wrote:
-> On 2020-02-12 11:32 am, Hans de Goede wrote:
->> Hi,
->>
->> On 2/12/20 12:01 PM, Roger Quadros wrote:
->>> Hi,
->>>
->>> On 06/02/2020 13:50, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 2/6/20 12:17 PM, Roger Quadros wrote:
->>>>> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
->>>>> Restrict it to 32-bit.
->>>>>
->>>>> Cc: stable@vger.kernel.org
->>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>> ---
->>>>>   drivers/ata/ahci_platform.c | 3 +++
->>>>>   1 file changed, 3 insertions(+)
->>>>>
->>>>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->>>>> index 3aab2e3d57f3..b925dc54cfa5 100644
->>>>> --- a/drivers/ata/ahci_platform.c
->>>>> +++ b/drivers/ata/ahci_platform.c
->>>>> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
->>>>>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
->>>>>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
->>>>> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
->>>>> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
->>>>> +
->>>>
->>>> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
->>>> is e.g. also used on some exynos devices. So using that to key the
->>>> setting of the 32 bit flag seems wrong to me.
->>>>
->>>> IMHO it would be better to introduce a TI specific compatible
->>>> and use that to match on instead (and also adjust the dts files
->>>> accordingly).
->>>
->>> Thinking further on this I think it is a bad idea to add a special
->>> binding because the IP is not different. It is just that it is
->>> wired differently on the TI SoC so DMA range is limited.
->>>
->>> IMO the proper solution is to have the right dma-ranges property in the
->>> device tree. However, SATA platform driver is doing the wrong thing
->>> by overriding the dma masks.
->>> i.e. in ahci_platform_init_host() in libahci_platform.c >
->>>          if (hpriv->cap & HOST_CAP_64) {
->>>                  rc = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(64));
->>>                  if (rc) {
->>>                          rc = dma_coerce_mask_and_coherent(dev,
->>> DMA_BIT_MASK(32));
->>>                          if (rc) {
->>>                                  dev_err(dev, "Failed to enable 64-bit DMA.\n");
->>>                                  return rc;
->>>                          }
->>>                          dev_warn(dev, "Enable 32-bit DMA instead of 64-bit.\n");
->>>                  }
->>>          }
->>>
->>> This should be removed. Do you agree?
->>
->> I agree with you in principal, but I'm afraid this might cause regressions for
->> existing hardware. We only do this if the host has set the CAP_64 flag,
->> this code is quite old, it comes from the following commit:
->>
->> ###
->>  From cc7a9e27562cd78a1dc885504086fab24addce40 Mon Sep 17 00:00:00 2001
->> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->> Date: Thu, 12 Jun 2014 12:40:23 -0500
->> Subject: [PATCH v3] ahci: Check and set 64-bit DMA mask for platform AHCI driver
->>
->> The current platform AHCI driver does not set the dma_mask correctly
->> for 64-bit DMA capable AHCI controller. This patch checks the AHCI
->> capability bit and set the dma_mask and coherent_dma_mask accordingly.
->>
->> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->> Tested-by: Hans de Goede <hdegoede@redhat.com>
->> Tested-by: Suman Tripathi <stripathi@apm.com>
->> Signed-off-by: Tejun Heo <tj@kernel.org>
->> ###
->>
->> Presumably this was added for a reason, I'm guessing this might come
->> from AMD's ARM server chips adventures, but I'm afraid that AHCI support
->> on other (ARM) SoC's has become to rely on this behavior too.
->>
->> Maybe we can add a check to see if the mask was not already set and skip
->> setting the mask in that case ?
+On Thu, Feb 13, 2020 at 02:43:09PM +0800, Anson Huang wrote:
+> From: Anson Huang <b20788@freescale.com>
 > 
-> If the device *is* inherently 64-bit capable, then setting 64-bit masks in the driver is correct - if a 64-bit IP block happens to have been integrated with only 32 address bits wired up, but the system has memory above the 32-bit boundary, then that should be described via "dma-ranges", which should then end up being used to further constrain the device masks internally to the DMA API.
+> Update i.MX6SX pinfunc header to add uart mux function.
 
-I agree. In this case, it looks like DMA API is allocating memory > 32-bits
-even if "dma-ranges" size and dma_bus_limit is < 32-bits so issue is with
-platform DMA code.
+I'm aware you add the macros in a consistent way to the already existing
+stuff. Still I think there is something to improve here. We now have
+definitions like:
 
-I will continue the discussion in the other thread
-https://lkml.org/lkml/2020/2/12/907
+	MX6SX_PAD_GPIO1_IO06__UART1_RTS_B
+	MX6SX_PAD_GPIO1_IO06__UART1_CTS_B
+
+	MX6SX_PAD_GPIO1_IO07__UART1_CTS_B
+	MX6SX_PAD_GPIO1_IO07__UART1_RTS_B
+
+where (ignoring other pins that could be used) only the following
+combinations are valid:
+
+	MX6SX_PAD_GPIO1_IO04__UART1_TX
+	MX6SX_PAD_GPIO1_IO05__UART1_RX
+	MX6SX_PAD_GPIO1_IO06__UART1_RTS_B
+	MX6SX_PAD_GPIO1_IO07__UART1_CTS_B
+
+(in DCE mode) and
+
+	MX6SX_PAD_GPIO1_IO04__UART1_RX
+	MX6SX_PAD_GPIO1_IO05__UART1_TX
+	MX6SX_PAD_GPIO1_IO06__UART1_CTS_B
+	MX6SX_PAD_GPIO1_IO07__UART1_RTS_B
+
+(in DTE mode).
+
+For i.MX6SLL, i.MX6UL, imx6ULL and i.MX7 the naming convention is saner,
+a typical definition there is:
+
+	MX7D_PAD_LPSR_GPIO1_IO04__UART5_DTE_RTS
+
+where the name includes DTE and where is it (more) obvious that this
+cannot be combined with
+
+	MX7D_PAD_LPSR_GPIO1_IO07__UART5_DCE_TX
+
+.
+
+I suggest to adapt the latter naming convention also for the other i.MX
+pinfunc headers, probably with introducing defines for not breaking
+existing dts files.
+
+Best regards
+Uwe
 
 -- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
