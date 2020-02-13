@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F1AC352A4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 02:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56944C352A4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 02:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373D620873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 02:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE1A20873
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 02:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581561060;
-	bh=QoxejkUX9cQpbXXJUB/sdxVS47Tv5T5Z/rZUhXSmJy4=;
+	s=default; t=1581561589;
+	bh=7njdiHZdpjT/lY2sGX+b1AjE8LpOct8cmEhxr86H+H0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FWPs/XsBUeEQH6dGDhr5UYYNY1Hs/wSQHEmerYfKHXHoUgSG/AHn4BbmF0gCoQ6XD
-	 5CsSsprt5vLhbDiKyUkoXMhbu7oc84SlunOcv7FCfDWGzdEgK1AdUrCs7m6eGYLQ5t
-	 ZlC+Xldz7NXaWn6IxMdWHjxaFQ0bnOUBqxkEt0lE=
+	b=NLMDOF2aRMk2+EEtsKjF4uIZ3zvKJkNkhGYs331DRzeq8xnKZjzBHOjW+AzvYZp9i
+	 odvc6NyYLsLj4j7c6H6KdXxS0PLwGlDNbwEBxdd0gbISYesJxezSFQyllNUv8uaxpc
+	 z2sQtnZ/lC4/pVuEFfvxxESKjDLpkpShvgbokT2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbgBMCa7 (ORCPT
+        id S1729394AbgBMCjs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 21:30:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32818 "EHLO mail.kernel.org"
+        Wed, 12 Feb 2020 21:39:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729378AbgBMCa7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 21:30:59 -0500
+        id S1729378AbgBMCjs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 21:39:48 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18AF220724;
-        Thu, 13 Feb 2020 02:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2595220675;
+        Thu, 13 Feb 2020 02:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581561058;
-        bh=QoxejkUX9cQpbXXJUB/sdxVS47Tv5T5Z/rZUhXSmJy4=;
+        s=default; t=1581561587;
+        bh=7njdiHZdpjT/lY2sGX+b1AjE8LpOct8cmEhxr86H+H0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j2aVKd3PGsMLbe0eIphnWxs0c0iK+tGFcAabqqygjIKnrjAhQE6QT9xv7X+4zdV9W
-         bn9CpPUaGMbf6tJIkBmrV51vNeBb2UamoZcx4qutZZn7JrPAYdiyRMCv9t/lmKkzSz
-         2CYvoHfFbKlYnfsPk1w2fjHdezgtoilpjfYUiVxk=
-Date:   Thu, 13 Feb 2020 10:30:52 +0800
+        b=cdbfpW4cX8rjgZx83+WfTpViLrn4dTfOaEDb9b9FzB9JAx+TlY22M3DcgLZcDwsxI
+         o4GgcTT+kBK6W79scynMcewukOj70s451PUNDrFOOt1gEzExCe6YjYEC4fJW7bBPlD
+         FvBznO8Q269xQWKNVchNybuyoPrJ6mgJK/xbK/Ds=
+Date:   Thu, 13 Feb 2020 10:39:41 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Peng Fan <peng.fan@nxp.com>
 Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -51,43 +51,54 @@ Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Phu Luu An <phu.luuan@nxp.com>,
-        Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>,
-        Mihaela Martinas <Mihaela.Martinas@freescale.com>,
-        Dan Nica <dan.nica@nxp.com>,
-        Cosmin Stefan Stoica <cosmin.stoica@nxp.com>
-Subject: Re: [PATCH 2/2] arm64: dts: freescale: s32v234: use generic name bus
-Message-ID: <20200213023051.GJ11096@dragon>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx: use generic name bus
+Message-ID: <20200213023330.GK11096@dragon>
 References: <1579156408-23739-1-git-send-email-peng.fan@nxp.com>
- <1579156408-23739-3-git-send-email-peng.fan@nxp.com>
+ <1579156408-23739-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579156408-23739-3-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1579156408-23739-2-git-send-email-peng.fan@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 06:38:03AM +0000, Peng Fan wrote:
+On Thu, Jan 16, 2020 at 06:37:57AM +0000, Peng Fan wrote:
 > From: Peng Fan <peng.fan@nxp.com>
 > 
-> Per devicetree specification, generic names are recommended
-> to be used, such as bus.
+> Per devicetree specification, generic names
+> are recommended to be used, such as bus.
 > 
-> AIPS is a AHB - IP bridge bus, so we could use bus as node name.
+> i.MX AIPS is a AHB - IP bridge bus, so
+> we could use bus as node name.
 > 
 > Script:
-> sed -i "s/\<aips@/bus@/" arch/arm64/boot/dts/freescale/*.dtsi
-> sed -i "s/\<aips-bus@/bus@/" arch/arm64/boot/freescale/*.dtsi
+> sed -i "s/\<aips@/bus@/" arch/arm/boot/dts/imx*.dtsi
+> sed -i "s/\<aips-bus@/bus@/" arch/arm/boot/dts/imx*.dtsi
 > 
-> Cc: Phu Luu An <phu.luuan@nxp.com>
-> Cc: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-> Cc: Mihaela Martinas <Mihaela.Martinas@freescale.com>
-> Cc: Dan Nica <dan.nica@nxp.com>
-> Cc: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
 > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx25.dtsi   | 4 ++--
+>  arch/arm/boot/dts/imx31.dtsi   | 4 ++--
+>  arch/arm/boot/dts/imx35.dtsi   | 4 ++--
+>  arch/arm/boot/dts/imx50.dtsi   | 4 ++--
+>  arch/arm/boot/dts/imx51.dtsi   | 4 ++--
+>  arch/arm/boot/dts/imx53.dtsi   | 4 ++--
+>  arch/arm/boot/dts/imx6dl.dtsi  | 4 ++--
+>  arch/arm/boot/dts/imx6q.dtsi   | 2 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi | 4 ++--
+>  arch/arm/boot/dts/imx6qp.dtsi  | 2 +-
+>  arch/arm/boot/dts/imx6sl.dtsi  | 4 ++--
+>  arch/arm/boot/dts/imx6sll.dtsi | 4 ++--
+>  arch/arm/boot/dts/imx6sx.dtsi  | 6 +++---
+>  arch/arm/boot/dts/imx6ul.dtsi  | 4 ++--
+>  arch/arm/boot/dts/imx6ull.dtsi | 2 +-
+>  arch/arm/boot/dts/imx7s.dtsi   | 6 +++---
+>  16 files changed, 31 insertions(+), 31 deletions(-)
 
-Applied, thanks.
+We may want to cover Vybrid family (see vf500.dtsi, vfxxx.dtsi) as well.
+
+Shawn
