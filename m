@@ -2,120 +2,93 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183F3C352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF39EC352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 21:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E280320848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581627520;
-	bh=gGyC2yCilDzrVy2DuoupOHXmFrSvA7OwYuKRmcnlp/Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=05hJJ0/qN7JjEGq+fPO6gUZuGuWYXvpsm/Q24lmt38ruyxsw/HmbvdMwV8XKbxW0W
-	 s3JEsGLULv5DeAnTB4CwHK5DiyHHwI6aCIBXcw2E/xUa5OATlQMZk1q/G9XoyZs/XM
-	 hUQhyambu2BmHpCJgS9NEFYXSRF8Fuu+jKauHbOE=
+	by mail.kernel.org (Postfix) with ESMTP id 866B324680
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 21:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgBMU6g (ORCPT
+        id S1728199AbgBMVOl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:58:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:53628 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728591AbgBMU6g (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:58:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D95F21FB;
-        Thu, 13 Feb 2020 12:58:35 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DCAE3F6CF;
-        Thu, 13 Feb 2020 12:58:35 -0800 (PST)
-Date:   Thu, 13 Feb 2020 20:58:33 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: core: allow a dt node to provide several components" to the asoc tree
-In-Reply-To:  <20200213155159.3235792-2-jbrunet@baylibre.com>
-Message-Id:  <applied-20200213155159.3235792-2-jbrunet@baylibre.com>
-X-Patchwork-Hint: ignore
+        Thu, 13 Feb 2020 16:14:41 -0500
+Received: from mailoutvs63.siol.net ([185.57.226.254]:44495 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728100AbgBMVOl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 16:14:41 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 029C5524C0C;
+        Thu, 13 Feb 2020 22:14:38 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kdriWTPBAfgS; Thu, 13 Feb 2020 22:14:37 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 993CE524BFE;
+        Thu, 13 Feb 2020 22:14:37 +0100 (CET)
+Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Zimbra) with ESMTPSA id E013B522D11;
+        Thu, 13 Feb 2020 22:14:34 +0100 (CET)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        jernej.skrabec@siol.net
+Subject: [PATCH 0/2] rtc: sun6i: Make external oscillator optional
+Date:   Thu, 13 Feb 2020 22:14:25 +0100
+Message-Id: <20200213211427.33004-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+This is implementation of idea discussed here:
+https://lore.kernel.org/linux-arm-kernel/20200117183901.lkieha3hu6nz2hoj@=
+gilmour.lan/T/
 
-   ASoC: core: allow a dt node to provide several components
+Part of first patch commit message:
 
-has been applied to the asoc tree at
+Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix TX6
+(H6) don't have external 32kHz oscillator. Till H6, it didn't really
+matter if external oscillator was enabled because HW detected error and
+fall back to internal one. H6 has same functionality but it's the first
+SoC which have "auto switch bypass" bit documented and always enabled in
+driver. This prevents RTC to work correctly if external crystal is not
+present on board. There are other side effects - all peripherals which
+depends on this clock also don't work (HDMI CEC for example).
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+In this series I fixed only H6 based boards since improper settings have
+real impact due to explicitly forbidden fallback to internal oscillator.
+Since most boards actually contain external oscillator, I wonder if it's
+better to leave external oscillator in common H6 dtsi and just delete
+clocks property in rtc node and ext. oscillator node in board dts file?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+What do you think?
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Best regards,
+Jernej
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Jernej Skrabec (2):
+  rtc: sun6i: Make external 32k oscillator optional
+  arm64: dts: allwinner: h6: Move ext. oscillator to board DTs
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+ .../boot/dts/allwinner/sun50i-h6-beelink-gs1.dts   | 11 +++++++++++
+ .../boot/dts/allwinner/sun50i-h6-orangepi-3.dts    | 11 +++++++++++
+ .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi     | 11 +++++++++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      | 11 +++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi       |  8 --------
+ drivers/rtc/rtc-sun6i.c                            | 14 ++++++--------
+ 6 files changed, 50 insertions(+), 16 deletions(-)
 
-Thanks,
-Mark
-
-From 1dfa5a5ab34560fd9647083f623d19705be2e706 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 13 Feb 2020 16:51:51 +0100
-Subject: [PATCH] ASoC: core: allow a dt node to provide several components
-
-At the moment, querying the dai_name will stop of the first component
-matching the dt node. This does not allow a device (single dt node) to
-provide several ASoC components which could then be used through DT.
-
-This change let the search go on if the xlate function of the component
-returns an error, giving the possibility to another component to match
-and return the dai_name.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200213155159.3235792-2-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/soc-core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 068d809c349a..03b87427faa7 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -3102,6 +3102,14 @@ int snd_soc_get_dai_name(struct of_phandle_args *args,
- 			*dai_name = dai->driver->name;
- 			if (!*dai_name)
- 				*dai_name = pos->name;
-+		} else if (ret) {
-+			/*
-+			 * if another error than ENOTSUPP is returned go on and
-+			 * check if another component is provided with the same
-+			 * node. This may happen if a device provides several
-+			 * components
-+			 */
-+			continue;
- 		}
- 
- 		break;
--- 
-2.20.1
+--=20
+2.25.0
 
