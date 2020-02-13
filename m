@@ -2,106 +2,112 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7A6C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028EDC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF5E20848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02FD2073C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aWl6b8LP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="V9CRb3ab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgBMLKL (ORCPT
+        id S1729557AbgBMLUJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:10:11 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54294 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729531AbgBMLKK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 06:10:10 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01DBA1Bc096628;
-        Thu, 13 Feb 2020 05:10:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581592201;
-        bh=a0YM8nWmHENhFyW+m7rbVJdEC+tUi+4yZir+iRtz1DI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aWl6b8LPDijCV7/S4YmUWyLvdOjp3mbFvawG6llddtboFv0SmmncLLU3fgzhwlhV+
-         rQNdpu5EWIhVdVoZm3KpqQkJN+wwWCqjVWiQeDiwx7RJwb2qaR9LRGfUhdW51dn/Qv
-         Fq4uyL5fsQbLOEdhAeaTvFrDli9yB2x8dvsVIREU=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DBA0b9047012;
-        Thu, 13 Feb 2020 05:10:00 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
- Feb 2020 05:10:00 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 13 Feb 2020 05:10:00 -0600
-Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DB9uUm069657;
-        Thu, 13 Feb 2020 05:09:57 -0600
-Subject: Re: [PATCH 3/4] arm64: dts: ti: am654: Add thermal zones
-To:     Lokesh Vutla <lokeshvutla@ti.com>, <rui.zhang@intel.com>,
-        <robh+dt@kernel.org>, <daniel.lezcano@linaro.org>
-CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <amit.kucheria@verdurent.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <t-kristo@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200213102440.20539-1-j-keerthy@ti.com>
- <20200213102440.20539-4-j-keerthy@ti.com>
- <0d0a5c81-3b85-afbd-7fd6-8c2a6432ec86@ti.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <2c8bc161-8a2a-f8ef-3b7b-99ced7f90478@ti.com>
-Date:   Thu, 13 Feb 2020 16:40:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 13 Feb 2020 06:20:09 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:58014 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729544AbgBMLUJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:20:09 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581592809; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=gPFSRWjhwAw28i80R20gawLJ6dnAWyyyj5ws/7ZwfPY=; b=V9CRb3abcZMiFEvDhJr7kZR9vP7RvW7Dwxu3TCobPwfWM2E1ql3wR4jl/Kreqt/Njsf2eLJH
+ kUGnbBiKTBJMUQ6FTBFQUPfsftmP/ojcKNhVejI3WhBBHADabSl/gb/bjnjg58KDNRVdbNcI
+ OSiw4bP/qW+q4fncr3375uAzfss=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4530e1.7fb06d7da928-smtp-out-n01;
+ Thu, 13 Feb 2020 11:20:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5F17FC447A0; Thu, 13 Feb 2020 11:20:01 +0000 (UTC)
+Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EAFD7C43383;
+        Thu, 13 Feb 2020 11:19:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EAFD7C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mka@chromium.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        hemantg@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        gubbaven@codeaurora.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Matthias Kaehlcke <matthias@chromium.org>
+Subject: [PATCH v3] arm64: dts: qcom: sc7180: Add bluetooth node on SC7180 IDP board
+Date:   Thu, 13 Feb 2020 16:49:34 +0530
+Message-Id: <20200213111934.6205-1-bgodavar@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <0d0a5c81-3b85-afbd-7fd6-8c2a6432ec86@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add bluetooth SoC WCN3990 node for SC7180 IDP board.
 
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <matthias@chromium.org>
+---
+v3:
+  * Updated subject.
+  * added reviewed by tag
+v2:
+  * updated commit text
+  * removed status form dts node
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-On 13/02/20 4:31 pm, Lokesh Vutla wrote:
-> 
-> 
-> On 13/02/20 3:54 PM, Keerthy wrote:
->> The am654 SoC has three thermal zones namely MPU0, MPU1 and MCU
->> zones
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   .../boot/dts/ti/am654-industrial-thermal.dtsi | 45 +++++++++++++++++++
->>   1 file changed, 45 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
->> new file mode 100644
->> index 000000000000..cdc3d40c3f60
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
-> 
-> Can you rename file to k3-am654-industrial-thermal.dtsi. This will be consistent
-> with other k3-am654 dt files.
-
-yes. I will rename this to k3-* in v2.
-
-Thanks,
-Keerthy
-
-> 
-> Thanks and regards,
-> Lokesh
-> 
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50ad4fde..d76e83c0a8e1 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -17,6 +17,7 @@
+ 	compatible = "qcom,sc7180-idp", "qcom,sc7180";
+ 
+ 	aliases {
++		bluetooth0 = &bluetooth;
+ 		hsuart0 = &uart3;
+ 		serial0 = &uart8;
+ 	};
+@@ -256,6 +257,16 @@
+ 
+ &uart3 {
+ 	status = "okay";
++
++	bluetooth: wcn3990-bt {
++		compatible = "qcom,wcn3990-bt";
++		vddio-supply = <&vreg_l10a_1p8>;
++		vddxo-supply = <&vreg_l1c_1p8>;
++		vddrf-supply = <&vreg_l2c_1p3>;
++		vddch0-supply = <&vreg_l10c_3p3>;
++		max-speed = <3200000>;
++		clocks = <&rpmhcc RPMH_RF_CLK2>;
++	};
+ };
+ 
+ &uart8 {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
