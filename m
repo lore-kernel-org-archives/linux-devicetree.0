@@ -2,76 +2,106 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F468C3B188
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7A6C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1671424677
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF5E20848
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:10:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aWl6b8LP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgBMLIv (ORCPT
+        id S1729731AbgBMLKL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:08:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:45056 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729466AbgBMLIv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:08:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83A291FB;
-        Thu, 13 Feb 2020 03:08:48 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CBC73F6CF;
-        Thu, 13 Feb 2020 03:08:46 -0800 (PST)
-Date:   Thu, 13 Feb 2020 11:08:41 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, maxime@cerno.tech,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Gross <agross@kernel.org>, Jon Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v9 11/15] dt-bindings: arm: Juno platform - add CTI
- entries to device tree.
-Message-ID: <20200213110841.GA26385@bogus>
-References: <20200210213924.20037-1-mike.leach@linaro.org>
- <20200210213924.20037-12-mike.leach@linaro.org>
- <20200211115852.GA52147@bogus>
- <CANLsYkxOK+21JutM7ryz1ux0gHBTa51q5r-9i18kFLvMKouShA@mail.gmail.com>
+        Thu, 13 Feb 2020 06:10:11 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54294 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbgBMLKK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 06:10:10 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01DBA1Bc096628;
+        Thu, 13 Feb 2020 05:10:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581592201;
+        bh=a0YM8nWmHENhFyW+m7rbVJdEC+tUi+4yZir+iRtz1DI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=aWl6b8LPDijCV7/S4YmUWyLvdOjp3mbFvawG6llddtboFv0SmmncLLU3fgzhwlhV+
+         rQNdpu5EWIhVdVoZm3KpqQkJN+wwWCqjVWiQeDiwx7RJwb2qaR9LRGfUhdW51dn/Qv
+         Fq4uyL5fsQbLOEdhAeaTvFrDli9yB2x8dvsVIREU=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DBA0b9047012;
+        Thu, 13 Feb 2020 05:10:00 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
+ Feb 2020 05:10:00 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 13 Feb 2020 05:10:00 -0600
+Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DB9uUm069657;
+        Thu, 13 Feb 2020 05:09:57 -0600
+Subject: Re: [PATCH 3/4] arm64: dts: ti: am654: Add thermal zones
+To:     Lokesh Vutla <lokeshvutla@ti.com>, <rui.zhang@intel.com>,
+        <robh+dt@kernel.org>, <daniel.lezcano@linaro.org>
+CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        <amit.kucheria@verdurent.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <t-kristo@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200213102440.20539-1-j-keerthy@ti.com>
+ <20200213102440.20539-4-j-keerthy@ti.com>
+ <0d0a5c81-3b85-afbd-7fd6-8c2a6432ec86@ti.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <2c8bc161-8a2a-f8ef-3b7b-99ced7f90478@ti.com>
+Date:   Thu, 13 Feb 2020 16:40:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANLsYkxOK+21JutM7ryz1ux0gHBTa51q5r-9i18kFLvMKouShA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0d0a5c81-3b85-afbd-7fd6-8c2a6432ec86@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 03:12:21PM -0700, Mathieu Poirier wrote:
-> On Tue, 11 Feb 2020 at 04:59, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Mon, Feb 10, 2020 at 09:39:20PM +0000, Mike Leach wrote:
-> > > Add in CTI entries for Juno r0, r1 and r2 to device tree entries.
-> > >
-> >
-> > I can take this patch alone unless you have plans to take all in go.
-> 
-> Please hang on to it for the moment.  I'll get back to you if/when we
-> decide to move forward with this set.
-> 
 
-Perfect, I will wait until you prod me again :)
 
--- 
-Regards,
-Sudeep
+On 13/02/20 4:31 pm, Lokesh Vutla wrote:
+> 
+> 
+> On 13/02/20 3:54 PM, Keerthy wrote:
+>> The am654 SoC has three thermal zones namely MPU0, MPU1 and MCU
+>> zones
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   .../boot/dts/ti/am654-industrial-thermal.dtsi | 45 +++++++++++++++++++
+>>   1 file changed, 45 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
+>> new file mode 100644
+>> index 000000000000..cdc3d40c3f60
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
+> 
+> Can you rename file to k3-am654-industrial-thermal.dtsi. This will be consistent
+> with other k3-am654 dt files.
+
+yes. I will rename this to k3-* in v2.
+
+Thanks,
+Keerthy
+
+> 
+> Thanks and regards,
+> Lokesh
+> 
