@@ -2,180 +2,142 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B8CC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 12:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCC4C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 12:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90FF20848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 12:46:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iymsOcVz"
+	by mail.kernel.org (Postfix) with ESMTP id 55516222C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 12:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbgBMMq1 (ORCPT
+        id S1729674AbgBMMuq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 07:46:27 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45164 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729544AbgBMMq1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 07:46:27 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so4146894lfa.12
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 04:46:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KVG6n3U//xPXGVSSKSNURJ+hYLlhk5sIndNvOvXvluk=;
-        b=iymsOcVz5YQJTiTPW/ZRvBWUVozaeBXfqwxZ7sP92D1AfV4efpUxXKAYi56Qc95YNf
-         vEMGleomaQb/rMLP+9xB3B5E7slHRU7deuKFKcsG3IBwUYVzty4dTaCBEKEr9s/RdXf3
-         GrZ03Zwkz4L+o4DXPiuiXCpXx5BN35FOxofjp2AFfByh451IAZnnyOCf7soaKJNGC6sK
-         TUlX6EVyKI2A2wtUjmB44pTZ0YqrEMNNP/kriYOksnICF+ocGIZOGVrysDN776nKjDAr
-         gOx6f1zMgUrwo9AIzOurfAcO3z2f3ce3voNzqwPxXzafFbHuzBsTtFoOKBulI8emL+L/
-         BeAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KVG6n3U//xPXGVSSKSNURJ+hYLlhk5sIndNvOvXvluk=;
-        b=nBNXDcROCh4aIMjWNwSg7XsFjYVZkLmP9TgwQIOAoWahOWd0bP12GXZ0NBM5ziWhEU
-         i2WDR/TLivahAsF5EzKw6x+mf7Z8X41xa9Gr4ZQKTyzWaswkC8z27cII4LhD1w77Y2G9
-         5Zvt7ZoidpeAGP+v8yiBTP6f4Qzyl6IPnT21zSxFllW9La5QD2XCdEEy53k+e/Kdaydg
-         8CP0dQSg55rthIEsGrq0mWr6zW6JK/7Zya9uAAN16CpSlpljYnzk4fIiqjx2d3zgIt4w
-         mHEEumdpcHdN4wOr63jgQIxaBwgFJZFh/CxvzHcxlQSXa43BqBNiUDVor36+r3Pa2Omw
-         jikg==
-X-Gm-Message-State: APjAAAUaopXV+117BThAHkU4jnlPfVAzqRo3ObMsh5DvcUmKvPeVIFqJ
-        oMendHo7P4W0KJvmeFQNJU3+QA==
-X-Google-Smtp-Source: APXvYqyB4Gpi72cah1IhY/oSi6hXj6VsSn/n1Qp+/Gch9IAgCKK9Ns778aCes0djRhsN1LJ2Nwbl9Q==
-X-Received: by 2002:a19:c210:: with SMTP id l16mr9431224lfc.35.1581597984516;
-        Thu, 13 Feb 2020 04:46:24 -0800 (PST)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id g15sm1398642ljl.10.2020.02.13.04.46.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 04:46:23 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 1/2] bus: Add DT bindings for Integrator/AP logical modules
-Date:   Thu, 13 Feb 2020 13:46:19 +0100
-Message-Id: <20200213124620.34982-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Thu, 13 Feb 2020 07:50:46 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60576 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729673AbgBMMup (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 07:50:45 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 4200629515E
+Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Jacob Chen <cc@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>,
+        Dafna Hirschfeld <dafna3@gmail.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-6-helen.koike@collabora.com>
+ <20190808091406.GQ21370@paasikivi.fi.intel.com>
+ <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
+ <20190815082422.GM6133@paasikivi.fi.intel.com>
+ <20190815131748.GS6133@paasikivi.fi.intel.com>
+ <78856358-1afd-31a7-86dd-22f7d6d7fb05@collabora.com>
+ <20200212211317.GD3087@kekkonen.localdomain>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <3bc90001-8ebc-c55f-06b5-bbd6b58fa3cd@collabora.com>
+Date:   Thu, 13 Feb 2020 13:50:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200212211317.GD3087@kekkonen.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds YAML device tree bindings for the Integrator/AP
-logical modules. These are plug-in tiles used typically for
-FPGA prototyping.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../bindings/bus/arm,integrator-ap-lm.yaml    | 89 +++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
 
-diff --git a/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml b/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
-new file mode 100644
-index 000000000000..dfabfa466c05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/arm,integrator-ap-lm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Integrator/AP Logical Module extension bus
-+
-+maintainers:
-+  - Linus Walleij <linusw@kernel.org>
-+
-+description: The Integrator/AP is a prototyping platform and as such has a
-+  site for stacking up to four logical modules (LM) designed specifically for
-+  use with this platform. A special system controller register can be read to
-+  determine if a logical module is connected at index 0, 1, 2 or 3. The logical
-+  module connector is described in this binding. The logical modules per se
-+  then have their own specific per-module bindings and they will be described
-+  as subnodes under this logical module extension bus.
-+
-+properties:
-+  "#address-cells":
-+    const: 2
-+
-+  "#size-cells":
-+    const: 1
-+
-+  compatible:
-+    items:
-+      - const: arm,integrator-ap-lm
-+
-+  ranges: true
-+  dma-ranges: true
-+
-+patternProperties:
-+  "^.*@[0-3],[0-9a-f]+$":
-+    description: Nodes on the Logical Module bus represent logical modules
-+      and are named with index,relative-address. The first module is at
-+      0x00000000, the second at 0x10000000 and so on until the top of the
-+      memory of the system at 0xffffffff.
-+    type: object
-+    properties:
-+      reg:
-+        maxItems: 1
-+
-+    required:
-+      - compatible
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    external-bus@c0000000 {
-+      compatible = "arm,integrator-ap-lm";
-+      #address-cells = <2>;
-+      #size-cells = <1>;
-+      ranges = <0 0x0 0xc0000000 0x10000000>,
-+               <1 0x0 0xd0000000 0x10000000>,
-+               <2 0x0 0xe0000000 0x10000000>,
-+               <3 0x0 0xf0000000 0x10000000>;
-+      dma-ranges = <0 0x0 0xc0000000 0x10000000>,
-+               <1 0x0 0xd0000000 0x10000000>,
-+               <2 0x0 0xe0000000 0x10000000>,
-+               <3 0x0 0xf0000000 0x10000000>;
-+      im-pd1@0,0 {
-+        compatible = "simple-bus";
-+        ranges = <0 0 0 0x10000000>;
-+        dma-ranges = <0 0 0 0x10000000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        uart@c0100000 {
-+          compatible = "arm,pl011", "arm,primecell";
-+          reg = <0x00100000 0x1000>;
-+          interrupts-extended = <&impd1_vic 1>;
-+        };
-+
-+        impd1_vic: interrupt-controller@c3000000 {
-+          compatible = "arm,pl192-vic";
-+          interrupt-controller;
-+          #interrupt-cells = <1>;
-+          reg = <0x03000000 0x1000>;
-+          valid-mask = <0x00000bff>;
-+          interrupts-extended = <&pic 9>;
-+        };
-+      };
-+    };
-+
-+additionalProperties: false
--- 
-2.23.0
+On 12.02.20 22:13, Sakari Ailus wrote:
+> Hi Dafna,
+> 
+> Apologies for the late reply. I learned the mail had got lost due to mail
+> server issues.
+> 
+np:)
 
+> On Fri, Jan 31, 2020 at 08:38:34PM +0100, Dafna Hirschfeld wrote:
+>> Hi,
+>> I (Dafna Hirschfeld) will work in following months with Helen Koike to fix the issues
+>> in the TODO file of this driver: drivers/staging/media/rkisp1/TODO
+>>
+>> On 15.08.19 15:17, Sakari Ailus wrote:
+>>> On Thu, Aug 15, 2019 at 11:24:22AM +0300, Sakari Ailus wrote:
+>>>> Hi Helen,
+>>>>
+>>>> On Wed, Aug 14, 2019 at 09:58:05PM -0300, Helen Koike wrote:
+>>>>
+>>>> ...
+>>>>
+>>>>>>> +static int rkisp1_isp_sd_set_fmt(struct v4l2_subdev *sd,
+>>>>>>> +				 struct v4l2_subdev_pad_config *cfg,
+>>>>>>> +				 struct v4l2_subdev_format *fmt)
+>>>>>>> +{
+>>>>>>> +	struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
+>>>>>>> +	struct rkisp1_isp_subdev *isp_sd = &isp_dev->isp_sdev;
+>>>>>>> +	struct v4l2_mbus_framefmt *mf = &fmt->format;
+>>>>>>> +
+>>>>>>
+>>>>>> Note that for sub-device nodes, the driver is itself responsible for
+>>>>>> serialising the access to its data structures.
+>>>>>
+>>>>> But looking at subdev_do_ioctl_lock(), it seems that it serializes the
+>>>>> ioctl calls for subdevs, no? Or I'm misunderstanding something (which is
+>>>>> most probably) ?
+>>>>
+>>>> Good question. I had missed this change --- subdev_do_ioctl_lock() is
+>>>> relatively new. But setting that lock is still not possible as the struct
+>>
+>> 'the struct' - do you mean the 'vdev' struct allocated in
+>> 'v4l2_device_register_subdev_nodes' ?
+> 
+> Yes.
+> 
+>>
+>>>> is allocated in the framework and the device is registered before the
+>>
+>>>> driver gets hold of it. It's a good idea to provide the same serialisation
+>>>> for subdevs as well.
+>>>>
+>>>> I'll get back to this later.
+>>>
+>>> The main reason is actually that these ops are also called through the
+>>> sub-device kAPI, not only through the uAPI, and the locks are only taken
+>>> through the calls via uAPI.
+>>
+>> actually it seems that although 'subdev_do_ioctl_lock' exit, I wonder if
+>> any subdevice uses that vdev->lock in  subdev_do_ioctl_lock.
+>> It is not initialized in v4l2_device_register_subdev_nodes where the vdev is allocated
+>> and I wonder if any subdevice actually initialize it somewhere else. For example it is null in this
+>> driver and in vimc.
+> 
+> It needs to be set before the video device is registered, so indeed, it
+> seems no driver can make use it.
+> 
+>>
+>>>
+>>> So adding the locks to uAPI calls alone would not address the issue.
+>>
+>> What I can do is add a mutex to every struct of a subdevice and lock it
+>> at the beginning of each subdevice operation.
+>> Is this an acceptable solution?
+> 
+> Please do. That's what other drivers do at the moment as well.
+> 
+I already sent it as the patchset "media: staging: rkisp1: add serialization to the isp and resizer ops"
+
+Thanks,
+Dafna
