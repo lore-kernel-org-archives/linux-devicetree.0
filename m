@@ -2,175 +2,76 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F41C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F468C3B188
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EF52073C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1671424677
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 11:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbgBMLEX (ORCPT
+        id S1729674AbgBMLIv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 06:04:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:45006 "EHLO foss.arm.com"
+        Thu, 13 Feb 2020 06:08:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:45056 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729731AbgBMLEX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 06:04:23 -0500
+        id S1729466AbgBMLIv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 06:08:51 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABF381FB;
-        Thu, 13 Feb 2020 03:04:22 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83A291FB;
+        Thu, 13 Feb 2020 03:08:48 -0800 (PST)
 Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E3233F6CF;
-        Thu, 13 Feb 2020 03:04:21 -0800 (PST)
-Date:   Thu, 13 Feb 2020 11:04:19 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CBC73F6CF;
+        Thu, 13 Feb 2020 03:08:46 -0800 (PST)
+Date:   Thu, 13 Feb 2020 11:08:41 +0000
 From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     peng.fan@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org,
-        f.fainelli@gmail.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andre.przywara@arm.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V2 2/2] firmware: arm_scmi: add smc/hvc transports
-Message-ID: <20200213110419.GB23374@bogus>
-References: <1581566330-1029-1-git-send-email-peng.fan@nxp.com>
- <1581566330-1029-3-git-send-email-peng.fan@nxp.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, maxime@cerno.tech,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Gross <agross@kernel.org>, Jon Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v9 11/15] dt-bindings: arm: Juno platform - add CTI
+ entries to device tree.
+Message-ID: <20200213110841.GA26385@bogus>
+References: <20200210213924.20037-1-mike.leach@linaro.org>
+ <20200210213924.20037-12-mike.leach@linaro.org>
+ <20200211115852.GA52147@bogus>
+ <CANLsYkxOK+21JutM7ryz1ux0gHBTa51q5r-9i18kFLvMKouShA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581566330-1029-3-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <CANLsYkxOK+21JutM7ryz1ux0gHBTa51q5r-9i18kFLvMKouShA@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:58:50AM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Wed, Feb 12, 2020 at 03:12:21PM -0700, Mathieu Poirier wrote:
+> On Tue, 11 Feb 2020 at 04:59, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Mon, Feb 10, 2020 at 09:39:20PM +0000, Mike Leach wrote:
+> > > Add in CTI entries for Juno r0, r1 and r2 to device tree entries.
+> > >
+> >
+> > I can take this patch alone unless you have plans to take all in go.
 > 
-> Add SCMI smc/hvc transports support.
+> Please hang on to it for the moment.  I'll get back to you if/when we
+> decide to move forward with this set.
 > 
-> Take smc-id as the 2nd arg, and protocol id as the 2nd arg when
-> invokding SMC/HVC. Since we need protocol id, so add this parrameter
-> to chan_setup, then smc transport driver could directly use it.
-> There is no Rx, only Tx because of smc/hvc not support Rx.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/firmware/arm_scmi/Makefile  |   2 +-
->  drivers/firmware/arm_scmi/common.h  |   4 +-
->  drivers/firmware/arm_scmi/driver.c  |  11 +-
->  drivers/firmware/arm_scmi/mailbox.c |   2 +-
->  drivers/firmware/arm_scmi/smc.c     | 222 ++++++++++++++++++++++++++++++++++++
->  5 files changed, 234 insertions(+), 7 deletions(-)
->  create mode 100644 drivers/firmware/arm_scmi/smc.c
 
-[...]
+Perfect, I will wait until you prod me again :)
 
->
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index dbec767222e9..65c56328e6d8 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -595,7 +595,7 @@ static int scmi_chan_setup(struct scmi_info *info, struct device *dev,
->  
->  	cinfo->dev = dev;
->  
-> -	ret = info->desc->ops->chan_setup(cinfo, info->dev, tx);
-> +	ret = info->desc->ops->chan_setup(cinfo, info->dev, prot_id, tx);
-
-Why do you need this ?
-
->  	if (ret)
->  		return ret;
->  
-> @@ -826,7 +829,7 @@ ATTRIBUTE_GROUPS(versions);
->  
->  /* Each compatible listed below must have descriptor associated with it */
->  static const struct of_device_id scmi_of_match[] = {
-> -	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
-> +	{ .compatible = "arm,scmi",  },
-
-Don't do this, get "arm,scmi-smc"
-
->  	{ /* Sentinel */ },
->  };
->  
-[...]
-
-
-> +static unsigned long
-> +__invoke_scmi_fn_hvc(unsigned long function_id, unsigned long arg0,
-> +		     unsigned long arg1, unsigned long arg2,
-> +		     unsigned long arg3, unsigned long arg4,
-> +		     unsigned long arg5, unsigned long arg6)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4, arg5,
-> +		      arg6, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static unsigned long
-> +__invoke_scmi_fn_smc(unsigned long function_id, unsigned long arg0,
-> +		     unsigned long arg1, unsigned long arg2,
-> +		     unsigned long arg3, unsigned long arg4,
-> +		     unsigned long arg5, unsigned long arg6)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4, arg5,
-> +		      arg6, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static int scmi_smc_conduit_method(struct device_node *np)
-> +{
-> +	const char *method;
-> +
-> +	if (invoke_scmi_smc_fn)
-> +		return 0;
-> +
-> +	if (of_property_read_string(np, "method", &method))
-> +		return -ENXIO;
-> +
-> +	if (!strcmp("hvc", method)) {
-> +		invoke_scmi_smc_fn = __invoke_scmi_fn_hvc;
-> +	} else if (!strcmp("smc", method)) {
-> +		invoke_scmi_smc_fn = __invoke_scmi_fn_smc;
-> +	} else {
-> +		pr_warn("invalid \"method\" property: %s\n", method);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-You don't the above functions
-
-[...]
-
-> +
-> +	np = of_find_node_by_path("/psci");
-> +	if (!np) {
-> +		dev_err(dev, "Not able to find /psci node\n");
-> +		return -ENODEV;
-> +	}
-
-No need for this as mentioned below.
-
-> +
-> +	ret = scmi_smc_conduit_method(np);
-
-Just use arm_smccc_1_1_get_conduit if you want to get the conduit which
-I don't think you need. You can just use arm_smccc_1_1_invoke() directly.
-
---
+-- 
 Regards,
 Sudeep
