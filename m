@@ -2,100 +2,131 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087F4C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 18:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761C6C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 18:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D934221734
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 18:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CF9218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 18:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581618122;
-	bh=JoDhUINe7wOHKEq2Yzj/yvlxxkUYjM/TtvzskHmcDD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IBIGf3fYxiOkuK02MyCdWdDiRlqBS7S77d4gt2s8V/nz67rz1dowN+yU0jX0Q2c6C
-	 e9Vv1nw1D6TaIB7cooEpeY26qcigkYMQ0iK0yXLPeNdmftcMq41bKjd8kSy5frEEjD
-	 0dGmfi+lJK2OoOST6me4VO4TkWplxsvpK5c/8058=
+	s=default; t=1581618421;
+	bh=Tgkvt23nlRf0XRm+t9xKVRBeZnNy7mLvrbdLPrq1dno=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YYvsb3ttIgF/CTtejFuDvhuMHCxfqsH2jO0VOJoBAEJmVabmWgLw5WXQy7IFNorb8
+	 fByQmuGbG6a5iYSzLX90LgwwKF7Mhg+OkUzSlCn9ZGhFhjzL3g11Br9Ima0T2BNMyc
+	 IzQK3XhGUnLgLFu2rP7SbcKVTG6FHSwUDhHNqQuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgBMSWC (ORCPT
+        id S1727705AbgBMS1A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 13:22:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:51930 "EHLO foss.arm.com"
+        Thu, 13 Feb 2020 13:27:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgBMSWC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 13:22:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACFE6328;
-        Thu, 13 Feb 2020 10:21:59 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 300043F68E;
-        Thu, 13 Feb 2020 10:21:59 -0800 (PST)
-Date:   Thu, 13 Feb 2020 18:21:57 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 5/9] ASoC: meson: aiu: add hdmi codec control support
-Message-ID: <20200213182157.GJ4333@sirena.org.uk>
-References: <20200213155159.3235792-1-jbrunet@baylibre.com>
- <20200213155159.3235792-6-jbrunet@baylibre.com>
+        id S1725781AbgBMS1A (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 13:27:00 -0500
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E991222C2;
+        Thu, 13 Feb 2020 18:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581618419;
+        bh=Tgkvt23nlRf0XRm+t9xKVRBeZnNy7mLvrbdLPrq1dno=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bz+2U90q4xyRoqgdjfbIX6rHvFOv6QdyFS6R6dKIw0F240hKve4cOqhYLU6RzTo0/
+         xYdsNw0MvvYnOGpW6fTmgezOVEAz5tB7pLxYFgxHqnypwKMrBJCb0typQTORRXWsQ1
+         h3oFcMDISvLmyBj62uGuw7KgJxdfMKD092DRS7Qc=
+Received: by mail-qk1-f171.google.com with SMTP id h4so6675378qkm.0;
+        Thu, 13 Feb 2020 10:26:59 -0800 (PST)
+X-Gm-Message-State: APjAAAUgAbpss0fNhG8qSnBl1pnJO0Al7CI4TIfyc5jCiJvb43UwLgmT
+        AohdDweq6JgpMao3YinTOyzOOUGSQftkNYm0/Q==
+X-Google-Smtp-Source: APXvYqydhKuBg+/ZrL4Cf+7gEQaOWH7r03zYxO/RkcD73vQs6Tc8XsgSRSpX2/PYrxCooFDmMvbFm0IEPx+1x/u9y3A=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr17247898qkd.223.1581618418620;
+ Thu, 13 Feb 2020 10:26:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QnBU6tTI9sljzm9u"
-Content-Disposition: inline
-In-Reply-To: <20200213155159.3235792-6-jbrunet@baylibre.com>
-X-Cookie: Academicians care, that's who.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200213165049.508908-1-jean-philippe@linaro.org> <20200213165049.508908-4-jean-philippe@linaro.org>
+In-Reply-To: <20200213165049.508908-4-jean-philippe@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 13 Feb 2020 12:26:46 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKZP9u7bFsVT=5TzqmnHWm_bvH39ffkbN3q9-k32ynVig@mail.gmail.com>
+Message-ID: <CAL_JsqKZP9u7bFsVT=5TzqmnHWm_bvH39ffkbN3q9-k32ynVig@mail.gmail.com>
+Subject: Re: [PATCH 03/11] PCI: OF: Check whether the host bridge supports ATS
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---QnBU6tTI9sljzm9u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Feb 13, 2020 at 04:51:55PM +0100, Jerome Brunet wrote:
-
-> +int aiu_add_component(struct device *dev,
-> +		      const struct snd_soc_component_driver *component_driver,
-> +		      struct snd_soc_dai_driver *dai_drv,
-> +		      int num_dai,
-> +		      const char *debugfs_prefix)
+On Thu, Feb 13, 2020 at 10:52 AM Jean-Philippe Brucker
+<jean-philippe@linaro.org> wrote:
+>
+> Copy the ats-supported flag into the pci_host_bridge structure.
+>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/pci/controller/pci-host-common.c | 1 +
+>  drivers/pci/of.c                         | 9 +++++++++
+>  include/linux/of_pci.h                   | 3 +++
+>  3 files changed, 13 insertions(+)
+>
+> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> index 250a3fc80ec6..a6ac927be291 100644
+> --- a/drivers/pci/controller/pci-host-common.c
+> +++ b/drivers/pci/controller/pci-host-common.c
+> @@ -92,6 +92,7 @@ int pci_host_common_probe(struct platform_device *pdev,
+>                 return ret;
+>         }
+>
+> +       of_pci_host_check_ats(bridge);
+>         platform_set_drvdata(pdev, bridge->bus);
+>         return 0;
+>  }
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 81ceeaa6f1d5..4b8a877f1e9f 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -576,6 +576,15 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(pci_parse_request_of_pci_ranges);
+>
+> +void of_pci_host_check_ats(struct pci_host_bridge *bridge)
 > +{
-> +	struct snd_soc_component *component;
+> +       struct device_node *np = bridge->bus->dev.of_node;
 > +
-> +	component = devm_kzalloc(dev, sizeof(*component), GFP_KERNEL);
-> +	if (!component)
-> +		return -ENOMEM;
+> +       if (!np)
+> +               return;
 > +
-> +#ifdef CONFIG_DEBUG_FS
-> +	component->debugfs_prefix = debugfs_prefix;
-> +#endif
+> +       bridge->ats_supported = of_property_read_bool(np, "ats-supported");
+> +}
 
-You really shouldn't be doing this as it could conflict with something
-the machine driver wants to do however it's probably not going to be an
-issue in practice as it's not like there's going to be multiple SoCs in
-the card at once and if there were there'd doubltess be other issues.
+Not really any point in a common function if we expect this to be only
+for ECAM hosts which it seems to be based on the binding.
 
---QnBU6tTI9sljzm9u
-Content-Type: application/pgp-signature; name="signature.asc"
+Otherwise, needs an export if not.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Fk8QACgkQJNaLcl1U
-h9CAhwf/cuQA52n4KErDZvZn7/DzU7OY4w6BULQb6pd6r1CgFm/rd1Fgf9QLK2yQ
-Yu4cKdsOCcT4YH0Abf5r7n0uNFnCdd4U9c+L+MnQ912Yu8ZV70+X9D9OniFif59u
-WVmnNC/sRTatvyefGnTDu//nHF29Yc10S6V+wPbFFACYONJ2s9SKEWCGZrclawkE
-mIopqJBFRcz7q2iCaPI8onRuIe5VtF7SeEk0XkFRQsdqPacrJF0JQQFuui2vYBq5
-Nu1SDN2ma7iXiSssC9Oy/iCv70WpDLMtYTHz35XiooaHkYKxi2xKkluXWOpy/Dcc
-hMVncK5RF58ft+ILMKSg9TXFiEcN0w==
-=iCR2
------END PGP SIGNATURE-----
-
---QnBU6tTI9sljzm9u--
+Rob
