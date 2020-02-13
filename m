@@ -2,250 +2,379 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28469C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC2BC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26FC21734
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBFC20848
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:19:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NmwbSH48"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qf01HFCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgBMJS7 (ORCPT
+        id S1729526AbgBMJTe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:18:59 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40860 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbgBMJS6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 04:18:58 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t3so5689134wru.7
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 01:18:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=7czut/f+WvTlMROMZ/cNySTRX/vHmG6GC+8NGFEVZJ4=;
-        b=NmwbSH483nOZckSEz2gQdiI1ReVlsSpJctLLqG7S6qr7AG+v5FJrLC3LU4tgj6eeko
-         SbMsMyw18EuWpAM2swQiCyXf8EDJ5K4n1RL400+UJ32jb1a5fWRqWmRB9OiJEAUR310P
-         D2aP0N6oWZd/KLuZnGR/IV6u3NaBM9XqB1kdHZE2GKMpnj/lMhrjLJms5oehZ8pmzr9A
-         DztQUby5RIxFJS0kgx4qC5D2PWAYMyz/yFnLsRN4lc8bora4NPgWs57svs1QmevcCCMv
-         LwkrWFzHIEWNIBa1rz3WR/82264NT1P81QIDoQImTqZHx88s/RXdHF8XTt9kOp6lJ0mX
-         +tmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=7czut/f+WvTlMROMZ/cNySTRX/vHmG6GC+8NGFEVZJ4=;
-        b=s9GpYJ+fzSWjYolheUjghlgrGiKOt5SLOuhGAmHVoUf6VStFLJv2YktOQv0CBUEaUH
-         jKCt/LpLYjGO5uS9p3srMBJ1tBLDl9k/cRPTL4snD5CiDgQ/3GjgFJ4sF9XV0rxu1g9R
-         L8n11NtZGHiqM0dHvDjN12DwVrSiUIFpHLHU9YQRT9aDJSfWLBNDBgfBLUAESyUjj9YW
-         pEH0s8WXnySRkr5FvUl1U3aj4fvgUwrBZYxkKQwGQcAxNg75DIsiTCYRXuQ9VK9xtB7o
-         7bjQmyf5lqINV00vTl0YGBWUnvYhGmNyPkhc/W5LVwPzosgBkhIhfSW1BwqbthuWR52i
-         65mw==
-X-Gm-Message-State: APjAAAXRN6AsAClsVT/4nh0nYbEsxl5mQHvDfaQiud9ak0BBWN6K8HzS
-        stpcKLnW9sgHf820giAPKGIngA==
-X-Google-Smtp-Source: APXvYqxDmr+YV4LtZoRtXU+1bcEnbJd9LFKQqknPCjnDC5IwLpyYvrgBnHfyRNAfWh8GtfECezwh4g==
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr20092486wrp.236.1581585535365;
-        Thu, 13 Feb 2020 01:18:55 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id u23sm2171611wmu.14.2020.02.13.01.18.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 01:18:54 -0800 (PST)
-References: <20200213061147.29386-1-samuel@sholland.org> <20200213061147.29386-5-samuel@sholland.org>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Samuel Holland <samuel@sholland.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Jonathan Corbet <corbet@lwn.net>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 4/4] ASoC: simple-card: Add support for codec-to-codec dai_links
-In-reply-to: <20200213061147.29386-5-samuel@sholland.org>
-Date:   Thu, 13 Feb 2020 10:18:53 +0100
-Message-ID: <1jpneialqa.fsf@starbuckisacylon.baylibre.com>
+        Thu, 13 Feb 2020 04:19:34 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53664 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729576AbgBMJTd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 04:19:33 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01D9JEOt127361;
+        Thu, 13 Feb 2020 03:19:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581585554;
+        bh=tYWMN2YveaXfn9+798tLoVElj0lt1lXVlJG0sJnmZRw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qf01HFCPxB0y9gPgQFI78RamWbqiZ4CcmB9T6fsEkQYbAMYf9dCD1PCsx3rD3Jgju
+         pKKUBaq3IkWKH5SSaMiKgQSu4HZyNircT5D+cqUmH+KcK6zxOFVwWxq702UCH8eKEN
+         ZsoDcojWrb7rDChXtGMENnAWagonOwS1hnV6u3i0=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01D9JEGH067261
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Feb 2020 03:19:14 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
+ Feb 2020 03:19:13 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 13 Feb 2020 03:19:13 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01D9J9tq094940;
+        Thu, 13 Feb 2020 03:19:10 -0600
+Subject: Re: [PATCH v5 2/3] drm: bridge: Add support for Cadence MHDP DPI/DP
+ bridge
+To:     Yuti Amonkar <yamonkar@cadence.com>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>
+CC:     <praneeth@ti.com>, <jsarha@ti.com>, <mparab@cadence.com>,
+        <sjakhade@cadence.com>
+References: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
+ <1581481604-24499-3-git-send-email-yamonkar@cadence.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <6c2188ce-a27a-bb76-4b38-5fda5f282f78@ti.com>
+Date:   Thu, 13 Feb 2020 11:19:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1581481604-24499-3-git-send-email-yamonkar@cadence.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On Thu 13 Feb 2020 at 07:11, Samuel Holland <samuel@sholland.org> wrote:
-
-> For now we assume there are only a few sets of valid PCM stream
-> parameters, to avoid needing to specify them in the device tree. We
-> also assume they are the same in both directions. We calculate the
-> common subset of parameters, and then the existing code automatically
-> chooses the highest quality of the remaining values.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+On 12/02/2020 06:26, Yuti Amonkar wrote:
+> This patch adds new DRM driver for Cadence MHDP DPTX IP used on J721e SoC.
+> MHDP DPTX IP is the component that complies with VESA DisplayPort (DP) and
+> embedded Display Port (eDP) standards. It integrates uCPU running the
+> embedded Firmware(FW) interfaced over APB interface.
+> Basically, it takes a DPI stream as input and output it encoded in DP
+> format. Currently, it supports only SST mode.
+> 
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
 > ---
->  .../devicetree/bindings/sound/simple-card.txt |  1 +
->  Documentation/sound/soc/codec-to-codec.rst    |  9 ++++-
->  include/sound/simple_card_utils.h             |  1 +
->  sound/soc/generic/simple-card-utils.c         | 39 +++++++++++++++++++
->  sound/soc/generic/simple-card.c               | 12 ++++++
->  5 files changed, 60 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-> index 79954cd6e37b..18a62e404a30 100644
-> --- a/Documentation/devicetree/bindings/sound/simple-card.txt
-> +++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-> @@ -63,6 +63,7 @@ Optional dai-link subnode properties:
->  - mclk-fs             			: Multiplication factor between stream
->  					  rate and codec mclk, applied only for
->  					  the dai-link.
-> +- codec-to-codec			: Indicates a codec-to-codec
-> dai-link.
+>   drivers/gpu/drm/bridge/Kconfig          |   11 +
+>   drivers/gpu/drm/bridge/Makefile         |    3 +
+>   drivers/gpu/drm/bridge/cdns-mhdp-core.c | 2206 +++++++++++++++++++++++
+>   drivers/gpu/drm/bridge/cdns-mhdp-core.h |  380 ++++
+>   4 files changed, 2600 insertions(+)
+>   create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-core.c
+>   create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-core.h
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 8397bf72d2f3..c66f2ef04f71 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -27,6 +27,17 @@ config DRM_CDNS_DSI
+>   	  Support Cadence DPI to DSI bridge. This is an internal
+>   	  bridge and is meant to be directly embedded in a SoC.
+>   
+> +config DRM_CDNS_MHDP
+> +	tristate "Cadence DPI/DP bridge"
+> +	select DRM_KMS_HELPER
+> +	select DRM_PANEL_BRIDGE
+> +	depends on OF
+> +	help
+> +	  Support Cadence DPI to DP bridge. This is an internal
+> +	  bridge and is meant to be directly embedded in a SoC.
+> +	  It takes a DPI stream as input and output it encoded
+> +	  in DP format.
+> +
+>   config DRM_DUMB_VGA_DAC
+>   	tristate "Dumb VGA DAC Bridge support"
+>   	depends on OF
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 1eb5376c5d68..71019088d257 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -15,6 +15,9 @@ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+>   obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+>   obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+>   obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
+> +obj-$(CONFIG_DRM_CDNS_MHDP) += cdns-mhdp.o
+>   
+>   obj-y += analogix/
+>   obj-y += synopsys/
+> +
+> +cdns-mhdp-objs := cdns-mhdp-core.o
 
-I wonder if such property could be viewed as a Linux implementation
-detail ?
+I think it's better to keep the two lines added in this change together, instead of having those 
+other obj-y lines in between.
 
-Similar discussion around DPCM:
+> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.c b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
+> new file mode 100644
+> index 000000000000..51ed9cdee161
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
+> @@ -0,0 +1,2206 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Cadence MHDP DP bridge driver.
+> + *
+> + * Copyright: 2019 Cadence Design Systems, Inc.
+> + *
+> + * Author: Quentin Schulz <quentin.schulz@free-electrons.com>
 
-* https://lore.kernel.org/linux-devicetree/20191014115635.GB4826@sirena.co.uk/#t
-* https://alsa-devel.alsa-project.narkive.com/NCs4MsqL/simle-card-dt-style-for-dpcm#post4
+Author is Quentin, but there's no signed-off-by from him? There are also many names in 
+MODULE_AUTHOR, without signed-off-bys.
 
-Should the card figure out the codec-to-codec links on its own or is it
-something generic enough to put in DT ?
+I think the rule is that you should have signed-off-bys for people who have contributed. I'm not 
+sure how strict that rule is, and what to do if the people cannot be reached anymore.
 
-In the Amlogic card driver, I'm using the compatible string of the
-device to figure out if CPU is a CODEC.
-It is ad-hoc and, to be honest, I'm not entirely happy with this
-solution but I could not figure out a better one yet.
+<snip>
 
->  
->  For backward compatibility the frame-master and bitclock-master
->  properties can be used as booleans in codec subnode to indicate if the
-> diff --git a/Documentation/sound/soc/codec-to-codec.rst b/Documentation/sound/soc/codec-to-codec.rst
-> index 810109d7500d..efe0a8c07933 100644
-> --- a/Documentation/sound/soc/codec-to-codec.rst
-> +++ b/Documentation/sound/soc/codec-to-codec.rst
-> @@ -104,5 +104,10 @@ Make sure to name your corresponding cpu and codec playback and capture
->  dai names ending with "Playback" and "Capture" respectively as dapm core
->  will link and power those dais based on the name.
->  
-> -Note that in current device tree there is no way to mark a dai_link
-> -as codec to codec. However, it may change in future.
-> +A dai_link in a "simple-audio-card" can be marked as codec to codec in
-> +the device tree by adding the "codec-to-codec" property. The dai_link
-> +will be initialized with the subset of stream parameters (channels,
-> +format, sample rate) supported by all DAIs on the link. Since there is
-> +no way to provide these parameters in the device tree, this is mostly
-> +useful for communication with simple fixed-function codecs, such as a
-> +Bluetooth controller or cellular modem.
-> diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
-> index bbdd1542d6f1..80b60237b3cd 100644
-> --- a/include/sound/simple_card_utils.h
-> +++ b/include/sound/simple_card_utils.h
-> @@ -49,6 +49,7 @@ struct asoc_simple_priv {
->  		struct asoc_simple_data adata;
->  		struct snd_soc_codec_conf *codec_conf;
->  		unsigned int mclk_fs;
-> +		bool codec_to_codec;
->  	} *dai_props;
->  	struct asoc_simple_jack hp_jack;
->  	struct asoc_simple_jack mic_jack;
-> diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-> index 9b794775df53..2de4cfead790 100644
-> --- a/sound/soc/generic/simple-card-utils.c
-> +++ b/sound/soc/generic/simple-card-utils.c
-> @@ -331,6 +331,41 @@ static int asoc_simple_init_dai(struct snd_soc_dai *dai,
->  	return 0;
->  }
->  
-> +static int asoc_simple_init_dai_link_params(struct snd_soc_pcm_runtime *rtd,
-> +					    struct simple_dai_props *dai_props)
+> +static int mhdp_probe(struct platform_device *pdev)
 > +{
-> +	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-> +	struct snd_soc_pcm_stream *params;
-> +	struct snd_pcm_hardware hw;
+> +	const struct of_device_id *match;
+> +	struct resource *regs;
+> +	struct cdns_mhdp_device *mhdp;
+> +	struct clk *clk;
 > +	int ret;
+> +	unsigned long rate;
+> +	int irq;
+> +	u32 lanes_prop;
+> +	unsigned int link_rate;
 > +
-> +	if (!dai_props->codec_to_codec)
-> +		return 0;
-> +
-> +	/* Assumes the hardware capabilities are the same in both directions */
-> +	ret = snd_soc_runtime_calc_hw(rtd, &hw, SNDRV_PCM_STREAM_PLAYBACK);
-> +	if (ret < 0) {
-> +		dev_err(rtd->dev, "simple-card: no valid dai_link params\n");
-> +		return ret;
-> +	}
-> +
-> +	params = devm_kzalloc(rtd->dev, sizeof(*params), GFP_KERNEL);
-> +	if (!params)
+> +	mhdp = devm_kzalloc(&pdev->dev, sizeof(struct cdns_mhdp_device),
+> +			    GFP_KERNEL);
+> +	if (!mhdp)
 > +		return -ENOMEM;
 > +
-> +	params->formats = hw.formats;
-> +	params->rates = hw.rates;
-> +	params->rate_min = hw.rate_min;
-> +	params->rate_max = hw.rate_max;
-> +	params->channels_min = hw.channels_min;
-> +	params->channels_max = hw.channels_max;
+> +	clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		dev_err(&pdev->dev, "couldn't get clk: %ld\n", PTR_ERR(clk));
+> +		return PTR_ERR(clk);
+> +	}
 > +
-> +	dai_link->params = params;
-> +	dai_link->num_params = 1;
+> +	mhdp->clk = clk;
+> +	mhdp->dev = &pdev->dev;
+> +	mhdp->conn_bus_flags_defaults = DRM_BUS_FLAG_DE_HIGH;
+> +	mutex_init(&mhdp->mbox_mutex);
+> +	spin_lock_init(&mhdp->start_lock);
+> +	dev_set_drvdata(&pdev->dev, mhdp);
+> +
+> +	drm_dp_aux_init(&mhdp->aux);
+> +	mhdp->aux.dev = &pdev->dev;
+> +	mhdp->aux.transfer = mhdp_transfer;
+> +
+> +	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	mhdp->regs = devm_ioremap_resource(&pdev->dev, regs);
+> +	if (IS_ERR(mhdp->regs))
+> +		return PTR_ERR(mhdp->regs);
+> +
+> +	mhdp->phy = devm_of_phy_get_by_index(&pdev->dev, pdev->dev.of_node, 0);
+> +	if (IS_ERR(mhdp->phy)) {
+> +		dev_err(&pdev->dev, "no PHY configured\n");
+> +		return PTR_ERR(mhdp->phy);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, mhdp);
+> +
+> +	clk_prepare_enable(clk);
+> +
+> +	match = of_match_device(mhdp_ids, &pdev->dev);
+> +	if (!match)
+> +		return -ENODEV;
+> +	mhdp->ops = (struct mhdp_platform_ops *)match->data;
+> +
+> +	pm_runtime_enable(&pdev->dev);
+> +	ret = pm_runtime_get_sync(&pdev->dev);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "pm_runtime_get_sync failed\n");
+> +		pm_runtime_disable(&pdev->dev);
+> +		goto clk_disable;
+> +	}
+> +
+> +	if (mhdp->ops && mhdp->ops->init) {
+> +		ret = mhdp->ops->init(mhdp);
+> +		if (ret != 0) {
+> +			dev_err(&pdev->dev, "MHDP platform initialization failed: %d\n",
+> +				ret);
+> +			goto runtime_put;
+> +		}
+> +	}
+> +
+> +	rate = clk_get_rate(clk);
+> +	writel(rate % 1000000, mhdp->regs + CDNS_SW_CLK_L);
+> +	writel(rate / 1000000, mhdp->regs + CDNS_SW_CLK_H);
+> +
+> +	dev_dbg(&pdev->dev, "func clk rate %lu Hz\n", rate);
+> +
+> +	writel(~0, mhdp->regs + CDNS_MB_INT_MASK);
+> +	writel(~0, mhdp->regs + CDNS_APB_INT_MASK);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	ret = devm_request_threaded_irq(mhdp->dev, irq, NULL, mhdp_irq_handler,
+> +					IRQF_ONESHOT, "mhdp8546", mhdp);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "cannot install IRQ %d\n", irq);
+> +		ret = -EIO;
+> +		goto plat_fini;
+> +	}
+> +
+> +	/* Read source capabilities, based on PHY's device tree properties. */
+> +	ret = device_property_read_u32(&mhdp->phy->dev, "cdns,num-lanes",
+> +				       &(lanes_prop));
+> +	if (ret)
+> +		mhdp->host.lanes_cnt = CDNS_LANE_4;
+> +	else
+> +		mhdp->host.lanes_cnt = lanes_prop;
+> +
+> +	ret = device_property_read_u32(&mhdp->phy->dev, "cdns,max-bit-rate",
+> +				       &(link_rate));
+> +	if (ret)
+> +		link_rate = drm_dp_bw_code_to_link_rate(DP_LINK_BW_8_1);
+> +	else
+> +		/* PHY uses Mb/s, DRM uses tens of kb/s. */
+> +		link_rate *= 100;
+> +
+> +	mhdp->host.link_rate = link_rate;
+> +	mhdp->host.volt_swing = CDNS_VOLT_SWING(3);
+> +	mhdp->host.pre_emphasis = CDNS_PRE_EMPHASIS(3);
+> +	mhdp->host.pattern_supp = CDNS_SUPPORT_TPS(1) |
+> +				  CDNS_SUPPORT_TPS(2) | CDNS_SUPPORT_TPS(3) |
+> +				  CDNS_SUPPORT_TPS(4);
+> +	mhdp->host.lane_mapping = CDNS_LANE_MAPPING_NORMAL;
+> +	mhdp->host.fast_link = false;
+> +	mhdp->host.enhanced = true;
+> +	mhdp->host.scrambler = true;
+> +	mhdp->host.ssc = false;
+> +
+> +	/* The only currently supported format */
+> +	mhdp->display_fmt.y_only = false;
+> +	mhdp->display_fmt.color_format = DRM_COLOR_FORMAT_RGB444;
+> +	mhdp->display_fmt.bpc = 8;
+> +
+> +	mhdp->bridge.of_node = pdev->dev.of_node;
+> +	mhdp->bridge.funcs = &cdns_mhdp_bridge_funcs;
+> +
+> +	ret = phy_init(mhdp->phy);
+> +	if (ret) {
+> +		dev_err(mhdp->dev, "Failed to initialize PHY: %d\n", ret);
+> +		goto runtime_put;
+> +	}
+> +
+> +	ret = load_firmware(mhdp);
+> +	if (ret)
+> +		goto phy_exit;
+> +
+> +	drm_bridge_add(&mhdp->bridge);
 > +
 > +	return 0;
+> +
+> +phy_exit:
+> +	phy_exit(mhdp->phy);
+> +plat_fini:
+> +	if (mhdp->ops && mhdp->ops->exit)
+> +		mhdp->ops->exit(mhdp);
+> +runtime_put:
+> +	pm_runtime_put_sync(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +clk_disable:
+> +	clk_disable_unprepare(mhdp->clk);
+> +
+> +	return ret;
 > +}
 > +
->  int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
->  {
->  	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
-> @@ -347,6 +382,10 @@ int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
->  	if (ret < 0)
->  		return ret;
->  
-> +	ret = asoc_simple_init_dai_link_params(rtd, dai_props);
-> +	if (ret < 0)
-> +		return ret;
+> +MODULE_FIRMWARE(FW_NAME);
 > +
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(asoc_simple_dai_init);
-> diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-> index 55e9f8800b3e..179ab4482d10 100644
-> --- a/sound/soc/generic/simple-card.c
-> +++ b/sound/soc/generic/simple-card.c
-> @@ -77,6 +77,16 @@ static int asoc_simple_parse_dai(struct device_node *node,
->  	return 0;
->  }
->  
-> +static void simple_parse_codec_to_codec(struct device_node *node,
-> +					struct simple_dai_props *props,
-> +					char *prefix)
+> +static int mhdp_remove(struct platform_device *pdev)
 > +{
-> +	char prop[128];
+> +	struct cdns_mhdp_device *mhdp = dev_get_drvdata(&pdev->dev);
+> +	unsigned int timeout = 10;
+> +	bool stop_fw = false;
+> +	int ret = 0;
 > +
-> +	snprintf(prop, sizeof(prop), "%scodec-to-codec", prefix);
-> +	props->codec_to_codec = of_property_read_bool(node, prop);
+> +	if (mhdp->ops && mhdp->ops->exit)
+> +		mhdp->ops->exit(mhdp);
+> +
+> +	drm_bridge_remove(&mhdp->bridge);
+> +
+> +wait_loading:
+> +	spin_lock(&mhdp->start_lock);
+> +	if (mhdp->hw_state == MHDP_HW_LOADING && timeout-- > 0) {
+> +		spin_unlock(&mhdp->start_lock);
+> +		msleep(100);
+> +		goto wait_loading;
+> +	} else if (mhdp->hw_state == MHDP_HW_READY) {
+> +		stop_fw = true;
+> +		timeout = 1; /* We were successful even if counter reached 0 */
+> +	}
+> +	mhdp->hw_state = MHDP_HW_STOPPED;
+> +	spin_unlock(&mhdp->start_lock);
+> +
+> +	if (timeout == 0)
+> +		dev_err(mhdp->dev, "%s: Timeout waiting for fw loading\n",
+> +			__func__);
+> +
+> +	if (stop_fw) {
+> +		ret = cdns_mhdp_set_firmware_active(mhdp, false);
+> +		if (ret)
+> +			dev_err(mhdp->dev, "%s: De-activate FW failed: %d\n",
+> +				__func__, ret);
+> +	}
+> +
+> +	phy_exit(mhdp->phy);
+> +
+> +	pm_runtime_put_sync(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	clk_disable_unprepare(mhdp->clk);
+> +
+> +	/* FIXME: check for missing functions */
+> +
+> +	return ret;
 > +}
-> +
->  static void simple_parse_convert(struct device *dev,
->  				 struct device_node *np,
->  				 struct asoc_simple_data *adata)
-> @@ -217,6 +227,7 @@ static int simple_dai_link_of_dpcm(struct asoc_simple_priv *priv,
->  					     "prefix");
->  	}
->  
-> +	simple_parse_codec_to_codec(node, dai_props, prefix);
->  	simple_parse_convert(dev, np, &dai_props->adata);
->  	simple_parse_mclk_fs(top, np, codec, dai_props, prefix);
->  
-> @@ -292,6 +303,7 @@ static int simple_dai_link_of(struct asoc_simple_priv *priv,
->  	if (ret < 0)
->  		goto dai_link_of_err;
->  
-> +	simple_parse_codec_to_codec(node, dai_props, prefix);
->  	simple_parse_mclk_fs(top, cpu, codec, dai_props, prefix);
->  
->  	ret = asoc_simple_parse_cpu(cpu, dai_link, &single_cpu);
 
+The sequence here does not match what's done at probe()'s error handling. It probably should.
+
+The FIXME here sounds something that has to be fixed (or removed).
+
+There were also a few FIXMEs in the code, I think think it would be good to review all those, and 
+see if they're still valid, and perhaps add a bit more explanation to each.
+
+> +/* mailbox */
+> +#define MAILBOX_RETRY_US			1000
+> +#define MAILBOX_TIMEOUT_US			5000000
+
+This is 5 seconds. It sounds pretty long time to wait in a blocking function.
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
