@@ -1,194 +1,116 @@
-Return-Path: <SRS0=LTWd=4A=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1DBC3B186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB9DC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 00:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5320C206E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Feb 2020 23:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581551916;
-	bh=YxOu/xZsV3EHzIioIvp3r1FDPQKUmaKetuS4vrICO9I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=KxW9m1CURwc1e4R9wENuupS/XqRoYH09TfmEp9v4qC5ddiUxqp57kHryRlFwvxVat
-	 XYP8B4Slg3Q2gPLgnbWvqKVJPEYq5W1KG/6WJHApqUUha6rSfekX8pymEnzeDnrOJL
-	 mxJrsIL3xYjWb2Q9geZw4G8s71Z9b8GBe8cuTNRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4259321734
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 00:54:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="UDW8jybL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I3yYMJOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbgBLX6d (ORCPT
+        id S1729313AbgBMAyy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 18:58:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:39856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbgBLX6c (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 18:58:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F9FA101E;
-        Wed, 12 Feb 2020 15:58:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 885CC3F68E;
-        Wed, 12 Feb 2020 15:58:31 -0800 (PST)
-Date:   Wed, 12 Feb 2020 23:58:30 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>, broonie@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Subject: Applied "dt-bindings: spi: Document binding for generic SPI multiplexer" to the spi tree
-In-Reply-To: <20200204032838.20739-2-chris.packham@alliedtelesis.co.nz>
-Message-Id: <applied-20200204032838.20739-2-chris.packham@alliedtelesis.co.nz>
-X-Patchwork-Hint: ignore
+        Wed, 12 Feb 2020 19:54:54 -0500
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:57079 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729190AbgBMAyy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 19:54:54 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 967B9EB3;
+        Wed, 12 Feb 2020 19:54:52 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 12 Feb 2020 19:54:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=kvIcpzMnZDBTrKFTCocK1+6gG8eemWb
+        Co4P6LYqLFvs=; b=UDW8jybLIIdDBBt9Ku/iP0HlGSMGGALp9ncys+sWCqk9rIu
+        z8z14n2X3kds4Jen2mHXJvHiY8wXI57LdB1vdI2Zrf51g7VhVnaVKg/zmxl7FOCk
+        URzgO8f/f7OsRbaxvKjhGN/dLZMKYIH90g83pBr6F6+FYay7MdI3i18K1thyor0S
+        vgitlZFPD5KQ/I7EjW1hylmtElfuZ5UQ23hq8yAjuncEDV99TiDYw7Ka/ScKXOt5
+        JwgTKrD24wt0ea4VkH6JviGjE7wEX51KbG4WVKUTYftSdmhr4up+zIRSFDf7BvJe
+        SBR6ot6ROmM5+zLXfQo5oSa6zp4N1QqCM7BFM3w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=kvIcpz
+        MnZDBTrKFTCocK1+6gG8eemWbCo4P6LYqLFvs=; b=I3yYMJOj1MN3yYFnfM0cx1
+        RcbLzFg3aKsvsWTCDkMm1yPaly/2WKE4wm5JUWjoGJN8C0Vs+onpJfxwH24AVE8z
+        cgQ+1hMpI8J+BxMoOjlQZ6GgU1cEmw3wLJXZPYBUe+3YDQLyU4/z3H/Y/avphF8V
+        mRKGoylgYXVXn2LGN+Gdt1S45/GlG0jYY8p4RXzLddWoEKskcaLOZmRYmMXxskyE
+        I2TUqIXlUZgEucs3NTxRWJXNWIQrr68EJfF2UzJtdcPHw84Ht1wjksg84wklpVOT
+        8UCakDbMVO+/SDT3NIhE5bz7aRrqhFPZ+X2s2iEckqJDZVwwgJoHsp9Wx5jG71sQ
+        ==
+X-ME-Sender: <xms:V55EXkAzRdV4rAbWN03GGELs2jHu3cs-01UwlblbWiYJoOgPXIrvpQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieejgddvkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
+    htvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
+    rdhiugdrrghu
+X-ME-Proxy: <xmx:V55EXitAfaithfdZSxrv88Msl9bhCOoJmXkykQyPueu75xmPlVwuwg>
+    <xmx:V55EXqeqPTGQoKHodorareVjiqYA8HOLTpOiIWw9CxYW_twfnSqy5g>
+    <xmx:V55EXpa1i15G_s792VwBSjznbgXfEnso0YAI-Mir6eD5GF57kUnqTA>
+    <xmx:XJ5EXjdH7gkCb21m1W2jjnwGtewnUIkhfZxrbk93jpDtiNPh0k1oIQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id F3F98E00A2; Wed, 12 Feb 2020 19:54:46 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
+Mime-Version: 1.0
+Message-Id: <288ba2d7-77dc-40a7-90e8-f2781b3fe067@www.fastmail.com>
+In-Reply-To: <CACPK8Xdg0ocBzDqtkoo8cSCpUq+QjHQ1PKrsVZd8NPUvPFeFCw@mail.gmail.com>
+References: <20200206170234.84288-1-geissonator@gmail.com>
+ <CACPK8Xdg0ocBzDqtkoo8cSCpUq+QjHQ1PKrsVZd8NPUvPFeFCw@mail.gmail.com>
+Date:   Thu, 13 Feb 2020 11:24:36 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Joel Stanley" <joel@jms.id.au>,
+        "Andrew Geissler" <geissonator@gmail.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Andrew Geissler" <geissonator@yahoo.com>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3] ARM: dts: aspeed: witherspoon: Add gpio line names
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
 
-   dt-bindings: spi: Document binding for generic SPI multiplexer
 
-has been applied to the spi tree at
+On Mon, 10 Feb 2020, at 12:59, Joel Stanley wrote:
+> On Thu, 6 Feb 2020 at 17:03, Andrew Geissler <geissonator@gmail.com> wrote:
+> >
+> > From: Andrew Geissler <geissonator@yahoo.com>
+> >
+> > Name the GPIOs to help userspace work with them. The names describe the
+> > functionality the lines provide, not the net or ball name. This makes it
+> > easier to share userspace code across different systems and makes the
+> > use of the lines more obvious.
+> >
+> > Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+> 
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+> 
+> I will wait for  Andrew before merging, but this looks good to me.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
+To the best of my knowledge this is the only supported approach.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I haven't checked the mapping of gpio lines to functions, but for
+the concept:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From d548ed71cb8862c96a1a8d17861bb5dabd1e2299 Mon Sep 17 00:00:00 2001
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Date: Tue, 4 Feb 2020 16:28:37 +1300
-Subject: [PATCH] dt-bindings: spi: Document binding for generic SPI
- multiplexer
-
-Add binding documentation for the spi-mux driver. This allows a generic
-multiplexer to be used to provide access to multiple SPI devices.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200204032838.20739-2-chris.packham@alliedtelesis.co.nz
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/spi/spi-mux.yaml      | 89 +++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documentation/devicetree/bindings/spi/spi-mux.yaml
-new file mode 100644
-index 000000000000..0ae692dc28b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-mux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic SPI Multiplexer
-+
-+description: |
-+  This binding describes a SPI bus multiplexer to route the SPI chip select
-+  signals. This can be used when you need more devices than the SPI controller
-+  has chip selects available. An example setup is shown in ASCII art; the actual
-+  setting of the multiplexer to a channel needs to be done by a specific SPI mux
-+  driver.
-+
-+        MOSI /--------------------------------+--------+--------+--------\
-+        MISO |/------------------------------+|-------+|-------+|-------\|
-+         SCL ||/----------------------------+||------+||------+||------\||
-+             |||                            |||      |||      |||      |||
-+      +------------+                        |||      |||      |||      |||
-+      | SoC  |||   |                      +-+++-+  +-+++-+  +-+++-+  +-+++-+
-+      |      |||   |                      | dev |  | dev |  | dev |  | dev |
-+      |   +--+++-+ | CS-X  +------+\      +--+--+  +--+--+  +--+--+  +--+--+
-+      |   | SPI  +-|-------+ Mux  |\\   CS-0 |        |        |        |
-+      |   +------+ |       +--+---+\\\-------/   CS-1 |        |        |
-+      |            |          |    \\\----------------/   CS-2 |        |
-+      |   +------+ |          |     \\-------------------------/   CS-3 |
-+      |   | ?    +-|----------/      \----------------------------------/
-+      |   +------+ |
-+      +------------+
-+
-+allOf:
-+  - $ref: "/schemas/spi/spi-controller.yaml#"
-+
-+maintainers:
-+  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-+
-+properties:
-+  compatible:
-+    const: spi-mux
-+
-+  mux-controls:
-+    maxItems: 1
-+
-+required:
-+   - compatible
-+   - reg
-+   - spi-max-frequency
-+   - mux-controls
-+
-+examples:
-+   - |
-+     #include <dt-bindings/gpio/gpio.h>
-+     mux: mux-controller {
-+       compatible = "gpio-mux";
-+       #mux-control-cells = <0>;
-+
-+       mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
-+     };
-+
-+     spi {
-+       #address-cells = <1>;
-+       #size-cells = <0>;
-+       spi@0 {
-+         compatible = "spi-mux";
-+         reg = <0>;
-+         #address-cells = <1>;
-+         #size-cells = <0>;
-+         spi-max-frequency = <100000000>;
-+
-+         mux-controls = <&mux>;
-+
-+         spi-flash@0 {
-+           compatible = "jedec,spi-nor";
-+           reg = <0>;
-+           #address-cells = <1>;
-+           #size-cells = <0>;
-+           spi-max-frequency = <40000000>;
-+         };
-+
-+         spi-device@1 {
-+           compatible = "lineartechnology,ltc2488";
-+           reg = <1>;
-+           #address-cells = <1>;
-+           #size-cells = <0>;
-+           spi-max-frequency = <10000000>;
-+         };
-+       };
-+     };
--- 
-2.20.1
-
+Andrew
