@@ -2,379 +2,170 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC2BC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E62C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBFC20848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984F22073C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:21:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qf01HFCP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V7rmpKL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgBMJTe (ORCPT
+        id S1729617AbgBMJVK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:19:34 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53664 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729576AbgBMJTd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 04:19:33 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01D9JEOt127361;
-        Thu, 13 Feb 2020 03:19:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581585554;
-        bh=tYWMN2YveaXfn9+798tLoVElj0lt1lXVlJG0sJnmZRw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qf01HFCPxB0y9gPgQFI78RamWbqiZ4CcmB9T6fsEkQYbAMYf9dCD1PCsx3rD3Jgju
-         pKKUBaq3IkWKH5SSaMiKgQSu4HZyNircT5D+cqUmH+KcK6zxOFVwWxq702UCH8eKEN
-         ZsoDcojWrb7rDChXtGMENnAWagonOwS1hnV6u3i0=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01D9JEGH067261
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Feb 2020 03:19:14 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
- Feb 2020 03:19:13 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 13 Feb 2020 03:19:13 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01D9J9tq094940;
-        Thu, 13 Feb 2020 03:19:10 -0600
-Subject: Re: [PATCH v5 2/3] drm: bridge: Add support for Cadence MHDP DPI/DP
- bridge
-To:     Yuti Amonkar <yamonkar@cadence.com>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>
-CC:     <praneeth@ti.com>, <jsarha@ti.com>, <mparab@cadence.com>,
-        <sjakhade@cadence.com>
-References: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
- <1581481604-24499-3-git-send-email-yamonkar@cadence.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <6c2188ce-a27a-bb76-4b38-5fda5f282f78@ti.com>
-Date:   Thu, 13 Feb 2020 11:19:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <1581481604-24499-3-git-send-email-yamonkar@cadence.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Thu, 13 Feb 2020 04:21:10 -0500
+Received: from mail-eopbgr30053.outbound.protection.outlook.com ([40.107.3.53]:23971
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729576AbgBMJVK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:21:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HR+01XObHmxe0Phh7pqD6uqkr14z96nwxqpYMEiQic4bpqDeiWA8hT64vONizhr27xaz/Yi5IO0VG1L1sd1WxUYw8HOiBi5bhAHmqZYmd9jpMM4RuIagEKsKbW5wO8gK13gxQYmzgzYyi4l6d92B2in7TCAH0OuOv2DseifIKM9QjylkQr430xizMxtO34pLxFFO//LJLFQ2lkoQNiHeCqJON0lLNKfgIgXbVa5wmo3fet3Ci85w8HpFQKCwb+7sWIMhuA29Wqni6R2GrAfSLGkUdRKIQ/THmREUR+u1mklZK8jXkG28Q9nhz3li5MVB+y0weZYrc6SJ/1uGblIEoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=atzhjWXuNPSvHA14BHm1oCxPeR2Vqj4e0XW51d0ib5A=;
+ b=N9eFGkt3FeFNcUcJCj3jTgO7uUdsqRqupLg+jYqwvv3hxInICnm226PmLSH87tJ+4eVS2wSw46o8uu/6UoeU7epduoi4mQaRi4OLe1vOtcjunngejW6lxg6oObZK2KRuO+PoBWY8CYy+4hL7RrtWZH6HGVZAKWuD2S0Wa1Xivun7YYK8DRfGXD3xYbV/XAhRoIYxLj5uRDQAo+qzH81XE593ArRoQLZk8SJ9VWX2enCf9FzxC2VjHN/bNHqJ7IO+UV3CEvLLFoDEHnpXYMrdFD+M56ebKueAeArX7qqXNi5pGmLkALWEtyYCDKekv/HYqh4DTOBGPvwB0cYeRGEtwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=atzhjWXuNPSvHA14BHm1oCxPeR2Vqj4e0XW51d0ib5A=;
+ b=V7rmpKL//fpkC2zrhs68o+Al9Z6tblU/67gNbmlMNXtdxvYnwbtN4baDUmkX9sxlIstS3RqeSF8sssLorDw4wTIRjlpyQGN2BVfNPCQBWv2O7dn8qiBRLiQm7qMEpTH4x6Hj0xcjrVhfop3CdA1jBmTc2oZtYa2Per24MT8uJ+k=
+Received: from VI1PR04MB6992.eurprd04.prod.outlook.com (52.133.247.22) by
+ VI1PR04MB4045.eurprd04.prod.outlook.com (52.133.13.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.24; Thu, 13 Feb 2020 09:21:02 +0000
+Received: from VI1PR04MB6992.eurprd04.prod.outlook.com
+ ([fe80::9454:2b46:a973:efdf]) by VI1PR04MB6992.eurprd04.prod.outlook.com
+ ([fe80::9454:2b46:a973:efdf%3]) with mapi id 15.20.2729.025; Thu, 13 Feb 2020
+ 09:21:02 +0000
+From:   Jacky Bai <ping.bai@nxp.com>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Adam Ford <aford173@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        =?utf-8?B?Q2zDqW1lbnQgRmF1cmU=?= <clement.faure@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: RE: [PATCH 0/3] Add power domain driver support for i.mx8m family
+Thread-Topic: [PATCH 0/3] Add power domain driver support for i.mx8m family
+Thread-Index: AQHVlbJUA691HUFq00G9JmwM2VD7GagZcSCAgAAAzeA=
+Date:   Thu, 13 Feb 2020 09:21:02 +0000
+Message-ID: <VI1PR04MB6992DF27336AC51945D1C0C1871A0@VI1PR04MB6992.eurprd04.prod.outlook.com>
+References: <20190417053211.2195-1-ping.bai@nxp.com>
+ <AM0PR04MB42116FEB1EE2CAE68A1CAA8980250@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <1555503195.2317.19.camel@pengutronix.de>
+ <VI1PR04MB55330105F4839FCF98B7CFC0EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
+ <68aaace3-f66e-b4b8-30a0-57b8b66a7524@arm.com>
+ <VI1PR04MB5533A1F87436C0839A772D03EE250@VI1PR04MB5533.eurprd04.prod.outlook.com>
+ <20190418144330.GD7770@e107155-lin>
+ <CAHCN7xKK3zWE9i24prauPw0DSNTjASsMgDYY8w3OBJ+hb2y-sg@mail.gmail.com>
+ <871ac22a-0508-8e92-b012-f414be5bd174@kontron.de>
+In-Reply-To: <871ac22a-0508-8e92-b012-f414be5bd174@kontron.de>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ping.bai@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e7f28147-bd98-45d2-d0d3-08d7b0660b9c
+x-ms-traffictypediagnostic: VI1PR04MB4045:|VI1PR04MB4045:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB40458C839AE635A88B277123871A0@VI1PR04MB4045.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 031257FE13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(346002)(396003)(376002)(199004)(189003)(110136005)(71200400001)(54906003)(7416002)(9686003)(52536014)(55016002)(4326008)(6506007)(2906002)(53546011)(33656002)(26005)(478600001)(76116006)(66556008)(66446008)(64756008)(66476007)(66946007)(186003)(8676002)(8936002)(81166006)(66574012)(316002)(81156014)(7696005)(86362001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4045;H:VI1PR04MB6992.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 33xVN5QWtzUjrs0XkTYOYoCO8HTI5/YpnKMIFBVhq27kr2onJg55JADc58z0YpLCE+5IfPPCHQ6RJn3BQCmmHSDM9VqcZhub0jJxNXYSLkyLnTyIxZTs6vmpjbS3GeKMSe7M6bF2aOa2yU5pHuMq2i6XMFYfePLnyEMMlU90KoabeuKO11s6Ab6v8YeBqOFXGdYET3jYDcLVkDJGg5WM++cgvOTDdutKSAEjnkQ5rCGCnnvkFX/E+3pCg23A3CIAQZV2LfHed+1DTX2Yt0iDq0An9lPe/3+Jon84vhsFNynrMg3jzkbR8ZVXpjYzT9odAKy2oLY41YR+fgqhD32Haf0vNO9vEFSgwYbNiaxqPqLzaPi43dtHPwjQWAFjg98cZrkGMujWLUl6Y8LVppLLng75GCXCXQYX6oyV7r1nla5TRBu+pQWfl5MzbkpzUrpC
+x-ms-exchange-antispam-messagedata: zOx6eV/JaHyjogpQ64YVuwqaL+0YQ8MxeWuEeqK+Q1/YGDWR8dgrHyueWeKXb3Ry6HqGYydQw6Z29WRD5YyqjrqjTq51jA3oTA17w12AbBTDpaXarYkQJNAkeG9Zo8xC7nMOfnbtW5rx0BHpw/xKww==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7f28147-bd98-45d2-d0d3-08d7b0660b9c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 09:21:02.3088
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IlX2H7T1x6AdU88p5KNYuX7SE6ZrFmBEpd+pcbB/pofY7qssakcyVSe8ZGWFp8fgBLKlMAQzHza4PmKn05jWmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4045
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/02/2020 06:26, Yuti Amonkar wrote:
-> This patch adds new DRM driver for Cadence MHDP DPTX IP used on J721e SoC.
-> MHDP DPTX IP is the component that complies with VESA DisplayPort (DP) and
-> embedded Display Port (eDP) standards. It integrates uCPU running the
-> embedded Firmware(FW) interfaced over APB interface.
-> Basically, it takes a DPI stream as input and output it encoded in DP
-> format. Currently, it supports only SST mode.
-> 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> ---
->   drivers/gpu/drm/bridge/Kconfig          |   11 +
->   drivers/gpu/drm/bridge/Makefile         |    3 +
->   drivers/gpu/drm/bridge/cdns-mhdp-core.c | 2206 +++++++++++++++++++++++
->   drivers/gpu/drm/bridge/cdns-mhdp-core.h |  380 ++++
->   4 files changed, 2600 insertions(+)
->   create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-core.c
->   create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 8397bf72d2f3..c66f2ef04f71 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -27,6 +27,17 @@ config DRM_CDNS_DSI
->   	  Support Cadence DPI to DSI bridge. This is an internal
->   	  bridge and is meant to be directly embedded in a SoC.
->   
-> +config DRM_CDNS_MHDP
-> +	tristate "Cadence DPI/DP bridge"
-> +	select DRM_KMS_HELPER
-> +	select DRM_PANEL_BRIDGE
-> +	depends on OF
-> +	help
-> +	  Support Cadence DPI to DP bridge. This is an internal
-> +	  bridge and is meant to be directly embedded in a SoC.
-> +	  It takes a DPI stream as input and output it encoded
-> +	  in DP format.
-> +
->   config DRM_DUMB_VGA_DAC
->   	tristate "Dumb VGA DAC Bridge support"
->   	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 1eb5376c5d68..71019088d257 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -15,6 +15,9 @@ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
->   obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
->   obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
->   obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
-> +obj-$(CONFIG_DRM_CDNS_MHDP) += cdns-mhdp.o
->   
->   obj-y += analogix/
->   obj-y += synopsys/
-> +
-> +cdns-mhdp-objs := cdns-mhdp-core.o
-
-I think it's better to keep the two lines added in this change together, instead of having those 
-other obj-y lines in between.
-
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.c b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> new file mode 100644
-> index 000000000000..51ed9cdee161
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> @@ -0,0 +1,2206 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Cadence MHDP DP bridge driver.
-> + *
-> + * Copyright: 2019 Cadence Design Systems, Inc.
-> + *
-> + * Author: Quentin Schulz <quentin.schulz@free-electrons.com>
-
-Author is Quentin, but there's no signed-off-by from him? There are also many names in 
-MODULE_AUTHOR, without signed-off-bys.
-
-I think the rule is that you should have signed-off-bys for people who have contributed. I'm not 
-sure how strict that rule is, and what to do if the people cannot be reached anymore.
-
-<snip>
-
-> +static int mhdp_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *match;
-> +	struct resource *regs;
-> +	struct cdns_mhdp_device *mhdp;
-> +	struct clk *clk;
-> +	int ret;
-> +	unsigned long rate;
-> +	int irq;
-> +	u32 lanes_prop;
-> +	unsigned int link_rate;
-> +
-> +	mhdp = devm_kzalloc(&pdev->dev, sizeof(struct cdns_mhdp_device),
-> +			    GFP_KERNEL);
-> +	if (!mhdp)
-> +		return -ENOMEM;
-> +
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(clk)) {
-> +		dev_err(&pdev->dev, "couldn't get clk: %ld\n", PTR_ERR(clk));
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	mhdp->clk = clk;
-> +	mhdp->dev = &pdev->dev;
-> +	mhdp->conn_bus_flags_defaults = DRM_BUS_FLAG_DE_HIGH;
-> +	mutex_init(&mhdp->mbox_mutex);
-> +	spin_lock_init(&mhdp->start_lock);
-> +	dev_set_drvdata(&pdev->dev, mhdp);
-> +
-> +	drm_dp_aux_init(&mhdp->aux);
-> +	mhdp->aux.dev = &pdev->dev;
-> +	mhdp->aux.transfer = mhdp_transfer;
-> +
-> +	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	mhdp->regs = devm_ioremap_resource(&pdev->dev, regs);
-> +	if (IS_ERR(mhdp->regs))
-> +		return PTR_ERR(mhdp->regs);
-> +
-> +	mhdp->phy = devm_of_phy_get_by_index(&pdev->dev, pdev->dev.of_node, 0);
-> +	if (IS_ERR(mhdp->phy)) {
-> +		dev_err(&pdev->dev, "no PHY configured\n");
-> +		return PTR_ERR(mhdp->phy);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, mhdp);
-> +
-> +	clk_prepare_enable(clk);
-> +
-> +	match = of_match_device(mhdp_ids, &pdev->dev);
-> +	if (!match)
-> +		return -ENODEV;
-> +	mhdp->ops = (struct mhdp_platform_ops *)match->data;
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +	ret = pm_runtime_get_sync(&pdev->dev);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "pm_runtime_get_sync failed\n");
-> +		pm_runtime_disable(&pdev->dev);
-> +		goto clk_disable;
-> +	}
-> +
-> +	if (mhdp->ops && mhdp->ops->init) {
-> +		ret = mhdp->ops->init(mhdp);
-> +		if (ret != 0) {
-> +			dev_err(&pdev->dev, "MHDP platform initialization failed: %d\n",
-> +				ret);
-> +			goto runtime_put;
-> +		}
-> +	}
-> +
-> +	rate = clk_get_rate(clk);
-> +	writel(rate % 1000000, mhdp->regs + CDNS_SW_CLK_L);
-> +	writel(rate / 1000000, mhdp->regs + CDNS_SW_CLK_H);
-> +
-> +	dev_dbg(&pdev->dev, "func clk rate %lu Hz\n", rate);
-> +
-> +	writel(~0, mhdp->regs + CDNS_MB_INT_MASK);
-> +	writel(~0, mhdp->regs + CDNS_APB_INT_MASK);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	ret = devm_request_threaded_irq(mhdp->dev, irq, NULL, mhdp_irq_handler,
-> +					IRQF_ONESHOT, "mhdp8546", mhdp);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "cannot install IRQ %d\n", irq);
-> +		ret = -EIO;
-> +		goto plat_fini;
-> +	}
-> +
-> +	/* Read source capabilities, based on PHY's device tree properties. */
-> +	ret = device_property_read_u32(&mhdp->phy->dev, "cdns,num-lanes",
-> +				       &(lanes_prop));
-> +	if (ret)
-> +		mhdp->host.lanes_cnt = CDNS_LANE_4;
-> +	else
-> +		mhdp->host.lanes_cnt = lanes_prop;
-> +
-> +	ret = device_property_read_u32(&mhdp->phy->dev, "cdns,max-bit-rate",
-> +				       &(link_rate));
-> +	if (ret)
-> +		link_rate = drm_dp_bw_code_to_link_rate(DP_LINK_BW_8_1);
-> +	else
-> +		/* PHY uses Mb/s, DRM uses tens of kb/s. */
-> +		link_rate *= 100;
-> +
-> +	mhdp->host.link_rate = link_rate;
-> +	mhdp->host.volt_swing = CDNS_VOLT_SWING(3);
-> +	mhdp->host.pre_emphasis = CDNS_PRE_EMPHASIS(3);
-> +	mhdp->host.pattern_supp = CDNS_SUPPORT_TPS(1) |
-> +				  CDNS_SUPPORT_TPS(2) | CDNS_SUPPORT_TPS(3) |
-> +				  CDNS_SUPPORT_TPS(4);
-> +	mhdp->host.lane_mapping = CDNS_LANE_MAPPING_NORMAL;
-> +	mhdp->host.fast_link = false;
-> +	mhdp->host.enhanced = true;
-> +	mhdp->host.scrambler = true;
-> +	mhdp->host.ssc = false;
-> +
-> +	/* The only currently supported format */
-> +	mhdp->display_fmt.y_only = false;
-> +	mhdp->display_fmt.color_format = DRM_COLOR_FORMAT_RGB444;
-> +	mhdp->display_fmt.bpc = 8;
-> +
-> +	mhdp->bridge.of_node = pdev->dev.of_node;
-> +	mhdp->bridge.funcs = &cdns_mhdp_bridge_funcs;
-> +
-> +	ret = phy_init(mhdp->phy);
-> +	if (ret) {
-> +		dev_err(mhdp->dev, "Failed to initialize PHY: %d\n", ret);
-> +		goto runtime_put;
-> +	}
-> +
-> +	ret = load_firmware(mhdp);
-> +	if (ret)
-> +		goto phy_exit;
-> +
-> +	drm_bridge_add(&mhdp->bridge);
-> +
-> +	return 0;
-> +
-> +phy_exit:
-> +	phy_exit(mhdp->phy);
-> +plat_fini:
-> +	if (mhdp->ops && mhdp->ops->exit)
-> +		mhdp->ops->exit(mhdp);
-> +runtime_put:
-> +	pm_runtime_put_sync(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +clk_disable:
-> +	clk_disable_unprepare(mhdp->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +MODULE_FIRMWARE(FW_NAME);
-> +
-> +static int mhdp_remove(struct platform_device *pdev)
-> +{
-> +	struct cdns_mhdp_device *mhdp = dev_get_drvdata(&pdev->dev);
-> +	unsigned int timeout = 10;
-> +	bool stop_fw = false;
-> +	int ret = 0;
-> +
-> +	if (mhdp->ops && mhdp->ops->exit)
-> +		mhdp->ops->exit(mhdp);
-> +
-> +	drm_bridge_remove(&mhdp->bridge);
-> +
-> +wait_loading:
-> +	spin_lock(&mhdp->start_lock);
-> +	if (mhdp->hw_state == MHDP_HW_LOADING && timeout-- > 0) {
-> +		spin_unlock(&mhdp->start_lock);
-> +		msleep(100);
-> +		goto wait_loading;
-> +	} else if (mhdp->hw_state == MHDP_HW_READY) {
-> +		stop_fw = true;
-> +		timeout = 1; /* We were successful even if counter reached 0 */
-> +	}
-> +	mhdp->hw_state = MHDP_HW_STOPPED;
-> +	spin_unlock(&mhdp->start_lock);
-> +
-> +	if (timeout == 0)
-> +		dev_err(mhdp->dev, "%s: Timeout waiting for fw loading\n",
-> +			__func__);
-> +
-> +	if (stop_fw) {
-> +		ret = cdns_mhdp_set_firmware_active(mhdp, false);
-> +		if (ret)
-> +			dev_err(mhdp->dev, "%s: De-activate FW failed: %d\n",
-> +				__func__, ret);
-> +	}
-> +
-> +	phy_exit(mhdp->phy);
-> +
-> +	pm_runtime_put_sync(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	clk_disable_unprepare(mhdp->clk);
-> +
-> +	/* FIXME: check for missing functions */
-> +
-> +	return ret;
-> +}
-
-The sequence here does not match what's done at probe()'s error handling. It probably should.
-
-The FIXME here sounds something that has to be fixed (or removed).
-
-There were also a few FIXMEs in the code, I think think it would be good to review all those, and 
-see if they're still valid, and perhaps add a bit more explanation to each.
-
-> +/* mailbox */
-> +#define MAILBOX_RETRY_US			1000
-> +#define MAILBOX_TIMEOUT_US			5000000
-
-This is 5 seconds. It sounds pretty long time to wait in a blocking function.
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTY2hyZW1wZiBGcmllZGVyIDxm
+cmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+DQo+IFNlbnQ6IFRodXJzZGF5LCBGZWJydWFyeSAx
+MywgMjAyMCA1OjE2IFBNDQo+IFRvOiBBZGFtIEZvcmQgPGFmb3JkMTczQGdtYWlsLmNvbT47IFN1
+ZGVlcCBIb2xsYQ0KPiA8c3VkZWVwLmhvbGxhQGFybS5jb20+DQo+IENjOiBBaXNoZW5nIERvbmcg
+PGFpc2hlbmcuZG9uZ0BueHAuY29tPjsgbWFyay5ydXRsYW5kQGFybS5jb207IFBlbmcNCj4gRmFu
+IDxwZW5nLmZhbkBueHAuY29tPjsgU291dmlrIENoYWtyYXZhcnR5DQo+IDxTb3V2aWsuQ2hha3Jh
+dmFydHlAYXJtLmNvbT47IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT47DQo+IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBDbMOpbWVudCBGYXVyZSA8Y2xlbWVudC5mYXVyZUBueHAuY29t
+PjsNCj4gcy5oYXVlckBwZW5ndXRyb25peC5kZTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcm9iaCtk
+dEBrZXJuZWwub3JnOw0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsga2VybmVs
+QHBlbmd1dHJvbml4LmRlOyBBbmRyZSBQcnp5d2FyYQ0KPiA8YW5kcmUucHJ6eXdhcmFAYXJtLmNv
+bT47IFNpbHZhbm8gRGkgTmlubm8gPHNpbHZhbm8uZGluaW5ub0BueHAuY29tPjsNCj4gTGVvbmFy
+ZCBDcmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47IGZlc3RldmFtQGdtYWlsLmNvbTsN
+Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBMdWNhcyBTdGFjaCA8bC5z
+dGFjaEBwZW5ndXRyb25peC5kZT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwLzNdIEFkZCBwb3dl
+ciBkb21haW4gZHJpdmVyIHN1cHBvcnQgZm9yIGkubXg4bSBmYW1pbHkNCj4gDQo+IEhpLA0KPiAN
+Cj4gT24gMDcuMTEuMTkgMjI6MjgsIEFkYW0gRm9yZCB3cm90ZToNCj4gPiBPbiBUaHUsIEFwciAx
+OCwgMjAxOSBhdCA5OjQzIEFNIFN1ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+DQo+
+IHdyb3RlOg0KPiA+Pg0KPiA+PiBPbiBXZWQsIEFwciAxNywgMjAxOSBhdCAwNDoyMTo1NVBNICsw
+MDAwLCBMZW9uYXJkIENyZXN0ZXogd3JvdGU6DQo+ID4+PiBPbiA0LzE3LzIwMTkgNDozMyBQTSwg
+U3VkZWVwIEhvbGxhIHdyb3RlOg0KPiA+Pj4+Pj4gSSBkb24ndCB5ZXQgYnV5IHRoZSBzZWN1cml0
+eSBhcmd1bWVudC4gVGhlcmUgYXJlIG1hbnkgbW9yZSBzaGFyZWQNCj4gPj4+Pj4+IHBhcnRzIG9u
+IHRoZSBTb0MsIGxpa2UgdGhlIGNsb2NrIGNvbnRyb2xsZXIsIHRoYXQgd291bGQgbmVlZCB0bw0K
+PiA+Pj4+Pj4gYmUgdGFrZW4gYXdheSBmcm9tIHRoZSBub24tc2VjdXJlIHdvcmxkIGlmIG9uZSB3
+b3VsZCB3YW50IHRvIHJ1bg0KPiA+Pj4+Pj4gYW4gdW50cnVzdGVkIE9TIGtlcm5lbCBvbiBhIGku
+TVg4TSBzeXN0ZW0uDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gVG8gcHJvcGVybHkgaW1wbGVtZW50IHNl
+Y3VyaXR5IG9uIGFueSBpLk1YOE0gYmFzZWQgc3lzdGVtIHRoZQ0KPiA+Pj4+Pj4gZmlybXdhcmUg
+d291bGQgbmVlZCB0byBncm93IHNvbWV0aGluZyBsaWtlIGEgZnVsbCBBUk0gU0NQSQ0KPiA+Pj4+
+Pj4gaW1wbGVtZW50YXRpb24sIHNvIGFsbCBzaGFyZWQgY3JpdGljYWwgcGVyaXBoZXJhbHMgYXJl
+IHNvbGVseSB1bmRlcg0KPiBmaXJtd2FyZSBjb250cm9sLg0KPiA+Pj4+Pg0KPiA+Pj4+PiBJdCBt
+aWdodCBiZSBwb3NzaWJsZSB0byByZXdvcmsgdGhpcyB0byB1c2Ugc29tZSBmb3JtIG9mDQo+ID4+
+Pj4+IFNDTUktb3Zlci1TTUMgaW5zdGVhZCBvZiB2ZW5kb3Itc3BlY2lmaWMgU01DQ0MgU0lQIGNh
+bGxzDQo+ID4NCj4gPiBJIHdhcyBqdXN0IGN1cmlvdXMgdG8ga25vdyBpZiB0aGVyZSBpcyBhbnkg
+cHJvZ3Jlc3MgYmVpbmcgbWFkZSBvbg0KPiA+IHRoaXMuICBUaGUgaS5teDhtbS1ldmsgaXMgbWlz
+c2luZyBmdW5jdGlvbmFsaXR5IHVwc3RyZWFtIGFuZCBJIHRoaW5rDQo+ID4gdGhlIHBvd2VyIGRv
+bWFpbiBzdXBwb3J0IHdvdWxkIGhlbHAgZW5hYmxlIHNvbWUgb2YgdGhlc2UgZmVhdHVyZXMuDQo+
+ID4NCj4gDQo+IEhhcyB0aGVyZSBiZWVuIGFueSBkZWNpc2lvbiBvciBhY3Rpb24gdGFrZW4gaW4g
+dGhpcyB0b3BpYz8NCj4gV2lsbCB0aGUgcG93ZXIgZG9tYWluIGRyaXZlciBhcyBwcm9wb3NlZCBp
+biB0aGlzIHBhdGNoIGJlIHVwc3RyZWFtZWQgYXQNCj4gc29tZSB0aW1lLCBvciByYXRoZXIgbm90
+Pw0KPiANCj4gSSB0cnkgdG8gYnVpbGQgYSBtYWlubGluZSBCU1AgZm9yIGkuTVg4TU0gKE1MIFUt
+Qm9vdCwgTUwgVEYtQSwgTUwgTGludXgpDQo+IGFuZCBJIGludGVncmF0ZWQgZGlzcGxheSBhbmQg
+Z3JhcGhpY3Mgc3VwcG9ydCBmcm9tIHRoZSBkb3duc3RyZWFtIE5YUA0KPiBrZXJuZWwuDQo+IA0K
+PiBXaGlsZSBtb3N0IHRoaW5ncyBhbHJlYWR5IHdvcmsgZmluZSwgdGhlcmUncyB0aGUgaXNzdWUg
+b2YgaG93IHRvIGhhbmRsZSB0aGUNCj4gcG93ZXIgZG9tYWlucy4gQ3VycmVudGx5IEkgbmVlZCB0
+byB1bmdhdGUgc29tZSBjbG9ja3MgaW4gdGhlIFRGLUENCj4gQkwzMSB0byBnZXQgZm9yIGV4YW1w
+bGUgdGhlIEdQVSBydW5uaW5nLiBJZiBJIHVuZGVyc3RhbmQgdGhpcyBjb3JyZWN0bHkgdGhlDQo+
+IHByb3Bvc2VkIHBvd2VyIGRvbWFpbiBkcml2ZXIgY291bGQgaGFuZGxlIHRoaXMgaW4gTGludXgg
+b3RoZXJ3aXNlLg0KPiANCg0KdGhlIFNDTUkgb3ZlciBTTUMgaXMgc3RpbGwgdW5kZXIgcmV2aWV3
+DQoNCkJSDQpKYWNreSBCYWkgDQo+IFRoYW5rcywNCj4gRnJpZWRlcg0K
