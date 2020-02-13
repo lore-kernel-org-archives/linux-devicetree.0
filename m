@@ -2,117 +2,95 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6461EC3B18B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF17C3B18B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 13:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E282222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 13:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581600720;
-	bh=Y/3200Xe91pK1588PjJBG4y3ejf01YSeXXgdUWVo2ug=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=1yC76+qH4i5HLsnPjRx6bp9gpjBxThTCmXoJMnBa5UiE810JfNcrpIZ1WXIGuhSfD
-	 gxOFz1EYt2inq6PDfOEaMw/n/gFqAhZZhosKgP7ZBhS6TPUQwATI7DSK1RtEv6zkuU
-	 4A3w6BC7w0oaGx9QLIHY+0jgvUePmalbboWs7zlQ=
+	by mail.kernel.org (Postfix) with ESMTP id E89A92465D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 13:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lREixcYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbgBMNb7 (ORCPT
+        id S1730024AbgBMNhV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 08:31:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:46636 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729901AbgBMNb7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 08:31:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77F861FB;
-        Thu, 13 Feb 2020 05:31:58 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E74B73F6CF;
-        Thu, 13 Feb 2020 05:31:57 -0800 (PST)
-Date:   Thu, 13 Feb 2020 13:31:56 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Thu, 13 Feb 2020 08:37:21 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34136 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729588AbgBMNhV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 08:37:21 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s144so7129360wme.1
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 05:37:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=sxsqagGeLumUFdcq50AfVMoV5tnNdOJIUWrTE3Ysc1A=;
+        b=lREixcYxXZMd+HB4zB2kgeqIErnl7jdpIIkpsP5+/IOc4ptokJJUQl/hcsgLXyPMDo
+         TeXUfvTxntS2PHa0smS3c6xXkpt20cclIbqaCcenZWG2Q11SNIO4WnQHdY/f84U0p+05
+         qb/JgE3bECvD7RWiTcxt7s3ZFmctiS4R4ZIAiDAUZRABkajvcukxMsBHpYgOKhw5Upx9
+         4ZfAgPiGZ+w8utqHIqh62/tCiGB0qBVGXRLi7dk6olziJvetq4jALpcZDBug9m7QvdTr
+         4qsD+sxNrkslbVOIde4Csc7qnI8jUDm02AdAZSTw0nF/m7/5mA9Y72Q9R8LeNQ1k9anM
+         W1ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=sxsqagGeLumUFdcq50AfVMoV5tnNdOJIUWrTE3Ysc1A=;
+        b=Ei21E1N2EFGNfZwLBsN/ldzATz/CHpNJRHx9UYl8NIWreP/dzGtotZfPTb/ZmiI2i+
+         jXaUPMZgqab92q5zDtkRrAqNDhWE3mlgdUC5G7p0HG32wF8wWXp55wwfkBK1L4bF+Hy9
+         Y+aPiIX7SrsaR4EdwPDsy16ZpGo7NxnX3nsF2mYsX2WWpSNK+be6frIjzepw9n0YaSxg
+         kf0iCcqklxalBXm/9Auswd+ztqFfIIwsTqAkTyea+xEL62lD39cjddBvvcPfwq+2WVYE
+         5TS0aJ9CzUt/fBCyQjSC2pbShZaTMhIH9CvN5KUfAA1MKQ6guajo0SC6iNM0QlYF6sBp
+         GYZw==
+X-Gm-Message-State: APjAAAWPA5pLopT+8uVSEs0KcsKhNdUT9P4mGIqq0L24iopgoUwZWEPP
+        /vIBn/mZqOJF/i3HyVdAMqXeJQ==
+X-Google-Smtp-Source: APXvYqztiV9EvOZIAj+NxxlShIkxKNbZk+0M4SW5L7q87rWhDfrwA1ZAf1ZxaTm0hoeyiyP9i1JGSg==
+X-Received: by 2002:a7b:ca49:: with SMTP id m9mr6164468wml.50.1581601039822;
+        Thu, 13 Feb 2020 05:37:19 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g15sm2713097wro.65.2020.02.13.05.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 05:37:19 -0800 (PST)
+References: <20200213061147.29386-1-samuel@sholland.org> <20200213061147.29386-2-samuel@sholland.org> <1jr1yyannl.fsf@starbuckisacylon.baylibre.com> <20200213113701.GA4333@sirena.org.uk>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, stable@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: codec2codec: avoid invalid/double-free of pcm runtime" to the asoc tree
-In-Reply-To: <20200213061147.29386-2-samuel@sholland.org>
-Message-Id: <applied-20200213061147.29386-2-samuel@sholland.org>
-X-Patchwork-Hint: ignore
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/4] ASoC: codec2codec: avoid invalid/double-free of pcm runtime
+In-reply-to: <20200213113701.GA4333@sirena.org.uk>
+Date:   Thu, 13 Feb 2020 14:37:18 +0100
+Message-ID: <1jo8u2a9rl.fsf@starbuckisacylon.baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: codec2codec: avoid invalid/double-free of pcm runtime
+On Thu 13 Feb 2020 at 12:37, Mark Brown <broonie@kernel.org> wrote:
 
-has been applied to the asoc tree at
+> On Thu, Feb 13, 2020 at 09:37:18AM +0100, Jerome Brunet wrote:
+>
+>> This brings another question/problem:
+>> A link which has failed in PMU, could try in PMD to hw_free/shutdown a
+>> dai which has not gone through startup/hw_params, right ?
+>
+> I think so, yes.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
+Maybe this can be solved using the dai active counts which the
+codec-to-codec event is not updating. I'll try to come up with
+something.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From b6570fdb96edf45bcf71884bd2644bd73d348d1a Mon Sep 17 00:00:00 2001
-From: Samuel Holland <samuel@sholland.org>
-Date: Thu, 13 Feb 2020 00:11:44 -0600
-Subject: [PATCH] ASoC: codec2codec: avoid invalid/double-free of pcm runtime
-
-The PCM runtime was freed during PMU in the case that the event hook
-encountered an error. However, it is also unconditionally freed during
-PMD. Avoid a double-free by dropping the call to kfree in the PMU hook.
-
-Fixes: a72706ed8208 ("ASoC: codec2codec: remove ephemeral variables")
-Cc: stable@vger.kernel.org
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Link: https://lore.kernel.org/r/20200213061147.29386-2-samuel@sholland.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/soc-dapm.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index bc20ad9abf8b..8b24396675ec 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3916,9 +3916,6 @@ snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
- 	runtime->rate = params_rate(params);
- 
- out:
--	if (ret < 0)
--		kfree(runtime);
--
- 	kfree(params);
- 	return ret;
- }
--- 
-2.20.1
 
