@@ -2,103 +2,112 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3689C3B18B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4D1C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB47820661
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 15:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581608611;
-	bh=VB61Cnre32YZs17GqjOvsXq0m51tzpaI4sAI2/jxhPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bekzloDXe3lJJcNJ0wYtBk8caHnv7I2fjtYN2CAO0+V+poJmAaAxiZ1AybMqL6AiQ
-	 uQgQnT3hs1sA8eHpzZWPbm+vujoGx0eJhOK4TCgLKh4ewgcJRA6Joi5sD9Sp4z0Su5
-	 Dya3ybiJ5nx9m/DccQ0LzvhOdG1mFSSH8t/fj/ks=
+	by mail.kernel.org (Postfix) with ESMTP id 52B2824649
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LYTr/jwn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgBMPn0 (ORCPT
+        id S1729966AbgBMPwN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 10:43:26 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44807 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbgBMPnU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 10:43:20 -0500
-Received: by mail-ed1-f67.google.com with SMTP id g19so7309976eds.11;
-        Thu, 13 Feb 2020 07:43:18 -0800 (PST)
+        Thu, 13 Feb 2020 10:52:13 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38842 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729930AbgBMPwM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 10:52:12 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y17so7293591wrh.5
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 07:52:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aB1AiCkdQEWl25o0CFyQmEuSLs3mwyleNLQ7q44t8HY=;
+        b=LYTr/jwnIP7xB41uk/g/SVYjXm/Nywl7CqihGSb6gmVFQuEoDKE+M6yeLtXBuxzSDV
+         WSSiblX+7cKEZrMWY2arxWYNZs2uanjtjOd+R/yUTEMfW9J33ZT633LPckPXELjES10Y
+         Aw8ZBK7NcNiN9jxHEIKAUsv3sAXzaBPkttp4Zf6trbnjHLj5fnXmyXOrUZL45qj2ssGU
+         GnuX/g7Hhi6cCKYgZwWfl0kXt6jC7LA9LBGTwFzOU3OSPGWRVbd3/jvNcy2c28hqmfKB
+         nNEVuHcu1cXqvVGTIH5fetzbCx7zyvwiZMeRE4ET5ZeNlolaqQALDjFF+9l21K1IDFee
+         UTmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xWjlmZnVBt/ZlK8vapzAQmz9T3RLkyLlYRSHtgLmYd4=;
-        b=CzVCjzh+FuyLd7kL9fHAM6HRWMCvbGLuy7tvQittfhNBsrvqkFhGl6KgQ5tZ/XHVRF
-         HzNqMi5hUxJ933xS2w0oPK0P8yhpl+z4E9+4s17hzVt9HHHlux49i8ES/aaensIlKhs0
-         6jYGbOCkFjtIuUZiuXJLY5A7J3FNXm1kEcPPkI42XF99GfmyRLCKtmIBlrw3rdhCj0Pi
-         6OQIkDwFcJ33Jsx6EF4xAhKX6W3nNlmuVRSpYpxjuSFRnTengdFqMrncA9FrWDxITuBg
-         5kyS2mSAaT0qzZgX1eW/+I372xPPrJFiwVKoHULommFOlPsbNmC1VIP6tyNCoZH/wjiW
-         wJtA==
-X-Gm-Message-State: APjAAAWEaGsk8ekv2+QI2i/4BWG9nbNEpROqM8sI0EKLSf2NcG3spr6E
-        63om7lV5GmPlYQhi0DdJDL4=
-X-Google-Smtp-Source: APXvYqxC6vfH1GEp1GXd5aDVxuhj2SoNdVlypepsj2HdRdhqBL5BWW5qSOnvNylv+AF9dT1OutTu0w==
-X-Received: by 2002:a50:9b03:: with SMTP id o3mr16345398edi.371.1581608597930;
-        Thu, 13 Feb 2020 07:43:17 -0800 (PST)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id w18sm293112eja.57.2020.02.13.07.43.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 07:43:17 -0800 (PST)
-Date:   Thu, 13 Feb 2020 16:43:14 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCHv1 0/2] Add FSYS2 power domain for MMC driver
-Message-ID: <20200213154314.GA7215@kozik-lap>
-References: <20200212120237.1332-1-linux.amoon@gmail.com>
- <20200213101744.GA11087@kozik-lap>
- <CANAwSgR+PFiE0=FEhDY__FDx+470pe0OsbUXcSG64JDuG++ccQ@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aB1AiCkdQEWl25o0CFyQmEuSLs3mwyleNLQ7q44t8HY=;
+        b=S0G9cce1Zr/gWXc+simVTZk8ARCHBWLZYyfUqhIJawxneFjNmhCzD3WdFibjcUslaj
+         rfVF13KTClb+ul40+xdetcB1sBPPx8Q96fPipAXatMDv82i/cU3k1lQ1g9c84QbzEDUM
+         YHCW3jCN2UPCFXHtd2GZLG5n1i8JuI8ZkyHpHcodx9kZKkV3tKXBbbzEiljRxIqE/xza
+         kxE/3iaA+paDXzQHDX0bkywCG8zDZTR8pZ5tfgSisqO/7U5Xm2ok5XZQXZc5uiUqHCVU
+         W77uUmKMICzAqgtOdo5v2Kj593qddFTMHddFlDlXKIrU0rU3YYCm/gjitzZae+XrbLWo
+         KJiA==
+X-Gm-Message-State: APjAAAWB75eVxIxDT6GFJ1Q1qN1S1/Gjd/6xe2uVCfODxX8w6z/QpszW
+        JCtlkZSgh2eZVGpR4DWyMFyIIQ==
+X-Google-Smtp-Source: APXvYqyEvLneyxVeHuI/0pBQCYZi5+WLlVqFWpfGuTvBL5p6xmOWK7iqZ4/PQzBDgirZhGC884Aaew==
+X-Received: by 2002:adf:f850:: with SMTP id d16mr21763639wrq.161.1581609128618;
+        Thu, 13 Feb 2020 07:52:08 -0800 (PST)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id e1sm3319814wrt.84.2020.02.13.07.52.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 07:52:07 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 1/9] ASoC: core: allow a dt node to provide several components
+Date:   Thu, 13 Feb 2020 16:51:51 +0100
+Message-Id: <20200213155159.3235792-2-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200213155159.3235792-1-jbrunet@baylibre.com>
+References: <20200213155159.3235792-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANAwSgR+PFiE0=FEhDY__FDx+470pe0OsbUXcSG64JDuG++ccQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 06:58:51PM +0530, Anand Moon wrote:
-> hi Krzysztof,
-> 
-> On Thu, 13 Feb 2020 at 15:47, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Wed, Feb 12, 2020 at 12:02:35PM +0000, Anand Moon wrote:
-> > > This patches add the power domain for MMC driver,
-> > > but somehow the suspend/resume feature is broken
-> > > so any input on how to fix this.
-> >
-> > I think S2R was working on XU3-family after Marek's fixes, so you mean
-> > that these patches break it?
-> >
-> Yes I my testing mmc driver failed to come up after suspend.
+At the moment, querying the dai_name will stop of the first component
+matching the dt node. This does not allow a device (single dt node) to
+provide several ASoC components which could then be used through DT.
 
-Patches breaking systems should be clearly marked as work in progress,
-e.g.  by using RFC instead of PATCH in the title.
+This change let the search go on if the xlate function of the component
+returns an error, giving the possibility to another component to match
+and return the dai_name.
 
-This patchset cannot be applied.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ sound/soc/soc-core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-You probably have to figure out some missing dependencies, e.g. in
-clocks/power domains/pinctrl.
-
-Best regards,
-Krzysztof
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 068d809c349a..03b87427faa7 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -3102,6 +3102,14 @@ int snd_soc_get_dai_name(struct of_phandle_args *args,
+ 			*dai_name = dai->driver->name;
+ 			if (!*dai_name)
+ 				*dai_name = pos->name;
++		} else if (ret) {
++			/*
++			 * if another error than ENOTSUPP is returned go on and
++			 * check if another component is provided with the same
++			 * node. This may happen if a device provides several
++			 * components
++			 */
++			continue;
+ 		}
+ 
+ 		break;
+-- 
+2.24.1
 
