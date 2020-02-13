@@ -7,205 +7,312 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B8EC352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4FEC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D7920848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6717324676
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581626251;
-	bh=9DTtFNcZaXu4QMJd6uAqg1Qx0jAJAyXSH9/VHtiItl4=;
+	s=default; t=1581626407;
+	bh=cDF3LhQWpDWYHtuU7yBQ1h0a5rtx3Yo49kFgRyADYJM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NdufCFaNXaUajPd79/iKKMdgw6zL9+zRcioAbNucCpAbwmA1tYbpaWYRIaBJfV4da
-	 TauUkqlz5yLrAKVufRfLXpcdBOuX18g/fWF0SSUJkC5jBhjh1HU7Br3Uk53XHgxql2
-	 pveXtDppJ49jP2RQEyIR32NmYid2me5LZvfmNwBM=
+	b=hR2VBhw8Ftjw/vlbxtVZaAWFgaJNGyKWAmX3HnZyYF1usuAXG8Zcjz0hgMO9uSJTb
+	 TSNZA7KUOPKzsuE4qy1qr9W/M9VPsWBIvhOV0oZEZT0EGOc//SDDcz0aa4TPk8g5fY
+	 Eit6Pi7y0L4dyBzFzhVlM2KM3nT03U3SxNuRC0TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgBMUhb (ORCPT
+        id S1727957AbgBMUkH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:37:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44856 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 15:40:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbgBMUha (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:37:30 -0500
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+        id S1727905AbgBMUkG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 15:40:06 -0500
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0878720848
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 20:37:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 072C324677;
+        Thu, 13 Feb 2020 20:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581626249;
-        bh=9DTtFNcZaXu4QMJd6uAqg1Qx0jAJAyXSH9/VHtiItl4=;
+        s=default; t=1581626405;
+        bh=cDF3LhQWpDWYHtuU7yBQ1h0a5rtx3Yo49kFgRyADYJM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FI6pU0qZv2fY1l/j/g+EpdVeCO/Y7nGclGTv+GjNb4vQa+o6YYY6JXyWpMVI78Qls
-         0zJhnbF4DX5zve41JbZFb5w3YLD1zoStmN9MYzpOomhGb/IW65N78EZqChYx9mFYbA
-         4ET7eHn213ginNrzC8Is6QUnfaFDg7xbChHfyIpk=
-Received: by mail-qv1-f43.google.com with SMTP id y8so3267449qvk.6
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 12:37:29 -0800 (PST)
-X-Gm-Message-State: APjAAAX0oB+tt1yPZnG5hZ1of9Bex5V/1gZ7+z0QNy4ieHxgPz7IejTV
-        lJ082zXi1aQHKwV7ZecsLue8wXMuzns1tgaoPA==
-X-Google-Smtp-Source: APXvYqxWyQbnNkniHcCg/NVqvH2JL0d/czxAJ3SIslwKtjoSDz6KRMwP1vdgQiQllXQ8Pk9rwcSxvd0EZth4O1DRvh4=
-X-Received: by 2002:ad4:4511:: with SMTP id k17mr12532838qvu.135.1581626248014;
- Thu, 13 Feb 2020 12:37:28 -0800 (PST)
+        b=Yhxm3r/nU8of76d1GF+p8ZhMvTSnLM4GvjDUrAgsoqZwdDadlg46Atu7GRXGQXe6N
+         9JRZeV2mg6Wq68bNpLKNSGKul7OBD8ZFiekiIvDN42nJroOezVjn4k8YpK3HRYICrD
+         y/OH5U07cEAfv474rLpbt7l9pjqaFaVdPqrcfE+w=
+Received: by mail-qt1-f181.google.com with SMTP id d18so5443765qtj.10;
+        Thu, 13 Feb 2020 12:40:05 -0800 (PST)
+X-Gm-Message-State: APjAAAU2NSEiaSYdA7sLQK6nZAKe1b1DvvXXjumaUnTuDXAc0RwW04+4
+        vqCX0osxw4mD++Od6jjD9Rn1GwIBbt5NzNC3Rg==
+X-Google-Smtp-Source: APXvYqyapGELfwtxtSmym+UJABxkTQiXuvJEHTRm4oUOPN5JVOJ2u/W90YhTS4laVx8f8kuKaQwn67ditKMdeRNiwFM=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr13361090qtp.224.1581626403988;
+ Thu, 13 Feb 2020 12:40:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20200210092713.279105-1-linus.walleij@linaro.org> <20200210092713.279105-7-linus.walleij@linaro.org>
-In-Reply-To: <20200210092713.279105-7-linus.walleij@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 13 Feb 2020 14:37:16 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLf=DMpiUYskJtUBYuuDx_0QQfy2noB3mQL=CyF1Hpy3Q@mail.gmail.com>
-Message-ID: <CAL_JsqLf=DMpiUYskJtUBYuuDx_0QQfy2noB3mQL=CyF1Hpy3Q@mail.gmail.com>
-Subject: Re: [PATCH 6/7] dt-bindings: arm: Add Versatile Express and Juno YAML schema
+References: <20200213141119.66462-1-linus.walleij@linaro.org>
+In-Reply-To: <20200213141119.66462-1-linus.walleij@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 13 Feb 2020 14:39:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL-_s==8TsLos=1OyYVkdyZXMuTj5z8UDYFbOC-F3am1Q@mail.gmail.com>
+Message-ID: <CAL_JsqL-_s==8TsLos=1OyYVkdyZXMuTj5z8UDYFbOC-F3am1Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Create YAML schema for ICST clocks
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 3:27 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Thu, Feb 13, 2020 at 8:11 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> This implements the top-level schema for the ARM Versatile
-> Express and Juno platforms.
+> The ICST clocks used in the ARM Integrator, Versatile and
+> RealView platforms are updated to use YAML schema, and two
+> new ICST clocks used by the Integrator IM-PD1 logical module
+> are added in the process.
 >
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: devicetree@vger.kernel.org
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  .../bindings/arm/arm,vexpress-juno.yaml       | 118 ++++++++++++++++++
->  1 file changed, 118 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/arm,vexpress-juno.yaml
+>  .../bindings/clock/arm,syscon-icst.yaml       | 102 ++++++++++++++++++
+>  .../bindings/clock/arm-integrator.txt         |  34 ------
+>  .../bindings/clock/arm-syscon-icst.txt        |  70 ------------
+>  3 files changed, 102 insertions(+), 104 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/clock/arm-integrator.txt
+>  delete mode 100644 Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
 >
-> diff --git a/Documentation/devicetree/bindings/arm/arm,vexpress-juno.yaml b/Documentation/devicetree/bindings/arm/arm,vexpress-juno.yaml
+> diff --git a/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml b/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
 > new file mode 100644
-> index 000000000000..f22edf66b622
+> index 000000000000..06c4d84e8c3d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/arm,vexpress-juno.yaml
-> @@ -0,0 +1,118 @@
+> +++ b/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
+> @@ -0,0 +1,102 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/arm/arm,vexpress-juno.yaml#
+> +$id: http://devicetree.org/schemas/clock/arm,syscon-icst.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ARM Versatile Express and Juno Boards Device Tree Bindings
+> +title: ARM System Conctroller ICST Clocks
 > +
 > +maintainers:
-> +  - Sudeep Holla <sudeep.holla@arm.com>
-> +  - Linus Walleij <linus.walleij@linaro.org>
+> +  - Linus Walleij <linusw@kernel.org>
 > +
-> +description: |+
-> +  ARM's Versatile Express platform were built as reference designs for exploring
-> +  multicore Cortex-A class systems. The Versatile Express family contains both
-> +  32 bit (Aarch32) and 64 bit (Aarch64) systems.
+> +description: The ICS525 and ICS307 oscillators are produced by Integrated
+
+Needs a literal block '|' to preserve formatting of your table below.
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +  Devices Technology (IDT). ARM integrated these oscillators deeply into their
+> +  reference designs by adding special control registers that manage such
+> +  oscillators to their system controllers.
 > +
-> +  The board consist of a motherboard and one or more daughterboards (tiles). The
-> +  motherboard provides a set of peripherals. Processor and RAM "live" on the
-> +  tiles.
+> +  The various ARM system controllers contain logic to serialize and initialize
+> +  an ICST clock request after a write to the 32 bit register at an offset
+> +  into the system controller. Furthermore, to even be able to alter one of
+> +  these frequencies, the system controller must first be unlocked by
+> +  writing a special token to another offset in the system controller.
 > +
-> +  The motherboard and each core tile should be described by a separate Device
-> +  Tree source file, with the tile's description including the motherboard file
-> +  using an include directive. As the motherboard can be initialized in one of
-> +  two different configurations ("memory maps"), care must be taken to include
-> +  the correct one.
+> +  Some ARM hardware contain special versions of the serial interface that only
+> +  connects the low 8 bits of the VDW (missing one bit), hardwires RDW to
+> +  different values and sometimes also hardwire the output divider. They
+> +  therefore have special compatible strings as per this table (the OD value is
+> +  the value on the pins, not the resulting output divider).
 > +
-> +  When a new generation of boards were introduced under the name "Juno", these
-> +  shared to many common characteristics with the Versatile Express that the
-> +  "arm,vexpress" compatible was retained in the root node, and these are
-> +  included in this binding schema as well.
+> +  In the core modules and logic tiles, the ICST is a configurable clock fed
+> +  from a 24 MHz clock on the motherboard (usually the main crystal) used for
+> +  generating e.g. video clocks. It is located on the core module and there is
+> +  only one of these. This clock node must be a subnode of the core module.
 > +
-> +  The root node indicates the CPU SoC on the core tile, and this
-> +  is a daughterboard to the main motherboard. The name used in the compatible
-> +  string shall match the name given in the core tile's technical reference
-> +  manual, followed by "arm,vexpress" as an additional compatible value. If
-> +  further subvariants are released of the core tile, even more fine-granular
-> +  compatible strings with up to three compatible strings are used.
+> +  Hardware variant         RDW     OD          VDW
+> +
+> +  Integrator/AP            22      1           Bit 8 0, rest variable
+> +  integratorap-cm
+> +
+> +  Integrator/AP            46      3           Bit 8 0, rest variable
+> +  integratorap-sys
+> +
+> +  Integrator/AP            22 or   1           17 or (33 or 25 MHz)
+> +  integratorap-pci         14      1           14
+> +
+> +  Integrator/CP            22      variable    Bit 8 0, rest variable
+> +  integratorcp-cm-core
+> +
+> +  Integrator/CP            22      variable    Bit 8 0, rest variable
+> +  integratorcp-cm-mem
+> +
+> +  The ICST oscillator must be provided inside a system controller node.
 > +
 > +properties:
-> +  $nodename:
-> +    const: '/'
+> +  "#clock-cells":
+> +    const: 0
+> +
 > +  compatible:
-> +    oneOf:
-> +      - description: CoreTile Express A9x4 (V2P-CA9) has 4 Cortex A9 CPU cores
-> +          in MPCore configuration in a test chip on the core tile. See ARM
-> +          DUI 0448I. This was the first Versatile Express platform.
-> +        items:
-> +          - const: arm,vexpress,v2p-ca9
-> +          - const: arm,vexpress
-> +      - description: CoreTile Express A5x2 (V2P-CA5s) has 2 Cortex A5 CPU cores
-> +          in a test chip on the core tile. It is intended to evaluate NEON, FPU
-> +          and Jazelle support in the Cortex A5 family. See ARM DUI 0541C.
-> +        items:
-> +          - const: arm,vexpress,v2p-ca5s
-> +          - const: arm,vexpress
-> +      - description: Coretile Express A15x2 (V2P-CA15) has 2 Cortex A15 CPU
-> +          cores in a MPCore configuration in a test chip on the core tile. See
-> +          ARM DUI 0604F.
-> +        items:
-> +          - const: arm,vexpress,v2p-ca15
-> +          - const: arm,vexpress
-> +      - description: CoreTile Express A15x4 (V2P-CA15, HBI-0237A) has 4 Cortex
-> +          A15 CPU cores in a test chip on the core tile. This is the first test
-> +          chip called "TC1".
-> +        items:
-> +          - const: arm,vexpress,v2p-ca15,tc1
-> +          - const: arm,vexpress,v2p-ca15
-> +          - const: arm,vexpress
-> +      - description: Coretile Express A15x2 A7x3 (V2P-CA15_A7) has 2 Cortex A15
-> +          CPU cores and 3 Cortex A7 cores in a big.LITTLE MPCore configuration
-> +          in a test chip on the core tile. See ARM DDI 0503I.
-> +        items:
-> +          - const: arm,vexpress,v2p-ca15_a7
-> +          - const: arm,vexpress
-> +      - description: LogicTile Express 20MG (V2F-1XV7) has 2 Cortex A53 CPU
-> +          cores in a test chip on the core tile. See ARM DDI 0498D.
-> +        items:
-> +          - const: arm,vexpress,v2f-1xv7,ca53x2
-> +          - const: arm,vexpress,v2f-1xv7
-> +          - const: arm,vexpress
-> +      - description: Arm Versatile Express Juno "r0" (the first Juno board,
-> +          V2M-Juno) was introduced as a vehicle for evaluating big.LITTLE on
-> +          AArch64 CPU cores. It has 2 Cortex A57 CPU cores and 4 Cortex A53
-> +          cores in a big.LITTLE configuration. It also features the MALI T624
-> +          GPU. See ARM document 100113_0000_07_en.
-> +        items:
-> +          - const: arm,juno
-> +          - const: arm,vexpress
-> +      - description: Arm Versatile Express Juno r1 Development Platform
-> +          (V2M-Juno r1) was introduced mainly aimed at development of PCIe
-> +          based systems. Juno r1 also has support for AXI masters placed on
-> +          the TLX connectors to join the coherency domain. Otherwise it is the
-> +          same configuration as Juno r0. See ARM document 100122_0100_06_en.
-> +        items:
-> +          - const: arm,juno-r1
-> +          - const: arm,vexpress
-> +      - description: Arm Versatile Express Juno r2 Development Platform
-> +          (V2M-Juno r2). It has the same feature set as Juno r0 and r1. See
-> +          ARM document 100114_0200_04_en.
-> +        items:
-> +          - const: arm,juno-r2
-> +          - const: arm,vexpress
+> +    enum:
+> +      - arm,syscon-icst525
+> +      - arm,syscon-icst307
+> +      - arm,syscon-icst525-integratorap-cm
+> +      - arm,syscon-icst525-integratorap-sys
+> +      - arm,syscon-icst525-integratorap-pci
+> +      - arm,syscon-icst525-integratorcp-cm-core
+> +      - arm,syscon-icst525-integratorcp-cm-mem
+> +      - arm,integrator-cm-auxosc
+> +      - arm,versatile-cm-auxosc
+> +      - arm,impd-vco1
+> +      - arm,impd-vco2
 > +
-> +  arm,hbi:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: This indicates the ARM HBI (Hardware Board ID), this is
-> +      ARM's unique board model ID, visible on the PCB's silkscreen.
+> +  clocks:
+> +    description: Parent clock for the ICST VCO
+> +    maxItems: 1
 > +
-> +  arm,vexpress-site:
+> +  clock-output-names:
+> +    maxItems: 1
+> +
+> +  lock-offset:
 > +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: Site
-
-Site?
-
-Any constraints? 2^32 - 1 is valid?
-
+> +    description: Offset to the unlocking register for the oscillator
+> +
+> +  vco-offset:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: Offset to the VCO register for the oscillator
 > +
 > +required:
+> +  - "#clock-cells"
 > +  - compatible
-> +  - arm,hbi
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    vco1: clock@00 {
+> +      compatible = "arm,impd1-vco1";
+> +      #clock-cells = <0>;
+> +      lock-offset = <0x08>;
+> +      vco-offset = <0x00>;
+> +      clocks = <&sysclk>;
+> +      clock-output-names = "IM-PD1-VCO1";
+> +    };
 > +
 > +...
+> diff --git a/Documentation/devicetree/bindings/clock/arm-integrator.txt b/Documentation/devicetree/bindings/clock/arm-integrator.txt
+> deleted file mode 100644
+> index 11f5f95f571b..000000000000
+> --- a/Documentation/devicetree/bindings/clock/arm-integrator.txt
+> +++ /dev/null
+> @@ -1,34 +0,0 @@
+> -Clock bindings for ARM Integrator and Versatile Core Module clocks
+> -
+> -Auxiliary Oscillator Clock
+> -
+> -This is a configurable clock fed from a 24 MHz chrystal,
+> -used for generating e.g. video clocks. It is located on the
+> -core module and there is only one of these.
+> -
+> -This clock node *must* be a subnode of the core module, since
+> -it obtains the base address for it's address range from its
+> -parent node.
+> -
+> -
+> -Required properties:
+> -- compatible: must be "arm,integrator-cm-auxosc" or "arm,versatile-cm-auxosc"
+> -- #clock-cells: must be <0>
+> -
+> -Optional properties:
+> -- clocks: parent clock(s)
+> -
+> -Example:
+> -
+> -core-module@10000000 {
+> -       xtal24mhz: xtal24mhz@24M {
+> -               #clock-cells = <0>;
+> -               compatible = "fixed-clock";
+> -               clock-frequency = <24000000>;
+> -       };
+> -       auxosc: cm_aux_osc@25M {
+> -               #clock-cells = <0>;
+> -               compatible = "arm,integrator-cm-auxosc";
+> -               clocks = <&xtal24mhz>;
+> -       };
+> -};
+> diff --git a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+> deleted file mode 100644
+> index 4cd81742038f..000000000000
+> --- a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+> +++ /dev/null
+> @@ -1,70 +0,0 @@
+> -ARM System Controller ICST clocks
+> -
+> -The ICS525 and ICS307 oscillators are produced by Integrated Devices
+> -Technology (IDT). ARM integrated these oscillators deeply into their
+> -reference designs by adding special control registers that manage such
+> -oscillators to their system controllers.
+> -
+> -The various ARM system controllers contain logic to serialize and initialize
+> -an ICST clock request after a write to the 32 bit register at an offset
+> -into the system controller. Furthermore, to even be able to alter one of
+> -these frequencies, the system controller must first be unlocked by
+> -writing a special token to another offset in the system controller.
+> -
+> -Some ARM hardware contain special versions of the serial interface that only
+> -connects the low 8 bits of the VDW (missing one bit), hardwires RDW to
+> -different values and sometimes also hardwire the output divider. They
+> -therefore have special compatible strings as per this table (the OD value is
+> -the value on the pins, not the resulting output divider):
+> -
+> -Hardware variant:        RDW     OD          VDW
+> -
+> -Integrator/AP            22      1           Bit 8 0, rest variable
+> -integratorap-cm
+> -
+> -Integrator/AP            46      3           Bit 8 0, rest variable
+> -integratorap-sys
+> -
+> -Integrator/AP            22 or   1           17 or (33 or 25 MHz)
+> -integratorap-pci         14      1           14
+> -
+> -Integrator/CP            22      variable    Bit 8 0, rest variable
+> -integratorcp-cm-core
+> -
+> -Integrator/CP            22      variable    Bit 8 0, rest variable
+> -integratorcp-cm-mem
+> -
+> -The ICST oscillator must be provided inside a system controller node.
+> -
+> -Required properties:
+> -- compatible: must be one of
+> -  "arm,syscon-icst525"
+> -  "arm,syscon-icst307"
+> -  "arm,syscon-icst525-integratorap-cm"
+> -  "arm,syscon-icst525-integratorap-sys"
+> -  "arm,syscon-icst525-integratorap-pci"
+> -  "arm,syscon-icst525-integratorcp-cm-core"
+> -  "arm,syscon-icst525-integratorcp-cm-mem"
+> -- lock-offset: the offset address into the system controller where the
+> -  unlocking register is located
+> -- vco-offset: the offset address into the system controller where the
+> -  ICST control register is located (even 32 bit address)
+> -- #clock-cells: must be <0>
+> -- clocks: parent clock, since the ICST needs a parent clock to derive its
+> -  frequency from, this attribute is compulsory.
+> -
+> -Example:
+> -
+> -syscon: syscon@10000000 {
+> -       compatible = "syscon";
+> -       reg = <0x10000000 0x1000>;
+> -
+> -       oscclk0: osc0@c {
+> -               compatible = "arm,syscon-icst307";
+> -               #clock-cells = <0>;
+> -               lock-offset = <0x20>;
+> -               vco-offset = <0x0c>;
+> -               clocks = <&xtal24mhz>;
+> -       };
+> -       (...)
+> -};
 > --
 > 2.23.0
 >
