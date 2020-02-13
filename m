@@ -7,109 +7,87 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D265C352A4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 02:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BABFC352A4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 02:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BB621739
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 02:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC5E20848
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 02:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEZfD6c0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4o4H9MS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgBMCCi (ORCPT
+        id S1729348AbgBMCKs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 21:02:38 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34461 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729302AbgBMCCh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 21:02:37 -0500
-Received: by mail-io1-f68.google.com with SMTP id z193so4687602iof.1;
-        Wed, 12 Feb 2020 18:02:37 -0800 (PST)
+        Wed, 12 Feb 2020 21:10:48 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46202 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729333AbgBMCKs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Feb 2020 21:10:48 -0500
+Received: by mail-qt1-f195.google.com with SMTP id e21so3244093qtp.13;
+        Wed, 12 Feb 2020 18:10:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JNctVHQXMHRMoLVHSnQu0meBGnR1Lkb/YWbGwQhQKXY=;
-        b=oEZfD6c0cXQISVAJtbLhL96sNT9nGk93VWwf13BYufaRBk0UiEL9bkUxdnt2YCKGeu
-         qF5JhTN9cxHQ/xZIHZlpyFNI4hOas/fiwX/H6fiIqLeh0n8twoIX6eqxyqX+OJ85q+By
-         BpyXH0IKtwb8+G4ssC7sebZYEWTGDP3K3rT8+XJkFPmd4rQ8WimhZPKhaAgiVnxztya/
-         ArwEioUkb12Dsb2zJgdMG0anxTeBsJXo70/9g/HblXtgVJZe1kgsaq8Q/uv6kOF68b82
-         1ke9fGmOETf/0cCJJaCyIl3X7I0GUO9fIsDjyRpKl/MaZ1Sw/UATl8YpV/oQMSumuO5z
-         L31w==
+        bh=mUdWWp+c0fomnydwOZuzDqMxQIhxsbRs6tTf2TPYRzA=;
+        b=B4o4H9MS03jB3qy+5V0hztuGt3eAHe4/kGTzKfPzIWZrT6Y4P2LcjHeFf4TFYvd/4j
+         c1VJvS86dpFeceOKyicjeG6kYeVBDsmpTaXrZ20HPUemdGubmkbA7sBEC6ahtejz3YAO
+         cVaQ/gJ7T9m2ApmVqTSgj3VnjBCPXehozQsheNAbO72TPNNrMu7/PbSeLE1OlLLEzsTB
+         z4uefz8/7cc19Ehm9ubSScg/EwOgQB7zT4isfIYAYKb8EVl8NR11BCDQkCjmPNd4LrUE
+         biYkgKUS8ALiZ3ciyqkigVZnZldwIJ6DlBboH0IqE/3d4W/ufw9l2xwsxLZV41XTE03f
+         uN/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JNctVHQXMHRMoLVHSnQu0meBGnR1Lkb/YWbGwQhQKXY=;
-        b=osxjrZM19lTGxG7r44xGuDCEr7sTCKeRqCEfoJktAToUHAFqyrkDl+tpM3WM/ZwNvQ
-         IsQdoZPVEzku1DzqTdWVLhqs+HUDBbWs76UiPbbD+EjeeUHEJW1FieuOjGPB7DaIwbyp
-         UOKhMD9K7V04J0fpm7kU3+ZzYzpZgGa+Q5+NssQN17hOprCfK7uZeGH4v/BRJ+EwlDqP
-         K0To+NpAmGwCajI0ytqJfwPyNlnBwAwFZr77gDRpLrklUH6umeNxbbZ6c3XvjKgESGzS
-         sRK1OQv5/6OLuqpV2Q4+ZJOqMMxOKqWM5EiIgNKhrTEY8Us6kFE0RaBqLu2uHiR5h/Fu
-         uyuw==
-X-Gm-Message-State: APjAAAV/7bKiXDTOPNhVmr4GzaTlGLPTr4DUTOhrxqP013icSktMYS+/
-        14aJL38urbAdFQuefZpbD8UTEvIviQXYlHpWM0M=
-X-Google-Smtp-Source: APXvYqxRLFhg7y/Ul+Ohfd1JDI8e5yvBFMQhWXHpXwwW9UL1nvuKxDSaN0zFwBWZ/FoUQJkD5MKh126lxnk+I4pHGk4=
-X-Received: by 2002:a02:c856:: with SMTP id r22mr20946779jao.67.1581559356960;
- Wed, 12 Feb 2020 18:02:36 -0800 (PST)
+        bh=mUdWWp+c0fomnydwOZuzDqMxQIhxsbRs6tTf2TPYRzA=;
+        b=Ut5bqJduAhzg5CNrjB2xO6vbRtucos7MnXchK2g5le3fGH6m7yPuVwcG+XZoFsmPku
+         U1Mc5sqwAY2bxxFWVEUt4Wg9+tx+0xSHkFjJExEEsooqwhloynjrSjzzSl6Z1pZf3shC
+         e8ipsbVhR3j/qa5r2+HBtD/x26An1cw+JE5Kp0/0tWR7lDwY7nr9gRVoslDI596o9WAU
+         5vonYRy3D7FoKxV5xLfo1awkgF6iATy+FB2HnElzjo8rfB1rjBBufnHQgenk1J8LwnKU
+         AXIzHOKN88QVIEoXM6YQfHGKTT+zXTEWiplBsAcq+IUCno+v7nn4r+hHVjcPbHXswBMv
+         yTMQ==
+X-Gm-Message-State: APjAAAUFD4GZp6qkxR8spBVtwVQaHpiYGnmsP1H+6qY6KZaRTEP1lR4l
+        suighT7vLz5GSMw42UG0jVSKbHnyZdPVt7utQ9Q=
+X-Google-Smtp-Source: APXvYqxdyDijz1rGqrbYCmLrIjViy7wgwMXb68AAZ4r2pC01PDuSdhiWq9HvmosjKuHgpR9L2JZlZb6NKQE8p5vXjwU=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr21937606qte.204.1581559847782;
+ Wed, 12 Feb 2020 18:10:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20200113051852.15996-1-samuel@sholland.org> <20200113051852.15996-3-samuel@sholland.org>
-In-Reply-To: <20200113051852.15996-3-samuel@sholland.org>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 12 Feb 2020 20:02:26 -0600
-Message-ID: <CABb+yY2MJ-1i0K7XVkPT3+6ac1XR9-3zf-GDNeswOMp6Zn_Ufw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/6] mailbox: sun6i-msgbox: Add a new mailbox driver
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <cover.1581475981.git.shengjiu.wang@nxp.com> <1ae9af586a2003e23885ccc7ef58ee2b1dce29f7.1581475981.git.shengjiu.wang@nxp.com>
+ <CAOMZO5Do=dzh4WXvm44mB7-PeesWuA6qRtMXwHCH9piXd1dZEw@mail.gmail.com>
+In-Reply-To: <CAOMZO5Do=dzh4WXvm44mB7-PeesWuA6qRtMXwHCH9piXd1dZEw@mail.gmail.com>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Thu, 13 Feb 2020 10:10:36 +0800
+Message-ID: <CAA+D8ANGtnPYNA9__Zeg8MJDaiw_kVebUUgU-jPmp8GXRNX4hg@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH 2/3] ASoC: dt-bindings: fsl_easrc: Add
+ document for EASRC
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linuxppc-dev@lists.ozlabs.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 11:18 PM Samuel Holland <samuel@sholland.org> wrote:
+Hi
+
+On Thu, Feb 13, 2020 at 1:26 AM Fabio Estevam <festevam@gmail.com> wrote:
 >
-> +static int sun6i_msgbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +       struct sun6i_msgbox *mbox = to_sun6i_msgbox(chan);
-> +       int n = channel_number(chan);
-> +       uint32_t msg = *(uint32_t *)data;
-> +
-> +       /* Using a channel backwards gets the hardware into a bad state. */
-> +       if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
-> +               return 0;
-> +
-> +       /* We cannot post a new message if the FIFO is full. */
-> +       if (readl(mbox->regs + FIFO_STAT_REG(n)) & FIFO_STAT_MASK) {
-> +               mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
-> +               return -EBUSY;
-> +       }
-> +
-This check should go into sun6i_msgbox_last_tx_done().
-send_data() assumes all is clear to send next packet.
-
-.....
-> +
-> +       mbox->controller.dev           = dev;
-> +       mbox->controller.ops           = &sun6i_msgbox_chan_ops;
-> +       mbox->controller.chans         = chans;
-> +       mbox->controller.num_chans     = NUM_CHANS;
-> +       mbox->controller.txdone_irq    = false;
-> +       mbox->controller.txdone_poll   = true;
-> +       mbox->controller.txpoll_period = 5;
-> +
-nit:  just a single space should do too.
-
-Sorry, for some reason I thought I had replied to this patch, but
-apparently not. My mistake. Do you want to revise this submission or
-send another patch on top?
-
-thanks
+> On Wed, Feb 12, 2020 at 1:35 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
+> >
+> > EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
+> > IP module found on i.MX815.
+>
+> i.MX815 in an internal terminology. Please avoid it on the commit log.
+>
+Ok, will use i.MX8MN instead.
