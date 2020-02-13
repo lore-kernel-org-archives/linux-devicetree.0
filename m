@@ -6,71 +6,101 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815A9C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDDAC3B189
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F54120848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7194820848
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 09:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgBMJCv (ORCPT
+        id S1729531AbgBMJKv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 04:02:51 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:41830 "EHLO deadmen.hmeau.com"
+        Thu, 13 Feb 2020 04:10:51 -0500
+Received: from sauhun.de ([88.99.104.3]:45284 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729428AbgBMJCv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 04:02:51 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1j2AOT-0003zG-Rn; Thu, 13 Feb 2020 17:02:45 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1j2AOP-000407-Pf; Thu, 13 Feb 2020 17:02:41 +0800
-Date:   Thu, 13 Feb 2020 17:02:41 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Kalyani Akula <kalyani.akula@xilinx.com>
-Cc:     davem@davemloft.net, monstr@seznam.cz,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        git-dev <git-dev@xilinx.com>,
-        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Harsh Jain <harshj@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Kalyani Akula <kalyania@xilinx.com>,
-        Mohan Marutirao Dhanawade <mohan.dhanawade@xilinx.com>
-Subject: Re: [PATCH V6 3/4] crypto: Add Xilinx AES driver
-Message-ID: <20200213090241.fksu33yszqi5fjat@gondor.apana.org.au>
-References: <1580192308-10952-1-git-send-email-kalyani.akula@xilinx.com>
- <1580192308-10952-4-git-send-email-kalyani.akula@xilinx.com>
+        id S1729515AbgBMJKv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 04:10:51 -0500
+Received: from localhost (p54B33627.dip0.t-ipconnect.de [84.179.54.39])
+        by pokefinder.org (Postfix) with ESMTPSA id 06EB52C08AC;
+        Thu, 13 Feb 2020 10:10:48 +0100 (CET)
+Date:   Thu, 13 Feb 2020 10:10:47 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        Alex Smith <alex.smith@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: i2c: jz4780: silence log flood on txabrt
+Message-ID: <20200213091047.GB2123@ninjato>
+References: <cover.1581457290.git.hns@goldelico.com>
+ <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com>
+ <20200212094628.GB1143@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
 Content-Disposition: inline
-In-Reply-To: <1580192308-10952-4-git-send-email-kalyani.akula@xilinx.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200212094628.GB1143@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 11:48:27AM +0530, Kalyani Akula wrote:
-> This patch adds AES driver support for the Xilinx ZynqMP SoC.
-> 
-> Signed-off-by: Mohan Marutirao Dhanawade <mohan.dhanawade@xilinx.com>
-> Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
-> V5 Changes:
-> - Replaced ARCH_ZYNQMP with ZYNQMP_FIRMWARE in Kconfig
-> - Removed extra new lines. 
-> - Moved crypto: Add Xilinx AES driver patch from 4/4 to 3/4.
-> - Updated Signed-off-by sequence.
 
-Sorry but this patch doesn't compile against the current cryptodev
-tree.  Please fix and respost.
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On Wed, Feb 12, 2020 at 10:46:28AM +0100, Wolfram Sang wrote:
+>=20
+> The printout for txabrt is way too talkative. Reduce it to the minimum,
+> the rest can be gained by I2C core debugging and datasheet information.
+> Also, make it a debug printout, it won't help the regular user.
+>=20
+> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+
+Applied to for-current, thanks!
+
+
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5FEpcACgkQFA3kzBSg
+KbaDmg/+LPu/HFCGDpbL6wSNLy+ddtuDJAdLMW+RLR22jamJt0hmY7Yq5ZkUOeXf
+SxZakdTgTh2D20e4hIEePPUa/cU9TaqfFl67OoLwaIMSVxJn2drOIKKPjqnr5Wbr
+bKX/GhVDAWzBDvg1tMMFZM1G056Q2t+wU5yePYnGdccwFdiak3BKE/Cve3cwSDyq
+hrUIy3ktDy481Cx7q8Lls9rgNGdHEkFPp9cwwT/GkPuPeVOSVQHsZpDcpjlAcMF2
+EkPOTN5o4aRLaFU2zoH+3k6vR+Mf/2KkArKvw8sR4cTVidZ/nqfJIE98Od9vOOGw
+qMm6JT5bns80N9MbRG21RCZ73yDyFChPk1OthQybZrmMB9WPwGshenRXqgX4IxZh
+HRK8HV3d9xRnACbbYsg1SHGtFy0W+FNzU0DEqw5Vg4gZ8P24ZTUEYMghO7BIcv25
+e0qVDNa0DveRvh1zcAGkTB2y0wUDd+Ti3X4/pcIN9FKiAArG5YpGy8YJf4jgfVEP
+gSeLCyfGrT0rJEzORfLo6dw4VrRqr6znBQ0Wk8IQP5++mXxXx5QN7ybNwflu+z/M
+v1579VU4ne2tK8J/+PDZPgciFc8Aj+U8ncDq/zE1+0SdL6HNCXnKO0fh321KgSyK
+cFOdRG+9zHBTeV67Gtr4Y/DrKCyacPDTgctE2SLT2FZXRvPwGpw=
+=dZR8
+-----END PGP SIGNATURE-----
+
+--uZ3hkaAS1mZxFaxD--
