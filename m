@@ -2,93 +2,120 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F8C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 17:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0984EC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 17:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478A2217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 17:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581614317;
-	bh=us1MMTCogBjdT2JfyOsRefkIeb9nYIIBpdj2wwEdxZ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KSZEWIUpMw+FS+DDEbCz6wIgU9rkHwb5zgqv+0Ke62M/5RJmThEwixOV/Yf0I+iSP
-	 iBtAM5BwBqvkr3zLQCIgVm0gWVp/Y5+uPOJfhanMdTF+Jsd1CS0a4TSGBiZOdDzOyF
-	 Wy6345XCH0nocDS81uBSbI9vQbe1V6JCL0uWxvUA=
+	by mail.kernel.org (Postfix) with ESMTP id D51C121734
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 17:37:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="y4z9797W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgBMRSd (ORCPT
+        id S1728192AbgBMRhr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 12:18:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:51294 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgBMRSd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 12:18:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CDC6328;
-        Thu, 13 Feb 2020 09:18:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 204453F6CF;
-        Thu, 13 Feb 2020 09:18:31 -0800 (PST)
-Date:   Thu, 13 Feb 2020 17:18:30 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
+        Thu, 13 Feb 2020 12:37:47 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37360 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbgBMRhp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 12:37:45 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a6so7738154wme.2
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 09:37:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Zvz2XeVTIF+ueC8ZSbcXCfTRm4NOaCnXy121PGkk+Yg=;
+        b=y4z9797WK5rw61o0bHX20MVMCzpPi8e1XV3NNiGnUzy/usayLB7afqaJPX9RbfFN8d
+         DTHjeJKKl0pf+6s56FBO6zp7C85vj8QTq9rii/FdwUiZoqKNj2guPNqtyP8wgQNOtmdv
+         UmaS7phuNaxUHCjYa2YlwmNpOzXz4C8VUr6ecOtZfSqBYOmP7+4uubq2yIunsJr3QiXl
+         LX8W4qZbMWDrTV7lJnlgFd0vCm3XBm13uk9eSp8VTYshLUJcLJ6P1lfAfGOL5EPZQvVi
+         OimW08hzSH5ujRFZxkJhUKNViVxC/yetGRK+uJ2pXq3g+0gHCPA1imWM3FBb0b/dl8fF
+         KtLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Zvz2XeVTIF+ueC8ZSbcXCfTRm4NOaCnXy121PGkk+Yg=;
+        b=F2KLFUQdmsoctYYOhCriA6/1IcvhN5MG8IeIBcdOhbchvu+h1dbb/5wopF1Jq9lJgW
+         gGRKdi+i5GNS2Rnkb2kaGmJ/68tkt26SLAxhxcPOExu5fziYYQf1KFaaHQfPk3h/xgG0
+         o7R4eZhZqypHO+6zNIcDPvfPYgpcL2KRZHnQeH8rz0TbFPsH6KWalHprwCybmcF40kVX
+         aPL/U0g6ohsEhA8y83he2dMzuSGRVHjswQtiItmOR6Gen1WM86sjfR9eUkN3MagTxlFK
+         IgnUKqIKCkhImaHnphY+rzeZXsr1BMSDm1jgiGWavbOWHps3oL1P0Tj39ejdxeN1HjiU
+         f4JA==
+X-Gm-Message-State: APjAAAX1PxYRUFrvL6b4WhG2n4qdZSLAITMa8wj9N2cgoLomsERnb/8g
+        qGsWMTTeMtyFPs39IIcK5t4ZHw==
+X-Google-Smtp-Source: APXvYqykC+mTy5IPmmZi7PPVz1FJbeRW+wBfOOUQU58sYIdkyHAaUT8ZIB+UlNf0ucjzIZv+uzieOg==
+X-Received: by 2002:a05:600c:228f:: with SMTP id 15mr7314496wmf.56.1581615463076;
+        Thu, 13 Feb 2020 09:37:43 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id y185sm4054871wmg.2.2020.02.13.09.37.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 09:37:42 -0800 (PST)
+References: <20200213155159.3235792-1-jbrunet@baylibre.com> <20200213155159.3235792-2-jbrunet@baylibre.com> <20200213171830.GH4333@sirena.org.uk>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org,
         Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/9] ASoC: core: allow a dt node to provide several
- components
-Message-ID: <20200213171830.GH4333@sirena.org.uk>
-References: <20200213155159.3235792-1-jbrunet@baylibre.com>
- <20200213155159.3235792-2-jbrunet@baylibre.com>
+Subject: Re: [PATCH 1/9] ASoC: core: allow a dt node to provide several components
+In-reply-to: <20200213171830.GH4333@sirena.org.uk>
+Date:   Thu, 13 Feb 2020 18:37:41 +0100
+Message-ID: <1j4kvufkwq.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LZFKeWUZP29EKQNE"
-Content-Disposition: inline
-In-Reply-To: <20200213155159.3235792-2-jbrunet@baylibre.com>
-X-Cookie: Academicians care, that's who.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---LZFKeWUZP29EKQNE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu 13 Feb 2020 at 18:18, Mark Brown <broonie@kernel.org> wrote:
 
-On Thu, Feb 13, 2020 at 04:51:51PM +0100, Jerome Brunet wrote:
+> On Thu, Feb 13, 2020 at 04:51:51PM +0100, Jerome Brunet wrote:
+>
+>> At the moment, querying the dai_name will stop of the first component
+>> matching the dt node. This does not allow a device (single dt node) to
+>> provide several ASoC components which could then be used through DT.
+>
+>> This change let the search go on if the xlate function of the component
+>> returns an error, giving the possibility to another component to match
+>> and return the dai_name.
+>
+> My first question here would be why you'd want to do that rather than
+> combine everything into a single component since the hardware seems to
+> be doing that anyway.  Hopefully the rest of the series will answer this
+> but it'd be good in the changelog here.
 
-> At the moment, querying the dai_name will stop of the first component
-> matching the dt node. This does not allow a device (single dt node) to
-> provide several ASoC components which could then be used through DT.
+Hi Mark,
 
-> This change let the search go on if the xlate function of the component
-> returns an error, giving the possibility to another component to match
-> and return the dai_name.
+Sorry if I was not clear enough.
 
-My first question here would be why you'd want to do that rather than
-combine everything into a single component since the hardware seems to
-be doing that anyway.  Hopefully the rest of the series will answer this
-but it'd be good in the changelog here.
+This HW is messy. It is indeed one monolithic device which
+provides several functions/sub-devices/components
 
---LZFKeWUZP29EKQNE
-Content-Type: application/pgp-signature; name="signature.asc"
+I tried several approaches:
 
------BEGIN PGP SIGNATURE-----
+* Just 1 component: This was ugly because the part that is present only on 1
+SoC variant, I needed to reconstruct the dai, widget, route and control
+table which involved a fair amount of useless copies.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5FhOUACgkQJNaLcl1U
-h9CqPgf+L/Xt6fytZ8T0Qto2jS45qM+J0JJtBuwbWI1qn00Rangat1H8RPcg9vlo
-3gwlnj9jjdCCvGNB3+ECaCtCeh5QihLVZXSs8qXYIZF502avt/atdjVBfK7XT5jb
-uKjjMM+fn5wwvTfZsi3OOxXtUMbpSkuDJ82c8zFDgQBss4F7T94Lq3Qzw5f6Bvub
-/m1zvfVuh4LiTa7HADtrrD9Az0o9gO/Ielc0xH0mHydZtuv4qIMOxPQXwT/14tU1
-hLQwfy9VkkBfA0xuKKVJ0vjyWhi7A0SdE6RdbR9D0QUSBuSD2iPV28XaJD+jFwX3
-k0q3tgreqtSmKkmnySuAGJ+wTQIzVg==
-=Cn3Z
------END PGP SIGNATURE-----
+* A lot of devices (and components) with syscon: This ended up being even
+  uglier, difficult to work with since it did not really reflected the
+  actual HW.
 
---LZFKeWUZP29EKQNE--
+The solution proposed here is just one device with 3 possible
+components (groups):
+* The CPU producers a associated path
+* The HDMI control
+* The Internal DAC control
+
+The impact on ASoC is rather small, the driver reflect quite well what
+the HW is and, with a sound-dai-cell=2, it fairly simple in DT as well.
+
+Do you think there is something wrong with a linux device providing
+several ASoC components ?
