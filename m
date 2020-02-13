@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AC2C352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 04:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11324C352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 04:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36BA218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 04:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF07721734
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 04:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="stFxB5Ni"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="G2BcHIWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgBMEKW (ORCPT
+        id S1729788AbgBMEKn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Feb 2020 23:10:22 -0500
-Received: from mail-eopbgr150041.outbound.protection.outlook.com ([40.107.15.41]:53076
+        Wed, 12 Feb 2020 23:10:43 -0500
+Received: from mail-eopbgr150052.outbound.protection.outlook.com ([40.107.15.52]:3891
         "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729440AbgBMEKV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Feb 2020 23:10:21 -0500
+        id S1729440AbgBMEKn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Feb 2020 23:10:43 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DBVWim0ERruTt1IHdthcwGefz3vJO31clXcKFXpvGktYmDG8puY3f6asxqa9NTYOMdlbq7j39R8pqVFFLxo4rtu9YZbRCe2TYVnlArNBrLZpfYn4sY95MSQxoet0rAlrLUVL3+uznkXXMqFAP3A/tOQS6DN3jGxdx+BYEgg9F06tcXtGdidaPJ8Nps3s1YhkCivigGcQ23jQklxx1EioaAYeg0+odJuTLgxPuSyKufkqh+1SppfLrWb9huW+gvxMeAgnStdm6nb9AxEJO3Oni+V5B4l+I1byJ/rTMjB6Ma0y4DPa6F+Zr/108wf2kCCTpJ6sKoTLmwLRmz6RmkWmnw==
+ b=LGJBcHn8a/UNjClXgU63s12NsmBAyVQcsEdx+uwM9caDuzi7TRI7AYglw5o9oPw0H98KnLtwawYIYKr1PtxiB2tiIl68gKB8U1oYwtQLRlYyk4mB1n+FTQuWGbSqgzSCwZJFWjmrNLCtgtx+9kP00o67uAjW6SMplMTzYGm9Ycx/z6fV6Nx8W0OycMZeGy/bMT6EP8z8adJR+KlrtbpGoqHTi6r7zlNqSjUCW6sYfi+UlsqYPcSbpq6HtA53Eyad9+EudYKFNisVFZqEAkrOFekHdkP8quKSMVUn4DfnSiqIl3LdNDbeAO04DVvBE1Ek/KYr1fz0MsUU2UM+hu5h2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/HBKnD0XYZKzk7ezC2fT2JojLNDrzBwdkzJf98xSmo8=;
- b=n8Q931c0qUMkscmeCu7I8NXPUqXaCN1jueSrq7EwPjCPFaKtnyW3LtI8rBj8xfY2EVGdgAuznM9VhEOOYSurNB5uvapcjYoJLMFWvuMnPLfvXZcG9dX9Ga1atf93PjRp9zW2ve+nh2PoSJdQ3PGTjAdnszNwwTtOfiB2sLKt00TAdc/xXGL549WUK29e6GROGnF/pI077KCH6rpLe4vlRvCwYAqmFWJfuZAgt812OS31l3jabA0QyXlywe5EMMpMtg519biXgKC6mXXmsoe5TTJoHEZugeSLnU/vSJuhZe4kE+KhM1QO4W3LOqg7EjUQW35HRAI4vi0cSxf2gpPBzg==
+ bh=q6fZFNV5LPZPD1GnnXvOvEftm5p9jFYYgEFw+TTkWKg=;
+ b=n38UdBaPZwfs1Bkh93r+2/Dl6/YaefMQdlFBS5HVyg0ZRz2pvXHhrKrwlq3SKmA0NpJz1oCbXo1U3rNDxh78lj9pkCJtzKOyrbFTLGSW0PzlYHIMkg/7KarUV5pz+YF05AoU2knoP4wGMzHdYlUfLQg2Hw8qYDrSc//z64750XHX4OH8pXLzaBi5ZT/ntAxrx/uZgDcr5BzE8WI9wMUQ3nqfJcpjuWhWUD1+CJ+zNB+pRhvLeXvh3UtwTZLsV49XZMs8t7zOLBdf/dTE61yVYU/bAljkc/HWd+oNh5z780PHwVvnoZQTbDajjmzopkIg3OKXCcSAegvD7XNSjoMzQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/HBKnD0XYZKzk7ezC2fT2JojLNDrzBwdkzJf98xSmo8=;
- b=stFxB5NijvFRQWipM1k94Dx+0N+yWGRTiCoA40U57ftFQP5ePksigmRCrPohkN7VCgmapgGgVLFVX8csCakhT5/eA7r0Au2R3z00mjQI9FpjUOU5YkVQ9PT7zfW/a8lrbxDyoLpUGjUuo1tgBOWLgnOzHvERN6IjrwXkBWoTKt4=
+ bh=q6fZFNV5LPZPD1GnnXvOvEftm5p9jFYYgEFw+TTkWKg=;
+ b=G2BcHIWAYeYVZ8eg8mROf0WEoplz4lGgWJjJDek4cnljbNH3O6ZOY3wz4JJBinJx3JEKBcFwNSoAzsUJie5lQ0TKQR4ONb9mNJtKg55oUBuq3lthyvOPJsadkHQvDekQMZqBK2rS4xRHSljIcvxKWsOCBicXKz1FwCpnUvObsyA=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=zhiqiang.hou@nxp.com; 
 Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
  DB8PR04MB7084.eurprd04.prod.outlook.com (52.135.63.71) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.23; Thu, 13 Feb 2020 04:10:18 +0000
+ 15.20.2729.23; Thu, 13 Feb 2020 04:10:37 +0000
 Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
  ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
  ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2707.030; Thu, 13 Feb 2020
- 04:10:18 +0000
+ 04:10:37 +0000
 From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -57,9 +57,9 @@ To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         catalin.marinas@arm.com, will.deacon@arm.com
 Cc:     Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv10 06/13] PCI: mobiveil: Add callback function for link up check
-Date:   Thu, 13 Feb 2020 12:06:37 +0800
-Message-Id: <20200213040644.45858-7-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv10 09/13] PCI: mobiveil: Add Header Type field check
+Date:   Thu, 13 Feb 2020 12:06:40 +0800
+Message-Id: <20200213040644.45858-10-Zhiqiang.Hou@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
 References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
@@ -68,15 +68,15 @@ X-ClientProxiedBy: HK2PR04CA0069.apcprd04.prod.outlook.com
  (2603:1096:202:15::13) To DB8PR04MB6747.eurprd04.prod.outlook.com
  (2603:10a6:10:10b::31)
 MIME-Version: 1.0
-Received: from localhost.localdomain (119.31.174.73) by HK2PR04CA0069.apcprd04.prod.outlook.com (2603:1096:202:15::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.24 via Frontend Transport; Thu, 13 Feb 2020 04:10:12 +0000
+Received: from localhost.localdomain (119.31.174.73) by HK2PR04CA0069.apcprd04.prod.outlook.com (2603:1096:202:15::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.24 via Frontend Transport; Thu, 13 Feb 2020 04:10:31 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [119.31.174.73]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d1793579-74c2-447f-7918-08d7b03aa2dd
+X-MS-Office365-Filtering-Correlation-Id: 2edaf9d7-1977-4c6a-5860-08d7b03aae31
 X-MS-TrafficTypeDiagnostic: DB8PR04MB7084:|DB8PR04MB7084:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR04MB7084AE525B3B8A9893278AAF841A0@DB8PR04MB7084.eurprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DB8PR04MB70849708B37108FF6FB3EA51841A0@DB8PR04MB7084.eurprd04.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
 X-Forefront-PRVS: 031257FE13
 X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(189003)(199004)(36756003)(6506007)(5660300002)(26005)(66476007)(7416002)(66556008)(66946007)(6512007)(4326008)(52116002)(6666004)(16526019)(86362001)(478600001)(1076003)(2616005)(956004)(6486002)(69590400006)(81156014)(8676002)(81166006)(8936002)(186003)(2906002)(316002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7084;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
@@ -84,16 +84,16 @@ Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /OOCjhBd7++CTM1PwdyfVsdyqa6jFLOvbaQdr47hcpYTNS1jf0KAeeI7F20GMBPbOcxXJUf3OHIk7BR1kVLPDokKA7PH4CyqVIP/0b04Q6eNBmtD4Drp5PoQ9As9RqNAmAfqaXeAXgQp7HOd5P2ckFtPnWqFxwamzlip5CDuD/BexELugiohdx7kHNQS/uiIrEa5R2dwp0J+VZFuQcuPydJWmct7eHNGfwjcxwM/9HY37FcA1fzkV/rQ8NitgYpIvQh93rdrRj4DAvlG+fN/6hWm2lAPPvlxOI7LKs6xeudUNw28XgruWd1y9QgQl7m20rWx8fNUqYzANuuefGxpD1BPBXHCAodCegVm2a3sYSHdxx8U2jZTRjB1oGPax3tEpPsfBBHaXcR/aFJto6N1uU9AERTmFi8KwLtgZAg0HlKd3SFMq/6nWGWKaqmzUBDPkZHv0jIMh8ZB/3mlhGkUbd2TQgNWwiTQUZ/hTiA2zpDd8yTyB27WDeH7ciFVOf2qvFEDlYbV8XmbHeTHhvLqquYEFKIUXK1Sm0PePYr7h2eEz14HIheuACQ54d0cyA3KVindyFc1Cr0Zky+kyetqTQ==
-X-MS-Exchange-AntiSpam-MessageData: ay2q2twe+wSOcTzhEevd87UR78ToDduVJZ+H+GUN27NLcPnHFZMzvVBPzp8SwFPu9/wKnPTDH8GhNMYGrQO8v6yWFEIZCET98k1dIe/3LJ6pf+BxF1rPiq/AhD5QAQO3GQrbdbcpn3wbgixxkr0LOg==
+X-Microsoft-Antispam-Message-Info: 6eveqEXt9qYu0QQVxphrflg58f/GfCVDGYQjPuuV2tD5Ew3pQ/Ot7Mj876cT1pzlNpBlZHPDl3xZdVQq9Ght6N+NB4sLWLkmsKkihdApw1cVztd/qUPTvcaNj/WDt2gm06ZWhwRkAOjns9zZnLtexJp5dktr3SlGs0WixlL2xfsQp+03o6g6g1V3CnlRE7B2Lrh1NwZaXBkScgp0ACRMU9wQSNVd56EcKITpH2mfmExUMECDEK/GA4XQTBmE5+KF3QnkdBHdsUUGm0wKOMpLOx2MYHGmxB3KPW1zZYPEhzBqPFiN65b6Jv2EXey7zzF2BaQFyWIWuvXDAc21u7/5FgSZsFoDCvYI/eX/YRwxoFqUs++JmG/LxAtENAQvjboLYiTd8TX16uTsPEZu1iBUl/qFqLNInfc49u9fVuioBu7o7xEOG2LKL55dPsTKrPr4ti8EupRvFwDNPjkQbzP1M51VtUOGJYbaLprRkJY7OJuVaymQtlL9rYCkKtKIYz/IB5+6w2XcPS7yZUpU3swy0o5n6JoyIIsb5B41GTpp9WZVDuCmWm5wyTCYlViL85kXVK6NJMow/wKGJjLrnoo6kQ==
+X-MS-Exchange-AntiSpam-MessageData: lIhaoNWi5vLA4E6ds4wdo1MQPfcghhrI3PYcRJ7ifIDoWkIZKsznca4Wn5qYPTuGCHrwW1JE2Oikq3YegfK4i7YlBpmV3oR1sR+SvaehJJ91nqxVgDHxwIU/ZFKsa5JBi335CQKvG1WR9MxaP61VOA==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1793579-74c2-447f-7918-08d7b03aa2dd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 04:10:18.6897
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2edaf9d7-1977-4c6a-5860-08d7b03aae31
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2020 04:10:37.6434
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XD2ayD5tXLjxcyV9trezWGkmEf/Slx3jGMH9PlmZPkcAplxyRkvx08WJvgXvxCwHUxEqX0cWTrxakbuep7URSA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7IFCvyoj6LZwuqOgolRlQzMDU7VgQ+okzNZfxVo1oApUNMr/8dO+59QW3gbaRmYI6yM94X3RIK3RMggXLSztAw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7084
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -102,57 +102,48 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The platforms, in which the Mobiveil GPEX is integrated,
-may have their specific mechanism to check link up status.
-This patch is to enable these platforms to implement theirs.
+Check the Header Type and exit from the host driver initialization if
+it is not in host mode.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 ---
 V10:
- - No change
+ - New patch separated from #10 of v9.
 
- drivers/pci/controller/mobiveil/pcie-mobiveil.c | 3 +++
- drivers/pci/controller/mobiveil/pcie-mobiveil.h | 5 +++++
- 2 files changed, 8 insertions(+)
+ .../pci/controller/mobiveil/pcie-mobiveil-host.c    | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.c b/drivers/pci/controller/mobiveil/pcie-mobiveil.c
-index 2773f823c9ea..b9ed2d95641c 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil.c
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.c
-@@ -125,6 +125,9 @@ void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
- 
- bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
- {
-+	if (pcie->ops->link_up)
-+		return pcie->ops->link_up(pcie);
-+
- 	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
- 		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+index 44dd641fede3..db7028788d91 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+@@ -554,6 +554,16 @@ static int mobiveil_pcie_interrupt_init(struct mobiveil_pcie *pcie)
+ 	return mobiveil_pcie_integrated_interrupt_init(pcie);
  }
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-index 0e6b5468c026..346bf79a581b 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-@@ -148,6 +148,10 @@ struct mobiveil_root_port {
- 	struct pci_host_bridge *bridge;
- };
  
-+struct mobiveil_pab_ops {
-+	int (*link_up)(struct mobiveil_pcie *pcie);
-+};
++static bool mobiveil_pcie_is_bridge(struct mobiveil_pcie *pcie)
++{
++	u32 header_type;
 +
- struct mobiveil_pcie {
- 	struct platform_device *pdev;
- 	void __iomem *csr_axi_slave_base;	/* root port config base */
-@@ -157,6 +161,7 @@ struct mobiveil_pcie {
- 	int ppio_wins;
- 	int ob_wins_configured;		/* configured outbound windows */
- 	int ib_wins_configured;		/* configured inbound windows */
-+	const struct mobiveil_pab_ops *ops;
- 	struct mobiveil_root_port rp;
- };
++	header_type = mobiveil_csr_readb(pcie, PCI_HEADER_TYPE);
++	header_type &= 0x7f;
++
++	return header_type == PCI_HEADER_TYPE_BRIDGE;
++}
++
+ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+ {
+ 	struct mobiveil_root_port *rp = &pcie->rp;
+@@ -569,6 +579,9 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+ 		return ret;
+ 	}
  
++	if (!mobiveil_pcie_is_bridge(pcie))
++		return -ENODEV;
++
+ 	/* parse the host bridge base addresses from the device tree file */
+ 	ret = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
+ 					      &bridge->dma_ranges, NULL);
 -- 
 2.17.1
 
