@@ -2,253 +2,145 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EFBC352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657DAC3B189
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24827217BA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4378C2467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:12:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Of24hL8a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UUEAaBo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgBMUIS (ORCPT
+        id S1728196AbgBMUMw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:08:18 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:42997 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbgBMUIS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 15:08:18 -0500
-Received: by mail-yb1-f196.google.com with SMTP id z125so3588284ybf.9
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 12:08:17 -0800 (PST)
+        Thu, 13 Feb 2020 15:12:52 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43878 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728100AbgBMUMv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 15:12:51 -0500
+Received: by mail-pf1-f194.google.com with SMTP id s1so3608996pfh.10
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 12:12:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=GJxkwq8/D+o8z2hOcO4GUN34L77pUJGhVsXqvKjTQDQ=;
-        b=Of24hL8aXheNsVDZUzZ55pcCK7OV3KGqYupe+ZmKgcaybTpcTuLLCFOBzep889PXDx
-         J+eAybQltBvRNx+rC00KxKZ6Y43l2FU3nKu+C/RnUCK3ddDYM9vVTy+bMBkWpY5vu5WF
-         QlfAxAfK47jlmX+uMTeg2ejqopLS8w++OdbPVQA9N6DBNmm9LTfnm+opqtV/Qo8c6X0k
-         HAwlNxDZOg9MuRnC6QClbINsPO6ujRAyIEGWd7jUkv7Ts3JOuFGo5OjdfXRPEvaZ0gau
-         4adIDoTsbq5Si9VYH0hwR723QfUMHdk8RNUp6oH6SKMhjMMdUNhtQrq2loUk0lhPOAVZ
-         RJ0w==
+        bh=Em2FaAYttibjTQlPuyOTgle0cIehhPkcJObsB7mmxQ4=;
+        b=UUEAaBo8QzHRBzSTg5vwmEwtBZHIqo8GM6h67erAyXq9FaDWBAU6ir6JHFm5b5diIV
+         HGWsJNDUrBMq8XkvSBRBNdSSnVo7QRrvOMGbMi4++YLam3x4bpheUpxPqL0nIVQiGhM5
+         wFBYyGzAdq57vTFYJhluzz5kWAZTiuunHzIg4nV6XVmMowY494/FBW7F+k7invAvbZ0u
+         349HgFlf3nLnrDlGAeeclZeyHNlXZAVUx2AJjjZQ8m74wI1MglsOpM3/jwU+jMgBt49d
+         KKo78LddH450ayeAYP+lbVv7jKVJwUjYpvPpYqdDXM4aBjH7FlHFOH+2XRGqs9w9YhTy
+         sGyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GJxkwq8/D+o8z2hOcO4GUN34L77pUJGhVsXqvKjTQDQ=;
-        b=PbH/Dh/FwvOEc1ZxPBW6HAMZ2Rho5xQWFV3vgdJqPg+pPceL3H4ceFF2PAyTJ5IboR
-         25nXhJ0+Qy3N9sRpx4gG/vJtHI2NXIHl2O9a1XWtOQiKLQ6nWR5s4Tmezr50VS7BjR3v
-         bBwwF4IQF7MSJI1q5yk6tyKfW0GRhLKVu5oJohKI6zMXDJ2hdFHD5MbaI7TKvAGfnqh2
-         4JXQspUXDfz1Ou+9eCAYUpoA243Pwb7/lBL+n99TZsmjS4Vj+nQPI5aP9wdPI2bqPVUq
-         KOmQYVL8vR+Wx/Df2NkqiIzEJgq1S2RYg5qC/1WNr8l5++zmvXmHH/BhrnXYoikypY8O
-         UaYA==
-X-Gm-Message-State: APjAAAUBBfCmsUe3QpsrkiM30+fhjek3g6LAhRjCP8Ys6Z6Z7NTxsr4g
-        3u/OB5fMW7/0+VDZkjs5WSED+Q==
-X-Google-Smtp-Source: APXvYqwlrZYVi0V2hI3T0AESbnztZSJUg9sdbeYCbuUGNhwLIhR6i/8KC0vw9CwxnN8O7tJmwxSwVg==
-X-Received: by 2002:a25:d9cc:: with SMTP id q195mr8640124ybg.126.1581624497107;
-        Thu, 13 Feb 2020 12:08:17 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id w132sm1424354ywc.51.2020.02.13.12.08.15
+        bh=Em2FaAYttibjTQlPuyOTgle0cIehhPkcJObsB7mmxQ4=;
+        b=c7nRlyJSMzFFgqM7fREmoPeJC0Qv/hWISdSHzOGji5CwgF0jFg6VpC2UqVnrTwpC0O
+         181Id666IxRa+9kROfYz91iXO+S7eJkk/ABvXJwDarhpKHpxKQXqHrqwDba4MifeRCuu
+         mKFVVjGhLrvyi56torIfL4DDPWGKpG22n8Z7hUlO3uUk0c1303U0AAZxu+JHrU0DSyWQ
+         rTBNA1o9q1qUvppAs/iBsfmvnTOqUs+7knZXEKhht7gcc4PsrOiBSXyi8FS/UwousGeZ
+         nhij2/g+8uwoTgZFoMvGqrvcXEUABlOVydSS98w0Rm6Wf6dOWojUW75NpMihbXwKLKPW
+         lbmQ==
+X-Gm-Message-State: APjAAAX/LDrvRL+sYjycB0QjtB7DiMemJdX65LUXAzgIf85J3CntuXyM
+        PmfbXfKRy8zCHmb47f3brLpBwA==
+X-Google-Smtp-Source: APXvYqz6C2//bSkNXWpg1QFzaCdhtdkUlSkJBK805RDsjAufMVdJhjl5udMwJOsTXCI9bhdi8VtmPg==
+X-Received: by 2002:aa7:8703:: with SMTP id b3mr14998134pfo.67.1581624769948;
+        Thu, 13 Feb 2020 12:12:49 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u23sm3988269pfm.29.2020.02.13.12.12.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 12:08:16 -0800 (PST)
-Date:   Thu, 13 Feb 2020 13:08:13 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
- and booted before kernel
-Message-ID: <20200213200813.GA14415@xps15>
-References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
- <20200211174205.22247-2-arnaud.pouliquen@st.com>
+        Thu, 13 Feb 2020 12:12:49 -0800 (PST)
+Date:   Thu, 13 Feb 2020 12:12:47 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vgarodia@codeaurora.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: Re: [PATCH V4 0/4] Enable video on sc7180
+Message-ID: <20200213201247.GQ3948@builder>
+References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
+ <20200203180240.GD3948@builder>
+ <20200213185305.GF50449@google.com>
+ <20200213192627.GA1455@tuxbook-pro>
+ <20200213195725.GH50449@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211174205.22247-2-arnaud.pouliquen@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200213195725.GH50449@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Good day,
+On Thu 13 Feb 11:57 PST 2020, Matthias Kaehlcke wrote:
 
-On Tue, Feb 11, 2020 at 06:42:03PM +0100, Arnaud Pouliquen wrote:
-> From: Loic Pallardy <loic.pallardy@st.com>
+> On Thu, Feb 13, 2020 at 11:26:27AM -0800, Bjorn Andersson wrote:
+> > On Thu 13 Feb 10:53 PST 2020, Matthias Kaehlcke wrote:
+> > 
+> > > Hi Bjorn,
+> > > 
+> > > On Mon, Feb 03, 2020 at 10:02:40AM -0800, Bjorn Andersson wrote:
+> > > > On Tue 14 Jan 04:53 PST 2020, Dikshita Agarwal wrote:
+> > > > 
+> > > > > Hello,
+> > > > > 
+> > > > > Changes since v3:
+> > > > > 
+> > > > >   - addressed DT and DT schema review comments.
+> > > > > 
+> > > > >   - renamed DT schema file.
+> > > > > 
+> > > > > v3 can be found at [1].
+> > > > > These changes depend on patch series [2] - [6].
+> > > > > 
+> > > > > Thanks,
+> > > > > Dikshita
+> > > > > 
+> > > > 
+> > > > Picked up the dts patches for 5.7, with Stan's acks
+> > > 
+> > > I can't seem to find the patches in the QCOM repo, neither in
+> > > 'arm64-for-5.7' nor 'for-next'. Am I looking at the wrong place or
+> > > maybe you forget to push these?
+> > > 
+> > 
+> > Thanks for the question Matthias, I was looking for this email as I
+> > rebased onto v5.6-rc1 earlier this week, but got distracted.
+> > 
+> > I pulled them in, but in the rebase I realized that we don't have the
+> > interconnects in place, so in it's current form these patches doesn't
+> > compile.
+> > 
+> > Seems we're waiting for rather trivial respin of
+> > https://lore.kernel.org/linux-arm-msm/1577782737-32068-1-git-send-email-okukatla@codeaurora.org/
+> > to get this settled.
 > 
-> Remote processor could boot independently or be loaded/started before
-> Linux kernel by bootloader or any firmware.
-> This patch introduces a new property in rproc core, named skip_fw_load,
-> to be able to allocate resources and sub-devices like vdev and to
-> synchronize with current state without loading firmware from file system.
-> It is platform driver responsibility to implement the right firmware
-> load ops according to HW specificities.
+> Hm, there has been no response to the comments in more than a month, also
+> the series depends on another ('Split SDM845 interconnect nodes and
+> consolidate RPMh support' https://patchwork.kernel.org/project/linux-arm-msm/list/?series=238831),
+> even though that isn't mentioned anywhere.
 > 
-> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
->  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
->  include/linux/remoteproc.h           |  2 +
->  2 files changed, 55 insertions(+), 14 deletions(-)
+
+Sibi is revisiting David's 845 series, so my expectation is that it will
+land in this cycle.
+
+> IIUC the interconnect configuration isn't strictly required to get the
+> video codec to work. I wonder if it would make sense to respin this
+> series to remove the interconnect properties. They could be added in a
+> separate patch after the ICC support has landed.
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e4f1f3..876b5420a32b 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1358,8 +1358,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
->  	return ret;
->  }
->  
-> -/*
-> - * take a firmware and boot a remote processor with it.
-> +/**
-> + * rproc_fw_boot() - boot specified remote processor according to specified
-> + * firmware
-> + * @rproc: handle of a remote processor
-> + * @fw: pointer on firmware to handle
-> + *
-> + * Handle resources defined in resource table, load firmware and
-> + * start remote processor.
-> + *
-> + * If firmware pointer fw is NULL, firmware is not handled by remoteproc
-> + * core, but under the responsibility of platform driver.
-> + *
-> + * Returns 0 on success, and an appropriate error value otherwise.
->   */
->  static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->  {
-> @@ -1371,7 +1382,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->  	if (ret)
->  		return ret;
->  
-> -	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
-> +	if (fw)
-> +		dev_info(dev, "Booting fw image %s, size %zd\n", name,
-> +			 fw->size);
-> +	else
-> +		dev_info(dev, "Synchronizing with preloaded co-processor\n");
->  
->  	/*
->  	 * if enabling an IOMMU isn't relevant for this rproc, this is
-> @@ -1718,16 +1733,22 @@ static void rproc_crash_handler_work(struct work_struct *work)
->   * rproc_boot() - boot a remote processor
->   * @rproc: handle of a remote processor
->   *
-> - * Boot a remote processor (i.e. load its firmware, power it on, ...).
-> + * Boot a remote processor (i.e. load its firmware, power it on, ...) from
-> + * different contexts:
-> + * - power off
-> + * - preloaded firmware
-> + * - started before kernel execution
-> + * The different operations are selected thanks to properties defined by
-> + * platform driver.
->   *
-> - * If the remote processor is already powered on, this function immediately
-> - * returns (successfully).
-> + * If the remote processor is already powered on at rproc level, this function
-> + * immediately returns (successfully).
->   *
->   * Returns 0 on success, and an appropriate error value otherwise.
->   */
->  int rproc_boot(struct rproc *rproc)
->  {
-> -	const struct firmware *firmware_p;
-> +	const struct firmware *firmware_p = NULL;
->  	struct device *dev;
->  	int ret;
->  
-> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
->  
->  	dev_info(dev, "powering up %s\n", rproc->name);
->  
-> -	/* load firmware */
-> -	ret = request_firmware(&firmware_p, rproc->firmware, dev);
-> -	if (ret < 0) {
-> -		dev_err(dev, "request_firmware failed: %d\n", ret);
-> -		goto downref_rproc;
-> +	if (!rproc->skip_fw_load) {
-> +		/* load firmware */
-> +		ret = request_firmware(&firmware_p, rproc->firmware, dev);
-> +		if (ret < 0) {
-> +			dev_err(dev, "request_firmware failed: %d\n", ret);
-> +			goto downref_rproc;
-> +		}
-> +	} else {
-> +		/*
-> +		 * Set firmware name pointer to null as remoteproc core is not
-> +		 * in charge of firmware loading
-> +		 */
-> +		kfree(rproc->firmware);
-> +		rproc->firmware = NULL;
+> Dikshita/Bjorn, what do you think?
 
-If the MCU with pre-loaded FW crashes request_firmware() in
-rproc_trigger_recovery() will return an error and rproc_start()
-never called.
+That sounds likely. Dikshita, can you confirm that we can just omit the
+interconnect lines from the patch and I'll just apply the patches again
+without these (and you can follow up with adding interconnects later).
 
->  	}
->  
->  	ret = rproc_fw_boot(rproc, firmware_p);
-> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
->  	/* create debugfs entries */
->  	rproc_create_debug_dir(rproc);
->  
-> -	/* if rproc is marked always-on, request it to boot */
-> -	if (rproc->auto_boot) {
-> +	if (rproc->skip_fw_load) {
-> +		/*
-> +		 * If rproc is marked already booted, no need to wait
-> +		 * for firmware.
-> +		 * Just handle associated resources and start sub devices
-> +		 */
-> +		ret = rproc_boot(rproc);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else if (rproc->auto_boot) {
-> +		/* if rproc is marked always-on, request it to boot */
-
-I spent way too much time staring at this modification...  I can't decide if a
-system where the FW has been pre-loaded should be considered "auto_boot".
-Indeed the result is the same, i.e the MCU is started at boot time without user
-intervention.
-
-I'd welcome other people's opinion on this.
-
->  		ret = rproc_trigger_auto_boot(rproc);
->  		if (ret < 0)
->  			return ret;
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad66683ad0..4fd5bedab4fa 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -479,6 +479,7 @@ struct rproc_dump_segment {
->   * @table_sz: size of @cached_table
->   * @has_iommu: flag to indicate if remote processor is behind an MMU
->   * @auto_boot: flag to indicate if remote processor should be auto-started
-> + * @skip_fw_load: remote processor has been preloaded before start sequence
->   * @dump_segments: list of segments in the firmware
->   * @nb_vdev: number of vdev currently handled by rproc
->   */
-> @@ -512,6 +513,7 @@ struct rproc {
->  	size_t table_sz;
->  	bool has_iommu;
->  	bool auto_boot;
-> +	bool skip_fw_load;
->  	struct list_head dump_segments;
->  	int nb_vdev;
->  };
-> -- 
-> 2.17.1
-> 
+Regards,
+Bjorn
