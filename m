@@ -2,100 +2,99 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A003C3B189
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 10:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF76C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 10:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9CA20848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 10:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D76FF20873
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 10:30:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JNxjVO4s"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pYQ3iGUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgBMKZR (ORCPT
+        id S1729428AbgBMKaW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 05:25:17 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37374 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbgBMKZR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 05:25:17 -0500
+        Thu, 13 Feb 2020 05:30:22 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52688 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgBMKaW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 05:30:22 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01DAOv5H103276;
-        Thu, 13 Feb 2020 04:24:57 -0600
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01DAU0ic101320;
+        Thu, 13 Feb 2020 04:30:00 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581589497;
-        bh=txHZv0otXJyIYJZzcbb6130T3NOshgUyHxIn6qc3fv8=;
-        h=From:To:CC:Subject:Date;
-        b=JNxjVO4sms3FgjgLVnw0JAYNTpfkMkN7+WW1ldfXT9hbEMoNxMqawc6QIjVPv5RV9
-         LiOS/P3uNmwyNynXRZt7PC7EwXIiURd2zR5m1qhtanO+DTjrliLQIdu6jcOu6WKkm9
-         /TpDSuUL1wHXuOSMXPoLfgQFf4U50jjtV5XQrkq0=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01DAOvEl074336
+        s=ti-com-17Q1; t=1581589800;
+        bh=R98a9SMu5+eMeNYgNMcwCYKDHkQAW3h7Sh9JpzS1HH8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pYQ3iGUH3kWGYdlbtTIeH6xKsUJ2vKa/0sh3w2A3E1yz1TXlfOISpy3LatJUQl+PQ
+         lOQqMo4Md4ocehc24lodfZaIYJFDj34XxSmimIqJMzx1djMbTBFP1lK0R3KHYlKfTV
+         igt6A/JYGWI5AqysnGY1FmESBIP3eyRtRuCAnD0s=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01DAU0F1080260
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Feb 2020 04:24:57 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 13 Feb 2020 04:30:00 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
- Feb 2020 04:24:56 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 04:29:59 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 13 Feb 2020 04:24:56 -0600
-Received: from a0393675ula.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DAOqpX011317;
-        Thu, 13 Feb 2020 04:24:53 -0600
-From:   Keerthy <j-keerthy@ti.com>
-To:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
-        <daniel.lezcano@linaro.org>
-CC:     <j-keerthy@ti.com>, <amit.kucheria@verdurent.com>,
-        <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-Subject: [PATCH 0/4] thermal: k3: Add support for bandgap sensors
-Date:   Thu, 13 Feb 2020 15:54:36 +0530
-Message-ID: <20200213102440.20539-1-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
+ Frontend Transport; Thu, 13 Feb 2020 04:29:59 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01DATtZs019005;
+        Thu, 13 Feb 2020 04:29:56 -0600
+Subject: Re: [PATCH v5 3/3] drm: bridge: cdns-mhdp: add j721e wrapper
+To:     Yuti Amonkar <yamonkar@cadence.com>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>
+CC:     <praneeth@ti.com>, <jsarha@ti.com>, <mparab@cadence.com>,
+        <sjakhade@cadence.com>
+References: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
+ <1581481604-24499-4-git-send-email-yamonkar@cadence.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <42a2db9b-b1ad-55be-5631-669b6bfae9a7@ti.com>
+Date:   Thu, 13 Feb 2020 12:29:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1581481604-24499-4-git-send-email-yamonkar@cadence.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add VTM thermal support. In the Voltage Thermal
-Management Module(VTM), K3 AM654 supplies a voltage
-reference and a temperature sensor feature that are gathered in the band
-gap voltage and temperature sensor (VBGAPTS) module. The band
-gap provides current and voltage reference for its internal
-circuits and other analog IP blocks. The analog-to-digital
-converter (ADC) produces an output value that is proportional
-to the silicon temperature.
+On 12/02/2020 06:26, Yuti Amonkar wrote:
+> Add j721e wrapper for mhdp, which sets up the clock and data muxes.
+> 
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>   drivers/gpu/drm/bridge/Kconfig           | 12 ++++
+>   drivers/gpu/drm/bridge/Makefile          |  3 +
+>   drivers/gpu/drm/bridge/cdns-mhdp-core.c  | 14 +++++
+>   drivers/gpu/drm/bridge/cdns-mhdp-core.h  |  1 +
+>   drivers/gpu/drm/bridge/cdns-mhdp-j721e.c | 79 ++++++++++++++++++++++++
+>   drivers/gpu/drm/bridge/cdns-mhdp-j721e.h | 55 +++++++++++++++++
+>   6 files changed, 164 insertions(+)
+>   create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+>   create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
 
-Add support for bandgap sensors. Currently reading temperatures
-and trend computing is supported. 
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-Keerthy (4):
-  dt-bindings: thermal: k3: Add VTM bindings documentation
-  thermal: k3: Add support for bandgap sensors
-  arm64: dts: ti: am654: Add thermal zones
-  arm64: dts: ti: am6: Add VTM node
-
- .../bindings/thermal/ti,am654-thermal.yaml    |  59 +++
- .../boot/dts/ti/am654-industrial-thermal.dtsi |  45 +++
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  11 +
- drivers/thermal/Kconfig                       |  12 +
- drivers/thermal/Makefile                      |   1 +
- drivers/thermal/k3_bandgap.c                  | 342 ++++++++++++++++++
- 6 files changed, 470 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
- create mode 100644 arch/arm64/boot/dts/ti/am654-industrial-thermal.dtsi
- create mode 100644 drivers/thermal/k3_bandgap.c
+  Tomi
 
 -- 
-2.17.1
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
