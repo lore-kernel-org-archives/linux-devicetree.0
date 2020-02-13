@@ -7,189 +7,187 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC57C352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055E6C352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77BF124685
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1225218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581625452;
-	bh=N9a+BVoiRLAWlMQYqOvNOgYl0ZU8s6znAZLOX+gpEAg=;
+	s=default; t=1581625932;
+	bh=s6hNakGk8DlI2Hml+xfexVBE89u4vI8XO7PqrZIAoig=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PGqz8/5WcLDmhEEVrHcAfKuy2+jzBS2er3BKilTf9YDZQ+jbNApdYIYidEG8scv7v
-	 V2S8MU/ua0N5o51/gRcexzoFZgbnFHlaTxlrSZ5mRoWuUAH9gM7X9sSgcVqqTIY0ag
-	 YuncQ6jQBg9vhoHcgJrZZe+VunCEecIBdFgVmRr4=
+	b=KZtUKLDdAV4aggIQ0fta6hoEuU5mkRSYOWqOW3ami5gmVFejQKygCvO97Oh20TTTG
+	 sMrcJilYXdHnJmDj/FU7+TTweQDdge1JJetD4IkyWf5gwZYBUsgbGRpLxZeubKc7GN
+	 KeH95NHTLVao3nAMSvASefEaI3JIebosCS1VMYtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgBMUYM (ORCPT
+        id S1727519AbgBMUcM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:24:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39676 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 15:32:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgBMUYL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 15:24:11 -0500
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+        id S1726968AbgBMUcM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 15:32:12 -0500
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 520D924684
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 20:24:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6226218AC
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 20:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581625450;
-        bh=N9a+BVoiRLAWlMQYqOvNOgYl0ZU8s6znAZLOX+gpEAg=;
+        s=default; t=1581625930;
+        bh=s6hNakGk8DlI2Hml+xfexVBE89u4vI8XO7PqrZIAoig=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YdPh3EGw+QWQVVqHsMg9hNFXHacHaK7sr+Dmdv7j3MlHW9CT23s9m93H6F6SOwCoL
-         6IDaXzP3wkNbSOdyhe0j4uWmYZAKOrCOKKJJRJUTRUV5R1u6sXYUPhhgRb1F5OBHk3
-         j5THtWcKp7FsxhB45Ro9yIAR3vjQS20IQm0sJIyE=
-Received: by mail-qv1-f41.google.com with SMTP id g6so3251529qvy.5
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 12:24:10 -0800 (PST)
-X-Gm-Message-State: APjAAAUiwyUl06UgVuSHcVSWmU9ia33HTFZeAD5cyOxlrgq4IGj9drk8
-        RvnMYay1zs8ZqM2MnFB8E0gicahf5Rtf0TCxTw==
-X-Google-Smtp-Source: APXvYqzySaRcn1yJ5/y7FYHk+Er01trcCUflqTCPJ+GCFdvM7asA/lZD7VyTokV1bgOliI+T0Zf5Vgc8A/I7WGsIK8o=
-X-Received: by 2002:ad4:4511:: with SMTP id k17mr12491088qvu.135.1581625449440;
- Thu, 13 Feb 2020 12:24:09 -0800 (PST)
+        b=K8y1sJoJ2C3Y/W9TThaditY5B63QrEG502WAiXETkhOFCE8/66YUW6EUCOg3vXInU
+         H0d8YQ51jYewfRoF9TcGvNDP+G9jHRe7XQrizH6XZXuvN5QBST9gvJq1w9pdeh56Un
+         ZF8SqnxlfS69ew0gJ/7b5bOk0Pwx7iR3CEUbEJUQ=
+Received: by mail-qk1-f169.google.com with SMTP id w25so7054092qki.3
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 12:32:10 -0800 (PST)
+X-Gm-Message-State: APjAAAVzfN1fkvnARhEy4nmMyU0cu1/acOu6W8WqIRL30b08Rq+DDVZy
+        Ih94C7zEv7a35eaTR2CO5sMHya9JH0tprRa+RA==
+X-Google-Smtp-Source: APXvYqy6UPBCM+/cAO8IS299fsQ6zI91H9yLFW9wXNsDzsB5RIzaiAPn6ppjU4UuYJwys2PBtMGp1gyUFULWWr55CeA=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr17727937qkd.223.1581625929896;
+ Thu, 13 Feb 2020 12:32:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20200210092713.279105-1-linus.walleij@linaro.org> <20200210092713.279105-4-linus.walleij@linaro.org>
-In-Reply-To: <20200210092713.279105-4-linus.walleij@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 13 Feb 2020 14:23:58 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+4bx=sOmexqBC-+Yv6-KwoS_0uLqVTLuiL+hLh+G03bA@mail.gmail.com>
-Message-ID: <CAL_Jsq+4bx=sOmexqBC-+Yv6-KwoS_0uLqVTLuiL+hLh+G03bA@mail.gmail.com>
-Subject: Re: [PATCH 3/7] dt-bindings: arm: Add Integrator YAML schema
+References: <20200213124620.34982-1-linus.walleij@linaro.org>
+In-Reply-To: <20200213124620.34982-1-linus.walleij@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 13 Feb 2020 14:31:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJqP=DfTBQsshgZBwLaOk1uYtXOvb796Ya1K-UCyG3bCg@mail.gmail.com>
+Message-ID: <CAL_JsqJqP=DfTBQsshgZBwLaOk1uYtXOvb796Ya1K-UCyG3bCg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] bus: Add DT bindings for Integrator/AP logical modules
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 3:27 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Thu, Feb 13, 2020 at 6:46 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> This implements the top-level schema for the ARM Integrator
-> platforms.
+> This adds YAML device tree bindings for the Integrator/AP
+> logical modules. These are plug-in tiles used typically for
+> FPGA prototyping.
 >
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: devicetree@vger.kernel.org
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  .../bindings/arm/arm,integrator.yaml          | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/arm,integrator.yaml
+>  .../bindings/bus/arm,integrator-ap-lm.yaml    | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/arm/arm,integrator.yaml b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
+> diff --git a/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml b/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
 > new file mode 100644
-> index 000000000000..39aa3e31f934
+> index 000000000000..dfabfa466c05
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> @@ -0,0 +1,85 @@
+> +++ b/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
+> @@ -0,0 +1,89 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/arm/arm,integrator.yaml#
+> +$id: http://devicetree.org/schemas/bus/arm,integrator-ap-lm.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ARM Integrator Boards Device Tree Bindings
+> +title: Integrator/AP Logical Module extension bus
 > +
 > +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
+> +  - Linus Walleij <linusw@kernel.org>
 > +
-> +description: |+
-> +  These were the first ARM platforms officially supported by ARM Ltd.
-> +  They are ARMv4, ARMv5 and ARMv6-capable using different core tiles,
-> +  so the system is modular and can host a variety of CPU tiles called
-> +  "core tiles" and referred to in the device tree as "core modules".
+> +description: The Integrator/AP is a prototyping platform and as such has a
+> +  site for stacking up to four logical modules (LM) designed specifically for
+> +  use with this platform. A special system controller register can be read to
+> +  determine if a logical module is connected at index 0, 1, 2 or 3. The logical
+> +  module connector is described in this binding. The logical modules per se
+> +  then have their own specific per-module bindings and they will be described
+> +  as subnodes under this logical module extension bus.
 > +
 > +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +      - description: ARM Integrator Application Platform, this board has a PCI
-> +          host and several PCI slots, as well as a number of slots for logical
-> +          expansion modules, it is referred to as an "ASIC Development
-> +          Motherboard" and is extended with custom FPGA and is intended for
-> +          rapid prototyping. See ARM DUI 0098B. This board can physically come
-> +          pre-packaged in a PC Tower form factor called Integrator/PP1 or a
-> +          special metal fixture called Integrator/PP2, see ARM DUI 0169A.
-> +        items:
-> +          - const: arm,integrator-ap
-> +      - description: ARM Integrator Compact Platform (HBI-0086), this board has
-> +          a compact form factor and mainly consists of the bare minimum
-> +          peripherals to make use of the core module. See ARM DUI 0159B.
-> +        items:
-> +          - const: arm,integrator-cp
-> +      - description: ARM Integrator Standard Development Board (SDB) Platform,
-> +          this board is a PCI-based board conforming to the Microsoft SDB
-> +          (HARP) specification. See ARM DUI 0099A.
-> +        items:
-> +          - const: arm,integrator-sp
+> +  "#address-cells":
+> +    const: 2
 > +
-> +  syscon:
-
-Given there's a 'reg' property here, this should have a unit-address.
-
-> +    description: All Integrator boards must provide a system controller as a
-> +      node in the root of the device tree.
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        oneOf:
-> +          - items:
-> +            - const: arm,integrator-ap-syscon
-> +            - const: syscon
-> +          - items:
-> +            - const: arm,integrator-cp-syscon
-> +            - const: syscon
-> +          - items:
-> +            - const: arm,integrator-sp-syscon
-> +            - const: syscon
-
-No need for oneOf:
-
-items:
-  - enum:
-      - arm,integrator-ap-syscon
-      - arm,integrator-cp-syscon
-      - arm,integrator-sp-syscon
-  - const: syscon
-
-> +    required:
-> +      - compatible
-> +      - reg
-
-'reg' should be listed as property too. How many entries?
-
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  compatible:
+> +    items:
+> +      - const: arm,integrator-ap-lm
+> +
+> +  ranges: true
+> +  dma-ranges: true
 > +
 > +patternProperties:
-> +  "^core-module@[0-9a-f]+$":
+> +  "^.*@[0-3],[0-9a-f]+$":
+> +    description: Nodes on the Logical Module bus represent logical modules
+> +      and are named with index,relative-address. The first module is at
+> +      0x00000000, the second at 0x10000000 and so on until the top of the
+> +      memory of the system at 0xffffffff.
+
+What's the point of the index if the address alone is enough?
+
 > +    type: object
-> +    description: the root node in the Integrator platforms must contain
-> +      a core module child node. They are always at physical address
-> +      0x10000000 in all the Integrator variants.
-
-Then do 'core-module@10000000' for the property name.
-
 > +    properties:
-> +      compatible:
-> +        contains:
-> +          const: arm,core-module-integrator
-> +        description: this node is the core module node, it can be compatible
-> +          with syscon and simple-bus as well
-
-Those compatibles should be listed, too.
-
+> +      reg:
+> +        maxItems: 1
 > +
 > +    required:
 > +      - compatible
-> +      - reg
+
+'reg' should be required given a unit address is.
+
 > +
 > +required:
 > +  - compatible
-> +  - syscon
-> +  - core-module@10000000
 > +
-> +...
+> +examples:
+> +  - |
+> +    external-bus@c0000000 {
+
+Node names should be generic:
+
+bus@...
+
+> +      compatible = "arm,integrator-ap-lm";
+> +      #address-cells = <2>;
+> +      #size-cells = <1>;
+> +      ranges = <0 0x0 0xc0000000 0x10000000>,
+> +               <1 0x0 0xd0000000 0x10000000>,
+> +               <2 0x0 0xe0000000 0x10000000>,
+> +               <3 0x0 0xf0000000 0x10000000>;
+> +      dma-ranges = <0 0x0 0xc0000000 0x10000000>,
+> +               <1 0x0 0xd0000000 0x10000000>,
+> +               <2 0x0 0xe0000000 0x10000000>,
+> +               <3 0x0 0xf0000000 0x10000000>;
+> +      im-pd1@0,0 {
+
+bus@...
+
+> +        compatible = "simple-bus";
+> +        ranges = <0 0 0 0x10000000>;
+> +        dma-ranges = <0 0 0 0x10000000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        uart@c0100000 {
+
+serial@100000
+
+> +          compatible = "arm,pl011", "arm,primecell";
+> +          reg = <0x00100000 0x1000>;
+> +          interrupts-extended = <&impd1_vic 1>;
+> +        };
+> +
+> +        impd1_vic: interrupt-controller@c3000000 {
+> +          compatible = "arm,pl192-vic";
+> +          interrupt-controller;
+> +          #interrupt-cells = <1>;
+> +          reg = <0x03000000 0x1000>;
+> +          valid-mask = <0x00000bff>;
+> +          interrupts-extended = <&pic 9>;
+> +        };
+> +      };
+> +    };
+> +
+> +additionalProperties: false
 > --
 > 2.23.0
 >
