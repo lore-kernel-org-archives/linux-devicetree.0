@@ -7,88 +7,95 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD807C352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F61FC352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53F8206DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546A920848
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581626893;
-	bh=RgrJIJWa/NRFJlHjMytiRqtubEa7O/6BI1L2tR6ilJg=;
+	s=default; t=1581627153;
+	bh=90lR1+e59wezNxV0B89GKQfGjUPdEHkzyxQLJ0us85Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VAzPTAiz3pyibCD1s6MU0/qUPBeBuHF0Pho7OXxEr4+RXVpuPdGfUXfwiR1y6sqjL
-	 2g0ghbF5ofsiNk4SawL5YrPSz4klqHRs7rwUbaMZMIgp6DP6GLdoYTpQcv1ws2bk01
-	 kcAFbRFmaUdZZ/H54NiWeYuqj/gjdqGUBzlhcBAU=
+	b=lkz8ArEWzGkR4uRXqnkKsVEz8z1W+46a9C4YjMxGWIdOuxXH4VcCAQo1WE2gJTIk0
+	 edyi7CZqIsMsUkMTqeRGnnFEzrWkvjiBqPt18za4bYT2wFbKDMeFSkVcjSD7lYCdok
+	 N/qBaObVjgcgtCZ2z2kAkVWmFIeIpu3l83o2RzIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgBMUsN (ORCPT
+        id S1727835AbgBMUwd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:48:13 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:32955 "EHLO
+        Thu, 13 Feb 2020 15:52:33 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41060 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgBMUsM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 15:48:12 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q81so7246185oig.0
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 12:48:12 -0800 (PST)
+        with ESMTP id S1726282AbgBMUwc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 15:52:32 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so7214856oie.8;
+        Thu, 13 Feb 2020 12:52:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g23uUEX59uGCYRgNVfEjNd/uv394+mhBP8SG+Rxtig0=;
-        b=m96r44U/GKVsJ8c8Lp3PHoDID8hW33HuqSslLteks6ZrjkOER76mJkdgIiJ34EIaS/
-         wd/HjGtoftvwv14W/35joVKd71fAyEQqCn/jSNWrSLE213CzCE+cIJq+y2AxuPDEQObR
-         2viuFIxgzSrmbslNhJgp/c8seu8hK2JYmg2i0lFKgofWrcVNY6r727t5XBW7sAL2+Ntj
-         5kKhUrMblqTEy6gSs9XMu/vC52vw66WBZsNY0gI4mVQRd96cF0k1+A5rB9NTPnSMtUrB
-         RmMCgLbXkDkr2Fi30Ma1OvkRzf8JBWtX6+wzQbTg2PHDhiWi0gYedcWUftgdFJ4KFKdt
-         Z73w==
-X-Gm-Message-State: APjAAAWPs6qXZDSYOTZjZTK/8AXe5+ZciWVOCbAG4b/4/zZeA/ZaKKVl
-        CJMcR2ojoDpTtAwUUqVT0Eua/Do=
-X-Google-Smtp-Source: APXvYqxWrnb6ehqImVDwDcCsvZFQ3yUG6DrXv86xot7Alj3fpLbd+jZmZ5DG6VdMU6v72fNb4SxN3A==
-X-Received: by 2002:a05:6808:8fc:: with SMTP id d28mr4348781oic.152.1581626892044;
-        Thu, 13 Feb 2020 12:48:12 -0800 (PST)
+        bh=s8i10ohrT2+weilggglqs0Ir1n1ZSXHJ2uT8Wx+VWFA=;
+        b=YT9wfsn6eAfrNiFpk0++ZvQ/eFWC4JLuIx1hLT0IyAMVd5slna4m0j+wxKDc2PVAao
+         CPot8Kcuk+KVEUZt9LtbK2AFph6l7y+F2JfE4BLuUG3W4YcWf4dAfrBtphPvbXg97rWL
+         0I52w/dqE/mFlw+eQbSwGCcca6ozJViPOeDRFOMAIbrz0aVvueehdqW7Y37YoaTVZxtC
+         96WVr0Pxkp/HVIPrmYKDyglgTleXz8iRtpduMYSiHMyyShG88UCD887s3P/DMdM20T5x
+         /5PHOa5DxqbhIKFcMx6SQvrb5ui3OJ3p5EUE50vo+kqiO+W31Wy47wa/iPEi/5DfmTwC
+         C1Dw==
+X-Gm-Message-State: APjAAAVu3aTObCptF5ERZXyUVMc0fs9gpdYt6H9/fXvezZDn+vI2I38r
+        tPdL6WOfAQUmra1GdYUh/Q==
+X-Google-Smtp-Source: APXvYqyxzp7FojO4VNDr08MgWew7G0vsADdfBY2x0CqIPVAPAt7ZS5c/S285NmepbwZyFpewQmPbIA==
+X-Received: by 2002:a54:4010:: with SMTP id x16mr4368671oie.174.1581627151779;
+        Thu, 13 Feb 2020 12:52:31 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p24sm1172493oth.28.2020.02.13.12.48.11
+        by smtp.gmail.com with ESMTPSA id p184sm1046185oic.40.2020.02.13.12.52.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 12:48:11 -0800 (PST)
-Received: (nullmailer pid 4686 invoked by uid 1000);
-        Thu, 13 Feb 2020 20:48:10 -0000
-Date:   Thu, 13 Feb 2020 14:48:10 -0600
+        Thu, 13 Feb 2020 12:52:30 -0800 (PST)
+Received: (nullmailer pid 14780 invoked by uid 1000);
+        Thu, 13 Feb 2020 20:52:30 -0000
+Date:   Thu, 13 Feb 2020 14:52:30 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] bus: Add DT bindings for Integrator/AP logical
- modules
-Message-ID: <20200213204810.GA4058@bogus>
-References: <20200213124620.34982-1-linus.walleij@linaro.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: dt-bindings: renesas,rsnd: switch to yaml base
+ Documentation
+Message-ID: <20200213205230.GA13640@bogus>
+References: <87tv3vqc93.wl-kuninori.morimoto.gx@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200213124620.34982-1-linus.walleij@linaro.org>
+In-Reply-To: <87tv3vqc93.wl-kuninori.morimoto.gx@renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 13 Feb 2020 13:46:19 +0100, Linus Walleij wrote:
-> This adds YAML device tree bindings for the Integrator/AP
-> logical modules. These are plug-in tiles used typically for
-> FPGA prototyping.
+On 13 Feb 2020 14:37:04 +0900, Kuninori Morimoto wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> This patch switches from .txt base to .yaml base Document.
+> It is still keeping detail explanations at .txt
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > ---
->  .../bindings/bus/arm,integrator-ap-lm.yaml    | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.yaml
+>  .../bindings/sound/renesas,rsnd.txt           | 518 -----------------
+>  .../bindings/sound/renesas,rsnd.yaml          | 528 ++++++++++++++++++
+>  2 files changed, 528 insertions(+), 518 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.example.dt.yaml: im-pd1@0,0: $nodename:0: 'im-pd1@0,0' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/bus/arm,integrator-ap-lm.example.dt.yaml: uart@c0100000: $nodename:0: 'uart@c0100000' does not match '^serial(@[0-9a-f,]+)*$'
+Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/sound/simple-card.yaml'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml: patternProperties:^rcar_sound,src$:patternProperties:src-.: 'if' is not one of ['type', 'description', 'dependencies', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml: patternProperties:^rcar_sound,src$:patternProperties:src-.: 'then' is not one of ['type', 'description', 'dependencies', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/sound/renesas,rsnd.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/sound/renesas,rsnd.example.dts] Error 255
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1237467
+See https://patchwork.ozlabs.org/patch/1237280
 Please check and re-submit.
