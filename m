@@ -2,59 +2,59 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DF4C3B18B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E3BC3B18C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10A3218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8105F217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 15:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZCJgo/bd"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="W2joqd9A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729936AbgBMPwS (ORCPT
+        id S1729926AbgBMPwS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 13 Feb 2020 10:52:18 -0500
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:43258 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729999AbgBMPwR (ORCPT
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36923 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729936AbgBMPwR (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 10:52:17 -0500
-Received: by mail-wr1-f49.google.com with SMTP id r11so7262265wrq.10
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 07:52:16 -0800 (PST)
+Received: by mail-wm1-f68.google.com with SMTP id a6so7333974wme.2
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 07:52:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T1g855CS59jrh8SfK06mUR/Pthrs1DKdWIhgcvf/5RA=;
-        b=ZCJgo/bdkSCVvMzBckcPAr7Bb2qUBTV679cow4tumi6A34TqMO1khsOmJCqlpE3nf8
-         NPBMErlh4gnrGnDpouHkhd67f11Wvf0kKseO1gKmknSUECRbCnR2xq3o50SnIhHgtWyH
-         k9csymi780aSj777AIavG5nAxHMkIdK93Mno2DRvf1KdEkgTPJ21Xyix/Fk/pfXrJYpy
-         HR6F8R1KUjG7RVfDkiwflbTIBu9x7BEF6lqZls/320swiS10Ha+LUVWS69okKa3aV/2i
-         yE6WdHxy0B0vCcoffHyU1oeIC7pc5Nqty+jjF7NFNsf/h4diCTBL6UJs/ieQEq7fpr81
-         21Pg==
+        bh=PE6MSof9ikEAHBm0daRLxCQZwkiheW3ZANvlgjgzY4A=;
+        b=W2joqd9AKon1Xq5f0Upd6Q7fOnSObgDd7NrBexU5uRn9qpzPt6VZMXwXgZX5vxZmjc
+         4jHc9q1srDbda3SNX04xCXQZRzFsO0c8bddtguhgNSLTE6FaqUAa9BT5yRI92nu58Xpe
+         o+VZVidv3whdiXRlMKVBm79NlEi+Bd2JDawi5EFef+MiOd6r2JF5cYKGFhN40pTHOUcw
+         2NUe4YqYfHzP0IaAEcwttcyXFnswgF7GCOSFIr2MA+cMCuZawBM7z7SZlrbfPAacBcve
+         GW+0792a9w/+gxK6Ojm9r8gaU55CMgpN5qAqLnFpmmfDReqmKFdVNXtmK6m/VrFgVG+j
+         6ZxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T1g855CS59jrh8SfK06mUR/Pthrs1DKdWIhgcvf/5RA=;
-        b=cXA11jIKi1UTONzgKm/69Mjp3jSw3i1PMa3r/ffq85BdypKhDKctZqE7/v//+RdQNg
-         /HRtD4SnRhS/Alu+xsnA4E02ZaqQRYUNg5j6/J+zFRjgwPWbIrN0Ep4htrvaDRvFRnPf
-         SKYR44OD8xWlCorkqUUZDN7QQLetJgmd3k6DTOV2MRP8tN/lR9/SELGuMOgYaTLCOHTL
-         5XtULVBmpZeNDHnmeXywqwlfRjENm+iFBD0WrIOxCsHcPJK1K9fwIzcJ25shFLfE54JE
-         yNR5bi0RO+huTbPADDlTEJ1gbjTFkTfExo8rKViUf+IrUkr02ov0HoXxUhKYFT2ee9gf
-         FpMQ==
-X-Gm-Message-State: APjAAAVaVU/ijYx/LSJdfRLljdhCypHsyvohm4sfVCg8iDy/yF8z0bua
-        x1hX9UUDo/WMEUnWI/40VLHlIw==
-X-Google-Smtp-Source: APXvYqzX5hIDcuU5EdxX0EcpHWnkLsb/NVSMa6VEMThGZDOYBjYlw1628Xp6uOcnr1jk2AWjKEL9hA==
-X-Received: by 2002:adf:de0b:: with SMTP id b11mr21740714wrm.89.1581609135767;
-        Thu, 13 Feb 2020 07:52:15 -0800 (PST)
+        bh=PE6MSof9ikEAHBm0daRLxCQZwkiheW3ZANvlgjgzY4A=;
+        b=frh2lLJ8CC3wpkT8EyXEhzk13G2M1MZSh9pKOqEmez2TOLlNZaZ0XPd7kAy7T5dAp7
+         sAJB09TQbS0IGNmLCes89r3LZDwGqrEUea4EtH5k6+nTPyChwYCyG2ID7vXbwWiKph8D
+         KQurRFpTZyJ+aQYlJTjiGU0caXco2vyLcrcpNscdXH507gLdZN6hPcUGQIm0GAYcagGo
+         SYmM7wcXTp214x4aRhYLc2jy2wQuTZtTWq5jfGuyYQ1D+jEx8SzlPRz5kgMVAO4d361h
+         qejFxklUc6EUMsQNZOTzZztjO8rlYmcKM7bg0IFTCb/PA8N2KNcbUxWZspF2kXYpQ/Ml
+         INZg==
+X-Gm-Message-State: APjAAAUoKqtyf67cWKOVD18B8/lz+3krNihBVSclZsVFOfVQ9dDNOdPj
+        7vequEHUZW+z1AaRpdnPLZqCBA==
+X-Google-Smtp-Source: APXvYqx4wuZLfC7RkbrXtkvYozkKIHXN5pJWTAs/jiDRgx6uE3jhvMkw7UoC1BQRf3SxfBRDSaCoAQ==
+X-Received: by 2002:a05:600c:34b:: with SMTP id u11mr6405614wmd.69.1581609133827;
+        Thu, 13 Feb 2020 07:52:13 -0800 (PST)
 Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id e1sm3319814wrt.84.2020.02.13.07.52.14
+        by smtp.googlemail.com with ESMTPSA id e1sm3319814wrt.84.2020.02.13.07.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 07:52:15 -0800 (PST)
+        Thu, 13 Feb 2020 07:52:13 -0800 (PST)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>
@@ -62,9 +62,9 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org,
         Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 8/9] ASoC: meson: gx: add sound card dt-binding documentation
-Date:   Thu, 13 Feb 2020 16:51:58 +0100
-Message-Id: <20200213155159.3235792-9-jbrunet@baylibre.com>
+Subject: [PATCH 6/9] ASoC: meson: aiu: add internal dac codec control support
+Date:   Thu, 13 Feb 2020 16:51:56 +0100
+Message-Id: <20200213155159.3235792-7-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200213155159.3235792-1-jbrunet@baylibre.com>
 References: <20200213155159.3235792-1-jbrunet@baylibre.com>
@@ -76,134 +76,275 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the dt-binding documentation of sound card supporting the amlogic
-GX SoC family
+Add the codec to codec component which handles the routing between
+the audio producers and the internal audio DAC found on the amlogic GXL
+SoC family
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../bindings/sound/amlogic,gx-sound-card.yaml | 113 ++++++++++++++++++
- 1 file changed, 113 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml
+ sound/soc/meson/Makefile          |   1 +
+ sound/soc/meson/aiu-acodec-ctrl.c | 205 ++++++++++++++++++++++++++++++
+ sound/soc/meson/aiu.c             |  10 ++
+ sound/soc/meson/aiu.h             |   1 +
+ 4 files changed, 217 insertions(+)
+ create mode 100644 sound/soc/meson/aiu-acodec-ctrl.c
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml b/Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml
+diff --git a/sound/soc/meson/Makefile b/sound/soc/meson/Makefile
+index 3b21f648e322..80f9113701b3 100644
+--- a/sound/soc/meson/Makefile
++++ b/sound/soc/meson/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ 
+ snd-soc-meson-aiu-objs := aiu.o
++snd-soc-meson-aiu-objs += aiu-acodec-ctrl.o
+ snd-soc-meson-aiu-objs += aiu-codec-ctrl.o
+ snd-soc-meson-aiu-objs += aiu-encoder-i2s.o
+ snd-soc-meson-aiu-objs += aiu-encoder-spdif.o
+diff --git a/sound/soc/meson/aiu-acodec-ctrl.c b/sound/soc/meson/aiu-acodec-ctrl.c
 new file mode 100644
-index 000000000000..fb374c659be1
+index 000000000000..12d8a4d351a1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml
-@@ -0,0 +1,113 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/amlogic,gx-sound-card.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/sound/soc/meson/aiu-acodec-ctrl.c
+@@ -0,0 +1,205 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2020 BayLibre, SAS.
++// Author: Jerome Brunet <jbrunet@baylibre.com>
 +
-+title: Amlogic GX sound card
++#include <linux/bitfield.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/soc-dai.h>
 +
-+maintainers:
-+  - Jerome Brunet <jbrunet@baylibre.com>
++#include <dt-bindings/sound/meson-aiu.h>
++#include "aiu.h"
++#include "meson-codec-glue.h"
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: amlogic,gx-sound-card
++#define CTRL_DIN_EN			15
++#define CTRL_CLK_INV			BIT(14)
++#define CTRL_LRCLK_INV			BIT(13)
++#define CTRL_I2S_IN_BCLK_SRC		BIT(11)
++#define CTRL_DIN_LRCLK_SRC_SHIFT	6
++#define CTRL_DIN_LRCLK_SRC		(0x3 << CTRL_DIN_LRCLK_SRC_SHIFT)
++#define CTRL_BCLK_MCLK_SRC		GENMASK(5, 4)
++#define CTRL_DIN_SKEW			GENMASK(3, 2)
++#define CTRL_I2S_OUT_LANE_SRC		0
 +
-+  audio-aux-devs:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: list of auxiliary devices
++#define AIU_ACODEC_OUT_CHMAX		2
 +
-+  audio-routing:
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    minItems: 2
-+    description: |-
-+      A list of the connections between audio components. Each entry is a
-+      pair of strings, the first being the connection's sink, the second
-+      being the connection's source.
++static const char * const aiu_acodec_ctrl_mux_texts[] = {
++	"DISABLED", "I2S", "PCM",
++};
 +
-+  audio-widgets:
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    minItems: 2
-+    description: |-
-+      A list off component DAPM widget. Each entry is a pair of strings,
-+      the first being the widget type, the second being the widget name
++static int aiu_acodec_ctrl_mux_put_enum(struct snd_kcontrol *kcontrol,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_dapm_kcontrol_component(kcontrol);
++	struct snd_soc_dapm_context *dapm =
++		snd_soc_dapm_kcontrol_dapm(kcontrol);
++	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
++	unsigned int mux, changed;
 +
-+  model:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: User specified audio sound card name
++	mux = snd_soc_enum_item_to_val(e, ucontrol->value.enumerated.item[0]);
++	changed = snd_soc_component_test_bits(component, e->reg,
++					      CTRL_DIN_LRCLK_SRC,
++					      FIELD_PREP(CTRL_DIN_LRCLK_SRC,
++							 mux));
 +
-+patternProperties:
-+  "^dai-link-[0-9]+$":
-+    type: object
-+    description: |-
-+      dai-link child nodes:
-+        Container for dai-link level properties and the CODEC sub-nodes.
-+        There should be at least one (and probably more) subnode of this type
++	if (!changed)
++		return 0;
 +
-+    properties:
-+      dai-format:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        enum: [ i2s, left-j, dsp_a ]
++	/* Force disconnect of the mux while updating */
++	snd_soc_dapm_mux_update_power(dapm, kcontrol, 0, NULL, NULL);
 +
-+      mclk-fs:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: |-
-+          Multiplication factor between the frame rate and master clock
-+          rate
++	snd_soc_component_update_bits(component, e->reg,
++				      CTRL_DIN_LRCLK_SRC |
++				      CTRL_BCLK_MCLK_SRC,
++				      FIELD_PREP(CTRL_DIN_LRCLK_SRC, mux) |
++				      FIELD_PREP(CTRL_BCLK_MCLK_SRC, mux));
 +
-+      sound-dai:
-+        $ref: /schemas/types.yaml#/definitions/phandle
-+        description: phandle of the CPU DAI
++	snd_soc_dapm_mux_update_power(dapm, kcontrol, mux, e, NULL);
 +
-+    patternProperties:
-+      "^codec-[0-9]+$":
-+        type: object
-+        description: |-
-+          Codecs:
-+          dai-link representing backend links should have at least one subnode.
-+          One subnode for each codec of the dai-link. dai-link representing
-+          frontend links have no codec, therefore have no subnodes
++	return 0;
++}
 +
-+        properties:
-+          sound-dai:
-+            $ref: /schemas/types.yaml#/definitions/phandle
-+            description: phandle of the codec DAI
++static SOC_ENUM_SINGLE_DECL(aiu_acodec_ctrl_mux_enum, AIU_ACODEC_CTRL,
++			    CTRL_DIN_LRCLK_SRC_SHIFT,
++			    aiu_acodec_ctrl_mux_texts);
 +
-+        required:
-+          - sound-dai
++static const struct snd_kcontrol_new aiu_acodec_ctrl_mux =
++	SOC_DAPM_ENUM_EXT("ACodec Source", aiu_acodec_ctrl_mux_enum,
++			  snd_soc_dapm_get_enum_double,
++			  aiu_acodec_ctrl_mux_put_enum);
 +
-+    required:
-+      - sound-dai
++static const struct snd_kcontrol_new aiu_acodec_ctrl_out_enable =
++	SOC_DAPM_SINGLE_AUTODISABLE("Switch", AIU_ACODEC_CTRL,
++				    CTRL_DIN_EN, 1, 0);
 +
-+required:
-+  - model
-+  - dai-link-0
++static const struct snd_soc_dapm_widget aiu_acodec_ctrl_widgets[] = {
++	SND_SOC_DAPM_MUX("ACODEC SRC", SND_SOC_NOPM, 0, 0,
++			 &aiu_acodec_ctrl_mux),
++	SND_SOC_DAPM_SWITCH("ACODEC OUT EN", SND_SOC_NOPM, 0, 0,
++			    &aiu_acodec_ctrl_out_enable),
++};
 +
-+examples:
-+  - |
-+    sound {
-+        compatible = "amlogic,gx-sound-card";
-+        model = "GXL-ACME-S905X-FOO";
-+        audio-aux-devs = <&amp>;
-+        audio-routing = "I2S ENCODER I2S IN", "I2S FIFO Playback";
++static int aiu_acodec_ctrl_input_hw_params(struct snd_pcm_substream *substream,
++					   struct snd_pcm_hw_params *params,
++					   struct snd_soc_dai *dai)
++{
++	struct meson_codec_glue_input *data;
++	int ret;
 +
-+        dai-link-0 {
-+               sound-dai = <&i2s_fifo>;
-+        };
++	ret = meson_codec_glue_input_hw_params(substream, params, dai);
++	if (ret)
++		return ret;
 +
-+        dai-link-1 {
-+                sound-dai = <&i2s_encoder>;
-+                dai-format = "i2s";
-+                mclk-fs = <256>;
++	/* The glue will provide 1 lane out of the 4 to the output */
++	data = meson_codec_glue_input_get_data(dai);
++	data->params.channels_min = min_t(unsigned int, AIU_ACODEC_OUT_CHMAX,
++					  data->params.channels_min);
++	data->params.channels_max = min_t(unsigned int, AIU_ACODEC_OUT_CHMAX,
++					  data->params.channels_max);
 +
-+                codec-0 {
-+                        sound-dai = <&codec0>;
-+                };
++	return 0;
++}
 +
-+                codec-1 {
-+                        sound-dai = <&codec1>;
-+                };
-+        };
-+    };
++static const struct snd_soc_dai_ops aiu_acodec_ctrl_input_ops = {
++	.hw_params	= aiu_acodec_ctrl_input_hw_params,
++	.set_fmt	= meson_codec_glue_input_set_fmt,
++};
 +
++static const struct snd_soc_dai_ops aiu_acodec_ctrl_output_ops = {
++	.startup	= meson_codec_glue_output_startup,
++};
++
++#define AIU_ACODEC_CTRL_FORMATS					\
++	(SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |	\
++	 SNDRV_PCM_FMTBIT_S24_3LE | SNDRV_PCM_FMTBIT_S24_LE |	\
++	 SNDRV_PCM_FMTBIT_S32_LE)
++
++#define AIU_ACODEC_STREAM(xname, xsuffix, xchmax)		\
++{								\
++	.stream_name	= xname " " xsuffix,			\
++	.channels_min	= 1,					\
++	.channels_max	= (xchmax),				\
++	.rate_min       = 5512,					\
++	.rate_max	= 192000,				\
++	.formats	= AIU_ACODEC_CTRL_FORMATS,		\
++}
++
++#define AIU_ACODEC_INPUT(xname) {				\
++	.name = "ACODEC CTRL " xname,				\
++	.name = xname,						\
++	.playback = AIU_ACODEC_STREAM(xname, "Playback", 8),	\
++	.ops = &aiu_acodec_ctrl_input_ops,			\
++	.probe = meson_codec_glue_input_dai_probe,		\
++	.remove = meson_codec_glue_input_dai_remove,		\
++}
++
++#define AIU_ACODEC_OUTPUT(xname) {				\
++	.name = "ACODEC CTRL " xname,				\
++	.capture = AIU_ACODEC_STREAM(xname, "Capture", AIU_ACODEC_OUT_CHMAX), \
++	.ops = &aiu_acodec_ctrl_output_ops,			\
++}
++
++static struct snd_soc_dai_driver aiu_acodec_ctrl_dai_drv[] = {
++	[CTRL_I2S] = AIU_ACODEC_INPUT("ACODEC I2S IN"),
++	[CTRL_PCM] = AIU_ACODEC_INPUT("ACODEC PCM IN"),
++	[CTRL_OUT] = AIU_ACODEC_OUTPUT("ACODEC OUT"),
++};
++
++static const struct snd_soc_dapm_route aiu_acodec_ctrl_routes[] = {
++	{ "ACODEC SRC", "I2S", "ACODEC I2S IN Playback" },
++	{ "ACODEC SRC", "PCM", "ACODEC PCM IN Playback" },
++	{ "ACODEC OUT EN", "Switch", "ACODEC SRC" },
++	{ "ACODEC OUT Capture", NULL, "ACODEC OUT EN" },
++};
++
++static const struct snd_kcontrol_new aiu_acodec_ctrl_controls[] = {
++	SOC_SINGLE("ACODEC I2S Lane Select", AIU_ACODEC_CTRL,
++		   CTRL_I2S_OUT_LANE_SRC, 3, 0),
++};
++
++static int aiu_acodec_of_xlate_dai_name(struct snd_soc_component *component,
++					struct of_phandle_args *args,
++					const char **dai_name)
++{
++	return aiu_of_xlate_dai_name(component, args, dai_name, AIU_ACODEC);
++}
++
++static int aiu_acodec_ctrl_component_probe(struct snd_soc_component *component)
++{
++	/*
++	 * NOTE: Din Skew setting
++	 * According to the documentation, the following update adds one delay
++	 * to the din line. Without this, the output saturates. This happens
++	 * regardless of the link format (i2s or left_j) so it is not clear what
++	 * it actually does but it seems to be required
++	 */
++	snd_soc_component_update_bits(component, AIU_ACODEC_CTRL,
++				      CTRL_DIN_SKEW,
++				      FIELD_PREP(CTRL_DIN_SKEW, 2));
++
++	return 0;
++}
++
++static const struct snd_soc_component_driver aiu_acodec_ctrl_component = {
++	.name			= "AIU Internal DAC Codec Control",
++	.probe			= aiu_acodec_ctrl_component_probe,
++	.controls		= aiu_acodec_ctrl_controls,
++	.num_controls		= ARRAY_SIZE(aiu_acodec_ctrl_controls),
++	.dapm_widgets		= aiu_acodec_ctrl_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(aiu_acodec_ctrl_widgets),
++	.dapm_routes		= aiu_acodec_ctrl_routes,
++	.num_dapm_routes	= ARRAY_SIZE(aiu_acodec_ctrl_routes),
++	.of_xlate_dai_name	= aiu_acodec_of_xlate_dai_name,
++	.endianness		= 1,
++	.non_legacy_dai_naming	= 1,
++};
++
++int aiu_acodec_ctrl_register_component(struct device *dev)
++{
++	return aiu_add_component(dev, &aiu_acodec_ctrl_component,
++				 aiu_acodec_ctrl_dai_drv,
++				 ARRAY_SIZE(aiu_acodec_ctrl_dai_drv),
++				 "acodec");
++}
+diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
+index b765dfb70726..5c4845a23a34 100644
+--- a/sound/soc/meson/aiu.c
++++ b/sound/soc/meson/aiu.c
+@@ -345,6 +345,16 @@ static int aiu_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
++	/* Register the internal dac control component on gxl */
++	if (of_device_is_compatible(dev->of_node, "amlogic,aiu-gxl")) {
++		ret = aiu_acodec_ctrl_register_component(dev);
++		if (ret) {
++			dev_err(dev,
++			    "Failed to register acodec control component\n");
++			goto err;
++		}
++	}
++
+ 	return 0;
+ err:
+ 	snd_soc_unregister_component(dev);
+diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
+index 9242ab1ab64b..a65a576e3400 100644
+--- a/sound/soc/meson/aiu.h
++++ b/sound/soc/meson/aiu.h
+@@ -52,6 +52,7 @@ int aiu_add_component(struct device *dev,
+ 		      const char *debugfs_prefix);
+ 
+ int aiu_hdmi_ctrl_register_component(struct device *dev);
++int aiu_acodec_ctrl_register_component(struct device *dev);
+ 
+ int aiu_fifo_i2s_dai_probe(struct snd_soc_dai *dai);
+ int aiu_fifo_spdif_dai_probe(struct snd_soc_dai *dai);
 -- 
 2.24.1
 
