@@ -2,269 +2,184 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5787C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 06:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A70C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 07:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525FB2082F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 06:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645C3218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 07:25:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m+c1YDXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbgBMGsu (ORCPT
+        id S1729839AbgBMHZB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 01:48:50 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:33496 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgBMGst (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 01:48:49 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B95D3205268;
-        Thu, 13 Feb 2020 07:48:45 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8BB8D226483;
-        Thu, 13 Feb 2020 07:48:39 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D1E5340297;
-        Thu, 13 Feb 2020 14:48:32 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] ARM: dts: imx6sx: Add missing uart mux function
-Date:   Thu, 13 Feb 2020 14:43:09 +0800
-Message-Id: <1581576189-20490-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 13 Feb 2020 02:25:01 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59408 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729364AbgBMHZA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 02:25:00 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01D7OiT6053069;
+        Thu, 13 Feb 2020 01:24:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581578684;
+        bh=tdRVGdl7zGcgsD4GIj6ckaPuNZE9tHErFs3YzFk6dw4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=m+c1YDXlgfXLn4ZC49AGdYt+7+HxUW/vssIp4QvnjXridBdfB8Ah4MsW2+WY/Hj4w
+         xmgJvTsITghB0GqPk3S6p7qSyb2YWDM5dgOynk1xNui4FwOyuv5JSdwRVnVyuV3Auc
+         YUtvBKY/cqF9qJCP1TklXgBTlZJMj0nX7udHEhHk=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01D7Oi2w060210
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Feb 2020 01:24:44 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 13
+ Feb 2020 01:24:43 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 13 Feb 2020 01:24:43 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01D7Oe6K027910;
+        Thu, 13 Feb 2020 01:24:41 -0600
+Subject: Re: [PATCH] ata: ahci_platform: add 32-bit quirk for dwc-ahci
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>, <axboe@kernel.dk>
+CC:     <vigneshr@ti.com>, <nsekhar@ti.com>, <linux-ide@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
+References: <20200206111728.6703-1-rogerq@ti.com>
+ <d3a80407-a40a-c9e4-830f-138cfe9b163c@redhat.com>
+ <1c3ec10c-8505-a067-d51d-667f47d8d55b@ti.com>
+ <37c3ca6a-dc64-9ce9-e43b-03b12da6325e@redhat.com>
+ <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <543961d5-afc6-31ef-7fa9-cd15597c2988@ti.com>
+Date:   Thu, 13 Feb 2020 09:24:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <7e5f503f-03df-29d0-baae-af12d0af6f61@arm.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anson Huang <b20788@freescale.com>
+On 12/02/2020 13:43, Robin Murphy wrote:
+> On 2020-02-12 11:32 am, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 2/12/20 12:01 PM, Roger Quadros wrote:
+>>> Hi,
+>>>
+>>> On 06/02/2020 13:50, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 2/6/20 12:17 PM, Roger Quadros wrote:
+>>>>> On TI Platforms using LPAE, SATA breaks with 64-bit DMA.
+>>>>> Restrict it to 32-bit.
+>>>>>
+>>>>> Cc: stable@vger.kernel.org
+>>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>>> ---
+>>>>>   drivers/ata/ahci_platform.c | 3 +++
+>>>>>   1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+>>>>> index 3aab2e3d57f3..b925dc54cfa5 100644
+>>>>> --- a/drivers/ata/ahci_platform.c
+>>>>> +++ b/drivers/ata/ahci_platform.c
+>>>>> @@ -62,6 +62,9 @@ static int ahci_probe(struct platform_device *pdev)
+>>>>>       if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
+>>>>>           hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
+>>>>> +    if (of_device_is_compatible(dev->of_node, "snps,dwc-ahci"))
+>>>>> +        hpriv->flags |= AHCI_HFLAG_32BIT_ONLY;
+>>>>> +
+>>>>
+>>>> The "snps,dwc-ahci" is a generic (non TI specific) compatible which
+>>>> is e.g. also used on some exynos devices. So using that to key the
+>>>> setting of the 32 bit flag seems wrong to me.
+>>>>
+>>>> IMHO it would be better to introduce a TI specific compatible
+>>>> and use that to match on instead (and also adjust the dts files
+>>>> accordingly).
+>>>
+>>> Thinking further on this I think it is a bad idea to add a special
+>>> binding because the IP is not different. It is just that it is
+>>> wired differently on the TI SoC so DMA range is limited.
+>>>
+>>> IMO the proper solution is to have the right dma-ranges property in the
+>>> device tree. However, SATA platform driver is doing the wrong thing
+>>> by overriding the dma masks.
+>>> i.e. in ahci_platform_init_host() in libahci_platform.c >
+>>>          if (hpriv->cap & HOST_CAP_64) {
+>>>                  rc = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(64));
+>>>                  if (rc) {
+>>>                          rc = dma_coerce_mask_and_coherent(dev,
+>>> DMA_BIT_MASK(32));
+>>>                          if (rc) {
+>>>                                  dev_err(dev, "Failed to enable 64-bit DMA.\n");
+>>>                                  return rc;
+>>>                          }
+>>>                          dev_warn(dev, "Enable 32-bit DMA instead of 64-bit.\n");
+>>>                  }
+>>>          }
+>>>
+>>> This should be removed. Do you agree?
+>>
+>> I agree with you in principal, but I'm afraid this might cause regressions for
+>> existing hardware. We only do this if the host has set the CAP_64 flag,
+>> this code is quite old, it comes from the following commit:
+>>
+>> ###
+>>  From cc7a9e27562cd78a1dc885504086fab24addce40 Mon Sep 17 00:00:00 2001
+>> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>> Date: Thu, 12 Jun 2014 12:40:23 -0500
+>> Subject: [PATCH v3] ahci: Check and set 64-bit DMA mask for platform AHCI driver
+>>
+>> The current platform AHCI driver does not set the dma_mask correctly
+>> for 64-bit DMA capable AHCI controller. This patch checks the AHCI
+>> capability bit and set the dma_mask and coherent_dma_mask accordingly.
+>>
+>> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>> Tested-by: Hans de Goede <hdegoede@redhat.com>
+>> Tested-by: Suman Tripathi <stripathi@apm.com>
+>> Signed-off-by: Tejun Heo <tj@kernel.org>
+>> ###
+>>
+>> Presumably this was added for a reason, I'm guessing this might come
+>> from AMD's ARM server chips adventures, but I'm afraid that AHCI support
+>> on other (ARM) SoC's has become to rely on this behavior too.
+>>
+>> Maybe we can add a check to see if the mask was not already set and skip
+>> setting the mask in that case ?
+> 
+> If the device *is* inherently 64-bit capable, then setting 64-bit masks in the driver is correct - if a 64-bit IP block happens to have been integrated with only 32 address bits wired up, but the system has memory above the 32-bit boundary, then that should be described via "dma-ranges", which should then end up being used to further constrain the device masks internally to the DMA API.
 
-Update i.MX6SX pinfunc header to add uart mux function.
+I agree. In this case, it looks like DMA API is allocating memory > 32-bits
+even if "dma-ranges" size and dma_bus_limit is < 32-bits so issue is with
+platform DMA code.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sx-pinfunc.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+I will continue the discussion in the other thread
+https://lkml.org/lkml/2020/2/12/907
 
-diff --git a/arch/arm/boot/dts/imx6sx-pinfunc.h b/arch/arm/boot/dts/imx6sx-pinfunc.h
-index aa194a2..df9a6c5 100644
---- a/arch/arm/boot/dts/imx6sx-pinfunc.h
-+++ b/arch/arm/boot/dts/imx6sx-pinfunc.h
-@@ -66,6 +66,7 @@
- #define MX6SX_PAD_GPIO1_IO06__ENET2_MDC                           0x002C 0x0374 0x0000 0x2 0x0
- #define MX6SX_PAD_GPIO1_IO06__CSI1_MCLK                           0x002C 0x0374 0x0000 0x3 0x0
- #define MX6SX_PAD_GPIO1_IO06__UART1_RTS_B                         0x002C 0x0374 0x082C 0x4 0x0
-+#define MX6SX_PAD_GPIO1_IO06__UART1_CTS_B                         0x002C 0x0374 0x0000 0x4 0x0
- #define MX6SX_PAD_GPIO1_IO06__GPIO1_IO_6                          0x002C 0x0374 0x0000 0x5 0x0
- #define MX6SX_PAD_GPIO1_IO06__SRC_ANY_PU_RESET                    0x002C 0x0374 0x0000 0x6 0x0
- #define MX6SX_PAD_GPIO1_IO06__OCOTP_CTRL_WRAPPER_FUSE_LATCHED     0x002C 0x0374 0x0000 0x7 0x0
-@@ -75,6 +76,7 @@
- #define MX6SX_PAD_GPIO1_IO07__ENET2_MDIO                          0x0030 0x0378 0x0770 0x2 0x0
- #define MX6SX_PAD_GPIO1_IO07__AUDMUX_MCLK                         0x0030 0x0378 0x0000 0x3 0x0
- #define MX6SX_PAD_GPIO1_IO07__UART1_CTS_B                         0x0030 0x0378 0x0000 0x4 0x0
-+#define MX6SX_PAD_GPIO1_IO07__UART1_RTS_B                         0x0030 0x0378 0x082C 0x4 0x1
- #define MX6SX_PAD_GPIO1_IO07__GPIO1_IO_7                          0x0030 0x0378 0x0000 0x5 0x0
- #define MX6SX_PAD_GPIO1_IO07__SRC_EARLY_RESET                     0x0030 0x0378 0x0000 0x6 0x0
- #define MX6SX_PAD_GPIO1_IO07__DCIC2_OUT                           0x0030 0x0378 0x0000 0x7 0x0
-@@ -84,6 +86,7 @@
- #define MX6SX_PAD_GPIO1_IO08__SDMA_EXT_EVENT_0                    0x0034 0x037C 0x081C 0x2 0x0
- #define MX6SX_PAD_GPIO1_IO08__CCM_PMIC_RDY                        0x0034 0x037C 0x069C 0x3 0x1
- #define MX6SX_PAD_GPIO1_IO08__UART2_RTS_B                         0x0034 0x037C 0x0834 0x4 0x0
-+#define MX6SX_PAD_GPIO1_IO08__UART2_CTS_B                         0x0034 0x037C 0x0000 0x4 0x0
- #define MX6SX_PAD_GPIO1_IO08__GPIO1_IO_8                          0x0034 0x037C 0x0000 0x5 0x0
- #define MX6SX_PAD_GPIO1_IO08__SRC_SYSTEM_RESET                    0x0034 0x037C 0x0000 0x6 0x0
- #define MX6SX_PAD_GPIO1_IO08__DCIC1_OUT                           0x0034 0x037C 0x0000 0x7 0x0
-@@ -93,6 +96,7 @@
- #define MX6SX_PAD_GPIO1_IO09__SDMA_EXT_EVENT_1                    0x0038 0x0380 0x0820 0x2 0x0
- #define MX6SX_PAD_GPIO1_IO09__CCM_OUT0                            0x0038 0x0380 0x0000 0x3 0x0
- #define MX6SX_PAD_GPIO1_IO09__UART2_CTS_B                         0x0038 0x0380 0x0000 0x4 0x0
-+#define MX6SX_PAD_GPIO1_IO09__UART2_RTS_B                         0x0038 0x0380 0x0834 0x4 0x1
- #define MX6SX_PAD_GPIO1_IO09__GPIO1_IO_9                          0x0038 0x0380 0x0000 0x5 0x0
- #define MX6SX_PAD_GPIO1_IO09__SRC_INT_BOOT                        0x0038 0x0380 0x0000 0x6 0x0
- #define MX6SX_PAD_GPIO1_IO09__OBSERVE_MUX_OUT_4                   0x0038 0x0380 0x0000 0x7 0x0
-@@ -200,6 +204,7 @@
- #define MX6SX_PAD_CSI_DATA06__I2C4_SCL                            0x0064 0x03AC 0x07C0 0x2 0x2
- #define MX6SX_PAD_CSI_DATA06__KPP_COL_7                           0x0064 0x03AC 0x07D0 0x3 0x0
- #define MX6SX_PAD_CSI_DATA06__UART6_RTS_B                         0x0064 0x03AC 0x0854 0x4 0x0
-+#define MX6SX_PAD_CSI_DATA06__UART6_CTS_B                         0x0064 0x03AC 0x0000 0x4 0x0
- #define MX6SX_PAD_CSI_DATA06__GPIO1_IO_20                         0x0064 0x03AC 0x0000 0x5 0x0
- #define MX6SX_PAD_CSI_DATA06__WEIM_DATA_17                        0x0064 0x03AC 0x0000 0x6 0x0
- #define MX6SX_PAD_CSI_DATA06__DCIC2_OUT                           0x0064 0x03AC 0x0000 0x7 0x0
-@@ -210,6 +215,7 @@
- #define MX6SX_PAD_CSI_DATA07__I2C4_SDA                            0x0068 0x03B0 0x07C4 0x2 0x2
- #define MX6SX_PAD_CSI_DATA07__KPP_ROW_7                           0x0068 0x03B0 0x07DC 0x3 0x0
- #define MX6SX_PAD_CSI_DATA07__UART6_CTS_B                         0x0068 0x03B0 0x0000 0x4 0x0
-+#define MX6SX_PAD_CSI_DATA07__UART6_RTS_B                         0x0068 0x03B0 0x0854 0x4 0x1
- #define MX6SX_PAD_CSI_DATA07__GPIO1_IO_21                         0x0068 0x03B0 0x0000 0x5 0x0
- #define MX6SX_PAD_CSI_DATA07__WEIM_DATA_16                        0x0068 0x03B0 0x0000 0x6 0x0
- #define MX6SX_PAD_CSI_DATA07__DCIC1_OUT                           0x0068 0x03B0 0x0000 0x7 0x0
-@@ -219,6 +225,7 @@
- #define MX6SX_PAD_CSI_HSYNC__ESAI_TX0                             0x006C 0x03B4 0x0790 0x1 0x1
- #define MX6SX_PAD_CSI_HSYNC__AUDMUX_AUD6_TXD                      0x006C 0x03B4 0x0678 0x2 0x1
- #define MX6SX_PAD_CSI_HSYNC__UART4_RTS_B                          0x006C 0x03B4 0x0844 0x3 0x2
-+#define MX6SX_PAD_CSI_HSYNC__UART4_CTS_B                          0x006C 0x03B4 0x0000 0x3 0x0
- #define MX6SX_PAD_CSI_HSYNC__MQS_LEFT                             0x006C 0x03B4 0x0000 0x4 0x0
- #define MX6SX_PAD_CSI_HSYNC__GPIO1_IO_22                          0x006C 0x03B4 0x0000 0x5 0x0
- #define MX6SX_PAD_CSI_HSYNC__WEIM_DATA_25                         0x006C 0x03B4 0x0000 0x6 0x0
-@@ -251,6 +258,7 @@
- #define MX6SX_PAD_CSI_VSYNC__ESAI_TX5_RX0                         0x0078 0x03C0 0x07A4 0x1 0x1
- #define MX6SX_PAD_CSI_VSYNC__AUDMUX_AUD6_RXD                      0x0078 0x03C0 0x0674 0x2 0x1
- #define MX6SX_PAD_CSI_VSYNC__UART4_CTS_B                          0x0078 0x03C0 0x0000 0x3 0x0
-+#define MX6SX_PAD_CSI_VSYNC__UART4_RTS_B                          0x0078 0x03C0 0x0844 0x3 0x3
- #define MX6SX_PAD_CSI_VSYNC__MQS_RIGHT                            0x0078 0x03C0 0x0000 0x4 0x0
- #define MX6SX_PAD_CSI_VSYNC__GPIO1_IO_25                          0x0078 0x03C0 0x0000 0x5 0x0
- #define MX6SX_PAD_CSI_VSYNC__WEIM_DATA_24                         0x0078 0x03C0 0x0000 0x6 0x0
-@@ -353,6 +361,7 @@
- #define MX6SX_PAD_ENET2_RX_CLK__ENET2_REF_CLK_25M                 0x009C 0x03E4 0x0000 0x1 0x0
- #define MX6SX_PAD_ENET2_RX_CLK__I2C3_SCL                          0x009C 0x03E4 0x07B8 0x2 0x1
- #define MX6SX_PAD_ENET2_RX_CLK__UART1_RTS_B                       0x009C 0x03E4 0x082C 0x3 0x2
-+#define MX6SX_PAD_ENET2_RX_CLK__UART1_CTS_B                       0x009C 0x03E4 0x0000 0x3 0x0
- #define MX6SX_PAD_ENET2_RX_CLK__MLB_DATA                          0x009C 0x03E4 0x07EC 0x4 0x1
- #define MX6SX_PAD_ENET2_RX_CLK__GPIO2_IO_8                        0x009C 0x03E4 0x0000 0x5 0x0
- #define MX6SX_PAD_ENET2_RX_CLK__USB_OTG2_OC                       0x009C 0x03E4 0x085C 0x6 0x1
-@@ -363,6 +372,7 @@
- #define MX6SX_PAD_ENET2_TX_CLK__ENET2_REF_CLK2                    0x00A0 0x03E8 0x076C 0x1 0x1
- #define MX6SX_PAD_ENET2_TX_CLK__I2C3_SDA                          0x00A0 0x03E8 0x07BC 0x2 0x1
- #define MX6SX_PAD_ENET2_TX_CLK__UART1_CTS_B                       0x00A0 0x03E8 0x0000 0x3 0x0
-+#define MX6SX_PAD_ENET2_TX_CLK__UART1_RTS_B                       0x00A0 0x03E8 0x082C 0x3 0x3
- #define MX6SX_PAD_ENET2_TX_CLK__MLB_CLK                           0x00A0 0x03E8 0x07E8 0x4 0x1
- #define MX6SX_PAD_ENET2_TX_CLK__GPIO2_IO_9                        0x00A0 0x03E8 0x0000 0x5 0x0
- #define MX6SX_PAD_ENET2_TX_CLK__USB_OTG2_PWR                      0x00A0 0x03E8 0x0000 0x6 0x0
-@@ -372,6 +382,7 @@
- #define MX6SX_PAD_KEY_COL0__KPP_COL_0                             0x00A4 0x03EC 0x0000 0x0 0x0
- #define MX6SX_PAD_KEY_COL0__USDHC3_CD_B                           0x00A4 0x03EC 0x0000 0x1 0x0
- #define MX6SX_PAD_KEY_COL0__UART6_RTS_B                           0x00A4 0x03EC 0x0854 0x2 0x2
-+#define MX6SX_PAD_KEY_COL0__UART6_CTS_B                           0x00A4 0x03EC 0x0000 0x2 0x0
- #define MX6SX_PAD_KEY_COL0__ECSPI1_SCLK                           0x00A4 0x03EC 0x0710 0x3 0x0
- #define MX6SX_PAD_KEY_COL0__AUDMUX_AUD5_TXC                       0x00A4 0x03EC 0x066C 0x4 0x0
- #define MX6SX_PAD_KEY_COL0__GPIO2_IO_10                           0x00A4 0x03EC 0x0000 0x5 0x0
-@@ -390,6 +401,7 @@
- #define MX6SX_PAD_KEY_COL2__KPP_COL_2                             0x00AC 0x03F4 0x0000 0x0 0x0
- #define MX6SX_PAD_KEY_COL2__USDHC4_CD_B                           0x00AC 0x03F4 0x0874 0x1 0x1
- #define MX6SX_PAD_KEY_COL2__UART5_RTS_B                           0x00AC 0x03F4 0x084C 0x2 0x2
-+#define MX6SX_PAD_KEY_COL2__UART5_CTS_B                           0x00AC 0x03F4 0x0000 0x2 0x0
- #define MX6SX_PAD_KEY_COL2__CAN1_TX                               0x00AC 0x03F4 0x0000 0x3 0x0
- #define MX6SX_PAD_KEY_COL2__CANFD_TX1                             0x00AC 0x03F4 0x0000 0x4 0x0
- #define MX6SX_PAD_KEY_COL2__GPIO2_IO_12                           0x00AC 0x03F4 0x0000 0x5 0x0
-@@ -415,6 +427,7 @@
- #define MX6SX_PAD_KEY_ROW0__KPP_ROW_0                             0x00B8 0x0400 0x0000 0x0 0x0
- #define MX6SX_PAD_KEY_ROW0__USDHC3_WP                             0x00B8 0x0400 0x0000 0x1 0x0
- #define MX6SX_PAD_KEY_ROW0__UART6_CTS_B                           0x00B8 0x0400 0x0000 0x2 0x0
-+#define MX6SX_PAD_KEY_ROW0__UART6_RTS_B                           0x00B8 0x0400 0x0854 0x2 0x3
- #define MX6SX_PAD_KEY_ROW0__ECSPI1_MOSI                           0x00B8 0x0400 0x0718 0x3 0x0
- #define MX6SX_PAD_KEY_ROW0__AUDMUX_AUD5_TXD                       0x00B8 0x0400 0x0660 0x4 0x0
- #define MX6SX_PAD_KEY_ROW0__GPIO2_IO_15                           0x00B8 0x0400 0x0000 0x5 0x0
-@@ -434,6 +447,7 @@
- #define MX6SX_PAD_KEY_ROW2__KPP_ROW_2                             0x00C0 0x0408 0x0000 0x0 0x0
- #define MX6SX_PAD_KEY_ROW2__USDHC4_WP                             0x00C0 0x0408 0x0878 0x1 0x1
- #define MX6SX_PAD_KEY_ROW2__UART5_CTS_B                           0x00C0 0x0408 0x0000 0x2 0x0
-+#define MX6SX_PAD_KEY_ROW2__UART5_RTS_B                           0x00C0 0x0408 0x084C 0x2 0x3
- #define MX6SX_PAD_KEY_ROW2__CAN1_RX                               0x00C0 0x0408 0x068C 0x3 0x1
- #define MX6SX_PAD_KEY_ROW2__CANFD_RX1                             0x00C0 0x0408 0x0694 0x4 0x1
- #define MX6SX_PAD_KEY_ROW2__GPIO2_IO_17                           0x00C0 0x0408 0x0000 0x5 0x0
-@@ -816,6 +830,7 @@
- #define MX6SX_PAD_NAND_DATA04__USDHC2_DATA4                       0x0160 0x04A8 0x0000 0x1 0x0
- #define MX6SX_PAD_NAND_DATA04__QSPI2_B_SS1_B                      0x0160 0x04A8 0x0000 0x2 0x0
- #define MX6SX_PAD_NAND_DATA04__UART3_RTS_B                        0x0160 0x04A8 0x083C 0x3 0x0
-+#define MX6SX_PAD_NAND_DATA04__UART3_CTS_B                        0x0160 0x04A8 0x0000 0x3 0x0
- #define MX6SX_PAD_NAND_DATA04__AUDMUX_AUD4_RXFS                   0x0160 0x04A8 0x0650 0x4 0x0
- #define MX6SX_PAD_NAND_DATA04__GPIO4_IO_8                         0x0160 0x04A8 0x0000 0x5 0x0
- #define MX6SX_PAD_NAND_DATA04__WEIM_AD_4                          0x0160 0x04A8 0x0000 0x6 0x0
-@@ -826,6 +841,7 @@
- #define MX6SX_PAD_NAND_DATA05__USDHC2_DATA5                       0x0164 0x04AC 0x0000 0x1 0x0
- #define MX6SX_PAD_NAND_DATA05__QSPI2_B_DQS                        0x0164 0x04AC 0x0000 0x2 0x0
- #define MX6SX_PAD_NAND_DATA05__UART3_CTS_B                        0x0164 0x04AC 0x0000 0x3 0x0
-+#define MX6SX_PAD_NAND_DATA05__UART3_RTS_B                        0x0164 0x04AC 0x083C 0x3 0x1
- #define MX6SX_PAD_NAND_DATA05__AUDMUX_AUD4_RXC                    0x0164 0x04AC 0x064C 0x4 0x0
- #define MX6SX_PAD_NAND_DATA05__GPIO4_IO_9                         0x0164 0x04AC 0x0000 0x5 0x0
- #define MX6SX_PAD_NAND_DATA05__WEIM_AD_5                          0x0164 0x04AC 0x0000 0x6 0x0
-@@ -968,6 +984,7 @@
- #define MX6SX_PAD_QSPI1A_SS1_B__SDMA_DEBUG_PC_3                   0x019C 0x04E4 0x0000 0x9 0x0
- #define MX6SX_PAD_QSPI1B_DATA0__QSPI1_B_DATA_0                    0x01A0 0x04E8 0x0000 0x0 0x0
- #define MX6SX_PAD_QSPI1B_DATA0__UART3_CTS_B                       0x01A0 0x04E8 0x0000 0x1 0x0
-+#define MX6SX_PAD_QSPI1B_DATA0__UART3_RTS_B                       0x01A0 0x04E8 0x083C 0x1 0x4
- #define MX6SX_PAD_QSPI1B_DATA0__ECSPI3_MOSI                       0x01A0 0x04E8 0x0738 0x2 0x1
- #define MX6SX_PAD_QSPI1B_DATA0__ESAI_RX_FS                        0x01A0 0x04E8 0x0778 0x3 0x2
- #define MX6SX_PAD_QSPI1B_DATA0__CSI1_DATA_22                      0x01A0 0x04E8 0x06F4 0x4 0x1
-@@ -976,6 +993,7 @@
- #define MX6SX_PAD_QSPI1B_DATA0__SIM_M_HADDR_9                     0x01A0 0x04E8 0x0000 0x7 0x0
- #define MX6SX_PAD_QSPI1B_DATA1__QSPI1_B_DATA_1                    0x01A4 0x04EC 0x0000 0x0 0x0
- #define MX6SX_PAD_QSPI1B_DATA1__UART3_RTS_B                       0x01A4 0x04EC 0x083C 0x1 0x5
-+#define MX6SX_PAD_QSPI1B_DATA1__UART3_CTS_B                       0x01A4 0x04EC 0x0000 0x1 0x0
- #define MX6SX_PAD_QSPI1B_DATA1__ECSPI3_MISO                       0x01A4 0x04EC 0x0734 0x2 0x1
- #define MX6SX_PAD_QSPI1B_DATA1__ESAI_RX_CLK                       0x01A4 0x04EC 0x0788 0x3 0x2
- #define MX6SX_PAD_QSPI1B_DATA1__CSI1_DATA_21                      0x01A4 0x04EC 0x06F0 0x4 0x1
-@@ -1247,6 +1265,7 @@
- #define MX6SX_PAD_SD1_DATA2__PWM3_OUT                             0x0230 0x0578 0x0000 0x2 0x0
- #define MX6SX_PAD_SD1_DATA2__GPT_COMPARE2                         0x0230 0x0578 0x0000 0x3 0x0
- #define MX6SX_PAD_SD1_DATA2__UART2_CTS_B                          0x0230 0x0578 0x0000 0x4 0x0
-+#define MX6SX_PAD_SD1_DATA2__UART2_RTS_B                          0x0230 0x0578 0x0834 0x4 0x2
- #define MX6SX_PAD_SD1_DATA2__GPIO6_IO_4                           0x0230 0x0578 0x0000 0x5 0x0
- #define MX6SX_PAD_SD1_DATA2__ECSPI4_RDY                           0x0230 0x0578 0x0000 0x6 0x0
- #define MX6SX_PAD_SD1_DATA2__CCM_OUT0                             0x0230 0x0578 0x0000 0x7 0x0
-@@ -1256,6 +1275,7 @@
- #define MX6SX_PAD_SD1_DATA3__AUDMUX_AUD5_RXD                      0x0234 0x057C 0x065C 0x2 0x2
- #define MX6SX_PAD_SD1_DATA3__GPT_COMPARE3                         0x0234 0x057C 0x0000 0x3 0x0
- #define MX6SX_PAD_SD1_DATA3__UART2_RTS_B                          0x0234 0x057C 0x0834 0x4 0x3
-+#define MX6SX_PAD_SD1_DATA3__UART2_CTS_B                          0x0234 0x057C 0x0000 0x4 0x0
- #define MX6SX_PAD_SD1_DATA3__GPIO6_IO_5                           0x0234 0x057C 0x0000 0x5 0x0
- #define MX6SX_PAD_SD1_DATA3__ECSPI4_SS1                           0x0234 0x057C 0x0000 0x6 0x0
- #define MX6SX_PAD_SD1_DATA3__CCM_PMIC_RDY                         0x0234 0x057C 0x069C 0x7 0x2
-@@ -1326,6 +1346,7 @@
- #define MX6SX_PAD_SD2_DATA3__MMDC_DEBUG_31                        0x024C 0x0594 0x0000 0x9 0x0
- #define MX6SX_PAD_SD3_CLK__USDHC3_CLK                             0x0250 0x0598 0x0000 0x0 0x0
- #define MX6SX_PAD_SD3_CLK__UART4_CTS_B                            0x0250 0x0598 0x0000 0x1 0x0
-+#define MX6SX_PAD_SD3_CLK__UART4_RTS_B                            0x0250 0x0598 0x0844 0x1 0x0
- #define MX6SX_PAD_SD3_CLK__ECSPI4_SCLK                            0x0250 0x0598 0x0740 0x2 0x0
- #define MX6SX_PAD_SD3_CLK__AUDMUX_AUD6_RXFS                       0x0250 0x0598 0x0680 0x3 0x0
- #define MX6SX_PAD_SD3_CLK__LCDIF2_VSYNC                           0x0250 0x0598 0x0000 0x4 0x0
-@@ -1365,6 +1386,7 @@
- #define MX6SX_PAD_SD3_DATA1__SDMA_DEBUG_EVT_CHN_LINES_1           0x025C 0x05A4 0x0000 0x9 0x0
- #define MX6SX_PAD_SD3_DATA2__USDHC3_DATA2                         0x0260 0x05A8 0x0000 0x0 0x0
- #define MX6SX_PAD_SD3_DATA2__UART4_RTS_B                          0x0260 0x05A8 0x0844 0x1 0x1
-+#define MX6SX_PAD_SD3_DATA2__UART4_CTS_B                          0x0260 0x05A8 0x0000 0x1 0x0
- #define MX6SX_PAD_SD3_DATA2__ECSPI4_SS0                           0x0260 0x05A8 0x074C 0x2 0x0
- #define MX6SX_PAD_SD3_DATA2__AUDMUX_AUD6_TXFS                     0x0260 0x05A8 0x0688 0x3 0x0
- #define MX6SX_PAD_SD3_DATA2__LCDIF2_CLK                           0x0260 0x05A8 0x0000 0x4 0x0
-@@ -1410,6 +1432,7 @@
- #define MX6SX_PAD_SD3_DATA6__CAN2_TX                              0x0270 0x05B8 0x0000 0x1 0x0
- #define MX6SX_PAD_SD3_DATA6__CANFD_TX2                            0x0270 0x05B8 0x0000 0x2 0x0
- #define MX6SX_PAD_SD3_DATA6__UART3_RTS_B                          0x0270 0x05B8 0x083C 0x3 0x2
-+#define MX6SX_PAD_SD3_DATA6__UART3_CTS_B                          0x0270 0x05B8 0x0000 0x3 0x0
- #define MX6SX_PAD_SD3_DATA6__LCDIF2_DATA_4                        0x0270 0x05B8 0x0000 0x4 0x0
- #define MX6SX_PAD_SD3_DATA6__GPIO7_IO_8                           0x0270 0x05B8 0x0000 0x5 0x0
- #define MX6SX_PAD_SD3_DATA6__ENET1_1588_EVENT0_OUT                0x0270 0x05B8 0x0000 0x6 0x0
-@@ -1420,6 +1443,7 @@
- #define MX6SX_PAD_SD3_DATA7__CAN1_RX                              0x0274 0x05BC 0x068C 0x1 0x0
- #define MX6SX_PAD_SD3_DATA7__CANFD_RX1                            0x0274 0x05BC 0x0694 0x2 0x0
- #define MX6SX_PAD_SD3_DATA7__UART3_CTS_B                          0x0274 0x05BC 0x0000 0x3 0x0
-+#define MX6SX_PAD_SD3_DATA7__UART3_RTS_B                          0x0274 0x05BC 0x083C 0x3 0x3
- #define MX6SX_PAD_SD3_DATA7__LCDIF2_DATA_5                        0x0274 0x05BC 0x0000 0x4 0x0
- #define MX6SX_PAD_SD3_DATA7__GPIO7_IO_9                           0x0274 0x05BC 0x0000 0x5 0x0
- #define MX6SX_PAD_SD3_DATA7__ENET1_1588_EVENT0_IN                 0x0274 0x05BC 0x0000 0x6 0x0
-@@ -1511,6 +1535,7 @@
- #define MX6SX_PAD_SD4_DATA6__USDHC4_DATA6                         0x0298 0x05E0 0x0000 0x0 0x0
- #define MX6SX_PAD_SD4_DATA6__RAWNAND_CE3_B                        0x0298 0x05E0 0x0000 0x1 0x0
- #define MX6SX_PAD_SD4_DATA6__UART5_RTS_B                          0x0298 0x05E0 0x084C 0x2 0x0
-+#define MX6SX_PAD_SD4_DATA6__UART5_CTS_B                          0x0298 0x05E0 0x0000 0x2 0x0
- #define MX6SX_PAD_SD4_DATA6__ECSPI3_MISO                          0x0298 0x05E0 0x0734 0x3 0x0
- #define MX6SX_PAD_SD4_DATA6__LCDIF2_DATA_6                        0x0298 0x05E0 0x0000 0x4 0x0
- #define MX6SX_PAD_SD4_DATA6__GPIO6_IO_20                          0x0298 0x05E0 0x0000 0x5 0x0
-@@ -1521,6 +1546,7 @@
- #define MX6SX_PAD_SD4_DATA7__USDHC4_DATA7                         0x029C 0x05E4 0x0000 0x0 0x0
- #define MX6SX_PAD_SD4_DATA7__RAWNAND_DATA08                       0x029C 0x05E4 0x0000 0x1 0x0
- #define MX6SX_PAD_SD4_DATA7__UART5_CTS_B                          0x029C 0x05E4 0x0000 0x2 0x0
-+#define MX6SX_PAD_SD4_DATA7__UART5_RTS_B                          0x029C 0x05E4 0x084C 0x2 0x1
- #define MX6SX_PAD_SD4_DATA7__ECSPI3_SS0                           0x029C 0x05E4 0x073C 0x3 0x0
- #define MX6SX_PAD_SD4_DATA7__LCDIF2_DATA_15                       0x029C 0x05E4 0x0000 0x4 0x0
- #define MX6SX_PAD_SD4_DATA7__GPIO6_IO_21                          0x029C 0x05E4 0x0000 0x5 0x0
 -- 
-2.7.4
-
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
