@@ -2,159 +2,127 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD217C352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 22:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B92C352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 22:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987D624695
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 22:18:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=trafsysas.onmicrosoft.com header.i=@trafsysas.onmicrosoft.com header.b="j8ne9EOK"
+	by mail.kernel.org (Postfix) with ESMTP id E55D721734
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 22:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgBMWSR (ORCPT
+        id S1727595AbgBMWde (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 17:18:17 -0500
-Received: from mail-db8eur05on2091.outbound.protection.outlook.com ([40.107.20.91]:60384
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727722AbgBMWSQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 17:18:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=miENUNsRGWXW2OWXoqAQp59wMNyk54C9XeOkCaZTbA53Owh+hmwLW8RaKIeS4K9/PdpdV8YDItjpZzD56abtTI9ioNtJImgPtvfVI4vIHHVAyenRoa7399woSy+ASSIQhw1KhwPBNpB+Pe51g3r7k2tbWI6A4aXrtAA5YeFgo0C70Lq+86VaE8GEYA8ux7DECyHzAjKkAsDVfPcLf0Wtw9sWiU9k6iyiHir3Hw+lMQoIiNJHRs9+JAhlmKk5Aos49EUtqUnAzK2aTT+EeG6UNN9PsAmfwcUX4+vQ8X5yIXnNNAFC+AsVfUwf6dMggEKmf0X2m7hCkdQbsbAhSAlHfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FIci2+FaZulGdoFUjaFx9/APPXv66LLYFIb4U9xDi3w=;
- b=MTBerlVy+CLzVehQT7JCwSt+FPViguBUXcw29UG7Q/pnAaAy1U/YjL324k0RspuqalAGI0kIb3qnvITbeRxZvJvsjCjZhXKEGznBbRbA2pSg3k3LAw26HKxvm8pfFldZ5IXcLgpOI/h9Bnb1XAducknWOUuiQSukdQWNootilseBBfjBmn6ZgKHK/Kld54jlAheYKBYwxHxzLXJTOi7hhlAuOUOoSyQTv090L3OlFh6lKaSZAPAiTLDxuHEWWK9PY2wBWuFR7itLrxxXFI7BorAwvDhBlKZkOEGWCBo9hdzUPnAo1wucyVMUjkVjB5rBprAFncw0Bovbv3K7o14uyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=norphonic.com; dmarc=pass action=none
- header.from=norphonic.com; dkim=pass header.d=norphonic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=trafsysas.onmicrosoft.com; s=selector2-trafsysas-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FIci2+FaZulGdoFUjaFx9/APPXv66LLYFIb4U9xDi3w=;
- b=j8ne9EOKNn2MU/erbOeCW++L6LjQfSKGnQCFRBc52t1bzL/UipPqLWb2ba2BE/Q7LqT3Tg9svRUJRRt6UIJxMNPyT+nMqU7OLv437HGuCy016ufo+Zs01t8/4W3kBfevpnA414ZxNsSmoswG9U5XyTm9un0ifkRTes3s0+Z94Fc=
-Received: from DB6PR06MB3048.eurprd06.prod.outlook.com (10.170.210.140) by
- DB6PR06MB3960.eurprd06.prod.outlook.com (10.168.19.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Thu, 13 Feb 2020 22:18:13 +0000
-Received: from DB6PR06MB3048.eurprd06.prod.outlook.com
- ([fe80::d9df:8743:dbc9:e247]) by DB6PR06MB3048.eurprd06.prod.outlook.com
- ([fe80::d9df:8743:dbc9:e247%3]) with mapi id 15.20.2707.031; Thu, 13 Feb 2020
- 22:18:13 +0000
-From:   Eugene Zalkonnikov <ez@norphonic.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "development@norphonic.com" <development@norphonic.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v5 2/2] Device tree bindings for TI HDC20x0 humidity and
- temperature sensors
-Thread-Topic: [PATCH v5 2/2] Device tree bindings for TI HDC20x0 humidity and
- temperature sensors
-Thread-Index: AQHV4rt7AAu36hdxykemm9XjidZh/w==
-Date:   Thu, 13 Feb 2020 22:18:13 +0000
-Message-ID: <90EF52F7-82A2-4617-95FF-CCF37E3FEAC6@norphonic.com>
-References: <CF7736B3-95D6-43E4-BC69-DDB0DFE2A86A@norphonic.com>
-In-Reply-To: <CF7736B3-95D6-43E4-BC69-DDB0DFE2A86A@norphonic.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ez@norphonic.com; 
-x-originating-ip: [85.166.70.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9ff5f66a-96bf-4946-7573-08d7b0d29de3
-x-ms-traffictypediagnostic: DB6PR06MB3960:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR06MB39606CDCE3933471340A7790CA1A0@DB6PR06MB3960.eurprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 031257FE13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(376002)(136003)(366004)(396003)(346002)(189003)(199004)(110136005)(54906003)(6486002)(508600001)(26005)(33656002)(36756003)(186003)(6506007)(2616005)(64756008)(66446008)(66476007)(66556008)(81166006)(5660300002)(316002)(81156014)(71200400001)(66946007)(8936002)(8676002)(2906002)(91956017)(4326008)(6512007)(966005)(86362001)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:DB6PR06MB3960;H:DB6PR06MB3048.eurprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: norphonic.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GHti0sdMbd/a5Gdfhnt5K1A63wWDF4esU3y9iIxR2Xg1OuTzMqRw1Ie2TXKQzMH/OahDxyAhnRrP4TFV85A21hrBdUTMDuAKn0H9y+Ilgrvazh96HMzIH7IgxAG9d7d/L18AhYitvn837rLS1ohSFUdDZ48Sr3FNEsUy0NFGLa7fzUyReXLdYkewTBLK7bQOr+LKiFXlYnA75Fq/SEhd90HWd3UjFFo0PogQjiiH2QjyzA/0MB0O1OL/EFZmZ7/KYLS2M1dWgzuBtel1jQrLUV4CMDjt8A52UHK/PJYtOqXqXFmAJRV1VrwRYqibGyorkcXrOIjyUQfQOsf3TrcUq9vgPNrlO/+7puMmlwlUNVPLjxbKuRK7wd1PWgfwZBUKxwkoJKGBess+I9e7FOwf+tyI2i09DjDVZmYp/QiDRDSIsfh+vlhIzXCYCalWYHaeWQ1nHbG3XiVAs4rnIodRU4q1UJVlpifadk1lWEfBuL3hWpfcrY3I019kocfPN3fl/Mm/qDu7rguilzMrvovsrQ==
-x-ms-exchange-antispam-messagedata: eJ1P4Gm2fWEKJLm67MmC5b+F3xH3NSlXjGZMYBrVbOcKgNQkswbcEyF19QJx4OpAk6D3chwmcgEikN4NiXgx4LZQx9VxcyqlbqsLXR0nw+57uvm8tKGsor/KSCNI3iH9RUUEb07hdmt7S26P/qwNDw==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3CCF2D6C85D1FC408616909C9D0D1D39@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Feb 2020 17:33:34 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37940 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgBMWde (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 17:33:34 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id C34D529587E
+Received: by earth.universe (Postfix, from userid 1000)
+        id AD82F3C0C83; Thu, 13 Feb 2020 23:33:29 +0100 (CET)
+Date:   Thu, 13 Feb 2020 23:33:29 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     linux-i2c@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+Subject: Re: [PATCH v3 2/2] arm64: tegra: add unit address to nodes under
+ i2c-tunnel
+Message-ID: <20200213223329.7onm5k6elqhrn7ty@earth.universe>
+References: <20200213214656.9801-1-dafna.hirschfeld@collabora.com>
+ <20200213214656.9801-2-dafna.hirschfeld@collabora.com>
 MIME-Version: 1.0
-X-OriginatorOrg: norphonic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ff5f66a-96bf-4946-7573-08d7b0d29de3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 22:18:13.2766
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: cbf3f496-45ad-415e-97cb-4e62d6cd974f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z3hUGkjYSGrjlfIpimR+pOgsgj/ebQ6meinJSRMiaE2ffgLPcwZeyXrbCQ/f4Zazov2wPtcqq/SIc5Z3G3gLrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR06MB3960
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="isksol5hrgo6yufk"
+Content-Disposition: inline
+In-Reply-To: <20200213214656.9801-2-dafna.hirschfeld@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Amended device tree bindings for the driver.
 
-Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
+--isksol5hrgo6yufk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hd=
-c2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/=
-ti,hdc2010.yaml
---- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.y=
-aml	1970-01-01 01:00:00.000000000 +0100
-+++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2=
-010.yaml	2020-02-12 14:28:42.562903814 +0100
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HDC2010/HDC2080 humidity and temperature iio sensors
-+
-+maintainers:
-+  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
-+
-+description: |
-+  Relative humidity and tempereature sensors on I2C bus
-+
-+  Datasheets are available at:
-+    http://www.ti.com/product/HDC2010/datasheet
-+    http://www.ti.com/product/HDC2080/datasheet
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,hdc2010
-+      - ti,hdc2080
-+
-+  vddd-supply:
-+    description:
-+      digital voltage regulator (see regulator/regulator.txt)
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    i2c0 {
-+      #address-cells =3D <1>;
-+      #size-cells =3D <0>;
-+
-+      hdc200x@40 {
-+          compatible =3D "ti,hdc2010";
-+          reg =3D <0x40>;
-+      };
-+    };
+Hi,
 
+On Thu, Feb 13, 2020 at 10:46:56PM +0100, Dafna Hirschfeld wrote:
+> add unit address to the nodes bq24735, smart-battery
+>=20
+> This fixes the warning:
+> 'bq24735', 'smart-battery' do not match any of the
+> regexes: '^.*@[0-9a-f]+$', 'pinctrl-[0-9]+'
+>=20
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
+
+While fixing the node names, it makes sense to also
+use device class instead of name as mentioned in
+Documentation/devicetree/bindings/writing-bindings.txt
+
+>  arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/=
+boot/dts/nvidia/tegra132-norrin.dts
+> index a0385a386a3f..a19171f6f0f7 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+> +++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+> @@ -767,7 +767,7 @@
+> =20
+>  				google,remote-bus =3D <0>;
+> =20
+> -				charger: bq24735 {
+> +				charger: bq24735@9 {
+
+charger: charger@9 {
+
+>  					compatible =3D "ti,bq24735";
+>  					reg =3D <0x9>;
+>  					interrupt-parent =3D <&gpio>;
+> @@ -778,7 +778,7 @@
+>  							GPIO_ACTIVE_HIGH>;
+>  				};
+> =20
+> -				battery: smart-battery {
+> +				battery: smart-battery@b {
+
+battery: battery@b {
+
+>  					compatible =3D "sbs,sbs-battery";
+>  					reg =3D <0xb>;
+>  					battery-name =3D "battery";
+
+-- Sebastian
+
+--isksol5hrgo6yufk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5FzrYACgkQ2O7X88g7
++pofkhAAoMoK8pmU5IM+7SKEC/t6gCHl3ZFxdr779uaNe2+xXryagiKWvr9VRlG3
+9Qwf9HcECBHc09tSQ5UMdCrxvPdWE3vCzAtar3K7KCAsKt0J0chJNkM2gXmXm2p/
+YODX06XMl604eMwz9XAWbBfZS/tEcfdRPb2s3r+vfBFm5ANNfdgCqI0ieCGzbnJO
+4RsIKDagTObQ3YdRgi7I4DLuCMuKyDXOapAESTOHxgm7ngb1UDENN9zg2ljCIqDX
+NbwOUsApIBPqETfrQBK2qCEuLLcVQVEB45/aWX2+8VJLX7EMgUvf07OcGVhOiwF8
+7ii38FQxRJwrECcPvcP0oKHAey6Mm9W4vf6iHQdXstZM/G0BCHMjYzuQeR285xO/
+1EgeoZzPNl0+x2Cl+rTXc32x3D64Zbhn2IPf47VcxQfxAb5ZzJCi6syax3q/ot1l
+TYDxc7IRsOCp5KlDJEG6BjZvjg+l4o9naKQ5sKwIDpz9vaFDi3vCgERU5i74FQbC
+3dyD1ycsPCmK9fTkKCKOBlcPaiXNMJ8xVMM1z9SZMYXix/ewMLZ//nb5BF1Hn8hx
+wilUATeajQI/WyI6/0E9Whw+zKDwQoLfUefa72lCEBdDMIV75ud+hcreoTZFTFN2
+J7KM/jLltPiBmyelrzBNMLQaIq/cAI6c2LG/B1O7Io5xmmSJRy8=
+=QPMO
+-----END PGP SIGNATURE-----
+
+--isksol5hrgo6yufk--
