@@ -2,106 +2,93 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C31C3B192
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F8C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 17:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F314D24650
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:52:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RU6hP0Ya"
+	by mail.kernel.org (Postfix) with ESMTP id 478A2217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 17:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581614317;
+	bh=us1MMTCogBjdT2JfyOsRefkIeb9nYIIBpdj2wwEdxZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KSZEWIUpMw+FS+DDEbCz6wIgU9rkHwb5zgqv+0Ke62M/5RJmThEwixOV/Yf0I+iSP
+	 iBtAM5BwBqvkr3zLQCIgVm0gWVp/Y5+uPOJfhanMdTF+Jsd1CS0a4TSGBiZOdDzOyF
+	 Wy6345XCH0nocDS81uBSbI9vQbe1V6JCL0uWxvUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgBMQwS (ORCPT
+        id S1728350AbgBMRSd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:52:18 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33172 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728333AbgBMQwR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 11:52:17 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m10so153187wmc.0
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 08:52:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WDMFZWW+h59RhGdVycD2Uyjz5YXns4ww4oPwlirB1xs=;
-        b=RU6hP0YaDVyg76DpwMt8+kokjDNdYK4t+fP1NMy86wohTGSpgKGZzXz22INLcb/uTG
-         SulDKPmxKjSDX9mM1ObcytxPc9qSyfmoSueNx1WrVr+i2pcQ0/1MH6MfZipjLCRNhZ4R
-         QAAwV9AK52wzbuAFhJ4wwljXxMGU1D8fjkRr3xz5yGktVvdi91XDhvfsXom1xAiav9Ca
-         9EsxU47a4H/ESMgWlgX459A9KaDdxI8GrFEiHciqdGPUqbJk6r0x0gm/NOt1/yOdfV8m
-         TYI4DrH7cKX39puiAtvbmBg0t24nmt6J4GV1r4c9AeQkOhtGKMzU9MsecC3L+ojmCMyI
-         c2Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WDMFZWW+h59RhGdVycD2Uyjz5YXns4ww4oPwlirB1xs=;
-        b=SYzEkjZ5azMxKlezlE7vklnK4WnjDShqYSBNEgCGzKZbuztEPcIdWs7EPNMV7bhl5q
-         oPZcqtmje0tim+bTg4q1WefGM/A3sBibYFGMwq3CqhsIJfbEFAxVaDnHGBt/inrfeCCC
-         YEsIBDE5DdiJyU4vuqkNnK1RKkMSxbexqu1OXJKwGj/hnrlF+rDCw0nOP7lVbzDiz7jf
-         xi1e2TNWOPwBcCCdubdHmVuF2d78BS4nvhaYf7xnOru8RFCBTVqguhCqxdGLUi9v4++u
-         LrxcOr07T1qmfEHDswdQCa+1fePdfOo5VcJrUt8YKDIta53hEtiHDsNoxRFM5JQMuzPJ
-         gd0Q==
-X-Gm-Message-State: APjAAAUVU+7kRetWBFNVBhKug6l/LZt9SXC5/iAhetXd4vcyrw+ZZhCS
-        BZ/DghkEtZFC5JfzBp4Tj4bRSg==
-X-Google-Smtp-Source: APXvYqyTnYcfWPm44mmD/6D5Wm+c5cA7JDMBagRyfl9k+jEqNIeMmPTzO2182wwz9XUN7ktGp7/pbQ==
-X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr6917432wmc.165.1581612735514;
-        Thu, 13 Feb 2020 08:52:15 -0800 (PST)
-Received: from localhost.localdomain ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id y6sm3484807wrl.17.2020.02.13.08.52.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 08:52:15 -0800 (PST)
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
-        lorenzo.pieralisi@arm.com, joro@8bytes.org,
-        baolu.lu@linux.intel.com, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
-        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
-Subject: [PATCH 10/11] arm64: dts: fast models: Enable PCIe ATS for Base RevC FVP
-Date:   Thu, 13 Feb 2020 17:50:48 +0100
-Message-Id: <20200213165049.508908-11-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213165049.508908-1-jean-philippe@linaro.org>
-References: <20200213165049.508908-1-jean-philippe@linaro.org>
+        Thu, 13 Feb 2020 12:18:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:51294 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbgBMRSd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 12:18:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CDC6328;
+        Thu, 13 Feb 2020 09:18:32 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 204453F6CF;
+        Thu, 13 Feb 2020 09:18:31 -0800 (PST)
+Date:   Thu, 13 Feb 2020 17:18:30 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/9] ASoC: core: allow a dt node to provide several
+ components
+Message-ID: <20200213171830.GH4333@sirena.org.uk>
+References: <20200213155159.3235792-1-jbrunet@baylibre.com>
+ <20200213155159.3235792-2-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LZFKeWUZP29EKQNE"
+Content-Disposition: inline
+In-Reply-To: <20200213155159.3235792-2-jbrunet@baylibre.com>
+X-Cookie: Academicians care, that's who.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Declare that the host controller supports ATS, so the OS can enable it
-for ATS-capable PCIe endpoints.
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
-All endpoints support ATS provided they have the ats_supported=1 model
-parameter. "lspci -vv" shows whether ATS is supported and enabled.
----
- arch/arm64/boot/dts/arm/fvp-base-revc.dts | 1 +
- 1 file changed, 1 insertion(+)
+--LZFKeWUZP29EKQNE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-index 62ab0d54ff71..6e5bb7bcb4b3 100644
---- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-+++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-@@ -170,6 +170,7 @@ pci: pci@40000000 {
- 		iommu-map = <0x0 &smmu 0x0 0x10000>;
- 
- 		dma-coherent;
-+		ats-supported;
- 	};
- 
- 	smmu: smmu@2b400000 {
--- 
-2.25.0
+On Thu, Feb 13, 2020 at 04:51:51PM +0100, Jerome Brunet wrote:
 
+> At the moment, querying the dai_name will stop of the first component
+> matching the dt node. This does not allow a device (single dt node) to
+> provide several ASoC components which could then be used through DT.
+
+> This change let the search go on if the xlate function of the component
+> returns an error, giving the possibility to another component to match
+> and return the dai_name.
+
+My first question here would be why you'd want to do that rather than
+combine everything into a single component since the hardware seems to
+be doing that anyway.  Hopefully the rest of the series will answer this
+but it'd be good in the changelog here.
+
+--LZFKeWUZP29EKQNE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5FhOUACgkQJNaLcl1U
+h9CqPgf+L/Xt6fytZ8T0Qto2jS45qM+J0JJtBuwbWI1qn00Rangat1H8RPcg9vlo
+3gwlnj9jjdCCvGNB3+ECaCtCeh5QihLVZXSs8qXYIZF502avt/atdjVBfK7XT5jb
+uKjjMM+fn5wwvTfZsi3OOxXtUMbpSkuDJ82c8zFDgQBss4F7T94Lq3Qzw5f6Bvub
+/m1zvfVuh4LiTa7HADtrrD9Az0o9gO/Ielc0xH0mHydZtuv4qIMOxPQXwT/14tU1
+hLQwfy9VkkBfA0xuKKVJ0vjyWhi7A0SdE6RdbR9D0QUSBuSD2iPV28XaJD+jFwX3
+k0q3tgreqtSmKkmnySuAGJ+wTQIzVg==
+=Cn3Z
+-----END PGP SIGNATURE-----
+
+--LZFKeWUZP29EKQNE--
