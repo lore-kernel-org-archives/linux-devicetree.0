@@ -2,100 +2,178 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F61FC352A3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F74C352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546A920848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581627153;
-	bh=90lR1+e59wezNxV0B89GKQfGjUPdEHkzyxQLJ0us85Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lkz8ArEWzGkR4uRXqnkKsVEz8z1W+46a9C4YjMxGWIdOuxXH4VcCAQo1WE2gJTIk0
-	 edyi7CZqIsMsUkMTqeRGnnFEzrWkvjiBqPt18za4bYT2wFbKDMeFSkVcjSD7lYCdok
-	 N/qBaObVjgcgtCZ2z2kAkVWmFIeIpu3l83o2RzIo=
+	by mail.kernel.org (Postfix) with ESMTP id 784392168B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgBMUwd (ORCPT
+        id S1728034AbgBMUzH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:52:33 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41060 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgBMUwc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 15:52:32 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so7214856oie.8;
-        Thu, 13 Feb 2020 12:52:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s8i10ohrT2+weilggglqs0Ir1n1ZSXHJ2uT8Wx+VWFA=;
-        b=YT9wfsn6eAfrNiFpk0++ZvQ/eFWC4JLuIx1hLT0IyAMVd5slna4m0j+wxKDc2PVAao
-         CPot8Kcuk+KVEUZt9LtbK2AFph6l7y+F2JfE4BLuUG3W4YcWf4dAfrBtphPvbXg97rWL
-         0I52w/dqE/mFlw+eQbSwGCcca6ozJViPOeDRFOMAIbrz0aVvueehdqW7Y37YoaTVZxtC
-         96WVr0Pxkp/HVIPrmYKDyglgTleXz8iRtpduMYSiHMyyShG88UCD887s3P/DMdM20T5x
-         /5PHOa5DxqbhIKFcMx6SQvrb5ui3OJ3p5EUE50vo+kqiO+W31Wy47wa/iPEi/5DfmTwC
-         C1Dw==
-X-Gm-Message-State: APjAAAVu3aTObCptF5ERZXyUVMc0fs9gpdYt6H9/fXvezZDn+vI2I38r
-        tPdL6WOfAQUmra1GdYUh/Q==
-X-Google-Smtp-Source: APXvYqyxzp7FojO4VNDr08MgWew7G0vsADdfBY2x0CqIPVAPAt7ZS5c/S285NmepbwZyFpewQmPbIA==
-X-Received: by 2002:a54:4010:: with SMTP id x16mr4368671oie.174.1581627151779;
-        Thu, 13 Feb 2020 12:52:31 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p184sm1046185oic.40.2020.02.13.12.52.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 12:52:30 -0800 (PST)
-Received: (nullmailer pid 14780 invoked by uid 1000);
-        Thu, 13 Feb 2020 20:52:30 -0000
-Date:   Thu, 13 Feb 2020 14:52:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dt-bindings: renesas,rsnd: switch to yaml base
- Documentation
-Message-ID: <20200213205230.GA13640@bogus>
-References: <87tv3vqc93.wl-kuninori.morimoto.gx@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tv3vqc93.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 13 Feb 2020 15:55:07 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37024 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgBMUzH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 15:55:07 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 5146929099D
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        dafna.hirschfeld@collabora.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, helen.koike@collabora.com,
+        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com
+Subject: [PATCH v2] dt-bindings: i2c: cros-ec-tunnel: convert i2c-cros-ec-tunnel.txt to yaml
+Date:   Thu, 13 Feb 2020 21:54:51 +0100
+Message-Id: <20200213205451.19899-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13 Feb 2020 14:37:04 +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> This patch switches from .txt base to .yaml base Document.
-> It is still keeping detail explanations at .txt
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
->  .../bindings/sound/renesas,rsnd.txt           | 518 -----------------
->  .../bindings/sound/renesas,rsnd.yaml          | 528 ++++++++++++++++++
->  2 files changed, 528 insertions(+), 518 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
-> 
+Convert the binding file i2c-cros-ec-tunnel.txt to yaml format.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+This was tested and verified on ARM and ARM64 with:
 
-Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/sound/simple-card.yaml'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml: patternProperties:^rcar_sound,src$:patternProperties:src-.: 'if' is not one of ['type', 'description', 'dependencies', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml: patternProperties:^rcar_sound,src$:patternProperties:src-.: 'then' is not one of ['type', 'description', 'dependencies', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/sound/renesas,rsnd.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/sound/renesas,rsnd.example.dts] Error 255
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
 
-See https://patchwork.ozlabs.org/patch/1237280
-Please check and re-submit.
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+---
+Changes since v1:
+- changing the subject to start with "dt-bindings: i2c: cros-ec-tunnel:"
+- changing the license to (GPL-2.0-only OR BSD-2-Clause)
+- removing "Guenter Roeck <groeck@chromium.org>" from the maintainers list
+- adding ref: /schemas/i2c/i2c-controller.yaml
+
+ .../bindings/i2c/i2c-cros-ec-tunnel.txt       | 39 ------------
+ .../bindings/i2c/i2c-cros-ec-tunnel.yaml      | 63 +++++++++++++++++++
+ 2 files changed, 63 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+deleted file mode 100644
+index 898f030eba62..000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-I2C bus that tunnels through the ChromeOS EC (cros-ec)
+-======================================================
+-On some ChromeOS board designs we've got a connection to the EC (embedded
+-controller) but no direct connection to some devices on the other side of
+-the EC (like a battery and PMIC).  To get access to those devices we need
+-to tunnel our i2c commands through the EC.
+-
+-The node for this device should be under a cros-ec node like google,cros-ec-spi
+-or google,cros-ec-i2c.
+-
+-
+-Required properties:
+-- compatible: google,cros-ec-i2c-tunnel
+-- google,remote-bus: The EC bus we'd like to talk to.
+-
+-Optional child nodes:
+-- One node per I2C device connected to the tunnelled I2C bus.
+-
+-
+-Example:
+-	cros-ec@0 {
+-		compatible = "google,cros-ec-spi";
+-
+-		...
+-
+-		i2c-tunnel {
+-			compatible = "google,cros-ec-i2c-tunnel";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			google,remote-bus = <0>;
+-
+-			battery: sbs-battery@b {
+-				compatible = "sbs,sbs-battery";
+-				reg = <0xb>;
+-				sbs,poll-retry-count = <1>;
+-			};
+-		};
+-	}
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+new file mode 100644
+index 000000000000..a14d821ff65d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/i2c-cros-ec-tunnel.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: I2C bus that tunnels through the ChromeOS EC (cros-ec)
++
++maintainers:
++  - Benson Leung <bleung@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++
++description: |
++  On some ChromeOS board designs we've got a connection to the EC (embedded
++  controller) but no direct connection to some devices on the other side of
++  the EC (like a battery and PMIC). To get access to those devices we need
++  to tunnel our i2c commands through the EC.
++  The node for this device should be under a cros-ec node like google,cros-ec-spi
++  or google,cros-ec-i2c.
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++properties:
++  compatible:
++    const:
++      google,cros-ec-i2c-tunnel
++
++  google,remote-bus:
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    description: The EC bus we'd like to talk to.
++
++  "#address-cells": true
++  "#size-cells": true
++
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
++    description: One node per I2C device connected to the tunnelled I2C bus.
++
++additionalProperties: false
++
++required:
++  - compatible
++  - google,remote-bus
++
++examples:
++  - |
++    cros-ec@0 {
++        compatible = "google,cros-ec-spi";
++        i2c-tunnel {
++            compatible = "google,cros-ec-i2c-tunnel";
++            #address-cells = <1>;
++            #size-cells = <0>;
++            google,remote-bus = <0>;
++
++            battery: sbs-battery@b {
++                compatible = "sbs,sbs-battery";
++                reg = <0xb>;
++                sbs,poll-retry-count = <1>;
++            };
++        };
++    };
+-- 
+2.17.1
+
