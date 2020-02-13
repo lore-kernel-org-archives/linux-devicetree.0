@@ -2,92 +2,141 @@ Return-Path: <SRS0=Uhz2=4B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929C0C3B189
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EE0C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC8124677
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B698122314
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YxmBmTj3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sq5RPbQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgBMQfL (ORCPT
+        id S1728112AbgBMQwG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:35:11 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52406 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbgBMQfL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 11:35:11 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so6976972wmc.2
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 08:35:09 -0800 (PST)
+        Thu, 13 Feb 2020 11:52:06 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39392 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgBMQwG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 11:52:06 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so7542805wrt.6
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 08:52:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=7ggoquwaNTIaGIGrCsxu73hH4eSlanLhZjrOSvqsMIY=;
-        b=YxmBmTj3SW+Wse8RG2pL7SR9RV3XrCYFzSS2BLUiCl8l62VmGJnxEuqdBfqe+UGtAf
-         Disk8hZBDwTcK4PPU1RXUDLR8f/KJfIabkgPDSRhI8ofo3/TEvMYHvln0RgsGr9bH0Js
-         MIkLoZPP26TtSbkQAnMosIxWnZSlT5sp0Vm1aW2EkNacD+QhZdmfaNPQriyPjgtbeErj
-         sFl/6A9JrPdSO4ICLuhzyIy9vH+m/mGfGnDTnSaM2rWih2jFs+L7wWsaYU9f0IpIp7oy
-         y04cuSJBxmSEEH69ViGlShsfdwrSZ/Q8xW0cjA5wXTGniLOn8P5MjYBFC3firj4MPlgy
-         AEtQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CfKpna/gHZrKywpyhlfYfrWp7SfpssT14AH9fDnyBhc=;
+        b=sq5RPbQMnHdJFKyr0y4rdobfNVfPyioZd4bFmy17jTSnzdOsxyVQCBIzt+dwmj/1hS
+         0FEIxdf3kxtor+WLr7kL9Y0vlCfHOur0aEBvo57AoXZfAVKNJX7nVRcpo3gPgBs0J121
+         JdAYwRCxxQKun+l1koHxbdXN/njOydBSX0j+Mi2OvJHKT8u6PsEqveyKsSTTNLqATYin
+         v3DQfP7nvrGGDS8aYK53MnSe/mxwZRXMScAGeoYNzL/tpe2Xv0I8BGXkzvgDYJ0/HQDv
+         JQh2RDF9ivk+TTFAdaGiOzE2CWJp7ONbWUXJKbxdagRIWbTJQpBvhyu2B2bQXibL99eT
+         R2rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=7ggoquwaNTIaGIGrCsxu73hH4eSlanLhZjrOSvqsMIY=;
-        b=BThgPORwUVc9WQlDOtgZE463Yo/sj13+yW6AdxOcd9szSYfbLvNF4w+TTVa1ZgOAee
-         HXOqWCZGOZgcVp5qINVGKGUsoAlEIOsJqr+Wm1Q8qbTlBIYtdY1HcgIBgp32wLovGMsB
-         pf9tKICst56zKC+klFHo17a4DSjAnJLO+kFx0s/JNyxaPArnDUCVboUqbPmJdJ5CrHAB
-         nDqSq0xUnbxSa0xr9zAud5gAvN6sMQciUXyAvxjsqscnjKIXV6+n+qr1Mua//aDCsDT7
-         zS7ZarFAZq5fSPM8tXsDaAnFe58KBgeVCNdv+SUXw+79LT/MPcbquu5YMNS+q7PouM+9
-         y7xQ==
-X-Gm-Message-State: APjAAAUABF5IkkD9Zq6QZ2X7ybEbkpGyne1kXOztaxTsJjIMEXSxd1Jj
-        2v2tPXsGIlQwhAALr2z8+MxFSg==
-X-Google-Smtp-Source: APXvYqxvlqxWaCHriW4bHt4AIcsFVsaT/7IkORpPargfpB0fvDThsa0A0ZWKK8N731MNLaJGX/rA3g==
-X-Received: by 2002:a05:600c:149:: with SMTP id w9mr6248835wmm.132.1581611708925;
-        Thu, 13 Feb 2020 08:35:08 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c9sm3573960wmc.47.2020.02.13.08.35.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CfKpna/gHZrKywpyhlfYfrWp7SfpssT14AH9fDnyBhc=;
+        b=YJwhDAKoSZqi39pemTMjbtmzSSvtUBLawcBRReBwycZNiY0OBwJlychFWTDoz4sKzE
+         qrZN2Ol5hkX/AWY8ufHhK7PsMK6FtaslIgJPD8FV/I23t9qtkZ2ppcjydTpUdh4Wiqzh
+         08vtdNO7WrqR9ap/dWG46ieFczRDWCbMb3SFl6BomCUffXL+aI/MhyV1SQ91RVyuYXiN
+         8URjG3PxnJq0tuASezRJgWq1HNk5XRsCuKvH2YbtCzCgHs/BHyOp5/JHurnty6rc9Qgt
+         gVitJFmsM/u/mAO5zuaqXRwR0t8z2mC/Izr1Yiid8QUkzapHUy7ATSw8mlSA42rR/U8X
+         nfzA==
+X-Gm-Message-State: APjAAAWdh32ia0Jpl2LNIDt5d/67lZNm4hclsyVBQaXqEYmOvSxQ0ZJV
+        tEUV86Zpv4VvG7pEzG4mDq4rCQ==
+X-Google-Smtp-Source: APXvYqy3NlA5gvY/i2LUQjbrj98NidF1+ZAccFnC7XtPBVcGfForOTuhwxmW4gsDRqMB842f8yYE+Q==
+X-Received: by 2002:a5d:54c1:: with SMTP id x1mr21837119wrv.240.1581612723942;
+        Thu, 13 Feb 2020 08:52:03 -0800 (PST)
+Received: from localhost.localdomain ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id y6sm3484807wrl.17.2020.02.13.08.52.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 08:35:08 -0800 (PST)
-References: <20200122100451.2443153-1-jbrunet@baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] clk: meson: gxbb: audio clock updates
-In-reply-to: <20200122100451.2443153-1-jbrunet@baylibre.com>
-Date:   Thu, 13 Feb 2020 17:35:07 +0100
-Message-ID: <1jftfewimc.fsf@starbuckisacylon.baylibre.com>
+        Thu, 13 Feb 2020 08:52:03 -0800 (PST)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
+        lorenzo.pieralisi@arm.com, joro@8bytes.org,
+        baolu.lu@linux.intel.com, linux-doc@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
+        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
+Subject: [PATCH 00/10] PCI/ATS: Device-tree support and other improvements
+Date:   Thu, 13 Feb 2020 17:50:38 +0100
+Message-Id: <20200213165049.508908-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Enable ATS on device-tree based systems, and factor the common ATS
+enablement checks into pci_enable_ats().
 
-On Wed 22 Jan 2020 at 11:04, Jerome Brunet <jbrunet@baylibre.com> wrote:
+ATS support in PCIe endpoints is discovered through the ATS capability,
+but there is no common method for discovering whether the host bridge
+supports ATS. Each vendor provides their own ACPI method:
+* DMAR (Intel) reports ATS support per domain or per root port.
+* IVRS (AMD) reports negative ATS support for a range of devices.
+* IORT (ARM) reports ATS support for a root complex.
 
-> This patcheset provides updates related to the audio peripheral clocks
-> It adds the peripheral clock required by the internal audio dac
-> and reorganize the AIU clocks into a hierarchy to better reflect the
-> behavior of the SoC.
->
-> Jerome Brunet (3):
->   dt-bindings: clk: meson: add the gxl internal dac gate
->   clk: meson: gxbb: add the gxl internal dac gate
->   clk: meson: gxbb: set audio output clock hierarchy
->
->  drivers/clk/meson/gxbb.c              | 21 +++++++++++++--------
->  drivers/clk/meson/gxbb.h              |  2 +-
->  include/dt-bindings/clock/gxbb-clkc.h |  1 +
->  3 files changed, 15 insertions(+), 9 deletions(-)
+In my opinion it's important that we only enable ATS if the host bridge
+supports it, but I don't think a finer granularity is useful. If the
+host bridge ignores the Address Translation field of TLP headers, it
+could in theory treat a Translation Request as a Memory Read Request,
+and a Translated Request as a normal memory access, which could result
+in silent memory corruption.
 
-Applied
+Patches 1-3 add a device-tree property that declares ATS support in host
+controllers. We only add it to the generic host, but the property can
+easily be reused by other PCI hosts. Alternatively, the host drivers can
+directly set the new ats_supported property of the host bridge
+introduced in patch 1.
+
+Patch 4 uses the new ats_supported host bridge property for IORT. Patch
+9 removes the old method that set a flag in each endpoint's fwspec.
+
+Patches 5-8 put all checks required for enabling ATS in common, along
+with the new host bridge check.
+
+Jean-Philippe Brucker (11):
+  dt-bindings: PCI: generic: Add ats-supported property
+  PCI: Add ats_supported host bridge flag
+  PCI: OF: Check whether the host bridge supports ATS
+  ACPI/IORT: Check ATS capability in root complex node
+  PCI/ATS: Gather checks into pci_ats_supported()
+  iommu/amd: Use pci_ats_supported()
+  iommu/arm-smmu-v3: Use pci_ats_supported()
+  iommu/vt-d: Use pci_ats_supported()
+  ACPI/IORT: Drop ATS fwspec flag
+  arm64: dts: fast models: Enable PCIe ATS for Base RevC FVP
+  Documentation: Generalize the "pci=noats" boot parameter
+
+ .../admin-guide/kernel-parameters.txt         |  4 +-
+ .../bindings/pci/host-generic-pci.yaml        |  6 +++
+ arch/arm64/boot/dts/arm/fvp-base-revc.dts     |  1 +
+ drivers/acpi/arm64/iort.c                     | 38 +++++++++++++------
+ drivers/acpi/pci_root.c                       |  3 ++
+ drivers/iommu/amd_iommu.c                     | 12 ++----
+ drivers/iommu/arm-smmu-v3.c                   | 18 ++-------
+ drivers/iommu/intel-iommu.c                   |  9 ++---
+ drivers/pci/ats.c                             | 30 ++++++++++++++-
+ drivers/pci/controller/pci-host-common.c      |  1 +
+ drivers/pci/of.c                              |  9 +++++
+ drivers/pci/probe.c                           |  7 ++++
+ include/linux/acpi_iort.h                     |  8 ++++
+ include/linux/iommu.h                         |  4 --
+ include/linux/of_pci.h                        |  3 ++
+ include/linux/pci-ats.h                       |  3 ++
+ include/linux/pci.h                           |  1 +
+ 17 files changed, 110 insertions(+), 47 deletions(-)
+
+-- 
+2.25.0
+
