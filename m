@@ -4,98 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A560EC3B18C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348CFC352A3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763CB222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B7E20848
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 20:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581626558;
-	bh=CacXk/nmyqBPxPCxkc9JUJ0i+jaVSSrFIrmN56qM4n8=;
+	s=default; t=1581626809;
+	bh=2tyqZMmykl+/y9fiYFQXY++hWEyGiC65IJSiJaZQdqQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pf25/GJXEB7xWGvltqQ1UEwoTNw7KwE5xi3tbz8J9w/cRSC0++GIdxE+ZcZOzMWMh
-	 qXtBLAIPWuyKAAuHNDd6FGA2ip2RyTaGssVj9ChNEEmIumIUjG1064NEeLh+FtKsMB
-	 U1re/cK/+l1lw6fB7w8PTR18FDcKraUl6lx4eyjM=
+	b=fBm7upwwN8JL2iOelaWqHEDriq7lYPEqG+Z+37VLoYO3wlSi96TywDqYTQ2kkypH8
+	 96WV5DJMXW8evJ8R0BcrZFUrzZWkifTBldK3TvcLQCJcumU7kVI9ZWkMe09CbVN27H
+	 zEPgdSwfEr4WwM7TRwuBjAFdWglFyq/4UxPekikY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgBMUmh (ORCPT
+        id S1728142AbgBMUqs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 15:42:37 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41698 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgBMUmh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 15:42:37 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r27so6930304otc.8;
-        Thu, 13 Feb 2020 12:42:37 -0800 (PST)
+        Thu, 13 Feb 2020 15:46:48 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36679 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbgBMUqs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 15:46:48 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j20so6982490otq.3;
+        Thu, 13 Feb 2020 12:46:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XRwMVkuDV4d8ODMtAkipbRUn94WHYzsePIbSyr8V/+I=;
-        b=QGPg0SVah25WeinQtb93ZkutmyMCaIfQLmP2vixA6QjC/m4lDMIJw1mCRriiVLdGxa
-         G/6dhcfNOlTejzwBhPYczdnnW3IsfvLwQW+c50kUP13+eUp/sc5o+ZEfZWr+ID5dX7Iy
-         w+GWLoNP962sogTvK0Qm3VGCxG8um7KmSBVNqhmhJkt3p3OtZCAxEnjo9GTyo6ybk5WX
-         0zyhnUEHC65RI2SUgP9i7W55wpF+GdSzFD3iN/3d4WaZCGLyRPeVKuabzkjXf5NcQr/v
-         Br22RyId0ijMPcNDEesEQYUOJK0UtmTZwzR1z0c7CrXB/4Zh4PiamNgRLXJv2vC+KC33
-         SZug==
-X-Gm-Message-State: APjAAAV2CG39iDVHqYPKImkMK6+yee2783AFIqN1hqkpA3pRXKaQlReK
-        oPY0VuSzalLIWdCEjvB6pA==
-X-Google-Smtp-Source: APXvYqyYSJv0g7m8Rw5CC/hVQ4Ls7EUiseNVD87JN2p/iePrV11KbZ/dIz2eWjob21uyFFF4cv9LVQ==
-X-Received: by 2002:a9d:f45:: with SMTP id 63mr15385855ott.0.1581626556735;
-        Thu, 13 Feb 2020 12:42:36 -0800 (PST)
+        bh=psOJlEetPRDRoxsa3f+Z8M0f2xosSTP4cPy/vWR0Ruw=;
+        b=frGAp2w+3vPCQYLYraGhrJl0AZQoez+wt0ZQD78OlBsY6pxoYW+ZhrJPLDVhEuQzYF
+         nsQp3dX3XU9YnXoEHUGF6t3r4YAx3vXq2ZIQ9WtC8QVB6GEZkzmSyChl7SsHUOXL6n/v
+         8/byM8WTBAUR2dX6hZQ1+Qhx+gFyhFagQQClusnjf4cFWZd+ppHm69+7Us41mclQVTFD
+         fPiVa4dFZiD358LKM7m6F47nGHat91vyb1VS4ak+z0pSB/1nPsfV0nnfHNFOuUmKvL9/
+         tnyx2Tg8RbN22u6ILofvMqhPMgRJOvglRnYl5qVuv3c2jXEVjHmwPTgdD9PYaJXit8ld
+         tYkg==
+X-Gm-Message-State: APjAAAWu4egd80So3Rw0Ln3rTlUZXYnbgcCA/LpCRlfTlEyyquDqYeIa
+        hupxquIBOkk3X8/2J+RU+g==
+X-Google-Smtp-Source: APXvYqy3sULmd5uqt/It774SbZe5Ly/Pz/6iKyGVw2itxbD64l7g6iG5gYX82BL71oueLveaCZg7wQ==
+X-Received: by 2002:a9d:784b:: with SMTP id c11mr14104655otm.246.1581626807462;
+        Thu, 13 Feb 2020 12:46:47 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 3sm1176239otd.15.2020.02.13.12.42.35
+        by smtp.gmail.com with ESMTPSA id p83sm1038787oia.51.2020.02.13.12.46.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 12:42:35 -0800 (PST)
-Received: (nullmailer pid 28841 invoked by uid 1000);
-        Thu, 13 Feb 2020 20:42:35 -0000
-Date:   Thu, 13 Feb 2020 14:42:35 -0600
+        Thu, 13 Feb 2020 12:46:46 -0800 (PST)
+Received: (nullmailer pid 2194 invoked by uid 1000);
+        Thu, 13 Feb 2020 20:46:46 -0000
+Date:   Thu, 13 Feb 2020 14:46:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+To:     Shawn Lin <shawn.lin@rock-chips.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: phy: qcom,qmp: Convert QMP phy
- bindings to yaml
-Message-ID: <20200213204234.GA28386@bogus>
-References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
- <1581506488-26881-2-git-send-email-sanm@codeaurora.org>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        linux-rockchip@lists.infradead.org,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: add binding for Rockchip combo phy
+ using an Innosilicon IP
+Message-ID: <20200213204646.GA316@bogus>
+References: <1581574091-240890-1-git-send-email-shawn.lin@rock-chips.com>
+ <1581574091-240890-2-git-send-email-shawn.lin@rock-chips.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581506488-26881-2-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <1581574091-240890-2-git-send-email-shawn.lin@rock-chips.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 12 Feb 2020 16:51:25 +0530, Sandeep Maheswaram wrote:
-> Convert QMP phy  bindings to DT schema format using json-schema.
+On Thu, 13 Feb 2020 14:08:06 +0800, Shawn Lin wrote:
+> This IP could supports USB3.0 and PCIe.
 > 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> 
 > ---
->  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 283 +++++++++++++++++++++
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 227 -----------------
->  2 files changed, 283 insertions(+), 227 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> 
+> Changes in v2:
+> - fix yaml format
+> 
+>  .../bindings/phy/rockchip,inno-combophy.yaml       | 80 ++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,qmp-phy.example.dt.yaml: phy@88e9000: '#phy-cells' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,qmp-phy.example.dt.yaml: lanes@88e9200: '#clock-cells' is a dependency of 'clock-output-names'
+Error: Documentation/devicetree/bindings/phy/rockchip,inno-combophy.example.dts:21.28-29 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/phy/rockchip,inno-combophy.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/phy/rockchip,inno-combophy.example.dt.yaml] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1236789
+See https://patchwork.ozlabs.org/patch/1237296
 Please check and re-submit.
