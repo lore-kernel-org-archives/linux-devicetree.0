@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DCBC3B19F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6235FC3B198
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F48206ED
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F50206ED
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Feb 2020 16:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h4qZTMif"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tiYr7b92"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgBMQwQ (ORCPT
+        id S1728220AbgBMQwK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 11:52:16 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56061 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728311AbgBMQwQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 11:52:16 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q9so7027214wmj.5
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 08:52:15 -0800 (PST)
+        Thu, 13 Feb 2020 11:52:10 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54845 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgBMQwI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 11:52:08 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g1so7024923wmh.4
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 08:52:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wTgN36L9uPFUOqE7HndfB97BUOtINMq0mCE8mycdOyM=;
-        b=h4qZTMifV+QK3yL9EkymCELnFi2Hv8hakZ6Oj0s96dY7GJFrgMKCn30S2Ywj+ho06c
-         G1z/vJUYVgp930BEncxrzfViReqSQZvR5tpAUoQpeAE9wlhWdhjhfKEcYz5MXbWKswTn
-         SgbBuIzImA3vusaiMbYCRw5fSUguq7jz2pS+xGIjY6BAWyZpS4wqHQg0jUSMe9i6JKOp
-         G8wx73fJcUThfZ34y6GFa8Soek65Pb+ir92kRHXEbMnqMfHxuVxm7Y6y46nzw2PTpQu6
-         vrFVOifSf4dKW7mNbiEzJglMqVYyc7Kp6ywzll7N+y1dApi+fUMeJEALomvPIMYONOq2
-         3lRA==
+        bh=DLm+diZ2LcHfr0394F1s+yyfGk9eSuidgj94VOIGVJw=;
+        b=tiYr7b92oPJK9Rk1Gz7ISnXadjy99eXjJlui5eg7HZk45BvGVN6A61GX0Yu4eKyStX
+         vhGv6Ez24Yg8/5hgZtdcD8ly8JxoQmsj0N1Hf7SxEEKVARO5mx5sNNeS0YhSS6e9kq4f
+         XotYFn8IB3W5V8rHY+OhK/PWIlMGxUeihlB+8viY5iKvXJKxzAdyjBip2SSKi5kNQJGJ
+         C+m9VaqteGLe1AfCrDlGJmNJ9C88TEjEQ9jgLuT5HHgxutbNec16wTRjA7llxO2X0qJH
+         mC/avBLY0qWSbS1xsDS5ZHOB8LrkXHdkPiQYRp+vm6UF2MK72kWfz6Rpj2lx/ChK8Sq8
+         FOYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wTgN36L9uPFUOqE7HndfB97BUOtINMq0mCE8mycdOyM=;
-        b=FpLk1leG5w+IFm5CADbwI1M0J+PtY9b+in7iaEI3Utzf1XJ/cxAAHwmEAvvMLmqMZT
-         QqSWBPf/aP9r1UGvOnUhH9+PjYRT3m3L5RZpn9aRANu1fcqd5IQedk1Cx2ov26d/7ruy
-         NyjWvvFKF37G46BMsoY/Shs59aaneZMhCbTcPAynnelCFPU7YcaI1NmszXiCl1jhN88+
-         r6QXwEqad3SujXpjTkuNR6V4CduWGdTXNctckuu0cgA/ci/M+K3jogd2ule/65WGmaND
-         syXSkIdyq5kdZ5ThxoNtgjjN6oOMg1aq5nNcGyxVGAMR9GXn49v6s2EWUKrXKxBl3Z4S
-         5Myw==
-X-Gm-Message-State: APjAAAVStR5hiCJ3DohqndtLtlIQWdbrWoCABeW/UaQEx4PGJ6UJL3Vn
-        oVVtDJWWpt6hMU2zJdO1X81JaA==
-X-Google-Smtp-Source: APXvYqxeuBETG18S4wku3Iin/3qX33/TOMOmaCOT/c4VstZL8FCL2GVweIV/jiGdNA4N0MW7TnICxg==
-X-Received: by 2002:a7b:ce8b:: with SMTP id q11mr6982434wmj.100.1581612734339;
-        Thu, 13 Feb 2020 08:52:14 -0800 (PST)
+        bh=DLm+diZ2LcHfr0394F1s+yyfGk9eSuidgj94VOIGVJw=;
+        b=ppWodiN2BQkXap8mroNRdVXOoSTvh73fMTJbuau006oyiKgAChGff0tUSF0M14iKSt
+         SSLFkijs//5Pvqc4CbqHElkcwJc2cn1ML36DY34N3dpTBRo6e6XP5eHzfTihB1qbjxmL
+         l53CChwTYD8P+PLWITJNdnpVBqxXdM3vkqYysN2cslGD5vVj/ljy47Qf46KBep/8TAqx
+         nv39ntgSzU4F/d9Kf1gdTP1O4TF8ajwrPVBykdH41pUL+QLIl8e3lLvOhq058ji8w7ys
+         5k4bGGv6s6FlM7rjqn34uNVW+/YCjmKu5aNbwum4ngDsGimi+p3ZL19lcYEP+Jrg+LP7
+         M2Mw==
+X-Gm-Message-State: APjAAAVn1Cw5TowKvL66WUS7/jJsTlbiGYR0RMQN971yExJgMJrLz7Sz
+        U9eEtcR4cB0E5HUQNu9abFssUg==
+X-Google-Smtp-Source: APXvYqywhPBCuc7YV+pVDcQ5dsIQRL3jciqAiBWcZ6RYHFYVHZcjIZ/wRvt2G4McAzl+fiVmWPpNkw==
+X-Received: by 2002:a1c:cc06:: with SMTP id h6mr6948649wmb.118.1581612726195;
+        Thu, 13 Feb 2020 08:52:06 -0800 (PST)
 Received: from localhost.localdomain ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id y6sm3484807wrl.17.2020.02.13.08.52.13
+        by smtp.gmail.com with ESMTPSA id y6sm3484807wrl.17.2020.02.13.08.52.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 08:52:13 -0800 (PST)
+        Thu, 13 Feb 2020 08:52:05 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
         lorenzo.pieralisi@arm.com, joro@8bytes.org,
@@ -66,9 +66,9 @@ Cc:     corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
         sudeep.holla@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
         lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
         amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
-Subject: [PATCH 09/11] ACPI/IORT: Drop ATS fwspec flag
-Date:   Thu, 13 Feb 2020 17:50:47 +0100
-Message-Id: <20200213165049.508908-10-jean-philippe@linaro.org>
+Subject: [PATCH 02/11] PCI: Add ats_supported host bridge flag
+Date:   Thu, 13 Feb 2020 17:50:40 +0100
+Message-Id: <20200213165049.508908-3-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200213165049.508908-1-jean-philippe@linaro.org>
 References: <20200213165049.508908-1-jean-philippe@linaro.org>
@@ -79,64 +79,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that the ats_supported flag is in the host bridge structure where it
-belongs, we can remove it from the per-device fwspec structure.
+Each vendor has their own way of describing whether a host bridge
+supports ATS.  The Intel and AMD ACPI tables selectively enable or
+disable ATS per device or sub-tree, while Arm has a single bit for each
+host bridge.  For those that need it, add an ats_supported bit to the
+host bridge structure.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/acpi/arm64/iort.c | 11 -----------
- include/linux/iommu.h     |  4 ----
- 2 files changed, 15 deletions(-)
+ drivers/pci/probe.c | 7 +++++++
+ include/linux/pci.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index d99d7f5b51e1..f634641b3699 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -924,14 +924,6 @@ static int arm_smmu_iort_xlate(struct device *dev, u32 streamid,
- 	return ret;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 512cb4312ddd..75c0a25af44e 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -598,6 +598,13 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+ 	bridge->native_shpc_hotplug = 1;
+ 	bridge->native_pme = 1;
+ 	bridge->native_ltr = 1;
++
++	/*
++	 * Some systems may disable ATS at the host bridge (ACPI IORT,
++	 * device-tree), other filter it with a smaller granularity (ACPI DMAR
++	 * and IVRS).
++	 */
++	bridge->ats_supported = 1;
  }
  
--static bool iort_pci_rc_supports_ats(struct acpi_iort_node *node)
--{
--	struct acpi_iort_root_complex *pci_rc;
--
--	pci_rc = (struct acpi_iort_root_complex *)node->node_data;
--	return pci_rc->ats_attribute & ACPI_IORT_ATS_SUPPORTED;
--}
--
- static int iort_iommu_xlate(struct device *dev, struct acpi_iort_node *node,
- 			    u32 streamid)
- {
-@@ -1026,9 +1018,6 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
- 		info.node = node;
- 		err = pci_for_each_dma_alias(to_pci_dev(dev),
- 					     iort_pci_iommu_init, &info);
--
--		if (!err && iort_pci_rc_supports_ats(node))
--			dev->iommu_fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
- 	} else {
- 		int i = 0;
+ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 3840a541a9de..9fe2e84d74d7 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -511,6 +511,7 @@ struct pci_host_bridge {
+ 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+ 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+ 	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
++	unsigned int	ats_supported:1;
  
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index d1b5f4d98569..1739f8a7a4b4 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -589,15 +589,11 @@ struct iommu_fwspec {
- 	const struct iommu_ops	*ops;
- 	struct fwnode_handle	*iommu_fwnode;
- 	void			*iommu_priv;
--	u32			flags;
- 	u32			num_pasid_bits;
- 	unsigned int		num_ids;
- 	u32			ids[1];
- };
- 
--/* ATS is supported */
--#define IOMMU_FWSPEC_PCI_RC_ATS			(1 << 0)
--
- /**
-  * struct iommu_sva - handle to a device-mm bond
-  */
+ 	/* Resource alignment requirements */
+ 	resource_size_t (*align_resource)(struct pci_dev *dev,
 -- 
 2.25.0
 
