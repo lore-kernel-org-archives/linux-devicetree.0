@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49368C3B1A6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7206C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C32020873
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7980E20873
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701815;
-	bh=Axi621C+trmYJ2hkH6lGnJy9hkrtz3txnGYSyx8Bdg8=;
+	s=default; t=1581701872;
+	bh=P6ka74hq+S9cWlwpKuE4fkuQlUl5IcnNTOP1eCnSy9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JQ2q3BmNLMoSkE3F9OjR3TZE6aVclsU33zFjxA+P3k3M10MVhZfrVgbp0fIyzh8m/
-	 fPKQLE5R44qja+gYql2VsTcnMkWVhUkp5rIlAi8LrYYQW3oHgiirEo0dt26dnM1efI
-	 LnQs6rGWEeNOLHWItvnbiIzJqgVPul7rIqjRXakI=
+	b=icqNzG5o7PfvnrTLnlhIANj/h2VKaeVzvpyfHpbBQeoEj2Ph1s63sh8upidHhkmon
+	 kMYqHblhnNH6x/FGZuQPCX2MwUzt6bbHHSNWcfXKielm/NDoL9QFrMP4bANTrUOceB
+	 4lcnJ8S/sosSa0Noqj2uwOT3fI3xS0N4ymBxRQaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730640AbgBNRgy (ORCPT
+        id S2390080AbgBNQFI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:36:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54970 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:05:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390142AbgBNQFV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:21 -0500
+        id S2389171AbgBNQFH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E6F02467D;
-        Fri, 14 Feb 2020 16:05:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6BA224676;
+        Fri, 14 Feb 2020 16:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696321;
-        bh=Axi621C+trmYJ2hkH6lGnJy9hkrtz3txnGYSyx8Bdg8=;
+        s=default; t=1581696306;
+        bh=P6ka74hq+S9cWlwpKuE4fkuQlUl5IcnNTOP1eCnSy9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pu8WQQpyq7Rj+SBKqIh0g09iOURTrPt4t8ZOgHOHUiyTBgxHXCie6/MiGO2Uzw3+8
-         +O4UXaGurRknlx38biqSRdYBkommO6lQy5lMpBLqkztA8lLWXApwn3KcQCtlMJg0dV
-         b+3KRTA4WT/hbaspXF+/va7MtuGJ8b6rPSgd67pQ=
+        b=Eb+Ff3wQgUGP5N42xGIwwpD0vUqzOJGilk1xMCHIEzhR9lW9TjUX7BTV+iUNkBYvE
+         ShE9q5WZ5ylKj/UWMU/ZS45KzgebjzibH2JcDjTAUKmTQG5Bz6TGAadkD6gAVe7lgj
+         hOutLUc8FUQTkv4F5j/wpJthnkItInhj73UY8Md4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 161/459] arm: dts: allwinner: H3: Add PMU node
-Date:   Fri, 14 Feb 2020 10:56:51 -0500
-Message-Id: <20200214160149.11681-161-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 150/459] arm64: dts: uDPU: fix broken ethernet
+Date:   Fri, 14 Feb 2020 10:56:40 -0500
+Message-Id: <20200214160149.11681-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,71 +60,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 0388a110747bec0c9d9de995842bb2a03a26aae1 ]
+[ Upstream commit 1eebac0240580b531954b02c05068051df41142a ]
 
-Add the Performance Monitoring Unit (PMU) device tree node to the H3
-.dtsi, which tells DT users which interrupts are triggered by PMU
-overflow events on each core. The numbers come from the manual and have
-been checked in U-Boot and with perf in Linux.
+The uDPU uses both ethernet controllers, which ties up COMPHY 0 for
+eth1 and COMPHY 1 for eth0, with no USB3 comphy.  The addition of
+COMPHY support made the kernel override the setup by the boot loader
+breaking this platform by assuming that COMPHY 0 was always used for
+USB3.  Delete the USB3 COMPHY definition at platform level, and add
+phy specifications for the ethernet channels.
 
-Tested with perf record and taskset on an OrangePi Zero.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: bd3d25b07342 ("arm64: dts: marvell: armada-37xx: link USB hosts with their PHYs")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index e37c30e811d3b..6056f206c9e39 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -80,7 +80,7 @@
- 			#cooling-cells = <2>;
- 		};
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+index bd4aab6092e0f..e31813a4f9722 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+@@ -143,6 +143,7 @@
+ 	phy-mode = "sgmii";
+ 	status = "okay";
+ 	managed = "in-band-status";
++	phys = <&comphy1 0>;
+ 	sfp = <&sfp_eth0>;
+ };
  
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <1>;
-@@ -90,7 +90,7 @@
- 			#cooling-cells = <2>;
- 		};
+@@ -150,11 +151,14 @@
+ 	phy-mode = "sgmii";
+ 	status = "okay";
+ 	managed = "in-band-status";
++	phys = <&comphy0 1>;
+ 	sfp = <&sfp_eth1>;
+ };
  
--		cpu@2 {
-+		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <2>;
-@@ -100,7 +100,7 @@
- 			#cooling-cells = <2>;
- 		};
+ &usb3 {
+ 	status = "okay";
++	phys = <&usb2_utmi_otg_phy>;
++	phy-names = "usb2-utmi-otg-phy";
+ };
  
--		cpu@3 {
-+		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <3>;
-@@ -111,6 +111,15 @@
- 		};
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ &uart0 {
 -- 
 2.20.1
 
