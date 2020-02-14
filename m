@@ -2,406 +2,258 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC097C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 15:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A499C3B19F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 15:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C97524676
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 15:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581693018;
-	bh=C4ruZYaMs1nYd0gqhHvdOmkB8OWOp8lsaC2jN1arpN4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r0gN6cYppM8vjo5hmoLnBaKgbb9+6dtR7uGgR27/Kdcz3IkR2L1z8DwnoDkJCe8bk
-	 QG30llp9ItJk6OqgBocsOagatDNBvH+6azts7mJMuVMvmHo3UFeHbZxM9mkvdvQBp8
-	 vnI4z1d/6eOUoypHCiqmhHsRKfXfzfFDIOFOt7Q0=
+	by mail.kernel.org (Postfix) with ESMTP id 42D562082F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 15:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q0DSWpQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbgBNPKR (ORCPT
+        id S1729444AbgBNPXt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:10:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbgBNPKR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:10:17 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BDA624670;
-        Fri, 14 Feb 2020 15:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581693016;
-        bh=C4ruZYaMs1nYd0gqhHvdOmkB8OWOp8lsaC2jN1arpN4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MqGmGnJOi1zsbXYPrFEHiIwrN2I30wVnvtp2y/QcFlG6xq1uFuCM2B1R98BgAeMN1
-         G+AY1N+t4s4uwug0E1lKcUdbGsa8aLwXJMDSAPAO1HbB1FvNzDZ8nfSKBMG2qDZ9DI
-         /eIC4B8BTkmwjE06SoLeKrYmO2wuvRPMo0x55uZM=
-Date:   Fri, 14 Feb 2020 15:10:11 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Olivier MOYSAN <olivier.moysan@st.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 4/4] iio: adc: stm32-dfsdm: add scale and offset support
-Message-ID: <20200214151011.20111e8c@archlinux>
-In-Reply-To: <5b2e74a0-71bd-46d0-0096-b33ff17f780b@st.com>
-References: <20200204101008.11411-1-olivier.moysan@st.com>
-        <20200204101008.11411-5-olivier.moysan@st.com>
-        <20200208161847.76c7d6e8@archlinux>
-        <8400827e-5f3d-ad3f-99c8-986934b1a7b8@st.com>
-        <20200214131113.70aa36b8@archlinux>
-        <5b2e74a0-71bd-46d0-0096-b33ff17f780b@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 14 Feb 2020 10:23:49 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42253 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbgBNPXt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 10:23:49 -0500
+Received: by mail-ed1-f67.google.com with SMTP id e10so11586494edv.9
+        for <devicetree@vger.kernel.org>; Fri, 14 Feb 2020 07:23:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iS6rIChJcSTaaI1Nz9SixMHI08wMem1DxlHDDVUuoQc=;
+        b=Q0DSWpQlYw40CM2s7bmXe66Q4hjXXHnPWGOXCxqFnp2fykuf72NaBN56YMu0EUxOaf
+         XSLajIVpJQz9aLUhsZl6A/A0S/CytZwJQJgwBLRe1kJA4yN30jnjeurCj87vXgcxDd0m
+         UpmN1gszuxHjAxv7CNUjyOU/UIWDSMWSrM2lhot2tMm4L9/oQRABlcs7jsqpv4h8wXnb
+         bUPPi+kWXLtBd4ygYkq4veBBcmZNHnODBK+N/CdCOzZPc6G0pfuQzU94eLlfi19LeNl5
+         GaSOGgeKKuBu59MKxmerkVK68WdFpadIeYZ1SWQ/z/w/UpkjLOZD9FKNdefm2BLcppq4
+         uDjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iS6rIChJcSTaaI1Nz9SixMHI08wMem1DxlHDDVUuoQc=;
+        b=fVFj5nE42SvRRUuxzcCbLsw7hFRNepGkFcPK1uiYtA/xpSlvPq3SPMrQj7iXI8T5h2
+         4r3wfEz3TvczaRVtHOqPS3jBlF0DbSUUJT6wemNEtHedv5Hjwh12dNCW0CN+zQvYhxtd
+         0bKbxaPBL6cdryTEYnnYrHMpNx0lEsbsOgsjp9mTYiw5J7OKfGRSm+udujfk6bruXDsr
+         fhd2kH9P9gu1Kgz25fjIb/HltGZvEPENCftKRILTsre/KNl4hSlQunRFd6sSBhh4a0dB
+         9mG2u8JBW9Oy0PjKOQjuhBn8/OLGifTEH7i8+xm0jPPKJrJQWLSxgdhoy6mcnxcUW1G3
+         l2Tw==
+X-Gm-Message-State: APjAAAWWKxkj69nXClKW8Nhewm9vGWZqfo34pT9lXRc8A41BY+zyHIU1
+        3XS0wzKaw4AogJVh5NDCG58kTg==
+X-Google-Smtp-Source: APXvYqwN7skpBywZiJr9HDS44ZkTIixbeEY5BIadBj8NT4M1HsZKHUwKNIuZyy3ViSTlyMlpZktrwg==
+X-Received: by 2002:aa7:d897:: with SMTP id u23mr3077160edq.50.1581693827401;
+        Fri, 14 Feb 2020 07:23:47 -0800 (PST)
+Received: from [192.168.27.209] ([94.155.124.210])
+        by smtp.googlemail.com with ESMTPSA id m27sm370689eda.96.2020.02.14.07.23.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 07:23:46 -0800 (PST)
+Subject: Re: [PATCH V4 2/4] dt-bindings: media: venus: Add sc7180 DT schema
+To:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
+References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
+ <1579006416-11599-3-git-send-email-dikshita@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <dbbd3b64-e030-a2f4-992c-ff90706b0ab5@linaro.org>
+Date:   Fri, 14 Feb 2020 17:23:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1579006416-11599-3-git-send-email-dikshita@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 14 Feb 2020 14:49:18 +0000
-Olivier MOYSAN <olivier.moysan@st.com> wrote:
+Hi,
 
-> Hi Jonathan,
->=20
-> On 2/14/20 2:11 PM, Jonathan Cameron wrote:
-> > On Tue, 11 Feb 2020 15:19:01 +0000
-> > Olivier MOYSAN <olivier.moysan@st.com> wrote:
-> > =20
-> >> Hi Jonathan,
-> >>
-> >> On 2/8/20 5:18 PM, Jonathan Cameron wrote: =20
-> >>> On Tue, 4 Feb 2020 11:10:08 +0100
-> >>> Olivier Moysan <olivier.moysan@st.com> wrote:
-> >>>    =20
-> >>>> Add scale and offset attributes support to STM32 DFSDM.
-> >>>>
-> >>>> Signed-off-by: Olivier Moysan <olivier.moysan@st.com> =20
-> >>> Hmm. I can't remember this history of this but we've kind of
-> >>> ended up backwards wrt to other consumer drivers.
-> >>>
-> >>> In some sense this is similar to the analog gyroscopes.  In those
-> >>> the consumer driver is the gyroscope which is consuming the raw
-> >>> readings from an ADC connected to the channel.  This results
-> >>> in us getting readings reported by the gyroscope driver.
-> >>>
-> >>> Here we have a sigma delta convertor consuming the pulse train
-> >>> from a sigma delta device.  So the channels are reported by
-> >>> the sigma delta receiver, whereas i think the nearest equivalent
-> >>> to the analog voltage outputing gyroscopes would have been if
-> >>> we had reported the channel values at the sigma delta converter. =20
-> >> The DFSDM driver is currently used as a consumer of the sd modulator.
-> >> The scale and offset values of the channels are already computed by
-> >> the DFSDM driver, and provided by this driver to the IIO ABI.
-> >> However, the DFSDM has no voltage reference, so it has to retrieve
-> >> it from sd-modulator channels, for the scale factor computation.
-> >>
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 scale=
-=C2=A0 offset
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ^=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 IIO ABI
-> >> +-------------------------------------------------------------+
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |sd driver=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |DFSDM driver |
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
-> >> +-------------------------------------------------------------+
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 HW
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
-> >> +------->+ sd-modulator=C2=A0 +--------->+ DFSDM +-------->
-> >> analog=C2=A0=C2=A0 +------+--------+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 +-------------+ output
-> >> input=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | vref
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 +
-> >>
-> >>
-> >> Is it the topology your are expecting ? =20
-> > It's not the one we'd expect if we are aligning with similar cases
-> > elsewhere in IIO.  For example, if we attach an analog accelerometer
-> > to an ADC, we report the accel channels on the accelerometer not the
-> > ADC.  The equivalent would be to see the DFSDM as providing a
-> > conversion service to the SD device which is actually executing
-> > the measurement and has the input channels.
-> >
-> >
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 scale=C2=A0 offset  r=
-aw
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 ^      ^
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0  |  =C2=A0=C2=A0        =
-                  IIO ABI
-> >   +-------------------------------------------------------------+
-> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
-> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |sd driver=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |DFSDM driver |
-> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
-> >   +-------------------------------------------------------------+
-> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 HW
-> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +---------------+=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+
-> >   +------->+ sd-modulator=C2=A0 +--------->+ DFSDM +-------->
-> >   analog=C2=A0=C2=A0 +------+--------+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 +-------------+ output
-> >   input=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> >    =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | vref =20
-> >>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 +
-> >> =20
-> Thanks for your clarification.
-> ok, moving to this logic is a significant change.
-> I need to evaluate further the impact on the dfsdm driver.
+I'll merge this through media tree but will drop interconnect properties
+from example cause of failing make dt_binding_check.
 
-Understood!  If we can't do it without potentially breaking users then
-such is life.
+We will add interconnect properties later on once the sc7180
+interconnect driver is merged.
 
-Jonathan
+On 1/14/20 2:53 PM, Dikshita Agarwal wrote:
+> Add new qcom,sc7180-venus DT binding schema.
+> 
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  .../bindings/media/qcom,sc7180-venus.yaml          | 144 +++++++++++++++++++++
+>  1 file changed, 144 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+> new file mode 100644
+> index 0000000..7b6a8fb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+> @@ -0,0 +1,144 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/media/qcom,sc7180-venus.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Venus video encode and decode accelerators
+> +
+> +maintainers:
+> +  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> +
+> +description: |
+> +  The Venus IP is a video encode and decode accelerator present
+> +  on Qualcomm platforms
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sc7180-venus
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 2
+> +
+> +  power-domain-names:
+> +    items:
+> +      - const: venus
+> +      - const: vcodec0
+> +
+> +  clocks:
+> +    maxItems: 5
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: iface
+> +      - const: bus
+> +      - const: vcodec0_core
+> +      - const: vcodec0_bus
+> +
+> +  iommus:
+> +    maxItems: 1
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +
+> +  interconnects:
+> +    maxItems: 2
+> +
+> +  interconnect-names:
+> +    items:
+> +      - const: video-mem
+> +      - const: cpu-cfg
+> +
+> +  video-decoder:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: venus-decoder
+> +
+> +    required:
+> +      - compatible
+> +
+> +    additionalProperties: false
+> +
+> +  video-encoder:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: venus-encoder
+> +
+> +    required:
+> +      - compatible
+> +
+> +    additionalProperties: false
+> +
+> +  video-firmware:
+> +    type: object
+> +
+> +    description: |
+> +      Firmware subnode is needed when the platform does not
+> +      have TrustZone.
+> +
+> +    properties:
+> +      iommus:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - iommus
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - power-domains
+> +  - power-domain-names
+> +  - clocks
+> +  - clock-names
+> +  - iommus
+> +  - memory-region
+> +  - video-decoder
+> +  - video-encoder
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        #include <dt-bindings/clock/qcom,videocc-sc7180.h>
+> +
+> +        venus: video-codec@aa00000 {
+> +                compatible = "qcom,sc7180-venus";
+> +                reg = <0 0x0aa00000 0 0xff000>;
+> +                interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +                power-domains = <&videocc VENUS_GDSC>,
+> +                                <&videocc VCODEC0_GDSC>;
+> +                power-domain-names = "venus", "vcodec0";
+> +                clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +                         <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +                         <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> +                         <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +                         <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +                clock-names = "core", "iface", "bus",
+> +                              "vcodec0_core", "vcodec0_bus";
+> +                iommus = <&apps_smmu 0x0c00 0x60>;
+> +                memory-region = <&venus_mem>;
+> +
 
->=20
-> Regards
-> Olivier
-> >> If not, I probably missedsomething. Could you please clarify this poin=
-t ?
-> >>
-> >> Regards
-> >> Olivier =20
-> >>> This wasn't really an issue when the only values available were
-> >>> raw, but if we are adding scale and offset, they are things that
-> >>> belong to the ad1201 for example, not the upstream stm32-dfsdm unit.
-> >>>
-> >>> Thinking of it another way, we don't report an SPI ADC output in
-> >>> the driver for the SPI master.
-> >>>
-> >>> Could we flip it around without breaking anything?
-> >>>
-> >>> Jonathan
-> >>>    =20
-> >>>> ---
-> >>>>    drivers/iio/adc/stm32-dfsdm-adc.c | 105 +++++++++++++++++++++++++=
-++++-
-> >>>>    1 file changed, 102 insertions(+), 3 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm=
-32-dfsdm-adc.c
-> >>>> index 07b9dfdf8e76..b85fd3e90496 100644
-> >>>> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> >>>> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> >>>> @@ -10,6 +10,7 @@
-> >>>>    #include <linux/dma-mapping.h>
-> >>>>    #include <linux/iio/adc/stm32-dfsdm-adc.h>
-> >>>>    #include <linux/iio/buffer.h>
-> >>>> +#include <linux/iio/consumer.h>
-> >>>>    #include <linux/iio/hw-consumer.h>
-> >>>>    #include <linux/iio/sysfs.h>
-> >>>>    #include <linux/iio/timer/stm32-lptim-trigger.h>
-> >>>> @@ -67,6 +68,13 @@ struct stm32_dfsdm_dev_data {
-> >>>>    	const struct regmap_config *regmap_cfg;
-> >>>>    };
-> >>>>   =20
-> >>>> +struct stm32_dfsdm_sd_chan_info {
-> >>>> +	int scale_val;
-> >>>> +	int scale_val2;
-> >>>> +	int offset;
-> >>>> +	unsigned int differential;
-> >>>> +};
-> >>>> +
-> >>>>    struct stm32_dfsdm_adc {
-> >>>>    	struct stm32_dfsdm *dfsdm;
-> >>>>    	const struct stm32_dfsdm_dev_data *dev_data;
-> >>>> @@ -79,6 +87,7 @@ struct stm32_dfsdm_adc {
-> >>>>    	struct iio_hw_consumer *hwc;
-> >>>>    	struct completion completion;
-> >>>>    	u32 *buffer;
-> >>>> +	struct stm32_dfsdm_sd_chan_info *sd_chan;
-> >>>>   =20
-> >>>>    	/* Audio specific */
-> >>>>    	unsigned int spi_freq;  /* SPI bus clock frequency */
-> >>>> @@ -1271,7 +1280,10 @@ static int stm32_dfsdm_read_raw(struct iio_de=
-v *indio_dev,
-> >>>>    				int *val2, long mask)
-> >>>>    {
-> >>>>    	struct stm32_dfsdm_adc *adc =3D iio_priv(indio_dev);
-> >>>> -	int ret;
-> >>>> +	struct stm32_dfsdm_filter *fl =3D &adc->dfsdm->fl_list[adc->fl_id];
-> >>>> +	struct stm32_dfsdm_filter_osr *flo =3D &fl->flo[fl->fast];
-> >>>> +	u32 max =3D flo->max << (flo->lshift - chan->scan_type.shift);
-> >>>> +	int ret, idx =3D chan->scan_index;
-> >>>>   =20
-> >>>>    	switch (mask) {
-> >>>>    	case IIO_CHAN_INFO_RAW:
-> >>>> @@ -1307,6 +1319,41 @@ static int stm32_dfsdm_read_raw(struct iio_de=
-v *indio_dev,
-> >>>>    		*val =3D adc->sample_freq;
-> >>>>   =20
-> >>>>    		return IIO_VAL_INT;
-> >>>> +
-> >>>> +	case IIO_CHAN_INFO_SCALE:
-> >>>> +		/*
-> >>>> +		 * Scale is expressed in mV.
-> >>>> +		 * When fast mode is disabled, actual resolution may be lower
-> >>>> +		 * than 2^n, where n=3Drealbits-1.
-> >>>> +		 * This leads to underestimating input voltage. To
-> >>>> +		 * compensate this deviation, the voltage reference can be
-> >>>> +		 * corrected with a factor =3D realbits resolution / actual max
-> >>>> +		 */
-> >>>> +		*val =3D div_u64((u64)adc->sd_chan[idx].scale_val *
-> >>>> +			       (u64)BIT(DFSDM_DATA_RES - 1), max);
-> >>>> +		*val2 =3D chan->scan_type.realbits;
-> >>>> +		if (adc->sd_chan[idx].differential)
-> >>>> +			*val *=3D 2;
-> >>>> +
-> >>>> +		return IIO_VAL_FRACTIONAL_LOG2;
-> >>>> +
-> >>>> +	case IIO_CHAN_INFO_OFFSET:
-> >>>> +		/*
-> >>>> +		 * DFSDM output data are in the range [-2^n,2^n-1],
-> >>>> +		 * with n=3Drealbits-1.
-> >>>> +		 * - Differential modulator:
-> >>>> +		 * Offset correspond to SD modulator offset.
-> >>>> +		 * - Single ended modulator:
-> >>>> +		 * Input is in [0V,Vref] range, where 0V corresponds to -2^n.
-> >>>> +		 * Add 2^n to offset. (i.e. middle of input range)
-> >>>> +		 * offset =3D offset(sd) * vref / res(sd) * max / vref.
-> >>>> +		 */
-> >>>> +		*val =3D div_u64((u64)max * adc->sd_chan[idx].offset,
-> >>>> +			       BIT(adc->sd_chan[idx].scale_val2 - 1));
-> >>>> +		if (!adc->sd_chan[idx].differential)
-> >>>> +			*val +=3D max;
-> >>>> +
-> >>>> +		return IIO_VAL_INT;
-> >>>>    	}
-> >>>>   =20
-> >>>>    	return -EINVAL;
-> >>>> @@ -1430,7 +1477,9 @@ static int stm32_dfsdm_adc_chan_init_one(struc=
-t iio_dev *indio_dev,
-> >>>>    	 * IIO_CHAN_INFO_RAW: used to compute regular conversion
-> >>>>    	 * IIO_CHAN_INFO_OVERSAMPLING_RATIO: used to set oversampling
-> >>>>    	 */
-> >>>> -	ch->info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW);
-> >>>> +	ch->info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
-> >>>> +				 BIT(IIO_CHAN_INFO_SCALE) |
-> >>>> +				 BIT(IIO_CHAN_INFO_OFFSET);
-> >>>>    	ch->info_mask_shared_by_all =3D BIT(IIO_CHAN_INFO_OVERSAMPLING_R=
-ATIO) |
-> >>>>    					BIT(IIO_CHAN_INFO_SAMP_FREQ);
-> >>>>   =20
-> >>>> @@ -1481,8 +1530,10 @@ static int stm32_dfsdm_adc_init(struct iio_de=
-v *indio_dev)
-> >>>>    {
-> >>>>    	struct iio_chan_spec *ch;
-> >>>>    	struct stm32_dfsdm_adc *adc =3D iio_priv(indio_dev);
-> >>>> +	struct iio_channel *channels, *chan;
-> >>>> +	struct stm32_dfsdm_sd_chan_info *sd_chan;
-> >>>>    	int num_ch;
-> >>>> -	int ret, chan_idx;
-> >>>> +	int ret, chan_idx, val2;
-> >>>>   =20
-> >>>>    	adc->oversamp =3D DFSDM_DEFAULT_OVERSAMPLING;
-> >>>>    	ret =3D stm32_dfsdm_compute_all_osrs(indio_dev, adc->oversamp);
-> >>>> @@ -1506,6 +1557,22 @@ static int stm32_dfsdm_adc_init(struct iio_de=
-v *indio_dev)
-> >>>>    	if (!ch)
-> >>>>    		return -ENOMEM;
-> >>>>   =20
-> >>>> +	/* Get SD modulator channels */
-> >>>> +	channels =3D iio_channel_get_all(&indio_dev->dev);
-> >>>> +	if (IS_ERR(channels)) {
-> >>>> +		dev_err(&indio_dev->dev, "Failed to get channel %ld\n",
-> >>>> +			PTR_ERR(channels));
-> >>>> +		return PTR_ERR(channels);
-> >>>> +	}
-> >>>> +	chan =3D &channels[0];
-> >>>> +
-> >>>> +	adc->sd_chan =3D devm_kzalloc(&indio_dev->dev,
-> >>>> +				    sizeof(*adc->sd_chan) * num_ch, GFP_KERNEL);
-> >>>> +	if (!adc->sd_chan)
-> >>>> +		return -ENOMEM;
-> >>>> +
-> >>>> +	sd_chan =3D adc->sd_chan;
-> >>>> +
-> >>>>    	for (chan_idx =3D 0; chan_idx < num_ch; chan_idx++) {
-> >>>>    		ch[chan_idx].scan_index =3D chan_idx;
-> >>>>    		ret =3D stm32_dfsdm_adc_chan_init_one(indio_dev, &ch[chan_idx]);
-> >>>> @@ -1513,6 +1580,38 @@ static int stm32_dfsdm_adc_init(struct iio_de=
-v *indio_dev)
-> >>>>    			dev_err(&indio_dev->dev, "Channels init failed\n");
-> >>>>    			return ret;
-> >>>>    		}
-> >>>> +
-> >>>> +		if (!chan->indio_dev)
-> >>>> +			return -EINVAL;
-> >>>> +
-> >>>> +		ret =3D iio_read_channel_scale(chan, &sd_chan->scale_val,
-> >>>> +					     &sd_chan->scale_val2);
-> >>>> +		if (ret < 0) {
-> >>>> +			dev_err(&indio_dev->dev,
-> >>>> +				"Failed to get channel %d scale\n", chan_idx);
-> >>>> +			return ret;
-> >>>> +		}
-> >>>> +
-> >>>> +		if (iio_channel_has_info(chan->channel, IIO_CHAN_INFO_OFFSET)) {
-> >>>> +			ret =3D iio_read_channel_offset(chan, &sd_chan->offset,
-> >>>> +						      &val2);
-> >>>> +			if (ret < 0) {
-> >>>> +				dev_err(&indio_dev->dev,
-> >>>> +					"Failed to get channel %d offset\n",
-> >>>> +					chan_idx);
-> >>>> +				return ret;
-> >>>> +			}
-> >>>> +		}
-> >>>> +
-> >>>> +		sd_chan->differential =3D chan->channel->differential;
-> >>>> +
-> >>>> +		dev_dbg(&indio_dev->dev, "Channel %d %s scale ref=3D%d offset=3D%=
-d",
-> >>>> +			chan_idx, chan->channel->differential ?
-> >>>> +			"differential" : "single-ended",
-> >>>> +			sd_chan->scale_val, sd_chan->offset);
-> >>>> +
-> >>>> +		chan++;
-> >>>> +		sd_chan++;
-> >>>>    	}
-> >>>>   =20
-> >>>>    	indio_dev->num_channels =3D num_ch; =20
+>>>>
 
+> +                interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
+> +                                <&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
+> +                interconnect-names = "video-mem", "cpu-cfg";
+
+<<<<
+
+> +
+> +                video-decoder {
+> +                        compatible = "venus-decoder";
+> +                };
+> +
+> +                video-encoder {
+> +                        compatible = "venus-encoder";
+> +                };
+> +        };
+> 
+
+-- 
+regards,
+Stan
