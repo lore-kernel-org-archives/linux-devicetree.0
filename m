@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2281FC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493F7C3B196
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD67206ED
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140A2206ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:49:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RyOIgCO9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ts4DSDY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgBNKqf (ORCPT
+        id S1728807AbgBNKtF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 05:46:35 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33883 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgBNKqf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 05:46:35 -0500
-Received: by mail-lj1-f195.google.com with SMTP id x7so10207263ljc.1
-        for <devicetree@vger.kernel.org>; Fri, 14 Feb 2020 02:46:33 -0800 (PST)
+        Fri, 14 Feb 2020 05:49:05 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46539 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgBNKtF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 05:49:05 -0500
+Received: by mail-lj1-f194.google.com with SMTP id x14so10168781ljd.13
+        for <devicetree@vger.kernel.org>; Fri, 14 Feb 2020 02:49:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NeXjnE7r2g7NW/QZCMY8eogb8019UjNBERpksRztscA=;
-        b=RyOIgCO9rwzLHRMzkzF15r94Gm7EFLx/l5Ek2m+SmkOaLf8KCd29ymRKiQHGtHzMO+
-         SjWc4wnVuhLkn/tE6g+Z/HhOMKZurtEWt1CLOk97/vkVcPe0PeaE8DgE5s5IrYdeMT/y
-         4hTSz3PGbn6yUUAsH+FyMtrWL23Hz3EuJc1ud4MtkQakJp19MzGQOs0kLLLPD8HQOccQ
-         us9qWmU2bw2Km1qQjblxOgi5536a0XSIlPNm0UjAmRHkmSb8wdZixYiJuS9Sfl9qLRJK
-         idQFhEdYShZ8OgDA0e++q6hokttEToCeomtqf8+akpiJmuT4T/6x2heIyQ5WvMHpum7B
-         xFYA==
+        bh=1i4Q6/1RsyH8dGZF2vprm22L1oxGHlOcnNHReqoF9A0=;
+        b=Ts4DSDY7UpRHKDbUuCSly0SJGu9e3cuorS05YoXAWoiHfbT6gDZLHgtavc4t6uYro2
+         Jd8tKZgAGyBhN4SCSktaIRL6q1pQC6cNsNrG/hv0z/7DiwEjLZOuQG4ZMWSlDutuJMXz
+         odHlhJ6Gf6gUix4lqMvr+gIMmhodCE0+cEmdy8WwSmZUPu8Gy9rRYcvrduPsfERBkXcf
+         vgfVsRRfU6q7ad86bLwMrzpnaqLPKUpjHyb7QxWm8oLMUpszmFk2aq0scMy7Dc+yRMlb
+         TpmDpcBxPHLReyZNxloQ/XqdAjdMKu9wStXmE3ts8+fwSi/F52kjw6t1YMmk8mZ2MBUV
+         PRCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NeXjnE7r2g7NW/QZCMY8eogb8019UjNBERpksRztscA=;
-        b=lOiZLKP+l7yMPKkEBl2GXQUtitKjpVkS1GxcC8kMftEKAZgFGOSdg8tRaBJK//KPOP
-         IvEyNPVRChsi7YQmSFsbocb2/56FiFt3BdQpRKJslasWoQI8ijFAHX1kObFvF+zvMDdt
-         BT0a1dIWPaj3rxY1y4J1+/bCqoY/ZBA33BHqLuTrE8F6QaDAX0TD8FvhauC6CCKorgHN
-         IuxbJf6aybPIFcMCC0cwWvd3csdyP9uWd2LQGMbSje9ObsWjd2hrFjT+ic7dZs9KcPL2
-         HNgHbooGsMaEhgZ4M6nPOn6HIn4FzJ/cpPB/SsSzQj5+oZ2WP+1et3/wu618hFVOZ2zZ
-         Hiag==
-X-Gm-Message-State: APjAAAWnKSog04YC1L8EFvcmwpesCmPuUlp1ZLDrjWzIXAY7UEBoXk9+
-        zG/nbkRXC9h5t40t6LoDjBHFttF7RSc+4Q/2TaSbpQ==
-X-Google-Smtp-Source: APXvYqzmdLdE8Rx/NNo5kXSwKXXl3RzcxUAwmAthly7FtdF/BpafqywcjF0AbGsPfO06POTuomc507bYl1nJS4URe7E=
-X-Received: by 2002:a05:651c:1bb:: with SMTP id c27mr1767553ljn.277.1581677193251;
- Fri, 14 Feb 2020 02:46:33 -0800 (PST)
+        bh=1i4Q6/1RsyH8dGZF2vprm22L1oxGHlOcnNHReqoF9A0=;
+        b=PxGWgtd3PxNoQYt9aAV27mruXz0gsCoWoDfEjhqgL8EEt8F3RMRZ1G+F9Fplcm1XUL
+         whEVLMO32PSrI2BtFJz0Xh+MPpLQDTR1dLrFHcQiA3IvBNSoAyzO3kl2d7zTAp67nhFL
+         SijttifIUZKOdnmTGgL6B+cKeAFQOy/s3sATLN4tDZ7WOTZvRasPG2hhnF58+kuVaExB
+         WrQ9NN5gFOREp+4LGr7A3xegTXg/7pVTde4CZIMHOT7FggdFeUlhSYjTfcVw8VWBaB2x
+         spxD6QQ9glPXNqyV3S66EpuwJ10LkG3pciwPDMqsJa7DCaiFN1MnSls0KZJKnudX78Ng
+         ya+Q==
+X-Gm-Message-State: APjAAAXeLfPaq1IALNO0ETKVzOL2ML2vF35rBFgAu/7uMAY+M3WUaKmi
+        iM5rc42NHi37y5neBh8VWnz5qZLKazWaIOLwatpPPg==
+X-Google-Smtp-Source: APXvYqz+6XkhlYSkMAKGVhZEHaoBs4DSOaPtmDqULEN8Q7rW85h657r4NxLb6Kf9TtTlfZhQ2GV+rviqE3OrEyKx/q4=
+X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr1665644ljo.125.1581677342094;
+ Fri, 14 Feb 2020 02:49:02 -0800 (PST)
 MIME-Version: 1.0
-References: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com> <1580148908-4863-2-git-send-email-stefan.wahren@i2se.com>
-In-Reply-To: <1580148908-4863-2-git-send-email-stefan.wahren@i2se.com>
+References: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com> <1581166975-22949-3-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <1581166975-22949-3-git-send-email-stefan.wahren@i2se.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Feb 2020 11:46:21 +0100
-Message-ID: <CACRpkdbcJwmVkT5kcR-ga3ejT4n8wbKPDJhFs_3Jp0-ZLKEWzQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] pinctrl: bcm2835: Drop unused define
+Date:   Fri, 14 Feb 2020 11:48:51 +0100
+Message-ID: <CACRpkdYKNYaLcy4T=CixZSkzP6wOvisFt_H_gqhEoANz2Bm4KA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] pinctrl: bcm2835: Refactor platform data
 To:     Stefan Wahren <stefan.wahren@i2se.com>
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -73,13 +73,14 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 7:15 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+On Sat, Feb 8, 2020 at 2:03 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
 
-> There is no usage for this define, so drop it.
+> This prepares the platform data to be easier to extend for more GPIOs.
+> Except of this there is no functional change.
 >
 > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Patch applied.
+Patch applied with Nicolas' Review tag.
 
 Yours,
 Linus Walleij
