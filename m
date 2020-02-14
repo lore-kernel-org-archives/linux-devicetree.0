@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779B9C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D51C3B1A6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50BE020637
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D292168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700937;
-	bh=0AGS+MlQMepeARnJsKYIBXgbmtmIqDDXRQy0zLTy+2Q=;
+	s=default; t=1581701049;
+	bh=JisXudK13Jk6Kspb8myNxbaBJxcABpU3ZxO3USpbX0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjbTTJzqnfEeDVYXk8XFrQGbLlXspbLEM1k5OR+iTgjKucOqoixOs5n6O0Kudp4jx
-	 rlYvSjzXsABZ+ouvYAYl0HAfKYAQ5yq3oWAowpp6H8HH0Er0GzWbGoQn8ykfd2o314
-	 rJsCyxo2NWbOVBnodVzHVpvHKJMf9ev3ZqppiID8=
+	b=e5MSINkffnzxEf50iBdsTv79gjzpJlSe24wIHlx22re7BKfpYi42Wcg1FXsroO1Yd
+	 kbtM3ybhzXusSrJo7pzHVzK/fEw9cccqryNZmXrd6ejKCuIs8K0YN/ORJV73kv4jm6
+	 ldBX/LMAyt6E9ZJv76NJcGaea+y3jqCegibh1T08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391693AbgBNRWL (ORCPT
+        id S2391222AbgBNQJK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:22:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:09:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390454AbgBNQKD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:03 -0500
+        id S2389963AbgBNQJK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9B724650;
-        Fri, 14 Feb 2020 16:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 988AD24681;
+        Fri, 14 Feb 2020 16:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696602;
-        bh=0AGS+MlQMepeARnJsKYIBXgbmtmIqDDXRQy0zLTy+2Q=;
+        s=default; t=1581696549;
+        bh=JisXudK13Jk6Kspb8myNxbaBJxcABpU3ZxO3USpbX0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iDjuYum31+mnFTHFC7UYKJhi3BzZJJOrtDcY562ThKjNO8UiXMWR8KjPohaa8HeoQ
-         iq8qKFnwOOWY49bYR7OLdTQaqX8YqObdwBdAy2nGJfza61U5BsDcpIP4SDhRkO/5ip
-         VFB84W1pWM+khZMpxQGNtAd97+kERtV6/FMNaGyk=
+        b=P2Ry/xdDrIas9EIQFjWqwaivTqr4jLFRNEbauVx4khClXSiL7ubtnUgha2OnPDFuF
+         u/jS8/WwYWM1KrJqyyfVUOdGrfB5xKbuFaTg7U7LkCKL29a0TDgqK5nWKIn+2hPXTp
+         8Wkw0iqbYAe8nh7OJCLzq5tOmCHCTIgRtV6jPU9M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>, Benoit Parrot <bparrot@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 387/459] ARM: dts: am43xx: add support for clkout1 clock
-Date:   Fri, 14 Feb 2020 11:00:37 -0500
-Message-Id: <20200214160149.11681-387-sashal@kernel.org>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 342/459] arm64: dts: ti: k3-j721e-main: Add missing power-domains for smmu
+Date:   Fri, 14 Feb 2020 10:59:52 -0500
+Message-Id: <20200214160149.11681-342-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,99 +59,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
 
-[ Upstream commit 01053dadb79d63b65f7b353e68b4b6ccf4effedb ]
+[ Upstream commit 3f03a58b25753843ce9e4511e9e246c51bd11011 ]
 
-clkout1 clock node and its generation tree was missing. Add this based
-on the data on TRM and PRCM functional spec.
+Add power-domains entry for smmu, so that the it is accessible as long
+as the driver is active. Without this device shutdown is throwing the
+below warning:
+"[   44.736348] arm-smmu-v3 36600000.smmu: failed to clear cr0"
 
-commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
-reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
-clkout1 clock") which is needed for the ov2659 camera sensor clock
-definition hence it is being re-applied here.
-
-Note that because of the current dts node name dependency for mapping to
-clock domain, we must still use "clkout1-*ck" naming instead of generic
-"clock@" naming for the node. And because of this, it's probably best to
-apply the dts node addition together along with the other clock changes.
-
-Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
+Reported-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Tested-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 091356f2a8c16..c726cd8dbdf1b 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -704,6 +704,60 @@
- 		ti,bit-shift = <8>;
- 		reg = <0x2a48>;
- 	};
-+
-+	clkout1_osc_div_ck: clkout1-osc-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&sys_clkin_ck>;
-+		ti,bit-shift = <20>;
-+		ti,max-div = <4>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
-+			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
-+			 <&dpll_mpu_m2_ck>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_mux_ck>;
-+		ti,bit-shift = <4>;
-+		ti,max-div = <8>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_pre_div_ck>;
-+		ti,bit-shift = <8>;
-+		ti,max-div = <32>;
-+		ti,index-power-of-two;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_mux_ck: clkout1-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
-+			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
-+		ti,bit-shift = <16>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_ck: clkout1-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&clkout1_mux_ck>;
-+		ti,bit-shift = <23>;
-+		reg = <0x4100>;
-+	};
- };
- 
- &prcm {
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 698ef9a1d5b75..96445111e3985 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -43,6 +43,7 @@
+ 	smmu0: smmu@36600000 {
+ 		compatible = "arm,smmu-v3";
+ 		reg = <0x0 0x36600000 0x0 0x100000>;
++		power-domains = <&k3_pds 229 TI_SCI_PD_EXCLUSIVE>;
+ 		interrupt-parent = <&gic500>;
+ 		interrupts = <GIC_SPI 772 IRQ_TYPE_EDGE_RISING>,
+ 			     <GIC_SPI 768 IRQ_TYPE_EDGE_RISING>;
 -- 
 2.20.1
 
