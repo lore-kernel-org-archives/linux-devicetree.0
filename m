@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7CDC3B1A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D33C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3663B24689
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C782217F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698319;
-	bh=wNzpmrTLzn6gJRvC4JafV65zvZOd9clsecn15jQjLKo=;
+	s=default; t=1581698375;
+	bh=S/7wKCFsMpQXLfwmfnjbr6se+wh/HZTqdiZYHh5D5iE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XcV0RRUGymB6x8OJ2X7dVUBoyyCSu4qAwtuYY/4CdlQgEslkrz2jD4azdHepVKFbG
-	 ee846T1cnBLKUY8lz2ip7mVDxmUjfW4t4KsPPYA8HEIoxrAV61DkjSNAFzL+Oibq3V
-	 y4X6iK3/4MZsP5ruP384HXj/eBTDmm1FPHkhZQiw=
+	b=G3T/vcZtZ9m0fg+FfQuWVAEuQNDIWF9Pzgce4sYScHB4ELt4pptGParCoQMDHknRn
+	 hBXrkL9fpfSKU7U7RePTQZKLXNLQsOLxuFuA2Y5yh+PzWbeKVegTRu436PNq/tIxHS
+	 +L86+YqMRHxdntmbjuS0Jh+0LaZH27sBbEbOAPDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405644AbgBNQXZ (ORCPT
+        id S2405556AbgBNQXM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:23:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59618 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:23:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405639AbgBNQXX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:23 -0500
+        id S2389207AbgBNQXL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 435D224761;
-        Fri, 14 Feb 2020 16:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6475024761;
+        Fri, 14 Feb 2020 16:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697403;
-        bh=wNzpmrTLzn6gJRvC4JafV65zvZOd9clsecn15jQjLKo=;
+        s=default; t=1581697390;
+        bh=S/7wKCFsMpQXLfwmfnjbr6se+wh/HZTqdiZYHh5D5iE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ptWd/wUruTNXJDR6RT0VRvGmCMtRtYNVwm8/aw3+dx02R/NtHNOGYPMQQ8WDtNknY
-         dHCkx7pJdYzFtX99y+rITzUny7JqMoHu5gOJXFrr44Wgj4o1yUlECrIS2i9JeQTque
-         t00xwNB9wiBeOpD0bjf/wXWGT5jMb8kW84pAx56o=
+        b=oPpiVPO2/hu904iDyXORSXNyUG4ntS9c6huIYyjQbrQRlqNq1uiGOXeQMG2xXqcQv
+         Dy8qvNa7LApGUau1cieLaX4zhJodL5EKi2JhN9VIq/dBgYMkA0HLc5TdxRDMWOaF5u
+         hMShyLtGq3k6f8FT1ennPP1v4wNhcMNRCUSuWlew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 096/141] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
-Date:   Fri, 14 Feb 2020 11:20:36 -0500
-Message-Id: <20200214162122.19794-96-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 085/141] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
+Date:   Fri, 14 Feb 2020 11:20:25 -0500
+Message-Id: <20200214162122.19794-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,34 +61,176 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 7980dff398f86a618f502378fa27cf7e77449afa ]
+[ Upstream commit ee0aa926ddb0bd8ba59e33e3803b3b5804e3f5da ]
 
-Add a missing property to GMAC node so that multicast filtering works
-correctly.
+Currently the maximum rate for peripheral clock is calculated based on a
+typical 133MHz MCK. The maximum frequency is defined in the datasheet as a
+ratio to MCK. Some sama5d3 platforms are using a 166MHz MCK. Update the
+device trees to match the maximum rate based on 166MHz.
 
-Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
+Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
+Link: https://lore.kernel.org/r/20200110172007.1253659-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/axs10x_mb.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sama5d3.dtsi      | 28 ++++++++++++++--------------
+ arch/arm/boot/dts/sama5d3_can.dtsi  |  4 ++--
+ arch/arm/boot/dts/sama5d3_uart.dtsi |  4 ++--
+ 3 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index d6c1bbc98ac3b..15698b3e490ff 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -63,6 +63,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = < 32 >;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&apbclk>;
- 			clock-names = "stmmaceth";
- 			max-speed = <100>;
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index 4c84d333fc7e6..33c0d26689347 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -1109,49 +1109,49 @@
+ 					usart0_clk: usart0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <12>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					usart1_clk: usart1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <13>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					usart2_clk: usart2_clk {
+ 						#clock-cells = <0>;
+ 						reg = <14>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					usart3_clk: usart3_clk {
+ 						#clock-cells = <0>;
+ 						reg = <15>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					uart0_clk: uart0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <16>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					twi0_clk: twi0_clk {
+ 						reg = <18>;
+ 						#clock-cells = <0>;
+-						atmel,clk-output-range = <0 16625000>;
++						atmel,clk-output-range = <0 41500000>;
+ 					};
+ 
+ 					twi1_clk: twi1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <19>;
+-						atmel,clk-output-range = <0 16625000>;
++						atmel,clk-output-range = <0 41500000>;
+ 					};
+ 
+ 					twi2_clk: twi2_clk {
+ 						#clock-cells = <0>;
+ 						reg = <20>;
+-						atmel,clk-output-range = <0 16625000>;
++						atmel,clk-output-range = <0 41500000>;
+ 					};
+ 
+ 					mci0_clk: mci0_clk {
+@@ -1167,19 +1167,19 @@
+ 					spi0_clk: spi0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <24>;
+-						atmel,clk-output-range = <0 133000000>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 
+ 					spi1_clk: spi1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <25>;
+-						atmel,clk-output-range = <0 133000000>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 
+ 					tcb0_clk: tcb0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <26>;
+-						atmel,clk-output-range = <0 133000000>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 
+ 					pwm_clk: pwm_clk {
+@@ -1190,7 +1190,7 @@
+ 					adc_clk: adc_clk {
+ 						#clock-cells = <0>;
+ 						reg = <29>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					dma0_clk: dma0_clk {
+@@ -1221,13 +1221,13 @@
+ 					ssc0_clk: ssc0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <38>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					ssc1_clk: ssc1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <39>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					sha_clk: sha_clk {
+diff --git a/arch/arm/boot/dts/sama5d3_can.dtsi b/arch/arm/boot/dts/sama5d3_can.dtsi
+index c5a3772741bf6..0fac79f75c06c 100644
+--- a/arch/arm/boot/dts/sama5d3_can.dtsi
++++ b/arch/arm/boot/dts/sama5d3_can.dtsi
+@@ -37,13 +37,13 @@
+ 					can0_clk: can0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <40>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					can1_clk: can1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <41>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 				};
+ 			};
+diff --git a/arch/arm/boot/dts/sama5d3_uart.dtsi b/arch/arm/boot/dts/sama5d3_uart.dtsi
+index 2511d748867bd..71818c7bfb673 100644
+--- a/arch/arm/boot/dts/sama5d3_uart.dtsi
++++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
+@@ -42,13 +42,13 @@
+ 					uart0_clk: uart0_clk {
+ 						#clock-cells = <0>;
+ 						reg = <16>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
+ 					uart1_clk: uart1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <17>;
+-						atmel,clk-output-range = <0 66000000>;
++						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 				};
+ 			};
 -- 
 2.20.1
 
