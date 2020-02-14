@@ -2,158 +2,287 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308F1C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D097FC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0498222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="kNOjQxVZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vKAisGVD"
+	by mail.kernel.org (Postfix) with ESMTP id A578E222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgBNIOr (ORCPT
+        id S1726179AbgBNIZj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:14:47 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:32889 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728864AbgBNIOr (ORCPT
+        Fri, 14 Feb 2020 03:25:39 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:45291 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725938AbgBNIZj (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:14:47 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 698522209B;
-        Fri, 14 Feb 2020 03:14:46 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 14 Feb 2020 03:14:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=DO1qB7EF03XbHYcM+MQop+UEcOT
-        t18HnhzTS5Ovdc4M=; b=kNOjQxVZhVfgcp+iqhb6aDnFZ/JegypifI4ezoWQtuZ
-        z2Ul5v1Kz08bX2Elyz2KGBv9w1Al76i1mt6iBcIF4ifj4wThv6E2xZcT9Sl8zT55
-        oxgalW9xsjRlmFoBNTfMkgha11NjLgTHP8XQR1MYmZAROPw/jZ2/7olVS5qinq+E
-        2x/U18ZHiVqdv1EdO/0QI2m+fullcKa56lAYlEmm0/rmq3OgoFPv0/qf2mD94mhK
-        W1R+fH+fVqPtRTiZv9dTeaVjpN39y54UDQpT6yVxNbyEW8Vp7W/8OOJjmptANBIO
-        ZJQHzKgsRvxxWbLlvXRA026yRkCXs4j7B5/0eXNHloQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DO1qB7
-        EF03XbHYcM+MQop+UEcOTt18HnhzTS5Ovdc4M=; b=vKAisGVD5dqKM7X6hG5Wdf
-        gOe6cyx91Qjmo8YGkc8Ql6GAZJEfakYX6Ta85WrMRatSLebAOwJt5WYZiZyTB769
-        FHzozMJ5c33IIV64LR5P0iCzJNUpAGQo7VaOVqDNzds5LifEkw0hqxdaPPo6uiR0
-        zm6YXnLf4OwGa/K4Z+UX8xucVGqDRBcF2cem8dSXq/MjTssPW6TrVV67BR506urx
-        hRYc0q8KAks7ZtaW/gXtOjN4s+WgQu+6fsNpnmco5z802vDPp624nD7V4Ug8b6eB
-        93gl8dlm+2chh6dpZIgl+TK55m1MFNjfqLoPRGNC8phHqBiBpdjcDcafpUgVEUmw
-        ==
-X-ME-Sender: <xms:9VZGXsPA5af8xY7aiEojvDXfnfXMf-8CbgGHJ4ku6cOx5-ghsTPwcw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieelgdduudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:9VZGXsBaONtsZfOvtIHuH_5yKiDOoL0caaLG49vkJIprvPdlg1Q9zQ>
-    <xmx:9VZGXmM6KBRF1IsSKO9UkEoY9bUh90PGu_TDlj8p_zynolIzCzTZ4Q>
-    <xmx:9VZGXhzeh8k26vwac0stegTUDevHYGXll46f1GDuViz5NbtO5g5VKA>
-    <xmx:9lZGXv-Xr4IdbcvbAnpBBJj3hcwZmqn48Lbr0mC07E8KSbE77Lz9Fg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CE77B3280062;
-        Fri, 14 Feb 2020 03:14:44 -0500 (EST)
-Date:   Fri, 14 Feb 2020 09:14:43 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
-Message-ID: <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
-References: <20200213211427.33004-1-jernej.skrabec@siol.net>
- <20200213211427.33004-2-jernej.skrabec@siol.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gd4hk6lpwgqc6ffi"
-Content-Disposition: inline
-In-Reply-To: <20200213211427.33004-2-jernej.skrabec@siol.net>
+        Fri, 14 Feb 2020 03:25:39 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Feb 2020 13:55:35 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 14 Feb 2020 13:55:07 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 296F925BF; Fri, 14 Feb 2020 13:55:06 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v5 2/3] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+Date:   Fri, 14 Feb 2020 13:54:43 +0530
+Message-Id: <1581668684-4182-3-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
+References: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add interconnect support in dwc3-qcom driver to vote for bus
+bandwidth.
 
---gd4hk6lpwgqc6ffi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This requires for two different paths - from USB master to
+DDR slave. The other is from APPS master to USB slave.
 
-Hi Jernej,
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+---
+ drivers/usb/dwc3/dwc3-qcom.c | 135 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 133 insertions(+), 2 deletions(-)
 
-Thanks for taking care of this
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 261af9e..2ed6c20 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/extcon.h>
++#include <linux/interconnect.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
+@@ -43,6 +44,14 @@
+ #define SDM845_QSCRATCH_SIZE			0x400
+ #define SDM845_DWC3_CORE_SIZE			0xcd00
+ 
++/* Interconnect path bandwidths in MBps */
++#define USB_MEMORY_AVG_HS_BW MBps_to_icc(240)
++#define USB_MEMORY_PEAK_HS_BW MBps_to_icc(700)
++#define USB_MEMORY_AVG_SS_BW  MBps_to_icc(1000)
++#define USB_MEMORY_PEAK_SS_BW MBps_to_icc(2500)
++#define APPS_USB_AVG_BW 0
++#define APPS_USB_PEAK_BW MBps_to_icc(40)
++
+ struct dwc3_acpi_pdata {
+ 	u32			qscratch_base_offset;
+ 	u32			qscratch_base_size;
+@@ -76,8 +85,13 @@ struct dwc3_qcom {
+ 	enum usb_dr_mode	mode;
+ 	bool			is_suspended;
+ 	bool			pm_suspended;
++	struct icc_path		*usb_ddr_icc_path;
++	struct icc_path		*apps_usb_icc_path;
+ };
+ 
++static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom);
++static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom);
++
+ static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
+ {
+ 	u32 reg;
+@@ -239,7 +253,7 @@ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ {
+ 	u32 val;
+-	int i;
++	int i, ret;
+ 
+ 	if (qcom->is_suspended)
+ 		return 0;
+@@ -251,6 +265,10 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ 	for (i = qcom->num_clocks - 1; i >= 0; i--)
+ 		clk_disable_unprepare(qcom->clks[i]);
+ 
++	ret = dwc3_qcom_interconnect_disable(qcom);
++	if (ret)
++		dev_warn(qcom->dev, "failed to disable interconnect %d\n", ret);
++
+ 	qcom->is_suspended = true;
+ 	dwc3_qcom_enable_interrupts(qcom);
+ 
+@@ -276,6 +294,10 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 		}
+ 	}
+ 
++	ret = dwc3_qcom_interconnect_enable(qcom);
++	if (ret)
++		dev_warn(qcom->dev, "failed to enable interconnect %d\n", ret);
++
+ 	/* Clear existing events from PHY related to L2 in/out */
+ 	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
+ 			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
+@@ -285,6 +307,108 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 	return 0;
+ }
+ 
++
++/**
++ * dwc3_qcom_interconnect_init() - Get interconnect path handles
++ * @qcom:			Pointer to the concerned usb core.
++ *
++ */
++static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
++{
++	struct device *dev = qcom->dev;
++	int ret;
++
++	if (!device_is_bound(&qcom->dwc3->dev))
++		return -EPROBE_DEFER;
++
++	qcom->usb_ddr_icc_path = of_icc_get(dev, "usb-ddr");
++	if (IS_ERR(qcom->usb_ddr_icc_path)) {
++		dev_err(dev, "Error: (%ld) failed getting usb-ddr path\n",
++			PTR_ERR(qcom->usb_ddr_icc_path));
++		return PTR_ERR(qcom->usb_ddr_icc_path);
++	}
++
++	qcom->apps_usb_icc_path = of_icc_get(dev, "apps-usb");
++	if (IS_ERR(qcom->apps_usb_icc_path)) {
++		dev_err(dev, "Error: (%ld) failed getting apps-usb path\n",
++				PTR_ERR(qcom->apps_usb_icc_path));
++		return PTR_ERR(qcom->apps_usb_icc_path);
++	}
++
++	ret = dwc3_qcom_interconnect_enable(qcom);
++	if (ret) {
++		dev_err(dev, "failed to enable interconnect %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++/**
++ * dwc3_qcom_interconnect_exit() - Release interconnect path handles
++ * @qcom:			Pointer to the concerned usb core.
++ *
++ * This function is used to release interconnect path handle.
++ */
++static void dwc3_qcom_interconnect_exit(struct dwc3_qcom *qcom)
++{
++	icc_put(qcom->usb_ddr_icc_path);
++	icc_put(qcom->apps_usb_icc_path);
++}
++
++/* Currently we only use bandwidth level, so just "enable" interconnects */
++static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
++{
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++	int ret;
++
++	if (dwc->maximum_speed == USB_SPEED_SUPER) {
++		ret = icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
++	} else {
++		ret = icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
++	}
++
++	if (ret)
++		return ret;
++
++	ret = icc_set_bw(qcom->apps_usb_icc_path,
++		APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
++	if (ret)
++		icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
++
++	return ret;
++}
++
++/* To disable an interconnect, we just set its bandwidth to 0 */
++static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
++{
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++	int ret;
++
++	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
++	if (ret)
++		return ret;
++
++	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
++	if (ret)
++		goto err_reenable_memory_path;
++
++	return 0;
++
++	/* Re-enable things in the event of an error */
++err_reenable_memory_path:
++	if (dwc->maximum_speed == USB_SPEED_SUPER)
++		icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
++	else
++		icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
++
++	return ret;
++}
++
+ static irqreturn_t qcom_dwc3_resume_irq(int irq, void *data)
+ {
+ 	struct dwc3_qcom *qcom = data;
+@@ -648,6 +772,10 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 		goto depopulate;
+ 	}
+ 
++	ret = dwc3_qcom_interconnect_init(qcom);
++	if (ret)
++		goto depopulate;
++
+ 	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+ 
+ 	/* enable vbus override for device mode */
+@@ -657,7 +785,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 	/* register extcon to override sw_vbus on Vbus change later */
+ 	ret = dwc3_qcom_register_extcon(qcom);
+ 	if (ret)
+-		goto depopulate;
++		goto interconnect_exit;
+ 
+ 	device_init_wakeup(&pdev->dev, 1);
+ 	qcom->is_suspended = false;
+@@ -667,6 +795,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++interconnect_exit:
++	dwc3_qcom_interconnect_exit(qcom);
+ depopulate:
+ 	if (np)
+ 		of_platform_depopulate(&pdev->dev);
+@@ -697,6 +827,7 @@ static int dwc3_qcom_remove(struct platform_device *pdev)
+ 	}
+ 	qcom->num_clocks = 0;
+ 
++	dwc3_qcom_interconnect_exit(qcom);
+ 	reset_control_assert(qcom->resets);
+ 
+ 	pm_runtime_allow(dev);
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
-> Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix TX6
-> (H6) don't have external 32kHz oscillator. Till H6, it didn't really
-> matter if external oscillator was enabled because HW detected error and
-> fall back to internal one. H6 has same functionality but it's the first
-> SoC which have "auto switch bypass" bit documented and always enabled in
-> driver. This prevents RTC to work correctly if external crystal is not
-> present on board. There are other side effects - all peripherals which
-> depends on this clock also don't work (HDMI CEC for example).
->
-> Make clocks property optional. If it is present, select external
-> oscillator. If not, stay on internal.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> index 852f5f3b3592..538cf7e19034 100644
-> --- a/drivers/rtc/rtc-sun6i.c
-> +++ b/drivers/rtc/rtc-sun6i.c
-> @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
->  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
->  	}
->
-> -	/* Switch to the external, more precise, oscillator */
-> -	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
-> -	if (rtc->data->has_losc_en)
-> -		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-> +	/* Switch to the external, more precise, oscillator, if present */
-> +	if (of_get_property(node, "clocks", NULL)) {
-> +		reg |= SUN6I_LOSC_CTRL_EXT_OSC;
-> +		if (rtc->data->has_losc_en)
-> +			reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-> +	}
->  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
->
->  	/* Yes, I know, this is ugly. */
->  	sun6i_rtc = rtc;
->
-> -	/* Deal with old DTs */
-> -	if (!of_get_property(node, "clocks", NULL))
-> -		goto err;
-> -
-
-Doesn't that prevent the parents to be properly set if there's an
-external crystal?
-
-Maxime
-
---gd4hk6lpwgqc6ffi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkZW8wAKCRDj7w1vZxhR
-xT/JAQCebsgcgBInF+PMbD9/OQ+obICfwPn2F6YKc8wH6LbTwAEAzCHajFqwpLR0
-m/VD6Vn5K5n5k503UZ48Ap0B4ro5cwc=
-=A1UQ
------END PGP SIGNATURE-----
-
---gd4hk6lpwgqc6ffi--
