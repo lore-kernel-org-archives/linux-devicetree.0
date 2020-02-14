@@ -2,139 +2,111 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621DDC3B18F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B28C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055532086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8EC22314
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:24:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ht49Dt1Y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="slO2uGFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgBNMTe (ORCPT
+        id S1729032AbgBNMYf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:19:34 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44828 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgBNMTe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 07:19:34 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5E10528D7ED
-Subject: Re: [PATCH v7 01/13] dt-bindings: arm: move mmsys description to
- display
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>, matthias.bgg@kernel.org
-Cc:     mark.rutland@arm.com, airlied@linux.ie, mturquette@baylibre.com,
-        dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com,
-        ulrich.hecht+renesas@gmail.com, linux-clk@vger.kernel.org,
-        drinkcat@chromium.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        wens@csie.org, mtk01761 <wendell.lin@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>, frank-w@public-files.de,
-        sean.wang@mediatek.com, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Fri, 14 Feb 2020 07:24:35 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:50289 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728223AbgBNMYf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 07:24:35 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id D0FE03AF4;
+        Fri, 14 Feb 2020 07:24:31 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 14 Feb 2020 07:24:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=2f3VFRjW3B+zONorxo3OTyEyy8
+        z5poB18m7XL4T/tlo=; b=ht49Dt1YpFBVR6qEV2lxiV0ZvCn9WXy/XSB8C8v3fj
+        kizud/Z8YazI0LislRtAooDuAFtWqfMn3H5bQXX3bOsar0HU9QtKHV1OMT6kehMd
+        zohdoS7aoBv9Pbto230VOwh6pXVnW/5wKnD2wX5S9+y5PvdJwRHgiE6oITiBR/TE
+        vBtunnRT/VIegClqgGZ6BhfpMXcOUrlLJ64stOMcbBVi0EFoOo1njeAsppHWcnqi
+        hBMWItowQPNvNtyLip0w8/ZTV695vthkeKZ3uiChDns/yn8KN58BgyRsWSguGYia
+        1mfLYVYf20WD+j9mwr4ky37YVay09s+UN5YX391l8H8g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=2f3VFRjW3B+zONorx
+        o3OTyEyy8z5poB18m7XL4T/tlo=; b=slO2uGFs4EkJN83M7x4pGERBGwNqyEh+1
+        hXlAl8ZidI1J7pJ9ADDMySyfsWF2gTDxvXyFslTgoZCCGPcgrXG6foU6y9E3cGJW
+        ZVjID9oIttD3FWgdoopxk8y4VSy63jKGCevrFiKvcJ0q6maM9xWvCD8oG6NwW9jj
+        T7VOBfCq4hJhGiCV1FEN9HPLihIi9VnaVaVxk/qG9kDzdONCaOvH6SdLxwCWqs4q
+        xYUlBc1PwIpsPFaSFvuGoYJ7U1OJN/D4hy5vT6MdtKSvjCH2YNcJLPezahPb7eY7
+        DMqaRMv7ObsHsFGoLTsnQEWULJ6A9HTEEHLnDs3WEsaQN3YuSaemQ==
+X-ME-Sender: <xms:fZFGXgNYKVkylRZpKb5k6Y9PPhxkoo43yJOAQM4IJ8lNyf7SiPOAYA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdegtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucft
+    ihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrdekle
+    drieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:fZFGXl4wnGzixgpbuwFprXm49iPzt5bjM5iFa3k3cTs3G_nx6ux6BQ>
+    <xmx:fZFGXjV_R-Crz4VvDURlqG-OSApRvbsyj91j9KR6WgTyXv0248iVPg>
+    <xmx:fZFGXsM3elag3TffXXGnSkZ1MbVzHukdPq2jivJLhmd6-4D3dAAjvQ>
+    <xmx:f5FGXkLQNIDHojlcgi4bI8K3by7TVKbddCulJhR0ORtoNV6BteBWSQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E495A3280062;
+        Fri, 14 Feb 2020 07:24:28 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>, sboyd@kernel.org,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-        p.zabel@pengutronix.de
-References: <20200213201953.15268-1-matthias.bgg@kernel.org>
- <20200213201953.15268-2-matthias.bgg@kernel.org>
- <1581662577.17949.3.camel@mtksdaap41>
- <2bda2dd7-9ed2-8b4c-897e-e585ccfa1fa5@gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <022e8f64-b414-67a5-722e-bdd7c00230ff@collabora.com>
-Date:   Fri, 14 Feb 2020 13:19:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] drm/sun4i: tcon: Support LVDS on the A33
+Date:   Fri, 14 Feb 2020 13:24:27 +0100
+Message-Id: <20200214122427.108675-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <2bda2dd7-9ed2-8b4c-897e-e585ccfa1fa5@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi CK,
+The A33 TCON supports LVDS, so we can toggle the support switch.
 
-On 14/2/20 11:01, Matthias Brugger wrote:
-> 
-> 
-> On 14/02/2020 07:42, CK Hu wrote:
->> Hi, Matthias:
->>
->> On Thu, 2020-02-13 at 21:19 +0100, matthias.bgg@kernel.org wrote:
->>> From: Matthias Brugger <mbrugger@suse.com>
->>>
->>> The mmsys block provides registers and clocks for the display
->>> subsystem. The binding description should therefore live together with
->>> the rest of the display descriptions. Move it to display/mediatek.
->>>
->>
->> Yes, for the upstreamed driver, only display (DRM) use mmsys clock. For
->> some MDP patches [1] in progress, MDP also use mmsys clock. So we just
->> consider what's upstreamed now?
-> 
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Let me jump into the discussion, and sorry if my question is silly because I'm
-just starting to look at this code.
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index fdf143042f83..14026b4fa7c7 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -1475,6 +1475,7 @@ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
+ 	.has_channel_0		= true,
+ 	.has_lvds_alt		= true,
+ 	.dclk_min_div		= 1,
++	.supports_lvds		= true,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
+-- 
+2.24.1
 
-IMO we should consider all the cases to find a proper fix on all this, and if
-MDP uses also mmsys clocks this approach will not work. I think the main problem
-here and the big question is what exactly is the MMSYS block, is an independent
-clock controller that provides clocks to DRM and other blocks? or is hardly tied
-to the DRM block in some way?
-
-Could you give us a block schema on how the things are interconnected?
-
-If is an independent clock controller I think there was a mistake when the first
-drm driver was pushed by using the compatible = "mediatek,mt8173-mmsys" as id
-for that driver.
-
-Thanks,
- Enric
-
-
-> I'm not sure if I understand you correctly. Are you proposing to keep the
-> binding description in arm/mediatek?
-> 
-> Regards,
-> Matthias
-> 
->>
->> [1] https://patchwork.kernel.org/patch/11140747/
->>
->> Regards,
->> CK
->>
->>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->>>
->>> ---
->>>
->>> Changes in v7:
->>> - move the binding description
->>>
->>> Changes in v6: None
->>> Changes in v5: None
->>> Changes in v4: None
->>> Changes in v3: None
->>> Changes in v2: None
->>>
->>>  .../bindings/{arm => display}/mediatek/mediatek,mmsys.txt         | 0
->>>  1 file changed, 0 insertions(+), 0 deletions(-)
->>>  rename Documentation/devicetree/bindings/{arm => display}/mediatek/mediatek,mmsys.txt (100%)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
->>> similarity index 100%
->>> rename from Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
->>> rename to Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
