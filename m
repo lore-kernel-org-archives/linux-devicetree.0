@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14693C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF14C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01BB24680
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1259324682
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695848;
-	bh=PDMV9NL7oAVwioQiltJHDGJGsryMCmbpfpVrnmp6Hao=;
+	s=default; t=1581696181;
+	bh=OHflqUrzlm8/xx/dM//1K4Fu0XHAEpTzk5pVqK1KuwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mft436r/4DQqU6KELuV6kpmLMnY2+/OA2cR1UGuaB59PoMfXE7Ltf7ciDrXjv7Ha3
-	 7Htvd0QJFvI6gg3t8LbFjHOy4bbU3IZOs3odoKHCl8GRLzyXHNijbFjhiJIXR8OrlY
-	 a5TrPEV/XxjP3WUhBUnh4ww6a/P9kSieP23ln9gE=
+	b=wKp9kduUrA2jnFxgrchjsd7dik9ibJhiOwp7bAEz+emT3890A80PCo2znDPHPX4I1
+	 Vrrp3GP2iugx+xy4RK5swiKVX7z0WlJpM6ts/jM3o3I+xrc4nm8BMZxL/rroQD2hOM
+	 5JWVMvYi2ZXAtKRdpemaoJ1ItSLhanoRxyVwZF6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbgBNP51 (ORCPT
+        id S2389183AbgBNQDA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:03:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388222AbgBNP51 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:27 -0500
+        id S2389506AbgBNQC7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB82C2082F;
-        Fri, 14 Feb 2020 15:57:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B6C82067D;
+        Fri, 14 Feb 2020 16:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695846;
-        bh=PDMV9NL7oAVwioQiltJHDGJGsryMCmbpfpVrnmp6Hao=;
+        s=default; t=1581696178;
+        bh=OHflqUrzlm8/xx/dM//1K4Fu0XHAEpTzk5pVqK1KuwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2p5i7w7c2YaKsI71BdmHflW3wW8lxNNAqQvxrx3UxzbdVl5MamQODjsZ6IX/g+2ZN
-         Wl6JeiuWTwz1mMWAOi9IHycbAPOyydaHNZV/WQEW44yf/3FC9Oq4GkTfDNVOYn77Ko
-         tB5lj+y8cHf/w1HyusJACwag49MVlD2g6mKWPdAE=
+        b=aZZOM1wJt5ohdqLRxlbs4WvPFNJv/l+YujhCLnyGTW4EZKWdPQlKyuukrr8uHr59s
+         q7/oQJMQT9H5S6iabdtVOIvNh82F8XlwN2Aa/Qjwun6zSC3LyoQYUVUoF+7gqGa7iU
+         n8auVwvzC6sArF+/8GXh+kDi2fPrx/R4+ibBHMMY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 396/542] arm64: dts: ti: k3-j721e-main: Add missing power-domains for smmu
-Date:   Fri, 14 Feb 2020 10:46:28 -0500
-Message-Id: <20200214154854.6746-396-sashal@kernel.org>
+Cc:     Baruch Siach <baruch@tkos.co.il>,
+        Denis Odintsov <d.odintsov@traviangames.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 050/459] arm64: dts: marvell: clearfog-gt-8k: fix switch cpu port node
+Date:   Fri, 14 Feb 2020 10:55:00 -0500
+Message-Id: <20200214160149.11681-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,35 +63,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Lokesh Vutla <lokeshvutla@ti.com>
+From: Baruch Siach <baruch@tkos.co.il>
 
-[ Upstream commit 3f03a58b25753843ce9e4511e9e246c51bd11011 ]
+[ Upstream commit 62bba54d99407aedfe9b0a02e72e23c06e2b0116 ]
 
-Add power-domains entry for smmu, so that the it is accessible as long
-as the driver is active. Without this device shutdown is throwing the
-below warning:
-"[   44.736348] arm-smmu-v3 36600000.smmu: failed to clear cr0"
+Explicitly set the switch cpu (upstream) port phy-mode and managed
+properties. This fixes the Marvell 88E6141 switch serdes configuration
+with the recently enabled phylink layer.
 
-Reported-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Fixes: a6120833272c ("arm64: dts: add support for SolidRun Clearfog GT 8K")
+Reported-by: Denis Odintsov <d.odintsov@traviangames.com>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 1e4c2b78d66d6..68d478af7a3e6 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -43,6 +43,7 @@
- 	smmu0: smmu@36600000 {
- 		compatible = "arm,smmu-v3";
- 		reg = <0x0 0x36600000 0x0 0x100000>;
-+		power-domains = <&k3_pds 229 TI_SCI_PD_EXCLUSIVE>;
- 		interrupt-parent = <&gic500>;
- 		interrupts = <GIC_SPI 772 IRQ_TYPE_EDGE_RISING>,
- 			     <GIC_SPI 768 IRQ_TYPE_EDGE_RISING>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+index bd881497b8729..a211a046b2f2f 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+@@ -408,6 +408,8 @@
+ 				reg = <5>;
+ 				label = "cpu";
+ 				ethernet = <&cp1_eth2>;
++				phy-mode = "2500base-x";
++				managed = "in-band-status";
+ 			};
+ 		};
+ 
 -- 
 2.20.1
 
