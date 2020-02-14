@@ -2,71 +2,130 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640A3C3B18F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 03:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACCDC352A3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 03:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7202168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 03:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23612217F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 03:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581649731;
+	bh=hjaIkHAO1KvEz7zY4FR2SQIzlH3LDp1v7jaEbLGckhQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YB5bynXgiF/nMJ4OH+tAqVNWJAQEirDbEOZZhuvvUUadynBzMjmrytBuM19HO2IAS
+	 Yql7e1FZ04MKfKZvllfM/ieVNsF5D7YZfM91y9GOJsSKriAOu0yH2tdv0WKJ4K/lRZ
+	 P3HSjAGNOZRD0jvS4az3wAuYqJYJDbgNembavvvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgBNDHC (ORCPT
+        id S1728004AbgBNDIu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:07:02 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:59138 "EHLO inva021.nxp.com"
+        Thu, 13 Feb 2020 22:08:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbgBNDHC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:07:02 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 83A8B209A3E;
-        Fri, 14 Feb 2020 04:07:01 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3C42C209A2C;
-        Fri, 14 Feb 2020 04:06:56 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 56EF0402EC;
-        Fri, 14 Feb 2020 11:06:48 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/5] ARM: dts: imx6sl: make clks node name generic
-Date:   Fri, 14 Feb 2020 10:59:38 +0800
-Message-Id: <1581649180-26086-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581649180-26086-1-git-send-email-Anson.Huang@nxp.com>
-References: <1581649180-26086-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727604AbgBNDIu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 22:08:50 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 042252168B;
+        Fri, 14 Feb 2020 03:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581649730;
+        bh=hjaIkHAO1KvEz7zY4FR2SQIzlH3LDp1v7jaEbLGckhQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fWjwqkF+s9n3Qw2LqeIfwsVgTdXrmLL+ldw+W9R3MQcJqR81+4SGP5TUYzTEswhNO
+         Gn1hb5LD0f2gOYmxStpJePNqURFzsNsw7KlMiM2PDNNk0ozFTG9kvRyTu6bTAqCjez
+         m5Uzlvgnb32Uyxccz71sRCQ47mZc12fZtbXFoQfI=
+Date:   Fri, 14 Feb 2020 11:08:44 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Robert Jones <rjones@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx: ventana: add fxos8700 on gateworks boards
+Message-ID: <20200214030843.GL22842@dragon>
+References: <20200128221424.11481-1-rjones@gateworks.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128221424.11481-1-rjones@gateworks.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Node name should be generic, use "clock-controller" instead of
-"ccm" for clks node.
+On Tue, Jan 28, 2020 at 02:14:24PM -0800, Robert Jones wrote:
+> Add fxos8700 iio imu entries for Gateworks ventana SBCs.
+> 
+> Signed-off-by: Robert Jones <rjones@gateworks.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 5 +++++
+>  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 5 +++++
+>  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 5 +++++
+>  3 files changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> index 1a9a9d9..2d7d01e 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> @@ -313,6 +313,11 @@
+>  		interrupts = <12 2>;
+>  		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>  	};
+> +
+> +	fxos8700@1e {
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sl.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Use a generic node name, not the model name.
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 3e5817d..6de815b 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -514,7 +514,7 @@
- 				status = "disabled";
- 			};
- 
--			clks: ccm@20c4000 {
-+			clks: clock-controller@20c4000 {
- 				compatible = "fsl,imx6sl-ccm";
- 				reg = <0x020c4000 0x4000>;
- 				interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
--- 
-2.7.4
+Shawn
 
+> +		compatible = "nxp,fxos8700";
+> +		reg = <0x1e>;
+> +	};
+>  };
+>  
+>  &ldb {
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> index 54b2bea..bf1a2c6 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> @@ -304,6 +304,11 @@
+>  		interrupts = <11 2>;
+>  		wakeup-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+>  	};
+> +
+> +	fxos8700@1e {
+> +		compatible = "nxp,fxos8700";
+> +		reg = <0x1e>;
+> +	};
+>  };
+>  
+>  &ldb {
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> index 1b6c133..d9e09a9 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> @@ -361,6 +361,11 @@
+>  		interrupts = <12 2>;
+>  		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>  	};
+> +
+> +	fxos8700@1e {
+> +		compatible = "nxp,fxos8700";
+> +		reg = <0x1e>;
+> +	};
+>  };
+>  
+>  &ldb {
+> -- 
+> 2.9.2
+> 
