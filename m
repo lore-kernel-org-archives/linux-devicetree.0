@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1176C3B1B0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632E8C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA782067D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C0F20873
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701777;
-	bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
+	s=default; t=1581701798;
+	bh=g6VPhW3eBB5C1uecuVo6rBMiGuCBDUnq8qjhxoIngKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G5erdMyAZ2//xSM0HUCp5fEXfZ0wGELhttMxowlEhZ9PBuWWVJWFVNhPVYag//TEk
-	 aK8TRgm2iPC+lqZjh2z6w4mJBU9iiBQ2jpN11+45VeGqoS7o1jc97dNxN23E23u7VJ
-	 xoBPzGBzH6Lqw9uOOZ3ov10Kee09Q2iCXHvtKX38=
+	b=uGfs/ieGh6yQ7ODVHVBWM4AF8AQDnPIr/iGPRy10LU+n+AhWunj2MksY0IF/XxZZP
+	 c7nJ0kabbFlUGeSGjd3vVOt4JvO1Xuo1vBKDZyksnsznxk3HQ+FqimSu/dzV0XEW/o
+	 f3Azno1T9F5N/tmx9cEqEH5lRnSwJuD+A/OAG6Do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389295AbgBNQFh (ORCPT
+        id S2390177AbgBNQF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:05:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55556 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:05:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390197AbgBNQFh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:37 -0500
+        id S2390174AbgBNQF3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 482CB246A1;
-        Fri, 14 Feb 2020 16:05:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D02B24681;
+        Fri, 14 Feb 2020 16:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696336;
-        bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
+        s=default; t=1581696328;
+        bh=g6VPhW3eBB5C1uecuVo6rBMiGuCBDUnq8qjhxoIngKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ryF86zmTumbCAJC6Wpe+n5ZrnmI9wom/IfZVQZ6vJokqAemP9gjaIJlZn9xdFasRA
-         xZMmx5/zF4XKQgIErLFRzlcNJ1PElXCIEZVUJ2BFsEnVimsPaXpRtFv6SaIRvKp4uy
-         HW3iN+sgk+K47+SFkSmLuhMSZqrts1RI3WWQ7OOc=
+        b=zUYyqFmivOhIcBoc5TElmQ4jlmD+EkKFcxGAwag1O+ovqREpiyu7PX8W5lEJfJ7dS
+         9O/WjixPlKmllLiQ0kHzrk8R3Nn+OxFSZp1FO4sIbSDef2puVrF0tYYuWE9cNeDZ3z
+         I+unsUnqAIr/VdUqqftkikxA7SWF4fh30HTaJ3BY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 173/459] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
-Date:   Fri, 14 Feb 2020 10:57:03 -0500
-Message-Id: <20200214160149.11681-173-sashal@kernel.org>
+Cc:     Manu Gautam <mgautam@codeaurora.org>,
+        Paolo Pisati <p.pisati@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 167/459] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
+Date:   Fri, 14 Feb 2020 10:56:57 -0500
+Message-Id: <20200214160149.11681-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -63,67 +61,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Manu Gautam <mgautam@codeaurora.org>
 
-[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
+[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
 
-RDU2 production units come with resistor connecting WP pin to
-correpsonding GPIO DNPed for both SD card slots. Drop any WP related
-configuration and mark both slots with "disable-wp".
+QUSB2 PHY on msm8996 doesn't work well when autosuspend by
+dwc3 core using USB2PHYCFG register is enabled. One of the
+issue seen is that PHY driver reports PLL lock failure and
+fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
+Fix this by using quirks to disable USB2 PHY LPM/suspend and
+dwc3 core already takes care of explicitly suspending PHY
+during suspend if quirks are specified.
 
-Reported-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 93be00a60c887..7b5c0e9b0fcff 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -627,7 +627,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc2>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	no-1-8-v;
-@@ -640,7 +640,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc3>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	no-1-8-v;
-@@ -1055,7 +1055,6 @@
- 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
- 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
- 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
- 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
- 		>;
- 	};
-@@ -1068,7 +1067,6 @@
- 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
- 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
- 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
- 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 87f4d9c1b0d4c..fbb8ce78f95be 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1598,6 +1598,8 @@
+ 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy2>;
+ 				phy-names = "usb2-phy";
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
+ 			};
+ 		};
  
- 		>;
+@@ -1628,6 +1630,8 @@
+ 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
+ 				phy-names = "usb2-phy", "usb3-phy";
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
+ 			};
+ 		};
+ 
 -- 
 2.20.1
 
