@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F92C3B1B5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBA6C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EC320873
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADBB206D7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703219;
-	bh=3wGW2BrunnOgr3U/ABE1pDq4qPc9Y4WepmDP45PXgNs=;
+	s=default; t=1581703239;
+	bh=n8KnkIiWQJKChEase/Tq3j8kItHEsPafl6UZDSi8fhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1BVcS4+sEtidD7bV66OKdyVkEn/GnVXqWmrSA2Zq5BYVKdVtfQcLH7PXyJ86TQuUx
-	 nx2uueATrJPdPrSStyx11SVCs1LIi64KULPkO/i0CS5eCHkOfdTPyxVVK948u7G+r6
-	 7BYliwbntwTAQ9St8cT23it4NBicLEJlQdsYqvFw=
+	b=LNJrAVcHgO2rjvEy05SLl6+j7amZxrPKlvXHyzOfmIgNMMzGqxJP8/RTMtZArYyyN
+	 sr0kkPRoyuXx3r48JhJMHWg8aSYA6rOGD8PIIKxdQk9fnmRjmHUh6/apqTszHV+Dap
+	 WjATlkN0moEqTO0nkwEUWaGV7D/pTjZu04u1VoAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387867AbgBNP4e (ORCPT
+        id S2387800AbgBNP40 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:56:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387858AbgBNP4d (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:33 -0500
+        id S2387796AbgBNP40 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3147B24654;
-        Fri, 14 Feb 2020 15:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0A4624649;
+        Fri, 14 Feb 2020 15:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695792;
-        bh=3wGW2BrunnOgr3U/ABE1pDq4qPc9Y4WepmDP45PXgNs=;
+        s=default; t=1581695785;
+        bh=n8KnkIiWQJKChEase/Tq3j8kItHEsPafl6UZDSi8fhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNc/SvIhgdJ2jd1P2vPZh7PXLAPS+QejE4UNR8kaNkyGSPXqSTaHIuV06sgzEon9i
-         8cnYtf+ylw//A/vwcDSeeEa4kdj3oHiXHJjSDw9Y4P/wMD+tL8T1Hul0KqRSYH4a91
-         4q2FF1AsrU5IpnBpqiKPQMcpTOp5w8wgdMN2NYCg=
+        b=OkkF5GYLoR30Kae0VTduIKv71nS5XrofCL4MPw6BCkMywDlsqeavi04iCKZIOBPXI
+         Vi50Y7YPJlGMHNnEUTJAocurNCrKSOx0bp0GjuKyzlaoFRIKVJDbnwLFZHDqjGDH64
+         N+qYKcsUl9Oc/hIpvfnk6YZmeNFIJF3XJctRUiLc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Reto Schneider <reto.schneider@husqvarnagroup.com>,
-        Stefan Roese <sr@denx.de>, Paul Burton <paul.burton@mips.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 354/542] MIPS: ralink: dts: gardena_smart_gateway_mt7688: Limit UART1
-Date:   Fri, 14 Feb 2020 10:45:46 -0500
-Message-Id: <20200214154854.6746-354-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 349/542] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
+Date:   Fri, 14 Feb 2020 10:45:41 -0500
+Message-Id: <20200214154854.6746-349-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,38 +61,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Reto Schneider <reto.schneider@husqvarnagroup.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit e8c192011c920517e5578d51c7aff0ecadd25de3 ]
+[ Upstream commit 7980dff398f86a618f502378fa27cf7e77449afa ]
 
-The radio module asserts CTS when its RX buffer has 10 bytes left.
-Putting just 8 instead of 16 bytes into the UART1 TX buffer on the Linux
-side ensures to not overflow the RX buffer on the radio module side.
+Add a missing property to GMAC node so that multicast filtering works
+correctly.
 
-Signed-off-by: Reto Schneider <reto.schneider@husqvarnagroup.com>
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Paul Burton <paul.burton@mips.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
+Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arc/boot/dts/axs10x_mb.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts b/arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts
-index aa5caaa311047..aad9a8a8669b4 100644
---- a/arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts
-+++ b/arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts
-@@ -177,6 +177,9 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinmux_i2s_gpio>;		/* GPIO0..3 */
- 
-+	fifo-size = <8>;
-+	tx-threshold = <8>;
-+
- 	rts-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
- 	cts-gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
- };
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index f9a5c9ddcae7d..1d109b06e7d81 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -78,6 +78,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = < 32 >;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&apbclk>;
+ 			clock-names = "stmmaceth";
+ 			max-speed = <100>;
 -- 
 2.20.1
 
