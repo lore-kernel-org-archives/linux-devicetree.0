@@ -2,119 +2,110 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279A3C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BAAC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9412187F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gFEUPD/U";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yvyZ2jo4"
+	by mail.kernel.org (Postfix) with ESMTP id CDA192187F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581686534;
+	bh=GD8k65h3tvI8piTI2dwKcrWso9hPL3kxwyOa3aWsOQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G3T1Adamm+xBR7g8lbg5q9Bb8moqso/2qSb8G8C7ou6sGdyD+Fd94aX0Crq6eolOW
+	 kCZ5yBITtpbdXLGRuhD/1D/2a7sOjfUR8lNxFuO+S15+2e6BfRke0HehSDZKLkV4EM
+	 HIaxgAXv5ZvZUtIn/hMCvKt3HwEDoGa5nMUYyu6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgBNNVz (ORCPT
+        id S1728121AbgBNNWO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:21:55 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37627 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbgBNNVz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:21:55 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2EAD821F82;
-        Fri, 14 Feb 2020 08:21:54 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 14 Feb 2020 08:21:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=SHi3ObvEfQV3V2POWN7Z55LHyBU
-        LAz1xQn5/bTDd+CY=; b=gFEUPD/UXJnixpEhxyMemyb5mHHbCVVBq0/MToXrX2Q
-        nDCT6X3GnIHWJ5JDErSyQZxjqg6cdvTTG5xw99eiIUnqbQQVeweiM+EKHafweGV7
-        8kfheZqO5KU4M+1ZcL77CHVUSKqKhuJxq89545aJ5sJf/+eInMnosKlxcMDq9wvC
-        1oDsE8xMOk+hq5xTZqjhcQPYQlJlngXrFUWSHsR661sT2E1QShnI7Rwx2gbGOeMq
-        tRY4pvgyUZvMRsC2I567ZWIzN7IRzowfN90VzNsJ2Z/yA1bIQ8cVAEyLc5nGnrm2
-        AFqyJBcYltIYSnBDUphQ6T2Yc6UoqAv/lKAV8Qmn5kA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SHi3Ob
-        vEfQV3V2POWN7Z55LHyBULAz1xQn5/bTDd+CY=; b=yvyZ2jo4Em2mPksP5RzfOD
-        dAgBLwo2dmyTCscd/h6+rccfeIt3GEPwEdmaemDk/pdx6EVlS/vLgL+P0cE9nEhF
-        TAbnr376xgU3FSr4Mjl/ENjq3LEuhIgHCQPe5jH26/c24Z8NaNH54jJfVFEYVD1W
-        POtTgHLmeyMntrlaTqYNo0aGi0ZCI8Dwl74Rcx5ghz7R8YXdo8UfHBEXI+5NJGnh
-        qXwSGI2c9VfcU9LY1K4fJR+Ry9UbZhzOSr79OrAPSmYlCf+HZsJ0TfyoZITjTTfk
-        0aYjzbyytnccs8leE5HP3SYzA9BAadfciUZf5MPnXB3DiDJTsotz2Dp+y1YqYQ6Q
-        ==
-X-ME-Sender: <xms:8Z5GXoBdQ69-PuR9Jq3NjxYmPFeQVQhRvmYr197Tu9ozIrYLzK_Fyg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdehvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    eplhhinhhuthhrohhnihigrdguvgenucfkphepledtrdekledrieekrdejieenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestg
-    gvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:8Z5GXmVXAWzZZT8T3XeXRDCMJOl8kz54xGUTLZHm52fsRNo__rvIjQ>
-    <xmx:8Z5GXhEyuTfYYD7OEEmjmN4-btSpiCacSeMn3pz4XJ079nc9o5wycA>
-    <xmx:8Z5GXhOzfXgtEuTO2hHY--KHWkUp1k7u9VlNNwaPTMhPBEx7HT3kbA>
-    <xmx:8p5GXvCZKgsTM-bmGeJ_eYQc4p9zrd_WC15dh-0lzqX8OOpjvtOawQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 868253280064;
-        Fri, 14 Feb 2020 08:21:53 -0500 (EST)
-Date:   Fri, 14 Feb 2020 14:21:52 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     bage@linutronix.de
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benedikt Spranger <b.spranger@linutronix.de>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Linutronix
-Message-ID: <20200214132152.3dweh52xjbuunbn2@gilmour.lan>
-References: <20200206113328.7296-1-bage@linutronix.de>
- <20200214111003.11115-1-bage@linutronix.de>
- <20200214111003.11115-2-bage@linutronix.de>
+        Fri, 14 Feb 2020 08:22:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:33038 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgBNNWO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:22:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A70E61FB;
+        Fri, 14 Feb 2020 05:22:13 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ABF23F68F;
+        Fri, 14 Feb 2020 05:22:13 -0800 (PST)
+Date:   Fri, 14 Feb 2020 13:22:11 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 5/9] ASoC: meson: aiu: add hdmi codec control support
+Message-ID: <20200214132211.GK4827@sirena.org.uk>
+References: <20200213155159.3235792-1-jbrunet@baylibre.com>
+ <20200213155159.3235792-6-jbrunet@baylibre.com>
+ <20200213182157.GJ4333@sirena.org.uk>
+ <1j36bdfgx1.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n35qd4cxsjrvbn7o"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QxIEt88oQPsT6QmF"
 Content-Disposition: inline
-In-Reply-To: <20200214111003.11115-2-bage@linutronix.de>
+In-Reply-To: <1j36bdfgx1.fsf@starbuckisacylon.baylibre.com>
+X-Cookie: Shipping not included.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---n35qd4cxsjrvbn7o
+--QxIEt88oQPsT6QmF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Feb 14, 2020 at 12:10:01PM +0100, bage@linutronix.de wrote:
-> From: Bastian Germann <bage@linutronix.de>
->
-> Add a vendor prefix for Linutronix GmbH.
-> Website: https://linutronix.de/
->
-> Co-developed-by: Benedikt Spranger <b.spranger@linutronix.de>
-> Signed-off-by: Benedikt Spranger <b.spranger@linutronix.de>
-> Signed-off-by: Bastian Germann <bage@linutronix.de>
+On Fri, Feb 14, 2020 at 02:16:10PM +0100, Jerome Brunet wrote:
+> On Thu 13 Feb 2020 at 19:21, Mark Brown <broonie@kernel.org> wrote:
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+> >> +#ifdef CONFIG_DEBUG_FS
+> >> +	component->debugfs_prefix = debugfs_prefix;
+> >> +#endif
 
-Thanks!
-Maxime
+> > You really shouldn't be doing this as it could conflict with something
+> > the machine driver wants to do however it's probably not going to be an
+> > issue in practice as it's not like there's going to be multiple SoCs in
+> > the card at once and if there were there'd doubltess be other issues.
 
---n35qd4cxsjrvbn7o
+> I'm not sure I understand (and I'd prefer to :) )
+
+> As you said before, initially the there was supposed to be a 1:1 mapping
+> between device and component. The component name is directly derived
+> from the device name, and the debugfs directory is created from component name.
+
+I understand why you're doing it but that feature is intended for the
+use of cards when they're integrating components, not for devices
+trying to register multiple components on the same device.  This means
+that a card that tries to use the feature will conflict with what the
+driver is doing, but like I say there's no obvious use case for a card
+doing that.
+
+> Instead of addressing the debugfs side effect, maybe  we could just make
+> sure that each component name is unique within ASoC ? I'd be happy submit
+> something if you think this can helpful.
+
+That'd be better.
+
+--QxIEt88oQPsT6QmF
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkae8AAKCRDj7w1vZxhR
-xeBrAP9gLq/dTXFwNYfbL6bB2iptT0baf0PgmZQ/MKf/hdSewgD+NpINgx9fQUAo
-4IrLpgOLR6pNLwyqzX/JHGK+1oNESgc=
-=3oyj
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GnwIACgkQJNaLcl1U
+h9ConAf/ZGIifJ2A3GT7/6hgGBOd30DCPyZ8wpzAq0wHv/ihVoH/uLJqlLiRVglQ
+Nqx0WU3HNlkMaHwiGc/1rp2fiXdZ1hzXQsCcHMX+0vQyLVRqtsITAVkHauL9RVE8
+U+DlOVSjkI7k4jPw9NQgATNCA0a5cw1WMzorwS6WNeLMUS3eqQdqxBZeLgwTqtdz
+zRg9Fwb/c9xmCJgQ8PdybSvDTxW0G9Mx/0BWAfeJqSUTk/2tQjpODkaGQP1fH/Az
+keB6n64qi+KoaIGZNUVEfiLL2zJ0w49nfDKyb1n5KndN0+iOVbk9jxRtnDaGajYF
+/ZLH5B59EjOw9RfRJTsAvNs2GO8JIA==
+=YJRb
 -----END PGP SIGNATURE-----
 
---n35qd4cxsjrvbn7o--
+--QxIEt88oQPsT6QmF--
