@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04351C3B1B2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7428EC3B1B2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88A720848
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1DB20873
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703337;
-	bh=JvWkGWu+zJTSt92/+C6IwYRDtjcfu7RIC81rjcj5734=;
+	s=default; t=1581703340;
+	bh=rXdWtPMHa6hJZMY0j6WQRhp1vZvRxw1l4dsVIRkRzkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XZS/wuAAVakI2CMPdfY8+YM2EzPzO9XByfTOjkLpFNFzjy+CqbprgzRkoK1wDCpNp
-	 EmLyxjEIkwtHAf86EsCDYNTRw5XYo+g+6rmfpp5msAhxDlX6qt+0g64naYpvXlSWNf
-	 RaPhka/rvSeZAAu3rxcw1BmlRY4zeYf0pMebJq4c=
+	b=pdsp9tcG291TJE5cELHuDTlJ+asAxxCehhGg3MBZX7cMI0fjMTdpe8a4Ql9kjcgt1
+	 krbESvCSHmhasoaSDlOTGb9ITBM61795hDTUGN878xRTJR52zmIyrh7qYt5adMla13
+	 wDWgQbjItZXPSbmZb6QzL1lMnIjY3xebwl9SC6hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbgBNP4G (ORCPT
+        id S1731102AbgBNSCT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:56:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37560 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:02:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731819AbgBNP4F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:05 -0500
+        id S1731641AbgBNP4D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4966E222C4;
-        Fri, 14 Feb 2020 15:56:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9730924682;
+        Fri, 14 Feb 2020 15:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695765;
-        bh=JvWkGWu+zJTSt92/+C6IwYRDtjcfu7RIC81rjcj5734=;
+        s=default; t=1581695762;
+        bh=rXdWtPMHa6hJZMY0j6WQRhp1vZvRxw1l4dsVIRkRzkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTRI66nYB6bjGjTkhsiAnORyyaC+WipCURdl/VPmglhPP1akP2W1XQ5ahZBb7+rYz
-         r+vhSai35+xSnSpNA2Q79kiLH18YbmcFh/J5PN3dVXRSnQCU4coEui+6z+NE7frdoH
-         J0I1q9mBosalJEYwLU10mYFkyU/0gLA6cHed1i6Q=
+        b=LNypl81u9PEB8yt/tYnNaJFd+48e4qyMTS5C8qb8JugGIuuIYDkm4vMl+22u7rwsM
+         GeG3qbjN3qymSOwkTGGw/Wh+/UGgmRMi16jrwO7x0kRiPZbOEqnTteJeWdI0gcm8aK
+         QoGu1y/eFXh0fAW5EC5FRDG2bGcbvbu0WcXRVuUc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 332/542] ARM: dts: rockchip: add reg property to brcmf sub node for rk3188-bqedison2qc
-Date:   Fri, 14 Feb 2020 10:45:24 -0500
-Message-Id: <20200214154854.6746-332-sashal@kernel.org>
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 330/542] arm64: dts: rockchip: fix dwmmc clock name for rk3308
+Date:   Fri, 14 Feb 2020 10:45:22 -0500
+Message-Id: <20200214154854.6746-330-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,43 +62,57 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit cf206bca178cd5b5a436494b2e0cea75295944f4 ]
+[ Upstream commit 2be6a280144e521248a4bdefb691a0a97e604294 ]
 
 An experimental test with the command below gives this error:
-rk3188-bqedison2qc.dt.yaml: dwmmc@10218000: wifi@1:
-'reg' is a required property
+rk3308-evb.dt.yaml: dwmmc@ff480000: clock-names:2:
+'ciu-drive' was expected
 
-So fix this by adding a reg property to the brcmf sub node.
-Also add #address-cells and #size-cells to prevent more warnings.
+'ciu-drv' is not a valid dwmmc clock name,
+so fix this by changing it to 'ciu-drive'.
 
-make ARCH=arm dtbs_check
+make ARCH=arm64 dtbs_check
 DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200110134420.11280-1-jbx6244@gmail.com
+Link: https://lore.kernel.org/r/20200110161200.22755-1-jbx6244@gmail.com
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index c8b62bbd6a4a4..ad1afd403052a 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -466,9 +466,12 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
- 	vmmcq-supply = <&vccio_wl>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	status = "okay";
- 
- 	brcmf: wifi@1 {
-+		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <RK_PD2 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+index 8bdc66c62975b..fa0d55f1a5871 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+@@ -591,7 +591,7 @@
+ 		bus-width = <4>;
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		pinctrl-names = "default";
+@@ -606,7 +606,7 @@
+ 		bus-width = <8>;
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		status = "disabled";
+@@ -619,7 +619,7 @@
+ 		bus-width = <4>;
+ 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		pinctrl-names = "default";
 -- 
 2.20.1
 
