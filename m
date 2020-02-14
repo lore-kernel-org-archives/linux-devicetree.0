@@ -4,90 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8781FC3B198
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57677C3B195
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC57222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39965222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgBNIZm (ORCPT
+        id S1728332AbgBNI01 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:25:42 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:45291 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728783AbgBNIZm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:25:42 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Feb 2020 13:55:35 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 14 Feb 2020 13:55:06 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 6A7E625C0; Fri, 14 Feb 2020 13:55:05 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Fri, 14 Feb 2020 03:26:27 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:54184 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgBNI01 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 03:26:27 -0500
+Received: from ramsan ([84.195.182.253])
+        by xavier.telenet-ops.be with bizsmtp
+        id 2YSQ2200V5USYZQ01YSQXn; Fri, 14 Feb 2020 09:26:25 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j2WIq-0005Cj-Es; Fri, 14 Feb 2020 09:26:24 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j2WIq-0001Hf-Bu; Fri, 14 Feb 2020 09:26:24 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 1/3] dt-bindings: usb: qcom,dwc3: Introduce interconnect properties for Qualcomm DWC3 driver
-Date:   Fri, 14 Feb 2020 13:54:42 +0530
-Message-Id: <1581668684-4182-2-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
-References: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v5] dt-bindings: display: renesas: du: Document optional reset properties
+Date:   Fri, 14 Feb 2020 09:26:23 +0100
+Message-Id: <20200214082623.4893-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for the interconnects and interconnect-names
-properties for USB.
+Document the optional properties for describing module resets, to
+support resetting display channels on R-Car Gen2 and Gen3.
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Who's taking this kind of patches?
+V1 was submmitted in March 2017.
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-index 4a36ab5..236877e 100644
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-@@ -68,6 +68,22 @@ properties:
-   resets:
-     maxItems: 1
+v5:
+  - Rebase on top of renesas,cmms and renesas,vsps patches,
+
+v4:
+  - Use "All but R8A7779" instead of "R8A779[0123456]", to reduce future
+    churn,
+
+v3:
+  - Add Acked-by,
+  - Drop LVDS resets, as LVDS is now covered by a separate binding,
+  - Update the example.
+
+v2:
+  - s/phandles/phandle/.
+---
+ .../devicetree/bindings/display/renesas,du.txt         | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index eb4ae41fe41f83c7..51cd4d1627703a15 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -50,6 +50,14 @@ Required Properties:
+     VSP instance that serves the DU channel, and the channel index identifies
+     the LIF instance in that VSP.
  
-+  interconnects:
-+    description:
-+      Pairs of phandles and interconnect provider specifiers
-+      to denote the edge source and destination ports of
-+      the interconnect path. Please refer to
-+      Documentation/devicetree/bindings/interconnect/
-+      for more details.
++Optional properties:
++  - resets: A list of phandle + reset-specifier pairs, one for each entry in
++    the reset-names property.
++  - reset-names: Names of the resets. This property is model-dependent.
++    - All but R8A7779 use one reset for a group of one or more successive
++      channels. The resets must be named "du.x" with "x" being the numerical
++      index of the lowest channel in the group.
 +
-+  interconnect-names:
-+    description:
-+      List of interconnect path name strings sorted in the same
-+      order as the interconnects property. Consumer drivers will use
-+      interconnect-names to match interconnect paths with interconnect
-+      specifiers. Please refer to Documentation/devicetree/bindings/
-+      interconnect/ for more details.
-+
-   interrupts:
-     items:
-       - description: The interrupt that is asserted
+ Required nodes:
+ 
+ The connections to the DU output video ports are modeled using the OF graph
+@@ -96,6 +104,8 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
+ 			 <&cpg CPG_MOD 722>,
+ 			 <&cpg CPG_MOD 721>;
+ 		clock-names = "du.0", "du.1", "du.2", "du.3";
++		resets = <&cpg 724>, <&cpg 722>;
++		reset-names = "du.0", "du.2";
+ 		renesas,cmms = <&cmm0>, <&cmm1>, <&cmm2>, <&cmm3>;
+ 		renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
 
