@@ -2,296 +2,543 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73416C3B1A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F215C3B1A5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4216824650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4761824670
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWbwuGIC"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="R1ydfZbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392947AbgBNQqw (ORCPT
+        id S2392896AbgBNQt7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:46:52 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51738 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389550AbgBNQqv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 11:46:51 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t23so10618600wmi.1;
-        Fri, 14 Feb 2020 08:46:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=A1PbDdtYgd7eIzgKkWykMOQVO3VO/61EFdSbHrXJXFY=;
-        b=KWbwuGICqb34KVFQ3jHfYb0adTm/KQL5iUBzkow0vRMO2XQNIY16b1vVu/CjOg0dvl
-         kHXsmdrq+OMB975yJkTYIxg9UssL5e9bqlYouLU3oUclA7HTag17h1EU7fcRFnzc9+/7
-         4eS8EYed9FahaCjuEfqcckjHtuTx5lF3K73mP+tXFOMUqpjv95bfWmRZy2Hcfnvd0YL1
-         tefnqxl40KbJZNJyUrbEkXmsU68pGc5IRdV+txtReQ3r+q8B4JYiZiDCZNXoADBEV51K
-         eeUvVbzf0y2jL5HM56d2QTnLW6B3Ik3Cvpr8g9WSb8nWCRkCTFkFNVgf8FcrFcZQJY7Y
-         Picg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A1PbDdtYgd7eIzgKkWykMOQVO3VO/61EFdSbHrXJXFY=;
-        b=dsf/VrRrNnY2HsGEwTARKVKOW3BW8fhpqHbREfTx24i2cZzpkPUZ8Oi3zX7CFOpFYN
-         GryqxvLiZUtsZ8K3EzGpwk2OoH2y/wGTl8Mt0PRSkeXTW0dKKevqdHwWcr1H2Bg2tbVP
-         fay1S1UEuUbiLRWIwKsztuKg78pSjTDr7+eSJmT6tQmRtwa0+3XwsoEJBNUU1mscQt9t
-         g3x73g2uD5D8Y6Yk7lioE55OB3HK2BM6juNhV7PuHcp1embsELfAW7KMBi6ldPnVcStb
-         DHjPmbmszQyOAKdEE5YgpgYEf4/s6dZXF6r54KgrErLERdyO3ifHIemxphAN65i8EAWq
-         8ylw==
-X-Gm-Message-State: APjAAAX/9PwNsjkehXeHPQRvJdczIwpv2+J/1G+7Sj2BYhRbY7IHZyMf
-        kxpVw3j/yw5d0K2kowoC7xI=
-X-Google-Smtp-Source: APXvYqyF3XpdaM4IdFu2CaSKS00hpJ0X2NgcXVWbskC5SW8fFQOccCxVcWPv2ZRjPgzWMyeKv5NHpg==
-X-Received: by 2002:a1c:4d07:: with SMTP id o7mr5696440wmh.174.1581698808420;
-        Fri, 14 Feb 2020 08:46:48 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id c77sm7872215wmd.12.2020.02.14.08.46.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 08:46:47 -0800 (PST)
-Date:   Fri, 14 Feb 2020 17:46:42 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        helen.koike@collabora.com, sboyd@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 4/6] media: tegra: Add Tegra210 Video input driver
-Message-ID: <20200214164642.GA1310813@ulmo>
-References: <1580937806-17376-1-git-send-email-skomatineni@nvidia.com>
- <1580937806-17376-5-git-send-email-skomatineni@nvidia.com>
+        Fri, 14 Feb 2020 11:49:59 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5730 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2392431AbgBNQt4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:49:56 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EGgTmP009207;
+        Fri, 14 Feb 2020 17:49:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=Yj2a7IFHSnPDZ3WYLP65fPO1wS3+vJNQmMzo6fKB96w=;
+ b=R1ydfZblboptgDoUuJwZYy73sl+TVqTgOZ9Gp8NcEjdGcHAkPY0hf2XZMtNkhFOY9zB+
+ Ky2KwMRJ9vGf6LOh7C/njUHF144wF/y5YhVWOQsSWLzlRxobfpb3X17o4c0i/tkwxzjT
+ y9G092v5JArbREH2RDdIjvx6dyXs1k+LHNgKS1O1gkonNaing+rBwMwEqp7nRooS46Ur
+ LhJkXDntY99SyUjmhudEDOwIZqeEBqijp1DT5FXlo0AS+Z1Cm0XPFzbfcGKU5eiPtnKO
+ TDskgjjIkKHcy387EbJeyMxYrfMNnAZmq7gE91NcrO1Zh9m3GWiRBsBBHHHSG4otwBEY Mw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1uve4sae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Feb 2020 17:49:44 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0FC5A10002A;
+        Fri, 14 Feb 2020 17:49:40 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E526D2C0972;
+        Fri, 14 Feb 2020 17:49:39 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.45) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
+ 2020 17:49:39 +0100
+Subject: Re: [PATCH v5 2/3] remoteproc: stm32: add support for co-processor
+ booted before kernel
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
+ <20200211174205.22247-3-arnaud.pouliquen@st.com> <20200214033837.GR1443@yoga>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <dfe0b740-c701-00f6-405d-c1808a146093@st.com>
+Date:   Fri, 14 Feb 2020 17:49:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
-Content-Disposition: inline
-In-Reply-To: <1580937806-17376-5-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200214033837.GR1443@yoga>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-14_05:2020-02-12,2020-02-14 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2/14/20 4:38 AM, Bjorn Andersson wrote:
+> On Tue 11 Feb 09:42 PST 2020, Arnaud Pouliquen wrote:
+> 
+>> From: Fabien Dessenne <fabien.dessenne@st.com>
+>>
+>> Add support of a remote firmware, preloaded by the boot loader.
+> 
+> This again describes what Loic was describing, a remote processor with
+> persistent or already loaded firmware, not an already booted remote
+> processor.
+> 
+>> Two backup registers are used to retrieve the state of the remote
+>> firmware and to get the optional resource table address.
+>>
+>> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> ---
+>>  drivers/remoteproc/stm32_rproc.c | 205 ++++++++++++++++++++++++++++---
+>>  1 file changed, 191 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+>> index a18f88044111..3d1e0774318c 100644
+>> --- a/drivers/remoteproc/stm32_rproc.c
+>> +++ b/drivers/remoteproc/stm32_rproc.c
+>> @@ -38,6 +38,15 @@
+>>  #define STM32_MBX_VQ1_ID	1
+>>  #define STM32_MBX_SHUTDOWN	"shutdown"
+>>  
+>> +#define RSC_TBL_SIZE		(1024)
+>> +
+>> +#define COPRO_STATE_OFF		0
+>> +#define COPRO_STATE_INIT	1
+>> +#define COPRO_STATE_CRUN	2
+>> +#define COPRO_STATE_CSTOP	3
+>> +#define COPRO_STATE_STANDBY	4
+>> +#define COPRO_STATE_CRASH	5
+> 
+> What does the states INIT and CSTOP represent and how would you deal
+> with these and STANDBY/CRASH? Or will this only ever be OFF or CRUN?
 
-On Wed, Feb 05, 2020 at 01:23:24PM -0800, Sowjanya Komatineni wrote:
-[...]
-> +static int tegra_channel_capture_frame(struct tegra_vi_channel *chan,
-> +				       struct tegra_channel_buffer *buf)
-> +{
-> +	int err = 0;
-> +	u32 thresh, value, frame_start;
-> +	int bytes_per_line = chan->format.bytesperline;
-> +
-> +	/* program buffer address by using surface 0 */
-> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_OFFSET_MSB, 0x0);
-> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_OFFSET_LSB, buf->addr);
-> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_STRIDE, bytes_per_line);
-> +
-> +	/* increase syncpoint max */
-> +	thresh = host1x_syncpt_incr_max(chan->sp, 1);
-> +
-> +	/* program syncpoint */
-> +	frame_start = VI_CSI_PP_FRAME_START(chan->portno);
-> +	value = VI_CFG_VI_INCR_SYNCPT_COND(frame_start) |
-> +		host1x_syncpt_id(chan->sp);
-> +	tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT, value);
+I will add references in commit message, information is missing.
+This come from stm32 code that has been upstreamed in U-boot.
+These definitions match with the u-boot definitions available here:
+https://gitlab.denx.de/u-boot/u-boot/blob/master/arch/arm/mach-stm32mp/include/mach/stm32.h
+The U-boot source code related to the preloaded is available here:
+https://gitlab.denx.de/u-boot/u-boot/blob/master/drivers/remoteproc/stm32_copro.c  
 
-Okay, so this programs the VI to increment the given syncpoint upon
-frame start? What is that VI_CSI_PP_FRAME_START(chan->portno) exactly?
+> 
+>> +
+>>  struct stm32_syscon {
+>>  	struct regmap *map;
+>>  	u32 reg;
+>> @@ -70,12 +79,14 @@ struct stm32_rproc {
+>>  	struct reset_control *rst;
+>>  	struct stm32_syscon hold_boot;
+>>  	struct stm32_syscon pdds;
+>> +	struct stm32_syscon copro_state;
+>>  	int wdg_irq;
+>>  	u32 nb_rmems;
+>>  	struct stm32_rproc_mem *rmems;
+>>  	struct stm32_mbox mb[MBOX_NB_MBX];
+>>  	struct workqueue_struct *workqueue;
+>>  	bool secured_soc;
+>> +	void __iomem *rsc_va;
+>>  };
+>>  
+>>  static int stm32_rproc_pa_to_da(struct rproc *rproc, phys_addr_t pa, u64 *da)
+>> @@ -98,6 +109,28 @@ static int stm32_rproc_pa_to_da(struct rproc *rproc, phys_addr_t pa, u64 *da)
+>>  	return -EINVAL;
+>>  }
+>>  
+>> +static int stm32_rproc_da_to_pa(struct rproc *rproc, u64 da, phys_addr_t *pa)
+>> +{
+>> +	unsigned int i;
+>> +	struct stm32_rproc *ddata = rproc->priv;
+>> +	struct stm32_rproc_mem *p_mem;
+>> +
+>> +	for (i = 0; i < ddata->nb_rmems; i++) {
+>> +		p_mem = &ddata->rmems[i];
+>> +
+>> +		if (da < p_mem->dev_addr ||
+>> +		    da >= p_mem->dev_addr + p_mem->size)
+>> +			continue;
+>> +		*pa = da - p_mem->dev_addr + p_mem->bus_addr;
+>> +		dev_dbg(rproc->dev.parent, "da %llx to pa %#x\n", da, *pa);
+> 
+> I think it would look better to move this and below prints to the
+> caller (you print in the other cases there).
 
-> +
-> +	vi_csi_write(chan, TEGRA_VI_CSI_SINGLE_SHOT, SINGLE_SHOT_CAPTURE);
+Ok
 
-And now we start capturing in single-shot mode.
+> 
+>> +		return 0;
+>> +	}
+>> +
+>> +	dev_err(rproc->dev.parent, "can't translate da %llx\n", da);
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>>  static int stm32_rproc_mem_alloc(struct rproc *rproc,
+>>  				 struct rproc_mem_entry *mem)
+>>  {
+>> @@ -127,6 +160,15 @@ static int stm32_rproc_mem_release(struct rproc *rproc,
+>>  	return 0;
+>>  }
+>>  
+>> +static int stm32_rproc_elf_load_segments(struct rproc *rproc,
+>> +					 const struct firmware *fw)
+>> +{
+>> +	if (!rproc->skip_fw_load)
+> 
+> This indicates that the core's support for skip_fw_load isn't
+> sufficient, let's ensure that the necessary core support is in place to
+> make the drivers pretty.
 
-> +
-> +	/* move buffer to capture done queue */
-> +	spin_lock(&chan->done_lock);
-> +	list_add_tail(&buf->queue, &chan->done);
-> +	spin_unlock(&chan->done_lock);
-> +
-> +	/* wait up kthread for capture done */
-> +	wake_up_interruptible(&chan->done_wait);
+I did not find in patch history the reason of this call, but yes seems that this ops should not be called
+i will crosscheck this point.
 
-But this I don't understand. You wake up the kthread...
+> 
+>> +		return rproc_elf_load_segments(rproc, fw);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int stm32_rproc_of_memory_translations(struct rproc *rproc)
+>>  {
+>>  	struct device *parent, *dev = rproc->dev.parent;
+>> @@ -197,9 +239,34 @@ static int stm32_rproc_mbox_idx(struct rproc *rproc, const unsigned char *name)
+>>  static int stm32_rproc_elf_load_rsc_table(struct rproc *rproc,
+>>  					  const struct firmware *fw)
+>>  {
+>> -	if (rproc_elf_load_rsc_table(rproc, fw))
+>> -		dev_warn(&rproc->dev, "no resource table found for this firmware\n");
+>> +	struct resource_table *table = NULL;
+>> +	struct stm32_rproc *ddata = rproc->priv;
+>> +
+>> +	if (!rproc->skip_fw_load) {
+>> +		if (rproc_elf_load_rsc_table(rproc, fw))
+>> +			goto no_rsc_table;
+>> +
+>> +		return 0;
+>> +	}
+>> +
+>> +	if (ddata->rsc_va) {
+>> +		table = (struct resource_table *)ddata->rsc_va;
+>> +		/* Assuming that the resource table fits in 1kB is fair */
+>> +		rproc->cached_table = kmemdup(table, RSC_TBL_SIZE, GFP_KERNEL);
+> 
+> If we properly support skipping the booting/setup phase of a remoteproc
+> driver in the core, then I don't see a reason why you can't do this
+> directly in your probe function.
 
-> +
-> +	/* use syncpoint to wake up */
-> +	err = host1x_syncpt_wait(chan->sp, thresh,
-> +				 TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
+The hypothesis is that the resource table can be decorrelated from the firmware, that why this ops has to be called for preloaded and none-preloded FWs. In this case does it usefull to move it in probe function?
 
-... and then wait for the syncpoint to reach the given threshold? Isn't
-that the wrong way around? Don't we need to wait for the syncpoint
-increment *before* we wake up the kthread that will return the buffer
-to userspace?
+> 
+>> +		if (!rproc->cached_table)
+>> +			return -ENOMEM;
+>> +
+>> +		rproc->table_ptr = rproc->cached_table;
+>> +		rproc->table_sz = RSC_TBL_SIZE;
+>> +		return 0;
+>> +	}
+>>  
+>> +	rproc->cached_table = NULL;
+>> +	rproc->table_ptr = NULL;
+>> +	rproc->table_sz = 0;
+>> +
+>> +no_rsc_table:
+>> +	dev_warn(&rproc->dev, "no resource table found for this firmware\n");
+>>  	return 0;
+>>  }
+>>  
+>> @@ -259,6 +326,36 @@ static int stm32_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+>>  	return stm32_rproc_elf_load_rsc_table(rproc, fw);
+>>  }
+>>  
+>> +static struct resource_table *
+>> +stm32_rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+>> +				      const struct firmware *fw)
+>> +{
+>> +	struct stm32_rproc *ddata = rproc->priv;
+>> +
+>> +	if (!rproc->skip_fw_load)
+>> +		return rproc_elf_find_loaded_rsc_table(rproc, fw);
+>> +
+>> +	return (struct resource_table *)ddata->rsc_va;
+>> +}
+>> +
+>> +static int stm32_rproc_elf_sanity_check(struct rproc *rproc,
+>> +					const struct firmware *fw)
+>> +{
+>> +	if (!rproc->skip_fw_load)
+>> +		return rproc_elf_sanity_check(rproc, fw);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static u32 stm32_rproc_elf_get_boot_addr(struct rproc *rproc,
+>> +					 const struct firmware *fw)
+>> +{
+>> +	if (!rproc->skip_fw_load)
+>> +		return rproc_elf_get_boot_addr(rproc, fw);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static irqreturn_t stm32_rproc_wdg(int irq, void *data)
+>>  {
+>>  	struct rproc *rproc = data;
+>> @@ -420,7 +517,7 @@ static int stm32_rproc_start(struct rproc *rproc)
+>>  	stm32_rproc_add_coredump_trace(rproc);
+>>  
+>>  	/* clear remote proc Deep Sleep */
+>> -	if (ddata->pdds.map) {
+>> +	if (ddata->pdds.map && !rproc->skip_fw_load) {
+>>  		err = regmap_update_bits(ddata->pdds.map, ddata->pdds.reg,
+>>  					 ddata->pdds.mask, 0);
+>>  		if (err) {
+>> @@ -429,9 +526,15 @@ static int stm32_rproc_start(struct rproc *rproc)
+>>  		}
+>>  	}
+>>  
+>> -	err = stm32_rproc_set_hold_boot(rproc, false);
+>> -	if (err)
+>> -		return err;
+>> +	/*
+>> +	 * If M4 previously started by bootloader, just guarantee holdboot
+>> +	 * is set to catch any crash.
+>> +	 */
+> 
+> If the bootloader started the M4, why do we call start()?
 
-> +	if (err) {
-> +		dev_err(&chan->video.dev,
-> +			"frame start syncpt timeout: %d\n", err);
-> +		tegra_channel_capture_error_status(chan);
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +static int tegra_channel_capture_done(struct tegra_vi_channel *chan,
-> +				      struct tegra_channel_buffer *buf)
-> +{
-> +	struct vb2_v4l2_buffer *vb = &buf->buf;
-> +	u32 thresh, value, mw_ack_done;
-> +	int ret = 0;
-> +
-> +	/* increase syncpoint max */
-> +	thresh = host1x_syncpt_incr_max(chan->sp, 1);
-> +
-> +	/* program syncpoint */
-> +	mw_ack_done = VI_CSI_MW_ACK_DONE(chan->portno);
-> +	value = VI_CFG_VI_INCR_SYNCPT_COND(mw_ack_done) |
-> +		host1x_syncpt_id(chan->sp);
-> +	tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT, value);
-> +
-> +	if (!vi_csi_read(chan, TEGRA_VI_CSI_SINGLE_SHOT))
-> +		vi_csi_write(chan, TEGRA_VI_CSI_SINGLE_SHOT,
-> +			     SINGLE_SHOT_CAPTURE);
-> +
-> +	/* use syncpoint to wake up */
-> +	ret = host1x_syncpt_wait(chan->sp, thresh,
-> +				 TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
-> +	if (ret)
-> +		dev_err(&chan->video.dev,
-> +			"MW_ACK_DONE syncpoint timeout: %d\n", ret);
+The bootloader starts the firmware with "hold boot" disabled.
+In case of crash the firmware automatically reboots, during the Linux kernel boot.
+Then when Linux "attaches" to the remote firmware, and reconfigures the hold boot to freeze the remote processor on crash, 
 
-Actually... there's another syncpoint wait here, so I guess this will
-stall until VI has actually completed writing the captured frame to
-memory.
+> 
+>> +	if (!rproc->skip_fw_load) {
+>> +		err = stm32_rproc_set_hold_boot(rproc, false);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>>  
+>>  	return stm32_rproc_set_hold_boot(rproc, true);
+>>  }
+>> @@ -473,6 +576,21 @@ static int stm32_rproc_stop(struct rproc *rproc)
+>>  		}
+>>  	}
+>>  
+>> +	/* update copro state to OFF */
+> 
+> Please spell out "coprocessor"
 
-> +
-> +	/* captured one frame */
-> +	vb->sequence = chan->sequence++;
-> +	vb->field = V4L2_FIELD_NONE;
-> +	vb->vb2_buf.timestamp = ktime_get_ns();
-> +	vb2_buffer_done(&vb->vb2_buf,
-> +			ret < 0 ? VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE);
+ok
 
-So it's really only at this point that we return the buffer to
-userspace, which should be after the hardware is done writing to the
-buffer, so this should be fine.
+> 
+>> +	if (ddata->copro_state.map) {
+>> +		err = regmap_update_bits(ddata->copro_state.map,
+>> +					 ddata->copro_state.reg,
+>> +					 ddata->copro_state.mask,
+>> +					 COPRO_STATE_OFF);
+>> +		if (err) {
+>> +			dev_err(&rproc->dev, "failed to set copro state\n");
+>> +			return err;
+>> +		}
+>> +	}
+>> +
+>> +	/* Reset skip_fw_load state as we stop the co-processor */
+>> +	rproc->skip_fw_load = false;
+> 
+> Now that's a hack...
 
-That said, I'm wondering if host1x_syncpt_wait() is a good interface
-for this use-case. We don't really have anything else right now, but
-I think we may be able to add something to have a function called in
-case the syncpoint reaches a threshold. Having to spawn two separate
-threads with wait queues seems a bit overkill for this.
+This allows to support 2 use cases:
+- crash recovery ( not able to ensure the integrity of the code in RAM)
+- allows application to change the preloaded firmware.
+As these use cases depend on the platform hw, how do you suggest to manage it?
+ 
+> 
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> @@ -502,11 +620,11 @@ static struct rproc_ops st_rproc_ops = {
+>>  	.start		= stm32_rproc_start,
+>>  	.stop		= stm32_rproc_stop,
+>>  	.kick		= stm32_rproc_kick,
+>> -	.load		= rproc_elf_load_segments,
+>> +	.load		= stm32_rproc_elf_load_segments,
+>>  	.parse_fw	= stm32_rproc_parse_fw,
+>> -	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
+>> -	.sanity_check	= rproc_elf_sanity_check,
+>> -	.get_boot_addr	= rproc_elf_get_boot_addr,
+>> +	.find_loaded_rsc_table = stm32_rproc_elf_find_loaded_rsc_table,
+>> +	.sanity_check	= stm32_rproc_elf_sanity_check,
+>> +	.get_boot_addr	= stm32_rproc_elf_get_boot_addr,
+>>  };
+>>  
+>>  static const struct of_device_id stm32_rproc_match[] = {
+>> @@ -543,8 +661,10 @@ static int stm32_rproc_parse_dt(struct platform_device *pdev)
+>>  	struct device_node *np = dev->of_node;
+>>  	struct rproc *rproc = platform_get_drvdata(pdev);
+>>  	struct stm32_rproc *ddata = rproc->priv;
+>> -	struct stm32_syscon tz;
+>> -	unsigned int tzen;
+>> +	struct stm32_syscon tz, rsctbl;
+>> +	phys_addr_t rsc_pa;
+>> +	u32 rsc_da;
+>> +	unsigned int tzen, state;
+>>  	int err, irq;
+>>  
+>>  	irq = platform_get_irq(pdev, 0);
+>> @@ -602,11 +722,62 @@ static int stm32_rproc_parse_dt(struct platform_device *pdev)
+>>  
+>>  	err = stm32_rproc_get_syscon(np, "st,syscfg-pdds", &ddata->pdds);
+>>  	if (err)
+>> -		dev_warn(dev, "failed to get pdds\n");
+>> +		dev_warn(dev, "pdds not supported\n");
+> 
+> Unrelated change?
 
-It's fine to leave this as it is for now, but maybe something to
-consider as improvement in the future.
+yes to clean up in this patchset
 
-> +	return ret;
-> +}
-> +
-> +static int chan_capture_kthread_start(void *data)
-> +{
-> +	struct tegra_vi_channel *chan = data;
-> +	struct tegra_channel_buffer *buf;
-> +	int err = 0;
-> +
-> +	set_freezable();
-> +
-> +	while (1) {
-> +		try_to_freeze();
-> +
-> +		wait_event_interruptible(chan->start_wait,
-> +					 !list_empty(&chan->capture) ||
-> +					 kthread_should_stop());
-> +		if (kthread_should_stop())
-> +			break;
-> +
-> +		if (err)
-> +			continue;
-> +
-> +		spin_lock(&chan->start_lock);
-> +		if (list_empty(&chan->capture)) {
-> +			spin_unlock(&chan->start_lock);
-> +			continue;
-> +		}
-> +
-> +		buf = list_entry(chan->capture.next,
-> +				 struct tegra_channel_buffer, queue);
-> +		list_del_init(&buf->queue);
-> +		spin_unlock(&chan->start_lock);
-> +		err = tegra_channel_capture_frame(chan, buf);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int chan_capture_kthread_done(void *data)
-> +{
-> +	struct tegra_vi_channel *chan = data;
-> +	struct tegra_channel_buffer *buf;
-> +	int err = 0;
-> +
-> +	set_freezable();
-> +
-> +	while (1) {
-> +		try_to_freeze();
-> +
-> +		wait_event_interruptible(chan->done_wait,
-> +					 !list_empty(&chan->done) ||
-> +					 kthread_should_stop());
-> +
-> +		if (kthread_should_stop())
-> +			break;
-> +
-> +		spin_lock(&chan->done_lock);
-> +		if (list_empty(&chan->done)) {
-> +			spin_unlock(&chan->done_lock);
-> +			continue;
-> +		}
-> +
-> +		buf = list_entry(chan->done.next, struct tegra_channel_buffer,
-> +				 queue);
-> +		if (!buf)
-> +			continue;
-> +
-> +		list_del_init(&buf->queue);
-> +		spin_unlock(&chan->done_lock);
-> +		err = tegra_channel_capture_done(chan, buf);
+> 
+>>  
+>>  	rproc->auto_boot = of_property_read_bool(np, "st,auto-boot");
+>>  
+>> -	return stm32_rproc_of_memory_translations(rproc);
+>> +	err = stm32_rproc_of_memory_translations(rproc);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	/* check if the coprocessor has been started from the bootloader */
+>> +	err = stm32_rproc_get_syscon(np, "st,syscfg-copro-state",
+>> +				     &ddata->copro_state);
+>> +	if (err) {
+>> +		/* no copro_state syscon (optional) */
+>> +		dev_warn(dev, "copro_state not supported\n");
+>> +		goto bail;
+> 
+> return 0;
 
-What's with the error here? I think we should either handle it in some
-way, or just avoid even returning an error if we're not going to deal
-with it anyway.
+ok
 
-Thierry
+> 
+>> +	}
+>> +
+>> +	err = regmap_read(ddata->copro_state.map, ddata->copro_state.reg,
+>> +			  &state);
+> 
+> Per the name of this function I think it should parse the dt, not figure
+> out if the processor is booted already. Please parse things here and
+> then read out the state and handle the absence of the "optional"
+> properties depending on the state.
 
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature; name="signature.asc"
+I will reorder the sequence.
 
------BEGIN PGP SIGNATURE-----
+> 
+>> +	if (err) {
+>> +		dev_err(&rproc->dev, "failed to read copro state\n");
+>> +		return err;
+>> +	}
+>> +
+>> +	if (state == COPRO_STATE_CRUN) {
+>> +		rproc->skip_fw_load = true;
+>> +
+>> +		if (stm32_rproc_get_syscon(np, "st,syscfg-rsc-tbl", &rsctbl)) {
+>> +			/* no rsc table syscon (optional) */
+>> +			dev_warn(dev, "rsc tbl syscon not supported\n");
+>> +			goto bail;
+> 
+> But you're still going to skip_fw_load?
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5Gzu4ACgkQ3SOs138+
-s6Hd1w/+INwB+uEPRluAC0zs+uoEeVtXd/JX1Fz5YqyKmaJ9Lp/WNj9RHfluVU2K
-r7mIGLq2ia8bLekfTdh3+YX6uaHfPIDhlHNsE3yiCseiIH1mIYdNXgUng+8v9KbJ
-T8/84ICFZSc2fb4rhYhivXJ61JqGkRK5dh8dl1HVqgvdYmjofivHQCZcUXlUvq1x
-q7iBVXE3U762/FYGfA7v09BHejAnT5G2TUcnOkQknFk2XZi+uEgIVgxgz9MMz6Bw
-1bf2Za2wbfm4LFO7e2kjahZy/tHdrNOE7Nyz62fbYEybev5G6IDT16kGpsnGpsf2
-kJ8ohkuyYxsROI1uxoO5C1Uvsi52worYljuDlXlXuYwtfVFmky4Yyk8diO9b8TmP
-6ImPP6v9XO7cyyJG1A97Gk0sm4gCJbbKsNvahA9niPwPqlJsww+qvczhxBVvsIDb
-iqc6zFRPOYpPV3oyvjX0sQi27iBF5MsoxN9TpK7Ow7qhnoBmf7jJczVwdeHTCmHE
-HWIuaVrTiy9mY02T0GXbxHD9daOgxPFcfVbudsyX1NOxRjtreN16Bfc1bDX0Awlg
-VoimBA8iVkP7u3Igpyr3q1FhVrCfdeN9yZBrwI44aiEOa7i6D1sAf1bgC2VZ+L1U
-mhfXc3eLZZq3NfKdS2SpQ99Mq46lTV//ORM0LuiRY6k9mQuSqog=
-=StqB
------END PGP SIGNATURE-----
+Yes the DT property is optional, as the resource table is optional. So if not present, we consider that it is a preloaded firmware without resource table.
 
---lrZ03NoBR/3+SXJZ--
+> 
+>> +		}
+>> +
+>> +		err = regmap_read(rsctbl.map, rsctbl.reg, &rsc_da);
+>> +		if (err) {
+>> +			dev_err(&rproc->dev, "failed to read rsc tbl addr\n");
+>> +			return err;
+>> +		}
+>> +		if (!rsc_da)
+>> +			/* no rsc table */
+>> +			goto bail;
+>> +
+>> +		err = stm32_rproc_da_to_pa(rproc, rsc_da, &rsc_pa);
+>> +		if (err)
+>> +			return err;
+>> +
+>> +		ddata->rsc_va = devm_ioremap_wc(dev, rsc_pa, RSC_TBL_SIZE);
+>> +		if (IS_ERR_OR_NULL(ddata->rsc_va)) {
+> 
+> Shouldn't this be just !ddata->rsc_va?
+
+Right, i will fix it.
+
+> 
+>> +			dev_err(dev, "Unable to map memory region: %pa+%zx\n",
+>> +				&rsc_pa, RSC_TBL_SIZE);
+>> +			ddata->rsc_va = NULL;
+>> +			return -ENOMEM;
+>> +		}
+>> +	}
+>> +bail:
+>> +	return 0;
+>>  }
+>>  
+>>  static int stm32_rproc_probe(struct platform_device *pdev)
+>> @@ -640,6 +811,12 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>>  	if (ret)
+>>  		goto free_wkq;
+>>  
+>> +	if (!rproc->skip_fw_load) {
+> 
+> So you read from the state map that the processor is not booted, why do
+> you need to stop it?
+
+This is done as values of the M4 are not at expected state on reset. For instance 
+the PDDS value is not set to 1. As consequence the platform can not
+go in standby mode. 
+
+> 
+>> +		ret = stm32_rproc_stop(rproc);
+>> +		if (ret)
+>> +			goto free_rproc;
+>> +	}
+>> +
+>>  	ret = stm32_rproc_request_mbox(rproc);
+>>  	if (ret)
+>>  		goto free_rproc;
+> 
+> Thanks for including this patch in the series. After reading this patch
+> I no longer think that patch 1 implements the proper support for what
+> you need.
+
+Please could you explain what exactly does not fit from your point of view?
+
+> 
+> The one piece I'm uncertain of is how are you dealing with the firmware
+> during a restart or do you simply not support restarts without user
+> space selecting new firmware?
+
+Yes we do not support the restart without user space action.
+If code is in ROM you can ensure the integrity of the code, but our code is in
+RAM. And as RAM can be isolated we potentially don't have access to the code space.
+Reseting rproc->skip_fw_load to 0 allows this choice.
+So from our point of view delegate the behavior to the user space makes sense as 
+depending on hardware but also on project itself.
+
+Thanks,
+Arnaud
+> 
+> Regards,
+> Bjorn
+> 
