@@ -2,120 +2,81 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44043C352A3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A95BC3B195
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2B22187F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC018218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581647099;
-	bh=9aNLoYnRCmB2kTD1dounOdkBMu8wUb3Wpo5I/7VnTRg=;
+	s=default; t=1581647699;
+	bh=NlFy+G7BwmwZJMBQsFrSrIwD/y9XhSxODCQxDfIySuU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K/lCnzsGyKnThQ0fxgC5feq7h7RXXvVuK2bIjqydHYR4KXSpTYXnS9k5VFmPHk5+E
-	 csu0faRmGWyM2zBGDilyFLOyEh2D73u5aGFbodJaswM6spvNgiGrGwd2m8c7eFedgr
-	 1yh3L05oohWrFKgEiBjl93duxJ+iFZllFgj0/6CU=
+	b=2TmN4Ny78kkwoCY20fSj2woSaVwxpUg1twumVyowG7b0Ncepyk8xnqBT1inJ8k8o3
+	 MRgTKaz94N++6ryHnoOc2P+trdJTgC/IvwnaVymveBNPgrdvndnMP9NgHoCAJhKFOY
+	 EuRRn1RA8Qflrl2H0QRZOYsD5JovN5d+Ee8/5g6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgBNCY6 (ORCPT
+        id S1728052AbgBNCex (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 21:34:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbgBNCY6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:24:58 -0500
+        id S1727988AbgBNCex (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 21:34:53 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6792168B;
-        Fri, 14 Feb 2020 02:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F1C22168B;
+        Fri, 14 Feb 2020 02:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581647097;
-        bh=9aNLoYnRCmB2kTD1dounOdkBMu8wUb3Wpo5I/7VnTRg=;
+        s=default; t=1581647692;
+        bh=NlFy+G7BwmwZJMBQsFrSrIwD/y9XhSxODCQxDfIySuU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rWpkKX18iZG8yYDuJmt37sqyvvy/7FcW9xrmyixAoKlakGtAOb/sHSS23q4nnJ1wI
-         lCvLN6329IIMorvhKjwayfrM83q1KKKK5fQtg+NC41QIeEewTw3LcHixdBSBN4uCUW
-         cGQb2C2h0uoAXnDz75EG9wE2ofJirXyuG/cnGRSs=
-Date:   Fri, 14 Feb 2020 10:24:51 +0800
+        b=tvDhV6jnoCeie0Kwf0B+4/6TxT/wSlWvZLZsiX8vs8ajAKJ0yfALbjrvcK2l0+bkS
+         AvwKa6FDFPJOQ8yH6dfj/kBs/lYzCaF5ONijXXAs6mBCE0fhaOQaFDnljR+nhutpuW
+         tQsMQxacnQ9HAQBNuIv/cDEos3n2wO0wy5wBdwRA=
+Date:   Fri, 14 Feb 2020 10:34:46 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mq-librem5-devkit: Add proximity sensor
-Message-ID: <20200214022450.GD22842@dragon>
-References: <e0434a87d8d46211a076c8a7c75c9f47b9e963c7.1579536647.git.agx@sigxcpu.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        claudiu.manoil@nxp.com, robh+dt@kernel.org, pavel@denx.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: ls1021a: Restore MDIO compatible to gianfar
+Message-ID: <20200214023446.GF22842@dragon>
+References: <20200126194950.31699-1-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e0434a87d8d46211a076c8a7c75c9f47b9e963c7.1579536647.git.agx@sigxcpu.org>
+In-Reply-To: <20200126194950.31699-1-olteanv@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 05:12:55PM +0100, Guido Günther wrote:
-> Support for the vcnl4040 landet a while ago so add it and the
-> corresponding pinmux. The irq is currently unused in the driver so don't
-> configure it yet.
+On Sun, Jan 26, 2020 at 09:49:50PM +0200, Vladimir Oltean wrote:
+> The difference between "fsl,etsec2-mdio" and "gianfar" has to do with
+> the .get_tbipa function, which calculates the address of the TBIPA
+> register automatically, if not explicitly specified. [ see
+> drivers/net/ethernet/freescale/fsl_pq_mdio.c ]. On LS1021A, the TBIPA
+> register is at offset 0x30 within the port register block, which is what
+> the "gianfar" method of calculating addresses actually does.
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  .../boot/dts/freescale/imx8mq-librem5-devkit.dts     | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> Luckily, the bad "compatible" is inconsequential for ls1021a.dtsi,
+> because the TBIPA register is explicitly specified via the second "reg"
+> (<0x0 0x2d10030 0x0 0x4>), so the "get_tbipa" function is dead code.
+> Nonetheless it's good to restore it to its correct value.
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index c8627f6614ae..b87c2e39b16c 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -448,6 +448,12 @@
->  		VDDIO-supply = <&reg_1v8_p>;
->  	};
->  
-> +	prox@60 {
+> Background discussion:
+> https://www.spinics.net/lists/stable/msg361156.html
+> 
+> Fixes: c7861adbe37f ("ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect")
+> Reported-by: Pavel Machek <pavel@denx.de>
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 
-I changed node name to proximity-sensor and applied the patch.
-
-Shawn
-
-> +		compatible = "vishay,vcnl4040";
-> +		reg = <0x60>;
-> +		pinctrl-0 = <&pinctrl_prox>;
-> +	};
-> +
->  	accel-gyro@6a {
->  		compatible = "st,lsm9ds1-imu";
->  		reg = <0x6a>;
-> @@ -550,6 +556,12 @@
->  		>;
->  	};
->  
-> +	pinctrl_prox: proxgrp {
-> +		fsl,pins = <
-> +			MX8MQ_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x80  /* prox intr */
-> +		>;
-> +	};
-> +
->  	pinctrl_pwr_en: pwrengrp {
->  		fsl,pins = <
->  			MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8	0x06
-> -- 
-> 2.23.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Applied, thanks.
