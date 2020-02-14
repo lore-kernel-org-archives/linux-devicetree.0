@@ -8,74 +8,67 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED98CC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530ACC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB8772187F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BDCB20873
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7SY3vsz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MC7/SL6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgBNKB1 (ORCPT
+        id S1729070AbgBNKPw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 05:01:27 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55723 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgBNKB0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 05:01:26 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q9so9301417wmj.5;
-        Fri, 14 Feb 2020 02:01:25 -0800 (PST)
+        Fri, 14 Feb 2020 05:15:52 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36667 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729064AbgBNKPw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 05:15:52 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so9965126wma.1;
+        Fri, 14 Feb 2020 02:15:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b7XfvBCe6zYfGaS3vBve2jeEE5i0WUHqRzVH5gemfFE=;
-        b=d7SY3vszbqsK6NOYoSo8GxalieNDL4bWuOPK25O7o8j8bWObGosSooHFiQz3Ay5dTB
-         RIqzZGa29ZYVCCPj6ghEtHcxTl6otzrhz16AzbwReNbwyIlE26jsI1xosZH6qhmKXMrI
-         nCmo7QOK9AQxyJKOa2TUk3yr9nVWvVxJJuROERwKbwhZhgH1K3e3UXK89G9dMYkiUmxC
-         M9z4v87oEI+ND3NgF8HoEE+fKIs6Y9Ewov9wtnCXhuslUdU+jSkEooQ8z1SWahyflLsJ
-         7CnmAyFnMJGj28RJefhEWZLrTaW14FagspjyiflHnCxZaFnH083BiEnzd5c7l7ER/VRZ
-         WYUg==
+        bh=qgAcFUTWIVh6J5lFRMAU/DXgNItcCCYEdAynPZvF7SI=;
+        b=MC7/SL6LEeQoUDSP7gclFNwRz+aN0p+hzxp4hg+qGG4eiyJU/Tb7+vWYAbkFBhH+p7
+         mIXlIXA0Hc5FtuQNNIg6SgHzBf+IKgemwwfh4XeVdAgRgj91wdBr3BMBLziszTOh2B9M
+         agVODPdtWVxC2VI2VuLMJmS6KpWb10W+j6sZktpGU2wSoF8SJkrHHny1+k1YJPhDg23I
+         tGMPJWyYetMxZy8otxYDkU7obHrKO116T28rNROZ3Z1Q61zVUrain2W6Kz/jy7IJyfhX
+         qPQ/Ze2Z7mEtDSGIu17n70tMjhUxiubMD/BThjzXjPS+nsQnQLXI2x0F88s23rK8tMfg
+         6yng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=b7XfvBCe6zYfGaS3vBve2jeEE5i0WUHqRzVH5gemfFE=;
-        b=Qkdhi8jPfCHwzpJaZy2Vlhj87cP3xwj29CQp3isMFXtJKYJ6eHoZIACwWC2oOntrhU
-         yA3HCkFHTtQZbs39+U9SJNwjoIkmBZgVOf2F8eMY5nOC4X86qLIDnqHS0VUOLHiQ5tZj
-         6o0B4dC7OC9Q1VmLwN2ATTR8igMPxLRsqoNYviNoNlRNO2T0G4R+0MsOvn/ca2NuGXMO
-         AxnSvY0FrBR4HTFCwDXLBGznutiNhu6guwyctylgfzogAbSCfNgtMrFonpoIcD76HW95
-         6qwF4Oyi8iaSOLrsWDvPHdxEwtkVTsxcVov2q2VxT9xyCx6IzDAks0jHt25VPzknmpTx
-         /3pw==
-X-Gm-Message-State: APjAAAVhLB3CTA8W5AHnsx8SN/dpKStwJeXj2QnjBHLNb9iDgUt4gvQj
-        foSCO4C4YXC+RHRhjZHGOyI=
-X-Google-Smtp-Source: APXvYqyBEgGsnLQapDgNpEl7MHnOABth8adMHph1z6FABvQrYE7u5M9syuDKG1AwJixjcIFV66aqWw==
-X-Received: by 2002:a7b:c5d9:: with SMTP id n25mr3987393wmk.65.1581674484153;
-        Fri, 14 Feb 2020 02:01:24 -0800 (PST)
+        bh=qgAcFUTWIVh6J5lFRMAU/DXgNItcCCYEdAynPZvF7SI=;
+        b=J2XF1tcwrB9FRopnsKAUtTWg09vjyImkYHGMZTwh2RPdw6DBtglAkT19C1dCgmWBBh
+         TfvIjVWDUrhaEl/YKkIOYj8TsjgU8lBjg8iMyDYGucXpZ0hqKVBYzA4FEf/r+RNxLit/
+         /9e19D//ydKIqbfbZbKtaXNpHuqQlJUH5+iQZHPvFKXU/1F8sdTpG5OBufXNgCcZdgr8
+         e7ewQIpcsMfLLiHtr+RJC17wrsw1QRTMHzoGXh10T5SNeWxNaTbqYA7arwlfVG7vMRNO
+         KkvY98bvZH94hrwhin9qnVRJ2FXMqJhtq1R9ioGkp9TuS+2YtY/OAOsOtCTwSEzFO50k
+         0ZXg==
+X-Gm-Message-State: APjAAAVgVzIuGd/1FjskPaBb4u3/qQpzQCnMqYNDlE8qMGj1py5QiEfK
+        FsHuP25/ytt7ByJQdh8KGrM=
+X-Google-Smtp-Source: APXvYqwgp0ONpM4VX7wOCtb6uwK+KrpYOx1wDhgo4oswupDnFUSr/rf8oWIbWNcyi+gLurEvZHEqGQ==
+X-Received: by 2002:a1c:4c10:: with SMTP id z16mr3847792wmf.136.1581675349383;
+        Fri, 14 Feb 2020 02:15:49 -0800 (PST)
 Received: from ziggy.stardust ([37.223.145.31])
-        by smtp.gmail.com with ESMTPSA id g21sm6402148wmh.17.2020.02.14.02.01.22
+        by smtp.gmail.com with ESMTPSA id t128sm7085182wmf.28.2020.02.14.02.15.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2020 02:01:23 -0800 (PST)
-Subject: Re: [PATCH v7 01/13] dt-bindings: arm: move mmsys description to
- display
-To:     CK Hu <ck.hu@mediatek.com>, matthias.bgg@kernel.org
-Cc:     mark.rutland@arm.com, airlied@linux.ie, mturquette@baylibre.com,
-        dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com,
-        ulrich.hecht+renesas@gmail.com, linux-clk@vger.kernel.org,
-        drinkcat@chromium.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        wens@csie.org, mtk01761 <wendell.lin@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>, frank-w@public-files.de,
-        sean.wang@mediatek.com, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Fri, 14 Feb 2020 02:15:48 -0800 (PST)
+Subject: Re: [PATCH] soc: mediatek: knows_txdone needs to be set in Mediatek
+ CMDQ helper
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>, sboyd@kernel.org,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-        p.zabel@pengutronix.de, enric.balletbo@collabora.com
-References: <20200213201953.15268-1-matthias.bgg@kernel.org>
- <20200213201953.15268-2-matthias.bgg@kernel.org>
- <1581662577.17949.3.camel@mtksdaap41>
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>
+References: <20200214043545.16713-1-bibby.hsieh@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -151,15 +144,15 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <2bda2dd7-9ed2-8b4c-897e-e585ccfa1fa5@gmail.com>
-Date:   Fri, 14 Feb 2020 11:01:21 +0100
+Message-ID: <03c07fab-3768-7bf2-f955-92b1e626709c@gmail.com>
+Date:   Fri, 14 Feb 2020 11:15:47 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1581662577.17949.3.camel@mtksdaap41>
+In-Reply-To: <20200214043545.16713-1-bibby.hsieh@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -167,57 +160,35 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 14/02/2020 07:42, CK Hu wrote:
-> Hi, Matthias:
+On 14/02/2020 05:35, Bibby Hsieh wrote:
+> Mediatek CMDQ driver have a mechanism to do TXDONE_BY_ACK,
+> so we should set knows_txdone.
 > 
-> On Thu, 2020-02-13 at 21:19 +0100, matthias.bgg@kernel.org wrote:
->> From: Matthias Brugger <mbrugger@suse.com>
->>
->> The mmsys block provides registers and clocks for the display
->> subsystem. The binding description should therefore live together with
->> the rest of the display descriptions. Move it to display/mediatek.
->>
+> Fixes:576f1b4bc802 ("soc: mediatek: Add Mediatek CMDQ helper")
 > 
-> Yes, for the upstreamed driver, only display (DRM) use mmsys clock. For
-> some MDP patches [1] in progress, MDP also use mmsys clock. So we just
-> consider what's upstreamed now?
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
 
-I'm not sure if I understand you correctly. Are you proposing to keep the
-binding description in arm/mediatek?
+I added a tag:
+Cc: stable@vger.kernel.org # v5.0+
 
-Regards,
-Matthias
+and applied it to v5.6-next/soc
 
+Thanks
+
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> [1] https://patchwork.kernel.org/patch/11140747/
-> 
-> Regards,
-> CK
-> 
->> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->>
->> ---
->>
->> Changes in v7:
->> - move the binding description
->>
->> Changes in v6: None
->> Changes in v5: None
->> Changes in v4: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>  .../bindings/{arm => display}/mediatek/mediatek,mmsys.txt         | 0
->>  1 file changed, 0 insertions(+), 0 deletions(-)
->>  rename Documentation/devicetree/bindings/{arm => display}/mediatek/mediatek,mmsys.txt (100%)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
->> similarity index 100%
->> rename from Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
->> rename to Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 9add0fd5fa6c..2ca1a759a347 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -80,6 +80,7 @@ struct cmdq_client *cmdq_mbox_create(struct device *dev, int index, u32 timeout)
+>  	client->pkt_cnt = 0;
+>  	client->client.dev = dev;
+>  	client->client.tx_block = false;
+> +	client->client.knows_txdone = true;
+>  	client->chan = mbox_request_channel(&client->client, index);
+>  
+>  	if (IS_ERR(client->chan)) {
 > 
