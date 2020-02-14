@@ -2,110 +2,163 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1052BC3B19D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0539BC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9192168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0A2206ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttyMlQud"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iZhYOgHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgBNNuB (ORCPT
+        id S1728336AbgBNNyJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:50:01 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44960 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbgBNNuB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 08:50:01 -0500
-Received: by mail-vs1-f68.google.com with SMTP id p6so5913353vsj.11;
-        Fri, 14 Feb 2020 05:50:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uqyI02njoot2XmCZIdNUmhXwHE9v/zz94Gp6DG53kCk=;
-        b=ttyMlQudUD/NIBwpvMZWuApIZRSf94LFlCQcay2XSvF2z8dXuaO5svAqb7WazigmfP
-         eZTC6ziq4bwq//prNhF+xxbc9pQ6cHgUifdA8udDHgIWVZ8rqePb7c3AM3WG8S0QvcKQ
-         dN1ygtCuxKRefH8ocoasDfWJTZfENfGPcqGvBOY+yo0W7OwUOqNEnPq+q9YKQ+onvd+q
-         2yGMYHdJAdUIOydiE2fBf4Qd5OXQTEej3aceCsOpiy/ezZEpUjYdXcS7In2MhGkZ7QJj
-         8xPjjfPTo2CKhaq6avDY0SH58louqdjtPdLzAl1xUdXhTXAPO1XHXQOoJ9vsTYKyyNo5
-         NCuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uqyI02njoot2XmCZIdNUmhXwHE9v/zz94Gp6DG53kCk=;
-        b=gOMN66P5tQfKNDCpLjX37KHw7BifLEwNyZjq2qImRS/+fguERvJvCczvHzrMplHrow
-         I0Xm4hf4md+dScofE628al0vCPKxbQi4w2utSJcVE4zmyn5X0LmWxaxTHUTxSIQvGWA3
-         ltsr6juZXHkDQ1PZLOL1sxpp6JhEYQK7Ov9NZPoa7GD9NT+XWMFtGbvWK3jsLJfPQYJO
-         H3eT4NuLBVQflg8FlmeXqqGv/HairVnQzFNUXGakYL7X7YWTHugNMnj5ENpFHCgCL5ef
-         MgzVCMaIQ+IvnZj4rSEvQLajk08FoHogsFg7PHnVS424qLZ+I7OfrGz82cTC42EwZCwm
-         Wsig==
-X-Gm-Message-State: APjAAAVdB3vy+teut919kbGj5bSKsO9O0m3YdDDLRxU3o7i2EXKygNRP
-        TDf3KXM6fa+2eHJhOiHy9Ci1exF7LVbVsxlDsuQ=
-X-Google-Smtp-Source: APXvYqx8gznJb0eroBOKXsZ3slGRJyDdgQg5k1ZyNJQC7tNmGE0gkxH8xYqUIYP2EnC0Nj7ideRVjXRyo+saG1phkyI=
-X-Received: by 2002:a67:ce93:: with SMTP id c19mr1413233vse.64.1581688199935;
- Fri, 14 Feb 2020 05:49:59 -0800 (PST)
-MIME-Version: 1.0
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
- <20200214121145.GF4827@sirena.org.uk> <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
- <20200214131518.GJ4827@sirena.org.uk>
-In-Reply-To: <20200214131518.GJ4827@sirena.org.uk>
-From:   Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Date:   Fri, 14 Feb 2020 14:49:48 +0100
-Message-ID: <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Fri, 14 Feb 2020 08:54:09 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13408 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728223AbgBNNyJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 08:54:09 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e46a63d0000>; Fri, 14 Feb 2020 05:53:01 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 14 Feb 2020 05:54:08 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 14 Feb 2020 05:54:08 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
+ 2020 13:54:08 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 14 Feb 2020 13:54:07 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.21.133.51]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e46a67d0001>; Fri, 14 Feb 2020 05:54:07 -0800
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH] ARM64: tegra: Fix Tegra194 PCIe compatible string
+Date:   Fri, 14 Feb 2020 13:53:53 +0000
+Message-ID: <20200214135353.31334-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581688381; bh=S/RFy4FJST5kVRAYMx9GpBNAntAYNupBOBr7JKDRlcg=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=iZhYOgHRE0dxNg+1Oi9qTf9O4s3Tv7/r92CSC+qF36p2UXRIECHg2v3XaTamR4T5C
+         FdqJju8E7bpHLV6vbXy/stfJICZNOrnK8j+ggmW6t3N/N3njr2etUybjKGgiOlzFgv
+         WorlFV6Oih4O318T4jfFFRgztBtReUfuRKHbjRz9qyIOpS62ROBQYrzz8YIpWsn5JH
+         vqxdfR3uWRAomuwZhI0PV/tvH2Czt8j6rgv8g+VBA5pPoQ2Kx4IXszy1ookSg2hgHp
+         uwk/4AFfH/1vF2LpLAa60AxxNx+HB4vJAtJymIEeGFYDXkLqu3u2HOaZGA9ieP0XeW
+         9gCo5ORcetLBA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 2:15 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Feb 14, 2020 at 01:50:44PM +0100, Simon Goldschmidt wrote:
->
-> > So please correct me if I'm wrong, but to me it seems like if this driver won't
-> > work on altera, and after merging it the currently working driver will be
-> > removed, altera will be broken.
->
-> I'm not seeing anything in the driver that removes whatever the current
-> support is?  Unless it's just adding a duplicate driver for the same
-> compatible strings which is obviously a bad idea but at least means that
-> unless people enable the driver there's no risk of it colliding with the
-> existing one.
+If the kernel configuration option CONFIG_PCIE_DW_PLAT_HOST is enabled
+then this can cause the kernel to incorrectly probe the generic
+designware PCIe platform driver instead of the Tegra194 designware PCIe
+driver. This causes a boot failure on Tegra194 because the necessary
+configuration to access the hardware is not performed.
 
-It does add a duplicate driver for the same compatible strings. The current
-working driver is in 'drivers/mtd/spi-nor/cadence-quadspi.c'.
+The order in which the compatible strings are populated in Device-Tree
+is not relevant in this case, because the kernel will attempt to probe
+the device as soon as a driver is loaded and if the generic designware
+PCIe driver is loaded first, then this driver will be probed first.
+Therefore, to fix this problem, remove the "snps,dw-pcie" string from
+the compatible string as we never want this driver to be probe on
+Tegra194.
 
-In fact, the compatible string "cdns,qspi-nor" copied from the old driver to
-this new driver is *only* used for altera. TI has its own compatible string,
-the new Intel platform adds its own as well.
+Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
 
-As long as that one doesn't get removed, I have nothing against this driver
-here. I'm only concerned that this will get forgotten. And given that I added
-altera guys to the loop in one of the previous versions, I just was surprised
-they aren't on CC in this version.
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt |  2 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi             | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-I'm not familiar with whom to CC for Linux drivers, so sorry for the noise
-if I'm overreacting here, just tell me.
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+index b739f92da58e..1f90eb39870b 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+@@ -118,7 +118,7 @@ Tegra194:
+ --------
+ 
+ 	pcie@14180000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+ 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index ccac43be12ac..4c58cb10fb9c 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1208,7 +1208,7 @@
+ 	};
+ 
+ 	pcie@14100000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14100000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x30000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1253,7 +1253,7 @@
+ 	};
+ 
+ 	pcie@14120000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14120000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x32000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1298,7 +1298,7 @@
+ 	};
+ 
+ 	pcie@14140000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14140000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x34000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1343,7 +1343,7 @@
+ 	};
+ 
+ 	pcie@14160000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
+ 		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x36000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1388,7 +1388,7 @@
+ 	};
+ 
+ 	pcie@14180000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+ 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1433,7 +1433,7 @@
+ 	};
+ 
+ 	pcie@141a0000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
+ 		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x3a000000 0x0 0x00040000   /* configuration space (256K) */
+-- 
+2.17.1
 
-Regards,
-Simon
