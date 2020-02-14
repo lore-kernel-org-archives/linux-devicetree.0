@@ -2,108 +2,114 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08562C35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 21:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5886AC35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3866222C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 21:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214B7217F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581717269;
+	bh=kPEmoqK5kkolXd/XtmxwGBw/rwiGBYbwTOnvH4ZJM78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fLLAmxgzf9fRW7r6rd6KD78Ft9V26WkVJAoEcv4Nyy59H3/REiYMWsXvcvejQ/500
+	 SAAQAwhnnqilqKhRMULdufQaz9C/dkAJpyOaIk+2WNwcuhuogsD/LGhDfKmQojfQS6
+	 ipd+U93PBUKPwKCS4Pl0u9i57YrywIgtMpepHh40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389072AbgBNVjJ (ORCPT
+        id S1729294AbgBNVy2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:39:09 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:49928 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388193AbgBNVjJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 16:39:09 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Fri, 14 Feb 2020 16:54:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728911AbgBNVy2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:54:28 -0500
+Received: from localhost (unknown [65.119.211.164])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id C993D20022;
-        Fri, 14 Feb 2020 22:39:04 +0100 (CET)
-Date:   Fri, 14 Feb 2020 22:39:02 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/3] drm/panel: simple: fix osd070t1718_19ts sync drive
- edge
-Message-ID: <20200214213902.GA22233@ravnborg.org>
-References: <20191114093950.4101-1-tomi.valkeinen@ti.com>
- <20191114093950.4101-4-tomi.valkeinen@ti.com>
- <20191202130717.GI4929@pendragon.ideasonboard.com>
- <a9cf515c-dbdd-e70d-5a89-1211c1049d16@ti.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BD9152082F;
+        Fri, 14 Feb 2020 21:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581717268;
+        bh=kPEmoqK5kkolXd/XtmxwGBw/rwiGBYbwTOnvH4ZJM78=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K9uY5UhJq9FPMU/mfklwfFYxjFgMVB8LfJWzsjZEa7jR7fr2KONnwjlEf0RA6/iN/
+         hyy0YWWftJ+6JERE6Sh2iYv5hXT01V62fcOFoznONFgeN8vuquNvlDrTva+TNtpx6C
+         B7GBiR4PSLpHfT0+v5NNkLB1bTkBiZsTW94GoJx0=
+Date:   Fri, 14 Feb 2020 16:40:51 -0500
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Grant Likely <grant.likely@arm.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkml@metux.net" <lkml@metux.net>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Message-ID: <20200214214051.GA4192967@kroah.com>
+References: <20200128155243.GC3438643@kroah.com>
+ <0dd9dc95-1329-0ad4-d03d-99899ea4f574@st.com>
+ <20200128165712.GA3667596@kroah.com>
+ <62b38576-0e1a-e30e-a954-a8b6a7d8d897@st.com>
+ <CACRpkdY427EzpAt7f5wwqHpRS_SHM8Fvm+cFrwY8op0E_J+D9Q@mail.gmail.com>
+ <20200129095240.GA3852081@kroah.com>
+ <20200129111717.GA3928@sirena.org.uk>
+ <0b109c05-24cf-a1c4-6072-9af8a61f45b2@st.com>
+ <20200131090650.GA2267325@kroah.com>
+ <CACRpkdajhivkOkZ63v-hr7+6ObhTffYOx5uZP0P-MYvuVnyweA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a9cf515c-dbdd-e70d-5a89-1211c1049d16@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=sozttTNsAAAA:8
-        a=P1BnusSwAAAA:8 a=pE7bLHUCcVxUAAEgjrMA:9 a=CjuIK1q_8ugA:10
-        a=aeg5Gbbo78KNqacMgKqU:22 a=D0XLA9XvdZm18NrgonBM:22
+In-Reply-To: <CACRpkdajhivkOkZ63v-hr7+6ObhTffYOx5uZP0P-MYvuVnyweA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomi.
-
-On Mon, Feb 10, 2020 at 10:15:33AM +0200, Tomi Valkeinen wrote:
-> Hi Thierry,
+On Fri, Feb 14, 2020 at 05:05:07PM +0100, Linus Walleij wrote:
+> On Fri, Jan 31, 2020 at 10:06 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 > 
-> On 02/12/2019 15:07, Laurent Pinchart wrote:
-> > Hi Tomi,
-> > 
-> > Thank you for the patch.
-> > 
-> > On Thu, Nov 14, 2019 at 11:39:50AM +0200, Tomi Valkeinen wrote:
-> > > The panel datasheet says that the panel samples at falling edge, but
-> > > does not say anything about h/v sync signals. Testing shows that if the
-> > > sync signals are driven on falling edge, the picture on the panel will
-> > > be slightly shifted right.
-> > > 
-> > > Setting sync drive edge to the same as data drive edge fixes this issue.
-> > > 
-> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > 
-> > I don't have access to the documentation, but this makes sense, so
-> > 
-> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > 
-> > > ---
-> > >   drivers/gpu/drm/panel/panel-simple.c | 3 ++-
-> > >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > > index 5d487686d25c..0784536ae6af 100644
-> > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > @@ -2397,7 +2397,8 @@ static const struct panel_desc osddisplays_osd070t1718_19ts = {
-> > >   		.height = 91,
-> > >   	},
-> > >   	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> > > -	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
-> > > +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-> > > +		DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
-> > >   	.connector_type = DRM_MODE_CONNECTOR_DPI,
-> > >   };
+> > Why do people want to abuse the platform bus so much?  If a device is on
+> > a bus that can have such a controller, then it is on a real bus, use it!
 > 
-> Can this be merged?
+> I'm not saying it is a good thing, but the reason why it is (ab)used so
+> much can be found in:
+> drivers/of/platform.c
+> 
+> TL;DR: struct platform_device is the Device McDeviceFace and
+> platform bus the Bus McBusFace used by the device tree parser since
+> it is slightly to completely unaware of what devices it is actually
+> spawning.
 
-I have lost the original mail.
-Can you re-send or provide a patchwork pointer or similar.
-Then I will apply.
+<snip>
 
-PS. Mail had been stuck in my spam quarantine so did not get it until
-now.
+Yeah, great explaination, and I understand.  DT stuff really is ok to be
+on a platform bus, as that's what almost all of them are.
 
-	Sam
+But, when you try to start messing around with things like this
+"firewall" says it is doing, it's then obvious that this really isn't a
+DT like thing, but rather you do have a bus involved with a controller
+so that should be used instead.
+
+Or just filter away the DT stuff so that the kernel never even sees
+those devices, which might just be simplest :)
+
+thanks,
+
+greg k-h
