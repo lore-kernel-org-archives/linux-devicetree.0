@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A57C3B1AB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95551C3B1AB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980552168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DFB24693
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701598;
-	bh=O223LQV9enNAUAJH8Cah5pckGd311AgxJ5giEGsj2OE=;
+	s=default; t=1581701602;
+	bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0EinCqlC5yokIdLtkFPXeaTCpaqwoA4Wx/60rtXK1Ygcof+e1NaMuO6/5P6P4SACp
-	 dbIdHrRSF6VcwKMfTyoeMU34N/sgljdVIXBHhThNWOw93j+BphumHhp426Ra2hlUfk
-	 9bB8OCu1s1p0YQLkmU4lln85PSY6CMho4MdBA2F4=
+	b=OVdIfpGTfy7jqLw403AI5B4/9tg2DL9dUH6pwniL9d9aW+9L3SGqx4fCK7RkR41me
+	 PH/W9FrtfkOv1BLRZ9GGwOvoPDIX8M4Wh0ZcOZDBAEPgUSkXN7Kk0y5jao7Oox8R/J
+	 nwOjNZY69wkT6JKMtbZlTm6kdrSellvPxDxbo5rA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390439AbgBNQGa (ORCPT
+        id S2394712AbgBNRdV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56950 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:33:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390435AbgBNQG3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:29 -0500
+        id S2390430AbgBNQG2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83319206D7;
-        Fri, 14 Feb 2020 16:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67525222C2;
+        Fri, 14 Feb 2020 16:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696389;
-        bh=O223LQV9enNAUAJH8Cah5pckGd311AgxJ5giEGsj2OE=;
+        s=default; t=1581696388;
+        bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKkyb6uCIQf4P7VmAvndURRa0TssA8m1YwroFbIsxyc/z+JRmR0i0jHp+IXR5Bue/
-         4a0H5LB1H7lVl7GhobX3pAA3C8hvTwAqZ6/9aO+jQstbN35JVePhrc2caSM+V5U6RF
-         v7CVu6Ss9KoZTLsnEvOxS7+zTNNxx9sdE8A4vhjE=
+        b=RXUT4NXYmBylU8FbrC4HSxnmGSn9oZqo+kujvM3nFbUsteiCVwCVCkAxvT+9kbIOO
+         d3YjLwp7RDwdWhYngFKxj8ihJTFhgdlCSQAIw7gm8Z6z/0Tepttc0jQ9gs2ds5ADQ3
+         oWsXKVErwE3kpW9CMNbKg1WylAT83UUByJ+Tcxok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 215/459] arm64: dts: renesas: r8a77990: ebisu: Remove clkout-lr-synchronous from sound
-Date:   Fri, 14 Feb 2020 10:57:45 -0500
-Message-Id: <20200214160149.11681-215-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 214/459] ARM: dts: r8a7779: Add device node for ARM global timer
+Date:   Fri, 14 Feb 2020 10:57:44 -0500
+Message-Id: <20200214160149.11681-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,37 +59,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit bf2b74ce9b33a2edd6ba1930ce60a71830790910 ]
+[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
 
-rcar_sound doesn't support clkout-lr-synchronous in upstream.
-It was supported under out-of-tree rcar_sound.
-upstream rcar_sound is supporting
-	- clkout-lr-synchronous
-	+ clkout-lr-asynchronous
+Add a device node for the global timer, which is part of the Cortex-A9
+MPCore.
 
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/87mubt3tux.wl-kuninori.morimoto.gx@renesas.com
-Fixes: 56629fcba94c698d ("arm64: dts: renesas: ebisu: Enable Audio")
+The global timer can serve as an accurate (4 ns) clock source for
+scheduling and delay loops.
+
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-index b38f9d442fc08..e6d700f8c1948 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-@@ -636,7 +636,6 @@
- 	/* audio_clkout0/1/2/3 */
- 	#clock-cells = <1>;
- 	clock-frequency = <12288000 11289600>;
--	clkout-lr-synchronous;
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index ebf5b7cfe2159..63341635bddf8 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -68,6 +68,14 @@
+ 		      <0xf0000100 0x100>;
+ 	};
  
- 	status = "okay";
- 
++	timer@f0000200 {
++		compatible = "arm,cortex-a9-global-timer";
++		reg = <0xf0000200 0x100>;
++		interrupts = <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
++	};
++
+ 	timer@f0000600 {
+ 		compatible = "arm,cortex-a9-twd-timer";
+ 		reg = <0xf0000600 0x20>;
 -- 
 2.20.1
 
