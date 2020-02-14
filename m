@@ -2,177 +2,101 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB7AC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71406C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFB82086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581685795;
-	bh=PZhB1NcQBOFlKyZ/Wg1snPu8zpk0I6QyaZXQv4UoOYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XGs9tzZuQH4QnMNNuawTPWqljIPLAB1WTrZ9iP2LRrQUVbtTqkJRNEy1NH6wrdaQj
-	 xrALRd/7ci1WlGD5fTT+WFw03r+gYJyWJKbZ4t5G1LoF3V05gampB6DuDZBqogIwD7
-	 a5vJ5lCI03YFCHsC1bkrn+hFQQmCQQVRfZ6jx9BY=
+	by mail.kernel.org (Postfix) with ESMTP id 3272E2086A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eSnObmA8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgBNNJy (ORCPT
+        id S1728036AbgBNNKo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:09:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:32886 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNNJy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:09:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31AA91FB;
-        Fri, 14 Feb 2020 05:09:54 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A84A23F68F;
-        Fri, 14 Feb 2020 05:09:53 -0800 (PST)
-Date:   Fri, 14 Feb 2020 13:09:52 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        vigneshr@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v9 2/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-Message-ID: <20200214130952.GI4827@sirena.org.uk>
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200214114618.29704-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Fri, 14 Feb 2020 08:10:44 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37394 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgBNNKo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 08:10:44 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 14E04504;
+        Fri, 14 Feb 2020 14:10:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1581685843;
+        bh=VBpnQBYrhS7rjLikkevn4VY+OoeRpTZ17mrFu2uIFkI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eSnObmA8eOFh0K2ebyyFg+LI6qet1ihcffdb8byKZ4v3oU0wkEJkF1+nyihZHhzPF
+         2aQO2wtxyIkrz7RpgrddgUxhajY3HmSd7DzXCCmtAi+tsXM7UNLi8Ua4qHCz5/QJL7
+         WikTXkvV1tNladGZ7HpnTfDjaHvHH23z/gPwEcRQ=
+Date:   Fri, 14 Feb 2020 15:10:25 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: display: sun4i-tcon: Add LVDS Dual Link
+ property
+Message-ID: <20200214131025.GI4831@pendragon.ideasonboard.com>
+References: <20200214123244.109300-1-maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GBuTPvBEOL0MYPgd"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200214114618.29704-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Cookie: Shipping not included.
+In-Reply-To: <20200214123244.109300-1-maxime@cerno.tech>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Maxime,
 
---GBuTPvBEOL0MYPgd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the patch.
 
-On Fri, Feb 14, 2020 at 07:46:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+On Fri, Feb 14, 2020 at 01:32:43PM +0100, Maxime Ripard wrote:
+> SoCs that have multiple TCONs can use the two set of pins on the first TCON
+> to drive a dual-link display. Add a property to enable the dual link.
+> 
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  .../bindings/display/allwinner,sun4i-a10-tcon.yaml         | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> index 86ad617d2327..aa6dd8409dbc 100644
+> --- a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> +++ b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+> @@ -105,6 +105,13 @@ properties:
+>          - const: edp
+>          - const: lvds
+>  
+> +  allwinner,lvds-dual-link:
+> +    type: boolean
+> +    description: |
+> +      On a SoC with two TCON with LVDS support, the first TCON can
+> +      operate over both pins sets to output in a dual-link setup. This
+> +      will be triggered by setting this property.
 
-> +static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
-> +{
-> +	struct cqspi_st *cqspi = dev;
-> +	unsigned int irq_status;
-> +
-> +	/* Read interrupt status */
-> +	irq_status = readl(cqspi->iobase + CQSPI_REG_IRQSTATUS);
-> +
-> +	/* Clear interrupt */
-> +	writel(irq_status, cqspi->iobase + CQSPI_REG_IRQSTATUS);
-> +
-> +	irq_status &= CQSPI_IRQ_MASK_RD | CQSPI_IRQ_MASK_WR;
-> +
-> +	if (irq_status)
-> +		complete(&cqspi->transfer_complete);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-This will unconditionally handle the interrupt regardless of if the
-hardware was actually flagging an interrupt which will break shared
-interrupts and the fault handling code in genirq.
-
-> +	tmpbufsize = op->addr.nbytes + op->dummy.nbytes;
-> +	tmpbuf = kzalloc(tmpbufsize, GFP_KERNEL | GFP_DMA);
-> +	if (!tmpbuf)
-> +		return -ENOMEM;
-
-I'm not clear where tmpbuf gets freed or passed out of this function?
+Could you maybe provide an example of how this property is supposed to
+be used ? I'm especially wondering what ports are used in that case and
+how they're connected.
 
 > +
-> +	if (op->addr.nbytes) {
-> +		for (i = 0; i < op->addr.nbytes; i++)
-> +			tmpbuf[i] = op->addr.val >> (8 * (op->addr.nbytes - i - 1));
-> +
-> +		addr_buf = tmpbuf;
+>    ports:
+>      type: object
+>      description: |
 
-We assign tmpbuf to addr_buf here but addr_buf just gets read from so
-it's not via that AFAICT.
+-- 
+Regards,
 
-> +	}
-> +	/* Invalid address return zero. */
-
-Missing blank line.
-
-> +static void cqspi_chipselect(struct cqspi_flash_pdata *f_pdata)
-> +{
-> +	struct cqspi_st *cqspi = f_pdata->cqspi;
-> +	void __iomem *reg_base = cqspi->iobase;
-> +	unsigned int chip_select = f_pdata->cs;
-> +	unsigned int reg;
-> +
-> +	reg = readl(reg_base + CQSPI_REG_CONFIG);
-> +	reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
-> +
-> +	/* Convert CS if without decoder.
-> +	 * CS0 to 4b'1110
-> +	 * CS1 to 4b'1101
-> +	 * CS2 to 4b'1011
-> +	 * CS3 to 4b'0111
-> +	 */
-> +	chip_select = 0xF & ~(1 << chip_select);
-
-This says "if without decoder" but there's no conditionals here, what if
-we do have a decoder?
-
-> +	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
-> +	ddata  = of_device_get_match_data(dev);
-> +	if (ddata) {
-> +		if (ddata->quirks & CQSPI_NEEDS_WR_DELAY)
-> +			cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
-> +						cqspi->master_ref_clk_hz);
-> +		if (ddata->hwcaps_mask & CQSPI_SUPPORTS_OCTAL)
-> +			master->mode_bits |= SPI_RX_OCTAL;
-> +		if (!(ddata->quirks & CQSPI_DISABLE_DAC_MODE))
-> +			cqspi->use_dac_mode = true;
-> +		if (ddata->quirks & CQSPI_NEEDS_ADDR_SWAP) {
-> +			master->bus_num = 0;
-> +			master->num_chipselect = 2;
-> +		}
-> +	}
-
-Given that the driver appears to unconditionally dereference match data
-in other places I'd expect this to return an error if there's none,
-otherwise we'll oops in those other code paths later on.
-
-> +	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
-> +			       pdev->name, cqspi);
-> +	if (ret) {
-> +		dev_err(dev, "Cannot request IRQ.\n");
-> +		goto probe_reset_failed;
-> +	}
-
-Are you sure that it's safe to use devm_request_irq() - what happens if
-the interrupt fires in the process of removing the device?
-
---GBuTPvBEOL0MYPgd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GnB8ACgkQJNaLcl1U
-h9C+fgf+Om+8sIQDPfShzyjlZsc5xBZOp8oDvh4pUB/LyqN2yM/zEyliKQW+lWOK
-fR7W7t5WsTnJaHGyniMVPQs3duaCXpHKZYZgM9U7dhvrMnsX+6A6OZgsJDc3HwfZ
-+Z1qQ5vEIOjv2A41gp26X6yp6rlG/7HyT2clyKL4fuoszBQQn231DLOYlh2rzIHN
-hpgIOR2aNl0tz9HybLexivn6d5CmqYxrvvpRavkxpFTii9ReX9xNVhGz9BZRCrr0
-xFqXz1MjYnTrB0HdEMjVn+RfT8TbdT5BcmNp4SRc9OigZuQrtraC0NNvrUxZfuIS
-z8eVTgg4kHixNvaVrt5uWJ49071S5g==
-=5DCl
------END PGP SIGNATURE-----
-
---GBuTPvBEOL0MYPgd--
+Laurent Pinchart
