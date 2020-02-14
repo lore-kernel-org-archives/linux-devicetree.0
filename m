@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FF3C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D295C3B1B9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4952168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7224024654
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703729;
-	bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
+	s=default; t=1581703932;
+	bh=wEbTmDAFGEJyYKw5bAkSrdfMG8SVFgSc3UHab2BPGXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yFCOdW+6IDtytm/LWVP3KS7m2i8BcDxQj2ITWPJRqpbb9F03mQm2Fai9GsT78UouB
-	 G0AjGFai0W0YaGVbXBT3T87TzHtVd6J71wacEvpoLUQFXwtLt8POTZ2HBUEttnnRcd
-	 3GOQfrAtots1v6wfyJONkuKAK24suVX89BLXULxE=
+	b=YfKi+qYh2c06KV1jUx8rYkKOLvNinFDjCc30E55/PBcbkzQ9oFZQg2CLZby+B8/cq
+	 f59nnwO6Es8aQDCOoCTadjYr7ERRvAUg6Byco0KbyBoUWPHNnl0lD/EaKEI9W0p5kZ
+	 Y0b4J+2F/9eTLPsUM4oFdyLK2RSRrjToSktZUOU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388859AbgBNSIp (ORCPT
+        id S1731176AbgBNPxN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:08:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34086 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731445AbgBNPyO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:14 -0500
+        id S1730533AbgBNPxM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DAE024676;
-        Fri, 14 Feb 2020 15:54:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0923E2465D;
+        Fri, 14 Feb 2020 15:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695654;
-        bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
+        s=default; t=1581695592;
+        bh=wEbTmDAFGEJyYKw5bAkSrdfMG8SVFgSc3UHab2BPGXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16OtNrizCYORco3+L8rn0yJ0cYHMZyg5jToz0UuVrg91TpOgbM1xQIMn8cZrBPGq5
-         2jF3+/J1nRV6voU1BCuLjNXe5ic95zf4WqQWa7A6oZ9MY+y8bxe70lkWrXvEzUJnUX
-         w/+dlOfzsjBRcRa4JW+LcTIFn9AoT/cPnVmJ1qPQ=
+        b=ODnbLo4/+hqez5iqxe2pm9eSkzcZ8cXDGClBccjVkYOboJ7ZNLxZ/aG/7hMUJc4vx
+         G6eVN3h+m1dm7lU+lEcXeS3gAo2NXdeiJ+SdU2NyAi+NrrfC8QRo5d5oYJoldD2+/O
+         PzJXRO0d+/dyQ8kNFisO9qLxJfJ2ejdDnBjZnQR8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 246/542] ARM: dts: r8a7779: Add device node for ARM global timer
-Date:   Fri, 14 Feb 2020 10:43:58 -0500
-Message-Id: <20200214154854.6746-246-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 198/542] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
+Date:   Fri, 14 Feb 2020 10:43:10 -0500
+Message-Id: <20200214154854.6746-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,42 +63,67 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
+[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
 
-Add a device node for the global timer, which is part of the Cortex-A9
-MPCore.
+RDU2 production units come with resistor connecting WP pin to
+correpsonding GPIO DNPed for both SD card slots. Drop any WP related
+configuration and mark both slots with "disable-wp".
 
-The global timer can serve as an accurate (4 ns) clock source for
-scheduling and delay loops.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index ebf5b7cfe2159..63341635bddf8 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -68,6 +68,14 @@
- 		      <0xf0000100 0x100>;
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index a2a4f33a3e3ef..4ec9fb332610e 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -629,7 +629,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -642,7 +642,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -1056,7 +1056,6 @@
+ 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+ 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+ 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
+ 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
+ 		>;
  	};
+@@ -1069,7 +1068,6 @@
+ 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+ 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+ 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
+ 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
  
-+	timer@f0000200 {
-+		compatible = "arm,cortex-a9-global-timer";
-+		reg = <0xf0000200 0x100>;
-+		interrupts = <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
-+		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
-+	};
-+
- 	timer@f0000600 {
- 		compatible = "arm,cortex-a9-twd-timer";
- 		reg = <0xf0000600 0x20>;
+ 		>;
 -- 
 2.20.1
 
