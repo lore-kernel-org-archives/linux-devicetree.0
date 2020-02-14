@@ -2,127 +2,171 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DB4C352A3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDEBC352A3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE1E20848
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58621217F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bqza2qpu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WALN77/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgBNCnG (ORCPT
+        id S1727604AbgBNCzR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:43:06 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:51028 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728454AbgBNCnG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 21:43:06 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so3240254pjb.0
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 18:43:05 -0800 (PST)
+        Thu, 13 Feb 2020 21:55:17 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46899 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgBNCzQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 21:55:16 -0500
+Received: by mail-pf1-f193.google.com with SMTP id k29so4106808pfp.13
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 18:55:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=uhAnaYBibh71jLGyT/MAQHtwtB/q365HXNevkI1NHmw=;
-        b=bqza2qpu0iMia0lDRZcLlw1hsj7t4HxHSBGtkrUkfecnRtXkQV9k9Hr+P3fXTdeYwG
-         WIGaXJCtnBYGIvhfHG2pUPZuZW0jCLv5UTd5aIQk7vLOBWUsvdfPeteI55NNImnKObNd
-         2+6JO7ErmbVY4W9L1QidUq0BRuc7LOtlUUygs=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IfOGOUALQlq+vrdueHXqJ3n19JBEMpajwqi9a2b9mu8=;
+        b=WALN77/LOtsK64f+I801o8pXTnwnrq+YUTeeV2575oMUx66quf3mYISHEsp68Kh4km
+         Ep6MmcnPJswlcg74lZpLH7dWG2eoHRWjWEMXHzMGJjGuP76jSYrqkpi2S1NKSnS6aIvB
+         57vcttNJP4g7NFVB5Mr1AeqnSbC5d5GKxugzqY9L0LCEHOWaBTK6dBUJ6HC8yM92Z8xt
+         TYcQSsjG/qoHeDuLZOvKeFsq6YeQhxml2Do1cK9IylL1bfJyLt46yXk2oVaxC9hRRWUk
+         2iumz+gctY6uxPr6AW/dZlH67PAPr1p+AR3+3hwbcaGMAJMuMvNl5kreGHk5LGnlhv+x
+         ED6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=uhAnaYBibh71jLGyT/MAQHtwtB/q365HXNevkI1NHmw=;
-        b=PTKA+iieKavcEEqz9MeSC5k6F+0QB7l92WZiLAMMLWLuWIBI9dHDNbegn2+R7O6dQn
-         Ef0L9BdFcIKHEC8m+VhGswoNBYa2MUTgLvYYYHaqRjVNEZOELbm50GEjZa3tzPJYrYKt
-         +SHZX5JlSR1J7OE78l/pMi2QJn5rGE3w4zDsL1bXIQgwqO2aBGHI52zVbUiNaIKclchi
-         lmqs6EXZtggovc2ZMIDHNJJn/0xmdBr7Um0Hq1z5ad0bX+D12lY1MvejmoC/rSs1bSpc
-         WIEKysucL0/0heqstX3ztBdbN52aMJIO6LtYCEKbTiMkLUBXwa6HdQRRjO2rsJpC72Kh
-         7Gfw==
-X-Gm-Message-State: APjAAAVaH2+wAZ1qIchq5KoA+FnGxYib6FUVgLai1f8uq0EyzXFxEivF
-        nwthqbNuxGr4NT1eouPicAiXxA==
-X-Google-Smtp-Source: APXvYqyieuX93wS+pYXvIYep4RXo0jartYxK5/w/PiWzurnNWGvHpO1ykyoIhsad7KiPH8fJQYxXTA==
-X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr745812pjn.39.1581648185439;
-        Thu, 13 Feb 2020 18:43:05 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id t66sm4628079pgb.91.2020.02.13.18.43.04
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IfOGOUALQlq+vrdueHXqJ3n19JBEMpajwqi9a2b9mu8=;
+        b=PpTf1FMM+F4Ui7XQEjYWM2cyatQXB+x1M+c9JluBjlQnLd9dUS/rhz4I9h6qGfWeFL
+         Go1S3Uvf32+3hbSrviSPZYu7SGvtkcb+6/gDghqj4hwF7EeteSeP2ThPg23Qawmf/l/J
+         Qg9U4zeDyEOFkamxr1VNlMTx24SrbEIZ0jYHS50QdpleuqCrhDyCi4EN1Lpq/NJy495a
+         tskxAqHBZKdQRnTjORKkEQ+g97zd4JOQ+i1n2UwTJ2ae20g9V7hXQvZ7vaZKn/lS9acm
+         zV1PcvDp/BnMNjCcKQjPt52vHSF1XybJKSSE3h2+mVNWwUP2PSuIRGx0bxIpIPBn2rDG
+         +Flg==
+X-Gm-Message-State: APjAAAVMbh/MuT43I8BNNcGXqFKF1z1W/KhqM9KZFa+UtzqQr+JPzZ+N
+        0AP7VM/gwMw/6HTuUDH++wnSbA==
+X-Google-Smtp-Source: APXvYqzc7z7F2mutLbtYnNSrcHgDyzR6Kndh5uzcQOw/4lYqQQOoCwTXLIuti9aWh6t0kRET2849ow==
+X-Received: by 2002:a63:5903:: with SMTP id n3mr1140280pgb.25.1581648915905;
+        Thu, 13 Feb 2020 18:55:15 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f8sm4686023pfn.2.2020.02.13.18.55.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 18:43:05 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200211005059.1377279-9-bjorn.andersson@linaro.org>
-References: <20200211005059.1377279-1-bjorn.andersson@linaro.org> <20200211005059.1377279-9-bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 8/8] remoteproc: qcom: Introduce panic handler for PAS and ADSP
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Thu, 13 Feb 2020 18:55:15 -0800 (PST)
+Date:   Thu, 13 Feb 2020 18:55:12 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>
-Date:   Thu, 13 Feb 2020 18:43:04 -0800
-Message-ID: <158164818421.184098.5580195556346218701@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
+ and booted before kernel
+Message-ID: <20200214025512.GQ1443@yoga>
+References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
+ <20200211174205.22247-2-arnaud.pouliquen@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200211174205.22247-2-arnaud.pouliquen@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-02-10 16:50:59)
-> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qco=
-m_q6v5_adsp.c
-> index 19f784adf91c..822881534d37 100644
-> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
-> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-> @@ -291,12 +291,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64=
- da, int len)
->         return adsp->mem_region + offset;
->  }
-> =20
-> +static unsigned int adsp_panic(struct rproc *rproc)
-> +{
-> +       struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
+On Tue 11 Feb 09:42 PST 2020, Arnaud Pouliquen wrote:
 
-We don't need to cast from void. Please drop the cast.
+> From: Loic Pallardy <loic.pallardy@st.com>
+> 
+> Remote processor could boot independently or be loaded/started before
+> Linux kernel by bootloader or any firmware.
+> This patch introduces a new property in rproc core, named skip_fw_load,
+> to be able to allocate resources and sub-devices like vdev and to
+> synchronize with current state without loading firmware from file system.
 
-> +
-> +       return qcom_q6v5_panic(&adsp->q6v5);
-> +}
-> +
->  static const struct rproc_ops adsp_ops =3D {
->         .start =3D adsp_start,
->         .stop =3D adsp_stop,
->         .da_to_va =3D adsp_da_to_va,
->         .parse_fw =3D qcom_register_dump_segments,
->         .load =3D adsp_load,
-> +       .panic =3D adsp_panic,
->  };
-> =20
->  static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom=
-_q6v5_pas.c
-> index d20ce3c62256..ac38624fb14d 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -242,12 +242,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64=
- da, int len)
->         return adsp->mem_region + offset;
->  }
-> =20
-> +static unsigned int adsp_panic(struct rproc *rproc)
-> +{
-> +       struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
+This sentence describes the provided patch.
 
-Same.
+As I expressed in the earlier version, in order to support remoteprocs
+that doesn't need firmware loading, e.g. running from some ROM or
+dedicated flash storage etc, this patch looks really good.
 
-> +
-> +       return qcom_q6v5_panic(&adsp->q6v5);
-> +}
+> It is platform driver responsibility to implement the right firmware
+> load ops according to HW specificities.
+
+But this last sentence describes a remoteproc that indeed needs
+firmware and that the purpose of this patch is to work around the core's
+handling of the firmware.
+
+> 
+> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
+>  include/linux/remoteproc.h           |  2 +
+>  2 files changed, 55 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+[..]
+> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
+>  
+>  	dev_info(dev, "powering up %s\n", rproc->name);
+>  
+> -	/* load firmware */
+> -	ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> -	if (ret < 0) {
+> -		dev_err(dev, "request_firmware failed: %d\n", ret);
+> -		goto downref_rproc;
+> +	if (!rproc->skip_fw_load) {
+> +		/* load firmware */
+> +		ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> +		if (ret < 0) {
+> +			dev_err(dev, "request_firmware failed: %d\n", ret);
+> +			goto downref_rproc;
+> +		}
+> +	} else {
+> +		/*
+> +		 * Set firmware name pointer to null as remoteproc core is not
+> +		 * in charge of firmware loading
+> +		 */
+> +		kfree(rproc->firmware);
+> +		rproc->firmware = NULL;
+
+As stated before, I think it would be more appropriate to allow a
+remoteproc driver for hardware that shouldn't have firmware loaded to
+never set rproc->firmware.
+
+And I'm still curious how you're dealing with a crash or a restart on
+this remoteproc. Don't you need to reload your firmware in these
+circumstances? Do you perhaps have a remoteproc that's both
+"already_booted" and "skip_fw_load"?
+
+>  	}
+>  
+>  	ret = rproc_fw_boot(rproc, firmware_p);
+> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
+>  	/* create debugfs entries */
+>  	rproc_create_debug_dir(rproc);
+>  
+> -	/* if rproc is marked always-on, request it to boot */
+> -	if (rproc->auto_boot) {
+> +	if (rproc->skip_fw_load) {
+> +		/*
+> +		 * If rproc is marked already booted, no need to wait
+> +		 * for firmware.
+> +		 * Just handle associated resources and start sub devices
+> +		 */
+
+Again, this describes a system where the remoteproc is already booted,
+not a remoteproc that doesn't need firmware loading.
+
+Regards,
+Bjorn
