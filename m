@@ -2,473 +2,69 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B10C3B18F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 03:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1154C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 03:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AC5206ED
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 03:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EuOt3ynS"
+	by mail.kernel.org (Postfix) with ESMTP id A3E372187F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 03:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581651608;
+	bh=I0SXNiBQ/dripHcfy1hs98Y2yp5mekzCc8CsjZHMorE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q//KtUgGbLcpPhH9I0QdJoh8/stHRaboO4afgz/4TVaqV6wTz03dzoYPIeL6xbEr2
+	 QpvULTlmqzvg3p8RwVG9/uycP/lAo504q/a6WPOfc+fIdICq3/Cq15nIrXwx9PTVdD
+	 y3eWIIlzckk8eAAhArltIgNdyEHebDIDZe4p/CgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgBNDio (ORCPT
+        id S1728523AbgBNDkI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:38:44 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37471 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbgBNDio (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 22:38:44 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z12so4244274pgl.4
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 19:38:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YpT/0QhQ5nsh3HHNrOGD2UvWMmgP5kfJ75tWHECF+hQ=;
-        b=EuOt3ynST2GRsjr6KunmZnvaDlJbWORw0X7CA8ujXt1RZUTBeuwgCFiTirmdwwLFuH
-         a6Fa77AdeXkv3JtLuasw8tHAGWcZcJrvRRPYGENxkNVfSRdESNNyktxaEP1vdqQgE75U
-         gVL7G8WK73xJ7DvdBB0Yz1csYi+yemGZ05n4pXzzu0QTyJZfjx0DvoLXQysxzeGWyH9g
-         I41yEAPx4D6ngJCQ/vG5fvMjxrXxxfC5ALGP+tgesINBGwZVccvOIlVdpV30M578BI6z
-         Z7pYnyyzRZAuwtAwzn/RhdGUaKaAQzxQQfYtrAfLntm+glVSF2zpoL6ZbWHYX516GJe+
-         gm6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YpT/0QhQ5nsh3HHNrOGD2UvWMmgP5kfJ75tWHECF+hQ=;
-        b=iqJ4c3DK976pT7svyfxzeoDfNDXlEWPv4lVzjQ729kPETtT5AFMFo9s0g60mxR7otJ
-         09sEzuVvLutJKkK6ZNKK5XDRJk+RnXYHEaL4PzSl3PJ4rON5gFIyyAB5iLEfR9aTB+Nc
-         CUE5L2fffgGTmdj9L8g5a5aCRJ+fblPgAeMSMsAMLbAiZjiu7yAKF1lmLegqebT32rkt
-         UO9CkxpUsqd/t1jZX52BCQ6CrWRfzISdC2rY3uEJxBrDEZBD2YB3ec7TfRFMWe0aNfxT
-         eGYrvPeaVMvUsDisXWi1xSrF79/+cn5lzxQmTc8cLyGCYLyMnwyyKc7VYWZHkB5hRmkx
-         brtQ==
-X-Gm-Message-State: APjAAAV5WOG+t/bOdV78s35D4NY2HDM3kTJQLFBo0O+Ek8BY2JF5Kcwx
-        cL4i1p+Luh4TNdm8824MSJ6t+A==
-X-Google-Smtp-Source: APXvYqxBSvujR3F+pGx8H/PY2LNZESotzmA9i8KgD9q4nKG1oPxHD0C4C20mkmbpCn2h+e7zdT/9cQ==
-X-Received: by 2002:a62:878a:: with SMTP id i132mr1319208pfe.8.1581651521115;
-        Thu, 13 Feb 2020 19:38:41 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r11sm4799806pgi.9.2020.02.13.19.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 19:38:40 -0800 (PST)
-Date:   Thu, 13 Feb 2020 19:38:37 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v5 2/3] remoteproc: stm32: add support for co-processor
- booted before kernel
-Message-ID: <20200214033837.GR1443@yoga>
-References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
- <20200211174205.22247-3-arnaud.pouliquen@st.com>
+        Thu, 13 Feb 2020 22:40:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728052AbgBNDkI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Feb 2020 22:40:08 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1877D206ED;
+        Fri, 14 Feb 2020 03:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581651607;
+        bh=I0SXNiBQ/dripHcfy1hs98Y2yp5mekzCc8CsjZHMorE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wsBFkoUyopb2IzuOGEMS+azX9KztOzdQ1MH2po6DGegBegDhUCpGl01XzC2Fn0wJI
+         JtEhGZuV27oje32ofd3z8Xe4Tqsyu/eYjFSrqrI+N6Jzirw/lSjtAmjUAlS04Vyxlt
+         4nhdVGKlvPZYd+11f9gG9JDmo2la7hNvwX+qUhkg=
+Date:   Fri, 14 Feb 2020 11:40:02 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Yangbo Lu <yangbo.lu@nxp.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: ls1088a: support eMMC HS200 speed mode for
+ RDB board
+Message-ID: <20200214034001.GR22842@dragon>
+References: <20200204040928.32320-1-yangbo.lu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211174205.22247-3-arnaud.pouliquen@st.com>
+In-Reply-To: <20200204040928.32320-1-yangbo.lu@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 11 Feb 09:42 PST 2020, Arnaud Pouliquen wrote:
-
-> From: Fabien Dessenne <fabien.dessenne@st.com>
+On Tue, Feb 04, 2020 at 12:09:28PM +0800, Yangbo Lu wrote:
+> This patch is to add eMMC HS200 speed mode support on ls1088ardb
+> whose controller and peripheral circut support such capability.
+> And clocks dts property is needed for driver to get peripheral
+> clock value used for this speed mode.
 > 
-> Add support of a remote firmware, preloaded by the boot loader.
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 
-This again describes what Loic was describing, a remote processor with
-persistent or already loaded firmware, not an already booted remote
-processor.
-
-> Two backup registers are used to retrieve the state of the remote
-> firmware and to get the optional resource table address.
-> 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
->  drivers/remoteproc/stm32_rproc.c | 205 ++++++++++++++++++++++++++++---
->  1 file changed, 191 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> index a18f88044111..3d1e0774318c 100644
-> --- a/drivers/remoteproc/stm32_rproc.c
-> +++ b/drivers/remoteproc/stm32_rproc.c
-> @@ -38,6 +38,15 @@
->  #define STM32_MBX_VQ1_ID	1
->  #define STM32_MBX_SHUTDOWN	"shutdown"
->  
-> +#define RSC_TBL_SIZE		(1024)
-> +
-> +#define COPRO_STATE_OFF		0
-> +#define COPRO_STATE_INIT	1
-> +#define COPRO_STATE_CRUN	2
-> +#define COPRO_STATE_CSTOP	3
-> +#define COPRO_STATE_STANDBY	4
-> +#define COPRO_STATE_CRASH	5
-
-What does the states INIT and CSTOP represent and how would you deal
-with these and STANDBY/CRASH? Or will this only ever be OFF or CRUN?
-
-> +
->  struct stm32_syscon {
->  	struct regmap *map;
->  	u32 reg;
-> @@ -70,12 +79,14 @@ struct stm32_rproc {
->  	struct reset_control *rst;
->  	struct stm32_syscon hold_boot;
->  	struct stm32_syscon pdds;
-> +	struct stm32_syscon copro_state;
->  	int wdg_irq;
->  	u32 nb_rmems;
->  	struct stm32_rproc_mem *rmems;
->  	struct stm32_mbox mb[MBOX_NB_MBX];
->  	struct workqueue_struct *workqueue;
->  	bool secured_soc;
-> +	void __iomem *rsc_va;
->  };
->  
->  static int stm32_rproc_pa_to_da(struct rproc *rproc, phys_addr_t pa, u64 *da)
-> @@ -98,6 +109,28 @@ static int stm32_rproc_pa_to_da(struct rproc *rproc, phys_addr_t pa, u64 *da)
->  	return -EINVAL;
->  }
->  
-> +static int stm32_rproc_da_to_pa(struct rproc *rproc, u64 da, phys_addr_t *pa)
-> +{
-> +	unsigned int i;
-> +	struct stm32_rproc *ddata = rproc->priv;
-> +	struct stm32_rproc_mem *p_mem;
-> +
-> +	for (i = 0; i < ddata->nb_rmems; i++) {
-> +		p_mem = &ddata->rmems[i];
-> +
-> +		if (da < p_mem->dev_addr ||
-> +		    da >= p_mem->dev_addr + p_mem->size)
-> +			continue;
-> +		*pa = da - p_mem->dev_addr + p_mem->bus_addr;
-> +		dev_dbg(rproc->dev.parent, "da %llx to pa %#x\n", da, *pa);
-
-I think it would look better to move this and below prints to the
-caller (you print in the other cases there).
-
-> +		return 0;
-> +	}
-> +
-> +	dev_err(rproc->dev.parent, "can't translate da %llx\n", da);
-> +
-> +	return -EINVAL;
-> +}
-> +
->  static int stm32_rproc_mem_alloc(struct rproc *rproc,
->  				 struct rproc_mem_entry *mem)
->  {
-> @@ -127,6 +160,15 @@ static int stm32_rproc_mem_release(struct rproc *rproc,
->  	return 0;
->  }
->  
-> +static int stm32_rproc_elf_load_segments(struct rproc *rproc,
-> +					 const struct firmware *fw)
-> +{
-> +	if (!rproc->skip_fw_load)
-
-This indicates that the core's support for skip_fw_load isn't
-sufficient, let's ensure that the necessary core support is in place to
-make the drivers pretty.
-
-> +		return rproc_elf_load_segments(rproc, fw);
-> +
-> +	return 0;
-> +}
-> +
->  static int stm32_rproc_of_memory_translations(struct rproc *rproc)
->  {
->  	struct device *parent, *dev = rproc->dev.parent;
-> @@ -197,9 +239,34 @@ static int stm32_rproc_mbox_idx(struct rproc *rproc, const unsigned char *name)
->  static int stm32_rproc_elf_load_rsc_table(struct rproc *rproc,
->  					  const struct firmware *fw)
->  {
-> -	if (rproc_elf_load_rsc_table(rproc, fw))
-> -		dev_warn(&rproc->dev, "no resource table found for this firmware\n");
-> +	struct resource_table *table = NULL;
-> +	struct stm32_rproc *ddata = rproc->priv;
-> +
-> +	if (!rproc->skip_fw_load) {
-> +		if (rproc_elf_load_rsc_table(rproc, fw))
-> +			goto no_rsc_table;
-> +
-> +		return 0;
-> +	}
-> +
-> +	if (ddata->rsc_va) {
-> +		table = (struct resource_table *)ddata->rsc_va;
-> +		/* Assuming that the resource table fits in 1kB is fair */
-> +		rproc->cached_table = kmemdup(table, RSC_TBL_SIZE, GFP_KERNEL);
-
-If we properly support skipping the booting/setup phase of a remoteproc
-driver in the core, then I don't see a reason why you can't do this
-directly in your probe function.
-
-> +		if (!rproc->cached_table)
-> +			return -ENOMEM;
-> +
-> +		rproc->table_ptr = rproc->cached_table;
-> +		rproc->table_sz = RSC_TBL_SIZE;
-> +		return 0;
-> +	}
->  
-> +	rproc->cached_table = NULL;
-> +	rproc->table_ptr = NULL;
-> +	rproc->table_sz = 0;
-> +
-> +no_rsc_table:
-> +	dev_warn(&rproc->dev, "no resource table found for this firmware\n");
->  	return 0;
->  }
->  
-> @@ -259,6 +326,36 @@ static int stm32_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
->  	return stm32_rproc_elf_load_rsc_table(rproc, fw);
->  }
->  
-> +static struct resource_table *
-> +stm32_rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
-> +				      const struct firmware *fw)
-> +{
-> +	struct stm32_rproc *ddata = rproc->priv;
-> +
-> +	if (!rproc->skip_fw_load)
-> +		return rproc_elf_find_loaded_rsc_table(rproc, fw);
-> +
-> +	return (struct resource_table *)ddata->rsc_va;
-> +}
-> +
-> +static int stm32_rproc_elf_sanity_check(struct rproc *rproc,
-> +					const struct firmware *fw)
-> +{
-> +	if (!rproc->skip_fw_load)
-> +		return rproc_elf_sanity_check(rproc, fw);
-> +
-> +	return 0;
-> +}
-> +
-> +static u32 stm32_rproc_elf_get_boot_addr(struct rproc *rproc,
-> +					 const struct firmware *fw)
-> +{
-> +	if (!rproc->skip_fw_load)
-> +		return rproc_elf_get_boot_addr(rproc, fw);
-> +
-> +	return 0;
-> +}
-> +
->  static irqreturn_t stm32_rproc_wdg(int irq, void *data)
->  {
->  	struct rproc *rproc = data;
-> @@ -420,7 +517,7 @@ static int stm32_rproc_start(struct rproc *rproc)
->  	stm32_rproc_add_coredump_trace(rproc);
->  
->  	/* clear remote proc Deep Sleep */
-> -	if (ddata->pdds.map) {
-> +	if (ddata->pdds.map && !rproc->skip_fw_load) {
->  		err = regmap_update_bits(ddata->pdds.map, ddata->pdds.reg,
->  					 ddata->pdds.mask, 0);
->  		if (err) {
-> @@ -429,9 +526,15 @@ static int stm32_rproc_start(struct rproc *rproc)
->  		}
->  	}
->  
-> -	err = stm32_rproc_set_hold_boot(rproc, false);
-> -	if (err)
-> -		return err;
-> +	/*
-> +	 * If M4 previously started by bootloader, just guarantee holdboot
-> +	 * is set to catch any crash.
-> +	 */
-
-If the bootloader started the M4, why do we call start()?
-
-> +	if (!rproc->skip_fw_load) {
-> +		err = stm32_rproc_set_hold_boot(rproc, false);
-> +		if (err)
-> +			return err;
-> +	}
->  
->  	return stm32_rproc_set_hold_boot(rproc, true);
->  }
-> @@ -473,6 +576,21 @@ static int stm32_rproc_stop(struct rproc *rproc)
->  		}
->  	}
->  
-> +	/* update copro state to OFF */
-
-Please spell out "coprocessor"
-
-> +	if (ddata->copro_state.map) {
-> +		err = regmap_update_bits(ddata->copro_state.map,
-> +					 ddata->copro_state.reg,
-> +					 ddata->copro_state.mask,
-> +					 COPRO_STATE_OFF);
-> +		if (err) {
-> +			dev_err(&rproc->dev, "failed to set copro state\n");
-> +			return err;
-> +		}
-> +	}
-> +
-> +	/* Reset skip_fw_load state as we stop the co-processor */
-> +	rproc->skip_fw_load = false;
-
-Now that's a hack...
-
-> +
->  	return 0;
->  }
->  
-> @@ -502,11 +620,11 @@ static struct rproc_ops st_rproc_ops = {
->  	.start		= stm32_rproc_start,
->  	.stop		= stm32_rproc_stop,
->  	.kick		= stm32_rproc_kick,
-> -	.load		= rproc_elf_load_segments,
-> +	.load		= stm32_rproc_elf_load_segments,
->  	.parse_fw	= stm32_rproc_parse_fw,
-> -	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
-> -	.sanity_check	= rproc_elf_sanity_check,
-> -	.get_boot_addr	= rproc_elf_get_boot_addr,
-> +	.find_loaded_rsc_table = stm32_rproc_elf_find_loaded_rsc_table,
-> +	.sanity_check	= stm32_rproc_elf_sanity_check,
-> +	.get_boot_addr	= stm32_rproc_elf_get_boot_addr,
->  };
->  
->  static const struct of_device_id stm32_rproc_match[] = {
-> @@ -543,8 +661,10 @@ static int stm32_rproc_parse_dt(struct platform_device *pdev)
->  	struct device_node *np = dev->of_node;
->  	struct rproc *rproc = platform_get_drvdata(pdev);
->  	struct stm32_rproc *ddata = rproc->priv;
-> -	struct stm32_syscon tz;
-> -	unsigned int tzen;
-> +	struct stm32_syscon tz, rsctbl;
-> +	phys_addr_t rsc_pa;
-> +	u32 rsc_da;
-> +	unsigned int tzen, state;
->  	int err, irq;
->  
->  	irq = platform_get_irq(pdev, 0);
-> @@ -602,11 +722,62 @@ static int stm32_rproc_parse_dt(struct platform_device *pdev)
->  
->  	err = stm32_rproc_get_syscon(np, "st,syscfg-pdds", &ddata->pdds);
->  	if (err)
-> -		dev_warn(dev, "failed to get pdds\n");
-> +		dev_warn(dev, "pdds not supported\n");
-
-Unrelated change?
-
->  
->  	rproc->auto_boot = of_property_read_bool(np, "st,auto-boot");
->  
-> -	return stm32_rproc_of_memory_translations(rproc);
-> +	err = stm32_rproc_of_memory_translations(rproc);
-> +	if (err)
-> +		return err;
-> +
-> +	/* check if the coprocessor has been started from the bootloader */
-> +	err = stm32_rproc_get_syscon(np, "st,syscfg-copro-state",
-> +				     &ddata->copro_state);
-> +	if (err) {
-> +		/* no copro_state syscon (optional) */
-> +		dev_warn(dev, "copro_state not supported\n");
-> +		goto bail;
-
-return 0;
-
-> +	}
-> +
-> +	err = regmap_read(ddata->copro_state.map, ddata->copro_state.reg,
-> +			  &state);
-
-Per the name of this function I think it should parse the dt, not figure
-out if the processor is booted already. Please parse things here and
-then read out the state and handle the absence of the "optional"
-properties depending on the state.
-
-> +	if (err) {
-> +		dev_err(&rproc->dev, "failed to read copro state\n");
-> +		return err;
-> +	}
-> +
-> +	if (state == COPRO_STATE_CRUN) {
-> +		rproc->skip_fw_load = true;
-> +
-> +		if (stm32_rproc_get_syscon(np, "st,syscfg-rsc-tbl", &rsctbl)) {
-> +			/* no rsc table syscon (optional) */
-> +			dev_warn(dev, "rsc tbl syscon not supported\n");
-> +			goto bail;
-
-But you're still going to skip_fw_load?
-
-> +		}
-> +
-> +		err = regmap_read(rsctbl.map, rsctbl.reg, &rsc_da);
-> +		if (err) {
-> +			dev_err(&rproc->dev, "failed to read rsc tbl addr\n");
-> +			return err;
-> +		}
-> +		if (!rsc_da)
-> +			/* no rsc table */
-> +			goto bail;
-> +
-> +		err = stm32_rproc_da_to_pa(rproc, rsc_da, &rsc_pa);
-> +		if (err)
-> +			return err;
-> +
-> +		ddata->rsc_va = devm_ioremap_wc(dev, rsc_pa, RSC_TBL_SIZE);
-> +		if (IS_ERR_OR_NULL(ddata->rsc_va)) {
-
-Shouldn't this be just !ddata->rsc_va?
-
-> +			dev_err(dev, "Unable to map memory region: %pa+%zx\n",
-> +				&rsc_pa, RSC_TBL_SIZE);
-> +			ddata->rsc_va = NULL;
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +bail:
-> +	return 0;
->  }
->  
->  static int stm32_rproc_probe(struct platform_device *pdev)
-> @@ -640,6 +811,12 @@ static int stm32_rproc_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto free_wkq;
->  
-> +	if (!rproc->skip_fw_load) {
-
-So you read from the state map that the processor is not booted, why do
-you need to stop it?
-
-> +		ret = stm32_rproc_stop(rproc);
-> +		if (ret)
-> +			goto free_rproc;
-> +	}
-> +
->  	ret = stm32_rproc_request_mbox(rproc);
->  	if (ret)
->  		goto free_rproc;
-
-Thanks for including this patch in the series. After reading this patch
-I no longer think that patch 1 implements the proper support for what
-you need.
-
-The one piece I'm uncertain of is how are you dealing with the firmware
-during a restart or do you simply not support restarts without user
-space selecting new firmware?
-
-Regards,
-Bjorn
+Applied, thanks.
