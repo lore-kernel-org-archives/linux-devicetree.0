@@ -2,108 +2,79 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57677C3B195
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE62C3B18F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39965222C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64670222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581669167;
+	bh=Hw5z4C04dvgDdgjwZX9sbW+U/h9mRyaYkFTxfMoV9rI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QKU03WksqDgZR/Y/xLdgWM9oMs1MqYodsrAFmP0hiNbhS0VPdtCawgdkLtIXG97l7
+	 mpHu0KVg7kL2ZMvxnTMdqjTYlM5FIL1JFHWWGBcfQJBd4a+q3LIEh1UEb4Xfnf2Gpu
+	 VQT7yWopoYTRvhwS089R9Ks3N8qWF8M9fxotOOMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgBNI01 (ORCPT
+        id S1727965AbgBNIcn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:26:27 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:54184 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgBNI01 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 03:26:27 -0500
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id 2YSQ2200V5USYZQ01YSQXn; Fri, 14 Feb 2020 09:26:25 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j2WIq-0005Cj-Es; Fri, 14 Feb 2020 09:26:24 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1j2WIq-0001Hf-Bu; Fri, 14 Feb 2020 09:26:24 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Fri, 14 Feb 2020 03:32:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgBNIcm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:32:42 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4668420873;
+        Fri, 14 Feb 2020 08:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581669162;
+        bh=Hw5z4C04dvgDdgjwZX9sbW+U/h9mRyaYkFTxfMoV9rI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rGuXm0DAYYdFvoXOA59Sy1pGJdtM2VWWJPQwq+ZXZhkqeJCSUmUiYnVxDG2bCv1h5
+         9iiG9o48fbxLQPKTUZhrPryC3Xtz3JWednyhkYIITa2OpLJALHu8pMMqSL/6Rn2ueF
+         LfiTPsMGnSgCD9GXsdn38883h+c52sPH58FIwlaY=
+Date:   Fri, 14 Feb 2020 16:32:33 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5] dt-bindings: display: renesas: du: Document optional reset properties
-Date:   Fri, 14 Feb 2020 09:26:23 +0100
-Message-Id: <20200214082623.4893-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] ARM: dts: imx7-colibri: fix muxing of usbc_det pin
+Message-ID: <20200214083232.GA25543@dragon>
+References: <20200204111151.3426090-1-oleksandr.suvorov@toradex.com>
+ <20200204111151.3426090-3-oleksandr.suvorov@toradex.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204111151.3426090-3-oleksandr.suvorov@toradex.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the optional properties for describing module resets, to
-support resetting display channels on R-Car Gen2 and Gen3.
+On Tue, Feb 04, 2020 at 01:11:47PM +0200, Oleksandr Suvorov wrote:
+> USB_C_DET pin shouldn't be in ethernet group.
+> 
+> Creating a separate group allows one to use this pin
+> as an USB ID pin.
+> 
+> Fixes: b326629f25b7 ("ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D suppor")
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Who's taking this kind of patches?
-V1 was submmitted in March 2017.
-
-v5:
-  - Rebase on top of renesas,cmms and renesas,vsps patches,
-
-v4:
-  - Use "All but R8A7779" instead of "R8A779[0123456]", to reduce future
-    churn,
-
-v3:
-  - Add Acked-by,
-  - Drop LVDS resets, as LVDS is now covered by a separate binding,
-  - Update the example.
-
-v2:
-  - s/phandles/phandle/.
----
- .../devicetree/bindings/display/renesas,du.txt         | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-index eb4ae41fe41f83c7..51cd4d1627703a15 100644
---- a/Documentation/devicetree/bindings/display/renesas,du.txt
-+++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-@@ -50,6 +50,14 @@ Required Properties:
-     VSP instance that serves the DU channel, and the channel index identifies
-     the LIF instance in that VSP.
- 
-+Optional properties:
-+  - resets: A list of phandle + reset-specifier pairs, one for each entry in
-+    the reset-names property.
-+  - reset-names: Names of the resets. This property is model-dependent.
-+    - All but R8A7779 use one reset for a group of one or more successive
-+      channels. The resets must be named "du.x" with "x" being the numerical
-+      index of the lowest channel in the group.
-+
- Required nodes:
- 
- The connections to the DU output video ports are modeled using the OF graph
-@@ -96,6 +104,8 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
- 			 <&cpg CPG_MOD 722>,
- 			 <&cpg CPG_MOD 721>;
- 		clock-names = "du.0", "du.1", "du.2", "du.3";
-+		resets = <&cpg 724>, <&cpg 722>;
-+		reset-names = "du.0", "du.2";
- 		renesas,cmms = <&cmm0>, <&cmm1>, <&cmm2>, <&cmm3>;
- 		renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
- 
--- 
-2.17.1
-
+Applied, thanks.
