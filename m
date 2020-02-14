@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E323C3B1B5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A5FC3B1B7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC742187F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A121D2187F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703980;
-	bh=itLd9JKqF/R9iI9reR0IzU5iyER+GtE4XjmRdA9VPJ8=;
+	s=default; t=1581703990;
+	bh=eBLejqYBNJZKgtBkhP+tpe58QdQ8fptkUqSNNoPg7is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KzJG/yAx8BpKKA59QgfkbVazMIGTIv4WXxl1Nw6+EqjhgDhE2mt5pLyK9CJNCs68b
-	 7/joZ1YaN3yAIpX9pWo6qTi6g3+tIncgH4ZEMyTUDI9124geto+4CbLSkTvyxHCOZs
-	 ZwwrRDrFSUZEYYdBp/Qbw+N8XwoCQQcFsLudIGLk=
+	b=r+aPnf6Mrh+BQE5r/RP7l3HOfGlA9lRTj8RSvgX+Qe5TJHHjZuLu8DgEjAEegYYiD
+	 zCfqLqLGSlrcZuVw1sW910Wbrn+dnkuVoBUtetx41eqLse3Pm3DUZFi5R/bLt5cVnW
+	 BrgQhsCLFlkzeIVikcq1MSGKe9W/mRVKBVs9jhvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbgBNPxA (ORCPT
+        id S1731086AbgBNPwy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:53:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60202 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:52:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731105AbgBNPxA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:00 -0500
+        id S1731083AbgBNPwy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDF4222C4;
-        Fri, 14 Feb 2020 15:52:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A097224681;
+        Fri, 14 Feb 2020 15:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695579;
-        bh=itLd9JKqF/R9iI9reR0IzU5iyER+GtE4XjmRdA9VPJ8=;
+        s=default; t=1581695573;
+        bh=eBLejqYBNJZKgtBkhP+tpe58QdQ8fptkUqSNNoPg7is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LuoWoXiFWyd4DkrtejxB359Bn8zEuQQuiq/f6cO4H100PmIpJWjm/FinhlzqpZWsr
-         AV1yJFLLiK8cRYyWiiyoRlp0HHJs7FpL9cbU8VT52oimQfozmqr0zJLmoDlMD2/Ezr
-         c0wQaJho+YYdoaORh0XIcv8hM+tjt6ZyRYN1uB3s=
+        b=H29JSwIxlfaC3Wgc1yyCpzZCSGwRuQ7CFUwnRZK6VcIx0E95VI1bImL/A71ZUjA4h
+         yXMMKOjrOx6B9kFvlIlZ540wscovugFjQSV8O+4ZHjz+5e3tIHRz+qN7lzCkjARzRL
+         MTPxbrZO6u1F7SimU1zhxnxfPQOrf8hegb3Es8cs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 189/542] arm64: dts: qcom: msm8998: Fix tcsr syscon size
-Date:   Fri, 14 Feb 2020 10:43:01 -0500
-Message-Id: <20200214154854.6746-189-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 184/542] arm64: dts: allwinner: H5: Add PMU node
+Date:   Fri, 14 Feb 2020 10:42:56 -0500
+Message-Id: <20200214154854.6746-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,36 +60,72 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 05caa5bf9cab9983dd7a50428c46b7e617ba20d6 ]
+[ Upstream commit c35a516a46187c8eeb7a56c64505ec6f7e22a0c7 ]
 
-The tcsr syscon region is really 0x40000 in size.  We need access to the
-full region so that we can access the axi resets when managing the
-modem subsystem.
+Add the Performance Monitoring Unit (PMU) device tree node to the H5
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core.
+As with the A64, the interrupt numbers from the manual were wrong (off
+by 4), the actual SPI IDs have been gathered in U-Boot, and were
+verified with perf in Linux.
 
-Fixes: c7833949564e ("arm64: dts: qcom: msm8998: Add smem related nodes")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lore.kernel.org/r/20191107045948.4341-1-jeffrey.l.hugo@gmail.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested with perf record and taskset on an OrangePi PC2.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index fc7838ea9a010..385b46686194a 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -987,7 +987,7 @@
- 
- 		tcsr_mutex_regs: syscon@1f40000 {
- 			compatible = "syscon";
--			reg = <0x01f40000 0x20000>;
-+			reg = <0x01f40000 0x40000>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index e92c4de5bf3b4..7c775a918a4e7 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -54,21 +54,21 @@
+ 			enable-method = "psci";
  		};
  
- 		tlmm: pinctrl@3400000 {
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <3>;
+@@ -76,6 +76,16 @@
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a53-pmu",
++			     "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
 2.20.1
 
