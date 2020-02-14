@@ -2,117 +2,110 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93243C3B1BF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B413C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED9A2168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60CF2187F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="HyTL905J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xf2T8kUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388367AbgBNTYy (ORCPT
+        id S2388456AbgBNT1Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:24:54 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:30923 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387596AbgBNTYy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 14:24:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581708292;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=e3Rzzpo7xk9J4ECQBBols/BtjcoyLgBQyjDXgkqJ5t4=;
-        b=HyTL905JWDg18FcLUhGZaD6IAYx04+ukXS4utjVBqPnjC+/y79E4ifypPUQuC9Bx+J
-        70AhaGRU6tBq7262beAjkmzKV0nEsRlMOOL4WgsZfylOHSLC3hj1wemzoj3vcmX0PPMT
-        Z6M9I3s7ymOR1k2zv0mVcmEca3yrYb1iyIVGMjh8XuzoI26NkVceyQXM2Xim92CAKi6t
-        PBavVX7si71PWyZ8yeb5/hp/dxdY4M6tbOK837ixoa5qrj+VTdi2+wlFLlKwXq8LYQ5R
-        bE8/TKuudjGDy/h/7ZA8nJL7gW8obHPn6oxFcxIPayh8TPds7YLQHr9dgjWSZ7MKJdUF
-        wFpw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PuwDOspHA="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1EJOlGBd
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 14 Feb 2020 20:24:47 +0100 (CET)
-Content-Type: text/plain; charset=iso-8859-1
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v2 01/12] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1581707177.3.6@crapouillou.net>
-Date:   Fri, 14 Feb 2020 20:24:45 +0100
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B5B39A33-B8C4-4503-91CB-BFB344558B5D@goldelico.com>
-References: <cover.1581696624.git.hns@goldelico.com> <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com> <1581707177.3.6@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 14 Feb 2020 14:27:16 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33249 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387576AbgBNT1Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 14:27:16 -0500
+Received: by mail-qt1-f193.google.com with SMTP id d5so7751032qto.0;
+        Fri, 14 Feb 2020 11:27:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rLdqNzAySRjmMgZB/PpbO12duUi9dVI2RpZBkw4lPuY=;
+        b=Xf2T8kUvWsfjQ/Up+Poojpe8L31XmtsOqhwlO2wut9m/gKzA9/QE50fQF3Tt0oo+aE
+         UBBLRLEMhUe5LsimhidkJi0bRIOfuOXP3cIkcLwMzPFNI3MFPArhJLo0DSLHGwZwiUF7
+         D7rmFgVzNAzt683d7R9vhs8Cv47yZfUL9qvOT34xE/d6+2I5Kf42td2lX+AlTR6snNkA
+         YV64hqetBncpWkEe2mSimUbdixXtVLcmAuC1T3ydm3Y0fYrSs4FfcdZVxijy74Lii5aR
+         gGJoPsMhpzjn//hXqEqT+4rJxInmDcsU9gYYgnJgaQghj58ZYHeI+EvZqt5GPMILD7HE
+         1ztg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rLdqNzAySRjmMgZB/PpbO12duUi9dVI2RpZBkw4lPuY=;
+        b=sqyepniYwlXN3O9IpxPPVDy0S5nIrtoNHlwzOL+nstxHfgHqRDw5J+/D6cLFW26q3F
+         CSQghXKtxxhCsRXG2k4T64b6hWnLtjLgPF+9X5KKgwEJyD9oJ55Mp7JIWbiO+G+aIZtL
+         Gdd59ON0U/0Oc17beEIF0kJXPFQgKEUIdXd5LfZmeFlEiiu7AnCRB5Sn9u2mRoOkHYGD
+         cbTEIJOM50QYWIskRXnPgHjz1K/p2esuU1yyulNFi+h1EECXZ7nSuoUNao74Ui1CQvh3
+         SwLLydwwJOzZ29SWAso58ND3JICPcv/bwu59obeXODKgR5pk3S0+7IDYe42/eUV5BdVK
+         JXKA==
+X-Gm-Message-State: APjAAAV6mghPMgJCNy/mwrz4FUEkEG2vRWbD9jbokaxX1X48Pi8ucQq6
+        y5EdiO2beQUOQaBjMv3RJ7A=
+X-Google-Smtp-Source: APXvYqynfs5kAav/PDO8R4gLse736bHsst/9DYgxRCWQaKraQ6rdoxAnUwHgh62yxQr95Xrv7YHoQQ==
+X-Received: by 2002:aed:2284:: with SMTP id p4mr3749213qtc.329.1581708434667;
+        Fri, 14 Feb 2020 11:27:14 -0800 (PST)
+Received: from L-E5450.nxp.com ([177.221.114.206])
+        by smtp.gmail.com with ESMTPSA id o55sm4009953qtf.46.2020.02.14.11.27.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 11:27:13 -0800 (PST)
+From:   Alifer Moraes <alifer.wsdm@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        peng.fan@nxp.com, leonard.crestez@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alifer Moraes <alifer.wsdm@gmail.com>
+Subject: [PATCH 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for fec1
+Date:   Fri, 14 Feb 2020 16:27:49 -0300
+Message-Id: <20200214192750.20845-1-alifer.wsdm@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+imx8mm-evk has a GPIO connected to AR8031 Ethernet PHY's reset pin.
 
-> Am 14.02.2020 um 20:06 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
-> Please rebase this patch on top of drm-misc-next and send it apart - =
-it should go through the DRM tree.
->=20
->=20
-> Le ven., f=E9vr. 14, 2020 at 17:10, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> Add MODULE_DEVICE_TABLE so that the driver can load by
->> matching the device tree if compiled as module.
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
->> 1 file changed, 2 insertions(+)
->> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c =
-b/drivers/gpu/drm/ingenic/ingenic-drm.c
->> index 6d47ef7b148c..d8617096dd8e 100644
->> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
->> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
->> @@ -844,6 +844,8 @@ static const struct of_device_id =
-ingenic_drm_of_match[] =3D {
->> 	{ /* sentinel */ },
->> };
->> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
->=20
-> Also please remove the blank line above MODULE_DEVICE_TABLE.
->=20
-> Cheers,
-> -Paul
+Describe it in the device tree, following phy's datasheet reset duration of 10ms.
 
-Ok.
+Tested booting via NFS.
 
-BR and thanks,
-Nikolaus
+Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
+---
 
->=20
->> +
->> static struct platform_driver ingenic_drm_driver =3D {
->> 	.driver =3D {
->> 		.name =3D "ingenic-drm",
->> --
->> 2.23.0
->=20
->=20
+Originally sent by Peng Fan <peng.fan@nxp.com>
+
+Back then CONFIG_AT803X_PHY was set as "m" in defconfig so the boot process hung
+at nfs boot, now that CONFIG_AT803X_PHY is set as "y" by default, the patch works
+correctly.
+
+Peng's original patch missed to pass the phy-reset-duration, according to the AR8031
+datasheet the reset GPIO needs to stay low for 10ms.
+
+Original thread: https://lkml.org/lkml/2019/10/21/347
+
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index 28ab17a277bb..11903ca86f0e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -82,6 +82,8 @@
+ 	pinctrl-0 = <&pinctrl_fec1>;
+ 	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy0>;
++	phy-reset-gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
++	phy-reset-duration = <10>;
+ 	fsl,magic-packet;
+ 	status = "okay";
+ 
+-- 
+2.17.1
 
