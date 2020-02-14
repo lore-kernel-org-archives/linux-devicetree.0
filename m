@@ -2,146 +2,75 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB9BC3B18F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC58C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9458A2187F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d69kMwpS"
+	by mail.kernel.org (Postfix) with ESMTP id D52DB222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581661901;
+	bh=/NBVVHpbeNDiTGZuyEEPBdk5MUFXngSlWT07WmFJcY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qMm5W7kW4c29zmIFrqWP9RH5jkhJ9cYvrEH4wOmbGlJowUCNuP46h18NTLzJFdMdH
+	 Y5a7SlN1wasnvPD5Ff86nMHLJLXpZnbSF2NrBFSLZyqxibbYj9aRE+OMGgZ674TjzQ
+	 L94SP4l6FILyAbaXREmqWZ3M3J71bUKjNLZn494E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725845AbgBNG05 (ORCPT
+        id S1728754AbgBNGbl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 01:26:57 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33858 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbgBNG05 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 01:26:57 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j7so3351711plt.1
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 22:26:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZfNOx9egLbAQLBCqcGowPLvDDsbitGpqyuG8vdVwiMo=;
-        b=d69kMwpSmTtFJP/1FqRQEGClRQOMAiQIW8PkbgXbrVM2erzoClA8jtUS1mkxvgC1+1
-         pxXWqlW7CeDMLzCHYj0G07DGRgpmJlmj+nkvV4+k6mKCcoRBjhmn+isK6pR/BjXXrG3L
-         JWqrVKbRFTtyteHeIgYUFXW5X5evlBbNFrHdY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZfNOx9egLbAQLBCqcGowPLvDDsbitGpqyuG8vdVwiMo=;
-        b=WN3gEknzg4NtL/l8Ul6qMBReOeqfDT453cE3DMgFTqKyJ5l6msR4OMz5GEMsNzhNFR
-         f0qWjKd5ZvTuY973e3ezHRRVfrxyrQVbMnUSyS2Ft6MOb8ug9ZeGWlD39MC+G05X44EW
-         3v/96vZbh1S0tTrRoTQ2zjyYZ1JI8bsc1EaxO3jhfnGaJiKNiJsweImbNqmI9VckfInZ
-         +4kSim1eCGLQLI74vtkppCGQ6wNC3716UuJwrMtuAX/pDn5rRUvjINWvLik5/Le/Ji9M
-         iZWIRVDm19LRZaVrB8jVIMIQBrDFAeLxkw3MiXxPeW3f89MV22uDCC3etAgvkcTe5sDg
-         XpKg==
-X-Gm-Message-State: APjAAAUWEM94FASsTQetYO3LLx9GGccVrcEIhZKlhJnmxBtt2OKI8TQZ
-        vquLsYGwP2xOPH4BBpVdPmwKE9ZRASTFbQ==
-X-Google-Smtp-Source: APXvYqyvc9phth6DVXD9Fm2fhndiDgJIEAfiLXapVfRf8xXPKrjsq6pDOxmhci9u/EHubDa0/Y0eVw==
-X-Received: by 2002:a17:902:7046:: with SMTP id h6mr1650483plt.231.1581661616431;
-        Thu, 13 Feb 2020 22:26:56 -0800 (PST)
-Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
-        by smtp.gmail.com with ESMTPSA id e16sm5233151pgk.77.2020.02.13.22.26.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2020 22:26:56 -0800 (PST)
-From:   Evan Benn <evanbenn@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     jwerner@chromium.org, Evan Benn <evanbenn@chromium.org>,
-        devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Fri, 14 Feb 2020 01:31:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgBNGbl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 01:31:41 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C9C2187F;
+        Fri, 14 Feb 2020 06:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581661900;
+        bh=/NBVVHpbeNDiTGZuyEEPBdk5MUFXngSlWT07WmFJcY4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vbbhoU1fGRuk3cY3GjifI5Mo6EWdc1hi3CW77kDmBd4Uyh5kEvGodfnK5hzXj6nHO
+         M5/nTYri1nMe8iQIIGePX2TIleEsxqkeE1Ov3Obt2I5wCJSlK4acM2TVsrjn2JOgBT
+         iPbQRZF4FdTLTeNpSBqwkFOASe9MfxKxHh37Xr/Y=
+Date:   Fri, 14 Feb 2020 14:31:34 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog arm,smc-wdt compatible
-Date:   Fri, 14 Feb 2020 17:26:36 +1100
-Message-Id: <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200214062637.216209-1-evanbenn@chromium.org>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] ARM: dts: imx7-colibri: add alias for RTC
+Message-ID: <20200214063132.GA25455@dragon>
+References: <20200204111151.3426090-1-oleksandr.suvorov@toradex.com>
+ <20200204111151.3426090-2-oleksandr.suvorov@toradex.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204111151.3426090-2-oleksandr.suvorov@toradex.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This watchdog can be used on ARM systems with a Secure
-Monitor firmware to forward watchdog operations to
-firmware via a Secure Monitor Call.
+On Tue, Feb 04, 2020 at 01:11:46PM +0200, Oleksandr Suvorov wrote:
+> Make sure that the priority of the RTCs is defined.
+> 
+> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-Signed-off-by: Evan Benn <evanbenn@chromium.org>
----
-
- .../bindings/watchdog/arm,smc-wdt.yaml        | 30 +++++++++++++++++++
- MAINTAINERS                                   |  6 ++++
- 2 files changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml
-
-diff --git a/Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml
-new file mode 100644
-index 000000000000..5170225b0c98
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/arm,smc-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM Secure Monitor Call based watchdog
-+
-+allOf:
-+  - $ref: "watchdog.yaml#"
-+
-+maintainers:
-+  - Julius Werner <jwerner@chromium.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - arm,smc-wdt
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    watchdog {
-+      compatible = "arm,smc-wdt";
-+      timeout-sec = <15>;
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e48ab79879ac..5c45536e1177 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1421,6 +1421,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
- F:	drivers/irqchip/irq-al-fic.c
- 
-+ARM SMC WATCHDOG DRIVER
-+M:	Julius Werner <jwerner@chromium.org>
-+R:	Evan Benn <evanbenn@chromium.org>
-+S:	Maintained
-+F:	devicetree/bindings/watchdog/arm,smc-wdt.yaml
-+
- ARM SMMU DRIVERS
- M:	Will Deacon <will@kernel.org>
- R:	Robin Murphy <robin.murphy@arm.com>
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+Applied, thanks.
