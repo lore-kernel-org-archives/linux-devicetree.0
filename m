@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AA6C3B1A6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1493EC3B1AB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66165206CC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D744C206CC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oWm214Xc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="UGS4CVZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391630AbgBNQKs (ORCPT
+        id S2391615AbgBNQKo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:10:48 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:28077 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391581AbgBNQKr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 11:10:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696639;
+        Fri, 14 Feb 2020 11:10:44 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:34182 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391571AbgBNQKn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 11:10:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696638;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=tc4xhvDjnfG1jLVOTwuj+X2pkCzFOljdsKLqfh9DWVg=;
-        b=oWm214Xciqg4X4MwO7KqdW3b7GCDSw3THNLui/B9XqlsU3E12OOGgJzABsaYIs/wGI
-        eq/fw/hTAgisEnWxo3wfV2SgeEsw4c0KSE1fPuivG4Lt6TlTqD7+LKmdz1yhvi25IuLn
-        bJGMBg8d1qDRXMtQj3+O06ZjFgpwS/1A3TVuOjM5ZwJKOrimjknpItQXmTc2l3wFA+DW
-        P45AVTjtnTWdyU1izvQ6TkE81bCEfekHQfBhoVQa2kr3riLZAjqjbtlzwfCAVWddwFaS
-        s9NJN/JQ+sOGhgjsy8Zpy+fjmpDqITu6sZr39NqtWV02Nkgpbre/40Hh08aXm3Bl2oIA
-        cXDA==
+        bh=RzFvreAROfD8+Za4+h0pzFXVuRYDasxapojPV71TMVg=;
+        b=UGS4CVZespYZ0uCisY3LWO0PZnLe7Ngh77CmMpZl+Jsf4FnKJuFo9/bsmiIFLTPyQd
+        lZ3cm25jJ+vaFbsFZSenKS9WlMsfrjtMDB643pxCLxGF1azQ+MIcXyBdrmts5fgNeksl
+        /tiOEEUiXyc/QJk8LOJ5/ibhIW5Eq9ke7dQGdHoLqchMOUE9GHjyT2mG6LSdkbhkUd+b
+        YcSdIjvjW6ScmyL7KETKTQLppMUGtk7ja8jk9lVbfAyq8auBgb+8ZiJcF4xCHC0GWShf
+        Zc4OlgxwqnTjwFv4eQPEhm97FeFPcUKVu4vaav4uLbAzEi+XXJgys6lKdgmfW48sG3GF
+        FaUg==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7OMfsfQx3"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1EGASFkz
+        with ESMTPSA id U06217w1EGARFkx
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 14 Feb 2020 17:10:28 +0100 (CET)
+        Fri, 14 Feb 2020 17:10:27 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Boddie <paul@boddie.org.uk>,
         Paul Cercueil <paul@crapouillou.net>,
@@ -57,9 +57,9 @@ To:     Paul Boddie <paul@boddie.org.uk>,
 Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: [PATCH v2 04/12] MIPS: CI20: defconfig: compile leds-gpio driver into the kernel and configure for LED triggers
-Date:   Fri, 14 Feb 2020 17:10:16 +0100
-Message-Id: <4a4e7f7a7d3cbb7a65134091e9f64aab6ff10482.1581696624.git.hns@goldelico.com>
+Subject: [PATCH v2 02/12] MIPS: DTS: jz4780: add #includes for irq.h and gpio.h
+Date:   Fri, 14 Feb 2020 17:10:14 +0100
+Message-Id: <9d1791de4af5fb669441b3b7c1cf3f7515490d67.1581696624.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581696624.git.hns@goldelico.com>
 References: <cover.1581696624.git.hns@goldelico.com>
@@ -70,35 +70,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DTS has been augmented to add some gpio-leds. We need the leds-gpio driver
-and enable the triggers.
+The constants from irq.h and gpio.h can be used in the
+jz4780.dtsi and derived DTS like ci20.dts.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/configs/ci20_defconfig | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index e0d3c9d4c2ae..30a47a7a2994 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -167,3 +167,16 @@ CONFIG_STACKTRACE=y
- # CONFIG_FTRACE is not set
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon console=ttyS4,115200 clk_ignore_unused"
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_TRIGGERS=y
-+CONFIG_LEDS_TRIGGER_MTD=y
-+CONFIG_LEDS_TRIGGER_TIMER=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-+CONFIG_LEDS_TRIGGER_BACKLIGHT=m
-+CONFIG_LEDS_TRIGGER_CPU=y
-+CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
-+CONFIG_LEDS_TRIGGER_TRANSIENT=y
-+CONFIG_LEDS_TRIGGER_CAMERA=m
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index f928329b034b..112a24deff71 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/jz4780-cgu.h>
+ #include <dt-bindings/dma/jz4780-dma.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
+ 
+ / {
+ 	#address-cells = <1>;
 -- 
 2.23.0
 
