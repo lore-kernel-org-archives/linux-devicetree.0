@@ -2,99 +2,139 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED8DC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621DDC3B18F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 927DD222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581682308;
-	bh=Yn4F4SdSsd+XSkCw+g3LZFq63exK1dyPDTlS0HWvtvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WN0ze81hLZTTOiGhDmmhJU5EVlgjIPGM6EN7g45Optb7QYCNTvVuhJNxX2bpslnbW
-	 A8OZbdXmnQqS0Y9mSTc+5j30QgPzirynq8q4iRgTsQJGand61f21tys4YARWg42mOg
-	 9yde1f2sVhQev1kzaND5sf6CL0dCW/wICOGMu3bM=
+	by mail.kernel.org (Postfix) with ESMTP id 055532086A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgBNMLs (ORCPT
+        id S1728595AbgBNMTe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:11:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:60558 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728864AbgBNMLr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:11:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 767FA1FB;
-        Fri, 14 Feb 2020 04:11:47 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE0063F68F;
-        Fri, 14 Feb 2020 04:11:46 -0800 (PST)
-Date:   Fri, 14 Feb 2020 12:11:45 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-Message-ID: <20200214121145.GF4827@sirena.org.uk>
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
+        Fri, 14 Feb 2020 07:19:34 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44828 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbgBNMTe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 07:19:34 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5E10528D7ED
+Subject: Re: [PATCH v7 01/13] dt-bindings: arm: move mmsys description to
+ display
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        CK Hu <ck.hu@mediatek.com>, matthias.bgg@kernel.org
+Cc:     mark.rutland@arm.com, airlied@linux.ie, mturquette@baylibre.com,
+        dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com,
+        ulrich.hecht+renesas@gmail.com, linux-clk@vger.kernel.org,
+        drinkcat@chromium.org, Weiyi Lu <weiyi.lu@mediatek.com>,
+        wens@csie.org, mtk01761 <wendell.lin@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>, frank-w@public-files.de,
+        sean.wang@mediatek.com, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <mbrugger@suse.com>, sboyd@kernel.org,
+        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
+        p.zabel@pengutronix.de
+References: <20200213201953.15268-1-matthias.bgg@kernel.org>
+ <20200213201953.15268-2-matthias.bgg@kernel.org>
+ <1581662577.17949.3.camel@mtksdaap41>
+ <2bda2dd7-9ed2-8b4c-897e-e585ccfa1fa5@gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <022e8f64-b414-67a5-722e-bdd7c00230ff@collabora.com>
+Date:   Fri, 14 Feb 2020 13:19:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
-Content-Disposition: inline
-In-Reply-To: <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
-X-Cookie: Shipping not included.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2bda2dd7-9ed2-8b4c-897e-e585ccfa1fa5@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi CK,
 
---Zi0sgQQBxRFxMTsj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 14/2/20 11:01, Matthias Brugger wrote:
+> 
+> 
+> On 14/02/2020 07:42, CK Hu wrote:
+>> Hi, Matthias:
+>>
+>> On Thu, 2020-02-13 at 21:19 +0100, matthias.bgg@kernel.org wrote:
+>>> From: Matthias Brugger <mbrugger@suse.com>
+>>>
+>>> The mmsys block provides registers and clocks for the display
+>>> subsystem. The binding description should therefore live together with
+>>> the rest of the display descriptions. Move it to display/mediatek.
+>>>
+>>
+>> Yes, for the upstreamed driver, only display (DRM) use mmsys clock. For
+>> some MDP patches [1] in progress, MDP also use mmsys clock. So we just
+>> consider what's upstreamed now?
+> 
 
-On Fri, Feb 14, 2020 at 01:02:22PM +0100, Simon Goldschmidt wrote:
-> On Fri, Feb 14, 2020 at 12:46 PM Ramuthevar,Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+Let me jump into the discussion, and sorry if my question is silly because I'm
+just starting to look at this code.
 
-> > Add support for the Cadence QSPI controller. This controller is
-> > present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
-> > This driver has been tested on the Intel LGM SoCs.
+IMO we should consider all the cases to find a proper fix on all this, and if
+MDP uses also mmsys clocks this approach will not work. I think the main problem
+here and the big question is what exactly is the MMSYS block, is an independent
+clock controller that provides clocks to DRM and other blocks? or is hardly tied
+to the DRM block in some way?
 
-> This is v9 and still, none of the altera maintainers are on CC?
-> How will it be ensured that this doesn't break altera if it is merged?
+Could you give us a block schema on how the things are interconnected?
 
-Given that this is a new driver I'd be very surprised if it broke other
-users?  I can imagine it might not work for them and it would definitely
-be much better to get their review but it shouldn't be any worse than
-the current lack of support.
+If is an independent clock controller I think there was a mistake when the first
+drm driver was pushed by using the compatible = "mediatek,mt8173-mmsys" as id
+for that driver.
 
---Zi0sgQQBxRFxMTsj
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+ Enric
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GjoAACgkQJNaLcl1U
-h9DFowf/dUPgpqg67TDIxYiZvaUkTs4lN9TTlwny0tuP3jzOHCtCJKrCCH+4T1M3
-WMPmx9MBpmgvd6ELTmOVYJDIOzmXEDYvqadQWhIoRdVlBakgeF89sPjs2P0VWiJk
-1QqNtnf9BJxhFAsGsSRh+pR1PtKG8POJ3TCjcexvAYV3byEeG6/+aTP3/Sb7s2s1
-YfvHfS8PVQoXhMAddcqO1BF8WA69chxlJjheCHMYflTX/331JqhO0wRyZ82qIx0P
-lPh1e6BCzlui3pydHcFJDBxyVxeNj7mEYG2QA59SQH1SbzmKnRx9gNFeywncgpHt
-QeSbR4+jGK2zIzfI9cH6vFGu48znRw==
-=RGMb
------END PGP SIGNATURE-----
-
---Zi0sgQQBxRFxMTsj--
+> I'm not sure if I understand you correctly. Are you proposing to keep the
+> binding description in arm/mediatek?
+> 
+> Regards,
+> Matthias
+> 
+>>
+>> [1] https://patchwork.kernel.org/patch/11140747/
+>>
+>> Regards,
+>> CK
+>>
+>>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+>>>
+>>> ---
+>>>
+>>> Changes in v7:
+>>> - move the binding description
+>>>
+>>> Changes in v6: None
+>>> Changes in v5: None
+>>> Changes in v4: None
+>>> Changes in v3: None
+>>> Changes in v2: None
+>>>
+>>>  .../bindings/{arm => display}/mediatek/mediatek,mmsys.txt         | 0
+>>>  1 file changed, 0 insertions(+), 0 deletions(-)
+>>>  rename Documentation/devicetree/bindings/{arm => display}/mediatek/mediatek,mmsys.txt (100%)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
+>>> similarity index 100%
+>>> rename from Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+>>> rename to Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
