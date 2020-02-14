@@ -2,204 +2,110 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F8AC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1052BC3B19D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 270AC2187F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9192168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="GusOwzis";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fokoz3H/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttyMlQud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgBNN0t (ORCPT
+        id S1729241AbgBNNuB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:26:49 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:35423 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbgBNN0t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:26:49 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id ECDC922012;
-        Fri, 14 Feb 2020 08:26:47 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 14 Feb 2020 08:26:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=kh6wFCbO/Y8gjrFw8l3UtrjY1zo
-        YJuxaVqFqWxhcBBs=; b=GusOwzis/J+QHQ93MHkzhGOYfUM1cvKfYBsjN8Z8PIk
-        Q12LhKpDMd77gkglS/Tq6xjFHpssG75cQgVUXOMFIV++yvKSn+bo3JkWRXGspI8z
-        r/upJuHxTNJu8Xg9SipZqIbVDiTmiuG4tPIdtPptSuomVWUdTyBHUvYnjMHb6zMb
-        IB5YZYeNoCJmJ1PQ4np60oeWLzPNPrN+JgAJQAbs6+in2Onolrh4z/NsV4t/wfeU
-        PS9u4NPDbMWuouDaqfGDa2eEB/P8/0HtB8nz4u+Kt3Xli+cuYGqR7dFBdNxK8NTP
-        K5vwrq3Ol6JJzLHaArI8ZCVsPg6yWg4dskPDF1D/r+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=kh6wFC
-        bO/Y8gjrFw8l3UtrjY1zoYJuxaVqFqWxhcBBs=; b=fokoz3H/Ypu9zHfbmTYa4U
-        2it3H71NpCFHejVbuBdnkp/AC+8tXFJlqMjPqmbfX8SM0OlOj3+dLGrY/9A1LveB
-        oSwnFmWqYla7rPyP097ZTxXSox3GmFNClU1wYGomd5mkG/KiJNN7j9Mmu4DbJV1M
-        Whpq1B64Bugc4Ce1+ITR0ilVFZKHuT9PqcAs4+HtWJP2xxyBBdPb79/jfmS7xiJI
-        yDFrkZJa0RFhE7GRCtZPNwtAC6nwd1/2coswSrR0t5nNLpB+IUCQufH1OwomKu42
-        MM+BInvL1JyhTaO80pkWUtlZmUWAJzgmwaOgPkMs1X234GULjFCNJ9a7BQSUOFZA
-        ==
-X-ME-Sender: <xms:F6BGXh3CvVp6bUcuUhwR3o3GEIqFcTt-74MlcdwXfJ2T1kbxuMYg_Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdehfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    eplhhinhhuthhrohhnihigrdguvgdpghhithhhuhgsrdgtohhmnecukfhppeeltddrkeel
-    rdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:F6BGXic5ZCwNxYCsIb-KoqbSvd599aRsUHu7fvHi7Ntfp5HHzUX_Zg>
-    <xmx:F6BGXiqbermX2sFrxz899t4mpA2LombW6Wsk2wc3icbxDiPk6i6WVw>
-    <xmx:F6BGXsXf7YGYi99QDt46D1X--UxgFWZl7Vg3wbgftjgfI7e03IWS5Q>
-    <xmx:F6BGXubWGiXCO1PbHslnPSsYXY-e7GYN39vZu9XzBrxx2AEKEmricw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3CF513060FDD;
-        Fri, 14 Feb 2020 08:26:47 -0500 (EST)
-Date:   Fri, 14 Feb 2020 14:26:45 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     bage@linutronix.de
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benedikt Spranger <b.spranger@linutronix.de>
-Subject: Re: [PATCH v2 3/3] ARM: dts: sun7i: Add Linutronix Testbox v2 board
-Message-ID: <20200214132645.so2pu5qng4xehldu@gilmour.lan>
-References: <20200206113328.7296-1-bage@linutronix.de>
- <20200214111003.11115-1-bage@linutronix.de>
- <20200214111003.11115-4-bage@linutronix.de>
+        Fri, 14 Feb 2020 08:50:01 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:44960 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728405AbgBNNuB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 08:50:01 -0500
+Received: by mail-vs1-f68.google.com with SMTP id p6so5913353vsj.11;
+        Fri, 14 Feb 2020 05:50:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uqyI02njoot2XmCZIdNUmhXwHE9v/zz94Gp6DG53kCk=;
+        b=ttyMlQudUD/NIBwpvMZWuApIZRSf94LFlCQcay2XSvF2z8dXuaO5svAqb7WazigmfP
+         eZTC6ziq4bwq//prNhF+xxbc9pQ6cHgUifdA8udDHgIWVZ8rqePb7c3AM3WG8S0QvcKQ
+         dN1ygtCuxKRefH8ocoasDfWJTZfENfGPcqGvBOY+yo0W7OwUOqNEnPq+q9YKQ+onvd+q
+         2yGMYHdJAdUIOydiE2fBf4Qd5OXQTEej3aceCsOpiy/ezZEpUjYdXcS7In2MhGkZ7QJj
+         8xPjjfPTo2CKhaq6avDY0SH58louqdjtPdLzAl1xUdXhTXAPO1XHXQOoJ9vsTYKyyNo5
+         NCuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uqyI02njoot2XmCZIdNUmhXwHE9v/zz94Gp6DG53kCk=;
+        b=gOMN66P5tQfKNDCpLjX37KHw7BifLEwNyZjq2qImRS/+fguERvJvCczvHzrMplHrow
+         I0Xm4hf4md+dScofE628al0vCPKxbQi4w2utSJcVE4zmyn5X0LmWxaxTHUTxSIQvGWA3
+         ltsr6juZXHkDQ1PZLOL1sxpp6JhEYQK7Ov9NZPoa7GD9NT+XWMFtGbvWK3jsLJfPQYJO
+         H3eT4NuLBVQflg8FlmeXqqGv/HairVnQzFNUXGakYL7X7YWTHugNMnj5ENpFHCgCL5ef
+         MgzVCMaIQ+IvnZj4rSEvQLajk08FoHogsFg7PHnVS424qLZ+I7OfrGz82cTC42EwZCwm
+         Wsig==
+X-Gm-Message-State: APjAAAVdB3vy+teut919kbGj5bSKsO9O0m3YdDDLRxU3o7i2EXKygNRP
+        TDf3KXM6fa+2eHJhOiHy9Ci1exF7LVbVsxlDsuQ=
+X-Google-Smtp-Source: APXvYqx8gznJb0eroBOKXsZ3slGRJyDdgQg5k1ZyNJQC7tNmGE0gkxH8xYqUIYP2EnC0Nj7ideRVjXRyo+saG1phkyI=
+X-Received: by 2002:a67:ce93:: with SMTP id c19mr1413233vse.64.1581688199935;
+ Fri, 14 Feb 2020 05:49:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5gmx6di2e3atvfwp"
-Content-Disposition: inline
-In-Reply-To: <20200214111003.11115-4-bage@linutronix.de>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
+ <20200214121145.GF4827@sirena.org.uk> <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
+ <20200214131518.GJ4827@sirena.org.uk>
+In-Reply-To: <20200214131518.GJ4827@sirena.org.uk>
+From:   Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Date:   Fri, 14 Feb 2020 14:49:48 +0100
+Message-ID: <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
+Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---5gmx6di2e3atvfwp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Feb 14, 2020 at 12:10:03PM +0100, bage@linutronix.de wrote:
-> From: Bastian Germann <bage@linutronix.de>
+On Fri, Feb 14, 2020 at 2:15 PM Mark Brown <broonie@kernel.org> wrote:
 >
-> The Testbox board is an open hardware enhancement for the Lamobo R1 router
-> board.  The Testbox board is used in the CI-RT project to manage devices
-> under test (https://ci-rt.linutronix.de).
+> On Fri, Feb 14, 2020 at 01:50:44PM +0100, Simon Goldschmidt wrote:
 >
-> The hardware project is located at https://github.com/ci-rt/testbox-shield
+> > So please correct me if I'm wrong, but to me it seems like if this driver won't
+> > work on altera, and after merging it the currently working driver will be
+> > removed, altera will be broken.
 >
-> The Testbox v2 expands the Lamobo R1 router board with
-> - a power supply,
-> - a CAN bus PHY,
-> - a power control,
-> - a relay,
-> - an I2C EEPROM,
-> - a secure key storage (ATECC608a) and
-> - two RS232 compliant serial ports.
->
-> Co-developed-by: Benedikt Spranger <b.spranger@linutronix.de>
-> Signed-off-by: Benedikt Spranger <b.spranger@linutronix.de>
-> Signed-off-by: Bastian Germann <bage@linutronix.de>
-> ---
->  arch/arm/boot/dts/Makefile                    |  1 +
->  .../dts/sun7i-a20-linutronix-testbox-v2.dts   | 56 +++++++++++++++++++
->  2 files changed, 57 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun7i-a20-linutronix-testbox-v2.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index d6546d2676b9..e9ddca2946ce 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1086,6 +1086,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
->  	sun7i-a20-i12-tvbox.dtb \
->  	sun7i-a20-icnova-swac.dtb \
->  	sun7i-a20-lamobo-r1.dtb \
-> +	sun7i-a20-linutronix-testbox-v2.dtb \
->  	sun7i-a20-m3.dtb \
->  	sun7i-a20-mk808c.dtb \
->  	sun7i-a20-olimex-som-evb.dtb \
-> diff --git a/arch/arm/boot/dts/sun7i-a20-linutronix-testbox-v2.dts b/arch/arm/boot/dts/sun7i-a20-linutronix-testbox-v2.dts
-> new file mode 100644
-> index 000000000000..685874d44e35
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun7i-a20-linutronix-testbox-v2.dts
-> @@ -0,0 +1,56 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright 2020 Linutronix GmbH
-> + * Author: Benedikt Spranger <b.spranger@linutronix.de>
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun7i-a20-lamobo-r1.dts"
-> +
-> +/ {
-> +	model = "Lamobo R1";
-> +	compatible = "linutronix,testbox-v2", "lamobo,lamobo-r1", "allwinner,sun7i-a20";
-> +
-> +	leds {
-> +		led-opto1 {
-> +			label = "lamobo_r1:opto:powerswitch";
-> +			gpios = <&pio 7 3 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		led-opto2 {
-> +			label = "lamobo_r1:opto:relay";
-> +			gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-> +
-> +	eeprom: eeprom@50 {
-> +		compatible = "atmel,24c08";
-> +		reg = <0x50>;
-> +		status = "okay";
-> +	};
-> +
-> +	atecc508a@60 {
-> +		compatible = "atmel,atecc508a";
-> +		reg = <0x60>;
-> +	};
-> +};
-> +
-> +&pio {
-> +	led_pins_lamobo_r1: led-pins {
-> +		pins = "PH3", "PH5", "PH24";
-> +		function = "gpio_out";
-> +		drive-strength = <40>;
-> +		bias-disable;
-> +	};
-> +};
+> I'm not seeing anything in the driver that removes whatever the current
+> support is?  Unless it's just adding a duplicate driver for the same
+> compatible strings which is obviously a bad idea but at least means that
+> unless people enable the driver there's no risk of it colliding with the
+> existing one.
 
-That node was unused, so I removed it as well while applying, thanks!
+It does add a duplicate driver for the same compatible strings. The current
+working driver is in 'drivers/mtd/spi-nor/cadence-quadspi.c'.
 
-Maxime
+In fact, the compatible string "cdns,qspi-nor" copied from the old driver to
+this new driver is *only* used for altera. TI has its own compatible string,
+the new Intel platform adds its own as well.
 
---5gmx6di2e3atvfwp
-Content-Type: application/pgp-signature; name="signature.asc"
+As long as that one doesn't get removed, I have nothing against this driver
+here. I'm only concerned that this will get forgotten. And given that I added
+altera guys to the loop in one of the previous versions, I just was surprised
+they aren't on CC in this version.
 
------BEGIN PGP SIGNATURE-----
+I'm not familiar with whom to CC for Linux drivers, so sorry for the noise
+if I'm overreacting here, just tell me.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkagFQAKCRDj7w1vZxhR
-xQDhAP4t9Y+oklMTU6Nk53wRvkB3qoJl0CbjH+wY49pd8/WeuAD+JZjfbMmLGfb8
-uyFZFB66JCUVa2StsZ7xkNyefpZ2aAk=
-=7NOs
------END PGP SIGNATURE-----
-
---5gmx6di2e3atvfwp--
+Regards,
+Simon
