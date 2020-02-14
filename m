@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEBDC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA14C3B1B2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4586322314
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAB42168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703673;
-	bh=CVfVA6v89yNedy4aQtUH/s74q22YyBh8hOOT8Sme+v8=;
+	s=default; t=1581703705;
+	bh=Z6d6zi/9ewk2kMFLw5AZmpLrk8BYR4zguQyQmM1H/aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqNwueyYM6xxTbUbVtz32hMmT/to+Yi4geXm9boRGvYMZIlEdMpBhhptbr1ipfvgu
-	 lmcodPPOPMgztRG8hyEJfV/MRL/gjAMQox48ABLl6ENJ0NWHbDCORxvtugtCugMMGs
-	 uNvLPfwH1Kz2HZZMxt3eSCsWLwrdgsUX46Os5X/M=
+	b=qT7aWkFELjG6iE0zBZ+EoC7EmGWFusyN8VigwY0DSaaqg1QAouZjDSH2qlre00B80
+	 vu6UF8F3JL3JzW9a/mmNsuWejgFCQi91AQO2R8NdQgNr6TLQFVMLPAcIlnl44QpddV
+	 vId5qvPmrHmmtzoufyEKj8yArJZoLz/KmHJKdc4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391205AbgBNSHm (ORCPT
+        id S2389326AbgBNSIY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:07:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:08:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731534AbgBNPy3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:29 -0500
+        id S1729684AbgBNPyV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F8B222C4;
-        Fri, 14 Feb 2020 15:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B36424681;
+        Fri, 14 Feb 2020 15:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695668;
-        bh=CVfVA6v89yNedy4aQtUH/s74q22YyBh8hOOT8Sme+v8=;
+        s=default; t=1581695660;
+        bh=Z6d6zi/9ewk2kMFLw5AZmpLrk8BYR4zguQyQmM1H/aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZOkG9aKTnt0LTypyrpCz65/JAPQFti0huxbPWrZyifiJ3Grropt2Rr55nM/2dK5M
-         WM/y8etsLG56hxSriZCBJdMrwHIHuuO7dHiOBXmfkmpwFVBXNzoeor34Ygc0kQX0Ru
-         nCVuddO9SX41WcrNtJByAARFmz9jV/s1WIW0UGKk=
+        b=jvFgRvO151sL7hPiY4rmAHqjatTYv8d47xQCnA4hQSxXCZXPNoWNmzCLkI7CWoCxL
+         sKWF8MnsKqW63bf94BKq3WEL10xU4mmUv/QaiNXY7G1zoU527wXm67ryk6OKo7P1Fi
+         7cEJOIWKrN+V79+GYso8LZtdMUgNViKIz/zLEEdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 257/542] clk: qcom: Add missing msm8998 gcc_bimc_gfx_clk
-Date:   Fri, 14 Feb 2020 10:44:09 -0500
-Message-Id: <20200214154854.6746-257-sashal@kernel.org>
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 251/542] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
+Date:   Fri, 14 Feb 2020 10:44:03 -0500
+Message-Id: <20200214154854.6746-251-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,66 +60,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit db2c7c0a04b11753f5741d00b784b5380ddeee72 ]
+[ Upstream commit 2e198c395a084ff3015d71896e35de049c40e3a4 ]
 
-gcc_bimc_gfx_clk is a required clock for booting the GPU and GPU SMMU.
+The WiFi firmware used on db845c implements the 8bit host-capability
+message, so enable the quirk for this.
 
-Fixes: 4807c71cc688 (arm64: dts: Add msm8998 SoC and MTP board support)
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lkml.kernel.org/r/20191217164913.4783-1-jeffrey.l.hugo@gmail.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20191113232245.4039932-1-bjorn.andersson@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-msm8998.c               | 14 ++++++++++++++
- include/dt-bindings/clock/qcom,gcc-msm8998.h |  1 +
- 2 files changed, 15 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
-index cf31b5d03270f..df1d7056436cd 100644
---- a/drivers/clk/qcom/gcc-msm8998.c
-+++ b/drivers/clk/qcom/gcc-msm8998.c
-@@ -1996,6 +1996,19 @@ static struct clk_branch gcc_gp3_clk = {
- 	},
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index d100f46791a62..912ba745c0fc9 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -529,6 +529,8 @@
+ 	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
+ 	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
+ 	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
++
++	qcom,snoc-host-cap-8bit-quirk;
  };
  
-+static struct clk_branch gcc_bimc_gfx_clk = {
-+	.halt_reg = 0x46040,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x46040,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_bimc_gfx_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_gpu_bimc_gfx_clk = {
- 	.halt_reg = 0x71010,
- 	.halt_check = BRANCH_HALT,
-@@ -2810,6 +2823,7 @@ static struct clk_regmap *gcc_msm8998_clocks[] = {
- 	[GCC_GP1_CLK] = &gcc_gp1_clk.clkr,
- 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
- 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
-+	[GCC_BIMC_GFX_CLK] = &gcc_bimc_gfx_clk.clkr,
- 	[GCC_GPU_BIMC_GFX_CLK] = &gcc_gpu_bimc_gfx_clk.clkr,
- 	[GCC_GPU_BIMC_GFX_SRC_CLK] = &gcc_gpu_bimc_gfx_src_clk.clkr,
- 	[GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
-diff --git a/include/dt-bindings/clock/qcom,gcc-msm8998.h b/include/dt-bindings/clock/qcom,gcc-msm8998.h
-index de1d8a1f59665..63e02dc32a0bb 100644
---- a/include/dt-bindings/clock/qcom,gcc-msm8998.h
-+++ b/include/dt-bindings/clock/qcom,gcc-msm8998.h
-@@ -182,6 +182,7 @@
- #define GCC_MSS_GPLL0_DIV_CLK_SRC				173
- #define GCC_MSS_SNOC_AXI_CLK					174
- #define GCC_MSS_MNOC_BIMC_AXI_CLK				175
-+#define GCC_BIMC_GFX_CLK					176
- 
- #define PCIE_0_GDSC						0
- #define UFS_GDSC						1
+ /* PINCTRL - additions to nodes defined in sdm845.dtsi */
 -- 
 2.20.1
 
