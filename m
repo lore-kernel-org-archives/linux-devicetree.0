@@ -2,138 +2,101 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C39C3B195
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8FAC35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD162465D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A55222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dYZ8rH6N"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mTrMVMpk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgBNGfJ (ORCPT
+        id S1728773AbgBNGtO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 01:35:09 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36094 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728877AbgBNGfJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 01:35:09 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01E6YuO5071851;
-        Fri, 14 Feb 2020 00:34:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581662096;
-        bh=nTNlC78P5b1CtFm3NMNGph83k7nR5TYmygeTTewiBPU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=dYZ8rH6NyWEiBbDjDfplX4oYQVaqJhhT2YZr6kB1LDnS3+ntGohwMkcKqKjNWdyOp
-         MK6SaUIsENKDamyvoIdivC+nSPGHrp8qjrlr5HfKLI+hO/CApAZCuTT8eELCZQynDQ
-         DS5TU2m/78DVkNPCTerz73vdGtsiW+gub72S/iQ0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01E6Yux4105041
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Feb 2020 00:34:56 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 14
- Feb 2020 00:34:55 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 14 Feb 2020 00:34:55 -0600
-Received: from a0393675ula.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01E6YdP5028331;
-        Fri, 14 Feb 2020 00:34:52 -0600
-From:   Keerthy <j-keerthy@ti.com>
-To:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
-        <daniel.lezcano@linaro.org>
-CC:     <j-keerthy@ti.com>, <amit.kucheria@verdurent.com>,
-        <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-Subject: [PATCH v2 3/4] arm64: dts: ti: am654: Add thermal zones
-Date:   Fri, 14 Feb 2020 12:04:42 +0530
-Message-ID: <20200214063443.23589-4-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200214063443.23589-1-j-keerthy@ti.com>
-References: <20200214063443.23589-1-j-keerthy@ti.com>
+        Fri, 14 Feb 2020 01:49:14 -0500
+Received: from mailgw01.mediatek.com ([216.200.240.184]:43858 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgBNGtN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 01:49:13 -0500
+X-UUID: 591c4716f1504125897deed0562d9a34-20200213
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/ImEYpFQVkvneIwZfKMDBwsxecrbwupV35NVM4pulYY=;
+        b=mTrMVMpkOfAblSD1+TYcE3jGCbNOEi5xgT/mzHXJEukclG3+tfWD4YGIjuvXNRuTn/Oci+hL0NTxTx6dAVwkMw6gQvDEC/2Gk3HBrWSz9WigdGUDip3tadfkrGzKcSsVcjVszgUHDLehkMazQIpSTJ7I9DMT0URVbDhm2ApnVIg=;
+X-UUID: 591c4716f1504125897deed0562d9a34-20200213
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2143336691; Thu, 13 Feb 2020 22:49:09 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 13 Feb 2020 22:43:12 -0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 14 Feb 2020 14:42:56 +0800
+Message-ID: <1581662577.17949.3.camel@mtksdaap41>
+Subject: Re: [PATCH v7 01/13] dt-bindings: arm: move mmsys description to
+ display
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <matthias.bgg@kernel.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <ulrich.hecht+renesas@gmail.com>,
+        <laurent.pinchart@ideasonboard.com>,
+        <enric.balletbo@collabora.com>, <devicetree@vger.kernel.org>,
+        <drinkcat@chromium.org>, <frank-w@public-files.de>,
+        <sean.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <wens@csie.org>,
+        <linux-mediatek@lists.infradead.org>, <rdunlap@infradead.org>,
+        <hsinyi@chromium.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-media@vger.kernel.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        mtk01761 <wendell.lin@mediatek.com>
+Date:   Fri, 14 Feb 2020 14:42:57 +0800
+In-Reply-To: <20200213201953.15268-2-matthias.bgg@kernel.org>
+References: <20200213201953.15268-1-matthias.bgg@kernel.org>
+         <20200213201953.15268-2-matthias.bgg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The am654 SoC has three thermal zones namely MPU0, MPU1 and MCU
-zones
-
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
-
-Changes in v2:
-
-  * Renamed am654-industrial-thermal.dtsi to k3-am654-industrial-thermal.dtsi
-
- .../dts/ti/k3-am654-industrial-thermal.dtsi   | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-new file mode 100644
-index 000000000000..cdc3d40c3f60
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+mpu0_thermal: mpu0_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 0>;
-+
-+	trips {
-+		mpu0_crit: mpu0_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
-+
-+mpu1_thermal: mpu1_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 1>;
-+
-+	trips {
-+		mpu1_crit: mpu1_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
-+
-+mcu_thermal: mcu_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 2>;
-+
-+	trips {
-+		mcu_crit: mcu_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
--- 
-2.17.1
+SGksIE1hdHRoaWFzOg0KDQpPbiBUaHUsIDIwMjAtMDItMTMgYXQgMjE6MTkgKzAxMDAsIG1hdHRo
+aWFzLmJnZ0BrZXJuZWwub3JnIHdyb3RlOg0KPiBGcm9tOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1
+Z2dlckBzdXNlLmNvbT4NCj4gDQo+IFRoZSBtbXN5cyBibG9jayBwcm92aWRlcyByZWdpc3RlcnMg
+YW5kIGNsb2NrcyBmb3IgdGhlIGRpc3BsYXkNCj4gc3Vic3lzdGVtLiBUaGUgYmluZGluZyBkZXNj
+cmlwdGlvbiBzaG91bGQgdGhlcmVmb3JlIGxpdmUgdG9nZXRoZXIgd2l0aA0KPiB0aGUgcmVzdCBv
+ZiB0aGUgZGlzcGxheSBkZXNjcmlwdGlvbnMuIE1vdmUgaXQgdG8gZGlzcGxheS9tZWRpYXRlay4N
+Cj4gDQoNClllcywgZm9yIHRoZSB1cHN0cmVhbWVkIGRyaXZlciwgb25seSBkaXNwbGF5IChEUk0p
+IHVzZSBtbXN5cyBjbG9jay4gRm9yDQpzb21lIE1EUCBwYXRjaGVzIFsxXSBpbiBwcm9ncmVzcywg
+TURQIGFsc28gdXNlIG1tc3lzIGNsb2NrLiBTbyB3ZSBqdXN0DQpjb25zaWRlciB3aGF0J3MgdXBz
+dHJlYW1lZCBub3c/DQoNClsxXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEx
+MTQwNzQ3Lw0KDQpSZWdhcmRzLA0KQ0sNCg0KPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBCcnVn
+Z2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT4NCj4gDQo+IC0tLQ0KPiANCj4gQ2hhbmdlcyBpbiB2NzoN
+Cj4gLSBtb3ZlIHRoZSBiaW5kaW5nIGRlc2NyaXB0aW9uDQo+IA0KPiBDaGFuZ2VzIGluIHY2OiBO
+b25lDQo+IENoYW5nZXMgaW4gdjU6IE5vbmUNCj4gQ2hhbmdlcyBpbiB2NDogTm9uZQ0KPiBDaGFu
+Z2VzIGluIHYzOiBOb25lDQo+IENoYW5nZXMgaW4gdjI6IE5vbmUNCj4gDQo+ICAuLi4vYmluZGlu
+Z3Mve2FybSA9PiBkaXNwbGF5fS9tZWRpYXRlay9tZWRpYXRlayxtbXN5cy50eHQgICAgICAgICB8
+IDANCj4gIDEgZmlsZSBjaGFuZ2VkLCAwIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+
+ICByZW5hbWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3thcm0gPT4gZGlzcGxh
+eX0vbWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0ICgxMDAlKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
+bW1zeXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
+aWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQo+IHNpbWlsYXJpdHkgaW5kZXggMTAwJQ0KPiByZW5h
+bWUgZnJvbSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21lZGlhdGVrL21l
+ZGlhdGVrLG1tc3lzLnR4dA0KPiByZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQoNCg==
 
