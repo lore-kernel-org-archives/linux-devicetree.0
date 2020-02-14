@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0837BC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0868DC3B19F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55BC246AA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1F22471A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696917;
-	bh=VAXM/wI+ARk8lW10+nryJ2K86Vm1q4s0xDutsq//i+8=;
+	s=default; t=1581697122;
+	bh=TRkgGmvkR5mwWBIQp1TX/waypqJc1bxA44k8shh26sI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2lovKiOvsYXPrah0V1fkhxujF9RBi3ddDnwCgQuVFrhpohdso0jj7f3B/ccOUEWoL
-	 6y6/rAzHwhWJdAc5UEWva/mjgHrHVRIPqbCW8Q0/IhtyL7i2iAERUTU/v5vX9/KE2W
-	 61pvioujJSGIFY54rA1V56eSG9TZ6ZZdUZmv8fNw=
+	b=qtgOEoPQacv2aFMuzD7oCcZ9QFTh0AiTKijfjsxDFU/okwekOLKLtiGFc+EYGOz3W
+	 c5GIrFEzH2XadSZqJoChPLkV+b3+JNiUeBsjQgpEEKqzqDBB54POCRkAq91dFP9vS8
+	 7IKceH4F2uj8lhXif/7BKptyXhBUKmL+OU00zufg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392443AbgBNQPR (ORCPT
+        id S2404828AbgBNQSl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:15:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392438AbgBNQPQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:16 -0500
+        id S2404820AbgBNQSl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B656A246DA;
-        Fri, 14 Feb 2020 16:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D435A24706;
+        Fri, 14 Feb 2020 16:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696915;
-        bh=VAXM/wI+ARk8lW10+nryJ2K86Vm1q4s0xDutsq//i+8=;
+        s=default; t=1581697120;
+        bh=TRkgGmvkR5mwWBIQp1TX/waypqJc1bxA44k8shh26sI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1u4hFqaoCRgySgzlzsoSprOYpIPcdmf/CJjgnj0gsWurVXsTO6jO/nM8326OPYUO/
-         Ku4AAXA7k3V6X7xRw1ADx6V0Mc6b8FfTJ5nq/7bZGL1peCQyfsFDeY1lMaeVzzTf+0
-         eBi12bwwT0NN7Oo7+GhSiC6GwYcMiSnoaZxBJ2Vo=
+        b=sVN6jEtOTvRHv5Of9dPHfe8RxgGtX8DNeKqV8PkpNc1Zn564f1Us4WKL/T0Vb9Vzk
+         srQHbbpeuaIhUWDSjW9JAGxDf0zWRQ17D0UOECAG0bPRFoj+ReFWjIgKE2NJMbEM0i
+         QPryqGmGC1skwz99thQ1kN1Jnb72A8SuCLf9dUto=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 164/252] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
-Date:   Fri, 14 Feb 2020 11:10:19 -0500
-Message-Id: <20200214161147.15842-164-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 066/186] arm: dts: allwinner: H3: Add PMU node
+Date:   Fri, 14 Feb 2020 11:15:15 -0500
+Message-Id: <20200214161715.18113-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,34 +60,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 7980dff398f86a618f502378fa27cf7e77449afa ]
+[ Upstream commit 0388a110747bec0c9d9de995842bb2a03a26aae1 ]
 
-Add a missing property to GMAC node so that multicast filtering works
-correctly.
+Add the Performance Monitoring Unit (PMU) device tree node to the H3
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core. The numbers come from the manual and have
+been checked in U-Boot and with perf in Linux.
 
-Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Tested with perf record and taskset on an OrangePi Zero.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/axs10x_mb.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index 37bafd44e36d0..da10a569adf73 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -80,6 +80,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = < 32 >;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&apbclk>;
- 			clock-names = "stmmaceth";
- 			max-speed = <100>;
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index b36f9f423c39d..d685beb49659c 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -53,25 +53,34 @@
+ 			reg = <0>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
 -- 
 2.20.1
 
