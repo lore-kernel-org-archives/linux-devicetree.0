@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D362C3B1B5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121C7C3B1B1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C1720848
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA82820848
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389017AbgBNSEH (ORCPT
+        id S1731661AbgBNSDh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:04:07 -0500
-Received: from out28-99.mail.aliyun.com ([115.124.28.99]:43381 "EHLO
-        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388680AbgBNSDl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 13:03:41 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2733001|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0763182-0.00649236-0.917189;DS=CONTINUE|ham_system_inform|0.00986228-0.000458731-0.989679;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03297;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=27;RT=27;SR=0;TI=SMTPD_---.GoAKeCh_1581703384;
+        Fri, 14 Feb 2020 13:03:37 -0500
+Received: from out28-219.mail.aliyun.com ([115.124.28.219]:43940 "EHLO
+        out28-219.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388470AbgBNSDg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 13:03:36 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08323406|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.656193-0.0159137-0.327893;DS=CONTINUE|ham_system_inform|0.00787412-0.000299377-0.991826;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=27;RT=27;SR=0;TI=SMTPD_---.GoAKeCh_1581703384;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GoAKeCh_1581703384)
           by smtp.aliyun-inc.com(10.147.42.253);
-          Sat, 15 Feb 2020 02:03:33 +0800
+          Sat, 15 Feb 2020 02:03:27 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -38,9 +38,9 @@ Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         paul@boddie.org.uk, hns@goldelico.com, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com, mips-creator-ci20-dev@googlegroups.com,
         1326991897@qq.com
-Subject: [PATCH v4 6/6] MIPS: CI20: Update defconfig to support SMP.
-Date:   Sat, 15 Feb 2020 02:02:40 +0800
-Message-Id: <1581703360-112557-8-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v4 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Date:   Sat, 15 Feb 2020 02:02:37 +0800
+Message-Id: <1581703360-112557-5-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581703360-112557-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1581703360-112557-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -52,7 +52,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add "CONFIG_SMP=y" and "CONFIG_NR_CPUS=2" to support SMP.
+Document the available properties for the SoC root node and the
+CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 
 Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 Tested-by: Paul Boddie <paul@boddie.org.uk>
@@ -61,27 +62,120 @@ Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 
 Notes:
     v1->v2:
-    No change.
+    Change the two Document from txt to yaml.
     
     v2->v3:
-    No change.
+    Fix formatting errors.
     
     v3->v4:
-    Rebase on top of kernel 5.6-rc1.
+    Fix bugs in the two yaml files.
 
- arch/mips/configs/ci20_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
+ .../bindings/mips/ingenic/ingenic,soc.yaml         | 35 ++++++++++++++
+ 2 files changed, 88 insertions(+)
+ create mode 100755 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+ create mode 100755 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
 
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index be41df2..3aadb2e 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -1,3 +1,5 @@
-+CONFIG_SMP=y
-+CONFIG_NR_CPUS=2
- # CONFIG_LOCALVERSION_AUTO is not set
- CONFIG_KERNEL_XZ=y
- CONFIG_SYSVIPC=y
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+new file mode 100644
+index 00000000..cb600ae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for Ingenic XBurst family CPUs
++
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++description: |
++  Ingenic XBurst family CPUs shall have the following properties.
++
++properties:
++  compatible:
++    oneOf:
++      - const: ingenic,xburst
++      - const: ingenic,xburst2
++
++  reg:
++    description: |
++      The number of the CPU.
++
++required:
++  - device_type
++  - compatible
++  - reg
++
++examples:
++  - |
++    cpus {
++    	#address-cells = <1>;
++    	#size-cells = <0>;
++
++    	cpu0: cpu@0 {
++    		device_type = "cpu";
++    		compatible = "ingenic,xburst";
++    		reg = <0>;
++
++    		clocks = <&cgu JZ4780_CLK_CPU>;
++    		clock-names = "cpu";
++    	};
++
++    	cpu1: cpu@1 {
++    		device_type = "cpu";
++    		compatible = "ingenic,xburst";
++    		reg = <1>;
++
++    		clocks = <&cgu JZ4780_CLK_CORE1>;
++    		clock-names = "cpu";
++    	};
++    };
++...
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+new file mode 100644
+index 00000000..11e5cde
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for Ingenic SoCs with XBurst CPU inside.
++
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++description: |
++  Ingenic SoCs with XBurst CPU inside shall have the following properties.
++
++properties:
++  compatible:
++    oneOf:
++      - const: ingenic,jz4740
++      - const: ingenic,jz4725b
++      - const: ingenic,jz4760
++      - const: ingenic,jz4760b
++      - const: ingenic,jz4770
++      - const: ingenic,jz4780
++      - const: ingenic,x1000
++      - const: ingenic,x1000e
++      - const: ingenic,x1500
++
++required:
++  - compatible
++
++examples:
++  - |
++    #address-cells = <1>;
++    #size-cells = <1>;
++    compatible = "ingenic,jz4780";
++...
 -- 
 2.7.4
 
