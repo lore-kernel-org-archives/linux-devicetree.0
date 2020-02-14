@@ -2,116 +2,136 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03DBC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63921C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADAB2086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XtRM0egZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XQZnzuG+"
+	by mail.kernel.org (Postfix) with ESMTP id 25B9D2086A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgBNMbg (ORCPT
+        id S1728405AbgBNMc0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:31:36 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:38697 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728036AbgBNMbg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:31:36 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 53DA54A6E;
-        Fri, 14 Feb 2020 07:31:35 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 14 Feb 2020 07:31:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=LUuxcNfSOwWscQIzR0So/9bxPwg
-        KSUZdiJhu4bV4RMY=; b=XtRM0egZ9LFEDkRTeXdhuM9gUjP39GO4ceL2zKVwwxp
-        MMmUN8x5JFgL6/19NIiBbwRu/P67nPc5qb1G4g9E0qWrm9+M5C5AtCMeqYzPWLTg
-        pMUMq99QrKojNTQJ5AFtJoXLPlfD4xSzEzXfS16fjUixXsdPWYkWGxAqvrY1H1j7
-        4bQRbnaUrnPlRcZcmI6nUR23mTXtir72naeeVPC73uckanpbbwwzEARwV2b3vTQX
-        Dbq2RuItrh4czV83wfvX5KqNXL4g5HPqbI7BDUwxH3ZbNAwMSYIzFqwmTWheBkXA
-        GAxBDjsFCh8WKdm1hEeOoYEkel+Vp2ZYGBo2qg2+bGw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=LUuxcN
-        fSOwWscQIzR0So/9bxPwgKSUZdiJhu4bV4RMY=; b=XQZnzuG+cKkjMP8GtT93yn
-        2USAOWihi/JiMXsSVVo5Xle6gBbPoyWw1qOlJh5BekWkq0zBerhOVB/59WTZSiM5
-        1X7+T553CpRxxUmX/55GjZCl8Br3RQd19u3LTdHbETHlbRXxVeJDsrk+pOGd+GyB
-        GI23zMTn8ICYXiFf9A5Btn5VzbpbiFtBNTuGBYS64ZZex9sVjbPc82+6mFZeWPQF
-        rTxeefUSgBcDvyq3F7OCaiTOMsHMfC5/N8Gle6Y+d3Ec2jENbZEPK6CQi5Wirnbb
-        Q/XzhVjll6jBlPvAlasIn6XYQE7GLxo2zMLzjIRVJ0Rjs2Q680Rn8DMRClzWhSSw
-        ==
-X-ME-Sender: <xms:JJNGXtvxKMhvkoe2jIj6PoUIdWliTZewrnHDKfkLDlOHhUIez1MqfQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdegvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:JJNGXk-nAqy58gO4J9jhlotpUkkgw-5gF3qoJOVA8jp6WMwRq7dNsQ>
-    <xmx:JJNGXnG7vFKRr2zyhSUVwhQneV0N39HzAwStXJTSZ6WJKeax34xmpQ>
-    <xmx:JJNGXqyQcNoZafwr-8OoOXMw3LwM6OUuXeORQpcWFZplz8Ic-1TUHw>
-    <xmx:J5NGXh2kB6Otp6KfMhVdkrTLvPEyU7P1Z_WnG2mx4n3Jq0ulNi38Aw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DB06C3280067;
-        Fri, 14 Feb 2020 07:31:31 -0500 (EST)
-Date:   Fri, 14 Feb 2020 13:31:30 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] drm/sun4i: tcon: Support LVDS on the A33
-Message-ID: <20200214123130.7bfn7d2imgpkief5@gilmour.lan>
-References: <20200214122427.108675-1-maxime@cerno.tech>
+        Fri, 14 Feb 2020 07:32:26 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:46058 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgBNMc0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 07:32:26 -0500
+X-AuditID: c0a8fbf4-279ff70000001e6c-3f-5e4693575a8a
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 05.BE.07788.753964E5; Fri, 14 Feb 2020 13:32:23 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Fri, 14 Feb 2020 13:32:11 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
+Thread-Topic: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
+Thread-Index: AQHV4At5sLPMospsI0G2S3c08J9KoagWS84AgADGiACAA3X4gIAADG2A
+Date:   Fri, 14 Feb 2020 12:32:10 +0000
+Message-ID: <375c7756fca56de4f2f85d1a1a4e0b01dadc290b.camel@fi.rohmeurope.com>
+References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+         <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200211190614.GP4543@sirena.org.uk>
+         <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
+         <20200214114749.GB4827@sirena.org.uk>
+In-Reply-To: <20200214114749.GB4827@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <338D36A977CBAD4794E1D9E2E0B91542@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cedtemy3eui6wleb"
-Content-Disposition: inline
-In-Reply-To: <20200214122427.108675-1-maxime@cerno.tech>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsVyYMXvTbrhk93iDNo7LCymPnzCZjH/yDlW
+        iyl/ljNZXN41h83ic+8RRoul1y8yWcxZeoLFonXvEXaL07tLHDg91sxbw+ixc9Zddo9NqzrZ
+        PO5c28Pm8XmTXABrFLdNUmJJWXBmep6+XQJ3xpY7L1kLpihXvL3RwtrAuECpi5GTQ0LARKJ5
+        83umLkYuDiGBq4wS99c3MUI4JxglHlzbyt7FyMHBJmAj0XWTHaRBREBXYuqvxWwgNcwCk1gk
+        PnTvZAFJCAu4Skx6cpUZoshN4mTjRTj7ye/7rCA2i4CqxNpDh8HivAJ+Eue3HYbavJtJoq1n
+        FVgRp4CRxOul88G2MQrISnQ2vGMCsZkFxCU2PfvOCnG2gMSSPeeZIWxRiZeP/0HFlST2/nzI
+        AnI0s4CmxPpd+hCtDhJ/py1kgbAVJaZ0P2SHuEFQ4uTMJywTGMVmIdkwC6F7FpLuWUi6ZyHp
+        XsDIuopRIjcxMyc9sSTVUK8otVSvKD8jF0gl5+duYoTE75cdjP8PeR5iZOJgPMQoycGkJMrL
+        2eQWJ8SXlJ9SmZFYnBFfVJqTWnyIUYKDWUmE97AiUI43JbGyKrUoHyYlzcGiJM6r/nBirJAA
+        yK7s1NSC1CKYrAwHh5IE75eJQI2CRanpqRVpmTklCGkmDk6Q4VxSIsWpeSmpRYmlJRnxoAQS
+        XwxMISApHqC9a0DaeYsLEnOBohCtpxgNOSa8nLuImWPz3KVA8giIFGLJy89LlRLnvQvSIADS
+        kFGaB7fuFaM4B6OSMO8LkCwPMKnDTXsFtIgJaFGvpgvIopJEhJRUA6PCCmcvo/V3fscc2Ga5
+        tZLzxeb1aSq7PrO9zhdfXlla5sp70TPyannUUaGHO2vlFW+vO5XRwij8XLAvaZ7W+4fPdRlu
+        pBzSyLKy4Kn8IvzDeevl0JmfAxmfbnvLLzZ5V9F9tSb9GNtTez5tz/39XCG4+EWu++kN8/qt
+        lnUefHkjJeieU0hbALsSS3FGoqEWc1FxIgBFjNffpwMAAA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---cedtemy3eui6wleb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Feb 14, 2020 at 01:24:27PM +0100, Maxime Ripard wrote:
-> The A33 TCON supports LVDS, so we can toggle the support switch.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-Sorry, that one was a spurious send-email run ...
-
-Maxime
-
---cedtemy3eui6wleb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkaTIgAKCRDj7w1vZxhR
-xTM8AQDH1yyQdstxuKVzuZ87kQMF0t43L3SxHNcDVWVfUvSrpAD+O73ZNqlaoy4F
-iNxK0jcWKBWBernguIgzQyobw/ovbgA=
-=7Hpy
------END PGP SIGNATURE-----
-
---cedtemy3eui6wleb--
+DQpPbiBGcmksIDIwMjAtMDItMTQgYXQgMTE6NDcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+IE9uIFdlZCwgRmViIDEyLCAyMDIwIGF0IDA2OjU2OjM3QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
+dGkgd3JvdGU6DQo+ID4gT24gVHVlLCAyMDIwLTAyLTExIGF0IDE5OjA2ICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiA+ID4gTm90ZSBhbHNvIHRoYXQgd2UgYWxyZWFkeSBoYXZlIHF1aXRlIGV4
+dGVuc2l2ZSBoZWxwZXJzIGZvciB0aGlzDQo+ID4gPiBzb3J0DQo+ID4gPiBvZg0KPiA+ID4gc3R1
+ZmYgaW4gdGhlIHJlZ3VsYXRvciBBUEkgd2hpY2ggSSBzZW5zZSBtYXkgaGF2ZSBiZWVuIGludm9s
+dmVkDQo+ID4gPiBpbg0KPiA+ID4gdGhpcw0KPiA+ID4gaW1wbGVtZW50YXRpb24NCj4gPiBZb3Ug
+c2Vuc2Ugd2VsbCB4RA0KPiANCj4gSWYgeW91J3JlIGZhY3RvcmluZyBzdHVmZiBvdXQgb2YgYW4g
+ZXhpc3RpbmcgaW1wbGVtZW50YXRpb24gaXQnZCBiZQ0KPiBnb29kDQo+IHRvIGV4cGxpY2l0bHkg
+ZG8gdGhhdCAtIHRoaXMgYm90aCBzaG93cyB3aGVyZSB0aGluZ3MgY2FtZSBmcm9tIGFuZA0KPiBh
+bHNvDQo+IG1lYW5zIHRoYXQgeW91IGNhbiBzaG93IHRoYXQgdGhlIGV4aXN0aW5nIHVzZXIgd29y
+a3Mgd2l0aCB0aGUgbmV3DQo+IGNvZGUNCj4gd2hpY2ggaXMgZ29vZC4NCg0KVHJ1ZS4gQnV0IEkg
+ZGlkbid0IHJlZmFjdG9yIHRoZSByZWd1bGF0b3IgY29kZSAtIEkgc3RvbGUgdGhlIGlkZWEgYW5k
+DQp3cm90ZSB0aGlzIHRoaW5nIGluIEJENzA1MjggcG93ZXItc3VwcGx5IGRyaXZlci4gSSBkaWRu
+J3QgdGhpbmsgb2YNCmNyZWF0aW5nIGdlbmVyaWMgaGVscGVyIHVudGlsIExpbnVzIFcgbWVudGlv
+bmVkIHdlIHNob3VsZCBjcmVhdGUgb25lLg0KDQpTbyBub3cgd2hlbiBJIGRpZCB0aGUgQkQ5OTk1
+NCBkcml2ZXIgYW5kIG5vdGljZWQgSSBuZWVkZWQgc2FtZSBoZWxwZXINCmluIHBvd2VyLXN1cHBs
+eSBhcmVhIGFnYWluIEkgZGVjaWRlZCB0byBnZXQgdGhlIGltcGxlbWVudGF0aW9uIEkgZGlkIGlu
+DQpCRDcwNTI4IGRyaXZlciBhbmQgbWFrZSBpdCBhdmFpbGFibGUgZm9yIGFsbC4gVGhhdCB3YXMg
+YSBsb3ctaGFuZ2luZw0KZnJ1aXQgZm9yIG1lIGFzIEkgYXV0aG9yZWQgdGhlIEJENzA1MjggYW5k
+IGtub3cgdGhlIGxpbmVhci1yYW5nZSBjb2RlDQp3YXMgZWFzeSB0byBwdWxsIG91dCBvZiB0aGUg
+QkQ3MDUyOC4gQ2hhbmdpbmcgdGhlIHJlZ3VsYXRvciBzeXN0ZW0gd2FzDQpub3QgYXMgZWFzeSBm
+b3IgbWUgLSBhbHRob3VnaCBpdCBpcyBkb2FibGUuDQoNCj4gPiBCdXQgYW5vdGhlciBvcHRpb24g
+LSB3aGljaCBJIHRob3VnaHQgb25seSBub3cgLSB3b3VsZCBiZSB0byBzZWUgaWYNCj4gPiBjdXJy
+ZW50IHJlZ3VsYXRvciBpbXBsZW1lbnRhdGlvbiBjb3VsZCBiZSByZS1uYW1lZCB0byBtb3JlIGdl
+bmVyaWMNCj4gPiBhbmQNCj4gPiBwbGFjZWQgdW5kZXIgc29tZSBtb3JlIGdlbmVyaWMgY29tcG9u
+ZW50IChJIHRob3VnaHQgb2YgcmVnbWFwIGJ1dA0KPiA+IGFzDQo+ID4geW91IHBvaW50ZWQgb3V0
+IHRoaXMgaXMgZXF1YWxseSB1c2VmdWxsIGZvciBkZXZpY2VzIGNvbm5lY3RlZCB0bw0KPiA+IG1l
+bW9yeQ0KPiA+IG1hcHBlZCBidXNlcyAtIHNvIG1heWJlIHVuZGVyIGxpYiAtIGlmIHN0YXRpYyBp
+bmxpbmUgZnVuY3Rpb25zIGluIGENCj4gPiBoZWFkZXIgYXJlIG5vdCBhIGdvb2Qgb3B0aW9uKS4g
+SSBqdXN0IGhhdmUgYSBmZWVsaW5nIHRoYXQgdGhlDQo+ID4gbGluZWFyLQ0KPiA+IHJhbmdlcyBp
+cyBjdXJyZW50bHkga2luZCBvZiBlbWJlZGRlZCBpbiB0aGUgY29kZSB3aGljaCBpcyBpbnRlcm5h
+bA0KPiA+IHRvDQo+ID4gcmVndWxhdG9yIGZyYW1ld29yayBzbyBpdCBpcyBwcm9iYWJseSBub3Qg
+ZWFzaWx5IGV4dHJhY3RlZCBmcm9tDQo+ID4gcmVndWxhdG9yIGNvZGU/DQo+IA0KPiBJdCBpcyBh
+IGJpdCBidXQgSSB0aGluayB0aGF0J3Mgc29sdmFibGUgd2l0aCBzb21lIHJlZmFjdG9yaW5nIGlu
+DQo+IHBsYWNlDQo+IChlZywgcHVzaGluZyB0aGluZ3MgaW50byBhIHNtYWxsZXIgc3RydWN0IGVt
+YmVkZGVkIGluIHRoZSBtYWluDQo+IHJlZ3VsYXRvcg0KPiBvbmUgYW5kIHRoZW4gbW92aW5nIHRo
+ZW0gb3V0KS4gIEkgbWlnaHQgbG9vayBhdCBpdCBteXNlbGYgaWYgbm9ib2R5DQo+IGVsc2UNCj4g
+Z2V0cyB0byBpdCBmaXJzdC4uLg0KDQpJIG5lZWQgc29tZXRoaW5nIGxpa2UgdGhpcyBpbiBvcmRl
+ciB0byBjb252ZXJ0IEJEOTk5NTQgY3VycmVudCBhbmQNCnZvbHRhZ2UgdmFsdWVzIHRvIHJlZ2lz
+dGVyIHZhbHVlcy4gSSB3aWxsIGhhcHBpbHkgdXNlIHdoYXQtZXZlciB5b3UgZG8NCnB1bGwgdG9n
+ZXRoZXIgLSBidXQgaWYgeW91IGRvbid0IGZlZWwgbGlrZSBkb2luZyBpdCBub3cgSSBtaWdodCBs
+b29rIGF0DQp0aGUgcmVndWxhdG9yIHBhcnQgd2hpbGUgSSBhbSB3b3JraW5nIHdpdGggQkQ5OTk1
+NCBhbnl3YXlzLiBQbGVhc2UganVzdA0KbGV0IG1lIGtub3cgaWYgeW91IHdhbnQgbWUgdG8gc2Vl
+IGlmIEkgY2FuIHB1bGwgdGhlIHJhbmdlIHN0dWZmIG91dCBvZg0KcmVndWxhdG9yIGFyZWEuDQoN
+Cj4gPiBTbyBpZiB3ZSBkbyBub3Qgc3RhcnQgcHVsbGluZyB0aGUgcmFuZ2UgY29kZSBvdXQgb2Yg
+cmVndWxhdG9yDQo+ID4gZnJhbWV3b3JrDQo+ID4gKGZvciBub3cgYXQgbGVhc3QpIC0gYW5kIGlm
+IHdlIGRvIG5vdCBwbGFjZSB0aGlzIHVuZGVyIHJlZ21hcCAtDQo+ID4gdGhlbiBJDQo+ID4gY2Fu
+IGRyb3AgeW91IG91dCBvZiB0aGUgcmVjaXBpZW50IGxpc3QgZm9yIHRoaXMgY2hhcmdlciBkcml2
+ZXIgaW4NCj4gPiBvcmRlcg0KPiA+IHRvIG5vdCBwb2xsdXRlIHlvdXIgaW5ib3ggOykgSG93IGRv
+IHlvdSBmZWVsIE1hcmssIGRvIHlvdSB3YW50IHRvDQo+ID4gYmUNCj4gPiBmb2xsb3dpbmcgdGhp
+cyBzZXJpZXM/DQo+IA0KPiBXZWxsLCBpZiB0aGVyZSdzIGEgcmVmYWN0b3Jpbmcgb3V0IG9mIHRo
+ZSByZWd1bGF0b3IgY29kZSBnb2luZyBvbg0KPiBJJ2xsDQo+IG5lZWQgdG8gbG9vayBhdCB0aGF0
+IGFueXdheS4NCg0KTXkgZmlyc3QgaWRlYSB3YXMgbm90IHRvIGNoYW5nZSB0aGUgcmVndWxhdG9y
+cyBub3cgLSBoZW5jZSBJIGFza2VkIGlmIEkNCnNob3VsZCBkcm9wIHlvdS4gQnV0IEkgZGVmaW5p
+dGVseSBuZWVkIHlvdXIgc3VwcG9ydCBpZiB3ZSBkZWNpZGUgdG8NCnJlZmFjdG9yIHRoZSByZWd1
+bGF0b3IgY29kZSBpbiB0aGlzIHNlcmllcyBhbmQgY3JlYXRlIHRoZXNlIGNvbW1vbg0KaGVscGVy
+cyBvdXQgb2YgaXQuDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
