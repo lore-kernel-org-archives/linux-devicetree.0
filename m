@@ -2,102 +2,94 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB2BC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D38C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055682187F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696341;
-	bh=kJWdcJPvZE287SU5CAesXG1gRxh01xitM8yvtMiSSGw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vdfgmB9RUYLlTnkmiqe+Jcu3z42d0ZqCc/jNPj+gDbleoQt754pzTi8S50HQnRAfR
-	 moW7OxeBbVr1SlATq2OWDkVyWSZ9JnshrmuI4QcV5Xv9Tjo7yNB2jtlsm0PCdXlaxk
-	 YT65kyjdTMsnQuu8+af1hQaRPiomvSWXiwPiq8mk=
+	by mail.kernel.org (Postfix) with ESMTP id 1525B2469F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="X8zoS4Ot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390210AbgBNQFj (ORCPT
+        id S2391621AbgBNQKq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:05:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390203AbgBNQFi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:38 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9EE72467E;
-        Fri, 14 Feb 2020 16:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696337;
-        bh=kJWdcJPvZE287SU5CAesXG1gRxh01xitM8yvtMiSSGw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kclPr2y82234lFPfOhCiJENNQKNtLFHOzGH3xBFoyKu/BI//4WR+s/qyziuFzFl7k
-         xkDQ1GLJ4McSTUw9c+r4FaWbkJqAyvFciHIdcAp9Aq4pwTJlm/3UKuGfXwez4TJlV0
-         1hawGGVG/XWNhnGwuIg2FDqWlEvvgBbmzGVOgoOI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 174/459] ARM: dts: imx6: rdu2: Limit USBH1 to Full Speed
-Date:   Fri, 14 Feb 2020 10:57:04 -0500
-Message-Id: <20200214160149.11681-174-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:10:46 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.175]:11483 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391579AbgBNQKp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 11:10:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696640;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=ZBAC50dU0uhRQKdMbm4Q/e7P7wLPrnPuOlslKb4Wgqo=;
+        b=X8zoS4OtkByR+9JNCBLPrlB7le9++A+8+OoB3dfwikrywj7q92SuxmXwbRsEq7XCta
+        ERMFJVFKt9U/ZrmXZVdQTilrwg1T/4kjaUiliTfygfcDtxfXCsaJ93EQ9p8Q80uJ3M5p
+        /ibXs+3xysg//X6GBI29RDwffsNOjRhXiQ+t1ks8+uv404C6n1S9GgLItsZ4aqyy8HIx
+        t2+boZwYz/QS3hJ66Qlbcrt/D0Iz6tS3qGLiV/ARVJQf4E8GZ1/p55V2ZVNXcAMGPjzR
+        xistHAe8lNhqPPwRIp2GxvIx6GWlL/CS6uA5BrE/hWJaBaOM5lpuxHi7LOIZxef+1LBH
+        kN6w==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7OMfsfQx3"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1EGAUFl2
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 14 Feb 2020 17:10:30 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Boddie <paul@boddie.org.uk>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: [PATCH v2 07/12] MIPS: DTS: CI20: give eth0_power a defined voltage.
+Date:   Fri, 14 Feb 2020 17:10:19 +0100
+Message-Id: <b72b4c86d2b390844a1ea97885c4b65204bc8872.1581696624.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1581696624.git.hns@goldelico.com>
+References: <cover.1581696624.git.hns@goldelico.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+This is a 3.3V power switch (DVNET3.3V ).
 
-[ Upstream commit 6bb1e09c4c375db29770444f689f35f5cbe696bc ]
-
-Cabling used to connect devices to USBH1 on RDU2 does not meet USB
-spec cable quality and cable length requirements to operate at High
-Speed, so limit the port to Full Speed only.
-
-Reported-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 7b5c0e9b0fcff..a66c4fac6baf0 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -774,6 +774,7 @@
- &usbh1 {
- 	vbus-supply = <&reg_5p0v_main>;
- 	disable-over-current;
-+	maximum-speed = "full-speed";
- 	status = "okay";
- };
- 
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index e02a19db7ef1..e1364f941c7d 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -56,6 +56,8 @@
+ 	eth0_power: fixedregulator@0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "eth0_power";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
+ 		enable-active-high;
+ 	};
 -- 
-2.20.1
+2.23.0
 
