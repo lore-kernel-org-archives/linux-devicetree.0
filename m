@@ -2,86 +2,117 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF425C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6ABC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88995217F4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E40206B6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581689676;
-	bh=MdUO0h05smc5KdaA/ZHU+8UH3vmdkaFGEznUM+x2ln0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CUmNPjYiqh93EKrXbKwKkZC21B+CvNohrb9zt36DmGNWB0dw4ne4fg09LZTq1k/jE
-	 UPRRvsTDXBV6iwlnpThOB7cgPdIb1v6s445m+dNbFtcONj+xtgegsvW5CuOlPFntwx
-	 W+7TaBtLq5UrPrfa81g/ByNGjs6OX0PMSjjaoDx8=
+	s=default; t=1581689812;
+	bh=5HALsHiDTL4axGdxa3WIcXS5r2rp1q38KCHpbT5M5g8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vwsnvcVpFnOCwl5tQ8CcysffbyX7wCTedCfwsBQ77o6T5iDCWmskSIxZt4dj+lHad
+	 rlfkZylgJIg2eXo8os19RsPXCJS8mmvQY8Uztge53bVd9rbTxEBFwB89fTp9lzGXX7
+	 dBxgyaHizuqo9JLFujfL1xu0TK7WcdlUh+eJmkr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgBNOOg (ORCPT
+        id S1729336AbgBNOQt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:14:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48322 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 09:16:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:33560 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNOOg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:14:36 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD9622314;
-        Fri, 14 Feb 2020 14:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581689675;
-        bh=MdUO0h05smc5KdaA/ZHU+8UH3vmdkaFGEznUM+x2ln0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1TQuwJkyrEDG4Zr88Ezq/kTRwslgZb2nVK7InN9NPN/GVvirKoPCthI2W0DFt1Ox7
-         U8nrLVd70NwvueEgl07oC+54n8P6vV1pkCUXG+Quxa4yr5AGLUhKugb9Ml4w3knVYX
-         48hBBtliu6D9hHX/2PcamWgsyd+F+Rgj0syqUguk=
-Date:   Fri, 14 Feb 2020 14:14:30 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Beniamin Bia <beniamin.bia@analog.com>, lars@metafoo.de,
-        Michael.Hennerich@analog.com, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        biabeniamin@outlook.com, knaack.h@gmx.de, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] dt-bindings: iio: amplifiers: Add docs for
- HMC425A Step Attenuator
-Message-ID: <20200214141430.2a3780c8@archlinux>
-In-Reply-To: <20200206213427.GA12507@bogus>
-References: <20200206151149.32122-1-beniamin.bia@analog.com>
-        <20200206151149.32122-4-beniamin.bia@analog.com>
-        <20200206213427.GA12507@bogus>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726191AbgBNOQs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:16:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4E141FB;
+        Fri, 14 Feb 2020 06:16:47 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 283DB3F68F;
+        Fri, 14 Feb 2020 06:16:47 -0800 (PST)
+Date:   Fri, 14 Feb 2020 14:16:45 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Cc:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+Message-ID: <20200214141645.GM4827@sirena.org.uk>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
+ <20200214121145.GF4827@sirena.org.uk>
+ <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
+ <20200214131518.GJ4827@sirena.org.uk>
+ <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rf72Gf+bfLC8kxKs"
+Content-Disposition: inline
+In-Reply-To: <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
+X-Cookie: Shipping not included.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 6 Feb 2020 14:34:27 -0700
-Rob Herring <robh@kernel.org> wrote:
 
-> On Thu, Feb 06, 2020 at 05:11:48PM +0200, Beniamin Bia wrote:
-> > From: Michael Hennerich <michael.hennerich@analog.com>
-> > 
-> > Document support for Analog Devices MC425A Step Attenuator.
-> > 
-> > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> > ---
-> > Changes in v5:
-> > -minItems added for ctrl_gpios
-> > 
-> >  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml  
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+--rf72Gf+bfLC8kxKs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Applied.  Thanks,
+On Fri, Feb 14, 2020 at 02:49:48PM +0100, Simon Goldschmidt wrote:
+> On Fri, Feb 14, 2020 at 2:15 PM Mark Brown <broonie@kernel.org> wrote:
 
-Jonathan
+> > I'm not seeing anything in the driver that removes whatever the current
+> > support is?  Unless it's just adding a duplicate driver for the same
+> > compatible strings which is obviously a bad idea but at least means that
+> > unless people enable the driver there's no risk of it colliding with the
+> > existing one.
+
+> It does add a duplicate driver for the same compatible strings. The current
+> working driver is in 'drivers/mtd/spi-nor/cadence-quadspi.c'.
+
+> In fact, the compatible string "cdns,qspi-nor" copied from the old driver to
+> this new driver is *only* used for altera. TI has its own compatible string,
+> the new Intel platform adds its own as well.
+
+Oh, that's not good - it's adding a completely new binding for the same
+compatibles which isn't OK.  We can transition to a new driver using the
+same binding but we should be keeping the old binding.  If we're moving
+the binding document around and/or transitioning to YAML that needs to
+be done explicitly rather than adding a new document for the same
+compatible.
+
+> As long as that one doesn't get removed, I have nothing against this driver
+> here. I'm only concerned that this will get forgotten. And given that I added
+> altera guys to the loop in one of the previous versions, I just was surprised
+> they aren't on CC in this version.
+
+Yes, like I say it'd be much better to get their review.
+
+--rf72Gf+bfLC8kxKs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Gq8wACgkQJNaLcl1U
+h9DHoQf+LsSB3ZHCDD01+GU4dangDKO0Y7qLxBcScMbJ4+Xuws5182R7ns4mhTmt
+wTsTbbf+Y3qfIXqReAzBxs5lRRxl46CdLexDJe/CRPKr+ADYByxAOhYcQ8jtPZzd
+9QNw3ftS8JICO81XdPsIH9FdPHbMfj1/H+Js5GhfppYUbsvvrxUI1njQ06mF6sOw
+oCymlCc+ruUgLSR0fA4FsBrLFmWMJTor8kudFBLupMeJs9F3dB2jgmQbkHmlfm1z
+X/fJnZRpD7voBp4x2TFfm+lx/m6OBPTLuOCuu6CON9p3ahH4KoSB1YXLl8S/d1Ew
+YV2Vi7U/k2epOpGy2yjWnN2je8whYA==
+=ysJH
+-----END PGP SIGNATURE-----
+
+--rf72Gf+bfLC8kxKs--
