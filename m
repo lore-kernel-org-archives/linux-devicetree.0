@@ -2,93 +2,125 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0593C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B25C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C086D24650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701258;
-	bh=m9OmCQrsjfjIej1QyAJMd4nXnccmf5UC5VzTK9ckWBk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vQzuPO8LPA7Not0KpgdSSifKFgOYnh4yCmT1XXQaSNDFCeKpADu7fXIMJUy0S5c5m
-	 YtlmR/zWYbWITWuPPOAstlNHptA7l7hTCSpjpgyKMzRuTR4Z37F0oWAgHjUipyk9fd
-	 bV22geSG7kB4c3HFXkkLEP59oFxThbkXKUItEUVs=
+	by mail.kernel.org (Postfix) with ESMTP id B42B924650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391005AbgBNR1c (ORCPT
+        id S2390958AbgBNR2Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:27:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390906AbgBNQIU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:20 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 576812467E;
-        Fri, 14 Feb 2020 16:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696500;
-        bh=m9OmCQrsjfjIej1QyAJMd4nXnccmf5UC5VzTK9ckWBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OvsFMTvjs5pR0FbD+l855tVwPTzSFua1/5kXHR+S+/vbg+rUKkgS1o2HVrIdhKPI6
-         ODh+ovREU7a/3900bvecFF0jhrUdUl3cZkkn8hclBlVrcZTdBf0h6r/gS4VfbYxyce
-         4N/5hEz2boSg5IJl+JRpKE8tuwmKJ2Nwd5utN9LU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 304/459] ARC: [plat-axs10x]: Add missing multicast filter number to GMAC node
-Date:   Fri, 14 Feb 2020 10:59:14 -0500
-Message-Id: <20200214160149.11681-304-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:28:25 -0500
+Received: from out28-221.mail.aliyun.com ([115.124.28.221]:38590 "EHLO
+        out28-221.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391144AbgBNR2W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 12:28:22 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07512346|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.63799-0.012238-0.349772;DS=CONTINUE|ham_system_inform|0.345318-0.00103386-0.653648;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.Go9djQb_1581701284;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Go9djQb_1581701284)
+          by smtp.aliyun-inc.com(10.147.41.231);
+          Sat, 15 Feb 2020 01:28:17 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, paul@crapouillou.net,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: [PATCH v5 1/6] clk: Ingenic: Remove unnecessary spinlock when reading registers.
+Date:   Sat, 15 Feb 2020 01:27:37 +0800
+Message-Id: <1581701262-110556-3-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+It is not necessary to use spinlock when reading registers,
+so remove it from cgu.c.
 
-[ Upstream commit 7980dff398f86a618f502378fa27cf7e77449afa ]
-
-Add a missing property to GMAC node so that multicast filtering works
-correctly.
-
-Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software development platform)")
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Suggested-by: Paul Cercueil <paul@crapouillou.net>
+Suggested-by: Paul Burton <paulburton@kernel.org>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- arch/arc/boot/dts/axs10x_mb.dtsi | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index 08bcfed6b80f5..134cc223ea81b 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -77,6 +77,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = < 32 >;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&apbclk>;
- 			clock-names = "stmmaceth";
- 			max-speed = <100>;
+Notes:
+    v2:
+    New patch.
+    
+    v2->v3:
+    Adjust order from [5/5] in v2 to [1/5] in v3.
+    
+    v3->v4:
+    Remove the spinlock around ingenic_cgu_gate_get().
+    
+    v4->v5:
+    Rebase on top of kernel 5.6-rc1.
+
+ drivers/clk/ingenic/cgu.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index 6e96303..ab1302a 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	const struct ingenic_cgu_pll_info *pll_info;
+ 	unsigned m, n, od_enc, od;
+ 	bool bypass;
+-	unsigned long flags;
+ 	u32 ctl;
+ 
+ 	clk_info = &cgu->clock_info[ingenic_clk->idx];
+ 	BUG_ON(clk_info->type != CGU_CLK_PLL);
+ 	pll_info = &clk_info->pll;
+ 
+-	spin_lock_irqsave(&cgu->lock, flags);
+ 	ctl = readl(cgu->base + pll_info->reg);
+-	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
+ 	m += pll_info->m_offset;
+@@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+ 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+-	unsigned long flags;
+ 	u32 ctl;
+ 
+-	spin_lock_irqsave(&cgu->lock, flags);
+ 	ctl = readl(cgu->base + pll_info->reg);
+-	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+ 	return !!(ctl & BIT(pll_info->enable_bit));
+ }
+@@ -562,16 +556,12 @@ static int ingenic_clk_is_enabled(struct clk_hw *hw)
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+ 	const struct ingenic_cgu_clk_info *clk_info;
+-	unsigned long flags;
+ 	int enabled = 1;
+ 
+ 	clk_info = &cgu->clock_info[ingenic_clk->idx];
+ 
+-	if (clk_info->type & CGU_CLK_GATE) {
+-		spin_lock_irqsave(&cgu->lock, flags);
++	if (clk_info->type & CGU_CLK_GATE)
+ 		enabled = !ingenic_cgu_gate_get(cgu, &clk_info->gate);
+-		spin_unlock_irqrestore(&cgu->lock, flags);
+-	}
+ 
+ 	return enabled;
+ }
 -- 
-2.20.1
+2.7.4
 
