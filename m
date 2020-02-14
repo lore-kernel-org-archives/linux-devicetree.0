@@ -2,117 +2,157 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6ABC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6B0C3B19D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E40206B6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D30222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581689812;
-	bh=5HALsHiDTL4axGdxa3WIcXS5r2rp1q38KCHpbT5M5g8=;
+	s=default; t=1581691141;
+	bh=N76ODAvwWtrNolNrfe1v+fSpRmjTv8SwxAx6ymA3JRQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vwsnvcVpFnOCwl5tQ8CcysffbyX7wCTedCfwsBQ77o6T5iDCWmskSIxZt4dj+lHad
-	 rlfkZylgJIg2eXo8os19RsPXCJS8mmvQY8Uztge53bVd9rbTxEBFwB89fTp9lzGXX7
-	 dBxgyaHizuqo9JLFujfL1xu0TK7WcdlUh+eJmkr8=
+	b=TLfUunsruwNq88uPSsF8skiNEwhP1YH869pf3KuEOVMmqxwLJk3vBPPw8uJo9sIuc
+	 UIG7QhgrMYS+ICvWUyNsqqMoEVJHDORl9yvBnRTkLrvGigHyXavEEkTtZPpOYPCQlX
+	 UEAuWTsk/gb25gEJvRX/klyoziByMU+uR0/GMzYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgBNOQt (ORCPT
+        id S1729268AbgBNOjA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:16:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:33560 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 09:39:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNOQs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:16:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4E141FB;
-        Fri, 14 Feb 2020 06:16:47 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 283DB3F68F;
-        Fri, 14 Feb 2020 06:16:47 -0800 (PST)
-Date:   Fri, 14 Feb 2020 14:16:45 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S1728557AbgBNOjA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:39:00 -0500
+Received: from earth.universe (dyndsl-095-033-170-229.ewe-ip-backbone.de [95.33.170.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F1242187F;
+        Fri, 14 Feb 2020 14:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581691139;
+        bh=N76ODAvwWtrNolNrfe1v+fSpRmjTv8SwxAx6ymA3JRQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rxcs3mqKxdI60Vdcwf4KgINHcmhzEFYVBYR1bfRa8cO655RDr3SGgwpLeNcD9xfPw
+         S9jTLA2hZ0j+MH8dOeloo+sVOptQTI4NE1tAXZ9ukOzjwDTyLgtqhpKZg9Ws0HjjrU
+         JsEl5id/SB2Sj2dYJMwujqXYj1M6PH3zFEBMYNPc=
+Received: by earth.universe (Postfix, from userid 1000)
+        id B9A4B3C0C83; Fri, 14 Feb 2020 15:38:57 +0100 (CET)
+Date:   Fri, 14 Feb 2020 15:38:57 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Merlijn Wajer <merlijn@wizzup.org>
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-Message-ID: <20200214141645.GM4827@sirena.org.uk>
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
- <20200214121145.GF4827@sirena.org.uk>
- <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
- <20200214131518.GJ4827@sirena.org.uk>
- <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] Input: add `SW_MACHINE_COVER`
+Message-ID: <20200214143857.msrkzzsss5hbb43l@earth.universe>
+References: <20200214130249.6845-1-merlijn@wizzup.org>
+ <20200214130249.6845-2-merlijn@wizzup.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rf72Gf+bfLC8kxKs"
+        protocol="application/pgp-signature"; boundary="jwfmyapwtfwrjma4"
 Content-Disposition: inline
-In-Reply-To: <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
-X-Cookie: Shipping not included.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200214130249.6845-2-merlijn@wizzup.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---rf72Gf+bfLC8kxKs
+--jwfmyapwtfwrjma4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 14, 2020 at 02:49:48PM +0100, Simon Goldschmidt wrote:
-> On Fri, Feb 14, 2020 at 2:15 PM Mark Brown <broonie@kernel.org> wrote:
+Hi,
 
-> > I'm not seeing anything in the driver that removes whatever the current
-> > support is?  Unless it's just adding a duplicate driver for the same
-> > compatible strings which is obviously a bad idea but at least means that
-> > unless people enable the driver there's no risk of it colliding with the
-> > existing one.
+On Fri, Feb 14, 2020 at 02:02:47PM +0100, Merlijn Wajer wrote:
+> This event code represents the state of a removable cover of a device.
+> Value 1 means that the cover is open or removed, value 0 means that the
+> cover is closed.
 
-> It does add a duplicate driver for the same compatible strings. The current
-> working driver is in 'drivers/mtd/spi-nor/cadence-quadspi.c'.
+This is the opposit of what is being stated everywhere else. It does
+not really matter, but it must be used consistently :)
 
-> In fact, the compatible string "cdns,qspi-nor" copied from the old driver to
-> this new driver is *only* used for altera. TI has its own compatible string,
-> the new Intel platform adds its own as well.
+> This can be used to preempt users removing a removable mmc card or even
+> the battery, allowing userspace to attempt to safely unmount a card.
 
-Oh, that's not good - it's adding a completely new binding for the same
-compatibles which isn't OK.  We can transition to a new driver using the
-same binding but we should be keeping the old binding.  If we're moving
-the binding document around and/or transitioning to YAML that needs to
-be done explicitly rather than adding a new document for the same
-compatible.
+I would drop this sentence, since its very specific to the N900. The
+name is generic enough to e.g. also apply for desktop machines, which
+sometimes have a cover switch for doing a shutdown (because of poor
+airflow when open).
 
-> As long as that one doesn't get removed, I have nothing against this driver
-> here. I'm only concerned that this will get forgotten. And given that I added
-> altera guys to the loop in one of the previous versions, I just was surprised
-> they aren't on CC in this version.
+> ---
 
-Yes, like I say it'd be much better to get their review.
+Missing Signed-off-by.=20
 
---rf72Gf+bfLC8kxKs
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+>  include/linux/mod_devicetable.h        | 2 +-
+>  include/uapi/linux/input-event-codes.h | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_deviceta=
+ble.h
+> index 448621c32e4d..4c692cb3cc1d 100644
+> --- a/include/linux/mod_devicetable.h
+> +++ b/include/linux/mod_devicetable.h
+> @@ -299,7 +299,7 @@ struct pcmcia_device_id {
+>  #define INPUT_DEVICE_ID_LED_MAX		0x0f
+>  #define INPUT_DEVICE_ID_SND_MAX		0x07
+>  #define INPUT_DEVICE_ID_FF_MAX		0x7f
+> -#define INPUT_DEVICE_ID_SW_MAX		0x0f
+> +#define INPUT_DEVICE_ID_SW_MAX		0x10
+>  #define INPUT_DEVICE_ID_PROP_MAX	0x1f
+> =20
+>  #define INPUT_DEVICE_ID_MATCH_BUS	1
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/=
+input-event-codes.h
+> index 64cee116928e..318a6387cdfb 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -807,7 +807,8 @@
+>  #define SW_LINEIN_INSERT	0x0d  /* set =3D inserted */
+>  #define SW_MUTE_DEVICE		0x0e  /* set =3D device disabled */
+>  #define SW_PEN_INSERTED		0x0f  /* set =3D pen inserted */
+> -#define SW_MAX			0x0f
+> +#define SW_MACHINE_COVER	 0x10 /* set =3D cover closed */
+> +#define SW_MAX			0x10
+>  #define SW_CNT			(SW_MAX+1)
+> =20
+>  /*
+> --=20
+> 2.23.0
+>=20
+
+--jwfmyapwtfwrjma4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Gq8wACgkQJNaLcl1U
-h9DHoQf+LsSB3ZHCDD01+GU4dangDKO0Y7qLxBcScMbJ4+Xuws5182R7ns4mhTmt
-wTsTbbf+Y3qfIXqReAzBxs5lRRxl46CdLexDJe/CRPKr+ADYByxAOhYcQ8jtPZzd
-9QNw3ftS8JICO81XdPsIH9FdPHbMfj1/H+Js5GhfppYUbsvvrxUI1njQ06mF6sOw
-oCymlCc+ruUgLSR0fA4FsBrLFmWMJTor8kudFBLupMeJs9F3dB2jgmQbkHmlfm1z
-X/fJnZRpD7voBp4x2TFfm+lx/m6OBPTLuOCuu6CON9p3ahH4KoSB1YXLl8S/d1Ew
-YV2Vi7U/k2epOpGy2yjWnN2je8whYA==
-=ysJH
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5GsPYACgkQ2O7X88g7
++ppRzQ//QSEzbm0KJXw2Jx8UyqQgtHPXk+/qWS4ZxbkS3KGtAulZ+SA+NA9HNUc8
+2IUhqlOZkEP8GbOs7kDV2DRm23jdL3prleB7lrU5OVD0b6b2SbIsMIoJ8Jmsyf/R
+iKeF/ck0bTkUJk2CtDqs691VT+XLlK0bOiez8JCueCs5FLqpRS7YXjDWQVlKHLN1
+FkEDyKypwve7awU4cRBrSKCWDN03JUYm2P20/cUvX0NmtBul68Y7GshN7K7eBENu
+0J1UQUgJZtPmmcw5hJ88DjfpWwxEVXGhsjH+Qi/toiIo5qE+sXRUgT4jdZrD+M3f
+CNl5y8bhKHYtFVasxocJ0jQRKIc84LWjwjBu+XlYNd5qY6yZJKLxI4oX0tz4CGiG
+iuQmYL0UUbpXQLmvnDsrWzqXkxo7HNwpq6qT03MD4HmxSe10CpCPuV9tiM4pofps
+RAZjlDEjX/NN2Zuzu5Xu962I7OrfVbxZJjKFNxQ1c1qxAe5s4XNomFh7NN3QHu8v
+ucKst2U7S4zsm+nQzNTc3YREjToxkh7EKOF7tC8+4mSYgzy+FCOORTQ/YTIT290F
+kdbAhrK8xACVMf67A32RhpJdCtmoa6kJzGElsYvdCJpnICk8s0IsQF1OmWPTCuoW
+4jg47ZS02SW4Hp3a0sV7Szdid9a1Bv/7whl/wt7ZeJWWW8DtPwo=
+=8n2c
 -----END PGP SIGNATURE-----
 
---rf72Gf+bfLC8kxKs--
+--jwfmyapwtfwrjma4--
