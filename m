@@ -2,215 +2,103 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8362AC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D88C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABA0222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225432168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fiI9CoPo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="m/G/6+eO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgBNStk (ORCPT
+        id S1728859AbgBNTGk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:49:40 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35532 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728968AbgBNStk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 13:49:40 -0500
-Received: by mail-pj1-f68.google.com with SMTP id q39so4294850pjc.0
-        for <devicetree@vger.kernel.org>; Fri, 14 Feb 2020 10:49:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z9X+mnbPdiAT3gi0kBtvocX45hqfGLXwGRWm7XiWrUQ=;
-        b=fiI9CoPovHs74fmaFmlOCZw+PBp/qyX6P9JdrzpnP5akcLRhqwvvQHZCkXeNg27/P9
-         B0OGzoMmcNxWD9DcINrkF7JnQM4nNUjE/5vVWFOQskW4tj4YgXhlcvetn50Uw0hx+GBL
-         mdFjE0+85VM45BpsczLNE11gS4Gl5UCjOmCAY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z9X+mnbPdiAT3gi0kBtvocX45hqfGLXwGRWm7XiWrUQ=;
-        b=TyrLXYR0NK32L5e/hckBxtaZDOiQk4P3VKxmft+oqHKGTxSzzHKyCZDzIKYIupQ5Iw
-         XAVDoXNag+RmcWmZarGPvPAe1Qtm8yN244d6GtGCMcd1aE1VTPSS9GJbyzDiPX3YhOV9
-         0wNrdvlVoquqZMLqkIR07HwSdv7lP6jeOZpmbIQXeUyWtW6IydzGUyUDDGZNHS9qIJTf
-         czvDHlVLVvoJv2dNHyF6LN7Wjha2VDe90/PBPdx2VSMMnfGfKmDBa1bqw3O0sJTf3Y00
-         Pd46q4ldMGj+EO4tNHBtssHLgKpFhl8n/ZLt9oncpbR6cNCsU2dVfIbPL7ucDY/77d2H
-         vhvg==
-X-Gm-Message-State: APjAAAX2wlFO17+N+C8blQTIUob90FLDIG/7WHqvRT5TBL0cKFh3GMd9
-        H9N1aDCaLv5ybpP+hxfKXDN3AA==
-X-Google-Smtp-Source: APXvYqynq99jlrl1qDm8z7d+FI9VC6ZSrWYeVFxihmLzWem1+jdU3ObIhzmt20oiM2H6je9jvHluKg==
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr4611111plt.221.1581706179645;
-        Fri, 14 Feb 2020 10:49:39 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h3sm7530961pfo.102.2020.02.14.10.49.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2020 10:49:38 -0800 (PST)
-Date:   Fri, 14 Feb 2020 10:49:37 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v2] arm64: dts: sc7180: add dsi controller and phy entries for
- idp dts
-Message-ID: <20200214184937.GA15781@google.com>
-References: <20200211113735.6840-1-harigovi@codeaurora.org>
+        Fri, 14 Feb 2020 14:06:40 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:55244 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgBNTGk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 14:06:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581707197; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4KB1bZUahZdMxykkZApvtcfxGNo5EEXp6pqcqZ+9Y/Q=;
+        b=m/G/6+eO4qdQjEzCuMTIRsZAWqUmu8d7b0F7tO+d1MPV2IuvUKI7o756uV+aNtF73xQvrL
+        B4C/IMiyF2njiBqqQbNxpbLFWCwtvNGDKvAuTdaeBMNnKscn4OTNo/4bEcpSuXmzvfIvM0
+        21O999aAb9OhsCVkv5Iq2yp5jLZMT3Q=
+Date:   Fri, 14 Feb 2020 16:06:17 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 01/12] drm: ingenic-drm: add MODULE_DEVICE_TABLE
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1581707177.3.6@crapouillou.net>
+In-Reply-To: <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com>
+References: <cover.1581696624.git.hns@goldelico.com>
+        <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200211113735.6840-1-harigovi@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 05:07:35PM +0530, Harigovindan P wrote:
+Hi Nikolaus,
 
-> subject: arm64: dts: sc7180: add dsi controller and phy entries for idp dts
+Please rebase this patch on top of drm-misc-next and send it apart - it=20
+should go through the DRM tree.
 
-nit: 'dts' at the end is redundant, the prefixes make it clear that this
-is about DT entries.
 
-Also the message isn't really concise. The main entries for the DSI
-controller and the PHY are in sc7180.dtsi. I would suggest to drop
-any mentions of DSI controller and PHYs, and just say something like
-'Add nodes for IDP display'. In the body you could mention that the
-display is the Visionox RM69299.
-
-> Adding dsi controller and phy entries for idp dt.
-> 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Le ven., f=E9vr. 14, 2020 at 17:10, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Add MODULE_DEVICE_TABLE so that the driver can load by
+> matching the device tree if compiled as module.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
-> 
-> Changes in v1:
-> 	- Added dsi controller and dsi phy entries for idp dts
-
-Changes in v1 is pointless, it's the first patch
-
-> Changes in v2:
-> 	- Adding dependency patchwork series
-> 	- Removing suspend configuration
-> 	- Adding blank before curly brace
-> 
-> This patch depends on following patchwork series:
-> 
-> https://patchwork.kernel.org/patch/11364687/
-> https://patchwork.kernel.org/patch/11366303/
-> 
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 55 +++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 388f50ad4fde..6ccf8c3603ab 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -7,6 +7,7 @@
->  
->  /dts-v1/;
->  
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->  #include "sc7180.dtsi"
->  #include "pm6150.dtsi"
-> @@ -232,6 +233,49 @@ vreg_bob: bob {
->  	};
+>  drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
+> b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> index 6d47ef7b148c..d8617096dd8e 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> @@ -844,6 +844,8 @@ static const struct of_device_id=20
+> ingenic_drm_of_match[] =3D {
+>  	{ /* sentinel */ },
 >  };
->  
-> +&dsi0 {
-> +	status = "okay";
-> +
-> +	vdda-supply = <&vreg_l3c_1p2>;
-> +
-> +	panel@0 {
-> +		compatible = "visionox,rm69299-1080p-display";
-> +		reg = <0>;
-> +
-> +		vdda-supply = <&vreg_l8c_1p8>;
-> +		vdd3p3-supply = <&vreg_l18a_2p8>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&disp_pins>;
-> +
-> +		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			port@0 {
-> +				reg = <0>;
-> +				panel0_in: endpoint {
-> +					remote-endpoint = <&dsi0_out>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	ports {
-> +		port@1 {
-> +			endpoint {
-> +				remote-endpoint = <&panel0_in>;
-> +				data-lanes = <0 1 2 3>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&dsi_phy {
-> +	status = "okay";
-> +};
-> +
->  &qspi {
->  	status = "okay";
->  	pinctrl-names = "default";
-> @@ -289,6 +333,17 @@ &usb_1_qmpphy {
->  
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
->  
-> +&pm6150l_gpio {
-> +	disp_pins: disp-pins {
-> +		pins = "gpio3";
-> +		function = "func1";
-> +		qcom,drive-strength = <2>;
-> +		power-source = <0>;
-> +		bias-disable;
-> +		output-low;
-> +	};
-> +};
-> +
->  &qspi_clk {
->  	pinconf {
->  		pins = "gpio63";
+>=20
+> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
 
-To get the display actually to work you also need this:
+Also please remove the blank line above MODULE_DEVICE_TABLE.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 88919da1510b03..fdbcb56dfa81f9 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -276,6 +276,14 @@
-        status = "okay";
- };
+Cheers,
+-Paul
 
-+&mdp {
-+       status = "okay";
-+};
-+
-+&mdss {
-+       status = "okay";
-+};
-+
- &qspi {
-        status = "okay";
-        pinctrl-names = "default";
+> +
+>  static struct platform_driver ingenic_drm_driver =3D {
+>  	.driver =3D {
+>  		.name =3D "ingenic-drm",
+> --
+> 2.23.0
+>=20
 
-Maybe just add this to this patch?
+=
+
