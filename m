@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A4EC3B1A1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB05C3B1A5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EB620656
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7569C2067D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699257;
-	bh=POQBEBmj9YQfomHR0dXXKcpPqERbDd5yZUvqqBkcoNE=;
+	s=default; t=1581699720;
+	bh=rWXbwbRAZonVyOwllnzP9TFQ4vkrdB9BcqX/125Xjik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DTOexjRDp+QI1k5/WDVUu+TIUHAnVf2P5dk2/OGjmH9gsHmxpIOio+uCqn/YY7D7N
-	 6lWNvzgk9NQgb6/ZC9QSoRlP/xGsGf5VH8FX4O5ds9MSUGsvduue5N8sO0SzoBYMOp
-	 1iNgnJBWccLnI2vTBm8w7iCTKlvAVf11ek2DirQI=
+	b=OB2mOF5fMkZ5D4peJZ00Syg//HlPMrXAtDFRuXA0397drmBlZDHeHPDw5H5+Ion7C
+	 IEgZxFBb+Q/F346EmD9PnarSmQjofxTvc87twY+ou+rEuXBP6z4pKHTlN64lAuMS2x
+	 iIsx1xMm7Qc3/MEZ8s2TlrnO/hewrd8O50wtg4Zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392794AbgBNQyM (ORCPT
+        id S2392438AbgBNQQP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:54:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51410 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:16:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404836AbgBNQSn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:18:43 -0500
+        id S2403832AbgBNQQN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 345A824703;
-        Fri, 14 Feb 2020 16:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 559042467D;
+        Fri, 14 Feb 2020 16:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697123;
-        bh=POQBEBmj9YQfomHR0dXXKcpPqERbDd5yZUvqqBkcoNE=;
+        s=default; t=1581696972;
+        bh=rWXbwbRAZonVyOwllnzP9TFQ4vkrdB9BcqX/125Xjik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T6YO/MxqHQ2bjV8HFgttXlpubjVAunUkXNe5dwq6oa9ilLQ6vCZfE40V4UI31FaDg
-         YvhG5/7OY0gCHIzUZd2p8zHTK5ZXWQJmJe/hkV25IZQb3/2dCT+8tbVR6j02DWc+aV
-         fm1AiQtODdlqNuk3OPzrHh2GeOMi74wTahya4Llg=
+        b=e0exXlpXlONcPFvXJAUNgnxFQkREUKO/hWyO3PEuj6a7pWFmdb1AXteFsgBSIKYjM
+         K8RRRtmt1u0vdWKjcTTjjCZrvwyKYd3NM19CEbVDAaWGBSV+rrmaR66MBLuJoYndYo
+         SzCb5U2gUTRGZKEpkZlp+ih5/WkBU1vaEE2yaP6o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manu Gautam <mgautam@codeaurora.org>,
-        Paolo Pisati <p.pisati@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+Cc:     Tero Kristo <t-kristo@ti.com>, Benoit Parrot <bparrot@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 068/186] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
-Date:   Fri, 14 Feb 2020 11:15:17 -0500
-Message-Id: <20200214161715.18113-68-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 210/252] ARM: dts: am43xx: add support for clkout1 clock
+Date:   Fri, 14 Feb 2020 11:11:05 -0500
+Message-Id: <20200214161147.15842-210-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,49 +60,99 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Manu Gautam <mgautam@codeaurora.org>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
+[ Upstream commit 01053dadb79d63b65f7b353e68b4b6ccf4effedb ]
 
-QUSB2 PHY on msm8996 doesn't work well when autosuspend by
-dwc3 core using USB2PHYCFG register is enabled. One of the
-issue seen is that PHY driver reports PLL lock failure and
-fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
-Fix this by using quirks to disable USB2 PHY LPM/suspend and
-dwc3 core already takes care of explicitly suspending PHY
-during suspend if quirks are specified.
+clkout1 clock node and its generation tree was missing. Add this based
+on the data on TRM and PRCM functional spec.
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
+reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
+clkout1 clock") which is needed for the ov2659 camera sensor clock
+definition hence it is being re-applied here.
+
+Note that because of the current dts node name dependency for mapping to
+clock domain, we must still use "clkout1-*ck" naming instead of generic
+"clock@" naming for the node. And because of this, it's probably best to
+apply the dts node addition together along with the other clock changes.
+
+Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Tested-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 6f372ec055dd3..da2949586c7a3 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -788,6 +788,8 @@
- 				interrupts = <0 138 0>;
- 				phys = <&hsusb_phy2>;
- 				phy-names = "usb2-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
- 
-@@ -817,6 +819,8 @@
- 				interrupts = <0 131 0>;
- 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
- 				phy-names = "usb2-phy", "usb3-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+index a7037a4b4fd48..ce3c4196f173c 100644
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -707,6 +707,60 @@
+ 		ti,bit-shift = <8>;
+ 		reg = <0x2a48>;
  	};
++
++	clkout1_osc_div_ck: clkout1-osc-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&sys_clkin_ck>;
++		ti,bit-shift = <20>;
++		ti,max-div = <4>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
++			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
++			 <&dpll_mpu_m2_ck>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_mux_ck>;
++		ti,bit-shift = <4>;
++		ti,max-div = <8>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_pre_div_ck>;
++		ti,bit-shift = <8>;
++		ti,max-div = <32>;
++		ti,index-power-of-two;
++		reg = <0x4100>;
++	};
++
++	clkout1_mux_ck: clkout1-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
++			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
++		ti,bit-shift = <16>;
++		reg = <0x4100>;
++	};
++
++	clkout1_ck: clkout1-ck {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&clkout1_mux_ck>;
++		ti,bit-shift = <23>;
++		reg = <0x4100>;
++	};
+ };
+ 
+ &prcm {
 -- 
 2.20.1
 
