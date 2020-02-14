@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7975FC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CC5C3B196
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDED222C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5316B222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="tUVxtqrh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U6HoPEPH"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="tjVpa68s";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YRsFt0v4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgBNMYu (ORCPT
+        id S1729140AbgBNMYv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:24:50 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:44445 "EHLO
+        Fri, 14 Feb 2020 07:24:51 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34983 "EHLO
         new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727970AbgBNMYt (ORCPT
+        by vger.kernel.org with ESMTP id S1727970AbgBNMYu (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:24:49 -0500
+        Fri, 14 Feb 2020 07:24:50 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id B3A9C7352;
-        Fri, 14 Feb 2020 07:24:48 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 14 Feb 2020 07:24:48 -0500
+        by mailnew.nyi.internal (Postfix) with ESMTP id 333FC734E;
+        Fri, 14 Feb 2020 07:24:50 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 14 Feb 2020 07:24:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=aGIlfA2KuBAok
-        WapNsxvxuUq+3OyrK2C0WS49FNUGu4=; b=tUVxtqrh+vW/O2BpQj+bR9+uhbZPd
-        RjCe0jJLlss1RVaLKUAyd5JM9rv6a79cHUJatJfwAJZxJOA1gyTylKKtglYHNntl
-        ikL+X2ThGq/5hvjDk9wwC/ZY2Gw5QjHMccH8zJAAqnrB/zLMiWqKwtuJpn5yl2Nc
-        3GFuiupwc3/Yw8Epp6dzR9QAF5oeuGbtdmTfS7s8pV0gI6w5/2na9VXkhq49hU6J
-        TgspOkIPpZMdd3b61kOohpUUoxOopEQ1mzwwUByeLzMlBAgEH87osj19/PJcO3Q1
-        edlxfw1g32sCH0Al41pXOOBVkp/3Onhn69eLVh0s343SIX61pNdFtqcYA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=bC7S86a4jGL63
+        niIbDq1SRfkrzDp7RcwzpEdiRnR5HQ=; b=tjVpa68swhCHL7XkAD4r3YiwBDAk9
+        AsTaFK31nPwN+5FI/obez2qZjo4kgraENOyfJrx1UEvWiTSn0Ks9TfDkHZcjSHT3
+        Ya77mY44vvdhnYbP12yF3cPSLnrnYJ8QW912zlIGtIK3Bz23zYzhG9MlgoOF31Ow
+        aSp5aetfk0ojcp6xIRi+E6bTze/DqLC30SFutGfTknxtnTNAwLJsCcS+LQwlDmjH
+        I2GoeIQlTOWTu4GwZTg6aBQOmxQyz0jwMsgE17CfPt4r+LHlpDjJZdHRnoPDxsXN
+        jb6kLZEek7M4Us3W18b+PUE0uN0wTx05QUIb5sH2pBa9GkhU+BH6CgXxA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=aGIlfA2KuBAokWapNsxvxuUq+3OyrK2C0WS49FNUGu4=; b=U6HoPEPH
-        k5ZpvAkq40wNODLGmqWtZlTHImZwFZWPlu6GJoUTUkUzruh09ULKlzRAJkB4PhQg
-        ddlewVly7VXFAC7CG3qrLr6RwIektH7Ln6xPco0Nh/DFUlaSepGhwbMxfE2+g+OI
-        9qPaKKsBI9lVbX+F+XyvbH3IM5gFY1/Jic19yH8ybzmSsX4U/iNH0fGHuc0gf1+D
-        WmqS/RH4nqcjyxoXhboEaPz3VmhWNqhTXwflF5r7GXOBeoHpjkl6uD4q2Fd42jfD
-        wkqIQyoKC6vtGKVwiYlvfq+QD7Vf+n+clpTh+5//NdvwfnfFjNJz/trYdIXR3cMk
-        m+LFhvhCA5GtAA==
-X-ME-Sender: <xms:kJFGXnj3Tewq_HMV-xwPvLWFuU5krV-iib8MpsDZTfk6K3_UlRr40A>
+        fm2; bh=bC7S86a4jGL63niIbDq1SRfkrzDp7RcwzpEdiRnR5HQ=; b=YRsFt0v4
+        1LH+T6thCxVx7vprAn5UedpAkslwwc//hZB102bNJgEhTPFAh+csany84R916EIp
+        HSQE9KgBKRYvb3hVgvMGs8yz1Sw0YgqT8zVlCX5Zlx0RgxHtgknPzeCH4x7a2voU
+        lOqjbJNjMjhX7VxDLII0vMNcfxCdsG+cHO/6A1q2JuhacAZRJ071L7VNh21jgnQK
+        vkLbZGAtOh6OuqVJiaGHcxvO8SFdQHtvFhEm5j4v9MpeJWrg7Is/ox/ErAOMhSFo
+        vPQe6cwrSdxSS8BSQ3kwD8BgxZuFduI0jx0zy+z9Ph0xzeS3QQ3H4i+Hku/ZyMFS
+        q6VD5MbtD9pTyw==
+X-ME-Sender: <xms:kpFGXhsusgwAHOvZcK7Kxvw037sIa4Rvd1G6b0N91JwEWSKrNo2voA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdegtdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeefnecurfgrrhgrmhepmhgrihhl
     fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:kJFGXlRKglcr9Uy1m2LmnuruiZJMviq-OX65GcZBKQExG3_x2bFp4g>
-    <xmx:kJFGXvgheTHC0eJRs3zCIcAAr0R_kjJxFVeHxRX5DIrcsQAyrHpBZA>
-    <xmx:kJFGXqdXKZho5XVpF5Nank1fXsShs6SHz0VCptx-G6n0Z8qECn95Eg>
-    <xmx:kJFGXnwr2qMbb1zYOROgntbivBlGYj31nMc0Uwo0fnuqLk_m-H-FrA>
+X-ME-Proxy: <xmx:kpFGXvab4L3-G1AVtcr9IekTDnEp9b6OfTc4w5xlnjP22tJOu_Uabw>
+    <xmx:kpFGXgRJ3qct5HqMTOaNbL4FzfMp-o6wvm1Kmhg-J_CRfZt0FhVXGw>
+    <xmx:kpFGXrW0E1ZQWX8IGIQEvoI0K02zNH66es2IatLgJLlh79WLuzJccA>
+    <xmx:kpFGXnMKd3W62XOua_YekANTasW8RddF4Y2ogTrkEj20EKjNCiQk5g>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 51D1E328005A;
-        Fri, 14 Feb 2020 07:24:48 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id C60113060EF2;
+        Fri, 14 Feb 2020 07:24:49 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
         dri-devel@lists.freedesktop.org
@@ -78,9 +78,9 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         linux-arm-kernel@lists.infradead.org,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 3/4] drm/panel: lvds: Support data and clock polarity flags
-Date:   Fri, 14 Feb 2020 13:24:40 +0100
-Message-Id: <bf302a84ca3ce9c4f83293d33e43925a9d7aeac9.1581682983.git-series.maxime@cerno.tech>
+Subject: [PATCH 4/4] drm/sun4i: lvds: Support data and clock polarity flags
+Date:   Fri, 14 Feb 2020 13:24:41 +0100
+Message-Id: <011bbc064e12acb5d8848721f8ff94e50754a9e4.1581682983.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.b12a054012ce067fa2094894147f953ab816d8d0.1581682983.git-series.maxime@cerno.tech>
 References: <cover.b12a054012ce067fa2094894147f953ab816d8d0.1581682983.git-series.maxime@cerno.tech>
@@ -91,70 +91,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree properties to the panel-lvds driver to set the bus
-flags properly.
+Our LVDS encoder can change the polarity of data and clock signals on
+the LVDS link. Make sure we don't ignore the matching bus flags.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/panel/panel-lvds.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-lvds.c b/drivers/gpu/drm/panel/panel-lvds.c
-index 5ce3f4a2b7a1..c0d6dcd9e9fc 100644
---- a/drivers/gpu/drm/panel/panel-lvds.c
-+++ b/drivers/gpu/drm/panel/panel-lvds.c
-@@ -31,6 +31,8 @@ struct panel_lvds {
- 	unsigned int height;
- 	struct videomode video_mode;
- 	unsigned int bus_format;
-+	bool clk_active_low;
-+	bool data_active_low;
- 	bool data_mirror;
- 
- 	struct regulator *supply;
-@@ -83,6 +85,7 @@ static int panel_lvds_get_modes(struct drm_panel *panel,
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index c81cdce6ed55..fdf143042f83 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -404,6 +404,8 @@ static void sun4i_tcon0_mode_set_lvds(struct sun4i_tcon *tcon,
+ 				      const struct drm_encoder *encoder,
+ 				      const struct drm_display_mode *mode)
  {
- 	struct panel_lvds *lvds = to_panel_lvds(panel);
- 	struct drm_display_mode *mode;
-+	unsigned int flags = 0;
++	struct drm_connector *connector = sun4i_tcon_get_connector(encoder);
++	const struct drm_display_info *info = &connector->display_info;
+ 	unsigned int bp;
+ 	u8 clk_delay;
+ 	u32 reg, val = 0;
+@@ -449,9 +451,17 @@ static void sun4i_tcon0_mode_set_lvds(struct sun4i_tcon *tcon,
+ 		     SUN4I_TCON0_BASIC2_V_TOTAL(mode->crtc_vtotal * 2) |
+ 		     SUN4I_TCON0_BASIC2_V_BACKPORCH(bp));
  
- 	mode = drm_mode_create(connector->dev);
- 	if (!mode)
-@@ -96,9 +99,23 @@ static int panel_lvds_get_modes(struct drm_panel *panel,
- 	connector->display_info.height_mm = lvds->height;
- 	drm_display_info_set_bus_formats(&connector->display_info,
- 					 &lvds->bus_format, 1);
--	connector->display_info.bus_flags = lvds->data_mirror
--					  ? DRM_BUS_FLAG_DATA_LSB_TO_MSB
--					  : DRM_BUS_FLAG_DATA_MSB_TO_LSB;
-+
-+	if (lvds->data_mirror)
-+		flags |= DRM_BUS_FLAG_DATA_LSB_TO_MSB;
+-	reg = SUN4I_TCON0_LVDS_IF_CLK_SEL_TCON0 |
+-		SUN4I_TCON0_LVDS_IF_DATA_POL_NORMAL |
+-		SUN4I_TCON0_LVDS_IF_CLK_POL_NORMAL;
++	reg = SUN4I_TCON0_LVDS_IF_CLK_SEL_TCON0;
++	if (info->bus_flags & DRM_BUS_FLAG_PIXDATA_NEGEDGE)
++		reg |= SUN4I_TCON0_LVDS_IF_CLK_POL_INV;
 +	else
-+		flags |= DRM_BUS_FLAG_DATA_MSB_TO_LSB;
++		reg |= SUN4I_TCON0_LVDS_IF_CLK_POL_NORMAL;
 +
-+	if (lvds->clk_active_low)
-+		flags |= DRM_BUS_FLAG_PIXDATA_NEGEDGE;
++	if (info->bus_flags & DRM_BUS_FLAG_DATA_LOW)
++		reg |= SUN4I_TCON0_LVDS_IF_DATA_POL_INV;
 +	else
-+		flags |= DRM_BUS_FLAG_PIXDATA_POSEDGE;
++		reg |= SUN4I_TCON0_LVDS_IF_DATA_POL_NORMAL;
 +
-+	if (lvds->data_active_low)
-+		flags |= DRM_BUS_FLAG_DATA_LOW;
-+	else
-+		flags |= DRM_BUS_FLAG_DATA_HIGH;
-+
-+	connector->display_info.bus_flags = flags;
- 
- 	return 1;
- }
-@@ -159,6 +176,8 @@ static int panel_lvds_parse_dt(struct panel_lvds *lvds)
- 		return -EINVAL;
- 	}
- 
-+	lvds->clk_active_low = of_property_read_bool(np, "clock-active-low");
-+	lvds->data_active_low = of_property_read_bool(np, "data-active-low");
- 	lvds->data_mirror = of_property_read_bool(np, "data-mirror");
- 
- 	return 0;
+ 	if (sun4i_tcon_get_pixel_depth(encoder) == 24)
+ 		reg |= SUN4I_TCON0_LVDS_IF_BITWIDTH_24BITS;
+ 	else
 -- 
 git-series 0.9.1
