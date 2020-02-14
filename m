@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB05C3B1A5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24046C3B1A6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7569C2067D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E414120656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699720;
-	bh=rWXbwbRAZonVyOwllnzP9TFQ4vkrdB9BcqX/125Xjik=;
+	s=default; t=1581700013;
+	bh=XqHntQ68nAA1PkhJZLhzZ1cKTnOr9ceFKNXlAqKnqBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OB2mOF5fMkZ5D4peJZ00Syg//HlPMrXAtDFRuXA0397drmBlZDHeHPDw5H5+Ion7C
-	 IEgZxFBb+Q/F346EmD9PnarSmQjofxTvc87twY+ou+rEuXBP6z4pKHTlN64lAuMS2x
-	 iIsx1xMm7Qc3/MEZ8s2TlrnO/hewrd8O50wtg4Zk=
+	b=eQbMwiqxO9uzJ4swkhTL6Oft29MoNREHXlGPoflSlMSHZDvHqCQzCWXs5QPbbAP8B
+	 5xNS1FxydNACDEyvp8V1sYqMc7buWDbdQgd8AExDCmoFIAqNs7xq4A0tn7l1ArwBWd
+	 bpuQbdcBsEkyq3wvFWCMlkxFjc3Rbt5u2nD6r1Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392438AbgBNQQP (ORCPT
+        id S2392390AbgBNQOs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:16:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46926 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403832AbgBNQQN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:13 -0500
+        id S2392383AbgBNQOr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 559042467D;
-        Fri, 14 Feb 2020 16:16:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 336E7246D2;
+        Fri, 14 Feb 2020 16:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696972;
-        bh=rWXbwbRAZonVyOwllnzP9TFQ4vkrdB9BcqX/125Xjik=;
+        s=default; t=1581696887;
+        bh=XqHntQ68nAA1PkhJZLhzZ1cKTnOr9ceFKNXlAqKnqBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e0exXlpXlONcPFvXJAUNgnxFQkREUKO/hWyO3PEuj6a7pWFmdb1AXteFsgBSIKYjM
-         K8RRRtmt1u0vdWKjcTTjjCZrvwyKYd3NM19CEbVDAaWGBSV+rrmaR66MBLuJoYndYo
-         SzCb5U2gUTRGZKEpkZlp+ih5/WkBU1vaEE2yaP6o=
+        b=Nhaf9M8LDFS7Qv3pR2bbTeWyzFwwV7IJnBWGCtQPu/p2cW4MX/OM7Kpnow/9aRFL9
+         GjIQpRJDy1iLAUdjSCP8qshobUJ+BmRnpySzKlUCg2xhqvmxuU2o6Npe2Da6jwxlFe
+         MdI4LkYgogoYQ5SzbvMo9er+8o9HU43e7YWGOHbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>, Benoit Parrot <bparrot@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 210/252] ARM: dts: am43xx: add support for clkout1 clock
-Date:   Fri, 14 Feb 2020 11:11:05 -0500
-Message-Id: <20200214161147.15842-210-sashal@kernel.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 140/252] ARM: dts: stm32: Add power-supply for DSI panel on stm32f469-disco
+Date:   Fri, 14 Feb 2020 11:09:55 -0500
+Message-Id: <20200214161147.15842-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,99 +61,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-[ Upstream commit 01053dadb79d63b65f7b353e68b4b6ccf4effedb ]
+[ Upstream commit 0ff15a86d0c5a3f004fee2e92d65b88e56a3bc58 ]
 
-clkout1 clock node and its generation tree was missing. Add this based
-on the data on TRM and PRCM functional spec.
+Add a fixed regulator and use it as power supply for DSI panel.
 
-commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
-reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
-clkout1 clock") which is needed for the ov2659 camera sensor clock
-definition hence it is being re-applied here.
+Fixes: 18c8866266 ("ARM: dts: stm32: Add display support on stm32f469-disco")
 
-Note that because of the current dts node name dependency for mapping to
-clock domain, we must still use "clkout1-*ck" naming instead of generic
-"clock@" naming for the node. And because of this, it's probably best to
-apply the dts node addition together along with the other clock changes.
-
-Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Tested-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ arch/arm/boot/dts/stm32f469-disco.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index a7037a4b4fd48..ce3c4196f173c 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -707,6 +707,60 @@
- 		ti,bit-shift = <8>;
- 		reg = <0x2a48>;
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index 3ee768cb86fc9..eea979ef5512f 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -75,6 +75,13 @@
+ 		regulator-max-microvolt = <3300000>;
  	};
-+
-+	clkout1_osc_div_ck: clkout1-osc-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&sys_clkin_ck>;
-+		ti,bit-shift = <20>;
-+		ti,max-div = <4>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
-+			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
-+			 <&dpll_mpu_m2_ck>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_mux_ck>;
-+		ti,bit-shift = <4>;
-+		ti,max-div = <8>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout1_src2_pre_div_ck>;
-+		ti,bit-shift = <8>;
-+		ti,max-div = <32>;
-+		ti,index-power-of-two;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_mux_ck: clkout1-mux-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
-+			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
-+		ti,bit-shift = <16>;
-+		reg = <0x4100>;
-+	};
-+
-+	clkout1_ck: clkout1-ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&clkout1_mux_ck>;
-+		ti,bit-shift = <23>;
-+		reg = <0x4100>;
-+	};
- };
  
- &prcm {
++	vdd_dsi: vdd-dsi {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_dsi";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	soc {
+ 		dma-ranges = <0xc0000000 0x0 0x10000000>;
+ 	};
+@@ -154,6 +161,7 @@
+ 		compatible = "orisetech,otm8009a";
+ 		reg = <0>; /* dsi virtual channel (0..3) */
+ 		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
++		power-supply = <&vdd_dsi>;
+ 		status = "okay";
+ 
+ 		port {
 -- 
 2.20.1
 
