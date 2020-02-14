@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5384CC35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E89DC35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD472081E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C572081E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 22:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581720208;
-	bh=6XtvcqAw2ng8h7+x3aNnk3TYZNl22VUmbMX+d8QHcEs=;
+	s=default; t=1581720224;
+	bh=H/TPqHRNSmD4IwUAivQ4lInBziR9Asin4p/pl6/mCO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XSG79FAUqcssb5yQG1r2wi99dv5F8eHHqaWQ0FPvDtVnuVUH9R9TCPcuMmZOhSWOX
-	 Egv4VrY6CUUbdApLleaLJw/F4wcQc0kfupQHdkiCh7Pq+Ctgbr3fDjJBxnksEOy/fd
-	 0TDvzt/QMvdxrMFJr3K0icYcbRKe6Y1t4ULS1vRQ=
+	b=ft7MovJuibCPz5frB+U24qugh0w36O/h+6B1aI5NM1dQvBKxC4i+5SM9oIrCQUNTn
+	 H/dmTopar/f5PI2IoSV4eTMP+PS+Dh9yyg/OyxRsvEpINsEQd8cMvxDMYqEoXkByj6
+	 BqDbTrKzfafpBuFBhS3XJy6nJ1yHE3BHKFZNuGMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgBNWn1 (ORCPT
+        id S1727964AbgBNWnf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:43:27 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46672 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbgBNWn1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 17:43:27 -0500
-Received: by mail-ot1-f66.google.com with SMTP id g64so10656636otb.13;
-        Fri, 14 Feb 2020 14:43:27 -0800 (PST)
+        Fri, 14 Feb 2020 17:43:35 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43094 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbgBNWnd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 17:43:33 -0500
+Received: by mail-oi1-f195.google.com with SMTP id p125so10951895oif.10;
+        Fri, 14 Feb 2020 14:43:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ST+PLmiGkSAozwHs99VdZ/cPWTCicua8kJ4SQHCu/G0=;
-        b=jVdUIj8QKcnYvs9zwdkmvD6M+eIlc/zEDEC0iAx0oDknUIre9g9WpIr9+djbQo/WXr
-         KwPJWksYnfY2UOYp4Dg46mmevIxY8XYfOtV51PR2yo6/NlLOdS3daj4afSIMO0rPK++f
-         ufPFcdPJYt8bthMNkWTUJSe46tTRzFi3hD3JO1mBHnYxkwB0XtWbnj9AmFakgxwJCLQN
-         ZBZqWVJOsbk+AHva1xsb/2JkPaY0WcG2kTiN3G2YysQcJQG6oJcov7S8v0vvRhLOILJG
-         QTB1BxI0WamG6zRnsR7VUD10fxXBPvIxpEXAwaDAtilP7Jv6MnXYsSQtqFXMBgLN0PIs
-         6Cmg==
-X-Gm-Message-State: APjAAAUvOP/bphVoCVdWc0niz1CJU7eCspN/AKqk2URrdQ8sUPtQ89ji
-        YUY+OdjJvZ+fh/LYsTRnbhBLaAc=
-X-Google-Smtp-Source: APXvYqxxmXzYV2nzTRMz/xGJINwf9DGQxAgo8jid+3mqivFaYg1qMgHG0Ks4Cmkv5nA82os7cvfM0Q==
-X-Received: by 2002:a9d:7f12:: with SMTP id j18mr4296352otq.17.1581720206590;
-        Fri, 14 Feb 2020 14:43:26 -0800 (PST)
+        bh=RRK+etse5GdhzRRMSbN0AsTFv8NtL6Mf75PwYVcJU44=;
+        b=ufV4By3kONxEZnyPWsfuV2Gp6foK6U9A7tSQdfSdzAel/6TDFgZw+/8/HBKXxffZd1
+         VSXS6wlcC5Vy3zpTHZVjrJN9R0R5VcUuErrWkvkORdP1gFCIltpDwTt0FeBF4NKSIm5e
+         jCwbS+hrkea14hx1vctyT1k32qmWR65sRNuP9/oxQwxNDWSaHpD7HVJt71ZH/uZndGfn
+         7YIpH+TAofUj3kKsjTNErV1o6ZVG8pq4RuHml7rDUybEroKiC1fskapyJvlmWXbj697e
+         oaPjFj6ykMoFCux0u9FDbtjN+0b7skh0K0gx2npo/sHvIqTEfKfGGwLDEPflr32EdaM1
+         1m9A==
+X-Gm-Message-State: APjAAAUk4xspchTzZNmxV0SMxD8P/pHscfcMpVtUrTKKHysPGLTjSols
+        2aZtRNnbRA80nYy5ZAyPNEERqDA=
+X-Google-Smtp-Source: APXvYqz909Fzl/Mv16+lZxspbsDGyoBiYnJJXHR2kdCOGJNisRMIBPTjbnRMOa+Vuf4buMe01/NvvA==
+X-Received: by 2002:aca:f0b:: with SMTP id 11mr3564215oip.34.1581720212297;
+        Fri, 14 Feb 2020 14:43:32 -0800 (PST)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id m69sm2453167otc.78.2020.02.14.14.43.25
+        by smtp.googlemail.com with ESMTPSA id m69sm2453167otc.78.2020.02.14.14.43.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 14:43:26 -0800 (PST)
+        Fri, 14 Feb 2020 14:43:31 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
@@ -60,9 +60,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Michael Ellerman <mpe@ellerman.id.au>,
         Michal Simek <monstr@monstr.eu>,
         Paul Mackerras <paulus@samba.org>
-Subject: [PATCH 2/7] microblaze: Drop using struct of_pci_range.pci_space field
-Date:   Fri, 14 Feb 2020 16:43:17 -0600
-Message-Id: <20200214224322.20030-3-robh@kernel.org>
+Subject: [PATCH 7/7] of/address: Support multiple 'dma-ranges' entries
+Date:   Fri, 14 Feb 2020 16:43:22 -0600
+Message-Id: <20200214224322.20030-8-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214224322.20030-1-robh@kernel.org>
 References: <20200214224322.20030-1-robh@kernel.org>
@@ -73,47 +73,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Let's use the struct of_pci_range.flags field instead so we can remove
-the pci_space field.
+Currently, the DMA offset and mask for a device are set based only on the
+first 'dma-ranges' entry. We should really be using all the entries. The
+kernel doesn't yet support multiple offsets and sizes, so the best we can
+do is to find the biggest size for a single offset. The algorithm is
+copied from acpi_dma_get_range().
 
-Just drop the debug prints as there's plenty of debug output in
-drivers/of/address.c which can be enabled.
+If there's different offsets from the first entry, then we warn and
+continue. It really should be an error, but this will likely break
+existing DTs.
 
-Cc: Michal Simek <monstr@monstr.eu>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/microblaze/pci/pci-common.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/of/address.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index 58cc4965bd3e..60a58c0015f2 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -433,10 +433,6 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
- 	pr_debug("Parsing ranges property...\n");
- 	for_each_of_pci_range(&parser, &range) {
- 		/* Read next ranges element */
--		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
--				range.pci_space, range.pci_addr);
--		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
--					range.cpu_addr, range.size);
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index a2c45812a50e..8eea3f6e29a4 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -944,6 +944,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	bool found_dma_ranges = false;
+ 	struct of_range_parser parser;
+ 	struct of_range range;
++	u64 dma_start = U64_MAX, dma_end = 0, dma_offset = 0;
  
- 		/* If we failed translation or got a zero-sized region
- 		 * (some FW try to feed us with non sensical zero sized regions
-@@ -486,7 +482,7 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
- 			pr_info(" MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
- 				range.cpu_addr, range.cpu_addr + range.size - 1,
- 				range.pci_addr,
--				(range.pci_space & 0x40000000) ?
-+				(range.flags & IORESOURCE_PREFETCH) ?
- 				"Prefetch" : "");
+ 	while (node) {
+ 		ranges = of_get_property(node, "dma-ranges", &len);
+@@ -974,14 +975,33 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 		pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
+ 			 range.bus_addr, range.cpu_addr, range.size);
  
- 			/* We support only 3 memory ranges */
-@@ -1121,4 +1117,3 @@ int early_find_capability(struct pci_controller *hose, int bus, int devfn,
- {
- 	return pci_bus_find_capability(fake_pci_bus(hose, bus), devfn, cap);
- }
--
+-		*dma_addr = range.bus_addr;
+-		*paddr = range.cpu_addr;
+-		*size = range.size;
++		if (dma_offset && range.cpu_addr - range.bus_addr != dma_offset) {
++			pr_warn("Can't handle multiple dma-ranges with different offsets on node(%pOF)\n", node);
++			/* Don't error out as we'd break some existing DTs */
++			continue;
++		}
++		dma_offset = range.cpu_addr - range.bus_addr;
++
++		/* Take lower and upper limits */
++		if (range.bus_addr < dma_start)
++			dma_start = range.bus_addr;
++		if (range.bus_addr + range.size > dma_end)
++			dma_end = range.bus_addr + range.size;
++	}
+ 
++	if (dma_start >= dma_end) {
++		ret = -EINVAL;
++		pr_debug("Invalid DMA ranges configuration on node(%pOF)\n",
++			 node);
+ 		goto out;
+ 	}
+ 
+-	pr_err("translation of DMA ranges failed on node(%pOF)\n", np);
++	*dma_addr = dma_start;
++	*size = dma_end - dma_start;
++	*paddr = dma_start + dma_offset;
++
++	pr_debug("final: dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
++		 *dma_addr, *paddr, *size);
+ 
+ out:
+ 	of_node_put(node);
 -- 
 2.20.1
 
