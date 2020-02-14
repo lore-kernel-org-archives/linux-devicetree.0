@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5518FC3B1A6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A57C3B1AB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290982082F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980552168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701595;
-	bh=LtILxJ9C95kXAEwVvle1sN+WabbIIbi0e8O6PJc8BpU=;
+	s=default; t=1581701598;
+	bh=O223LQV9enNAUAJH8Cah5pckGd311AgxJ5giEGsj2OE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uqxJghjQ4HIecpuqypOSYth46Jsklc5udpGROzzD2Cp+KOvCs2Wh8Or3NTJND/E6a
-	 wNkh9vQM2+ZhrgplMkFJqEskh85gHLTwr5tneqK798GWaGpt28RZWeV3TVEEKKWA0a
-	 Nny3BojlJBojdSp8Tk2mkywFu52AI1htGDNG20ls=
+	b=0EinCqlC5yokIdLtkFPXeaTCpaqwoA4Wx/60rtXK1Ygcof+e1NaMuO6/5P6P4SACp
+	 dbIdHrRSF6VcwKMfTyoeMU34N/sgljdVIXBHhThNWOw93j+BphumHhp426Ra2hlUfk
+	 9bB8OCu1s1p0YQLkmU4lln85PSY6CMho4MdBA2F4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390459AbgBNQGe (ORCPT
+        id S2390439AbgBNQGa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57004 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:06:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390450AbgBNQGd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:33 -0500
+        id S2390435AbgBNQG3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34BB722314;
-        Fri, 14 Feb 2020 16:06:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83319206D7;
+        Fri, 14 Feb 2020 16:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696393;
-        bh=LtILxJ9C95kXAEwVvle1sN+WabbIIbi0e8O6PJc8BpU=;
+        s=default; t=1581696389;
+        bh=O223LQV9enNAUAJH8Cah5pckGd311AgxJ5giEGsj2OE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4W7WCqqBpEG+cj3D6C3FNIJrZtcrggHXh/8FNvL1fITLE14T1Ebq37Y/ZBQzV49M
-         aiR6TrF/rNjzKjc31K7vQ7HZ9d2Nwv3dGyxbUSWvUyCp4u4R66j0UuitxEskPJS8lb
-         MsmHQ5TGt9YoxnJiOikyvCApJnxLfZ89zc3xVmkw=
+        b=sKkyb6uCIQf4P7VmAvndURRa0TssA8m1YwroFbIsxyc/z+JRmR0i0jHp+IXR5Bue/
+         4a0H5LB1H7lVl7GhobX3pAA3C8hvTwAqZ6/9aO+jQstbN35JVePhrc2caSM+V5U6RF
+         v7CVu6Ss9KoZTLsnEvOxS7+zTNNxx9sdE8A4vhjE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 218/459] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
-Date:   Fri, 14 Feb 2020 10:57:48 -0500
-Message-Id: <20200214160149.11681-218-sashal@kernel.org>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 215/459] arm64: dts: renesas: r8a77990: ebisu: Remove clkout-lr-synchronous from sound
+Date:   Fri, 14 Feb 2020 10:57:45 -0500
+Message-Id: <20200214160149.11681-215-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,35 +60,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-[ Upstream commit 2e198c395a084ff3015d71896e35de049c40e3a4 ]
+[ Upstream commit bf2b74ce9b33a2edd6ba1930ce60a71830790910 ]
 
-The WiFi firmware used on db845c implements the 8bit host-capability
-message, so enable the quirk for this.
+rcar_sound doesn't support clkout-lr-synchronous in upstream.
+It was supported under out-of-tree rcar_sound.
+upstream rcar_sound is supporting
+	- clkout-lr-synchronous
+	+ clkout-lr-asynchronous
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20191113232245.4039932-1-bjorn.andersson@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/87mubt3tux.wl-kuninori.morimoto.gx@renesas.com
+Fixes: 56629fcba94c698d ("arm64: dts: renesas: ebisu: Enable Audio")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index f5a85caff1a39..751651a6cd819 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -517,6 +517,8 @@
- 	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
- 	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
- 	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+
-+	qcom,snoc-host-cap-8bit-quirk;
- };
+diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+index b38f9d442fc08..e6d700f8c1948 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+@@ -636,7 +636,6 @@
+ 	/* audio_clkout0/1/2/3 */
+ 	#clock-cells = <1>;
+ 	clock-frequency = <12288000 11289600>;
+-	clkout-lr-synchronous;
  
- /* PINCTRL - additions to nodes defined in sdm845.dtsi */
+ 	status = "okay";
+ 
 -- 
 2.20.1
 
