@@ -2,912 +2,375 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109FFC35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 05:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C67C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 05:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F0224654
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 05:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641F1222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 05:30:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZSf2/sGO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725845AbgBNFNH (ORCPT
+        id S1726092AbgBNFa6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 00:13:07 -0500
-Received: from relmlor2.renesas.com ([210.160.252.172]:51636 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725777AbgBNFNH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 00:13:07 -0500
-Date:   14 Feb 2020 14:13:05 +0900
-X-IronPort-AV: E=Sophos;i="5.70,439,1574089200"; 
-   d="scan'208";a="39044632"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 14 Feb 2020 14:13:05 +0900
-Received: from mercury.renesas.com (unknown [10.166.252.133])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 1E2C24195008;
-        Fri, 14 Feb 2020 14:13:05 +0900 (JST)
-Message-ID: <87blq1zr8n.wl-kuninori.morimoto.gx@renesas.com>
-From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH v2] ASoC: dt-bindings: simple-card: switch to yaml base Documentation
-User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 14 Feb 2020 00:30:58 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40000 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgBNFa6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 00:30:58 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so4297580pfh.7
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 21:30:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EFw2du6rZFRPkSdj9P0sIJ2N76IKO5MEY8qu/tBHDTE=;
+        b=ZSf2/sGO4VosqGWbhqIg9BURFt5AEw7U1ceHPx4xuB3St0pTtFSyAFl11OHhNkD+jG
+         yN3kiPsdW2HSg3pxQZG7Wwq5SxUKGCoyARoxlO3/kweb9iA+MVhrU4y62BKoo6Ca3mxX
+         F+N7ji1kMg+eFV/E/+NZjdocV4xUcO1ml9/q9YszTbaeJY8aE6RniJ2P9yHaoNoWf2s4
+         UNmZWMtUdynSBDX6wG5jpsvJG3Aq+uKnn84MUMk0+EEhV4/7b0tDvur6nd2iDVWuXcJw
+         f6ovHSaEMkOzCEAf9UfTTY/jz2RgGDevXXmBhfaAdriJz8OnuB8iAcIxiTzqV+5HNolg
+         8A1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EFw2du6rZFRPkSdj9P0sIJ2N76IKO5MEY8qu/tBHDTE=;
+        b=Zj2uPkPi7z6kJubTewnTOW5f+VfV1uuTMVEEUOuiYCSGxftO7903eFz6v6824OyKeL
+         FhO/oB6x2sMX0QRMs5+tg7G8aQRl97xOJCsorIqrpt6Eklb3IBk8FfIxCGJpn//S7Jaj
+         w3MfZKyafKmsaoT0GBIS3WQ49KFT/sgR4BFiE8O2fBM1QKfigwpR5ZGNfdE/bg1nPMyG
+         X71v5NEwFlrSZQanE0hUedmQCk62hCa1Jw4rDGk5/g25h+Eh+SmybbE+5yibFu6QwSvp
+         UdO3to1Oc6PP3MqeBIKRhscBigSVTWNZ3aq4DOsZVlVYZxheFkzIU2wLPpVEL+it7KkG
+         fylQ==
+X-Gm-Message-State: APjAAAV3yKXaBeXbV1W5gohqNe9VrE9gLyzAEM7r+f8aPFfHtWrK7QlW
+        niPDKz1qeT8WaQWgEr5CEbS9QQ==
+X-Google-Smtp-Source: APXvYqyWuLtjpfHoJG0Et4y2kDxaE5sl9XWYR/qheoXohBf/fiQf171wTxdxmPyYwEAJ35bIMlWhOA==
+X-Received: by 2002:a63:e65:: with SMTP id 37mr1575156pgo.171.1581658257501;
+        Thu, 13 Feb 2020 21:30:57 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f43sm4741021pje.23.2020.02.13.21.30.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 21:30:56 -0800 (PST)
+Date:   Thu, 13 Feb 2020 21:30:53 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH V3] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD
+ card
+Message-ID: <20200214053053.GV3948@builder>
+References: <1578495250-10672-1-git-send-email-sbhanu@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578495250-10672-1-git-send-email-sbhanu@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Wed 08 Jan 06:54 PST 2020, Shaik Sajida Bhanu wrote:
 
-This patch switches from .txt base to .yaml base Document.
+> From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> 
+> Add sdhc instances for supporting eMMC and SD-card on sc7180.
+> The regulators should be in HPM state for proper functionality of
+> eMMC and SD-card. Updating corresponding regulators accordingly.
+> 
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
 
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
----
-v1 -> v2
+Applied
 
-	- add missing setup
+Regards,
+Bjorn
 
- .../devicetree/bindings/sound/simple-card.txt | 351 -------------
- .../bindings/sound/simple-card.yaml           | 484 ++++++++++++++++++
- 2 files changed, 484 insertions(+), 351 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/simple-card.txt
- create mode 100644 Documentation/devicetree/bindings/sound/simple-card.yaml
-
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-deleted file mode 100644
-index 79954cd6e37b..000000000000
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ /dev/null
-@@ -1,351 +0,0 @@
--Simple-Card:
--
--Simple-Card specifies audio DAI connections of SoC <-> codec.
--
--Required properties:
--
--- compatible				: "simple-audio-card"
--
--Optional properties:
--
--- simple-audio-card,name		: User specified audio sound card name, one string
--					  property.
--- simple-audio-card,widgets		: Please refer to widgets.txt.
--- simple-audio-card,routing		: A list of the connections between audio components.
--					  Each entry is a pair of strings, the first being the
--					  connection's sink, the second being the connection's
--					  source.
--- simple-audio-card,mclk-fs             : Multiplication factor between stream rate and codec
--					  mclk. When defined, mclk-fs property defined in
--					  dai-link sub nodes are ignored.
--- simple-audio-card,hp-det-gpio		: Reference to GPIO that signals when
--					  headphones are attached.
--- simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
--					  a microphone is attached.
--- simple-audio-card,aux-devs		: List of phandles pointing to auxiliary devices, such
--					  as amplifiers, to be added to the sound card.
--- simple-audio-card,pin-switches	: List of strings containing the widget names for
--					  which pin switches must be created.
--
--Optional subnodes:
--
--- simple-audio-card,dai-link		: Container for dai-link level
--					  properties and the CPU and CODEC
--					  sub-nodes. This container may be
--					  omitted when the card has only one
--					  DAI link. See the examples and the
--					  section below.
--
--Dai-link subnode properties and subnodes:
--
--If dai-link subnode is omitted and the subnode properties are directly
--under "sound"-node the subnode property and subnode names have to be
--prefixed with "simple-audio-card,"-prefix.
--
--Required dai-link subnodes:
--
--- cpu					: CPU   sub-node
--- codec					: CODEC sub-node
--
--Optional dai-link subnode properties:
--
--- format				: CPU/CODEC common audio format.
--					  "i2s", "right_j", "left_j" , "dsp_a"
--					  "dsp_b", "ac97", "pdm", "msb", "lsb"
--- frame-master				: Indicates dai-link frame master.
--					  phandle to a cpu or codec subnode.
--- bitclock-master			: Indicates dai-link bit clock master.
--					  phandle to a cpu or codec subnode.
--- bitclock-inversion			: bool property. Add this if the
--					  dai-link uses bit clock inversion.
--- frame-inversion			: bool property. Add this if the
--					  dai-link uses frame clock inversion.
--- mclk-fs             			: Multiplication factor between stream
--					  rate and codec mclk, applied only for
--					  the dai-link.
--
--For backward compatibility the frame-master and bitclock-master
--properties can be used as booleans in codec subnode to indicate if the
--codec is the dai-link frame or bit clock master. In this case there
--should be no dai-link node, the same properties should not be present
--at sound-node level, and the bitclock-inversion and frame-inversion
--properties should also be placed in the codec node if needed.
--
--Required CPU/CODEC subnodes properties:
--
--- sound-dai				: phandle and port of CPU/CODEC
--
--Optional CPU/CODEC subnodes properties:
--
--- dai-tdm-slot-num			: Please refer to tdm-slot.txt.
--- dai-tdm-slot-width			: Please refer to tdm-slot.txt.
--- clocks / system-clock-frequency	: specify subnode's clock if needed.
--					  it can be specified via "clocks" if system has
--					  clock node (= common clock), or "system-clock-frequency"
--					  (if system doens't support common clock)
--					  If a clock is specified, it is
--					  enabled with clk_prepare_enable()
--					  in dai startup() and disabled with
--					  clk_disable_unprepare() in dai
--					  shutdown().
--					  If a clock is specified and a
--					  multiplication factor is given with
--					  mclk-fs, the clock will be set to the
--					  calculated mclk frequency when the
--					  stream starts.
--- system-clock-direction-out		: specifies clock direction as 'out' on
--					  initialization. It is useful for some aCPUs with
--					  fixed clocks.
--
---------------------------------------------
--Example 1 - single DAI link:
---------------------------------------------
--
--sound {
--	compatible = "simple-audio-card";
--	simple-audio-card,name = "VF610-Tower-Sound-Card";
--	simple-audio-card,format = "left_j";
--	simple-audio-card,bitclock-master = <&dailink0_master>;
--	simple-audio-card,frame-master = <&dailink0_master>;
--	simple-audio-card,widgets =
--		"Microphone", "Microphone Jack",
--		"Headphone", "Headphone Jack",
--		"Speaker", "External Speaker";
--	simple-audio-card,routing =
--		"MIC_IN", "Microphone Jack",
--		"Headphone Jack", "HP_OUT",
--		"External Speaker", "LINE_OUT";
--
--	simple-audio-card,cpu {
--		sound-dai = <&sh_fsi2 0>;
--	};
--
--	dailink0_master: simple-audio-card,codec {
--		sound-dai = <&ak4648>;
--		clocks = <&osc>;
--	};
--};
--
--&i2c0 {
--	ak4648: ak4648@12 {
--		#sound-dai-cells = <0>;
--		compatible = "asahi-kasei,ak4648";
--		reg = <0x12>;
--	};
--};
--
--sh_fsi2: sh_fsi2@ec230000 {
--	#sound-dai-cells = <1>;
--	compatible = "renesas,sh_fsi2";
--	reg = <0xec230000 0x400>;
--	interrupt-parent = <&gic>;
--	interrupts = <0 146 0x4>;
--};
--
---------------------------------------------
--Example 2 - many DAI links:
---------------------------------------------
--
--sound {
--	compatible = "simple-audio-card";
--	simple-audio-card,name = "Cubox Audio";
--
--	simple-audio-card,dai-link@0 {		/* I2S - HDMI */
--		reg = <0>;
--		format = "i2s";
--		cpu {
--			sound-dai = <&audio1 0>;
--		};
--		codec {
--			sound-dai = <&tda998x 0>;
--		};
--	};
--
--	simple-audio-card,dai-link@1 {		/* S/PDIF - HDMI */
--		reg = <1>;
--		cpu {
--			sound-dai = <&audio1 1>;
--		};
--		codec {
--			sound-dai = <&tda998x 1>;
--		};
--	};
--
--	simple-audio-card,dai-link@2 {		/* S/PDIF - S/PDIF */
--		reg = <2>;
--		cpu {
--			sound-dai = <&audio1 1>;
--		};
--		codec {
--			sound-dai = <&spdif_codec>;
--		};
--	};
--};
--
---------------------------------------------
--Example 3 - route audio from IMX6 SSI2 through TLV320DAC3100 codec
--through TPA6130A2 amplifier to headphones:
---------------------------------------------
--
--&i2c0 {
--	codec: tlv320dac3100@18 {
--		compatible = "ti,tlv320dac3100";
--		...
--	}
--
--	amp: tpa6130a2@60 {
--		compatible = "ti,tpa6130a2";
--		...
--	}
--}
--
--sound {
--	compatible = "simple-audio-card";
--	...
--	simple-audio-card,widgets =
--		"Headphone", "Headphone Jack";
--	simple-audio-card,routing =
--		"Headphone Jack", "HPLEFT",
--		"Headphone Jack", "HPRIGHT",
--		"LEFTIN", "HPL",
--		"RIGHTIN", "HPR";
--	simple-audio-card,aux-devs = <&amp>;
--	simple-audio-card,cpu {
--		sound-dai = <&ssi2>;
--	};
--	simple-audio-card,codec {
--		sound-dai = <&codec>;
--		clocks = ...
--	};
--};
--
---------------------------------------------
--Example 4. Sampling Rate Conversion
---------------------------------------------
--
--sound {
--	compatible = "simple-audio-card";
--
--	simple-audio-card,name = "rsnd-ak4643";
--	simple-audio-card,format = "left_j";
--	simple-audio-card,bitclock-master = <&sndcodec>;
--	simple-audio-card,frame-master = <&sndcodec>;
--
--	simple-audio-card,convert-rate = <48000>;
--
--	simple-audio-card,prefix = "ak4642";
--	simple-audio-card,routing = "ak4642 Playback", "DAI0 Playback",
--			"DAI0 Capture", "ak4642 Capture";
--
--	sndcpu: simple-audio-card,cpu {
--		sound-dai = <&rcar_sound>;
--	};
--
--	sndcodec: simple-audio-card,codec {
--		sound-dai = <&ak4643>;
--		system-clock-frequency = <11289600>;
--	};
--};
--
---------------------------------------------
--Example 5. 2 CPU 1 Codec (Mixing)
---------------------------------------------
--sound {
--	compatible = "simple-audio-card";
--
--	simple-audio-card,name = "rsnd-ak4643";
--	simple-audio-card,format = "left_j";
--	simple-audio-card,bitclock-master = <&dpcmcpu>;
--	simple-audio-card,frame-master = <&dpcmcpu>;
--
--	simple-audio-card,routing = "ak4642 Playback", "DAI0 Playback",
--			"ak4642 Playback", "DAI1 Playback";
--
--	dpcmcpu: cpu@0 {
--		sound-dai = <&rcar_sound 0>;
--	};
--
--	cpu@1 {
--		sound-dai = <&rcar_sound 1>;
--	};
--
--	codec {
--		prefix = "ak4642";
--		sound-dai = <&ak4643>;
--		clocks = <&audio_clock>;
--	};
--};
--
---------------------------------------------
--Example 6 - many DAI links with DPCM:
---------------------------------------------
--
--CPU0 ------ ak4613
--CPU1 ------ PCM3168A-p  /* DPCM 1ch/2ch */
--CPU2 --/                /* DPCM 3ch/4ch */
--CPU3 --/                /* DPCM 5ch/6ch */
--CPU4 --/                /* DPCM 7ch/8ch */
--CPU5 ------ PCM3168A-c
--
--sound {
--	compatible = "simple-audio-card";
--
--	simple-audio-card,routing =
--		  "pcm3168a Playback", "DAI1 Playback",
--		  "pcm3168a Playback", "DAI2 Playback",
--		  "pcm3168a Playback", "DAI3 Playback",
--		  "pcm3168a Playback", "DAI4 Playback";
--
--	simple-audio-card,dai-link@0 {
--		format = "left_j";
--		bitclock-master = <&sndcpu0>;
--		frame-master = <&sndcpu0>;
--
--		sndcpu0: cpu {
--			sound-dai = <&rcar_sound 0>;
--		};
--		codec {
--			sound-dai = <&ak4613>;
--		};
--	};
--	simple-audio-card,dai-link@1 {
--		format = "i2s";
--		bitclock-master = <&sndcpu1>;
--		frame-master = <&sndcpu1>;
--
--		convert-channels = <8>; /* TDM Split */
--
--		sndcpu1: cpu@0 {
--			sound-dai = <&rcar_sound 1>;
--		};
--		cpu@1 {
--			sound-dai = <&rcar_sound 2>;
--		};
--		cpu@2 {
--			sound-dai = <&rcar_sound 3>;
--		};
--		cpu@3 {
--			sound-dai = <&rcar_sound 4>;
--		};
--		codec {
--			mclk-fs = <512>;
--			prefix = "pcm3168a";
--			dai-tdm-slot-num = <8>;
--			sound-dai = <&pcm3168a 0>;
--		};
--	};
--	simple-audio-card,dai-link@2 {
--		format = "i2s";
--		bitclock-master = <&sndcpu2>;
--		frame-master = <&sndcpu2>;
--
--		sndcpu2: cpu {
--			sound-dai = <&rcar_sound 5>;
--		};
--		codec {
--			mclk-fs = <512>;
--			prefix = "pcm3168a";
--			sound-dai = <&pcm3168a 1>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.yaml b/Documentation/devicetree/bindings/sound/simple-card.yaml
-new file mode 100644
-index 000000000000..0a2a2c878c4a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/simple-card.yaml
-@@ -0,0 +1,484 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/simple-card.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Simple Audio Card Driver Device Tree Bindings
-+
-+maintainers:
-+  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-+
-+definitions:
-+
-+  frame-master:
-+    description: Indicates dai-link frame master.
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+
-+  bitclock-master:
-+    description: Indicates dai-link bit clock master
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+
-+  frame-inversion:
-+    description: dai-link uses frame clock inversion
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  bitclock-inversion:
-+    description: dai-link uses bit clock inversion
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  dai-tdm-slot-num:
-+    description: see tdm-slot.txt.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  dai-tdm-slot-width:
-+    description: see tdm-slot.txt.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  clocks:
-+    description: |
-+      If a clock is specified and a multiplication factor is given with
-+      mclk-fs, the clock will be set to the calculated mclk frequency
-+      when the stream starts.
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+
-+  system-clock-frequency:
-+    description: |
-+      If a clock is specified and a multiplication factor is given with
-+      mclk-fs, the clock will be set to the calculated mclk frequency
-+      when the stream starts.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  system-clock-direction-out:
-+    description: |
-+      specifies clock direction as 'out' on initialization.
-+      It is useful for some aCPUs with fixed clocks.
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  mclk-fs:
-+    description: |
-+      Multiplication factor between stream rate and codec mclk.
-+      When defined, mclk-fs property defined in dai-link sub nodes are ignored.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  aux-devs:
-+    description: |
-+      List of phandles pointing to auxiliary devices, such
-+      as amplifiers, to be added to the sound card.
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+
-+  convert-rate:
-+    description: CPU to Codec rate convert.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  convert-channels:
-+    description: CPU to Codec rate channels.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  prefix:
-+    description: "device name prefix"
-+    $ref: /schemas/types.yaml#/definitions/string
-+
-+  label:
-+    description: "device name"
-+    $ref: /schemas/types.yaml#/definitions/string
-+
-+  routing:
-+    description: |
-+      A list of the connections between audio components.
-+      Each entry is a pair of strings, the first being the
-+      connection's sink, the second being the connection's source.
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+
-+  widgets:
-+    description: User specified audio sound widgets.
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+
-+  pin-switches:
-+    description: the widget names for which pin switches must be created.
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+
-+  format:
-+    description: audio format.
-+    items:
-+      enum:
-+        - i2s
-+        - right_j
-+        - left_j
-+        - dsp_a
-+        - dsp_b
-+        - ac97
-+        - pdm
-+        - msb
-+        - lsb
-+
-+  dai:
-+    type: object
-+    properties:
-+      sound-dai:
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+
-+      # common properties
-+      mclk-fs:
-+        $ref: "#/definitions/mclk-fs"
-+      prefix:
-+        $ref: "#/definitions/prefix"
-+      frame-inversion:
-+        $ref: "#/definitions/frame-inversion"
-+      bitclock-inversion:
-+        $ref: "#/definitions/bitclock-inversion"
-+      frame-master:
-+        $ref: /schemas/types.yaml#/definitions/flag
-+      bitclock-master:
-+        $ref: /schemas/types.yaml#/definitions/flag
-+
-+      dai-tdm-slot-num:
-+        $ref: "#/definitions/dai-tdm-slot-num"
-+      dai-tdm-slot-width:
-+        $ref: "#/definitions/dai-tdm-slot-width"
-+      clocks:
-+        $ref: "#/definitions/clocks"
-+      system-clock-frequency:
-+        $ref: "#/definitions/system-clock-frequency"
-+      system-clock-direction-out:
-+        $ref: "#/definitions/system-clock-direction-out"
-+    required:
-+      - sound-dai
-+
-+properties:
-+  compatible:
-+    contains:
-+      enum:
-+        - simple-audio-card
-+        - simple-scu-audio-card
-+
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+  label:
-+    $ref: "#/definitions/label"
-+
-+  simple-audio-card,name:
-+    description: User specified audio sound card name.
-+    $ref: /schemas/types.yaml#/definitions/string
-+
-+# use patternProperties to use "#definitions/xxx"
-+patternProperties:
-+  "^simple-audio-card,widgets$":
-+    $ref: "#/definitions/widgets"
-+  "^simple-audio-card,routing$":
-+    $ref: "#/definitions/routing"
-+  "^simple-audio-card,cpu(@.*)?":
-+    $ref: "#/definitions/dai"
-+  "^simple-audio-card,codec(@.*)?":
-+    $ref: "#/definitions/dai"
-+
-+  # common properties
-+  "^simple-audio-card,frame-master$":
-+    $ref: "#/definitions/frame-master"
-+  "^simple-audio-card,bitclock-master$":
-+    $ref: "#/definitions/bitclock-master"
-+  "^simple-audio-card,frame-inversion$":
-+    $ref: "#/definitions/frame-inversion"
-+  "^simple-audio-card,bitclock-inversion$":
-+    $ref: "#/definitions/bitclock-inversion"
-+  "^simple-audio-card,format$":
-+    $ref: "#/definitions/format"
-+  "^simple-audio-card,mclk-fs$":
-+    $ref: "#/definitions/mclk-fs"
-+  "^simple-audio-card,aux-devs$":
-+    $ref: "#/definitions/aux-devs"
-+  "^simple-audio-card,convert-rate$":
-+    $ref: "#/definitions/convert-rate"
-+  "^simple-audio-card,convert-channels$":
-+    $ref: "#/definitions/convert-channels"
-+  "^simple-audio-card,prefix$":
-+    $ref: "#/definitions/prefix"
-+  "^simple-audio-card,pin-switches$":
-+    $ref: "#/definitions/pin-switches"
-+# use common *-gpio for
-+#   simple-audio-card,hp-det-gpio:
-+#   simple-audio-card,mic-det-gpio:
-+
-+  "^simple-audio-card,dai-link(@.*)?":
-+    description: |
-+      Container for dai-link level properties and the CPU and CODEC sub-nodes.
-+      This container may be omitted when the card has only one DAI link.
-+    type: object
-+    properties:
-+      reg:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+
-+      # common properties
-+      frame-master:
-+        $ref: "#/definitions/frame-master"
-+      bitclock-master:
-+        $ref: "#/definitions/bitclock-master"
-+      frame-inversion:
-+        $ref: "#/definitions/frame-inversion"
-+      bitclock-inversion:
-+        $ref: "#/definitions/bitclock-inversion"
-+      format:
-+        $ref: "#/definitions/format"
-+      mclk-fs:
-+        $ref: "#/definitions/mclk-fs"
-+      aux-devs:
-+        $ref: "#/definitions/aux-devs"
-+      convert-rate:
-+        $ref: "#/definitions/convert-rate"
-+      convert-channels:
-+        $ref: "#/definitions/convert-channels"
-+      prefix:
-+        $ref: "#/definitions/prefix"
-+      pin-switches:
-+        $ref: "#/definitions/pin-switches"
-+      # use common *-gpio for
-+      #	hp-det-gpio:
-+      #	mic-det-gpio:
-+
-+    patternProperties:
-+      "^cpu(@.*)?":
-+        $ref: "#/definitions/dai"
-+      "^codec(@.*)?":
-+        $ref: "#/definitions/dai"
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+#--------------------
-+# single DAI link
-+#--------------------
-+  - |
-+    sound {
-+        compatible = "simple-audio-card";
-+        simple-audio-card,name = "VF610-Tower-Sound-Card";
-+        simple-audio-card,format = "left_j";
-+        simple-audio-card,bitclock-master = <&dailink0_master>;
-+        simple-audio-card,frame-master = <&dailink0_master>;
-+        simple-audio-card,widgets =
-+                "Microphone", "Microphone Jack",
-+                "Headphone", "Headphone Jack",
-+                "Speaker", "External Speaker";
-+        simple-audio-card,routing =
-+                "MIC_IN", "Microphone Jack",
-+                "Headphone Jack", "HP_OUT",
-+                "External Speaker", "LINE_OUT";
-+
-+        simple-audio-card,cpu {
-+            sound-dai = <&sh_fsi2 0>;
-+        };
-+
-+        dailink0_master: simple-audio-card,codec {
-+            sound-dai = <&ak4648>;
-+            clocks = <&osc>;
-+        };
-+    };
-+
-+#--------------------
-+# Multi DAI links
-+#--------------------
-+  - |
-+    sound {
-+        compatible = "simple-audio-card";
-+        simple-audio-card,name = "Cubox Audio";
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        simple-audio-card,dai-link@0 {		/* I2S - HDMI */
-+            reg = <0>;
-+            format = "i2s";
-+            cpu {
-+                sound-dai = <&audio0>;
-+            };
-+            codec {
-+                sound-dai = <&tda998x0>;
-+            };
-+        };
-+
-+        simple-audio-card,dai-link@1 {		/* S/PDIF - HDMI */
-+            reg = <1>;
-+            cpu {
-+                sound-dai = <&audio1>;
-+            };
-+            codec {
-+                sound-dai = <&tda998x1>;
-+            };
-+        };
-+
-+        simple-audio-card,dai-link@2 {		/* S/PDIF - S/PDIF */
-+            reg = <2>;
-+            cpu {
-+                sound-dai = <&audio2>;
-+            };
-+            codec {
-+                sound-dai = <&spdif_codec>;
-+            };
-+        };
-+    };
-+
-+#--------------------
-+# route audio from IMX6 SSI2 through TLV320DAC3100 codec
-+# through TPA6130A2 amplifier to headphones:
-+#--------------------
-+  - |
-+    sound {
-+        compatible = "simple-audio-card";
-+
-+        simple-audio-card,widgets =
-+            "Headphone", "Headphone Jack";
-+        simple-audio-card,routing =
-+            "Headphone Jack", "HPLEFT",
-+            "Headphone Jack", "HPRIGHT",
-+            "LEFTIN", "HPL",
-+            "RIGHTIN", "HPR";
-+        simple-audio-card,aux-devs = <&amp>;
-+        simple-audio-card,cpu {
-+            sound-dai = <&ssi2>;
-+        };
-+        simple-audio-card,codec {
-+            sound-dai = <&codec>;
-+            clocks = <&clocks>;
-+        };
-+    };
-+
-+#--------------------
-+# Sampling Rate Conversion
-+#--------------------
-+  - |
-+    sound {
-+        compatible = "simple-audio-card";
-+
-+        simple-audio-card,name = "rsnd-ak4643";
-+        simple-audio-card,format = "left_j";
-+        simple-audio-card,bitclock-master = <&sndcodec>;
-+        simple-audio-card,frame-master = <&sndcodec>;
-+
-+        simple-audio-card,convert-rate = <48000>;
-+
-+        simple-audio-card,prefix = "ak4642";
-+        simple-audio-card,routing = "ak4642 Playback", "DAI0 Playback",
-+                                    "DAI0 Capture", "ak4642 Capture";
-+
-+        sndcpu: simple-audio-card,cpu {
-+            sound-dai = <&rcar_sound>;
-+        };
-+
-+        sndcodec: simple-audio-card,codec {
-+            sound-dai = <&ak4643>;
-+            system-clock-frequency = <11289600>;
-+        };
-+    };
-+
-+#--------------------
-+# 2 CPU 1 Codec (Mixing)
-+#--------------------
-+  - |
-+    sound {
-+        compatible = "simple-audio-card";
-+
-+        simple-audio-card,name = "rsnd-ak4643";
-+        simple-audio-card,format = "left_j";
-+        simple-audio-card,bitclock-master = <&dpcmcpu>;
-+        simple-audio-card,frame-master = <&dpcmcpu>;
-+
-+        simple-audio-card,convert-rate = <48000>;
-+        simple-audio-card,convert-channels = <2>;
-+
-+        simple-audio-card,routing = "ak4642 Playback", "DAI0 Playback",
-+                                    "ak4642 Playback", "DAI1 Playback";
-+
-+        dpcmcpu: simple-audio-card,cpu@0 {
-+            sound-dai = <&rcar_sound 0>;
-+        };
-+
-+        simple-audio-card,cpu@1 {
-+            sound-dai = <&rcar_sound 1>;
-+        };
-+
-+        simple-audio-card,codec {
-+            prefix = "ak4642";
-+            sound-dai = <&ak4643>;
-+            clocks = <&audio_clock>;
-+        };
-+    };
-+
-+#--------------------
-+# Multi DAI links with DPCM:
-+#
-+# CPU0 ------ ak4613
-+# CPU1 ------ PCM3168A-p  /* DPCM 1ch/2ch */
-+# CPU2 --/                /* DPCM 3ch/4ch */
-+# CPU3 --/                /* DPCM 5ch/6ch */
-+# CPU4 --/                /* DPCM 7ch/8ch */
-+# CPU5 ------ PCM3168A-c
-+#--------------------
-+  - |
-+    sound {
-+        compatible = "simple-audio-card";
-+
-+        simple-audio-card,routing =
-+            "pcm3168a Playback", "DAI1 Playback",
-+            "pcm3168a Playback", "DAI2 Playback",
-+            "pcm3168a Playback", "DAI3 Playback",
-+            "pcm3168a Playback", "DAI4 Playback";
-+
-+        simple-audio-card,dai-link@0 {
-+            format = "left_j";
-+            bitclock-master = <&sndcpu0>;
-+            frame-master = <&sndcpu0>;
-+
-+            sndcpu0: cpu {
-+                sound-dai = <&rcar_sound 0>;
-+            };
-+            codec {
-+                sound-dai = <&ak4613>;
-+            };
-+        };
-+
-+        simple-audio-card,dai-link@1 {
-+            format = "i2s";
-+            bitclock-master = <&sndcpu1>;
-+            frame-master = <&sndcpu1>;
-+
-+            convert-channels = <8>; /* TDM Split */
-+
-+            sndcpu1: cpu@0 {
-+                sound-dai = <&rcar_sound 1>;
-+            };
-+            cpu@1 {
-+                sound-dai = <&rcar_sound 2>;
-+            };
-+            cpu@2 {
-+                sound-dai = <&rcar_sound 3>;
-+            };
-+            cpu@3 {
-+                sound-dai = <&rcar_sound 4>;
-+            };
-+            codec {
-+                mclk-fs = <512>;
-+                prefix = "pcm3168a";
-+                dai-tdm-slot-num = <8>;
-+                sound-dai = <&pcm3168a 0>;
-+            };
-+        };
-+
-+        simple-audio-card,dai-link@2 {
-+            format = "i2s";
-+            bitclock-master = <&sndcpu2>;
-+            frame-master = <&sndcpu2>;
-+
-+            sndcpu2: cpu {
-+                sound-dai = <&rcar_sound 5>;
-+            };
-+            codec {
-+                mclk-fs = <512>;
-+                prefix = "pcm3168a";
-+                sound-dai = <&pcm3168a 1>;
-+            };
-+        };
-+    };
--- 
-2.17.1
-
+> ---
+> Changes since V2:
+> 	- Added cmdq register space and support-cqe flag.
+> 	- Incorporated review comments by Matthias Kaehlcke.
+> 
+> Changes since V1:
+> 	- Updated the regulator min, max voltages as per
+> 	  eMMC/SD-card voltage requirements
+> 	- Enabled IOMMU for eMMC and SD-card.
+> 	- Added pull and drive strength to SD-card cd-gpio.
+> 	- Incorporated review comments by Matthias Kaehlcke.
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  47 +++++++---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 148 ++++++++++++++++++++++++++++++++
+>  2 files changed, 183 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..a790d82 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -7,6 +7,7 @@
+>  
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>  #include "sc7180.dtsi"
+>  #include "pm6150.dtsi"
+> @@ -101,9 +102,9 @@
+>  		};
+>  
+>  		vreg_l12a_1p8: ldo12 {
+> -			regulator-min-microvolt = <1696000>;
+> -			regulator-max-microvolt = <1952000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  
+>  		vreg_l13a_1p8: ldo13 {
+> @@ -143,9 +144,9 @@
+>  		};
+>  
+>  		vreg_l19a_2p9: ldo19 {
+> -			regulator-min-microvolt = <2696000>;
+> -			regulator-max-microvolt = <3304000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  	};
+>  
+> @@ -189,9 +190,9 @@
+>  		};
+>  
+>  		vreg_l6c_2p9: ldo6 {
+> -			regulator-min-microvolt = <2696000>;
+> -			regulator-max-microvolt = <3304000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <2950000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  
+>  		vreg_l7c_3p0: ldo7 {
+> @@ -207,9 +208,9 @@
+>  		};
+>  
+>  		vreg_l9c_2p9: ldo9 {
+> -			regulator-min-microvolt = <2952000>;
+> -			regulator-max-microvolt = <3304000>;
+> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+>  
+>  		vreg_l10c_3p3: ldo10 {
+> @@ -254,6 +255,28 @@
+>  	status = "okay";
+>  };
+>  
+> +&sdhc_1 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&sdc1_on>;
+> +	pinctrl-1 = <&sdc1_off>;
+> +	vmmc-supply = <&vreg_l19a_2p9>;
+> +	vqmmc-supply = <&vreg_l12a_1p8>;
+> +};
+> +
+> +&sdhc_2 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default","sleep";
+> +	pinctrl-0 = <&sdc2_on>;
+> +	pinctrl-1 = <&sdc2_off>;
+> +	vmmc-supply  = <&vreg_l9c_2p9>;
+> +	vqmmc-supply = <&vreg_l6c_2p9>;
+> +
+> +	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
+> +};
+> +
+>  &uart3 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3676bfd..525bc02 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -226,6 +226,33 @@
+>  			};
+>  		};
+>  
+> +		sdhc_1: sdhci@7c4000 {
+> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> +			reg = <0 0x7c4000 0 0x1000>,
+> +				<0 0x07c5000 0 0x1000>;
+> +			reg-names = "hc_mem", "cqhci_mem";
+> +
+> +			iommus = <&apps_smmu 0x60 0x0>;
+> +			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
+> +
+> +			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+> +					<&gcc GCC_SDCC1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +
+> +			bus-width = <8>;
+> +			non-removable;
+> +			supports-cqe;
+> +
+> +			mmc-ddr-1_8v;
+> +			mmc-hs200-1_8v;
+> +			mmc-hs400-1_8v;
+> +			mmc-hs400-enhanced-strobe;
+> +
+> +			status = "disabled";
+> +		};
+> +
+>  		qupv3_id_0: geniqup@8c0000 {
+>  			compatible = "qcom,geni-se-qup";
+>  			reg = <0 0x008c0000 0 0x6000>;
+> @@ -929,6 +956,127 @@
+>  					function = "qup15";
+>  				};
+>  			};
+> +
+> +			sdc1_on: sdc1-on {
+> +				pinconf-clk {
+> +					pins = "sdc1_clk";
+> +					bias-disable;
+> +					drive-strength = <16>;
+> +				};
+> +
+> +				pinconf-cmd {
+> +					pins = "sdc1_cmd";
+> +					bias-pull-up;
+> +					drive-strength = <10>;
+> +				};
+> +
+> +				pinconf-data {
+> +					pins = "sdc1_data";
+> +					bias-pull-up;
+> +					drive-strength = <10>;
+> +				};
+> +
+> +				pinconf-rclk {
+> +					pins = "sdc1_rclk";
+> +					bias-pull-down;
+> +				};
+> +			};
+> +
+> +			sdc1_off: sdc1-off {
+> +				pinconf-clk {
+> +					pins = "sdc1_clk";
+> +					bias-disable;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				pinconf-cmd {
+> +					pins = "sdc1_cmd";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				pinconf-data {
+> +					pins = "sdc1_data";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				pinconf-rclk {
+> +					pins = "sdc1_rclk";
+> +					bias-pull-down;
+> +				};
+> +			};
+> +
+> +			sdc2_on: sdc2-on {
+> +				pinconf-clk {
+> +					pins = "sdc2_clk";
+> +					bias-disable;
+> +					drive-strength = <16>;
+> +				};
+> +
+> +				pinconf-cmd {
+> +					pins = "sdc2_cmd";
+> +					bias-pull-up;
+> +					drive-strength = <10>;
+> +				};
+> +
+> +				pinconf-data {
+> +					pins = "sdc2_data";
+> +					bias-pull-up;
+> +					drive-strength = <10>;
+> +				};
+> +
+> +				pinconf-sd-cd {
+> +					pins = "gpio69";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +			};
+> +
+> +			sdc2_off: sdc2-off {
+> +				pinconf-clk {
+> +					pins = "sdc2_clk";
+> +					bias-disable;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				pinconf-cmd {
+> +					pins = "sdc2_cmd";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				pinconf-data {
+> +					pins = "sdc2_data";
+> +					bias-pull-up;
+> +					drive-strength = <2>;
+> +				};
+> +
+> +				pinconf-sd-cd {
+> +					pins = "gpio69";
+> +					bias-disable;
+> +					drive-strength = <2>;
+> +				};
+> +			};
+> +		};
+> +
+> +		sdhc_2: sdhci@8804000 {
+> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+> +			reg = <0 0x08804000 0 0x1000>;
+> +			reg-names = "hc_mem";
+> +
+> +			iommus = <&apps_smmu 0x80 0>;
+> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
+> +
+> +			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+> +					<&gcc GCC_SDCC2_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +
+> +			bus-width = <4>;
+> +
+> +			status = "disabled";
+>  		};
+>  
+>  		qspi: spi@88dc000 {
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
