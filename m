@@ -2,101 +2,126 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024C2C35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B30C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE57C2187F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD60720873
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGyoSAm7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="hd9pQmVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388552AbgBNT1V (ORCPT
+        id S2388318AbgBNTbM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:27:21 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43400 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387576AbgBNT1U (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 14:27:20 -0500
-Received: by mail-qk1-f195.google.com with SMTP id p7so10298621qkh.10;
-        Fri, 14 Feb 2020 11:27:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=keLfPhE4Ew2fJjPOO0h+Ikr94hI4U8Ahj9pUlPHGqTg=;
-        b=bGyoSAm7bVU/WOL0Bt768495trYhUnfkR9+rrHNuhlHAt8hg4lUnEcj5YYfwc6K8WV
-         4wrZ0ytdBZeCqZ6A/lLkX7uEaIj4z4Jd/guLstDF5euKKhEoja2ugEVzNRzXzvds9Whw
-         bybPcz+4+iPtualAN74gr0eLWr8UxqQXKFhhJ7oK65IjpwzD4nNrpy6di5wwFH8IZ/UU
-         rfMQghXUJmllLMAQFHbSV5aYlv0HRseg28FpGI2LZpMv7jkyx+wMqBkwhNbkI+5TE1Bz
-         2zmYooBWsJIKIJsdujXRLKeDvpkB1o39odLwn295YFpx99derFD00H0+wa1E5zz0FRFb
-         PBrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=keLfPhE4Ew2fJjPOO0h+Ikr94hI4U8Ahj9pUlPHGqTg=;
-        b=AYUVdjlCZtZNybYxboCTx9YSEUTE5R2AhD7f8VL1hSa+HWeZO9nKfwnXeYWukLN1A3
-         1I8UY7bPWvD0nBkcbJMERKheHTT/+kttrOkehWYrn1yj//pDQ9ogh2UQpEd9Lk0B5ETU
-         VRSvHosSjJ91s3qHfClOFBV9Eazb1YqZha45l4Czqp0LiFAms6sa9VF02kg0JVYqaaVJ
-         8/BdT/Sfu4KGipBwT4CPy6Yu7yBgvsfn8IfyxYwy/t/yLT2dn0GHOLT1Frv9lQvvgfau
-         l7hCE7bgIWKleAKpALVwXYFVL/09gbN/uiwst2dy0fKlZwJ60x0YAkWS2DQI+kdJ5d1I
-         lwDQ==
-X-Gm-Message-State: APjAAAWQhWC03Uhbhp9hNP7fP8xfCCdJYa2X+M3SWb+kMHy9owI4XAJ1
-        vCCaxUUaBdIkuyMucF9a0Zk=
-X-Google-Smtp-Source: APXvYqwa0fHRzPH7J98XzsYYYx4uEShZEC2h9Cf/Msxb1TcTkvujnJJv7TrIhtum2hbpRDuukCKJaA==
-X-Received: by 2002:a37:4743:: with SMTP id u64mr3997368qka.289.1581708439650;
-        Fri, 14 Feb 2020 11:27:19 -0800 (PST)
-Received: from L-E5450.nxp.com ([177.221.114.206])
-        by smtp.gmail.com with ESMTPSA id o55sm4009953qtf.46.2020.02.14.11.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 11:27:19 -0800 (PST)
-From:   Alifer Moraes <alifer.wsdm@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        peng.fan@nxp.com, leonard.crestez@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alifer Moraes <alifer.wsdm@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: imx8mq-evk: add phy-reset-gpios for fec1
-Date:   Fri, 14 Feb 2020 16:27:50 -0300
-Message-Id: <20200214192750.20845-2-alifer.wsdm@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200214192750.20845-1-alifer.wsdm@gmail.com>
-References: <20200214192750.20845-1-alifer.wsdm@gmail.com>
+        Fri, 14 Feb 2020 14:31:12 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:32422 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387557AbgBNTbM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 14:31:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581708670;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=CVamlJG5fFjEwwaf0KaFiIJGPYXsc97AfdP/JIkpP98=;
+        b=hd9pQmVxPYo6GGmsFtVIYtEPovhIn2hqTkzjf1g/alpjX/e5JEX/LCs+GQcuNZwwLP
+        Ys6kFE0D+GSHA72pYWeNf2kPkZQ+B715u34dT9zC8FO4Kavj+Wr+f1vWJXxq06/iRumO
+        FnHPuL12zH+H4X0032iISB1VuzgsfiMaYuF/+rImXKRSwuzkI78fakF+Lx3/xrBnoOeY
+        50Byx06/9b1IN4U6n26nObzmvDhLv8a8f0pSjEUVgwJcHfiA74S5SqnWRRgR3uz3J9By
+        HRZ3aY5lvScQsy6W+wEItIAdkPWqXAqM/mBTscVcIFuwNofMTj1OKR7PbJe6KC2izHxK
+        VJvQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PuwDOspHA="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1EJV0GDZ
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 14 Feb 2020 20:31:00 +0100 (CET)
+Content-Type: text/plain; charset=iso-8859-1
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v2 03/12] MIPS: CI20: defconfig: configure for supporting modules
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1581707415.3.7@crapouillou.net>
+Date:   Fri, 14 Feb 2020 20:30:59 +0100
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AD9439FF-9DEF-4B9A-8A01-F11B626708C1@goldelico.com>
+References: <cover.1581696624.git.hns@goldelico.com> <db4db9e0b024aa3051a6f1f7be07323418d1d453.1581696624.git.hns@goldelico.com> <1581707415.3.7@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-imx8mq-evk has a GPIO connected to AR8031 Ethernet PHY's reset pin.
+Hi Paul,
 
-Describe it in the device tree, following phy's datasheet reset duration of 10ms.
+> Am 14.02.2020 um 20:10 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+> Patches 03-12 only touch the same two files - ci20.dts and =
+ci20_defconfig.
+>=20
+> Unless someone strongly disagrees, I'd suggest to squash all patches =
+that touch each file together (except the ones with a Fixes tag), I =
+don't think we really need that much granularity here.
 
-Tested booting via NFS.
+It comes more from having developed these things quite independently and =
+only collected for submission...
 
-Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
----
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 2 ++
- 1 file changed, 2 insertions(+)
+One patch I don't know how to handle: "MIPS: DTS: CI20: add DT node for =
+IR sensor".
+It is from 2015 and has a different author (some Alex Smith but the mail =
+address seems to be broken).
+This information and attribution will be lost if we squash them.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index c36685916683..a49e2bf8afe5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -110,6 +110,8 @@
- 	pinctrl-0 = <&pinctrl_fec1>;
- 	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy0>;
-+	phy-reset-gpios = <&gpio1 9  GPIO_ACTIVE_LOW>;
-+	phy-reset-duration = <10>;
- 	fsl,magic-packet;
- 	status = "okay";
- 
--- 
-2.17.1
+But I can do for V3 and will also fix the fixes tags by adding cc: =
+stable :)
+
+BR and thanks,
+Nikolaus
+
+
+>=20
+> -Paul
+>=20
+>=20
+> Le ven., f=E9vr. 14, 2020 at 17:10, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> Not all drivers need to be compiled into the kernel.
+>> Support building and loading of kernel modules.
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> arch/mips/configs/ci20_defconfig | 1 +
+>> 1 file changed, 1 insertion(+)
+>> diff --git a/arch/mips/configs/ci20_defconfig =
+b/arch/mips/configs/ci20_defconfig
+>> index be41df2a81fb..e0d3c9d4c2ae 100644
+>> --- a/arch/mips/configs/ci20_defconfig
+>> +++ b/arch/mips/configs/ci20_defconfig
+>> @@ -1,4 +1,5 @@
+>> # CONFIG_LOCALVERSION_AUTO is not set
+>> +CONFIG_MODULES=3Dy
+>> CONFIG_KERNEL_XZ=3Dy
+>> CONFIG_SYSVIPC=3Dy
+>> CONFIG_POSIX_MQUEUE=3Dy
+>> --
+>> 2.23.0
+>=20
+>=20
 
