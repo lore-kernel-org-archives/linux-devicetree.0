@@ -2,123 +2,96 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7CAC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 113C2C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1E724654
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:38:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="sC5pJA/n"
+	by mail.kernel.org (Postfix) with ESMTP id CF48F20848
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389255AbgBNSic (ORCPT
+        id S1729752AbgBNSo7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:38:32 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:56768 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388315AbgBNSiI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 13:38:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581705485; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=beZzKtKyiHGgH1Qk/SiuKXMW0hDwqXZLEktuMIuWvEE=;
-        b=sC5pJA/nh5xcTm7rWdmK2CKb8najbEJln1+fkR17tqQylQ5NhHpjbnDlOK5AnbztrT6vIl
-        bV7+EhcjF8AqgTGgCFQ+sFlp/PYN6uiSrjG2Ew3MIdT2Wo7mLp3cWlnNAFhc2Fi6Jpu7c1
-        LLPZu0xnCOeBG/mVs5pupfLnYePF4GU=
-Date:   Fri, 14 Feb 2020 15:37:38 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 5/6] MIPS: CI20: Modify DTS to support high resolution
- timer for SMP.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, allison@lohutok.net,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
-        ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        paul@boddie.org.uk, hns@goldelico.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, mips-creator-ci20-dev@googlegroups.com,
-        1326991897@qq.com
-Message-Id: <1581705458.3.2@crapouillou.net>
-In-Reply-To: <1581703360-112557-7-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1581703360-112557-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1581703360-112557-7-git-send-email-zhouyanjie@wanyeetech.com>
+        Fri, 14 Feb 2020 13:44:59 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:44346 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729595AbgBNSo7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:44:59 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 2F8A3FB03;
+        Fri, 14 Feb 2020 19:44:56 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Exb_RJVpsLOz; Fri, 14 Feb 2020 19:44:55 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 1B2F840E06; Fri, 14 Feb 2020 19:44:54 +0100 (CET)
+Date:   Fri, 14 Feb 2020 19:44:53 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
+        kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/12] arm64: dts: librem5-devkit: description updates
+Message-ID: <20200214184453.GA38549@bogon.m.sigxcpu.org>
+References: <20200205143003.28408-1-martin.kepplinger@puri.sm>
+ <5f81b30a-d00f-9331-dc70-161376cfc008@puri.sm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f81b30a-d00f-9331-dc70-161376cfc008@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+Hi,
+On Thu, Feb 13, 2020 at 03:08:57PM +0100, Martin Kepplinger wrote:
+> On 05.02.20 15:29, Martin Kepplinger wrote:
+> > These are additions to the imx8mq-librem5-devkit devicetree description
+> > we are running for quite some time. All users should have them:
+> > 
+> > Angus Ainslie (Purism) (11):
+> >   arm64: dts: librem5-devkit: add sai2 and sai6 pinctrl definitions
+> >   arm64: dts: librem5-devkit: add the simcom 7100 modem and audio
+> >   arm64: dts: librem5-devkit: allow modem to wake the system from
+> >     suspend
+> >   arm64: dts: librem5-devkit: enable sai2 audio interface
+> >   arm64: dts: librem5-devkit: add the sgtl5000 i2c audio codec
+> >   arm64: dts: librem5-devkit: add a vbus supply to usb0
+> >   arm64: dts: librem5-devkit: add the regulators for DVFS
+> >   arm64: dts: librem5-devkit: add a battery for the bq25896 to monitor
+> >   arm64: dts: librem5-devkit: allow the redpine card to be removed
+> >   arm64: dts: librem5-devkit: configure VSELECT
+> >   arm64: dts: librem5-devkit: increase the VBUS current in the kernel
+> > 
+> > Martin Kepplinger (1):
+> >   arm64: dts: librem5-devkit: add lsm9ds1 mount matrix
+> > 
+> >  .../dts/freescale/imx8mq-librem5-devkit.dts   | 173 +++++++++++++++++-
+> >  1 file changed, 165 insertions(+), 8 deletions(-)
+> > 
+> 
+> hi,
+> 
+> any objections or opinions on these additions?
 
-I think you can move this patch before the clocksource one - it will=20
-work with the old clocksource code and in generally it's a good idea to=20
-ensure (if possible) that you can git-bisect without ending up with a=20
-broken kernel.
+I think
 
--Paul
+'arm64: dts: librem5-devkit: add a battery for the bq25896 to monitor'
 
+should be dropped since the driver does not process any battery
+information.
 
-Le sam., f=C3=A9vr. 15, 2020 at 02:02, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Ya=
-njie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Modify DTS, change tcu channel from 2 to 3, channel #0 and #1 for
-> per core local timer, #2 for clocksource.
->=20
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v1->v2:
->     No change.
->=20
->     v2->v3:
->     No change.
->=20
->     v3->v4:
->     Rebase on top of kernel 5.6-rc1.
->=20
->  arch/mips/boot/dts/ingenic/ci20.dts | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts=20
-> b/arch/mips/boot/dts/ingenic/ci20.dts
-> index 37b9316..98c4c42 100644
-> --- a/arch/mips/boot/dts/ingenic/ci20.dts
-> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-> @@ -456,6 +456,13 @@
->=20
->  &tcu {
->  	/* 3 MHz for the system timer and clocksource */
-> -	assigned-clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
-> -	assigned-clock-rates =3D <3000000>, <3000000>;
-> +	assigned-clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>,
-> +					  <&tcu TCU_CLK_TIMER2>;
-> +	assigned-clock-rates =3D <3000000>, <3000000>, <750000>;
-> +
-> +	/*
-> +	 * Use channel #0 and #1 for the per core system timer,
-> +	 * and use channel #2 for the clocksource.
-> +	 */
-> +	ingenic,pwm-channels-mask =3D <0xF8>;
->  };
-> --
-> 2.7.4
->=20
+Cheers,
+ -- Guido
 
-=
-
+> 
+> thanks!
+> 
+>                                   martin
