@@ -2,136 +2,117 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63921C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47027C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B9D2086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC872168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 12:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="q7gl3hyD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wiCQvRzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgBNMc0 (ORCPT
+        id S1728895AbgBNMcu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:32:26 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:46058 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgBNMc0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 07:32:26 -0500
-X-AuditID: c0a8fbf4-279ff70000001e6c-3f-5e4693575a8a
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 05.BE.07788.753964E5; Fri, 14 Feb 2020 13:32:23 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Fri, 14 Feb 2020 13:32:11 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Thread-Topic: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Thread-Index: AQHV4At5sLPMospsI0G2S3c08J9KoagWS84AgADGiACAA3X4gIAADG2A
-Date:   Fri, 14 Feb 2020 12:32:10 +0000
-Message-ID: <375c7756fca56de4f2f85d1a1a4e0b01dadc290b.camel@fi.rohmeurope.com>
-References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200211190614.GP4543@sirena.org.uk>
-         <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
-         <20200214114749.GB4827@sirena.org.uk>
-In-Reply-To: <20200214114749.GB4827@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <338D36A977CBAD4794E1D9E2E0B91542@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 14 Feb 2020 07:32:50 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34295 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726191AbgBNMcu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 07:32:50 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3490460DC;
+        Fri, 14 Feb 2020 07:32:49 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 14 Feb 2020 07:32:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=l8eDDHNYcUg2vqAcfVnoMzWlXT
+        5rDFAUpSbmbYQS3/Y=; b=q7gl3hyDPfv4sQi//Gm+Ml6FO8bhyR3GNEh7WiVISb
+        SbVB6DhN3qalZYC5wcU7ph7/+PF5MiXbhfmRaoNp5iYgaphdWcSh1YyG1B8jbXmm
+        JztJ0zS/9c4MKb5C/bfD/Rfv8acL4i+jMf/9yqG+9r57WiTWf054ox6ul2ErWAe7
+        YZB8okJH6HFUqubaloTLrte0+vu1qwI5rMFjDNKBEzEtfvviglHjMjYOISLOW8bm
+        wxHDLiXuw0uNYJyATOEMpkqX9lFnC8jmc666tbKITveR42x5rTPpElc9TS0TL1Bq
+        o6IxPWx6fUUgsoZMbZegJfT64L7BeehNNrDPkfdUw4jQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=l8eDDHNYcUg2vqAcf
+        VnoMzWlXT5rDFAUpSbmbYQS3/Y=; b=wiCQvRziYW5SdgAKHR2T14J2bLJpYnQ2K
+        85PDUHPxX0b6vlQ0prgHagQ3+ljh+I6Dubdy7a75eXNdIDAudUrk/yynyJw/3gqA
+        ODBXMrUX7yFWiBub70o6I3f/8cpTJ0iPyBnljoP7yqKLhgH0ZAwn8XX1r9+97dCn
+        JrQNEJQq2ATJJxiEgYcwJLzxES7l/frCtlP+Pd79F4rTTIE9x2XrgDlv9wjZSc5Y
+        9b3C7ZACWfAO7WzR1U8oexueAx9k+G4kzfIaxBOKvzgpP+L7L0tTGS6NIlk5UFsN
+        RiUmNaDESfIAZjEypQ91kFtiOuRm/By6o7e9L5PXxMGkTNjkjfK/A==
+X-ME-Sender: <xms:b5NGXhWX3W3AAbQV8McMdGewxQy9sYVUFgWX5IIpD8CSTg8yg7W4Lg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdegvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucft
+    ihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrdekle
+    drieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:b5NGXki6WnYOVVKbSUrCyeCStEIhBTixD4yTYqd2Wxt7QTwkwEFfSA>
+    <xmx:b5NGXkIyfYWw1VqMCn774jPEIVrKdTEsQ9i-3vynQAZR34835F8W4g>
+    <xmx:b5NGXucuKNKGrQUP4-lV08lyvklhLtrnOlBDkXhQmYT1RnIKp-mQ-g>
+    <xmx:cZNGXoiTlcty2ifP9whSTomBfktvCQTMLQbDHaojQSVIfPaKu--bcg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 813DC3060C28;
+        Fri, 14 Feb 2020 07:32:47 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 1/2] dt-bindings: display: sun4i-tcon: Add LVDS Dual Link property
+Date:   Fri, 14 Feb 2020 13:32:43 +0100
+Message-Id: <20200214123244.109300-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsVyYMXvTbrhk93iDNo7LCymPnzCZjH/yDlW
-        iyl/ljNZXN41h83ic+8RRoul1y8yWcxZeoLFonXvEXaL07tLHDg91sxbw+ixc9Zddo9NqzrZ
-        PO5c28Pm8XmTXABrFLdNUmJJWXBmep6+XQJ3xpY7L1kLpihXvL3RwtrAuECpi5GTQ0LARKJ5
-        83umLkYuDiGBq4wS99c3MUI4JxglHlzbyt7FyMHBJmAj0XWTHaRBREBXYuqvxWwgNcwCk1gk
-        PnTvZAFJCAu4Skx6cpUZoshN4mTjRTj7ye/7rCA2i4CqxNpDh8HivAJ+Eue3HYbavJtJoq1n
-        FVgRp4CRxOul88G2MQrISnQ2vGMCsZkFxCU2PfvOCnG2gMSSPeeZIWxRiZeP/0HFlST2/nzI
-        AnI0s4CmxPpd+hCtDhJ/py1kgbAVJaZ0P2SHuEFQ4uTMJywTGMVmIdkwC6F7FpLuWUi6ZyHp
-        XsDIuopRIjcxMyc9sSTVUK8otVSvKD8jF0gl5+duYoTE75cdjP8PeR5iZOJgPMQoycGkJMrL
-        2eQWJ8SXlJ9SmZFYnBFfVJqTWnyIUYKDWUmE97AiUI43JbGyKrUoHyYlzcGiJM6r/nBirJAA
-        yK7s1NSC1CKYrAwHh5IE75eJQI2CRanpqRVpmTklCGkmDk6Q4VxSIsWpeSmpRYmlJRnxoAQS
-        XwxMISApHqC9a0DaeYsLEnOBohCtpxgNOSa8nLuImWPz3KVA8giIFGLJy89LlRLnvQvSIADS
-        kFGaB7fuFaM4B6OSMO8LkCwPMKnDTXsFtIgJaFGvpgvIopJEhJRUA6PCCmcvo/V3fscc2Ga5
-        tZLzxeb1aSq7PrO9zhdfXlla5sp70TPyannUUaGHO2vlFW+vO5XRwij8XLAvaZ7W+4fPdRlu
-        pBzSyLKy4Kn8IvzDeevl0JmfAxmfbnvLLzZ5V9F9tSb9GNtTez5tz/39XCG4+EWu++kN8/qt
-        lnUefHkjJeieU0hbALsSS3FGoqEWc1FxIgBFjNffpwMAAA==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiBGcmksIDIwMjAtMDItMTQgYXQgMTE6NDcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIFdlZCwgRmViIDEyLCAyMDIwIGF0IDA2OjU2OjM3QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+ID4gT24gVHVlLCAyMDIwLTAyLTExIGF0IDE5OjA2ICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiA+ID4gTm90ZSBhbHNvIHRoYXQgd2UgYWxyZWFkeSBoYXZlIHF1aXRlIGV4
-dGVuc2l2ZSBoZWxwZXJzIGZvciB0aGlzDQo+ID4gPiBzb3J0DQo+ID4gPiBvZg0KPiA+ID4gc3R1
-ZmYgaW4gdGhlIHJlZ3VsYXRvciBBUEkgd2hpY2ggSSBzZW5zZSBtYXkgaGF2ZSBiZWVuIGludm9s
-dmVkDQo+ID4gPiBpbg0KPiA+ID4gdGhpcw0KPiA+ID4gaW1wbGVtZW50YXRpb24NCj4gPiBZb3Ug
-c2Vuc2Ugd2VsbCB4RA0KPiANCj4gSWYgeW91J3JlIGZhY3RvcmluZyBzdHVmZiBvdXQgb2YgYW4g
-ZXhpc3RpbmcgaW1wbGVtZW50YXRpb24gaXQnZCBiZQ0KPiBnb29kDQo+IHRvIGV4cGxpY2l0bHkg
-ZG8gdGhhdCAtIHRoaXMgYm90aCBzaG93cyB3aGVyZSB0aGluZ3MgY2FtZSBmcm9tIGFuZA0KPiBh
-bHNvDQo+IG1lYW5zIHRoYXQgeW91IGNhbiBzaG93IHRoYXQgdGhlIGV4aXN0aW5nIHVzZXIgd29y
-a3Mgd2l0aCB0aGUgbmV3DQo+IGNvZGUNCj4gd2hpY2ggaXMgZ29vZC4NCg0KVHJ1ZS4gQnV0IEkg
-ZGlkbid0IHJlZmFjdG9yIHRoZSByZWd1bGF0b3IgY29kZSAtIEkgc3RvbGUgdGhlIGlkZWEgYW5k
-DQp3cm90ZSB0aGlzIHRoaW5nIGluIEJENzA1MjggcG93ZXItc3VwcGx5IGRyaXZlci4gSSBkaWRu
-J3QgdGhpbmsgb2YNCmNyZWF0aW5nIGdlbmVyaWMgaGVscGVyIHVudGlsIExpbnVzIFcgbWVudGlv
-bmVkIHdlIHNob3VsZCBjcmVhdGUgb25lLg0KDQpTbyBub3cgd2hlbiBJIGRpZCB0aGUgQkQ5OTk1
-NCBkcml2ZXIgYW5kIG5vdGljZWQgSSBuZWVkZWQgc2FtZSBoZWxwZXINCmluIHBvd2VyLXN1cHBs
-eSBhcmVhIGFnYWluIEkgZGVjaWRlZCB0byBnZXQgdGhlIGltcGxlbWVudGF0aW9uIEkgZGlkIGlu
-DQpCRDcwNTI4IGRyaXZlciBhbmQgbWFrZSBpdCBhdmFpbGFibGUgZm9yIGFsbC4gVGhhdCB3YXMg
-YSBsb3ctaGFuZ2luZw0KZnJ1aXQgZm9yIG1lIGFzIEkgYXV0aG9yZWQgdGhlIEJENzA1MjggYW5k
-IGtub3cgdGhlIGxpbmVhci1yYW5nZSBjb2RlDQp3YXMgZWFzeSB0byBwdWxsIG91dCBvZiB0aGUg
-QkQ3MDUyOC4gQ2hhbmdpbmcgdGhlIHJlZ3VsYXRvciBzeXN0ZW0gd2FzDQpub3QgYXMgZWFzeSBm
-b3IgbWUgLSBhbHRob3VnaCBpdCBpcyBkb2FibGUuDQoNCj4gPiBCdXQgYW5vdGhlciBvcHRpb24g
-LSB3aGljaCBJIHRob3VnaHQgb25seSBub3cgLSB3b3VsZCBiZSB0byBzZWUgaWYNCj4gPiBjdXJy
-ZW50IHJlZ3VsYXRvciBpbXBsZW1lbnRhdGlvbiBjb3VsZCBiZSByZS1uYW1lZCB0byBtb3JlIGdl
-bmVyaWMNCj4gPiBhbmQNCj4gPiBwbGFjZWQgdW5kZXIgc29tZSBtb3JlIGdlbmVyaWMgY29tcG9u
-ZW50IChJIHRob3VnaHQgb2YgcmVnbWFwIGJ1dA0KPiA+IGFzDQo+ID4geW91IHBvaW50ZWQgb3V0
-IHRoaXMgaXMgZXF1YWxseSB1c2VmdWxsIGZvciBkZXZpY2VzIGNvbm5lY3RlZCB0bw0KPiA+IG1l
-bW9yeQ0KPiA+IG1hcHBlZCBidXNlcyAtIHNvIG1heWJlIHVuZGVyIGxpYiAtIGlmIHN0YXRpYyBp
-bmxpbmUgZnVuY3Rpb25zIGluIGENCj4gPiBoZWFkZXIgYXJlIG5vdCBhIGdvb2Qgb3B0aW9uKS4g
-SSBqdXN0IGhhdmUgYSBmZWVsaW5nIHRoYXQgdGhlDQo+ID4gbGluZWFyLQ0KPiA+IHJhbmdlcyBp
-cyBjdXJyZW50bHkga2luZCBvZiBlbWJlZGRlZCBpbiB0aGUgY29kZSB3aGljaCBpcyBpbnRlcm5h
-bA0KPiA+IHRvDQo+ID4gcmVndWxhdG9yIGZyYW1ld29yayBzbyBpdCBpcyBwcm9iYWJseSBub3Qg
-ZWFzaWx5IGV4dHJhY3RlZCBmcm9tDQo+ID4gcmVndWxhdG9yIGNvZGU/DQo+IA0KPiBJdCBpcyBh
-IGJpdCBidXQgSSB0aGluayB0aGF0J3Mgc29sdmFibGUgd2l0aCBzb21lIHJlZmFjdG9yaW5nIGlu
-DQo+IHBsYWNlDQo+IChlZywgcHVzaGluZyB0aGluZ3MgaW50byBhIHNtYWxsZXIgc3RydWN0IGVt
-YmVkZGVkIGluIHRoZSBtYWluDQo+IHJlZ3VsYXRvcg0KPiBvbmUgYW5kIHRoZW4gbW92aW5nIHRo
-ZW0gb3V0KS4gIEkgbWlnaHQgbG9vayBhdCBpdCBteXNlbGYgaWYgbm9ib2R5DQo+IGVsc2UNCj4g
-Z2V0cyB0byBpdCBmaXJzdC4uLg0KDQpJIG5lZWQgc29tZXRoaW5nIGxpa2UgdGhpcyBpbiBvcmRl
-ciB0byBjb252ZXJ0IEJEOTk5NTQgY3VycmVudCBhbmQNCnZvbHRhZ2UgdmFsdWVzIHRvIHJlZ2lz
-dGVyIHZhbHVlcy4gSSB3aWxsIGhhcHBpbHkgdXNlIHdoYXQtZXZlciB5b3UgZG8NCnB1bGwgdG9n
-ZXRoZXIgLSBidXQgaWYgeW91IGRvbid0IGZlZWwgbGlrZSBkb2luZyBpdCBub3cgSSBtaWdodCBs
-b29rIGF0DQp0aGUgcmVndWxhdG9yIHBhcnQgd2hpbGUgSSBhbSB3b3JraW5nIHdpdGggQkQ5OTk1
-NCBhbnl3YXlzLiBQbGVhc2UganVzdA0KbGV0IG1lIGtub3cgaWYgeW91IHdhbnQgbWUgdG8gc2Vl
-IGlmIEkgY2FuIHB1bGwgdGhlIHJhbmdlIHN0dWZmIG91dCBvZg0KcmVndWxhdG9yIGFyZWEuDQoN
-Cj4gPiBTbyBpZiB3ZSBkbyBub3Qgc3RhcnQgcHVsbGluZyB0aGUgcmFuZ2UgY29kZSBvdXQgb2Yg
-cmVndWxhdG9yDQo+ID4gZnJhbWV3b3JrDQo+ID4gKGZvciBub3cgYXQgbGVhc3QpIC0gYW5kIGlm
-IHdlIGRvIG5vdCBwbGFjZSB0aGlzIHVuZGVyIHJlZ21hcCAtDQo+ID4gdGhlbiBJDQo+ID4gY2Fu
-IGRyb3AgeW91IG91dCBvZiB0aGUgcmVjaXBpZW50IGxpc3QgZm9yIHRoaXMgY2hhcmdlciBkcml2
-ZXIgaW4NCj4gPiBvcmRlcg0KPiA+IHRvIG5vdCBwb2xsdXRlIHlvdXIgaW5ib3ggOykgSG93IGRv
-IHlvdSBmZWVsIE1hcmssIGRvIHlvdSB3YW50IHRvDQo+ID4gYmUNCj4gPiBmb2xsb3dpbmcgdGhp
-cyBzZXJpZXM/DQo+IA0KPiBXZWxsLCBpZiB0aGVyZSdzIGEgcmVmYWN0b3Jpbmcgb3V0IG9mIHRo
-ZSByZWd1bGF0b3IgY29kZSBnb2luZyBvbg0KPiBJJ2xsDQo+IG5lZWQgdG8gbG9vayBhdCB0aGF0
-IGFueXdheS4NCg0KTXkgZmlyc3QgaWRlYSB3YXMgbm90IHRvIGNoYW5nZSB0aGUgcmVndWxhdG9y
-cyBub3cgLSBoZW5jZSBJIGFza2VkIGlmIEkNCnNob3VsZCBkcm9wIHlvdS4gQnV0IEkgZGVmaW5p
-dGVseSBuZWVkIHlvdXIgc3VwcG9ydCBpZiB3ZSBkZWNpZGUgdG8NCnJlZmFjdG9yIHRoZSByZWd1
-bGF0b3IgY29kZSBpbiB0aGlzIHNlcmllcyBhbmQgY3JlYXRlIHRoZXNlIGNvbW1vbg0KaGVscGVy
-cyBvdXQgb2YgaXQuDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
+SoCs that have multiple TCONs can use the two set of pins on the first TCON
+to drive a dual-link display. Add a property to enable the dual link.
+
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ .../bindings/display/allwinner,sun4i-a10-tcon.yaml         | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+index 86ad617d2327..aa6dd8409dbc 100644
+--- a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
++++ b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+@@ -105,6 +105,13 @@ properties:
+         - const: edp
+         - const: lvds
+ 
++  allwinner,lvds-dual-link:
++    type: boolean
++    description: |
++      On a SoC with two TCON with LVDS support, the first TCON can
++      operate over both pins sets to output in a dual-link setup. This
++      will be triggered by setting this property.
++
+   ports:
+     type: object
+     description: |
+-- 
+2.24.1
+
