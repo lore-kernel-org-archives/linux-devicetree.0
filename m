@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048F7C352A3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DB4C352A3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2FD218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE1E20848
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 02:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jWCAMo8E"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bqza2qpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgBNClM (ORCPT
+        id S1728530AbgBNCnG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:41:12 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35189 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbgBNClM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 21:41:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y73so4121477pfg.2
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 18:41:10 -0800 (PST)
+        Thu, 13 Feb 2020 21:43:06 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:51028 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728454AbgBNCnG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Feb 2020 21:43:06 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so3240254pjb.0
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 18:43:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=eCyRMSwDhUx3DYVZzm+7HHgO3GMTp1RY7+uRcyHTPeI=;
-        b=jWCAMo8EQdcK5KgJsuy4ct3kIXs800bHvuwy7eaSvUJ6vjxd0uxMYlrTzk5OJ+nIaG
-         hRxdpE5zgAApIeCCKctakaQV1rb1+CevGAxyZKAg44aai2FNZQ/+Ye1//HuoTs4/jNqS
-         PGaecUCEUoOntwF63nWtLazgkvgSU2eX7Ts/Y=
+        bh=uhAnaYBibh71jLGyT/MAQHtwtB/q365HXNevkI1NHmw=;
+        b=bqza2qpu0iMia0lDRZcLlw1hsj7t4HxHSBGtkrUkfecnRtXkQV9k9Hr+P3fXTdeYwG
+         WIGaXJCtnBYGIvhfHG2pUPZuZW0jCLv5UTd5aIQk7vLOBWUsvdfPeteI55NNImnKObNd
+         2+6JO7ErmbVY4W9L1QidUq0BRuc7LOtlUUygs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=eCyRMSwDhUx3DYVZzm+7HHgO3GMTp1RY7+uRcyHTPeI=;
-        b=AHXpXSQ6ZroE6yUjpPKZweuxHrn9d9N+yLmM9tJx+lFWI+vq05otuavgAKoBpkqSzr
-         pwGy/cN5zJeCO43YDPlsTjey953cLaKWbaMmjYs6SmZx0cRpDGqU05AA+z1K7WZh1mND
-         g/tesun/evjKQWwP5emGW2hCj7DVIoNia+iR4Rs+52kZTrViVGQZOdnEixY6FBQrkt88
-         1KX9oIH310WpG+Mf3weKu4bxgAwVEpneRR+gF5bvInQ1DyhjXReck8lUQasZvGSyCUB+
-         WPOLKrkCI8HL+KOQDY2Cjdd9IdK5+SiUUQaJ6m9g6UU4/xCrVyoX+1dOFkC4Rtdy0+Z+
-         cnlA==
-X-Gm-Message-State: APjAAAXkQr2x/2K5oFU13YWXkubwbofHw3kEM5nGyLiseHJajPK2ic4F
-        IQMyeSk7rITSp6bIXAR78ZqcNQ==
-X-Google-Smtp-Source: APXvYqw7VRLbP38LxX1QJdX8p44zufhYebjDSFyj+OYD+cPmrjXyIJE9pZtr4Da8lcmqnUNS//QrNQ==
-X-Received: by 2002:a63:ca04:: with SMTP id n4mr1083967pgi.110.1581648070461;
-        Thu, 13 Feb 2020 18:41:10 -0800 (PST)
+        bh=uhAnaYBibh71jLGyT/MAQHtwtB/q365HXNevkI1NHmw=;
+        b=PTKA+iieKavcEEqz9MeSC5k6F+0QB7l92WZiLAMMLWLuWIBI9dHDNbegn2+R7O6dQn
+         Ef0L9BdFcIKHEC8m+VhGswoNBYa2MUTgLvYYYHaqRjVNEZOELbm50GEjZa3tzPJYrYKt
+         +SHZX5JlSR1J7OE78l/pMi2QJn5rGE3w4zDsL1bXIQgwqO2aBGHI52zVbUiNaIKclchi
+         lmqs6EXZtggovc2ZMIDHNJJn/0xmdBr7Um0Hq1z5ad0bX+D12lY1MvejmoC/rSs1bSpc
+         WIEKysucL0/0heqstX3ztBdbN52aMJIO6LtYCEKbTiMkLUBXwa6HdQRRjO2rsJpC72Kh
+         7Gfw==
+X-Gm-Message-State: APjAAAVaH2+wAZ1qIchq5KoA+FnGxYib6FUVgLai1f8uq0EyzXFxEivF
+        nwthqbNuxGr4NT1eouPicAiXxA==
+X-Google-Smtp-Source: APXvYqyieuX93wS+pYXvIYep4RXo0jartYxK5/w/PiWzurnNWGvHpO1ykyoIhsad7KiPH8fJQYxXTA==
+X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr745812pjn.39.1581648185439;
+        Thu, 13 Feb 2020 18:43:05 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b12sm4758285pfr.26.2020.02.13.18.41.09
+        by smtp.gmail.com with ESMTPSA id t66sm4628079pgb.91.2020.02.13.18.43.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 18:41:09 -0800 (PST)
+        Thu, 13 Feb 2020 18:43:05 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200211005059.1377279-7-bjorn.andersson@linaro.org>
-References: <20200211005059.1377279-1-bjorn.andersson@linaro.org> <20200211005059.1377279-7-bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 6/8] remoteproc: Introduce "panic" callback in ops
+In-Reply-To: <20200211005059.1377279-9-bjorn.andersson@linaro.org>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org> <20200211005059.1377279-9-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 8/8] remoteproc: qcom: Introduce panic handler for PAS and ADSP
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -68,99 +68,61 @@ Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Rishabh Bhatnagar <rishabhb@codeaurora.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Ohad Ben-Cohen <ohad@wizery.com>
-Date:   Thu, 13 Feb 2020 18:41:08 -0800
-Message-ID: <158164806895.184098.244699295706516537@swboyd.mtv.corp.google.com>
+Date:   Thu, 13 Feb 2020 18:43:04 -0800
+Message-ID: <158164818421.184098.5580195556346218701@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-02-10 16:50:57)
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/re=
-moteproc_core.c
-> index 097f33e4f1f3..8b6932027d36 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -2216,10 +2218,53 @@ void rproc_report_crash(struct rproc *rproc, enum=
- rproc_crash_type type)
+Quoting Bjorn Andersson (2020-02-10 16:50:59)
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qco=
+m_q6v5_adsp.c
+> index 19f784adf91c..822881534d37 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -291,12 +291,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64=
+ da, int len)
+>         return adsp->mem_region + offset;
 >  }
->  EXPORT_SYMBOL(rproc_report_crash);
 > =20
-> +static int rproc_panic_handler(struct notifier_block *nb, unsigned long =
-event,
-> +                              void *ptr)
+> +static unsigned int adsp_panic(struct rproc *rproc)
 > +{
-> +       unsigned int longest =3D 0;
-> +       struct rproc *rproc;
-> +       unsigned int d;
-> +       int locked;
-> +
-> +       locked =3D mutex_trylock(&rproc_list_mutex);
-> +       if (!locked) {
-> +               pr_err("Failed to acquire rproc list lock, won't call pan=
-ic functions\n");
-> +               return NOTIFY_DONE;
-> +       }
-> +
-> +       list_for_each_entry(rproc, &rproc_list, node) {
-> +               if (!rproc->ops->panic || rproc->state !=3D RPROC_RUNNING)
-> +                       continue;
-> +
-> +               d =3D rproc->ops->panic(rproc);
-> +               if (d > longest)
-> +                       longest =3D d;
+> +       struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
 
-Could be
-
-	d =3D max(longest, d);
-
-> +       }
-> +
-> +       mutex_unlock(&rproc_list_mutex);
-> +
-> +       /* Delay panic for the longest requested duration */
-> +       mdelay(longest);
-
-Is this to flush caches? Maybe indicate that in the comment.
+We don't need to cast from void. Please drop the cast.
 
 > +
-> +       return NOTIFY_DONE;
+> +       return qcom_q6v5_panic(&adsp->q6v5);
 > +}
 > +
-> +static void __init rproc_init_panic(void)
+>  static const struct rproc_ops adsp_ops =3D {
+>         .start =3D adsp_start,
+>         .stop =3D adsp_stop,
+>         .da_to_va =3D adsp_da_to_va,
+>         .parse_fw =3D qcom_register_dump_segments,
+>         .load =3D adsp_load,
+> +       .panic =3D adsp_panic,
+>  };
+> =20
+>  static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom=
+_q6v5_pas.c
+> index d20ce3c62256..ac38624fb14d 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -242,12 +242,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64=
+ da, int len)
+>         return adsp->mem_region + offset;
+>  }
+> =20
+> +static unsigned int adsp_panic(struct rproc *rproc)
 > +{
-> +       rproc_panic_nb.notifier_call =3D rproc_panic_handler;
-> +       atomic_notifier_chain_register(&panic_notifier_list, &rproc_panic=
-_nb);
+> +       struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
 
-This is an atomic notifier, but the notifier function takes a mutex,
-which sleeps. It should use spinlocks, and never sleep, given that panic
-can be called from anywhere.
+Same.
 
-> +}
 > +
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad66683ad0..14f05f26cbcd 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -369,6 +369,8 @@ enum rsc_handling_status {
->   *                     expects to find it
->   * @sanity_check:      sanity check the fw image
->   * @get_boot_addr:     get boot address to entry point specified in firm=
-ware
-> + * @panic:     optional callback to react to system panic, core will del=
-ay
-> + *             panic at least the returned number of milliseconds
->   */
->  struct rproc_ops {
->         int (*start)(struct rproc *rproc);
-> @@ -383,6 +385,7 @@ struct rproc_ops {
->         int (*load)(struct rproc *rproc, const struct firmware *fw);
->         int (*sanity_check)(struct rproc *rproc, const struct firmware *f=
-w);
->         u32 (*get_boot_addr)(struct rproc *rproc, const struct firmware *=
-fw);
-> +       unsigned int (*panic)(struct rproc *rproc);
-
-Maybe should be unsigned long to match other "timeouts" in the kernel.
+> +       return qcom_q6v5_panic(&adsp->q6v5);
+> +}
