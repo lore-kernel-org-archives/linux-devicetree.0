@@ -2,124 +2,126 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7E3C3B1A1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C1BC3B19F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4B62468E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698507;
-	bh=lteqolzuU+UzVOoAG+rTJZd2wFSneRZ0L8io3FLpjn8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EWokMTXVuMO7Iryk8cJiI/u1vP9eg5kjXSJdkqfdtzQ5GjsI+OrESuByHU1l9KPyo
-	 rvCNh6O0hqZWUENC3RotFZBBCW1Qutz92iFS6ZCP11K3yCa11KXRFys8Sj8gMZhNi0
-	 usXBKdT09IQSNslpweEWI4wB8ZkJ1kKF4on5cpE0=
+	by mail.kernel.org (Postfix) with ESMTP id 07B102187F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405461AbgBNQW3 (ORCPT
+        id S2393813AbgBNQmV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391318AbgBNQW3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:29 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92BC3246D9;
-        Fri, 14 Feb 2020 16:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697348;
-        bh=lteqolzuU+UzVOoAG+rTJZd2wFSneRZ0L8io3FLpjn8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1d889S5LbhArjuFejkXrS0IdWABDxHZEn40Jor0ycZY0UHPY83BfOQHkYnmZRD5cU
-         0H6V6VsI+xrVE0hDY2ajvbwN+Wgl7It7OSfedm50gEHB2kgmbOqpAAIUCfDKaQlYGw
-         x2jPHp6KWfFlYIN61uuBJwixgzxv0oH4r6P2Ykyo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 052/141] arm: dts: allwinner: H3: Add PMU node
-Date:   Fri, 14 Feb 2020 11:19:52 -0500
-Message-Id: <20200214162122.19794-52-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:42:21 -0500
+Received: from mailoutvs57.siol.net ([185.57.226.248]:53551 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388948AbgBNQmU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 11:42:20 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 3F1E752389C;
+        Fri, 14 Feb 2020 17:42:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id gPTKP3VPISxT; Fri, 14 Feb 2020 17:42:15 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id D26BF52389B;
+        Fri, 14 Feb 2020 17:42:15 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 8286452389D;
+        Fri, 14 Feb 2020 17:42:14 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
+Date:   Fri, 14 Feb 2020 17:42:13 +0100
+Message-ID: <5326350.DvuYhMxLoT@jernej-laptop>
+In-Reply-To: <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
+References: <20200213211427.33004-1-jernej.skrabec@siol.net> <20200213211427.33004-2-jernej.skrabec@siol.net> <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+Hi Maxime,
 
-[ Upstream commit 0388a110747bec0c9d9de995842bb2a03a26aae1 ]
+Dne petek, 14. februar 2020 ob 09:14:43 CET je Maxime Ripard napisal(a):
+> Hi Jernej,
+> 
+> Thanks for taking care of this
+> 
+> On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
+> > Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix TX6
+> > (H6) don't have external 32kHz oscillator. Till H6, it didn't really
+> > matter if external oscillator was enabled because HW detected error and
+> > fall back to internal one. H6 has same functionality but it's the first
+> > SoC which have "auto switch bypass" bit documented and always enabled in
+> > driver. This prevents RTC to work correctly if external crystal is not
+> > present on board. There are other side effects - all peripherals which
+> > depends on this clock also don't work (HDMI CEC for example).
+> > 
+> > Make clocks property optional. If it is present, select external
+> > oscillator. If not, stay on internal.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
+> >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> > index 852f5f3b3592..538cf7e19034 100644
+> > --- a/drivers/rtc/rtc-sun6i.c
+> > +++ b/drivers/rtc/rtc-sun6i.c
+> > @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct
+> > device_node *node,> 
+> >  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> >  	
+> >  	}
+> > 
+> > -	/* Switch to the external, more precise, oscillator */
+> > -	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
+> > -	if (rtc->data->has_losc_en)
+> > -		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> > +	/* Switch to the external, more precise, oscillator, if present */
+> > +	if (of_get_property(node, "clocks", NULL)) {
+> > +		reg |= SUN6I_LOSC_CTRL_EXT_OSC;
+> > +		if (rtc->data->has_losc_en)
+> > +			reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> > +	}
+> > 
+> >  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> >  	
+> >  	/* Yes, I know, this is ugly. */
+> >  	sun6i_rtc = rtc;
+> > 
+> > -	/* Deal with old DTs */
+> > -	if (!of_get_property(node, "clocks", NULL))
+> > -		goto err;
+> > -
+> 
+> Doesn't that prevent the parents to be properly set if there's an
+> external crystal?
 
-Add the Performance Monitoring Unit (PMU) device tree node to the H3
-.dtsi, which tells DT users which interrupts are triggered by PMU
-overflow events on each core. The numbers come from the manual and have
-been checked in U-Boot and with perf in Linux.
+No, why?
 
-Tested with perf record and taskset on an OrangePi Zero.
+Check these two clk_summary:
+http://ix.io/2bHY Tanix TX6 (no external crystal)
+http://ix.io/2bI2 OrangePi 3 (external crystal present)
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Please disregard ac200_clk in first case, it's part of another work.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index f4ba088b225ed..08d65f252e172 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -60,25 +60,34 @@
- 			reg = <0>;
- 		};
- 
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <1>;
- 		};
- 
--		cpu@2 {
-+		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <2>;
- 		};
- 
--		cpu@3 {
-+		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <3>;
- 		};
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
--- 
-2.20.1
+Best regards,
+Jernej
+
+
 
