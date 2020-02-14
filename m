@@ -2,108 +2,84 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6A5C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 09:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840DEC3B18F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 09:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773C22086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 09:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E85222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 09:22:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XeDClSzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgBNJU3 (ORCPT
+        id S1728522AbgBNJWl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:20:29 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:53170 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbgBNJU2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:20:28 -0500
-Received: from p5b127dd9.dip0.t-ipconnect.de ([91.18.125.217] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j2X8x-0000h0-3A; Fri, 14 Feb 2020 10:20:15 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: add binding for Rockchip combo phy using an Innosilicon IP
-Date:   Fri, 14 Feb 2020 10:20:14 +0100
-Message-ID: <17396429.PKOFnNSWWW@phil>
-In-Reply-To: <1581574091-240890-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1581574091-240890-1-git-send-email-shawn.lin@rock-chips.com> <1581574091-240890-2-git-send-email-shawn.lin@rock-chips.com>
+        Fri, 14 Feb 2020 04:22:41 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54626 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727965AbgBNJWk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 04:22:40 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01E9MOs5113423;
+        Fri, 14 Feb 2020 03:22:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581672144;
+        bh=KA3DcS8FdpmaMcpdKbqJws8HhoUKSQQclgurVLEjBBw=;
+        h=From:To:CC:Subject:Date;
+        b=XeDClSzXDT1wWavxOdO4esH9o3DvZC8pKeqDuH9kjpTtulX0ESnS5qoTwInpC8Xhr
+         RtFy4IK+rhfcq2Q3EUcaEgru+/xAx7fJo34foM6+svUrbcNoFHNcHe7ADXg5byt8qm
+         seNZUOvw1WuEzCfozV6nqq8ShHJJP4fdC2lB+uvc=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01E9MOhF026423
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Feb 2020 03:22:24 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 14
+ Feb 2020 03:22:24 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 14 Feb 2020 03:22:24 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01E9MJj6086345;
+        Fri, 14 Feb 2020 03:22:19 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <ssantosh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <praneeth@ti.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+Subject: [PATCH resend 0/2] dts: keystone-k2g-evm: Display support
+Date:   Fri, 14 Feb 2020 11:22:13 +0200
+Message-ID: <cover.1581671951.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shawn,
+Resend because the earlier recipient list was wrong. 
 
-Am Donnerstag, 13. Februar 2020, 07:08:06 CET schrieb Shawn Lin:
-> This IP could supports USB3.0 and PCIe.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - fix yaml format
-> 
->  .../bindings/phy/rockchip,inno-combophy.yaml       | 80 ++++++++++++++++++++++
+Now that drm/tidss is queued for mainline, lets add display support for
+k2g-evm. There is no hurry since tidss is out only in v5.7, but it
+should not harm to have the dts changes in place before that.
 
-can we make this rockchip,inno-usb3pciephy or something similar please?
-Same for the driver name.
+Jyri Sarha (2):
+  ARM: dts: keystone-k2g: Add DSS node
+  ARM: dts: keystone-k2g-evm: add HDMI video support
 
--combophy is completely non-descriptive and looking at the Rockchip
-vendor-tree we already have:
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 101 +++++++++++++++++++++++++
+ arch/arm/boot/dts/keystone-k2g.dtsi    |  22 ++++++
+ 2 files changed, 123 insertions(+)
 
-- phy-rockchip-inno-combphy.c (this one)
-- phy-rockchip-inno-mipi-dphy.c (rk1808 dsi, but should actually fit into combo)
-- phy-rockchip-inno-video-combo-phy.c (dsi/lvds/ttl)
-- phy-rockchip-inno-video-phy.c (rk3288-lvds)
-
-All of them have quite none-descriptive names
-
-The inno-video-combo-phy already got a somewhat nicer name in
-mainline (dsidphy), so I think it would be cool to also do this here
-(and for the driver of course).
-
-
-> +  reset-names:
-> +    items:
-> +      - const: otg-rst
-> +      - const: combphy-por
-> +      - const: combphy-apb
-> +      - const: combphy-pipe
-
-reset-names are local to the node, so there is no need
-for combophy prefixes, so these should probably be:
-
-      - const: otg-rst
-      - const: por
-      - const: apb
-      - const: pipe
-
-
-> +
-> +  rockchip,combphygrf:
-> +    enum:
-> +      - rockchip,combphygrf
-
-nicer name here? :-)
-
-
-Thanks
-Heiko
-
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
