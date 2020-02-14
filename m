@@ -2,97 +2,117 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B07C35242
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93243C3B1BF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FE120848
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED9A2168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 19:24:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="HyTL905J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388006AbgBNTYT (ORCPT
+        id S2388367AbgBNTYy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:24:19 -0500
-Received: from eddie.linux-mips.org ([148.251.95.138]:38744 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729320AbgBNTYT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 14:24:19 -0500
-X-Greylist: delayed 459 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Feb 2020 14:24:17 EST
-Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
-        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
-        id S23994981AbgBNTQgVDTwM (ORCPT
-        <rfc822;linux-input@vger.kernel.org> + 3 others);
-        Fri, 14 Feb 2020 20:16:36 +0100
-Date:   Fri, 14 Feb 2020 20:16:34 +0100
-From:   Ladislav Michl <ladis@linux-mips.org>
-To:     Merlijn Wajer <merlijn@wizzup.org>
-Cc:     =?iso-8859-2?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 14 Feb 2020 14:24:54 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:30923 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387596AbgBNTYy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 14:24:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581708292;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=e3Rzzpo7xk9J4ECQBBols/BtjcoyLgBQyjDXgkqJ5t4=;
+        b=HyTL905JWDg18FcLUhGZaD6IAYx04+ukXS4utjVBqPnjC+/y79E4ifypPUQuC9Bx+J
+        70AhaGRU6tBq7262beAjkmzKV0nEsRlMOOL4WgsZfylOHSLC3hj1wemzoj3vcmX0PPMT
+        Z6M9I3s7ymOR1k2zv0mVcmEca3yrYb1iyIVGMjh8XuzoI26NkVceyQXM2Xim92CAKi6t
+        PBavVX7si71PWyZ8yeb5/hp/dxdY4M6tbOK837ixoa5qrj+VTdi2+wlFLlKwXq8LYQ5R
+        bE8/TKuudjGDy/h/7ZA8nJL7gW8obHPn6oxFcxIPayh8TPds7YLQHr9dgjWSZ7MKJdUF
+        wFpw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PuwDOspHA="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1EJOlGBd
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 14 Feb 2020 20:24:47 +0100 (CET)
+Content-Type: text/plain; charset=iso-8859-1
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v2 01/12] drm: ingenic-drm: add MODULE_DEVICE_TABLE
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1581707177.3.6@crapouillou.net>
+Date:   Fri, 14 Feb 2020 20:24:45 +0100
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] Input: add `SW_MACHINE_COVER`
-Message-ID: <20200214191634.GA6251@lenoch>
-References: <20200214130249.6845-1-merlijn@wizzup.org>
- <20200214130249.6845-2-merlijn@wizzup.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214130249.6845-2-merlijn@wizzup.org>
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B5B39A33-B8C4-4503-91CB-BFB344558B5D@goldelico.com>
+References: <cover.1581696624.git.hns@goldelico.com> <1b5475c88032b3851c6d33443e688b432af42a9f.1581696624.git.hns@goldelico.com> <1581707177.3.6@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Merlijn,
 
-On Fri, Feb 14, 2020 at 02:02:47PM +0100, Merlijn Wajer wrote:
-> This event code represents the state of a removable cover of a device.
-> Value 1 means that the cover is open or removed, value 0 means that the
-> cover is closed.
-> 
-> This can be used to preempt users removing a removable mmc card or even
-> the battery, allowing userspace to attempt to safely unmount a card.
-> ---
->  include/linux/mod_devicetable.h        | 2 +-
->  include/uapi/linux/input-event-codes.h | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index 448621c32e4d..4c692cb3cc1d 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -299,7 +299,7 @@ struct pcmcia_device_id {
->  #define INPUT_DEVICE_ID_LED_MAX		0x0f
->  #define INPUT_DEVICE_ID_SND_MAX		0x07
->  #define INPUT_DEVICE_ID_FF_MAX		0x7f
-> -#define INPUT_DEVICE_ID_SW_MAX		0x0f
-> +#define INPUT_DEVICE_ID_SW_MAX		0x10
->  #define INPUT_DEVICE_ID_PROP_MAX	0x1f
->  
->  #define INPUT_DEVICE_ID_MATCH_BUS	1
-> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> index 64cee116928e..318a6387cdfb 100644
-> --- a/include/uapi/linux/input-event-codes.h
-> +++ b/include/uapi/linux/input-event-codes.h
-> @@ -807,7 +807,8 @@
->  #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
->  #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
->  #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
-> -#define SW_MAX			0x0f
-> +#define SW_MACHINE_COVER	 0x10 /* set = cover closed */
+> Am 14.02.2020 um 20:06 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+> Please rebase this patch on top of drm-misc-next and send it apart - =
+it should go through the DRM tree.
+>=20
+>=20
+> Le ven., f=E9vr. 14, 2020 at 17:10, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> Add MODULE_DEVICE_TABLE so that the driver can load by
+>> matching the device tree if compiled as module.
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
+>> 1 file changed, 2 insertions(+)
+>> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c =
+b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>> index 6d47ef7b148c..d8617096dd8e 100644
+>> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+>> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+>> @@ -844,6 +844,8 @@ static const struct of_device_id =
+ingenic_drm_of_match[] =3D {
+>> 	{ /* sentinel */ },
+>> };
+>> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
+>=20
+> Also please remove the blank line above MODULE_DEVICE_TABLE.
+>=20
+> Cheers,
+> -Paul
 
-There is an extra space above ^
+Ok.
 
-> +#define SW_MAX			0x10
->  #define SW_CNT			(SW_MAX+1)
->  
->  /*
-> -- 
-> 2.23.0
+BR and thanks,
+Nikolaus
+
+>=20
+>> +
+>> static struct platform_driver ingenic_drm_driver =3D {
+>> 	.driver =3D {
+>> 		.name =3D "ingenic-drm",
+>> --
+>> 2.23.0
+>=20
+>=20
+
