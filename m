@@ -2,76 +2,83 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB949C3B195
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D954C35242
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3700222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1577F2187F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 06:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gVc1c004"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f3T6NdVH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgBNG0V (ORCPT
+        id S1728809AbgBNG0v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 01:26:21 -0500
-Received: from mail-pj1-f48.google.com ([209.85.216.48]:32826 "EHLO
-        mail-pj1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728761AbgBNG0U (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 01:26:20 -0500
-Received: by mail-pj1-f48.google.com with SMTP id m7so538021pjs.0
-        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 22:26:20 -0800 (PST)
+        Fri, 14 Feb 2020 01:26:51 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52857 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbgBNG0u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 01:26:50 -0500
+Received: by mail-pj1-f65.google.com with SMTP id ep11so3441220pjb.2
+        for <devicetree@vger.kernel.org>; Thu, 13 Feb 2020 22:26:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=j3Xyx8fRbicPOjRu9j2e0LsG8c5+ZnJjBZgg9ohEEXs=;
-        b=gVc1c004qVQWIrfk97TY/QhWJws5yi4ccbyTNrM9uzZ70yUg9lZzt+/G6/ZTAIDUrR
-         foKhCnYhWQOjicaAS2SKv6Gg9p3aHrxhhT+so0UYx7OvD5dK29YdSZ4tMZ5KO+UZkRA6
-         DmRkhzJsIKb1foTmDgelR3EcHAK9pdzy4qjqQ=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eCrhZ74+BntL1ASmsZknwx81NOpQkF74lLsvD9sBub0=;
+        b=f3T6NdVHZxNDFtYQX+iekyEp0Bj2gxg4PzjB4yrO524wQr2gUIHTtFAGcvT0x+wfxY
+         xgHw8Oc7tgN48emrBRNtwlfgTheC5sPIifAvxhb1VHFp42qc5buBVrLVuqMTscO3BeVg
+         gMN5M9wfjGBaooPpixSwRakGOYGWDa2gtcbaE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=j3Xyx8fRbicPOjRu9j2e0LsG8c5+ZnJjBZgg9ohEEXs=;
-        b=dhg6nhH0kBeqVc3d1IYLKFirSTwerYwacomhZAK6nv5h0JFgHr9WfxFHGGjPY8U6nZ
-         mVJcZUDeXd3upua/oDPML6RP5rDN+wCjRGw65osC3hSwObapPYTxVma4bRKpqJNcGgS4
-         ZmpFWqrVGwQiP1u7OOiEU+SSW5A082KIwn6DgtJXJW2PyMt9j0V72rEhbYGUzla9zd5s
-         eG+pn58cz94Q/bIZHkuRxsj6vpaZMMqC4ptEKAO7RK3e8qF4sjhzVpDtbpRJV04hqjsY
-         oPE6pDWgWNyhrf5pbFU6DjyGS/IeY1tM8PUQozeECgHmjjWLEukyaEVW1mYvPzbTUgv0
-         RAEQ==
-X-Gm-Message-State: APjAAAVMPf9XLwMA+Sqk3xm2Z+TGhOpo4NVr98HcmtSwHPNmJVxjlPbC
-        CZrx8nOaut7BmBdUhhG57+6I0T7pmO8=
-X-Google-Smtp-Source: APXvYqx3jJCPQiDaPMqTILJKjdDrncHj6OUTkBgV2TDazbHtb84Mg5PdUHrXroM6oC5owWzjZnPNhw==
-X-Received: by 2002:a17:90b:1110:: with SMTP id gi16mr1587676pjb.110.1581661579697;
-        Thu, 13 Feb 2020 22:26:19 -0800 (PST)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id x21sm5409598pfq.76.2020.02.13.22.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 22:26:19 -0800 (PST)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     devicetree@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eCrhZ74+BntL1ASmsZknwx81NOpQkF74lLsvD9sBub0=;
+        b=uK3CR3OqowTvNePeVXsg19KlKiROXYfDxlNwvvanMNmIE5iWWKUhl7cScvfahyIRFA
+         5HfuSRNSxhdvFqKfWn/R2UC3GsWnijoscIRjf7mQ2PE8c3atAOxHSN5vwr5BPb3x47Bu
+         +mt/U8nTdfX7eh5zWuEOqqm49EM4hyct3Po+UrMuJSe1I8cb1yuEngK7em81/KFIKs0L
+         Bfn5tbTZKuL9pstFFz8DURovW3055uZ4OFyYAjd3wq0GiqSBD2a+tV5jsiQz3D+nJn6A
+         iZTPZFmPZfn0BpNXlv4ku7FlBX6uAftcF7II1SM06lfOJ5JfyrfVEKajHTxq42vLxtOl
+         F5TQ==
+X-Gm-Message-State: APjAAAWK8czFOd4eAvwLqOV9rXORGhUulIATywE3a/HQSMIJ8Ys4W0H0
+        9SENyZWWM74owt25AEH1nLBgCw==
+X-Google-Smtp-Source: APXvYqyn5ehjzmo5Eos0aPWzc2ZSt6d7nE5vtqIbR/GyaAShL8VPgieCBvCjTwVgiNarWUm9OnDtxg==
+X-Received: by 2002:a17:90a:9dc3:: with SMTP id x3mr1620345pjv.45.1581661609563;
+        Thu, 13 Feb 2020 22:26:49 -0800 (PST)
+Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
+        by smtp.gmail.com with ESMTPSA id o73sm4636778pje.7.2020.02.13.22.26.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2020 22:26:48 -0800 (PST)
+From:   Evan Benn <evanbenn@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     jwerner@chromium.org, Evan Benn <evanbenn@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Olof Johansson <olof@lixom.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
+        linux-watchdog@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "David S. Miller" <davem@davemloft.net>,
         Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH v4] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
-Date:   Fri, 14 Feb 2020 14:26:14 +0800
-Message-Id: <20200214062614.220699-1-ikjn@chromium.org>
+        Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+Date:   Fri, 14 Feb 2020 17:26:35 +1100
+Message-Id: <20200214062637.216209-1-evanbenn@chromium.org>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200114021934.178057-1-ikjn@chromium.org>
-References: <20200114021934.178057-1-ikjn@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,248 +86,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the ChromeOS EC bindings to json-schema.
+This is currently supported in firmware deployed on oak, hana and elm mt8173
+chromebook devices. The kernel driver is written to be a generic SMC
+watchdog driver.
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Arm Trusted Firmware upstreaming review:
+    https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
 
----
-v4: text reflows, add type references, and fix examples
-v3: node name changed in rpmsg example
-v2: cleanup description, fix typos, remove LPC, and add RPMSG example
----
- .../devicetree/bindings/mfd/cros-ec.txt       |  76 ----------
- .../devicetree/bindings/mfd/cros-ec.yaml      | 139 ++++++++++++++++++
- 2 files changed, 139 insertions(+), 76 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
+Patch to add oak, hana, elm device tree:
+    https://lore.kernel.org/linux-arm-kernel/20200110073730.213789-1-hsinyi@chromium.org/
+I would like to add the device tree support after the above patch is
+accepted.
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-deleted file mode 100644
-index 4860eabd0f72..000000000000
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ /dev/null
-@@ -1,76 +0,0 @@
--ChromeOS Embedded Controller
--
--Google's ChromeOS EC is a Cortex-M device which talks to the AP and
--implements various function such as keyboard and battery charging.
--
--The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
--compatible string used depends on the interface. Each connection method has
--its own driver which connects to the top level interface-agnostic EC driver.
--Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
--the top-level driver.
--
--Required properties (I2C):
--- compatible: "google,cros-ec-i2c"
--- reg: I2C slave address
--
--Required properties (SPI):
--- compatible: "google,cros-ec-spi"
--- reg: SPI chip select
--
--Required properties (RPMSG):
--- compatible: "google,cros-ec-rpmsg"
--
--Optional properties (SPI):
--- google,cros-ec-spi-pre-delay: Some implementations of the EC need a little
--  time to wake up from sleep before they can receive SPI transfers at a high
--  clock rate. This property specifies the delay, in usecs, between the
--  assertion of the CS to the start of the first clock pulse.
--- google,cros-ec-spi-msg-delay: Some implementations of the EC require some
--  additional processing time in order to accept new transactions. If the delay
--  between transactions is not long enough the EC may not be able to respond
--  properly to subsequent transactions and cause them to hang. This property
--  specifies the delay, in usecs, introduced between transactions to account
--  for the time required by the EC to get back into a state in which new data
--  can be accepted.
--
--Required properties (LPC):
--- compatible: "google,cros-ec-lpc"
--- reg: List of (IO address, size) pairs defining the interface uses
--
--Optional properties (all):
--- google,has-vbc-nvram: Some implementations of the EC include a small
--  nvram space used to store verified boot context data. This boolean flag
--  is used to specify whether this nvram is present or not.
--
--Example for I2C:
--
--i2c@12ca0000 {
--	cros-ec@1e {
--		reg = <0x1e>;
--		compatible = "google,cros-ec-i2c";
--		interrupts = <14 0>;
--		interrupt-parent = <&wakeup_eint>;
--		wakeup-source;
--	};
--
--
--Example for SPI:
--
--spi@131b0000 {
--	ec@0 {
--		compatible = "google,cros-ec-spi";
--		reg = <0x0>;
--		interrupts = <14 0>;
--		interrupt-parent = <&wakeup_eint>;
--		wakeup-source;
--		spi-max-frequency = <5000000>;
--		controller-data {
--		cs-gpio = <&gpf0 3 4 3 0>;
--		samsung,spi-cs;
--		samsung,spi-feedback-delay = <2>;
--		};
--	};
--};
--
--
--Example for LPC is not supplied as it is not yet implemented.
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.yaml b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
-new file mode 100644
-index 000000000000..20d54cddc967
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.yaml
-@@ -0,0 +1,139 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/cros-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChromeOS Embedded Controller
-+
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+  - Guenter Roeck <groeck@chromium.org>
-+
-+description:
-+  Google's ChromeOS EC is a microcontroller which talks to the AP and
-+  implements various functions such as keyboard and battery charging.
-+  The EC can be connected through various interfaces (I2C, SPI, and others)
-+  and the compatible string specifies which interface is being used.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description:
-+          For implementations of the EC is connected through I2C.
-+        const: google,cros-ec-i2c
-+      - description:
-+          For implementations of the EC is connected through SPI.
-+        const: google,cros-ec-spi
-+      - description:
-+          For implementations of the EC is connected through RPMSG.
-+        const: google,cros-ec-rpmsg
-+
-+  google,has-vbc-nvram:
-+    description:
-+      Some implementations of the EC include a small nvram space used to
-+      store verified boot context data. This boolean flag is used to specify
-+      whether this nvram is present or not.
-+    type: boolean
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          const: google,cros-ec-i2c
-+    then:
-+      properties:
-+        reg:
-+          description: I2C slave address
-+          maxItems: 1
-+
-+      required:
-+        - reg
-+  - if:
-+      properties:
-+        compatible:
-+          const: google,cros-ec-spi
-+    then:
-+      properties:
-+        reg:
-+          description: SPI chip select
-+          maxItems: 1
-+
-+        google,cros-ec-spi-pre-delay:
-+          description:
-+            This property specifies the delay in usecs between the
-+            assertion of the CS and the first clock pulse.
-+          allOf:
-+            - $ref: /schemas/types.yaml#/definitions/uint32
-+            - default: 0
-+            - minimum: 0
-+
-+        google,cros-ec-spi-msg-delay:
-+          description:
-+            This property specifies the delay in usecs between messages.
-+          allOf:
-+            - $ref: /schemas/types.yaml#/definitions/uint32
-+            - default: 0
-+            - minimum: 0
-+
-+      required:
-+        - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Example for I2C
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cros-ec@1e {
-+            compatible = "google,cros-ec-i2c";
-+            reg = <0x1e>;
-+            interrupts = <6 0>;
-+            interrupt-parent = <&gpio0>;
-+        };
-+    };
-+
-+  # Example for SPI
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0x0>;
-+            google,cros-ec-spi-msg-delay = <30>;
-+            google,cros-ec-spi-pre-delay = <10>;
-+            interrupts = <99 0>;
-+            interrupt-parent = <&gpio7>;
-+            spi-max-frequency = <5000000>;
-+        };
-+    };
-+
-+  # Example for RPMSG
-+  - |
-+    scp0 {
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-rpmsg";
-+        };
-+    };
-+...
+
+Evan Benn (1):
+  dt-bindings: watchdog: Add arm,smc-wdt watchdog arm,smc-wdt compatible
+
+Julius Werner (1):
+  watchdog: Add new arm_smc_wdt watchdog driver
+
+ .../bindings/watchdog/arm,smc-wdt.yaml        |  30 +++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/watchdog/Kconfig                      |  12 ++
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/arm_smc_wdt.c                | 191 ++++++++++++++++++
+ 6 files changed, 242 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml
+ create mode 100644 drivers/watchdog/arm_smc_wdt.c
+
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
