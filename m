@@ -2,57 +2,57 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BD8C3B1A1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CEEC3B1AB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B7D24650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5DE52467B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701384;
-	bh=9e/FhVFKz7yVFUP/sk2xKVY1v7EsAFpJTgAFW/oS4Aw=;
+	s=default; t=1581701412;
+	bh=ScsIUI1jhlemcbd0HtcfRdTTAt1Fs26SJj8CgwW/VZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdQi1E141o4fwK9F8+8OU00S9L3/Q4hnhcW9GL/4i4uQygmCc0YhWq3yQ/okLJUVM
-	 b7vDZV1n5Mg0FH5N6CTSl8pf8MmVP3IJvB5I5IDR4lLLh6/UJVrLKzxO7xoyAV7u4n
-	 ATIQ7qcheH2ERngE3Up8dlERBLHk8/g/9aSFKMJI=
+	b=AqPsO7PyOMHQBv63RNQ+gYrzg7zmwcRkVhLMcJtwGclvL6nugjxFnlCVq6jDtagR0
+	 H0WVz0ev5Ivnjg5k8ztaoWt1JbfLAEpEfgjfyIa0hP7AcXi3NWM38IRWCK17nk0YrI
+	 RWwrCIO7lcHy6x0mm46M/kiO/0jtIwF/QZGWzNL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390782AbgBNQHt (ORCPT
+        id S2391636AbgBNRaK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:07:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59482 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:30:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390041AbgBNQHt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:49 -0500
+        id S2390712AbgBNQHg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 173B32187F;
-        Fri, 14 Feb 2020 16:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8677A2467E;
+        Fri, 14 Feb 2020 16:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696468;
-        bh=9e/FhVFKz7yVFUP/sk2xKVY1v7EsAFpJTgAFW/oS4Aw=;
+        s=default; t=1581696455;
+        bh=ScsIUI1jhlemcbd0HtcfRdTTAt1Fs26SJj8CgwW/VZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eis0HaD6jAHUMuoUPMVWAtDKsKdXmT3VAWgUEW8HpGmQrJQ366pz2dCfCR1DztLkV
-         LZlF4rAczlORPctZ+skONntBEXPpAWkmYENoZRbj6gP/dkdsajpYCJ86Ko0zUk9tr7
-         hJ+RXm0UnuWGw0+TSeZ/Egr/lnc1TzPeBObtOPq4=
+        b=0duWHp31wHHiK4aOtyfGzLjxVAfWqWjBQwV0MKt0QOknjdZKnEBN14zdLeBCMPGDf
+         vJ6/qhtvfmbEIcazs0AStyaTbA8kUE5AeyMOCZrwU2lt7dZS0AxuQMB98b3Q798BPP
+         JeSqWPht4usZMhfii9qaYK0/LQk+xgfCTw81gPrs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 278/459] ARM: dts: at91: sama5d3: define clock rate range for tcb1
-Date:   Fri, 14 Feb 2020 10:58:48 -0500
-Message-Id: <20200214160149.11681-278-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 267/459] ARM: dts: stm32: Add power-supply for DSI panel on stm32f469-disco
+Date:   Fri, 14 Feb 2020 10:58:37 -0500
+Message-Id: <20200214160149.11681-267-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,34 +61,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-[ Upstream commit a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d ]
+[ Upstream commit 0ff15a86d0c5a3f004fee2e92d65b88e56a3bc58 ]
 
-The clock rate range for the TCB1 clock is missing. define it in the device
-tree.
+Add a fixed regulator and use it as power supply for DSI panel.
 
-Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
-Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
-Link: https://lore.kernel.org/r/20200110172007.1253659-2-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 18c8866266 ("ARM: dts: stm32: Add display support on stm32f469-disco")
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sama5d3_tcb1.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/stm32f469-disco.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sama5d3_tcb1.dtsi b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-index 1584035daf515..215802b8db301 100644
---- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-@@ -22,6 +22,7 @@
- 					tcb1_clk: tcb1_clk {
- 						#clock-cells = <0>;
- 						reg = <27>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 				};
- 			};
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index a3ff04940aec1..c6dc6d1a051b0 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -76,6 +76,13 @@
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+ 
++	vdd_dsi: vdd-dsi {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_dsi";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	soc {
+ 		dma-ranges = <0xc0000000 0x0 0x10000000>;
+ 	};
+@@ -155,6 +162,7 @@
+ 		compatible = "orisetech,otm8009a";
+ 		reg = <0>; /* dsi virtual channel (0..3) */
+ 		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
++		power-supply = <&vdd_dsi>;
+ 		status = "okay";
+ 
+ 		port {
 -- 
 2.20.1
 
