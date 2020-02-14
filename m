@@ -2,95 +2,132 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7489C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AA1C3B199
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35E52168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="J+8f2YqS"
+	by mail.kernel.org (Postfix) with ESMTP id CB755222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581685770;
+	bh=S1KcqlRgaFv8iW8vw5VXuHf37fRz7NJhUiPg/24MFmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ssn2x2uIhTYgJTKVEaFegmQGBMCEJhRdD12c2KaQu8FObsuwCIZGlROghtTq1E0vc
+	 pzj7CfLzlQGJjsLneiqm3+c5TnHLFJzVNgthWMjH+9ihg2JoWm2ubV+xdtdZpxiV/w
+	 fkqnacGlsqK3ArKl+A8V0s+dqizMKBrGWN3CJe/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgBNNBG (ORCPT
+        id S1728437AbgBNNJa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:01:06 -0500
-Received: from a80-127-99-228.adsl.xs4all.nl ([80.127.99.228]:59454 "EHLO
-        hetgrotebos.org" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727970AbgBNNBD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 08:01:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
-         s=mail; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:
-        To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Q9PRBzzMe+a3dzAzMxrx0xT2y1fZevZ8aQZ/OjHoBN8=; b=J+8f2YqS5b9SXJ+ctf75ziQntm
-        IDqPGFfoH6VLBLfEb78RBz7itd9w+j6Doe5sUOpKFvlB/Ir38fY7Y125Nrrk8maCGT1xGRphJXyOT
-        Ka6W94g+va9bmC0V9S+PajK41qIUQjnVm08bAsXDlA/AfuJTlN5a4zCPhbaWGmW4W+VcTRgOsQm7j
-        JLo7t4JTOVZhLpHe16q+E6O6M6fwYsEc2CJtLbWqsXWI2SgZhqVTaYTzTjHJRVCRuolNLpcNbpRjq
-        KaGBvOF7t6dbOgAZmkZsFeM9kQOXOOze0iTpOD+fs28Tin+gMPGNfwRM2i/PdRf9UNaGcyo9VTKcM
-        oA9d1m7Q==;
-Received: from kgpe-d16.fritz.box ([192.168.178.22])
-        by hetgrotebos.org with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <merlijn@wizzup.org>)
-        id 1j2aaS-0002df-Ny; Fri, 14 Feb 2020 13:00:52 +0000
-From:   Merlijn Wajer <merlijn@wizzup.org>
-To:     merlijn@wizzup.org
-Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [RFC PATCH 0/2] Add SW_MACHINE_COVER key
-Date:   Fri, 14 Feb 2020 14:02:46 +0100
-Message-Id: <20200214130249.6845-1-merlijn@wizzup.org>
-X-Mailer: git-send-email 2.23.0
+        Fri, 14 Feb 2020 08:09:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgBNNJa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:09:30 -0500
+Received: from localhost (unknown [106.201.58.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02F02086A;
+        Fri, 14 Feb 2020 13:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581685769;
+        bh=S1KcqlRgaFv8iW8vw5VXuHf37fRz7NJhUiPg/24MFmM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ew9lNr986QqTsMdVyURhpqV13JrXJfHXSDcBF5HSqYvPETinKZMV+FMEHTwrmmt3U
+         EIcpnBgGSAfUYY4ClcqTE+zYekP6sLxR/JYKRQEhz3TmEIqTSzBlWZuK7Ypjmj4uXs
+         ukwSWiU+C5n8Je0aDM44pz4T1WHEwJoU6Ig29yDk=
+Date:   Fri, 14 Feb 2020 18:39:23 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jshriram@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, psodagud@codeaurora.org,
+        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
+        vnkgutta@codeaurora.org
+Subject: Re: [PATCH v2 6/7] clk: qcom: gcc: Add global clock controller
+ driver for SM8250
+Message-ID: <20200214130923.GV2618@vkoul-mobl>
+References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org>
+ <1579905147-12142-7-git-send-email-vnkgutta@codeaurora.org>
+ <20200205194022.C5E8C20730@mail.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205194022.C5E8C20730@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series adds the SW_MACHINE_COVER key, and changes the Nokia N900 dts to
-expose the key via gpio-keys.
+On 05-02-20, 11:40, Stephen Boyd wrote:
 
-Before, this gpio was used as card detect GPIO, causing the card not to show up
-if the phone was booted without cover, see this thread on linux-omap:
+> > +static const struct clk_parent_data gcc_parent_data_2[] = {
+> > +       { .fw_name = "bi_tcxo" },
+> > +       { .fw_name = "sleep_clk", .name = "sleep_clk" },
+> 
+> Please drop .name
 
-    N900: Remove mmc1 "safety feature"? (was: Re: mmc0 on Nokia N900 on Linux 5.4.18)
+Yup, will do
 
-Since there is no realistic use for using this gpio as card detect, instead
-expose it to userspace via gpio-keys. There are no event type for machine covers
-yet, so add that first.
+> > +static const struct clk_parent_data gcc_parent_data_5[] = {
+> > +       { .fw_name = "bi_tcxo" },
+> > +       { .hw = &gpll0.clkr.hw },
+> > +       { .fw_name = "aud_ref_clk", .name = "aud_ref_clk" },
+> 
+> Why have .name? Pleas remove it.
 
-The key should be 1 when the cover is closed, and 0 when the cover is open.
+Dropped...
 
-Starting the Nokia N900 with the cover removed, putting the cover in place:
+> > +       { .hw = &gpll0_out_even.clkr.hw },
+> > +       { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
+> 
+> Please drop these test inputs. I don't see any reason why they're listed.
 
-    Event: time 1581684523.415296, type 5 (EV_SW), code 16 (?), value 1
+Dropped this and rest.
 
-Removing the cover again, exposing mmc1 and the battery:
+> > +static struct clk_branch gcc_sys_noc_cpuss_ahb_clk = {
+> > +       .halt_reg = 0x48198,
+> > +       .halt_check = BRANCH_HALT_VOTED,
+> > +       .clkr = {
+> > +               .enable_reg = 0x52000,
+> > +               .enable_mask = BIT(0),
+> > +               .hw.init = &(struct clk_init_data){
+> > +                       .name = "gcc_sys_noc_cpuss_ahb_clk",
+> > +                       .parent_data = &(const struct clk_parent_data){
+> > +                               .hw = &gcc_cpuss_ahb_postdiv_clk_src.clkr.hw,
+> > +                       },
+> > +                       .num_parents = 1,
+> > +                       .flags = CLK_IS_CRITICAL | CLK_SET_RATE_PARENT,
+> > +                       .ops = &clk_branch2_ops,
+> > +               },
+> > +       },
+> > +};
+> 
+> Is there a need for this clk to be exposed? Why can't we just turn the
+> bit on in probe and ignore it after that? I'd prefer to not have
+> CLK_IS_CRITICAL in this driver unless necessary.
 
-    Event: time 1581684529.413706, type 5 (EV_SW), code 16 (?), value 0
+yeah moved it as setting a bit in probe..
 
-Merlijn Wajer (2):
-  Input: add `SW_MACHINE_COVER`
-  ARM: dts: n900: remove mmc1 card detect gpio
+> > +       /*
+> > +        * Keep the clocks always-ON
+> > +        * GCC_VIDEO_AHB_CLK, GCC_CAMERA_AHB_CLK, GCC_DISP_AHB_CLK,
+> > +        * GCC_CPUSS_DVM_BUS_CLK, GCC_GPU_CFG_AHB_CLK
+> > +        */
+> > +       regmap_update_bits(regmap, 0x0b004, BIT(0), BIT(0));
+> > +       regmap_update_bits(regmap, 0x0b008, BIT(0), BIT(0));
+> > +       regmap_update_bits(regmap, 0x0b00c, BIT(0), BIT(0));
+> > +       regmap_update_bits(regmap, 0x4818c, BIT(0), BIT(0));
+> > +       regmap_update_bits(regmap, 0x71004, BIT(0), BIT(0));
+> 
+> These look like the AHB clks above that we just enabled and then ignore.
 
- arch/arm/boot/dts/omap3-n900.dts       | 12 ++++++++----
- include/linux/mod_devicetable.h        |  2 +-
- include/uapi/linux/input-event-codes.h |  3 ++-
- 3 files changed, 11 insertions(+), 6 deletions(-)
+right, I think these are rest of the always-on clocks
 
 -- 
-2.23.0
-
+~Vinod
