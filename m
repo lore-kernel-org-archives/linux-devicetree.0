@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D06CC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D32BC3B1B1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3590920873
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471C0206D7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702202;
-	bh=8LejdIoIXZMOUABhucZnQy6clJGTMw5d0X03JVnOjpw=;
+	s=default; t=1581702772;
+	bh=0AGS+MlQMepeARnJsKYIBXgbmtmIqDDXRQy0zLTy+2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lz9Lr67lTCw97syv2Ouuhyci9x8ka2H1hOoZtrKtm3zAaxZrQwrDrpo1iqIksCOBm
-	 JGwXlQfn2zlcic9iiD2b7Oav3cl18oFNmlfsmWC+fg6GcCBiYPieAfPwWpobcO/Efj
-	 XNjgUzZ/YnOsBX/IIQhUTKjq+9cnR3pkkqJfgJTE=
+	b=qcAfbNka9cr/wRwBassy27RPCMg7PqoreOC1PFp4j32RDdmJsaH3GnuQJPTeHOIhH
+	 wjs1id3fFwZrGgEB+3k0J65gzKRxYSdMe6+rtZivUX3SQTmmPB6/oMwwANoZrYjtID
+	 NG8rFmjcoXMpyVkRvHVhZljqf/Oq8hYI7r5cN5WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389593AbgBNRnS (ORCPT
+        id S2388695AbgBNRws (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:43:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50198 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:52:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389581AbgBNQDQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:16 -0500
+        id S2388606AbgBNP6b (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20FD724686;
-        Fri, 14 Feb 2020 16:03:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17BDC22314;
+        Fri, 14 Feb 2020 15:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696196;
-        bh=8LejdIoIXZMOUABhucZnQy6clJGTMw5d0X03JVnOjpw=;
+        s=default; t=1581695911;
+        bh=0AGS+MlQMepeARnJsKYIBXgbmtmIqDDXRQy0zLTy+2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TfZAPIlfJO0MAWiuTQph2TXzcdOzFXlC6seE4LqMX4DNgWwqnLu0tXs4/bLKgMbTK
-         wYHCn+0DXKTtygM5/lLNV3acB0lLESK/ZCnlidsX9gXmNhp8O+l1B5oKJaDzTDbN6k
-         Y0M6SdgUTq1yRtiUUceD3eFEM2uo2TQ8K7vVmpp4=
+        b=0i8m1m3Epasid4UBYWjGkUrEkJk6NLoU3L8ELRRBKC/P3x121ThCu2/pEq/QjT4Ow
+         O7W7KnDPj/EKbGFm3AgPz7EgCsLEnE7BNoFI8bhRPalxsBVMBG+og5cDhEvT1pr8Az
+         qzGeAN9rQuvEUnfmcJz1B4uSM5Fs+tc0CGXL43MU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Beniamin Bia <beniamin.bia@analog.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+Cc:     Tero Kristo <t-kristo@ti.com>, Benoit Parrot <bparrot@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 063/459] dt-bindings: iio: adc: ad7606: Fix wrong maxItems value
-Date:   Fri, 14 Feb 2020 10:55:13 -0500
-Message-Id: <20200214160149.11681-63-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 450/542] ARM: dts: am43xx: add support for clkout1 clock
+Date:   Fri, 14 Feb 2020 10:47:22 -0500
+Message-Id: <20200214154854.6746-450-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,48 +60,99 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Beniamin Bia <beniamin.bia@analog.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit a6c4f77cb3b11f81077b53c4a38f21b92d41f21e ]
+[ Upstream commit 01053dadb79d63b65f7b353e68b4b6ccf4effedb ]
 
-This patch set the correct value for oversampling maxItems. In the
-original example, appears 3 items for oversampling while the maxItems
-is set to 1, this patch fixes those issues.
+clkout1 clock node and its generation tree was missing. Add this based
+on the data on TRM and PRCM functional spec.
 
-Fixes: 416f882c3b40 ("dt-bindings: iio: adc: Migrate AD7606 documentation to yaml")
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
+reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
+clkout1 clock") which is needed for the ov2659 camera sensor clock
+definition hence it is being re-applied here.
+
+Note that because of the current dts node name dependency for mapping to
+clock domain, we must still use "clkout1-*ck" naming instead of generic
+"clock@" naming for the node. And because of this, it's probably best to
+apply the dts node addition together along with the other clock changes.
+
+Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Tested-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-index cc544fdc38bea..bc8aed17800d3 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-@@ -85,7 +85,7 @@ properties:
-       Must be the device tree identifier of the over-sampling
-       mode pins. As the line is active high, it should be marked
-       GPIO_ACTIVE_HIGH.
--    maxItems: 1
-+    maxItems: 3
+diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+index 091356f2a8c16..c726cd8dbdf1b 100644
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -704,6 +704,60 @@
+ 		ti,bit-shift = <8>;
+ 		reg = <0x2a48>;
+ 	};
++
++	clkout1_osc_div_ck: clkout1-osc-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&sys_clkin_ck>;
++		ti,bit-shift = <20>;
++		ti,max-div = <4>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
++			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
++			 <&dpll_mpu_m2_ck>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_mux_ck>;
++		ti,bit-shift = <4>;
++		ti,max-div = <8>;
++		reg = <0x4100>;
++	};
++
++	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
++		#clock-cells = <0>;
++		compatible = "ti,divider-clock";
++		clocks = <&clkout1_src2_pre_div_ck>;
++		ti,bit-shift = <8>;
++		ti,max-div = <32>;
++		ti,index-power-of-two;
++		reg = <0x4100>;
++	};
++
++	clkout1_mux_ck: clkout1-mux-ck {
++		#clock-cells = <0>;
++		compatible = "ti,mux-clock";
++		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
++			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
++		ti,bit-shift = <16>;
++		reg = <0x4100>;
++	};
++
++	clkout1_ck: clkout1-ck {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&clkout1_mux_ck>;
++		ti,bit-shift = <23>;
++		reg = <0x4100>;
++	};
+ };
  
-   adi,sw-mode:
-     description:
-@@ -128,9 +128,9 @@ examples:
-                 adi,conversion-start-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-                 reset-gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
-                 adi,first-data-gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
--                adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH
--                                                &gpio 23 GPIO_ACTIVE_HIGH
--                                                &gpio 26 GPIO_ACTIVE_HIGH>;
-+                adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>,
-+                                               <&gpio 23 GPIO_ACTIVE_HIGH>,
-+                                               <&gpio 26 GPIO_ACTIVE_HIGH>;
-                 standby-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
-                 adi,sw-mode;
-         };
+ &prcm {
 -- 
 2.20.1
 
