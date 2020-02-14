@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B25C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A305FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42B924650
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830C224650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 17:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390958AbgBNR2Z (ORCPT
+        id S2404483AbgBNR2a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:28:25 -0500
-Received: from out28-221.mail.aliyun.com ([115.124.28.221]:38590 "EHLO
-        out28-221.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391144AbgBNR2W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 12:28:22 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07512346|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.63799-0.012238-0.349772;DS=CONTINUE|ham_system_inform|0.345318-0.00103386-0.653648;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.Go9djQb_1581701284;
+        Fri, 14 Feb 2020 12:28:30 -0500
+Received: from out28-122.mail.aliyun.com ([115.124.28.122]:41993 "EHLO
+        out28-122.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394636AbgBNR22 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 12:28:28 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1018745|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.231591-0.0044768-0.763932;DS=CONTINUE|ham_regular_dialog|0.00503353-1.34513e-05-0.994953;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.Go9djQb_1581701284;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Go9djQb_1581701284)
           by smtp.aliyun-inc.com(10.147.41.231);
-          Sat, 15 Feb 2020 01:28:17 +0800
+          Sat, 15 Feb 2020 01:28:22 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -31,9 +31,9 @@ Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, paul@crapouillou.net,
         mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com
-Subject: [PATCH v5 1/6] clk: Ingenic: Remove unnecessary spinlock when reading registers.
-Date:   Sat, 15 Feb 2020 01:27:37 +0800
-Message-Id: <1581701262-110556-3-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v5 6/6] clk: X1000: Add FIXDIV for SSI clock of X1000.
+Date:   Sat, 15 Feb 2020 01:27:42 +0800
+Message-Id: <1581701262-110556-8-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -45,82 +45,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It is not necessary to use spinlock when reading registers,
-so remove it from cgu.c.
+The SSI clock of X1000 not like JZ4770 and JZ4780, they are not
+directly derived from the output of SSIPLL, but from the clock
+obtained by dividing the frequency by 2. "X1000_CLK_SSIPLL_DIV2"
+is added for this purpose, and ensure that it initialized before
+"X1000_CLK_SSIMUX" when initializing the clocks.
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
-Suggested-by: Paul Burton <paulburton@kernel.org>
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
 
 Notes:
-    v2:
+    v5:
     New patch.
-    
-    v2->v3:
-    Adjust order from [5/5] in v2 to [1/5] in v3.
-    
-    v3->v4:
-    Remove the spinlock around ingenic_cgu_gate_get().
-    
-    v4->v5:
-    Rebase on top of kernel 5.6-rc1.
 
- drivers/clk/ingenic/cgu.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/clk/ingenic/x1000-cgu.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index 6e96303..ab1302a 100644
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	const struct ingenic_cgu_pll_info *pll_info;
- 	unsigned m, n, od_enc, od;
- 	bool bypass;
--	unsigned long flags;
- 	u32 ctl;
+diff --git a/drivers/clk/ingenic/x1000-cgu.c b/drivers/clk/ingenic/x1000-cgu.c
+index d6fe28f..a3bbe70 100644
+--- a/drivers/clk/ingenic/x1000-cgu.c
++++ b/drivers/clk/ingenic/x1000-cgu.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+  * X1000 SoC CGU driver
+- * Copyright (c) 2019 Zhou Yanjie <zhouyanjie@zoho.com>
++ * Copyright (c) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+  */
  
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 	pll_info = &clk_info->pll;
+ #include <linux/clk-provider.h>
+@@ -18,6 +18,7 @@
+ #define CGU_REG_CLKGR		0x20
+ #define CGU_REG_OPCR		0x24
+ #define CGU_REG_DDRCDR		0x2c
++#define CGU_REG_USBCDR		0x50
+ #define CGU_REG_MACCDR		0x54
+ #define CGU_REG_I2SCDR		0x60
+ #define CGU_REG_LPCDR		0x64
+@@ -186,6 +187,15 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		.gate = { CGU_REG_CLKGR, 5 },
+ 	},
  
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
++	[X1000_CLK_OTG] = {
++		"otg", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
++		.parents = { X1000_CLK_EXCLK, -1,
++					 X1000_CLK_APLL, X1000_CLK_MPLL },
++		.mux = { CGU_REG_USBCDR, 30, 2 },
++		.div = { CGU_REG_USBCDR, 0, 1, 8, 29, 28, 27 },
++		.gate = { CGU_REG_CLKGR, 3 },
++	},
++
+ 	[X1000_CLK_SSIPLL] = {
+ 		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
+ 		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL, -1, -1 },
+@@ -193,9 +203,15 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		.div = { CGU_REG_SSICDR, 0, 1, 8, 29, 28, 27 },
+ 	},
  
- 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
- 	m += pll_info->m_offset;
-@@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
--	unsigned long flags;
- 	u32 ctl;
++	[X1000_CLK_SSIPLL_DIV2] = {
++		"ssi_pll_div2", CGU_CLK_FIXDIV,
++		.parents = { X1000_CLK_SSIPLL },
++		.fixdiv = { 2 },
++	},
++
+ 	[X1000_CLK_SSIMUX] = {
+ 		"ssi_mux", CGU_CLK_MUX,
+-		.parents = { X1000_CLK_EXCLK, X1000_CLK_SSIPLL, -1, -1 },
++		.parents = { X1000_CLK_EXCLK, X1000_CLK_SSIPLL_DIV2, -1, -1 },
+ 		.mux = { CGU_REG_SSICDR, 30, 1 },
+ 	},
  
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	return !!(ctl & BIT(pll_info->enable_bit));
- }
-@@ -562,16 +556,12 @@ static int ingenic_clk_is_enabled(struct clk_hw *hw)
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info;
--	unsigned long flags;
- 	int enabled = 1;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 
--	if (clk_info->type & CGU_CLK_GATE) {
--		spin_lock_irqsave(&cgu->lock, flags);
-+	if (clk_info->type & CGU_CLK_GATE)
- 		enabled = !ingenic_cgu_gate_get(cgu, &clk_info->gate);
--		spin_unlock_irqrestore(&cgu->lock, flags);
--	}
- 
- 	return enabled;
- }
 -- 
 2.7.4
 
