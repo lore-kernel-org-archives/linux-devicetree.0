@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19507C3B1B2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA2EC3B1B1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D982420873
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A4820848
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703489;
-	bh=8Yb5HhRfNtu90zyqPHEgbqHDjAy4hSB8qwaNWc47P64=;
+	s=default; t=1581703506;
+	bh=881Yyyw2fSkV4kx7RDvxnSQOK+0PXzO6EwfTy9I53jY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rT+xvAJxO2cNqBOTvOs6yIxvNnQ52uvF5n+f9Us+nnvOSPFcpDJhbqw3vyliDZVR2
-	 DdBV/552dVFaA2k7W6ZwAVO70Ln7aMebgwzy5JLYNGFTG8oRN6UV1HfU8pY4KZzloK
-	 glpXzUbLUoRhkPozqhgPeUAPD65AnmoFD7TOkGc8=
+	b=iiSFYcJVJP3udaVOvRnEtqLzrOI44u52dP2xHg9jm3O7vtRUqsosUNhwJ+Qkf/1KD
+	 ZAOdUXj2kWGH+Biu/+M2QjRU97OtWaDVlCbiAUnZxkw7pNFThFT0bfG3JkA5Ul8e3o
+	 EvYH7z0Lr8X8QMsU+dYtYbbAYIuNdTN7SL57tZOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731796AbgBNPze (ORCPT
+        id S1731770AbgBNPz0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36728 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731790AbgBNPzc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:32 -0500
+        id S1731765AbgBNPz0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 591EF2467C;
-        Fri, 14 Feb 2020 15:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5834324649;
+        Fri, 14 Feb 2020 15:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695732;
-        bh=8Yb5HhRfNtu90zyqPHEgbqHDjAy4hSB8qwaNWc47P64=;
+        s=default; t=1581695725;
+        bh=881Yyyw2fSkV4kx7RDvxnSQOK+0PXzO6EwfTy9I53jY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o6rus/f3oqz8ScjHPeOvGNETQ1X43tt2ddezZQ80XyTTWetWk01uUmdEwkcVIJXP4
-         Ki/90xOA/vIaqDFow5SwyV4C/cULprVfRvAsshOQ7fMc5QyNXfAmPwcj148Nk6hWrn
-         L8kazU1h109Di6UcJ/QjeIL51oTSA7JriVgYTE7g=
+        b=o8WjgH8aQMr7pqM92CZ0et0/HLIjD1Ldsqj770iGQZ2amNreXCJBWHmlDzpQIqYZp
+         9eATfLB3GyKjHVGzvdInWIndnQi0WSy1RC4jKFeHBNUe4XCamOxphBUCjJHkkl62tZ
+         xsaaqrbASCTSCgIU5wSahq1yaj0tslyf98XyeFaM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 306/542] ARM: dts: stm32: Add power-supply for DSI panel on stm32f469-disco
-Date:   Fri, 14 Feb 2020 10:44:58 -0500
-Message-Id: <20200214154854.6746-306-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 301/542] ARM: dts: meson8b: use the actual frequency for the GPU's 364MHz OPP
+Date:   Fri, 14 Feb 2020 10:44:53 -0500
+Message-Id: <20200214154854.6746-301-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,47 +61,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 0ff15a86d0c5a3f004fee2e92d65b88e56a3bc58 ]
+[ Upstream commit c3dd3315ab58b2cfa1916df55b0d0f9fbd94266f ]
 
-Add a fixed regulator and use it as power supply for DSI panel.
+The clock setup on Meson8 cannot achieve a Mali frequency of exactly
+182.15MHz. The vendor driver uses "FCLK_DIV7 / 1" for this frequency,
+which translates to 2550MHz / 7 / 1 = 364285714Hz.
+Update the GPU operating point to that specific frequency to not confuse
+myself when comparing the frequency from the .dts with the actual clock
+rate on the system.
 
-Fixes: 18c8866266 ("ARM: dts: stm32: Add display support on stm32f469-disco")
-
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Fixes: c3ea80b6138cae ("ARM: dts: meson8b: add the Mali-450 MP2 GPU")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32f469-disco.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/meson8b.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-index f3ce477b7bae6..9397db0c43de2 100644
---- a/arch/arm/boot/dts/stm32f469-disco.dts
-+++ b/arch/arm/boot/dts/stm32f469-disco.dts
-@@ -76,6 +76,13 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
- 
-+	vdd_dsi: vdd-dsi {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_dsi";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	soc {
- 		dma-ranges = <0xc0000000 0x0 0x10000000>;
- 	};
-@@ -155,6 +162,7 @@
- 		compatible = "orisetech,otm8009a";
- 		reg = <0>; /* dsi virtual channel (0..3) */
- 		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
-+		power-supply = <&vdd_dsi>;
- 		status = "okay";
- 
- 		port {
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 099bf8e711c94..1e8c5d7bc824a 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -125,8 +125,8 @@
+ 			opp-hz = /bits/ 64 <255000000>;
+ 			opp-microvolt = <1100000>;
+ 		};
+-		opp-364300000 {
+-			opp-hz = /bits/ 64 <364300000>;
++		opp-364285714 {
++			opp-hz = /bits/ 64 <364285714>;
+ 			opp-microvolt = <1100000>;
+ 		};
+ 		opp-425000000 {
 -- 
 2.20.1
 
