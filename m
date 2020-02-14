@@ -2,112 +2,92 @@ Return-Path: <SRS0=lsCC=4C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9FCC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E01FC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD9924649
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704122082F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 14:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581689161;
-	bh=nqqK+fKvkLZHnclQOXpb/w6rt8Jru29JAuCrVR2XDRI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=me5xxcAykiIpIX1o8lEQpc2yoNHpzGb+gWDERCgDXQXDnWQxVysG2HwU/daNlxzs+
-	 +JEVF0x6YJr8XIeh7HI/FqdEsF/XZw7OVNVAYQS1qG+qaqDAU5HFmtsN7QiEbPH+cT
-	 mSEJjZ6h+utoHCDpJEdh1XLMvhgvOdjCTIeWFNzU=
+	s=default; t=1581689328;
+	bh=NYONTVuQfJnb0NB+oRxMYquRS2nwbq5J3wHFrLwWlig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VjPcUpsm89iG1BYbeERjSOue3xo8MZMlFYj5+9z93Vc3k8wPx+xyJ36RGShCUtXos
+	 YNPVFwnCh7YHmBeMmF0tV/gKHRU7GVDXCVXQZFItyYfViwXQGMk9TytiOMTaBF4ZVu
+	 1CLkEABaey+3VrNQgLm19LAFOTemAKg3LaUE0+WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387454AbgBNOGA (ORCPT
+        id S1729335AbgBNOIs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:06:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 09:08:48 -0500
+Received: from foss.arm.com ([217.140.110.172]:33452 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387434AbgBNOGA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:06:00 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD6A2187F;
-        Fri, 14 Feb 2020 14:05:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581689160;
-        bh=nqqK+fKvkLZHnclQOXpb/w6rt8Jru29JAuCrVR2XDRI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G7ddZMcfzyRyHqqR+RoTuh287BHIPCdwiPuXHTHxU2LUbVssmfOXbMHYhoij09cjN
-         ksF9W+fGGAvAF3tb0Xlo8dpcvvqijKuybK5I0IWCsSReullAWAmGyXtctQ4r06Oi4L
-         FYbbJ9tQrah8vHpCrP2PuFjrRf3Q0CHXWI4Vq7vg=
-Date:   Fri, 14 Feb 2020 14:05:55 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 2/5] iio: amplifiers: ad8366: Add write_raw_get_fmt
- function
-Message-ID: <20200214140555.3b732ad4@archlinux>
-In-Reply-To: <20200206151149.32122-2-beniamin.bia@analog.com>
-References: <20200206151149.32122-1-beniamin.bia@analog.com>
-        <20200206151149.32122-2-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1729320AbgBNOIr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:08:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0036B1FB;
+        Fri, 14 Feb 2020 06:08:47 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7875C3F68F;
+        Fri, 14 Feb 2020 06:08:46 -0800 (PST)
+Date:   Fri, 14 Feb 2020 14:08:44 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        vigneshr@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v9 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+Message-ID: <20200214140844.GL4827@sirena.org.uk>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200214114618.29704-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cy9Nn4fUvYST66Pl"
+Content-Disposition: inline
+In-Reply-To: <20200214114618.29704-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Cookie: Shipping not included.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 6 Feb 2020 17:11:46 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-> This patch add write_raw_get_fmt function to specify conversion for
-> hardware gain.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+--cy9Nn4fUvYST66Pl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
+On Fri, Feb 14, 2020 at 07:46:17PM +0800, Ramuthevar,Vadivel MuruganX wrote:
 
-Jonathan
+> +  - compatible : should be one of the following:
+> +        Generic default - "cdns,qspi-nor".
+> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
 
-> ---
-> Changes in v5:
-> -nothing changed
-> 
->  drivers/iio/amplifiers/ad8366.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
-> index 0176d3d8cc9c..95972ab60f42 100644
-> --- a/drivers/iio/amplifiers/ad8366.c
-> +++ b/drivers/iio/amplifiers/ad8366.c
-> @@ -180,9 +180,22 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
->  	return ret;
->  }
->  
-> +static int ad8366_write_raw_get_fmt(struct iio_dev *indio_dev,
-> +				    struct iio_chan_spec const *chan,
-> +				    long mask)
-> +{
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_HARDWAREGAIN:
-> +		return IIO_VAL_INT_PLUS_MICRO_DB;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  static const struct iio_info ad8366_info = {
->  	.read_raw = &ad8366_read_raw,
->  	.write_raw = &ad8366_write_raw,
-> +	.write_raw_get_fmt = &ad8366_write_raw_get_fmt,
->  };
->  
->  #define AD8366_CHAN(_channel) {				\
+There are already existing bindings for several of these compatibles,
+we should not be adding a second binding for something which already has
+a binding but rather continuing to use the same binding.  This is the
+whole point of documenting a binding that's separate to the implementation.
 
+--cy9Nn4fUvYST66Pl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GqewACgkQJNaLcl1U
+h9DtBgf/by0nSMwRQT7XWPBJkgVJC41aPF/FnRROHTeX4+E/Wdd1YhmtwwI88q9Q
+ys4i+8ZXPV4Nmh0M/L6iX/dgdITH+DGML2hnJijnqyIcAcDElu9QzOge9K+TcpcC
+OVDMxxls194MmBJkbe6iRmC9PaPQAucCPHTVBSEzqOsSwLTrKv7ouBPVzvaF8qp7
+jjqLoMGhoJa/Y0XcoOqTsAHkSDRldoDx8q8SBcYpraw4o3SkW3Pgvz8uCixh2w3n
+f96xeZn42peC559j0dTk/ey1g2oJ6drHxF01G3rpDk9T7EJZogrQXJAJdYre5iIP
+lFfsgWm4mmXgMF4nDNp70tZD8dRuog==
+=vocF
+-----END PGP SIGNATURE-----
+
+--cy9Nn4fUvYST66Pl--
