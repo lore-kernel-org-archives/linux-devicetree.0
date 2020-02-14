@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285F0C3B18F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E775CC3B195
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1A424649
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD94B217F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 10:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C7y7H4jy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MNxQ+HuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgBNKQv (ORCPT
+        id S1729162AbgBNKRr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 05:16:51 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35398 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729156AbgBNKQv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 05:16:51 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z18so6406927lfe.2
-        for <devicetree@vger.kernel.org>; Fri, 14 Feb 2020 02:16:49 -0800 (PST)
+        Fri, 14 Feb 2020 05:17:47 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35554 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729070AbgBNKRr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Feb 2020 05:17:47 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so10112303ljb.2
+        for <devicetree@vger.kernel.org>; Fri, 14 Feb 2020 02:17:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vmPFCYNd1b2Z269i3yTjn10KuJ/1yAN0FqONO4h3pYM=;
-        b=C7y7H4jylEuEqMnGjgmT+H0M+h+femEJMIBzMgfB7vWd7xinxGtIWg5hjzVf97k5By
-         81ichhlUxUcuE+gpzED+ObhW/gJUHJCXo9IIp0boG22bOraAX3BiBoHIYn9P8GpiYb8Y
-         QRQCmU1ymbZCh4V933PSIeteImHsjiS8L3DcSHjmaCO869J2GUR2ocJ3uJW3Vy0CZvjo
-         /SYd2V8GNZmLcti0/RWd8v9JbipZczwBq2DRNBnUskpwoxjESHOuZtbINP1ZI+8y/1XW
-         kLzA7hV1HtTwhzhSMGIt+CelSr4UakLg/+G+0mSoxzCNAUYw2DrXYG8T4gXZjRjCKV+S
-         m9MQ==
+        bh=v8ypgl7dFd+FN00YxlfzHIJKl3YchrCCrbKgFjCVTDU=;
+        b=MNxQ+HuCDY088dTom9PFOh4rxyHd576KmzzMsyWnYhyp0UpgWA19L6Nitp2AQc9dOy
+         Karscw08YlX4Dg1W61ESUi5f/31NGIDZm4EqIus9tIQf+O5M28Y0jyTAuo9dR1Y0H0rz
+         2AVAJRbtO9yn7RjFNZXS30hjpVKDSBST7Y0jgBDL2snZDVKS2dRMHy3QacypQ2LxKwZV
+         trk4g/jfx145+VkRAcZ465GPkGogpEK8AuFur1fwyfBP6l7dThSPi/EbX65bqU7Qi44y
+         VyHWfpFOgYhi74jRlwh6ixM7165ALYt30ELZoP2vcFxOIAzfaRAipnLZObe3Kz/Jmo8W
+         S6uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vmPFCYNd1b2Z269i3yTjn10KuJ/1yAN0FqONO4h3pYM=;
-        b=FXVTXXZhTqD5op/QXyaMF7pZ40+GUEO5dI2xxd4I7ml41yhhdJ1xkBIFFfon9eGoee
-         E47CJQLG6Shamt/UPy+SjW30g6OUPplpvTLwwEKW1YLxD7x/Pj+J8z0d8dX4xbLZTziu
-         BYCtrDtMZPorfKuZ0zahXk2tn5wBR95V9Bt+Lh/qrURsV9Qcy7XX5sslD77BFhuzj+A0
-         V4mMWSraTQvjrFNyaXCMwYp39HnFx0LNAacXgFOKTifcQGDvXv2TIObNIUO4fs6Mt8oi
-         nFFdnTOcr2g7BGdN5iaIO1I13QedblvOf3MTn7xea3+3WUNdVEoT8WgvG6Cz+h+YwXNT
-         bHOA==
-X-Gm-Message-State: APjAAAX9y17YF66e6LdJct0xQRT7gE/2P1wydaWxGSmg7sjTjgjD/wNv
-        EH2/oPMbTYIzXitRgFof0H+g4A3J/WH39SQsAyR+ig==
-X-Google-Smtp-Source: APXvYqy3A2UvE/PunEwc9b95paj1uRKlANgXjihOMn+iQGFlsaa0yHC/L21T4dFZZ7k9amkC+MY+YUVX95o0/o8skaU=
-X-Received: by 2002:a19:dc14:: with SMTP id t20mr1309882lfg.47.1581675408867;
- Fri, 14 Feb 2020 02:16:48 -0800 (PST)
+        bh=v8ypgl7dFd+FN00YxlfzHIJKl3YchrCCrbKgFjCVTDU=;
+        b=E+BVJ7IssD0yowE0/x+d5F5/lVGVWyfktbbv+zapX6umf9O8dhjHYA5AFL1zSVjWCH
+         X5JMtMV7esPF5NKhrBWbt9Uuf81vudbUF6GKhm04ktE4/8wa2Nq+3EzzU0idcVz59/rn
+         UuReldYa/9/1UINJ8WyfdO0LjuqpzENaLNYBN2xEzG8tmxFdqfJjDARcHozr8QTZAMtX
+         4GmDHGC7Mp0brncQrKlKueD0oV3WaLz/7TL1ctaUq5ajQfNAlVUMWWvhPxc4w6gWMsOq
+         2P7+8zj+xt1QnktZM+noAUunQAVn3gEpU+x5uipzVro4YuYd5TlF5X9TqXCZLIYY7/uA
+         m4RA==
+X-Gm-Message-State: APjAAAV61FsUPserfnzB/2YKDK4REyoz5lYyXNKvUrWA/CSmiiKoVqp2
+        7vI/1mzxEtt8EV4L7xRmzYh3TpVXK3deIsCyuMPhZg==
+X-Google-Smtp-Source: APXvYqyC9kNfFIiiOrwmF4acw1MAKutkTjdFGe1E/MwMDJJksNCwGjs1TmU24KDB/f98Aqw0M3pRNognuV+WdjgeGVA=
+X-Received: by 2002:a2e:9013:: with SMTP id h19mr1678145ljg.223.1581675465087;
+ Fri, 14 Feb 2020 02:17:45 -0800 (PST)
 MIME-Version: 1.0
-References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org> <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
-In-Reply-To: <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
+References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org> <1579439601-14810-3-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1579439601-14810-3-git-send-email-sricharan@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Feb 2020 11:16:37 +0100
-Message-ID: <CACRpkda8XLZxqH9CROHUYpaq8z+z2zsdg8pyzqQ9DfavGMy6QQ@mail.gmail.com>
-Subject: Re: [PATCH V6 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
+Date:   Fri, 14 Feb 2020 11:17:34 +0100
+Message-ID: <CACRpkdY-O3es1xcPxnb+3KKucUFx95WDXawnKeq1fo0rX9N+3A@mail.gmail.com>
+Subject: Re: [PATCH V6 2/5] pinctrl: qcom: Add ipq6018 pinctrl driver
 To:     Sricharan R <sricharan@codeaurora.org>
 Cc:     Andy Gross <agross@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
@@ -77,8 +77,8 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Sun, Jan 19, 2020 at 2:13 PM Sricharan R <sricharan@codeaurora.org> wrote:
 
-> Add device tree binding Documentation details for ipq6018
-> pinctrl driver.
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for ipq6018.
 >
 > Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
 > Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
@@ -86,12 +86,10 @@ On Sun, Jan 19, 2020 at 2:13 PM Sricharan R <sricharan@codeaurora.org> wrote:
 > Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 > Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
-> [V6]
 
-Patch applied  for v5.7 with Rob's Review tag.
+Patch applied for v5.7.
 
 Yours,
 Linus Walleij
