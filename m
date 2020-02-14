@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98824C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E323C3B1B5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F37B2467E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC742187F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703966;
-	bh=7hru8cnJAo9ESKhHTHc5KphNWfsXPPMxbfD+k7yN1a8=;
+	s=default; t=1581703980;
+	bh=itLd9JKqF/R9iI9reR0IzU5iyER+GtE4XjmRdA9VPJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UuUzPR4ZR4p2pDCwSpDlbxdaDI7XNBvpmMgXSV1yf1pRhs4Mb+lnzOxq3wRUZWo5I
-	 wxZGLVI6Q+812+9yzDSn/G/Ksy0s2moHeoxkduj0lWzgG4aVL1RzN80gv6P5A7gtCm
-	 ABwB1tjUgXV+w8irM0HMr6dB018a5IO8h9YSom2U=
+	b=KzJG/yAx8BpKKA59QgfkbVazMIGTIv4WXxl1Nw6+EqjhgDhE2mt5pLyK9CJNCs68b
+	 7/joZ1YaN3yAIpX9pWo6qTi6g3+tIncgH4ZEMyTUDI9124geto+4CbLSkTvyxHCOZs
+	 ZwwrRDrFSUZEYYdBp/Qbw+N8XwoCQQcFsLudIGLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbgBNPxE (ORCPT
+        id S1731109AbgBNPxA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:53:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60348 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgBNPxE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:04 -0500
+        id S1731105AbgBNPxA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 608F82465D;
-        Fri, 14 Feb 2020 15:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDDF4222C4;
+        Fri, 14 Feb 2020 15:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695583;
-        bh=7hru8cnJAo9ESKhHTHc5KphNWfsXPPMxbfD+k7yN1a8=;
+        s=default; t=1581695579;
+        bh=itLd9JKqF/R9iI9reR0IzU5iyER+GtE4XjmRdA9VPJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znHL2xIP0dcpjR0jazJm2FMzOFuRxafH2aycSBPM5uh4U2u0ItpSUqfM2AdMGHaBV
-         OsRwDPcwmKOQNyw3OMskHW8byi6j4bhL7d00T+Fv3vIkJCjToFY0jKYJqxRfwKMwhm
-         44IAgENeLDRqZPH7J9z3ZzM2ItEaL8C1QDPgJxE4=
+        b=LuoWoXiFWyd4DkrtejxB359Bn8zEuQQuiq/f6cO4H100PmIpJWjm/FinhlzqpZWsr
+         AV1yJFLLiK8cRYyWiiyoRlp0HHJs7FpL9cbU8VT52oimQfozmqr0zJLmoDlMD2/Ezr
+         c0wQaJho+YYdoaORh0XIcv8hM+tjt6ZyRYN1uB3s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manu Gautam <mgautam@codeaurora.org>,
-        Paolo Pisati <p.pisati@gmail.com>,
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 192/542] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
-Date:   Fri, 14 Feb 2020 10:43:04 -0500
-Message-Id: <20200214154854.6746-192-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 189/542] arm64: dts: qcom: msm8998: Fix tcsr syscon size
+Date:   Fri, 14 Feb 2020 10:43:01 -0500
+Message-Id: <20200214154854.6746-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,49 +60,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Manu Gautam <mgautam@codeaurora.org>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
+[ Upstream commit 05caa5bf9cab9983dd7a50428c46b7e617ba20d6 ]
 
-QUSB2 PHY on msm8996 doesn't work well when autosuspend by
-dwc3 core using USB2PHYCFG register is enabled. One of the
-issue seen is that PHY driver reports PLL lock failure and
-fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
-Fix this by using quirks to disable USB2 PHY LPM/suspend and
-dwc3 core already takes care of explicitly suspending PHY
-during suspend if quirks are specified.
+The tcsr syscon region is really 0x40000 in size.  We need access to the
+full region so that we can access the axi resets when managing the
+modem subsystem.
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
+Fixes: c7833949564e ("arm64: dts: qcom: msm8998: Add smem related nodes")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lore.kernel.org/r/20191107045948.4341-1-jeffrey.l.hugo@gmail.com
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 4ca2e7b44559c..1eed3c41521ab 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1602,6 +1602,8 @@
- 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy2>;
- 				phy-names = "usb2-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index fc7838ea9a010..385b46686194a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -987,7 +987,7 @@
+ 
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+-			reg = <0x01f40000 0x20000>;
++			reg = <0x01f40000 0x40000>;
  		};
  
-@@ -1632,6 +1634,8 @@
- 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
- 				phy-names = "usb2-phy", "usb3-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
- 
+ 		tlmm: pinctrl@3400000 {
 -- 
 2.20.1
 
