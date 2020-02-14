@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EF8C47409
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB2BC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017BD2468E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055682187F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Feb 2020 16:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696324;
-	bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
+	s=default; t=1581696341;
+	bh=kJWdcJPvZE287SU5CAesXG1gRxh01xitM8yvtMiSSGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hrMtLLJsFRyH3Hqbt16JrhNvo76quSLdNl5LKE7gbOp61Q5x2MCzqXBEqQ+vE9YTj
-	 jYDAOylrAWQO2N+5ArmSayb/L+8U98h/hRvBfOsCMXrJTavOtz2zC19rPizFqvPRF0
-	 0Luy38yGqQEpuPRNyRmzOxT1dYQiswp3kcDPJNMk=
+	b=vdfgmB9RUYLlTnkmiqe+Jcu3z42d0ZqCc/jNPj+gDbleoQt754pzTi8S50HQnRAfR
+	 moW7OxeBbVr1SlATq2OWDkVyWSZ9JnshrmuI4QcV5Xv9Tjo7yNB2jtlsm0PCdXlaxk
+	 YT65kyjdTMsnQuu8+af1hQaRPiomvSWXiwPiq8mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390153AbgBNQFW (ORCPT
+        id S2390210AbgBNQFj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:05:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54916 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:05:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390148AbgBNQFU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:20 -0500
+        id S2390203AbgBNQFi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB7824681;
-        Fri, 14 Feb 2020 16:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9EE72467E;
+        Fri, 14 Feb 2020 16:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696319;
-        bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
+        s=default; t=1581696337;
+        bh=kJWdcJPvZE287SU5CAesXG1gRxh01xitM8yvtMiSSGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UxE/z+Slei+YF8x+h/ggXz1TTZkFpWjzin5tul9TCjmqghJiKfeCfuaOex3eKPC8i
-         soBYRGuKLZmKpwcNRuIzYMCOTfTcTo/9yMXXsvPGlKBpMCLQrY+EBd4Uy9t7al3yLO
-         rwKjXVR/2JByedbXgCC6YydIO3ISME0FJVC/AThw=
+        b=kclPr2y82234lFPfOhCiJENNQKNtLFHOzGH3xBFoyKu/BI//4WR+s/qyziuFzFl7k
+         xkDQ1GLJ4McSTUw9c+r4FaWbkJqAyvFciHIdcAp9Aq4pwTJlm/3UKuGfXwez4TJlV0
+         1hawGGVG/XWNhnGwuIg2FDqWlEvvgBbmzGVOgoOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 160/459] arm64: dts: allwinner: H5: Add PMU node
-Date:   Fri, 14 Feb 2020 10:56:50 -0500
-Message-Id: <20200214160149.11681-160-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 174/459] ARM: dts: imx6: rdu2: Limit USBH1 to Full Speed
+Date:   Fri, 14 Feb 2020 10:57:04 -0500
+Message-Id: <20200214160149.11681-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,72 +63,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit c35a516a46187c8eeb7a56c64505ec6f7e22a0c7 ]
+[ Upstream commit 6bb1e09c4c375db29770444f689f35f5cbe696bc ]
 
-Add the Performance Monitoring Unit (PMU) device tree node to the H5
-.dtsi, which tells DT users which interrupts are triggered by PMU
-overflow events on each core.
-As with the A64, the interrupt numbers from the manual were wrong (off
-by 4), the actual SPI IDs have been gathered in U-Boot, and were
-verified with perf in Linux.
+Cabling used to connect devices to USBH1 on RDU2 does not meet USB
+spec cable quality and cable length requirements to operate at High
+Speed, so limit the port to Full Speed only.
 
-Tested with perf record and taskset on an OrangePi PC2.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index f002a496d7cbb..1d34e3eefda3f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -54,21 +54,21 @@
- 			enable-method = "psci";
- 		};
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 7b5c0e9b0fcff..a66c4fac6baf0 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -774,6 +774,7 @@
+ &usbh1 {
+ 	vbus-supply = <&reg_5p0v_main>;
+ 	disable-over-current;
++	maximum-speed = "full-speed";
+ 	status = "okay";
+ };
  
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a53";
- 			device_type = "cpu";
- 			reg = <1>;
- 			enable-method = "psci";
- 		};
- 
--		cpu@2 {
-+		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a53";
- 			device_type = "cpu";
- 			reg = <2>;
- 			enable-method = "psci";
- 		};
- 
--		cpu@3 {
-+		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a53";
- 			device_type = "cpu";
- 			reg = <3>;
-@@ -76,6 +76,16 @@
- 		};
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a53-pmu",
-+			     "arm,armv8-pmuv3";
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
 -- 
 2.20.1
 
