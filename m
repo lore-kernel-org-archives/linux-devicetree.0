@@ -2,168 +2,168 @@ Return-Path: <SRS0=Atyc=4D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91B2C352A3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 07:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8EAC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 09:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866EC2082F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 07:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F71F2072D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 09:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eME8l+Mz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="jGBAf09M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725880AbgBOHAs (ORCPT
+        id S1725920AbgBOJCW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Feb 2020 02:00:48 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44743 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbgBOHAs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 02:00:48 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d9so4644598plo.11;
-        Fri, 14 Feb 2020 23:00:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XE5CJKc1a7rUfnazp7u4JItKmlkGauSYL++r+MJXVmk=;
-        b=eME8l+Mz1VmjGK/Dqrt0VHQY0F5h1jH976J9MEfHNjh/ccDMhF5qTx4G9+X6pveDZj
-         OrPRJOhFt2qU/q4ghkaoEpK5rKN4blEs8DHOam/D1s0IzmKeVGNmGjLVRAdM9bbEP731
-         84PeYQlsjXqiCXpKUqS6haWVcVTi78oZ/2XKO7dnR1p93wWCGB4Hq2MJ2LfNX3cFjIyv
-         Omp7coDij8BcqHXw5kbdlPtKXExub2YkDL9K1plTEI/6gM+TsRyHsHeMtVuCSCle/WdE
-         G+JqkPvAIGkzD/zt5tW0qBx0Egvnkg6tIjnpxzCVwRzdi15EoEy+Ql3K/DFQISC3WS2+
-         /E3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XE5CJKc1a7rUfnazp7u4JItKmlkGauSYL++r+MJXVmk=;
-        b=KfSEjbH9rLtWulzF+Gkm5dW42vWqPQ/x+2C39AVNkThi4TzRinwtpLmcgzl3IZJmxZ
-         QjJcYObJq/VuyStjCFdyB0HH6/YW78VA8RQkaZvbd7QUFZQtAg1FSBhbxiUHc/SpZyr8
-         SooSIOyNXC7Hz+FPR9wLk0hHp2iJ8FuBM0VGEAeZ5O/I2QkEFVP4W8l7ApZOsyFxEUB2
-         1UHZlOVGGveuJ2/T4EThmfVA206aLdtKNIO7snsQDmWWzj1LgcU4UgMJqZ9IcCttk++Q
-         RTmc445QYbtS7K103mG8A/KnUtgis6ADJuR9/wIepZA2O/ZB5RwQOKEczWuXpqXkbjEB
-         wOWQ==
-X-Gm-Message-State: APjAAAX1sIRuNSzyyyA4ewajqfuz+Bv0BWCqH6r1k7WLAuG+RTuvp6Xs
-        RxnbZKlzgU7ol9STawgDe14=
-X-Google-Smtp-Source: APXvYqyXRMtaMTp5YdXfgVA8qeIZoLUUB+MIfZxktdbjVBwb3h8kbRh7Ndkxqtzl8O5vUZ5Kjp91jQ==
-X-Received: by 2002:a17:902:d684:: with SMTP id v4mr7221978ply.14.1581750047679;
-        Fri, 14 Feb 2020 23:00:47 -0800 (PST)
-Received: from localhost.localdomain ([240e:379:95a:e780::fa3])
-        by smtp.gmail.com with ESMTPSA id c15sm8918140pfo.137.2020.02.14.23.00.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 23:00:47 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
+        Sat, 15 Feb 2020 04:02:22 -0500
+Received: from a80-127-99-228.adsl.xs4all.nl ([80.127.99.228]:41144 "EHLO
+        hetgrotebos.org" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725882AbgBOJCV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 04:02:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
+         s=mail; h=Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:
+        References:Cc:To:Subject:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=hAsL6SNdm8O6Wf8bw2uGccXIuUdRAn5/VLXjgsiQZcY=; b=jGBAf09MeINeNkrIYi/egg7iYD
+        /57wo8VP+V3DpBomageCHyAh2Dmi02whN47iIJmdp7S0V/KBZFSrWd6GAr8ZqYVgsGAjYgFTuErc3
+        5c1OgfxdvsfQdik25C3vzp2yA6pq8LKDgBuFcFNOzig2C59lMuPr91h3Yj3oHS/BtepfU089QO5Ed
+        sINPDm6ueY7FdvbSiqwSa5J7uxNdZz/+vCpLZXHVhUxXy0lovhobRwG7pVeKpda6NwlfBd0Bhhs6c
+        IJqosy+xfVUMuJyW+s/iHiAbdNBetSYhxpk+lwsTReZ2IhY3KxG9TIxMHW4TOoGePlSPynAXrBmVK
+        tihfY9WA==;
+Received: from deepwater.fritz.box ([192.168.178.25] helo=[0.0.0.0])
+        by hetgrotebos.org with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <merlijn@wizzup.org>)
+        id 1j2tL8-00030P-W8; Sat, 15 Feb 2020 09:02:19 +0000
+Subject: Re: [RFC PATCH 1/2] Input: add `SW_MACHINE_COVER`
+To:     Ladislav Michl <ladis@linux-mips.org>
+Cc:     =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
-Date:   Sat, 15 Feb 2020 14:58:26 +0800
-Message-Id: <20200215065826.739102-3-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200215065826.739102-1-gch981213@gmail.com>
-References: <20200215065826.739102-1-gch981213@gmail.com>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <20200214130249.6845-1-merlijn@wizzup.org>
+ <20200214130249.6845-2-merlijn@wizzup.org> <20200214191634.GA6251@lenoch>
+From:   Merlijn Wajer <merlijn@wizzup.org>
+Autocrypt: addr=merlijn@wizzup.org; prefer-encrypt=mutual; keydata=
+ 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
+ /XslHw==
+Message-ID: <7520b2d8-d960-e7de-0974-dfc7b708ed6b@wizzup.org>
+Date:   Sat, 15 Feb 2020 10:03:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214191634.GA6251@lenoch>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Ae0i3vRij5spopHGE2YcH6eNbPk3uWGI0"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-spi-mtk-nor is a driver to replace mtk-quadspi and they have almost
-the same device-tree bindings. Reuse this binding documentation and
-convert it for new driver:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Ae0i3vRij5spopHGE2YcH6eNbPk3uWGI0
+Content-Type: multipart/mixed; boundary="wW4AXA8pvVtlPFhsBqWB26rdmBD8K43HY"
 
-1. "Mediatek SoCs" -> "Mediatek ARM SoCs" because MTK MIPS SoCs
-   use different controllers.
-2. document "interrupts" as a required property because it's
-   available on all SoCs with this controller and new driver takes
-   advantages of it. It's implemented as optional only to maintain
-   backward compatibility.
-3. replace binding example with a mt7629 one because this is the
-   only one I know the interrupt assignment.
+--wW4AXA8pvVtlPFhsBqWB26rdmBD8K43HY
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
----
- .../mtk-quadspi.txt => spi/spi-mtk-nor.txt}   | 34 ++++++++-----------
- 1 file changed, 15 insertions(+), 19 deletions(-)
- rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt} (62%)
+Hi Ladislav,
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-similarity index 62%
-rename from Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-rename to Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-index a12e3b5c495d..829da480b9a9 100644
---- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-@@ -1,4 +1,4 @@
--* Serial NOR flash controller for MediaTek SoCs
-+* SPI NOR flash controller for MediaTek ARM SoCs
- 
- Required properties:
- - compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
-@@ -13,6 +13,7 @@ Required properties:
- 		  "mediatek,mt7629-nor", "mediatek,mt8173-nor"
- 		  "mediatek,mt8173-nor"
- - reg: 		  physical base address and length of the controller's register
-+- interrupts:	  Interrupt number used by the controller.
- - clocks: 	  the phandle of the clocks needed by the nor controller
- - clock-names: 	  the names of the clocks
- 		  the clocks should be named "spi" and "sf". "spi" is used for spi bus,
-@@ -22,29 +23,24 @@ Required properties:
- - #address-cells: should be <1>
- - #size-cells:	  should be <0>
- 
--The SPI flash must be a child of the nor_flash node and must have a
--compatible property. Also see jedec,spi-nor.txt.
--
--Required properties:
--- compatible:	  May include a device-specific string consisting of the manufacturer
--		  and name of the chip. Must also include "jedec,spi-nor" for any
--		  SPI NOR flash that can be identified by the JEDEC READ ID opcode (0x9F).
--- reg :		  Chip-Select number
-+There should be only one spi slave device following generic spi bindings.
-+It's not recommended to use this controller for devices other than SPI NOR
-+flash due to limited transfer capability of this controller.
- 
- Example:
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/mt7629-clk.h>
- 
--nor_flash: spi@1100d000 {
--	compatible = "mediatek,mt8173-nor";
--	reg = <0 0x1100d000 0 0xe0>;
--	clocks = <&pericfg CLK_PERI_SPI>,
--		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+spi_nor: spi@11014000 {
-+	compatible = "mediatek,mt7629-nor",
-+		     "mediatek,mt8173-nor";
-+	reg = <0x11014000 0xe0>;
-+	interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_LOW>;
-+	clocks = <&pericfg CLK_PERI_FLASH_PD>,
-+		 <&topckgen CLK_TOP_FLASH_SEL>;
- 	clock-names = "spi", "sf";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
--
--	flash@0 {
--		compatible = "jedec,spi-nor";
--		reg = <0>;
--	};
- };
- 
--- 
-2.24.1
+On 14/02/2020 20:16, Ladislav Michl wrote:
+> Hi Merlijn,
+>=20
+>> +#define SW_MACHINE_COVER	 0x10 /* set =3D cover closed */
+>=20
+> There is an extra space above ^
 
+Thanks, will fix.
+
+Cheers,
+Merlijn
+
+
+--wW4AXA8pvVtlPFhsBqWB26rdmBD8K43HY--
+
+--Ae0i3vRij5spopHGE2YcH6eNbPk3uWGI0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCXkez4gAKCRAGN09rynK8
+WtvgAPwOGefaWPi00Kuon7vC8PvgfT0C+olrfTsAjoze1buOLgD/UP6J/5yAqZxF
+GHt+4fKqEThSlioyKHaXr0+hIyAZEAI=
+=u1Yj
+-----END PGP SIGNATURE-----
+
+--Ae0i3vRij5spopHGE2YcH6eNbPk3uWGI0--
