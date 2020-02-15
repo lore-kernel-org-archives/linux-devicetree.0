@@ -2,90 +2,117 @@ Return-Path: <SRS0=Atyc=4D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3301BC76197
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EB3C71150
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 21:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124E224654
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3742187F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 21:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581801051;
+	bh=tEClT3+bvoTgI32MP1CwIfXkOx2B0xPFE4PgnQ/bh48=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=H8NUndNKhNS/71TETxarER4RUrxLchOErse0KxaYG6f6oMsFPttAgPiP3MKHX9Pxi
+	 TakSs1HAtO6OUnPNinp6O7WCVfdCxhDcAQhPJVZFGPC5xtXqfo3DzA2XvXOEZpIQKU
+	 T1Y3rl1kOhCtciIP70g7H9kibGXxgXm9+lycCVx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBOS4M (ORCPT
+        id S1727362AbgBOVKu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Feb 2020 13:56:12 -0500
-Received: from out28-51.mail.aliyun.com ([115.124.28.51]:57904 "EHLO
-        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgBOS4K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 13:56:10 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08891963|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.612978-0.0599614-0.327061;DS=CONTINUE|ham_system_inform|0.084116-0.000465042-0.915419;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.GoTIZgt_1581792955;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GoTIZgt_1581792955)
-          by smtp.aliyun-inc.com(10.147.42.241);
-          Sun, 16 Feb 2020 02:56:04 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, paul@crapouillou.net,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, allison@lohutok.net,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
-        ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        paul@boddie.org.uk, hns@goldelico.com,
-        mips-creator-ci20-dev@googlegroups.com
-Subject: [PATCH v5 0/7] Introduce SMP support for JZ4780.
-Date:   Sun, 16 Feb 2020 02:55:25 +0800
-Message-Id: <1581792932-108032-2-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Sat, 15 Feb 2020 16:10:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgBOVKu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 15 Feb 2020 16:10:50 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905702086A;
+        Sat, 15 Feb 2020 21:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581801050;
+        bh=tEClT3+bvoTgI32MP1CwIfXkOx2B0xPFE4PgnQ/bh48=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=j47cd6VEUSwkfygxE3Fl0jZ0+y96rV6rhCOwTbxqICgBpfUFlzCgbwqGdRnYiox7C
+         WKpb0mZuAn05weV4GJBx36SsMMc64S7A1LA6rWCgZ5DLfuiiSr3UJMQigOngLYguLD
+         3KhIlTuEB+wKTuzoV2SkhAffzCkX+GisJYG3Cb8A=
+Date:   Sat, 15 Feb 2020 15:10:47 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     will@kernel.org, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
+        joro@8bytes.org, baolu.lu@linux.intel.com,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
+        corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
+        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
+Subject: Re: [PATCH 02/11] PCI: Add ats_supported host bridge flag
+Message-ID: <20200215211047.GA124796@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213165049.508908-3-jean-philippe@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce SMP support for MIPS Creator CI20, which is
-based on Ingenic JZ4780 SoC.
+On Thu, Feb 13, 2020 at 05:50:40PM +0100, Jean-Philippe Brucker wrote:
+> Each vendor has their own way of describing whether a host bridge
+> supports ATS.  The Intel and AMD ACPI tables selectively enable or
+> disable ATS per device or sub-tree, while Arm has a single bit for each
+> host bridge.  For those that need it, add an ats_supported bit to the
+> host bridge structure.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/pci/probe.c | 7 +++++++
+>  include/linux/pci.h | 1 +
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 512cb4312ddd..75c0a25af44e 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -598,6 +598,13 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+>  	bridge->native_shpc_hotplug = 1;
+>  	bridge->native_pme = 1;
+>  	bridge->native_ltr = 1;
+> +
+> +	/*
+> +	 * Some systems may disable ATS at the host bridge (ACPI IORT,
+> +	 * device-tree), other filter it with a smaller granularity (ACPI DMAR
+> +	 * and IVRS).
+> +	 */
+> +	bridge->ats_supported = 1;
 
-周琰杰 (Zhou Yanjie) (7):
-  clk: JZ4780: Add function for enable the second core.
-  MIPS: JZ4780: Introduce SMP support.
-  MIPS: CI20: Modify DTS to support high resolution timer for SMP.
-  clocksource: Ingenic: Add high resolution timer support for SMP.
-  dt-bindings: MIPS: Document Ingenic SoCs binding.
-  MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
-  MIPS: CI20: Update defconfig to support SMP.
+The cover letter says it's important to enable ATS only if the host
+bridge supports it.  From the other patches, it looks like we learn if
+the host bridge supports ATS from either a DT "ats-supported" property
+or an ACPI IORT table.  If that's the case, shouldn't the default here
+be "ATS is *not* supported"?
 
- .../bindings/mips/ingenic/ingenic,cpu.yaml         |  53 ++++
- .../bindings/mips/ingenic/ingenic,soc.yaml         |  35 +++
- arch/mips/boot/dts/ingenic/ci20.dts                |  13 +-
- arch/mips/boot/dts/ingenic/jz4740.dtsi             |  14 +
- arch/mips/boot/dts/ingenic/jz4770.dtsi             |  15 +-
- arch/mips/boot/dts/ingenic/jz4780.dtsi             |  23 ++
- arch/mips/boot/dts/ingenic/x1000.dtsi              |  14 +
- arch/mips/configs/ci20_defconfig                   |   2 +
- arch/mips/include/asm/mach-jz4740/jz4780-smp.h     |  91 +++++++
- arch/mips/jz4740/Kconfig                           |   3 +
- arch/mips/jz4740/Makefile                          |   5 +
- arch/mips/jz4740/prom.c                            |   4 +
- arch/mips/jz4740/smp-entry.S                       |  57 +++++
- arch/mips/jz4740/smp.c                             | 283 +++++++++++++++++++++
- arch/mips/kernel/idle.c                            |  14 +-
- drivers/clk/ingenic/jz4780-cgu.c                   |  58 ++++-
- drivers/clocksource/ingenic-timer.c                | 115 +++++++--
- 17 files changed, 767 insertions(+), 32 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
- create mode 100644 arch/mips/include/asm/mach-jz4740/jz4780-smp.h
- create mode 100644 arch/mips/jz4740/smp-entry.S
- create mode 100644 arch/mips/jz4740/smp.c
-
--- 
-2.7.4
-
+>  }
+>  
+>  struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 3840a541a9de..9fe2e84d74d7 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -511,6 +511,7 @@ struct pci_host_bridge {
+>  	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+>  	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+>  	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
+> +	unsigned int	ats_supported:1;
+>  
+>  	/* Resource alignment requirements */
+>  	resource_size_t (*align_resource)(struct pci_dev *dev,
+> -- 
+> 2.25.0
+> 
