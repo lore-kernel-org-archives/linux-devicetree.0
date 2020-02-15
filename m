@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3E5C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0BCC7114E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D86620726
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CF820726
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgBOS4V (ORCPT
+        id S1727922AbgBOS4f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Feb 2020 13:56:21 -0500
-Received: from out28-217.mail.aliyun.com ([115.124.28.217]:44121 "EHLO
-        out28-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgBOS4U (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 13:56:20 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07452023|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.208385-0.00957184-0.782043;DS=CONTINUE|ham_system_inform|0.028472-0.000402336-0.971126;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.GoTIZgt_1581792955;
+        Sat, 15 Feb 2020 13:56:35 -0500
+Received: from out28-121.mail.aliyun.com ([115.124.28.121]:60803 "EHLO
+        out28-121.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727799AbgBOS4T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 13:56:19 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08278246|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.656193-0.0159137-0.327893;DS=CONTINUE|ham_system_inform|0.00787411-0.000299376-0.991826;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.GoTIZgt_1581792955;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GoTIZgt_1581792955)
           by smtp.aliyun-inc.com(10.147.42.241);
-          Sun, 16 Feb 2020 02:56:14 +0800
+          Sun, 16 Feb 2020 02:56:12 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -37,9 +37,9 @@ Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         ebiederm@xmission.com, miquel.raynal@bootlin.com,
         paul@boddie.org.uk, hns@goldelico.com,
         mips-creator-ci20-dev@googlegroups.com
-Subject: [PATCH v5 6/7] MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
-Date:   Sun, 16 Feb 2020 02:55:31 +0800
-Message-Id: <1581792932-108032-8-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v5 5/7] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Date:   Sun, 16 Feb 2020 02:55:30 +0800
+Message-Id: <1581792932-108032-7-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -51,8 +51,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi
-and x1000.dtsi files.
+Document the available properties for the SoC root node and the
+CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 
 Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 Tested-by: Paul Boddie <paul@boddie.org.uk>
@@ -61,138 +61,123 @@ Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 
 Notes:
     v1->v2:
-    No change.
+    Change the two Document from txt to yaml.
     
     v2->v3:
-    No change.
+    Fix formatting errors.
     
     v3->v4:
-    Rebase on top of kernel 5.6-rc1.
+    Fix bugs in the two yaml files.
     
     v4->v5:
     No change.
 
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 14 ++++++++++++++
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 15 ++++++++++++++-
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 23 +++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/x1000.dtsi  | 14 ++++++++++++++
- 4 files changed, 65 insertions(+), 1 deletion(-)
+ .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
+ .../bindings/mips/ingenic/ingenic,soc.yaml         | 35 ++++++++++++++
+ 2 files changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+ create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 5accda2..9627d95 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -6,6 +6,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4740";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+new file mode 100644
+index 00000000..cb600ae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
++title: Bindings for Ingenic XBurst family CPUs
 +
-+			clocks = <&cgu JZ4740_CLK_CCLK>;
-+			clock-names = "cpu";
-+		};
-+	};
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++description: |
++  Ingenic XBurst family CPUs shall have the following properties.
 +
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-index 0bfb9ed..1b8114d 100644
---- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--
- #include <dt-bindings/clock/jz4770-cgu.h>
- 
- / {
-@@ -7,6 +6,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4770";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++properties:
++  compatible:
++    oneOf:
++      - const: ingenic,xburst
++      - const: ingenic,xburst2
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
++  reg:
++    description: |
++      The number of the CPU.
 +
-+			clocks = <&cgu JZ4770_CLK_CCLK>;
-+			clock-names = "cpu";
-+		};
-+	};
++required:
++  - device_type
++  - compatible
++  - reg
 +
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329..93a0604 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -7,6 +7,29 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4780";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++examples:
++  - |
++    cpus {
++    	#address-cells = <1>;
++    	#size-cells = <0>;
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
++    	cpu0: cpu@0 {
++    		device_type = "cpu";
++    		compatible = "ingenic,xburst";
++    		reg = <0>;
 +
-+			clocks = <&cgu JZ4780_CLK_CPU>;
-+			clock-names = "cpu";
-+		};
++    		clocks = <&cgu JZ4780_CLK_CPU>;
++    		clock-names = "cpu";
++    	};
 +
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <1>;
++    	cpu1: cpu@1 {
++    		device_type = "cpu";
++    		compatible = "ingenic,xburst";
++    		reg = <1>;
 +
-+			clocks = <&cgu JZ4780_CLK_CORE1>;
-+			clock-names = "cpu";
-+		};
-+	};
++    		clocks = <&cgu JZ4780_CLK_CORE1>;
++    		clock-names = "cpu";
++    	};
++    };
++...
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+new file mode 100644
+index 00000000..11e5cde
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
-index 4994c69..376df1b 100644
---- a/arch/mips/boot/dts/ingenic/x1000.dtsi
-+++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-@@ -7,6 +7,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,x1000", "ingenic,x1000e";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++title: Bindings for Ingenic SoCs with XBurst CPU inside.
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++description: |
++  Ingenic SoCs with XBurst CPU inside shall have the following properties.
 +
-+			clocks = <&cgu X1000_CLK_CPU>;
-+			clock-names = "cpu";
-+		};
-+	};
++properties:
++  compatible:
++    oneOf:
++      - const: ingenic,jz4740
++      - const: ingenic,jz4725b
++      - const: ingenic,jz4760
++      - const: ingenic,jz4760b
++      - const: ingenic,jz4770
++      - const: ingenic,jz4780
++      - const: ingenic,x1000
++      - const: ingenic,x1000e
++      - const: ingenic,x1500
 +
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
++required:
++  - compatible
++
++examples:
++  - |
++    #address-cells = <1>;
++    #size-cells = <1>;
++    compatible = "ingenic,jz4780";
++...
 -- 
 2.7.4
 
