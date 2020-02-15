@@ -2,75 +2,163 @@ Return-Path: <SRS0=Atyc=4D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90155C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 16:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58571C7114D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 16:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1AC2083B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 16:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5772086A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 16:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581785950;
+	bh=1qUEz4ujkGGQsEuVNAf94EoAOAw0/zejz2pxtOvcllw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0hWvoRhMnzMuw1mUKXEmh1ZqoLb1AW4qhgsQjFr/dHNxMCrYy4S80pzE95zVE4vG4
+	 8bSnurfCfmhHFzbA/TDg/TSNGwp3j6zSARBJM2TQKetl14apHNwkF0gdLIM5EKDBq5
+	 PPh1u50lHuvyQ/4UlbGG2EKl6FUJmALt3MDFaAdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgBOQRg (ORCPT
+        id S1726209AbgBOQ7J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Feb 2020 11:17:36 -0500
-Received: from out28-4.mail.aliyun.com ([115.124.28.4]:48048 "EHLO
-        out28-4.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgBOQRg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 11:17:36 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1699795|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0157863-0.000302482-0.983911;DS=CONTINUE|ham_social|0.0123951-0.000427235-0.987178;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03295;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=28;RT=28;SR=0;TI=SMTPD_---.GoRZEMS_1581783435;
-Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GoRZEMS_1581783435)
-          by smtp.aliyun-inc.com(10.147.40.26);
-          Sun, 16 Feb 2020 00:17:17 +0800
-Subject: Re: [PATCH v4 1/6] MIPS: JZ4780: Introduce SMP support.
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-References: <1581703360-112557-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1581703360-112557-3-git-send-email-zhouyanjie@wanyeetech.com>
- <20200215150355.GA6253@afzalpc>
-Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        paul@crapouillou.net, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org,
-        paulburton@kernel.org, jiaxun.yang@flygoat.com, chenhc@lemote.com,
-        allison@lohutok.net, tglx@linutronix.de, daniel.lezcano@linaro.org,
-        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
-        ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        paul@boddie.org.uk, hns@goldelico.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, mips-creator-ci20-dev@googlegroups.com,
-        1326991897@qq.com
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E48198B.60806@wanyeetech.com>
-Date:   Sun, 16 Feb 2020 00:17:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Sat, 15 Feb 2020 11:59:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbgBOQ7J (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 15 Feb 2020 11:59:09 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B142083B;
+        Sat, 15 Feb 2020 16:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581785948;
+        bh=1qUEz4ujkGGQsEuVNAf94EoAOAw0/zejz2pxtOvcllw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=obe+96GUSY7bGr259zJRrQ+YuBQB5X/u8RM4qMrKOp7JLgB35zTcvipUo1YIEXybg
+         hxk/V35XlQHlDS4U4eQiotLwcpN3YxGTYawl2cEXlqQS/MLlFYTCEYS2LqgT6fiIY5
+         KCMVCb05FANjhgLqSGmw+CDSDjiXJ24lH3ts9rro=
+Date:   Sat, 15 Feb 2020 16:59:03 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     David Heidelberg <david@ixit.cz>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/7] dt-bindings: iio: light: add support for
+ Dyna-Image AL3320A
+Message-ID: <20200215165903.6ea4e618@archlinux>
+In-Reply-To: <20200211191201.1049902-2-david@ixit.cz>
+References: <20200211191201.1049902-1-david@ixit.cz>
+        <20200211191201.1049902-2-david@ixit.cz>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200215150355.GA6253@afzalpc>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Afzal,
+On Tue, 11 Feb 2020 20:11:55 +0100
+David Heidelberg <david@ixit.cz> wrote:
 
-On 2020年02月15日 23:03, afzal mohammed wrote:
-> Hi,
->
-> On Sat, Feb 15, 2020 at 02:02:35AM +0800, 周琰杰 (Zhou Yanjie) wrote:
->
->> +	/* setup the mailbox IRQ */
->> +	setup_irq(MIPS_CPU_IRQ_BASE + 3, &mbox_action);
-> s/setup_irq/request_irq, see,
->
-> https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
+> This commit add dt-bindings support to al3320a driver and vendor-prefix
+> dynaimage.
+> Partly based on unmerged commit:
+> "iio: Add Dyna-Image AP3223 ambient light and proximity driver"
+> 
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
+> v5
+>  - drop requirement on interrups and vdd-supply
+>  - s/al3320a@1c/light-sensor@1c/
+>  - dual license also under BSD
+> 
+>  .../bindings/iio/light/al3320a.yaml           | 43 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/al3320a.yaml b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
+> new file mode 100644
+> index 000000000000..cdc8d98d114c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/al3320a.yaml
+I missed this previously but it's preferred for the filename to include the
+manufacturer bit.  I'll fix up including the reference to the filename below.
 
-Thanks for your advice, will change in v5.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
->
-> Regards
-> afzal
+Ideally I'd like to add a DT reviewed by, but I think you've addressed
+all the previous comments.
 
-Thanks and best regards!
+Thanks,
+
+Jonathan
+
+
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/al3320a.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Dyna-Image AL3320A sensor
+> +
+> +maintainers:
+> +  - David Heidelberg <david@ixit.cz>
+> +
+> +properties:
+> +  compatible:
+> +    const: dynaimage,al3320a
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        light-sensor@1c {
+> +            compatible = "dynaimage,al3320a";
+> +            reg = <0x1c>;
+> +            vdd-supply = <&vdd_reg>;
+> +            interrupts = <0 99 4>;
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9cd52d9e1f7f..8d2ebf3d0aa1 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -267,6 +267,8 @@ patternProperties:
+>      description: Dragino Technology Co., Limited
+>    "^dserve,.*":
+>      description: dServe Technology B.V.
+> +  "^dynaimage,.*":
+> +    description: Dyna-Image
+>    "^ea,.*":
+>      description: Embedded Artists AB
+>    "^ebs-systart,.*":
+
