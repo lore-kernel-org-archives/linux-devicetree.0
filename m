@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FD7C71153
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A63C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395782084E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1618F2083B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgBOS4Q (ORCPT
+        id S1727881AbgBOS4X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Feb 2020 13:56:16 -0500
-Received: from out28-49.mail.aliyun.com ([115.124.28.49]:41743 "EHLO
-        out28-49.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgBOS4P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 13:56:15 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.086072|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.296506-0.0118045-0.69169;DS=CONTINUE|ham_system_inform|0.00938196-0.00027899-0.990339;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.GoTIZgt_1581792955;
+        Sat, 15 Feb 2020 13:56:23 -0500
+Received: from out28-123.mail.aliyun.com ([115.124.28.123]:37629 "EHLO
+        out28-123.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgBOS4W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 13:56:22 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2654309|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0742753-0.00614346-0.919581;DS=CONTINUE|ham_system_inform|0.00902531-0.000445777-0.990529;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03278;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.GoTIZgt_1581792955;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GoTIZgt_1581792955)
           by smtp.aliyun-inc.com(10.147.42.241);
-          Sun, 16 Feb 2020 02:56:09 +0800
+          Sun, 16 Feb 2020 02:56:16 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -37,9 +37,9 @@ Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         ebiederm@xmission.com, miquel.raynal@bootlin.com,
         paul@boddie.org.uk, hns@goldelico.com,
         mips-creator-ci20-dev@googlegroups.com
-Subject: [PATCH v5 3/7] MIPS: CI20: Modify DTS to support high resolution timer for SMP.
-Date:   Sun, 16 Feb 2020 02:55:28 +0800
-Message-Id: <1581792932-108032-5-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v5 7/7] MIPS: CI20: Update defconfig to support SMP.
+Date:   Sun, 16 Feb 2020 02:55:32 +0800
+Message-Id: <1581792932-108032-9-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -51,8 +51,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Modify DTS, change tcu channel from 2 to 3, channel #0 and #1 for
-per core local timer, #2 for clocksource.
+Add "CONFIG_SMP=y" and "CONFIG_NR_CPUS=2" to support SMP.
 
 Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 Tested-by: Paul Boddie <paul@boddie.org.uk>
@@ -70,34 +69,21 @@ Notes:
     Rebase on top of kernel 5.6-rc1.
     
     v4->v5:
-    Move [5/6] in v4 to this patch, to ensure that we can
-    git-bisect without ending up with a broken kernel.
+    No change.
 
- arch/mips/boot/dts/ingenic/ci20.dts | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/mips/configs/ci20_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 37b9316..29437aa 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -455,7 +455,14 @@
- };
- 
- &tcu {
--	/* 3 MHz for the system timer and clocksource */
--	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
--	assigned-clock-rates = <3000000>, <3000000>;
-+	/* 3 MHz for the system timers, 750kHz for the clocksource */
-+	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>,
-+					  <&tcu TCU_CLK_TIMER2>;
-+	assigned-clock-rates = <3000000>, <3000000>, <750000>;
-+
-+	/*
-+	 * Use channel #0 and #1 for the per core system timer,
-+	 * and use channel #2 for the clocksource.
-+	 */
-+	ingenic,pwm-channels-mask = <0xF8>;
- };
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index be41df2..3aadb2e 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -1,3 +1,5 @@
++CONFIG_SMP=y
++CONFIG_NR_CPUS=2
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_KERNEL_XZ=y
+ CONFIG_SYSVIPC=y
 -- 
 2.7.4
 
