@@ -2,117 +2,140 @@ Return-Path: <SRS0=Atyc=4D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4C0C7114D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 17:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF96DC7114E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 17:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E2F2083B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 17:00:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="ONIshqSG"
+	by mail.kernel.org (Postfix) with ESMTP id 930362086A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 17:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581786061;
+	bh=rpN9KSwCeWF3MfgKjBVx8LSSwJenIzc6kg5Nd3scvZY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fopMwpVhzjCOUsuM45vk5klg31nhqKHYhbUtoQw5qFIK8eEmnh3Ju3SO8E6tkdAhm
+	 2RClDJqsYBi54RGO8ezdSUD9xnAfiMwdiC0c4qSUbPlapwx4crWD1BdSrkza3pe6EO
+	 J4Rlv3EIfcVjFdLRGOO7k6CRy/tqNUoKB1taFktQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgBORAe (ORCPT
+        id S1726307AbgBORBB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Feb 2020 12:00:34 -0500
-Received: from a80-127-99-228.adsl.xs4all.nl ([80.127.99.228]:45180 "EHLO
-        hetgrotebos.org" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726143AbgBORAe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 12:00:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
-         s=mail; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=5mloNwlHrXdn4IwVWhbhGXhiCRauDyoDgJnxMxS8A3Y=; b=ONIshqSGcrrUtCYNbDJGk63TWb
-        FSLz2TT8D24qgDUtIGDPmVXp9BxfwjjprtJXuZZPOL+4uSrSFWijbiHMao5rScoEfvNkI631I8w6S
-        +eQtNwMg0WfBM9nTe1V9V1IkE/l9MFObWuiVtJfZpMMVMdzQT78Znc/QaavJd38moOGzyIZy4PJUM
-        +SzifJhAL4Vy78nBHWuFYDwSWmAFokD7K7Bt4wArYXWZt83viyKbe5gnu59dwks1Adla/Nkv1lZCk
-        Dc+4JlmVOOZCFd+ZjLeNcqmQJZ/8CVD0an2XxZPdMRxaEYPxir0xaDpRXVI6seNnLwKpHZejhKoBd
-        7sX48b7w==;
-Received: from kgpe-d16.fritz.box ([192.168.178.22])
-        by hetgrotebos.org with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <merlijn@wizzup.org>)
-        id 1j30nj-00037p-C4; Sat, 15 Feb 2020 17:00:19 +0000
-From:   Merlijn Wajer <merlijn@wizzup.org>
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
+        Sat, 15 Feb 2020 12:01:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbgBORBA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 15 Feb 2020 12:01:00 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 831F82083B;
+        Sat, 15 Feb 2020 17:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581786060;
+        bh=rpN9KSwCeWF3MfgKjBVx8LSSwJenIzc6kg5Nd3scvZY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0/Cp2TAUQTiPZiCyD5WErFRVo97f3lJ02dZEZdCxL4pgeGmHPFO6nwhj8R5SlJO8d
+         GIw739tzH+MxEAWBt6m5L/qJOCHa5TkB1gIw+CZt0HEjPOhWZJa0KhgFP8JNNnOo+n
+         sxMGPxfKpBm5vs5FgfRgP6/dMsyfYpUDnKZ0/S2I=
+Date:   Sat, 15 Feb 2020 17:00:55 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     David Heidelberg <david@ixit.cz>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH 2/2] ARM: dts: n900: remove mmc1 card detect gpio
-Date:   Sat, 15 Feb 2020 18:02:15 +0100
-Message-Id: <20200215170216.14397-3-merlijn@wizzup.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200215170216.14397-1-merlijn@wizzup.org>
-References: <20200215170216.14397-1-merlijn@wizzup.org>
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 2/7] dt-bindings: iio: light: add support for
+ Dyna-Image AL3010
+Message-ID: <20200215170055.32e63892@archlinux>
+In-Reply-To: <20200211191201.1049902-3-david@ixit.cz>
+References: <20200211191201.1049902-1-david@ixit.cz>
+        <20200211191201.1049902-3-david@ixit.cz>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Instead, expose the key via the input framework, as SW_MACHINE_COVER
+On Tue, 11 Feb 2020 20:11:56 +0100
+David Heidelberg <david@ixit.cz> wrote:
 
-The chip-detect GPIO is actually detecting if the cover is closed.
-Technically it's possible to use the SD card with open cover. The
-only downside is risk of battery falling out and user being able
-to physically remove the card.
+> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
+> provides a multiple gain function with linear response over a dynamic
+> range 1216/4863/19452/77806.
+> 
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+Applied with name tweaked as per patch 1.
 
-The behaviour of SD card not being available when the device is
-open is unexpected and creates more problems than it solves. There
-is a high chance, that more people accidently break their rootfs
-by opening the case without physically removing the card.
+Thanks,
 
-Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- arch/arm/boot/dts/omap3-n900.dts | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Jonathan
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 7028a7cb2849..ed773e1609a5 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -108,6 +108,14 @@
- 			linux,code = <SW_FRONT_PROXIMITY>;
- 			linux,can-disable;
- 		};
-+
-+		machine_cover {
-+			label = "Machine Cover";
-+			gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
-+			linux,input-type = <EV_SW>;
-+			linux,code = <SW_MACHINE_COVER>;
-+			linux,can-disable;
-+		};
- 	};
- 
- 	isp1707: isp1707 {
-@@ -805,10 +813,6 @@
- 	pinctrl-0 = <&mmc1_pins>;
- 	vmmc-supply = <&vmmc1>;
- 	bus-width = <4>;
--	/* For debugging, it is often good idea to remove this GPIO.
--	   It means you can remove back cover (to reboot by removing
--	   battery) and still use the MMC card. */
--	cd-gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
- };
- 
- /* most boards use vaux3, only some old versions use vmmc2 instead */
--- 
-2.23.0
+> ---
+> v5
+>  - drop requirement on interrups and vdd-supply
+>  - s/al3010@1c/light-sensor@1c/
+>  - dual license also under BSD
+> 
+>  .../devicetree/bindings/iio/light/al3010.yaml | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/al3010.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/al3010.yaml b/Documentation/devicetree/bindings/iio/light/al3010.yaml
+> new file mode 100644
+> index 000000000000..fdd1e5fa9c74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/al3010.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/al3010.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Dyna-Image AL3010 sensor
+> +
+> +maintainers:
+> +  - David Heidelberg <david@ixit.cz>
+> +
+> +properties:
+> +  compatible:
+> +    const: dynaimage,al3010
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        light-sensor@1c {
+> +            compatible = "dynaimage,al3010";
+> +            reg = <0x1c>;
+> +            vdd-supply = <&vdd_reg>;
+> +            interrupts = <0 99 4>;
+> +        };
+> +    };
 
