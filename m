@@ -2,140 +2,52 @@ Return-Path: <SRS0=Atyc=4D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF96DC7114E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 17:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DFCC7114E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930362086A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 17:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581786061;
-	bh=rpN9KSwCeWF3MfgKjBVx8LSSwJenIzc6kg5Nd3scvZY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fopMwpVhzjCOUsuM45vk5klg31nhqKHYhbUtoQw5qFIK8eEmnh3Ju3SO8E6tkdAhm
-	 2RClDJqsYBi54RGO8ezdSUD9xnAfiMwdiC0c4qSUbPlapwx4crWD1BdSrkza3pe6EO
-	 J4Rlv3EIfcVjFdLRGOO7k6CRy/tqNUoKB1taFktQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0B13B2084E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgBORBB (ORCPT
+        id S1726273AbgBOS4K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Feb 2020 12:01:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbgBORBA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 15 Feb 2020 12:01:00 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 831F82083B;
-        Sat, 15 Feb 2020 17:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581786060;
-        bh=rpN9KSwCeWF3MfgKjBVx8LSSwJenIzc6kg5Nd3scvZY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0/Cp2TAUQTiPZiCyD5WErFRVo97f3lJ02dZEZdCxL4pgeGmHPFO6nwhj8R5SlJO8d
-         GIw739tzH+MxEAWBt6m5L/qJOCHa5TkB1gIw+CZt0HEjPOhWZJa0KhgFP8JNNnOo+n
-         sxMGPxfKpBm5vs5FgfRgP6/dMsyfYpUDnKZ0/S2I=
-Date:   Sat, 15 Feb 2020 17:00:55 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     David Heidelberg <david@ixit.cz>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] dt-bindings: iio: light: add support for
- Dyna-Image AL3010
-Message-ID: <20200215170055.32e63892@archlinux>
-In-Reply-To: <20200211191201.1049902-3-david@ixit.cz>
-References: <20200211191201.1049902-1-david@ixit.cz>
-        <20200211191201.1049902-3-david@ixit.cz>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 15 Feb 2020 13:56:10 -0500
+Received: from out28-170.mail.aliyun.com ([115.124.28.170]:50083 "EHLO
+        out28-170.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgBOS4J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 13:56:09 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.411617|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0490798-0.00794291-0.942977;DS=CONTINUE|ham_system_inform|0.0762816-0.232677-0.691042;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.GoTIZgt_1581792955;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GoTIZgt_1581792955)
+          by smtp.aliyun-inc.com(10.147.42.241);
+          Sun, 16 Feb 2020 02:56:03 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, paul@crapouillou.net,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org,
+        jiaxun.yang@flygoat.com, chenhc@lemote.com, allison@lohutok.net,
+        tglx@linutronix.de, daniel.lezcano@linaro.org,
+        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
+        ebiederm@xmission.com, miquel.raynal@bootlin.com,
+        paul@boddie.org.uk, hns@goldelico.com,
+        mips-creator-ci20-dev@googlegroups.com
+Subject: Introduce SMP support for CI20 (based on JZ4780) v5.
+Date:   Sun, 16 Feb 2020 02:55:24 +0800
+Message-Id: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2020 20:11:56 +0100
-David Heidelberg <david@ixit.cz> wrote:
-
-> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
-> provides a multiple gain function with linear response over a dynamic
-> range 1216/4863/19452/77806.
-> 
-> Signed-off-by: David Heidelberg <david@ixit.cz>
-Applied with name tweaked as per patch 1.
-
-Thanks,
-
-Jonathan
-
-> ---
-> v5
->  - drop requirement on interrups and vdd-supply
->  - s/al3010@1c/light-sensor@1c/
->  - dual license also under BSD
-> 
->  .../devicetree/bindings/iio/light/al3010.yaml | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/al3010.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/al3010.yaml b/Documentation/devicetree/bindings/iio/light/al3010.yaml
-> new file mode 100644
-> index 000000000000..fdd1e5fa9c74
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/al3010.yaml
-> @@ -0,0 +1,43 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/light/al3010.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dyna-Image AL3010 sensor
-> +
-> +maintainers:
-> +  - David Heidelberg <david@ixit.cz>
-> +
-> +properties:
-> +  compatible:
-> +    const: dynaimage,al3010
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Regulator that provides power to the sensor
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        light-sensor@1c {
-> +            compatible = "dynaimage,al3010";
-> +            reg = <0x1c>;
-> +            vdd-supply = <&vdd_reg>;
-> +            interrupts = <0 99 4>;
-> +        };
-> +    };
+Introduce SMP support for MIPS Creator CI20, which is
+based on Ingenic JZ4780 SoC.
 
