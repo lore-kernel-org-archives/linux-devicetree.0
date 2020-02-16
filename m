@@ -2,817 +2,250 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_PH_BODY_ACCOUNTS_PRE,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69321C7619D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 23:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BDEC3B1BF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 23:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FBB208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 23:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E202086A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 23:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="pfExkRFZ"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="gii25t9W";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VAbwzqfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgBPXdF (ORCPT
+        id S1726962AbgBPXsa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 18:33:05 -0500
-Received: from mail-dm6nam12on2066.outbound.protection.outlook.com ([40.107.243.66]:6039
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728205AbgBPXdF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Feb 2020 18:33:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J7tZlP6YtPS+bF4My7v+hUckJrWbE/VZkU4DtRCUS2RcE5zMrexv+6WViM5dlLAMIRrF4KpmRcSjUco0otFcOGiEnjvvFCBOq05/Ii8SEM1m/tdRagRqymP2EJHsHUJQ492VqxmP/jvlYlrErJq00lwHL1mx+R/S5dy+tPsGAQJbpd0GXHC+ZrMWgejgAqh8dIsc8G8hHHyE0j4Gmo2a4xo322vK/YsJat97GAEVhwyVxz0Pz2cqzDQW9s5WjH3LtvIYLiVGJj5vJ228C/4hi3Z2q0IC45YDCaiN97FKHmAJ/NUMmTbHJqaBsYvDe9KLdCJ3otnWM0DW3KylVHrB3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ri2WXjlmX3IbfJZeQPe555l0EyfIijpPGjVJNKwO6Ok=;
- b=D2YKFK9fJ8TBdV6B6upw3kLYf195zaMoQAZ+FJubV6McPVXpBOOyw+QZQZO3Ps1BquFd1z2IpZFR+eeTx09eH/CJNOkAnEo8s6bQGAkAGehE6oYd63Kye7vzgnQnOTbk67H+C3ocq3ES5P8Qohi4kD74hYrhNQnbn2QqWRpCdLMmoikaU9J0AIOBb4YFPtIZb4q10X8Grd3lXUm7yImTPVmTmNLDKSsZzcIH96tHkyuZXAkWxDYlrNfZ6T0hu52uRaF2vjyjRLXH9sDP41RM51lqrTSJKiR+uSsMUqJ03kA98RwrrO7SNdTBR7zqUUqxpuzVwdlhkrTA3HyjyPzo+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ri2WXjlmX3IbfJZeQPe555l0EyfIijpPGjVJNKwO6Ok=;
- b=pfExkRFZw9Om26r6GVQmjbf2QGXox8o5xB6h1hlzi9U8xVLIUzZIkU/SAwT5d6U+PM7aLnhAF+cb+QiAG/o/Va5oaskd6MvNjm2yVaMVXu253KaVCFV0Ll7WCMyq8wTZFJSKrdanVOOFLzSumkOAdx/gzL3qye7WJDXRE4JYTM4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jeff@labundy.com; 
-Received: from SN6PR08MB5053.namprd08.prod.outlook.com (52.135.107.153) by
- SN6PR08MB5406.namprd08.prod.outlook.com (52.135.117.208) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Sun, 16 Feb 2020 23:33:01 +0000
-Received: from SN6PR08MB5053.namprd08.prod.outlook.com
- ([fe80::2cd0:e164:fe88:3945]) by SN6PR08MB5053.namprd08.prod.outlook.com
- ([fe80::2cd0:e164:fe88:3945%4]) with mapi id 15.20.2729.025; Sun, 16 Feb 2020
- 23:33:00 +0000
-From:   Jeff LaBundy <jeff@labundy.com>
-To:     lee.jones@linaro.org, dmitry.torokhov@gmail.com,
-        thierry.reding@gmail.com, jic23@kernel.org,
-        devicetree@vger.kernel.org
-Cc:     linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
-Subject: [PATCH v5 6/7] iio: light: Add support for Azoteq IQS621/622 ambient light sensors
-Date:   Sun, 16 Feb 2020 17:32:10 -0600
-Message-Id: <1581895931-6056-7-git-send-email-jeff@labundy.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581895931-6056-1-git-send-email-jeff@labundy.com>
-References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
+        Sun, 16 Feb 2020 18:48:30 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:38127 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726482AbgBPXs3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Feb 2020 18:48:29 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id B16EC6435;
+        Sun, 16 Feb 2020 18:48:27 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 16 Feb 2020 18:48:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to
+        :subject:content-type; s=fm2; bh=uPvzPfeLssWll94cUqu6zSYEVY0EtIa
+        CosSptfdI0ok=; b=gii25t9WYnSSTkHeauV2hH2UHwbVUPPw+yLOjQKDBhMyeGS
+        EDkjDaewr+5LUpVyYixbomyYrH+LfTcBFKZ2uxYtHwvXqc227U3yheYJ9bE5JXfh
+        S5rzU+IOxZ11vcFAbvmii+Q9164J3KgdJiapTfqx8uz6DgjC7Rk9uAjQKB0PltVU
+        MfB9TEUwkvvCzFWJtNs7UtOmx2gXvwYXgmtmcImrusGw/NqOxtcZZFlgefSCl7Hg
+        zmtfkZY7LihvcvgmywAATmZhoS3hVQgUQ4oxudkdC0fZE5PYbKyO7CuFD3e8j+qn
+        dEXLymIudK/s7I0ZGVBc/huTCW2offeDLM5sGgA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=uPvzPf
+        eLssWll94cUqu6zSYEVY0EtIaCosSptfdI0ok=; b=VAbwzqfqo/y9Tu8LX5Lfyx
+        6Yl8l3udSj5vMmSuDj1oMRAfayQXn9AbdS8ECqZ4k2aMpnQZ75FC0SnatX4mdkB3
+        otfPdnKXlsYRD2eE1/cAKgw4tnYJ6d8dJ+yEU+N/kE0j+oObO3DnwrRrdYQ+h0Nl
+        56PDpk/Q/3VuKQ/OV1m6Xh6GyTsZ5USwJwxp55vqVsnnp1PBpxCUd3S2scC+i66d
+        UD2lK7KA4L67F8Dk5LV9sm0t8jyP4HrSdWX7R5LLOwDhL0omzwJIq8GH3JDbLEtJ
+        rjRyOXB5qCUL6LCy0FHdKP64OCnaLed++Ne+/LLYTsonj8C60e2ajatpaIo0N8Mg
+        ==
+X-ME-Sender: <xms:w9RJXtJs6D8kIs6PKmou0A3rLpCqjWS4i7aYsxew6CSBWFnnwWJtyw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgddufecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
+    rdhiugdrrghu
+X-ME-Proxy: <xmx:w9RJXpUdqDLjMVR3DQlScEWMyPRikq9iJvVJV1LmvtV1nSDbvcnQkg>
+    <xmx:w9RJXoXbZ2sIlBRiQvlSME-N3BbB2H-JtxzAwD0ddccHEexs_8ETYQ>
+    <xmx:w9RJXp_sjRWNEgMLbalyA2rOXjG1SQddVcU7PUiMxk9YOSr9equm_A>
+    <xmx:y9RJXidtxXeIKeauc7jrwlF62H2pHiE5KEVmrPsD7xWuRiQiDknVjA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2A140E00A2; Sun, 16 Feb 2020 18:48:19 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
+Mime-Version: 1.0
+Message-Id: <88f74fcd-537d-497d-bb39-346e56da34e2@www.fastmail.com>
+In-Reply-To: <20200212215717.9474-2-rentao.bupt@gmail.com>
+References: <20200212215717.9474-1-rentao.bupt@gmail.com>
+ <20200212215717.9474-2-rentao.bupt@gmail.com>
+Date:   Mon, 17 Feb 2020 10:18:11 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Tao Ren" <rentao.bupt@gmail.com>,
+        "Felipe Balbi" <balbi@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Joel Stanley" <joel@jms.id.au>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        "Chunfeng Yun" <chunfeng.yun@mediatek.com>,
+        "Colin King" <colin.king@canonical.com>,
+        "Stephen Boyd" <swboyd@chromium.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        "Tao Ren" <taoren@fb.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_1/5]_usb:_gadget:_aspeed:_read_vhub_properties_f?=
+ =?UTF-8?Q?rom_device_tree?=
 Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0501CA0142.namprd05.prod.outlook.com
- (2603:10b6:803:2c::20) To SN6PR08MB5053.namprd08.prod.outlook.com
- (2603:10b6:805:78::25)
-MIME-Version: 1.0
-Received: from localhost.localdomain (136.49.227.119) by SN4PR0501CA0142.namprd05.prod.outlook.com (2603:10b6:803:2c::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.9 via Frontend Transport; Sun, 16 Feb 2020 23:33:00 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [136.49.227.119]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5b0dc72e-f88f-441f-9e2f-08d7b3388fb7
-X-MS-TrafficTypeDiagnostic: SN6PR08MB5406:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR08MB5406B4F6EED39E78C42BBD87D3170@SN6PR08MB5406.namprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03152A99FF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(136003)(366004)(39830400003)(396003)(376002)(199004)(189003)(8676002)(107886003)(8936002)(4326008)(7416002)(69590400006)(956004)(66556008)(2616005)(81156014)(81166006)(16526019)(26005)(5660300002)(6506007)(186003)(66946007)(6666004)(66476007)(316002)(6486002)(36756003)(52116002)(508600001)(6512007)(2906002)(86362001)(30864003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB5406;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: labundy.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PfLEsecIV/h2Ip2DjJAV+Ab5Gd52a4psXuG1F5Is+AcpXZll1nwr51cPxa+NppzbWkPQ13MAaUJKDCEjLLz8fF/UsNjPf/xdmuYRO5+68e9nVn3NVAeEVcElHqYBN6a2lAhRfIMK+SUVSnhRDPG4VrwW6MZ1pbIYvyLoywGEdBmjbF7ZrL77RCFxp8q/1hCaetBfJSTEmbyQ79vbtHG5bsYlsMbfqtAT8SmrCk6CiKL6r/K2CyPCY7bS5OH0xd6lH1CFFC8pkDOEWZ5HXS1gJlE3kgzCxcCiV2hljL8iZ/O2kfHbUlbPlon+fBx6XnIEYcIuFUuBvzc/o5RIo4KAV6RddJcKsVCg/4f0j5qrqkl0ZMdf1FkJwxyxeXB3J0NdQZ6x1gPfL9sMBNQj1B7vduoyhWtz3fI77WuzywiQp7vclUQsBxfImSK7pk7KwhbnidyIgbND/EYvfXjbAp7928rTOv9fcFsrmDrnpntsC/kM1HhiNMCDoRxFtAeQpLWtpoA4nZMxHknFkdvPY4qCd5/qOBS50MI7t97sMT4gMz8=
-X-MS-Exchange-AntiSpam-MessageData: 0g6V7NMNxadzwdy1DzbdAZ9EXB1aH5iU1D9XrQb4Z4WiClYAI/eMOV1ToHXk/NzTaVCoTgFlNaNrWN3L8UzjuVAwxK0nzRUSOP0dDD3/uEXXYqQ6YEdf+uQWjYd1Jhy23RvI0y094mYR0uj4gNSdjA==
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b0dc72e-f88f-441f-9e2f-08d7b3388fb7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2020 23:33:00.8999
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qIgEpepDPwinXNctP0nDdqNBEvZLW9z0mxsfZwTMQMVmkiMvferuS8UQpHeobpdGybPEasnILEG3DQW519pkgQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB5406
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for the Azoteq IQS621 and IQS622 ambient light
-sensors, both of which can report a four-bit representation of ambient
-light intensity.
 
-The IQS621 can additionally report illuminace directly in units of lux,
-while the IQS622 can report a four-bit representation of infrared light
-intensity. Furthermore, the IQS622 can report a unitless measurement of
-a target's proximity to the device.
 
-Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-Changes in v5:
-  - Replaced iqs62x->map with iqs62x->regmap throughout
-  - Replaced use of bitwise-OR operators in iqs621_als_write_event_config with
-    logical-OR operators as was originally intended
-  - Dropped #defines for platform_driver name and alias in favor of the actual
-    string names
+On Thu, 13 Feb 2020, at 08:27, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> The patch introduces 2 DT properties ("aspeed,vhub-downstream-ports" and
+> "aspeed,vhub-generic-endpoints") which replaces hardcoded port/endpoint
+> number. It is to make it more convenient to add support for newer vhub
+> revisions with different number of ports and endpoints.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  Changes in v2:
+>    - removed ast_vhub_config structure and moved vhub port/endpoint
+>      number into device tree.
+> 
+>  drivers/usb/gadget/udc/aspeed-vhub/core.c | 68 ++++++++++++++---------
+>  drivers/usb/gadget/udc/aspeed-vhub/dev.c  | 30 +++++++---
+>  drivers/usb/gadget/udc/aspeed-vhub/epn.c  |  4 +-
+>  drivers/usb/gadget/udc/aspeed-vhub/hub.c  | 26 ++++++---
+>  drivers/usb/gadget/udc/aspeed-vhub/vhub.h | 23 +++-----
+>  5 files changed, 91 insertions(+), 60 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c 
+> b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> index 90b134d5dca9..d6f737fac4e2 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> @@ -99,7 +99,7 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+>  {
+>  	struct ast_vhub *vhub = data;
+>  	irqreturn_t iret = IRQ_NONE;
+> -	u32 istat;
+> +	u32 i, istat;
+>  
+>  	/* Stale interrupt while tearing down */
+>  	if (!vhub->ep0_bufs)
+> @@ -121,10 +121,10 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+>  
+>  	/* Handle generic EPs first */
+>  	if (istat & VHUB_IRQ_EP_POOL_ACK_STALL) {
+> -		u32 i, ep_acks = readl(vhub->regs + AST_VHUB_EP_ACK_ISR);
+> +		u32 ep_acks = readl(vhub->regs + AST_VHUB_EP_ACK_ISR);
+>  		writel(ep_acks, vhub->regs + AST_VHUB_EP_ACK_ISR);
+>  
+> -		for (i = 0; ep_acks && i < AST_VHUB_NUM_GEN_EPs; i++) {
+> +		for (i = 0; ep_acks && i < vhub->max_epns; i++) {
+>  			u32 mask = VHUB_EP_IRQ(i);
+>  			if (ep_acks & mask) {
+>  				ast_vhub_epn_ack_irq(&vhub->epns[i]);
+> @@ -134,21 +134,11 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+>  	}
+>  
+>  	/* Handle device interrupts */
+> -	if (istat & (VHUB_IRQ_DEVICE1 |
+> -		     VHUB_IRQ_DEVICE2 |
+> -		     VHUB_IRQ_DEVICE3 |
+> -		     VHUB_IRQ_DEVICE4 |
+> -		     VHUB_IRQ_DEVICE5)) {
+> -		if (istat & VHUB_IRQ_DEVICE1)
+> -			ast_vhub_dev_irq(&vhub->ports[0].dev);
+> -		if (istat & VHUB_IRQ_DEVICE2)
+> -			ast_vhub_dev_irq(&vhub->ports[1].dev);
+> -		if (istat & VHUB_IRQ_DEVICE3)
+> -			ast_vhub_dev_irq(&vhub->ports[2].dev);
+> -		if (istat & VHUB_IRQ_DEVICE4)
+> -			ast_vhub_dev_irq(&vhub->ports[3].dev);
+> -		if (istat & VHUB_IRQ_DEVICE5)
+> -			ast_vhub_dev_irq(&vhub->ports[4].dev);
+> +	for (i = 0; i < vhub->max_ports; i++) {
+> +		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
+> +
+> +		if (istat & dev_mask)
+> +			ast_vhub_dev_irq(&vhub->ports[i].dev);
+>  	}
+>  
+>  	/* Handle top-level vHub EP0 interrupts */
+> @@ -182,7 +172,7 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+>  
+>  void ast_vhub_init_hw(struct ast_vhub *vhub)
+>  {
+> -	u32 ctrl;
+> +	u32 ctrl, port_mask, epn_mask;
+>  
+>  	UDCDBG(vhub,"(Re)Starting HW ...\n");
+>  
+> @@ -222,15 +212,20 @@ void ast_vhub_init_hw(struct ast_vhub *vhub)
+>  	}
+>  
+>  	/* Reset all devices */
+> -	writel(VHUB_SW_RESET_ALL, vhub->regs + AST_VHUB_SW_RESET);
+> +	port_mask = GENMASK(vhub->max_ports, 1);
+> +	writel(VHUB_SW_RESET_ROOT_HUB |
+> +	       VHUB_SW_RESET_DMA_CONTROLLER |
+> +	       VHUB_SW_RESET_EP_POOL |
+> +	       port_mask, vhub->regs + AST_VHUB_SW_RESET);
+>  	udelay(1);
+>  	writel(0, vhub->regs + AST_VHUB_SW_RESET);
+>  
+>  	/* Disable and cleanup EP ACK/NACK interrupts */
+> +	epn_mask = GENMASK(vhub->max_epns - 1, 0);
+>  	writel(0, vhub->regs + AST_VHUB_EP_ACK_IER);
+>  	writel(0, vhub->regs + AST_VHUB_EP_NACK_IER);
+> -	writel(VHUB_EP_IRQ_ALL, vhub->regs + AST_VHUB_EP_ACK_ISR);
+> -	writel(VHUB_EP_IRQ_ALL, vhub->regs + AST_VHUB_EP_NACK_ISR);
+> +	writel(epn_mask, vhub->regs + AST_VHUB_EP_ACK_ISR);
+> +	writel(epn_mask, vhub->regs + AST_VHUB_EP_NACK_ISR);
+>  
+>  	/* Default settings for EP0, enable HW hub EP1 */
+>  	writel(0, vhub->regs + AST_VHUB_EP0_CTRL);
+> @@ -273,7 +268,7 @@ static int ast_vhub_remove(struct platform_device *pdev)
+>  		return 0;
+>  
+>  	/* Remove devices */
+> -	for (i = 0; i < AST_VHUB_NUM_PORTS; i++)
+> +	for (i = 0; i < vhub->max_ports; i++)
+>  		ast_vhub_del_dev(&vhub->ports[i].dev);
+>  
+>  	spin_lock_irqsave(&vhub->lock, flags);
+> @@ -295,7 +290,7 @@ static int ast_vhub_remove(struct platform_device *pdev)
+>  	if (vhub->ep0_bufs)
+>  		dma_free_coherent(&pdev->dev,
+>  				  AST_VHUB_EP0_MAX_PACKET *
+> -				  (AST_VHUB_NUM_PORTS + 1),
+> +				  (vhub->max_ports + 1),
+>  				  vhub->ep0_bufs,
+>  				  vhub->ep0_bufs_dma);
+>  	vhub->ep0_bufs = NULL;
+> @@ -309,11 +304,32 @@ static int ast_vhub_probe(struct platform_device *pdev)
+>  	struct ast_vhub *vhub;
+>  	struct resource *res;
+>  	int i, rc = 0;
+> +	const struct device_node *np = pdev->dev.of_node;
+>  
+>  	vhub = devm_kzalloc(&pdev->dev, sizeof(*vhub), GFP_KERNEL);
+>  	if (!vhub)
+>  		return -ENOMEM;
+>  
+> +	rc = of_property_read_u32(np, "aspeed,vhub-downstream-ports",
+> +				  &vhub->max_ports);
+> +	if (rc < 0)
+> +		return -ENODEV;
 
-Changes in v4:
-  - None
+This breaks the driver for old devicetrees, or at the very least,
+devicetrees without your subsequent two patches in the series.
 
-Changes in v3:
-  - Added Reviewed-by trailer
+I feel we shouldn't drop the built-in values for the 2400 and 2500, that
+way we can fall back to them if the devicetree properties aren't present.
 
-Changes in v2:
-  - Merged 'Copyright' and 'Author' lines into one in introductory comments
-  - Replaced 'error' with 'ret' throughout
-  - Merged support for the closely related IQS622 (formerly represented by
-    a separate iio/proximity driver)
-  - Added support for unitless ambient light intensity (IQS621 and IQS622)
-    and infrared light intensity (IQS622 only)
-  - Moved the read of IQS621_ALS_FLAGS to iqs621_als_write_event_config to
-    account for the fact that IQS621_ALS_FLAGS may have changed in between
-    having first been read in iqs621_als_init and the time at which events
-    are enabled, thereby eliminating the need to call iqs621_als_init from
-    iqs621_als_probe
-  - Refactored the logic in iqs621_als_notifier and added a lock to safely
-    evaluate variables that may change in response to user action
-  - Added locks to iqs621_als_read_event_config/value to account for cases in
-    which the corresponding hardware state is in the process of being updated
-  - Refactored the logic in iqs621_als_read/write_event_value and removed all
-    #defines that could instead be represented by simple math
-  - Based the decision whether to select the IQS622 IR touch vs. proximity
-    threshold on the single proximity threshold written by user space, and
-    added a comment to describe the difference between either threshold
-  - Replaced IIO_CHAN_INFO_RAW with IIO_CHAN_INFO_PROCESSED for the IIO_LIGHT
-    channel (IQS621 only)
-  - Removed devm_add_action_or_reset failure message
-  - Eliminated tabbed alignment of platform_driver struct members
-  - Changed Kconfig "depends on" logic to MFD_IQS62X || COMPILE_TEST
+For the 2600 we can have a clean break and require the properties be
+present (i.e. not hardcode the values in the driver for fallback) as there
+aren't yet any devicetrees describing the device.
 
- drivers/iio/light/Kconfig      |  10 +
- drivers/iio/light/Makefile     |   1 +
- drivers/iio/light/iqs621-als.c | 617 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 628 insertions(+)
- create mode 100644 drivers/iio/light/iqs621-als.c
-
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 9968f98..baf7958b 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -173,6 +173,16 @@ config GP2AP020A00F
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called gp2ap020a00f.
-
-+config IQS621_ALS
-+	tristate "Azoteq IQS621/622 ambient light sensors"
-+	depends on MFD_IQS62X || COMPILE_TEST
-+	help
-+	  Say Y here if you want to build support for the Azoteq IQS621
-+	  and IQS622 ambient light sensors.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called iqs621-als.
-+
- config SENSORS_ISL29018
- 	tristate "Intersil 29018 light and proximity sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index c98d1ce..988e8f4 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_IIO_CROS_EC_LIGHT_PROX) += cros_ec_light_prox.o
- obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
- obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
- obj-$(CONFIG_HID_SENSOR_PROX)	+= hid-sensor-prox.o
-+obj-$(CONFIG_IQS621_ALS)	+= iqs621-als.o
- obj-$(CONFIG_SENSORS_ISL29018)	+= isl29018.o
- obj-$(CONFIG_SENSORS_ISL29028)	+= isl29028.o
- obj-$(CONFIG_ISL29125)		+= isl29125.o
-diff --git a/drivers/iio/light/iqs621-als.c b/drivers/iio/light/iqs621-als.c
-new file mode 100644
-index 0000000..b2988a7
---- /dev/null
-+++ b/drivers/iio/light/iqs621-als.c
-@@ -0,0 +1,617 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Azoteq IQS621/622 Ambient Light Sensors
-+ *
-+ * Copyright (C) 2019 Jeff LaBundy <jeff@labundy.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/iio/events.h>
-+#include <linux/iio/iio.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/iqs62x.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define IQS621_ALS_FLAGS_LIGHT			BIT(7)
-+#define IQS621_ALS_FLAGS_RANGE			GENMASK(3, 0)
-+
-+#define IQS621_ALS_UI_OUT			0x17
-+
-+#define IQS621_ALS_THRESH_DARK			0x80
-+#define IQS621_ALS_THRESH_LIGHT			0x81
-+
-+#define IQS622_IR_RANGE				0x15
-+#define IQS622_IR_FLAGS				0x16
-+#define IQS622_IR_FLAGS_TOUCH			BIT(1)
-+#define IQS622_IR_FLAGS_PROX			BIT(0)
-+
-+#define IQS622_IR_UI_OUT			0x17
-+
-+#define IQS622_IR_THRESH_PROX			0x91
-+#define IQS622_IR_THRESH_TOUCH			0x92
-+
-+struct iqs621_als_private {
-+	struct iqs62x_core *iqs62x;
-+	struct notifier_block notifier;
-+	struct mutex lock;
-+	bool light_en;
-+	bool range_en;
-+	bool prox_en;
-+	u8 als_flags;
-+	u8 ir_flags_mask;
-+	u8 ir_flags;
-+	u8 thresh_light;
-+	u8 thresh_dark;
-+	u8 thresh_prox;
-+};
-+
-+static int iqs621_als_init(struct iqs621_als_private *iqs621_als)
-+{
-+	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
-+	unsigned int event_mask = 0;
-+	int ret;
-+
-+	switch (iqs621_als->ir_flags_mask) {
-+	case IQS622_IR_FLAGS_TOUCH:
-+		ret = regmap_write(iqs62x->regmap, IQS622_IR_THRESH_TOUCH,
-+				   iqs621_als->thresh_prox);
-+		break;
-+
-+	case IQS622_IR_FLAGS_PROX:
-+		ret = regmap_write(iqs62x->regmap, IQS622_IR_THRESH_PROX,
-+				   iqs621_als->thresh_prox);
-+		break;
-+
-+	default:
-+		ret = regmap_write(iqs62x->regmap, IQS621_ALS_THRESH_LIGHT,
-+				   iqs621_als->thresh_light);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_write(iqs62x->regmap, IQS621_ALS_THRESH_DARK,
-+				   iqs621_als->thresh_dark);
-+	}
-+
-+	if (ret)
-+		return ret;
-+
-+	if (iqs621_als->light_en || iqs621_als->range_en)
-+		event_mask |= iqs62x->dev_desc->als_mask;
-+
-+	if (iqs621_als->prox_en)
-+		event_mask |= iqs62x->dev_desc->ir_mask;
-+
-+	return regmap_update_bits(iqs62x->regmap, IQS620_GLBL_EVENT_MASK,
-+				  event_mask, 0);
-+}
-+
-+static int iqs621_als_notifier(struct notifier_block *notifier,
-+			       unsigned long event_flags, void *context)
-+{
-+	struct iqs62x_event_data *event_data = context;
-+	struct iqs621_als_private *iqs621_als;
-+	struct iio_dev *indio_dev;
-+	bool light_new, light_old;
-+	bool prox_new, prox_old;
-+	u8 range_new, range_old;
-+	s64 timestamp;
-+	int ret;
-+
-+	iqs621_als = container_of(notifier, struct iqs621_als_private,
-+				  notifier);
-+	indio_dev = iio_priv_to_dev(iqs621_als);
-+	timestamp = iio_get_time_ns(indio_dev);
-+
-+	mutex_lock(&iqs621_als->lock);
-+
-+	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
-+		ret = iqs621_als_init(iqs621_als);
-+		if (ret) {
-+			dev_err(indio_dev->dev.parent,
-+				"Failed to re-initialize device: %d\n", ret);
-+			ret = NOTIFY_BAD;
-+		} else {
-+			ret = NOTIFY_OK;
-+		}
-+
-+		goto err_mutex;
-+	}
-+
-+	if (!iqs621_als->light_en && !iqs621_als->range_en &&
-+	    !iqs621_als->prox_en) {
-+		ret = NOTIFY_DONE;
-+		goto err_mutex;
-+	}
-+
-+	/* IQS621 only */
-+	light_new = event_data->als_flags & IQS621_ALS_FLAGS_LIGHT;
-+	light_old = iqs621_als->als_flags & IQS621_ALS_FLAGS_LIGHT;
-+
-+	if (iqs621_als->light_en && light_new && !light_old)
-+		iio_push_event(indio_dev,
-+			       IIO_UNMOD_EVENT_CODE(IIO_LIGHT, 0,
-+						    IIO_EV_TYPE_THRESH,
-+						    IIO_EV_DIR_RISING),
-+			       timestamp);
-+	else if (iqs621_als->light_en && !light_new && light_old)
-+		iio_push_event(indio_dev,
-+			       IIO_UNMOD_EVENT_CODE(IIO_LIGHT, 0,
-+						    IIO_EV_TYPE_THRESH,
-+						    IIO_EV_DIR_FALLING),
-+			       timestamp);
-+
-+	/* IQS621 and IQS622 */
-+	range_new = event_data->als_flags & IQS621_ALS_FLAGS_RANGE;
-+	range_old = iqs621_als->als_flags & IQS621_ALS_FLAGS_RANGE;
-+
-+	if (iqs621_als->range_en && (range_new > range_old))
-+		iio_push_event(indio_dev,
-+			       IIO_UNMOD_EVENT_CODE(IIO_INTENSITY, 0,
-+						    IIO_EV_TYPE_CHANGE,
-+						    IIO_EV_DIR_RISING),
-+			       timestamp);
-+	else if (iqs621_als->range_en && (range_new < range_old))
-+		iio_push_event(indio_dev,
-+			       IIO_UNMOD_EVENT_CODE(IIO_INTENSITY, 0,
-+						    IIO_EV_TYPE_CHANGE,
-+						    IIO_EV_DIR_FALLING),
-+			       timestamp);
-+
-+	/* IQS622 only */
-+	prox_new = event_data->ir_flags & iqs621_als->ir_flags_mask;
-+	prox_old = iqs621_als->ir_flags & iqs621_als->ir_flags_mask;
-+
-+	if (iqs621_als->prox_en && prox_new && !prox_old)
-+		iio_push_event(indio_dev,
-+			       IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
-+						    IIO_EV_TYPE_THRESH,
-+						    IIO_EV_DIR_RISING),
-+			       timestamp);
-+	else if (iqs621_als->prox_en && !prox_new && prox_old)
-+		iio_push_event(indio_dev,
-+			       IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
-+						    IIO_EV_TYPE_THRESH,
-+						    IIO_EV_DIR_FALLING),
-+			       timestamp);
-+
-+	iqs621_als->als_flags = event_data->als_flags;
-+	iqs621_als->ir_flags = event_data->ir_flags;
-+	ret = NOTIFY_OK;
-+
-+err_mutex:
-+	mutex_unlock(&iqs621_als->lock);
-+
-+	return ret;
-+}
-+
-+static void iqs621_als_notifier_unregister(void *context)
-+{
-+	struct iqs621_als_private *iqs621_als = context;
-+	struct iio_dev *indio_dev = iio_priv_to_dev(iqs621_als);
-+	int ret;
-+
-+	ret = blocking_notifier_chain_unregister(&iqs621_als->iqs62x->nh,
-+						 &iqs621_als->notifier);
-+	if (ret)
-+		dev_err(indio_dev->dev.parent,
-+			"Failed to unregister notifier: %d\n", ret);
-+}
-+
-+static int iqs621_als_read_raw(struct iio_dev *indio_dev,
-+			       struct iio_chan_spec const *chan,
-+			       int *val, int *val2, long mask)
-+{
-+	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
-+	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
-+	int ret;
-+	__le16 val_buf;
-+
-+	switch (chan->type) {
-+	case IIO_INTENSITY:
-+		ret = regmap_read(iqs62x->regmap, chan->address, val);
-+		if (ret)
-+			return ret;
-+
-+		*val &= IQS621_ALS_FLAGS_RANGE;
-+		return IIO_VAL_INT;
-+
-+	case IIO_PROXIMITY:
-+	case IIO_LIGHT:
-+		ret = regmap_raw_read(iqs62x->regmap, chan->address, &val_buf,
-+				      sizeof(val_buf));
-+		if (ret)
-+			return ret;
-+
-+		*val = le16_to_cpu(val_buf);
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int iqs621_als_read_event_config(struct iio_dev *indio_dev,
-+					const struct iio_chan_spec *chan,
-+					enum iio_event_type type,
-+					enum iio_event_direction dir)
-+{
-+	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&iqs621_als->lock);
-+
-+	switch (chan->type) {
-+	case IIO_LIGHT:
-+		ret = iqs621_als->light_en;
-+		break;
-+
-+	case IIO_INTENSITY:
-+		ret = iqs621_als->range_en;
-+		break;
-+
-+	case IIO_PROXIMITY:
-+		ret = iqs621_als->prox_en;
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	mutex_unlock(&iqs621_als->lock);
-+
-+	return ret;
-+}
-+
-+static int iqs621_als_write_event_config(struct iio_dev *indio_dev,
-+					 const struct iio_chan_spec *chan,
-+					 enum iio_event_type type,
-+					 enum iio_event_direction dir,
-+					 int state)
-+{
-+	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
-+	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
-+	unsigned int val;
-+	int ret;
-+
-+	mutex_lock(&iqs621_als->lock);
-+
-+	ret = regmap_read(iqs62x->regmap, iqs62x->dev_desc->als_flags, &val);
-+	if (ret)
-+		goto err_mutex;
-+	iqs621_als->als_flags = val;
-+
-+	switch (chan->type) {
-+	case IIO_LIGHT:
-+		ret = regmap_update_bits(iqs62x->regmap, IQS620_GLBL_EVENT_MASK,
-+					 iqs62x->dev_desc->als_mask,
-+					 iqs621_als->range_en || state ? 0 :
-+									 0xFF);
-+		if (!ret)
-+			iqs621_als->light_en = state;
-+		break;
-+
-+	case IIO_INTENSITY:
-+		ret = regmap_update_bits(iqs62x->regmap, IQS620_GLBL_EVENT_MASK,
-+					 iqs62x->dev_desc->als_mask,
-+					 iqs621_als->light_en || state ? 0 :
-+									 0xFF);
-+		if (!ret)
-+			iqs621_als->range_en = state;
-+		break;
-+
-+	case IIO_PROXIMITY:
-+		ret = regmap_read(iqs62x->regmap, IQS622_IR_FLAGS, &val);
-+		if (ret)
-+			goto err_mutex;
-+		iqs621_als->ir_flags = val;
-+
-+		ret = regmap_update_bits(iqs62x->regmap, IQS620_GLBL_EVENT_MASK,
-+					 iqs62x->dev_desc->ir_mask,
-+					 state ? 0 : 0xFF);
-+		if (!ret)
-+			iqs621_als->prox_en = state;
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+err_mutex:
-+	mutex_unlock(&iqs621_als->lock);
-+
-+	return ret;
-+}
-+
-+static int iqs621_als_read_event_value(struct iio_dev *indio_dev,
-+				       const struct iio_chan_spec *chan,
-+				       enum iio_event_type type,
-+				       enum iio_event_direction dir,
-+				       enum iio_event_info info,
-+				       int *val, int *val2)
-+{
-+	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
-+	int ret = IIO_VAL_INT;
-+
-+	mutex_lock(&iqs621_als->lock);
-+
-+	switch (dir) {
-+	case IIO_EV_DIR_RISING:
-+		*val = iqs621_als->thresh_light * 16;
-+		break;
-+
-+	case IIO_EV_DIR_FALLING:
-+		*val = iqs621_als->thresh_dark * 4;
-+		break;
-+
-+	case IIO_EV_DIR_EITHER:
-+		if (iqs621_als->ir_flags_mask == IQS622_IR_FLAGS_TOUCH)
-+			*val = iqs621_als->thresh_prox * 4;
-+		else
-+			*val = iqs621_als->thresh_prox;
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	mutex_unlock(&iqs621_als->lock);
-+
-+	return ret;
-+}
-+
-+static int iqs621_als_write_event_value(struct iio_dev *indio_dev,
-+					const struct iio_chan_spec *chan,
-+					enum iio_event_type type,
-+					enum iio_event_direction dir,
-+					enum iio_event_info info,
-+					int val, int val2)
-+{
-+	struct iqs621_als_private *iqs621_als = iio_priv(indio_dev);
-+	struct iqs62x_core *iqs62x = iqs621_als->iqs62x;
-+	unsigned int thresh_reg, thresh_val;
-+	u8 ir_flags_mask, *thresh_cache;
-+	int ret = -EINVAL;
-+
-+	mutex_lock(&iqs621_als->lock);
-+
-+	switch (dir) {
-+	case IIO_EV_DIR_RISING:
-+		thresh_reg = IQS621_ALS_THRESH_LIGHT;
-+		thresh_val = val / 16;
-+
-+		thresh_cache = &iqs621_als->thresh_light;
-+		ir_flags_mask = 0;
-+		break;
-+
-+	case IIO_EV_DIR_FALLING:
-+		thresh_reg = IQS621_ALS_THRESH_DARK;
-+		thresh_val = val / 4;
-+
-+		thresh_cache = &iqs621_als->thresh_dark;
-+		ir_flags_mask = 0;
-+		break;
-+
-+	case IIO_EV_DIR_EITHER:
-+		/*
-+		 * The IQS622 supports two detection thresholds, both measured
-+		 * in the same arbitrary units reported by read_raw: proximity
-+		 * (0 through 255 in steps of 1), and touch (0 through 1020 in
-+		 * steps of 4).
-+		 *
-+		 * Based on the single detection threshold chosen by the user,
-+		 * select the hardware threshold that gives the best trade-off
-+		 * between range and resolution.
-+		 *
-+		 * By default, the close-range (but coarse) touch threshold is
-+		 * chosen during probe.
-+		 */
-+		switch (val) {
-+		case 0 ... 255:
-+			thresh_reg = IQS622_IR_THRESH_PROX;
-+			thresh_val = val;
-+
-+			ir_flags_mask = IQS622_IR_FLAGS_PROX;
-+			break;
-+
-+		case 256 ... 1020:
-+			thresh_reg = IQS622_IR_THRESH_TOUCH;
-+			thresh_val = val / 4;
-+
-+			ir_flags_mask = IQS622_IR_FLAGS_TOUCH;
-+			break;
-+
-+		default:
-+			goto err_mutex;
-+		}
-+
-+		thresh_cache = &iqs621_als->thresh_prox;
-+		break;
-+
-+	default:
-+		goto err_mutex;
-+	}
-+
-+	if (thresh_val > 0xFF)
-+		goto err_mutex;
-+
-+	ret = regmap_write(iqs62x->regmap, thresh_reg, thresh_val);
-+	if (ret)
-+		goto err_mutex;
-+
-+	*thresh_cache = thresh_val;
-+	iqs621_als->ir_flags_mask = ir_flags_mask;
-+
-+err_mutex:
-+	mutex_unlock(&iqs621_als->lock);
-+
-+	return ret;
-+}
-+
-+static const struct iio_info iqs621_als_info = {
-+	.read_raw = &iqs621_als_read_raw,
-+	.read_event_config = iqs621_als_read_event_config,
-+	.write_event_config = iqs621_als_write_event_config,
-+	.read_event_value = iqs621_als_read_event_value,
-+	.write_event_value = iqs621_als_write_event_value,
-+};
-+
-+static const struct iio_event_spec iqs621_als_range_events[] = {
-+	{
-+		.type = IIO_EV_TYPE_CHANGE,
-+		.dir = IIO_EV_DIR_EITHER,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-+	},
-+};
-+
-+static const struct iio_event_spec iqs621_als_light_events[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_EITHER,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-+	},
-+};
-+
-+static const struct iio_chan_spec iqs621_als_channels[] = {
-+	{
-+		.type = IIO_INTENSITY,
-+		.address = IQS621_ALS_FLAGS,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.event_spec = iqs621_als_range_events,
-+		.num_event_specs = ARRAY_SIZE(iqs621_als_range_events),
-+	},
-+	{
-+		.type = IIO_LIGHT,
-+		.address = IQS621_ALS_UI_OUT,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
-+		.event_spec = iqs621_als_light_events,
-+		.num_event_specs = ARRAY_SIZE(iqs621_als_light_events),
-+	},
-+};
-+
-+static const struct iio_event_spec iqs622_als_prox_events[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_EITHER,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE) |
-+				 BIT(IIO_EV_INFO_VALUE),
-+	},
-+};
-+
-+static const struct iio_chan_spec iqs622_als_channels[] = {
-+	{
-+		.type = IIO_INTENSITY,
-+		.channel2 = IIO_MOD_LIGHT_BOTH,
-+		.address = IQS622_ALS_FLAGS,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.event_spec = iqs621_als_range_events,
-+		.num_event_specs = ARRAY_SIZE(iqs621_als_range_events),
-+		.modified = true,
-+	},
-+	{
-+		.type = IIO_INTENSITY,
-+		.channel2 = IIO_MOD_LIGHT_IR,
-+		.address = IQS622_IR_RANGE,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.modified = true,
-+	},
-+	{
-+		.type = IIO_PROXIMITY,
-+		.address = IQS622_IR_UI_OUT,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.event_spec = iqs622_als_prox_events,
-+		.num_event_specs = ARRAY_SIZE(iqs622_als_prox_events),
-+	},
-+};
-+
-+static int iqs621_als_probe(struct platform_device *pdev)
-+{
-+	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
-+	struct iqs621_als_private *iqs621_als;
-+	struct iio_dev *indio_dev;
-+	unsigned int val;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*iqs621_als));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	iqs621_als = iio_priv(indio_dev);
-+	iqs621_als->iqs62x = iqs62x;
-+
-+	if (iqs62x->dev_desc->prod_num == IQS622_PROD_NUM) {
-+		ret = regmap_read(iqs62x->regmap, IQS622_IR_THRESH_TOUCH,
-+				  &val);
-+		if (ret)
-+			return ret;
-+		iqs621_als->thresh_prox = val;
-+		iqs621_als->ir_flags_mask = IQS622_IR_FLAGS_TOUCH;
-+
-+		indio_dev->channels = iqs622_als_channels;
-+		indio_dev->num_channels = ARRAY_SIZE(iqs622_als_channels);
-+	} else {
-+		ret = regmap_read(iqs62x->regmap, IQS621_ALS_THRESH_LIGHT,
-+				  &val);
-+		if (ret)
-+			return ret;
-+		iqs621_als->thresh_light = val;
-+
-+		ret = regmap_read(iqs62x->regmap, IQS621_ALS_THRESH_DARK,
-+				  &val);
-+		if (ret)
-+			return ret;
-+		iqs621_als->thresh_dark = val;
-+
-+		indio_dev->channels = iqs621_als_channels;
-+		indio_dev->num_channels = ARRAY_SIZE(iqs621_als_channels);
-+	}
-+
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->name = iqs62x->dev_desc->dev_name;
-+	indio_dev->info = &iqs621_als_info;
-+
-+	mutex_init(&iqs621_als->lock);
-+
-+	iqs621_als->notifier.notifier_call = iqs621_als_notifier;
-+	ret = blocking_notifier_chain_register(&iqs621_als->iqs62x->nh,
-+					       &iqs621_als->notifier);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register notifier: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(&pdev->dev,
-+				       iqs621_als_notifier_unregister,
-+				       iqs621_als);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(&pdev->dev, indio_dev);
-+}
-+
-+static struct platform_driver iqs621_als_platform_driver = {
-+	.driver = {
-+		.name = "iqs621-als",
-+	},
-+	.probe = iqs621_als_probe,
-+};
-+module_platform_driver(iqs621_als_platform_driver);
-+
-+MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
-+MODULE_DESCRIPTION("Azoteq IQS621/622 Ambient Light Sensors");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:iqs621-als");
---
-2.7.4
-
+Andrew
