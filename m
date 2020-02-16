@@ -2,219 +2,260 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D06C76199
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 15:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FC9C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 16:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCDA2086A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 15:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679CB20857
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 16:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="H1nzhNo/"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="urfuiCNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgBPPdf (ORCPT
+        id S1728449AbgBPQHq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 10:33:35 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36838 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgBPPdf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 10:33:35 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2FF742AF;
-        Sun, 16 Feb 2020 16:33:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1581867213;
-        bh=UwjoSQbzdBP1f/alysPDptK1b0h5/YPxmlv920b3QuQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H1nzhNo/u6R+fv7VOii4nq3lzmTGUwIjEvMzJysT8Z5E4Xd5n/jpEdQwwWs3UdmLS
-         Hag0XOC7vObfBgClP6S/zpdeNutnzui3LnEoqAcGw1cbWcB9GwIQPVs7Z6rkWKCBKn
-         G8vKm6SAoNJ3DBOujoxjgAi7w3aKDVaMyaX0F6xs=
-Date:   Sun, 16 Feb 2020 17:33:15 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Yuti Amonkar <yamonkar@cadence.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, maxime@cerno.tech,
-        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, praneeth@ti.com, jsarha@ti.com,
-        tomi.valkeinen@ti.com, mparab@cadence.com, sjakhade@cadence.com
-Subject: Re: [PATCH v5 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
- bridge bindings.
-Message-ID: <20200216153315.GD28645@pendragon.ideasonboard.com>
-References: <1581481604-24499-1-git-send-email-yamonkar@cadence.com>
- <1581481604-24499-2-git-send-email-yamonkar@cadence.com>
+        Sun, 16 Feb 2020 11:07:46 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:61695 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728380AbgBPQHn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Feb 2020 11:07:43 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581869262; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=N87NNl6dKJaidFch39XvQKX3vbtqKKMUGcaq4Q/mfPs=; b=urfuiCNZKfjZiXjhk8INxAAWMRwKg6X7nFGBEjb/FXjCrdvqOHDHDu1bHmQorhK4LTisHqWM
+ qDI+A9R19vzE64abRC6MmWj4iCBpbCFdqhkgoj8l+7FqmsSU7ydz90iUwtszIDs1snrcfTTj
+ cwfLwjmBk350dlspkF25B9RPFY4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4968c6.7efda7f32618-smtp-out-n03;
+ Sun, 16 Feb 2020 16:07:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A53FEC4479C; Sun, 16 Feb 2020 16:07:33 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [103.140.231.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04E44C43383;
+        Sun, 16 Feb 2020 16:07:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04E44C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ckadabi@codeaurora.org, tsoni@codeaurora.org,
+        bryanh@codeaurora.org, psodagud@codeaurora.org,
+        rnayak@codeaurora.org, satyap@codeaurora.org,
+        pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
+ <20200203193533.GL3948@builder>
+ <5008a446-a90c-b68a-aaa4-3e7cd90418fa@linaro.org>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <d09f8a1d-0544-838f-e6f8-1c47f58e4f1f@codeaurora.org>
+Date:   Sun, 16 Feb 2020 21:37:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1581481604-24499-2-git-send-email-yamonkar@cadence.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5008a446-a90c-b68a-aaa4-3e7cd90418fa@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Yuti,
 
-Thank you for the patch.
+On 2/4/2020 8:40 AM, Bryan O'Donoghue wrote:
+> On 03/02/2020 19:35, Bjorn Andersson wrote:
+>> On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
+>
+> Hi Avaneesh.
 
-On Wed, Feb 12, 2020 at 05:26:42AM +0100, Yuti Amonkar wrote:
-> Document the bindings used for the Cadence MHDP DPI/DP bridge in
-> yaml format.
-> 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hello Bryan, Thank you very much for your review comments.
+
+Will be replying to your comments and will be posting new patchset soon 
+as per review comments.
+
+>
+>> Please aim for keeping the sort order in this file (ignore QCOM_APR
+>> which obviously is in the wrong place)
+>>
+>>> +       tristate "QTI Embedded USB Debugger (EUD)"
+>>> +       depends on ARCH_QCOM
+>
+> If we persist with the model of EXTCON you should "select EXTCON" here.
+I have asked this query with Bjorn Also against his review comments, 
+whether we need to persist with extcon or need to switch to usb role 
+switch framework, as we are notifying not only to usb controller but 
+also to pmic charger so in case we adopt usb role switch then how we 
+will notify to pmic charger to enable charging battery ? Also as i 
+mentioned there my dilema is it does not look very apt to model EUD hw 
+IP as c type connector, so please let me know your views.
+>
+>>> +       help
+>>> +         The Embedded USB Debugger (EUD) driver is a driver for the
+>>> +         control peripheral which waits on events like USB 
+>>> attach/detach
+>>> +         and charger enable/disable. The control peripheral further 
+>>> helps
+>>> +         support the USB-based debug and trace capabilities.
+>>> +         This module enables support for Qualcomm Technologies, Inc.
+>>> +         Embedded USB Debugger (EUD).
+>
+> Suggest.
+>
+> This module enables support for Qualcomm Technologies, Inc.
+> Embedded USB Debugger (EUD).
+> The EUD is a control peripheral which reports VBUS attach/detach, 
+> charger enable/disable and USB-based debug and trace capabilities.
+OK.
+>
+>
+>>> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+>
+> 2020
+OK
+>
+>>> +
+>>> +static int enable_eud(struct eud_chip *priv)
+>>> +{
+>>> +    int ret;
+>>> +
+>>> +    /* write into CSR to enable EUD */
+>>> +    writel_relaxed(BIT(0), priv->eud_reg_base + EUD_REG_CSR_EUD_EN);
+>>> +    /* Enable vbus, chgr & safe mode warning interrupts */
+>>> +    writel_relaxed(EUD_INT_VBUS | EUD_INT_CHGR | EUD_INT_SAFE_MODE,
+>>> +            priv->eud_reg_base + EUD_REG_INT1_EN_MASK);
+>>> +
+>>> +    /* Ensure Register Writes Complete */
+>
+> So... You are writing a register in an on-chip PMIC. The PMIC is 
+> responsible for detecting USB ID and supplying VBUS as appropriate.
+>
+> You then get an interrupt to inform you of the state ?
+
+I am writing to EUD control port so that when EUD is enable, EUD hw IP 
+can intercept VBUS and d+/d- signal and can reroute to PMIC or USB as 
+per host application command in debug mode.
+
+so for example in debug mode VBUS signal although asserted on connecting 
+phone with host PC, but EUD based on debug application command can 
+notify USB to detach(which otherwise would have detected and attached)
+
+>
+>>> +static ssize_t enable_store(struct device *dev,
+>>> +                struct device_attribute *attr,
+>>> +                const char *buf, size_t count)
+>>> +{
+>>> +    struct eud_chip *chip = dev_get_drvdata(dev);
+>>> +    int enable = 0;
+>>
+>> You shouldn't need to initialize this as you're checking the return
+>> value of sscanf().
+OK
+>>
+>>> +    int ret = 0;
+>>> +
+>>> +    if (sscanf(buf, "%du", &enable) != 1)
+>>> +        return -EINVAL;
+>>> +
+>>> +    if (enable == EUD_ENABLE_CMD)
+>>> +        ret = enable_eud(chip);
+>>
+>> If ret is !0 you should probably return that, rather than count...
+OK
+>>
+>>> +    else if (enable == EUD_DISABLE_CMD)
+>>> +        disable_eud(chip);
+>>> +    if (!ret)
+>>
+>> ...and then you don't need this check, or initialize ret to 0 above.
+>>
+>>> +        chip->enable = enable;
+>>
+>> So if I write 42 to "enable" nothing will change in the hardware, but
+>> chip->enable will be 42...
+>>
+>>> +    return count;
+>>> +}
+>
+> I was just going to comment on usb_connector but, does the above code 
+> need a synchronization primitive to serialize with the worker and 
+> interrupt handler ?
+Will evaluate and take corrective action if needed.
+>
+>>> +static int msm_eud_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct eud_chip *chip;
+>>> +    struct resource *res;
+>>> +    int ret;
+>>> +
+>>> +    chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+>>> +    if (!chip)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    chip->dev = &pdev->dev;
+>>> +    platform_set_drvdata(pdev, chip);
+>>> +
+>>> +    chip->extcon = devm_extcon_dev_allocate(&pdev->dev, 
+>>> eud_extcon_cable);
+>>
+>> Aren't we moving away from extcon in favor of the usb role switching
+>> thing?
+>
+> Yes.
+>
+> For the VBUS notification you could use
+>
+> usb-role-switch and model the USB connector as a child-node of the 
+> dual-role controller.
+
+I am not sure if EUD interface is true USB connector or should be 
+modeled so, as EUD can trick usb controller about absence of VBUS/d+/d- 
+signal. To illustrate, when in debug mode even if phone is connected 
+with PC, EUD can notify USB controller to stop USB s/w stack, by 
+notifying USB controller about usb detach event, even when d+\d- signals 
+are valid. moreover in debug mode USB controller will always configure 
+in device mode, so let me know if EUD qualifies to be modeled as child 
+of controller node?
+
+
+>
+> See:
+> https://patchwork.kernel.org/cover/11346247/
+> https://patchwork.kernel.org/patch/11346295/
+> https://patchwork.kernel.org/patch/11346263/
+>
+> Avaneesh do you have any kernel code that cares about the charger state ?
+
+charger state is to be notified to charger driver to start charging 
+battery so if i switch to usb role switch framework, how will i notify 
+to pmic charger? so if i have to adopt usb role switch framework then 
+also i will have to keep extcon framework, let me know your comment.
+
+>
+> What we are suggesting here is dropping extcon and using 
+> role-switching but, if you have some other code that cares about 
+> EXTCON_CHG_USB_SDP you'd have to do additional work.
+>
+> But, if I understood the implication of the code above where you write 
+> to the PMIC and let it handle VBUS/CHARGER on/off and you are just 
+> notified of the state change, you should be fine with usb-role-switching.
+as i mentioned usb-role-switch will only cater need to notify to usb 
+controller so please let me know your views.
+
+>
 > ---
->  .../bindings/display/bridge/cdns,mhdp.yaml    | 125 ++++++++++++++++++
->  1 file changed, 125 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> new file mode 100644
-> index 000000000000..e7f84ed1d2da
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> @@ -0,0 +1,125 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence MHDP bridge
-> +
-> +maintainers:
-> +  - Swapnil Jakhade <sjakhade@cadence.com>
-> +  - Yuti Amonkar <yamonkar@cadence.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cdns,mhdp8546
-> +      - ti,j721e-mhdp8546
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description:
-> +          Register block of mhdptx apb registers upto PHY mapped area(AUX_CONFIG_P).
-> +          The AUX and PMA registers are mapped to associated phy driver.
-> +      - description:
-> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: mhdptx
-> +      - const: j721e-intg
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      DP bridge clock, it's used by the IP to know how to translate a number of
-> +      clock cycles into a time (which is used to comply with DP standard timings
-> +      and delays).
-> +
-> +  phys:
-> +    description: Phandle to the DisplyPort phy.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      Ports as described in Documentation/devicetree/bindings/graph.txt
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description:
-> +          input port representing the DP bridge input
-
-s/input port/Input port/ and s/bridge input/bridge input./
-
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          output port representing the DP bridge output.
-
-s/output port/Output port/
-
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: ti,j721e-mhdp8546
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +        reg-names:
-> +          minItems: 2
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - reg
-> +  - reg-names
-> +  - phys
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    mhdp: dp-bridge@f0fb000000 {
-> +        compatible = "cdns,mhdp8546";
-> +        reg = <0xf0 0xfb000000 0x0 0x1000000>;
-> +        reg-names = "mhdptx";
-> +        clocks = <&mhdp_clock>;
-> +        phys = <&dp_phy>;
-> +
-> +        ports {
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +
-> +              port@0 {
-> +                     reg = <0>;
-> +                     dp_bridge_input: endpoint {
-> +                        remote-endpoint = <&xxx_dpi_output>;
-> +                     };
-> +              };
-> +
-> +              port@1 {
-> +                     reg = <1>;
-> +                     dp_bridge_output: endpoint {
-> +                        remote-endpoint = <&xxx_dp_connector_input>;
-> +                     };
-> +              };
-> +        };
-> +    };
-> +...
-
-Really good bindings ! With the above comments addressed, as well as he
-one in reply to Tomi's review,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> bod
 
 -- 
-Regards,
-
-Laurent Pinchart
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
