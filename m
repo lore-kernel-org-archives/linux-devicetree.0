@@ -2,72 +2,66 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C09BC761A2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6760C761A3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A6422522
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D3A22B48
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfX3pzUB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Qud9a2u/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgBPUV1 (ORCPT
+        id S1728033AbgBPUVP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:21:27 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41717 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbgBPUV0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 15:21:26 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 70so7911210pgf.8;
-        Sun, 16 Feb 2020 12:21:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=z3zfUADPk/oUyuzJ7VgI1Juwrp+2x57KXXaZ+inluLQ=;
-        b=FfX3pzUBHrAj8jkxvad38rERLbzrfN6+fcK0HplUj8CLnl7DtX87kPUDbcoasbyS82
-         pQ9uEpb/xIrz/MpMfylFu9z6L8g6whgnCiUxq23GL/a6EihKQsLBTMhTmqA3SR80+h3C
-         TOvZGwwM3Ko2e3npVE/d9dI4cNkAaL7Qxbt8OrLFDQIX/f+OmLSd0W5/RWKSV4VcC9Wv
-         vXPCJGyEPhvzo8tY6cuI+5EwhTPJxkYVb0HlES2oO/AUQ9Y5ytzRHlLfZX8frnnwgg1N
-         gYKdezI67yJAV59FQoRuM3NVQtL6Fp6/jKR2Wuin3KONqeeE4YATVM6KqbQBaSRCOdJQ
-         hb2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=z3zfUADPk/oUyuzJ7VgI1Juwrp+2x57KXXaZ+inluLQ=;
-        b=XA8ipsank3fZA1zpRZIOjy//fBpAOsU3fg/woqj1FIxWoVFGuXh4hg11FftQFzTtYa
-         uRLq8LDN8rpIhJi8Xm3w/XGJhBTg13Z28j9j+lrCqWlmUcLED6+hazU/A/ZqTRF4thEm
-         HiTkD/K8psitlN1eL8BtZzKMLMKMb1W3hyaKRKiHflYPfkYwE43mdYmWMftF2uHkmUN8
-         DVA6Eqj1KtluwYAkrEhPATmGjFk/7DU3bUdhNhrit4gv6AHeHUjy/DDSG4oEz7p3UFLG
-         Cw175o+n2unw+rrIUWqPxTDCpFttNoxHI8lS/yWNzznwCqytYgtavOVZqpCraUZxeAg4
-         2jvg==
-X-Gm-Message-State: APjAAAVhZst2VugebkT4xsWE5sR/uEegtRU58D1LI0XscGge45H7Xde6
-        sDw4h6e5DMg87AfR314mT88=
-X-Google-Smtp-Source: APXvYqyt1ki5Ed6SRzWgLcOn7teb9PcdZLafsaTmcNNnAg3NTxCIsHfcmSjKmDh3o1T8Dzjfc5dRxA==
-X-Received: by 2002:a63:9dcd:: with SMTP id i196mr14159101pgd.93.1581884485869;
-        Sun, 16 Feb 2020 12:21:25 -0800 (PST)
-Received: from localhost.localdomain ([103.51.74.127])
-        by smtp.gmail.com with ESMTPSA id l69sm14424750pgd.1.2020.02.16.12.21.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 12:21:25 -0800 (PST)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] arm64: dts: amlogic: odroid-n2: set usb-pwr-en regulator always on
-Date:   Sun, 16 Feb 2020 20:21:01 +0000
-Message-Id: <20200216202101.2810-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Sun, 16 Feb 2020 15:21:15 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:36460 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgBPUVP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 15:21:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884472;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=g+MhOb+4lKLgWM8gQAJn6gz4lNR5/1Wr0ePd7BKV9Oo=;
+        b=Qud9a2u/xxLq05WXr2qAoCVBWcEY51aDy+wZBgeq5WuiJF7uaerACd79RC2H7SzbuB
+        wRyez70NfICyNU0Ph4nSZD1NgD11aA8fiSRLs57iDfvq88PeKF9tKEu4NI3YRsZyHtaO
+        Bm822ecOwegcs0aTrXuJ5cNvI5dhtXuv6KUrgp8kFby2aTg93cz08I5AMR23sNPd8CtI
+        XUYZi9hr/ch03wkQt0PscPItBRZTDFzT9P5RwoFc0+gqn/OTYBE7pusXaGhHwerYkkHw
+        msfRtgK4Jjjp3YfZVuX1fSvn6E0u++GUYCqiumqabgtowR/1ND5q/dAV/aBwmwlMm6Ct
+        cVew==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0OoPPevMB"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1GKL4Jr3
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 16 Feb 2020 21:21:04 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Boddie <paul@boddie.org.uk>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Subject: [PATCH v3 3/6] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Date:   Sun, 16 Feb 2020 21:20:57 +0100
+Message-Id: <36aa1e80153fbb29eeb56f65cac9e3672165f7b7.1581884459.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1581884459.git.hns@goldelico.com>
+References: <cover.1581884459.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -75,43 +69,130 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-usb-pwr-en regulator is getting disable after booting, setting
-regulator-alway-on help enable the regulator after booting.
+There is a ACT8600 on the CI20 board and the bindings of the
+ACT8865 driver have changed without updating the CI20 device
+tree. Therefore the PMU can not be probed successfully and
+is running in power-on reset state.
 
-[   31.766097] USB_PWR_EN: disabling
+Fix DT to match the latest act8865-regulator bindings.
 
-Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+Cc: stable@vger.kernel.org
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
-Patch generated on top of my earier patch.
-[0] https://patchwork.kernel.org/patch/11384531/
-[1] https://patchwork.kernel.org/patch/11384533/
+ arch/mips/boot/dts/ingenic/ci20.dts | 48 ++++++++++++++++++++---------
+ 1 file changed, 33 insertions(+), 15 deletions(-)
 
-Before
-[root@alarm ~]# cat /sys/kernel/debug/regulator/regulator_summary | grep USB
-       USB_PWR_EN                 0    1      0 unknown  5000mV     0mA  5000mV  5000mV
-After
-[root@alarm ~]# cat /sys/kernel/debug/regulator/regulator_summary | grep USB
-       USB_PWR_EN                 1    1      0 unknown  5000mV     0mA  5000mV  5000mV
----
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 23eddff85fe5..938a9e15adfc 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -177,6 +177,7 @@ usb_pwr_en: regulator-usb_pwr_en {
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 		vin-supply = <&vcc_5v>;
-+		regulator-always-on;
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 59c104289ece..4f48bc16fb52 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -153,6 +153,8 @@
+ 	pinctrl-0 = <&pins_uart4>;
+ };
  
- 		/* Connected to the microUSB port power enable */
- 		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
++#include <dt-bindings/regulator/active-semi,8865-regulator.h>
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -166,65 +168,81 @@
+ 		reg = <0x5a>;
+ 		status = "okay";
+ 
++/*
++Optional input supply properties:
++- for act8600:
++  - vp1-supply: The input supply for DCDC_REG1
++  - vp2-supply: The input supply for DCDC_REG2
++  - vp3-supply: The input supply for DCDC_REG3
++  - inl-supply: The input supply for LDO_REG5, LDO_REG6, LDO_REG7 and LDO_REG8
++  SUDCDC_REG4, LDO_REG9 and LDO_REG10 do not have separate supplies.
++*/
++
+ 		regulators {
+ 			vddcore: SUDCDC1 {
+-				regulator-name = "VDDCORE";
++				regulator-name = "DCDC_REG1";
+ 				regulator-min-microvolt = <1100000>;
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-always-on;
+ 			};
+ 			vddmem: SUDCDC2 {
+-				regulator-name = "VDDMEM";
++				regulator-name = "DCDC_REG2";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_33: SUDCDC3 {
+-				regulator-name = "VCC33";
++				regulator-name = "DCDC_REG3";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_50: SUDCDC4 {
+-				regulator-name = "VCC50";
++				regulator-name = "SUDCDC_REG4";
+ 				regulator-min-microvolt = <5000000>;
+ 				regulator-max-microvolt = <5000000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_25: LDO_REG5 {
+-				regulator-name = "VCC25";
++				regulator-name = "LDO_REG5";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			wifi_io: LDO_REG6 {
+-				regulator-name = "WIFIIO";
++				regulator-name = "LDO_REG6";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_28: LDO_REG7 {
+-				regulator-name = "VCC28";
++				regulator-name = "LDO_REG7";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_15: LDO_REG8 {
+-				regulator-name = "VCC15";
++				regulator-name = "LDO_REG8";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+-			vcc_18: LDO_REG9 {
+-				regulator-name = "VCC18";
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
++			vrtc_18: LDO_REG9 {
++				regulator-name = "LDO_REG9";
++				/* Despite the datasheet stating 3.3V for REG9 and
++				   driver expecting that, REG9 outputs 1.8V.
++				   Likely the CI20 uses a chip variant.
++				   Since it is a simple on/off LDO the exact values
++				   do not matter.
++				*/
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_11: LDO_REG10 {
+-				regulator-name = "VCC11";
+-				regulator-min-microvolt = <1100000>;
+-				regulator-max-microvolt = <1100000>;
++				regulator-name = "LDO_REG10";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
+ 				regulator-always-on;
+ 			};
+ 		};
 -- 
-2.25.0
+2.23.0
 
