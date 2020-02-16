@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1119C76199
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0C5C7619C
 	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818692086A
+	by mail.kernel.org (Postfix) with ESMTP id B6CE924676
 	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZ9WP5Cc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JE//nzDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgBPSPl (ORCPT
+        id S1726116AbgBPSPl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 16 Feb 2020 13:15:41 -0500
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:34631 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgBPSPk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 13:15:40 -0500
-Received: by mail-lj1-f180.google.com with SMTP id x7so16227649ljc.1
-        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 10:15:38 -0800 (PST)
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37501 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgBPSPl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 13:15:41 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so10214045lfc.4
+        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 10:15:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=M576Y01Az48NWOqCNh5DN/YDcZWavtf35b6+dPcXGTk=;
-        b=gZ9WP5CcdrghC+ukDbXDAeh1kCxoRfVDDhtYvgZI5hpMLqbWi5zVdLOlsNBRnOStSP
-         mPtzcxssX4wN2peaZBX7GXQJoW2LZZumFy7biE+3WlucCAohrN41+5FlFlIQIOSNNJRA
-         r9hksG9/hz0XpoXGsRQEJ8TUHvdSKWya0lVAEUVyTOh4ZZ1+3Kqu4les5eK44yeTDN5x
-         vQsZyHcoZdOO7AGHHBOez8PyxivvNNbexGjIzo1KMpy59tRLs+ZxbyMMTkafvj+w/lwt
-         FAXLeiwSF3FFpWVDYvSAGjXsVE8SEey4DqegEtsOBRRhj1tIJqXiKvo/80XvJd5L4O5u
-         Q6IA==
+        bh=VOa5BvEVC53gAxDGC2Az8GeC+PWsDupUY7BePlsJCzY=;
+        b=JE//nzDhbJRZDEWoj65+j0fBdf4afIh+REZdLrUatpuJfHyk5SFggtpQokzTex9HOC
+         8N7AxOWr/+9oyWpTqYL5/QleNcV/2C1w5t7Tioj4D+Ntp35Yi9qe586UaPUX5m0ho+s7
+         htAGtgZEOOmQ12YhqIkDD/OVQQARgAs/hCYi+z9TNPynfyEyXoAc1Sjaq9z/JWBNuuLc
+         X9L7EV3dnTs3+SrWrMLFdas2ZHz0YT34qGktjk5/oBhNB5fk1DMfrgwuDYT7/xnF6KHt
+         N8hSLXpcolzW8FVsD+dK2eulCXkpu2NMEoibKnqgOmQQwrIa6dk8hHpMGZx3XAe6hW0D
+         4lbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=M576Y01Az48NWOqCNh5DN/YDcZWavtf35b6+dPcXGTk=;
-        b=X4jef+YE7qjR/f5Y1W25eiS78lu9kXy6e21UXFz88J6G+9DN6AvvhGncQkR4hckwEE
-         ig51W4EvhKkxPMB3FePznwqwJcfLbYMZ871awGRj3j65YPHX9fV1IW2aHZ+qB6yjTXrL
-         vGmfLl4f1l74QSnk8m8wWnjxylrvMYLJ1uWmNjxFr+e2IpsQq1O9fMhWS9q8QFnzQhRP
-         QIsmqsw9eBdkVxa6SUdCSLnhyz4YRMQ7Oi/hA7e6YErw2bny8/rP5BMnfdx5HBZG5CGh
-         0869sFiSHCFBaOzP84cuN0rw37tbHGhAYx8cuGz3KPDIqdypo78bDHAwK3in10bQU9Fv
-         xv0w==
-X-Gm-Message-State: APjAAAUf4J5JXEShd5SSJ0tYRnuhdQP5v2QdgSDg9dRl/U3TpIZnZV2v
-        nNj3xxU7/W6GfK3i/ufzgsE=
-X-Google-Smtp-Source: APXvYqyDwVpMc2gasRlyFfrK1g7kFEUVRNpPpv3Evz79tUnzi3bdDHfsXOT+loxfVFDLyfIY2V+WxA==
-X-Received: by 2002:a2e:909a:: with SMTP id l26mr7450153ljg.209.1581876937673;
-        Sun, 16 Feb 2020 10:15:37 -0800 (PST)
+        bh=VOa5BvEVC53gAxDGC2Az8GeC+PWsDupUY7BePlsJCzY=;
+        b=BiEUi1Ws1InFdm+H77VBB5EY6DsT8B6q29BuezDaUAKQXyoiRUwWWIHCbyRW9IG7L4
+         Ry/pfMIsDItTDWcE1H4ezD+PITEH3KP+9GgtCCH9JeWVf/0tPbosPiu5VBRZ8Ds0suqT
+         kbhCCxYklUrPXjDCwMHd9qUQESh25itfWJv2gMvYOWejVE/yVJz5NuMj5a5RWoLcnFUJ
+         RVbOZKNRQn319fGqFxut343LMyzVqJKcGsHeV5BCitO6EUMRLb/iBXRUca82lwTo44Ly
+         aIGAgeXdU5wSq6+xTkP90d2h8Ah0wP6GW43kWMC0q4BYMJVjiNEtqrT7oDpMFSOOR6NI
+         b28A==
+X-Gm-Message-State: APjAAAViZp+HgMLc6iDIYDrLelvh+UNnRK7Yb0aPL/s2ZRR+FXbW2lY8
+        jeLJooY0XMBSe5wuoH2xwQk=
+X-Google-Smtp-Source: APXvYqxFx+f4n79IKFN5yY6IXfp11xLEIaNyV8NpiBY8wsoxTO2N5b6whFvxeE3ZgsfI+YSfF9wIbA==
+X-Received: by 2002:a19:7015:: with SMTP id h21mr6051881lfc.68.1581876938935;
+        Sun, 16 Feb 2020 10:15:38 -0800 (PST)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id u15sm6157431lfl.87.2020.02.16.10.15.36
+        by smtp.gmail.com with ESMTPSA id u15sm6157431lfl.87.2020.02.16.10.15.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 10:15:37 -0800 (PST)
+        Sun, 16 Feb 2020 10:15:38 -0800 (PST)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
@@ -66,9 +66,9 @@ Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Steffen Trumtrar <s.trumtrar@pengutronix.de>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v3 3/5] dt-bindings: display: convert panel-dpi to DT schema
-Date:   Sun, 16 Feb 2020 19:15:11 +0100
-Message-Id: <20200216181513.28109-4-sam@ravnborg.org>
+Subject: [PATCH v3 4/5] dt-bindings: display: add data-mapping to panel-dpi
+Date:   Sun, 16 Feb 2020 19:15:12 +0100
+Message-Id: <20200216181513.28109-5-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200216181513.28109-1-sam@ravnborg.org>
 References: <20200216181513.28109-1-sam@ravnborg.org>
@@ -79,167 +79,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With panel-timing converted, now convert the single
-remaining .txt user in panel/ of panel-timing to DT schema.
-
-v2:
-  - Drop Thierry as maintainer, as this is not a general panel binding
-    and I have no acks.
-  - Drop requirement for a panel- specific binding - "panel-dpi" is enough
-  - Updated example
-
-v3:
-  - added yaml document terminator "..."
-  - always require a specific binding - panel-dpi (based on feedback from Rob)
-  - use "power-supply" for the supply property, and made it mandatory
-    "power-supply" is the standard property for panels
-
+Add data-mapping property that can be used to specify
+the media format used for the connection betwwen the
+display controller (connector) and the panel.
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Maxime Ripard <mripard@kernel.org>
 ---
- .../bindings/display/panel/panel-dpi.txt      | 50 -------------
- .../bindings/display/panel/panel-dpi.yaml     | 72 +++++++++++++++++++
- 2 files changed, 72 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-dpi.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
+ .../devicetree/bindings/display/panel/panel-dpi.yaml | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-deleted file mode 100644
-index 6b203bc4d932..000000000000
---- a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--Generic MIPI DPI Panel
--======================
--
--Required properties:
--- compatible: "panel-dpi"
--
--Optional properties:
--- label: a symbolic name for the panel
--- enable-gpios: panel enable gpio
--- reset-gpios: GPIO to control the RESET pin
--- vcc-supply: phandle of regulator that will be used to enable power to the display
--- backlight: phandle of the backlight device
--
--Required nodes:
--- "panel-timing" containing video timings
--  (Documentation/devicetree/bindings/display/panel/display-timing.txt)
--- Video port for DPI input
--
--Example
---------
--
--lcd0: display@0 {
--        compatible = "samsung,lte430wq-f0c", "panel-dpi";
--        label = "lcd";
--
--        backlight = <&backlight>;
--
--        port {
--            lcd_in: endpoint {
--                    remote-endpoint = <&dpi_out>;
--            };
--        };
--
--        panel-timing {
--                clock-frequency = <9200000>;
--                hactive = <480>;
--                vactive = <272>;
--                hfront-porch = <8>;
--                hback-porch = <4>;
--                hsync-len = <41>;
--                vback-porch = <2>;
--                vfront-porch = <4>;
--                vsync-len = <10>;
--
--                hsync-active = <0>;
--                vsync-active = <0>;
--                de-active = <1>;
--                pixelclk-active = <1>;
--        };
--};
 diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-new file mode 100644
-index 000000000000..40079fc24a63
---- /dev/null
+index 40079fc24a63..6a03d2449701 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
 +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/panel-dpi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+@@ -21,6 +21,16 @@ properties:
+       - {}
+       - const: panel-dpi
+ 
++  data-mapping:
++    enum:
++      - rgb24
++      - rgb565
++      - bgr666
++      - lvds666
++    description: |
++      Describes the media format, how the display panel is connected
++      to the display interface.
 +
-+title: Generic MIPI DPI Panel
-+
-+maintainers:
-+  - Sam Ravnborg <sam@ravnborg.org>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    description:
-+      Shall contain a panel specific compatible and "panel-dpi"
-+      in that order.
-+    items:
-+      - {}
-+      - const: panel-dpi
-+
-+  backlight: true
-+  enable-gpios: true
-+  height-mm: true
-+  label: true
-+  panel-timing: true
-+  port: true
-+  power-supply: true
-+  reset-gpios: true
-+  width-mm: true
-+
-+required:
-+  - panel-timing
-+  - power-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    panel@0 {
-+        compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+        label = "osddisplay";
-+        power-supply = <&vcc_supply>;
-+
-+        backlight = <&backlight>;
-+
-+        port {
-+            lcd_in: endpoint {
-+                remote-endpoint = <&dpi_out>;
-+            };
-+        };
-+        panel-timing {
-+            clock-frequency = <9200000>;
-+            hactive = <800>;
-+            vactive = <480>;
-+            hfront-porch = <8>;
-+            hback-porch = <4>;
-+            hsync-len = <41>;
-+            vback-porch = <2>;
-+            vfront-porch = <4>;
-+            vsync-len = <10>;
-+
-+            hsync-active = <0>;
-+            vsync-active = <0>;
-+            de-active = <1>;
-+            pixelclk-active = <1>;
-+        };
-+    };
-+
-+...
+   backlight: true
+   enable-gpios: true
+   height-mm: true
+@@ -43,7 +53,7 @@ examples:
+         compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
+         label = "osddisplay";
+         power-supply = <&vcc_supply>;
+-
++        data-mapping = "lvds666";
+         backlight = <&backlight>;
+ 
+         port {
 -- 
 2.20.1
 
