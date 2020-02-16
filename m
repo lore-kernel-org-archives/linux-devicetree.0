@@ -2,281 +2,166 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002A4C33FA1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644FCC7619B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 23:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4393208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B177208C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 23:32:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o3jerznX"
+	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="igqEkzfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgBPUV6 (ORCPT
+        id S1726142AbgBPXch (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:21:58 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14558 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgBPUV6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 15:21:58 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e49a4200000>; Sun, 16 Feb 2020 12:20:48 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 16 Feb 2020 12:21:57 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 16 Feb 2020 12:21:57 -0800
-Received: from [10.2.163.245] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 16 Feb
- 2020 20:21:56 +0000
-Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
- <30e417ba-84e1-63d2-de74-22cfe859bddb@xs4all.nl>
- <920b4276-b2ca-646c-a21b-ca0b9bacf471@nvidia.com>
- <6bb124db-681c-55c1-e328-6e1f766a8bb3@nvidia.com>
-Message-ID: <0f84d37c-105f-8de6-c922-186d2f9ea156@nvidia.com>
-Date:   Sun, 16 Feb 2020 12:22:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 16 Feb 2020 18:32:37 -0500
+Received: from mail-dm6nam12on2070.outbound.protection.outlook.com ([40.107.243.70]:6137
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726059AbgBPXch (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Feb 2020 18:32:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G77UadDxg9qtMAchnlCrLmAqnGKzznMaTnW6uC06Yorzq+zRZSY2c+BMOka/fxWeTyafHMHoyJ1n1njhhbqClfS57rYHpMkt+8x8/LVMa/zonvNhIjIevNm2ZDjrUPednPZSBWES9SAai2D/vNYr2aFg7G5LOAI244YWketWgrskmRNGeEAzG3vvWYTAjCf8hIIbSCdj0wXp1gNCevv4cd10eY8Ge/K1r6mDT6gMLSgPqaKyUwQCLVeMHPpulwOH851zKzzEppOZh39lbq3hhiyi6xIyAlFmr1wq21wufstIWfjAyzMaZfIf3acOZePDSr884SSw0mdx/SXxAWYKyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9UfjynYxKuTgJagCRQyzEnaPhEHLym0Xa4nwrQIvo8I=;
+ b=iwiAOkEn49ioSc2+58uEMtZrObL8Xgm57snIDfzKAp9+uVKhjGqLXfXVCAGhrnWo1XaZk5tAnMCmOPIhmhHctexIsKyUl1eWWXEoPLVR2BoIkVlvb1CkhPciSj4lN3CpS5Tr5JBJpkKVz0jpglEKfh0H7zpDrf2P/J8eNGj8yPiPiMMcmETrvIaqfe8oMZOeGHTfQx5BPyyIZQhtQk49mrjmtBOjjPlr8CfEFY52S9hhgfQxsQO1mWs0EmGoGiKTXTBPnZmWP/LmoGj9MqXktCQOqPumf7pHy2PYFgeR+MdcUaVU0/iXBWqH6eVp5sJxxx6Kz9G7WyUQPZeZU1YLoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9UfjynYxKuTgJagCRQyzEnaPhEHLym0Xa4nwrQIvo8I=;
+ b=igqEkzfJDqjTKJZyaXchZPj0jSYrPsx8mdgbZnTuaab55QNjz/dN2NZG8HHVyvk28pSGpOpOM+wqBNcLTKx5OydXtP4HtcyrzR6zCMJLtC/XwK0CsWe61uOmi16oS4utpMAZ2ZB1cck34SQmEhv9KMefnzCchppA6SQiT/4iTUE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jeff@labundy.com; 
+Received: from SN6PR08MB5053.namprd08.prod.outlook.com (52.135.107.153) by
+ SN6PR08MB5406.namprd08.prod.outlook.com (52.135.117.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Sun, 16 Feb 2020 23:32:32 +0000
+Received: from SN6PR08MB5053.namprd08.prod.outlook.com
+ ([fe80::2cd0:e164:fe88:3945]) by SN6PR08MB5053.namprd08.prod.outlook.com
+ ([fe80::2cd0:e164:fe88:3945%4]) with mapi id 15.20.2729.025; Sun, 16 Feb 2020
+ 23:32:32 +0000
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     lee.jones@linaro.org, dmitry.torokhov@gmail.com,
+        thierry.reding@gmail.com, jic23@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
+Subject: [PATCH v5 0/7] Add support for Azoteq IQS620A/621/622/624/625
+Date:   Sun, 16 Feb 2020 17:32:04 -0600
+Message-Id: <1581895931-6056-1-git-send-email-jeff@labundy.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0501CA0142.namprd05.prod.outlook.com
+ (2603:10b6:803:2c::20) To SN6PR08MB5053.namprd08.prod.outlook.com
+ (2603:10b6:805:78::25)
 MIME-Version: 1.0
-In-Reply-To: <6bb124db-681c-55c1-e328-6e1f766a8bb3@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581884448; bh=jZ5L2TNSpFF5Qbx5vfyoBsHsU3zI5lpu8LpfMXV6+J8=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=o3jerznXyvPBVIHCjVKnTQxyOClPaQY47npfRrIA4cl3zFtTXSryjY0Q4R20Pu41g
-         tV7AHTPzgcZQHO8s78N/jMcKeza+65+Yu5JT5vg5tca2jQ8ekiz3DR4dW5dDpzsew4
-         BdHeOtoytJASQVc2Nzb3FYjXEKH+h/o0bx90Fs+bmirIa6drKCdedkb7wuz/UWFSoM
-         Hb9mnbZkxBFZ6XAhh2dbV3wzUAvKQ7u3fckn+JZG0LKs1yZR9MYqlucMWHrefoFVvr
-         yD4y4mHumx1rnANn73SDtal1FIj/jDrKZLdY5AsIeiYymieMJEEdlYSC2GbUtucPYy
-         zM6oczqcCU2cg==
+Received: from localhost.localdomain (136.49.227.119) by SN4PR0501CA0142.namprd05.prod.outlook.com (2603:10b6:803:2c::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.9 via Frontend Transport; Sun, 16 Feb 2020 23:32:31 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [136.49.227.119]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2ff220b1-2cdb-4df4-05e7-08d7b3387ee8
+X-MS-TrafficTypeDiagnostic: SN6PR08MB5406:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR08MB540639144DE816F8A169C5F0D3170@SN6PR08MB5406.namprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 03152A99FF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(136003)(366004)(39830400003)(396003)(376002)(199004)(189003)(8676002)(107886003)(8936002)(4326008)(7416002)(69590400006)(956004)(66556008)(2616005)(81156014)(81166006)(16526019)(26005)(5660300002)(6506007)(186003)(66946007)(6666004)(66476007)(316002)(6486002)(36756003)(52116002)(508600001)(966005)(6512007)(2906002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB5406;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: labundy.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KFJj+48jFeucJ/A85JIcRmZARtF88gQ81E4B7oZdz+G+tduKz3snfU3JIHsrl/V/jurZ6O7IZUj50+EpPGKqXfg4Bpm6wfQbHA7HWqzdPLVrpZqqIt099f1z9erECsKTVxZU2Lao96algHrrC/IEVaJHYEpaTUtkwMHvHZp/ePqOPI+58T0LxWujN9RDolEJ35XSsNq8l2yFnuYQ4+otIhVk0EmMLAu3VDM8O0wq3ZscfAQfdN2LdaYiujorNERiDJ4bjjF7jH9C5uf9jJpCNnjHYa/FqCS/ptEmwA9kK/htZAM2/pbPA63to8Q1ET/moob1ZbhGzHLcIxP3Sq6bi1sQi/atGzz9xO6IgQlWNbIA8BCKSWC71VtsaHujyVkpgVWytjxl2J7jCw9yh4FgXM1O9iLwZ2L+WlN8I15cMpMWXNz1oPl7rZahows4AaDJBc1cGmpcehp9jMwaR84xPL4tTwLq37C477soLMOpGuQVcUIMgAx1JlN5HtWrXG4wK/kgEXaVpAYy1O1gNfNnapdrymzQQYTl8ObIN0r5m5ksrS4bsX8YhafRI7yT5EizYd9EZ0NZHEhwj/57ylznw1dVa8LvMI/T3e/oE6zIB5+wPHZG0ebmIreCV2t6k9OB
+X-MS-Exchange-AntiSpam-MessageData: FyYJTHyF5LR5SCso9z07JghZyoiTEv0Py5aigY1Xic34U16iK+jyWlLUOeWwteQhWEC9G+9TSxEJ7nxvcah0/HDC+mXj5xnO2BBf47nEgNTW9V4ad7xsaCgvWzQGED9YXCW2MjNRO/dKpRmyREBhtw==
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ff220b1-2cdb-4df4-05e7-08d7b3387ee8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2020 23:32:32.6419
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SjQzLjIp1OdmewBp7/9dfi2n9llU0O9l5ErwZVGMh4w1YD2e9t+XnoHK2mjXIK8OjxdmmC8NLhuvNMjhefYR5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB5406
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series adds support for the Azoteq IQS620A, IQS621, IQS622, IQS624 and
+IQS625 multi-function sensors. Each device integrates numerous sensing tech-
+nologies in a single package.
 
-On 2/16/20 12:11 PM, Sowjanya Komatineni wrote:
->
-> On 2/16/20 11:54 AM, Sowjanya Komatineni wrote:
->>
->> On 2/16/20 3:03 AM, Hans Verkuil wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On 2/14/20 7:23 PM, Sowjanya Komatineni wrote:
->>>> Tegra210 contains a powerful Video Input (VI) hardware controller
->>>> which can support up to 6 MIPI CSI camera sensors.
->>>>
->>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
->>>> capture from an external camera sensor connected to CSI or from
->>>> built-in test pattern generator.
->>>>
->>>> Tegra210 supports built-in test pattern generator from CSI to VI.
->>>>
->>>> This patch adds a V4L2 media controller and capture driver support
->>>> for Tegra210 built-in CSI to VI test pattern generator.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>> =C2=A0 drivers/staging/media/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 2 +
->>>> =C2=A0 drivers/staging/media/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 1 +
->>>> =C2=A0 drivers/staging/media/tegra/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 10 +
->>>> =C2=A0 drivers/staging/media/tegra/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 8 +
->>>> =C2=A0 drivers/staging/media/tegra/TODO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 10 +
->>>> =C2=A0 drivers/staging/media/tegra/tegra-common.h |=C2=A0 239 +++++++
->>>> =C2=A0 drivers/staging/media/tegra/tegra-csi.c=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 374 ++++++++++
->>>> =C2=A0 drivers/staging/media/tegra/tegra-csi.h=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 115 ++++
->>>> =C2=A0 drivers/staging/media/tegra/tegra-vi.c=C2=A0=C2=A0=C2=A0=C2=A0 =
-| 1019=20
->>>> ++++++++++++++++++++++++++++
->>>> =C2=A0 drivers/staging/media/tegra/tegra-vi.h=C2=A0=C2=A0=C2=A0=C2=A0 =
-|=C2=A0=C2=A0 79 +++
->>>> =C2=A0 drivers/staging/media/tegra/tegra-video.c=C2=A0 |=C2=A0 118 +++=
-+
->>>> =C2=A0 drivers/staging/media/tegra/tegra-video.h=C2=A0 |=C2=A0=C2=A0 3=
-2 +
->>>> =C2=A0 drivers/staging/media/tegra/tegra210.c=C2=A0=C2=A0=C2=A0=C2=A0 =
-|=C2=A0 767=20
->>>> +++++++++++++++++++++
->>>> =C2=A0 drivers/staging/media/tegra/tegra210.h=C2=A0=C2=A0=C2=A0=C2=A0 =
-|=C2=A0 190 ++++++
->>>> =C2=A0 14 files changed, 2964 insertions(+)
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/Kconfig
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/Makefile
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/TODO
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-common.h
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-csi.c
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-csi.h
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vi.c
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vi.h
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-video.c
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-video.h
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra210.c
->>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra210.h
->>>>
->>> <snip>
->>>
->>>> +/*
->>>> + * videobuf2 queue operations
->>>> + */
->>>> +static int tegra_channel_queue_setup(struct vb2_queue *vq,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *nbuffe=
-rs,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *nplane=
-s,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int sizes[]=
-,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *alloc=
-_devs[])
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D vb2_get_dr=
-v_priv(vq);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (*nplanes)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return sizes[0] < chan->format.sizeimage ? -EINVAL : 0;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 *nplanes =3D 1;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 sizes[0] =3D chan->format.sizeimage;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 alloc_devs[0] =3D chan->vi->dev;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * allocate min 3 buffers in queue to a=
-void race between DMA
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * writes and userspace reads.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (*nbuffers < 3)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 *nbuffers =3D 3;
->>> First of all, don't check this here, instead set the struct=20
->>> vb2_queue field
->>> 'min_buffers_needed' to 3 instead.
->>>
->>> But the reason given for this check is peculiar: there should not be=20
->>> any
->>> race at all. Usually the reason for requiring a specific minimum=20
->>> number of
->>> buffers is that the DMA engine needs at least 2 buffers before it=20
->>> can start
->>> streaming: it can't give back a buffer to userspace (vb2_buffer_done())
->>> unless there is a second buffer it can start to capture to next. So=20
->>> for many
->>> DMA implementations you need a minimum of 2 buffers: two buffers for=20
->>> the
->>> DMA engine, one buffer being processed by userspace.
->>>
->>> If the driver is starved of buffers it will typically keep capturing to
->>> the last buffer until a new buffer is queued.
->>>
->>> In any case, once the driver releases a buffer via vb2_buffer_done()=20
->>> the
->>> buffer memory is no longer owned by the driver.
->>>
->>> To be precise, buffer ownership is as follows:
->>>
->>> userspace -> VIDIOC_QBUF -> vb2 -> buf_queue -> driver ->=20
->>> vb2_buffer_done() -> vb2 -> VIDIOC_DQBUF -> userspace
->>>
->>> (vb2 =3D=3D videobuf2 framework)
->>>
->>> Note that vb2 never touches the buffer memory.
->>>
->>> So if you get a race condition in this driver, then there is something
->>> strange going on. It looks like vb2_buffer_done() is called while=20
->>> DMA is
->>> still ongoing, or because the driver really needs to keep one buffer
->>> available at all times.
->>>
->>> Regards,
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
->>
->> Thanks Hans.
->>
->> On running v4l2-compliance streaming tests for longer run, I noticed=20
->> kernel reporting unable to write to read-only memory and with debugs=20
->> I observed when this error was reported, I see 2 buffers queued and=20
->> both using same address.
->>
->> for first buffer capture start thread initiates capture and wakes=20
->> done thread to wait for memory write ack and once its done buffer is=20
->> released to user space but I see upon buffer released to user space=20
->> immediate next buffer capture single shot gets issued (as soon as=20
->> single shot is issued frame capture data is written to memory by DMA)=20
->> and I see this kernel error of unable to write to read-only memory.
->>
->> This error happens rare and happens on long run and all the times of=20
->> repro's, I see when other thread releases buffer immediate I see=20
->> single shot gets issued as 2 buffers are queued up at the same time=20
->> with same DMA address.
->>
-> Just to be clear, I meant all the times when kernel reports error=20
-> unable to write to read-only memory, I see 2 buffers gets queued and=20
-> as the capture start thread and done thread are parallel and when=20
-> capture thread wakes done thread on receiving FS event, done thread=20
-> for waiting for memory write happens parallel to next frame capture=20
-> and I see while vb2_buffer_done happens in done thread next frame=20
-> single shot has been issues by capture start thread in parallel when=20
-> it hits this error.
+A multi-function device (MFD) driver supports core functions common to all
+devices, including device identification, firmware, interrupt handling and
+runtime power management. The MFD driver is also responsible for adding all
+product-specific sub-devices.
 
-For low latency, we use 2 threads one thread for capture and wait for FS=20
-and on receiving FS even wakes other done thread to wait for memory=20
-write to finish.
+Each device supports self-capacitive, Hall-effect, and (in some cases) mutual-
+inductive sensing. These functions represent keys or switches and are supported
+by an input driver that covers all five devices. An assortment of pwm and iio
+drivers supports device-specific functions including ambient light and angular
+position sensing.
 
-While other done thread waits for memory write to finish, capture thread=20
-can start capture for next frame and as soon as single shot is issued=20
-capture frame is written to memory and as this thread runs in parallel=20
-to done thread
+This series was tested using the following development hardware: IQS620AEV04,
+IQS621EV04, IQS622EV04 and IQS624/5EV04. A demonstration of the series can be
+seen at the following link: https://youtu.be/7hJZPeFT0aY
 
-there is a possibility vb2_buffer_done being called by=20
-kthread_capture_done while DMA is ongoing by kthread_capture_start and I=20
-observed same DMA address being used got both buffers that got queued at=20
-same time when it hits this error.
+Jeff LaBundy (7):
+  dt-bindings: Add bindings for Azoteq IQS620A/621/622/624/625
+  mfd: Add support for Azoteq IQS620A/621/622/624/625
+  input: keyboard: Add support for Azoteq IQS620A/621/622/624/625
+  pwm: Add support for Azoteq IQS620A PWM generator
+  iio: temperature: Add support for Azoteq IQS620AT temperature sensor
+  iio: light: Add support for Azoteq IQS621/622 ambient light sensors
+  iio: position: Add support for Azoteq IQS624/625 angle sensors
 
->> With using minimum 3 buffers, this issue doesnt happen at all from=20
->> almost 72 hours of testing.
->>
->>
->> Will try with setting vb2 queue field min_buffers_needed as 3 instead=20
->> of adding check in queue setup.
->>
->
->>
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +}
+ .../devicetree/bindings/input/iqs62x-keys.yaml     |  132 +++
+ Documentation/devicetree/bindings/mfd/iqs62x.yaml  |  179 ++++
+ .../devicetree/bindings/pwm/iqs620a-pwm.yaml       |   32 +
+ drivers/iio/Kconfig                                |    1 +
+ drivers/iio/Makefile                               |    1 +
+ drivers/iio/light/Kconfig                          |   10 +
+ drivers/iio/light/Makefile                         |    1 +
+ drivers/iio/light/iqs621-als.c                     |  617 ++++++++++++
+ drivers/iio/position/Kconfig                       |   19 +
+ drivers/iio/position/Makefile                      |    7 +
+ drivers/iio/position/iqs624-pos.c                  |  284 ++++++
+ drivers/iio/temperature/Kconfig                    |   10 +
+ drivers/iio/temperature/Makefile                   |    1 +
+ drivers/iio/temperature/iqs620at-temp.c            |   97 ++
+ drivers/input/keyboard/Kconfig                     |   10 +
+ drivers/input/keyboard/Makefile                    |    1 +
+ drivers/input/keyboard/iqs62x-keys.c               |  335 ++++++
+ drivers/mfd/Kconfig                                |   13 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/iqs62x.c                               | 1063 ++++++++++++++++++++
+ drivers/pwm/Kconfig                                |   10 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-iqs620a.c                          |  270 +++++
+ include/linux/mfd/iqs62x.h                         |  139 +++
+ 24 files changed, 3234 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/iqs62x-keys.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/iqs620a-pwm.yaml
+ create mode 100644 drivers/iio/light/iqs621-als.c
+ create mode 100644 drivers/iio/position/Kconfig
+ create mode 100644 drivers/iio/position/Makefile
+ create mode 100644 drivers/iio/position/iqs624-pos.c
+ create mode 100644 drivers/iio/temperature/iqs620at-temp.c
+ create mode 100644 drivers/input/keyboard/iqs62x-keys.c
+ create mode 100644 drivers/mfd/iqs62x.c
+ create mode 100644 drivers/pwm/pwm-iqs620a.c
+ create mode 100644 include/linux/mfd/iqs62x.h
+
+--
+2.7.4
+
