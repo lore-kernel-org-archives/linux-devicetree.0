@@ -2,45 +2,44 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6760C761A3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F599C7619F
 	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D3A22B48
+	by mail.kernel.org (Postfix) with ESMTP id 103DF22B48
 	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Qud9a2u/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="dVdTG6zJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgBPUVP (ORCPT
+        id S1728076AbgBPUVQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:21:15 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:36460 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgBPUVP (ORCPT
+        Sun, 16 Feb 2020 15:21:16 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:10689 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727936AbgBPUVP (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 15:21:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884472;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884470;
         s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=g+MhOb+4lKLgWM8gQAJn6gz4lNR5/1Wr0ePd7BKV9Oo=;
-        b=Qud9a2u/xxLq05WXr2qAoCVBWcEY51aDy+wZBgeq5WuiJF7uaerACd79RC2H7SzbuB
-        wRyez70NfICyNU0Ph4nSZD1NgD11aA8fiSRLs57iDfvq88PeKF9tKEu4NI3YRsZyHtaO
-        Bm822ecOwegcs0aTrXuJ5cNvI5dhtXuv6KUrgp8kFby2aTg93cz08I5AMR23sNPd8CtI
-        XUYZi9hr/ch03wkQt0PscPItBRZTDFzT9P5RwoFc0+gqn/OTYBE7pusXaGhHwerYkkHw
-        msfRtgK4Jjjp3YfZVuX1fSvn6E0u++GUYCqiumqabgtowR/1ND5q/dAV/aBwmwlMm6Ct
-        cVew==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=wgk32v4tt7EcXaiX5ehacLWrDHtd9hiWK/Gk33cRKsw=;
+        b=dVdTG6zJoiLOk7+qSIt0kgZPq3+KlA6Xqp5Y50/2Dfa43pAmNqKDA9Gov5zJd4onuZ
+        vwnSUXQI0zyYwD3BHFZj/3o73SCf7gw18kDHQfbZ82h31s1sqfHX4y9EePD4JhSyDulI
+        Wl1GpEbrsIj+bkUD6Svd1J7ark7bYwNL9zKQt0g6C6Ljaq+c4ZS8COszesU7X2eWB81+
+        oHIcY/25P4lsVxbegGETwIwApOioHxsta548ZsjG/hWPEDyRQTXJZbJPyt9hysGv0fK6
+        x8Rd9zlu+2AIa2Xg3SzhnNChCjIMK9xn2XWpZNmXiEJm1EmuipFcaTBpordGqJ2ldBv1
+        B9hQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0OoPPevMB"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1GKL4Jr3
+        with ESMTPSA id U06217w1GKL0Jr0
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 16 Feb 2020 21:21:04 +0100 (CET)
+        Sun, 16 Feb 2020 21:21:00 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Boddie <paul@boddie.org.uk>,
         Paul Cercueil <paul@crapouillou.net>,
@@ -55,13 +54,11 @@ To:     Paul Boddie <paul@boddie.org.uk>,
         Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Subject: [PATCH v3 3/6] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-Date:   Sun, 16 Feb 2020 21:20:57 +0100
-Message-Id: <36aa1e80153fbb29eeb56f65cac9e3672165f7b7.1581884459.git.hns@goldelico.com>
+        kernel@pyra-handheld.com
+Subject: [PATCH v3 0/6] MIPS: Fixes and improvements for CI20 board (JZ4780)
+Date:   Sun, 16 Feb 2020 21:20:54 +0100
+Message-Id: <cover.1581884459.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1581884459.git.hns@goldelico.com>
-References: <cover.1581884459.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -69,130 +66,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is a ACT8600 on the CI20 board and the bindings of the
-ACT8865 driver have changed without updating the CI20 device
-tree. Therefore the PMU can not be probed successfully and
-is running in power-on reset state.
+V3:
+* dropped "drm: ingenic-drm: add MODULE_DEVICE_TABLE" because it will be resubmitted
+  with a HDMI driver solution
+* added Cc: stable@vger.kernel.org where appropriate (suggested by Paul Cercueil <paul@crapouillou.net>)
+* squashed all other DTS and CONFIG changes into single patches (suggested by Paul Cercueil <paul@crapouillou.net>)
 
-Fix DT to match the latest act8865-regulator bindings.
+PATCH V2 2020-02-14 17:10:33:
+* dropped "net: davicom: dm9000: allow to pass MAC address through mac_addr module parameter"
+  from this series because it goes through the netdev tree
+  (suggested by Andrew Lunn <andrew@lunn.ch>)
+* added a "fixes:" for "MIPS: DTS: CI20: fix PMU definitions for ACT8600"
+  and "MIPS: DTS: CI20: fix interrupt for pcf8563 RTC"
+  (suggested by Andreas Kemnade <andreas@kemnade.info>)
+* "i2c: jz4780: silence log flood on txabrt" dropped because it is
+  replaced by a new version in v5.6 by Wolfram Sang <wsa@the-dreams.de>
 
-Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
-Cc: stable@vger.kernel.org
+PATCH V1 2020-02-11 22:41:43:
+This patch set provides several improvements for the CI20 board:
+
+* suppress warnings from i2c if device is not responding
+* make ingenic-drm found through DT
+* allow davicom dm9000 ethernet controller to use MAC address provided by U-Boot
+* fix #include in jz4780.dtsi
+* configure for loadable kernel modules
+* add DTS for IR sensor and SW1 button
+* configure so that LEDs, IR sensor, SW1 button have drivers
+* fix DTS for ACT8600 PMU and configure driver
+* fix interrupt of nxp,pcf8563
+
+There is another patch set in our queue to add HDMI support on top of this work.
+
+Signed-off-by: Paul Boddie <paul@boddie.org.uk>
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/mips/boot/dts/ingenic/ci20.dts | 48 ++++++++++++++++++++---------
- 1 file changed, 33 insertions(+), 15 deletions(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 59c104289ece..4f48bc16fb52 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -153,6 +153,8 @@
- 	pinctrl-0 = <&pins_uart4>;
- };
- 
-+#include <dt-bindings/regulator/active-semi,8865-regulator.h>
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -166,65 +168,81 @@
- 		reg = <0x5a>;
- 		status = "okay";
- 
-+/*
-+Optional input supply properties:
-+- for act8600:
-+  - vp1-supply: The input supply for DCDC_REG1
-+  - vp2-supply: The input supply for DCDC_REG2
-+  - vp3-supply: The input supply for DCDC_REG3
-+  - inl-supply: The input supply for LDO_REG5, LDO_REG6, LDO_REG7 and LDO_REG8
-+  SUDCDC_REG4, LDO_REG9 and LDO_REG10 do not have separate supplies.
-+*/
-+
- 		regulators {
- 			vddcore: SUDCDC1 {
--				regulator-name = "VDDCORE";
-+				regulator-name = "DCDC_REG1";
- 				regulator-min-microvolt = <1100000>;
- 				regulator-max-microvolt = <1100000>;
- 				regulator-always-on;
- 			};
- 			vddmem: SUDCDC2 {
--				regulator-name = "VDDMEM";
-+				regulator-name = "DCDC_REG2";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 			vcc_33: SUDCDC3 {
--				regulator-name = "VCC33";
-+				regulator-name = "DCDC_REG3";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 			vcc_50: SUDCDC4 {
--				regulator-name = "VCC50";
-+				regulator-name = "SUDCDC_REG4";
- 				regulator-min-microvolt = <5000000>;
- 				regulator-max-microvolt = <5000000>;
- 				regulator-always-on;
- 			};
- 			vcc_25: LDO_REG5 {
--				regulator-name = "VCC25";
-+				regulator-name = "LDO_REG5";
- 				regulator-min-microvolt = <2500000>;
- 				regulator-max-microvolt = <2500000>;
- 				regulator-always-on;
- 			};
- 			wifi_io: LDO_REG6 {
--				regulator-name = "WIFIIO";
-+				regulator-name = "LDO_REG6";
- 				regulator-min-microvolt = <2500000>;
- 				regulator-max-microvolt = <2500000>;
- 				regulator-always-on;
- 			};
- 			vcc_28: LDO_REG7 {
--				regulator-name = "VCC28";
-+				regulator-name = "LDO_REG7";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
- 				regulator-always-on;
- 			};
- 			vcc_15: LDO_REG8 {
--				regulator-name = "VCC15";
-+				regulator-name = "LDO_REG8";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
--			vcc_18: LDO_REG9 {
--				regulator-name = "VCC18";
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
-+			vrtc_18: LDO_REG9 {
-+				regulator-name = "LDO_REG9";
-+				/* Despite the datasheet stating 3.3V for REG9 and
-+				   driver expecting that, REG9 outputs 1.8V.
-+				   Likely the CI20 uses a chip variant.
-+				   Since it is a simple on/off LDO the exact values
-+				   do not matter.
-+				*/
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
- 			vcc_11: LDO_REG10 {
--				regulator-name = "VCC11";
--				regulator-min-microvolt = <1100000>;
--				regulator-max-microvolt = <1100000>;
-+				regulator-name = "LDO_REG10";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
- 				regulator-always-on;
- 			};
- 		};
+
+Alex Smith (1):
+  MIPS: DTS: CI20: add DT node for IR sensor
+
+H. Nikolaus Schaller (5):
+  MIPS: DTS: jz4780: add #includes for irq.h and gpio.h
+  MIPS: DTS: CI20: fix PMU definitions for ACT8600
+  MIPS: DTS: CI20: fix interrupt for pcf8563 RTC
+  MIPS: DTS: CI20: multiple DTS improvements
+  MIPS: CI20: defconfig: multiple improvements
+
+ arch/mips/boot/dts/ingenic/ci20.dts    | 71 ++++++++++++++++++++------
+ arch/mips/boot/dts/ingenic/jz4780.dtsi |  2 +
+ arch/mips/configs/ci20_defconfig       | 21 ++++++++
+ 3 files changed, 78 insertions(+), 16 deletions(-)
+
 -- 
 2.23.0
 
