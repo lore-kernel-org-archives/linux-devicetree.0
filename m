@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9387DC7619B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1119C76199
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5852D22B48
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818692086A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMH1yGMx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZ9WP5Cc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbgBPSPi (ORCPT
+        id S1726256AbgBPSPl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 13:15:38 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37803 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgBPSPi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 13:15:38 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q23so123110ljm.4
-        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 10:15:35 -0800 (PST)
+        Sun, 16 Feb 2020 13:15:41 -0500
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:34631 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgBPSPk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 13:15:40 -0500
+Received: by mail-lj1-f180.google.com with SMTP id x7so16227649ljc.1
+        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 10:15:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=z1FS8LRkofyBHE69m1Zyhg/WI9Rx8nKgyKT0srC+cRo=;
-        b=qMH1yGMxnCKf2wH9KEXgnVlplNDlwcNW8UjPMMuxLoMRJId7YEwuO5/GrebUE8S+FH
-         Sulh5RCJXkyD00QMCbqYPWO52rjCXUPi/jl9orH33edagfA6DAOTn6wsLYiG+XduCji8
-         aoNtZk0tDrzyzuS1+JsmMdhSlMHnmJoZ40KHbtmx2G1XznVZ6NG72oZKY3qnrK/j+PLE
-         HhpxIZNq2DUiFM+2jNwfATIABI8tQv7BOPLUFC5PlFcO02yjsWibyzk+dkYGk/OYTPr4
-         shSY3YmGo4zkHReFAz4+5tAvMM7P5mm1Sl5peLTFNwUPQBDmRLY+ucQPhoHzrsy3o6R1
-         zTxw==
+        bh=M576Y01Az48NWOqCNh5DN/YDcZWavtf35b6+dPcXGTk=;
+        b=gZ9WP5CcdrghC+ukDbXDAeh1kCxoRfVDDhtYvgZI5hpMLqbWi5zVdLOlsNBRnOStSP
+         mPtzcxssX4wN2peaZBX7GXQJoW2LZZumFy7biE+3WlucCAohrN41+5FlFlIQIOSNNJRA
+         r9hksG9/hz0XpoXGsRQEJ8TUHvdSKWya0lVAEUVyTOh4ZZ1+3Kqu4les5eK44yeTDN5x
+         vQsZyHcoZdOO7AGHHBOez8PyxivvNNbexGjIzo1KMpy59tRLs+ZxbyMMTkafvj+w/lwt
+         FAXLeiwSF3FFpWVDYvSAGjXsVE8SEey4DqegEtsOBRRhj1tIJqXiKvo/80XvJd5L4O5u
+         Q6IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=z1FS8LRkofyBHE69m1Zyhg/WI9Rx8nKgyKT0srC+cRo=;
-        b=H1tNyL/L4Gue6ZJaix1jdQ/1ERYqkW6R8eEACfOOHjE9XzNFrC9DzvJdXetUYmMcoz
-         /cku8jUczWoDDMRYGE214pVWLRBNunrqARKP4Owh8SwmDG48zAQyFLjqznyvGq3tKcOr
-         Co5jAB8Eye29iujVJhV/lH3oAcNKcR9qSc0iPP/8yW9RMWSpmtgHzIYjDKbMxRFfBXKL
-         /4u0BhrdDP2SCbeNcI6d+VG6ERavoAFyu36qBAtTwYpZOEQ4kTIetBKbpp9/sadvg27K
-         /6IR1vORzSKEL0ztit//zm20DgHafjqh5y+AVo9vbtXxmaUg38WvU3rhefPYo+FGbh3k
-         MYcQ==
-X-Gm-Message-State: APjAAAV/8tWS+WX02cNz3SROpW2dU1o1s9WvPFzjjW+aNdh37BZyPB7V
-        67DBXZiWur2CGmlpmag/mSQ=
-X-Google-Smtp-Source: APXvYqxJJ7oR4UI999iQrrb/Jue334NRNSViCmiMcgqZ+R5dLrf1D0klzF0tUR5OQPr7XEGmtlVYlw==
-X-Received: by 2002:a2e:9a04:: with SMTP id o4mr7953969lji.214.1581876934785;
-        Sun, 16 Feb 2020 10:15:34 -0800 (PST)
+        bh=M576Y01Az48NWOqCNh5DN/YDcZWavtf35b6+dPcXGTk=;
+        b=X4jef+YE7qjR/f5Y1W25eiS78lu9kXy6e21UXFz88J6G+9DN6AvvhGncQkR4hckwEE
+         ig51W4EvhKkxPMB3FePznwqwJcfLbYMZ871awGRj3j65YPHX9fV1IW2aHZ+qB6yjTXrL
+         vGmfLl4f1l74QSnk8m8wWnjxylrvMYLJ1uWmNjxFr+e2IpsQq1O9fMhWS9q8QFnzQhRP
+         QIsmqsw9eBdkVxa6SUdCSLnhyz4YRMQ7Oi/hA7e6YErw2bny8/rP5BMnfdx5HBZG5CGh
+         0869sFiSHCFBaOzP84cuN0rw37tbHGhAYx8cuGz3KPDIqdypo78bDHAwK3in10bQU9Fv
+         xv0w==
+X-Gm-Message-State: APjAAAUf4J5JXEShd5SSJ0tYRnuhdQP5v2QdgSDg9dRl/U3TpIZnZV2v
+        nNj3xxU7/W6GfK3i/ufzgsE=
+X-Google-Smtp-Source: APXvYqyDwVpMc2gasRlyFfrK1g7kFEUVRNpPpv3Evz79tUnzi3bdDHfsXOT+loxfVFDLyfIY2V+WxA==
+X-Received: by 2002:a2e:909a:: with SMTP id l26mr7450153ljg.209.1581876937673;
+        Sun, 16 Feb 2020 10:15:37 -0800 (PST)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id u15sm6157431lfl.87.2020.02.16.10.15.33
+        by smtp.gmail.com with ESMTPSA id u15sm6157431lfl.87.2020.02.16.10.15.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 10:15:33 -0800 (PST)
+        Sun, 16 Feb 2020 10:15:37 -0800 (PST)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
@@ -66,9 +66,9 @@ Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Steffen Trumtrar <s.trumtrar@pengutronix.de>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v3 1/5] dt-bindings: display: add panel-timing.yaml
-Date:   Sun, 16 Feb 2020 19:15:09 +0100
-Message-Id: <20200216181513.28109-2-sam@ravnborg.org>
+Subject: [PATCH v3 3/5] dt-bindings: display: convert panel-dpi to DT schema
+Date:   Sun, 16 Feb 2020 19:15:11 +0100
+Message-Id: <20200216181513.28109-4-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200216181513.28109-1-sam@ravnborg.org>
 References: <20200216181513.28109-1-sam@ravnborg.org>
@@ -79,301 +79,165 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add meta-schema variant of panel-timing and
-reference it from panel-common.yaml.
-
-Part of this came form other files with other
-licenses - original commits:
-
-cc3f414cf2e4 ("video: add of helper for display timings/videomode")
-86f46565dff3 ("dt-bindings: display: display-timing: Add property to configure sync drive edge")
-9cad9c95d7e8 ("Documentation: DocBook DRM framework documentation")
-
-The original authors acked the license change to:
-(GPL-2.0-only OR BSD-2-Clause)
+With panel-timing converted, now convert the single
+remaining .txt user in panel/ of panel-timing to DT schema.
 
 v2:
-  - Got OK from original authors for re-license
-    Huge thanks for the quick replies!
-  - Typo fixes (Oleksandr)
-  - Drop -array variant when not needed (Maxime)
-  - Replace oneOf:... with enum (Maxime)
-  - Drop type from clock-frequency (Rob)
-  - Drop "|" when not needed (Rob)
+  - Drop Thierry as maintainer, as this is not a general panel binding
+    and I have no acks.
+  - Drop requirement for a panel- specific binding - "panel-dpi" is enough
+  - Updated example
 
 v3:
-  - Added comment to acks that are only for the license change
-  - Add yaml document terminator "..."
-  - Updated description (removed reference to native-mode)
+  - added yaml document terminator "..."
+  - always require a specific binding - panel-dpi (based on feedback from Rob)
+  - use "power-supply" for the supply property, and made it mandatory
+    "power-supply" is the standard property for panels
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com> [license change]
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com> [license change]
-Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de> [license change]
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de> [license change]
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
 Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Maxime Ripard <mripard@kernel.org>
-Cc: devicetree@vger.kernel.org
 ---
- .../bindings/display/panel/panel-common.yaml  |   7 +-
- .../bindings/display/panel/panel-timing.yaml  | 227 ++++++++++++++++++
- 2 files changed, 230 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/panel-timing.yaml
+ .../bindings/display/panel/panel-dpi.txt      | 50 -------------
+ .../bindings/display/panel/panel-dpi.yaml     | 72 +++++++++++++++++++
+ 2 files changed, 72 insertions(+), 50 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-index ef8d8cdfcede..8070c439adbd 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-@@ -54,13 +54,12 @@ properties:
- 
-   # Display Timings
-   panel-timing:
--    type: object
-     description:
-       Most display panels are restricted to a single resolution and
-       require specific display timings. The panel-timing subnode expresses those
--      timings as specified in the timing subnode section of the display timing
--      bindings defined in
--      Documentation/devicetree/bindings/display/panel/display-timing.txt.
-+      timings.
-+    allOf:
-+      - $ref: panel-timing.yaml#
- 
-   # Connectivity
-   port:
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-timing.yaml b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+deleted file mode 100644
+index 6b203bc4d932..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-Generic MIPI DPI Panel
+-======================
+-
+-Required properties:
+-- compatible: "panel-dpi"
+-
+-Optional properties:
+-- label: a symbolic name for the panel
+-- enable-gpios: panel enable gpio
+-- reset-gpios: GPIO to control the RESET pin
+-- vcc-supply: phandle of regulator that will be used to enable power to the display
+-- backlight: phandle of the backlight device
+-
+-Required nodes:
+-- "panel-timing" containing video timings
+-  (Documentation/devicetree/bindings/display/panel/display-timing.txt)
+-- Video port for DPI input
+-
+-Example
+--------
+-
+-lcd0: display@0 {
+-        compatible = "samsung,lte430wq-f0c", "panel-dpi";
+-        label = "lcd";
+-
+-        backlight = <&backlight>;
+-
+-        port {
+-            lcd_in: endpoint {
+-                    remote-endpoint = <&dpi_out>;
+-            };
+-        };
+-
+-        panel-timing {
+-                clock-frequency = <9200000>;
+-                hactive = <480>;
+-                vactive = <272>;
+-                hfront-porch = <8>;
+-                hback-porch = <4>;
+-                hsync-len = <41>;
+-                vback-porch = <2>;
+-                vfront-porch = <4>;
+-                vsync-len = <10>;
+-
+-                hsync-active = <0>;
+-                vsync-active = <0>;
+-                de-active = <1>;
+-                pixelclk-active = <1>;
+-        };
+-};
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
 new file mode 100644
-index 000000000000..bd558ad7891f
+index 000000000000..40079fc24a63
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
-@@ -0,0 +1,227 @@
++++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
+@@ -0,0 +1,72 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/panel-timing.yaml#
++$id: http://devicetree.org/schemas/display/panel/panel-dpi.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: panel timing bindings
++title: Generic MIPI DPI Panel
 +
 +maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
 +  - Sam Ravnborg <sam@ravnborg.org>
 +
-+description: |
-+  There are different ways of describing the timing data of a panel. The
-+  devicetree representation corresponds to the one commonly found in datasheets
-+  for panels.
-+
-+  The parameters are defined as seen in the following illustration.
-+
-+  +----------+-------------------------------------+----------+-------+
-+  |          |        ^                            |          |       |
-+  |          |        |vback_porch                 |          |       |
-+  |          |        v                            |          |       |
-+  +----------#######################################----------+-------+
-+  |          #        ^                            #          |       |
-+  |          #        |                            #          |       |
-+  |  hback   #        |                            #  hfront  | hsync |
-+  |   porch  #        |       hactive              #  porch   |  len  |
-+  |<-------->#<-------+--------------------------->#<-------->|<----->|
-+  |          #        |                            #          |       |
-+  |          #        |vactive                     #          |       |
-+  |          #        |                            #          |       |
-+  |          #        v                            #          |       |
-+  +----------#######################################----------+-------+
-+  |          |        ^                            |          |       |
-+  |          |        |vfront_porch                |          |       |
-+  |          |        v                            |          |       |
-+  +----------+-------------------------------------+----------+-------+
-+  |          |        ^                            |          |       |
-+  |          |        |vsync_len                   |          |       |
-+  |          |        v                            |          |       |
-+  +----------+-------------------------------------+----------+-------+
-+
-+
-+  The following is the panel timings shown with time on the x-axis.
-+  This matches the timing diagrams often found in data sheets.
-+
-+              Active                 Front           Sync           Back
-+              Region                 Porch                          Porch
-+  <-----------------------><----------------><-------------><-------------->
-+    //////////////////////|
-+   ////////////////////// |
-+  //////////////////////  |..................               ................
-+                                             _______________
-+
-+  Timing can be specified either as a typical value or as a tuple
-+  of min, typ, max values.
++allOf:
++  - $ref: panel-common.yaml#
 +
 +properties:
++  compatible:
++    description:
++      Shall contain a panel specific compatible and "panel-dpi"
++      in that order.
++    items:
++      - {}
++      - const: panel-dpi
 +
-+  clock-frequency:
-+   description: Panel clock in Hz
-+
-+  hactive:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Horizontal panel resolution in pixels
-+
-+  vactive:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Vertical panel resolution in pixels
-+
-+  hfront-porch:
-+    description: Horizontal front porch panel timing
-+    oneOf:
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - maxItems: 1
-+          items:
-+            description: typical number of pixels
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        - minItems: 3
-+          maxItems: 3
-+          items:
-+            description: min, typ, max number of pixels
-+
-+  hback-porch:
-+    description: Horizontal back porch timing
-+    oneOf:
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - maxItems: 1
-+          items:
-+            description: typical number of pixels
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        - minItems: 3
-+          maxItems: 3
-+          items:
-+            description: min, typ, max number of pixels
-+
-+  hsync-len:
-+    description: Horizontal sync length panel timing
-+    oneOf:
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - maxItems: 1
-+          items:
-+            description: typical number of pixels
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        - minItems: 3
-+          maxItems: 3
-+          items:
-+            description: min, typ, max number of pixels
-+
-+  vfront-porch:
-+    description: Vertical front porch panel timing
-+    oneOf:
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - maxItems: 1
-+          items:
-+            description: typical number of lines
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        - minItems: 3
-+          maxItems: 3
-+          items:
-+            description: min, typ, max number of lines
-+
-+  vback-porch:
-+    description: Vertical back porch panel timing
-+    oneOf:
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - maxItems: 1
-+          items:
-+            description: typical number of lines
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        - minItems: 3
-+          maxItems: 3
-+          items:
-+            description: min, typ, max number of lines
-+
-+  vsync-len:
-+    description: Vertical sync length panel timing
-+    oneOf:
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - maxItems: 1
-+          items:
-+            description: typical number of lines
-+      - allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        - minItems: 3
-+          maxItems: 3
-+          items:
-+            description: min, typ, max number of lines
-+
-+  hsync-active:
-+    description: |
-+      Horizontal sync pulse.
-+      0 selects active low, 1 selects active high.
-+      If omitted then it is not used by the hardware
-+    enum: [0, 1]
-+
-+  vsync-active:
-+    description: |
-+      Vertical sync pulse.
-+      0 selects active low, 1 selects active high.
-+      If omitted then it is not used by the hardware
-+    enum: [0, 1]
-+
-+  de-active:
-+    description: |
-+      Data enable.
-+      0 selects active low, 1 selects active high.
-+      If omitted then it is not used by the hardware
-+    enum: [0, 1]
-+
-+  pixelclk-active:
-+    description: |
-+      Data driving on rising or falling edge.
-+      Use 0 to drive pixel data on falling edge and
-+      sample data on rising edge.
-+      Use 1 to drive pixel data on rising edge and
-+      sample data on falling edge
-+    enum: [0, 1]
-+
-+  syncclk-active:
-+    description: |
-+      Drive sync on rising or sample sync on falling edge.
-+      If not specified then the setup is as specified by pixelclk-active.
-+      Use 0 to drive sync on falling edge and
-+      sample sync on rising edge of pixel clock.
-+      Use 1 to drive sync on rising edge and
-+      sample sync on falling edge of pixel clock
-+    enum: [0, 1]
-+
-+  interlaced:
-+    type: boolean
-+    description: Enable interlaced mode
-+
-+  doublescan:
-+    type: boolean
-+    description: Enable double scan mode
-+
-+  doubleclk:
-+    type: boolean
-+    description: Enable double clock mode
++  backlight: true
++  enable-gpios: true
++  height-mm: true
++  label: true
++  panel-timing: true
++  port: true
++  power-supply: true
++  reset-gpios: true
++  width-mm: true
 +
 +required:
-+ - clock-frequency
-+ - hactive
-+ - vactive
-+ - hfront-porch
-+ - hback-porch
-+ - hsync-len
-+ - vfront-porch
-+ - vback-porch
-+ - vsync-len
++  - panel-timing
++  - power-supply
 +
 +additionalProperties: false
++
++examples:
++  - |
++    panel@0 {
++        compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
++        label = "osddisplay";
++        power-supply = <&vcc_supply>;
++
++        backlight = <&backlight>;
++
++        port {
++            lcd_in: endpoint {
++                remote-endpoint = <&dpi_out>;
++            };
++        };
++        panel-timing {
++            clock-frequency = <9200000>;
++            hactive = <800>;
++            vactive = <480>;
++            hfront-porch = <8>;
++            hback-porch = <4>;
++            hsync-len = <41>;
++            vback-porch = <2>;
++            vfront-porch = <4>;
++            vsync-len = <10>;
++
++            hsync-active = <0>;
++            vsync-active = <0>;
++            de-active = <1>;
++            pixelclk-active = <1>;
++        };
++    };
 +
 +...
 -- 
