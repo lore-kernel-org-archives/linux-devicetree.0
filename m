@@ -2,85 +2,85 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D47C76199
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 06:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D594DC2BA83
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 10:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ABB2086A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 06:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XM6MU3il"
+	by mail.kernel.org (Postfix) with ESMTP id B6A1322522
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 10:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgBPGRo (ORCPT
+        id S1726142AbgBPKEf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 01:17:44 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:32715 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725858AbgBPGRc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 01:17:32 -0500
-X-UUID: 170b37a9e81d49889acedff3c486d878-20200216
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PnaAJPfe8UDyZR006OQGPtqV2JRsmbV8fNWy8VRokME=;
-        b=XM6MU3illvDe5bPLhOpOVX1QoCU9Lfg7xrXnfwxPhJayfRGZSS3DpKRtp8XUyR5ZtwSSK5pZI1g1EV6097GcEneHlqfUOt2SFspEPvKH7nXXKRpcKvNmEoV4LPOv7f9SVymD4sblLZk59rjFvuhgHWZpc2uu1sRFtYDLSvLIjSM=;
-X-UUID: 170b37a9e81d49889acedff3c486d878-20200216
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <argus.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 13343661; Sun, 16 Feb 2020 14:17:28 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 16 Feb 2020 14:15:00 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 16 Feb 2020 14:17:17 +0800
-From:   Argus Lin <argus.lin@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Sun, 16 Feb 2020 05:04:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:52964 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbgBPKEf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Feb 2020 05:04:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E78030E;
+        Sun, 16 Feb 2020 02:04:34 -0800 (PST)
+Received: from ssg-dev-vb.kfn.arm.com (unknown [10.50.4.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 559553F68F;
+        Sun, 16 Feb 2020 02:04:30 -0800 (PST)
+From:   Hadar Gat <hadar.gat@arm.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-CC:     Chenglin Xu <chenglin.xu@mediatek.com>, <argus.lin@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <wsd_upstream@mediatek.com>, <henryc.chen@mediatek.com>,
-        <flora.fu@mediatek.com>, Chen Zhong <chen.zhong@mediatek.com>,
-        Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2 1/3] dt-bindings: pwrap: mediatek: add pwrap support for MT6779
-Date:   Sun, 16 Feb 2020 14:17:21 +0800
-Message-ID: <1581833843-4485-2-git-send-email-argus.lin@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1581833843-4485-1-git-send-email-argus.lin@mediatek.com>
-References: <1581833843-4485-1-git-send-email-argus.lin@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: E42B2A5851BA3347534F24890D19F31A2FEBC875C3FF1CB527B8A703235A94082000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Weili Qian <qianweili@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
+Subject: [PATCH v4 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+Date:   Sun, 16 Feb 2020 12:04:07 +0200
+Message-Id: <1581847450-22924-1-git-send-email-hadar.gat@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkIGJpbmRpbmcgZG9jdW1lbnQgb2YgcHdyYXAgZm9yIE1UNjc3OSBTb0NzLg0KDQpTaWduZWQt
-b2ZmLWJ5OiBBcmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQpBY2tlZC1ieTogUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0IHwgMSArDQogMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQppbmRleCA3YTMyNDA0Li5lY2FjMmJi
-IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRp
-YXRlay9wd3JhcC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b2MvbWVkaWF0ZWsvcHdyYXAudHh0DQpAQCAtMjAsNiArMjAsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0
-aWVzIGluIHB3cmFwIGRldmljZSBub2RlLg0KIC0gY29tcGF0aWJsZToNCiAJIm1lZGlhdGVrLG10
-MjcwMS1wd3JhcCIgZm9yIE1UMjcwMS83NjIzIFNvQ3MNCiAJIm1lZGlhdGVrLG10Njc2NS1wd3Jh
-cCIgZm9yIE1UNjc2NSBTb0NzDQorCSJtZWRpYXRlayxtdDY3NzktcHdyYXAiIGZvciBNVDY3Nzkg
-U29Dcw0KIAkibWVkaWF0ZWssbXQ2Nzk3LXB3cmFwIiBmb3IgTVQ2Nzk3IFNvQ3MNCiAJIm1lZGlh
-dGVrLG10NzYyMi1wd3JhcCIgZm9yIE1UNzYyMiBTb0NzDQogCSJtZWRpYXRlayxtdDgxMzUtcHdy
-YXAiIGZvciBNVDgxMzUgU29Dcw0KLS0NCjEuOC4xLjEuZGlydHkNCg==
+The Arm CryptoCell is a hardware security engine.
+This patch introduces driver for its TRNG (True Random Number Generator)
+engine.
+
+v4 changes: update arm-cctrng.yaml to conform with json-schema standard.
+
+v3 change: removed few unneeded "#ifdef CONFIG_PM" from the code.
+
+v2 changes: fixed 'make dt_bnding_check' errors.
+
+Hadar Gat (3):
+  dt-bindings: add device tree binding for Arm CryptoCell trng engine
+  hw_random: cctrng: introduce Arm CryptoCell driver
+  MAINTAINERS: add HG as cctrng maintainer
+
+ .../devicetree/bindings/rng/arm-cctrng.yaml        |  50 ++
+ MAINTAINERS                                        |   9 +
+ drivers/char/hw_random/Kconfig                     |  12 +
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/cctrng.c                    | 767 +++++++++++++++++++++
+ drivers/char/hw_random/cctrng.h                    |  69 ++
+ 6 files changed, 908 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+ create mode 100644 drivers/char/hw_random/cctrng.c
+ create mode 100644 drivers/char/hw_random/cctrng.h
+
+-- 
+2.7.4
 
