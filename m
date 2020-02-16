@@ -2,76 +2,162 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C1AC2BA83
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 12:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161FEC7619B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 13:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFA42086A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 12:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E373222B48
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 13:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="I00CfkrK"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iHPFy/hl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBPM0L (ORCPT
+        id S1728228AbgBPNMD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 07:26:11 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:44438 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbgBPM0K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 07:26:10 -0500
-Received: by mail-qv1-f67.google.com with SMTP id n8so6391180qvg.11
-        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 04:26:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VT1MCH4MKCO4J3DHnKFfEi79z1Rcq0/doyUc8eW1WIg=;
-        b=I00CfkrKUYn4kwX92cS4aOemYsVO0HeOkBlsnww/ARt0TyMdfV704tvXZVmr3y135v
-         7B7maPUxqjxk+NHzmqU66HaLmGnu+AXFTYRCRj45wg4EP6XkbcY38Oc5FVMyW4l3qXzA
-         IfU/ip8psn47Zfilc8NstPx42Upvfo/Js4+kT6liQSnLJU0xU+rlYrmuG/9mLtGtuS0z
-         xGF4IGVo+iQ1rYzKzgXKkeZ7W4vU07B8Xqs4IjtXSIB8sfMthR4J7LYBjh4UI1UA6Llq
-         8h3OBLZNTMoualUfMGR4K8xQF4T0pePBDInffZ60+bHGE+GpfDb8VX6vpgF0wMxifs2C
-         r6yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VT1MCH4MKCO4J3DHnKFfEi79z1Rcq0/doyUc8eW1WIg=;
-        b=ozjlP4lA22/pmFT08lx0XdrwyeVDVcOnP7n4dwp+yl0Uj7xedbwVRX4/1i4zxAsI8n
-         AoNhbTB1y/KnqaCTLe4ggS9zwdVw4Y0e9XLMI/TLMMxCCD4y2nGDybE3i2z5/OU0uzCi
-         XMCENUVT+BqXmfhC1k4quaXpk0J6ZMz9eyPq0knnc/mm/imDi92CRSSkqnudiruFUUbS
-         AFQiMX81CV5g4gwBWc0/TtKfFBzW8ONUfGdKgxXOa8pgjDrkUMDgPe3lEYxpMg2DBsN0
-         /DLwiKTgHEGQg6yy49kZTJY2aw4THQxZFb7r1xoGUkQkNoUlOfuu5nFwxWVKCnKVwzsH
-         VorQ==
-X-Gm-Message-State: APjAAAUnJFXxw2RUOSa1krvYRmMaH2oGxY4jWbYOqyUQNSm7tjM1uOV9
-        8f2G1fAMBi/2kzsVsJBPPFwysw==
-X-Google-Smtp-Source: APXvYqwsIZcqP8uoonoK8c9iwZkXabkXrwTYXi6aH0V8kn6Aef+nS0HXqu2sxB1kxJx6l9vufQT11g==
-X-Received: by 2002:a05:6214:1750:: with SMTP id dc16mr9131678qvb.47.1581855969601;
-        Sun, 16 Feb 2020 04:26:09 -0800 (PST)
-Received: from localhost.localdomain ([179.159.237.245])
-        by smtp.gmail.com with ESMTPSA id r6sm7011857qtm.63.2020.02.16.04.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 04:26:09 -0800 (PST)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        festevam@gmail.com, s.hauer@pengutronix.de,
-        linux-kernel@vger.kernel.org,
-        Alifer Moraes <alifer.wsdm@gmail.com>, marco.franchi@nxp.com,
-        shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: imx8mq-phanbell: Add support for ethernet
-Date:   Sun, 16 Feb 2020 09:26:03 -0300
-Message-Id: <20200216122603.8164-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200211134828.138-1-alifer.wsdm@gmail.com>
-References: <20200211134828.138-1-alifer.wsdm@gmail.com>
+        Sun, 16 Feb 2020 08:12:03 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:24575 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728220AbgBPNMD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Feb 2020 08:12:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581858722; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=A5ZI/g7WWcSZehWepKEyAPPOsuiaR/FmCfcQVi4vYPQ=; b=iHPFy/hlBBgewZ/ol6Z3sKwvIy+od3ZVIYlotcVpRKR8NXBsFt3LcnNSacdBQSBTQk356A43
+ nIkBkFBk/fvPZG3KgwrFnfIgIWmEFr7OiXiRe5M3NzCUrNMLyxiHBim9LduGor6LC0AaQWaP
+ nPqj56OkzH2qI5tzRrhtwW+PLls=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e493f9e.7f63ed18d5e0-smtp-out-n01;
+ Sun, 16 Feb 2020 13:11:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 370FDC4479C; Sun, 16 Feb 2020 13:11:58 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [103.140.231.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2E0AC43383;
+        Sun, 16 Feb 2020 13:11:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2E0AC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: Documentation for qcom,eud
+To:     Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, ckadabi@codeaurora.org,
+        tsoni@codeaurora.org, bryanh@codeaurora.org,
+        psodagud@codeaurora.org, rnayak@codeaurora.org,
+        satyap@codeaurora.org, pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-2-git-send-email-akdwived@codeaurora.org>
+ <9483dfa0-15ea-e9ed-79ee-3dcf97e98136@nexus-software.ie>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <4f19fe93-3af2-1050-4d80-ed568865d825@codeaurora.org>
+Date:   Sun, 16 Feb 2020 18:41:30 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <9483dfa0-15ea-e9ed-79ee-3dcf97e98136@nexus-software.ie>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tested on Coral Dev board.
+Thank you very much Bryan for your review comments, will be working on 
+your and other maintainers comment on this patchset and will be posting 
+new patchset soon.
+
+On 2/4/2020 8:21 AM, Bryan O'Donoghue wrote:
+> On 31/01/2020 04:43, Avaneesh Kumar Dwivedi wrote:
+>> Documentation for Embedded USB Debugger (EUD) device tree bindings.
+>>
+>> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+>> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+>> Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  | 43 
+>> ++++++++++++++++++++++
+>>   1 file changed, 43 insertions(+)
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt 
+>> b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>> new file mode 100644
+>> index 0000000..57476ce
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>> @@ -0,0 +1,43 @@
+>> +* Qualcomm Technologies Inc Embedded USB Debugger (EUD)
+>> +
+>> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
+>> +on chip to support the USB-based debug and trace capabilities.
+>
+> on chip to support USB-based debug and trace capabilities.
+OK
+>
+>> +
+>> +Required properties:
+>> +
+>> + - compatible:  Should be "qcom,msm-eud"
+>> + - interrupts:  Interrupt number
+>> + - reg: Should be address and size of EUD register space
+>> +
+>> +EUD notifies clients for VBUS attach/detach and charger enable/disable
+>> +events. The link between event consumer(i.e.USB controller for vbus
+> missing space
+> consumer (i.e.
+Ok
+>
+>> +attach/detach event) and EUD is established via a directed graph. EUD
+>> +act 
+> The EUD acts
+OK
+>
+>> as an output link and clients of EUD as input link of this directed
+>> +graph. Events flows through the directed graph only during debug mode.
+>
+> Probably this is a very obvious question but, you mean debug and trace 
+> events or do you mean VBUS/charger events?
+Directed graph is to show VBUS and charger events flow.
+>
+>> +
+>> +An example for EUD device node:
+>> +
+>> +    eud: qcom,msm-eud@88e0000 {
+>> +        compatible = "qcom,msm-eud";
+>> +        interrupts = <GIC_SPI 492 IRQ_TYPE_LEVEL_HIGH>;
+>> +        reg = <0x88e0000 0x4000>;
+>> +        usb_con: connector {
+>> +            compatible = "usb-c-connector";
+>> +            label = "USB-C";
+>> +            port {
+>> +                eud_usb_output: endpoint {
+>> +                    remote-endpoint = <&eud_usb3_input>;
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> +
+>> +An example for EUD client:
+>> +
+>> +    usb3 {
+>> +        port {
+>> +            eud_usb3_input: endpoint {
+>> +                remote-endpoint = <&eud_usb_output>;
+>> +            };
+>> +        };
+>> +    };
+>>
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
