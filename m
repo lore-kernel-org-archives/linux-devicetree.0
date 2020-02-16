@@ -2,111 +2,85 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB7CC7114E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 03:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66679C3B1BF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 06:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6986F20675
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 03:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36517227BF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 06:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdaEGu8U"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="C1kFXJgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgBPDLi (ORCPT
+        id S1725993AbgBPGOt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Feb 2020 22:11:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45318 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBPDLi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Feb 2020 22:11:38 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so7035721pfg.12
-        for <devicetree@vger.kernel.org>; Sat, 15 Feb 2020 19:11:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4IurElQdFvPC+/LWrawVEzBSutkHfaHW4YHKUExtECo=;
-        b=OdaEGu8UaT0nfCoYa8y0buTZsB+qFnCdan2qxyKbN9qOUts306Ll04w5KORGUFhhYb
-         FG8IcNMe+i9RpSjST6E2pFeqXa5uCWRFM/lu2poHLos1TZjLxBFBWbUPXWle4VEaly/c
-         zYCPeqgkEydJob7Adu/hD8l/1xP+E/814nAPV0oKr7MsVGkOgEGxiUv6fJcYKe4Whhls
-         bzWX4mahwN2Q7rxntgaT/zmSUa/ooDP2kMVK+p5SXQv7kxRCBuqgkpFqRBs4SJemGyCA
-         1c0bV5nXt7/fbdBXzu1UhfnG8lSs3IfJZQQsFzKwwhBid6Vpkmc/wU0/PaYuvplWJJvV
-         7ClA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4IurElQdFvPC+/LWrawVEzBSutkHfaHW4YHKUExtECo=;
-        b=saPD3ubtJHlUC+fld6XSLZZdczbD0aKZjIpGOhAFRouw1bVh7wrPJavc+YVD9+Kt2G
-         d/puDKFskAZKA2bGMy8zYp3/LsmOUbM12hBYdt9yrR5x8cBPOcDLVoA1NEZm8d9ce/cz
-         /LlFbFFvcNrSqYJey/OCWY6SCwcxtAwFdElcr1IukZrrK67tllgIqi1qDwBiP03iDDsM
-         qD/EwPDSHBDGdvF29/rgtHE4KiZZ3/c54s9Hy8g8P3IATkBM76PAli6enQJj1RH3wQDx
-         Ed38T2EQMmYvoxkgGbeLnH7urqR92ZW4gx+Gd0CilrQASXwORGcg7Ka2mpTVrIj44twB
-         aY7Q==
-X-Gm-Message-State: APjAAAXxCX/2px6eG/mehg61IkOyitfBqtJNNRltJYfjB5zOL5XsbRJ+
-        5dFDKig/sMrpYVGEPd3ouPk=
-X-Google-Smtp-Source: APXvYqze3MpvB4LMhxffD+xuPIz+yoZbmR97xDl9oWKB97jBUYfgnFBxfRykFvX0MmlOZ2+XTkPz7A==
-X-Received: by 2002:a63:7e5a:: with SMTP id o26mr11144285pgn.117.1581822697992;
-        Sat, 15 Feb 2020 19:11:37 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id 70sm11786274pgd.28.2020.02.15.19.11.36
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sat, 15 Feb 2020 19:11:37 -0800 (PST)
-From:   qiwuchen55@gmail.com
-To:     robh+dt@kernel.org, frowand.list@gmail.com
-Cc:     devicetree@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
-Subject: [PATCH] of: kobj: fix unreasonable pr_warn() in safe_name()
-Date:   Sun, 16 Feb 2020 11:11:33 +0800
-Message-Id: <1581822693-5308-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Sun, 16 Feb 2020 01:14:49 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:11255 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725951AbgBPGOt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 01:14:49 -0500
+X-UUID: 424e2d7138ff489e9839306fa86f7107-20200216
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=TbzTN9VDopWuQM9WqUfKWtNwI/MMB07r6MYptBp9CNE=;
+        b=C1kFXJgghN7biAXSh+10yiLQrMdaShPgpTtDpcS9xvEk4r2baIcfRweCDJw2rplEx6vTOacAhP6j1Y6k3OQexeBmC+TT7e3FdhmvG1USFirEQOkQBcsse8KErQ6Di9yPVJwNZ895uZpSNd/s9IQer3iFC6yWYxSChiqQevGufuw=;
+X-UUID: 424e2d7138ff489e9839306fa86f7107-20200216
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <argus.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 39784462; Sun, 16 Feb 2020 14:14:43 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 16 Feb 2020 14:13:52 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 16 Feb 2020 14:14:32 +0800
+From:   Argus Lin <argus.lin@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+CC:     Chenglin Xu <chenglin.xu@mediatek.com>, <argus.lin@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <wsd_upstream@mediatek.com>, <henryc.chen@mediatek.com>,
+        <flora.fu@mediatek.com>, Chen Zhong <chen.zhong@mediatek.com>,
+        Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v2 0/3] soc: mediatek: pwrap: add pwrap driver for MT6779 SoCs
+Date:   Sun, 16 Feb 2020 14:14:36 +0800
+Message-ID: <1581833679-4319-1-git-send-email-argus.lin@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
-
-safe_name() tries to find a non-existing name of kernfs_node
-by sysfs_get_dirent() no more than 16 times.
-
-There are three possible results when while loop breaks:
-1. i = 0, name = orig_name, name is safe to use.
-2. i > 0 && i < 16, name != orig_name, name is safe to use.
-3. i == 16, name != orig_name, name is unsafe to use.
-
-However, the original code consider 2nd result as unsafe with
-a unnecessary warning message by pr_warn(). This patch can fix
-the problem.
-
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
----
- drivers/of/kobj.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index c72eef9..b32cf55 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -52,11 +52,14 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
- 	}
- 
- 	if (name == orig_name) {
--		name = kstrdup(orig_name, GFP_KERNEL);
--	} else {
-+		name = kstrdup_const(orig_name, GFP_KERNEL);
-+		return name;
-+	}
-+
-+	if (i == 16)
- 		pr_warn("Duplicate name in %s, renamed to \"%s\"\n",
- 			kobject_name(kobj), name);
--	}
-+
- 	return name;
- }
- 
--- 
-1.9.1
+Y2hhbmdlcyBzaW5jZSB2MToNCjEuIE1vZGlmeSBwd3JhcF9tdDY3NzkgYXJiX2VuX2FsbCwgaW50
+X2VuX2FsbCwgYW5kIHdkdF9zcmMgdmFsdWUNCndoZW4gaW5pdGlhbGl6YXRpb24uDQoyLiBSZW1v
+dmUgUFdSQVBfV0RUX1VOSVQsIFBXUkFQX1dEVF9VTklULCBQV1JBUF9JTlRfRU4sIGFuZA0KUFdS
+QVBfQ0FQX0lOVDFfRU4gcmVnaXN0ZXJlZCB2YWx1ZSBjaGVjaywgd2Ugd2lsbCBpbml0aWFsaXpl
+IHRoZW0NCmFnYWluIGF0IGtlcm5lbCBsZXZlbC4NCg0KSGVyZSdzIHZlcnNpb24gMSBvZiB0aGUg
+cGF0Y2ggc2VyaWVzLCBpbmNsdWRlIDMgcGF0Y2hlczoNCjEuIEFkZCBjb21wYXRpYmxlIGZvciBN
+VDY3NzkgcHdyYXANCjIuIEFkZCBwd3JhcCBkcml2ZXIgZm9yIE1UNjc3OSBTb0NzLiBLZWVwIFBX
+UkFQX0hJUFJJT19BUkJfRU4sDQpQV1JBUF9XRFRfVU5JVCwgYW5kIFBXUkFQX1dEVF9TUkNfRU4g
+dmFsdWUgaWYgaXQgaGFzIGluaXRpYWxpemVkLg0KV2hlbiB3ZSBlbmFibGUgaW50ZXJydXB0IGZs
+YWcsIHJlYWQgY3VycmVudCB2YWx1ZSB0aGVuIGRvIGxvZ2ljYWwNCk9SIG9wZXJzaW9uIHdpdGgg
+d3JwLT5tYXN0ZXItPmludF9lbl9hbGwuDQozLiBBZGQgTVQ2MzU5IHN1cHBvcnQgZm9yIE1UNjc3
+OSBTb0NzLg0KDQpBcmd1cyBMaW4gKDMpOg0KICBkdC1iaW5kaW5nczogcHdyYXA6IG1lZGlhdGVr
+OiBhZGQgcHdyYXAgc3VwcG9ydCBmb3IgTVQ2Nzc5DQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBh
+ZGQgcHdyYXAgZHJpdmVyIGZvciBNVDY3NzkgU29Dcw0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDog
+YWRkIHN1cHBvcnQgZm9yIE1UNjM1OSBQTUlDDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b2MvbWVkaWF0ZWsvcHdyYXAudHh0ICAgICB8ICAgMSArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsv
+bXRrLXBtaWMtd3JhcC5jICAgICAgICAgICAgICAgfCAxMjggKysrKysrKysrKysrKysrKysrKysr
+DQogMiBmaWxlcyBjaGFuZ2VkLCAxMjkgaW5zZXJ0aW9ucygrKQ0KDQotLQ0KMS44LjEuMS5kaXJ0
+eQ0K
 
