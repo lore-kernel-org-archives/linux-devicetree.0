@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C842C2BA83
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9387DC7619B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB8520857
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5852D22B48
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 18:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwzR0Bkt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMH1yGMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgBPSPj (ORCPT
+        id S1726069AbgBPSPi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 13:15:39 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34629 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgBPSPj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 13:15:39 -0500
-Received: by mail-lf1-f68.google.com with SMTP id l18so10229544lfc.1
-        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 10:15:37 -0800 (PST)
+        Sun, 16 Feb 2020 13:15:38 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37803 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgBPSPi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 13:15:38 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q23so123110ljm.4
+        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 10:15:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+7ayXnkwev+SFNxHb0Bp6z7cfJ9St215RYzE1C6F3n8=;
-        b=ZwzR0BktA+kOj7Gg/XTiMTp52cqLa9DtchoT/tFEFhC5s7ZLYvdtcoPmDrbqr5Yd97
-         0uhFievCVyJdfOY3YqT8279zP2UvW/IoWzkWxWFUrgTraQwB4bzbhY8BdOJWrTUHl19e
-         xjXe8hbxusXJ2r2dA7fB4a5C2pMjYLq1YG/lF6yuVFVu+77A8q63FbXjSVZuuqUXSnwZ
-         JBPNMyuH2rccZksgS3Lex1QOUeRnKFcMqTyeov+tmAFR7LMKYxhUOzKNxzWu/G9d49VB
-         f+Gv9Ul5Jk2tBFAfR1flnGViq7jANsAS9j3beC196cFLdBHb2qclWC4ykHIkx8UnOfzI
-         EXjA==
+        bh=z1FS8LRkofyBHE69m1Zyhg/WI9Rx8nKgyKT0srC+cRo=;
+        b=qMH1yGMxnCKf2wH9KEXgnVlplNDlwcNW8UjPMMuxLoMRJId7YEwuO5/GrebUE8S+FH
+         Sulh5RCJXkyD00QMCbqYPWO52rjCXUPi/jl9orH33edagfA6DAOTn6wsLYiG+XduCji8
+         aoNtZk0tDrzyzuS1+JsmMdhSlMHnmJoZ40KHbtmx2G1XznVZ6NG72oZKY3qnrK/j+PLE
+         HhpxIZNq2DUiFM+2jNwfATIABI8tQv7BOPLUFC5PlFcO02yjsWibyzk+dkYGk/OYTPr4
+         shSY3YmGo4zkHReFAz4+5tAvMM7P5mm1Sl5peLTFNwUPQBDmRLY+ucQPhoHzrsy3o6R1
+         zTxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=+7ayXnkwev+SFNxHb0Bp6z7cfJ9St215RYzE1C6F3n8=;
-        b=fBmzBctUx0Nwnv5KsLpRoyCqBI0sJPVYC/cHFWi+GnophQUogRBKMbZT/IU79tUL9T
-         xVl76Blgjxjh+0iAdeuQ6d3RhrIh150sgkCcRRSmQLWwqjrPuADWpBy9LQ30YbVXBdjt
-         z9JdpmYdueCgNgndVyK7BFReJr3eiLTv9m8vVrtv3inON/Qrzk6qdGxFGoVXhyme2+Ol
-         nbbBEYwzaqiHuulpnCb4ZAGXlxXmiNBF8KE7UOydDl1/Ye+DDEGOzKd+Ckva71y+ONdd
-         V2JAVn88aev2+D9XHqPe53ws7o6VgpIaH2E8kOrPQIktJAb5+1ZS9K4lCLVADK9R3DKz
-         YjXg==
-X-Gm-Message-State: APjAAAUhAj90F9AAkPMRoJ27ge5awmK/U45GAG7rDsSC66fLjnp+W4ao
-        P+q459qMr6bqfacfUbSS5Fs=
-X-Google-Smtp-Source: APXvYqzL1+b+x21rvbeMnFV/oNrN+WzpABBWXdklqNbEc99a6L/B5TlC5j528MprmZOdlhLL20eJ6Q==
-X-Received: by 2002:a05:6512:203b:: with SMTP id s27mr6112810lfs.87.1581876936206;
-        Sun, 16 Feb 2020 10:15:36 -0800 (PST)
+        bh=z1FS8LRkofyBHE69m1Zyhg/WI9Rx8nKgyKT0srC+cRo=;
+        b=H1tNyL/L4Gue6ZJaix1jdQ/1ERYqkW6R8eEACfOOHjE9XzNFrC9DzvJdXetUYmMcoz
+         /cku8jUczWoDDMRYGE214pVWLRBNunrqARKP4Owh8SwmDG48zAQyFLjqznyvGq3tKcOr
+         Co5jAB8Eye29iujVJhV/lH3oAcNKcR9qSc0iPP/8yW9RMWSpmtgHzIYjDKbMxRFfBXKL
+         /4u0BhrdDP2SCbeNcI6d+VG6ERavoAFyu36qBAtTwYpZOEQ4kTIetBKbpp9/sadvg27K
+         /6IR1vORzSKEL0ztit//zm20DgHafjqh5y+AVo9vbtXxmaUg38WvU3rhefPYo+FGbh3k
+         MYcQ==
+X-Gm-Message-State: APjAAAV/8tWS+WX02cNz3SROpW2dU1o1s9WvPFzjjW+aNdh37BZyPB7V
+        67DBXZiWur2CGmlpmag/mSQ=
+X-Google-Smtp-Source: APXvYqxJJ7oR4UI999iQrrb/Jue334NRNSViCmiMcgqZ+R5dLrf1D0klzF0tUR5OQPr7XEGmtlVYlw==
+X-Received: by 2002:a2e:9a04:: with SMTP id o4mr7953969lji.214.1581876934785;
+        Sun, 16 Feb 2020 10:15:34 -0800 (PST)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id u15sm6157431lfl.87.2020.02.16.10.15.34
+        by smtp.gmail.com with ESMTPSA id u15sm6157431lfl.87.2020.02.16.10.15.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 10:15:35 -0800 (PST)
+        Sun, 16 Feb 2020 10:15:33 -0800 (PST)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
@@ -66,9 +66,9 @@ Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Steffen Trumtrar <s.trumtrar@pengutronix.de>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v3 2/5] dt-bindings: display: convert display-timings to DT schema
-Date:   Sun, 16 Feb 2020 19:15:10 +0100
-Message-Id: <20200216181513.28109-3-sam@ravnborg.org>
+Subject: [PATCH v3 1/5] dt-bindings: display: add panel-timing.yaml
+Date:   Sun, 16 Feb 2020 19:15:09 +0100
+Message-Id: <20200216181513.28109-2-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200216181513.28109-1-sam@ravnborg.org>
 References: <20200216181513.28109-1-sam@ravnborg.org>
@@ -79,266 +79,303 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add display-timings.yaml - that references panel-timings.yaml.
-display-timings.yaml will be used for display bindings
-when they are converted to meta-schema format.
+Add meta-schema variant of panel-timing and
+reference it from panel-common.yaml.
 
-For now the old display-timing.txt points to the new
-display-timings.yaml - and all users are left as-is.
+Part of this came form other files with other
+licenses - original commits:
+
+cc3f414cf2e4 ("video: add of helper for display timings/videomode")
+86f46565dff3 ("dt-bindings: display: display-timing: Add property to configure sync drive edge")
+9cad9c95d7e8 ("Documentation: DocBook DRM framework documentation")
+
+The original authors acked the license change to:
+(GPL-2.0-only OR BSD-2-Clause)
 
 v2:
-  - Updated native-mode description
+  - Got OK from original authors for re-license
+    Huge thanks for the quick replies!
+  - Typo fixes (Oleksandr)
+  - Drop -array variant when not needed (Maxime)
+  - Replace oneOf:... with enum (Maxime)
+  - Drop type from clock-frequency (Rob)
+  - Drop "|" when not needed (Rob)
 
 v3:
-  - Simpler "^timing" pattern (Rob)
-  - timing node is of type object (Rob)
-  - added display-timings to panel-common.yaml
-  - added yaml document terminator "..."
+  - Added comment to acks that are only for the license change
+  - Add yaml document terminator "..."
+  - Updated description (removed reference to native-mode)
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com> [license change]
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com> [license change]
+Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de> [license change]
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de> [license change]
 Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc: Maxime Ripard <mripard@kernel.org>
 Cc: devicetree@vger.kernel.org
 ---
- .../bindings/display/panel/display-timing.txt | 124 +-----------------
- .../display/panel/display-timings.yaml        |  77 +++++++++++
- .../bindings/display/panel/panel-common.yaml  |   8 ++
- 3 files changed, 86 insertions(+), 123 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/display-timings.yaml
+ .../bindings/display/panel/panel-common.yaml  |   7 +-
+ .../bindings/display/panel/panel-timing.yaml  | 227 ++++++++++++++++++
+ 2 files changed, 230 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/panel-timing.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/display-timing.txt b/Documentation/devicetree/bindings/display/panel/display-timing.txt
-index 78222ced1874..7f55ad4a40c4 100644
---- a/Documentation/devicetree/bindings/display/panel/display-timing.txt
-+++ b/Documentation/devicetree/bindings/display/panel/display-timing.txt
-@@ -1,123 +1 @@
--display-timing bindings
--=======================
--
--display-timings node
----------------------
--
--required properties:
-- - none
--
--optional properties:
-- - native-mode: The native mode for the display, in case multiple modes are
--		provided. When omitted, assume the first node is the native.
--
--timing subnode
----------------
--
--required properties:
-- - hactive, vactive: display resolution
-- - hfront-porch, hback-porch, hsync-len: horizontal display timing parameters
--   in pixels
--   vfront-porch, vback-porch, vsync-len: vertical display timing parameters in
--   lines
-- - clock-frequency: display clock in Hz
--
--optional properties:
-- - hsync-active: hsync pulse is active low/high/ignored
-- - vsync-active: vsync pulse is active low/high/ignored
-- - de-active: data-enable pulse is active low/high/ignored
-- - pixelclk-active: with
--			- active high = drive pixel data on rising edge/
--					sample data on falling edge
--			- active low  = drive pixel data on falling edge/
--					sample data on rising edge
--			- ignored     = ignored
-- - syncclk-active: with
--			- active high = drive sync on rising edge/
--					sample sync on falling edge of pixel
--					clock
--			- active low  = drive sync on falling edge/
--					sample sync on rising edge of pixel
--					clock
--			- omitted     = same configuration as pixelclk-active
-- - interlaced (bool): boolean to enable interlaced mode
-- - doublescan (bool): boolean to enable doublescan mode
-- - doubleclk (bool): boolean to enable doubleclock mode
--
--All the optional properties that are not bool follow the following logic:
--    <1>: high active
--    <0>: low active
--    omitted: not used on hardware
--
--There are different ways of describing the capabilities of a display. The
--devicetree representation corresponds to the one commonly found in datasheets
--for displays. If a display supports multiple signal timings, the native-mode
--can be specified.
--
--The parameters are defined as:
--
--  +----------+-------------------------------------+----------+-------+
--  |          |        ^                            |          |       |
--  |          |        |vback_porch                 |          |       |
--  |          |        v                            |          |       |
--  +----------#######################################----------+-------+
--  |          #        ^                            #          |       |
--  |          #        |                            #          |       |
--  |  hback   #        |                            #  hfront  | hsync |
--  |   porch  #        |       hactive              #  porch   |  len  |
--  |<-------->#<-------+--------------------------->#<-------->|<----->|
--  |          #        |                            #          |       |
--  |          #        |vactive                     #          |       |
--  |          #        |                            #          |       |
--  |          #        v                            #          |       |
--  +----------#######################################----------+-------+
--  |          |        ^                            |          |       |
--  |          |        |vfront_porch                |          |       |
--  |          |        v                            |          |       |
--  +----------+-------------------------------------+----------+-------+
--  |          |        ^                            |          |       |
--  |          |        |vsync_len                   |          |       |
--  |          |        v                            |          |       |
--  +----------+-------------------------------------+----------+-------+
--
--Note: In addition to being used as subnode(s) of display-timings, the timing
--      subnode may also be used on its own. This is appropriate if only one mode
--      need be conveyed. In this case, the node should be named 'panel-timing'.
--
--
--Example:
--
--	display-timings {
--		native-mode = <&timing0>;
--		timing0: 1080p24 {
--			/* 1920x1080p24 */
--			clock-frequency = <52000000>;
--			hactive = <1920>;
--			vactive = <1080>;
--			hfront-porch = <25>;
--			hback-porch = <25>;
--			hsync-len = <25>;
--			vback-porch = <2>;
--			vfront-porch = <2>;
--			vsync-len = <2>;
--			hsync-active = <1>;
--		};
--	};
--
--Every required property also supports the use of ranges, so the commonly used
--datasheet description with minimum, typical and maximum values can be used.
--
--Example:
--
--	timing1: timing {
--		/* 1920x1080p24 */
--		clock-frequency = <148500000>;
--		hactive = <1920>;
--		vactive = <1080>;
--		hsync-len = <0 44 60>;
--		hfront-porch = <80 88 95>;
--		hback-porch = <100 148 160>;
--		vfront-porch = <0 4 6>;
--		vback-porch = <0 36 50>;
--		vsync-len = <0 5 6>;
--	};
-+See display-timings.yaml in this directory.
-diff --git a/Documentation/devicetree/bindings/display/panel/display-timings.yaml b/Documentation/devicetree/bindings/display/panel/display-timings.yaml
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+index ef8d8cdfcede..8070c439adbd 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+@@ -54,13 +54,12 @@ properties:
+ 
+   # Display Timings
+   panel-timing:
+-    type: object
+     description:
+       Most display panels are restricted to a single resolution and
+       require specific display timings. The panel-timing subnode expresses those
+-      timings as specified in the timing subnode section of the display timing
+-      bindings defined in
+-      Documentation/devicetree/bindings/display/panel/display-timing.txt.
++      timings.
++    allOf:
++      - $ref: panel-timing.yaml#
+ 
+   # Connectivity
+   port:
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-timing.yaml b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
 new file mode 100644
-index 000000000000..c8c0c9cb0492
+index 000000000000..bd558ad7891f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/display-timings.yaml
-@@ -0,0 +1,77 @@
++++ b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
+@@ -0,0 +1,227 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/display-timings.yaml#
++$id: http://devicetree.org/schemas/display/panel/panel-timing.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: display timing bindings
++title: panel timing bindings
 +
 +maintainers:
 +  - Thierry Reding <thierry.reding@gmail.com>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 +  - Sam Ravnborg <sam@ravnborg.org>
 +
 +description: |
-+  A display panel may be able to handle several display timings,
-+  with different resolutions.
-+  The display-timings node makes it possible to specify the timing
-+  and to specify the timing that is native for the display.
++  There are different ways of describing the timing data of a panel. The
++  devicetree representation corresponds to the one commonly found in datasheets
++  for panels.
++
++  The parameters are defined as seen in the following illustration.
++
++  +----------+-------------------------------------+----------+-------+
++  |          |        ^                            |          |       |
++  |          |        |vback_porch                 |          |       |
++  |          |        v                            |          |       |
++  +----------#######################################----------+-------+
++  |          #        ^                            #          |       |
++  |          #        |                            #          |       |
++  |  hback   #        |                            #  hfront  | hsync |
++  |   porch  #        |       hactive              #  porch   |  len  |
++  |<-------->#<-------+--------------------------->#<-------->|<----->|
++  |          #        |                            #          |       |
++  |          #        |vactive                     #          |       |
++  |          #        |                            #          |       |
++  |          #        v                            #          |       |
++  +----------#######################################----------+-------+
++  |          |        ^                            |          |       |
++  |          |        |vfront_porch                |          |       |
++  |          |        v                            |          |       |
++  +----------+-------------------------------------+----------+-------+
++  |          |        ^                            |          |       |
++  |          |        |vsync_len                   |          |       |
++  |          |        v                            |          |       |
++  +----------+-------------------------------------+----------+-------+
++
++
++  The following is the panel timings shown with time on the x-axis.
++  This matches the timing diagrams often found in data sheets.
++
++              Active                 Front           Sync           Back
++              Region                 Porch                          Porch
++  <-----------------------><----------------><-------------><-------------->
++    //////////////////////|
++   ////////////////////// |
++  //////////////////////  |..................               ................
++                                             _______________
++
++  Timing can be specified either as a typical value or as a tuple
++  of min, typ, max values.
 +
 +properties:
-+  $nodename:
-+    const: display-timings
 +
-+  native-mode:
-+    $ref: /schemas/types.yaml#/definitions/phandle
++  clock-frequency:
++   description: Panel clock in Hz
++
++  hactive:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Horizontal panel resolution in pixels
++
++  vactive:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Vertical panel resolution in pixels
++
++  hfront-porch:
++    description: Horizontal front porch panel timing
++    oneOf:
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - maxItems: 1
++          items:
++            description: typical number of pixels
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32-array
++        - minItems: 3
++          maxItems: 3
++          items:
++            description: min, typ, max number of pixels
++
++  hback-porch:
++    description: Horizontal back porch timing
++    oneOf:
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - maxItems: 1
++          items:
++            description: typical number of pixels
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32-array
++        - minItems: 3
++          maxItems: 3
++          items:
++            description: min, typ, max number of pixels
++
++  hsync-len:
++    description: Horizontal sync length panel timing
++    oneOf:
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - maxItems: 1
++          items:
++            description: typical number of pixels
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32-array
++        - minItems: 3
++          maxItems: 3
++          items:
++            description: min, typ, max number of pixels
++
++  vfront-porch:
++    description: Vertical front porch panel timing
++    oneOf:
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - maxItems: 1
++          items:
++            description: typical number of lines
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32-array
++        - minItems: 3
++          maxItems: 3
++          items:
++            description: min, typ, max number of lines
++
++  vback-porch:
++    description: Vertical back porch panel timing
++    oneOf:
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - maxItems: 1
++          items:
++            description: typical number of lines
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32-array
++        - minItems: 3
++          maxItems: 3
++          items:
++            description: min, typ, max number of lines
++
++  vsync-len:
++    description: Vertical sync length panel timing
++    oneOf:
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - maxItems: 1
++          items:
++            description: typical number of lines
++      - allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32-array
++        - minItems: 3
++          maxItems: 3
++          items:
++            description: min, typ, max number of lines
++
++  hsync-active:
 +    description: |
-+      The default display timing is the one specified as native-mode.
-+      If no native-mode is specified then the first node is assumed the
-+      native mode.
++      Horizontal sync pulse.
++      0 selects active low, 1 selects active high.
++      If omitted then it is not used by the hardware
++    enum: [0, 1]
 +
-+patternProperties:
-+  "^timing":
-+    type: object
-+    allOf:
-+      - $ref: panel-timing.yaml#
++  vsync-active:
++    description: |
++      Vertical sync pulse.
++      0 selects active low, 1 selects active high.
++      If omitted then it is not used by the hardware
++    enum: [0, 1]
++
++  de-active:
++    description: |
++      Data enable.
++      0 selects active low, 1 selects active high.
++      If omitted then it is not used by the hardware
++    enum: [0, 1]
++
++  pixelclk-active:
++    description: |
++      Data driving on rising or falling edge.
++      Use 0 to drive pixel data on falling edge and
++      sample data on rising edge.
++      Use 1 to drive pixel data on rising edge and
++      sample data on falling edge
++    enum: [0, 1]
++
++  syncclk-active:
++    description: |
++      Drive sync on rising or sample sync on falling edge.
++      If not specified then the setup is as specified by pixelclk-active.
++      Use 0 to drive sync on falling edge and
++      sample sync on rising edge of pixel clock.
++      Use 1 to drive sync on rising edge and
++      sample sync on falling edge of pixel clock
++    enum: [0, 1]
++
++  interlaced:
++    type: boolean
++    description: Enable interlaced mode
++
++  doublescan:
++    type: boolean
++    description: Enable double scan mode
++
++  doubleclk:
++    type: boolean
++    description: Enable double clock mode
++
++required:
++ - clock-frequency
++ - hactive
++ - vactive
++ - hfront-porch
++ - hback-porch
++ - hsync-len
++ - vfront-porch
++ - vback-porch
++ - vsync-len
 +
 +additionalProperties: false
 +
-+examples:
-+  - |+
-+
-+    /*
-+     * Example that specifies panel timing using minimum, typical,
-+     * maximum values as commonly used in datasheet description.
-+     * timing1 is the native-mode.
-+     */
-+    display-timings {
-+        native-mode = <&timing1>;
-+        timing0 {
-+            /* 1920x1080p24 */
-+            clock-frequency = <148500000>;
-+            hactive = <1920>;
-+            vactive = <1080>;
-+            hsync-len = <0 44 60>;
-+            hfront-porch = <80 88 95>;
-+            hback-porch = <100 148 160>;
-+            vfront-porch = <0 4 6>;
-+            vback-porch = <0 36 50>;
-+            vsync-len = <0 5 6>;
-+        };
-+        timing1 {
-+            /* 1920x1080p24 */
-+            clock-frequency = <52000000>;
-+            hactive = <1920>;
-+            vactive = <1080>;
-+            hfront-porch = <25>;
-+            hback-porch = <25>;
-+            hsync-len = <0 25 25>;
-+            vback-porch = <2>;
-+            vfront-porch = <2>;
-+            vsync-len = <2>;
-+            hsync-active = <1>;
-+            pixelclk-active = <1>;
-+        };
-+    };
-+
 +...
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-index 8070c439adbd..ed051ba12084 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-@@ -61,6 +61,14 @@ properties:
-     allOf:
-       - $ref: panel-timing.yaml#
- 
-+  display-timings:
-+    description:
-+      Some display panels supports several resolutions with different timing.
-+      The display-timings bindings supports specifying several timings and
-+      optional specify which is the native mode.
-+    allOf:
-+      - $ref: display-timings.yaml#
-+
-   # Connectivity
-   port:
-     type: object
 -- 
 2.20.1
 
