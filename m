@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D444C76199
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4E9C7619F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CECA7208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E913B2084E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="eS2G6TKU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="OLlKxtd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgBPUVI (ORCPT
+        id S1728113AbgBPUVR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:21:08 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:8509 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgBPUVI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 15:21:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884466;
+        Sun, 16 Feb 2020 15:21:17 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.173]:15650 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727668AbgBPUVR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 15:21:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884474;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0lwRY9T/vQcOBJYlZ2p0ZLpMFPC/FqS0O8Fyu7RLxI4=;
-        b=eS2G6TKU296YQNZhwodX8gnsgXk5a0GH76x1PXHcptDc94cTINB8fw6mSru6FXYWYL
-        hIuZFAv3Qw6vc4KArCj2ATSTmZPVlpd/dWXMWsvmi9Dzrs2LfPuGl4X/NvSazUf9vIsG
-        JRg65PoM6rhYxkm1XJhrhwK7my0cwSL4YtBTMb/6tD/OeDGLcYQYXcMQIifizZTbBy+6
-        QCDUuWABxMLGmDW9dvfhxfeU+ufeiQ40EJ9NMEx2lFFz5pugokv+tv5vA9k8nJfege1Q
-        8Y88GLgUoUQx1ZEjlGbaRQ2GbSgzP2imVyYgGxlyPnO+aGEfVR3Wgf5jFbwhzAdhIw/2
-        qyfQ==
+        bh=om/S/5fPnXm4B/Lyee89SFLJZzKhh10fVwb75Bs/p+U=;
+        b=OLlKxtd5cQ7XbnF/ZBZunNwc6G7yRbox3FNWdbH1JHEbZwVmADXwKV63nrEN/IsObh
+        oxsTWKwsLKDvzPoo3uFIvZeOx249cCOIJrTatEAr0Ejm7/ywGmKMhDivGkto761fyppi
+        4DmlEGvcPemPeNCaS2oOQuE03/zP6wT4B45Dd54hv+1hjeC9SnoHpo90tBGgvATzgGOD
+        3QlqkAtIidMqHh6dik8o0ZOccf9cgtDzlj9eNohuJkBMxLjIrDSTmVSvWgarY8xktgC6
+        ApJPX+58daaC34u3hcWtF0Ubt1KnxnzkDxUgoGos9K9y4cJrHlzNDfr+3V5w90zA4hjC
+        ZkXg==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0OoPPevMB"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1GKL2Jr2
+        with ESMTPSA id U06217w1GKL5Jr5
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 16 Feb 2020 21:21:02 +0100 (CET)
+        Sun, 16 Feb 2020 21:21:05 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Boddie <paul@boddie.org.uk>,
         Paul Cercueil <paul@crapouillou.net>,
@@ -55,10 +55,10 @@ To:     Paul Boddie <paul@boddie.org.uk>,
         Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, Alex Smith <alex.smith@imgtec.com>
-Subject: [PATCH v3 2/6] MIPS: DTS: CI20: add DT node for IR sensor
-Date:   Sun, 16 Feb 2020 21:20:56 +0100
-Message-Id: <c18873d6502f2d69f4d02e7d615bd8012c0b0f3d.1581884459.git.hns@goldelico.com>
+        kernel@pyra-handheld.com
+Subject: [PATCH v3 5/6] MIPS: DTS: CI20: multiple DTS improvements
+Date:   Sun, 16 Feb 2020 21:20:59 +0100
+Message-Id: <01795b270ad025ffffbf80e115b3b2d138a20ffe.1581884459.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581884459.git.hns@goldelico.com>
 References: <cover.1581884459.git.hns@goldelico.com>
@@ -69,34 +69,62 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+a) add DT node for SW1 as Enter button
 
-The infrared sensor on the CI20 board is connected to a GPIO and can
-be operated by using the gpio-ir-recv driver. Add a DT node for the
-sensor to allow that driver to be used.
+The SW1 button can be used as a simple one-button keyboard
+and is connected to PD17.
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+Note: SW1 has a second meaning to change the boot sequence
+when pressed while powering on.
+
+b) give eth0_power a defined voltage.
+
+This is a 3.3V power switch (DVNET3.3V ).
+
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 37b93166bf22..59c104289ece 100644
+index 1ab55be707af..4bacefa2cfce 100644
 --- a/arch/mips/boot/dts/ingenic/ci20.dts
 +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -60,6 +60,11 @@
- 		enable-active-high;
+@@ -4,6 +4,7 @@
+ #include "jz4780.dtsi"
+ #include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	compatible = "img,ci20", "ingenic,jz4780";
+@@ -25,6 +26,17 @@
+ 		       0x30000000 0x30000000>;
  	};
  
-+	ir: ir-receiver {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		sw1 {
++			label = "ci20:sw1";
++			linux,code = <KEY_ENTER>;
++			gpios = <&gpd 17 GPIO_ACTIVE_HIGH>;
++			wakeup-source;
++		};
 +	};
 +
- 	wlan0_power: fixedregulator@1 {
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -56,6 +68,8 @@
+ 	eth0_power: fixedregulator@0 {
  		compatible = "regulator-fixed";
- 		regulator-name = "wlan0_power";
+ 		regulator-name = "eth0_power";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
+ 		enable-active-high;
+ 	};
 -- 
 2.23.0
 
