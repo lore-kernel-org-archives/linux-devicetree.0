@@ -2,169 +2,106 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E0C7619C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 16:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C36C2BA83
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 17:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33422086A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 16:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE99C24125
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 17:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nmcy0E9U";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GZhEBWLo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOWFF8mP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgBPQf6 (ORCPT
+        id S1728504AbgBPRe5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 11:35:58 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:43367 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728239AbgBPQf6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Feb 2020 11:35:58 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C45ED5966;
-        Sun, 16 Feb 2020 11:35:56 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Sun, 16 Feb 2020 11:35:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=SQA1PLeoVk+BW+GTPAF4AsP3llw
-        ambjLeI+Hxm8q8jY=; b=nmcy0E9UGTIhkYGrQYahCZthdxt5odOdVHcvXfHU+XE
-        NdCbXPiKGVLHk2RRmmiHwQMEklhsyOkc/47HVt/+/E2topOCBJERfsiny2lXLnvp
-        UDzmHt1g6J1Z4iilSqw69Q7e2Ku/UVbQQN/LtsbvNsFwW2Uiv/VoYuchgasnzsUn
-        z/0VXXoVIxtkI3CwMP15OPveLRplrhdO4ut43gD9H27xwAApjywQbabuhPb1QNnW
-        P+jRXfi83jrarJAHIjZiWk/zkdMCVnbhyBZhcJ3oP3BEEhB0z+CFuMUUXTUVo404
-        ihTIDZjS3Ib/0ng2aWvBg80i+TTvjq1jtjPiicVKoVg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SQA1PL
-        eoVk+BW+GTPAF4AsP3llwambjLeI+Hxm8q8jY=; b=GZhEBWLo/hc1Yy9zGMY7RI
-        3qIhXoV7Ggjjr6b/JovvJpd9a5rltQ7iwzSpwNsOzQIUdJpEnyeqVpcMpaBD0pvF
-        IyoP/unIXL6PcBglNdE0bZu+L7zptqzYaNibkKMImwE7KC1NZWGqZ+rXH4yW5n0l
-        /PLc8YaUYAGg/2FsEelBXp3uVoLK2evW/GJXhzQ4ffNTMzjayHzdXrvpleFklJyp
-        unySdOsE5b0MQYxyRq3MsZQ9cu3IVSFQIGFIBUXT0kh8ETqE5PP4cv81tTsMV7by
-        W5uG1rpIgEiiltxLrSyVxIbxl3K/IOMQcoW+8NKHQk0pWCyyUr4vq2OJ3v3Im7og
-        ==
-X-ME-Sender: <xms:bG9JXpqk52gGd1F_j4h6-vVKhPYSpg4pQP1HjUQiInJGnf_XpQTYrA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeeggdeludcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgv
-    gheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:bG9JXuSwcKY1qeLkTwBf8f3sdU9lOxSXwsGqCAwFT637D82o8df1Iw>
-    <xmx:bG9JXlvXMUGUkhSjXli6qZKkaNjJX-4o65eSHea4SbiOf5IvanjJWg>
-    <xmx:bG9JXmNnHqugDnOijxA1h5xBRJluRUnKRLWhjyjk3cTjFt29SsPrug>
-    <xmx:bG9JXq_vmNs6tYMHPHDaGEbCsvnTTO8kuzf64adAWBQ0P5NpUtrudQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1ADBB3060C28;
-        Sun, 16 Feb 2020 11:35:56 -0500 (EST)
-Date:   Sun, 16 Feb 2020 17:35:54 +0100
-From:   Greg KH <greg@kroah.com>
-To:     "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ckadabi@codeaurora.org, tsoni@codeaurora.org,
-        bryanh@codeaurora.org, psodagud@codeaurora.org,
-        rnayak@codeaurora.org, satyap@codeaurora.org,
-        pheragu@codeaurora.org
-Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
-Message-ID: <20200216163554.GA48157@kroah.com>
-References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
- <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
- <20200207100438.GA627905@kroah.com>
- <06d21fa5-0115-9478-5cf1-e710446f8311@codeaurora.org>
+        Sun, 16 Feb 2020 12:34:57 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44587 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728370AbgBPRe5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 12:34:57 -0500
+Received: by mail-pg1-f194.google.com with SMTP id g3so7666113pgs.11;
+        Sun, 16 Feb 2020 09:34:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UxaHOVEn7LlLsxvk22jYigXq5kYWEUT+TigdtVf+Dag=;
+        b=pOWFF8mP+uUa5RzOE5JdYiL2dsq+GZUQ/RCtEQwsOV8POFSR//vy64zKVTnvUjDVUO
+         BoVRxVhFDuJUa2pzViEnEmFalZPLkoYjqo6eVdIzl0cXFcukrFDy1D/DXJNsIy0a1mru
+         bo5hQwu9olFbkJKMyXoClmJv7n9CM1nXtjAMb5z/+u4BuTBon6z1s+94Ifcy4V1suKhi
+         AnL5PhIGKbzl/J2YkNTVN7u/WlErmPllrFwbLzJ8Ul8l52PHg6Ya/1scFAyBu8R8quQA
+         UNuY4XiRPVFc0EIhCMnsKT0czXWwhYV3HyUjm2kUd+qr/jxta02hLW+H2wsKAFOi0V28
+         Ve7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UxaHOVEn7LlLsxvk22jYigXq5kYWEUT+TigdtVf+Dag=;
+        b=IFjZBbMSi//4gl8mvcffHjDXpkkFobqozXVcjDZno7yromkjoru+NjpZOVTuTb2WE2
+         vJvGoBxidHhnkag2E5yU6FibodBSvaP3T3HELWMfJzv0h2UmRw90sRb+ypKW9IbEcNmM
+         ZISof2wCjEjHWAzgw1zxn1JgAex1OTK4L7eTFl+O78RIQLccT0jfqHUXOu/txnVXT3rL
+         0SEpS5x+IAPcjZuUTWK3KAl4/80pdZk68rQVEW+9gLpClxk4OZsSbMA1Wmx482wXx72b
+         Jrp1t3kHSjp3yxbw/9mViaojMRLax4hRncj1sKgNaCgOhmeZTlOAHwFkB6x0q4K17vg5
+         NM6A==
+X-Gm-Message-State: APjAAAU99r84sAQXoRbijac7Pim74N0oX8bpPAe+N2Z6pB4sUFCV2Vau
+        I7xRNXDq0hduYq+csK7Es54=
+X-Google-Smtp-Source: APXvYqzIF1eNE+9kSnylg1WQyiY6aJJsMIBumzSzxu/FK/ciU3XfRBQWJbl+oi3csP2R7aOw7licJw==
+X-Received: by 2002:aa7:874b:: with SMTP id g11mr13499452pfo.225.1581874495024;
+        Sun, 16 Feb 2020 09:34:55 -0800 (PST)
+Received: from localhost.localdomain ([103.51.74.127])
+        by smtp.gmail.com with ESMTPSA id a36sm14284724pga.32.2020.02.16.09.34.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2020 09:34:54 -0800 (PST)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCHv1 0/3] Odroid N2 failes to boot using upstream kernel using microSD card
+Date:   Sun, 16 Feb 2020 17:34:43 +0000
+Message-Id: <20200216173446.1823-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06d21fa5-0115-9478-5cf1-e710446f8311@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 09:52:19PM +0530, Dwivedi, Avaneesh Kumar (avani) wrote:
-> 
-> On 2/7/2020 3:34 PM, Greg KH wrote:
-> > On Fri, Jan 31, 2020 at 10:13:31AM +0530, Avaneesh Kumar Dwivedi wrote:
-> > > Add support for control peripheral of EUD (Embedded USB Debugger) to
-> > > listen to events such as USB attach/detach, charger enable/disable, pet
-> > > EUD to indicate software is functional. Reusing the platform device kobj,
-> > > sysfs entry 'enable' is created to enable or disable EUD.
-> > > 
-> > > Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
-> > > Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
-> > > Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-> > > ---
-> > >   Documentation/ABI/stable/sysfs-driver-msm-eud |   5 +
-> > >   drivers/soc/qcom/Kconfig                      |  12 +
-> > >   drivers/soc/qcom/Makefile                     |   1 +
-> > >   drivers/soc/qcom/eud.c                        | 329 ++++++++++++++++++++++++++
-> > >   4 files changed, 347 insertions(+)
-> > >   create mode 100644 Documentation/ABI/stable/sysfs-driver-msm-eud
-> > >   create mode 100644 drivers/soc/qcom/eud.c
-> > > 
-> > > diff --git a/Documentation/ABI/stable/sysfs-driver-msm-eud b/Documentation/ABI/stable/sysfs-driver-msm-eud
-> > > new file mode 100644
-> > > index 0000000..d96ae05
-> > > --- /dev/null
-> > > +++ b/Documentation/ABI/stable/sysfs-driver-msm-eud
-> > > @@ -0,0 +1,5 @@
-> > > +What:           /sys/bus/platform/drivers/msm-eud/enable
-> > > +Date:           Jan 2020
-> > > +Contact:        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-> > > +Description:    Enable/Disable use of eud device.
-> > What are valid values to be used here?
-> it should be bool variable relying on 0 or 1.
+We am trying to build the upstream u-boot and upstream kernel,
+but it fails to pass the initialization of PWM_MESON driver.
+So these patches help boot the kernel on microSD card.
 
-Then document it.
+Fix the clk driver help booting of the kernel.
+Any more suggestion or inputs are welcome.
 
-> > 
-> > > +Users:          User space debug application which intend to use EUD h/w block.
-> > > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> > > index d0a73e7..6b7c9d0 100644
-> > > --- a/drivers/soc/qcom/Kconfig
-> > > +++ b/drivers/soc/qcom/Kconfig
-> > > @@ -202,4 +202,16 @@ config QCOM_APR
-> > >   	  application processor and QDSP6. APR is
-> > >   	  used by audio driver to configure QDSP6
-> > >   	  ASM, ADM and AFE modules.
-> > > +
-> > > +config QCOM_EUD
-> > > +       tristate "QTI Embedded USB Debugger (EUD)"
-> > > +       depends on ARCH_QCOM
-> > Why not let everyone test build this?
-> EUD is Qualcomm IP, shall not it be associated with ARCH_QCOM?
+Changes since RFCv1
+[0] https://lore.kernel.org/linux-amlogic/20191007131649.1768-1-linux.amoon@gmail.com/
+drop some patches and fix the clk driver as suggested by Neil.
 
-No, why can't everyone buid it for testing?  What about when I want to
-build a generic arm64 kernel to run on multiple SoCs?
+-Anand
 
-Do not put dependancies in here that you really do not have.  There's no
-reason for this to be limited to that one chip, right?  And if you allow
-others to build the code, you will get proper bug reports when things
-break, and others will fix them, which is what you want.
+Anand Moon (3):
+  arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator
+    to FLASH_VDD
+  arm64: dts: meson: Add missing regulator linked to VCCV5 regulator to
+    VDDIO_C/TF_IO
+  clk: meson: g12a: set cpu clock divider flags too CLK_IS_CRITICAL
 
-I think the ARCH_RANDOM_SOC_NAME is totally broken and needs to be, at
-most, just an arch-specific thing, if even that.
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 6 ++++++
+ drivers/clk/meson/g12a.c                             | 3 ++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-Look at almost all other kernel drivers, they do not have those types of
-dependancies.
+-- 
+2.25.0
 
-> > > +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> > > +	if (!chip)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	chip->dev = &pdev->dev;
-> > No reference counting???
-> you mean get/put_device?
-
-yes.
-
-thanks,
-
-greg k-h
