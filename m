@@ -2,149 +2,281 @@ Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B149BC33FA2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002A4C33FA1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3D022522
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4393208C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 20:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Mp+eYrDv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o3jerznX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbgBPUVL (ORCPT
+        id S1728209AbgBPUV6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:21:11 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:30257 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgBPUVL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 15:21:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884468;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=dOonmpmRBGw9AJdjMOawfKlXYNxdn0SnFz/txP/bL+s=;
-        b=Mp+eYrDvLEaHHTBpkg5rNFZkAv3nwp+ADZ+6ADSbj7MrIjpH983vPPdNtphJn5QBM6
-        iMeXAlaCDW+tOlPrNqgGN1AQQ/pLpbAgcmVLp7BCa4cTvSnCCQCUgF9l/lKbpAsNPtwx
-        g89OBFfcjccU1WrAPFj/hzgRXvzY7zJ/vsvN27U6e5Cpqqlht/ACBFtFG80SXEZsmkKX
-        RDrciwSn9VHvid9ky0NDLjYIXTHKtzVcnmtjqnJjrXVcrOh1RTjomjrqpnwHeld8KvHY
-        ablKAzrMnDOHIKCAqCeg445GMQEN/htO0voPup2/txv0bUuFFqJLd+f6JQ6KkqpK4QVA
-        9QVQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0OoPPevMB"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1GKL6Jr6
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sun, 16 Feb 2020 21:21:06 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Boddie <paul@boddie.org.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v3 6/6] MIPS: CI20: defconfig: multiple improvements
-Date:   Sun, 16 Feb 2020 21:21:00 +0100
-Message-Id: <aa7259fbcf0f89ec4ab0639ee67fc03d1c492829.1581884459.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1581884459.git.hns@goldelico.com>
-References: <cover.1581884459.git.hns@goldelico.com>
+        Sun, 16 Feb 2020 15:21:58 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14558 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgBPUV6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 15:21:58 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e49a4200000>; Sun, 16 Feb 2020 12:20:48 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 16 Feb 2020 12:21:57 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 16 Feb 2020 12:21:57 -0800
+Received: from [10.2.163.245] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 16 Feb
+ 2020 20:21:56 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <30e417ba-84e1-63d2-de74-22cfe859bddb@xs4all.nl>
+ <920b4276-b2ca-646c-a21b-ca0b9bacf471@nvidia.com>
+ <6bb124db-681c-55c1-e328-6e1f766a8bb3@nvidia.com>
+Message-ID: <0f84d37c-105f-8de6-c922-186d2f9ea156@nvidia.com>
+Date:   Sun, 16 Feb 2020 12:22:03 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <6bb124db-681c-55c1-e328-6e1f766a8bb3@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581884448; bh=jZ5L2TNSpFF5Qbx5vfyoBsHsU3zI5lpu8LpfMXV6+J8=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=o3jerznXyvPBVIHCjVKnTQxyOClPaQY47npfRrIA4cl3zFtTXSryjY0Q4R20Pu41g
+         tV7AHTPzgcZQHO8s78N/jMcKeza+65+Yu5JT5vg5tca2jQ8ekiz3DR4dW5dDpzsew4
+         BdHeOtoytJASQVc2Nzb3FYjXEKH+h/o0bx90Fs+bmirIa6drKCdedkb7wuz/UWFSoM
+         Hb9mnbZkxBFZ6XAhh2dbV3wzUAvKQ7u3fckn+JZG0LKs1yZR9MYqlucMWHrefoFVvr
+         yD4y4mHumx1rnANn73SDtal1FIj/jDrKZLdY5AsIeiYymieMJEEdlYSC2GbUtucPYy
+         zM6oczqcCU2cg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-a) configure for supporting modules
 
-Not all drivers need to be compiled into the kernel.
-Support building and loading of kernel modules.
+On 2/16/20 12:11 PM, Sowjanya Komatineni wrote:
+>
+> On 2/16/20 11:54 AM, Sowjanya Komatineni wrote:
+>>
+>> On 2/16/20 3:03 AM, Hans Verkuil wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On 2/14/20 7:23 PM, Sowjanya Komatineni wrote:
+>>>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>>>> which can support up to 6 MIPI CSI camera sensors.
+>>>>
+>>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>>>> capture from an external camera sensor connected to CSI or from
+>>>> built-in test pattern generator.
+>>>>
+>>>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>>>
+>>>> This patch adds a V4L2 media controller and capture driver support
+>>>> for Tegra210 built-in CSI to VI test pattern generator.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>> =C2=A0 drivers/staging/media/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 2 +
+>>>> =C2=A0 drivers/staging/media/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 1 +
+>>>> =C2=A0 drivers/staging/media/tegra/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 10 +
+>>>> =C2=A0 drivers/staging/media/tegra/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 8 +
+>>>> =C2=A0 drivers/staging/media/tegra/TODO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 10 +
+>>>> =C2=A0 drivers/staging/media/tegra/tegra-common.h |=C2=A0 239 +++++++
+>>>> =C2=A0 drivers/staging/media/tegra/tegra-csi.c=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 374 ++++++++++
+>>>> =C2=A0 drivers/staging/media/tegra/tegra-csi.h=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 115 ++++
+>>>> =C2=A0 drivers/staging/media/tegra/tegra-vi.c=C2=A0=C2=A0=C2=A0=C2=A0 =
+| 1019=20
+>>>> ++++++++++++++++++++++++++++
+>>>> =C2=A0 drivers/staging/media/tegra/tegra-vi.h=C2=A0=C2=A0=C2=A0=C2=A0 =
+|=C2=A0=C2=A0 79 +++
+>>>> =C2=A0 drivers/staging/media/tegra/tegra-video.c=C2=A0 |=C2=A0 118 +++=
++
+>>>> =C2=A0 drivers/staging/media/tegra/tegra-video.h=C2=A0 |=C2=A0=C2=A0 3=
+2 +
+>>>> =C2=A0 drivers/staging/media/tegra/tegra210.c=C2=A0=C2=A0=C2=A0=C2=A0 =
+|=C2=A0 767=20
+>>>> +++++++++++++++++++++
+>>>> =C2=A0 drivers/staging/media/tegra/tegra210.h=C2=A0=C2=A0=C2=A0=C2=A0 =
+|=C2=A0 190 ++++++
+>>>> =C2=A0 14 files changed, 2964 insertions(+)
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/Kconfig
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/Makefile
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/TODO
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-common.h
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-csi.h
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-video.c
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-video.h
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra210.c
+>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra210.h
+>>>>
+>>> <snip>
+>>>
+>>>> +/*
+>>>> + * videobuf2 queue operations
+>>>> + */
+>>>> +static int tegra_channel_queue_setup(struct vb2_queue *vq,
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *nbuffe=
+rs,
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *nplane=
+s,
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int sizes[]=
+,
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *alloc=
+_devs[])
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D vb2_get_dr=
+v_priv(vq);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (*nplanes)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return sizes[0] < chan->format.sizeimage ? -EINVAL : 0;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 *nplanes =3D 1;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 sizes[0] =3D chan->format.sizeimage;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 alloc_devs[0] =3D chan->vi->dev;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * allocate min 3 buffers in queue to a=
+void race between DMA
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * writes and userspace reads.
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (*nbuffers < 3)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 *nbuffers =3D 3;
+>>> First of all, don't check this here, instead set the struct=20
+>>> vb2_queue field
+>>> 'min_buffers_needed' to 3 instead.
+>>>
+>>> But the reason given for this check is peculiar: there should not be=20
+>>> any
+>>> race at all. Usually the reason for requiring a specific minimum=20
+>>> number of
+>>> buffers is that the DMA engine needs at least 2 buffers before it=20
+>>> can start
+>>> streaming: it can't give back a buffer to userspace (vb2_buffer_done())
+>>> unless there is a second buffer it can start to capture to next. So=20
+>>> for many
+>>> DMA implementations you need a minimum of 2 buffers: two buffers for=20
+>>> the
+>>> DMA engine, one buffer being processed by userspace.
+>>>
+>>> If the driver is starved of buffers it will typically keep capturing to
+>>> the last buffer until a new buffer is queued.
+>>>
+>>> In any case, once the driver releases a buffer via vb2_buffer_done()=20
+>>> the
+>>> buffer memory is no longer owned by the driver.
+>>>
+>>> To be precise, buffer ownership is as follows:
+>>>
+>>> userspace -> VIDIOC_QBUF -> vb2 -> buf_queue -> driver ->=20
+>>> vb2_buffer_done() -> vb2 -> VIDIOC_DQBUF -> userspace
+>>>
+>>> (vb2 =3D=3D videobuf2 framework)
+>>>
+>>> Note that vb2 never touches the buffer memory.
+>>>
+>>> So if you get a race condition in this driver, then there is something
+>>> strange going on. It looks like vb2_buffer_done() is called while=20
+>>> DMA is
+>>> still ongoing, or because the driver really needs to keep one buffer
+>>> available at all times.
+>>>
+>>> Regards,
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
+>>
+>> Thanks Hans.
+>>
+>> On running v4l2-compliance streaming tests for longer run, I noticed=20
+>> kernel reporting unable to write to read-only memory and with debugs=20
+>> I observed when this error was reported, I see 2 buffers queued and=20
+>> both using same address.
+>>
+>> for first buffer capture start thread initiates capture and wakes=20
+>> done thread to wait for memory write ack and once its done buffer is=20
+>> released to user space but I see upon buffer released to user space=20
+>> immediate next buffer capture single shot gets issued (as soon as=20
+>> single shot is issued frame capture data is written to memory by DMA)=20
+>> and I see this kernel error of unable to write to read-only memory.
+>>
+>> This error happens rare and happens on long run and all the times of=20
+>> repro's, I see when other thread releases buffer immediate I see=20
+>> single shot gets issued as 2 buffers are queued up at the same time=20
+>> with same DMA address.
+>>
+> Just to be clear, I meant all the times when kernel reports error=20
+> unable to write to read-only memory, I see 2 buffers gets queued and=20
+> as the capture start thread and done thread are parallel and when=20
+> capture thread wakes done thread on receiving FS event, done thread=20
+> for waiting for memory write happens parallel to next frame capture=20
+> and I see while vb2_buffer_done happens in done thread next frame=20
+> single shot has been issues by capture start thread in parallel when=20
+> it hits this error.
 
-b) compile leds-gpio driver into the kernel and configure for LED triggers
+For low latency, we use 2 threads one thread for capture and wait for FS=20
+and on receiving FS even wakes other done thread to wait for memory=20
+write to finish.
 
-DTS has been augmented to add some gpio-leds. We need the leds-gpio driver
-and enable the triggers.
+While other done thread waits for memory write to finish, capture thread=20
+can start capture for next frame and as soon as single shot is issued=20
+capture frame is written to memory and as this thread runs in parallel=20
+to done thread
 
-c) configure CONFIG_REGULATOR_ACT8865 for PMU
+there is a possibility vb2_buffer_done being called by=20
+kthread_capture_done while DMA is ongoing by kthread_capture_start and I=20
+observed same DMA address being used got both buffers that got queued at=20
+same time when it hits this error.
 
-The PMU on the CI20 board is an ACT8600 using the ACT8865 driver.
-Since it is not compiled, the PMU and the CI20 board is running in
-power-on reset state of the PMU.
-
-d) compile gpio-ir driver
-
-The CI20 board has a gpio based IR receiver.
-
-e) configure for CONFIG_KEYBOARD_GPIO=m
-
-The SW1 button is hooked up to send input events.
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/mips/configs/ci20_defconfig | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index be41df2a81fb..0db0088bbc1c 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -1,4 +1,5 @@
- # CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_MODULES=y
- CONFIG_KERNEL_XZ=y
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-@@ -88,12 +89,14 @@ CONFIG_I2C_JZ4780=y
- CONFIG_SPI=y
- CONFIG_SPI_GPIO=y
- CONFIG_GPIO_SYSFS=y
-+CONFIG_KEYBOARD_GPIO=m
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
- CONFIG_JZ4740_WDT=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_DEBUG=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
-+CONFIG_REGULATOR_ACT8865=y
- # CONFIG_VGA_CONSOLE is not set
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
-@@ -166,3 +169,21 @@ CONFIG_STACKTRACE=y
- # CONFIG_FTRACE is not set
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon console=ttyS4,115200 clk_ignore_unused"
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_TRIGGERS=y
-+CONFIG_LEDS_TRIGGER_MTD=y
-+CONFIG_LEDS_TRIGGER_TIMER=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-+CONFIG_LEDS_TRIGGER_BACKLIGHT=m
-+CONFIG_LEDS_TRIGGER_CPU=y
-+CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
-+CONFIG_LEDS_TRIGGER_TRANSIENT=y
-+CONFIG_LEDS_TRIGGER_CAMERA=m
-+CONFIG_LIRC=y
-+CONFIG_MEDIA_SUPPORT=m
-+CONFIG_RC_DEVICES=y
-+CONFIG_IR_GPIO_CIR=m
-+CONFIG_IR_GPIO_TX=m
--- 
-2.23.0
-
+>> With using minimum 3 buffers, this issue doesnt happen at all from=20
+>> almost 72 hours of testing.
+>>
+>>
+>> Will try with setting vb2 queue field min_buffers_needed as 3 instead=20
+>> of adding check in queue setup.
+>>
+>
+>>
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>> +}
