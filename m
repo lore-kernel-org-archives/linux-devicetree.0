@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ECCC7619B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D9AC7619E
 	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB0A207FD
+	by mail.kernel.org (Postfix) with ESMTP id CBC08206F4
 	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="JsdZLFt3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GJNaWC3w"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="nQN89O1n";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NWebf0hC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbgBQGon (ORCPT
+        id S1726865AbgBQGm4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:44:43 -0500
+        Mon, 17 Feb 2020 01:42:56 -0500
 Received: from new2-smtp.messagingengine.com ([66.111.4.224]:38951 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726866AbgBQGm4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726823AbgBQGmz (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:42:56 -0500
+        Mon, 17 Feb 2020 01:42:55 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 456AE546D;
-        Mon, 17 Feb 2020 01:42:56 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 58674539F;
+        Mon, 17 Feb 2020 01:42:54 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:42:56 -0500
+  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:42:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=zutLwkCFJwr4H
-        OIeiYIfzlC7l/v47tnp9l6lYRGMDUc=; b=JsdZLFt3JUJzmrJ0rn6xzKBgrItg1
-        gNspE5jw1f6wyXMVIHyaZ9OVQpeZjPfc2Je6iUi+G63uZMa7rCfk9q7OOQ0SK9tt
-        Gti261rG31Z/4M5IVg2EHPcUN8khm4U48UUDVOtqfafsv6IqhkXBKhRNG9AnQpno
-        AGGkeqPZFBlMk67DpzmKCafME7mg+lQFTv3T8bBqr7M0Zv2n6qfqisKHYciJCYbq
-        6PvqHZ1MZ8GFDRmx4vdap9FqEX9tjiac2fvzQrf1lzlTdO6qYBvXNJuZ9kOtldaj
-        izxfIl10lR3Jro93dx+lzfVxbXuOJN7zpZQJPQgiOdC5OLCS7aQQU7pxQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=if7xr+Sp8ss0f
+        9YqwMqw18AX7QTuXK6q1CEVj33p/34=; b=nQN89O1nFLZtQYlqH89I0Kmx5EBrM
+        JMjAqr2aBnz9Jw97GauexifTLIRYSYN5hIxTERMKL/QnzrjwN5aKGUtkEqk6vYOi
+        OQFo+90INsKRq+6zr0XagjGvUqLrKOQ+ZYJNLFYuw5h6Ru23GFvWhXGMQohg7HFO
+        mHUpYtDKm1vwTBT7biF9+Ip7G7q0S47GxfFFRkl8ruwXjvGxDqORdboD5d+P7L7v
+        DdyWxwzb0ML3LLFNeU8py2b+wJQiTNxDFhaPQlr/AlgqAuucOWVW95cdkX42zqop
+        XKe2THxeuGSxNzUgTDwkJQynH0mG5K1Seqtyi+t/0J+Rm68wEtBQloIbQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=zutLwkCFJwr4HOIeiYIfzlC7l/v47tnp9l6lYRGMDUc=; b=GJNaWC3w
-        06NtYj84M01lqQA4XI+ArLdnf7e4BAuKkANxyEJkRBWeje2qkDdh+ZZW/50l1n/P
-        5P55BcMAhPn6YSG28PnSlUp0+AHS4u2KxtG56wXCcOJ2wPlCd27bANF4qWOyFpNR
-        nZE32oJ4lOv+EI/Rfkoz0NopbulvuM/se36d/eGutR0bgCBlrhg2wQqbGpLU9mNH
-        RdDtygi9bhIbosZmsxOV1hVCJ0qPxEXTM+XGCHIAfXXXp3HeSYkSAnhHp/wEfiva
-        HS2VtjdDk3ys6V39YyqtPMIXa/Z73tNFqmJtpYLNODjx5EBUDO+gwLq7vWybG3Mk
-        u9kKNRRAW06LWQ==
-X-ME-Sender: <xms:8DVKXg-y1ruVNvt3CXWNHiyu4rQ9nyYca3dpOBzsbZlRucChtHUt0A>
+        fm2; bh=if7xr+Sp8ss0f9YqwMqw18AX7QTuXK6q1CEVj33p/34=; b=NWebf0hC
+        YRw2t54WE710Iix4f2kX216aODyK7MaXe40G22nwq4NM1S8E83ycvMWxTFOngoJy
+        96tGCTRiGTZsHFpu6iAcP6MXTy/Am8MqItLB46CyXmq8KI1YHtFZ8OVwIupjheOA
+        RT4VNK1gopc22IkSlHqBZcHKl0EQNEMZcrfnvQBkYdPSxuFQv9UpDPtzrxIJk7vm
+        fPiBrvRoofsLEAsnwMHHVqHdz3MiWBpm93ykAsX+BVrF2T5hMr6QnyeTgw3y4oes
+        SSKUAVa6PetTsGFM81A/MZloxu0pHtl/jivQVWKA2eYdFJaPJwrP5oWHd+LbzCRs
+        d/tC/IzkTI1oHg==
+X-ME-Sender: <xms:7jVKXgk9WbQi4qoVVqHJXTPVoZa2Gp-2PbCu8zF1DluYo33TYXt7AQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpeejnecurfgrrhgr
+    ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
     mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:8DVKXq9OBQUgfvocvdlc9udwuoGMljBt1tOXxhOrhl2q8G1yOQYFOg>
-    <xmx:8DVKXoSWix7WNAnQK-uFcAyZ7s1uf6UOJDTYqHXirHdM-55qXzNFzQ>
-    <xmx:8DVKXmccCTNFmnwfzJPBT5I9SYGm-zfV8DQs544-aTLEWsiti3aBNg>
-    <xmx:8DVKXjH-2Uwdtoy-ej-HycyT4dSmxyW41Zc_8KTMA6oOxOdvYJ_T5Q>
+X-ME-Proxy: <xmx:7jVKXrwoToJ4ItX6p0QNZsgmwgbQpmAgW0R4SKpsT07CB7_EaExfyQ>
+    <xmx:7jVKXhtdweaRWVC5t2ZNqexYIqTV1RF1163UNVD99zGVBrkrcMFUYQ>
+    <xmx:7jVKXn-Wrmj-oeXIaSZVXpPjBdgerAzMoQR6JKLSiGDScpYpTQ_iMQ>
+    <xmx:7jVKXnNN2Lg85QfQl7EnCuE65MmvuxwZ1WWkfHTJXLne0esz1VcxpA>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7DB533280062;
-        Mon, 17 Feb 2020 01:42:55 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 935FC328005E;
+        Mon, 17 Feb 2020 01:42:53 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -78,9 +78,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>, stable@kernel.org
-Subject: [RFC PATCH 08/34] ASoC: sun8i-codec: Fix direction of AIF1 outputs
-Date:   Mon, 17 Feb 2020 00:42:24 -0600
-Message-Id: <20200217064250.15516-9-samuel@sholland.org>
+Subject: [RFC PATCH 05/34] ASoC: sun8i-codec: Remove incorrect SND_SOC_DAIFMT_DSP_B
+Date:   Mon, 17 Feb 2020 00:42:21 -0600
+Message-Id: <20200217064250.15516-6-samuel@sholland.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200217064250.15516-1-samuel@sholland.org>
 References: <20200217064250.15516-1-samuel@sholland.org>
@@ -91,42 +91,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The naming convention for AIFs in this codec is to call the "DAC" the
-path from the AIF into the codec, and the ADC the path from the codec
-back to the AIF, regardless of if there is any analog path involved.
+DSP_A and DSP_B are not interchangeable. The timing used by the codec in
+DSP mode is consistent with DSP_A. This is verified with an EG25-G modem
+connected to AIF2, as well as by comparing with the BSP driver.
 
-The output from AIF 1 used for capture should be declared as such.
+Remove the DSP_B option, as it is not supported by the hardware.
 
 Cc: stable@kernel.org
-Fixes: eda85d1fee05 ("ASoC: sun8i-codec: Add ADC support for a33")
+Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/soc/sunxi/sun8i-codec.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index 0eca75d22f13..83c812742cc1 100644
+index 33ffbc2be47c..32b7410540c6 100644
 --- a/sound/soc/sunxi/sun8i-codec.c
 +++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -399,12 +399,12 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
- 			    SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0R_ENA, 0),
- 
- 	/* Analog ADC AIF */
--	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Left ADC", "Capture", 0,
--			    SUN8I_AIF1_ADCDAT_CTRL,
--			    SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0L_ENA, 0),
--	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Right ADC", "Capture", 0,
--			    SUN8I_AIF1_ADCDAT_CTRL,
--			    SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0R_ENA, 0),
-+	SND_SOC_DAPM_AIF_OUT("AIF1 Slot 0 Left ADC", "Capture", 0,
-+			     SUN8I_AIF1_ADCDAT_CTRL,
-+			     SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0L_ENA, 0),
-+	SND_SOC_DAPM_AIF_OUT("AIF1 Slot 0 Right ADC", "Capture", 0,
-+			     SUN8I_AIF1_ADCDAT_CTRL,
-+			     SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0R_ENA, 0),
- 
- 	/* DAC and ADC Mixers */
- 	SOC_MIXER_ARRAY("Left Digital DAC Mixer", SND_SOC_NOPM, 0, 0,
+@@ -236,7 +236,6 @@ static int sun8i_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 		value = 0x2;
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_A:
+-	case SND_SOC_DAIFMT_DSP_B:
+ 		value = 0x3;
+ 		break;
+ 	default:
 -- 
 2.24.1
 
