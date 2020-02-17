@@ -2,124 +2,100 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6083C34021
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73299C34021
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE541215A4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:15:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gCgf3hT+"
+	by mail.kernel.org (Postfix) with ESMTP id 47654222D9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581953064;
+	bh=2zACJdzJWOimtEDKdqtbvKk8L5olDddcqqV+IDbusDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wz74zzg7muTYG8UTe6+N013Hf0l4tqC6TGdqvfZRjeWC6w80+GPqRZcDAP+W1IIsW
+	 jkgtKSD203bCYDUyo4lh2UB5QTFXvy7lAGEv7lsUoh5eMsjWNT57FgbZDVSF1rdy0b
+	 O09LB278E/9JwVh9MXNavCgM+p7Z4AqX1PS3uEwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBQPPu (ORCPT
+        id S1728138AbgBQPYX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:15:50 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43576 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgBQPPu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 10:15:50 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HFFTk5125091;
-        Mon, 17 Feb 2020 09:15:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581952529;
-        bh=sesL32PDsZi01y0X5NncQMWx/LULUnsHSmLX5Wya1Xc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gCgf3hT+IcPMAv4XKF0sDStZbR0mz80E4QENsSIj7d/a/S0T9abzOcR9XKl/l4VRP
-         2SmDJfX6EVy8ENek08jsvgB0YRJuZdn2JrQ2R1I74ByocsVYcggHmzoqhPB3jhe/ry
-         f8Pk6FCS1OW8+2L6kaPAZzzqZsr6mp6T8TUrhg6o=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01HFFTfv119247
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Feb 2020 09:15:29 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
- Feb 2020 09:15:28 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 17 Feb 2020 09:15:28 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HFFSIB067034;
-        Mon, 17 Feb 2020 09:15:28 -0600
-Subject: Re: [PATCH v2 2/3] can: m_can: m_can_platform: Add support for
- enabling transceiver
-To:     Faiz Abbas <faiz_abbas@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <mkl@pengutronix.de>, <wg@grandegger.com>,
-        <sriram.dash@samsung.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
- <20200217142836.23702-3-faiz_abbas@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <250f905a-33c3-dd17-15c9-e282299dd742@ti.com>
-Date:   Mon, 17 Feb 2020 09:10:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 17 Feb 2020 10:24:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:37270 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727428AbgBQPYX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:24:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F112530E;
+        Mon, 17 Feb 2020 07:24:22 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74CEB3F703;
+        Mon, 17 Feb 2020 07:24:22 -0800 (PST)
+Date:   Mon, 17 Feb 2020 15:24:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [RFC PATCH 09/34] ASoC: sun8i-codec: Fix broken DAPM routing
+Message-ID: <20200217152420.GK9304@sirena.org.uk>
+References: <20200217064250.15516-1-samuel@sholland.org>
+ <20200217064250.15516-10-samuel@sholland.org>
 MIME-Version: 1.0
-In-Reply-To: <20200217142836.23702-3-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="opg8F0UgoHELSI+9"
+Content-Disposition: inline
+In-Reply-To: <20200217064250.15516-10-samuel@sholland.org>
+X-Cookie: There was a phone call for you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Faiz
 
-On 2/17/20 8:28 AM, Faiz Abbas wrote:
-> CAN transceivers on some boards have a standby line which can be
-> toggled to enable/disable the transceiver. Model this as an optional
-> fixed xceiver regulator.
->
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> Acked-by: Sriram Dash <sriram.dash@samsung.com>
-> ---
->   drivers/net/can/m_can/m_can_platform.c | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
-> index 38ea5e600fb8..719468fab507 100644
-> --- a/drivers/net/can/m_can/m_can_platform.c
-> +++ b/drivers/net/can/m_can/m_can_platform.c
-> @@ -6,6 +6,7 @@
->   // Copyright (C) 2018-19 Texas Instruments Incorporated - http://www.ti.com/
->   
->   #include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
->   
->   #include "m_can.h"
->   
-> @@ -57,6 +58,7 @@ static int m_can_plat_probe(struct platform_device *pdev)
->   {
->   	struct m_can_classdev *mcan_class;
->   	struct m_can_plat_priv *priv;
-> +	struct regulator *reg_xceiver;
->   	struct resource *res;
->   	void __iomem *addr;
->   	void __iomem *mram_addr;
-> @@ -111,6 +113,10 @@ static int m_can_plat_probe(struct platform_device *pdev)
->   
->   	m_can_init_ram(mcan_class);
->   
-> +	reg_xceiver = devm_regulator_get_optional(&pdev->dev, "xceiver");
-> +	if (PTR_ERR(reg_xceiver) == -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
-> +
+--opg8F0UgoHELSI+9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Where is this regulator enabled?
+On Mon, Feb 17, 2020 at 12:42:25AM -0600, Samuel Holland wrote:
 
-Shouldn't the regulator be managed by runtime PM as well?
+> This commit provides the minimal necessary changes to the driver's
+> device tree ABI, so that the driver can begin to describe the full
+> hardware topology.
 
-Dan
+> Cc: stable@kernel.org
 
+You're changing the ABI and trying to CC this to stable.  This is
+obviously not at all OK, this would mean that if someone got a stable
+update with this change the ABI break would mean that their existing
+device tree would not work.  The code should be making every effort to
+provide a stable ABI over new kernel releases, never mind within a
+stable point release.
+
+--opg8F0UgoHELSI+9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5KsCQACgkQJNaLcl1U
+h9DlOQf/fnliV8i6hOsjjmuPNKhYpYFB0CpQahOVaYcseah4KRMxgLYafPDPCBFi
+YOG1uPOnbNmX7j2Vk4tA4fobq2c9iAJjVUafUWsNm6qiftRtSKHw8NgpDcH/i5+A
+hQpjcJoW+zdzoV3a/l0/lA0Ntot3eligdLNJZEukfJTWU5KndAo0k6jJH0WNj3zw
+xjiw6WNJee1j6xkOZEWzHoIZNZ+eXQjebMa5KbArSwzBXVS3SeaYZ9eMCzph7OpI
+CXcIBWJssHvQlSxZeCjB64bwsBCbzUuRW6doz1Ikjn/IdAfjudwjwODeRENTKykJ
+JCEiaoF87UkEhPoF68ycyKTgcgrxRA==
+=pmEj
+-----END PGP SIGNATURE-----
+
+--opg8F0UgoHELSI+9--
