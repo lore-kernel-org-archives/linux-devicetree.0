@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02524C7619D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 08:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71404C7619B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 08:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87A5207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 08:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506B420718
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 08:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgBQIGz (ORCPT
+        id S1728049AbgBQIT6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:06:55 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40984 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbgBQIGy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 03:06:54 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c26so19606356eds.8;
-        Mon, 17 Feb 2020 00:06:53 -0800 (PST)
+        Mon, 17 Feb 2020 03:19:58 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:32995 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbgBQIT6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 03:19:58 -0500
+Received: by mail-ed1-f65.google.com with SMTP id r21so19685824edq.0;
+        Mon, 17 Feb 2020 00:19:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H7HNmg9K88memoV4mQIdFTzsV1B2vI42lPI0r8PIbeg=;
-        b=dL8b1/I9N18AwkXpOjnUyzKOq+IVYoMmhzFajQZOyfD4oLYirOk3kg3DPaOqJczuaR
-         avKv7set26LKlMqmhlUFB3SONJZ9hLWrMDy4SJudTcWPOtcKQLjKEd3+R8KJ0YuS3csb
-         5sUlOk1trZ0jGFbdEdkQx4ZJrQdSJd+TJQQkGefGn/Jk/OWUG5QdPyNj63ab3/36maKX
-         PrF479Z/v3tWmiVIA6giL04eb3HsgNwKi1qnWBAlWSRDlgPyKQTlWrNJwxkyJPxcmRwI
-         6Z6CE45ZXgVrArhr3yCYnPNgUBPuE4+s52FqqStj+/YZZZLnbq4DShdWtNQmH9mcqMwW
-         2SGw==
-X-Gm-Message-State: APjAAAXgvKJmE+j3RsMjFa2z25GRcu35IK5M+vEjheUI6QBziQmQ7hE8
-        T+sb9oAqpVjmG1WYeK94R8aM1g2qtcw=
-X-Google-Smtp-Source: APXvYqzNwaq0yuvhJm5GWsQg1Xyaym5Z/x3W5k4Nu6x8N9admJqi8HPwKL3bZP5pepMOXs98idtb2A==
-X-Received: by 2002:a17:906:a444:: with SMTP id cb4mr13414956ejb.42.1581926811793;
-        Mon, 17 Feb 2020 00:06:51 -0800 (PST)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
-        by smtp.gmail.com with ESMTPSA id m27sm425467eda.96.2020.02.17.00.06.51
+        bh=ATnQLLigNnNp+3vrMMUywd96YC/sdkp/YQzir+b0HgQ=;
+        b=G242rs+PDBmmgooaB2XqYB1dGRNvDnJOs03wZzB8y9bJpR4Cd3LDMuZ9k4DvNLEdd7
+         Ey3bwblhwnKeQmCkNetL1kpwSHZdLfCqfb3Qo4XlsMmgmHsUPEjfptPqMvhxJx8Z5eYj
+         bd51hx63y1M63ZQIH6mJTneVZqI4tyqxLm6t9dfaj6IbHkqpDTdRC41PxoI/Uh5GEuN7
+         pb8JfGGphWNyvyVGJ7A+PiSCd/rHpqpmy5+8DnLyhx65laWvajKWBqhh9v2rQUf57zXL
+         cDRCrP+Pmfff6goRcRReCSQzs53NHQG3Mo/k0tyIqeQRSQDM+VtNSzM8dmUV6KOjLvyB
+         /mkg==
+X-Gm-Message-State: APjAAAXbwIYYq/LfvuIHxr7xi6isa/UG63vXKjeThAHlW0zUeV/IH+Vr
+        4zSH20qodyrY57Ct6NM4yaoHPmv/8kY=
+X-Google-Smtp-Source: APXvYqxslzR90ipQN6pVb+aQ+bJiil+U8VHigr94WA1ReDW3LRyk/OLB84bRFXvmlID7e+zGSSsnHA==
+X-Received: by 2002:a05:6402:1764:: with SMTP id da4mr13492458edb.24.1581927595038;
+        Mon, 17 Feb 2020 00:19:55 -0800 (PST)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
+        by smtp.gmail.com with ESMTPSA id m7sm445260edq.37.2020.02.17.00.19.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 00:06:51 -0800 (PST)
-Received: by mail-wm1-f47.google.com with SMTP id g1so16093850wmh.4;
-        Mon, 17 Feb 2020 00:06:51 -0800 (PST)
-X-Received: by 2002:a1c:dc85:: with SMTP id t127mr22204730wmg.16.1581926810934;
- Mon, 17 Feb 2020 00:06:50 -0800 (PST)
+        Mon, 17 Feb 2020 00:19:54 -0800 (PST)
+Received: by mail-wm1-f45.google.com with SMTP id s144so6786815wme.1;
+        Mon, 17 Feb 2020 00:19:54 -0800 (PST)
+X-Received: by 2002:a05:600c:34d:: with SMTP id u13mr21454590wmd.77.1581927594021;
+ Mon, 17 Feb 2020 00:19:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-13-samuel@sholland.org>
-In-Reply-To: <20200217064250.15516-13-samuel@sholland.org>
+References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-6-samuel@sholland.org>
+In-Reply-To: <20200217064250.15516-6-samuel@sholland.org>
 From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 16:06:40 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65e3dwji4cwRh6uTryjXq=0qmeggEjrMgL9KtB+JTWCVg@mail.gmail.com>
-Message-ID: <CAGb2v65e3dwji4cwRh6uTryjXq=0qmeggEjrMgL9KtB+JTWCVg@mail.gmail.com>
-Subject: Re: [RFC PATCH 12/34] ASoC: sun8i-codec: Fix AIF1 MODCLK widget name
+Date:   Mon, 17 Feb 2020 16:19:43 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64p9QEhni1sAQWA9eOtGYDcc2_VnUd92sUxK7M_doHZJA@mail.gmail.com>
+Message-ID: <CAGb2v64p9QEhni1sAQWA9eOtGYDcc2_VnUd92sUxK7M_doHZJA@mail.gmail.com>
+Subject: Re: [RFC PATCH 05/34] ASoC: sun8i-codec: Remove incorrect SND_SOC_DAIFMT_DSP_B
 To:     Samuel Holland <samuel@sholland.org>
 Cc:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -65,7 +65,7 @@ Cc:     Mark Brown <broonie@kernel.org>,
         Linux-ALSA <alsa-devel@alsa-project.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        linux-kernel <linux-kernel@vger.kernel.org>, stable@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -74,10 +74,14 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Mon, Feb 17, 2020 at 2:43 PM Samuel Holland <samuel@sholland.org> wrote:
 >
-> It should be "AIF1", not "AFI1".
+> DSP_A and DSP_B are not interchangeable. The timing used by the codec in
+> DSP mode is consistent with DSP_A. This is verified with an EG25-G modem
+> connected to AIF2, as well as by comparing with the BSP driver.
 >
+> Remove the DSP_B option, as it is not supported by the hardware.
+>
+> Cc: stable@kernel.org
 > Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
-> Fixes: eda85d1fee05 ("ASoC: sun8i-codec: Add ADC support for a33")
 > Signed-off-by: Samuel Holland <samuel@sholland.org>
 
 Acked-by: Chen-Yu Tsai <wens@csie.org>
