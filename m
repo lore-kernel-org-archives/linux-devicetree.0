@@ -2,96 +2,175 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6123C34022
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 14:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB0BC34022
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 14:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6B6207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 14:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671912072C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 14:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uDgHPfvP"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="WRDJvcS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgBQO1h (ORCPT
+        id S1728054AbgBQOeq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 09:27:37 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41510 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728845AbgBQO1W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 09:27:22 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HEQxeF041813;
-        Mon, 17 Feb 2020 08:26:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581949619;
-        bh=d45ru5d3fIe+VZkm3lVD10Gnrxhb5tb33AdK63CL63Y=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uDgHPfvP/R4R2E79YryAUHEf0ID5wky+B81iDKsc+JjLDA44TofwAf3JlqLvd75m6
-         e2BaTFfKsdsSpuKc0yYOU0JEgobsPspkycxImlJi3JOyijDIT81UL2sBgu55oYboAZ
-         9ylzoBULVAwaUHkT9pUwKK0a/WYI/QHLzhvezsLs=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HEQxD3064624;
-        Mon, 17 Feb 2020 08:26:59 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
- Feb 2020 08:26:59 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 17 Feb 2020 08:26:59 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HEQoJM033875;
-        Mon, 17 Feb 2020 08:26:55 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <mkl@pengutronix.de>, <wg@grandegger.com>,
-        <sriram.dash@samsung.com>, <dmurphy@ti.com>, <faiz_abbas@ti.com>
-Subject: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for transceiver regulator
-Date:   Mon, 17 Feb 2020 19:58:34 +0530
-Message-ID: <20200217142836.23702-2-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20200217142836.23702-1-faiz_abbas@ti.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
+        Mon, 17 Feb 2020 09:34:46 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34437 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbgBQOep (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 09:34:45 -0500
+Received: by mail-il1-f195.google.com with SMTP id l4so14434561ilj.1
+        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 06:34:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sYSA9gH5D5QpjxpnnA/foVNSE8oIoSs3/0w1wFARKFA=;
+        b=WRDJvcS8ymr5ylA0UtB/67GmGZlM/1gESH2KXwDfgkuE/OV3VvkijsWD//rIjkTp+/
+         3hqMXipaSN4FEmKuuj8U9V8yMz6PPmOmpjeCQeNX5UlPNQw48w7DBB32NR4fuMQIaR58
+         yLrsthNgb1+PE/pnm3Re2Un53IWzQ/T8cZv5A8Ui84o2GB34SysBLLOfKn0OY+pW80PU
+         WL8chP1WdNh35DgAPQrvBWSN3dNuk5A8WqAZCvKvZ8z0tpWa+OlfblDJHCDC0KcXZ5Tr
+         6cDyMcg+IoFSILBmpeqABcqwPqv/M4fzd9Y2+PT6Ek9gnQBZX0iMVQh5f4dTxL2Fu2kT
+         MXZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sYSA9gH5D5QpjxpnnA/foVNSE8oIoSs3/0w1wFARKFA=;
+        b=J+wo3+9EeKUZCol7xJcqImOBbfZcoRgNw5U7AJFDeHXBweCOdnJmaodVkhYx9CGuyg
+         sEop1K6NPi4MtASneq81myk5LFFY14UnrQWX8xIFtTGTu7Fv895LVIiERNStcjDeydAt
+         Gcoj5l3Kfrfpn432s9/NN43XMlcHxHm4J/JolgBNUYhTbC/rI+umKyqDTJTz6AImdgud
+         sBbOGDhsfEJqIFHPcPso70o55o8h9BbN07hGV5Zcr0/IlpP142M4AZI75Grsefmn+SYa
+         64nBRuzweBd2PXEZzUBh7tpe6eqlPXAGmT+XGBz0EKtJ07zxAmkdx8ni8jFllxYuQUs1
+         k6QA==
+X-Gm-Message-State: APjAAAUg/ACsWPYKLHyZSc1SX0fNhVb+8n/Z7PZKikXhvV6XpTuilhZb
+        sXlfOAxZ/m+Gaj7tKrtaZYEB7jG0W8zNuPaTDxjbTQ==
+X-Google-Smtp-Source: APXvYqzi/1eGUH3va8zyTePwxOHIk4rV1thytDj390MDtFkW1a2+0h5oVnoRFXF3ZcGU+SYhkA3e9JGh2GSzypVxjyU=
+X-Received: by 2002:a92:9c1c:: with SMTP id h28mr14256156ili.189.1581950085177;
+ Mon, 17 Feb 2020 06:34:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200107092922.18408-1-ktouil@baylibre.com> <20200107092922.18408-3-ktouil@baylibre.com>
+ <CAMuHMdVv+FRnf6fvjEeu50W5PB-Gh2V8Th1h__vt6guMwk2xNQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVv+FRnf6fvjEeu50W5PB-Gh2V8Th1h__vt6guMwk2xNQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 17 Feb 2020 15:34:34 +0100
+Message-ID: <CAMRc=Mf0-gQJH8Se4sFBCkRNE=b4ww=SWges-7GPD2jsivrv1Q@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] nvmem: add support for the write-protect pin
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Khouloud Touil <ktouil@baylibre.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some CAN transceivers have a standby line that needs to be asserted
-before they can be used. Model this GPIO lines as an optional
-fixed-regulator node. Document bindings for the same.
+czw., 30 sty 2020 o 09:06 Geert Uytterhoeven <geert@linux-m68k.org> napisa=
+=C5=82(a):
+>
+> Hi Khouloud,
+>
+> On Tue, Jan 7, 2020 at 10:30 AM Khouloud Touil <ktouil@baylibre.com> wrot=
+e:
+> > The write-protect pin handling looks like a standard property that
+> > could benefit other users if available in the core nvmem framework.
+> >
+> > Instead of modifying all the memory drivers to check this pin, make
+> > the NVMEM subsystem check if the write-protect GPIO being passed
+> > through the nvmem_config or defined in the device tree and pull it
+> > low whenever writing to the memory.
+> >
+> > There was a suggestion for introducing the gpiodesc from pdata, but
+> > as pdata is already removed it could be replaced by adding it to
+> > nvmem_config.
+> >
+> > Reference: https://lists.96boards.org/pipermail/dev/2018-August/001056.=
+html
+> >
+> > Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
+> Thanks for your patch!
+>
+> > --- a/drivers/nvmem/core.c
+> > +++ b/drivers/nvmem/core.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/nvmem-consumer.h>
+> >  #include <linux/nvmem-provider.h>
+> > +#include <linux/gpio/consumer.h>
+> >  #include <linux/of.h>
+> >  #include <linux/slab.h>
+> >  #include "nvmem.h"
+> > @@ -54,8 +55,14 @@ static int nvmem_reg_read(struct nvmem_device *nvmem=
+, unsigned int offset,
+> >  static int nvmem_reg_write(struct nvmem_device *nvmem, unsigned int of=
+fset,
+> >                            void *val, size_t bytes)
+> >  {
+> > -       if (nvmem->reg_write)
+> > -               return nvmem->reg_write(nvmem->priv, offset, val, bytes=
+);
+> > +       int ret;
+> > +
+> > +       if (nvmem->reg_write) {
+> > +               gpiod_set_value_cansleep(nvmem->wp_gpio, 0);
+> > +               ret =3D nvmem->reg_write(nvmem->priv, offset, val, byte=
+s);
+> > +               gpiod_set_value_cansleep(nvmem->wp_gpio, 1);
+> > +               return ret;
+> > +       }
+> >
+> >         return -EINVAL;
+> >  }
+> > @@ -338,6 +345,14 @@ struct nvmem_device *nvmem_register(const struct n=
+vmem_config *config)
+> >                 kfree(nvmem);
+> >                 return ERR_PTR(rval);
+> >         }
+> > +       if (config->wp_gpio)
+> > +               nvmem->wp_gpio =3D config->wp_gpio;
+> > +       else
+> > +               nvmem->wp_gpio =3D gpiod_get_optional(config->dev, "wp"=
+,
+> > +                                                   GPIOD_OUT_HIGH);
+>
+> Shouldn't this GPIO be released in nvmem_release(), by calling gpiod_put(=
+)?
+>
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Hi Geert,
 
-diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-index ed614383af9c..f17e2a5207dc 100644
---- a/Documentation/devicetree/bindings/net/can/m_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-@@ -48,6 +48,9 @@ Optional Subnode:
- 			  that can be used for CAN/CAN-FD modes. See
- 			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
- 			  for details.
-+
-+- xceiver-supply: Regulator that powers the CAN transceiver.
-+
- Example:
- SoC dtsi:
- m_can1: can@20e8000 {
--- 
-2.19.2
+Khouloud already sent out a patch but I think it still doesn't fix all
+the problems.
 
+While we should call gpiod_put() for the descs we request - we must
+not do it for the desc we get over the config structure. Unless... we
+make descs reference counted with kref and add gpiod_ref() helper.
+That way we could increase the reference counter in the upper branch
+of the if and not do it in the lower. Calling gpiod_put() would
+internally call kref_put(). Does it make sense? I think that a
+function that's called gpiod_put() but doesn't really use reference
+counting is misleading anyway.
+
+> Once that's implemented, I assume it will be auto-released on registratio=
+n
+> failure by the call to put_device()?
+
+No, I think this is another leak - why would put_device() lead to
+freeing any resources? Am I missing something?
+
+Bart
