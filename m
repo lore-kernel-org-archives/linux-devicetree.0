@@ -2,100 +2,76 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73299C34021
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2093DC34021
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47654222D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581953064;
-	bh=2zACJdzJWOimtEDKdqtbvKk8L5olDddcqqV+IDbusDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wz74zzg7muTYG8UTe6+N013Hf0l4tqC6TGdqvfZRjeWC6w80+GPqRZcDAP+W1IIsW
-	 jkgtKSD203bCYDUyo4lh2UB5QTFXvy7lAGEv7lsUoh5eMsjWNT57FgbZDVSF1rdy0b
-	 O09LB278E/9JwVh9MXNavCgM+p7Z4AqX1PS3uEwQ=
+	by mail.kernel.org (Postfix) with ESMTP id E6796214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:29:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UcrU4Z6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgBQPYX (ORCPT
+        id S1727329AbgBQP3V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:24:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:37270 "EHLO foss.arm.com"
+        Mon, 17 Feb 2020 10:29:21 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:50082 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727428AbgBQPYX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:24:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F112530E;
-        Mon, 17 Feb 2020 07:24:22 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74CEB3F703;
-        Mon, 17 Feb 2020 07:24:22 -0800 (PST)
-Date:   Mon, 17 Feb 2020 15:24:20 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [RFC PATCH 09/34] ASoC: sun8i-codec: Fix broken DAPM routing
-Message-ID: <20200217152420.GK9304@sirena.org.uk>
-References: <20200217064250.15516-1-samuel@sholland.org>
- <20200217064250.15516-10-samuel@sholland.org>
+        id S1726397AbgBQP3U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:29:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=B3MQFO6OCVy3CaonUG+ggsdLMmIu76Cs+DwnBQUzbNE=; b=UcrU4Z6N0sY6vQwq1LiOEY0WJQ
+        UZdGGqBcYl6pDrIO0E2I4R379eX8YplMipjv53nsB9QPtcCY6ok5UMDGA926zEictJkl/onyFRicB
+        FmDJXsNtk9SZaIxV9Hn6UVRtjv27BMN/jOX2iEk8ozRW1CwYQa1tEDXfH7eu6FHJVoe0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j3iKe-0005L3-6K; Mon, 17 Feb 2020 16:29:12 +0100
+Date:   Mon, 17 Feb 2020 16:29:12 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: Re: [PATCH devicetree 3/4] arm64: dts: fsl: ls1028a: add node for
+ Felix switch
+Message-ID: <20200217152912.GE31084@lunn.ch>
+References: <20200217144414.409-1-olteanv@gmail.com>
+ <20200217144414.409-4-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="opg8F0UgoHELSI+9"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217064250.15516-10-samuel@sholland.org>
-X-Cookie: There was a phone call for you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200217144414.409-4-olteanv@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Vladimir
 
---opg8F0UgoHELSI+9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +					/* Internal port with DSA tagging */
+> +					mscc_felix_port4: port@4 {
+> +						reg = <4>;
+> +						phy-mode = "gmii";
 
-On Mon, Feb 17, 2020 at 12:42:25AM -0600, Samuel Holland wrote:
+Is it really using gmii? Often in SoC connections use something else,
+and phy-mode = "internal" is more appropriate.
 
-> This commit provides the minimal necessary changes to the driver's
-> device tree ABI, so that the driver can begin to describe the full
-> hardware topology.
+> +						ethernet = <&enetc_port2>;
+> +
+> +						fixed-link {
+> +							speed = <2500>;
+> +							full-duplex;
+> +						};
 
-> Cc: stable@kernel.org
+gmii and 2500 also don't really go together.
 
-You're changing the ABI and trying to CC this to stable.  This is
-obviously not at all OK, this would mean that if someone got a stable
-update with this change the ABI break would mean that their existing
-device tree would not work.  The code should be making every effort to
-provide a stable ABI over new kernel releases, never mind within a
-stable point release.
-
---opg8F0UgoHELSI+9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5KsCQACgkQJNaLcl1U
-h9DlOQf/fnliV8i6hOsjjmuPNKhYpYFB0CpQahOVaYcseah4KRMxgLYafPDPCBFi
-YOG1uPOnbNmX7j2Vk4tA4fobq2c9iAJjVUafUWsNm6qiftRtSKHw8NgpDcH/i5+A
-hQpjcJoW+zdzoV3a/l0/lA0Ntot3eligdLNJZEukfJTWU5KndAo0k6jJH0WNj3zw
-xjiw6WNJee1j6xkOZEWzHoIZNZ+eXQjebMa5KbArSwzBXVS3SeaYZ9eMCzph7OpI
-CXcIBWJssHvQlSxZeCjB64bwsBCbzUuRW6doz1Ikjn/IdAfjudwjwODeRENTKykJ
-JCEiaoF87UkEhPoF68ycyKTgcgrxRA==
-=pmEj
------END PGP SIGNATURE-----
-
---opg8F0UgoHELSI+9--
+     Andrew
