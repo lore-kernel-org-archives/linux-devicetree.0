@@ -2,114 +2,136 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA09C34021
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C90C34022
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9109C20725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589EF22B48
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vt9a75b6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QUNDlRjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgBQPdr (ORCPT
+        id S1728969AbgBQPkY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:33:47 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37432 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728002AbgBQPdq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 10:33:46 -0500
-Received: by mail-ed1-f68.google.com with SMTP id t7so9455978edr.4;
-        Mon, 17 Feb 2020 07:33:45 -0800 (PST)
+        Mon, 17 Feb 2020 10:40:24 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39730 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727300AbgBQPkY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 10:40:24 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so20268883wrt.6
+        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 07:40:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cpDwgE9K4RX3YbsUsXFN1RxAexrY0yin13bDyT1Pydo=;
-        b=Vt9a75b6ulHLYug9ORVv2qddFUbDqbV0qW9CtOGS4oDqSVs9nx21NosXzjxYJVxMnz
-         Pu7nhiFxbbhjtAUjfyo5P+4RueOD0E/oVaELaFUW5l36zeXuWi+S7PCBLQ8v1a4Q9yXp
-         1Aq8d59GNpz3RxJ13Rzlmwbb1bLbXCvKrbPlNX29pF3Wr0730Y0v5uMzH8llyNoah3W4
-         z/TZA8eqBekmfAqV54oWYf1hPTjOXup5hzElFNxKmGJBG8bBIMYVEHKvRzIJZGDZR4//
-         sC0GJzQPl18/wNWfZ5+lT+79A3KfPwE280NF++pr6knlLSsszJkFpHSBoTZUIu8U6Ws3
-         E1uQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uBL44HTwPsTzK1hTlXHwrWPFvRz4I8cxeuhUA7nfr3s=;
+        b=QUNDlRjh2O+ooQ41KWBChztMd4j9tV2M8HiE6TDGhh6KZcCXQYdQmMqHkRy/oPre/d
+         E+T64sT8TUAqvGZCkZWcpAPXMK/psI/SMbqtUXH8WD/97O+XqMwt7rE0VgfYpg4SGCTu
+         72DvsxmGQ2FHB1KOF86wT5RUdwe9l5E14uXBkwlKILpzWF5nOlDot/mlGYQpzffkiZng
+         dV1PcmwTrlY7TdA4Y7kgPv5XUqhxhLqt6oG02ccYRx64/bgjYrAaemMkV8MHRgYP/RlA
+         RNsfj1wDY4F+M6s4FATLU+2N+UfYeGwZGxIXM15btV8V9U0AnPqJn9J60Be6mPZjxKkb
+         OLhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cpDwgE9K4RX3YbsUsXFN1RxAexrY0yin13bDyT1Pydo=;
-        b=bPXdixltFLcclUSwt0vEN3zL1ITqYM862xPUigLWeOUlKToI1zRziCdZKkwWZQy1+Q
-         PmaY1hXNo8IXhl/CeZO+c0p0PfGcwTpVljGgQPHL+tI6QIFmckpMucm2m3QmgbCFyn+R
-         n/d4qQiDJV0dz6FD5tklO169XP5Pb4PF+AhnnZrNxTUEKjxNOfex2cgUgvGzrkugkRYc
-         1UaZ6KpZD56GeFpXhfOENV3OVfEwJxznQk758nJDAa6SutapwAdn9QkcoyqQ0B4iiPgG
-         R4ZhmAjbqPxqFgINqBcBrQRZi8kUnRWLFx+dAygZmjRcLjVfYt/2sx3q5jmHyLLXN0e1
-         ItaQ==
-X-Gm-Message-State: APjAAAUtIR7zA65Qu/Pfj6BaSOMciJUAm9QuRVAYqG2ntBWIZDe2dKJh
-        nT6mbK8u3uL20bz4o8ppTCNr0AIcjBAG1ZeGL/M=
-X-Google-Smtp-Source: APXvYqyEhbUMliSSuUHQSx5pNXCM3Cx87B6D7Hnl92XJYYx/7VuKSXcpeYZMT6j5RHmnc3Urzc5Q2GClWyL+yoXzUlw=
-X-Received: by 2002:a17:906:31c3:: with SMTP id f3mr15005416ejf.239.1581953624846;
- Mon, 17 Feb 2020 07:33:44 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uBL44HTwPsTzK1hTlXHwrWPFvRz4I8cxeuhUA7nfr3s=;
+        b=PD41UJYgtqNNcsHBj95L05k/pkFI726Z9cbWqJNpFeCmH1qLcY4jT0yVT7TilWWz+r
+         w/4KmnM2/WVj6fLf8UNO7YrRbWYpyb81rWbKGXQsVwoT0dejPlJY6ebZ4m/Cd1hj3TOT
+         +4ukN/6siBKsskTznMC0KtD2NjMUqoHkNSEYGBujVYKVwoDXssMdOfsbWUMDaAiyRZVc
+         h0MLtCRxSrneqvN9eRuJDU1qq+CgmS8VrpsOakTtWYy65aZPD7F+/Dut8y+TjPz6qANF
+         tld1BkJ6WHd0pZBhi4dJJzVukKz/A0sWoO2M/Y2GA+A0e+AU+t7OPr0VpbIn5vCYX07F
+         KNtg==
+X-Gm-Message-State: APjAAAXtI0XziML2zJQpCScFeJrcy5HfW4wSAwShVWyI7ef+EP7hC8K4
+        ACCRxFfSc00TcXSpboxL6qUdmA==
+X-Google-Smtp-Source: APXvYqyK3wvWFPYLO6Oneazyxhd5g+tje1jkIBunochJVdUjHRcEMjjKDjk9tOFHPoHKB9Cr5dnXww==
+X-Received: by 2002:adf:f109:: with SMTP id r9mr22236398wro.406.1581954021861;
+        Mon, 17 Feb 2020 07:40:21 -0800 (PST)
+Received: from myrica ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id v131sm1106010wme.23.2020.02.17.07.40.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 07:40:21 -0800 (PST)
+Date:   Mon, 17 Feb 2020 16:40:12 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     will@kernel.org, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
+        joro@8bytes.org, baolu.lu@linux.intel.com,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
+        corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
+        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
+Subject: Re: [PATCH 02/11] PCI: Add ats_supported host bridge flag
+Message-ID: <20200217154012.GD1650092@myrica>
+References: <20200213165049.508908-3-jean-philippe@linaro.org>
+ <20200215211047.GA124796@google.com>
 MIME-Version: 1.0
-References: <20200217144414.409-1-olteanv@gmail.com> <20200217144414.409-4-olteanv@gmail.com>
- <20200217152912.GE31084@lunn.ch>
-In-Reply-To: <20200217152912.GE31084@lunn.ch>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 17 Feb 2020 17:33:33 +0200
-Message-ID: <CA+h21ho29TRG8JYfSaaSsoxM-mg0-yOKBNCq9wbHDHCf2pkdUg@mail.gmail.com>
-Subject: Re: [PATCH devicetree 3/4] arm64: dts: fsl: ls1028a: add node for
- Felix switch
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200215211047.GA124796@google.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrew,
-
-On Mon, 17 Feb 2020 at 17:29, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> Hi Vladimir
->
-> > +                                     /* Internal port with DSA tagging */
-> > +                                     mscc_felix_port4: port@4 {
-> > +                                             reg = <4>;
-> > +                                             phy-mode = "gmii";
->
-> Is it really using gmii? Often in SoC connections use something else,
-> and phy-mode = "internal" is more appropriate.
->
-
-What would be that "something else"? Given that the host port and the
-switch are completely different hardware IP blocks, I would assume
-that a parallel GMII is what's connecting them, no optimizations done.
-Certainly no serializer. But I don't know for sure.
-Does it matter, in the end?
-
-> > +                                             ethernet = <&enetc_port2>;
+On Sat, Feb 15, 2020 at 03:10:47PM -0600, Bjorn Helgaas wrote:
+> On Thu, Feb 13, 2020 at 05:50:40PM +0100, Jean-Philippe Brucker wrote:
+> > Each vendor has their own way of describing whether a host bridge
+> > supports ATS.  The Intel and AMD ACPI tables selectively enable or
+> > disable ATS per device or sub-tree, while Arm has a single bit for each
+> > host bridge.  For those that need it, add an ats_supported bit to the
+> > host bridge structure.
+> > 
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > ---
+> >  drivers/pci/probe.c | 7 +++++++
+> >  include/linux/pci.h | 1 +
+> >  2 files changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 512cb4312ddd..75c0a25af44e 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -598,6 +598,13 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+> >  	bridge->native_shpc_hotplug = 1;
+> >  	bridge->native_pme = 1;
+> >  	bridge->native_ltr = 1;
 > > +
-> > +                                             fixed-link {
-> > +                                                     speed = <2500>;
-> > +                                                     full-duplex;
-> > +                                             };
->
-> gmii and 2500 also don't really go together.
+> > +	/*
+> > +	 * Some systems may disable ATS at the host bridge (ACPI IORT,
+> > +	 * device-tree), other filter it with a smaller granularity (ACPI DMAR
+> > +	 * and IVRS).
+> > +	 */
+> > +	bridge->ats_supported = 1;
+> 
+> The cover letter says it's important to enable ATS only if the host
+> bridge supports it.  From the other patches, it looks like we learn if
+> the host bridge supports ATS from either a DT "ats-supported" property
+> or an ACPI IORT table.  If that's the case, shouldn't the default here
+> be "ATS is *not* supported"?
 
-Not even if you raise the clock frequency?
+The ACPI IVRS table (AMD) doesn't have a property for the host bridge, it
+can only deselect ATS for a sub-range of devices. Similarly the DMAR table
+(Intel) declares that ATS is supported either by the whole PCIe domain or
+for sub-ranges of devices. I selected ats_supported at the bridge by
+default since IVRS needs it and DMAR has its own fine-grained ATS support
+configuration.
 
->
->      Andrew
+I'm still not sure this is the right approach, given that the
+ats_supported bridge property doesn't exactly correspond to a firmware
+property on all platforms. Maybe the device-tree implementation should
+follow the IORT one where each device carries a fwspec property stating
+"root-complex supports ATS". But it isn't nice either so I tried a cleaner
+implementation (as discussed with Robin back on the ATS-with-SMMUv3 series
+[1]).
 
 Thanks,
--Vladimir
+Jean
+
+[1] https://lore.kernel.org/linux-iommu/c10c7adb-c7f6-f8c6-05cc-f4f143427a2d@arm.com/
