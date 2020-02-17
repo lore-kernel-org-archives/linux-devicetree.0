@@ -2,83 +2,108 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39714C34021
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4AFC34022
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F29C20718
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498072072C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581956815;
+	bh=rF5n1LALgS1QdHMLdIt6JdEOXWZA/nrceOeMB/9wLqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pPC8aukRHRjEDbbVBoo98SQ1SeqHuQuge2+Zdv9QRf7FEUoLGCtIIngI5S1eHOkpo
+	 KPxfmf9+dNV2LzZPpLBiflGtz6zCrcAY/ELy2J8+AYkm5P8w2sFzvX7EZrLrUo/7bf
+	 Cx2A9Z9YcBoqol1/yDYhSR0CfZDdQ8lLIHBCr2h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgBQQMU (ORCPT
+        id S1728463AbgBQQ0y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:12:20 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:22542 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgBQQMU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 11:12:20 -0500
-Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 18 Feb 2020
- 00:12:41 +0800
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mon, 17 Feb 2020 11:26:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:38182 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727922AbgBQQ0y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:26:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3729C30E;
+        Mon, 17 Feb 2020 08:26:54 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD9143F68F;
+        Mon, 17 Feb 2020 08:26:53 -0800 (PST)
+Date:   Mon, 17 Feb 2020 16:26:52 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH] soc: amlogic: fix compile failure with MESON_SECURE_PM_DOMAINS & !MESON_SM
-Date:   Tue, 18 Feb 2020 00:12:13 +0800
-Message-ID: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
-X-Mailer: git-send-email 2.7.4
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/34] sun8i-codec fixes and new features
+Message-ID: <20200217162652.GO9304@sirena.org.uk>
+References: <20200217064250.15516-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [116.236.93.172]
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jozmn01XJZjDjM3N"
+Content-Disposition: inline
+In-Reply-To: <20200217064250.15516-1-samuel@sholland.org>
+X-Cookie: There was a phone call for you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When MESON_SECURE_PM_DOMAINS & !MESON_SM, there will be compile failure:
-.../meson-secure-pwrc.o: In function `meson_secure_pwrc_on':
-.../meson-secure-pwrc.c:76: undefined reference to `meson_sm_call'
 
-Fix this by adding depends on MESON_SM for MESON_SECURE_PM_DOMAINS.
+--jozmn01XJZjDjM3N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fixes: b3dde5013e13 ("soc: amlogic: Add support for Secure power domains controller")
+On Mon, Feb 17, 2020 at 12:42:16AM -0600, Samuel Holland wrote:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: patchwork-bot+linux-amlogic<patchwork-bot+linux-amlogic@kernel.org>
-Reported-by: Stephen Rothwell<sfr@canb.auug.org.au>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- drivers/soc/amlogic/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> There are several trivial fixes in here, and there are several commits
+> that just add new features without changing any existing behavior, but
+> there is enough changing that I thought it would be best to send the
+> whole thing as an RFC. I'm more than happy to reorganize this into one
+> or several patchsets in future revisions. It doesn't have to all go in
+> at once.
 
-diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
-index 6cb06e7..321c5e2 100644
---- a/drivers/soc/amlogic/Kconfig
-+++ b/drivers/soc/amlogic/Kconfig
-@@ -50,7 +50,7 @@ config MESON_EE_PM_DOMAINS
- 
- config MESON_SECURE_PM_DOMAINS
- 	bool "Amlogic Meson Secure Power Domains driver"
--	depends on ARCH_MESON || COMPILE_TEST
-+	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
- 	depends on PM && OF
- 	depends on HAVE_ARM_SMCCC
- 	default ARCH_MESON
--- 
-2.7.4
+This could definitely use being both split up and reordered, it's a 34
+patch series as things stand which is just far too big and I don't
+understand the ordering within the series - there's a mix of fixes,
+cleanups and new features which should come in that order but don't.
+This makes it difficult to get a handle on what's going on because what
+the series is doing jumps about a lot.  There's also a lot of overuse of
+fixes tags and stable tags which also makes things less clear.  I'd
+suggest first sending all the clear fixes as a separate series with the
+cleanups and new functionality separate.
 
+With regard to the ABI breaks they *may* be OK for mainline if we're
+confident that there's not going to be anyone broken by them but we
+should be looking to maintain compatibility if we can even if that's the
+case.
+
+--jozmn01XJZjDjM3N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5KvssACgkQJNaLcl1U
+h9AFkAf+PTXKlVW0kwCz5ifw7rANYaEVuHbffAG8xTZ4xnAb6OOQp6nrRyjbeCh+
+CVeQiWco9iMv0s3ViZrPNRu0cAY0q5yT9/3PtcSUnf9kdZU0j2NGgVcd8M1r36nG
+rqo32+9t3pM7PVuMFxprSYIWowjL4imVnijbUr4HKqMfgcSv11/A8/vrgeFDVw7s
+iaICzpZ7eEo7wz23UocFb3ZTLamvSqlUen7jJj8l2KlMZute7NlbH9WOZVV7KHoE
+i/eafDrmflwnVDqYffboBROuzLF3fBWbcvyBHsqt9ox5N4YIv9+IBp9u1JORKCPX
+tAZBXTMe3EN10DSbE3X0iXvk+gwzRw==
+=106H
+-----END PGP SIGNATURE-----
+
+--jozmn01XJZjDjM3N--
