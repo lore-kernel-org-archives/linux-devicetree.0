@@ -1,120 +1,105 @@
-Return-Path: <SRS0=AK1n=4E=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2FAC3B1BF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 23:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24822C3B1BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 01:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5830F20729
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Feb 2020 23:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1E2208C4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 01:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="rcplxmb/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lq1ibPzk"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mgKM+8Nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgBPX5G (ORCPT
+        id S1726222AbgBQBPy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 18:57:06 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:42941 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726067AbgBPX5G (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Feb 2020 18:57:06 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BF5DB23D1;
-        Sun, 16 Feb 2020 18:57:05 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 16 Feb 2020 18:57:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=Iq3LVkD0V43Pc+mO0wAfFqV5qSaPvQ/
-        MM4fB/BoXF80=; b=rcplxmb/8uWm7hKf+9c9zjG9b88Q8NCjzvGSxUne58cHaK5
-        AGJhSJkKKdRdGy/8SFYXzKicYHBTdfm4Mv/j9go6EoTaIFAoFzkX7YFlMNjcEgyq
-        1As7W1TLCXXLGFD7f3i1uNFtEs7bMNyBGDTCZMQja640DU9muoOv/sRp/Ql04zBe
-        G/CTYIWMRHXdTstH4u7DQRtdwFJP2mFIBhNVfAiKTKDTt3ziZr9cvBH+ORaSfDYl
-        fVPXs1iHNwHc3GfRwT1UHXLX+F3hNv2uC+FtYdd45N33kcu93E2ccWrYHHpfzw1X
-        1TG3oohc3u2Tj/Ys8Xn2Rog9DB1fG33VvhltpfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Iq3LVk
-        D0V43Pc+mO0wAfFqV5qSaPvQ/MM4fB/BoXF80=; b=lq1ibPzkpvgjiRKofRT7M1
-        CJUr2d1nf4CUXLJnak+rjb0fZRWL0VhhuU+rrO35vEmz7Jw1+QMVBIu/b/h7rLJi
-        lHiZeyqbeBUNCJ7945aOHA9WnOIlcudgWi9R8MAv3CbMOzMdqyk0UzeDgy8TuKD4
-        csdlzFjeXRtbco+GhyUihPe62TfyXN8ww4hxA34/9mMYmvZBC0zCuD/sxtEsfXdr
-        cA2mBC2oA6FQ34SzK5C9v2g9Cmqc3r3bqFaZ8QPPjmqfJy5WWAaTwAAquf4iHyDz
-        izgPv1QSnIshP1wmDLuHQ2XPZxY21Ym/hHqx+XqYiZlbujMYyzj93NC/FbiCLu2g
-        ==
-X-ME-Sender: <xms:0NZJXkTfPWJ7ph-BGf8lw6Y4BnRRam1vXMEO3UDOX9D6kKJI4OosKA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdduhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:0NZJXntJj7JYT3Gh4F196g4BvCaz567U-g7331QHejM-Tv7EgdBvig>
-    <xmx:0NZJXu9q2I8QUBF1xwuRXsq73ydIXGF39keIKWrbXbHNdpderRJMAg>
-    <xmx:0NZJXoxMdh764fHv5nMSvf75ZYqa3ttgzcooKbyaWhXrpYSwRm6Ctg>
-    <xmx:0dZJXgjvk7IAxL22y8MzPM2A7xInaTSyZYyqGo_jZOroRQcB-t5T1A>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id EE60AE00A2; Sun, 16 Feb 2020 18:57:03 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
-Mime-Version: 1.0
-Message-Id: <3a053c3e-0fec-4ab9-b941-a335524b3303@www.fastmail.com>
-In-Reply-To: <CAK8P3a3HsdpLz0aDGem1BrQsNo2mEJOnOsLcKFcLjaERx9dhGg@mail.gmail.com>
-References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
- <1579123790-6894-7-git-send-email-eajames@linux.ibm.com>
- <CAK8P3a3HsdpLz0aDGem1BrQsNo2mEJOnOsLcKFcLjaERx9dhGg@mail.gmail.com>
-Date:   Mon, 17 Feb 2020 10:26:57 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Arnd Bergmann" <arnd@arndb.de>,
-        "Eddie James" <eajames@linux.ibm.com>
-Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Jason Cooper" <jason@lakedaemon.net>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Joel Stanley" <joel@jms.id.au>
-Subject: Re: [PATCH v6 06/12] soc: aspeed: Add XDMA Engine Driver
-Content-Type: text/plain
+        Sun, 16 Feb 2020 20:15:54 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:56056 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726183AbgBQBPy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Feb 2020 20:15:54 -0500
+X-UUID: 58ba2fca33f14c9791cf60f1413a63f1-20200217
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=udU/3e9H9cGpZ7qWkk4wYru8GgYPMObjkY0Yy3r1L74=;
+        b=mgKM+8Nwn5zTb+/rSNb5iz+ExOM4Sc8MJzwPOEl9Zm6o724DKBP/zA1xoJZiHL8YDpP6WEh3nDoNYG3A98KErmjV79kxkXk2ic/+xGEQid62GraYImiua/s7hbcxQZMmDCcEhbSqFxp1+sYvJe5XBz2/Jf5E7vi6ycpB47HVuBk=;
+X-UUID: 58ba2fca33f14c9791cf60f1413a63f1-20200217
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 689842576; Mon, 17 Feb 2020 09:15:48 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 17 Feb 2020 09:14:16 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 17 Feb 2020 09:15:24 +0800
+Message-ID: <1581902146.28283.0.camel@mtksdaap41>
+Subject: Re: [PATCH 2/2] iommu/mediatek: add support for MT8167
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Fabien Parent <fparent@baylibre.com>,
+        Yong Wu <yong.wu@mediatek.com>
+CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <joro@8bytes.org>, <robh+dt@kernel.org>
+Date:   Mon, 17 Feb 2020 09:15:46 +0800
+In-Reply-To: <20200103162632.109553-2-fparent@baylibre.com>
+References: <20200103162632.109553-1-fparent@baylibre.com>
+         <20200103162632.109553-2-fparent@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 1FF58C5F95081E4197AD9A1E11E99E371D55C8CC78938A0A06E74C41163DCFFC2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+K1lvbmcuV3UuDQoNCk9uIEZyaSwgMjAyMC0wMS0wMyBhdCAxNzoyNiArMDEwMCwgRmFiaWVuIFBh
+cmVudCB3cm90ZToNCj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBJT01NVSBvbiBNVDgxNjcNCj4gDQo+
+IFNpZ25lZC1vZmYtYnk6IEZhYmllbiBQYXJlbnQgPGZwYXJlbnRAYmF5bGlicmUuY29tPg0KPiAt
+LS0NCj4gIGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgfCAxMSArKysrKysrKysrLQ0KPiAgZHJp
+dmVycy9pb21tdS9tdGtfaW9tbXUuaCB8ICAxICsNCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTEgaW5z
+ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9t
+bXUvbXRrX2lvbW11LmMgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+IGluZGV4IDZmYzFm
+NWVjZjkxZS4uNWZjNjE3OGE4MmRjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lvbW11L210a19p
+b21tdS5jDQo+ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gQEAgLTU2OSw3ICs1
+NjksOCBAQCBzdGF0aWMgaW50IG10a19pb21tdV9od19pbml0KGNvbnN0IHN0cnVjdCBtdGtfaW9t
+bXVfZGF0YSAqZGF0YSkNCj4gIAkJRl9JTlRfUFJFVEVUQ0hfVFJBTlNBVElPTl9GSUZPX0ZBVUxU
+Ow0KPiAgCXdyaXRlbF9yZWxheGVkKHJlZ3ZhbCwgZGF0YS0+YmFzZSArIFJFR19NTVVfSU5UX01B
+SU5fQ09OVFJPTCk7DQo+ICANCj4gLQlpZiAoZGF0YS0+cGxhdF9kYXRhLT5tNHVfcGxhdCA9PSBN
+NFVfTVQ4MTczKQ0KPiArCWlmIChkYXRhLT5wbGF0X2RhdGEtPm00dV9wbGF0ID09IE00VV9NVDgx
+NzMgfHwNCj4gKwkgICAgZGF0YS0+cGxhdF9kYXRhLT5tNHVfcGxhdCA9PSBNNFVfTVQ4MTY3KQ0K
+PiAgCQlyZWd2YWwgPSAoZGF0YS0+cHJvdGVjdF9iYXNlID4+IDEpIHwgKGRhdGEtPmVuYWJsZV80
+R0IgPDwgMzEpOw0KPiAgCWVsc2UNCj4gIAkJcmVndmFsID0gbG93ZXJfMzJfYml0cyhkYXRhLT5w
+cm90ZWN0X2Jhc2UpIHwNCj4gQEAgLTc4Miw2ICs3ODMsMTMgQEAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBtdGtfaW9tbXVfcGxhdF9kYXRhIG10MjcxMl9kYXRhID0gew0KPiAgCS5sYXJiaWRfcmVtYXAg
+PSB7MCwgMSwgMiwgMywgNCwgNSwgNiwgNywgOCwgOX0sDQo+ICB9Ow0KPiAgDQo+ICtzdGF0aWMg
+Y29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ4MTY3X2RhdGEgPSB7DQo+ICsJLm00
+dV9wbGF0ICAgICA9IE00VV9NVDgxNjcsDQo+ICsJLmhhc180Z2JfbW9kZSA9IHRydWUsDQo+ICsJ
+LnJlc2V0X2F4aSAgICA9IHRydWUsDQo+ICsJLmxhcmJpZF9yZW1hcCA9IHswLCAxLCAyLCAzLCA0
+LCA1fSwgLyogTGluZWFyIG1hcHBpbmcuICovDQo+ICt9Ow0KPiArDQo+ICBzdGF0aWMgY29uc3Qg
+c3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ4MTczX2RhdGEgPSB7DQo+ICAJLm00dV9wbGF0
+ICAgICA9IE00VV9NVDgxNzMsDQo+ICAJLmhhc180Z2JfbW9kZSA9IHRydWUsDQo+IEBAIC03OTgs
+NiArODA2LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaW9tbXVfcGxhdF9kYXRhIG10ODE4
+M19kYXRhID0gew0KPiAgDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtf
+aW9tbXVfb2ZfaWRzW10gPSB7DQo+ICAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MTIt
+bTR1IiwgLmRhdGEgPSAmbXQyNzEyX2RhdGF9LA0KPiArCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0
+ZWssbXQ4MTY3LW00dSIsIC5kYXRhID0gJm10ODE2N19kYXRhfSwNCj4gIAl7IC5jb21wYXRpYmxl
+ID0gIm1lZGlhdGVrLG10ODE3My1tNHUiLCAuZGF0YSA9ICZtdDgxNzNfZGF0YX0sDQo+ICAJeyAu
+Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtbTR1IiwgLmRhdGEgPSAmbXQ4MTgzX2RhdGF9
+LA0KPiAgCXt9DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5oIGIvZHJp
+dmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiBpbmRleCBlYTk0OWEzMjRlMzMuLmNiOGZkNTk3MGNk
+NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiArKysgYi9kcml2
+ZXJzL2lvbW11L210a19pb21tdS5oDQo+IEBAIC0zMCw2ICszMCw3IEBAIHN0cnVjdCBtdGtfaW9t
+bXVfc3VzcGVuZF9yZWcgew0KPiAgZW51bSBtdGtfaW9tbXVfcGxhdCB7DQo+ICAJTTRVX01UMjcw
+MSwNCj4gIAlNNFVfTVQyNzEyLA0KPiArCU00VV9NVDgxNjcsDQo+ICAJTTRVX01UODE3MywNCj4g
+IAlNNFVfTVQ4MTgzLA0KPiAgfTsNCg0K
 
-
-On Tue, 11 Feb 2020, at 03:05, Arnd Bergmann wrote:
-> On Wed, Jan 15, 2020 at 10:31 PM Eddie James <eajames@linux.ibm.com> wrote:
-> >
-> > The XDMA engine embedded in the AST2500 and AST2600 SOCs performs PCI
-> > DMA operations between the SOC (acting as a BMC) and a host processor
-> > in a server.
-> >
-> > This commit adds a driver to control the XDMA engine and adds functions
-> > to initialize the hardware and memory and start DMA operations.
-> >
-> > Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> 
-> Hi Eddie,
-> 
-> I'm missing the bigger picture in the description here, how does this fit into
-> the PCIe endpoint framework and the dmaengine subsystem?
-> 
-> Does the AST2500 show up as a PCIe device in the host, or do you just
-> inject DMAs into the host and hope that bypasses the IOMMU?
-
-The host needs to coordinate out-of-band with the BMC to communicate host
-addresses to be used. The host should configure the IOMMU as required before
-triggering transfers (either from it's own XDMA interface or requesting the BMC
-queue the transfer).
-
-Andrew
