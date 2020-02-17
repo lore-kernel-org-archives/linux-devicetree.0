@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F35C35242
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 03:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1B8C7619B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 03:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994E821744
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 03:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7173521744
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 03:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581911667;
-	bh=jrF0oNRyAPvPKYYpF8tmM5q6hhzDDWjQzsZFCTo4Ikc=;
+	s=default; t=1581911954;
+	bh=o2FZuDF+s0lgyoH3wJzVZ5K7NvTZWMeJj/DeeTi4Y3M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y0raaykvene6aB5FD/JmvA034tTxsMEYG9dA0VXf31z3v8OXRfgkCdvPFVdQjqRb7
-	 w7mTp9KCr7pfrbIBCbIYW5lqrX8Jjkyje9ifNQlkbyH4sSozet7FOEtEzQEz9C4o8B
-	 rPNX7oWe/LgbazmKm/5Wi/9RrYck0eSmd0PqX0JU=
+	b=IrZaA2Uid/Wu6btdExeMKQFPWqw4QU3SeRqJt9RFJPfMfDS3Dmy7kQtzT2cQhFs4k
+	 o5YF5ffmzNtAyGMWrxBrGwafCgFNlWSfUiE7EIaGBWJmpL5cmIJHKq1Ky2DfPIdhKI
+	 gGh11c6xD1m6l85EwKAN8pt/tV1/SQ8RRkFpLRaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgBQDy0 (ORCPT
+        id S1727329AbgBQD7N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 22:54:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59632 "EHLO mail.kernel.org"
+        Sun, 16 Feb 2020 22:59:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbgBQDy0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Feb 2020 22:54:26 -0500
+        id S1726498AbgBQD7N (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Feb 2020 22:59:13 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2BCC2072C;
-        Mon, 17 Feb 2020 03:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E62542072C;
+        Mon, 17 Feb 2020 03:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581911666;
-        bh=jrF0oNRyAPvPKYYpF8tmM5q6hhzDDWjQzsZFCTo4Ikc=;
+        s=default; t=1581911952;
+        bh=o2FZuDF+s0lgyoH3wJzVZ5K7NvTZWMeJj/DeeTi4Y3M=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PbppxtE2EaohmfIqplGUBKlCfsZT1Lp29fHIY07N/pv1pgPZ4spbRmWBdzLkL2bfq
-         2LsmfeIjF0Nrh5D/5DHXJLXYJ/03eipk3xWU0qvxjJ6awGWA/Oi4iOWdG0WdvxNloR
-         Jbfp5PZ7ZrYgondMAjyP46dVAEpc6KdfCiu6ETGA=
-Date:   Mon, 17 Feb 2020 11:54:16 +0800
+        b=1NQroVDNjPZS+vQNS1YYNhBkwLMGowdfVeG0E2kk6it4e04DF3BAeL8tcgRLb1yFl
+         jFIxNhHD0f9wM4r34isWAUVl6rI7xqAqtRzbrWu9LVV1vL+o7u72U6AkuRTcujN2qT
+         6Y+Pf/0YRDCKa6EQ6dKVJKrI7Ujamzmk/KqQU61M=
+Date:   Mon, 17 Feb 2020 11:59:02 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Martin Kepplinger <martin.kepplinger@puri.sm>
 Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
@@ -47,67 +47,117 @@ Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
         Anson.Huang@nxp.com, devicetree@vger.kernel.org, kernel@puri.sm,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: Re: [PATCH v1 01/12] arm64: dts: librem5-devkit: add sai2 and sai6
- pinctrl definitions
-Message-ID: <20200217035416.GB5395@dragon>
+Subject: Re: [PATCH v1 02/12] arm64: dts: librem5-devkit: add the simcom 7100
+ modem and audio
+Message-ID: <20200217035902.GC5395@dragon>
 References: <20200205143003.28408-1-martin.kepplinger@puri.sm>
- <20200205143003.28408-2-martin.kepplinger@puri.sm>
+ <20200205143003.28408-3-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205143003.28408-2-martin.kepplinger@puri.sm>
+In-Reply-To: <20200205143003.28408-3-martin.kepplinger@puri.sm>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 03:29:52PM +0100, Martin Kepplinger wrote:
+On Wed, Feb 05, 2020 at 03:29:53PM +0100, Martin Kepplinger wrote:
 > From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 > 
-> Add missing sai2 and sai6 audio interface pinctrl definitions for the
-> Librem 5 devkit.
+> Add the simcomm modem and the sai6 interface that connects it, as well
+> as the sgtl5000 audio codec.
 > 
 > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+
+When you forward a patch from others, you need to add your SoB.
+
+
 > ---
->  .../dts/freescale/imx8mq-librem5-devkit.dts   | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index 764a4cb4e125..9702db69d3ed 100644
+> index 9702db69d3ed..8162576e8f3d 100644
 > --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 > +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -555,6 +555,25 @@
->  		>;
+> @@ -148,6 +148,51 @@
+>  		regulator-always-on;
 >  	};
 >  
-> +	pinctrl_sai2: sai2grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC	0xd6
+> +	sim7100_codec: sound-wwan-codec {
+> +		compatible = "option,gtm601";
+> +		#sound-dai-cells = <0>;
+> +	};
+> +
+> +	sound {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "sgtl5000";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,widgets =
+> +			"Microphone", "Microphone Jack",
+> +			"Headphone", "Headphone Jack",
+> +			"Speaker", "Speaker Ext",
+> +			"Line", "Line In Jack";
+> +		simple-audio-card,routing =
+> +			"MIC_IN", "Microphone Jack",
+> +			"Microphone Jack", "Mic Bias",
+> +			"LINE_IN", "Line In Jack",
+> +			"Headphone Jack", "HP_OUT",
+> +			"Speaker Ext", "LINE_OUT";
 
-Please be consistent with existing indentation style.
+Please have a newline between properties and child node.
+
+> +		simple-audio-card,cpu {
+> +			sound-dai = <&sai2>;
+> +		};
+
+Also have a newline between nodes.
 
 Shawn
 
-> +		MX8MQ_IOMUXC_SAI2_TXC_SAI2_TX_BCLK	0xd6
-> +		MX8MQ_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0	0xd6
-> +		MX8MQ_IOMUXC_SAI2_RXD0_SAI2_RX_DATA0	0xd6
-> +		MX8MQ_IOMUXC_SAI2_MCLK_SAI2_MCLK	0xd6
-> +		>;
+> +		simple-audio-card,codec {
+> +			sound-dai = <&sgtl5000>;
+> +			clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
+> +			frame-master;
+> +			bitclock-master;
+> +		};
 > +	};
 > +
-> +	pinctrl_sai6: sai6grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SAI1_RXD5_SAI6_RX_DATA0	0xd6
-> +		MX8MQ_IOMUXC_SAI1_RXD6_SAI6_RX_SYNC	0xd6
-> +		MX8MQ_IOMUXC_SAI1_TXD4_SAI6_RX_BCLK     0xd6
-> +		MX8MQ_IOMUXC_SAI1_TXD5_SAI6_TX_DATA0	0xd6
-> +		>;
+> +	sound-wwan {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "SIMCom SIM7100";
+> +		simple-audio-card,format = "dsp_a";
+> +		simple-audio-card,cpu {
+> +			sound-dai = <&sai6>;
+> +		};
+> +		telephony_link_master: simple-audio-card,codec {
+> +			sound-dai = <&sim7100_codec>;
+> +			frame-master;
+> +			bitclock-master;
+> +		};
 > +	};
 > +
->  	pinctrl_typec: typecgrp {
->  		fsl,pins = <
->  			MX8MQ_IOMUXC_NAND_DATA06_GPIO3_IO12		0x16
+>  	vibrator {
+>  		compatible = "gpio-vibrator";
+>  		pinctrl-names = "default";
+> @@ -749,6 +794,16 @@
+>  	status = "okay";
+>  };
+>  
+> +&sai6 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_sai6>;
+> +	assigned-clocks = <&clk IMX8MQ_CLK_SAI6>;
+> +	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+> +	assigned-clock-rates = <24576000>;
+> +	fsl,sai-synchronous-rx;
+> +	status = "okay";
+> +};
+> +
+>  &uart1 { /* console */
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_uart1>;
 > -- 
 > 2.20.1
 > 
