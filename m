@@ -2,54 +2,54 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEDFC7619B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBC4C7619B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1DAF206F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BEB20726
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="i99lQeaT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WwBMFoeh"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="F7IJ71l4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="agSTzwEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgBQGnf (ORCPT
+        id S1726980AbgBQGnK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:43:35 -0500
+        Mon, 17 Feb 2020 01:43:10 -0500
 Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60881 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727495AbgBQGnM (ORCPT
+        by vger.kernel.org with ESMTP id S1727402AbgBQGnK (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:43:12 -0500
+        Mon, 17 Feb 2020 01:43:10 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6F00855F6;
-        Mon, 17 Feb 2020 01:43:11 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 22CCF5590;
+        Mon, 17 Feb 2020 01:43:09 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:43:11 -0500
+  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:43:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=0bytkBnACm85u
-        8GzFKkbz2lEVaNk97YvyRqeDTlzBYk=; b=i99lQeaTghn8OQoAndt3G+dRheaO7
-        fZt3V1MIRK2/IhxlsJqfsHIxJwqRnHrntE8g0GyqriW6z4BzwBIfoSCKdK5/XclU
-        RzvdzEeutg3uwMBaJSIIh1PLsbK5kR9cTgU4BzGz5wSDgV7GBYPsgOQ5ZuQ9I3Dv
-        Av+qMZbFz1cSBE3RYryHNqQuYy8+olMcFULBR4GnIyiCavqnMckYWucCawTlKEGv
-        1+tSH/jWJA2VxmNnD9/zZkJzo4XxbH+LWetOv7SHzizp+QtgN2zQg79cPqba4Wfe
-        Pbicci++kBkkn9e5I0RvCEOqdwptQnTFgK3KqEC1NgcSK2Llhg4wcU8rw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=ectfDp539hM3p
+        tJyekSj+yRWKWQ4i4xQcJ0r8f3OkZg=; b=F7IJ71l4MsxmVq4huWXG6LnfilrRa
+        PEe+HDA5NQrcuy951qPXy2dH8ZaPzUFQMz2SHMVw2hWzEcbHo3TKXmxcUX94Xmz3
+        /mSa9mi2iv9sEuBvtXTmRLWKPk4lzpgyh4t/10VDFBUaOCjoUI7jJrxXolnVTeOT
+        Vqz7gS3bcK+yYr5eiI96CgtxNjkQXn5Abob/WPibXSRyJz711KPH9VtLsiIhdoPC
+        dIsPSX0rIASALTvKFYWyAwWLLNDD0qo3oUn+mh0bYPeqwblsdLd9h3DKfKmigyZQ
+        0TQXDFzhLhKk53Br59N6gcvQYWcxHgo7HnOkNsF3iuSkru73kfrS/juYA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=0bytkBnACm85u8GzFKkbz2lEVaNk97YvyRqeDTlzBYk=; b=WwBMFoeh
-        Qa11XMb5Xd3MWF4wtTHrY5LBbyHxIdYx72jEDDGLK43ViU8IVYTr1zB+6oBPvXsz
-        wrFhjDMkBUxyAaO89E14qLbo+PYCdams7gzPLeSmDDy03vpls5az41Xr74Aa8UR+
-        9LFMMg+d7IsSFXsbQ2q+Rr0ht2gWGx+k0nBseEw5TS77dmoggdj0S7/wFWd3w+gs
-        y7JiV4ihgokvYjKN7Wac7sHyagVIp1fu8PVb5TvYMhC2ci8iqcNW8OTfuH/JHTSx
-        ie8akTY3UmsGhbygtNyaISERBoDjKjgbAcij2n39HZXtOLScQWcQiul7d6FxGno3
-        BgCPe3MZAl6feg==
-X-ME-Sender: <xms:_zVKXtR-TCsBFRD2CKHVBUoiEUqoFf7DNrioFovXvSSRt413WpSkvg>
+        fm2; bh=ectfDp539hM3ptJyekSj+yRWKWQ4i4xQcJ0r8f3OkZg=; b=agSTzwEf
+        Uic/LDNzkirTkry/5n12fx4DHRJy+gzejfXJdV2+rBU/8w5L1CweXmTzXiHyHj0N
+        8k2rWRy1fr5abvYxbMukBPrknfr/m5yACsbZ5pMOkz5hEsDSFUMG98HxHZnBSSm1
+        nrStBUcknkKojORDi5uoDPHyh3nIM2mpgi2vx+7BiSMkhRDPlq4rSisJfAAJv4Ps
+        vFJroUm4n9i/goiFOgHbVbXNZq6Y8Jmd3jFj584cJRTKxqG5FJFGNmVPH9H9wIog
+        cxAe6oe9pkN7soLPGRswsAinpmT3BIpTY7MyddDp6ucrC7EELzM/n7oYl7MCLFXo
+        K0mWBXEA9GAGew==
+X-ME-Sender: <xms:_DVKXjCMbXSmVX_qm8JIGG0OBE2efMrP9xAB7AjghsEqLJuIPqbUnA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdote
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
     ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedvjeenucfrrghr
     rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:_zVKXsKL33Rk3bUTnQfqwnv908Y5ovArZCAXo5Jr2JQV8LE0LdDZXA>
-    <xmx:_zVKXjC0w8iGmhcJ_lyoV1g_mJsGkM1stjHdvaT1zEreH__2akslUQ>
-    <xmx:_zVKXlBria6HDsYR_yKYBcJDcjPi3RZb-VRJSZiNAvQK6Cl2Sg-D5A>
-    <xmx:_zVKXnxCKNWDF9qTUjnSAR2gYFbOiIDeHMkxE8hSCOUcUHPABn41gg>
+X-ME-Proxy: <xmx:_TVKXtzF_Hu6hN0cXNTPj9K1w70EDnTgOULcYe2R8NMdRdo0kY8m9w>
+    <xmx:_TVKXpnT3tRnltnyCWA8NFXVkNNCezYKrOS1SSAYUgJaCWqnkJZAHA>
+    <xmx:_TVKXqGXBqOFE62Qe0ay9vBSBdfuOuZEz1cESeMrLCRi60l65lBhxw>
+    <xmx:_TVKXszf4QYA9d_usTG6AjiZJ60jBHwoYoHJfpt7I086t6bCgzFjOw>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C6EB6328005A;
-        Mon, 17 Feb 2020 01:43:10 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5CBEE3280059;
+        Mon, 17 Feb 2020 01:43:08 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -78,9 +78,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [RFC PATCH 33/34] arm64: dts: allwinner: a64: Allow multiple DAI links
-Date:   Mon, 17 Feb 2020 00:42:49 -0600
-Message-Id: <20200217064250.15516-34-samuel@sholland.org>
+Subject: [RFC PATCH 29/34] ASoC: sun8i-codec: Add AIF, ADC, and DAC volume controls
+Date:   Mon, 17 Feb 2020 00:42:45 -0600
+Message-Id: <20200217064250.15516-30-samuel@sholland.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200217064250.15516-1-samuel@sholland.org>
 References: <20200217064250.15516-1-samuel@sholland.org>
@@ -91,60 +91,124 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-simple-audio-card supports either a single DAI link at the top level, or
-subnodes with one or more DAI links. To use the secondary AIFs on the
-codec, we need to add additional DAI links to the same sound card, so we
-need to use the other binding.
+This allows changing the volume of each digital input/output
+independently, and provides the only "master volume" for the DAC.
+(The ADC also has a gain control on the analog side.)
+
+While the hardware supports volumes up to +72dB, the controls here
+are limited to +24dB maximum, as anything more makes volume sliders
+difficult to use, and is extremely likely to cause clipping (this is
+simple digital gain).
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23 +++++++++++--------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ sound/soc/sunxi/sun8i-codec.c | 56 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index a7470f2ab975..78353893c3b9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -157,12 +157,10 @@ psci {
- 	};
+diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
+index 245145e36357..71cd7646a895 100644
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -21,6 +21,7 @@
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <sound/soc-dapm.h>
++#include <sound/tlv.h>
  
- 	sound: sound {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "sun50i-a64-audio";
--		simple-audio-card,format = "i2s";
--		simple-audio-card,frame-master = <&cpudai>;
--		simple-audio-card,bitclock-master = <&cpudai>;
--		simple-audio-card,mclk-fs = <128>;
- 		simple-audio-card,aux-devs = <&codec_analog>;
- 		simple-audio-card,routing =
- 				"Left DAC", "DAC Left",
-@@ -171,12 +169,19 @@ sound: sound {
- 				"ADC Right", "Right ADC";
- 		status = "disabled";
+ #define SUN8I_SYSCLK_CTL				0x00c
+ #define SUN8I_SYSCLK_CTL_AIF1CLK_ENA			11
+@@ -73,6 +74,12 @@
+ #define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACR	10
+ #define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_ADCR		9
+ #define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACL	8
++#define SUN8I_AIF1_VOL_CTRL1				0x050
++#define SUN8I_AIF1_VOL_CTRL1_AD0L_VOL			8
++#define SUN8I_AIF1_VOL_CTRL1_AD0R_VOL			0
++#define SUN8I_AIF1_VOL_CTRL3				0x058
++#define SUN8I_AIF1_VOL_CTRL3_DA0L_VOL			8
++#define SUN8I_AIF1_VOL_CTRL3_DA0R_VOL			0
+ #define SUN8I_AIF2_ADCDAT_CTRL				0x084
+ #define SUN8I_AIF2_ADCDAT_CTRL_AIF2_ADCL_ENA		15
+ #define SUN8I_AIF2_ADCDAT_CTRL_AIF2_ADCR_ENA		14
+@@ -93,6 +100,12 @@
+ #define SUN8I_AIF2_MXR_SRC_ADCR_MXR_SRC_AIF1DA1R	10
+ #define SUN8I_AIF2_MXR_SRC_ADCR_MXR_SRC_AIF2DACL	9
+ #define SUN8I_AIF2_MXR_SRC_ADCR_MXR_SRC_ADCR		8
++#define SUN8I_AIF2_VOL_CTRL1				0x090
++#define SUN8I_AIF2_VOL_CTRL1_ADCL_VOL			8
++#define SUN8I_AIF2_VOL_CTRL1_ADCR_VOL			0
++#define SUN8I_AIF2_VOL_CTRL2				0x098
++#define SUN8I_AIF2_VOL_CTRL2_DACL_VOL			8
++#define SUN8I_AIF2_VOL_CTRL2_DACR_VOL			0
+ #define SUN8I_AIF3_CLK_CTRL_AIF3_CLOCK_SRC_AIF1		(0x0 << 0)
+ #define SUN8I_AIF3_CLK_CTRL_AIF3_CLOCK_SRC_AIF2		(0x1 << 0)
+ #define SUN8I_AIF3_CLK_CTRL_AIF3_CLOCK_SRC_AIF1CLK	(0x2 << 0)
+@@ -106,8 +119,14 @@
+ #define SUN8I_ADC_DIG_CTRL_ENAD				15
+ #define SUN8I_ADC_DIG_CTRL_ADOUT_DTS			2
+ #define SUN8I_ADC_DIG_CTRL_ADOUT_DLY			1
++#define SUN8I_ADC_VOL_CTRL				0x104
++#define SUN8I_ADC_VOL_CTRL_ADCL_VOL			8
++#define SUN8I_ADC_VOL_CTRL_ADCR_VOL			0
+ #define SUN8I_DAC_DIG_CTRL				0x120
+ #define SUN8I_DAC_DIG_CTRL_ENDA				15
++#define SUN8I_DAC_VOL_CTRL				0x124
++#define SUN8I_DAC_VOL_CTRL_DACL_VOL			8
++#define SUN8I_DAC_VOL_CTRL_DACR_VOL			0
+ #define SUN8I_DAC_MXR_SRC				0x130
+ #define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA0L		15
+ #define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA1L		14
+@@ -521,6 +540,41 @@ static struct snd_soc_dai_driver sun8i_codec_dais[] = {
+ 	},
+ };
  
--		cpudai: simple-audio-card,cpu {
--			sound-dai = <&dai>;
--		};
-+		simple-audio-card,dai-link@0 {
-+			format = "i2s";
-+			frame-master = <&link0_cpu>;
-+			bitclock-master = <&link0_cpu>;
-+			mclk-fs = <128>;
- 
--		link_codec: simple-audio-card,codec {
--			sound-dai = <&codec 0>;
-+			link0_cpu: cpu {
-+				sound-dai = <&dai>;
-+			};
++static const DECLARE_TLV_DB_SCALE(sun8i_codec_vol_scale, -12000, 75, 1);
 +
-+			link0_codec: codec {
-+				sound-dai = <&codec 0>;
-+			};
- 		};
- 	};
++static const struct snd_kcontrol_new sun8i_codec_controls[] = {
++	SOC_DOUBLE_TLV("AIF1 AD0 Capture Volume",
++		       SUN8I_AIF1_VOL_CTRL1,
++		       SUN8I_AIF1_VOL_CTRL1_AD0L_VOL,
++		       SUN8I_AIF1_VOL_CTRL1_AD0R_VOL,
++		       0xc0, 0, sun8i_codec_vol_scale),
++	SOC_DOUBLE_TLV("AIF1 DA0 Playback Volume",
++		       SUN8I_AIF1_VOL_CTRL3,
++		       SUN8I_AIF1_VOL_CTRL3_DA0L_VOL,
++		       SUN8I_AIF1_VOL_CTRL3_DA0R_VOL,
++		       0xc0, 0, sun8i_codec_vol_scale),
++	SOC_DOUBLE_TLV("AIF2 ADC Capture Volume",
++		       SUN8I_AIF2_VOL_CTRL1,
++		       SUN8I_AIF2_VOL_CTRL1_ADCL_VOL,
++		       SUN8I_AIF2_VOL_CTRL1_ADCR_VOL,
++		       0xc0, 0, sun8i_codec_vol_scale),
++	SOC_DOUBLE_TLV("AIF2 DAC Playback Volume",
++		       SUN8I_AIF2_VOL_CTRL2,
++		       SUN8I_AIF2_VOL_CTRL2_DACL_VOL,
++		       SUN8I_AIF2_VOL_CTRL2_DACR_VOL,
++		       0xc0, 0, sun8i_codec_vol_scale),
++	SOC_DOUBLE_TLV("ADC Capture Volume",
++		       SUN8I_ADC_VOL_CTRL,
++		       SUN8I_ADC_VOL_CTRL_ADCL_VOL,
++		       SUN8I_ADC_VOL_CTRL_ADCR_VOL,
++		       0xc0, 0, sun8i_codec_vol_scale),
++	SOC_DOUBLE_TLV("DAC Playback Volume",
++		       SUN8I_DAC_VOL_CTRL,
++		       SUN8I_DAC_VOL_CTRL_DACL_VOL,
++		       SUN8I_DAC_VOL_CTRL_DACR_VOL,
++		       0xc0, 0, sun8i_codec_vol_scale),
++};
++
+ static const struct snd_kcontrol_new sun8i_aif1_loopback_switch =
+ 	SOC_DAPM_SINGLE("AIF1 Loopback Switch",
+ 			SUN8I_AIF1_DACDAT_CTRL,
+@@ -1017,6 +1071,8 @@ static int sun8i_codec_component_probe(struct snd_soc_component *component)
+ }
  
+ static const struct snd_soc_component_driver sun8i_soc_component = {
++	.controls		= sun8i_codec_controls,
++	.num_controls		= ARRAY_SIZE(sun8i_codec_controls),
+ 	.dapm_widgets		= sun8i_codec_dapm_widgets,
+ 	.num_dapm_widgets	= ARRAY_SIZE(sun8i_codec_dapm_widgets),
+ 	.dapm_routes		= sun8i_codec_dapm_routes,
 -- 
 2.24.1
 
