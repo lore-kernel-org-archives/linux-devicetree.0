@@ -2,244 +2,123 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63222C35254
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 10:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B23DC761A2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 11:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B82A222D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 10:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654BC20836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 11:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W+p2Kez5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aPguU36P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgBQKmU (ORCPT
+        id S1728102AbgBQLLy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:42:20 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:17460 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725972AbgBQKmT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:42:19 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581936138; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=9eyK9s5QcOQNlzTcBcw9+PasjfwqMuF96kLGC5PXg0c=;
- b=W+p2Kez5aXY3qC1/b6JIGmQDRQfBOBLDg6EV+7NrffT8kVmu1NAUnm+HRo/qzeHjSbeZWNsU
- Olc8EKjYq2KtyHpZyJTndOjgNMt05BLNF1Y3aZkOGuYNSPmLbeBzHvZN7du2JLiF4w8997HE
- 5DxyglYH4zsZdc0d/wQifRB4FaQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4a6dfe.7f32ddc08ea0-smtp-out-n03;
- Mon, 17 Feb 2020 10:42:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0FD30C4479F; Mon, 17 Feb 2020 10:42:05 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: harigovi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7EABC43383;
-        Mon, 17 Feb 2020 10:42:03 +0000 (UTC)
+        Mon, 17 Feb 2020 06:11:54 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52666 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbgBQLLx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 06:11:53 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HBBlQB039631;
+        Mon, 17 Feb 2020 05:11:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581937907;
+        bh=YUlkxjL/5rW7/xSy0zkSYbWN6Df5HFgJ5tv8RMZL+nQ=;
+        h=From:To:CC:Subject:Date;
+        b=aPguU36PRPwnNWqe00LmaSV66/DGBMf8mdFtljWYkmQa5H4p/sCNIXdSrW78iWlbx
+         jEIZB+hpMGEnvRPBtb+Imc/wLuJkS673EknFIBcw4EvfGEsNbSHrTtulLMH2Y0Mm9C
+         QmlemScm18BkRFlc3RcfFR2U91C624YLAURT8Ow8=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HBBlA2049795;
+        Mon, 17 Feb 2020 05:11:47 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
+ Feb 2020 05:11:46 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 17 Feb 2020 05:11:46 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HBBhYK030042;
+        Mon, 17 Feb 2020 05:11:44 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>, Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 0/2] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
+Date:   Mon, 17 Feb 2020 16:45:17 +0530
+Message-ID: <20200217111519.29163-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Feb 2020 16:12:03 +0530
-From:   harigovi@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
-In-Reply-To: <CAF6AEGv2Ymn+4uDXsO2-P+HR9dpOotB=NRMSEsBu8_uOCJ2vBQ@mail.gmail.com>
-References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
- <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
- <2f5abc857910f70faa119fea5bda81d7@codeaurora.org>
- <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
- <1d201377996e16ce25acb640867e1214@codeaurora.org>
- <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
- <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com>
- <CAF6AEGvLOWKVCjjmqranEi9TKOpMM+BPK199wQ7f=Ez491uhcA@mail.gmail.com>
- <CAOCk7NrifMkwartV4rj_v_V4=EHeSkmb28tdBUrxoPHVSX5G5Q@mail.gmail.com>
- <CAF6AEGv2Ymn+4uDXsO2-P+HR9dpOotB=NRMSEsBu8_uOCJ2vBQ@mail.gmail.com>
-Message-ID: <500fec9adf6c8f8102d0e92535166007@codeaurora.org>
-X-Sender: harigovi@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-02-12 10:40, Rob Clark wrote:
-> On Tue, Feb 11, 2020 at 8:05 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> 
-> wrote:
->> 
->> On Tue, Feb 11, 2020 at 5:28 PM Rob Clark <robdclark@gmail.com> wrote:
->> >
->> > On Tue, Feb 11, 2020 at 7:59 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->> > >
->> > > On Tue, Feb 11, 2020 at 8:44 AM Rob Clark <robdclark@gmail.com> wrote:
->> > > >
->> > > > On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
->> > > > >
->> > > > > On 2020-02-07 19:40, Jeffrey Hugo wrote:
->> > > > > > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
->> > > > > >>
->> > > > > >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
->> > > > > >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
->> > > > > >> > wrote:
->> > > > > >> >>
->> > > > > >> >> For a given byte clock, if VCO recalc value is exactly same as
->> > > > > >> >> vco set rate value, vco_set_rate does not get called assuming
->> > > > > >> >> VCO is already set to required value. But Due to GDSC toggle,
->> > > > > >> >> VCO values are erased in the HW. To make sure VCO is programmed
->> > > > > >> >> correctly, we forcefully call set_rate from vco_prepare.
->> > > > > >> >
->> > > > > >> > Is this specific to certain SoCs? I don't think I've observed this.
->> > > > > >>
->> > > > > >> As far as Qualcomm SOCs are concerned, since pll is analog and the
->> > > > > >> value
->> > > > > >> is directly read from hardware if we get recalc value same as set rate
->> > > > > >> value, the vco_set_rate will not be invoked. We checked in our idp
->> > > > > >> device which has the same SOC but it works there since the rates are
->> > > > > >> different.
->> > > > > >
->> > > > > > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
->> > > > > > does this issue apply to?  Everything implementing the 10nm pll?  One
->> > > > > > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
->> > > > > > so I'm interested to know what is the actual impact here.  I don't see
->> > > > > > an "IDP" SoC in the IP catalog, so I really have no idea what you are
->> > > > > > referring to.
->> > > > >
->> > > > >
->> > > > > This is not 10nm specific. It is applicable for other nms also.
->> > > > > Its specific to the frequency being set. If vco_recalc returns the same
->> > > > > value as being set by vco_set_rate,
->> > > > > vco_set_rate will not be invoked second time onwards.
->> > > > >
->> > > > > For example: Lets take below devices:
->> > > > >
->> > > > > Cheza is based on SDM845 which is 10nm only.
->> > > > > Clk frequency:206016
->> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
->> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
->> > > > >
->> > > > > Trogdor is based on sc7180 which is also 10nm.
->> > > > > Clk frequency:69300
->> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
->> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
->> > > > >
->> > > > > In same trogdor device, we slightly changed the clock frequency and the
->> > > > > values actually differ which will not cause any issue.
->> > > > > Clk frequency:69310
->> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
->> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
->> > > >
->> > > >
->> > > > tbh, loosing state when power is off is kind of the behavior that I'd
->> > > > expect.  It kinda makes me wonder if things are not getting powered
->> > > > off all the way on some SoCs?
->> > > >
->> > > > jhugo, are you worried that this patch will cause problems on other
->> > > > users of the 10nm pll?
->> > >
->> > > Essentially yes.  Conceptually it doesn't seem like this change should
->> > > cause any harm, however -
->> > >
->> > > This sounds like we are trying to work around the clk framework, which
->> > > seems wrong.  It feels like we should be able to set a clk flag for
->> > > this and make the framework deal with it.
->> > >
->> > > Also, this fix is 10nm specific, yet this issue affects all
->> > > implementations?  Seems like this should perhaps be in common code so
->> > > that we don't need to play whack-a-mole by fixing every implementation
->> > > piecemeal.
->> > >
->> > > Finally, the PLLs are notorious for not taking a configuration unless
->> > > they are running.  I admit, I haven't looked at this patch in detail
->> > > to determine if that is the case here, but there doesn't seem to be
->> > > any indication from the commit test or a comment that doing so is
->> > > actually valid in all cases.
->> >
->> > I'm not obviously seeing a clk-provider flag for this.. although I
->> > won't claim to be a clk expert so maybe I'm looking for the wrong
->> > thing..
->> >
->> > On a more practical level, I'd kinda like to get some sort of fix for
->> > v5.6, as currently suspend/resume doesn't work (or at least the
->> > display does not survive) on trogdor, which is a bit annoying.  It
->> > sounds a bit like cheza was just getting lucky (because of rate
->> > rounding?)  I'm not sure if it is the same situation on other sdm850
->> > devices (yoga c630) or sdm835 devices (are they using the 10mm pll as
->> > well?).
->> 
->> sdm835 is the first implementation of the 10nm PLL.  Pretty much
->> everything after (including sdm845/850) also uses the 10nm PLL.
->> 
->> >  I will confess to not really testing s/r on the yoga c630,
->> > although maybe someone else has (Bjorn?).
->> >
->> > Possibly this should be pushed up to the clk framework, although not
->> > sure if it has a good way to realize the clk provider has lost power?
->> > But that sounds like a better thing for v5.7 than v5.6-rc fixes.. ofc
->> > if there is a better way that I'm not seeing, I'm all ears.
->> 
->> There is a suspend/resume sequence in the HPG where VCO isn't lost,
->> but that assumes the GDSC isn't turned off.  If GDSC is turned off,
->> then we need to go through the entire power-up sequence again.  Feels
->> like this should be plumbed into runtime PM based on the
->> suspend/resume usecase, but that's probably more complicated then this
->> change.
-> 
-> since gdsc is modelled as genpd, that seems to (afaict) happen all
-> outside the scope of what the driver knows about.. (but I may be
-> overlooking something)
-> 
->> Looking at the HPG for the power up sequence, it seems like we should
->> be setting the bias in the middle of the dsi_pll_commit(), so the
->> order of operations is slight off, however I somewhat doubt that will
->> have a meaningful impact and it does seem like this change is in line
->> with the spirit of the HPG.
->> 
->> It wasn't clear to me from the commit message what usecase triggered
->> this.  You've made it clear that its suspend/resume (it would be good
->> if that was mentioned) and that its impacting an actual target.  To
->> me, the current description seemed more theoretical and didn't
->> describe the impact that was being addressed.  Overall, it really
->> didn't answer the "why should I care if I have this change" question.
->> 
->> Right now, I think my concerns are cosmetic, therefore I don't have
->> reservations about it being picked up.  If you like:
->> 
->> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> 
-> 
-> hmm, yeah, I guess the commit msg didn't really make that clear.. at
-> any rate, I want to see a clean solution pursued in the long run, but
-> in the short term I also want to get things working (at least if it
-> doesn't break any other users).  So I don't want to land this patch at
-> the expense of follow-up for a cleaner solution.. but like I said, I
-> would like to get s/r working for now.  So I guess I'd like to see
-> some commitment from the display team to follow-up to improve this in
-> the next cycle.  And suggestions welcome about how the clk framework
-> could make this easier.
-> 
-> BR,
-> -R
+Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+themselves have a validation platform for validating the PCIe IP which
+is already in the upstream kernel. Right now the binding only exists for
+Cadence platform and this will result in adding redundant binding schema
+for any platform using Cadence PCIe core.
 
-we had an initial discussion with the clock team, currently there is no 
-ready made clock provider flag to help in the above scenario.
-however we are planning to have further discussions for a cleaner fix, 
-can we open a new issue to track the discussions and design and close 
-the current one ?
+This series:
+1) Create cdns-pcie.yaml which includes properties that are applicable
+   to both host mode and endpoint mode of Cadence PCIe core.
+2) Create cdns-pcie-host.yaml to include properties that are specific to
+   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+   cdns-pcie.yaml.
+3) Create cdns-pcie-ep.yaml to include properties that are specific to
+   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+   cdns-pcie.yaml.
+4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+   for Cadence platform then includes schema for Cadence PCIe core.
 
+Changes from v1:
+*) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+*) Fix example DT node for PCIe Endpoint.
 
+Ref: Patches to convert Cadence driver to library
+     https://lkml.org/lkml/2019/11/11/317
+
+Some of this was initially part of [1], but to accelerate it getting
+into upstream, sending this as a separate series.
+
+[1] -> [1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+
+Kishon Vijay Abraham I (2):
+  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+    schema
+
+ .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
+ .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
+ .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 22 ++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 27 +++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 45 +++++++++++
+ MAINTAINERS                                   |  2 +-
+ 8 files changed, 219 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+
+-- 
+2.17.1
 
