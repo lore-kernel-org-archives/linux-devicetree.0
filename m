@@ -2,115 +2,84 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52041C7619F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B63C35242
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC45207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:33:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eSHNGl3n"
+	by mail.kernel.org (Postfix) with ESMTP id 2D0FF20718
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581921384;
+	bh=BMMe9is2DgAIgri+7WZ9a4B8Sjfj9h9YXhUEhAstKsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RWmLa86NqGiA7E96b7Fnokf8u4hYMILmUHUJBHVAC8K1CFC0AJEVhxszthQQiODwd
+	 XxqgeToeBWujNVNaGpFjwX3kuVtxIzJZ4T1W886BtZcscfG0LxcL2dmhVC/sepiCFS
+	 GYxnLXJzZmaYFua98z2z7fG1IADbwi8ZXlJAQde0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgBQGdU (ORCPT
+        id S1725935AbgBQGgX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:33:20 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:17019 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726289AbgBQGdU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 01:33:20 -0500
-X-UUID: 3ca73692839c4dd49d67780fb507cd2a-20200217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UqyfYNy4x/PeVu5uBPlMP3PaioUduXQQRrrF8IqqBsU=;
-        b=eSHNGl3ngkklQ+DAeyKzOL1AGRCpEpnns5dAto+A/lEzKc7guvbdOGT907uEyWYjocScfLTDMeYuoNOWK7n8vQsE8MJF/rYqblhaNvAvHDtPwtrNIlU0FwxUA8gPNKtyIZrm1qzUYT7sNaupTNhNXosgmmo+nndDfLaEvq5R/7A=;
-X-UUID: 3ca73692839c4dd49d67780fb507cd2a-20200217
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1788356166; Mon, 17 Feb 2020 14:33:16 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 17 Feb 2020 14:31:32 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 17 Feb 2020 14:32:49 +0800
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 17 Feb 2020 01:36:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbgBQGgX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:36:23 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1729B20702;
+        Mon, 17 Feb 2020 06:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581921383;
+        bh=BMMe9is2DgAIgri+7WZ9a4B8Sjfj9h9YXhUEhAstKsg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RTmpKC/hl12WkzSFTmeztlSc0NpSAbIB5OnqD67xudkgJeHI41q9afz61Ah05tBxK
+         4P1SSZKEIknhn63/MKcLnB8RzdcjwrNYu+M6UkOLeXdpjjxqzRuWeo1Wa9KpnEt8F3
+         +2KkkLItfPTZtk4oZrUyKiqA9VpMXgNjFh+bprlA=
+Date:   Mon, 17 Feb 2020 14:36:17 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>
-CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Subject: [PATCH 2/4] [2/4] mmc: mediatek: refine msdc timeout api
-Date:   Mon, 17 Feb 2020 14:31:49 +0800
-Message-ID: <1581921111-24172-3-git-send-email-chun-hung.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581921111-24172-1-git-send-email-chun-hung.wu@mediatek.com>
-References: <1581921111-24172-1-git-send-email-chun-hung.wu@mediatek.com>
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sanchayan Maity <maitysanchayan@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible
+ properties
+Message-ID: <20200217063616.GC6952@dragon>
+References: <20200212104629.20272-1-johan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212104629.20272-1-johan@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RXh0cmFjdCBtc2RjIHRpbWVvdXQgYXBpIGNvbW1vbiBwYXJ0IHRvIGhhdmUNCmJldHRlciBjb2Rl
-IGFyY2hpdGVjdHVyZSBhbmQgYXZvaWQgcmVkdW5kYW50DQpjb2RlLg0KDQotLS0NCiBkcml2ZXJz
-L21tYy9ob3N0L210ay1zZC5jIHwgMzIgKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0N
-CiAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQoNCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L210ay1zZC5jIGIvZHJpdmVycy9tbWMvaG9zdC9t
-dGstc2QuYw0KaW5kZXggMTg5ZTQyNi4uMTI3YjBjZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbW1j
-L2hvc3QvbXRrLXNkLmMNCisrKyBiL2RyaXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMNCkBAIC02OTgs
-MjEgKzY5OCwyMSBAQCBzdGF0aWMgdm9pZCBtc2RjX3VucHJlcGFyZV9kYXRhKHN0cnVjdCBtc2Rj
-X2hvc3QgKmhvc3QsIHN0cnVjdCBtbWNfcmVxdWVzdCAqbXJxKQ0KIAl9DQogfQ0KIA0KLS8qIGNs
-b2NrIGNvbnRyb2wgcHJpbWl0aXZlcyAqLw0KLXN0YXRpYyB2b2lkIG1zZGNfc2V0X3RpbWVvdXQo
-c3RydWN0IG1zZGNfaG9zdCAqaG9zdCwgdTMyIG5zLCB1MzIgY2xrcykNCitzdGF0aWMgdTY0IG1z
-ZGNfdGltZW91dF9jYWwoc3RydWN0IG1zZGNfaG9zdCAqaG9zdCwgdTY0IG5zLCB1NjQgY2xrcykN
-CiB7DQotCXUzMiB0aW1lb3V0LCBjbGtfbnM7DQorCXU2NCB0aW1lb3V0LCBjbGtfbnM7DQogCXUz
-MiBtb2RlID0gMDsNCiANCi0JaG9zdC0+dGltZW91dF9ucyA9IG5zOw0KLQlob3N0LT50aW1lb3V0
-X2Nsa3MgPSBjbGtzOw0KIAlpZiAoaG9zdC0+bW1jLT5hY3R1YWxfY2xvY2sgPT0gMCkgew0KIAkJ
-dGltZW91dCA9IDA7DQogCX0gZWxzZSB7DQotCQljbGtfbnMgID0gMTAwMDAwMDAwMFVMIC8gaG9z
-dC0+bW1jLT5hY3R1YWxfY2xvY2s7DQotCQl0aW1lb3V0ID0gKG5zICsgY2xrX25zIC0gMSkgLyBj
-bGtfbnMgKyBjbGtzOw0KKwkJY2xrX25zICA9IDEwMDAwMDAwMDBVTEw7DQorCQlkb19kaXYoY2xr
-X25zLCBob3N0LT5tbWMtPmFjdHVhbF9jbG9jayk7DQorCQl0aW1lb3V0ID0gbnMgKyBjbGtfbnMg
-LSAxOw0KKwkJZG9fZGl2KHRpbWVvdXQsIGNsa19ucyk7DQorCQl0aW1lb3V0ICs9IGNsa3M7DQog
-CQkvKiBpbiAxMDQ4NTc2IHNjbGsgY3ljbGUgdW5pdCAqLw0KLQkJdGltZW91dCA9ICh0aW1lb3V0
-ICsgKDB4MSA8PCAyMCkgLSAxKSA+PiAyMDsNCisJCXRpbWVvdXQgPSBESVZfUk9VTkRfVVAodGlt
-ZW91dCwgKDB4MSA8PCAyMCkpOw0KIAkJaWYgKGhvc3QtPmRldl9jb21wLT5jbGtfZGl2X2JpdHMg
-PT0gOCkNCiAJCQlzZHJfZ2V0X2ZpZWxkKGhvc3QtPmJhc2UgKyBNU0RDX0NGRywNCiAJCQkJICAg
-ICAgTVNEQ19DRkdfQ0tNT0QsICZtb2RlKTsNCkBAIC03MjIsOSArNzIyLDIxIEBAIHN0YXRpYyB2
-b2lkIG1zZGNfc2V0X3RpbWVvdXQoc3RydWN0IG1zZGNfaG9zdCAqaG9zdCwgdTMyIG5zLCB1MzIg
-Y2xrcykNCiAJCS8qRERSIG1vZGUgd2lsbCBkb3VibGUgdGhlIGNsayBjeWNsZXMgZm9yIGRhdGEg
-dGltZW91dCAqLw0KIAkJdGltZW91dCA9IG1vZGUgPj0gMiA/IHRpbWVvdXQgKiAyIDogdGltZW91
-dDsNCiAJCXRpbWVvdXQgPSB0aW1lb3V0ID4gMSA/IHRpbWVvdXQgLSAxIDogMDsNCi0JCXRpbWVv
-dXQgPSB0aW1lb3V0ID4gMjU1ID8gMjU1IDogdGltZW91dDsNCiAJfQ0KLQlzZHJfc2V0X2ZpZWxk
-KGhvc3QtPmJhc2UgKyBTRENfQ0ZHLCBTRENfQ0ZHX0RUT0MsIHRpbWVvdXQpOw0KKwlyZXR1cm4g
-dGltZW91dDsNCit9DQorDQorLyogY2xvY2sgY29udHJvbCBwcmltaXRpdmVzICovDQorc3RhdGlj
-IHZvaWQgbXNkY19zZXRfdGltZW91dChzdHJ1Y3QgbXNkY19ob3N0ICpob3N0LCB1NjQgbnMsIHU2
-NCBjbGtzKQ0KK3sNCisJdTY0IHRpbWVvdXQ7DQorDQorCWhvc3QtPnRpbWVvdXRfbnMgPSBuczsN
-CisJaG9zdC0+dGltZW91dF9jbGtzID0gY2xrczsNCisNCisJdGltZW91dCA9IG1zZGNfdGltZW91
-dF9jYWwoaG9zdCwgbnMsIGNsa3MpOw0KKwlzZHJfc2V0X2ZpZWxkKGhvc3QtPmJhc2UgKyBTRENf
-Q0ZHLCBTRENfQ0ZHX0RUT0MsDQorCQkgICAgICAodTMyKSh0aW1lb3V0ID4gMjU1ID8gMjU1IDog
-dGltZW91dCkpOw0KIH0NCiANCiBzdGF0aWMgdm9pZCBtc2RjX2dhdGVfY2xvY2soc3RydWN0IG1z
-ZGNfaG9zdCAqaG9zdCkNCi0tIA0KMS45LjENCg==
+On Wed, Feb 12, 2020 at 11:46:29AM +0100, Johan Hovold wrote:
+> The sram-node compatible properties have mistakingly combined the
+> model-specific string with the generic "mtd-ram" string.
+> 
+> Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
+> "cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
+> not present in any binding.
+> 
+> The physmap driver will however bind to platform devices that specify
+> "mtd-ram".
+> 
+> Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
+> Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+> Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
+Applied, thanks.
