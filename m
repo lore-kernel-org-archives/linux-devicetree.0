@@ -2,125 +2,85 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BA7C7619B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF43C35242
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA7520718
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:49:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jtItyBiU"
+	by mail.kernel.org (Postfix) with ESMTP id BFF6820718
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgBQHtR (ORCPT
+        id S1726289AbgBQHyq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:49:17 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34652 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgBQHtQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 02:49:16 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s144so6732611wme.1
-        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 23:49:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=lcsYrSRBQv0/tuOiLtIdcGzeEqOZwy/ucgpprLmBBKY=;
-        b=jtItyBiUgRgk6BmdYboXya2a/o9c2S21KkV7KiQxBx+O6/WaPpvHVfErJdssFjbZ4i
-         P30GjGDkteiyBRZp0k8BhIW+1GcTywIEbovUouGu/OgfmsDsIjMiWshH7A4OKSd28gaH
-         p5SS5NkDBquZz6AKGgu5seByFxMBbzCNQHVBbI7NAocYAgt1VqeoXMVMcjdYd9C4ccU6
-         LDQwxS+4Xepn/dGwZJkW2wyMnIxyfFq2eDYcMgs9DQ6Dt7px1HlhQqUTSIfbTL6kZZGl
-         jVFgUT/VcLP8iDlE2qaccCbQRDlQ7ewgbyFDpZ9SdHnRiRZuTI/jZHIkheuqwFHAzb/k
-         Riiw==
+        Mon, 17 Feb 2020 02:54:46 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44963 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgBQHyq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 02:54:46 -0500
+Received: by mail-ed1-f65.google.com with SMTP id g19so19549663eds.11;
+        Sun, 16 Feb 2020 23:54:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=lcsYrSRBQv0/tuOiLtIdcGzeEqOZwy/ucgpprLmBBKY=;
-        b=SnreoP5uRp+rx0+MpsIyo43dsvTdd/Ogb46l4tcAYUAceGXsFDdFlqZrhYM0WdQWuc
-         fDHIWQt8JIW1v1FkR0K/3O7i66MemekrUfd4PxsL9h3pjj8q8CipuHlowYuOtHmKnPmr
-         VJ1J+9XSOq5fzRViehf0jI+44hPY8x103zfY5Y8/rvdZBITlpfCoNQ7r/XJ1y3Q0U2dq
-         FQE1nHcem01rWL9K5Ec0siWXFRnaAe3L+Ha1BZJPQe3vzZqXDAOtAVIeHKDD/1Ke+EGX
-         NkZWM1SB7G2d6uWBSMDfbGcgMtuvi/kSOGq8m7EfC56asGQiVl1ldC9Y4vibR8uK3LtX
-         Ygig==
-X-Gm-Message-State: APjAAAUGSt52gz3rnnljj6hekmWhTPiL1vK74ZMFkIRHIzY9QQyj7npi
-        d6hITV3SauMYrD3IDf/T1CGVyw==
-X-Google-Smtp-Source: APXvYqyJtjN2qsgU+dia/mVioDpDwyoJ+ti/pQN/I0BI9y/1B7olbgnxkE2KdsFVusIV1tYvrwUnkA==
-X-Received: by 2002:a1c:a553:: with SMTP id o80mr20042142wme.94.1581925754379;
-        Sun, 16 Feb 2020 23:49:14 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id u23sm19462367wmu.14.2020.02.16.23.49.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 23:49:13 -0800 (PST)
-References: <20200216173446.1823-1-linux.amoon@gmail.com> <20200216173446.1823-3-linux.amoon@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Anand Moon <linux.amoon@gmail.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KR6FhQWcs0qNnsB7tbG/todYZCoVJm9lbx/mBjKE5fM=;
+        b=qgjWzJ7Nv/Rq+Y6b/HQvItrGaJytyHXNwx+8sfW7CctKpDIa1ybqyaXOVzCA7RPJ3Q
+         8FF1CCbwqYAQco/ZThzgINULWP2zTlYS3L+/jdB2Jc164gEPqURPcJhIaCkU0uaiOMlN
+         pSG3CIS8WeZvIFnFFOW4rj2Ej6nsN8gUg1rlHkbDDJdvx7qQN2bsS8n7s+gqLUQWmx89
+         DdqWSUJ7wuJUXihd57Cp77Qw9mOwEo9g2hW4kvH0qPeVY4DPVmPEVH1qliciGtmeLrh7
+         JSudJOJTo/Ba/QsXBn+aZniYCCq1+Er3quEQ9dFaDyq7eY2/bsBegCuqPsKZbZ/+NTBG
+         /jlQ==
+X-Gm-Message-State: APjAAAVqGSwVoYEP0cGq+1NJiFsq5gXJlRQsddIbbiae19W5kz3ly21t
+        KGG7fkODwnhR9/4FoI5Lt8GAy7vAMJM=
+X-Google-Smtp-Source: APXvYqwBlGQmpgutjnv6W6/Fc7WIcgwZIXJwv/hA1GKiY6SY/54p/zLHaPvobXHd0aR0IV14ymPCXA==
+X-Received: by 2002:a50:f612:: with SMTP id c18mr13109179edn.1.1581926082098;
+        Sun, 16 Feb 2020 23:54:42 -0800 (PST)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
+        by smtp.gmail.com with ESMTPSA id f25sm456008edt.73.2020.02.16.23.54.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Feb 2020 23:54:41 -0800 (PST)
+Received: by mail-wr1-f45.google.com with SMTP id k11so18374179wrd.9;
+        Sun, 16 Feb 2020 23:54:41 -0800 (PST)
+X-Received: by 2002:a5d:484f:: with SMTP id n15mr20401029wrs.365.1581926081266;
+ Sun, 16 Feb 2020 23:54:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-17-samuel@sholland.org>
+In-Reply-To: <20200217064250.15516-17-samuel@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 17 Feb 2020 15:54:29 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67Af-gZxfrmCEg3Ltvy82Wb4M0RF17CR=jwazyTGy8L=g@mail.gmail.com>
+Message-ID: <CAGb2v67Af-gZxfrmCEg3Ltvy82Wb4M0RF17CR=jwazyTGy8L=g@mail.gmail.com>
+Subject: Re: [RFC PATCH 16/34] ASoC: sun8i-codec: Fix field bit number indentation
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCHv1 2/3] arm64: dts: meson: Add missing regulator linked to VCCV5 regulator to VDDIO_C/TF_IO
-In-reply-to: <20200216173446.1823-3-linux.amoon@gmail.com>
-Date:   Mon, 17 Feb 2020 08:49:12 +0100
-Message-ID: <1jo8txzm9z.fsf@starbuckisacylon.baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On Sun 16 Feb 2020 at 18:34, Anand Moon <linux.amoon@gmail.com> wrote:
-
-> As per schematics add missing VCCV5 power supply to VDDIO_C/TF_IO
-> regulator. Also add TF_3V3N_1V8_EN signal name to gpio pin.
-
-Why ? I don't see the connection with the cover letter here ...
-
+On Mon, Feb 17, 2020 at 2:43 PM Samuel Holland <samuel@sholland.org> wrote:
 >
-> Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
->  1 file changed, 3 insertions(+)
+> Several fields have inconsistent indentation, presumably because it
+> "looked correct" in the patch due to the additional character at the
+> beginning of the line.
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index 353db3b32cc4..23eddff85fe5 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -66,11 +66,14 @@ tf_io: gpio-regulator-tf_io {
->  		regulator-min-microvolt = <1800000>;
->  		regulator-max-microvolt = <3300000>;
->  
-> +		/* TF_3V3N_1V8_EN */
-This is not terribly useful ... same for the previous patch
+> Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
->  		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
->  		gpios-states = <0>;
->  
->  		states = <3300000 0>,
->  			 <1800000 1>;
-> +		/* U16 RT9179GB */
-> +		vin-supply = <&vcc_5v>;
-That is not parsed and not even part of the gpio regulator binding
-documentation. It won't make any difference.
-
->  	};
->  
->  	flash_1v8: regulator-flash_1v8 {
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
