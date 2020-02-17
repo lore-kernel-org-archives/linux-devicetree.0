@@ -2,116 +2,99 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CED1C34022
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCFEC34022
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 17:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13EBF20801
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="r5D9I7Or"
+	by mail.kernel.org (Postfix) with ESMTP id 1A0282064C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 17:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581959344;
+	bh=9gDfaRp3/VrzEmTjM4HC4/4X3kn+35c1/X1vFrri6SQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lkB3jktqD0SRiJSv825eiwu8GSFGg98lErcsSAqbLOKFLdzV9Qo8rOpxXKFPwDy06
+	 Dd/MHX+qXfZWHFtpKWXD5q1f1eMD5uewjJnYR1EEqyuCvRi0Vk6xO5sPbf6yPGiltx
+	 mbwL1hJOkwA36ywFtqmz54Xk9pjNBhZkhZqL53Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbgBQQ4B (ORCPT
+        id S1727976AbgBQRJD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:56:01 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:15422 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbgBQQzj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 11:55:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581958537;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=x19Yc0lwgVFAHPYdn2uCmqE96DBTXWvCWwEjKHcs+zU=;
-        b=r5D9I7OrejNQnWiU6QLV+aIow9I7CZHXQKLtPfsdViKTJL/t/Z7khR/P2SZcCpidKg
-        mgrwnxIvhNfzq9ro2b20hNMoVP0GU2jPIC1G/uOyxTdIaMqJIUVZLTuzDhEb9oe/0HtL
-        v/nDqdamHeq7yUtenbU4UkR8RqiB3YwJWEma/oClN2wgqQz6EPMebYvtCo5v2hczkReZ
-        t2wcSjeoFINroQNemheW35EGKvWV52wDY6fBqgFmindee/lPhCoMw1uVB96Oj4fC0aOX
-        U78r9HLndlam8+m22NTo3WYL04m1vfg6FSeOk4lRLM4qFj9RK2ZW5BoTRfflw6E1whgZ
-        Zd8w==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXL8GTnsvhg="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1HGtWOqr
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 17 Feb 2020 17:55:32 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [RFC v4 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
-Date:   Mon, 17 Feb 2020 17:55:26 +0100
-Message-Id: <86b78db4d607e0bdda6def018bc7f73207ce82e8.1581958529.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1581958529.git.hns@goldelico.com>
-References: <cover.1581958529.git.hns@goldelico.com>
+        Mon, 17 Feb 2020 12:09:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:38890 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727601AbgBQRJD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 12:09:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42A111FB;
+        Mon, 17 Feb 2020 09:09:03 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAC023F68F;
+        Mon, 17 Feb 2020 09:09:02 -0800 (PST)
+Date:   Mon, 17 Feb 2020 17:09:01 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        vigneshr@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v9 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+Message-ID: <20200217170901.GS9304@sirena.org.uk>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200214114618.29704-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200214130952.GI4827@sirena.org.uk>
+ <3530edcd-eb67-8ea5-0fce-89c83400441c@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="D+M1YvVlDncl3vD5"
+Content-Disposition: inline
+In-Reply-To: <3530edcd-eb67-8ea5-0fce-89c83400441c@linux.intel.com>
+X-Cookie: There was a phone call for you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 
-This patch brings support for the JZ4780 efuse. Currently it only expose
-a read only access to the entire 8K bits efuse memory.
+--D+M1YvVlDncl3vD5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- .../bindings/nvmem/ingenic,jz4780-efuse.txt     | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+On Mon, Feb 17, 2020 at 05:18:10PM +0800, Ramuthevar, Vadivel MuruganX wrote:
+> On 14/2/2020 9:09 PM, Mark Brown wrote:
 
-diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
-new file mode 100644
-index 000000000000..339e74daa9a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
-@@ -0,0 +1,17 @@
-+Ingenic JZ EFUSE driver bindings
-+
-+Required properties:
-+- "compatible"		Must be set to "ingenic,jz4780-efuse"
-+- "reg"			Register location and length
-+- "clocks"		Handle for the ahb clock for the efuse.
-+- "clock-names"		Must be "bus_clk"
-+
-+Example:
-+
-+efuse: efuse@134100d0 {
-+	compatible = "ingenic,jz4780-efuse";
-+	reg = <0x134100d0 0x2c>;
-+
-+	clocks = <&cgu JZ4780_CLK_AHB2>;
-+	clock-names = "bus_clk";
-+};
--- 
-2.23.0
+> > This will unconditionally handle the interrupt regardless of if the
+> > hardware was actually flagging an interrupt which will break shared
+> > interrupts and the fault handling code in genirq.
 
+> Yes, you're correct, it doesn't check unconditionally, will update the
+> INT flag in the INT_STATUS register after successful completion of
+> read/write operation.
+> but in this case it is dedicated to qspi-interrupt,not shared with any other
+> HW/SW interrupts.
+
+Currently, on the system you're looking at.  Given that this is already
+a widely reused IP there's no guarantee that this will always be the
+case, and like I say even without sharing it also defeats the fault
+handling code.
+
+--D+M1YvVlDncl3vD5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5KyKwACgkQJNaLcl1U
+h9BRpQf7BBpw3svFemJ2cWh6h1EFnHHkZ/ZLCnfay3PkV8NcIfAhsFPqR7cppyO+
+fd1j9FJjXESo+VN3avFmvA6owvPQOQ/nSxaW+i1a1/w8lx3hLfOaPfk7srq86rmE
+wCWC6/JPdc3pGsez/Eps2ToT36hUWQQPKI5Af2hIbVJyC0BdbM4o6tA1HP0yzP5m
++ORv/DNeldo4WO2Vg6kQeSwOp8KPFNc8rwMYszVKuLMP35B+1yBS1/wqOibqd7D0
+TtxA4X9VwLAN4uxa8QHrjyXKUZBH5w9WCebCV4OdjWlBYiwM8jK3hWqYQ1DeQqjM
+/0Eg90UbfBNrqThe8eoiX1tuUwgT0w==
+=xyLf
+-----END PGP SIGNATURE-----
+
+--D+M1YvVlDncl3vD5--
