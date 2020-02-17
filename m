@@ -2,161 +2,146 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26893C33FA0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 13:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD2FC34022
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 13:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2F92072C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 13:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ADC0214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 13:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McIHR4Hq"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jPdF7j9A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgBQNaQ (ORCPT
+        id S1728744AbgBQNaq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:30:16 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41720 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgBQNaQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 08:30:16 -0500
-Received: by mail-il1-f193.google.com with SMTP id f10so14217437ils.8;
-        Mon, 17 Feb 2020 05:30:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oKZige4m/AoNTTthLZdSUaeHyHzQ4UT6ng0N8s0kzVk=;
-        b=McIHR4HqYVgFbC6brytrdSkaOQ3tJKrEhWb45DEuUAYXqoA+IO8qwVbx2KpqFr9DUb
-         o6njCVJFfIXDCRBfv711DuWgjJphYFThWmvOv9evpZ3TsdOV/Rk1ZPIqXxZLs6Sainmc
-         S1zxOVLhQRiOwSH1GMfEcsuD2KtXgUMJrRMViVoq/UZL0HZt6ERELVgYoFml+6uggMFX
-         cGLzk6Weomiv0gAG8h5grNeHOOHNF15TVuokP0GoIDIxVc+bnGX1DzNdMRar+5yqfEM3
-         hAyOKF3b1iCXri88ClHayFeOvwp5Xp3aYia+cJ90T4xMdC1SDfrtBTehcKf/VtSEzeK+
-         LQjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oKZige4m/AoNTTthLZdSUaeHyHzQ4UT6ng0N8s0kzVk=;
-        b=oIZqnHx1fIU+6fY18zzifRFeJ/BZ68kZCa7SuKd3aZBWxmd4psvlmt72o+4cP3GmCT
-         FWCNkAEPVpnDh/3ghoAfPceiBCay3iq6IaIMySMcJztQdNiaFWK+sB8l5bdpqwLsQ9+r
-         A36EsXlEE8DU3w+x9yZE2tUkb3Q2eJ5KOk5vV/VBKMCjss60fciMzBx5pk/atwlBoVnz
-         i1aXx6Q6QM3wZup0GnpSTM85mFytq6MgQTBlBK36Z69M67O4M3yXTgNyRo8bI6wyMFRm
-         xeVVQ2+2dPmDZYyBq1dNR3rF+Jl11sqIG3aIbVYCYokR9LQUfjUZNdfZZeiw8ziV0brE
-         d7Ww==
-X-Gm-Message-State: APjAAAUifIlLy4phR3wlBwdvFy54gijNJXuX7y3COCU3sToiu8obnPPc
-        UXhWxw4qJqRjlwDaKwYLaKb7rEl6F5OJ8t9ZFiI=
-X-Google-Smtp-Source: APXvYqz/hD3abK5iZXSi3wPYlOwN8FrT1CFYkRgJTPJUClxe+fHEd7f1yn8unX05mzbhhqRWfk9p5Hb28CxRNQtgwpQ=
-X-Received: by 2002:a92:85c1:: with SMTP id f184mr14075867ilh.221.1581946214224;
- Mon, 17 Feb 2020 05:30:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20200216173446.1823-1-linux.amoon@gmail.com> <20200216173446.1823-4-linux.amoon@gmail.com>
- <1jmu9hzlo2.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jmu9hzlo2.fsf@starbuckisacylon.baylibre.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 17 Feb 2020 19:00:04 +0530
-Message-ID: <CANAwSgSaQgU=H3h0S9deT11HA8z9R=Fhy5Kawii9tSBxKf2Wgw@mail.gmail.com>
-Subject: Re: [PATCHv1 3/3] clk: meson: g12a: set cpu clock divider flags too CLK_IS_CRITICAL
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 17 Feb 2020 08:30:46 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46144 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728696AbgBQNaq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 08:30:46 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581946246; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=+WGApTuKqfOHM6DOZbs0hjT7LC6Y7rCmZikPNioYhqE=; b=jPdF7j9AgPBC65nPK3drV6ydUOVfQTdUCTXd5sZlfi8/BZGIjvXcTx54xeQid6d7/YuEuQAw
+ zaMGO7SkgcuAbtGzHlO7enjoPeu++eY2ClkGJR7Yzq5dZVLn8Es41h5G4mrebS9prFabYWsE
+ Ofpu97tga55VnwYs3mB6RQO6CRs=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4a9585.7f138d7c14c8-smtp-out-n03;
+ Mon, 17 Feb 2020 13:30:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AA409C4479C; Mon, 17 Feb 2020 13:30:43 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8FF0C43383;
+        Mon, 17 Feb 2020 13:30:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8FF0C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH 1/6] soc: qcom: geni: Support for ICC voting
+Date:   Mon, 17 Feb 2020 19:00:00 +0530
+Message-Id: <1581946205-27189-2-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
+References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jeronme,
+Add necessary enums, macros and structure variables to support ICC BW
+voting from individual SE drivers.
 
-Thanks for your  review comments.
-On Mon, 17 Feb 2020 at 13:32, Jerome Brunet <jbrunet@baylibre.com> wrote:
->
->
-> On Sun 16 Feb 2020 at 18:34, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> > Odroid N2 would fail to boot using microSD unless we set
-> > cpu freq clk divider flags to CLK_IS_CRITICAL to avoid stalling of
-> > cpu when booting, most likely because of PWM module linked to
->
-> Where did you see a PWM ?
->
-> > the CPU for DVFS is getting disabled in between the late_init call,
->
-> between the late_init call and what ?
->
-> > so gaiting the clock source shuts down the power to the codes.
->
-> what code ?
->
-Sorry, I was really upset about my self.
-I tried to improvise this commit message based on previous mails.
-sorry about that.
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+---
+ include/linux/qcom-geni-se.h | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-> > Setting clk divider flags to CLK_IS_CRITICAL help resolve the issue.
-> >
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >
-> > Following Neil's suggestion, I have prepared this patch.
-> > https://patchwork.kernel.org/patch/11177441/#22964889
-> > ---
-> >  drivers/clk/meson/g12a.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> > index d2760a021301..accae3695fe5 100644
-> > --- a/drivers/clk/meson/g12a.c
-> > +++ b/drivers/clk/meson/g12a.c
-> > @@ -283,6 +283,7 @@ static struct clk_fixed_factor g12a_fclk_div2_div = {
-> >               .ops = &clk_fixed_factor_ops,
-> >               .parent_hws = (const struct clk_hw *[]) { &g12a_fixed_pll.hw },
-> >               .num_parents = 1,
-> > +             .flags = CLK_IS_CRITICAL,
->
-> This makes no sense for because:
-> * This clock cannot gate and none of its parents can either. IOW, the
-> output of this clock is never disabled.
-> * I cannot guess the relation between fdiv2 and the commit description
->
-
-Ok I check this code changes is not needed for this fix.
-
-> >       },
-> >  };
-> >
-> > @@ -681,7 +682,7 @@ static struct clk_regmap g12b_cpub_clk = {
-> >                       &g12a_sys_pll.hw
-> >               },
-> >               .num_parents = 2,
-> > -             .flags = CLK_SET_RATE_PARENT,
-> > +             .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
->
-> Why not. Neil what do you think of this ?
-> If nothing is claiming this clock and enabling it then I suppose it
-> could make sense.
->
-I would like core developers to handle this.
-Sorry for the noise.
-
--Anand
->
-> >       },
-> >  };
->
+diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+index dd46494..b0adbfb 100644
+--- a/include/linux/qcom-geni-se.h
++++ b/include/linux/qcom-geni-se.h
+@@ -6,6 +6,8 @@
+ #ifndef _LINUX_QCOM_GENI_SE
+ #define _LINUX_QCOM_GENI_SE
+ 
++#include <linux/interconnect.h>
++
+ /* Transfer mode supported by GENI Serial Engines */
+ enum geni_se_xfer_mode {
+ 	GENI_SE_INVALID,
+@@ -22,6 +24,13 @@ enum geni_se_protocol_type {
+ 	GENI_SE_I3C,
+ };
+ 
++/* Interconnect paths for GENI */
++enum geni_se_icc_path {
++	GENI_TO_CORE,
++	CPU_TO_GENI,
++	GENI_TO_DDR
++};
++
+ struct geni_wrapper;
+ struct clk;
+ 
+@@ -33,6 +42,13 @@ struct clk;
+  * @clk:		Handle to the core serial engine clock
+  * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
+  * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
++ * @icc_path:		Array of interconnect path handles
++ * @avg_bw_core:	Average bus bandwidth value for QUP core 2x clock
++ * @peak_bw_core:	Peak bus bandwidth value for QUP core 2x clock
++ * @avg_bw_cpu:		Average bus bandwidth value for CPU
++ * @peak_bw_cpu:	Peak bus bandwidth value for CPU
++ * @avg_bw_ddr:		Average bus bandwidth value for DDR
++ * @peak_bw_ddr:	Peak bus bandwidth value for DDR
+  */
+ struct geni_se {
+ 	void __iomem *base;
+@@ -41,6 +57,13 @@ struct geni_se {
+ 	struct clk *clk;
+ 	unsigned int num_clk_levels;
+ 	unsigned long *clk_perf_tbl;
++	struct icc_path *icc_path[3];
++	unsigned int avg_bw_core;
++	unsigned int peak_bw_core;
++	unsigned int avg_bw_cpu;
++	unsigned int peak_bw_cpu;
++	unsigned int avg_bw_ddr;
++	unsigned int peak_bw_ddr;
+ };
+ 
+ /* Common SE registers */
+@@ -229,6 +252,14 @@ struct geni_se {
+ #define GENI_SE_VERSION_MINOR(ver) ((ver & HW_VER_MINOR_MASK) >> HW_VER_MINOR_SHFT)
+ #define GENI_SE_VERSION_STEP(ver) (ver & HW_VER_STEP_MASK)
+ 
++/* Core 2X clock frequency to BCM threshold mapping */
++#define CORE_2X_19_2_MHZ		960
++#define CORE_2X_50_MHZ			2500
++#define CORE_2X_100_MHZ			5000
++#define CORE_2X_150_MHZ			7500
++#define CORE_2X_200_MHZ			10000
++#define CORE_2X_236_MHZ			16383
++
+ #if IS_ENABLED(CONFIG_QCOM_GENI_SE)
+ 
+ u32 geni_se_get_qup_hw_version(struct geni_se *se);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
