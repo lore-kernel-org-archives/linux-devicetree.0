@@ -2,128 +2,287 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C22BC35254
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4408C35254
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E069920726
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E284206F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d6J5PEU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgBQJov (ORCPT
+        id S1728967AbgBQJpT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:44:51 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36669 "EHLO
+        Mon, 17 Feb 2020 04:45:19 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43314 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728849AbgBQJov (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 04:44:51 -0500
-Received: by mail-ed1-f66.google.com with SMTP id j17so19932474edp.3;
-        Mon, 17 Feb 2020 01:44:50 -0800 (PST)
+        with ESMTP id S1728968AbgBQJpS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 04:45:18 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dc19so19880419edb.10
+        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 01:45:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nu7jWISZb77Z0tiPaYwqP5zwhpW6xuzz3wSY4EXTCT4=;
+        b=d6J5PEU7VyQi67HKjSTaI+gvJgl7/9g1rJtiCtB3RqPV7ZbFZWHqMy8tYi2jxwKC6J
+         bequMP/PwbMSd/tr0HyT+OZJWHhr4GoIBTiG4wiz6J3VFZiVwMuY/hk/UALTnGYeUyb7
+         7lxctQoybLVN3C0e9fKqpeWcinZNeOoA+llHk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=z5Mm0UcTlrataEbH992JlC3fdkxaoZqbYWxeVKMRIWw=;
-        b=jWgfccxGpx5X99Jdq1GPF+lR7GDPHUCstjwpezl8tQiBesecEdNEvEYY8glKK9c621
-         oEt/mg7E2cGNshJdEDTKhM6Zct/8CrKpkXPdVS1UlchSIeUScrQdQbFR2sIPpgL9HuU0
-         dEzYF3b72/nBCtcBZPog1idY8wQh448bHzqXpZnvyZE6t3vj/2IeM+XjoRF8RZZ2qKCb
-         WbOSz+AKIjufiuDmd9V8WQz51gPhGgiEOgf7pKMUn0b6FM+c6cFHCrAMOyAHaI45iIm6
-         JwEw2nvmvNooWJqRBSFowtL+zyik0/10nFDfaiM3/y3fqzCROlobSpM6DpcfIZV78jgZ
-         FeDw==
-X-Gm-Message-State: APjAAAX2R92PBw/SYd6E8Rylf0kTEjdYlhHcqNKOX5waykrBDBAzXH11
-        zevkJt9N0hRDEOxYI9LFpm7bYyDNG50=
-X-Google-Smtp-Source: APXvYqy7Yl1wsueKhXtMs7/CsRvCCTNOODw03MGDEoUVCQwRihqNzfAEgymQefn7DKym6QnxmTD+OA==
-X-Received: by 2002:a05:6402:c08:: with SMTP id co8mr13971476edb.197.1581932688791;
-        Mon, 17 Feb 2020 01:44:48 -0800 (PST)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
-        by smtp.gmail.com with ESMTPSA id qw15sm840177ejb.92.2020.02.17.01.44.47
+        bh=Nu7jWISZb77Z0tiPaYwqP5zwhpW6xuzz3wSY4EXTCT4=;
+        b=b/FucYn4hKJpMnJuZLzG8OkELCDragIASu787UaIT83vPpfcMktsuqvCtH6vId8R3N
+         EP1p2KHnHq30Kc2vdS7G9u1YjdfVkNbph28PIkClUYb84N//J7LBe2MOWZhbLbPSqmOn
+         x2I4n01SypIqDREru/hPVCuKL8WPg2UtkSsMvqxYkc/JfNewcGt83rEiAVeqL0KCE2Gp
+         XAXBPzWJfTy76Y96Ecxt6GitTJAEao/+74H594C5MD3jtxxVvQEydhFDQxoDiZYXZH9p
+         iQmZOKP5qNP0Uje9sl0Ii8koH4kzMOxs0nE0BaAvEuS3eUuiD6iOTXe1IgDMMtJyPJ4n
+         MbDg==
+X-Gm-Message-State: APjAAAWuehb6xL1UorOABX89Z2Wmr162BWnH7nJcVp0ii/70YC3QYbni
+        UaK60wcEI00wDgxykpSijqtP+v7vfs8L9A==
+X-Google-Smtp-Source: APXvYqx9ZbiAbzl3t/OwJYpcBpNxmFUHN53c6J57qER5rJal33IDotPcb00JNL1QFJuNcok/bHvCxQ==
+X-Received: by 2002:a17:906:9615:: with SMTP id s21mr14136301ejx.20.1581932715932;
+        Mon, 17 Feb 2020 01:45:15 -0800 (PST)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
+        by smtp.gmail.com with ESMTPSA id y4sm866018ejp.50.2020.02.17.01.45.14
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 01:44:47 -0800 (PST)
-Received: by mail-wm1-f52.google.com with SMTP id g1so16403668wmh.4;
-        Mon, 17 Feb 2020 01:44:47 -0800 (PST)
-X-Received: by 2002:a05:600c:34d:: with SMTP id u13mr21930702wmd.77.1581932686942;
- Mon, 17 Feb 2020 01:44:46 -0800 (PST)
+        Mon, 17 Feb 2020 01:45:15 -0800 (PST)
+Received: by mail-wr1-f50.google.com with SMTP id z3so18869646wru.3
+        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 01:45:14 -0800 (PST)
+X-Received: by 2002:adf:f6c1:: with SMTP id y1mr20634317wrp.17.1581932714265;
+ Mon, 17 Feb 2020 01:45:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20200217064250.15516-1-samuel@sholland.org> <20200217091423.y2muniz3hosquho6@gilmour.lan>
-In-Reply-To: <20200217091423.y2muniz3hosquho6@gilmour.lan>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 17:44:36 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65GuwLdJ3Rkt1cyU6EroWZ6pim7-sGry5jYBoi=mubpUg@mail.gmail.com>
-Message-ID: <CAGb2v65GuwLdJ3Rkt1cyU6EroWZ6pim7-sGry5jYBoi=mubpUg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/34] sun8i-codec fixes and new features
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Samuel Holland <samuel@sholland.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+References: <20200116025637.3524-1-bibby.hsieh@mediatek.com>
+ <20200116025637.3524-5-bibby.hsieh@mediatek.com> <CAAFQd5Bh9dUuu2fzxQSyuyRrEvN5o8PBqPCUTdrC5btN2Q1HVw@mail.gmail.com>
+In-Reply-To: <CAAFQd5Bh9dUuu2fzxQSyuyRrEvN5o8PBqPCUTdrC5btN2Q1HVw@mail.gmail.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 17 Feb 2020 18:45:01 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5DtnBhGV-VemTwudm7K-UtFsGg99YGuD-cyR93u0OAPuA@mail.gmail.com>
+Message-ID: <CAAFQd5DtnBhGV-VemTwudm7K-UtFsGg99YGuD-cyR93u0OAPuA@mail.gmail.com>
+Subject: Re: [PATCH v10 4/4] i2c: core: support bus regulator controlling in adapter
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 5:14 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Mon, Feb 17, 2020 at 12:42:16AM -0600, Samuel Holland wrote:
-> > The sun8i-codec driver, as used in the Allwinner A33 and A64, currently
-> > only exposes a small subset of the available hardware features. In order
-> > to use the A64 in a smartphone (the PinePhone), I've added the necessary
-> > functionality to the driver:
-> >   * The full set of supported DAI format options
-> >   * Support for AIF2 and AIF3
-> >   * Additional routing knobs
-> >   * Additional volume controls
-> >
-> > Unfortunately, due to preexisting issues with the driver, there are some
-> > breaking changes, as explained further in the commit messages:
-> >   * The LRCK inversion issue means we need a new compatible for the A64.
-> >   * Some controls are named inaccurately, so they are renamed.
-> >   * Likewise, the DAPM widgets used in device trees were either named
-> >     wrong, or the device trees were using the wrong widgets in the first
-> >     place. (Specifically, the links between the analog codec and digital
-> >     codec happen at the ADC and DAC, not AIF1.)
-> >
-> > I tended to take the philosophy of "while I'm breaking things, I might
-> > as well do them right", so I've probably made a few more changes than
-> > absolutely necessary. I'm not sure about where all of the policy
-> > boundaries are, about how far I should go to maintain compatibility. For
-> > example, for the DT widget usage, I could:
-> >   * Rename everything and update the DTS files (which is what I did)
-> >   * Keep the old (misleading/wrong) name for the widgets, but repurpose
-> >     them to work correctly
-> >       (i.e. "ADC Left" would be named "AIF1 Slot 0 Left ADC", but it
-> >        would work just like "ADC Left" does in this patchset)
-> >   * Keep the old widgets around as a compatibility layer, but add new
-> >     widgets and update the in-tree DTS files to use them
-> >       (i.e. "ADC Left" would have a path from "AIF1 Slot 0 Left ADC",
-> >        but "AIF1 Slot 0 Left ADC" would be a no-op widget)
-> >   * Something else entirely
->
-> I'm not sure this is really a concern here. We need to maintain the
-> compatibility with old DT's, but those will have an A33 compatible
-> too, and as far as I can see, you're not changing anything for that
-> compatible, so we're in the clear?
->
-> If not, then the third option would probably be the best, especially
-> since it's only a couple of them.
+Hi Rafael,
 
-Unfortunately the description for both chips are shared, and they're wrong.
-So we probably need a new compatible (or a new driver)... or like options
-2 or 3, keep the DT visible endpoints (but deprecate them), and route them
-to a new set of proper widgets.
+On Tue, Jan 28, 2020 at 4:31 PM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> Hi Rafael,
+>
+> On Thu, Jan 16, 2020 at 11:56 AM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
+> >
+> > Although in the most platforms, the bus power of i2c
+> > are alway on, some platforms disable the i2c bus power
+> > in order to meet low power request.
+> >
+> > We get and enable bulk regulator in i2c adapter device.
+> >
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > ---
+> >  drivers/i2c/i2c-core-base.c | 81 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/i2c.h         |  3 ++
+> >  2 files changed, 84 insertions(+)
+> >
+>
+> I posted some comments in a separate reply [1] and Wolfram confirmed
+> that he's fine with the approach [2]. Would you have some time to take
+> a look from the PM point of view? Thanks.
+>
+> [1] https://patchwork.ozlabs.org/patch/1223991/#2350984
+> [2] https://patchwork.ozlabs.org/patch/1223991/#2351032
+>
+> Please let me know if you want me to CC you directly on any of those replies.
 
-ChenYu
+Would you have a few minutes to take a look at this?
+
+Thanks,
+Tomasz
+
+>
+> Best regards,
+> Tomasz
+>
+> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> > index 9333c865d4a9..9b9e96b094ca 100644
+> > --- a/drivers/i2c/i2c-core-base.c
+> > +++ b/drivers/i2c/i2c-core-base.c
+> > @@ -306,6 +306,7 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+> >  static int i2c_device_probe(struct device *dev)
+> >  {
+> >         struct i2c_client       *client = i2c_verify_client(dev);
+> > +       struct i2c_adapter      *adap = client->adapter;
+> >         struct i2c_driver       *driver;
+> >         int status;
+> >
+> > @@ -371,6 +372,12 @@ static int i2c_device_probe(struct device *dev)
+> >
+> >         dev_dbg(dev, "probe\n");
+> >
+> > +       status = regulator_enable(adap->bus_reg);
+> > +       if (status != 0) {
+> > +               dev_err(&adap->dev, "Failed to enable power regulator\n");
+> > +               goto err_clear_wakeup_irq;
+> > +       }
+> > +
+> >         status = of_clk_set_defaults(dev->of_node, false);
+> >         if (status < 0)
+> >                 goto err_clear_wakeup_irq;
+> > @@ -407,6 +414,7 @@ static int i2c_device_probe(struct device *dev)
+> >  static int i2c_device_remove(struct device *dev)
+> >  {
+> >         struct i2c_client       *client = i2c_verify_client(dev);
+> > +       struct i2c_adapter      *adap = client->adapter;
+> >         struct i2c_driver       *driver;
+> >         int status = 0;
+> >
+> > @@ -420,6 +428,8 @@ static int i2c_device_remove(struct device *dev)
+> >         }
+> >
+> >         dev_pm_domain_detach(&client->dev, true);
+> > +       if (!pm_runtime_status_suspended(&adap->dev))
+> > +               regulator_disable(adap->bus_reg);
+> >
+> >         dev_pm_clear_wake_irq(&client->dev);
+> >         device_init_wakeup(&client->dev, false);
+> > @@ -431,6 +441,71 @@ static int i2c_device_remove(struct device *dev)
+> >         return status;
+> >  }
+> >
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int i2c_resume(struct device *dev)
+> > +{
+> > +       struct i2c_client *client = i2c_verify_client(dev);
+> > +       struct i2c_adapter *adap = client->adapter;
+> > +       int err;
+> > +
+> > +       if (pm_runtime_status_suspended(&adap->dev)) {
+> > +               err = regulator_enable(adap->bus_reg);
+> > +               if (err)
+> > +                       return err;
+> > +       }
+> > +
+> > +       return pm_generic_resume(dev);
+> > +}
+> > +
+> > +static int i2c_suspend(struct device *dev)
+> > +{
+> > +       struct i2c_client *client = i2c_verify_client(dev);
+> > +       struct i2c_adapter *adap = client->adapter;
+> > +       int err;
+> > +
+> > +       if (!pm_runtime_status_suspended(&adap->dev)) {
+> > +               err = regulator_disable(adap->bus_reg);
+> > +               if (err)
+> > +                       return err;
+> > +       }
+> > +
+> > +       return pm_generic_suspend(dev);
+> > +}
+> > +#endif
+> > +
+> > +#ifdef CONFIG_PM
+> > +static int i2c_runtime_resume(struct device *dev)
+> > +{
+> > +       struct i2c_client *client = i2c_verify_client(dev);
+> > +       struct i2c_adapter *adap = client->adapter;
+> > +       int err;
+> > +
+> > +       err = regulator_enable(adap->bus_reg);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       return pm_generic_runtime_resume(dev);
+> > +}
+> > +
+> > +static int i2c_runtime_suspend(struct device *dev)
+> > +{
+> > +       struct i2c_client *client = i2c_verify_client(dev);
+> > +       struct i2c_adapter *adap = client->adapter;
+> > +       int err;
+> > +
+> > +       err = pm_generic_runtime_suspend(dev);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       return regulator_disable(adap->bus_reg);
+> > +}
+> > +#endif
+> > +
+> > +static const struct dev_pm_ops i2c_device_pm = {
+> > +       SET_SYSTEM_SLEEP_PM_OPS(i2c_suspend, i2c_resume)
+> > +       SET_RUNTIME_PM_OPS(i2c_runtime_suspend, i2c_runtime_resume, NULL)
+> > +};
+> > +
+> >  static void i2c_device_shutdown(struct device *dev)
+> >  {
+> >         struct i2c_client *client = i2c_verify_client(dev);
+> > @@ -488,6 +563,7 @@ struct bus_type i2c_bus_type = {
+> >         .probe          = i2c_device_probe,
+> >         .remove         = i2c_device_remove,
+> >         .shutdown       = i2c_device_shutdown,
+> > +       .pm             = &i2c_device_pm,
+> >  };
+> >  EXPORT_SYMBOL_GPL(i2c_bus_type);
+> >
+> > @@ -1351,6 +1427,11 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
+> >                 goto out_reg;
+> >
+> >         dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
+> > +       adap->bus_reg = devm_regulator_get(&adap->dev, "bus");
+> > +       if (IS_ERR(adap->bus_reg)) {
+> > +               res = PTR_ERR(adap->bus_reg);
+> > +               goto out_reg;
+> > +       }
+> >
+> >         pm_runtime_no_callbacks(&adap->dev);
+> >         pm_suspend_ignore_children(&adap->dev, true);
+> > diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> > index d2f786706657..833b81a680da 100644
+> > --- a/include/linux/i2c.h
+> > +++ b/include/linux/i2c.h
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/device.h>      /* for struct device */
+> >  #include <linux/sched.h>       /* for completion */
+> >  #include <linux/mutex.h>
+> > +#include <linux/regulator/consumer.h>
+> >  #include <linux/rtmutex.h>
+> >  #include <linux/irqdomain.h>           /* for Host Notify IRQ */
+> >  #include <linux/of.h>          /* for struct device_node */
+> > @@ -330,6 +331,7 @@ struct i2c_client {
+> >         int init_irq;                   /* irq set at initialization    */
+> >         int irq;                        /* irq issued by device         */
+> >         struct list_head detected;
+> > +
+> >  #if IS_ENABLED(CONFIG_I2C_SLAVE)
+> >         i2c_slave_cb_t slave_cb;        /* callback for slave mode      */
+> >  #endif
+> > @@ -723,6 +725,7 @@ struct i2c_adapter {
+> >         const struct i2c_adapter_quirks *quirks;
+> >
+> >         struct irq_domain *host_notify_domain;
+> > +       struct regulator *bus_reg;
+> >  };
+> >  #define to_i2c_adapter(d) container_of(d, struct i2c_adapter, dev)
+> >
+> > --
+> > 2.18.0
