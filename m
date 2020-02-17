@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4568C7619F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 08:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CA4C7619B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 08:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83BA20718
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 08:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821A820725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 08:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgBQIUw (ORCPT
+        id S1728124AbgBQIVe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:20:52 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45451 "EHLO
+        Mon, 17 Feb 2020 03:21:34 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35371 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbgBQIUw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 03:20:52 -0500
+        with ESMTP id S1726397AbgBQIVe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 03:21:34 -0500
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1j3be4-0003zu-Ea; Mon, 17 Feb 2020 09:20:48 +0100
+        id 1j3bel-0004Hv-EW; Mon, 17 Feb 2020 09:21:31 +0100
 Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <mfe@pengutronix.de>)
-        id 1j3be3-00025k-IT; Mon, 17 Feb 2020 09:20:47 +0100
-Date:   Mon, 17 Feb 2020 09:20:47 +0100
+        id 1j3bek-000263-TX; Mon, 17 Feb 2020 09:21:30 +0100
+Date:   Mon, 17 Feb 2020 09:21:30 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     Alifer Moraes <alifer.wsdm@gmail.com>
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
@@ -35,20 +35,21 @@ Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
         s.hauer@pengutronix.de, linux-kernel@vger.kernel.org,
         linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com,
         festevam@gmail.com
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for fec1
-Message-ID: <20200217082047.nzxxo7mpejq5yj65@pengutronix.de>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mq-evk: add phy-reset-gpios for fec1
+Message-ID: <20200217082130.7ckiqwodumqvynla@pengutronix.de>
 References: <20200214192750.20845-1-alifer.wsdm@gmail.com>
+ <20200214192750.20845-2-alifer.wsdm@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214192750.20845-1-alifer.wsdm@gmail.com>
+In-Reply-To: <20200214192750.20845-2-alifer.wsdm@gmail.com>
 X-Sent-From: Pengutronix Hildesheim
 X-URL:  http://www.pengutronix.de/
 X-IRC:  #ptxdist @freenode
 X-Accept-Language: de,en
 X-Accept-Content-Type: text/plain
-X-Uptime: 09:19:43 up 93 days, 23:38, 104 users,  load average: 0.30, 0.22,
- 0.09
+X-Uptime: 09:20:54 up 93 days, 23:39, 104 users,  load average: 0.43, 0.28,
+ 0.12
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
 X-SA-Exim-Mail-From: mfe@pengutronix.de
@@ -59,10 +60,10 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Alifer,
 
 On 20-02-14 16:27, Alifer Moraes wrote:
-> imx8mm-evk has a GPIO connected to AR8031 Ethernet PHY's reset pin.
+> imx8mq-evk has a GPIO connected to AR8031 Ethernet PHY's reset pin.
 > 
 > Describe it in the device tree, following phy's datasheet reset duration of 10ms.
 > 
@@ -70,32 +71,20 @@ On 20-02-14 16:27, Alifer Moraes wrote:
 > 
 > Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
 > ---
-> 
-> Originally sent by Peng Fan <peng.fan@nxp.com>
-> 
-> Back then CONFIG_AT803X_PHY was set as "m" in defconfig so the boot process hung
-> at nfs boot, now that CONFIG_AT803X_PHY is set as "y" by default, the patch works
-> correctly.
-> 
-> Peng's original patch missed to pass the phy-reset-duration, according to the AR8031
-> datasheet the reset GPIO needs to stay low for 10ms.
-> 
-> Original thread: https://lkml.org/lkml/2019/10/21/347
-> 
->  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 ++
+>  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 2 ++
 >  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> index 28ab17a277bb..11903ca86f0e 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> @@ -82,6 +82,8 @@
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> index c36685916683..a49e2bf8afe5 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> @@ -110,6 +110,8 @@
 >  	pinctrl-0 = <&pinctrl_fec1>;
 >  	phy-mode = "rgmii-id";
 >  	phy-handle = <&ethphy0>;
-> +	phy-reset-gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
+> +	phy-reset-gpios = <&gpio1 9  GPIO_ACTIVE_LOW>;
 
-Where is this gpio muxed?
+Same here.
 
 Regards,
   Marco
