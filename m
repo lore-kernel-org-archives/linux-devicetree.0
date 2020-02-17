@@ -2,120 +2,123 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1395BC7619F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 11:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BB0C7619F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 11:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B732070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 11:18:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lrBkXujs"
+	by mail.kernel.org (Postfix) with ESMTP id A482F20836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 11:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgBQLSn (ORCPT
+        id S1729590AbgBQLTh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 06:18:43 -0500
-Received: from mail-eopbgr70041.outbound.protection.outlook.com ([40.107.7.41]:4603
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728152AbgBQLSn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:18:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GNzxC1jl82yagyEgRSKvc43z2nvMe+GejuFwqV9YelLKnhb6+uDglVouFyEnGyBSJX0EiNms+IJzClB5bp9PtqzU7d/BtEwxz0BIHmQgeMvOxJZPl9x9Z8rkijoTOn1yebt0D1vRwcjwC2MQL/mqL215kdRRVgI8tWEzJmWpu3PQVAkSKlxqB1iynAzCWPqkLQtai8hF56bvgx83otKP3DfWvHpn5FpMqMv7IEfvxDtSFdNRrjBiYzhQ9+8apHUeI4b5oQUDFvV/USHPo9khHacLm8rJ3WSiaHYDPqgPG50EKMQho6gf23XuZoD10s51vXqLdUJ7ZIwpVz3Jg0AdEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C9IRT0C7aY0aUFAJ3B6bMGu3gol6GqC+/KhOXcSYskE=;
- b=dx6K1ou0Cg+goAb3yAxhCGzj7Q26u/1nY1uduoBqwE247w82U804EhDZ6IyCE0vp2WfjiFPpFLoOVvL/rCe8liI5tBUX7ggK4MiqTeu5WB1HkGVJXCF9oGMvp147Pjbhu49IvlSCfEdDoEIMm0JD8+Mg6t2m6MKO60mUqcP2Y6jEL82qWs+AqejCU5cMdoT36hCDIhGV00MFLAK1KbDsw/s/T22oWSTYWyM6wAlMvKreBC59c43CWPHr0bTVm3cnnubmrbLk8WNKOnsnc1z81cNtQcjuMjuz1G2NCf7C3c37ph1FqxQiOSAHvNOuAoympMTX1tknXXfKHB0b9fvx5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C9IRT0C7aY0aUFAJ3B6bMGu3gol6GqC+/KhOXcSYskE=;
- b=lrBkXujsAKYQSPyCWk1hSDciwkY924jBHy6PuPI96Zrszc0H9EQU/iOMPBoCf7yGG30ElcZf2TCD/rhO8EpMoSjRjJnwUFQ1PK00wZ6jwmjjeojLfgfirLGT2+kHI9+OhyBV3PVOSoWq43si4MT+tX+lT5mefVY9ECn47vjTvNg=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3659.eurprd04.prod.outlook.com (52.134.66.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Mon, 17 Feb 2020 11:18:38 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2729.028; Mon, 17 Feb 2020
- 11:18:38 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 2/7] ARM: dts: imx6sx: Add missing UART RTS/CTS pins
- mux
-Thread-Topic: [PATCH V3 2/7] ARM: dts: imx6sx: Add missing UART RTS/CTS pins
- mux
-Thread-Index: AQHV5XXXj4PCuaVf3E2fPk4xLzrhHagfJFmAgAAYTmA=
-Date:   Mon, 17 Feb 2020 11:18:38 +0000
-Message-ID: <DB3PR0402MB39167B32B8C713AC410D811DF5160@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1581931886-12173-1-git-send-email-Anson.Huang@nxp.com>
- <1581931886-12173-2-git-send-email-Anson.Huang@nxp.com>
- <20200217095007.sn7hqbqoqcv75ic3@pengutronix.de>
-In-Reply-To: <20200217095007.sn7hqbqoqcv75ic3@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [220.161.57.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 170cae05-957b-4870-8340-08d7b39b22f4
-x-ms-traffictypediagnostic: DB3PR0402MB3659:|DB3PR0402MB3659:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3659724A0A003F79F1530672F5160@DB3PR0402MB3659.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1060;
-x-forefront-prvs: 0316567485
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(189003)(199004)(76116006)(66446008)(66476007)(66946007)(64756008)(66556008)(7416002)(55016002)(4326008)(9686003)(4744005)(478600001)(8936002)(6916009)(54906003)(66574012)(2906002)(26005)(186003)(44832011)(6506007)(33656002)(316002)(5660300002)(8676002)(81156014)(71200400001)(81166006)(86362001)(52536014)(7696005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3659;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 54DNpiQEK4PiTsU+S4A2cErLAbv2tgIjfZBnl1qzrwg7VJHx6PuF4tLpG3PE1KudcUUxM8ZwYQ2x1KrYTaF1hTWjXqLe/DrBv82z71s1KxPbGwxM2ar04zzdtnvp+jmvAwWcQ446vHgFbZAwRKC1Gck0vD3Bce0ZY0JB7ixCib5j/YyAmwqJCVWu19GRvgs3g9xUo6R/fPt5bhQyVQSm3evL1+TjUdzf2EVj7hGnizZGZ7BDGrfQx9bg+jEUiqEK+OKHSt+KvWQx06Ezb62eMznsO0/gsHYBPMYy59GJOtbD7/TAkH6J8E4jCDDedmz7nEkgmCjR0RZPw2D3i6UqbmhEwyS2Je/PQ99XNuXKuVuPt20BrSEWF2gES3EnEDV/bFa2rHIN3tqkAUsXd7VanTmQXABpLXnYaMFQLodrJAauMytGkQhyB8L8o/p9zazENrDgEoHnvOjVOrRFLIuGy2xKNs3GewGapQikr+rIaJ0XaS22wzX04SIJCPZkIcrQ
-x-ms-exchange-antispam-messagedata: MJKoVNgh4t7qwplO0DeED4ddOlXIPabTTQwwlxlw7W93zLsoRHzjM42F9X2k9HrPmpdCCvUL7NkG6V2ehl0sqMXejhV+mEmxbN6M4jHPMHLlfBwjfc4E8ROUTBAsgRpPvoxBkm7+Z6X0AVBcdevM/g==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 17 Feb 2020 06:19:37 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:57150 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729573AbgBQLTh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:19:37 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E94C41A2CD5;
+        Mon, 17 Feb 2020 12:19:34 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3E9921A2CD1;
+        Mon, 17 Feb 2020 12:19:29 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 308AD402E0;
+        Mon, 17 Feb 2020 19:19:22 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 RESEND 7/7] ARM: dts: imx6sx-udoo-neo: Use new pin names with DCE/DTE for UART pins
+Date:   Mon, 17 Feb 2020 19:13:41 +0800
+Message-Id: <1581938021-16259-7-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581938021-16259-1-git-send-email-Anson.Huang@nxp.com>
+References: <1581938021-16259-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 170cae05-957b-4870-8340-08d7b39b22f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2020 11:18:38.2847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uzhUuiEyRH+UQCoEJaHFS0VEAz6xVMKk54pY/vjei4rtzxVq59mCf3SPRxWxJiGFkjUC7q6H1cEN7MFxfqnHPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3659
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIFV3ZQ0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMi83XSBBUk06IGR0czogaW14NnN4
-OiBBZGQgbWlzc2luZyBVQVJUIFJUUy9DVFMNCj4gcGlucyBtdXgNCj4gDQo+IE9uIE1vbiwgRmVi
-IDE3LCAyMDIwIGF0IDA1OjMxOjIxUE0gKzA4MDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IFNv
-bWUgb2YgVUFSVCBSVFMvQ1RTIHBpbnMnIERDRS9EVEUgbXV4IGZ1bmN0aW9uIGFyZSBtaXNzaW5n
-LCBhZGQgdGhlbS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5I
-dWFuZ0BueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBVd2UgS2xlaW5lLUvmnppuaWcgPHUua2xl
-aW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4NCj4gDQo+IEh1aCwgdGhpcyBpcyBub3QgaG93IEkg
-d3JvdGUgbXkgbmFtZSA6LSkNCg0KU29ycnksIGxvb2tzIGxpa2UgdGhlICJmZW5jIiBpcyBpbmNv
-cnJlY3QgYmVjYXVzZSBvbmUgY2hhcmFjdGVyIG9mIHlvdXIgbmFtZSwgSQ0Kd2lsbCByZXNlbmQg
-dGhlIHBhdGNoIHdpdGggY29ycmVjdCBuYW1lLg0KDQpUaGFua3MsDQpBbnNvbi4NCg==
+Use new pin names containing DCE/DTE for UART RX/TX/RTS/CTS pins, this
+is to distinguish the DCE/DTE functions.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+No change.
+---
+ arch/arm/boot/dts/imx6sx-udoo-neo.dtsi | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
+index 25d4aa9..ee64565 100644
+--- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
++++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
+@@ -235,28 +235,28 @@
+ 
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins =
+-			<MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1>,
+-			<MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1>;
++			<MX6SX_PAD_GPIO1_IO04__UART1_DCE_TX	0x1b0b1>,
++			<MX6SX_PAD_GPIO1_IO05__UART1_DCE_RX	0x1b0b1>;
+ 	};
+ 
+ 	pinctrl_uart2: uart2grp {
+ 		fsl,pins =
+-			<MX6SX_PAD_GPIO1_IO06__UART2_TX		0x1b0b1>,
+-			<MX6SX_PAD_GPIO1_IO07__UART2_RX		0x1b0b1>;
++			<MX6SX_PAD_GPIO1_IO06__UART2_DCE_TX	0x1b0b1>,
++			<MX6SX_PAD_GPIO1_IO07__UART2_DCE_RX	0x1b0b1>;
+ 	};
+ 
+ 	pinctrl_uart3: uart3grp {
+ 		fsl,pins =
+-			<MX6SX_PAD_SD3_DATA4__UART3_RX          0x13059>,
+-			<MX6SX_PAD_SD3_DATA5__UART3_TX          0x13059>,
+-			<MX6SX_PAD_SD3_DATA6__UART3_RTS_B       0x13059>,
+-			<MX6SX_PAD_SD3_DATA7__UART3_CTS_B       0x13059>;
++			<MX6SX_PAD_SD3_DATA4__UART3_DCE_RX	0x13059>,
++			<MX6SX_PAD_SD3_DATA5__UART3_DCE_TX	0x13059>,
++			<MX6SX_PAD_SD3_DATA6__UART3_DCE_RTS	0x13059>,
++			<MX6SX_PAD_SD3_DATA7__UART3_DCE_CTS	0x13059>;
+ 	};
+ 
+ 	pinctrl_uart5: uart5grp {
+ 		fsl,pins =
+-			<MX6SX_PAD_SD4_DATA4__UART5_RX		0x1b0b1>,
+-			<MX6SX_PAD_SD4_DATA5__UART5_TX		0x1b0b1>;
++			<MX6SX_PAD_SD4_DATA4__UART5_DCE_RX	0x1b0b1>,
++			<MX6SX_PAD_SD4_DATA5__UART5_DCE_TX	0x1b0b1>;
+ 	};
+ 
+ 	pinctrl_uart6: uart6grp {
+@@ -265,10 +265,10 @@
+ 			<MX6SX_PAD_CSI_DATA01__UART6_DSR_B	0x1b0b1>,
+ 			<MX6SX_PAD_CSI_DATA02__UART6_DTR_B	0x1b0b1>,
+ 			<MX6SX_PAD_CSI_DATA03__UART6_DCD_B	0x1b0b1>,
+-			<MX6SX_PAD_CSI_DATA04__UART6_RX		0x1b0b1>,
+-			<MX6SX_PAD_CSI_DATA05__UART6_TX		0x1b0b1>,
+-			<MX6SX_PAD_CSI_DATA06__UART6_RTS_B	0x1b0b1>,
+-			<MX6SX_PAD_CSI_DATA07__UART6_CTS_B	0x1b0b1>;
++			<MX6SX_PAD_CSI_DATA04__UART6_DCE_RX	0x1b0b1>,
++			<MX6SX_PAD_CSI_DATA05__UART6_DCE_TX	0x1b0b1>,
++			<MX6SX_PAD_CSI_DATA06__UART6_DCE_RTS	0x1b0b1>,
++			<MX6SX_PAD_CSI_DATA07__UART6_DCE_CTS	0x1b0b1>;
+ 	};
+ 
+ 	pinctrl_otg1_reg: otg1grp {
+-- 
+2.7.4
+
