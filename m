@@ -2,95 +2,114 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EB2C34024
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF1AC34021
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D6824673
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:35:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581957320;
-	bh=C/gHO45DyrMSmotWluGDSngCfiAIBIpKJQ2Qh0UZRGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GEOFccBmLNUxHHEH+/t8ICaTCQdgUJbqioe4y9P1PmfXA8iAWMfGdbm7rV82CVbVi
-	 VzwEi1JTkpSQKuAVbt27NP23LI6aK3PQf9hDzwHzPDl8aQit/NvDNtuke+JB7p+k2l
-	 /7YYXCL1fX6yjiwv1IZ5m5/IIglp+Q+D0VfDm5aI=
+	by mail.kernel.org (Postfix) with ESMTP id 3EC8F222D9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:55:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="jxzbvijI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgBQQfT (ORCPT
+        id S1728810AbgBQQzk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:35:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:38312 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728540AbgBQQfS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:35:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CF86328;
-        Mon, 17 Feb 2020 08:35:18 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A27B73F68F;
-        Mon, 17 Feb 2020 08:35:17 -0800 (PST)
-Date:   Mon, 17 Feb 2020 16:35:16 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org
-Subject: Re: [PATCH 5/6] spi: spi-qcom-qspi: Add interconnect support
-Message-ID: <20200217163516.GR9304@sirena.org.uk>
-References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
- <1581946205-27189-6-git-send-email-akashast@codeaurora.org>
+        Mon, 17 Feb 2020 11:55:40 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:35428 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728791AbgBQQzk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 11:55:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581958537;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=gTk8MRIaL+Zoo6AYmT56Y6jd8ZDzvosVYa8gE1FYjOU=;
+        b=jxzbvijIQbBRUsIBTju5RoF96hW3gOLEHd2pEUNFIYC90kpiRGznHONXB9dfySZ+bl
+        TgLY/6rHK+mZmL5MtZEdUJviKo/cP4w517ot+YVMGL4hAXQEEcB6oKvFseCOOFqV1xK3
+        b6nxuspMcW+hbDv09eIL49Q1kU67TzGCGHffQkB/rG/fM5YK+xQLrNMxEl92XsfqhcWI
+        KcMTry/xu4DdmrSyI/kaQu94f2MlGhhBscDWgcKf+lSoXb8QqIYZ9qkyqcTrbdEtt1UD
+        NeyUX81h7aF71ttjl2mKwZbzt9X7AwtAzffEREIm9H4l0kKXOxCTp4IBhGLxrzrHo17y
+        1aJw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXL8GTnsvhg="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1HGtXOqs
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 17 Feb 2020 17:55:33 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: [RFC v4 3/6] Documentation: ABI: nvmem: add documentation for JZ4780 efuse ABI
+Date:   Mon, 17 Feb 2020 17:55:27 +0100
+Message-Id: <b0792c096e246be5af73fa22d42d4aac8e8e4b96.1581958529.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1581958529.git.hns@goldelico.com>
+References: <cover.1581958529.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7L9kolmstoDTZ4pm"
-Content-Disposition: inline
-In-Reply-To: <1581946205-27189-6-git-send-email-akashast@codeaurora.org>
-X-Cookie: There was a phone call for you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 
---7L9kolmstoDTZ4pm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch brings support for the JZ4780 efuse. Currently it only expose
+a read only access to the entire 8K bits efuse memory.
 
-On Mon, Feb 17, 2020 at 07:00:04PM +0530, Akash Asthana wrote:
-> Get the interconnect paths for QSPI device and vote according to the
-> current bus speed of the driver.
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+ .../ABI/testing/sysfs-driver-jz4780-efuse        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
 
-Acked-by: Mark Brown <broonie@kernel.org>
+diff --git a/Documentation/ABI/testing/sysfs-driver-jz4780-efuse b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+new file mode 100644
+index 000000000000..bb6f5d6ceea0
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+@@ -0,0 +1,16 @@
++What:		/sys/devices/*/<our-device>/nvmem
++Date:		December 2017
++Contact:	PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
++Description:	read-only access to the efuse on the Ingenic JZ4780 SoC
++		The SoC has a one time programmable 8K efuse that is
++		split into segments. The driver supports read only.
++		The segments are
++		0x000   64 bit Random Number
++		0x008  128 bit Ingenic Chip ID
++		0x018  128 bit Customer ID
++		0x028 3520 bit Reserved
++		0x1E0    8 bit Protect Segment
++		0x1E1 2296 bit HDMI Key
++		0x300 2048 bit Security boot key
++Users:		any user space application which wants to read the Chip
++		and Customer ID
+-- 
+2.23.0
 
-> +	/* Set BW quota for CPU as driver supports FIFO mode only */
-> +	ctrl->avg_bw_cpu = Bps_to_icc(speed_hz);
-> +	ctrl->peak_bw_cpu = Bps_to_icc(2 * speed_hz);
-
-These peak numbers seem like you're just guessing and should perhaps be
-handled more gracefully by the core (eg, assuming twice the average if
-no explicit peak is provided).
-
---7L9kolmstoDTZ4pm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5KwMMACgkQJNaLcl1U
-h9BYdwf9Hw50ELkLWJ2LbQDxFVRGURfX2RoGEMty2qsXnVdvgKQXlcZbSHBe+PfX
-NEA5WNsaeDwLlEpZF6AoaylbTSoooNOqTuyDcMgsBCjfPR/DdWuyRURjhNaJtOHr
-PauHaxThkjOihnc3zuFds8TSzCdcOya7BzWJIwW3SxYwjo3reYSjb9j1Lq3x20/T
-PjrqpFbyn+R2lIja7tpkI6tAE+O4U0KjX+RQLqqTuwjVF6VZRMKncWaHR1d7mR4g
-dQkuKAuB8MXYUrSnHpQ7l+XzvxtmayVECYnE18PXy8qfifJ0GOTc2hgPy5EqoPjU
-KCzWIif4ie3eJS/Ofimq2SLzfdKhQg==
-=lNdK
------END PGP SIGNATURE-----
-
---7L9kolmstoDTZ4pm--
