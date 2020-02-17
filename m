@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B87C35242
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 04:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03493C35242
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 04:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAE324649
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 04:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24B62072C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 04:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581912492;
-	bh=/Mqu27AqpB+4XNsWQu4dQ/bmhKfjD2lKSZW9AtQdLNA=;
+	s=default; t=1581912594;
+	bh=N6Y5KKKWqMwm7aFctqJ1MGvZUyDeIUpv6buvA4gPxUM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tNU6GIXvg9+dqk9y14AELPl0N2Jsg3ewGMZ5Xy7IwKMnd2ol/g0+myXMM+/eOHf4n
-	 n3Szaj7LqAWC8L45tH7azOMcf1Ca90iA/TVlpRz8XQtsOLbDLslptJ0edEf4f9QvYC
-	 rzt6DqFMnRIp/rb/piAnirFhKcIWd7kenMuEnEUk=
+	b=YUp1VUqPnbSPnws/xtv6WCD69lLPk0i8f8U3P26pCy5YDegShQ3SUTh3sITuAdwP4
+	 IhiWcC9FcXEUYDvSezz4cOcwELh95/8JfQOufIX011URSfxkW6+Cx8S6cZJ7s9XiW4
+	 izE8PFHR9T5ndLm+vg0bHAkvYVVgAbKu6/jDDCNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgBQEIL (ORCPT
+        id S1726591AbgBQEJy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 23:08:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38044 "EHLO mail.kernel.org"
+        Sun, 16 Feb 2020 23:09:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgBQEIL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Feb 2020 23:08:11 -0500
+        id S1726560AbgBQEJy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Feb 2020 23:09:54 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13B3E20717;
-        Mon, 17 Feb 2020 04:08:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDF920717;
+        Mon, 17 Feb 2020 04:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581912491;
-        bh=/Mqu27AqpB+4XNsWQu4dQ/bmhKfjD2lKSZW9AtQdLNA=;
+        s=default; t=1581912593;
+        bh=N6Y5KKKWqMwm7aFctqJ1MGvZUyDeIUpv6buvA4gPxUM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0X1NwE765Ub3qnrKRRSMBdMh6b+IrmisUUjmapkAPtZ0fKmIpwoxdlwfjAd78nyAx
-         3tGluL3tCh7z5j5q34VymWTX1y2PhlzNRTMb8beorMlewFHdlRBpcET0W2ocPm2qP7
-         6iRGZ3ohRwpEEaNzD+3Eou4+QRdsV2GFyPWAkx7U=
-Date:   Mon, 17 Feb 2020 12:08:02 +0800
+        b=2F8+vWxe9UuNOOVTK+1AxAoBzcorwtXspYXHIItjZuNh5yW39woNtzY8Vsh76jdjC
+         eblBjzyyiqNHjIEDi1gTvKWDaf6oA9s+g6rx9dvAtT4lQmCBTr5Lya9f+dA15wcbF/
+         76Zi0fXQJZajaAJ7o6rh2vHS1zZK2J6pjs7qgoxU=
+Date:   Mon, 17 Feb 2020 12:09:43 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Martin Kepplinger <martin.kepplinger@puri.sm>
 Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
@@ -47,67 +47,63 @@ Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
         Anson.Huang@nxp.com, devicetree@vger.kernel.org, kernel@puri.sm,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: Re: [PATCH v1 07/12] arm64: dts: librem5-devkit: add the regulators
- for DVFS
-Message-ID: <20200217040801.GF5395@dragon>
+Subject: Re: [PATCH v1 10/12] arm64: dts: librem5-devkit: configure VSELECT
+Message-ID: <20200217040942.GG5395@dragon>
 References: <20200205143003.28408-1-martin.kepplinger@puri.sm>
- <20200205143003.28408-8-martin.kepplinger@puri.sm>
+ <20200205143003.28408-11-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205143003.28408-8-martin.kepplinger@puri.sm>
+In-Reply-To: <20200205143003.28408-11-martin.kepplinger@puri.sm>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 03:29:58PM +0100, Martin Kepplinger wrote:
+On Wed, Feb 05, 2020 at 03:30:01PM +0100, Martin Kepplinger wrote:
 > From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 > 
-> Specify which regulator is used for cpufreq DVFS.
+> use vselect to set the io voltage to 1.8V
 > 
 > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > ---
->  .../dts/freescale/imx8mq-librem5-devkit.dts   | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
+>  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index ac0145839a69..6a8f6cee96cf 100644
+> index fbc7062c4633..8f920c554ebd 100644
 > --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 > +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -223,6 +223,26 @@
->  	};
->  };
->  
-> +&A53_0 {
-> +	operating-points-v2 = <&a53_opp_table>;
+> @@ -789,6 +789,7 @@
+>  			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1	0xc3
+>  			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2	0xc3
+>  			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3	0xc3
+> +			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4	0xc1
 
-The property has already been set in imx8mq.dtsi.
+How is the pin working without a pinctrl handle pointing it?
 
 Shawn
 
-> +	cpu-supply = <&buck2_reg>;
-> +};
-> +
-> +&A53_1 {
-> +	operating-points-v2 = <&a53_opp_table>;
-> +	cpu-supply = <&buck2_reg>;
-> +};
-> +
-> +&A53_2 {
-> +	operating-points-v2 = <&a53_opp_table>;
-> +	cpu-supply = <&buck2_reg>;
-> +};
-> +
-> +&A53_3 {
-> +	operating-points-v2 = <&a53_opp_table>;
-> +	cpu-supply = <&buck2_reg>;
-> +};
-> +
->  &clk {
->  	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
->  	assigned-clock-rates = <786432000>, <722534400>;
+>  		>;
+>  	};
+>  
+> @@ -800,6 +801,7 @@
+>  			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1	0xcd
+>  			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2	0xcd
+>  			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3	0xcd
+> +			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4	0xc1
+>  		>;
+>  	};
+>  
+> @@ -811,6 +813,7 @@
+>  			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1	0xcf
+>  			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2	0xcf
+>  			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3	0xcf
+> +			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4	0xc1
+>  		>;
+>  	};
+>  
 > -- 
 > 2.20.1
 > 
