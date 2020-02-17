@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58926C35242
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D149C7619D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0082064C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3672F207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgBQH6b (ORCPT
+        id S1727135AbgBQH7u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:58:31 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34354 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbgBQH6b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 02:58:31 -0500
-Received: by mail-ed1-f66.google.com with SMTP id r18so19620545edl.1;
-        Sun, 16 Feb 2020 23:58:29 -0800 (PST)
+        Mon, 17 Feb 2020 02:59:50 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41730 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgBQH7u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 02:59:50 -0500
+Received: by mail-ed1-f67.google.com with SMTP id c26so19584044eds.8;
+        Sun, 16 Feb 2020 23:59:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qAkDAKXcgCBrOdSb/zgNyHSfr/RVZZb04YTPxwkLXA0=;
-        b=B3eF+N02k7VwUkfLnH2qxhHQ9ZMDlFzRw6teDz8izk8Ot2aOdBqyRKpui2xo2GYhcY
-         8gB7eiFWfv2sWTF0kZd7ZT0FRX4IaWD5zaQIuwVg3gTdjgrVhxhK9GrSC5GV3umsOLzB
-         GqlQ77iSXysLAJlcdjgDV0JGvGisZzVhcjXQ+sMXaCpqQj6P5iMbjBz1GCDqfvTVoG9t
-         OqcBncoVcZ4f+pH74emlQAvQNeq7G5bL5Dpns0wZnKElFiOdpfK0KrYriuTOuQcDs7EW
-         KMVMM/LCe2m/m+ZMDPaBzaKsSAcIP8Wn3ExlNUdLohELOfF97Q3e3XbZwvYdsKtGan4V
-         bEuw==
-X-Gm-Message-State: APjAAAUsXfSKuuaRJBoNXgdqFOE75PFqGxI/Wi6c6uDWoGqimBa8OG+K
-        2vvxcJbCNMPShAkcldFY2QUNvzdMrYg=
-X-Google-Smtp-Source: APXvYqzWyvAJ00Xm4v5p11IJ/b+NZja63RU1ZUKX6t+oAqQcGTb28hAvi74Pp/jtHRQp6krZSKpPFw==
-X-Received: by 2002:a17:906:7f02:: with SMTP id d2mr13010924ejr.261.1581926308218;
-        Sun, 16 Feb 2020 23:58:28 -0800 (PST)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com. [209.85.128.43])
-        by smtp.gmail.com with ESMTPSA id n10sm802208ejc.58.2020.02.16.23.58.27
+        bh=Diza8Cc5Cpy+OVsRi4P0IsWcjJ4gPjcUytSTU6gocRQ=;
+        b=KGMb3bNcO9hOcceVAIUGqw3i5hbeuG/1h/5jxiXZ3O398psl0ubUJBpG+Og1O/8lOe
+         dsCfD8LGuc+kyItDVy4/5TErrfZZqjW6pZozhxzCMmaYXRF4uXqO5D2+Fs2U7auUxcGP
+         zagrDYljhC+yvXXuE+D1ZMSASnAdq+8itgDbHvvwMrQBQQ98C00me0jZwQxfpiF0RNUU
+         8lkARqkGi7eRZiXwpvAMglZH00JmrJzNHC2DCaqa+0C1VxuvcQpmw41ILcP8EaDy3+TY
+         2JCLbKD8kvjt2KWxYZo5ZxERu+y4/D5v/0N/X88zRwIMeX4JAARHlQK1smfxu9rPqvYS
+         L1PQ==
+X-Gm-Message-State: APjAAAUnLqm4Sk35EWNa63C9IZYp6p/36BBPYbTpjSFuUtXVsvSt1wmP
+        gFzPE1t3lSUvgkfUKbzr2Aqea4IPP1s=
+X-Google-Smtp-Source: APXvYqy0dTf5QvJVnKsSHwIf/s4bt+LCzibbUo2tiw91NAparwrHkETsTw+HDY+DhXHVnw60N/BdnA==
+X-Received: by 2002:a05:6402:b2e:: with SMTP id bo14mr13577541edb.13.1581926388311;
+        Sun, 16 Feb 2020 23:59:48 -0800 (PST)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id cf2sm484135edb.2.2020.02.16.23.59.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Feb 2020 23:58:27 -0800 (PST)
-Received: by mail-wm1-f43.google.com with SMTP id p17so17271632wma.1;
-        Sun, 16 Feb 2020 23:58:27 -0800 (PST)
-X-Received: by 2002:a1c:dc85:: with SMTP id t127mr22154598wmg.16.1581926307557;
- Sun, 16 Feb 2020 23:58:27 -0800 (PST)
+        Sun, 16 Feb 2020 23:59:47 -0800 (PST)
+Received: by mail-wr1-f41.google.com with SMTP id w12so18407721wrt.2;
+        Sun, 16 Feb 2020 23:59:47 -0800 (PST)
+X-Received: by 2002:a5d:484f:: with SMTP id n15mr20431084wrs.365.1581926387451;
+ Sun, 16 Feb 2020 23:59:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-14-samuel@sholland.org>
-In-Reply-To: <20200217064250.15516-14-samuel@sholland.org>
+References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-18-samuel@sholland.org>
+In-Reply-To: <20200217064250.15516-18-samuel@sholland.org>
 From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 15:58:17 +0800
-X-Gmail-Original-Message-ID: <CAGb2v649-ZJZfnOoNtsRuQXFOsZLg69Bizz+vZbB6yML-T8z2g@mail.gmail.com>
-Message-ID: <CAGb2v649-ZJZfnOoNtsRuQXFOsZLg69Bizz+vZbB6yML-T8z2g@mail.gmail.com>
-Subject: Re: [RFC PATCH 13/34] ASoC: sun8i-codec: Fix AIF1_ADCDAT_CTRL field names
+Date:   Mon, 17 Feb 2020 15:59:37 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65jWNCss88961zXT5is4LQQFh=Hcxx9ydn_bGqR7Sig8A@mail.gmail.com>
+Message-ID: <CAGb2v65jWNCss88961zXT5is4LQQFh=Hcxx9ydn_bGqR7Sig8A@mail.gmail.com>
+Subject: Re: [RFC PATCH 17/34] ASoC: sun8i-codec: Sort masks in a consistent order
 To:     Samuel Holland <samuel@sholland.org>
 Cc:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -60,8 +60,6 @@ Cc:     Mark Brown <broonie@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Maxime Ripard <mripard@kernel.org>,
         Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= 
-        <mylene.josserand@free-electrons.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
         Linux-ALSA <alsa-devel@alsa-project.org>,
@@ -76,9 +74,9 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Mon, Feb 17, 2020 at 2:43 PM Samuel Holland <samuel@sholland.org> wrote:
 >
-> They are controlling "AD0" (AIF1 slot 0), not "DA0".
+> All other definitions are sorted from largest to smallest bit number.
+> This makes the AIF1CLK_CTRL mask constants consistent with them.
 >
-> Fixes: eda85d1fee05 ("ASoC: sun8i-codec: Add ADC support for a33")
 > Signed-off-by: Samuel Holland <samuel@sholland.org>
 
 Acked-by: Chen-Yu Tsai <wens@csie.org>
