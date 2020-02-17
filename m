@@ -2,74 +2,83 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC91C34022
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39714C34021
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6975620725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581955224;
-	bh=+1rWFt0BhZpC3SqXwAi480o2XZY5N6loZqRsLUur/2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Z/8mnOLOkxsmmO3A1/O4p9BI5gyhSxdsbDOCCWtHTK85V28NWwytEgyh8q+67F6c
-	 oGWoXqgsTcO2KqXHOHxKsu6HM6jFPl5qvOY0FUgVG2mQkpFsYQOsdJntNJB/E13OX4
-	 eQRaxqWgDVINpi9lsEj5wgyI0byWY2cTIWj7f/CI=
+	by mail.kernel.org (Postfix) with ESMTP id 0F29C20718
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgBQQAY (ORCPT
+        id S1728929AbgBQQMU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:00:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbgBQQAX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:00:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0AD4206F4;
-        Mon, 17 Feb 2020 16:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581955223;
-        bh=+1rWFt0BhZpC3SqXwAi480o2XZY5N6loZqRsLUur/2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GIvncg8510kdf/ZqImAIxa0tFU+rfCmL5UIF7dAymDeFQigHY0/phCF+Qyxk/flPd
-         Ul52S3a5DBsdrBqoRd0aHHiAJGHJ57BR6jWHYg/47PH2ZTrCMRK2O1kopxl/r0p7s4
-         0ouE1j3OFyX2Blg5hH1SOJNyVjx+98GRo8on33ts=
-Date:   Mon, 17 Feb 2020 17:00:21 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org
-Subject: Re: [PATCH 2/6] tty: serial: qcom_geni_serial: Add interconnect
- support
-Message-ID: <20200217160021.GA1484698@kroah.com>
-References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
- <1581946205-27189-3-git-send-email-akashast@codeaurora.org>
+        Mon, 17 Feb 2020 11:12:20 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:22542 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbgBQQMU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 11:12:20 -0500
+Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 18 Feb 2020
+ 00:12:41 +0800
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH] soc: amlogic: fix compile failure with MESON_SECURE_PM_DOMAINS & !MESON_SM
+Date:   Tue, 18 Feb 2020 00:12:13 +0800
+Message-ID: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581946205-27189-3-git-send-email-akashast@codeaurora.org>
+Content-Type: text/plain
+X-Originating-IP: [116.236.93.172]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 07:00:01PM +0530, Akash Asthana wrote:
-> Get the interconnect paths for Uart based Serial Engine device
-> and vote according to the baud rate requirement of the driver.
-> 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
->  drivers/tty/serial/qcom_geni_serial.c | 84 ++++++++++++++++++++++++++++++-----
->  1 file changed, 74 insertions(+), 10 deletions(-)
+When MESON_SECURE_PM_DOMAINS & !MESON_SM, there will be compile failure:
+.../meson-secure-pwrc.o: In function `meson_secure_pwrc_on':
+.../meson-secure-pwrc.c:76: undefined reference to `meson_sm_call'
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by adding depends on MESON_SM for MESON_SECURE_PM_DOMAINS.
+
+Fixes: b3dde5013e13 ("soc: amlogic: Add support for Secure power domains controller")
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: patchwork-bot+linux-amlogic<patchwork-bot+linux-amlogic@kernel.org>
+Reported-by: Stephen Rothwell<sfr@canb.auug.org.au>
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+---
+ drivers/soc/amlogic/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+index 6cb06e7..321c5e2 100644
+--- a/drivers/soc/amlogic/Kconfig
++++ b/drivers/soc/amlogic/Kconfig
+@@ -50,7 +50,7 @@ config MESON_EE_PM_DOMAINS
+ 
+ config MESON_SECURE_PM_DOMAINS
+ 	bool "Amlogic Meson Secure Power Domains driver"
+-	depends on ARCH_MESON || COMPILE_TEST
++	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
+ 	depends on PM && OF
+ 	depends on HAVE_ARM_SMCCC
+ 	default ARCH_MESON
+-- 
+2.7.4
+
