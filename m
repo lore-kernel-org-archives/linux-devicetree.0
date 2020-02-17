@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B7CC7619E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E945CC7619E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E31E20CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9D120726
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="iYnsynIQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AB4wG6tJ"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="oDmFapVa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Gfk6BOFV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgBQGnB (ORCPT
+        id S1727487AbgBQGo3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:43:01 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:40587 "EHLO
+        Mon, 17 Feb 2020 01:44:29 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60403 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726980AbgBQGnA (ORCPT
+        by vger.kernel.org with ESMTP id S1727089AbgBQGnB (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:43:00 -0500
+        Mon, 17 Feb 2020 01:43:01 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5B0AE5240;
-        Mon, 17 Feb 2020 01:42:59 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 86F9A5529;
+        Mon, 17 Feb 2020 01:43:00 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:42:59 -0500
+  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:43:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=quPjEsfhLhkxZ
-        JxWr8pdY2HamuseL6mLJzNXb0wlNAQ=; b=iYnsynIQaQ8rJpgkLfEnukcRnAEXZ
-        AUpa+Md+7MnQL23o9Wi6C3GzBslTOnkjlWE9efbDS54FpzfACFYIS85VlVv/jX+E
-        DRf1ewGLxn1K5xfWCbtvbI2mzRF+DYlpKnWDcCeR4/3Dvre8YwftM6/HLOYGPuDR
-        v6sz5diQIZ4W7dx2xeSYE2FrK4bJGQsyLvdL805sayqfa2KZ27ckOjz26V2WJPu2
-        bSfliW6KiqJK59MZUF5iyyNdCfAd0pT+Gg2JN4+/pEzUJD4vBw4nQexZJokyGXEq
-        szxXGYEUDXHVMNwdF71ugVNmfGpmcCYlUTOHwPYhcls/fKvexukKRch3g==
+        :mime-version:content-transfer-encoding; s=fm2; bh=bWdMIahH29yFf
+        zqwPIeEk1em2GgGUD8m6unCtTeCgqs=; b=oDmFapVanONA3Slt7PN7tEJnclOhm
+        tdlQ6XiGyxMevoxHuUMikFZhHM6eywY8irIudalh+02wtXA1Mzr5UN6cKLFAUPsp
+        baeBXslamCMNxmfCZgnFougtNU1LtRN+OI5BySI+w7eLGIwL5S+C+locXD1AwdGy
+        kWc7GNCwfq/EHLWnkGcoyYVnDEQ7P28HIfzPQvkPeuHNXpfRSQ9oX5za1zfn+auU
+        7odde6VyrqIPfqU7xwbGUXUx+7dw/BoyBhmroyGAganlcZ4nCitS2BGXdULF+AR4
+        +Du2J9jvDUVUTt/HYBIG9/iHM072/J4nwPD5gx00oZioQSpD1Lc9NYvUw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=quPjEsfhLhkxZJxWr8pdY2HamuseL6mLJzNXb0wlNAQ=; b=AB4wG6tJ
-        y9hHY+UgJpTnH5ooW/QWnC3TdWAbJCGrJJzIwdL6l7+EuY8Ld7XIqBA3B3Q+vXe6
-        MMtt0LmKEjgyMVnUzEqXhDdsRy7Rp0Yu2D6hJm/dhk3XO43l1Tm9tBuCgVCwsmix
-        PdUEitiqXDQfgRXydbEQdyjZFGlH4ELpQ78qykDvT7q4dZH0Gw3WF1ywiWMBblgz
-        3CajymOQmYBh796jX5RF1u3zlhU7kMq9z/U4gmlymjpstsy6hGVNIxAzAfed7Dy3
-        i9gb6KIPkJJKC4uoqx50MTHadkBN450KQaN52bCMHZToOEa5bNBM9CBnu5Wc5y8A
-        8b0zsBwXy3TqJw==
-X-ME-Sender: <xms:8zVKXq4no9v-8W8clfOk-kyd4Lyuc93uG1znpSY4iKF83smxYt6Y5g>
+        fm2; bh=bWdMIahH29yFfzqwPIeEk1em2GgGUD8m6unCtTeCgqs=; b=Gfk6BOFV
+        5zfCdamui7/Aovbs/sbmd47cRRRmgFhF/gIHUSVoSxFKpHwNjdk6w1jInKl7lXT4
+        P8FhmCZfU55lJ8IXOTsqMzeI1j3FTfLn4Cu2gDW7LJFEARStHOY99OMdnzdHbbHZ
+        kveQSffYUBaNAvzd5aMLFg1XZgYNeMsQ92V1RvM/emc9bbYjoAQsUmuE1D6gc91o
+        WfaWxrgOBp9UMl3EpQuNMvG1XSvYS42xKnw3iegogqY4YUkTWmW2eaiiybIHS+IU
+        zxqCS9xa9eNNHFiC91UaCKLSudxCD995iWU1d42Rb++VjWzjYX2vvexn//xqr61n
+        qy28BIysxXMygg==
+X-ME-Sender: <xms:9DVKXv2Oybe4YvNfBc8OTA-hrH5ArG7P98gJQG0rOiTKtxMs3imlPA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdote
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
     ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpeejnecurfgrrhgr
     mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:8zVKXq3zWpR9CyukjTBk4TxDIlJIt-ayHp8f8sKBRsCh9ku6EyBOYw>
-    <xmx:8zVKXiZkllV2gTaBopMwgHhzDNEdnPmqPLoQ99VWh0h5GRyNyZrLRg>
-    <xmx:8zVKXu-_2DIGd0hQsed669T0S_3fS_6fYQ8D0hg2GUUOg3Q_-mBzeQ>
-    <xmx:8zVKXp88cwrOgijRPne_-v92y0Nh8sOEVyH3Xa2kVXJOpgsJ0g2VAw>
+X-ME-Proxy: <xmx:9DVKXssjNf9P2VJhB7qaCyD2XDPjjoQo2YTXkrrdVBzymNRvqVJzmw>
+    <xmx:9DVKXvgup7UmBZHeFUDXzqBgUpXELuWbWNToAkLRd4nhBpIg7jFkPw>
+    <xmx:9DVKXrAwi2k8dWc3qso-tuKpuJG87IWiZlI4Ye_slPFXdBA487TOKw>
+    <xmx:9DVKXnhyvJdLZiM8CNr_S3RxUz0AEGUa-R_6pGaS3vjB-rIaPPVnZA>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9CFF73280059;
-        Mon, 17 Feb 2020 01:42:58 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id D1AD63280059;
+        Mon, 17 Feb 2020 01:42:59 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -78,9 +78,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [RFC PATCH 13/34] ASoC: sun8i-codec: Fix AIF1_ADCDAT_CTRL field names
-Date:   Mon, 17 Feb 2020 00:42:29 -0600
-Message-Id: <20200217064250.15516-14-samuel@sholland.org>
+Subject: [RFC PATCH 15/34] ASoC: sun8i-codec: Fix ADC_DIG_CTRL field name
+Date:   Mon, 17 Feb 2020 00:42:31 -0600
+Message-Id: <20200217064250.15516-16-samuel@sholland.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200217064250.15516-1-samuel@sholland.org>
 References: <20200217064250.15516-1-samuel@sholland.org>
@@ -91,42 +91,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-They are controlling "AD0" (AIF1 slot 0), not "DA0".
+This is the enable bit for the "AD"C, no the "DA"C.
 
 Fixes: eda85d1fee05 ("ASoC: sun8i-codec: Add ADC support for a33")
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/sunxi/sun8i-codec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index 03cfe4e17ff7..8b08cb34c503 100644
+index 6c2fe8549668..0063fa301fab 100644
 --- a/sound/soc/sunxi/sun8i-codec.c
 +++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -49,8 +49,8 @@
- #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_16		(1 << 4)
- #define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT		2
- #define SUN8I_AIF1_ADCDAT_CTRL				0x044
--#define SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0L_ENA		15
--#define SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0R_ENA		14
-+#define SUN8I_AIF1_ADCDAT_CTRL_AIF1_AD0L_ENA		15
-+#define SUN8I_AIF1_ADCDAT_CTRL_AIF1_AD0R_ENA		14
- #define SUN8I_AIF1_DACDAT_CTRL				0x048
- #define SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0L_ENA		15
- #define SUN8I_AIF1_DACDAT_CTRL_AIF1_DA0R_ENA		14
-@@ -406,10 +406,10 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
- 	/* Analog ADC AIF */
- 	SND_SOC_DAPM_AIF_OUT("AIF1 Slot 0 Left ADC", "Capture", 0,
- 			     SUN8I_AIF1_ADCDAT_CTRL,
--			     SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0L_ENA, 0),
-+			     SUN8I_AIF1_ADCDAT_CTRL_AIF1_AD0L_ENA, 0),
- 	SND_SOC_DAPM_AIF_OUT("AIF1 Slot 0 Right ADC", "Capture", 0,
- 			     SUN8I_AIF1_ADCDAT_CTRL,
--			     SUN8I_AIF1_ADCDAT_CTRL_AIF1_DA0R_ENA, 0),
-+			     SUN8I_AIF1_ADCDAT_CTRL_AIF1_AD0R_ENA, 0),
+@@ -64,7 +64,7 @@
+ #define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_ADCR		9
+ #define SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACL	8
+ #define SUN8I_ADC_DIG_CTRL				0x100
+-#define SUN8I_ADC_DIG_CTRL_ENDA			15
++#define SUN8I_ADC_DIG_CTRL_ENAD				15
+ #define SUN8I_ADC_DIG_CTRL_ADOUT_DTS			2
+ #define SUN8I_ADC_DIG_CTRL_ADOUT_DLY			1
+ #define SUN8I_DAC_DIG_CTRL				0x120
+@@ -392,7 +392,7 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
+ 	/* Digital parts of the DACs and ADC */
+ 	SND_SOC_DAPM_SUPPLY("DAC", SUN8I_DAC_DIG_CTRL, SUN8I_DAC_DIG_CTRL_ENDA,
+ 			    0, NULL, 0),
+-	SND_SOC_DAPM_SUPPLY("ADC", SUN8I_ADC_DIG_CTRL, SUN8I_ADC_DIG_CTRL_ENDA,
++	SND_SOC_DAPM_SUPPLY("ADC", SUN8I_ADC_DIG_CTRL, SUN8I_ADC_DIG_CTRL_ENAD,
+ 			    0, NULL, 0),
  
- 	/* Main DAC Outputs (connected to analog codec DAPM context) */
- 	SND_SOC_DAPM_PGA("DAC Left", SND_SOC_NOPM, 0, 0, NULL, 0),
+ 	/* Analog DAC AIF */
 -- 
 2.24.1
 
