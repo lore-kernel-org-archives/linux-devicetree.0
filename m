@@ -4,65 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2179C35242
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 05:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DA0C35242
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE1C20725
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 05:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC50B206F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581918774;
-	bh=3XZW45+oxiEd21pjOWOS/xVC/P/jx/HU3Cb4pITE3fw=;
+	s=default; t=1581920204;
+	bh=DLvMATAzEWVQjYRixiWO3+rDmcBnoRjcRpX5U858a+8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UD/R758aVViJq7swatDWPkv5n+a1DjkTibZGV5+Yx7Z/adKvCCUJXg9lj1SC2VoQs
-	 aQ1AxnO3ai1y+2o+N8zf6FVcx2s5klBwBVthzPxu/UA/HMfNwzMJocePqbW+MSoBfP
-	 4PN+U5ghtwsCZr6IKD3ZdOjsucD2+MG/F3GmnYOs=
+	b=JNItsLhhGuAGdXzuloq1jbXMVLCjj0u2zUeS+oEElRI4VHZJZXE3Kk53+GFcfIRIg
+	 zI5H861ZBEhBcEGraSTN54xM7Dzo8qXewDavfOL0zGV3QfEY0h4uCJo7A0zq2PVQfA
+	 HoRs+eib++UIbPj9UAgg7l8lH/pGLhz2AyqECdk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725869AbgBQFwy (ORCPT
+        id S1725873AbgBQGQo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 00:52:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57492 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 01:16:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgBQFwy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 00:52:54 -0500
+        id S1725835AbgBQGQo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:16:44 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCEAA206F4;
-        Mon, 17 Feb 2020 05:52:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF73020679;
+        Mon, 17 Feb 2020 06:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581918773;
-        bh=3XZW45+oxiEd21pjOWOS/xVC/P/jx/HU3Cb4pITE3fw=;
+        s=default; t=1581920203;
+        bh=DLvMATAzEWVQjYRixiWO3+rDmcBnoRjcRpX5U858a+8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JqETqfL1YBqAvtHF2RyHkOTqG5cmAmPwE4k5mGeoZTCzh7dkTO64l6Ji1Vb7Vjgaw
-         cW9NWvgHNKBqOABc7ypk7UGIeKFonKSY95I1ug/KaPQc/oyChxB559B3aAkqtzqXpi
-         6fAWeyngRMt5SOm3kvRFJ9GXX5eepwXlmifhDhx0=
-Date:   Mon, 17 Feb 2020 13:52:47 +0800
+        b=LEO1sA0guMEqD++vNYCPcJAPujIvm6A5mDDD/+UcI6BBqPrjR7K+oVw1kCzr2uZh6
+         TSBCI8DSgGRjikqFJqbTr6YELYwhxKZw20MZt2nesBP7DwU4SMqftXE18I1FI6nKk2
+         N5AVGfVeSNY4tu3wgsrU9gRaXwKeQ3rC6/2HyjhQ=
+Date:   Mon, 17 Feb 2020 14:16:33 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Yangbo Lu <yangbo.lu@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: ls1028a: support external trigger timestamp
- fifo of PTP timer
-Message-ID: <20200217055246.GD6042@dragon>
-References: <20200211045758.8231-1-yangbo.lu@nxp.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
+        marcel.ziswiler@toradex.com, rjones@gateworks.com,
+        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
+        gary.bisson@boundarydevices.com, angus@akkea.ca,
+        pramod.kumar_1@nxp.com, rabeeh@solid-run.com,
+        cosmin.stoica@nxp.com, l.stach@pengutronix.de,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V3 2/4] arm64: dts: freescale: Add i.MX8MP dtsi support
+Message-ID: <20200217061629.GA6659@dragon>
+References: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
+ <1581425307-18567-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211045758.8231-1-yangbo.lu@nxp.com>
+In-Reply-To: <1581425307-18567-2-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 12:57:58PM +0800, Yangbo Lu wrote:
-> There is an external trigger timestamp fifo for PTP timer
-> of LS1028A. Add property fsl,extts-fifo for that.
+On Tue, Feb 11, 2020 at 08:48:25PM +0800, Anson Huang wrote:
+> The i.MX8M Plus Media Applications Processor is part of the growing
+> mScale family targeting the consumer and industrial market. It brings
+> an effective Machine Learning and AI accelerator that enables a new
+> class of applications. It is built in Samsung 14LPP to achieve both
+> high performance and low power consumption and relies on a powerful
+> fully coherent core complex based on a quad core ARM Cortex-A53 cluster
+> and Cortex-M7 low-power coprocessor, audio digital signal processor,
+> machine learning and graphics accelerators.
 > 
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Add the basic dtsi support for i.MX8MP.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied, thanks.
+Applied 2 ~ 4, thanks.
