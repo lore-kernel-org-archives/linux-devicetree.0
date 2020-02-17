@@ -2,137 +2,128 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A79CC7619F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C22BC35254
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D8C2072C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="txsXBkx9"
+	by mail.kernel.org (Postfix) with ESMTP id E069920726
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbgBQJkZ (ORCPT
+        id S1728925AbgBQJov (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:40:25 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40760 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728919AbgBQJkZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 04:40:25 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t14so17625765wmi.5;
-        Mon, 17 Feb 2020 01:40:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2jk2U3A+UdC2j/40UYflxTvu2jRzfOgnsui2N5ti3cA=;
-        b=txsXBkx9hagw1F8lGYDCyBjPM0l9cIEXq3vJZdoXDWVa7V6rLnVgervweHeiiOvV6R
-         6z7kZ4U/riwXg7649B2BcoSZ2ZJYy2PCWG3nbcyI9RkQr9Z7oMR0EdqQ80vRDvr+1+8e
-         368YliYQzTMw4J9byCRqWGnB+eUYvNc4qUg7ZpTm+qH+Sb4LzuK3GP5b/m38nfRjUK/+
-         S+H8S2t23qTJRBXKyEnC5rzvC4ex3dtsQsPX+ZMHxbc4gKZOLcipUCdw08+AsJHAs94E
-         d6BrSGUDRY2P8RPoO+wv7yKOA5bRMD2DPq/MXGN6NIvGM6CsBVvrC9BFS4icR7oo6hOB
-         aVJA==
+        Mon, 17 Feb 2020 04:44:51 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36669 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728849AbgBQJov (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 04:44:51 -0500
+Received: by mail-ed1-f66.google.com with SMTP id j17so19932474edp.3;
+        Mon, 17 Feb 2020 01:44:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2jk2U3A+UdC2j/40UYflxTvu2jRzfOgnsui2N5ti3cA=;
-        b=YZcBASfJzStJwaP6nqpTiGKkBYRUCreCT90x8Zw6uJrjNjEoJY1GD/RLre9ipVL8lQ
-         uJaVYw9VT4IVbbocULOoxfnlYchrnbKx8pKD2ef3w4qGyI8YYqPDEn61P04ZwxGTeXwX
-         XUuj/x+COpSag1DCTDbikm+9vabvISg9JKNhyXW8NDCG4SxXD6nx+jKUGxRpmsSU1lUr
-         kMS6K5v2qreHx1hXp+EtKuRMnChVXJCyGW9MiejRGVPy6X9ulo4/RWC2up8KZLPdfLOn
-         8BxAO8oJRscGrPnzDCJxGLlrdYiowf7ZLYjgmv4P6/XMrB4nKXX5XSvyNtES1Tqq1vh/
-         Oiww==
-X-Gm-Message-State: APjAAAVUnD50UnKMpB+G8hCX4vrqZZFp92Kfkcn3E0NfkDOKcEeA597Y
-        YQrfvQR5j6JIw//Ad8XyRpY=
-X-Google-Smtp-Source: APXvYqwh4pc/7fN+8AgnYCes5SZY0fQ3oNF71KqEeMZq6eHUpYNp67Xs4LeLpryg/d8kcG1Jw3JOBg==
-X-Received: by 2002:a1c:3803:: with SMTP id f3mr21894082wma.134.1581932422701;
-        Mon, 17 Feb 2020 01:40:22 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id d4sm140834wra.14.2020.02.17.01.40.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 01:40:21 -0800 (PST)
-Date:   Mon, 17 Feb 2020 10:40:20 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, broonie@kernel.org, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, digetx@gmail.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 11/22] ASoC: tegra: Add fallback implementation for
- audio mclk
-Message-ID: <20200217094020.GM1339021@ulmo>
-References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
- <1578986667-16041-12-git-send-email-skomatineni@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z5Mm0UcTlrataEbH992JlC3fdkxaoZqbYWxeVKMRIWw=;
+        b=jWgfccxGpx5X99Jdq1GPF+lR7GDPHUCstjwpezl8tQiBesecEdNEvEYY8glKK9c621
+         oEt/mg7E2cGNshJdEDTKhM6Zct/8CrKpkXPdVS1UlchSIeUScrQdQbFR2sIPpgL9HuU0
+         dEzYF3b72/nBCtcBZPog1idY8wQh448bHzqXpZnvyZE6t3vj/2IeM+XjoRF8RZZ2qKCb
+         WbOSz+AKIjufiuDmd9V8WQz51gPhGgiEOgf7pKMUn0b6FM+c6cFHCrAMOyAHaI45iIm6
+         JwEw2nvmvNooWJqRBSFowtL+zyik0/10nFDfaiM3/y3fqzCROlobSpM6DpcfIZV78jgZ
+         FeDw==
+X-Gm-Message-State: APjAAAX2R92PBw/SYd6E8Rylf0kTEjdYlhHcqNKOX5waykrBDBAzXH11
+        zevkJt9N0hRDEOxYI9LFpm7bYyDNG50=
+X-Google-Smtp-Source: APXvYqy7Yl1wsueKhXtMs7/CsRvCCTNOODw03MGDEoUVCQwRihqNzfAEgymQefn7DKym6QnxmTD+OA==
+X-Received: by 2002:a05:6402:c08:: with SMTP id co8mr13971476edb.197.1581932688791;
+        Mon, 17 Feb 2020 01:44:48 -0800 (PST)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
+        by smtp.gmail.com with ESMTPSA id qw15sm840177ejb.92.2020.02.17.01.44.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 01:44:47 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id g1so16403668wmh.4;
+        Mon, 17 Feb 2020 01:44:47 -0800 (PST)
+X-Received: by 2002:a05:600c:34d:: with SMTP id u13mr21930702wmd.77.1581932686942;
+ Mon, 17 Feb 2020 01:44:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="egxrhndXibJAPJ54"
-Content-Disposition: inline
-In-Reply-To: <1578986667-16041-12-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <20200217064250.15516-1-samuel@sholland.org> <20200217091423.y2muniz3hosquho6@gilmour.lan>
+In-Reply-To: <20200217091423.y2muniz3hosquho6@gilmour.lan>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 17 Feb 2020 17:44:36 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65GuwLdJ3Rkt1cyU6EroWZ6pim7-sGry5jYBoi=mubpUg@mail.gmail.com>
+Message-ID: <CAGb2v65GuwLdJ3Rkt1cyU6EroWZ6pim7-sGry5jYBoi=mubpUg@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/34] sun8i-codec fixes and new features
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Feb 17, 2020 at 5:14 PM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Mon, Feb 17, 2020 at 12:42:16AM -0600, Samuel Holland wrote:
+> > The sun8i-codec driver, as used in the Allwinner A33 and A64, currently
+> > only exposes a small subset of the available hardware features. In order
+> > to use the A64 in a smartphone (the PinePhone), I've added the necessary
+> > functionality to the driver:
+> >   * The full set of supported DAI format options
+> >   * Support for AIF2 and AIF3
+> >   * Additional routing knobs
+> >   * Additional volume controls
+> >
+> > Unfortunately, due to preexisting issues with the driver, there are some
+> > breaking changes, as explained further in the commit messages:
+> >   * The LRCK inversion issue means we need a new compatible for the A64.
+> >   * Some controls are named inaccurately, so they are renamed.
+> >   * Likewise, the DAPM widgets used in device trees were either named
+> >     wrong, or the device trees were using the wrong widgets in the first
+> >     place. (Specifically, the links between the analog codec and digital
+> >     codec happen at the ADC and DAC, not AIF1.)
+> >
+> > I tended to take the philosophy of "while I'm breaking things, I might
+> > as well do them right", so I've probably made a few more changes than
+> > absolutely necessary. I'm not sure about where all of the policy
+> > boundaries are, about how far I should go to maintain compatibility. For
+> > example, for the DT widget usage, I could:
+> >   * Rename everything and update the DTS files (which is what I did)
+> >   * Keep the old (misleading/wrong) name for the widgets, but repurpose
+> >     them to work correctly
+> >       (i.e. "ADC Left" would be named "AIF1 Slot 0 Left ADC", but it
+> >        would work just like "ADC Left" does in this patchset)
+> >   * Keep the old widgets around as a compatibility layer, but add new
+> >     widgets and update the in-tree DTS files to use them
+> >       (i.e. "ADC Left" would have a path from "AIF1 Slot 0 Left ADC",
+> >        but "AIF1 Slot 0 Left ADC" would be a no-op widget)
+> >   * Something else entirely
+>
+> I'm not sure this is really a concern here. We need to maintain the
+> compatibility with old DT's, but those will have an A33 compatible
+> too, and as far as I can see, you're not changing anything for that
+> compatible, so we're in the clear?
+>
+> If not, then the third option would probably be the best, especially
+> since it's only a couple of them.
 
---egxrhndXibJAPJ54
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Unfortunately the description for both chips are shared, and they're wrong.
+So we probably need a new compatible (or a new driver)... or like options
+2 or 3, keep the DT visible endpoints (but deprecate them), and route them
+to a new set of proper widgets.
 
-On Mon, Jan 13, 2020 at 11:24:16PM -0800, Sowjanya Komatineni wrote:
-> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
-> are moved to Tegra PMC driver with pmc as clock provider and using pmc
-> clock ids.
->=20
-> New device tree uses clk_out_1 from pmc clock provider as audio mclk.
->=20
-> So, this patch adds implementation for mclk fallback to extern1 when
-> retrieving mclk returns -ENOENT to be backward compatible of new device
-> tree with older kernels.
->=20
-> Fixes: 110147c8c513 ("ASoC: tegra: always use clk_get() in utility code")
->=20
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  sound/soc/tegra/tegra_asoc_utils.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-
-There's some inconsistent spelling of PMC in the above, but other than
-that:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---egxrhndXibJAPJ54
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5KX4EACgkQ3SOs138+
-s6Fv6RAAuWcedNtxcpf1Te+X5nra3uQEEKd0TuNszot0ysatU9RzdUyV2WgKYaNM
-waUPM+ScmUboRJSGBgFEuXcIFs3eYo9JV0ODdkkONJfJqWAVR05lcn/CzpWyLYBt
-9KbqTnNPDMGZ/55wkn6+7VWl0skvgUrNtYsIFIXxAbPFQJle0X2Fv57a/b9XWTc4
-oJw4eEM16pHXkrl60WtbvMvt3Fwjj7juBa8bS707DnVOeMufR/SCJ5R9D2R0kJeI
-YIDbYuyLKzAjdrWc1cnWwYmfJmyAV2TNAH6QFxDPY6gxXErjvuY7xNSxxwlq/QDX
-8HW8FDKJQ7GREF5rAO+AbKfE1iF9jrmkGCKZwDdms3BvVEm2nYx+ZG9L86+kk6NN
-nn03DpAmNXNC3eiNNVgtTpDGokbKvDgjr/84dMdha1MHjqlaE9sovhfQpCpbcIEl
-gvHMRDmdIHhxF8zYn8wmqPSGI2xpvqLWt4gzkQNv79Bq+Q9qhGRRTbVJBg0SawRb
-TooYWT4EpiKvA8RV4rsM3gvCCtqQAD0ekFRSEb39r3Sn65zUmvCttPKyzAZ0ePk9
-/2TjbCQEtPPPjXV3DZYtmCGAODV+kEI/TPiz7t66TCV16oVSWmTFBSvIsrV3FmX1
-+/pfxQbsWJlWHjjsCDQ634jKLFUtefD6kaSrTMq+CbAnfspQTdw=
-=/mBF
------END PGP SIGNATURE-----
-
---egxrhndXibJAPJ54--
+ChenYu
