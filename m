@@ -2,182 +2,113 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB854C7619F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059B0C7619F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B310A20801
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC18A2070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jRUI4paO"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RDCvw7tH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgBQJUc (ORCPT
+        id S1728801AbgBQJ3g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:20:32 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36483 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbgBQJUc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 04:20:32 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so17555284wma.1
-        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 01:20:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eUz2G04Bb89tsKE0msFkZ9blTmeu3DgvQbssg5zQwVU=;
-        b=jRUI4paOxqTsdkPUlKyQza5/FpjH5wFiT0l/DFu9r7BUgb5pGXIndS5vpdCLOkBORf
-         Iw+TAURuUy2azNJ5jTx10V/NAz11y/TrDoYRIxoeYulS/whZYSte8nrQQIQ4M4tljIlR
-         pY+9l2bv/3db1tfrEDEwqJTo83NafxBBIqp/n5hD70GxBtSbrgc42/kigzd3koASPoWg
-         lo6X9DGrQnQTFf936OV0/inNqQ9bMc9UApXK58C//1tqFBjEmbRBjWcmPxEZGOy8auim
-         MwgHdRDNZmNQ1gq8FfvGBfXsZxE7f8Rdswb4B5H9Gl7VpXYwXcQtG/ZjnOPJB/MzlxPW
-         CAeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eUz2G04Bb89tsKE0msFkZ9blTmeu3DgvQbssg5zQwVU=;
-        b=ASkhZob7xvT9tzox4CMWR33QGgEP6ad5iMED7nW+xPsE+OOKtC7oOK5lO2YzzvtWJ4
-         wGSwoXDJMgsH2tyUpwDk5RDaUSneSziem3QRancfqI1WK2ldWwqIXaK75258jzHNQcLf
-         H6SdefBhXjT/D7Ds9ribep48PwE1zq4ohWbhHRhCkw1/SC/c+TJyn/sgbyLW+KEaWytt
-         dQC4IZHkE9CimXBEzDpRhFnvJJVDSTF1VH6iVpnpzq6eRooyfZ4ES+BkiHY4FMGLq1WE
-         v4814ZNfSIHSkSf1WTvgp5iCKd8aKuaBqQ3EhkdUvveiD0PNTAdbCOYr5WrXTM4gXMgF
-         43TQ==
-X-Gm-Message-State: APjAAAXMOjDmA5Vr0d2yaJxfePo1xFRPvL2t8jMaEqMzI0D7R7oj0Od2
-        29s258FeyJQOD6NYXvrr9PYQcw==
-X-Google-Smtp-Source: APXvYqzW2Cgw9zR9wxV2rpAUJf7+def0ERox9GI5jHN5hfn2bae9qIgwbWg171C1Ty1FYR9HcduUeQ==
-X-Received: by 2002:a7b:cf0d:: with SMTP id l13mr22297831wmg.13.1581931229174;
-        Mon, 17 Feb 2020 01:20:29 -0800 (PST)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id v14sm67373wrm.28.2020.02.17.01.20.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 01:20:28 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH] ASoC: meson: aiu: simplify component addition
-Date:   Mon, 17 Feb 2020 10:20:19 +0100
-Message-Id: <20200217092019.433402-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 17 Feb 2020 04:29:36 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:32672 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728773AbgBQJ3g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 04:29:36 -0500
+X-UUID: 62babae891504fdc96b7d46612dea2b6-20200217
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=+AZRRBU+eXyDNfzUrhQQGTkVM4JM0kpcUBh6dZge9tA=;
+        b=RDCvw7tHLfWuqmOGS911L2SXvA9CN9I/QCntQmRrc4VGTjml9DqeQNDiCsMEJAgxO6Vvx9S5J2s8E+8K9iyuOX1LGmyMMP2AiYWwwYl6TeCK8S8zaroegAj8Kw9dj98NG2G/V3WVJ1EIxW9QOrigMu7cTCRUinOPcnsCF7Bter0=;
+X-UUID: 62babae891504fdc96b7d46612dea2b6-20200217
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1424113595; Mon, 17 Feb 2020 17:29:32 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 17 Feb 2020 17:28:46 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 17 Feb 2020 17:27:27 +0800
+Message-ID: <1581931765.12547.0.camel@mtksdaap41>
+Subject: Re: [PATCH v1 2/3] mailbox: mediatek: implement flush function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>
+Date:   Mon, 17 Feb 2020 17:29:25 +0800
+In-Reply-To: <20200217090532.16019-3-bibby.hsieh@mediatek.com>
+References: <20200217090532.16019-1-bibby.hsieh@mediatek.com>
+         <20200217090532.16019-3-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that the component name is unique within ASoC, there is no need to
-hack the debugfs prefix to add more than one ASoC component to a linux
-device. Remove the unnecessary function and use
-snd_soc_register_component() directly.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/aiu-acodec-ctrl.c |  7 +++----
- sound/soc/meson/aiu-codec-ctrl.c  |  7 +++----
- sound/soc/meson/aiu.c             | 20 --------------------
- sound/soc/meson/aiu.h             |  8 --------
- 4 files changed, 6 insertions(+), 36 deletions(-)
-
-diff --git a/sound/soc/meson/aiu-acodec-ctrl.c b/sound/soc/meson/aiu-acodec-ctrl.c
-index b8e88b1a4fc8..7078197e0cc5 100644
---- a/sound/soc/meson/aiu-acodec-ctrl.c
-+++ b/sound/soc/meson/aiu-acodec-ctrl.c
-@@ -197,8 +197,7 @@ static const struct snd_soc_component_driver aiu_acodec_ctrl_component = {
- 
- int aiu_acodec_ctrl_register_component(struct device *dev)
- {
--	return aiu_add_component(dev, &aiu_acodec_ctrl_component,
--				 aiu_acodec_ctrl_dai_drv,
--				 ARRAY_SIZE(aiu_acodec_ctrl_dai_drv),
--				 "acodec");
-+	return snd_soc_register_component(dev, &aiu_acodec_ctrl_component,
-+					  aiu_acodec_ctrl_dai_drv,
-+					  ARRAY_SIZE(aiu_acodec_ctrl_dai_drv));
- }
-diff --git a/sound/soc/meson/aiu-codec-ctrl.c b/sound/soc/meson/aiu-codec-ctrl.c
-index 8646a953e3b3..4b773d3e8b07 100644
---- a/sound/soc/meson/aiu-codec-ctrl.c
-+++ b/sound/soc/meson/aiu-codec-ctrl.c
-@@ -144,9 +144,8 @@ static const struct snd_soc_component_driver aiu_hdmi_ctrl_component = {
- 
- int aiu_hdmi_ctrl_register_component(struct device *dev)
- {
--	return aiu_add_component(dev, &aiu_hdmi_ctrl_component,
--				 aiu_hdmi_ctrl_dai_drv,
--				 ARRAY_SIZE(aiu_hdmi_ctrl_dai_drv),
--				 "hdmi");
-+	return snd_soc_register_component(dev, &aiu_hdmi_ctrl_component,
-+					  aiu_hdmi_ctrl_dai_drv,
-+					  ARRAY_SIZE(aiu_hdmi_ctrl_dai_drv));
- }
- 
-diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
-index 34b40b8b8299..d3e2d40e9562 100644
---- a/sound/soc/meson/aiu.c
-+++ b/sound/soc/meson/aiu.c
-@@ -71,26 +71,6 @@ int aiu_of_xlate_dai_name(struct snd_soc_component *component,
- 	return 0;
- }
- 
--int aiu_add_component(struct device *dev,
--		      const struct snd_soc_component_driver *component_driver,
--		      struct snd_soc_dai_driver *dai_drv,
--		      int num_dai,
--		      const char *debugfs_prefix)
--{
--	struct snd_soc_component *component;
--
--	component = devm_kzalloc(dev, sizeof(*component), GFP_KERNEL);
--	if (!component)
--		return -ENOMEM;
--
--#ifdef CONFIG_DEBUG_FS
--	component->debugfs_prefix = debugfs_prefix;
--#endif
--
--	return snd_soc_add_component(dev, component, component_driver,
--				     dai_drv, num_dai);
--}
--
- static int aiu_cpu_of_xlate_dai_name(struct snd_soc_component *component,
- 				     struct of_phandle_args *args,
- 				     const char **dai_name)
-diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
-index 097c26de7b7c..06a968c55728 100644
---- a/sound/soc/meson/aiu.h
-+++ b/sound/soc/meson/aiu.h
-@@ -11,9 +11,7 @@ struct clk;
- struct clk_bulk_data;
- struct device;
- struct of_phandle_args;
--struct snd_soc_component_driver;
- struct snd_soc_dai;
--struct snd_soc_dai_driver;
- struct snd_soc_dai_ops;
- 
- enum aiu_clk_ids {
-@@ -45,12 +43,6 @@ int aiu_of_xlate_dai_name(struct snd_soc_component *component,
- 			  const char **dai_name,
- 			  unsigned int component_id);
- 
--int aiu_add_component(struct device *dev,
--		      const struct snd_soc_component_driver *component_driver,
--		      struct snd_soc_dai_driver *dai_drv,
--		      int num_dai,
--		      const char *debugfs_prefix);
--
- int aiu_hdmi_ctrl_register_component(struct device *dev);
- int aiu_acodec_ctrl_register_component(struct device *dev);
- 
--- 
-2.24.1
+SGksIEJpYmJ5Og0KDQpPbiBNb24sIDIwMjAtMDItMTcgYXQgMTc6MDUgKzA4MDAsIEJpYmJ5IEhz
+aWVoIHdyb3RlOg0KPiBGb3IgY2xpZW50IGRyaXZlciB3aGljaCBuZWVkIHRvIHJlb3JnYW5pemUg
+dGhlIGNvbW1hbmQgYnVmZmVyLCBpdCBjb3VsZA0KPiB1c2UgdGhpcyBmdW5jdGlvbiB0byBmbHVz
+aCB0aGUgc2VuZCBjb21tYW5kIGJ1ZmZlci4NCj4gSWYgdGhlIGNoYW5uZWwgZG9lc24ndCBiZSBz
+dGFydGVkICh1c3VhbGx5IGluIHdhaXRpbmcgZm9yIGV2ZW50KSwgdGhpcw0KPiBmdW5jdGlvbiB3
+aWxsIGFib3J0IGl0IGRpcmVjdGx5Lg0KPiANCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBt
+ZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVo
+QG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJv
+eC5jIHwgNTIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdl
+ZCwgNTIgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWFpbGJveC9t
+dGstY21kcS1tYWlsYm94LmMgYi9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQo+
+IGluZGV4IDlhNmNlOWY1YTdkYi4uMGRhNWUyZGMyYzBlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
+L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQo+ICsrKyBiL2RyaXZlcnMvbWFpbGJveC9tdGst
+Y21kcS1tYWlsYm94LmMNCj4gQEAgLTQzMiwxMCArNDMyLDYyIEBAIHN0YXRpYyB2b2lkIGNtZHFf
+bWJveF9zaHV0ZG93bihzdHJ1Y3QgbWJveF9jaGFuICpjaGFuKQ0KPiAgew0KPiAgfQ0KPiAgDQo+
+ICtzdGF0aWMgaW50IGNtZHFfbWJveF9mbHVzaChzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB1bnNp
+Z25lZCBsb25nIHRpbWVvdXQpDQo+ICt7DQo+ICsJc3RydWN0IGNtZHFfdGhyZWFkICp0aHJlYWQg
+PSAoc3RydWN0IGNtZHFfdGhyZWFkICopY2hhbi0+Y29uX3ByaXY7DQo+ICsJc3RydWN0IGNtZHFf
+dGFza19jYiAqY2I7DQo+ICsJc3RydWN0IGNtZHFfY2JfZGF0YSBkYXRhOw0KPiArCXN0cnVjdCBj
+bWRxICpjbWRxID0gZGV2X2dldF9kcnZkYXRhKGNoYW4tPm1ib3gtPmRldik7DQo+ICsJc3RydWN0
+IGNtZHFfdGFzayAqdGFzaywgKnRtcDsNCj4gKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiArCXUz
+MiBlbmFibGU7DQo+ICsNCj4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmdGhyZWFkLT5jaGFuLT5sb2Nr
+LCBmbGFncyk7DQo+ICsJaWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFza19idXN5X2xpc3QpKQ0K
+PiArCQlnb3RvIG91dDsNCj4gKw0KPiArCVdBUk5fT04oY21kcV90aHJlYWRfc3VzcGVuZChjbWRx
+LCB0aHJlYWQpIDwgMCk7DQo+ICsJaWYgKCFjbWRxX3RocmVhZF9pc19pbl93ZmUodGhyZWFkKSkN
+Cj4gKwkJZ290byB3YWl0Ow0KPiArDQo+ICsJbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKHRhc2ss
+IHRtcCwgJnRocmVhZC0+dGFza19idXN5X2xpc3QsDQo+ICsJCQkJIGxpc3RfZW50cnkpIHsNCj4g
+KwkJY2IgPSAmdGFzay0+cGt0LT5hc3luY19jYjsNCj4gKwkJaWYgKGNiLT5jYikgew0KPiArCQkJ
+ZGF0YS5zdGEgPSBDTURRX0NCX0VSUk9SOw0KPiArCQkJZGF0YS5kYXRhID0gY2ItPmRhdGE7DQo+
+ICsJCQljYi0+Y2IoZGF0YSk7DQo+ICsJCX0NCj4gKwkJbGlzdF9kZWwoJnRhc2stPmxpc3RfZW50
+cnkpOw0KPiArCQlrZnJlZSh0YXNrKTsNCj4gKwl9DQo+ICsNCj4gKwljbWRxX3RocmVhZF9yZXN1
+bWUodGhyZWFkKTsNCj4gKwljbWRxX3RocmVhZF9kaXNhYmxlKGNtZHEsIHRocmVhZCk7DQo+ICsJ
+Y2xrX2Rpc2FibGUoY21kcS0+Y2xvY2spOw0KPiArDQo+ICtvdXQ6DQo+ICsJc3Bpbl91bmxvY2tf
+aXJxcmVzdG9yZSgmdGhyZWFkLT5jaGFuLT5sb2NrLCBmbGFncyk7DQo+ICsJcmV0dXJuIDA7DQo+
+ICsNCj4gK3dhaXQ6DQo+ICsJY21kcV90aHJlYWRfcmVzdW1lKHRocmVhZCk7DQo+ICsJc3Bpbl91
+bmxvY2tfaXJxcmVzdG9yZSgmdGhyZWFkLT5jaGFuLT5sb2NrLCBmbGFncyk7DQo+ICsJaWYgKHJl
+YWRsX3BvbGxfdGltZW91dF9hdG9taWModGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5BQkxFX1RB
+U0ssDQo+ICsJCQkJICAgICAgZW5hYmxlLCBlbmFibGUgPT0gMCwgMSwgdGltZW91dCkpIHsNCj4g
+KwkJZGV2X2VycihjbWRxLT5tYm94LmRldiwgIkZhaWwgdG8gd2FpdCBHQ0UgdGhyZWFkIDB4JXgg
+ZG9uZVxuIiwNCj4gKwkJCSh1MzIpKHRocmVhZC0+YmFzZSAtIGNtZHEtPmJhc2UpKTsNCj4gKw0K
+PiArCQlyZXR1cm4gLUVGQVVMVDsNCj4gKwl9DQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4g
+IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWJveF9jaGFuX29wcyBjbWRxX21ib3hfY2hhbl9vcHMgPSB7
+DQo+ICAJLnNlbmRfZGF0YSA9IGNtZHFfbWJveF9zZW5kX2RhdGEsDQo+ICAJLnN0YXJ0dXAgPSBj
+bWRxX21ib3hfc3RhcnR1cCwNCj4gIAkuc2h1dGRvd24gPSBjbWRxX21ib3hfc2h1dGRvd24sDQo+
+ICsJLmZsdXNoID0gY21kcV9tYm94X2ZsdXNoLA0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIHN0cnVj
+dCBtYm94X2NoYW4gKmNtZHFfeGxhdGUoc3RydWN0IG1ib3hfY29udHJvbGxlciAqbWJveCwNCg0K
 
