@@ -2,146 +2,137 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123DBC7619D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDEFC7619F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E076020718
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C2D2067D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KU7uNzSu"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="EAuUGbIu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lik8Lr7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgBQJFk (ORCPT
+        id S1728646AbgBQJO2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:05:40 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58062 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728599AbgBQJFk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 04:05:40 -0500
-X-UUID: 9d8daa15a41247eaa710b158ecd38da1-20200217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=035FQ1Fw3xURfPM55/UUoa6QVfGND190Ak9FtnTFJ0g=;
-        b=KU7uNzSuul8qgKRsTbzaDNP5WB0tPR8kiGqP+Q7NbcpsuuPrgR1kCuL+ysbvjyQgCdqi99oQPI2akmkcT0Vhe6SUlCZXPUT2422hUUOVhoH/HpSE6EXCn5R1zqN3wnjN6MlJP10VUd+z+4mlv08ucLZpDm2S8CQB2+2ugtGWjaI=;
-X-UUID: 9d8daa15a41247eaa710b158ecd38da1-20200217
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1385568392; Mon, 17 Feb 2020 17:05:35 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 17 Feb 2020 17:04:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 17 Feb 2020 17:03:36 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v1 3/3] mailbox: mediatek: remove implementation related to atomic_exec
-Date:   Mon, 17 Feb 2020 17:05:32 +0800
-Message-ID: <20200217090532.16019-4-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200217090532.16019-1-bibby.hsieh@mediatek.com>
-References: <20200217090532.16019-1-bibby.hsieh@mediatek.com>
+        Mon, 17 Feb 2020 04:14:28 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57169 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728272AbgBQJO2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 04:14:28 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 23E8158D9;
+        Mon, 17 Feb 2020 04:14:27 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 17 Feb 2020 04:14:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=I14qqSa44pqibysylqjnJvoStph
+        owXN60qAH0HmIOOk=; b=EAuUGbIuhZh0DXzoXVHHztJTrb8eBm2mp9htdM6LVn/
+        B4yzXZmGWryVzz9Fw8WCCnvJumnVY1EdR78GNUh9O/S4NzDZzeMieTUCK+KTLW95
+        9SXL7yIrbv0MrpjZzRs29MBVa7AAey6KOVjkCrfMeTlGgOe29OomQ5W/3KhfdHEB
+        2I5CkHHJpJ+tiQe+1huTRXXvfla2buzQbUWGLEtd0QpruMmX4P4tic+4rr3m9nZR
+        uZ9HhmwQuWxJ/wYeKwtRGMLIMSsceuTg/J4y8PryN/u62SBmoP4ldSsAPytMHtuX
+        aeXiNViClRaOK4gHgmwfPvbuadUde+HnJEY36xUeGRw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=I14qqS
+        a44pqibysylqjnJvoStphowXN60qAH0HmIOOk=; b=lik8Lr7RVQqNSV3aPYfoUp
+        H90Xt8Fpw3L2KIrMaoRynRmRd9D9C24cDxR8GAusJRkQEwWT2rHg7d+m4wOdyBcu
+        AXthhxe+m8akQCKbyUJEdzv2aHGTXaQqxDXR77IqiiC4s0fvzgLT/PtwpMKItwYZ
+        h3qtxU10iXxprv/nPOY5AR3ekqWqrWNy86YDf85SGHiO4MK9B+qmW8d3UeSfYPw/
+        6xcdTni4SXTveWcYtzegbp3NmNPy5CSl8Q2Vdq+f2x34PWZQ+3IG8eADG9cQU4hs
+        G8+ZgJXCvqIhg/DYfdqlGlgIRzv/Tne7gU2+J3Kdswk7PZcIaeA+2OgCtz4YGSrQ
+        ==
+X-ME-Sender: <xms:cVlKXg51H4uoiVdRpFvbxv5WaiiJHys340EmbcV2izrGll7g2Mp8eA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeeigddtudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:cVlKXjjKhtDjlU7U-ryVkWl9vjdPNTrE9gGOjfgHuR5pNC-o8u0TsQ>
+    <xmx:cVlKXuITpIJ3ig2bMMiZbsUXKDTNM7wC1G_wEqOrfpQOLSOyqN_IXw>
+    <xmx:cVlKXtraCBKH8gXKGfliAISdaG5b0xo3twF3iliEFo1SKbIXb1_DqA>
+    <xmx:c1lKXgelgsQq-uTX3XtfZK319DHI1tQY9w1Fd2bvLlqtsutqVCD8oA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 83F823280062;
+        Mon, 17 Feb 2020 04:14:25 -0500 (EST)
+Date:   Mon, 17 Feb 2020 10:14:23 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?utf-8?Q?Myl=C3=A8ne?= Josserand 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/34] sun8i-codec fixes and new features
+Message-ID: <20200217091423.y2muniz3hosquho6@gilmour.lan>
+References: <20200217064250.15516-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217064250.15516-1-samuel@sholland.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWZ0ZXIgaW1wbGVtZW50IGZsdXNoLCBjbGllbnQgY2FuIGZsdXNoIHRoZSBleGVjdXRpbmcNCmNv
-bW1hbmQgYnVmZmVyIG9yIGFib3J0IHRoZSBzdGlsbCB3YWl0aW5nIGZvciBldmVudA0KY29tbWFu
-ZCBidWZmZXIsIHNvIGNvbnRyb2xsZXIgZG8gbm90IG5lZWQgdG8gaW1wbGVtZW50DQphdG9taWNf
-ZXhlIGZlYXR1cmUuIHJlbW92ZSBpdC4NCg0KU2lnbmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJp
-YmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0
-ZWsuY29tPg0KLS0tDQogZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYyB8IDc2ICsr
-KystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlv
-bnMoKyksIDY4IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWlsYm94L210
-ay1jbWRxLW1haWxib3guYyBiL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCmlu
-ZGV4IDBkYTVlMmRjMmMwZS4uYjI0ODIyYWQ4NDA5IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tYWls
-Ym94L210ay1jbWRxLW1haWxib3guYw0KKysrIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1h
-aWxib3guYw0KQEAgLTU2LDcgKzU2LDYgQEAgc3RydWN0IGNtZHFfdGhyZWFkIHsNCiAJdm9pZCBf
-X2lvbWVtCQkqYmFzZTsNCiAJc3RydWN0IGxpc3RfaGVhZAl0YXNrX2J1c3lfbGlzdDsNCiAJdTMy
-CQkJcHJpb3JpdHk7DQotCWJvb2wJCQlhdG9taWNfZXhlYzsNCiB9Ow0KIA0KIHN0cnVjdCBjbWRx
-X3Rhc2sgew0KQEAgLTE2Miw0OCArMTYxLDExIEBAIHN0YXRpYyB2b2lkIGNtZHFfdGFza19pbnNl
-cnRfaW50b190aHJlYWQoc3RydWN0IGNtZHFfdGFzayAqdGFzaykNCiAJY21kcV90aHJlYWRfaW52
-YWxpZGF0ZV9mZXRjaGVkX2RhdGEodGhyZWFkKTsNCiB9DQogDQotc3RhdGljIGJvb2wgY21kcV9j
-b21tYW5kX2lzX3dmZSh1NjQgY21kKQ0KLXsNCi0JdTY0IHdmZV9vcHRpb24gPSBDTURRX1dGRV9V
-UERBVEUgfCBDTURRX1dGRV9XQUlUIHwgQ01EUV9XRkVfV0FJVF9WQUxVRTsNCi0JdTY0IHdmZV9v
-cCA9ICh1NjQpKENNRFFfQ09ERV9XRkUgPDwgQ01EUV9PUF9DT0RFX1NISUZUKSA8PCAzMjsNCi0J
-dTY0IHdmZV9tYXNrID0gKHU2NClDTURRX09QX0NPREVfTUFTSyA8PCAzMiB8IDB4ZmZmZmZmZmY7
-DQotDQotCXJldHVybiAoKGNtZCAmIHdmZV9tYXNrKSA9PSAod2ZlX29wIHwgd2ZlX29wdGlvbikp
-Ow0KLX0NCi0NCi0vKiB3ZSBhc3N1bWUgdGFza3MgaW4gdGhlIHNhbWUgZGlzcGxheSBHQ0UgdGhy
-ZWFkIGFyZSB3YWl0aW5nIHRoZSBzYW1lIGV2ZW50LiAqLw0KLXN0YXRpYyB2b2lkIGNtZHFfdGFz
-a19yZW1vdmVfd2ZlKHN0cnVjdCBjbWRxX3Rhc2sgKnRhc2spDQotew0KLQlzdHJ1Y3QgZGV2aWNl
-ICpkZXYgPSB0YXNrLT5jbWRxLT5tYm94LmRldjsNCi0JdTY0ICpiYXNlID0gdGFzay0+cGt0LT52
-YV9iYXNlOw0KLQlpbnQgaTsNCi0NCi0JZG1hX3N5bmNfc2luZ2xlX2Zvcl9jcHUoZGV2LCB0YXNr
-LT5wYV9iYXNlLCB0YXNrLT5wa3QtPmNtZF9idWZfc2l6ZSwNCi0JCQkJRE1BX1RPX0RFVklDRSk7
-DQotCWZvciAoaSA9IDA7IGkgPCBDTURRX05VTV9DTUQodGFzay0+cGt0KTsgaSsrKQ0KLQkJaWYg
-KGNtZHFfY29tbWFuZF9pc193ZmUoYmFzZVtpXSkpDQotCQkJYmFzZVtpXSA9ICh1NjQpQ01EUV9K
-VU1QX0JZX09GRlNFVCA8PCAzMiB8DQotCQkJCSAgQ01EUV9KVU1QX1BBU1M7DQotCWRtYV9zeW5j
-X3NpbmdsZV9mb3JfZGV2aWNlKGRldiwgdGFzay0+cGFfYmFzZSwgdGFzay0+cGt0LT5jbWRfYnVm
-X3NpemUsDQotCQkJCSAgIERNQV9UT19ERVZJQ0UpOw0KLX0NCi0NCiBzdGF0aWMgYm9vbCBjbWRx
-X3RocmVhZF9pc19pbl93ZmUoc3RydWN0IGNtZHFfdGhyZWFkICp0aHJlYWQpDQogew0KIAlyZXR1
-cm4gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfV0FJVF9UT0tFTikgJiBDTURRX1RIUl9J
-U19XQUlUSU5HOw0KIH0NCiANCi1zdGF0aWMgdm9pZCBjbWRxX3RocmVhZF93YWl0X2VuZChzdHJ1
-Y3QgY21kcV90aHJlYWQgKnRocmVhZCwNCi0JCQkJIHVuc2lnbmVkIGxvbmcgZW5kX3BhKQ0KLXsN
-Ci0Jc3RydWN0IGRldmljZSAqZGV2ID0gdGhyZWFkLT5jaGFuLT5tYm94LT5kZXY7DQotCXVuc2ln
-bmVkIGxvbmcgY3Vycl9wYTsNCi0NCi0JaWYgKHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWModGhy
-ZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSLA0KLQkJCWN1cnJfcGEsIGN1cnJfcGEgPT0g
-ZW5kX3BhLCAxLCAyMCkpDQotCQlkZXZfZXJyKGRldiwgIkdDRSB0aHJlYWQgY2Fubm90IHJ1biB0
-byBlbmQuXG4iKTsNCi19DQotDQogc3RhdGljIHZvaWQgY21kcV90YXNrX2V4ZWNfZG9uZShzdHJ1
-Y3QgY21kcV90YXNrICp0YXNrLCBlbnVtIGNtZHFfY2Jfc3RhdHVzIHN0YSkNCiB7DQogCXN0cnVj
-dCBjbWRxX3Rhc2tfY2IgKmNiID0gJnRhc2stPnBrdC0+YXN5bmNfY2I7DQpAQCAtMzgzLDM2ICsz
-NDUsMTUgQEAgc3RhdGljIGludCBjbWRxX21ib3hfc2VuZF9kYXRhKHN0cnVjdCBtYm94X2NoYW4g
-KmNoYW4sIHZvaWQgKmRhdGEpDQogCQlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwg
-dGhyZWFkKSA8IDApOw0KIAkJY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhS
-X0NVUlJfQUREUik7DQogCQllbmRfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9F
-TkRfQUREUik7DQotDQotCQkvKg0KLQkJICogQXRvbWljIGV4ZWN1dGlvbiBzaG91bGQgcmVtb3Zl
-IHRoZSBmb2xsb3dpbmcgd2ZlLCBpLmUuIG9ubHkNCi0JCSAqIHdhaXQgZXZlbnQgYXQgZmlyc3Qg
-dGFzaywgYW5kIHByZXZlbnQgdG8gcGF1c2Ugd2hlbiBydW5uaW5nLg0KLQkJICovDQotCQlpZiAo
-dGhyZWFkLT5hdG9taWNfZXhlYykgew0KLQkJCS8qIEdDRSBpcyBleGVjdXRpbmcgaWYgY29tbWFu
-ZCBpcyBub3QgV0ZFICovDQotCQkJaWYgKCFjbWRxX3RocmVhZF9pc19pbl93ZmUodGhyZWFkKSkg
-ew0KLQkJCQljbWRxX3RocmVhZF9yZXN1bWUodGhyZWFkKTsNCi0JCQkJY21kcV90aHJlYWRfd2Fp
-dF9lbmQodGhyZWFkLCBlbmRfcGEpOw0KLQkJCQlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQo
-Y21kcSwgdGhyZWFkKSA8IDApOw0KLQkJCQkvKiBzZXQgdG8gdGhpcyB0YXNrIGRpcmVjdGx5ICov
-DQotCQkJCXdyaXRlbCh0YXNrLT5wYV9iYXNlLA0KLQkJCQkgICAgICAgdGhyZWFkLT5iYXNlICsg
-Q01EUV9USFJfQ1VSUl9BRERSKTsNCi0JCQl9IGVsc2Ugew0KLQkJCQljbWRxX3Rhc2tfaW5zZXJ0
-X2ludG9fdGhyZWFkKHRhc2spOw0KLQkJCQljbWRxX3Rhc2tfcmVtb3ZlX3dmZSh0YXNrKTsNCi0J
-CQkJc21wX21iKCk7IC8qIG1vZGlmeSBqdW1wIGJlZm9yZSBlbmFibGUgdGhyZWFkICovDQotCQkJ
-fQ0KKwkJLyogY2hlY2sgYm91bmRhcnkgKi8NCisJCWlmIChjdXJyX3BhID09IGVuZF9wYSAtIENN
-RFFfSU5TVF9TSVpFIHx8DQorCQkgICAgY3Vycl9wYSA9PSBlbmRfcGEpIHsNCisJCQkvKiBzZXQg
-dG8gdGhpcyB0YXNrIGRpcmVjdGx5ICovDQorCQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UsDQorCQkJ
-ICAgICAgIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQogCQl9IGVsc2Ugew0K
-LQkJCS8qIGNoZWNrIGJvdW5kYXJ5ICovDQotCQkJaWYgKGN1cnJfcGEgPT0gZW5kX3BhIC0gQ01E
-UV9JTlNUX1NJWkUgfHwNCi0JCQkgICAgY3Vycl9wYSA9PSBlbmRfcGEpIHsNCi0JCQkJLyogc2V0
-IHRvIHRoaXMgdGFzayBkaXJlY3RseSAqLw0KLQkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSwNCi0J
-CQkJICAgICAgIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQotCQkJfSBlbHNl
-IHsNCi0JCQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsNCi0JCQkJc21wX21i
-KCk7IC8qIG1vZGlmeSBqdW1wIGJlZm9yZSBlbmFibGUgdGhyZWFkICovDQotCQkJfQ0KKwkJCWNt
-ZHFfdGFza19pbnNlcnRfaW50b190aHJlYWQodGFzayk7DQorCQkJc21wX21iKCk7IC8qIG1vZGlm
-eSBqdW1wIGJlZm9yZSBlbmFibGUgdGhyZWFkICovDQogCQl9DQogCQl3cml0ZWwodGFzay0+cGFf
-YmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplLA0KIAkJICAgICAgIHRocmVhZC0+YmFzZSArIENNRFFf
-VEhSX0VORF9BRERSKTsNCkBAIC01MDEsNyArNDQyLDYgQEAgc3RhdGljIHN0cnVjdCBtYm94X2No
-YW4gKmNtZHFfeGxhdGUoc3RydWN0IG1ib3hfY29udHJvbGxlciAqbWJveCwNCiANCiAJdGhyZWFk
-ID0gKHN0cnVjdCBjbWRxX3RocmVhZCAqKW1ib3gtPmNoYW5zW2luZF0uY29uX3ByaXY7DQogCXRo
-cmVhZC0+cHJpb3JpdHkgPSBzcC0+YXJnc1sxXTsNCi0JdGhyZWFkLT5hdG9taWNfZXhlYyA9IChz
-cC0+YXJnc1syXSAhPSAwKTsNCiAJdGhyZWFkLT5jaGFuID0gJm1ib3gtPmNoYW5zW2luZF07DQog
-DQogCXJldHVybiAmbWJveC0+Y2hhbnNbaW5kXTsNCi0tIA0KMi4xOC4wDQo=
+Hi,
 
+On Mon, Feb 17, 2020 at 12:42:16AM -0600, Samuel Holland wrote:
+> The sun8i-codec driver, as used in the Allwinner A33 and A64, currently
+> only exposes a small subset of the available hardware features. In order
+> to use the A64 in a smartphone (the PinePhone), I've added the necessary
+> functionality to the driver:
+>   * The full set of supported DAI format options
+>   * Support for AIF2 and AIF3
+>   * Additional routing knobs
+>   * Additional volume controls
+>
+> Unfortunately, due to preexisting issues with the driver, there are some
+> breaking changes, as explained further in the commit messages:
+>   * The LRCK inversion issue means we need a new compatible for the A64.
+>   * Some controls are named inaccurately, so they are renamed.
+>   * Likewise, the DAPM widgets used in device trees were either named
+>     wrong, or the device trees were using the wrong widgets in the first
+>     place. (Specifically, the links between the analog codec and digital
+>     codec happen at the ADC and DAC, not AIF1.)
+>
+> I tended to take the philosophy of "while I'm breaking things, I might
+> as well do them right", so I've probably made a few more changes than
+> absolutely necessary. I'm not sure about where all of the policy
+> boundaries are, about how far I should go to maintain compatibility. For
+> example, for the DT widget usage, I could:
+>   * Rename everything and update the DTS files (which is what I did)
+>   * Keep the old (misleading/wrong) name for the widgets, but repurpose
+>     them to work correctly
+>       (i.e. "ADC Left" would be named "AIF1 Slot 0 Left ADC", but it
+>        would work just like "ADC Left" does in this patchset)
+>   * Keep the old widgets around as a compatibility layer, but add new
+>     widgets and update the in-tree DTS files to use them
+>       (i.e. "ADC Left" would have a path from "AIF1 Slot 0 Left ADC",
+>        but "AIF1 Slot 0 Left ADC" would be a no-op widget)
+>   * Something else entirely
+
+I'm not sure this is really a concern here. We need to maintain the
+compatibility with old DT's, but those will have an A33 compatible
+too, and as far as I can see, you're not changing anything for that
+compatible, so we're in the clear?
+
+If not, then the third option would probably be the best, especially
+since it's only a couple of them.
+
+Maxime
