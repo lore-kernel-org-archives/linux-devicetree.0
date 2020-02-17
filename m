@@ -2,83 +2,125 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 710D2C35242
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BA7C7619B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A8220702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA7520718
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 07:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jtItyBiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgBQHln (ORCPT
+        id S1726289AbgBQHtR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:41:43 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46672 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgBQHln (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 02:41:43 -0500
-Received: by mail-ed1-f65.google.com with SMTP id p14so11383636edy.13;
-        Sun, 16 Feb 2020 23:41:42 -0800 (PST)
+        Mon, 17 Feb 2020 02:49:17 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34652 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgBQHtQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 02:49:16 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s144so6732611wme.1
+        for <devicetree@vger.kernel.org>; Sun, 16 Feb 2020 23:49:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=lcsYrSRBQv0/tuOiLtIdcGzeEqOZwy/ucgpprLmBBKY=;
+        b=jtItyBiUgRgk6BmdYboXya2a/o9c2S21KkV7KiQxBx+O6/WaPpvHVfErJdssFjbZ4i
+         P30GjGDkteiyBRZp0k8BhIW+1GcTywIEbovUouGu/OgfmsDsIjMiWshH7A4OKSd28gaH
+         p5SS5NkDBquZz6AKGgu5seByFxMBbzCNQHVBbI7NAocYAgt1VqeoXMVMcjdYd9C4ccU6
+         LDQwxS+4Xepn/dGwZJkW2wyMnIxyfFq2eDYcMgs9DQ6Dt7px1HlhQqUTSIfbTL6kZZGl
+         jVFgUT/VcLP8iDlE2qaccCbQRDlQ7ewgbyFDpZ9SdHnRiRZuTI/jZHIkheuqwFHAzb/k
+         Riiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=76WiewyfAQysMsVYcXQkeWLkjiTOOZNh8t0AnmKu14M=;
-        b=lqg1TAIE3mMMWfgMrHXFUlYHiwEs6KzOI5RPvLytgfv+dIDrwuR/MLUY0/uTy6Z2oA
-         p9OkFEYvhmxQ7i1fx3+RM5/47BnPwneyy9u8XwZ3H3KEGgJZThS9Pe0bdGyM3KtlCslf
-         0d8ZhCULpIliDW9/Xo2lUux3xnHE9tEDSk1RWq6RBJezs+K3regj6Y/FetmDWMKS0jc9
-         6UAHQmahBslp1YOyLvZ27kXTrcF/7Wv+AHG9O+px7ISDISVqikLGHxwoAHHIURsekDuj
-         WPa2vh9OCC2Cl8988391EVOagXXJTBYVSyAZbWMmTUbm5XxhTas6NuSZliOD/zrbSsLF
-         Pfhw==
-X-Gm-Message-State: APjAAAXGS7Etms5CLxYizd0uy6VpSRFJ3F7ojxxg7lRGAc0r+J0eWp1v
-        cjI8VTu0HD2p4MdwAgVcekZbQ78R8tQ=
-X-Google-Smtp-Source: APXvYqxNUwWtuzyu3XLYnlq0qag2tmGzszgI1Ec/xqs4MRbkWjAwqvblKHzNX73QxFhI0fj0dlOFgw==
-X-Received: by 2002:a05:6402:22c1:: with SMTP id dm1mr12303346edb.21.1581925301367;
-        Sun, 16 Feb 2020 23:41:41 -0800 (PST)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
-        by smtp.gmail.com with ESMTPSA id r24sm501431edv.69.2020.02.16.23.41.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Feb 2020 23:41:40 -0800 (PST)
-Received: by mail-wr1-f53.google.com with SMTP id w15so18358543wru.4;
-        Sun, 16 Feb 2020 23:41:40 -0800 (PST)
-X-Received: by 2002:a5d:484f:: with SMTP id n15mr20324028wrs.365.1581925300705;
- Sun, 16 Feb 2020 23:41:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-5-samuel@sholland.org>
-In-Reply-To: <20200217064250.15516-5-samuel@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 15:41:29 +0800
-X-Gmail-Original-Message-ID: <CAGb2v6543yLuBUi_37DbFdfkOo_OBK8v-rB2hViex_BCzAurPQ@mail.gmail.com>
-Message-ID: <CAGb2v6543yLuBUi_37DbFdfkOo_OBK8v-rB2hViex_BCzAurPQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/34] ASoC: sun8i-codec: Remove unused dev from codec struct
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=lcsYrSRBQv0/tuOiLtIdcGzeEqOZwy/ucgpprLmBBKY=;
+        b=SnreoP5uRp+rx0+MpsIyo43dsvTdd/Ogb46l4tcAYUAceGXsFDdFlqZrhYM0WdQWuc
+         fDHIWQt8JIW1v1FkR0K/3O7i66MemekrUfd4PxsL9h3pjj8q8CipuHlowYuOtHmKnPmr
+         VJ1J+9XSOq5fzRViehf0jI+44hPY8x103zfY5Y8/rvdZBITlpfCoNQ7r/XJ1y3Q0U2dq
+         FQE1nHcem01rWL9K5Ec0siWXFRnaAe3L+Ha1BZJPQe3vzZqXDAOtAVIeHKDD/1Ke+EGX
+         NkZWM1SB7G2d6uWBSMDfbGcgMtuvi/kSOGq8m7EfC56asGQiVl1ldC9Y4vibR8uK3LtX
+         Ygig==
+X-Gm-Message-State: APjAAAUGSt52gz3rnnljj6hekmWhTPiL1vK74ZMFkIRHIzY9QQyj7npi
+        d6hITV3SauMYrD3IDf/T1CGVyw==
+X-Google-Smtp-Source: APXvYqyJtjN2qsgU+dia/mVioDpDwyoJ+ti/pQN/I0BI9y/1B7olbgnxkE2KdsFVusIV1tYvrwUnkA==
+X-Received: by 2002:a1c:a553:: with SMTP id o80mr20042142wme.94.1581925754379;
+        Sun, 16 Feb 2020 23:49:14 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id u23sm19462367wmu.14.2020.02.16.23.49.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2020 23:49:13 -0800 (PST)
+References: <20200216173446.1823-1-linux.amoon@gmail.com> <20200216173446.1823-3-linux.amoon@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Anand Moon <linux.amoon@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCHv1 2/3] arm64: dts: meson: Add missing regulator linked to VCCV5 regulator to VDDIO_C/TF_IO
+In-reply-to: <20200216173446.1823-3-linux.amoon@gmail.com>
+Date:   Mon, 17 Feb 2020 08:49:12 +0100
+Message-ID: <1jo8txzm9z.fsf@starbuckisacylon.baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 2:42 PM Samuel Holland <samuel@sholland.org> wrote:
->
-> This field is not used anywhere in the driver, so remove it.
->
-> Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+On Sun 16 Feb 2020 at 18:34, Anand Moon <linux.amoon@gmail.com> wrote:
+
+> As per schematics add missing VCCV5 power supply to VDDIO_C/TF_IO
+> regulator. Also add TF_3V3N_1V8_EN signal name to gpio pin.
+
+Why ? I don't see the connection with the cover letter here ...
+
+>
+> Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> index 353db3b32cc4..23eddff85fe5 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> @@ -66,11 +66,14 @@ tf_io: gpio-regulator-tf_io {
+>  		regulator-min-microvolt = <1800000>;
+>  		regulator-max-microvolt = <3300000>;
+>  
+> +		/* TF_3V3N_1V8_EN */
+This is not terribly useful ... same for the previous patch
+
+>  		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+>  		gpios-states = <0>;
+>  
+>  		states = <3300000 0>,
+>  			 <1800000 1>;
+> +		/* U16 RT9179GB */
+> +		vin-supply = <&vcc_5v>;
+That is not parsed and not even part of the gpio regulator binding
+documentation. It won't make any difference.
+
+>  	};
+>  
+>  	flash_1v8: regulator-flash_1v8 {
+
