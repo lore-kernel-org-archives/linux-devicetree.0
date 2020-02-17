@@ -2,128 +2,482 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551A7C34022
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 22:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3703BC3402E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 23:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21CB6222D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 22:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0810206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 23:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fB16ZjEj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="elGw1bxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725853AbgBQWWn (ORCPT
+        id S1726237AbgBQXMe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:22:43 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37583 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgBQWWn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:22:43 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Lz4s3TWQz9sPJ;
-        Tue, 18 Feb 2020 09:22:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581978159;
-        bh=T/Ho1UZEyFt8rs4SdRhU3v+8yxewmcXVrq7So23AQHU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fB16ZjEjWQ1+Dxc9OAbPk1bDSsmg4otnhc3HTmHHRUZxQHUqv5wcWqNqrxOTW+r1J
-         oZlKigjMDFIO/I4jB/cGtIYxaqCPFdkr9TZeALZFb0sAljMlUU63CmHp+e1vbZIFwA
-         u+L8sHcmVeoBFKhmD5BKx7+YPh9dLhdnPOAuMZJNqvTVmYZz8yB44kQUBOEnjUNHFl
-         8OwTcN2z4rNA74p27snEmuoIiyUCDSBxm01OyfUdfYBKYvKUttrenaWdpsuNCjWh1+
-         27rmHRv6oHPkLT/lmu2Z8Eb++7cOZcqH0Rargn+kVEKD+RPyQHIxPiEAFtm5GJgnW5
-         ylz9hfujI2HIQ==
-Date:   Tue, 18 Feb 2020 09:22:29 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH] soc: amlogic: fix compile failure with
- MESON_SECURE_PM_DOMAINS & !MESON_SM
-Message-ID: <20200218092229.0448d266@canb.auug.org.au>
-In-Reply-To: <20200218080743.07e58c6e@canb.auug.org.au>
-References: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
-        <20200218080743.07e58c6e@canb.auug.org.au>
+        Mon, 17 Feb 2020 18:12:34 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:36155 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgBQXMe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 18:12:34 -0500
+Received: by mail-yw1-f68.google.com with SMTP id n184so8609428ywc.3
+        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 15:12:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=plKxY5Yio5Jr2AlQMtIcW1+8DGCQP8/Yf1rGtBPXYN0=;
+        b=elGw1bxgIPOvCrRYpZD8P+MqZLdG0DZxVPG09tSOFlHUgn9Ii5kAooZWC0je2FuvIA
+         I3lhDCfyk5cvzbUrqUzYFWw9axGfHioPJ6nS4Pv2aMdHkPOyQN6gBDZIxD0hKy99ZCWE
+         wwE9aj2qcpFGsdxKn3Rv8Fhkxj1frnMwYXIo4wXQ2cxzponL8aqF0JQ1RC+pxlxQ3pTB
+         qhcs/XLtPrFRQKrLpRLQmskBp39xkIIUY1MgXKmXIASW4OU/pPCEDEad++c648rz3KjC
+         eEO1aidKUFTocTuej/Vz/6fR+Fl4WG3+R0CTEeWTIeJ6WiDmSLaz5RzWIM5AIHvqbd/o
+         J4RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=plKxY5Yio5Jr2AlQMtIcW1+8DGCQP8/Yf1rGtBPXYN0=;
+        b=q3COjktvTRMHiYBTIErDQz4cRFSOuUa9+4GJdK7il9Qrwjn7l/j0KFlf1u4oXeMG+e
+         oyTQVc4/MUobyMJw7S5FDiV10fKTQxLZ5DaJCZ1dpePQwgvfuNF7cUOSb9mhL/sSfud1
+         nK5j87pkkRTtHNF2H3m5t3zdPhrYnZhBGBOHuT55FAUEStecq4+Di40xfq1qqtKLBlfh
+         IfPRV0nHKGDps5MntwnflGDrEXMxBwPJNEawWXX4I85FcVmyOY9WFikxDdRnJ0M1W/Zl
+         UQBrEv05oD7mMm7dSwAw1ejQAhIHFUEnu/aHIfD7j4fncg5vfUMPrKY4mFkxuRXBZGBn
+         uYlQ==
+X-Gm-Message-State: APjAAAWaQPdoN//K93ZMFtsUYN90UDBz0dLec434MdJPWeTd4vm1CIuO
+        rCAdkugebq5pkW6xUfFHBokbclOPv/M=
+X-Google-Smtp-Source: APXvYqybOyo5T72803m8N9/kyqXf3ZGTN/S6DdEQUwHTJnuPtt9FBux9ts8bd4jQuSy/58It3yYJHA==
+X-Received: by 2002:a81:8606:: with SMTP id w6mr14036304ywf.137.1581981151700;
+        Mon, 17 Feb 2020 15:12:31 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id t15sm775877ywg.67.2020.02.17.15.12.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 15:12:31 -0800 (PST)
+Date:   Mon, 17 Feb 2020 16:12:28 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        coresight@lists.linaro.org, linux-doc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, suzuki.poulose@arm.com,
+        robh+dt@kernel.org, maxime@cerno.tech, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, agross@kernel.org,
+        corbet@lwn.net
+Subject: Re: [PATCH v9 08/15] coresight: cti: Enable CTI associated with
+ devices.
+Message-ID: <20200217231228.GA28357@xps15>
+References: <20200210213924.20037-1-mike.leach@linaro.org>
+ <20200210213924.20037-9-mike.leach@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.qVlDOXsSXuL3sxUO2UwZ_+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210213924.20037-9-mike.leach@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/.qVlDOXsSXuL3sxUO2UwZ_+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Suzuki,
 
-Hi all,
+As far as I can tell Mike made the modifications you have requested.  Please
+have a look to make sure it is the case before I add this to my next tree.
 
-On Tue, 18 Feb 2020 08:07:43 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Tue, 18 Feb 2020 00:12:13 +0800 Jianxin Pan <jianxin.pan@amlogic.com> =
-wrote:
-> >
-> > When MESON_SECURE_PM_DOMAINS & !MESON_SM, there will be compile failure:
-> > .../meson-secure-pwrc.o: In function `meson_secure_pwrc_on':
-> > .../meson-secure-pwrc.c:76: undefined reference to `meson_sm_call'
-> >=20
-> > Fix this by adding depends on MESON_SM for MESON_SECURE_PM_DOMAINS.
-> >=20
-> > Fixes: b3dde5013e13 ("soc: amlogic: Add support for Secure power domain=
-s controller")
-> >=20
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: patchwork-bot+linux-amlogic<patchwork-bot+linux-amlogic@ke=
-rnel.org>
-> > Reported-by: Stephen Rothwell<sfr@canb.auug.org.au>
-> > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> > ---
-> >  drivers/soc/amlogic/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-) =20
->=20
-> I will apply that patch to linux-next today.
+Thanks,
+Mathieu
 
-This fixes the build for me.
-
-Tested-by: Stephen Rothwell<sfr@canb.auug.org.au>
-
-Also, please keep the commit message tags together at the end of the
-commit message i.e. remove the blank line after the Fixes: tag above.
-(see "git interpret-trailers ")
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.qVlDOXsSXuL3sxUO2UwZ_+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5LEiUACgkQAVBC80lX
-0GxiFQf/YRVKJcX4m5O/6kWTlxZ2/vzcKlyfDLSY2sadgEbNcCoGpqHg3C8MuVN5
-SHJd3URexLrLU3zLpCtgxCgDTjoQRNjqUIZVQYnWFBI0bOiWu+rc9Z+SCuJ62UVq
-Ct6I89voQEMg9Wdz37uordsgbGJIRq+VFiA2lOSLJhMxQIJ9/5Wf5AO0i2g/RDxz
-j/xX2bbl2nb3fFBBWQ59Hs1/GHaXCv73apLt0WTxxw8I5slbF0sRYqWDo0BABABX
-PIar9gHeIOrBLJWJJTqJV3E7/JepXwBpfZK7fuZKcroirNefQrkQdhRW26C7gKFN
-9uuM1INSTOTPFxa5jaYaw0r3vAnkYg==
-=IwNd
------END PGP SIGNATURE-----
-
---Sig_/.qVlDOXsSXuL3sxUO2UwZ_+--
+On Mon, Feb 10, 2020 at 09:39:17PM +0000, Mike Leach wrote:
+> The CoreSight subsystem enables a path of devices from source to sink.
+> Any CTI devices associated with the path devices must be enabled at the
+> same time.
+> 
+> This patch adds an associated coresight_device element to the main
+> coresight device structure, and uses this to create associations between
+> the CTI and other devices based on the device tree data. The associated
+> device element is used to enable CTI in conjunction with the path elements.
+> 
+> CTI devices are reference counted so where a single CTI is associated with
+> multiple elements on the path, it will be enabled on the first associated
+> device enable, and disabled with the last associated device disable.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  drivers/hwtracing/coresight/coresight-cti.c  | 129 +++++++++++++++++++
+>  drivers/hwtracing/coresight/coresight-cti.h  |   1 +
+>  drivers/hwtracing/coresight/coresight-priv.h |  12 ++
+>  drivers/hwtracing/coresight/coresight.c      |  71 +++++++++-
+>  include/linux/coresight.h                    |   4 +
+>  5 files changed, 212 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+> index 77c2af247917..c4494923d030 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti.c
+> @@ -4,6 +4,7 @@
+>   * Author: Mike Leach <mike.leach@linaro.org>
+>   */
+>  
+> +#include <linux/property.h>
+>  #include "coresight-cti.h"
+>  
+>  /**
+> @@ -440,6 +441,131 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
+>  	return err;
+>  }
+>  
+> +/*
+> + * Look for a matching connection device name in the list of connections.
+> + * If found then swap in the csdev name, set trig con association pointer
+> + * and return found.
+> + */
+> +static bool
+> +cti_match_fixup_csdev(struct cti_device *ctidev, const char *node_name,
+> +		      struct coresight_device *csdev)
+> +{
+> +	struct cti_trig_con *tc;
+> +	const char *csdev_name;
+> +
+> +	list_for_each_entry(tc, &ctidev->trig_cons, node) {
+> +		if (tc->con_dev_name) {
+> +			if (!strcmp(node_name, tc->con_dev_name)) {
+> +				/* match: so swap in csdev name & dev */
+> +				csdev_name = dev_name(&csdev->dev);
+> +				tc->con_dev_name =
+> +					devm_kstrdup(&csdev->dev, csdev_name,
+> +						     GFP_KERNEL);
+> +				tc->con_dev = csdev;
+> +				return true;
+> +			}
+> +		}
+> +	}
+> +	return false;
+> +}
+> +
+> +/*
+> + * Search the cti list to add an associated CTI into the supplied CS device
+> + * This will set the association if CTI declared before the CS device.
+> + * (called from coresight_register() with coresight_mutex locked).
+> + */
+> +void cti_add_assoc_to_csdev(struct coresight_device *csdev)
+> +{
+> +	struct cti_drvdata *ect_item;
+> +	struct cti_device *ctidev;
+> +	const char *node_name = NULL;
+> +
+> +	/* protect the list */
+> +	mutex_lock(&ect_mutex);
+> +
+> +	/* exit if current is an ECT device.*/
+> +	if ((csdev->type == CORESIGHT_DEV_TYPE_ECT) || list_empty(&ect_net))
+> +		goto cti_add_done;
+> +
+> +	/* if we didn't find the csdev previously we used the fwnode name */
+> +	node_name = cti_plat_get_node_name(dev_fwnode(csdev->dev.parent));
+> +	if (!node_name)
+> +		goto cti_add_done;
+> +
+> +	/* for each CTI in list... */
+> +	list_for_each_entry(ect_item, &ect_net, node) {
+> +		ctidev = &ect_item->ctidev;
+> +		if (cti_match_fixup_csdev(ctidev, node_name, csdev)) {
+> +			/*
+> +			 * if we found a matching csdev then update the ECT
+> +			 * association pointer for the device with this CTI.
+> +			 */
+> +			csdev->ect_dev = ect_item->csdev;
+> +			break;
+> +		}
+> +	}
+> +cti_add_done:
+> +	mutex_unlock(&ect_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(cti_add_assoc_to_csdev);
+> +
+> +/*
+> + * Removing the associated devices is easier.
+> + * A CTI will not have a value for csdev->ect_dev.
+> + */
+> +void cti_remove_assoc_from_csdev(struct coresight_device *csdev)
+> +{
+> +	struct cti_drvdata *ctidrv;
+> +	struct cti_trig_con *tc;
+> +	struct cti_device *ctidev;
+> +
+> +	mutex_lock(&ect_mutex);
+> +	if (csdev->ect_dev) {
+> +		ctidrv = csdev_to_cti_drvdata(csdev->ect_dev);
+> +		ctidev = &ctidrv->ctidev;
+> +		list_for_each_entry(tc, &ctidev->trig_cons, node) {
+> +			if (tc->con_dev == csdev->ect_dev) {
+> +				tc->con_dev = NULL;
+> +				break;
+> +			}
+> +		}
+> +		csdev->ect_dev = NULL;
+> +	}
+> +	mutex_unlock(&ect_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(cti_remove_assoc_from_csdev);
+> +
+> +/*
+> + * Update the cross references where the associated device was found
+> + * while we were building the connection info. This will occur if the
+> + * assoc device was registered before the CTI.
+> + */
+> +static void cti_update_conn_xrefs(struct cti_drvdata *drvdata)
+> +{
+> +	struct cti_trig_con *tc;
+> +	struct cti_device *ctidev = &drvdata->ctidev;
+> +
+> +	list_for_each_entry(tc, &ctidev->trig_cons, node) {
+> +		if (tc->con_dev)
+> +			/* set tc->con_dev->ect_dev */
+> +			coresight_set_assoc_ectdev_mutex(tc->con_dev,
+> +							 drvdata->csdev);
+> +	}
+> +}
+> +
+> +static void cti_remove_conn_xrefs(struct cti_drvdata *drvdata)
+> +{
+> +	struct cti_trig_con *tc;
+> +	struct cti_device *ctidev = &drvdata->ctidev;
+> +
+> +	list_for_each_entry(tc, &ctidev->trig_cons, node) {
+> +		if (tc->con_dev) {
+> +			coresight_set_assoc_ectdev_mutex(tc->con_dev,
+> +							 NULL);
+> +		}
+> +	}
+> +}
+> +
+>  /** cti ect operations **/
+>  int cti_enable(struct coresight_device *csdev)
+>  {
+> @@ -474,6 +600,7 @@ static void cti_device_release(struct device *dev)
+>  	struct cti_drvdata *ect_item, *ect_tmp;
+>  
+>  	mutex_lock(&ect_mutex);
+> +	cti_remove_conn_xrefs(drvdata);
+>  
+>  	/* remove from the list */
+>  	list_for_each_entry_safe(ect_item, ect_tmp, &ect_net, node) {
+> @@ -565,6 +692,8 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+>  	/* add to list of CTI devices */
+>  	mutex_lock(&ect_mutex);
+>  	list_add(&drvdata->node, &ect_net);
+> +	/* set any cross references */
+> +	cti_update_conn_xrefs(drvdata);
+>  	mutex_unlock(&ect_mutex);
+>  
+>  	/* set up release chain */
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
+> index 469a06a1bb78..578d7e9ac67e 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti.h
+> +++ b/drivers/hwtracing/coresight/coresight-cti.h
+> @@ -216,6 +216,7 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
+>  		      u32 channel_idx);
+>  struct coresight_platform_data *
+>  coresight_cti_get_platform_data(struct device *dev);
+> +const char *cti_plat_get_node_name(struct fwnode_handle *fwnode);
+>  
+>  /* cti powered and enabled */
+>  static inline bool cti_active(struct cti_config *cfg)
+> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+> index 357ffef7b825..890f9a5c97c6 100644
+> --- a/drivers/hwtracing/coresight/coresight-priv.h
+> +++ b/drivers/hwtracing/coresight/coresight-priv.h
+> @@ -162,6 +162,16 @@ static inline int etm_readl_cp14(u32 off, unsigned int *val) { return 0; }
+>  static inline int etm_writel_cp14(u32 off, u32 val) { return 0; }
+>  #endif
+>  
+> +#ifdef CONFIG_CORESIGHT_CTI
+> +extern void cti_add_assoc_to_csdev(struct coresight_device *csdev);
+> +extern void cti_remove_assoc_from_csdev(struct coresight_device *csdev);
+> +
+> +#else
+> +static inline void cti_add_assoc_to_csdev(struct coresight_device *csdev) {}
+> +static inline void
+> +cti_remove_assoc_from_csdev(struct coresight_device *csdev) {}
+> +#endif
+> +
+>  /*
+>   * Macros and inline functions to handle CoreSight UCI data and driver
+>   * private data in AMBA ID table entries, and extract data values.
+> @@ -204,5 +214,7 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
+>  void coresight_release_platform_data(struct coresight_platform_data *pdata);
+>  struct coresight_device *
+>  coresight_find_csdev_by_fwnode(struct fwnode_handle *r_fwnode);
+> +void coresight_set_assoc_ectdev_mutex(struct coresight_device *csdev,
+> +				      struct coresight_device *ect_csdev);
+>  
+>  #endif
+> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+> index 39a5d9f7a395..c71553c09f8e 100644
+> --- a/drivers/hwtracing/coresight/coresight.c
+> +++ b/drivers/hwtracing/coresight/coresight.c
+> @@ -216,6 +216,44 @@ void coresight_disclaim_device(void __iomem *base)
+>  	CS_LOCK(base);
+>  }
+>  
+> +/* enable or disable an associated CTI device of the supplied CS device */
+> +static int
+> +coresight_control_assoc_ectdev(struct coresight_device *csdev, bool enable)
+> +{
+> +	int ect_ret = 0;
+> +	struct coresight_device *ect_csdev = csdev->ect_dev;
+> +
+> +	if (!ect_csdev)
+> +		return 0;
+> +
+> +	if (enable) {
+> +		if (ect_ops(ect_csdev)->enable)
+> +			ect_ret = ect_ops(ect_csdev)->enable(ect_csdev);
+> +	} else {
+> +		if (ect_ops(ect_csdev)->disable)
+> +			ect_ret = ect_ops(ect_csdev)->disable(ect_csdev);
+> +	}
+> +
+> +	/* output warning if ECT enable is preventing trace operation */
+> +	if (ect_ret)
+> +		dev_info(&csdev->dev, "Associated ECT device (%s) %s failed\n",
+> +			 dev_name(&ect_csdev->dev),
+> +			 enable ? "enable" : "disable");
+> +	return ect_ret;
+> +}
+> +
+> +/*
+> + * Set the associated ect / cti device while holding the coresight_mutex
+> + * to avoid a race with coresight_enable that may try to use this value.
+> + */
+> +void coresight_set_assoc_ectdev_mutex(struct coresight_device *csdev,
+> +				      struct coresight_device *ect_csdev)
+> +{
+> +	mutex_lock(&coresight_mutex);
+> +	csdev->ect_dev = ect_csdev;
+> +	mutex_unlock(&coresight_mutex);
+> +}
+> +
+>  static int coresight_enable_sink(struct coresight_device *csdev,
+>  				 u32 mode, void *data)
+>  {
+> @@ -228,9 +266,14 @@ static int coresight_enable_sink(struct coresight_device *csdev,
+>  	if (!sink_ops(csdev)->enable)
+>  		return -EINVAL;
+>  
+> -	ret = sink_ops(csdev)->enable(csdev, mode, data);
+> +	ret = coresight_control_assoc_ectdev(csdev, true);
+>  	if (ret)
+>  		return ret;
+> +	ret = sink_ops(csdev)->enable(csdev, mode, data);
+> +	if (ret) {
+> +		coresight_control_assoc_ectdev(csdev, false);
+> +		return ret;
+> +	}
+>  	csdev->enable = true;
+>  
+>  	return 0;
+> @@ -246,6 +289,7 @@ static void coresight_disable_sink(struct coresight_device *csdev)
+>  	ret = sink_ops(csdev)->disable(csdev);
+>  	if (ret)
+>  		return;
+> +	coresight_control_assoc_ectdev(csdev, false);
+>  	csdev->enable = false;
+>  }
+>  
+> @@ -269,8 +313,15 @@ static int coresight_enable_link(struct coresight_device *csdev,
+>  	if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_SPLIT && outport < 0)
+>  		return outport;
+>  
+> -	if (link_ops(csdev)->enable)
+> -		ret = link_ops(csdev)->enable(csdev, inport, outport);
+> +	if (link_ops(csdev)->enable) {
+> +		ret = coresight_control_assoc_ectdev(csdev, true);
+> +		if (!ret) {
+> +			ret = link_ops(csdev)->enable(csdev, inport, outport);
+> +			if (ret)
+> +				coresight_control_assoc_ectdev(csdev, false);
+> +		}
+> +	}
+> +
+>  	if (!ret)
+>  		csdev->enable = true;
+>  
+> @@ -300,8 +351,10 @@ static void coresight_disable_link(struct coresight_device *csdev,
+>  		nr_conns = 1;
+>  	}
+>  
+> -	if (link_ops(csdev)->disable)
+> +	if (link_ops(csdev)->disable) {
+>  		link_ops(csdev)->disable(csdev, inport, outport);
+> +		coresight_control_assoc_ectdev(csdev, false);
+> +	}
+>  
+>  	for (i = 0; i < nr_conns; i++)
+>  		if (atomic_read(&csdev->refcnt[i]) != 0)
+> @@ -322,9 +375,14 @@ static int coresight_enable_source(struct coresight_device *csdev, u32 mode)
+>  
+>  	if (!csdev->enable) {
+>  		if (source_ops(csdev)->enable) {
+> -			ret = source_ops(csdev)->enable(csdev, NULL, mode);
+> +			ret = coresight_control_assoc_ectdev(csdev, true);
+>  			if (ret)
+>  				return ret;
+> +			ret = source_ops(csdev)->enable(csdev, NULL, mode);
+> +			if (ret) {
+> +				coresight_control_assoc_ectdev(csdev, false);
+> +				return ret;
+> +			};
+>  		}
+>  		csdev->enable = true;
+>  	}
+> @@ -347,6 +405,7 @@ static bool coresight_disable_source(struct coresight_device *csdev)
+>  	if (atomic_dec_return(csdev->refcnt) == 0) {
+>  		if (source_ops(csdev)->disable)
+>  			source_ops(csdev)->disable(csdev, NULL);
+> +		coresight_control_assoc_ectdev(csdev, false);
+>  		csdev->enable = false;
+>  	}
+>  	return !csdev->enable;
+> @@ -964,6 +1023,7 @@ static void coresight_device_release(struct device *dev)
+>  {
+>  	struct coresight_device *csdev = to_coresight_device(dev);
+>  
+> +	cti_remove_assoc_from_csdev(csdev);
+>  	fwnode_handle_put(csdev->dev.fwnode);
+>  	kfree(csdev->refcnt);
+>  	kfree(csdev);
+> @@ -1246,6 +1306,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+>  
+>  	coresight_fixup_device_conns(csdev);
+>  	coresight_fixup_orphan_conns(csdev);
+> +	cti_add_assoc_to_csdev(csdev);
+>  
+>  	mutex_unlock(&coresight_mutex);
+>  
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index b3e582d96a34..193cc9dbf448 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -163,6 +163,8 @@ struct coresight_connection {
+>   *		activated but not yet enabled.  Enabling for a _sink_
+>   *		appens when a source has been selected for that it.
+>   * @ea:		Device attribute for sink representation under PMU directory.
+> + * @ect_dev:	Associated cross trigger device. Not part of the trace data
+> + *		path or connections.
+>   */
+>  struct coresight_device {
+>  	struct coresight_platform_data *pdata;
+> @@ -176,6 +178,8 @@ struct coresight_device {
+>  	/* sink specific fields */
+>  	bool activated;	/* true only if a sink is part of a path */
+>  	struct dev_ext_attribute *ea;
+> +	/* cross trigger handling */
+> +	struct coresight_device *ect_dev;
+>  };
+>  
+>  /*
+> -- 
+> 2.17.1
+> 
