@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC603C34021
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A253AC34021
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964D3214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BB522527
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581951955;
-	bh=TRXzS1/3PZIMdCqxv0UFvbQGi3roNuI+NYhk587bOns=;
+	s=default; t=1581952179;
+	bh=+QsbzVsPqtYbBQzk87hqVrIbl3gJslqr6zkmmEt4xlM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DG7XG6EVYKRzWujVPyPDtyiAag/W0Jx6Ol0Lu1BDgSj/nJ4wO+bF6EjjVGb3e23uf
-	 tgRzZMTNv9BGxaNifr2eLbuEDsYgQtw8OFegb+lIfes7tnJel3nk6j0A2gWii9saFL
-	 bAwNbNAvBlVW91jeaQzTAI16VzzHq60npxlOtDkE=
+	b=KMFTTgpn5Fw6q/h4aMEIAGja+5VbAeqgV8XEcKi6jYM3WSJcn8jwYQEV4sx4WrwZR
+	 DPVcjDa+VHLA+uB2ciy9ic/HNN97Ev4B/1on9RRVzC/kKcGUqUBacLN2hUUXNrkY4r
+	 WqmddRllEpEAtNy5a428gfXl+ImIl/DszKR1dBX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgBQPFz (ORCPT
+        id S1728845AbgBQPJi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:05:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:36996 "EHLO foss.arm.com"
+        Mon, 17 Feb 2020 10:09:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:37066 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbgBQPFz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:05:55 -0500
+        id S1728054AbgBQPJi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:09:38 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76B05106F;
-        Mon, 17 Feb 2020 07:05:54 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D841630E;
+        Mon, 17 Feb 2020 07:09:37 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEE463F703;
-        Mon, 17 Feb 2020 07:05:53 -0800 (PST)
-Date:   Mon, 17 Feb 2020 15:05:52 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B7BA3F703;
+        Mon, 17 Feb 2020 07:09:37 -0800 (PST)
+Date:   Mon, 17 Feb 2020 15:09:35 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Samuel Holland <samuel@sholland.org>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
@@ -47,14 +47,16 @@ Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [RFC PATCH 07/34] ASoC: sun8i-codec: Remove extraneous widgets
-Message-ID: <20200217150552.GI9304@sirena.org.uk>
-References: <20200217064250.15516-8-samuel@sholland.org>
+Subject: Re: [RFC PATCH 08/34] ASoC: sun8i-codec: Fix direction of AIF1
+ outputs
+Message-ID: <20200217150935.GJ9304@sirena.org.uk>
+References: <20200217064250.15516-1-samuel@sholland.org>
+ <20200217064250.15516-9-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="e5GLnnZ8mDMEwH4V"
+        protocol="application/pgp-signature"; boundary="4vpci17Ql0Nrbul2"
 Content-Disposition: inline
-In-Reply-To: <20200217064250.15516-8-samuel@sholland.org>
+In-Reply-To: <20200217064250.15516-9-samuel@sholland.org>
 X-Cookie: There was a phone call for you.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -63,34 +65,35 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---e5GLnnZ8mDMEwH4V
+--4vpci17Ql0Nrbul2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 17, 2020 at 12:42:23AM -0600, Samuel Holland wrote:
-> This driver is for the digital part of the codec, which has no
-> microphone input. These widgets look like they were copied from
-> sun4i-codec. Since they do not belong here, remove them.
->=20
+On Mon, Feb 17, 2020 at 12:42:24AM -0600, Samuel Holland wrote:
+> The naming convention for AIFs in this codec is to call the "DAC" the
+> path from the AIF into the codec, and the ADC the path from the codec
+> back to the AIF, regardless of if there is any analog path involved.
+
+This renames widgets but does not update any DAPM routes from those
+widgets which will break things if this patch is applied.
+
 > Cc: stable@kernel.org
-> Fixes: eda85d1fee05 ("ASoC: sun8i-codec: Add ADC support for a33")
 
-This is a cleanup, why send it to stable?
+Why is this suitable for stable?  It's a random textual cleanup.
 
---e5GLnnZ8mDMEwH4V
+--4vpci17Ql0Nrbul2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Kq88ACgkQJNaLcl1U
-h9AO/wf+MRxer75LjO64950mSzyZv03H08zeydq4EqDjAfmEz4SKcz7U2c4saLDV
-rnK6SSDhIk+37PQH7f3K1vOkeS2vbdZ4jLlfv37BZM8W4Gjvmskw55ALcWYyEJUT
-NLbZapLoOL+r6G0jTNchN/Y9RxH02zUZjpaCkAu8pYQJ4H9uj4Tmo2ma08gsKe6Z
-5hJJGjVeiJMF7vekIeY6qzV44uWDXL2fEkP41L05NPQBA3bPzo0E35uJEz+q2aZC
-6M7cH9ezGYL4AtEJIFqzZnIUcQxVZkLHG/zpMqY4bxC1xFmNihLDzqi7HKQtGOEF
-NTKdQfX3VCJwv2632jbbdyiKMpeIUg==
-=zg40
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5KrK8ACgkQJNaLcl1U
+h9Ab9Af/b8sQj3zwynBYYxusscd9/aduwhw7qF+DAdPBw6PYNIA/g/Ts6oULrx9/
+F9O4MHo55RlwYbfi8iuyYJ8LpLv4y7txkM5x5y5oauIL+soV6TB8bszuwBvk5jHu
+qMxAhPDo6mD2D1QYL7GJeWvid+lBr7MGrlzbxg+0uW1jEw3pEJjXL4WTXu0e2l4T
+cTZ4Am744vhS15WDE0s/wJSvB2rxPn6xVVi93LtdEE9+YgE4lE9Y7ruezZibMFQb
+hrTkWC0l92y8sbIkHpAzlo5gh5qNn6UahJRlr+wCILtXuEJMgPEEmx0DoTciwQUr
+su1mRVq9kOQOtpw4mjBq3iDo8MiP3A==
+=UkmS
 -----END PGP SIGNATURE-----
 
---e5GLnnZ8mDMEwH4V--
+--4vpci17Ql0Nrbul2--
