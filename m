@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5886C35242
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 03:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B537EC7619D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 03:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4A122522
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 03:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E6A22522
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 03:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgBQD0j (ORCPT
+        id S1726742AbgBQD0h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Feb 2020 22:26:39 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:46126 "EHLO inva020.nxp.com"
+        Sun, 16 Feb 2020 22:26:37 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:46074 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbgBQD0i (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Feb 2020 22:26:38 -0500
+        id S1727078AbgBQD0h (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Feb 2020 22:26:37 -0500
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 479B01A1F2C;
-        Mon, 17 Feb 2020 04:26:37 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B025A1A1F4B;
+        Mon, 17 Feb 2020 04:26:35 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 81E9F1A1F31;
-        Mon, 17 Feb 2020 04:26:27 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ED05F1A1F30;
+        Mon, 17 Feb 2020 04:26:25 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CAAF74030D;
-        Mon, 17 Feb 2020 11:26:15 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 41A8F402ED;
+        Mon, 17 Feb 2020 11:26:14 +0800 (SGT)
 From:   Joakim Zhang <qiangqing.zhang@nxp.com>
 To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de
@@ -39,9 +39,9 @@ Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH 2/7] clk: imx8: Add SCU and LPCG clocks for I2C in CM40 SS
-Date:   Mon, 17 Feb 2020 11:19:16 +0800
-Message-Id: <1581909561-12058-3-git-send-email-qiangqing.zhang@nxp.com>
+Subject: [PATCH 1/7] firmware: imx: scu-pd: add power domain for I2C and INTMUX in CM40 SS
+Date:   Mon, 17 Feb 2020 11:19:15 +0800
+Message-Id: <1581909561-12058-2-git-send-email-qiangqing.zhang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1581909561-12058-1-git-send-email-qiangqing.zhang@nxp.com>
 References: <1581909561-12058-1-git-send-email-qiangqing.zhang@nxp.com>
@@ -51,42 +51,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add SCU and LPCG clocks for I2C in CM40 SS.
+Add power domain for I2C and INTMUX in CM40 SS.
 
 Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 ---
- include/dt-bindings/clock/imx8-clock.h | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/firmware/imx/scu-pd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
-index 673a8c662340..84a442be700f 100644
---- a/include/dt-bindings/clock/imx8-clock.h
-+++ b/include/dt-bindings/clock/imx8-clock.h
-@@ -131,7 +131,12 @@
- #define IMX_ADMA_PWM_CLK				188
- #define IMX_ADMA_LCD_CLK				189
- 
--#define IMX_SCU_CLK_END					190
-+/* CM40 SS */
-+#define IMX_CM40_IPG_CLK				200
-+#define IMX_CM40_I2C_CLK				205
+diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
+index b556612207e5..e803dcf60d14 100644
+--- a/drivers/firmware/imx/scu-pd.c
++++ b/drivers/firmware/imx/scu-pd.c
+@@ -158,6 +158,10 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
+ 	/* DC SS */
+ 	{ "dc0", IMX_SC_R_DC_0, 1, false, 0 },
+ 	{ "dc0-pll", IMX_SC_R_DC_0_PLL_0, 2, true, 0 },
 +
-+#define IMX_SCU_CLK_END					220
-+
++	/* CM40 SS */
++	{ "cm40_i2c", IMX_SC_R_M4_0_I2C, 1, 0 },
++	{ "cm40_intmux", IMX_SC_R_M4_0_INTMUX, 1, 0 },
+ };
  
- /* LPCG clocks */
- 
-@@ -290,4 +295,10 @@
- 
- #define IMX_ADMA_LPCG_CLK_END				45
- 
-+/* CM40 SS LPCG */
-+#define IMX_CM40_LPCG_I2C_IPG_CLK			0
-+#define IMX_CM40_LPCG_I2C_CLK				1
-+
-+#define IMX_CM40_LPCG_CLK_END				2
-+
- #endif /* __DT_BINDINGS_CLOCK_IMX_H */
+ static const struct imx_sc_pd_soc imx8qxp_scu_pd = {
 -- 
 2.17.1
 
