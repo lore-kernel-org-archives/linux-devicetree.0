@@ -2,176 +2,95 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F72C7619D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C150BC7619B
 	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF7D20726
+	by mail.kernel.org (Postfix) with ESMTP id 9AAD120801
 	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:56:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="E1h2dIY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgBQG4y (ORCPT
+        id S1726768AbgBQG4y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 17 Feb 2020 01:56:54 -0500
-Received: from twhmllg3.macronix.com ([122.147.135.201]:57436 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgBQG4w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 01:56:52 -0500
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id 01H6ug7Q005796;
-        Mon, 17 Feb 2020 14:56:43 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, tglx@linutronix.de,
-        juliensu@mxic.com.tw, frieder.schrempf@kontron.de,
-        allison@lohutok.net, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, yuehaibing@huawei.com,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v5 1/2] mtd: rawnand: Add support for Macronix NAND randomizer
-Date:   Mon, 17 Feb 2020 14:56:39 +0800
-Message-Id: <1581922600-25461-2-git-send-email-masonccyang@mxic.com.tw>
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6658 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726667AbgBQG4u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 01:56:50 -0500
+X-UUID: a1e7d58ff51b47df95ce8600bd730cd4-20200217
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=AwwsjmBhPYU6ROoZPvj0twrtbVT8+nH58GyVf5fw804=;
+        b=E1h2dIY7lmxQcarGcG0WxLAL69zpwh5N0rYDlrIrwbNsM19hjp+z11+NvVDpfSh9X+juLgQXRcwJziRA+3jEriEsEzXszvtFVkQPkrt1Tifkyzj6JUlELglaxumU4dSB0P4w2p7jsEBIzRyXSdzAGYY8NyQAm/PaU4cIOzO/SNQ=;
+X-UUID: a1e7d58ff51b47df95ce8600bd730cd4-20200217
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <chun-hung.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1153515605; Mon, 17 Feb 2020 14:56:45 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 17 Feb 2020 14:54:17 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 17 Feb 2020 14:54:45 +0800
+From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>
+CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: [PATCH v3 4/4] dt-bindings: mmc: mediatek: Add document for mt6779
+Date:   Mon, 17 Feb 2020 14:56:04 +0800
+Message-ID: <1581922564-24914-5-git-send-email-chun-hung.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581922600-25461-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1581922600-25461-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG3.macronix.com 01H6ug7Q005796
+In-Reply-To: <1581922564-24914-1-git-send-email-chun-hung.wu@mediatek.com>
+References: <1581922564-24914-1-git-send-email-chun-hung.wu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 1A6ACAC00BE898EC995EFD535506D1AD6C8185BC5D35431C913A9162380239B22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Macronix NANDs support randomizer operation for user data scrambled,
-which can be enabled with a SET_FEATURE.
-
-User data written to the NAND device without randomizer is still readable
-after randomizer function enabled.
-The penalty of randomizer are subpage accesses prohibited and more time
-period is needed in program operation and entering deep power-down mode.
-i.e., tPROG 300us to 340us(randomizer enabled)
-
-For more high-reliability concern, if subpage write not available with
-hardware ECC and then to enable randomizer is recommended by default.
-Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-to see if this high-reliability function is supported. By adding a new
-specific DT property in children nodes to enable randomizer function.
-
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/mtd/nand/raw/nand_macronix.c | 81 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
-
-diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-index 3ff7ce0..0a2fe25 100644
---- a/drivers/mtd/nand/raw/nand_macronix.c
-+++ b/drivers/mtd/nand/raw/nand_macronix.c
-@@ -11,6 +11,19 @@
- #define MACRONIX_READ_RETRY_BIT BIT(0)
- #define MACRONIX_NUM_READ_RETRY_MODES 6
- 
-+#define ONFI_FEATURE_ADDR_MXIC_RANDOMIZER 0xB0
-+#define MACRONIX_RANDOMIZER_BIT BIT(1)
-+#define MACRONIX_RANDOMIZER_ENPGM BIT(0)
-+#define MACRONIX_RANDOMIZER_RANDEN BIT(1)
-+#define MACRONIX_RANDOMIZER_RANDOPT BIT(2)
-+#define MACRONIX_RANDOMIZER_MODE_ENTER	\
-+	(MACRONIX_RANDOMIZER_ENPGM |	\
-+	 MACRONIX_RANDOMIZER_RANDEN |	\
-+	 MACRONIX_RANDOMIZER_RANDOPT)
-+#define MACRONIX_RANDOMIZER_MODE_EXIT	\
-+	(MACRONIX_RANDOMIZER_RANDEN |	\
-+	 MACRONIX_RANDOMIZER_RANDOPT)
-+
- struct nand_onfi_vendor_macronix {
- 	u8 reserved;
- 	u8 reliability_func;
-@@ -29,15 +42,83 @@ static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
- 	return nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
- }
- 
-+static int macronix_nand_randomizer_check_enable(struct nand_chip *chip)
-+{
-+	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-+	int ret;
-+
-+	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+				feature);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (feature[0])
-+		return feature[0];
-+
-+	feature[0] = MACRONIX_RANDOMIZER_MODE_ENTER;
-+	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+				feature);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* RANDEN and RANDOPT OTP bits are programmed */
-+	feature[0] = 0x0;
-+	ret = nand_prog_page_op(chip, 0, 0, feature, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+				feature);
-+	if (ret < 0)
-+		return ret;
-+
-+	feature[0] &= MACRONIX_RANDOMIZER_MODE_EXIT;
-+	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+				feature);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static void macronix_nand_onfi_init(struct nand_chip *chip)
- {
- 	struct nand_parameters *p = &chip->parameters;
- 	struct nand_onfi_vendor_macronix *mxic;
-+	struct device_node *dn = nand_get_flash_node(chip);
-+	int rand_otp = 0;
-+	int ret;
- 
- 	if (!p->onfi)
- 		return;
- 
-+	if (of_find_property(dn, "mxic,enable-randomizer-otp", NULL))
-+		rand_otp = 1;
-+
- 	mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
-+	/* Subpage write is prohibited in randomizer operatoin */
-+	if (rand_otp && chip->options & NAND_NO_SUBPAGE_WRITE &&
-+	    mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
-+		if (p->supports_set_get_features) {
-+			bitmap_set(p->set_feature_list,
-+				   ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-+			bitmap_set(p->get_feature_list,
-+				   ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-+			ret = macronix_nand_randomizer_check_enable(chip);
-+			if (ret < 0) {
-+				bitmap_clear(p->set_feature_list,
-+					     ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+					     1);
-+				bitmap_clear(p->get_feature_list,
-+					     ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+					     1);
-+				pr_info("Macronix NAND randomizer failed\n");
-+			} else {
-+				pr_info("Macronix NAND randomizer enabled\n");
-+			}
-+		}
-+	}
-+
- 	if ((mxic->reliability_func & MACRONIX_READ_RETRY_BIT) == 0)
- 		return;
- 
--- 
-1.9.1
+QWRkIGNvbXBhdGlibGUgbm9kZSBmb3IgbXQ2Nzc5IG1tYw0KDQpTaWduZWQtb2ZmLWJ5OiBDaHVu
+LUh1bmcgV3UgPGNodW4taHVuZy53dUBtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbW1jL210ay1zZC50eHQgfCAxICsNCiAxIGZpbGUgY2hhbmdl
+ZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tbWMvbXRrLXNkLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tbWMvbXRrLXNkLnR4dA0KaW5kZXggOGE1MzJmNC4uMGM5Y2Y2YSAxMDA2NDQNCi0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvbXRrLXNkLnR4dA0KKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9tdGstc2QudHh0DQpAQCAtMTIs
+NiArMTIsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIAkibWVkaWF0ZWssbXQ4MTczLW1tYyI6
+IGZvciBtbWMgaG9zdCBpcCBjb21wYXRpYmxlIHdpdGggbXQ4MTczDQogCSJtZWRpYXRlayxtdDgx
+ODMtbW1jIjogZm9yIG1tYyBob3N0IGlwIGNvbXBhdGlibGUgd2l0aCBtdDgxODMNCiAJIm1lZGlh
+dGVrLG10ODUxNi1tbWMiOiBmb3IgbW1jIGhvc3QgaXAgY29tcGF0aWJsZSB3aXRoIG10ODUxNg0K
+KwkibWVkaWF0ZWssbXQ2Nzc5LW1tYyI6IGZvciBtbWMgaG9zdCBpcCBjb21wYXRpYmxlIHdpdGgg
+bXQ2Nzc5DQogCSJtZWRpYXRlayxtdDI3MDEtbW1jIjogZm9yIG1tYyBob3N0IGlwIGNvbXBhdGli
+bGUgd2l0aCBtdDI3MDENCiAJIm1lZGlhdGVrLG10MjcxMi1tbWMiOiBmb3IgbW1jIGhvc3QgaXAg
+Y29tcGF0aWJsZSB3aXRoIG10MjcxMg0KIAkibWVkaWF0ZWssbXQ3NjIyLW1tYyI6IGZvciBNVDc2
+MjIgU29DDQotLSANCjEuOS4xDQo=
 
