@@ -2,80 +2,93 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F874C35254
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692C3C761A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7587C2070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0892070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:37:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Izs3fjpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgBQJhf (ORCPT
+        id S1729111AbgBQJho (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:37:35 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:51714 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728951AbgBQJhR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:37:17 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 109281A2B0F;
-        Mon, 17 Feb 2020 10:37:16 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 58E571A2B1F;
-        Mon, 17 Feb 2020 10:37:10 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B2E5B4029B;
-        Mon, 17 Feb 2020 17:37:03 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 4/7] ARM: dts: imx6sx-sabreauto: Use new pin names with DCE/DTE for UART pins
-Date:   Mon, 17 Feb 2020 17:31:23 +0800
-Message-Id: <1581931886-12173-4-git-send-email-Anson.Huang@nxp.com>
+        Mon, 17 Feb 2020 04:37:44 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12533 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728920AbgBQJho (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 04:37:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581932263; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=zi/dhUAP+bB6LuFSx4ezmguLtXnOL5CDNAJylokoxeg=; b=Izs3fjpuwhzUkuFtQxfyA5IazSJqRxw/3OGhl9iTmCf0l57793aQPKuQgBZ4mNerXFuOEgYy
+ bSVCWHZOA1hQD59lz8Yc2XPHAaLlgZVfuYofRMVkVmYO7TAweckoghmPUjB8ExUApSkvsrZq
+ NDuU8BT5y77frgwLtbZDDVXCgpM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4a5ee7.7f8f016d8ab0-smtp-out-n01;
+ Mon, 17 Feb 2020 09:37:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2C695C447B3; Mon, 17 Feb 2020 09:37:42 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E4CAC447AC;
+        Mon, 17 Feb 2020 09:37:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5E4CAC447AC
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V4 2/3] dt-bindings: geni-se: Add interconnect binding for GENI QUP
+Date:   Mon, 17 Feb 2020 15:06:51 +0530
+Message-Id: <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581931886-12173-1-git-send-email-Anson.Huang@nxp.com>
-References: <1581931886-12173-1-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
+References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use new pin names containing DCE/DTE for UART RX/TX/RTS/CTS pins, this
-is to distinguish the DCE/DTE functions.
+Add documentation for the interconnect and interconnect-names properties
+for the GENI QUP.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Uwe Kleine-K枚nig <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 ---
-No change.
----
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 315044c..8259244 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -229,8 +229,8 @@
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+index 23282ab..11530df 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+@@ -73,6 +73,15 @@ patternProperties:
+         description: Serial engine core clock needed by the device.
+         maxItems: 1
  
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
--			MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
--			MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO04__UART1_DCE_TX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO05__UART1_DCE_RX		0x1b0b1
- 		>;
- 	};
- 
++      interconnects:
++         maxItems: 3
++
++      interconnect-names:
++         items:
++           - const: qup-core
++           - const: qup-config
++           - const: qup-memory
++
+     required:
+       - reg
+       - clock-names
 -- 
-2.7.4
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
