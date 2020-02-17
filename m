@@ -2,176 +2,182 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C2DC7619D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB854C7619F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A60D20726
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B310A20801
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 09:20:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jRUI4paO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgBQJSQ (ORCPT
+        id S1728804AbgBQJUc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:18:16 -0500
-Received: from mga02.intel.com ([134.134.136.20]:31048 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgBQJSP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:18:15 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 01:18:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
-   d="scan'208";a="433734048"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Feb 2020 01:18:13 -0800
-Received: from [10.226.38.21] (unknown [10.226.38.21])
-        by linux.intel.com (Postfix) with ESMTP id 2F17D5804A2;
-        Mon, 17 Feb 2020 01:18:10 -0800 (PST)
-Subject: Re: [PATCH v9 2/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        vigneshr@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200214114618.29704-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200214130952.GI4827@sirena.org.uk>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <3530edcd-eb67-8ea5-0fce-89c83400441c@linux.intel.com>
-Date:   Mon, 17 Feb 2020 17:18:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 17 Feb 2020 04:20:32 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36483 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728801AbgBQJUc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 04:20:32 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so17555284wma.1
+        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 01:20:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eUz2G04Bb89tsKE0msFkZ9blTmeu3DgvQbssg5zQwVU=;
+        b=jRUI4paOxqTsdkPUlKyQza5/FpjH5wFiT0l/DFu9r7BUgb5pGXIndS5vpdCLOkBORf
+         Iw+TAURuUy2azNJ5jTx10V/NAz11y/TrDoYRIxoeYulS/whZYSte8nrQQIQ4M4tljIlR
+         pY+9l2bv/3db1tfrEDEwqJTo83NafxBBIqp/n5hD70GxBtSbrgc42/kigzd3koASPoWg
+         lo6X9DGrQnQTFf936OV0/inNqQ9bMc9UApXK58C//1tqFBjEmbRBjWcmPxEZGOy8auim
+         MwgHdRDNZmNQ1gq8FfvGBfXsZxE7f8Rdswb4B5H9Gl7VpXYwXcQtG/ZjnOPJB/MzlxPW
+         CAeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eUz2G04Bb89tsKE0msFkZ9blTmeu3DgvQbssg5zQwVU=;
+        b=ASkhZob7xvT9tzox4CMWR33QGgEP6ad5iMED7nW+xPsE+OOKtC7oOK5lO2YzzvtWJ4
+         wGSwoXDJMgsH2tyUpwDk5RDaUSneSziem3QRancfqI1WK2ldWwqIXaK75258jzHNQcLf
+         H6SdefBhXjT/D7Ds9ribep48PwE1zq4ohWbhHRhCkw1/SC/c+TJyn/sgbyLW+KEaWytt
+         dQC4IZHkE9CimXBEzDpRhFnvJJVDSTF1VH6iVpnpzq6eRooyfZ4ES+BkiHY4FMGLq1WE
+         v4814ZNfSIHSkSf1WTvgp5iCKd8aKuaBqQ3EhkdUvveiD0PNTAdbCOYr5WrXTM4gXMgF
+         43TQ==
+X-Gm-Message-State: APjAAAXMOjDmA5Vr0d2yaJxfePo1xFRPvL2t8jMaEqMzI0D7R7oj0Od2
+        29s258FeyJQOD6NYXvrr9PYQcw==
+X-Google-Smtp-Source: APXvYqzW2Cgw9zR9wxV2rpAUJf7+def0ERox9GI5jHN5hfn2bae9qIgwbWg171C1Ty1FYR9HcduUeQ==
+X-Received: by 2002:a7b:cf0d:: with SMTP id l13mr22297831wmg.13.1581931229174;
+        Mon, 17 Feb 2020 01:20:29 -0800 (PST)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id v14sm67373wrm.28.2020.02.17.01.20.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 01:20:28 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH] ASoC: meson: aiu: simplify component addition
+Date:   Mon, 17 Feb 2020 10:20:19 +0100
+Message-Id: <20200217092019.433402-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200214130952.GI4827@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
+Now that the component name is unique within ASoC, there is no need to
+hack the debugfs prefix to add more than one ASoC component to a linux
+device. Remove the unnecessary function and use
+snd_soc_register_component() directly.
 
-    Thank you for the review comments,  response in inline.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ sound/soc/meson/aiu-acodec-ctrl.c |  7 +++----
+ sound/soc/meson/aiu-codec-ctrl.c  |  7 +++----
+ sound/soc/meson/aiu.c             | 20 --------------------
+ sound/soc/meson/aiu.h             |  8 --------
+ 4 files changed, 6 insertions(+), 36 deletions(-)
 
-On 14/2/2020 9:09 PM, Mark Brown wrote:
-> On Fri, Feb 14, 2020 at 07:46:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->
->> +static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
->> +{
->> +	struct cqspi_st *cqspi = dev;
->> +	unsigned int irq_status;
->> +
->> +	/* Read interrupt status */
->> +	irq_status = readl(cqspi->iobase + CQSPI_REG_IRQSTATUS);
->> +
->> +	/* Clear interrupt */
->> +	writel(irq_status, cqspi->iobase + CQSPI_REG_IRQSTATUS);
->> +
->> +	irq_status &= CQSPI_IRQ_MASK_RD | CQSPI_IRQ_MASK_WR;
->> +
->> +	if (irq_status)
->> +		complete(&cqspi->transfer_complete);
->> +
->> +	return IRQ_HANDLED;
->> +}
-> This will unconditionally handle the interrupt regardless of if the
-> hardware was actually flagging an interrupt which will break shared
-> interrupts and the fault handling code in genirq.
-Yes, you're correct, it doesn't check unconditionally, will update the
-INT flag in the INT_STATUS register after successful completion of 
-read/write operation.
-but in this case it is dedicated to qspi-interrupt,not shared with any 
-other HW/SW interrupts.
->> +	tmpbufsize = op->addr.nbytes + op->dummy.nbytes;
->> +	tmpbuf = kzalloc(tmpbufsize, GFP_KERNEL | GFP_DMA);
->> +	if (!tmpbuf)
->> +		return -ENOMEM;
-> I'm not clear where tmpbuf gets freed or passed out of this function?
-Agreed!, will fix it.
->> +
->> +	if (op->addr.nbytes) {
->> +		for (i = 0; i < op->addr.nbytes; i++)
->> +			tmpbuf[i] = op->addr.val >> (8 * (op->addr.nbytes - i - 1));
->> +
->> +		addr_buf = tmpbuf;
-> We assign tmpbuf to addr_buf here but addr_buf just gets read from so
-> it's not via that AFAICT.
-Agreed, will fix it.
->> +	}
->> +	/* Invalid address return zero. */
-> Missing blank line.
-Noted.
->> +static void cqspi_chipselect(struct cqspi_flash_pdata *f_pdata)
->> +{
->> +	struct cqspi_st *cqspi = f_pdata->cqspi;
->> +	void __iomem *reg_base = cqspi->iobase;
->> +	unsigned int chip_select = f_pdata->cs;
->> +	unsigned int reg;
->> +
->> +	reg = readl(reg_base + CQSPI_REG_CONFIG);
->> +	reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
->> +
->> +	/* Convert CS if without decoder.
->> +	 * CS0 to 4b'1110
->> +	 * CS1 to 4b'1101
->> +	 * CS2 to 4b'1011
->> +	 * CS3 to 4b'0111
->> +	 */
->> +	chip_select = 0xF & ~(1 << chip_select);
-> This says "if without decoder" but there's no conditionals here, what if
-> we do have a decoder?
-Good catch, will add the check in the next patch, the below check to be 
-added.
-if (cqspi->is_decoded_cs) {
-           reg |= CQSPI_REG_CONFIG_DECODE_MASK;
-} else {
-           reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
->> +	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
->> +	ddata  = of_device_get_match_data(dev);
->> +	if (ddata) {
->> +		if (ddata->quirks & CQSPI_NEEDS_WR_DELAY)
->> +			cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
->> +						cqspi->master_ref_clk_hz);
->> +		if (ddata->hwcaps_mask & CQSPI_SUPPORTS_OCTAL)
->> +			master->mode_bits |= SPI_RX_OCTAL;
->> +		if (!(ddata->quirks & CQSPI_DISABLE_DAC_MODE))
->> +			cqspi->use_dac_mode = true;
->> +		if (ddata->quirks & CQSPI_NEEDS_ADDR_SWAP) {
->> +			master->bus_num = 0;
->> +			master->num_chipselect = 2;
->> +		}
->> +	}
-> Given that the driver appears to unconditionally dereference match data
-> in other places I'd expect this to return an error if there's none,
-> otherwise we'll oops in those other code paths later on.
-Noted, will double check is there any impact if there is no data provided.
-also will add the error check if return an error.
->> +	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
->> +			       pdev->name, cqspi);
->> +	if (ret) {
->> +		dev_err(dev, "Cannot request IRQ.\n");
->> +		goto probe_reset_failed;
->> +	}
-> Are you sure that it's safe to use devm_request_irq()
-Yes, I'm sure that it's safe to use devm_request_irq().
->   - what happens if
-> the interrupt fires in the process of removing the device?
-    This is not external interrupt which is coming from the device, its 
-inbuilt to QSPI controller which has 2 Registers 1) INT_STATUS_REG 2) 
-INT_MASK_REG.
-    It fires an interrupt and updating INT flag bit in the interrupt 
-status register once reached read/write completion state then 
-irq_handler is called,
-    there we are clearing the INT_FLAG bit by masking of RD/WR flag in 
-INT_MASK register.
+diff --git a/sound/soc/meson/aiu-acodec-ctrl.c b/sound/soc/meson/aiu-acodec-ctrl.c
+index b8e88b1a4fc8..7078197e0cc5 100644
+--- a/sound/soc/meson/aiu-acodec-ctrl.c
++++ b/sound/soc/meson/aiu-acodec-ctrl.c
+@@ -197,8 +197,7 @@ static const struct snd_soc_component_driver aiu_acodec_ctrl_component = {
+ 
+ int aiu_acodec_ctrl_register_component(struct device *dev)
+ {
+-	return aiu_add_component(dev, &aiu_acodec_ctrl_component,
+-				 aiu_acodec_ctrl_dai_drv,
+-				 ARRAY_SIZE(aiu_acodec_ctrl_dai_drv),
+-				 "acodec");
++	return snd_soc_register_component(dev, &aiu_acodec_ctrl_component,
++					  aiu_acodec_ctrl_dai_drv,
++					  ARRAY_SIZE(aiu_acodec_ctrl_dai_drv));
+ }
+diff --git a/sound/soc/meson/aiu-codec-ctrl.c b/sound/soc/meson/aiu-codec-ctrl.c
+index 8646a953e3b3..4b773d3e8b07 100644
+--- a/sound/soc/meson/aiu-codec-ctrl.c
++++ b/sound/soc/meson/aiu-codec-ctrl.c
+@@ -144,9 +144,8 @@ static const struct snd_soc_component_driver aiu_hdmi_ctrl_component = {
+ 
+ int aiu_hdmi_ctrl_register_component(struct device *dev)
+ {
+-	return aiu_add_component(dev, &aiu_hdmi_ctrl_component,
+-				 aiu_hdmi_ctrl_dai_drv,
+-				 ARRAY_SIZE(aiu_hdmi_ctrl_dai_drv),
+-				 "hdmi");
++	return snd_soc_register_component(dev, &aiu_hdmi_ctrl_component,
++					  aiu_hdmi_ctrl_dai_drv,
++					  ARRAY_SIZE(aiu_hdmi_ctrl_dai_drv));
+ }
+ 
+diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
+index 34b40b8b8299..d3e2d40e9562 100644
+--- a/sound/soc/meson/aiu.c
++++ b/sound/soc/meson/aiu.c
+@@ -71,26 +71,6 @@ int aiu_of_xlate_dai_name(struct snd_soc_component *component,
+ 	return 0;
+ }
+ 
+-int aiu_add_component(struct device *dev,
+-		      const struct snd_soc_component_driver *component_driver,
+-		      struct snd_soc_dai_driver *dai_drv,
+-		      int num_dai,
+-		      const char *debugfs_prefix)
+-{
+-	struct snd_soc_component *component;
+-
+-	component = devm_kzalloc(dev, sizeof(*component), GFP_KERNEL);
+-	if (!component)
+-		return -ENOMEM;
+-
+-#ifdef CONFIG_DEBUG_FS
+-	component->debugfs_prefix = debugfs_prefix;
+-#endif
+-
+-	return snd_soc_add_component(dev, component, component_driver,
+-				     dai_drv, num_dai);
+-}
+-
+ static int aiu_cpu_of_xlate_dai_name(struct snd_soc_component *component,
+ 				     struct of_phandle_args *args,
+ 				     const char **dai_name)
+diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
+index 097c26de7b7c..06a968c55728 100644
+--- a/sound/soc/meson/aiu.h
++++ b/sound/soc/meson/aiu.h
+@@ -11,9 +11,7 @@ struct clk;
+ struct clk_bulk_data;
+ struct device;
+ struct of_phandle_args;
+-struct snd_soc_component_driver;
+ struct snd_soc_dai;
+-struct snd_soc_dai_driver;
+ struct snd_soc_dai_ops;
+ 
+ enum aiu_clk_ids {
+@@ -45,12 +43,6 @@ int aiu_of_xlate_dai_name(struct snd_soc_component *component,
+ 			  const char **dai_name,
+ 			  unsigned int component_id);
+ 
+-int aiu_add_component(struct device *dev,
+-		      const struct snd_soc_component_driver *component_driver,
+-		      struct snd_soc_dai_driver *dai_drv,
+-		      int num_dai,
+-		      const char *debugfs_prefix);
+-
+ int aiu_hdmi_ctrl_register_component(struct device *dev);
+ int aiu_acodec_ctrl_register_component(struct device *dev);
+ 
+-- 
+2.24.1
 
-Regards
-Vadivel
