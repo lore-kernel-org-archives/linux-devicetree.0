@@ -2,209 +2,254 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE943C7619F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 10:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD90C3B185
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 10:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA9E20801
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 10:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5151B20725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 10:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="A5wkmguJ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QLq6KXnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgBQK1w (ORCPT
+        id S1729271AbgBQKar (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:27:52 -0500
-Received: from mail-bn8nam11on2048.outbound.protection.outlook.com ([40.107.236.48]:6083
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729336AbgBQK1p (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:27:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bljOpzgWkEhkcrghr8CfAdF60oQRj61hfjxLXZlJM+BUkZNsicthC5R86uABEQ4BNI2td62CJRzREauhZQ//a2RxZT/IJUlBgFbcFoOtVZPMcuzvPfjbAvG9DOI8MJwyPBBYuuPSZO8/eay3T7Q9xknV4Rixp7EBQBqMfXMxnlBqqqiRalZw83cqKz+tLTDRSCc8YUw4kWzOMZwuOdDYLMtGOSEltJjf70W+No3ifz7h1GIkiPOA0WKwkekI8AVgMbgdeya4tgFudMKWzThAoiCoJGjiF4u09ZYPIEIlVYAnfNYCStsthqZMIjNKwiASG6w1PzdbmGXgW7jsN0eWgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZiDtpWIhO3ZycZxVkARdI4WPQ+lhJypYK/CxdjJGDgQ=;
- b=G+ndrOvscSBUiz/e4uPsm8J38Kb+Kwn46rph5Q056Aed25hyEXS4GzAZDKlHo85CH/bbkg8FqLS8CPo4U8TEF7fVNh0JJW3X7KEjYl3HhS2EUhJ6/4KmeFOtArVA+hVbAFGiWx1+FQuo3/eLDUrm940qQ46MuIf2t2eTYKdLt810tPr2SIoS4Pik4w/SqAKo41jPG2ZH+M9Up1uztIMbGWEjDNeMixT9MFeS/vd4KTfdD2/mHY5NBXVcVf/HrNosU4mR8M1D7uNwKkw29+QC14g0vwuNfMca0qgP75e/HUj0L3A9SW0MsHqlSEVnYzIdvoJ+oH2LPjWGJVaVzJISzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZiDtpWIhO3ZycZxVkARdI4WPQ+lhJypYK/CxdjJGDgQ=;
- b=A5wkmguJxq3zndSduhu0tA0wF5enVPCgZeOuHaa9bjajUhw2WMIGlImQUudOoXMQPiDz43Zeqc5URoNivhxt88/ND7n5KJeOSIYLjGBuql6JxkGp9dQql6CvJxe0Z9ZnFxTBs/4N26FVFiM1fYN2/9adhu5B6OtpKREQ6AwE47w=
-Received: from BL0PR02CA0070.namprd02.prod.outlook.com (2603:10b6:207:3d::47)
- by BYAPR02MB3974.namprd02.prod.outlook.com (2603:10b6:a02:f2::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25; Mon, 17 Feb
- 2020 10:27:10 +0000
-Received: from CY1NAM02FT006.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::208) by BL0PR02CA0070.outlook.office365.com
- (2603:10b6:207:3d::47) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend
- Transport; Mon, 17 Feb 2020 10:27:09 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT006.mail.protection.outlook.com (10.152.74.104) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Mon, 17 Feb 2020 10:27:09 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1j3dcK-0007nZ-W9; Mon, 17 Feb 2020 02:27:09 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1j3dcF-0002vH-Si; Mon, 17 Feb 2020 02:27:03 -0800
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01HAR0wZ000527;
-        Mon, 17 Feb 2020 02:27:00 -0800
-Received: from [172.23.155.80] (helo=xhdengvm155080.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <kalyania@xilinx.com>)
-        id 1j3dcB-0002pl-Ua; Mon, 17 Feb 2020 02:27:00 -0800
-Received: by xhdengvm155080.xilinx.com (Postfix, from userid 23151)
-        id 1A993800AA; Mon, 17 Feb 2020 15:56:46 +0530 (IST)
-From:   Kalyani Akula <kalyani.akula@xilinx.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kalyani Akula <kalyania@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        git-dev@xilinx.com,
-        Mohan Marutirao Dhanawade <mohan.dhanawade@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Harsh Jain <harshj@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        Kalyani Akula <kalyani.akula@xilinx.com>
-Subject: [PATCH V7 1/4] firmware: xilinx: Add ZynqMP aes API for AES functionality
-Date:   Mon, 17 Feb 2020 15:56:41 +0530
-Message-Id: <1581935204-25673-2-git-send-email-kalyani.akula@xilinx.com>
-X-Mailer: git-send-email 1.9.5
-In-Reply-To: <1581935204-25673-1-git-send-email-kalyani.akula@xilinx.com>
-References: <1581935204-25673-1-git-send-email-kalyani.akula@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(39860400002)(189003)(199004)(26005)(336012)(186003)(2616005)(426003)(44832011)(42186006)(54906003)(316002)(478600001)(5660300002)(8676002)(107886003)(8936002)(4326008)(81156014)(356004)(6666004)(70586007)(70206006)(6266002)(36756003)(2906002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB3974;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        Mon, 17 Feb 2020 05:30:47 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:31768 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbgBQKar (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 05:30:47 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200217103044epoutp016ec5f501a367b4fd434cea45c0543af4~0Kee70Ahl0852808528epoutp01R
+        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 10:30:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200217103044epoutp016ec5f501a367b4fd434cea45c0543af4~0Kee70Ahl0852808528epoutp01R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1581935444;
+        bh=ok8t0QdvH7qfzEnAkZnpXw8pVEVjZqhNypJEm+sb/n4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=QLq6KXnI1hAF0m0Kk8LZDvz/9PrENMXD3K78VIq0iZqcYBhPwpjEkOsmumvpA6ERp
+         yxex3FEgCkWUZTqgufu2BXQNCSFbKz1t9rUECk7BrTH7OM/rePEMIZTZ8Dwg4ikTcg
+         R364hqhshY8SN1CnwZD7WLVWrUDUnCbPFuTWKWFA=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200217103043epcas1p216ba466affb25f0e308e316d11fc5758~0Ked883Pw2223622236epcas1p2I;
+        Mon, 17 Feb 2020 10:30:43 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 48LgHN0sz8zMqYkb; Mon, 17 Feb
+        2020 10:30:40 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        66.03.51241.05B6A4E5; Mon, 17 Feb 2020 19:30:40 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200217103039epcas1p476015a1db4eef89cffde9711260369f9~0KeaWoS5b2166621666epcas1p4-;
+        Mon, 17 Feb 2020 10:30:39 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200217103039epsmtrp123c5c5a84eb1aa0934ac2df5d8074d82~0KeaTIGml0839908399epsmtrp1N;
+        Mon, 17 Feb 2020 10:30:39 +0000 (GMT)
+X-AuditID: b6c32a39-163ff7000001c829-f2-5e4a6b50e24b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AA.E5.06569.F4B6A4E5; Mon, 17 Feb 2020 19:30:39 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200217103039epsmtip2cae87a1ca501eca058d7510fd7b7e399~0KeaGTJmy3000030000epsmtip2j;
+        Mon, 17 Feb 2020 10:30:39 +0000 (GMT)
+Subject: Re: [PATCH v4] dt-bindings: extcon: usbc-cros-ec: convert
+ extcon-usbc-cros-ec.txt to yaml format
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        devicetree@vger.kernel.org
+Cc:     myungjoo.ham@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        bleung@chromium.org, enric.balletbo@collabora.com,
+        groeck@chromium.org, linux-kernel@vger.kernel.org,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <a1bc262f-d8af-9590-105b-1db0b16f2861@samsung.com>
+Date:   Mon, 17 Feb 2020 19:38:46 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3cac23b6-a22d-4058-e364-08d7b393f1dd
-X-MS-TrafficTypeDiagnostic: BYAPR02MB3974:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB39748EB65BAC90631253687DAF160@BYAPR02MB3974.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1148;
-X-Forefront-PRVS: 0316567485
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ctZlSAeeMJZkCZ3YLTwW1O5YtwoTx2N2W23XxKjbITG4pSx+HFrkrlBTpHZ9Bp3CddFrMZHqU6rZr1cqn5D/lr426/fMzpKQGsxV45NPumvy6qKakiYkOH60QvF/1CDKZEClVUQTrT/FilZG4HLsBedukf2c5mD+V7XBHIRGpt9p1mgbPw6dbMzrvse5lTLZZJKZvLq23UfBpc3X94v5u2uOvAA3xOQgjiWU8Pm1pavhackI4MueOd17c9bS/FRteHFdB3K6cX0tQjV7oUpwitqx/BB9B6QKlgiXQh1WzcE1ejC+v4kzfS4ujdnMMTUrndsGyMqk0woS28AhCNfXT64UeOXdDoYxxuA2dQ5+pPhrS6fRODSy5T2IwcUhOAK+Hww0ES5kl4VvVHNBLQHlgTcd88aw50VzfI/rkBLfymep19NSVG7Uxxycukbq/UlV
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 10:27:09.3908
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cac23b6-a22d-4058-e364-08d7b393f1dd
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB3974
+In-Reply-To: <20200213123934.10841-1-dafna.hirschfeld@collabora.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHJsWRmVeSWpSXmKPExsWy7bCmrm5AtlecwamtrBbTn1xmsTi57g2L
+        xYUVN5gt5h85x2qx5vYhRoudG76wW5x6tYzZ4lT3O3aLzed6WC0u75rDZrH0+kUmi9uNK9gs
+        WvceYXfg9Vgzbw2jx+yGiyweO+4uYfTYOesuu8emVZ1sHn1bVjF6fN4kF8AelW2TkZqYklqk
+        kJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3SukkJZYk4pUCggsbhY
+        Sd/Opii/tCRVISO/uMRWKbUgJafAskCvODG3uDQvXS85P9fK0MDAyBSoMCE7Y83rT6wFX1Qr
+        pk9LbmDcItfFyMkhIWAicf1HL1sXIxeHkMAORon3Rz4yQzifGCUO9Dxkh3C+MUpcfLSaCaZl
+        4fqDLBCJvYwSL9e9ZoJw3jNKXDh1ng2kSlggW6L3xFUwW0QgWGLanr+sIEXMAr1MEgffXmQE
+        SbAJaEnsf3EDrIhfQFHi6o/HYHFeATuJTc93MIPYLAKqEicfvQGzRQXCJE5ua4GqEZQ4OfMJ
+        C4jNKeAiMX/WfzCbWUBc4taT+UwQtrzE9rdzwB6SENjELvHm4AWoH1wk+i61sEDYwhKvjm9h
+        h7ClJF72t0HZ1RIrTx5hg2juYJTYsv8CK0TCWGL/0slAgziANmhKrN+lDxFWlNj5ey4jxGI+
+        iXdfe1hBSiQEeCU62oQgSpQlLj+4C3WCpMTi9k62CYxKs5C8MwvJC7OQvDALYdkCRpZVjGKp
+        BcW56anFhgWmyNG9iRGclrUsdzAeO+dziFGAg1GJh/dFoGecEGtiWXFl7iFGCQ5mJRFeb3Gv
+        OCHelMTKqtSi/Pii0pzU4kOMpsDQnsgsJZqcD8wZeSXxhqZGxsbGFiaGZqaGhkrivA8jNeOE
+        BNITS1KzU1MLUotg+pg4OKUaGP2s7mw/9LbMUW2Du/zcmkP8H/Rdrl1Me8w3Q/ZGnd4veTvJ
+        4L3xXwPCnMp2bqj+Ur3v/R/h5R3f1Pf+uslx9AV/4YZZ141qRUuqLx67/Sj8K+8cV86eOarS
+        h34c37A58sRdWVFWlaLVcom2fcmpNmW9/185bFvYXnJavHZ1ulHY0a659Q2bo5VYijMSDbWY
+        i4oTASwwhFfhAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsWy7bCSvK5/tlecwZLPohbTn1xmsTi57g2L
+        xYUVN5gt5h85x2qx5vYhRoudG76wW5x6tYzZ4lT3O3aLzed6WC0u75rDZrH0+kUmi9uNK9gs
+        WvceYXfg9Vgzbw2jx+yGiyweO+4uYfTYOesuu8emVZ1sHn1bVjF6fN4kF8AexWWTkpqTWZZa
+        pG+XwJWx5vUn1oIvqhXTpyU3MG6R62Lk5JAQMJFYuP4gSxcjF4eQwG5GiU8fv7JAJCQlpl08
+        ytzFyAFkC0scPlwMUfOWUWLfpzZ2kBphgWyJ3hNX2UBsEYFgiVd72sAGMQv0Mkk8br7KDNEx
+        nVFi+vmXTCBVbAJaEvtf3ADr4BdQlLj64zEjiM0rYCex6fkOZhCbRUBV4uSjN2C2qECYxM4l
+        j5kgagQlTs58AnYdp4CLxPxZ/8FsZgF1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llI
+        WmYhaZmFpGUBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzg+NTS2sF44kT8IUYB
+        DkYlHl6HEM84IdbEsuLK3EOMEhzMSiK83uJecUK8KYmVValF+fFFpTmpxYcYpTlYlMR55fOP
+        RQoJpCeWpGanphakFsFkmTg4pRoY5bj9ows+rak6f/vA4pw7Gc7P19kdbI2c+F184emtLzN2
+        Cv9yrovK4MmdF/bWLXu59Oa3QjtnLunxsl06Ozb0/6nNQYbfP+2yfnB76e/zB/UaDT49SspZ
+        dHDjSu6q2a+OS6744ncpt2RW8dJvutezWu6+OTmlvc/s5qUbikapX6XD1kyMN3SxPKXEUpyR
+        aKjFXFScCABgb6HJywIAAA==
+X-CMS-MailID: 20200217103039epcas1p476015a1db4eef89cffde9711260369f9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200213123953epcas1p45c39830a9ec6bd535f5370702f603806
+References: <CGME20200213123953epcas1p45c39830a9ec6bd535f5370702f603806@epcas1p4.samsung.com>
+        <20200213123934.10841-1-dafna.hirschfeld@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add ZynqMP firmware AES API to perform encryption/decryption of given data.
+On 2/13/20 9:39 PM, Dafna Hirschfeld wrote:
+> convert the binding file extcon-usbc-cros-ec.txt to
+> yaml format extcon-usbc-cros-ec.yaml
+> 
+> This was tested and verified on ARM with:
+> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+> 
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> Changes since v1:
+> 1 - changing the license to (GPL-2.0-only OR BSD-2-Clause)
+> 2 - changing the maintainers
+> 3 - changing the google,usb-port-id property to have minimum 0 and maximum 255
+> 
+> Changes since v2:
+> 1 - Changing the patch subject to start with "dt-bindings: extcon: usbc-cros-ec:"
+> 2 - In the example, adding a parent isp node, a reg field to cros-ec@0
+> and adding nodes 'extcon0/1' instead of one node 'extcon'.
+> 
+> Changes since v3:
+> in the example, changing the node isp1 to spi0
+> 
+>  .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 --------
+>  .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 56 +++++++++++++++++++
+>  2 files changed, 56 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+> deleted file mode 100644
+> index 8e8625c00dfa..000000000000
+> --- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -ChromeOS EC USB Type-C cable and accessories detection
+> -
+> -On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+> -able to detect the state of external accessories such as display adapters
+> -or USB devices when said accessories are attached or detached.
+> -
+> -The node for this device must be under a cros-ec node like google,cros-ec-spi
+> -or google,cros-ec-i2c.
+> -
+> -Required properties:
+> -- compatible:		Should be "google,extcon-usbc-cros-ec".
+> -- google,usb-port-id:	Specifies the USB port ID to use.
+> -
+> -Example:
+> -	cros-ec@0 {
+> -		compatible = "google,cros-ec-i2c";
+> -
+> -		...
+> -
+> -		extcon {
+> -			compatible = "google,extcon-usbc-cros-ec";
+> -			google,usb-port-id = <0>;
+> -		};
+> -	}
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+> new file mode 100644
+> index 000000000000..9c5849b341ea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: https://protect2.fireeye.com/url?k=d3c63a24-8e5dc647-d3c7b16b-0cc47a31cdbc-e8d8e2b7806aed8e&u=http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
+> +$schema: https://protect2.fireeye.com/url?k=04f78247-596c7e24-04f60908-0cc47a31cdbc-1b9a3937c161a4b6&u=http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ChromeOS EC USB Type-C cable and accessories detection
+> +
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> +
+> +description: |
+> +  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
+> +  able to detect the state of external accessories such as display adapters
+> +  or USB devices when said accessories are attached or detached.
+> +  The node for this device must be under a cros-ec node like google,cros-ec-spi
+> +  or google,cros-ec-i2c.
+> +
+> +properties:
+> +  compatible:
+> +    const: google,extcon-usbc-cros-ec
+> +
+> +  google,usb-port-id:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: the port id
+> +    minimum: 0
+> +    maximum: 255
+> +
+> +required:
+> +  - compatible
+> +  - google,usb-port-id
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        cros-ec@0 {
+> +            compatible = "google,cros-ec-spi";
+> +            reg = <0>;
+> +
+> +            usbc_extcon0: extcon0 {
+> +                compatible = "google,extcon-usbc-cros-ec";
+> +                google,usb-port-id = <0>;
+> +            };
+> +
+> +            usbc_extcon1: extcon1 {
+> +                compatible = "google,extcon-usbc-cros-ec";
+> +                google,usb-port-id = <1>;
+> +            };
+> +        };
+> +    };
+> 
 
-Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
----
+Applied it. Thanks.
 
-V5 Changes:
-- Moved firmware: xilinx: Add ZynqMP aes API for AES patch from 3/4 to 1/4
-- This patch (1/4) is based on below commit id because of possible merge conflict
-  commit 461011b1e1ab ("drivers: firmware: xilinx: Add support for feature check")
-- Added newlines in between at the start and end of zynqmp_pm_aes_engine function
-
-
- drivers/firmware/xilinx/zynqmp.c     | 25 +++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |  2 ++
- 2 files changed, 27 insertions(+)
-
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index ecc339d..1dea880 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -707,6 +707,30 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
- 				   qos, ack, NULL);
- }
- 
-+/**
-+ * zynqmp_pm_aes - Access AES hardware to encrypt/decrypt the data using
-+ * AES-GCM core.
-+ * @address:	Address of the AesParams structure.
-+ * @out:	Returned output value
-+ *
-+ * Return:	Returns status, either success or error code.
-+ */
-+static int zynqmp_pm_aes_engine(const u64 address, u32 *out)
-+{
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+	int ret;
-+
-+	if (!out)
-+		return -EINVAL;
-+
-+	ret = zynqmp_pm_invoke_fn(PM_SECURE_AES, upper_32_bits(address),
-+				  lower_32_bits(address),
-+				  0, 0, ret_payload);
-+	*out = ret_payload[1];
-+
-+	return ret;
-+}
-+
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.get_chipid = zynqmp_pm_get_chipid,
-@@ -730,6 +754,7 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
- 	.set_requirement = zynqmp_pm_set_requirement,
- 	.fpga_load = zynqmp_pm_fpga_load,
- 	.fpga_get_status = zynqmp_pm_fpga_get_status,
-+	.aes = zynqmp_pm_aes_engine,
- };
- 
- /**
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 2cd12eb..8acace4 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -82,6 +82,7 @@ enum pm_api_id {
- 	PM_CLOCK_GETRATE,
- 	PM_CLOCK_SETPARENT,
- 	PM_CLOCK_GETPARENT,
-+	PM_SECURE_AES = 47,
- 	PM_FEATURE_CHECK = 63,
- 	PM_API_MAX,
- };
-@@ -315,6 +316,7 @@ struct zynqmp_eemi_ops {
- 			       const u32 capabilities,
- 			       const u32 qos,
- 			       const enum zynqmp_pm_request_ack ack);
-+	int (*aes)(const u64 address, u32 *out);
- };
- 
- int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
 -- 
-1.9.5
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
