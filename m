@@ -2,136 +2,74 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C90C34022
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC91C34022
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589EF22B48
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 15:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QUNDlRjh"
+	by mail.kernel.org (Postfix) with ESMTP id 6975620725
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 16:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581955224;
+	bh=+1rWFt0BhZpC3SqXwAi480o2XZY5N6loZqRsLUur/2Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Z/8mnOLOkxsmmO3A1/O4p9BI5gyhSxdsbDOCCWtHTK85V28NWwytEgyh8q+67F6c
+	 oGWoXqgsTcO2KqXHOHxKsu6HM6jFPl5qvOY0FUgVG2mQkpFsYQOsdJntNJB/E13OX4
+	 eQRaxqWgDVINpi9lsEj5wgyI0byWY2cTIWj7f/CI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgBQPkY (ORCPT
+        id S1727976AbgBQQAY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:40:24 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39730 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727300AbgBQPkY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 10:40:24 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so20268883wrt.6
-        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 07:40:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uBL44HTwPsTzK1hTlXHwrWPFvRz4I8cxeuhUA7nfr3s=;
-        b=QUNDlRjh2O+ooQ41KWBChztMd4j9tV2M8HiE6TDGhh6KZcCXQYdQmMqHkRy/oPre/d
-         E+T64sT8TUAqvGZCkZWcpAPXMK/psI/SMbqtUXH8WD/97O+XqMwt7rE0VgfYpg4SGCTu
-         72DvsxmGQ2FHB1KOF86wT5RUdwe9l5E14uXBkwlKILpzWF5nOlDot/mlGYQpzffkiZng
-         dV1PcmwTrlY7TdA4Y7kgPv5XUqhxhLqt6oG02ccYRx64/bgjYrAaemMkV8MHRgYP/RlA
-         RNsfj1wDY4F+M6s4FATLU+2N+UfYeGwZGxIXM15btV8V9U0AnPqJn9J60Be6mPZjxKkb
-         OLhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uBL44HTwPsTzK1hTlXHwrWPFvRz4I8cxeuhUA7nfr3s=;
-        b=PD41UJYgtqNNcsHBj95L05k/pkFI726Z9cbWqJNpFeCmH1qLcY4jT0yVT7TilWWz+r
-         w/4KmnM2/WVj6fLf8UNO7YrRbWYpyb81rWbKGXQsVwoT0dejPlJY6ebZ4m/Cd1hj3TOT
-         +4ukN/6siBKsskTznMC0KtD2NjMUqoHkNSEYGBujVYKVwoDXssMdOfsbWUMDaAiyRZVc
-         h0MLtCRxSrneqvN9eRuJDU1qq+CgmS8VrpsOakTtWYy65aZPD7F+/Dut8y+TjPz6qANF
-         tld1BkJ6WHd0pZBhi4dJJzVukKz/A0sWoO2M/Y2GA+A0e+AU+t7OPr0VpbIn5vCYX07F
-         KNtg==
-X-Gm-Message-State: APjAAAXtI0XziML2zJQpCScFeJrcy5HfW4wSAwShVWyI7ef+EP7hC8K4
-        ACCRxFfSc00TcXSpboxL6qUdmA==
-X-Google-Smtp-Source: APXvYqyK3wvWFPYLO6Oneazyxhd5g+tje1jkIBunochJVdUjHRcEMjjKDjk9tOFHPoHKB9Cr5dnXww==
-X-Received: by 2002:adf:f109:: with SMTP id r9mr22236398wro.406.1581954021861;
-        Mon, 17 Feb 2020 07:40:21 -0800 (PST)
-Received: from myrica ([2001:171b:2276:930:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id v131sm1106010wme.23.2020.02.17.07.40.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 07:40:21 -0800 (PST)
-Date:   Mon, 17 Feb 2020 16:40:12 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     will@kernel.org, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
-        joro@8bytes.org, baolu.lu@linux.intel.com,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
-        corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
-        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
-Subject: Re: [PATCH 02/11] PCI: Add ats_supported host bridge flag
-Message-ID: <20200217154012.GD1650092@myrica>
-References: <20200213165049.508908-3-jean-philippe@linaro.org>
- <20200215211047.GA124796@google.com>
+        Mon, 17 Feb 2020 11:00:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726779AbgBQQAX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:00:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0AD4206F4;
+        Mon, 17 Feb 2020 16:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581955223;
+        bh=+1rWFt0BhZpC3SqXwAi480o2XZY5N6loZqRsLUur/2Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GIvncg8510kdf/ZqImAIxa0tFU+rfCmL5UIF7dAymDeFQigHY0/phCF+Qyxk/flPd
+         Ul52S3a5DBsdrBqoRd0aHHiAJGHJ57BR6jWHYg/47PH2ZTrCMRK2O1kopxl/r0p7s4
+         0ouE1j3OFyX2Blg5hH1SOJNyVjx+98GRo8on33ts=
+Date:   Mon, 17 Feb 2020 17:00:21 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, wsa@the-dreams.de,
+        broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org
+Subject: Re: [PATCH 2/6] tty: serial: qcom_geni_serial: Add interconnect
+ support
+Message-ID: <20200217160021.GA1484698@kroah.com>
+References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
+ <1581946205-27189-3-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200215211047.GA124796@google.com>
+In-Reply-To: <1581946205-27189-3-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 03:10:47PM -0600, Bjorn Helgaas wrote:
-> On Thu, Feb 13, 2020 at 05:50:40PM +0100, Jean-Philippe Brucker wrote:
-> > Each vendor has their own way of describing whether a host bridge
-> > supports ATS.  The Intel and AMD ACPI tables selectively enable or
-> > disable ATS per device or sub-tree, while Arm has a single bit for each
-> > host bridge.  For those that need it, add an ats_supported bit to the
-> > host bridge structure.
-> > 
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > ---
-> >  drivers/pci/probe.c | 7 +++++++
-> >  include/linux/pci.h | 1 +
-> >  2 files changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 512cb4312ddd..75c0a25af44e 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -598,6 +598,13 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
-> >  	bridge->native_shpc_hotplug = 1;
-> >  	bridge->native_pme = 1;
-> >  	bridge->native_ltr = 1;
-> > +
-> > +	/*
-> > +	 * Some systems may disable ATS at the host bridge (ACPI IORT,
-> > +	 * device-tree), other filter it with a smaller granularity (ACPI DMAR
-> > +	 * and IVRS).
-> > +	 */
-> > +	bridge->ats_supported = 1;
+On Mon, Feb 17, 2020 at 07:00:01PM +0530, Akash Asthana wrote:
+> Get the interconnect paths for Uart based Serial Engine device
+> and vote according to the baud rate requirement of the driver.
 > 
-> The cover letter says it's important to enable ATS only if the host
-> bridge supports it.  From the other patches, it looks like we learn if
-> the host bridge supports ATS from either a DT "ats-supported" property
-> or an ACPI IORT table.  If that's the case, shouldn't the default here
-> be "ATS is *not* supported"?
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+>  drivers/tty/serial/qcom_geni_serial.c | 84 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 74 insertions(+), 10 deletions(-)
 
-The ACPI IVRS table (AMD) doesn't have a property for the host bridge, it
-can only deselect ATS for a sub-range of devices. Similarly the DMAR table
-(Intel) declares that ATS is supported either by the whole PCIe domain or
-for sub-ranges of devices. I selected ats_supported at the bridge by
-default since IVRS needs it and DMAR has its own fine-grained ATS support
-configuration.
-
-I'm still not sure this is the right approach, given that the
-ats_supported bridge property doesn't exactly correspond to a firmware
-property on all platforms. Maybe the device-tree implementation should
-follow the IORT one where each device carries a fwspec property stating
-"root-complex supports ATS". But it isn't nice either so I tried a cleaner
-implementation (as discussed with Robin back on the ATS-with-SMMUv3 series
-[1]).
-
-Thanks,
-Jean
-
-[1] https://lore.kernel.org/linux-iommu/c10c7adb-c7f6-f8c6-05cc-f4f143427a2d@arm.com/
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
