@@ -2,54 +2,54 @@ Return-Path: <SRS0=gY8B=4F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3A8C7619B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752FAC7619E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3F02070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494BB20718
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Feb 2020 06:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="AfJL98fm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vgNuYm5m"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="ZdpdafcL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EVo6bp2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgBQGoC (ORCPT
+        id S1728150AbgBQGoH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:44:02 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60881 "EHLO
+        Mon, 17 Feb 2020 01:44:07 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60403 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727280AbgBQGnG (ORCPT
+        by vger.kernel.org with ESMTP id S1727259AbgBQGnE (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:43:06 -0500
+        Mon, 17 Feb 2020 01:43:04 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6FF3B5227;
-        Mon, 17 Feb 2020 01:43:05 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 38F7055D3;
+        Mon, 17 Feb 2020 01:43:04 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:43:05 -0500
+  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:43:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=A623uF+Zt8pd+
-        G8X0YQI2ZXWxoaPlRIPweAQu1VTmF4=; b=AfJL98fmlBMsUO0xr3bKrgdjg8THH
-        BUyrd93/WewF+Y3SWMZjtB4AzlVR5+AOzODyEk8dV0Mz4irKH7jQ/787PRtwC//n
-        Vcz27XhwINWrQS3JLmCJBlz/m1A2kOPOFIEMM3A01ljOIOEvj26Hm2lmWsm8YVG7
-        pakdbUyChiVJJEoFRspvXo0ujYwiqbhI+ksASX6a/tnM/f8bT22Ul4kJDGF8DAzL
-        53lCGC13TO02rkVLfmmHR+0EDwIdTcKkkGh5cr4dwkgS0aTeOOAj9FSF5c0tNxnc
-        9UBnwu3MgcJp1PhoyNYYRMOCHW2fGWcYh2fHFHQ6WjLSgEVTLdMayDXUw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=8yoXX805b9zsP
+        6c+DEUGNPwPSVfxywvRYUAdiRbhh9k=; b=ZdpdafcLWsyWiQayO9SV5VzkvsGpc
+        9UjD29c6j8EgAslghI04rpmjXxLjtXNj2M8+dAJUl9CVEyVI95/hQXHRrADuFzAm
+        LAvYSkpgNWCj2kEHYB8C3fA72jczb9T3qGas2bd+8jbNIVMT1phAfTqoJ+Mx8Auw
+        vHXAeWEgpJvrltCDJkMVoUOWGqgnzHD0MfzjsFKjmRFm8E9z2N7EgTQ/9ySQUYpx
+        gry95ZTAd38mGvXvWZmQZujLp/dTrB3IVC6412YUmAfIsJrWVW0OYkQNFj4wR3wo
+        joxxE6OcL4YrtLelno4x+y/9tpUn416BZY6K4M4cxKGx0shGCP+A4AWig==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=A623uF+Zt8pd+G8X0YQI2ZXWxoaPlRIPweAQu1VTmF4=; b=vgNuYm5m
-        Pwvo9nJfWJDoXJo51De9m4qV7CGi7DxvfbcfBmedn6MTG1REGLxtUVqAEVsXObFH
-        wvEIneKtTGTUwQy3tQ2V1Yk5zq3IC/3YTMjMp5WZSwqWjlEnXtRPtko0CGnMS3sp
-        0yy4IdVEk32sRcFPQtUkOsKqlLk2VNUnhCv8A9gwk1TwUUCGHSGLlftMYbgpim5F
-        WcBabi1uLx9pg9/bL61awMerJzuXTWKtNLGUygrsVYlweLICPwE3ycO//+MW7nSs
-        v4GHrIjT6o8++nLmlw1IYza0iUM9GTQH10miLwNMVcKYRZafq0S0yDogClIB0nHR
-        kA+9UYzWXvplEw==
-X-ME-Sender: <xms:-TVKXi8h-sRHYAgrftYMp2XLsrxdthQnD_TbHKKV-27QTWYY9LoEnA>
+        fm2; bh=8yoXX805b9zsP6c+DEUGNPwPSVfxywvRYUAdiRbhh9k=; b=EVo6bp2p
+        VZkUQeD0Qy0uHkppcjvfBarsUAwFBukADnVx6P0VKVO/u6dDHEkGZep7HuAEw4ch
+        +u5p+MHju93fidvdX9oxjKt2c1/DiGEflYpHJuFP7dWQz7PcL76n/BdhB1DfC4Aa
+        h/v68mTt4qMrG5tiHdGTIpwkJxPGJ7juYQQ7pwOqbjDMb/FSV05rMrJX2uYMadMK
+        6KwX/769BPK/sz+WBwrukGS/Y3Zk9FTe8dj+QW/R7LCtulN3plkUYynMKahsYxtt
+        Lo/FZyoAdMMp30a4KIkXe0U+3FpHBB2wmFf3BgQO/81arUHrgAACW3l8Gxjvok45
+        IhPXABJl0LLaRA==
+X-ME-Sender: <xms:-DVKXkkS42iHr0QRxK-nNxvs7k5KdveZQq0yH_4b6IIPHFOANLcekg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdote
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
     ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedujeenucfrrghr
     rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:-TVKXlD_nY7EfLJUG8ylnS7Buiz7Kaz01PlgryqpQ14-ipn8VLEnJQ>
-    <xmx:-TVKXmvyOodAbVB69CsS1yxTbn9zqcdHfp4XPIG3PUS8_3tuwQ965A>
-    <xmx:-TVKXnZvtkd8M9Jt4JtafxP18KJ7v_mdYqVZjwWrMKKVBafk9kdduQ>
-    <xmx:-TVKXq7BuuaaESH1AP8X5WmLu97yhPm-kBV_3ORtgxn7ivTJNkTQEw>
+X-ME-Proxy: <xmx:-DVKXlX7SZeWmnxDfDVaq-JlBASGEqtBozTMsh-DubaGAxNQQQldww>
+    <xmx:-DVKXgQ6UG0kJh-tsfaBIG-6g2n_cscYnkMixX5qoUhwJO7edonoDw>
+    <xmx:-DVKXoD-t5_oIdErt9Pr_anTcB8VjkVe6aUyt6CoQZ8f3L83K0SmRg>
+    <xmx:-DVKXh0DyaPRFClukCgxCLkxodJf6EODBPbuwXXcfOeCNp9loyjN3A>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AE9443280059;
-        Mon, 17 Feb 2020 01:43:04 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7A670328005E;
+        Mon, 17 Feb 2020 01:43:03 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -78,9 +78,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [RFC PATCH 23/34] ASoC: sun8i-codec: Clean up DAC widgets
-Date:   Mon, 17 Feb 2020 00:42:39 -0600
-Message-Id: <20200217064250.15516-24-samuel@sholland.org>
+Subject: [RFC PATCH 21/34] ASoC: sun8i-codec: Clean up module/clock hierarchy
+Date:   Mon, 17 Feb 2020 00:42:37 -0600
+Message-Id: <20200217064250.15516-22-samuel@sholland.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200217064250.15516-1-samuel@sholland.org>
 References: <20200217064250.15516-1-samuel@sholland.org>
@@ -91,114 +91,231 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Again, rename the widgets and controls to match their actual function
-(and disambiguate the mixers), then sort the widgets and routes in a
-topological sink<-source ordering.
+The clock hieriarchy in the codec is:
+
+       MCLK/PLL      MCLK/PLL
+          |              |
+       AIF1CLK        AIF2CLK
+         |    \      /    |
+         |     SYSCLK     |
+         |       ||       |
+         |   MODCLK ***   |
+         |       ||       |
+         |    RST ****    |
+         |   /  /  \  \   |
+         AIF1 ADC  DAC AIF2
+
+Currently, this driver makes some design decisions:
+ - AIF1CLK/AIF2CLK should always have the PLL as their parent. MCLK may
+   not be running, and it has the same PLL as its parent anyway.
+ - SYSCLK should always have AIF1CLK as its parent. There is no easy way
+   for DAPM to automatically switch clock parents based on which AIFs
+   are in use, and AIF1 is most likely to be used. Even in the case
+   where only AIF2 is used, the extra power consumption by also running
+   AIF1CLK should be minimal.
+
+This commit updates the driver to match the hardware clock hierarchy:
+ - Since the clock parent decisions are static, they are configured once
+   in the component's probe function. They do not need DAPM widgets.
+ - ADC/DAC supplies are moved immediately after the widgets they supply.
+ - Module resets are moved before module clocks to maintain topological
+   ordering (and they are sorted by bit order within the register).
+ - AIF1 module is supplied by both SYSCLK (via MODCLK AIF1) and AIF1CLK.
+ - ADC/DAC modules are supplied by SYSCLK only, not MODCLK AIF1.
+ - SYSCLK is supplied by AIF1CLK.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 61 ++++++++++++++++++-----------------
- 1 file changed, 32 insertions(+), 29 deletions(-)
+ sound/soc/sunxi/sun8i-codec.c | 114 ++++++++++++++++++++--------------
+ 1 file changed, 68 insertions(+), 46 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index 6f589e93850a..5dfaf656b5b1 100644
+index b915e62fa005..0561d8d2e941 100644
 --- a/sound/soc/sunxi/sun8i-codec.c
 +++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -384,23 +384,6 @@ static int sun8i_codec_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
- }
+@@ -24,10 +24,11 @@
  
--static const struct snd_kcontrol_new sun8i_dac_mixer_controls[] = {
--	SOC_DAPM_DOUBLE("AIF1 Slot 0 Digital DAC Playback Switch",
--			SUN8I_DAC_MXR_SRC,
--			SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA0L,
--			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF1DA0R, 1, 0),
--	SOC_DAPM_DOUBLE("AIF1 Slot 1 Digital DAC Playback Switch",
--			SUN8I_DAC_MXR_SRC,
--			SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA1L,
--			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF1DA1R, 1, 0),
--	SOC_DAPM_DOUBLE("AIF2 Digital DAC Playback Switch", SUN8I_DAC_MXR_SRC,
--			SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF2DACL,
--			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF2DACR, 1, 0),
--	SOC_DAPM_DOUBLE("ADC Digital DAC Playback Switch", SUN8I_DAC_MXR_SRC,
--			SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_ADCL,
--			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_ADCR, 1, 0),
--};
--
- static const struct snd_kcontrol_new sun8i_aif1_ad0_mixer_controls[] = {
- 	SOC_DAPM_DOUBLE("AIF1 AD0 Mixer AIF1 DA0 Capture Switch",
- 			SUN8I_AIF1_MXR_SRC,
-@@ -420,6 +403,25 @@ static const struct snd_kcontrol_new sun8i_aif1_ad0_mixer_controls[] = {
- 			SUN8I_AIF1_MXR_SRC_AD0R_MXR_SRC_AIF2DACL, 1, 0),
+ #define SUN8I_SYSCLK_CTL				0x00c
+ #define SUN8I_SYSCLK_CTL_AIF1CLK_ENA			11
+-#define SUN8I_SYSCLK_CTL_AIF1CLK_SRC_PLL		9
+-#define SUN8I_SYSCLK_CTL_AIF1CLK_SRC			8
++#define SUN8I_SYSCLK_CTL_AIF1CLK_SRC_PLL		(0x3 << 8)
+ #define SUN8I_SYSCLK_CTL_SYSCLK_ENA			3
+ #define SUN8I_SYSCLK_CTL_SYSCLK_SRC			0
++#define SUN8I_SYSCLK_CTL_SYSCLK_SRC_AIF1CLK		(0x0 << 0)
++#define SUN8I_SYSCLK_CTL_SYSCLK_SRC_AIF2CLK		(0x1 << 0)
+ #define SUN8I_MOD_CLK_ENA				0x010
+ #define SUN8I_MOD_CLK_ENA_AIF1				15
+ #define SUN8I_MOD_CLK_ENA_ADC				3
+@@ -78,6 +79,7 @@
+ #define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF2DACR		9
+ #define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_ADCR		8
+ 
++#define SUN8I_SYSCLK_CTL_AIF1CLK_SRC_MASK	GENMASK(9, 8)
+ #define SUN8I_SYS_SR_CTRL_AIF1_FS_MASK		GENMASK(15, 12)
+ #define SUN8I_SYS_SR_CTRL_AIF2_FS_MASK		GENMASK(11, 8)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_CLK_INV_MASK	GENMASK(14, 13)
+@@ -418,12 +420,6 @@ static const struct snd_kcontrol_new sun8i_input_mixer_controls[] = {
  };
  
-+static const struct snd_kcontrol_new sun8i_dac_mixer_controls[] = {
-+	SOC_DAPM_DOUBLE("DAC Mixer AIF1 DA0 Playback Switch",
-+			SUN8I_DAC_MXR_SRC,
-+			SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA0L,
-+			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF1DA0R, 1, 0),
-+	SOC_DAPM_DOUBLE("DAC Mixer AIF1 DA1 Playback Switch",
-+			SUN8I_DAC_MXR_SRC,
-+			SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA1L,
-+			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF1DA1R, 1, 0),
-+	SOC_DAPM_DOUBLE("DAC Mixer AIF2 DAC Playback Switch",
-+			SUN8I_DAC_MXR_SRC,
-+			SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF2DACL,
-+			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF2DACR, 1, 0),
-+	SOC_DAPM_DOUBLE("DAC Mixer ADC Playback Switch",
-+			SUN8I_DAC_MXR_SRC,
-+			SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_ADCL,
-+			SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_ADCR, 1, 0),
-+};
-+
  static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
- 	/* AIF "ADC" Outputs */
- 	SND_SOC_DAPM_AIF_OUT("AIF1 AD0 Left", "Capture", 0,
-@@ -450,10 +452,10 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
- 	SND_SOC_DAPM_SUPPLY("DAC", SUN8I_DAC_DIG_CTRL,
- 			    SUN8I_DAC_DIG_CTRL_ENDA, 0, NULL, 0),
+-	/* Digital parts of the DACs and ADC */
+-	SND_SOC_DAPM_SUPPLY("DAC", SUN8I_DAC_DIG_CTRL, SUN8I_DAC_DIG_CTRL_ENDA,
+-			    0, NULL, 0),
+-	SND_SOC_DAPM_SUPPLY("ADC", SUN8I_ADC_DIG_CTRL, SUN8I_ADC_DIG_CTRL_ENAD,
+-			    0, NULL, 0),
+-
+ 	/* Analog DAC AIF */
+ 	SND_SOC_DAPM_AIF_IN("AIF1 Slot 0 Left", "Playback", 0,
+ 			    SUN8I_AIF1_DACDAT_CTRL,
+@@ -444,6 +440,9 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
+ 	SND_SOC_DAPM_PGA("DAC Left", SND_SOC_NOPM, 0, 0, NULL, 0),
+ 	SND_SOC_DAPM_PGA("DAC Right", SND_SOC_NOPM, 0, 0, NULL, 0),
  
--	/* DAC and ADC Mixers */
--	SOC_MIXER_ARRAY("Left Digital DAC Mixer", SND_SOC_NOPM, 0, 0,
-+	/* Main DAC Mixers */
-+	SOC_MIXER_ARRAY("DAC Left Mixer", SND_SOC_NOPM, 0, 0,
- 			sun8i_dac_mixer_controls),
--	SOC_MIXER_ARRAY("Right Digital DAC Mixer", SND_SOC_NOPM, 0, 0,
-+	SOC_MIXER_ARRAY("DAC Right Mixer", SND_SOC_NOPM, 0, 0,
- 			sun8i_dac_mixer_controls),
- 
- 	/* Main ADC Inputs (connected to analog codec DAPM context) */
-@@ -505,20 +507,21 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
- 	{ "AIF1 DA0 Left", NULL, "AIF1CLK" },
- 	{ "AIF1 DA0 Right", NULL, "AIF1CLK" },
- 
--	/* DAC Routes */
--	{ "DAC Left", NULL, "Left Digital DAC Mixer" },
--	{ "DAC Right", NULL, "Right Digital DAC Mixer" },
-+	/* Main DAC Output Routes */
-+	{ "DAC Left", NULL, "DAC Left Mixer" },
-+	{ "DAC Right", NULL, "DAC Right Mixer" },
- 
- 	{ "DAC Left", NULL, "DAC" },
- 	{ "DAC Right", NULL, "DAC" },
- 
--	/* DAC Mixer Routes */
--	{ "Left Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
--	  "AIF1 DA0 Left"},
--	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
--	  "AIF1 DA0 Right"},
-+	/* Main DAC Mixer Routes */
-+	{ "DAC Left Mixer", "DAC Mixer AIF1 DA0 Playback Switch", "AIF1 DA0 Left" },
-+	{ "DAC Left Mixer", "DAC Mixer ADC Playback Switch", "ADC Left" },
++	SND_SOC_DAPM_SUPPLY("DAC", SUN8I_DAC_DIG_CTRL,
++			    SUN8I_DAC_DIG_CTRL_ENDA, 0, NULL, 0),
 +
-+	{ "DAC Right Mixer", "DAC Mixer AIF1 DA0 Playback Switch", "AIF1 DA0 Right" },
-+	{ "DAC Right Mixer", "DAC Mixer ADC Playback Switch", "ADC Right" },
+ 	/* DAC and ADC Mixers */
+ 	SOC_MIXER_ARRAY("Left Digital DAC Mixer", SND_SOC_NOPM, 0, 0,
+ 			sun8i_dac_mixer_controls),
+@@ -458,60 +457,43 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
+ 	SND_SOC_DAPM_PGA("ADC Left", SND_SOC_NOPM, 0, 0, NULL, 0),
+ 	SND_SOC_DAPM_PGA("ADC Right", SND_SOC_NOPM, 0, 0, NULL, 0),
  
--	/* ADC Routes */
-+	/* Main ADC Input Routes */
- 	{ "ADC Left", NULL, "ADC" },
- 	{ "ADC Right", NULL, "ADC" },
+-	/* Clocks */
++	SND_SOC_DAPM_SUPPLY("ADC", SUN8I_ADC_DIG_CTRL,
++			    SUN8I_ADC_DIG_CTRL_ENAD, 0, NULL, 0),
++
++	/* Module Resets */
++	SND_SOC_DAPM_SUPPLY("RST AIF1", SUN8I_MOD_RST_CTL,
++			    SUN8I_MOD_RST_CTL_AIF1, 0, NULL, 0),
++	SND_SOC_DAPM_SUPPLY("RST ADC", SUN8I_MOD_RST_CTL,
++			    SUN8I_MOD_RST_CTL_ADC, 0, NULL, 0),
++	SND_SOC_DAPM_SUPPLY("RST DAC", SUN8I_MOD_RST_CTL,
++			    SUN8I_MOD_RST_CTL_DAC, 0, NULL, 0),
++
++	/* Module Clocks */
+ 	SND_SOC_DAPM_SUPPLY("MODCLK AIF1", SUN8I_MOD_CLK_ENA,
+ 			    SUN8I_MOD_CLK_ENA_AIF1, 0, NULL, 0),
+-	SND_SOC_DAPM_SUPPLY("MODCLK DAC", SUN8I_MOD_CLK_ENA,
+-			    SUN8I_MOD_CLK_ENA_DAC, 0, NULL, 0),
+ 	SND_SOC_DAPM_SUPPLY("MODCLK ADC", SUN8I_MOD_CLK_ENA,
+ 			    SUN8I_MOD_CLK_ENA_ADC, 0, NULL, 0),
+-	SND_SOC_DAPM_SUPPLY("AIF1", SUN8I_SYSCLK_CTL,
++	SND_SOC_DAPM_SUPPLY("MODCLK DAC", SUN8I_MOD_CLK_ENA,
++			    SUN8I_MOD_CLK_ENA_DAC, 0, NULL, 0),
++
++	/* Clock Supplies */
++	SND_SOC_DAPM_SUPPLY("AIF1CLK", SUN8I_SYSCLK_CTL,
+ 			    SUN8I_SYSCLK_CTL_AIF1CLK_ENA, 0, NULL, 0),
+ 	SND_SOC_DAPM_SUPPLY("SYSCLK", SUN8I_SYSCLK_CTL,
+ 			    SUN8I_SYSCLK_CTL_SYSCLK_ENA, 0, NULL, 0),
+-
+-	SND_SOC_DAPM_SUPPLY("AIF1 PLL", SUN8I_SYSCLK_CTL,
+-			    SUN8I_SYSCLK_CTL_AIF1CLK_SRC_PLL, 0, NULL, 0),
+-	/* Inversion as 0=AIF1, 1=AIF2 */
+-	SND_SOC_DAPM_SUPPLY("SYSCLK AIF1", SUN8I_SYSCLK_CTL,
+-			    SUN8I_SYSCLK_CTL_SYSCLK_SRC, 1, NULL, 0),
+-
+-	/* Module reset */
+-	SND_SOC_DAPM_SUPPLY("RST AIF1", SUN8I_MOD_RST_CTL,
+-			    SUN8I_MOD_RST_CTL_AIF1, 0, NULL, 0),
+-	SND_SOC_DAPM_SUPPLY("RST DAC", SUN8I_MOD_RST_CTL,
+-			    SUN8I_MOD_RST_CTL_DAC, 0, NULL, 0),
+-	SND_SOC_DAPM_SUPPLY("RST ADC", SUN8I_MOD_RST_CTL,
+-			    SUN8I_MOD_RST_CTL_ADC, 0, NULL, 0),
+ };
  
+ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
+-	/* Clock Routes */
+-	{ "AIF1", NULL, "SYSCLK AIF1" },
+-	{ "AIF1 PLL", NULL, "AIF1" },
+-	{ "RST AIF1", NULL, "AIF1 PLL" },
+-	{ "MODCLK AIF1", NULL, "RST AIF1" },
+-	{ "DAC", NULL, "MODCLK AIF1" },
+-	{ "ADC", NULL, "MODCLK AIF1" },
+-
+-	{ "RST DAC", NULL, "SYSCLK" },
+-	{ "MODCLK DAC", NULL, "RST DAC" },
+-	{ "DAC", NULL, "MODCLK DAC" },
+-
+-	{ "RST ADC", NULL, "SYSCLK" },
+-	{ "MODCLK ADC", NULL, "RST ADC" },
+-	{ "ADC", NULL, "MODCLK ADC" },
+-
+ 	/* AIF "ADC" Output Routes */
+ 	{ "AIF1 Slot 0 Left ADC", NULL, "Left Digital ADC Mixer" },
+ 	{ "AIF1 Slot 0 Right ADC", NULL, "Right Digital ADC Mixer" },
+ 
+-	{ "AIF1 Slot 0 Left ADC", NULL, "MODCLK AIF1" },
+-	{ "AIF1 Slot 0 Right ADC", NULL, "MODCLK AIF1" },
++	{ "AIF1 Slot 0 Left ADC", NULL, "AIF1CLK" },
++	{ "AIF1 Slot 0 Right ADC", NULL, "AIF1CLK" },
+ 
+ 	/* AIF "DAC" Input Routes */
+-	{ "AIF1 Slot 0 Left", NULL, "MODCLK AIF1" },
+-	{ "AIF1 Slot 0 Right", NULL, "MODCLK AIF1" },
++	{ "AIF1 Slot 0 Left", NULL, "AIF1CLK" },
++	{ "AIF1 Slot 0 Right", NULL, "AIF1CLK" },
+ 
+ 	/* DAC Routes */
+ 	{ "DAC Left", NULL, "Left Digital DAC Mixer" },
+@@ -535,8 +517,47 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
+ 	  "ADC Left" },
+ 	{ "Right Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
+ 	  "ADC Right" },
++
++	/* Module Supply Routes */
++	{ "AIF1 Slot 0 Left ADC", NULL, "RST AIF1" },
++	{ "AIF1 Slot 0 Right ADC", NULL, "RST AIF1" },
++	{ "AIF1 Slot 0 Left", NULL, "RST AIF1" },
++	{ "AIF1 Slot 0 Right", NULL, "RST AIF1" },
++
++	{ "ADC", NULL, "RST ADC" },
++	{ "DAC", NULL, "RST DAC" },
++
++	/* Module Reset Routes */
++	{ "RST AIF1", NULL, "MODCLK AIF1" },
++	{ "RST ADC", NULL, "MODCLK ADC" },
++	{ "RST DAC", NULL, "MODCLK DAC" },
++
++	/* Module Clock Routes */
++	{ "MODCLK AIF1", NULL, "SYSCLK" },
++	{ "MODCLK ADC", NULL, "SYSCLK" },
++	{ "MODCLK DAC", NULL, "SYSCLK" },
++
++	/* Clock Supply Routes */
++	{ "SYSCLK", NULL, "AIF1CLK" },
+ };
+ 
++static int sun8i_codec_component_probe(struct snd_soc_component *component)
++{
++	struct sun8i_codec *scodec = snd_soc_component_get_drvdata(component);
++
++	/* Set AIF1CLK clock source to PLL */
++	regmap_update_bits(scodec->regmap, SUN8I_SYSCLK_CTL,
++			   SUN8I_SYSCLK_CTL_AIF1CLK_SRC_MASK,
++			   SUN8I_SYSCLK_CTL_AIF1CLK_SRC_PLL);
++
++	/* Set SYSCLK clock source to AIF1CLK */
++	regmap_update_bits(scodec->regmap, SUN8I_SYSCLK_CTL,
++			   BIT(SUN8I_SYSCLK_CTL_SYSCLK_SRC),
++			   SUN8I_SYSCLK_CTL_SYSCLK_SRC_AIF1CLK);
++
++	return 0;
++}
++
+ static const struct snd_soc_dai_ops sun8i_codec_dai_ops = {
+ 	.hw_params = sun8i_codec_hw_params,
+ 	.set_fmt = sun8i_set_fmt,
+@@ -573,6 +594,7 @@ static const struct snd_soc_component_driver sun8i_soc_component = {
+ 	.num_dapm_widgets	= ARRAY_SIZE(sun8i_codec_dapm_widgets),
+ 	.dapm_routes		= sun8i_codec_dapm_routes,
+ 	.num_dapm_routes	= ARRAY_SIZE(sun8i_codec_dapm_routes),
++	.probe			= sun8i_codec_component_probe,
+ 	.idle_bias_on		= 1,
+ 	.use_pmdown_time	= 1,
+ 	.endianness		= 1,
 -- 
 2.24.1
 
