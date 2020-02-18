@@ -4,89 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17CBC34031
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCACC34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8852070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23B02070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582059610;
-	bh=9VFLIpvHCUonzusOwJLnA08GCA8JcwJBbhUKZiS6Fh8=;
+	s=default; t=1582059672;
+	bh=CrvL6Fu71IIMWSbKPHV6n8JUND8AaU31nyzwsp5iw2w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mbQNNFWvrrYjrYKGILXz/ErhhxFuqse/Iuj4KCtFaCIB+IfSLL6Y7qFZEl8tGkY5L
-	 qDzbq2+iwHJFo7sXuMMBKfo7NfYBw5ala68fVXrJCR5hnyHNP9CAzlc/NV23lLeM3+
-	 vJMZk6pYkMNeD4BcyQSVjsM5qgJYidG3/H7crPfo=
+	b=IPvHhkc08etvu3a9++fGQiF81zR3N4LrorRy7T/EvEzVqvTCCkWZvqIRC1r/B1grn
+	 88sSzNjZvfi+gyUtuwn0Vo4PDYYI3DWK2GIxjKEzXApH55+tABOU7w1mfr1Lz+0+Qk
+	 IsZFaaWhceUzkX3aYFcOyOwf6CXRFnnps+b6xMtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgBRVAK (ORCPT
+        id S1726352AbgBRVBM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:00:10 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37227 "EHLO
+        Tue, 18 Feb 2020 16:01:12 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40091 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgBRVAJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:00:09 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w23so4526571otj.4;
-        Tue, 18 Feb 2020 13:00:09 -0800 (PST)
+        with ESMTP id S1726339AbgBRVBM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:01:12 -0500
+Received: by mail-ot1-f67.google.com with SMTP id i6so20953378otr.7;
+        Tue, 18 Feb 2020 13:01:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EZdSZVnFTTL60ilak2TTEP7SdA1gf6hbeTUpnAC0fEY=;
-        b=JW1TMgw+oqDThRlFbFkU1CVTMhfET0pQbiW4h8wYztN3sItpNF4FQ6hmdizDlZsW7V
-         t2nJ/qFWLvwqtC+Ms4Q5dqHCeq8q4wHnyN8bXm1ihzArowyFsAPj8KI8PzJKEBTP+5hA
-         207c90e/vzZfpgODMIORR55+49DzGt17LCEeRnkxDLhhmVN0ylO+OeI35kmE2gAQ3OXZ
-         MJIk0AmR3A3lr1AH/t2UW1N4jhxgjQP1UZbscxUbfjXTaqafSQ94OUeggTRZzOIm2JTw
-         iHOBBPmZSIS1kEvqLH1eAovzE9DHNktc+YuOAe8JsF4CaZjpE7WWoNBqQC7OGMqYH4B2
-         TauQ==
-X-Gm-Message-State: APjAAAVDym2nM5OUdhgCD7XqbGMl2uQvUIkmDxt8KjCfDZJP/P14Z08N
-        Khk+J5LePQbc8VAr1Wq5Kw==
-X-Google-Smtp-Source: APXvYqxBQJgcoPbaU7PhwEXKClf1mLX8ROp0uTfC2VI4ZU5HWY5HM3BpMCCje1myXwydUl1kHDMoZQ==
-X-Received: by 2002:a9d:6c01:: with SMTP id f1mr16594053otq.133.1582059608989;
-        Tue, 18 Feb 2020 13:00:08 -0800 (PST)
+        bh=3UOeZaH3v4Y+ZlEV3oAmdS6HQDRLOduqQRyNOB2xC5c=;
+        b=Djo1NuFIa5gRukliWiPwdQa0RbGzhnYj50qtbYfpcNq31aOHklL1oHWRgtlHowuY+f
+         LnYXV6X9x/UgeM10spKvS94E6WbjSAQOfuuNr6JJNzNHh/dyyTFwJZV8LU+EsZbyWE61
+         4Nf2PE5+nEqNLp8Lq2IyKzYpTnJhxlEIUot/nM1Lv7n5lluiNPj589BnXPaspfuci/An
+         xjf6+t6VBRGlIbPLusk4PaSaXX+tnCI5aRLpG2rqIfRuxOolTPiW9k3w5+FUlAbtEELM
+         C/YFdmVpYKT0QDklUjW6/HBWg3+EWhrOace/DGDUOFylgSdqGkYX/OULmg92YK7KkVfg
+         SwJw==
+X-Gm-Message-State: APjAAAVRfvTzMWzOljoWb70TiAH6JmS78jAj+HTcyPzBvY+2oVga/k8e
+        Gxh+ckyu09pE6b9366mYWA==
+X-Google-Smtp-Source: APXvYqySr5SN9c8HUFsUtyV6Yaw0BE8v8KterAwiEnJ6/QG00uH6c9heW/cM3fHdlWSMk9PpCIZ2/g==
+X-Received: by 2002:a05:6830:1011:: with SMTP id a17mr16192900otp.45.1582059671162;
+        Tue, 18 Feb 2020 13:01:11 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f3sm1731641oto.57.2020.02.18.13.00.07
+        by smtp.gmail.com with ESMTPSA id 9sm1740628otx.75.2020.02.18.13.01.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:00:08 -0800 (PST)
-Received: (nullmailer pid 27504 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:00:07 -0000
-Date:   Tue, 18 Feb 2020 15:00:07 -0600
+        Tue, 18 Feb 2020 13:01:10 -0800 (PST)
+Received: (nullmailer pid 29034 invoked by uid 1000);
+        Tue, 18 Feb 2020 21:01:09 -0000
+Date:   Tue, 18 Feb 2020 15:01:09 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     David Heidelberg <david@ixit.cz>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Loic PALLARDY <loic.pallardy@st.com>, arnaud.pouliquen@st.com,
-        Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v5 3/3] dt-bindings: remoteproc: stm32: add syscon
- bindings preloaded fw support
-Message-ID: <20200218210007.GA27448@bogus>
-References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
- <20200211174205.22247-4-arnaud.pouliquen@st.com>
+        David Heidelberg <david@ixit.cz>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/7] dt-bindings: iio: light: add support for
+ Dyna-Image AL3320A
+Message-ID: <20200218210109.GA28353@bogus>
+References: <20200211191201.1049902-1-david@ixit.cz>
+ <20200211191201.1049902-2-david@ixit.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211174205.22247-4-arnaud.pouliquen@st.com>
+In-Reply-To: <20200211191201.1049902-2-david@ixit.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2020 18:42:05 +0100, Arnaud Pouliquen wrote:
-> Add the optional syscon property that points to the resource table
-> address and the state of the Cortex-M4 firmware loaded by the bootloader.
+On Tue, 11 Feb 2020 20:11:55 +0100, David Heidelberg wrote:
+> This commit add dt-bindings support to al3320a driver and vendor-prefix
+> dynaimage.
+> Partly based on unmerged commit:
+> "iio: Add Dyna-Image AP3223 ambient light and proximity driver"
 > 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> Signed-off-by: David Heidelberg <david@ixit.cz>
 > ---
->  .../bindings/remoteproc/st,stm32-rproc.yaml   | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
+> v5
+>  - drop requirement on interrups and vdd-supply
+>  - s/al3320a@1c/light-sensor@1c/
+>  - dual license also under BSD
+> 
+>  .../bindings/iio/light/al3320a.yaml           | 43 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/al3320a.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
