@@ -2,157 +2,199 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EBDC34049
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 18:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC6AC34049
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 18:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EFD21D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 18:13:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dfvx6yUv"
+	by mail.kernel.org (Postfix) with ESMTP id 28E5521D56
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 18:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgBRSNC (ORCPT
+        id S1726650AbgBRSOF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:13:02 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44899 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726751AbgBRSNC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:13:02 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582049581; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=0c1mjaoinwfnnDHt6xgGoo8PceKhGgd93L7iJhOjAzw=; b=dfvx6yUv7/ohYRDbfsgVLYgE5/mtJIorLmNgE+w1VDBZ9S7DHFds4erhIejZDhEfWf/nU0Wy
- eXu59UKB+o96ato2ADNiJq9BxzKJ8Wvg7GKTJ9BQHkZ/5+ca4xISfISc6jMi1K1M34qGXVqS
- n33V7sGEtgoKxjI/NLkHHF2c2QQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4c2925.7fc52b12a1f0-smtp-out-n03;
- Tue, 18 Feb 2020 18:12:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C2D45C447AF; Tue, 18 Feb 2020 18:12:51 +0000 (UTC)
-Received: from [192.168.0.107] (unknown [183.83.146.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C1A07C447AA;
-        Tue, 18 Feb 2020 18:12:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C1A07C447AA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org
-References: <1580357923-19783-1-git-send-email-tdas@codeaurora.org>
- <1580357923-19783-2-git-send-email-tdas@codeaurora.org>
- <20200130180637.9E02D206F0@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <6ea1e6a5-4942-5dba-4e91-28275db00153@codeaurora.org>
-Date:   Tue, 18 Feb 2020 23:42:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 18 Feb 2020 13:14:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:58186 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgBRSOE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:14:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65A9331B;
+        Tue, 18 Feb 2020 10:14:03 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8412E3F68F;
+        Tue, 18 Feb 2020 10:13:59 -0800 (PST)
+Date:   Tue, 18 Feb 2020 18:13:56 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        soc@kernel.org, Robert Richter <rrichter@marvell.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        iommu@lists.linux-foundation.org,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC PATCH 00/11] Removing Calxeda platform support
+Message-ID: <20200218181356.09ae0779@donnerap.cambridge.arm.com>
+In-Reply-To: <20200218171321.30990-1-robh@kernel.org>
+References: <20200218171321.30990-1-robh@kernel.org>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200130180637.9E02D206F0@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Stephen.
-Will address the comments in the next patch series.
+On Tue, 18 Feb 2020 11:13:10 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-On 1/30/2020 11:36 PM, Stephen Boyd wrote:
-> Quoting Taniya Das (2020-01-29 20:18:41)
->> The Modem Subsystem clock provider have a bunch of generic properties
->> that are needed in a device tree. Add a YAML schemas for those.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,mss.yaml        | 58 ++++++++++++++++++++++
-> 
-> Please rename to qcom,sc7180-mss.yaml
-> 
->>   1 file changed, 58 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,mss.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
->> new file mode 100644
->> index 0000000..ebb04e1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
->> @@ -0,0 +1,58 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Modem Clock Controller Binding
->> +
->> +maintainers:
->> +  - Taniya Das <tdas@codeaurora.org>
->> +
->> +description: |
->> +  Qualcomm modem clock control module which supports the clocks.
-> 
-> Can you point to the header file from here?
-> include/dt-bindings/clock/qcom,sc7180-mss.h I guess.
-> 
+Hi,
 
-will add the same.
-
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +       - qcom,sc7180-mss
->> +
->> +  clocks:
->> +    minItems: 1
->> +    maxItems: 3
+> Calxeda has been defunct for 6 years now. Use of Calxeda servers carried
+> on for some time afterwards primarily as distro builders for 32-bit ARM.
+> AFAIK, those systems have been retired in favor of 32-bit VMs on 64-bit
+> hosts.
 > 
-> Why is it optional? Don't these all go there?
+> The other use of Calxeda Midway I'm aware of was testing 32-bit ARM KVM
+> support as there are few or no other systems with enough RAM and LPAE. Now
+> 32-bit KVM host support is getting removed[1].
 > 
+> While it's not much maintenance to support, I don't care to convert the
+> Calxeda DT bindings to schema nor fix any resulting errors in the dts files
+> (which already don't exactly match what's shipping in firmware).
 
-Yes, moved them to required.
+While every kernel maintainer seems always happy to take patches with a negative diffstat, I wonder if this is really justification enough to remove a perfectly working platform. I don't really know about any active users, but experience tells that some platforms really are used for quite a long time, even if they are somewhat obscure. N900 or Netwinder, anyone?
 
->> +    items:
->> +      - description: gcc_mss_mfab_axi clock from GCC
->> +      - description: gcc_mss_nav_axi clock from GCC
->> +      - description: gcc_mss_cfg_ahb clock from GCC
->> +
->> +  clock-names:
->> +    items:
->> +      - const: gcc_mss_mfab_axis_clk
->> +      - const: gcc_mss_nav_axi_clk
->> +      - const: cfg_clk
+So to not give the impression that actually *everyone* (from that small subset of people actively reading the kernel list) is happy with that, I think that having support for at least Midway would be useful. On the one hand it's a decent LPAE platform (with memory actually exceeding 4GB), and on the other hand it's something with capable I/O (SATA) and networking, so one can actually stress test the system. Which is the reason I was using that for KVM testing, but even with that probably going away now there remain still some use cases, and be it for general ARM(32) testing.
+
+I don't particularly care about the more optional parts like EDAC, cpuidle, or cpufreq, but I wonder if keeping in at least the rather small SATA and XGMAC drivers and basic platform support is feasible.
+If YAML DT bindings are used as an excuse, I am more than happy to convert those over.
+
+And if anyone has any particular gripes with some code, maybe there is a way to fix that instead of removing it? I was always wondering if we could get rid of the mach-highbank directory, for instance. I think most of it is Highbank (Cortex-A9) related.
+
+Cheers,
+Andre
+
 > 
-> Do these really need _clk at the end? Seems redundant.
+> Rob
 > 
-Removed _clk.
+> [1] https://lore.kernel.org/linux-arm-kernel/20200210141324.21090-1-maz@kernel.org/
+> 
+> Rob Herring (11):
+>   vfio: Remove Calxeda XGMAC reset driver
+>   ata: Remove Calxeda AHCI driver
+>   cpuidle: Remove Calxeda driver
+>   cpufreq: Remove Calxeda driver
+>   EDAC: Remove Calxeda drivers
+>   iommu: arm-smmu: Remove Calxeda secure mode quirk
+>   net: Remove Calxeda XGMAC driver
+>   clk: Remove Calxeda driver
+>   ARM: Remove Calxeda platform support
+>   ARM: dts: Remove Calxeda platforms
+>   dt-bindings: Remove Calxeda platforms bindings
+> 
+>  .../devicetree/bindings/arm/calxeda.yaml      |   22 -
+>  .../devicetree/bindings/arm/calxeda/l2ecc.txt |   15 -
+>  .../devicetree/bindings/ata/sata_highbank.txt |   44 -
+>  .../devicetree/bindings/clock/calxeda.txt     |   17 -
+>  .../memory-controllers/calxeda-ddr-ctrlr.txt  |   16 -
+>  .../devicetree/bindings/net/calxeda-xgmac.txt |   18 -
+>  .../bindings/phy/calxeda-combophy.txt         |   17 -
+>  MAINTAINERS                                   |   14 -
+>  arch/arm/Kconfig                              |    2 -
+>  arch/arm/Kconfig.debug                        |   12 +-
+>  arch/arm/Makefile                             |    1 -
+>  arch/arm/boot/dts/Makefile                    |    3 -
+>  arch/arm/boot/dts/ecx-2000.dts                |  103 -
+>  arch/arm/boot/dts/ecx-common.dtsi             |  230 --
+>  arch/arm/boot/dts/highbank.dts                |  161 --
+>  arch/arm/configs/multi_v7_defconfig           |    5 -
+>  arch/arm/mach-highbank/Kconfig                |   19 -
+>  arch/arm/mach-highbank/Makefile               |    4 -
+>  arch/arm/mach-highbank/core.h                 |   18 -
+>  arch/arm/mach-highbank/highbank.c             |  175 --
+>  arch/arm/mach-highbank/pm.c                   |   49 -
+>  arch/arm/mach-highbank/smc.S                  |   25 -
+>  arch/arm/mach-highbank/sysregs.h              |   75 -
+>  arch/arm/mach-highbank/system.c               |   22 -
+>  drivers/ata/Kconfig                           |    9 -
+>  drivers/ata/Makefile                          |    1 -
+>  drivers/ata/sata_highbank.c                   |  635 ------
+>  drivers/clk/Makefile                          |    1 -
+>  drivers/clk/clk-highbank.c                    |  329 ---
+>  drivers/cpufreq/Kconfig.arm                   |   10 -
+>  drivers/cpufreq/Makefile                      |    3 +-
+>  drivers/cpufreq/cpufreq-dt-platdev.c          |    3 -
+>  drivers/cpufreq/highbank-cpufreq.c            |  106 -
+>  drivers/cpuidle/Kconfig.arm                   |    7 -
+>  drivers/cpuidle/Makefile                      |    1 -
+>  drivers/cpuidle/cpuidle-calxeda.c             |   72 -
+>  drivers/edac/Kconfig                          |   14 -
+>  drivers/edac/Makefile                         |    3 -
+>  drivers/edac/highbank_l2_edac.c               |  142 --
+>  drivers/edac/highbank_mc_edac.c               |  272 ---
+>  drivers/iommu/arm-smmu-impl.c                 |   43 -
+>  drivers/net/ethernet/Kconfig                  |    1 -
+>  drivers/net/ethernet/Makefile                 |    1 -
+>  drivers/net/ethernet/calxeda/Kconfig          |    9 -
+>  drivers/net/ethernet/calxeda/Makefile         |    2 -
+>  drivers/net/ethernet/calxeda/xgmac.c          | 1927 -----------------
+>  drivers/vfio/platform/reset/Kconfig           |    8 -
+>  drivers/vfio/platform/reset/Makefile          |    2 -
+>  .../reset/vfio_platform_calxedaxgmac.c        |   74 -
+>  49 files changed, 2 insertions(+), 4740 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/calxeda.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
+>  delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+>  delete mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
+>  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
+>  delete mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.txt
+>  delete mode 100644 Documentation/devicetree/bindings/phy/calxeda-combophy.txt
+>  delete mode 100644 arch/arm/boot/dts/ecx-2000.dts
+>  delete mode 100644 arch/arm/boot/dts/ecx-common.dtsi
+>  delete mode 100644 arch/arm/boot/dts/highbank.dts
+>  delete mode 100644 arch/arm/mach-highbank/Kconfig
+>  delete mode 100644 arch/arm/mach-highbank/Makefile
+>  delete mode 100644 arch/arm/mach-highbank/core.h
+>  delete mode 100644 arch/arm/mach-highbank/highbank.c
+>  delete mode 100644 arch/arm/mach-highbank/pm.c
+>  delete mode 100644 arch/arm/mach-highbank/smc.S
+>  delete mode 100644 arch/arm/mach-highbank/sysregs.h
+>  delete mode 100644 arch/arm/mach-highbank/system.c
+>  delete mode 100644 drivers/ata/sata_highbank.c
+>  delete mode 100644 drivers/clk/clk-highbank.c
+>  delete mode 100644 drivers/cpufreq/highbank-cpufreq.c
+>  delete mode 100644 drivers/cpuidle/cpuidle-calxeda.c
+>  delete mode 100644 drivers/edac/highbank_l2_edac.c
+>  delete mode 100644 drivers/edac/highbank_mc_edac.c
+>  delete mode 100644 drivers/net/ethernet/calxeda/Kconfig
+>  delete mode 100644 drivers/net/ethernet/calxeda/Makefile
+>  delete mode 100644 drivers/net/ethernet/calxeda/xgmac.c
+>  delete mode 100644 drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+> 
+> 
+> base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+> --
+> 2.20.1
 
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
