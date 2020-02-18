@@ -2,83 +2,220 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CC8C34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E149CC34026
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735A621D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2812173E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqrPJBs7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gY0xfUIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgBRNB6 (ORCPT
+        id S1726594AbgBRNXS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:01:58 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42464 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgBRNB5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 08:01:57 -0500
-Received: by mail-lj1-f194.google.com with SMTP id d10so22851895ljl.9;
-        Tue, 18 Feb 2020 05:01:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3NRJPj3OerMDUZIsLVIBTx3cxsVu/NqvIaRSfxkUDjk=;
-        b=ZqrPJBs7Tlhw0pc/b3ZpLDIFuJb6Qd3kBwiTrq2plEc25WoAK8oWQcCVsRtoJtU51f
-         nXmXCezpFtcTq2+1y3kYsVlLI83rQRghbYgi4BCQ2eZzWkqEkhxalddHLjikO+hLnVLz
-         GAepQZyJncUccBWh7Y+UGXbnP1RncqzTsVMJqqTPhuhwqowo6buoGTBuYDsUwXDTe38r
-         YfcnGICAcinunmW6C6oRaQEyWBeDSfqdxcxH4pwmDOw3zUacWW58rEMLMIWR0QSYPFIF
-         Ft90RL807LNlaFnxRnN+2g2jkvUiTguwhPYzCJVe0Bsmt5HeI+t4cTiMydv4Su3O1fdu
-         1c0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3NRJPj3OerMDUZIsLVIBTx3cxsVu/NqvIaRSfxkUDjk=;
-        b=rdTvspuAVaSrHiwg9fQqJaKoiZ7uhP7oG9On47MKIa8cjzjg1dUu705XhZm3I9A5Nw
-         u8HiRbfcadb76Qs9iZA0KgS7Dshz5Ly8SJNpO1IoOPBbBqrRvgoZurhGtOZMFoYdXNXW
-         mZ5PezmkkxfRvSE1CeM+OqySpVj0BEy9cYIQNKG0ZCz77cka350KWdeLgVm5JxX8iq8p
-         6xBN0hSuJZERmnCmc3Tu5roSGb5SI056D+sg6SkOkiUE9lsS37qxCvH7VqUsWIeLit5S
-         I4Q4XGp5d6V9NPLRPKSC4AvKZEXfA9dn6k1xwjQ1FSd3l260OCzfcPBRk+jy6lm2wNLR
-         eaxQ==
-X-Gm-Message-State: APjAAAUvTG5DMHmywKYmSxK3pnbLr5CPuHIRwdyAoCXSWDHC9YopB1Lx
-        livHdJbZPXwnx9r4F82ar2dUWVKa/XIUH6U6nGE=
-X-Google-Smtp-Source: APXvYqxONNhL8ahuIYdrsoVgkIbRN6liLiU+pdYOPCPkpHuXvPwsraNW0EIhNjpyMTO4eyKbuO5eK8XAJqs/p6GOwCU=
-X-Received: by 2002:a2e:9157:: with SMTP id q23mr12846980ljg.196.1582030915517;
- Tue, 18 Feb 2020 05:01:55 -0800 (PST)
+        Tue, 18 Feb 2020 08:23:18 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:14267 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726340AbgBRNXR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 08:23:17 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582032196; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=BLTlwEgPb1ufuuq6RMa4UTkP2svU0gzl7AF6fzPW9Wc=; b=gY0xfUIMdH3UopU9jJfwgG3ahFeGw9Iu51nPCRQPLzBQcSb6gVXTgB88CiCfB4skfA6MddGZ
+ E7SdSp50umzFVs44raf9NQQJVfgmUHoQ7ogjIacZIuv9rngCtQGEmO+Xg9gXCg4EtJmz/OiL
+ 59/Me00dHVTZ9YkQBuIW9sxW0kM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4be53f.7fc39fd93180-smtp-out-n03;
+ Tue, 18 Feb 2020 13:23:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 03F6AC447A0; Tue, 18 Feb 2020 13:23:11 +0000 (UTC)
+Received: from [10.204.79.138] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70023C4479F;
+        Tue, 18 Feb 2020 13:23:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 70023C4479F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ckadabi@codeaurora.org, tsoni@codeaurora.org,
+        bryanh@codeaurora.org, psodagud@codeaurora.org,
+        rnayak@codeaurora.org, satyap@codeaurora.org,
+        pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
+ <20200203193533.GL3948@builder>
+ <5008a446-a90c-b68a-aaa4-3e7cd90418fa@linaro.org>
+ <d09f8a1d-0544-838f-e6f8-1c47f58e4f1f@codeaurora.org>
+ <8a854c02-7435-46c6-5bd1-05273e5249e4@linaro.org>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <aa942701-d11b-dcf2-d28f-144582af0d2f@codeaurora.org>
+Date:   Tue, 18 Feb 2020 18:53:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200214192750.20845-1-alifer.wsdm@gmail.com> <20200217082047.nzxxo7mpejq5yj65@pengutronix.de>
-In-Reply-To: <20200217082047.nzxxo7mpejq5yj65@pengutronix.de>
-From:   Alifer Moraes <alifer.wsdm@gmail.com>
-Date:   Tue, 18 Feb 2020 10:02:31 -0300
-Message-ID: <CA+W=15bD5Ek0S8_OAr3nTBrhNJCozF7yAB=BhX0c0HCAOVVVOQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for fec1
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, peng.fan@nxp.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com,
-        Fabio Estevam <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8a854c02-7435-46c6-5bd1-05273e5249e4@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
 
-I forgot to select reply all in this question, so I answered only to Marco.
-
-> Where is this gpio muxed?
+On 2/18/2020 1:14 AM, Bryan O'Donoghue wrote:
+> On 16/02/2020 16:07, Dwivedi, Avaneesh Kumar (avani) wrote:
+>>
+>> On 2/4/2020 8:40 AM, Bryan O'Donoghue wrote:
+>>> On 03/02/2020 19:35, Bjorn Andersson wrote:
+>>>> On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
+>>>
+>>> Hi Avaneesh.
+>>
+>> Hello Bryan, Thank you very much for your review comments.
+>>
+>> Will be replying to your comments and will be posting new patchset 
+>> soon as per review comments.
+>>
+>>>
+>>>> Please aim for keeping the sort order in this file (ignore QCOM_APR
+>>>> which obviously is in the wrong place)
+>>>>
+>>>>> +       tristate "QTI Embedded USB Debugger (EUD)"
+>>>>> +       depends on ARCH_QCOM
+>>>
+>>> If we persist with the model of EXTCON you should "select EXTCON" here.
 >
+>> I have asked this query with Bjorn Also against his review comments, 
+>> whether we need to persist with extcon or need to switch to usb role 
+>> switch framework, as we are notifying not only to usb controller but 
+>> also to pmic charger so in case we adopt usb role switch then how we 
+>> will notify to pmic charger to enable charging battery ? Also as i 
+>> mentioned there my dilema is it does not look very apt to model EUD 
+>> hw IP as c type connector, so please let me know your views.
+>
+> I think there's a desire to model USB ports as connector child nodes 
+> of a USB controllers as opposed to the more generic extcon so, I think 
+> the effort should probably be made to model it up as typec.
+this comment is irrespective of your below comment (If we were to 
+support Control Peripheral where the local DWC3 controller has the 
+signals routed away entirely, then I think we would need to look into 
+modelling that in device tree - and using an overlay to show the DWC3 
+controller going away in Control Peripheral mode and coming back. )?
+>
+> 1. Model as a typec connector
+>    You can use usb-role-switch based on the VBUS interrupt you get
+>    drivers/extcon/extcon-axp288.c::axp288_usb_role_work()
+>    as an exmple
+Will look into this example, but seems this driver uses both extcon and 
+usb-role-switch for notification.
+>
+> 2. Model the registers/gpios in the PMIC interface as regulators
+>    that your typec driver could then own.
+>
+>    You wouldn't have to notify outside of your typec driver then
+>    you'd just be using the regulator API.
+>
+> You can use regmap to divide up the registers between devices for that.
+>
+> Can that work for you ?
+Did not comprehend this comment fully. if possible can you give some 
+example.
+>
+>>>>> +static int enable_eud(struct eud_chip *priv)
+>>>>> +{
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    /* write into CSR to enable EUD */
+>>>>> +    writel_relaxed(BIT(0), priv->eud_reg_base + EUD_REG_CSR_EUD_EN);
+>>>>> +    /* Enable vbus, chgr & safe mode warning interrupts */
+>>>>> +    writel_relaxed(EUD_INT_VBUS | EUD_INT_CHGR | EUD_INT_SAFE_MODE,
+>>>>> +            priv->eud_reg_base + EUD_REG_INT1_EN_MASK);
+>>>>> +
+>>>>> +    /* Ensure Register Writes Complete */
+>>>
+>>> So... You are writing a register in an on-chip PMIC. The PMIC is 
+>>> responsible for detecting USB ID and supplying VBUS as appropriate.
+>>>
+>>> You then get an interrupt to inform you of the state ?
+>>
+>> I am writing to EUD control port so that when EUD is enable, EUD hw 
+>> IP can intercept VBUS and d+/d- signal and can reroute to PMIC or USB 
+>> as per host application command in debug mode.
+>
+> Reading the dts that goes with this
+>
+> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
+> +on chip to support the USB-based debug and trace capabilities.
+>
+> Ah so, the EUD is a mux, that sits between the connector and the 
+> controller, routing UTMI signals to an internal USB hub, which in-turn 
+> has debug functions attached to the hub...
+Yes that is correct understanding.
+>
+> Can the Arm core see the hub ? I assume not ?
+Not sure what is it mean by "Can the Arm core see the hub"?
+>
+> There are a few different modes - you should probably be clear on 
+> which mode it is you are supporting.
+>
+> Normal mode: (Bypass)
+> Port | EUD | Controller
+>
+> Normal + debug hub mode: (Debug)
+> Port | EUD | Controller + HUB -> debug functions
+>
+> Debug hub mode: (Control Peripheral)
+> Port | EUD | HUB -> debug functions
+>
+> its not clear to me from the documentation or the code which mode it 
+> is we are targeting to be supported here.
+Its debug mode which we are supporting in driver.
+>
+> I think you should support Debug mode only here, so that the Arm core 
+> never has to deal with the situation where the USB connector "goes away".
+Can you please help what you mean by "so that the Arm core never has to 
+deal with the situation where the USB connector "goes away""
+>
+> If we were to support Control Peripheral where the local DWC3 
+> controller has the signals routed away entirely, then I think we would 
+> need to look into modelling that in device tree - and using an overlay 
+> to show the DWC3 controller going away in Control Peripheral mode and 
+> coming back.
+debug mode is set run time via user, i will check how we can model such 
+scenario where device tree corresponding to a h/w module is only valid 
+in some scenario at run time. if possible please elaborate bit more on 
+your suggestion
+>
+> Also final thought since the EUD can operate in different modes, it 
+> really should be a string that gets passed in - with the string name 
+> aligning to the documentation "bypass", "debug" and so on, so that the 
+> mode we are switching to is obvious to anybody who has the spec and 
+> the driver.
 
-The gpio is muxed in the subnode pinctrl_fec1.
+you mean we should document that this driver works in debug mode only? 
+not clear on where one should pass "debug" and "bypass" string?
 
-Regards,
+I will also be discussing modelling EUD as typec connector with USB 
+folks and will come back soon with clarity on this. Thanks for your 
+valuable comments and suggestions.
 
-Alifer
+>
+> ---
+> bod
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
