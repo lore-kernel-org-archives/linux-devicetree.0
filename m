@@ -2,100 +2,224 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201FDC3403E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21036C34026
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC85421D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54FA21D56
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UhzB7IdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgBRNBV (ORCPT
+        id S1726713AbgBRNBj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:01:21 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:62303 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726373AbgBRNBU (ORCPT
+        Tue, 18 Feb 2020 08:01:39 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17357 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726648AbgBRNBj (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:01:20 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 18 Feb 2020 18:31:16 +0530
-Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 18 Feb 2020 18:30:44 +0530
-Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id D3B324C42; Tue, 18 Feb 2020 18:30:43 +0530 (IST)
-From:   Pradeep P V K <ppvk@codeaurora.org>
-To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Pradeep P V K <ppvk@codeaurora.org>
-Subject: [RFC v4 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
-Date:   Tue, 18 Feb 2020 18:30:33 +0530
-Message-Id: <1582030833-12964-3-git-send-email-ppvk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
-References: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
+        Tue, 18 Feb 2020 08:01:39 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582030898; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=zg7uOTNhl06Of6m/IGJ2JX7YMKlvKHRPMgNieOllFHI=; b=UhzB7IdKSTCAfuc1hXRSgf+fHCwOndprN4kUVlBLJ5dlpZI3hN5BBSuemFTML2ERK1Bv1oZB
+ rjMFo7pYa12zlzUvGWKCjJ9wZ89ASl1lcpJWRBCgkoMa4bycdcBZcJ7p5S0QK9xtgQwbvIZW
+ WuJenTVopZ7l27BrcYS1U4u6q5Q=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4be00f.7fec514f6ce0-smtp-out-n01;
+ Tue, 18 Feb 2020 13:01:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D22AFC4479C; Tue, 18 Feb 2020 13:01:01 +0000 (UTC)
+Received: from [10.204.79.138] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5EF1C43383;
+        Tue, 18 Feb 2020 13:00:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5EF1C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ckadabi@codeaurora.org, tsoni@codeaurora.org,
+        bryanh@codeaurora.org, psodagud@codeaurora.org,
+        rnayak@codeaurora.org, satyap@codeaurora.org,
+        pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
+ <20200203193533.GL3948@builder>
+ <5808f959-f0fc-85be-4bfa-980b5311adeb@codeaurora.org>
+ <20200218033542.GY955802@ripper>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <6df14d5f-dbc7-22eb-e4b2-ac5973f6424f@codeaurora.org>
+Date:   Tue, 18 Feb 2020 18:30:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200218033542.GY955802@ripper>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add interconnect bandwidth scaling supported strings for qcom-sdhci
-controller.
 
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
----
+On 2/18/2020 9:05 AM, Bjorn Andersson wrote:
+> On Sun 16 Feb 06:14 PST 2020, Dwivedi, Avaneesh Kumar (avani) wrote:
+>
+>> Thank you very much Bjorn for your comments, will address them and post
+>> latest patchset soon.
+>>
+>> On 2/4/2020 1:05 AM, Bjorn Andersson wrote:
+>>> On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
+> [..]
+>>>> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+>>>> index d0a73e7..6b7c9d0 100644
+>>>> --- a/drivers/soc/qcom/Kconfig
+>>>> +++ b/drivers/soc/qcom/Kconfig
+>>>> @@ -202,4 +202,16 @@ config QCOM_APR
+>>>>    	  application processor and QDSP6. APR is
+>>>>    	  used by audio driver to configure QDSP6
+>>>>    	  ASM, ADM and AFE modules.
+>>>> +
+>>>> +config QCOM_EUD
+>>> Please aim for keeping the sort order in this file (ignore QCOM_APR
+>>> which obviously is in the wrong place)
+>> Please help to elaborate more, do you mean adding configs in alphabetical
+>> order?
+> Yes, we want to maintain alphabetical sort order of the config options
+> in the Kconfig file. Unfortunately I must have missed this as I picked
+> up QCOM_APR - hence my ask to add you entry further up, even if the
+> order isn't perfect...
+Ok
+>
+>>>> +       tristate "QTI Embedded USB Debugger (EUD)"
+>>>> +       depends on ARCH_QCOM
+>>>> +       help
+>>>> +         The Embedded USB Debugger (EUD) driver is a driver for the
+>>>> +         control peripheral which waits on events like USB attach/detach
+>>>> +         and charger enable/disable. The control peripheral further helps
+>>>> +         support the USB-based debug and trace capabilities.
+>>>> +         This module enables support for Qualcomm Technologies, Inc.
+>>>> +         Embedded USB Debugger (EUD).
+>>>> +         If unsure, say N.
+>>>>    endmenu
+> [..]
+>>>> +static ssize_t enable_store(struct device *dev,
+>>>> +				struct device_attribute *attr,
+>>>> +				const char *buf, size_t count)
+>>>> +{
+>>>> +	struct eud_chip *chip = dev_get_drvdata(dev);
+>>>> +	int enable = 0;
+>>> You shouldn't need to initialize this as you're checking the return
+>>> value of sscanf().
+>> OK
+>>>> +	int ret = 0;
+>>>> +
+>>>> +	if (sscanf(buf, "%du", &enable) != 1)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	if (enable == EUD_ENABLE_CMD)
+>>>> +		ret = enable_eud(chip);
+>>> If ret is !0 you should probably return that, rather than count...
+>> ok
+>>>> +	else if (enable == EUD_DISABLE_CMD)
+>>>> +		disable_eud(chip);
+>>>> +	if (!ret)
+>>> ...and then you don't need this check, or initialize ret to 0 above.
+>> ok
+>>>> +		chip->enable = enable;
+>>> So if I write 42 to "enable" nothing will change in the hardware, but
+>>> chip->enable will be 42...
+>> will change enable struct member to bool?
+> The problem I meant was hat if buf is "42", then you will hit the
+> following code path:
+>
+> int ret = 0;
+> sscanf(buf, "%du", &enable);
+> chip->enable = 42;
+>
+> As enable isn't 1 or 0, neither conditional path is taken, but you still
+> store the value in chip->enable.
+>
+> Changing enable to bool won't change this problem, adding an else and
+> returning -EINVAL; would.
+ok.
+>>>> +	return count;
+>>>> +}
+>>>> +
+>>>> +static DEVICE_ATTR_RW(enable);
+> [..]
+>>>> +static int msm_eud_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct eud_chip *chip;
+>>>> +	struct resource *res;
+>>>> +	int ret;
+>>>> +
+>>>> +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+>>>> +	if (!chip)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	chip->dev = &pdev->dev;
+>>>> +	platform_set_drvdata(pdev, chip);
+>>>> +
+>>>> +	chip->extcon = devm_extcon_dev_allocate(&pdev->dev, eud_extcon_cable);
+>>> Aren't we moving away from extcon in favor of the usb role switching
+>>> thing?
+>> i could see that usb role switch has been implemented for c type connector
+>> and that connector is modeled as child of usb controller, but EUD is not a
+>> true connector, it intercepts PHY signals and reroute it to USB controller
+>> as per EUD Command issued by debug appliaction
+>>
+>> i am not sure if i need to implement EUD DT node as child of usb controller,
+>> if i do so, as per my understanding EUD driver need to set USB controller
+>> mode(host or device mode) by calling usb role switch API's, please let me
+>> know if my understanding is correct?
+>>
+> I don't know how to properly represent this, but I would like the USB
+> guys to chime in before merging something.
 
-changes from RFC v3 -> v4:
-- No changes.
+I will check with USB folks if they can give their opinion.
 
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+based on that will proceed.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 7ee639b..cbe97b8 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -40,6 +40,21 @@ Required properties:
- 	"cal"	- reference clock for RCLK delay calibration (optional)
- 	"sleep"	- sleep clock for RCLK delay calibration (optional)
- 
-+Optional Properties:
-+* Following bus parameters are required for interconnect bandwidth scaling:
-+- interconnects: Pairs of phandles and interconnect provider specifier
-+		 to denote the edge source and destination ports of
-+		 the interconnect path.
-+
-+- interconnect-names: For sdhc, we have two main paths.
-+		1. Data path : sdhc to ddr
-+		2. Config path : cpu to sdhc
-+		For Data interconnect path the name supposed to be
-+		is "sdhc-ddr" and for config interconnect path it is
-+		"cpu-sdhc".
-+		Please refer to Documentation/devicetree/bindings/
-+		interconnect/ for more details.
-+
- Example:
- 
- 	sdhc_1: sdhci@f9824900 {
-@@ -57,6 +72,9 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
- 		clock-names = "core", "iface";
-+		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
-+				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
-+		interconnect-names = "sdhc-ddr","cpu-sdhc";
- 	};
- 
- 	sdhc_2: sdhci@f98a4900 {
+>
+>>>> +	if (IS_ERR(chip->extcon))
+>>>> +		return PTR_ERR(chip->extcon);
+>>>> +
+> [..]
+>>>> +static const struct of_device_id msm_eud_dt_match[] = {
+>>>> +	{.compatible = "qcom,msm-eud"},
+>>> Is this the one and only, past and future, version of the EUD hardware
+>>> block? Or do we need this compatible to be more specific?
+>> EUD h/w  IP is Qualcomm IP, As of now this is only hw IP available, if
+>> future version of EUD IP comes, we can modify and add support then?
+> You can add additional compatibles, but you can't change this one as
+> existing devicetree files must continue to function.
+>
+> If you have a number of platforms that works with this very same
+> implementation then you could make the binding require a specific
+> platform and qcom,msm-eud (although qcom,eud should be enough?) and then
+> keep the implementation as is.
+>
+> I.e. dt would say:
+> 	compatible = "qcom,sc7180-eud", "qcom,eud";
+>
+> And driver would match on the latter only, for now.
+Ok.
+>
+> Regards,
+> Bjorn
+
 -- 
-1.9.1
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
