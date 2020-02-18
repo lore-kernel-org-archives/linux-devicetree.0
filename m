@@ -2,104 +2,144 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B74FC34047
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15A2C34047
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F420D2176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998A024655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056839;
-	bh=Acc7PN7duriLeMEBn/i+Ipfei5C84iWC+Cce28eKV88=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z1Au7QpK4RZStfXHZHxp4BeCtLKafD7PssLK4bv/Ur3ql4HaAJGMfDi1LUzn63Dgx
-	 umIsoJa+K7vK+pasKvd7RH+BRVvLC3vGb65E9UMCZi/w4COSGy5uxjwrOosMe440OV
-	 vo6F0604PboqxfuOm3O2A36uoT9bGveQwb2wJ1+o=
+	s=default; t=1582057162;
+	bh=rsHYLXZfIvowtjqTwKvChU1P5MegFFzjipifaN+35pY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CuqseQcIau1myJ10oL4jp130pa8xOnF4kpsIlbz2dGzhot5vZlYzRqWpe1vtlNyoR
+	 PyzhLMAbyuaZexAsnUN5QhPYuZCG8wt+XlCIUfwJVdR9m0N+tnFrTqiEzVTwQX8XEm
+	 561pSi8nz1WUYzHYHa9Us2y4LgirolnqMpksBXNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgBRUN6 (ORCPT
+        id S1726422AbgBRUTW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:13:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgBRUN6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:13:58 -0500
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BF422176D
-        for <devicetree@vger.kernel.org>; Tue, 18 Feb 2020 20:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056837;
-        bh=Acc7PN7duriLeMEBn/i+Ipfei5C84iWC+Cce28eKV88=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Xa/HojNS7ER7D9LpiPBpcCfF6aZVcYWftXni4e5EASAVVXte1GKF3yeNl/bHrqUyS
-         lCi4weB9ny/H2vgj+IhAebwSlPwCWWj2FOb+Pf5QtjEL6wDjBCaeDdKH4TzelELbBY
-         rvY4Y4fbPtlnpFBnZxwCCkbsGp5LpMIZuh7dPF5w=
-Received: by mail-qk1-f177.google.com with SMTP id p7so20820794qkh.10
-        for <devicetree@vger.kernel.org>; Tue, 18 Feb 2020 12:13:57 -0800 (PST)
-X-Gm-Message-State: APjAAAUf8EJtnt+bjtUak4WTzEU3PIRrHjR7N74XQie5oAmAvQFIJxu/
-        sxurwoUNSaB3YloykmUmxuqAkn+H7SNpmGdPPA==
-X-Google-Smtp-Source: APXvYqybczt9BgmXl0zwE3fcZYEM5u3dyflmTv2R+FtGMnj+y9Zn0gyqJ/tbhIImcIrVhl4UZqXSMboy7eCznWHRWIY=
-X-Received: by 2002:a37:9d47:: with SMTP id g68mr15663876qke.119.1582056836665;
- Tue, 18 Feb 2020 12:13:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20200216181513.28109-1-sam@ravnborg.org> <20200216181513.28109-5-sam@ravnborg.org>
-In-Reply-To: <20200216181513.28109-5-sam@ravnborg.org>
+        Tue, 18 Feb 2020 15:19:22 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39869 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgBRUTW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:19:22 -0500
+Received: by mail-oi1-f193.google.com with SMTP id z2so21445688oih.6;
+        Tue, 18 Feb 2020 12:19:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:content-language
+         :content-id:user-agent;
+        bh=/oH+eSV6HonFGoyf1c7VOyN9K2wepQ+JN8XlQu5VFGQ=;
+        b=oddWER9MgP4CPGtyyZyPDIgiYPM4W+kIZjyTmTbEAgSoWCHBnJV/rBPVFnXFxdtL7F
+         Zppep8/4v3R8iDMYxNI1f/tpPlpcUTwW2TU0QN9VxNNMUSf6FlrNzpy9lTFC4fccdq2P
+         RrjUhX8HMUdUBY/696t2uo3KMgqSi+6f+fdqln0Gu4HZPdYEqTBgOSTlHQoHq23x2qox
+         hZQV1XkrfzsECnyTe6RJupWri/HvudYCksYUNZpvDIuvM8LA7fasXqIc+1uza45G/PoN
+         SST0IrotH+GrMXAG6lx0Nwd6UbfEQF9xEZQTAgaIlELNkATH/hb3dq2vegWomd/C25zL
+         25uQ==
+X-Gm-Message-State: APjAAAWCweYqJ9B6K5/MjVWDR5cevAkG9FnX4lAgw93oHRD1HUJ+L3XQ
+        z4zpsFd97cBph4vgPJpHSw==
+X-Google-Smtp-Source: APXvYqxbC09hZJmpCbOQiakXKMqr3SJqmjEG05VISMsBCbMdawmAIIsQlXS9RVG/WrW/lxEciCX1Cw==
+X-Received: by 2002:aca:d0a:: with SMTP id 10mr2313431oin.50.1582057161228;
+        Tue, 18 Feb 2020 12:19:21 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g8sm1677015otq.19.2020.02.18.12.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 12:19:20 -0800 (PST)
+Received: (nullmailer pid 30683 invoked by uid 1000);
+        Tue, 18 Feb 2020 20:19:19 -0000
+Date:   Tue, 18 Feb 2020 14:19:19 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 18 Feb 2020 14:13:45 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+AbXEiLCYiAvwr5qzbSnuo9G8bTwAM3G9J4cPYz1_FMw@mail.gmail.com>
-Message-ID: <CAL_Jsq+AbXEiLCYiAvwr5qzbSnuo9G8bTwAM3G9J4cPYz1_FMw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] dt-bindings: display: add data-mapping to panel-dpi
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+To:     Eugene Zalkonnikov <ez@norphonic.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "development@norphonic.com" <development@norphonic.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] Device tree bindings for TI HDC20x0 humidity and
+  temperature sensors
+Message-ID: <20200218201919.GA28712@bogus>
+References: <CF7736B3-95D6-43E4-BC69-DDB0DFE2A86A@norphonic.com>
+ <90EF52F7-82A2-4617-95FF-CCF37E3FEAC6@norphonic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <90EF52F7-82A2-4617-95FF-CCF37E3FEAC6@norphonic.com>
+Content-Language: en-US
+Content-ID: <3CCF2D6C85D1FC408616909C9D0D1D39@eurprd06.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 12:15 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Add data-mapping property that can be used to specify
-> the media format used for the connection betwwen the
-> display controller (connector) and the panel.
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-
-Missing blank line.
-
-> ---
->  .../devicetree/bindings/display/panel/panel-dpi.yaml | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> index 40079fc24a63..6a03d2449701 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-> @@ -21,6 +21,16 @@ properties:
->        - {}
->        - const: panel-dpi
->
-> +  data-mapping:
+On Thu, 13 Feb 2020 22:18:13 +0000, Eugene Zalkonnikov wrote:
+> 
+> Amended device tree bindings for the driver.
+> 
+> Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
+> 
+> diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml
+> --- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	1970-01-01 01:00:00.000000000 +0100
+> +++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	2020-02-12 14:28:42.562903814 +0100
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HDC2010/HDC2080 humidity and temperature iio sensors
+> +
+> +maintainers:
+> +  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
+> +
+> +description: |
+> +  Relative humidity and tempereature sensors on I2C bus
+> +
+> +  Datasheets are available at:
+> +    http://www.ti.com/product/HDC2010/datasheet
+> +    http://www.ti.com/product/HDC2080/datasheet
+> +
+> +properties:
+> +  compatible:
 > +    enum:
-> +      - rgb24
-> +      - rgb565
-> +      - bgr666
-> +      - lvds666
+> +      - ti,hdc2010
+> +      - ti,hdc2080
+> +
+> +  vddd-supply:
+> +    description:
+> +      digital voltage regulator (see regulator/regulator.txt)
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      hdc200x@40 {
+> +          compatible = "ti,hdc2010";
+> +          reg = <0x40>;
+> +      };
+> +    };
+> 
 
-Doesn't lvds666 come from i.MX IPU which as I remember has built-in
-LVDS block? I'd think this format would be implicit when using the
-LVDS block and panel. It doesn't seem this is actually used anywhere
-either.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Rob
+Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml: $id: path/filename 'iio/humidity/hdc2010.yaml' doesn't match actual filename
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1237780
+Please check and re-submit.
