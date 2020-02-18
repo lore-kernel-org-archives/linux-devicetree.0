@@ -2,125 +2,104 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEF1C34031
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 22:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878B7C3404C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 22:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C895A207FD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 22:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681F2207FD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 22:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgBRWLg (ORCPT
+        id S1726461AbgBRWQq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:11:36 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33895 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgBRWLg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 17:11:36 -0500
-Received: by mail-qk1-f194.google.com with SMTP id c20so21184081qkm.1;
-        Tue, 18 Feb 2020 14:11:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SexCyhtG++Ew70oYHNDjxWHTtm2YNgcLBPVDPrQlosM=;
-        b=M6WgOTSsB2eroVtH/gNW4Np4t84zmB52a5fVaCOmSnLGmkgoqlQUQmPn/mJnfXB7v+
-         EPwEJHZBvPqa6i9u9VpItKK06JobPftiaVM4Kdrvrlup7tV2iJy78hen7Msb6c295mNc
-         Skok3pKk1n8R3mUPYXW2L3NpmyfHoUgB2qN1gwhR7t2sSHnVxyC6GO+ofGYAKss/SXWh
-         gUuKke+mMbfYYDIrxBI7ACN+cKWBVgsSo2eyhZzFsOurffhRw5VhW00p3vlZS4je2BZU
-         kH80heuV3N5tobDmudFrcIieMj2d4BnWj2TpwEAU4aiW8JdEk2Qxttx2oGtY0CA1ydDu
-         YOYQ==
-X-Gm-Message-State: APjAAAXJIHeyechw2FWNLWCoRlLt2yc1DKUT+OoFtRJXU9t4G77KWP1L
-        AWL8cmnjer1zx/UzeHQy8Bw=
-X-Google-Smtp-Source: APXvYqxAuVhE9JWncGZiB96oj6NDqmFr+ATZc2mDIOV3mzx6dygSFAZoH1yla2lHQqbOeZ0xxJtJAQ==
-X-Received: by 2002:a37:6197:: with SMTP id v145mr20336585qkb.443.1582063895017;
-        Tue, 18 Feb 2020 14:11:35 -0800 (PST)
-Received: from localhost.localdomain (189-18-27-64.dsl.telesp.net.br. [189.18.27.64])
-        by smtp.googlemail.com with ESMTPSA id 85sm5415qko.49.2020.02.18.14.11.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 14:11:34 -0800 (PST)
-From:   Carlos de Paula <me@carlosedp.com>
-Cc:     papadakospan@gmail.com, jose.abreu@synopsys.com,
-        Carlos de Paula <me@carlosedp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: Add txpbl node for RK3399/RK3328
-Date:   Tue, 18 Feb 2020 17:10:37 -0500
-Message-Id: <20200218221040.10955-1-me@carlosedp.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 18 Feb 2020 17:16:46 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:44958 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgBRWQp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 17:16:45 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D4B7680535;
+        Tue, 18 Feb 2020 23:16:39 +0100 (CET)
+Date:   Tue, 18 Feb 2020 23:16:38 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 4/5] dt-bindings: display: add data-mapping to
+ panel-dpi
+Message-ID: <20200218221638.GA27927@ravnborg.org>
+References: <20200216181513.28109-1-sam@ravnborg.org>
+ <20200216181513.28109-5-sam@ravnborg.org>
+ <CAL_Jsq+AbXEiLCYiAvwr5qzbSnuo9G8bTwAM3G9J4cPYz1_FMw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+AbXEiLCYiAvwr5qzbSnuo9G8bTwAM3G9J4cPYz1_FMw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=VQIv7C4PpHhCiZb-sUYA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some rockchip SoCs like the RK3399 and RK3328 exhibit an issue
-where tx checksumming does not work with packets larger than 1498.
+On Tue, Feb 18, 2020 at 02:13:45PM -0600, Rob Herring wrote:
+> On Sun, Feb 16, 2020 at 12:15 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Add data-mapping property that can be used to specify
+> > the media format used for the connection betwwen the
+> > display controller (connector) and the panel.
+> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> 
+> Missing blank line.
+> 
+> > ---
+> >  .../devicetree/bindings/display/panel/panel-dpi.yaml | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
+> > index 40079fc24a63..6a03d2449701 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
+> > @@ -21,6 +21,16 @@ properties:
+> >        - {}
+> >        - const: panel-dpi
+> >
+> > +  data-mapping:
+> > +    enum:
+> > +      - rgb24
+> > +      - rgb565
+> > +      - bgr666
+> > +      - lvds666
+> 
+> Doesn't lvds666 come from i.MX IPU which as I remember has built-in
+> LVDS block? I'd think this format would be implicit when using the
+> LVDS block and panel. It doesn't seem this is actually used anywhere
+> either.
+I must admit that I just copied this list from Oleksandrs original
+patch. The MEDIA type it identifies(MEDIA_BUS_FMT_RGB666_1X24_CPADHI) looks special.
+I will drop lvds666 while applying, unless I get other feedback.
+(Note: travelling, earliest in the weekend)
 
-The default Programmable Buffer Length for TX in these GMAC's is
-not suitable for MTUs higher than 1498. The workaround is to disable
-TX offloading with 'ethtool -K eth0 tx off rx off' causing performance
-impacts as it disables hardware checksumming.
+Btw. anyway I can add data-mapping to panel-common - and then list the
+allowed enum values in each binding?
 
-This patch sets snps,txpbl to 0x4 which is a safe number tested ok for
-the most popular MTU value of 1500.
+I would love to have a central definition of data-mapping, and then let
+the users only allow the relevant subset so we catch errors in DT files
+early.
 
-For reference, see https://lkml.org/lkml/2019/4/1/1382.
-
-Signed-off-by: Carlos de Paula <me@carlosedp.com>
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 ++
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
- 2 files changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 1f53ead52c7f..b7f1de4b7fd0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -906,6 +906,7 @@
- 		resets = <&cru SRST_GMAC2IO_A>;
- 		reset-names = "stmmaceth";
- 		rockchip,grf = <&grf>;
-+		snps,txpbl = <0x4>;
- 		status = "disabled";
- 	};
- 
-@@ -913,6 +914,7 @@
- 		compatible = "rockchip,rk3328-gmac";
- 		reg = <0x0 0xff550000 0x0 0x10000>;
- 		rockchip,grf = <&grf>;
-+		snps,txpbl = <0x4>;
- 		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "macirq";
- 		clocks = <&cru SCLK_MAC2PHY_SRC>, <&cru SCLK_MAC2PHY_RXTX>,
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 33cc21fcf4c1..cd5415d7e559 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -288,6 +288,7 @@
- 		resets = <&cru SRST_A_GMAC>;
- 		reset-names = "stmmaceth";
- 		rockchip,grf = <&grf>;
-+		snps,txpbl = <0x4>;
- 		status = "disabled";
- 	};
- 
--- 
-2.20.1
-
+	Sam
