@@ -2,90 +2,89 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023C2C34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 16:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC34C34048
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 16:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC3B22B48
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 16:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F8724654
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 16:47:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGEgFZUo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEJMPd6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgBRQpy (ORCPT
+        id S1726422AbgBRQrc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:45:54 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41918 "EHLO
+        Tue, 18 Feb 2020 11:47:32 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38217 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgBRQpx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 11:45:53 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so24802885wrw.8;
-        Tue, 18 Feb 2020 08:45:51 -0800 (PST)
+        with ESMTP id S1726411AbgBRQrc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 11:47:32 -0500
+Received: by mail-wr1-f65.google.com with SMTP id e8so2291270wrm.5;
+        Tue, 18 Feb 2020 08:47:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tqM69f0khZgqGzKlv1hT8DZQ288UnU/MUxoUUSqbgDQ=;
-        b=XGEgFZUo4q8mdEvZuy+Xo/9P4vTJZwOZOep8hMcW5nKTL83Sg8OljpG3aSvVCSpNYd
-         kn/ZHgvRwVjoO+pKb0r5YdNSI/QtJ3oNWJY24NGF6dDWmhMx9Mu2kGg6F/8QOnMtqRw8
-         WD6Zm19pS3vpoql4QQp7RyLBIZ+LIrV1/fZdFvFO2aaYLzIAIUlutDwhBMvpUxSx8BT1
-         bkR6JlI0hzww34Xbnew6rb/GOgB7LZ3JO37u4hGYUH2PZ5ja8KPjkCdUuGPjoFLskFc3
-         tiIzUlcWdRLdDGe3OzUIXM45hv2Gt5APqEnWdBL5kmVw2VjS8btQC9vzAJfpocvc/jxu
-         FdMA==
+        bh=Sx6YwKFl3YqMD/hTP7T5HXGA6OKQSM6aKHU3VOHFlv8=;
+        b=SEJMPd6c0R1BW2qbvcDyZkrZ3GTvH/RI5cLc1nF80cpGVRzDCMc/WrGlUHIr7OkGe1
+         hy4+Kfp5OvfB62e8Q9nCD2AhdAO1GpLOIDJFyxjqYrXBcHS2lhE+pZTmkQgSalmRPmej
+         bpwekFJYgff9tswGHXOvO8owLkokfTGWNCwZ78id52UoPUmgiZvEFJhAaqbKjortt37G
+         XJLe/2Hxx14miqBKeUoOzlxUEJzz2Ta7CJRD8i/DNP8elQWCiz3ND4wsBdpASdfIRfoy
+         Pnu3c3YdN5nCmmL2BUsfw+efJMYcEKJQ7ZRUCXghRI8ddfmX2tF6FPMjsh1NsmQcac6g
+         cgyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=tqM69f0khZgqGzKlv1hT8DZQ288UnU/MUxoUUSqbgDQ=;
-        b=KNpI4n9GJYBurnAeMGsWVEE9OUfDMvQ8tWUy8oQUWA+n2AFjusSsrFO/R6EO9G/cK/
-         SOqzXUpXV4wr2s2KcujQUTe+6xJLxbGeVbImC6L5YY7+J0cLhUbcZHuQqulZ76PgrkFa
-         iBiW9BAbHxCCFivwupQG9nFGDrc+Sp4OgqhJfY2kEYc02Ex+0FIV/IClhznaHf4Mx9aT
-         3VLuEDx4BP+quKi1L4lnRSvvsXvb4IMDvU4TFvOEFkWS0rFkra+zLmKbraz8OAtY8mHu
-         gA928+BGlVacIfnN9omLaesvUe6CyCs7ViO2hA2gg+Hp56DoOfvjSNSHGUn2mQwnv7Cu
-         JjBw==
-X-Gm-Message-State: APjAAAUPg3lJ39fmOavy2N2oELOMNx0k3gPQTwppoytXRpOq4qDdcFxl
-        Xxdbl+/+Jj/yLm2lQ/mzigA=
-X-Google-Smtp-Source: APXvYqxyg786Trxxu+Jq2TvaeeJPnuolOB24jLJhQrbRlRr2EUoaH9s1p4A5fDuINqKJEyNsK2PuYw==
-X-Received: by 2002:adf:82c7:: with SMTP id 65mr3066094wrc.374.1582044350862;
-        Tue, 18 Feb 2020 08:45:50 -0800 (PST)
+        bh=Sx6YwKFl3YqMD/hTP7T5HXGA6OKQSM6aKHU3VOHFlv8=;
+        b=axlPHc17jkgL2YHfRLSrjPKQEAfP+PwD95pgp3qdqXLeNCaPe2dw2+qeszJn6JXAUw
+         mq09VARyUDuKHDus+q1LZSY+8g+I4h3q8xVU9uGUUrruGwIUvBEHwCBvxrzlE3Xq2Bob
+         dyiB1jDERk46Ds+C6jqU/vArizkM+pVDJVMSuu4HAi8TJWwqS94GGvAG7Ba7r5Y1Jlwd
+         KZZKYbj1WQ3vbAm5TNydJLGhRyMUmpp3XPD/kprnY8wHixBTcejkJjb0YGgmKJorClA7
+         +Qv1XZT0+0bPbqWBvyda3KiZNtYa0bYNWTHGaWdFeK21PZQXhIBlh7x8qhcwGeO4y6Or
+         o29g==
+X-Gm-Message-State: APjAAAXCSMbNwwP8krunj9jYHdTiljwm+GTp7QeB4x1bNi5v2V2ksrPG
+        F63HGSAv1Ow+eQ0G99XWyz8=
+X-Google-Smtp-Source: APXvYqz897D/S/PVtRiJibdBa66nCSrINFYPqGU63Kaqj8Cko1oCSOhuU3xOlEgNweGJrw0yeL+nPg==
+X-Received: by 2002:a5d:614a:: with SMTP id y10mr31309955wrt.73.1582044448645;
+        Tue, 18 Feb 2020 08:47:28 -0800 (PST)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id w13sm6825034wru.38.2020.02.18.08.45.44
+        by smtp.gmail.com with ESMTPSA id y7sm3534061wmd.1.2020.02.18.08.47.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 08:45:50 -0800 (PST)
-Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
+        Tue, 18 Feb 2020 08:47:27 -0800 (PST)
+Subject: Re: [PATCH v7 1/7] dt-bindings: clock: mediatek: document clk
+ bindings for Mediatek MT6765 SoC
 To:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
         Evan Green <evgreen@chromium.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
         Shawn Guo <shawnguo@kernel.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        mtk01761 <wendell.lin@mediatek.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Ryder Lee <Ryder.Lee@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org
+Cc:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
         CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>
+        Loda Chou <loda.chou@mediatek.com>
 References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com>
- <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com>
- <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com>
- <1581999138.19053.21.camel@mtkswgap22>
+ <1581067250-12744-2-git-send-email-macpaul.lin@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -161,12 +160,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
-Date:   Tue, 18 Feb 2020 17:45:42 +0100
+Message-ID: <d606aeb2-5327-ff13-0043-e70ef37522f5@gmail.com>
+Date:   Tue, 18 Feb 2020 17:47:25 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1581999138.19053.21.camel@mtkswgap22>
+In-Reply-To: <1581067250-12744-2-git-send-email-macpaul.lin@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -177,39 +176,199 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 18/02/2020 05:12, Macpaul Lin wrote:
-> On Sat, 2020-02-15 at 02:47 +0100, Matthias Brugger wrote:
+On 07/02/2020 10:20, Macpaul Lin wrote:
+> From: Mars Cheng <mars.cheng@mediatek.com>
 > 
-> Hi Stephen,
+> This patch adds the binding documentation for apmixedsys, audsys, camsys,
+> imgsys, infracfg, mipi0a, topckgen, vcodecsys
 > 
->> Hi Stephen,
->>
->> On 13/02/2020 00:44, Stephen Boyd wrote:
->>> Quoting Macpaul Lin (2020-02-07 01:20:43)
->>>> This patch adds basic SoC support for Mediatek's new 8-core SoC,
->>>> MT6765, which is mainly for smartphone application.
->>>
->>> Clock patches look OK to me. Can you resend them without the defconfig
->>> and dts patches and address Matthias' question?
->>>
->>
->> I'm not sure if I understand you. Do you prefer to have just the clock parts
->> send as an independent version so that you can easier apply the patches to your
->> tree?
->>
->> Patch 2, 5, 6 and 7 should go through my tree.
->> So do you want a series with patches 1, 3 and 4?
->>
->> Regards,
->> Matthias
-> 
-> Yup, I've got a little bit confused, too.
-> Should I separate and resend these patches into 2 patch sets?
-> The 1st patch set includes #1, #3, and #4?
-> And the other includes #2, #5, #6, and #7?
-> 
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> ---
+>  .../arm/mediatek/mediatek,apmixedsys.txt      |  1 +
+>  .../bindings/arm/mediatek/mediatek,audsys.txt |  1 +
+>  .../bindings/arm/mediatek/mediatek,camsys.txt |  1 +
+>  .../bindings/arm/mediatek/mediatek,imgsys.txt |  1 +
+>  .../arm/mediatek/mediatek,infracfg.txt        |  1 +
+>  .../bindings/arm/mediatek/mediatek,mipi0a.txt | 28 +++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,mmsys.txt  |  1 +
+>  .../arm/mediatek/mediatek,pericfg.txt         |  1 +
+>  .../arm/mediatek/mediatek,topckgen.txt        |  1 +
+>  .../arm/mediatek/mediatek,vcodecsys.txt       | 27 ++++++++++++++++++
 
-Yes please do so. I think that's what Stephen referred to.
+I think it's OK to put all the bindings, that only add one compatible in onw
+patch. But I think mipi0a and vcodesys should each go into a separate patch, as
+we will need a Ack by Rob for that.
 
 Regards,
 Matthias
+
+>  10 files changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vcodecsys.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> index ff000ccade78..bd7a0fa5801b 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> @@ -8,6 +8,7 @@ Required Properties:
+>  - compatible: Should be one of:
+>  	- "mediatek,mt2701-apmixedsys"
+>  	- "mediatek,mt2712-apmixedsys", "syscon"
+> +	- "mediatek,mt6765-apmixedsys", "syscon"
+>  	- "mediatek,mt6779-apmixedsys", "syscon"
+>  	- "mediatek,mt6797-apmixedsys"
+>  	- "mediatek,mt7622-apmixedsys"
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> index e4ca7b703123..38309db115f5 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> @@ -7,6 +7,7 @@ Required Properties:
+>  
+>  - compatible: Should be one of:
+>  	- "mediatek,mt2701-audsys", "syscon"
+> +	- "mediatek,mt6765-audsys", "syscon"
+>  	- "mediatek,mt6779-audio", "syscon"
+>  	- "mediatek,mt7622-audsys", "syscon"
+>  	- "mediatek,mt7623-audsys", "mediatek,mt2701-audsys", "syscon"
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,camsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,camsys.txt
+> index 1f4aaa15a37e..a0ce82085ad0 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,camsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,camsys.txt
+> @@ -6,6 +6,7 @@ The MediaTek camsys controller provides various clocks to the system.
+>  Required Properties:
+>  
+>  - compatible: Should be one of:
+> +	- "mediatek,mt6765-camsys", "syscon"
+>  	- "mediatek,mt6779-camsys", "syscon"
+>  	- "mediatek,mt8183-camsys", "syscon"
+>  - #clock-cells: Must be 1
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+> index 2b693e343c56..1e1f00718a7d 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+> @@ -8,6 +8,7 @@ Required Properties:
+>  - compatible: Should be one of:
+>  	- "mediatek,mt2701-imgsys", "syscon"
+>  	- "mediatek,mt2712-imgsys", "syscon"
+> +	- "mediatek,mt6765-imgsys", "syscon"
+>  	- "mediatek,mt6779-imgsys", "syscon"
+>  	- "mediatek,mt6797-imgsys", "syscon"
+>  	- "mediatek,mt7623-imgsys", "mediatek,mt2701-imgsys", "syscon"
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+> index db2f4fd754e7..49a968be1a80 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+> @@ -9,6 +9,7 @@ Required Properties:
+>  - compatible: Should be one of:
+>  	- "mediatek,mt2701-infracfg", "syscon"
+>  	- "mediatek,mt2712-infracfg", "syscon"
+> +	- "mediatek,mt6765-infracfg", "syscon"
+>  	- "mediatek,mt6779-infracfg_ao", "syscon"
+>  	- "mediatek,mt6797-infracfg", "syscon"
+>  	- "mediatek,mt7622-infracfg", "syscon"
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
+> new file mode 100644
+> index 000000000000..8be5978f388d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
+> @@ -0,0 +1,28 @@
+> +Mediatek mipi0a (mipi_rx_ana_csi0a) controller
+> +============================
+> +
+> +The Mediatek mipi0a controller provides various clocks
+> +to the system.
+> +
+> +Required Properties:
+> +
+> +- compatible: Should be one of:
+> +	- "mediatek,mt6765-mipi0a", "syscon"
+> +- #clock-cells: Must be 1
+> +
+> +The mipi0a controller uses the common clk binding from
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> +
+> +The mipi0a controller also uses the common power domain from
+> +Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> +The available power doamins are defined in dt-bindings/power/mt*-power.h.
+> +
+> +Example:
+> +
+> +mipi0a: clock-controller@11c10000 {
+> +	compatible = "mediatek,mt6765-mipi0a", "syscon";
+> +	reg = <0 0x11c10000 0 0x1000>;
+> +	power-domains = <&scpsys MT6765_POWER_DOMAIN_CAM>;
+> +	#clock-cells = <1>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+> index 301eefbe1618..4a712509bec2 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+> @@ -8,6 +8,7 @@ Required Properties:
+>  - compatible: Should be one of:
+>  	- "mediatek,mt2701-mmsys", "syscon"
+>  	- "mediatek,mt2712-mmsys", "syscon"
+> +	- "mediatek,mt6765-mmsys", "syscon"
+>  	- "mediatek,mt6779-mmsys", "syscon"
+>  	- "mediatek,mt6797-mmsys", "syscon"
+>  	- "mediatek,mt7623-mmsys", "mediatek,mt2701-mmsys", "syscon"
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+> index ecf027a9003a..dcbd414c7fd7 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+> @@ -9,6 +9,7 @@ Required Properties:
+>  - compatible: Should be one of:
+>  	- "mediatek,mt2701-pericfg", "syscon"
+>  	- "mediatek,mt2712-pericfg", "syscon"
+> +	- "mediatek,mt6765-pericfg", "syscon"
+>  	- "mediatek,mt7622-pericfg", "syscon"
+>  	- "mediatek,mt7623-pericfg", "mediatek,mt2701-pericfg", "syscon"
+>  	- "mediatek,mt7629-pericfg", "syscon"
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+> index 0293d693ce0c..9b0394cbbdc9 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+> @@ -8,6 +8,7 @@ Required Properties:
+>  - compatible: Should be one of:
+>  	- "mediatek,mt2701-topckgen"
+>  	- "mediatek,mt2712-topckgen", "syscon"
+> +	- "mediatek,mt6765-topckgen", "syscon"
+>  	- "mediatek,mt6779-topckgen", "syscon"
+>  	- "mediatek,mt6797-topckgen"
+>  	- "mediatek,mt7622-topckgen"
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vcodecsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vcodecsys.txt
+> new file mode 100644
+> index 000000000000..c877bcc1a5c5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vcodecsys.txt
+> @@ -0,0 +1,27 @@
+> +Mediatek vcodecsys controller
+> +============================
+> +
+> +The Mediatek vcodecsys controller provides various clocks to the system.
+> +
+> +Required Properties:
+> +
+> +- compatible: Should be one of:
+> +	- "mediatek,mt6765-vcodecsys", "syscon"
+> +- #clock-cells: Must be 1
+> +
+> +The vcodecsys controller uses the common clk binding from
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> +
+> +The vcodecsys controller also uses the common power domain from
+> +Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> +The available power doamins are defined in dt-bindings/power/mt*-power.h.
+> +
+> +Example:
+> +
+> +venc_gcon: clock-controller@17000000 {
+> +	compatible = "mediatek,mt6765-vcodecsys", "syscon";
+> +	reg = <0 0x17000000 0 0x10000>;
+> +	power-domains = <&scpsys MT6765_POWER_DOMAIN_VCODEC>;
+> +	#clock-cells = <1>;
+> +};
+> 
