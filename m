@@ -2,61 +2,53 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC51EC34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 17:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E1AC34048
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 17:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC50208C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 17:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043802176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 17:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582046106;
-	bh=LePWQPdw0yLe3gcSpPm0E4sHYbV16oulKoL2D/G26dk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9ZFB9pUakT29GMd+dZiFJAdvr0mDAMN3kiN7DHBUAiHtjRpt74rrG0UAUblfuFnm
-	 oBHCUc1Xj1qhbcI/WfaNregp5rPFGR827d9CjKCnek4CvoGDuNUPYla85UKSYw7JRd
-	 DZnDwO7iVX+7RqU0mx/AZg7nEYAAesEQRnKXzvkY=
+	s=default; t=1582046418;
+	bh=1/QcFFVdy6vaYY3yC/qBVxENZ9VWu8BQUFNLPDxdkwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TNzv3E/+HWSCJzu0Iq1M91cadVICHVagxTkj2ewY9anO2KqcXo+PFjrqrqnEoQoCa
+	 qDBRxQ/EKhtweGJLdIK1du82w5O0sa9XRaJYOzYwBeIbSjRVGxsrkpC2PKr2mHDJ+C
+	 mu+4QPuY3+XzrKRinvXSsGKqZWGFlRVOFBzBVMGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgBRRN0 (ORCPT
+        id S1726539AbgBRRUK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:13:26 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45975 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgBRRN0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 12:13:26 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so20239284otp.12;
-        Tue, 18 Feb 2020 09:13:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4LxZR/H/qWaW6PLZe7czUDlSa5Ov9S/K1kfsaVdcFug=;
-        b=Y+eIkOh/8pk4ibBhldw3l0arntaaYotKXwiF29K9P325mXl//DMJJ5zkNVaug/4nYL
-         QxyS2BT+5uhwcpZtmXSQu1FoKhp0nGrIregfSKKiL08DsKekbeVrf7y2hwFGGm+4DrYo
-         RHHY3XwWgBgA7d+t4bgLWfob/LcH7cJqxt6wR4zwByA4gPE13GNyqyRfOTZ8WrimDQqH
-         NYgxtWncTVZP+7d/AE6vBllHbSITaEnfafPlsLurijhLCx0/L59iEL8CPkFQ3GA+2E9c
-         NyzHyiIEWshdjhFRa2oJhP3OPTD42OkWPS2qTSwTfqs5WKXla0V8vUr27tdnwNMs54Yx
-         nGYw==
-X-Gm-Message-State: APjAAAXtoWxEyliSONOWPlZayTiwMT1c2rBDm8UveOkJaugQbWyFOT0R
-        ei2xdoRadJxzUeyHpFYHMA==
-X-Google-Smtp-Source: APXvYqzcQiA7Kz1hw5DSMbv4x/r+JIz0TrIbtjHbvB5jqm2ONigiZ49RPglyPaLbn09y6q4zITnNIw==
-X-Received: by 2002:a05:6830:1f0c:: with SMTP id u12mr16226750otg.253.1582046005180;
-        Tue, 18 Feb 2020 09:13:25 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 09:13:24 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tue, 18 Feb 2020 12:20:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgBRRUK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:20:10 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA1D20801;
+        Tue, 18 Feb 2020 17:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582046409;
+        bh=1/QcFFVdy6vaYY3yC/qBVxENZ9VWu8BQUFNLPDxdkwc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FUdza3Rmbg/mS79PNLWd5ZIzn/9300o9tKNwbcJP/mcDcJzUXNmpPjr3jh0X1zJQY
+         2DeI3v9A8QBOH7SD92VtvtrHYPjrF3geQHcK40Qmlnhfnh4LVkrgJXeC+f0XbtauyE
+         Egn9ZDEQtvitjwxDPEpQNg8nsuu31Fls/i5PJ22g=
+Date:   Tue, 18 Feb 2020 17:20:00 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
         Robert Richter <rrichter@marvell.com>,
         Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
         Matthias Brugger <mbrugger@suse.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Borislav Petkov <bp@alien8.de>,
         Cornelia Huck <cohuck@redhat.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -73,143 +65,43 @@ Cc:     Alex Williamson <alex.williamson@redhat.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: [RFC PATCH 01/11] vfio: Remove Calxeda XGMAC reset driver
-Date:   Tue, 18 Feb 2020 11:13:11 -0600
-Message-Id: <20200218171321.30990-2-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200218171321.30990-1-robh@kernel.org>
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC PATCH 06/11] iommu: arm-smmu: Remove Calxeda secure mode
+ quirk
+Message-ID: <20200218172000.GF1133@willie-the-truck>
 References: <20200218171321.30990-1-robh@kernel.org>
+ <20200218171321.30990-7-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218171321.30990-7-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Cc: Eric Auger <eric.auger@redhat.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: kvm@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Do not apply yet.
+On Tue, Feb 18, 2020 at 11:13:16AM -0600, Rob Herring wrote:
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: iommu@lists.linux-foundation.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Do not apply yet.
 
- drivers/vfio/platform/reset/Kconfig           |  8 --
- drivers/vfio/platform/reset/Makefile          |  2 -
- .../reset/vfio_platform_calxedaxgmac.c        | 74 -------------------
- 3 files changed, 84 deletions(-)
- delete mode 100644 drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+Pleeeeease? ;)
 
-diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
-index 1edbe9ee7356..3668d1d92909 100644
---- a/drivers/vfio/platform/reset/Kconfig
-+++ b/drivers/vfio/platform/reset/Kconfig
-@@ -1,12 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--config VFIO_PLATFORM_CALXEDAXGMAC_RESET
--	tristate "VFIO support for calxeda xgmac reset"
--	depends on VFIO_PLATFORM
--	help
--	  Enables the VFIO platform driver to handle reset for Calxeda xgmac
--
--	  If you don't know what to do here, say N.
--
- config VFIO_PLATFORM_AMDXGBE_RESET
- 	tristate "VFIO support for AMD XGBE reset"
- 	depends on VFIO_PLATFORM
-diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
-index 7294c5ea122e..be7960ce5dbc 100644
---- a/drivers/vfio/platform/reset/Makefile
-+++ b/drivers/vfio/platform/reset/Makefile
-@@ -1,7 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
- vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
+>  drivers/iommu/arm-smmu-impl.c | 43 -----------------------------------
+>  1 file changed, 43 deletions(-)
 
--obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
- obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
- obj-$(CONFIG_VFIO_PLATFORM_BCMFLEXRM_RESET) += vfio_platform_bcmflexrm.o
-diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
-deleted file mode 100644
-index 09a9453b75c5..000000000000
---- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
-+++ /dev/null
-@@ -1,74 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * VFIO platform driver specialized for Calxeda xgmac reset
-- * reset code is inherited from calxeda xgmac native driver
-- *
-- * Copyright 2010-2011 Calxeda, Inc.
-- * Copyright (c) 2015 Linaro Ltd.
-- *              www.linaro.org
-- */
--
--#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/init.h>
--#include <linux/io.h>
--
--#include "../vfio_platform_private.h"
--
--#define DRIVER_VERSION  "0.1"
--#define DRIVER_AUTHOR   "Eric Auger <eric.auger@linaro.org>"
--#define DRIVER_DESC     "Reset support for Calxeda xgmac vfio platform device"
--
--/* XGMAC Register definitions */
--#define XGMAC_CONTROL           0x00000000      /* MAC Configuration */
--
--/* DMA Control and Status Registers */
--#define XGMAC_DMA_CONTROL       0x00000f18      /* Ctrl (Operational Mode) */
--#define XGMAC_DMA_INTR_ENA      0x00000f1c      /* Interrupt Enable */
--
--/* DMA Control registe defines */
--#define DMA_CONTROL_ST          0x00002000      /* Start/Stop Transmission */
--#define DMA_CONTROL_SR          0x00000002      /* Start/Stop Receive */
--
--/* Common MAC defines */
--#define MAC_ENABLE_TX           0x00000008      /* Transmitter Enable */
--#define MAC_ENABLE_RX           0x00000004      /* Receiver Enable */
--
--static inline void xgmac_mac_disable(void __iomem *ioaddr)
--{
--	u32 value = readl(ioaddr + XGMAC_DMA_CONTROL);
--
--	value &= ~(DMA_CONTROL_ST | DMA_CONTROL_SR);
--	writel(value, ioaddr + XGMAC_DMA_CONTROL);
--
--	value = readl(ioaddr + XGMAC_CONTROL);
--	value &= ~(MAC_ENABLE_TX | MAC_ENABLE_RX);
--	writel(value, ioaddr + XGMAC_CONTROL);
--}
--
--static int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
--{
--	struct vfio_platform_region *reg = &vdev->regions[0];
--
--	if (!reg->ioaddr) {
--		reg->ioaddr =
--			ioremap(reg->addr, reg->size);
--		if (!reg->ioaddr)
--			return -ENOMEM;
--	}
--
--	/* disable IRQ */
--	writel(0, reg->ioaddr + XGMAC_DMA_INTR_ENA);
--
--	/* Disable the MAC core */
--	xgmac_mac_disable(reg->ioaddr);
--
--	return 0;
--}
--
--module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
--
--MODULE_VERSION(DRIVER_VERSION);
--MODULE_LICENSE("GPL v2");
--MODULE_AUTHOR(DRIVER_AUTHOR);
--MODULE_DESCRIPTION(DRIVER_DESC);
---
-2.20.1
+Yes, I'm happy to get rid of this. Sadly, I don't think we can remove
+anything from 'struct arm_smmu_impl' because most implementations fall
+just short of perfect.
+
+Anyway, let me know when I can push the button and I'll queue this in
+the arm-smmu tree.
+
+Cheers,
+
+Will
