@@ -7,79 +7,93 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435DEC34031
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4010CC3404B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0ED2070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1926E24125
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582059850;
-	bh=698x42I2ufxl1x0O0W+a0wkRef0Ya1kV09YQY08Hf8M=;
+	s=default; t=1582059949;
+	bh=pXRGp6Z5lMsZ/0lr66clxg0dlS14Nc8pwOBlEOaxAT0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q3124F7cVBCnwoWtOw5mQ/5Bp2qLQuBr4y97oXF9APFGnI4ibWcW2B9p9ya1MGPJl
-	 SDh8TchjwylNBf62E3esWLL8mgVYNYnlAKARHihUFl/+8Cq/et20ztGOjVKxxPcVui
-	 nexPu7eTH+KFcvLmQTDjV+r42YVXbdPNMQB2muC4=
+	b=uTXDvDixqpq1eLVAFaG66OT+Z59f3EO2CXPM4aaukFM6KzCNKrK7wQuXQsBRXRK43
+	 bTUj2l9pjOuURTZOcZJO3d35+1P6t52bt4WvSktDnniWs/cVfIemrIYaDa+3WZveyn
+	 dQr3NYepK6QwzaeJ45EAy7XRqXqRJQ1onf+WPS9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgBRVEJ (ORCPT
+        id S1726757AbgBRVFp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:04:09 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33931 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgBRVEJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:04:09 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l136so21605270oig.1;
-        Tue, 18 Feb 2020 13:04:08 -0800 (PST)
+        Tue, 18 Feb 2020 16:05:45 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39750 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgBRVFp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:05:45 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so20950785oty.6;
+        Tue, 18 Feb 2020 13:05:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UwjjYnG/jWqlCLFoFu94p360e88borBKuEW+C88Dv3s=;
-        b=US1cE3z0CNzcgktY/liULmQaqp1u5yoiWyvqyUGT9OQHZv06+NkaF7O+LhhJhQW9L7
-         EjdCBPuyH86nduRbVou9wUIoVOVfFIwVYfHKlaLWqkGlLl2YH+F7vIghSTZQ3e1mSD3Z
-         uia9OgOab93T1KB41VtcI9ybqYTlZiXLVkwhtti+iMnhEaajo+uBxHC6/OD0Ymn13UB8
-         d+un4nZJoEJOuhrxPdUHiP6oWtwBfbXBV5TYelkB7qx0mEU1P6mGs/XpMMqwjbwt1+lN
-         4Teu6XFF/gF0tfhMQhvi9IRRl3lwoq/qPF9VJuGw+sY8iCxTLSFt0iNopuwSjYK05imN
-         6iyQ==
-X-Gm-Message-State: APjAAAWLUD7Mg88rHQvR7qLmWdV37Wv4GkppW8dRMD+Vwog6gIpvPCwI
-        hVphXXRYYEWe4bONoc0zVw==
-X-Google-Smtp-Source: APXvYqwHJDNZjVGmm+GSa20E6MAlz3y9ic6qbHKnImkXJJw2j5CVcKD+jcgP7v4fZRSddspoiFrHBw==
-X-Received: by 2002:aca:b808:: with SMTP id i8mr2457073oif.66.1582059847979;
-        Tue, 18 Feb 2020 13:04:07 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2NFp6Xk53EoDTqiO1l+FnY4ve5J6YqrYXVw+6lM+mI8=;
+        b=s5kQnPUn+fzfSwuWKU6M/zm/PBLgj/RC1C7epH9ZRMuOyDqVDqjfI1JZHmaWJ929re
+         jaRHS3YGvkRY+aAYWefObd0El3kOej/kk0jazcgEsIByiv3KRTJGW9D35jRai1N7i+59
+         W9bU5Gsa2Cf5TdbyL9KrcaO1wb3JKB5mcqSA8h7p23j/yc4sq+sj2ElTu/POKd61Lssj
+         qCJB5nYQ6BjUwL4a0+GzL7kIpdHglF4/Vp+DfzGwzA9JelKhHR3xawVWu/ZgPfHB7aro
+         AkPToDY57Xf6byG19/Li1dSy03jBxD+waRtx/Clr9wqf6vR9pR+6ukDm7l+3egBS68w2
+         A+xQ==
+X-Gm-Message-State: APjAAAUwxIksyhxezx4rz6lUiL/b/iEE+eOkW4fgxdL+XW7hti43+Kps
+        t4e1FATGhlMiRczt8sMLwAp/5+U=
+X-Google-Smtp-Source: APXvYqxcwtPcb9dczEQuX/YRkNOyWP8oJdu6arcnSX/Hbr2ChjUqdwgZkFrS0kF7gjxMTNBUk++bxQ==
+X-Received: by 2002:a9d:6ad6:: with SMTP id m22mr18026683otq.7.1582059943981;
+        Tue, 18 Feb 2020 13:05:43 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b9sm1723745otf.56.2020.02.18.13.04.07
+        by smtp.gmail.com with ESMTPSA id w6sm1728684otp.69.2020.02.18.13.05.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:04:07 -0800 (PST)
-Received: (nullmailer pid 974 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:04:06 -0000
-Date:   Tue, 18 Feb 2020 15:04:06 -0600
+        Tue, 18 Feb 2020 13:05:43 -0800 (PST)
+Received: (nullmailer pid 3545 invoked by uid 1000);
+        Tue, 18 Feb 2020 21:05:42 -0000
+Date:   Tue, 18 Feb 2020 15:05:42 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Mohammad Rasim <mohammad.rasim96@gmail.com>
-Cc:     linux-media@vger.kernel.org, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: Re: [PATCH v5 2/3] dt-bindings: media: add new kii pro key map
-Message-ID: <20200218210406.GA917@bogus>
-References: <20200214085802.28742-1-mohammad.rasim96@gmail.com>
- <20200214085802.28742-3-mohammad.rasim96@gmail.com>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        paul@crapouillou.net, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v5 5/6] dt-bindings: clock: Add and reorder ABI for X1000.
+Message-ID: <20200218210542.GA3483@bogus>
+References: <1581701262-110556-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1581701262-110556-7-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200214085802.28742-3-mohammad.rasim96@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1581701262-110556-7-git-send-email-zhouyanjie@wanyeetech.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 14 Feb 2020 11:58:01 +0300, Mohammad Rasim wrote:
-> Add new entry for rc-videostrong-kii-pro in linux,rc-map-name
+On Sat, 15 Feb 2020 01:27:41 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?=          wrote:
+> The SSI clock of X1000 not like JZ4770 and JZ4780, they are not
+> directly derived from the output of SSIPLL, but from the clock
+> obtained by dividing the frequency by 2. "X1000_CLK_SSIPLL_DIV2"
+> is added for this purpose, it must between "X1000_CLK_SSIPLL"
+> and "X1000_CLK_SSIMUX", otherwise an error will occurs when
+> initializing the clock. These ABIs are only used for X1000, and
+> I'm sure that no other devicetree out there is using these ABIs,
+> so we should be able to reorder them.
 > 
-> Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 > ---
->  Documentation/devicetree/bindings/media/rc.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> 
+> Notes:
+>     v5:
+>     New patch.
+> 
+>  include/dt-bindings/clock/x1000-cgu.h | 58 ++++++++++++++++++-----------------
+>  1 file changed, 30 insertions(+), 28 deletions(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
