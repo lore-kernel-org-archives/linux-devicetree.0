@@ -2,94 +2,63 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E2FC3404C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE38EC34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197DE2173E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582061501;
-	bh=v1ZejpWaMAUjOljhRcr7hWShwy1XLBLAMgNmn6u4JU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bt8yaj4K2dHd716UYZppVh4/41RGd97Y+mITnY9gtL5/CR5+WyaauikUqSJrqeVNr
-	 gy8//ADeJE/vazHdzLgQqJ5b2gx9MqoxgNBgqjPg6UmHYLLXwlgmpJ0GvL3fvUauo7
-	 x5GngjaDELi8Q+QSotQxegOfDGDd6evPrD1O3TSA=
+	by mail.kernel.org (Postfix) with ESMTP id 9BBA42464E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgBRVbk (ORCPT
+        id S1726634AbgBRVcQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:31:40 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45579 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgBRVbk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:31:40 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so21035700otp.12;
-        Tue, 18 Feb 2020 13:31:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PyZM4tCjgTwD6aYfoDzIWv9a874H9XwwMkRT7i0BQWE=;
-        b=Su8HnnYm/dGhT/uHPbO4tSkni8uB3PC2CYPVashO8bOXNspZFarxNI8fJUuor257It
-         sYDmaWRFvAmHBwDztj2iT+cfJEyBqc1SCmRe8u1aR61kaKoNJpel2W4qk+bxYDd6nMaF
-         BCUTOYgaSDYc1eGcFqFWZeELQ4r3Q1GIVDRtNNFKiwGOyWwElDDGtBQuu4tthugNd7QD
-         Jr0ibf8JV40W43e/B/qK/IkfcBrbGI04949U7e5WYU+LkZn06uF+t07hlRU5t8bswzzr
-         1npJV8yi8BaMCHwmR1TI5SqsRCuy6yvAMov95J1gt4qY4u3Omgt/CSjNKmHYg+0Ex2zx
-         IBuQ==
-X-Gm-Message-State: APjAAAVci1mFVVXQxG1Mxx9HERMh+7gLkaJpTqswA8WmHC/s3kofFOqD
-        qDj6+xUq+euOb7LbiJ/0Iw==
-X-Google-Smtp-Source: APXvYqzcQ5B6Jqv7ykwcXbxhubiIg4tzjWg968oQFRq7I7DKyRZ7OSbD5dZ/ERQzRBwPGUamWs1Xlw==
-X-Received: by 2002:a9d:48d:: with SMTP id 13mr16210737otm.249.1582061498523;
-        Tue, 18 Feb 2020 13:31:38 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm29716oij.19.2020.02.18.13.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:31:37 -0800 (PST)
-Received: (nullmailer pid 8809 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:31:37 -0000
-Date:   Tue, 18 Feb 2020 15:31:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     robh+dt@kernel.org, georgi.djakov@linaro.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        daidavid1@codeaurora.org, saravanak@google.com, mka@chromium.org,
-        linux-pm@vger.kernel.org, Odelu Kukatla <okukatla@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: interconnect: Update Qualcomm SDM845
- DT bindings
-Message-ID: <20200218213137.GA8767@bogus>
-References: <20200209183411.17195-1-sibis@codeaurora.org>
- <20200209183411.17195-4-sibis@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209183411.17195-4-sibis@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 18 Feb 2020 16:32:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:34716 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbgBRVcQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 16:32:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DD841FB;
+        Tue, 18 Feb 2020 13:32:15 -0800 (PST)
+Received: from DESKTOP-VLO843J.lan (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CA3723F68F;
+        Tue, 18 Feb 2020 13:32:13 -0800 (PST)
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, heiko@sntech.de
+Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        pgwipeout@gmail.com
+Subject: [PATCH v2 0/3] Clean up RK3328 audio codec GPIO control
+Date:   Tue, 18 Feb 2020 21:31:57 +0000
+Message-Id: <cover.1581376744.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 10 Feb 2020 00:04:08 +0530, Sibi Sankar wrote:
-> From: David Dai <daidavid1@codeaurora.org>
-> 
-> Redefine the Network-on-Chip devices to more accurately describe
-> the interconnect topology on Qualcomm's SDM845 platform. Each
-> interconnect device can communicate with different instances of the
-> RPMh hardware which are described as RSCs(Resource State Coordinators).
-> 
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  .../bindings/interconnect/qcom,sdm845.yaml    | 49 +++++++++++++++----
->  1 file changed, 40 insertions(+), 9 deletions(-)
-> 
+Hi all,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Since nobody said anything resembling "that looks like a terrible idea!"
+to what I propsed on top of v1, resending as a full v2 per Mark's
+request.
+
+Robin.
+
+
+Robin Murphy (3):
+  ASoC: dt-bindings: Make RK3328 codec GPIO explicit
+  ASoC: rockchip: Make RK3328 GPIO_MUTE control explicit
+  arm64: dts: rockchip: Describe RK3328 GPIO_MUTE users
+
+ .../bindings/sound/rockchip,rk3328-codec.txt  |  7 ++++-
+ arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |  1 +
+ .../arm64/boot/dts/rockchip/rk3328-rock64.dts |  1 +
+ sound/soc/codecs/rk3328_codec.c               | 31 ++++++++++---------
+ 4 files changed, 24 insertions(+), 16 deletions(-)
+
+-- 
+2.17.1
+
