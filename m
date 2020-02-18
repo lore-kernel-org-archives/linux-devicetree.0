@@ -4,84 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98053C34031
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222C9C34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CD521D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2DE2173E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582060771;
-	bh=vJa/Lzv5R9QXSQWBp04oqsbHnebb9Fh+gzRWPHYPGvw=;
+	s=default; t=1582061062;
+	bh=UUbdbt1UjiYj+WX0qb5Ey9strIRkV51R4FowbVrT6kw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iZyRjCJ+qWlt0VnBqxZVEkur+x5W0FIkfi9TT4XN7o96IWvzOX5/YFgkD+IcZRWhs
-	 i2mRdbBwPjS0KsApK3jhpzIim7QjP47RJ6Gj4tJH8s1crrl7hmX1tu5Sc0TD6scHw/
-	 nXLVt0HHuDnP4rFJxYucO8SYUeuMf3jJJDlLThfo=
+	b=hUfi6pb/Mjx4Dq0cJTkRAvUCJZ2SOU6ZVk77bo/xtLs851x0wjbSQz3VG/caxcnBc
+	 JgS5QV4m5edOoNwnuEnTBk1udos7JywTyTSnQcYdN2DjTx8tsXq/wMbD4l9Rsz0eqb
+	 SU7GJ8DkqbmmC4D5hJQTbqs9126gZNwcXV4l5PDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBRVT2 (ORCPT
+        id S1726713AbgBRVYV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:19:28 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40805 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgBRVT1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:19:27 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i6so21005868otr.7;
-        Tue, 18 Feb 2020 13:19:27 -0800 (PST)
+        Tue, 18 Feb 2020 16:24:21 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45542 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgBRVYV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:24:21 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v19so21625879oic.12;
+        Tue, 18 Feb 2020 13:24:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XgkRYjMZSy2zFAcHDa4KGpDFkUtjw2hNkoLV9SrG87g=;
-        b=H9R33l+h1MFkTvNgoqOgETQUGs/LEhfAIfwy5r0R5KXoCNg3jfMGBEP6VeV0bEKghC
-         HP8h48mAO6smA1/bOJdL6SaS80qVNAtlT9lYbAPzCUKkXmRzonL+YzboL6Y5/1BvH8Ye
-         Wflm67lvEB2dAr/fVzYb/cdpp2NoajGfmkZ0lwlP/nzcrt8G7svQTPxs+d1xyVQCO9VB
-         nLRaearF0ORCbvJNtKoyOQx+fYWiXs5ALwvdjj5nAqeIVlfaMj1rBktpbQwIER/nfYuu
-         HR6Kav83D28qJ6KV7hIwBMDH4n+viR5dZPmW+huP44tdszImgDRLmoAhyBLxQXqaeSdk
-         iU7g==
-X-Gm-Message-State: APjAAAWHNWQ2rc889xc/O0/5Brk+JBuK80gCnLUcoIHwvgLXSb7MdlpG
-        Qi5+4/RoggNv9yebzwX6Bw==
-X-Google-Smtp-Source: APXvYqx067Jn3haA6964Buxg+JndkTb+lf/jrEZqq63qpLnE/ua7P966IM0TjJlG4ye8i+J20JHvjA==
-X-Received: by 2002:a9d:750b:: with SMTP id r11mr17982137otk.310.1582060766950;
-        Tue, 18 Feb 2020 13:19:26 -0800 (PST)
+        bh=wtMHXyFhYbqyTVO0vF6Kcqe6OQmnz/7Cal/xbWgxM1k=;
+        b=Bg94CE7hqPzevjYJg2NB4gxfRVWaF6/4Tdeum73/RVvwbMarGkaw11gultWRJja5PQ
+         0Y/gq/qqKk2qbbyzLqKOEDRttEyl8K9p0Vj5IHUszbvJgTwGQhkf6HhPYMfSLgTKFGv6
+         8cFq76OQMsh/IZaBKcuBBzq95nJO549hO815uJbW+J8lpkGaKXqNgLyRFIWYEXkWIkt8
+         0JFBzbmpudn+57Va7rYaJRfayuzYLgHi1JminW7xKyyroSetrm9U0yeWE69gZl2Rx89t
+         r+yUuDDXUU+SGkOP1VZXJLVzI5GgnacNltweu1Vrc8ogcmPTXBnavTjIsCf8OnrkcIUE
+         zLPQ==
+X-Gm-Message-State: APjAAAU/mXlQ/kDc2ZJcAr4lNK8zslK8oGpZCQUPcxkpeEZVz3ZETbYS
+        lQCtFa3wfNEfpEjFyU5LPg==
+X-Google-Smtp-Source: APXvYqzRApOAzxWTuj6FxZU0qh45JNaX3foVD2D6h/wVsRSCi4UeCotVaoEUHsPi9xiZdnGVL+n19A==
+X-Received: by 2002:aca:c1c2:: with SMTP id r185mr2676756oif.19.1582061060244;
+        Tue, 18 Feb 2020 13:24:20 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t21sm1750223otr.42.2020.02.18.13.19.25
+        by smtp.gmail.com with ESMTPSA id i7sm17411oib.42.2020.02.18.13.24.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:19:26 -0800 (PST)
-Received: (nullmailer pid 23228 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:19:25 -0000
-Date:   Tue, 18 Feb 2020 15:19:25 -0600
+        Tue, 18 Feb 2020 13:24:19 -0800 (PST)
+Received: (nullmailer pid 29988 invoked by uid 1000);
+        Tue, 18 Feb 2020 21:24:18 -0000
+Date:   Tue, 18 Feb 2020 15:24:18 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org,
-        Akash Asthana <akashast@codeaurora.org>
-Subject: Re: [PATCH V4 2/3] dt-bindings: geni-se: Add interconnect binding
- for GENI QUP
-Message-ID: <20200218211925.GA23175@bogus>
-References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
- <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de,
+        fabrice.gasnier@st.com, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: mfd: Document STM32 low power timer
+ bindings
+Message-ID: <20200218212418.GA29946@bogus>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <20200217134546.14562-2-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 17 Feb 2020 15:06:51 +0530, Akash Asthana wrote:
-> Add documentation for the interconnect and interconnect-names properties
-> for the GENI QUP.
+On Mon, 17 Feb 2020 14:45:44 +0100, Benjamin Gaignard wrote:
+> Add a subnode to STM low power timer bindings to support timer driver
 > 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> version 4:
+> - change compatible and subnode names
+> - document wakeup-source property
+> 
+>  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml        | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
