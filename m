@@ -4,96 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A466C34049
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F008C34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78F924125
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5CA121D56
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582060435;
-	bh=jVC8I1sGpUiNMyiy8r1s4MV9S4tOyGLhWM1jmiBuVEo=;
+	s=default; t=1582060747;
+	bh=tjgP8Gwr85ueFFDdMl0wEnUP/atq5yCSjZJFSpAMUMs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kjr8ahENh3NZDQdtANWtS8sFnLBrtGwtsoBSMQQb5IInzFMJ3ZBEjnnLO100Dkrwd
-	 9jwVxBdg2P3peAbK+0uNci4Iov4fMBw0FvTSZl7IY1AprugCOmn3kojbwC2p8gghiU
-	 /FCrzrloR3q8pN5wNswTO7FLSLzHhEaNa/NpnLNQ=
+	b=jeJn5GEAlZlhuXnx6pA4WZEbFm13nWsapVqS4hz736E8BOsSj0hBwaAXgMzR5TRDv
+	 8janGwHF5bCk2qrI2GicpXdt+v6H/PJrpsKF3sEHKe5CuVi7V7NMFe0Ebl/cMZM5/s
+	 jyvhe7PQZ+w48kpopfDOvIR6EHpXFvA0fEpeqlL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgBRVNv (ORCPT
+        id S1726766AbgBRVTH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:13:51 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39649 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgBRVNv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:13:51 -0500
-Received: by mail-oi1-f196.google.com with SMTP id z2so21610187oih.6;
-        Tue, 18 Feb 2020 13:13:50 -0800 (PST)
+        Tue, 18 Feb 2020 16:19:07 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36638 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgBRVTH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:19:07 -0500
+Received: by mail-ot1-f65.google.com with SMTP id j20so21025780otq.3;
+        Tue, 18 Feb 2020 13:19:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wsp21LIcG4NslijziS7uyMDJScAYzOtQaO+9/p80IQ4=;
-        b=Gn4kmXJu9n+uXGhlbfM9KPlbi5ycH4xKUSLbngI4euPIE/5WlodKz25tj2XHe1BQO8
-         xNzavCIzz50qIB4nBht9+qyPoznu+UM5iZJpOPhWXkcCefa11U9uAvyp9KX4x7RHosXu
-         ShT7FMEoKFxuF6MvwgiDECAgw0JFNbMTsZLKuTFWydWxE2kxBscJDniJI1iEWC7KZNbz
-         FvwBxrIX/2PTtvmP1PgWhGZaBZ0OXkhhn7NxL+Us5Ynp9mw5uBTRK98RjrHd9HiKj7NN
-         /+5SDiP3j1Y6qdoO9BWRQqw7Ss4OaWpcXRfVBSTBiUWAQHExlu6cGNtvL4SUmm8mWgOz
-         QBKA==
-X-Gm-Message-State: APjAAAWWY1wTEeRHNyBSUA2BVamo+lEiKfdwaABl5FjrZE7d5F4kIiIr
-        RJ330liDWIbi5LpjPN7Ciw==
-X-Google-Smtp-Source: APXvYqzV9oocyBJZGvkp1bADAbLS2xQl21KF+EyRyietsBdKoEM/3HRmoC9kQcpKj2d8Pz3raOUtlA==
-X-Received: by 2002:aca:3542:: with SMTP id c63mr2575156oia.135.1582060430256;
-        Tue, 18 Feb 2020 13:13:50 -0800 (PST)
+        bh=CEprnubCzTtFH2kEj0Xp6JjvSDETKIIdT0CSWCcyBW8=;
+        b=kVcMOGKK5ExNa6TDJDa9BGTQlzGFL/VLnDKPpTkKNjGmfcH95A+aaXdrlTR4ghQ7bz
+         jGk+llPxh8w1aWQ4uR7xpaXD1n7+eq4o7TpVKfnCoTTeCM8IBatCivOC6IDyJNyDBz+V
+         sBHEGLr3jEi4j3HWYlJS5xW3L0tfodeKB6SLd+Rbg7yYVnE7XIP2cj7bO+5hakPNjtZk
+         ZWjvQBGkVd1Co1x0CkBYEtejCh/8vom1ryZFo9jNnZCog5qBHhn0yfvhRiHPmb4fTsDv
+         L44CcIXT61C69acyuWlpjvYrsDXc40xYGFp6rEDyZJe2dL72dkSLki3juyhXrroSZwpf
+         0VHg==
+X-Gm-Message-State: APjAAAWwxUmOFQ+wbDSCQOqKGJKtyg++OMVOqPJYVPk+EJdkNrA48iZr
+        TpW2zBX+AVguiLyPW0Rv1g==
+X-Google-Smtp-Source: APXvYqybXVyGew1U/Qdm6Ql5rJ3ez5H4g1Nw7s9ewtILrIB0urAUCtN7DUY4qOUY25SltRSFxq4zqQ==
+X-Received: by 2002:a05:6830:139a:: with SMTP id d26mr17893745otq.75.1582060746503;
+        Tue, 18 Feb 2020 13:19:06 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m185sm13530oia.26.2020.02.18.13.13.49
+        by smtp.gmail.com with ESMTPSA id p65sm10876oif.47.2020.02.18.13.19.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:13:49 -0800 (PST)
-Received: (nullmailer pid 15304 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:13:48 -0000
-Date:   Tue, 18 Feb 2020 15:13:48 -0600
+        Tue, 18 Feb 2020 13:19:05 -0800 (PST)
+Received: (nullmailer pid 22622 invoked by uid 1000);
+        Tue, 18 Feb 2020 21:19:05 -0000
+Date:   Tue, 18 Feb 2020 15:19:05 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car
- PCIe  endpoint controller
-Message-ID: <20200218211348.GA15246@bogus>
-References: <20200208183641.6674-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200208183641.6674-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: Re: [PATCH V4 1/3] dt-bindings: geni-se: Convert QUP geni-se
+ bindings to YAML
+Message-ID: <20200218211905.GA22559@bogus>
+References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
+ <1581932212-19469-2-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200208183641.6674-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1581932212-19469-2-git-send-email-akashast@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat,  8 Feb 2020 18:36:39 +0000, Lad Prabhakar wrote:
-> This patch adds the bindings for the R-Car PCIe endpoint driver.
+On Mon, 17 Feb 2020 15:06:50 +0530, Akash Asthana wrote:
+> Convert QUP geni-se bindings to DT schema format using json-schema.
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 > ---
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml       | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+> Changes in V2:
+>  - As per Stephen's comment corrected defintion of interrupts for UART node.
+>    Any valid UART node must contain atleast 1 interrupts.
+> 
+> Changes in V3:
+>  - As per Rob's comment, added number of reg entries for reg property.
+>  - As per Rob's comment, corrected unit address to hex.
+>  - As per Rob's comment, created a pattern which matches everything common
+>    to geni based I2C, SPI and UART controller and then one pattern  for each.
+>  - As per Rob's comment, restored original example.
+> 
+> Changes in V4:
+>  - Resolve below compilation error reported from bot.
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/
+> qcom,geni-se.yaml: properties:clocks:minItems: False schema does not allow 2
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/
+> qcom,geni-se.yaml: properties:clocks:maxItems: False schema does not allow 2
+> Documentation/devicetree/bindings/Makefile:12: recipe for target
+> 'Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/soc/qcom/
+> qcom,geni-se.example.dts] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  94 ---------
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 209 +++++++++++++++++++++
+>  2 files changed, 209 insertions(+), 94 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
