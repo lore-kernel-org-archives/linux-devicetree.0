@@ -2,117 +2,90 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CB9C34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 12:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D702C34026
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 12:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAF320722
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 12:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7142173E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 12:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgBRMSp (ORCPT
+        id S1726567AbgBRMcZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 07:18:45 -0500
-Received: from mga17.intel.com ([192.55.52.151]:61091 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726086AbgBRMSp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 07:18:45 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 04:18:44 -0800
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="228717519"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 04:18:42 -0800
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 0DF6220E95; Tue, 18 Feb 2020 14:18:40 +0200 (EET)
-Date:   Tue, 18 Feb 2020 14:18:40 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
-        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
-        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-media@vger.kernel.org
-Subject: Re: [PATCH v11 04/15] media: v4l2-fwnode: add initial connector
- parsing support
-Message-ID: <20200218121839.GA5379@paasikivi.fi.intel.com>
-References: <20190930093900.16524-1-m.felsch@pengutronix.de>
- <20190930093900.16524-5-m.felsch@pengutronix.de>
- <20191115233439.GB2696@mara.localdomain>
- <20200115170621.jszy2p3e4w3b3hpn@pengutronix.de>
+        Tue, 18 Feb 2020 07:32:25 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:37550 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726549AbgBRMcZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 07:32:25 -0500
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 01ICVcXO007989;
+        Tue, 18 Feb 2020 14:31:39 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id C1E586032E; Tue, 18 Feb 2020 14:31:38 +0200 (IST)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
+        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com,
+        linux-arm-kernel@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v4 0/3] arm: dts: add and modify device node in NPCM7xx device tree
+Date:   Tue, 18 Feb 2020 14:31:25 +0200
+Message-Id: <20200218123128.17990-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115170621.jszy2p3e4w3b3hpn@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marco,
+This patch set adds and modify device tree nodes in the NPCM7xx
+Baseboard Management Controller (BMC) device tree.
 
-On Wed, Jan 15, 2020 at 06:06:21PM +0100, Marco Felsch wrote:
-> Hi Sakari,
-> 
-> On 19-11-16 01:34, Sakari Ailus wrote:
-> > Hi Marco,
-> > 
-> > On Mon, Sep 30, 2019 at 11:38:49AM +0200, Marco Felsch wrote:
-> 
-> ...
-> 
-> Let me sum up our irc discussion about that kAPI.
-> 
-> Our starting point is a fwnode based subdev which has connectors in
-> front of there pins. Connectors are used to limit the subdev to some
-> device limits e.g. if the device support only PAL-Input streams and the
-> subdev has an buggy autodetect mechanism. In that case the connector can
-> be used by the subdev to set the possible TV-Norms to PAL. Currently the
-> tvp5150 is the only fwnode based subdev implementing connectors.
-> 
-> Connectors have common and connector specific properties. All current
-> provided connectors can be found here:
-> Documentation/devicetree/bindings/display/connector/ .
-> 
-> Parsing the properties is common to all _upcoming_ fwnode based subdevs
-> so this should be done within the core. So lets move on to the parsing
-> helper.
-> 
-> > > +int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
-> > > +				      struct v4l2_fwnode_connector *connector)
-> > > +{
-> 
-> This kAPI seems to fit all current use cases. The API is not responsible
-> to alloc the 'struct v4l2_fwnode_connector' instead it is only used to
-> fill this struct. The given 'struct fwnode_handle' should be the subdev
-> local ep-fwnode because the user already has a reference to this ep.
-> 
-> This helper has two use-cases:
->   1) Parsing the connector properties and add the initial (1st) link.
->   2) Add further n-links upon n-calls to an already parsed connector.
-> 
-> Going this way we need to ensure that the caller init the 'struct
-> v4l2_fwnode_connector' to '0' before call this helper. This can be
-> documented within the kAPI doc.
+The following device node add:
+        - NPCM7xx Pin controller and GPIO
+        - NPCM7xx PWM and FAN.
+        - NPCM7xx EHCI USB.
+        - NPCM7xx KCS.
+        - NPCM Reset.
+        - NPCM Peripheral SPI.
+        - NPCM FIU SPI.
+        - NPCM HWRNG.
+        - NPCM I2C.
+        - STMicro STMMAC.
 
-The problem with the above is that although the API does not prevent
-sharing connectors as such, it does not support it either: parsing a
-connector on another sub-device ends up looking like a new connector,
-independently of whether one (or more) entities representing the same
-connector already exist.
+The following device node modified:
+        - NPCM7xx timer.
+        - NPCM7xx clock constants parameters.
 
-Either way, I discussed this with Hans, and we concluded it's fine for now.
-We've dealt with similar changes before, so when someone needs sharing
-connectors, he'll need to implement it, also changing the kAPI drivers use.
+NPCM7xx device tree tested on NPCM750 evaluation board.
 
-Could you address the other comments I've given on the set?
+Changes since version 3:
+ - Tested patches in Linux kernel 5.6.
+
+Changes since version 2:
+ - Remove unnecessary ouput-enable flags.
+
+Changes since version 1:
+ - Add NPCM reset device node.
+ - Add reset parameters to NPCM driver device nodes.
+
+Tomer Maimon (3):
+  arm: dts: modify NPCM7xx device tree clock parameter to clock constant
+  arm: dts: modify NPCM7xx device tree timer register size
+  arm: dts: add new device nodes to NPCM750 device tree
+
+ arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi | 958 +++++++++++++++++-
+ arch/arm/boot/dts/nuvoton-npcm750-evb.dts     | 444 +++++++-
+ .../boot/dts/nuvoton-npcm750-pincfg-evb.dtsi  | 157 +++
+ arch/arm/boot/dts/nuvoton-npcm750.dtsi        |  24 +-
+ 4 files changed, 1549 insertions(+), 34 deletions(-)
+ create mode 100644 arch/arm/boot/dts/nuvoton-npcm750-pincfg-evb.dtsi
 
 -- 
-Kind regards,
+2.22.0
 
-Sakari Ailus
