@@ -2,107 +2,122 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA2EC34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 11:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0C7C34026
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 11:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6935724649
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 11:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582025562;
-	bh=2b1XwxH8MZNa/x4vH9fIYj1CqGENzpjeWAElEh1a/xI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bPCeV6IxCfdN+DeDRgQfH/AvEkBUyZWKJuUY4DRuFd5W0X+borBMjBgTOz1AWMXSp
-	 n4PnCb+3j7ltwIpiKq35BI5+dDJqs2tVCr8c2Z2/9J6SKw1hw4SvwvemZfAu9xr5Lv
-	 M5v304at8J1os72YN4kGYjXJmcXdZp972N63veG8=
+	by mail.kernel.org (Postfix) with ESMTP id EC4B7206F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 11:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgBRLcm (ORCPT
+        id S1726312AbgBRL5E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:32:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:50372 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgBRLcl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:32:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 705721FB;
-        Tue, 18 Feb 2020 03:32:41 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E92BA3F703;
-        Tue, 18 Feb 2020 03:32:40 -0800 (PST)
-Date:   Tue, 18 Feb 2020 11:32:39 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [RFC PATCH 05/34] ASoC: sun8i-codec: Remove incorrect
- SND_SOC_DAIFMT_DSP_B
-Message-ID: <20200218113239.GB4232@sirena.org.uk>
-References: <20200217064250.15516-1-samuel@sholland.org>
- <20200217064250.15516-6-samuel@sholland.org>
- <20200217150208.GG9304@sirena.org.uk>
- <1cdcbc0d-39c7-25f2-68eb-a44e815fb9b8@sholland.org>
+        Tue, 18 Feb 2020 06:57:04 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41565 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbgBRL5E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 06:57:04 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j41Uq-0005og-IB; Tue, 18 Feb 2020 12:57:00 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j41Up-0004Nb-U0; Tue, 18 Feb 2020 12:56:59 +0100
+Date:   Tue, 18 Feb 2020 12:56:59 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, robh+dt@kernel.org
+Cc:     robh+dt@kernel.org, support.opensource@diasemi.com,
+        stwiss.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com,
+        devicetree@vger.kernel.org, kernel@pengutronix.de,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: Input: da9062 - add key-opmode
+ documentation
+Message-ID: <20200218115659.b3mggkniwvoyzqgn@pengutronix.de>
+References: <20191127132304.22924-1-m.felsch@pengutronix.de>
+ <20191127132304.22924-2-m.felsch@pengutronix.de>
+ <20200122055706.GB110084@dtor-ws>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1cdcbc0d-39c7-25f2-68eb-a44e815fb9b8@sholland.org>
-X-Cookie: No alcohol, dogs or horses.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200122055706.GB110084@dtor-ws>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:56:26 up 95 days,  3:15, 123 users,  load average: 0.09, 0.19,
+ 0.17
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
---nVMJ2NtxeReIH9PS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 20-01-21 21:57, Dmitry Torokhov wrote:
+> On Wed, Nov 27, 2019 at 02:23:02PM +0100, Marco Felsch wrote:
+> > The onkey behaviour can be changed by programming the NONKEY_PIN
+> > bitfield. Since the driver supports the reconfiguration we need to add
+> > the documentation here.
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> > v2:
+> > - add da9061/3 references
+> > - adapt binding description to be more general
+> > 
+> >  .../devicetree/bindings/input/da9062-onkey.txt         | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/da9062-onkey.txt b/Documentation/devicetree/bindings/input/da9062-onkey.txt
+> > index 5f9fbc68e58a..0005b2bdcdd7 100644
+> > --- a/Documentation/devicetree/bindings/input/da9062-onkey.txt
+> > +++ b/Documentation/devicetree/bindings/input/da9062-onkey.txt
+> > @@ -19,6 +19,16 @@ Optional properties:
+> >      entry exists the OnKey driver will remove support for the KEY_POWER key
+> >      press when triggered using a long press of the OnKey.
+> >  
+> > +- dlg,key-opmode : Set the nONKEY behaviour. This value is initial set by the
+> > +    otp values. 
+> 
+> Did you mean to say "nONKEY behavior is normally specified in OTP
+> settings; this property allows modifying it".
+> 
+> Rob, do you have any comments?
 
-On Mon, Feb 17, 2020 at 07:35:08PM -0600, Samuel Holland wrote:
-> On 2/17/20 9:02 AM, Mark Brown wrote:
-> > On Mon, Feb 17, 2020 at 12:42:21AM -0600, Samuel Holland wrote:
+gentle ping.
 
-> >> DSP_A and DSP_B are not interchangeable. The timing used by the codec in
-> >> DSP mode is consistent with DSP_A. This is verified with an EG25-G modem
-> >> connected to AIF2, as well as by comparing with the BSP driver.
+> > See nONKEY_PIN register description for more information.
+> > +    Valid value range: 0x0..0x3
+> > +
+> > +References:
+> > +
+> > +[1] https://www.dialog-semiconductor.com/sites/default/files/da9061_datasheet_3v6.pdf
+> > +[2] https://www.dialog-semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
+> > +[3] https://www.dialog-semiconductor.com/sites/default/files/da9063_datasheet_2v2.pdf
+> > +
+> >  Example: DA9063
+> >  
+> >  	pmic0: da9063@58 {
+> > -- 
+> > 2.20.1
+> > 
+> 
+> -- 
+> Dmitry
+> 
 
-> > This can only break things for existing systems using stable, if they
-> > haven't noticed a problem with DSP B they'll certainly notice failing to
-> > set up the DAI at all without it.
-
-> Are you suggesting that I drop this patch entirely, or only that I remove the CC
-> to stable (and/or Fixes: tag)? Is this something that can't be removed once it's
-> there, or is the concern about making user-visible changes on stable?
-
-Remove the stable tag, if someone is relying on the DSP B support in
-stable this will break it.
-
---nVMJ2NtxeReIH9PS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Ly1YACgkQJNaLcl1U
-h9CFEQf8D9YL5SadnjL9dOFFrzy8yoRe7dCBkHfRxS2YavdoyZPsbCrDOcY93rEL
-/VkLJwslj6K1LCmAYYJ4/Qo+q+hPV2bnnzcslJD4Mk19RhLuBbLR8/kfP0mgnlb4
-igA2RgQJlN1GubExF4orNfkGrQxaTORV9EmceHayvRL232NkBdwGqu6wcG4Gk3YR
-dA0GaD0uBoCMBucCRvveNRdwJAD9aStpZZwC2Qb4Iv3lMAD6do8XCz99kT+ptlFs
-8N/oDBbmQpwJTkXmTphUhhkCkxA/bMZMw8QxPHZnG5SuemVyfYJ/WYevARSnpaTp
-zPxaVojES71xzKzOJUh3NURlUBhKcg==
-=Hx/L
------END PGP SIGNATURE-----
-
---nVMJ2NtxeReIH9PS--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
