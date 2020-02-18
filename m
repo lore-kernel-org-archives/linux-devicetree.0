@@ -2,52 +2,53 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7E0C34048
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 17:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B240FC34048
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 17:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7FC12465A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 17:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A68C24658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 17:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582046006;
-	bh=y7y/2uFhH+46BBtP5zDjE6H4fDuvmrC89I0sFFjdYSQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=kfzMhBXzBk5oOVQCIwseq6a5S5WOVZfc8ApZpTLL7cvr0aA+NMWwRmAYgYhzeqkLp
-	 VmEFx1JEpxslNswAjcZhH6/fbvh5Mcap/wkLeoXcbSbLXKR1ZHDflw8Ew1rI7+2Vqf
-	 o5zrF6ELv+nRrQlXEZWs27F+auDlUkPra9tHfz7I=
+	s=default; t=1582046013;
+	bh=FnKR5zpBy7wE5NA3ChCpJ+1zmGg+KAGqKyEyd/Piv6U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SQOWzmOOuzlqlVlyeSVRSmJqrdiEvycgtqoMZhwTGJJQ2urYxZ7c48QrvolGkH0Ye
+	 71WLWAkvE7j2w63Wxlraq4s5wno8yqIvaq3ME1+qn9Xxeu9wREnBeOSaEh/hlVnUan
+	 eS3KnmcwLBMKvXsztB+hvKDzWZ+mXR+rfcj/+b2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgBRRNZ (ORCPT
+        id S1727232AbgBRRNc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:13:25 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34844 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgBRRNZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 12:13:25 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r16so20277730otd.2;
-        Tue, 18 Feb 2020 09:13:24 -0800 (PST)
+        Tue, 18 Feb 2020 12:13:32 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41625 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgBRRNb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 12:13:31 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so20205893otc.8;
+        Tue, 18 Feb 2020 09:13:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KxKWes5Maiiz92tj+onliCPmpibZ/Bkve3W+pNRz4Mc=;
-        b=pPdB5Tm2in8T1907YMvR6CliDUREpPsIQjmcfrfC+segvsIdLzGRCjVJLaynod4Y/i
-         yivauLepwRgD2x3AWvi9tiVrEwQSPbm575N9VfoCb/JrxLxlbDDhvMYM/ZStNkdn711H
-         HF127XDj53mn4gRgd5qUmsoFjtiCdJXAbx6SeudM9gD6RTw6Eb4RxzZoZwZiSlkxrFjB
-         t4eTDfd6egrl4L5lhgnoLb+E3KomlVyKDxq9gYIw9RyMVneJSUV0O8xh48N4jy5gNKbV
-         DCHPEt7jU4QkNihapAHUGk4YHjWLJe/COl2DX1KDA/IPJta+risZA2Yd25U8wC5VsdWT
-         LvHw==
-X-Gm-Message-State: APjAAAWwkDcNRKv8WC/jVaskR9EZEVtde1acWJxTcgcs4jmvFPz0bTNz
-        EUDxKbdZcOki1Ko4HW5JLw==
-X-Google-Smtp-Source: APXvYqw78RKkguXMrAM7M8gSXlZrfkdWkZ4c6zf2HSWTeBKpVzryzLJxnnrYZ2glk4KBR3Pi24m44w==
-X-Received: by 2002:a9d:10d:: with SMTP id 13mr4047747otu.238.1582046003552;
-        Tue, 18 Feb 2020 09:13:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JusgAl5N6MihYqm5uluXtGjWepTJgZcRc57DbXhWS1c=;
+        b=Ht/DRUApfdDEJwkI1CWe6zG+5n/5CBDzitD9S6yyarok+Kp9wAB63tuZrGMMLIH/N9
+         wXAmamgg+ZjM2qhR6wf+pFSm5K3Xki266YKNrmeYG5oLxNR3sqgmTePHN78ZmxZkkNf1
+         8ngs5kPjsvEzzmsYq5DWckIUjYReme5RxQYZ5eNwpIkJDlL5Xe4ZqeF9lRAVvOSyfaDT
+         sX3Ze8goOk8ZtOs/ifo3lUN/FzP9OnrOv9l9Xs+shxHSxuypi4+5V7tSqxyGgqreaqHb
+         gIZGPfzd97pX3LtbUTHTdemQWCQG9SAe9nuwu7N6XyYOXUNAJciheIVU0aejiRHJ9lLP
+         ccdQ==
+X-Gm-Message-State: APjAAAVCh8Q2BvG+RaklQs0qBtDyP+RC/J+LULd4j245+6Zc5NyrRzVo
+        JO0IFO8czX3c3VJiKIBK0Q==
+X-Google-Smtp-Source: APXvYqxtfwdO5ZrwB57qMGPOEsnz4rhk/PhIK9UqQ1I24Sd3few+yqThLV3He9kZDSP4GnJqg66xxQ==
+X-Received: by 2002:a05:6830:1042:: with SMTP id b2mr16287928otp.306.1582046010353;
+        Tue, 18 Feb 2020 09:13:30 -0800 (PST)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.21
+        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 09:13:22 -0800 (PST)
+        Tue, 18 Feb 2020 09:13:29 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
@@ -74,10 +75,12 @@ Cc:     Alex Williamson <alex.williamson@redhat.com>,
         Tony Luck <tony.luck@intel.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Will Deacon <will@kernel.org>
-Subject: [RFC PATCH 00/11] Removing Calxeda platform support
-Date:   Tue, 18 Feb 2020 11:13:10 -0600
-Message-Id: <20200218171321.30990-1-robh@kernel.org>
+Subject: [RFC PATCH 04/11] cpufreq: Remove Calxeda driver
+Date:   Tue, 18 Feb 2020 11:13:14 -0600
+Message-Id: <20200218171321.30990-5-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200218171321.30990-1-robh@kernel.org>
+References: <20200218171321.30990-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -85,116 +88,187 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Calxeda has been defunct for 6 years now. Use of Calxeda servers carried
-on for some time afterwards primarily as distro builders for 32-bit ARM.
-AFAIK, those systems have been retired in favor of 32-bit VMs on 64-bit
-hosts.
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Do not apply yet.
 
-The other use of Calxeda Midway I'm aware of was testing 32-bit ARM KVM
-support as there are few or no other systems with enough RAM and LPAE. Now
-32-bit KVM host support is getting removed[1].
-
-While it's not much maintenance to support, I don't care to convert the
-Calxeda DT bindings to schema nor fix any resulting errors in the dts files
-(which already don't exactly match what's shipping in firmware).
-
-Rob
-
-[1] https://lore.kernel.org/linux-arm-kernel/20200210141324.21090-1-maz@kernel.org/
-
-Rob Herring (11):
-  vfio: Remove Calxeda XGMAC reset driver
-  ata: Remove Calxeda AHCI driver
-  cpuidle: Remove Calxeda driver
-  cpufreq: Remove Calxeda driver
-  EDAC: Remove Calxeda drivers
-  iommu: arm-smmu: Remove Calxeda secure mode quirk
-  net: Remove Calxeda XGMAC driver
-  clk: Remove Calxeda driver
-  ARM: Remove Calxeda platform support
-  ARM: dts: Remove Calxeda platforms
-  dt-bindings: Remove Calxeda platforms bindings
-
- .../devicetree/bindings/arm/calxeda.yaml      |   22 -
- .../devicetree/bindings/arm/calxeda/l2ecc.txt |   15 -
- .../devicetree/bindings/ata/sata_highbank.txt |   44 -
- .../devicetree/bindings/clock/calxeda.txt     |   17 -
- .../memory-controllers/calxeda-ddr-ctrlr.txt  |   16 -
- .../devicetree/bindings/net/calxeda-xgmac.txt |   18 -
- .../bindings/phy/calxeda-combophy.txt         |   17 -
- MAINTAINERS                                   |   14 -
- arch/arm/Kconfig                              |    2 -
- arch/arm/Kconfig.debug                        |   12 +-
- arch/arm/Makefile                             |    1 -
- arch/arm/boot/dts/Makefile                    |    3 -
- arch/arm/boot/dts/ecx-2000.dts                |  103 -
- arch/arm/boot/dts/ecx-common.dtsi             |  230 --
- arch/arm/boot/dts/highbank.dts                |  161 --
- arch/arm/configs/multi_v7_defconfig           |    5 -
- arch/arm/mach-highbank/Kconfig                |   19 -
- arch/arm/mach-highbank/Makefile               |    4 -
- arch/arm/mach-highbank/core.h                 |   18 -
- arch/arm/mach-highbank/highbank.c             |  175 --
- arch/arm/mach-highbank/pm.c                   |   49 -
- arch/arm/mach-highbank/smc.S                  |   25 -
- arch/arm/mach-highbank/sysregs.h              |   75 -
- arch/arm/mach-highbank/system.c               |   22 -
- drivers/ata/Kconfig                           |    9 -
- drivers/ata/Makefile                          |    1 -
- drivers/ata/sata_highbank.c                   |  635 ------
- drivers/clk/Makefile                          |    1 -
- drivers/clk/clk-highbank.c                    |  329 ---
- drivers/cpufreq/Kconfig.arm                   |   10 -
- drivers/cpufreq/Makefile                      |    3 +-
- drivers/cpufreq/cpufreq-dt-platdev.c          |    3 -
- drivers/cpufreq/highbank-cpufreq.c            |  106 -
- drivers/cpuidle/Kconfig.arm                   |    7 -
- drivers/cpuidle/Makefile                      |    1 -
- drivers/cpuidle/cpuidle-calxeda.c             |   72 -
- drivers/edac/Kconfig                          |   14 -
- drivers/edac/Makefile                         |    3 -
- drivers/edac/highbank_l2_edac.c               |  142 --
- drivers/edac/highbank_mc_edac.c               |  272 ---
- drivers/iommu/arm-smmu-impl.c                 |   43 -
- drivers/net/ethernet/Kconfig                  |    1 -
- drivers/net/ethernet/Makefile                 |    1 -
- drivers/net/ethernet/calxeda/Kconfig          |    9 -
- drivers/net/ethernet/calxeda/Makefile         |    2 -
- drivers/net/ethernet/calxeda/xgmac.c          | 1927 -----------------
- drivers/vfio/platform/reset/Kconfig           |    8 -
- drivers/vfio/platform/reset/Makefile          |    2 -
- .../reset/vfio_platform_calxedaxgmac.c        |   74 -
- 49 files changed, 2 insertions(+), 4740 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/calxeda.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
- delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
- delete mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
- delete mode 100644 Documentation/devicetree/bindings/memory-controllers/calxeda-ddr-ctrlr.txt
- delete mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.txt
- delete mode 100644 Documentation/devicetree/bindings/phy/calxeda-combophy.txt
- delete mode 100644 arch/arm/boot/dts/ecx-2000.dts
- delete mode 100644 arch/arm/boot/dts/ecx-common.dtsi
- delete mode 100644 arch/arm/boot/dts/highbank.dts
- delete mode 100644 arch/arm/mach-highbank/Kconfig
- delete mode 100644 arch/arm/mach-highbank/Makefile
- delete mode 100644 arch/arm/mach-highbank/core.h
- delete mode 100644 arch/arm/mach-highbank/highbank.c
- delete mode 100644 arch/arm/mach-highbank/pm.c
- delete mode 100644 arch/arm/mach-highbank/smc.S
- delete mode 100644 arch/arm/mach-highbank/sysregs.h
- delete mode 100644 arch/arm/mach-highbank/system.c
- delete mode 100644 drivers/ata/sata_highbank.c
- delete mode 100644 drivers/clk/clk-highbank.c
+ drivers/cpufreq/Kconfig.arm          |  10 ---
+ drivers/cpufreq/Makefile             |   3 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c |   3 -
+ drivers/cpufreq/highbank-cpufreq.c   | 106 ---------------------------
+ 4 files changed, 1 insertion(+), 121 deletions(-)
  delete mode 100644 drivers/cpufreq/highbank-cpufreq.c
- delete mode 100644 drivers/cpuidle/cpuidle-calxeda.c
- delete mode 100644 drivers/edac/highbank_l2_edac.c
- delete mode 100644 drivers/edac/highbank_mc_edac.c
- delete mode 100644 drivers/net/ethernet/calxeda/Kconfig
- delete mode 100644 drivers/net/ethernet/calxeda/Makefile
- delete mode 100644 drivers/net/ethernet/calxeda/xgmac.c
- delete mode 100644 drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
 
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index 3858d86cf409..27fdd5ac21da 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -79,16 +79,6 @@ config ARM_BRCMSTB_AVS_CPUFREQ
 
-base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+ 	  Say Y, if you have a Broadcom SoC with AVS support for DFS or DVFS.
+
+-config ARM_HIGHBANK_CPUFREQ
+-	tristate "Calxeda Highbank-based"
+-	depends on ARCH_HIGHBANK && CPUFREQ_DT && REGULATOR
+-	default m
+-	help
+-	  This adds the CPUFreq driver for Calxeda Highbank SoC
+-	  based boards.
+-
+-	  If in doubt, say N.
+-
+ config ARM_IMX6Q_CPUFREQ
+ 	tristate "Freescale i.MX6 cpufreq support"
+ 	depends on ARCH_MXC
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index f6670c4abbb0..47d773b9312a 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -5,7 +5,7 @@ obj-$(CONFIG_CPU_FREQ)			+= cpufreq.o freq_table.o
+ # CPUfreq stats
+ obj-$(CONFIG_CPU_FREQ_STAT)             += cpufreq_stats.o
+
+-# CPUfreq governors
++# CPUfreq governors
+ obj-$(CONFIG_CPU_FREQ_GOV_PERFORMANCE)	+= cpufreq_performance.o
+ obj-$(CONFIG_CPU_FREQ_GOV_POWERSAVE)	+= cpufreq_powersave.o
+ obj-$(CONFIG_CPU_FREQ_GOV_USERSPACE)	+= cpufreq_userspace.o
+@@ -52,7 +52,6 @@ obj-$(CONFIG_ARM_ARMADA_8K_CPUFREQ)	+= armada-8k-cpufreq.o
+ obj-$(CONFIG_ARM_BRCMSTB_AVS_CPUFREQ)	+= brcmstb-avs-cpufreq.o
+ obj-$(CONFIG_ACPI_CPPC_CPUFREQ)		+= cppc_cpufreq.o
+ obj-$(CONFIG_ARCH_DAVINCI)		+= davinci-cpufreq.o
+-obj-$(CONFIG_ARM_HIGHBANK_CPUFREQ)	+= highbank-cpufreq.o
+ obj-$(CONFIG_ARM_IMX6Q_CPUFREQ)		+= imx6q-cpufreq.o
+ obj-$(CONFIG_ARM_IMX_CPUFREQ_DT)	+= imx-cpufreq-dt.o
+ obj-$(CONFIG_ARM_KIRKWOOD_CPUFREQ)	+= kirkwood-cpufreq.o
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index f2ae9cd455c1..274294f83e7c 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -102,9 +102,6 @@ static const struct of_device_id whitelist[] __initconst = {
+ static const struct of_device_id blacklist[] __initconst = {
+ 	{ .compatible = "allwinner,sun50i-h6", },
+
+-	{ .compatible = "calxeda,highbank", },
+-	{ .compatible = "calxeda,ecx-2000", },
+-
+ 	{ .compatible = "fsl,imx7d", },
+ 	{ .compatible = "fsl,imx8mq", },
+ 	{ .compatible = "fsl,imx8mm", },
+diff --git a/drivers/cpufreq/highbank-cpufreq.c b/drivers/cpufreq/highbank-cpufreq.c
+deleted file mode 100644
+index 5a7f6dafcddb..000000000000
+--- a/drivers/cpufreq/highbank-cpufreq.c
++++ /dev/null
+@@ -1,106 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright (C) 2012 Calxeda, Inc.
+- *
+- * This driver provides the clk notifier callbacks that are used when
+- * the cpufreq-dt driver changes to frequency to alert the highbank
+- * EnergyCore Management Engine (ECME) about the need to change
+- * voltage. The ECME interfaces with the actual voltage regulators.
+- */
+-
+-#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+-
+-#include <linux/kernel.h>
+-#include <linux/module.h>
+-#include <linux/clk.h>
+-#include <linux/cpu.h>
+-#include <linux/err.h>
+-#include <linux/of.h>
+-#include <linux/pl320-ipc.h>
+-#include <linux/platform_device.h>
+-
+-#define HB_CPUFREQ_CHANGE_NOTE	0x80000001
+-#define HB_CPUFREQ_IPC_LEN	7
+-#define HB_CPUFREQ_VOLT_RETRIES	15
+-
+-static int hb_voltage_change(unsigned int freq)
+-{
+-	u32 msg[HB_CPUFREQ_IPC_LEN] = {HB_CPUFREQ_CHANGE_NOTE, freq / 1000000};
+-
+-	return pl320_ipc_transmit(msg);
+-}
+-
+-static int hb_cpufreq_clk_notify(struct notifier_block *nb,
+-				unsigned long action, void *hclk)
+-{
+-	struct clk_notifier_data *clk_data = hclk;
+-	int i = 0;
+-
+-	if (action == PRE_RATE_CHANGE) {
+-		if (clk_data->new_rate > clk_data->old_rate)
+-			while (hb_voltage_change(clk_data->new_rate))
+-				if (i++ > HB_CPUFREQ_VOLT_RETRIES)
+-					return NOTIFY_BAD;
+-	} else if (action == POST_RATE_CHANGE) {
+-		if (clk_data->new_rate < clk_data->old_rate)
+-			while (hb_voltage_change(clk_data->new_rate))
+-				if (i++ > HB_CPUFREQ_VOLT_RETRIES)
+-					return NOTIFY_BAD;
+-	}
+-
+-	return NOTIFY_DONE;
+-}
+-
+-static struct notifier_block hb_cpufreq_clk_nb = {
+-	.notifier_call = hb_cpufreq_clk_notify,
+-};
+-
+-static int hb_cpufreq_driver_init(void)
+-{
+-	struct platform_device_info devinfo = { .name = "cpufreq-dt", };
+-	struct device *cpu_dev;
+-	struct clk *cpu_clk;
+-	struct device_node *np;
+-	int ret;
+-
+-	if ((!of_machine_is_compatible("calxeda,highbank")) &&
+-		(!of_machine_is_compatible("calxeda,ecx-2000")))
+-		return -ENODEV;
+-
+-	cpu_dev = get_cpu_device(0);
+-	if (!cpu_dev) {
+-		pr_err("failed to get highbank cpufreq device\n");
+-		return -ENODEV;
+-	}
+-
+-	np = of_node_get(cpu_dev->of_node);
+-	if (!np) {
+-		pr_err("failed to find highbank cpufreq node\n");
+-		return -ENOENT;
+-	}
+-
+-	cpu_clk = clk_get(cpu_dev, NULL);
+-	if (IS_ERR(cpu_clk)) {
+-		ret = PTR_ERR(cpu_clk);
+-		pr_err("failed to get cpu0 clock: %d\n", ret);
+-		goto out_put_node;
+-	}
+-
+-	ret = clk_notifier_register(cpu_clk, &hb_cpufreq_clk_nb);
+-	if (ret) {
+-		pr_err("failed to register clk notifier: %d\n", ret);
+-		goto out_put_node;
+-	}
+-
+-	/* Instantiate cpufreq-dt */
+-	platform_device_register_full(&devinfo);
+-
+-out_put_node:
+-	of_node_put(np);
+-	return ret;
+-}
+-module_init(hb_cpufreq_driver_init);
+-
+-MODULE_AUTHOR("Mark Langsdorf <mark.langsdorf@calxeda.com>");
+-MODULE_DESCRIPTION("Calxeda Highbank cpufreq driver");
+-MODULE_LICENSE("GPL");
 --
 2.20.1
