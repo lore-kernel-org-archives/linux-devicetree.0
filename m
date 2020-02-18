@@ -2,192 +2,208 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754F5C34039
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFAAC34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 08:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A7C2176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342F9206EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 08:11:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mtwB5luA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgBRH5f (ORCPT
+        id S1726293AbgBRILe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:57:35 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:52936 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgBRH5e (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:57:34 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E1CFE1A0D40;
-        Tue, 18 Feb 2020 08:57:32 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 95E001A055D;
-        Tue, 18 Feb 2020 08:57:25 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 04B8040245;
-        Tue, 18 Feb 2020 15:57:16 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V4 1/4] dt-bindings: pinctrl: Convert i.MX8MQ to json-schema
-Date:   Tue, 18 Feb 2020 15:51:37 +0800
-Message-Id: <1582012300-30260-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 18 Feb 2020 03:11:34 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42693 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgBRILe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 03:11:34 -0500
+Received: by mail-pl1-f195.google.com with SMTP id e8so7761065plt.9;
+        Tue, 18 Feb 2020 00:11:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QUPlxwKLP9HDsSXAYmsXVJM5TniLPju/R6y5R75AffU=;
+        b=mtwB5luAFOm5K7gzOCix+RXz1ZERgI7b1W1WEWuYrq6mbh15n2JrrS4LFvK3xJER91
+         BOZ0jFtv6kfg8fuIFHhvbjdG8G4bj8Se/XQPjSXtsOtUMOHyCW3rTb+Xvwh4uzYyVWIZ
+         NwuWwPTDDjre/6kpTtMMDln0D02xnLEX8Zfs+d5d85KHgQAqCt1pkjLGVADXLT07V9Qw
+         FUP4lS6vtT3VEGGda7R2nCJFr8x6DPkpl+a6bnrZ6tvJ2MkCUfnSwI/Y62K+C/vaeI1w
+         mz9S0gIqDJCZRdedJS/ifw3g4r5LlOxzWWkDjNFdRfkGs0fNLB5Pxd3n52ODSiuRhmyO
+         KF+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QUPlxwKLP9HDsSXAYmsXVJM5TniLPju/R6y5R75AffU=;
+        b=LjG5NPXcwztz/AudPo7+/W6sZiucA2upysBF4N3Rlibvyit7XLWIfSy5ZBI2kVDkol
+         Cqk2Fc5l3tx+RDob0GwGTogW+gfulCc9pWgEWprpbt1Ef0RHQDWxYpjbnk7Y1GLm/rEM
+         Vw7sfiXpvDEAxsIUk1oAcy1d25xyOZ8KTMO740LqOXbh/h8rB9LGKKjSQHH5R5Vzeib8
+         14zJTaee0+U+zyQuZrjJ+OPHtxEWZkR2Sa9QbjyHxM2VhWOLPrDz0TD65gYsB3BxdWlw
+         5N6DUaFWdW3yjMSno945sP61WhxMwHQD3lM+Xu+DrNO/J/+TkSu+dVoQVcp1iIpRojFk
+         g6TQ==
+X-Gm-Message-State: APjAAAV2Feie+d8053dsOtS3tyP6W7rEF/eMLVdRmZ6LTTwP+f63C5iP
+        utXQwDqefeJhLczZboPDvXA=
+X-Google-Smtp-Source: APXvYqz08UVvt9qDdWZuY7F9gk+8Up46fj2HHouxwZvVQcLav7iIEXePwSxmGfND/ZUTir9U1ie6Nw==
+X-Received: by 2002:a17:902:348:: with SMTP id 66mr19695770pld.137.1582013492909;
+        Tue, 18 Feb 2020 00:11:32 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id z27sm3083411pfj.107.2020.02.18.00.11.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Feb 2020 00:11:32 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     orsonzhai@gmail.com, baolin.wang7@gmail.com,
+        freeman.liu@unisoc.com, zhang.lyra@gmail.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum thermal documentation
+Date:   Tue, 18 Feb 2020 16:10:27 +0800
+Message-Id: <444e45ce0a9b390b2502dfcefd1ddb36948fa8e1.1582013101.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX8MQ pinctrl binding to DT schema format using json-schema
+From: Baolin Wang <baolin.wang@unisoc.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V3:
-	- use uint32-matrix instead of uint32-array for fsl,pins.
----
- .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 36 ----------
- .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml       | 82 ++++++++++++++++++++++
- 2 files changed, 82 insertions(+), 36 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+Add the Spreadtrum thermal documentation.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-deleted file mode 100644
-index 66de750..0000000
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--* Freescale IMX8MQ IOMUX Controller
--
--Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
--for common binding part and usage.
--
--Required properties:
--- compatible: "fsl,imx8mq-iomuxc"
--- reg: should contain the base physical address and size of the iomuxc
--  registers.
--
--Required properties in sub-nodes:
--- fsl,pins: each entry consists of 6 integers and represents the mux and config
--  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
--  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
--  imx8mq-pinfunc.h under device tree source folder.  The last integer CONFIG is
--  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Quad
--  Reference Manual for detailed CONFIG settings.
--
--Examples:
--
--&uart1 {
--       pinctrl-names = "default";
--       pinctrl-0 = <&pinctrl_uart1>;
--};
--
--iomuxc: pinctrl@30330000 {
--        compatible = "fsl,imx8mq-iomuxc";
--        reg = <0x0 0x30330000 0x0 0x10000>;
--
--        pinctrl_uart1: uart1grp {
--                fsl,pins = <
--                        MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX             0x49
--                        MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX             0x49
--                >;
--        };
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+Changes from v2:
+ - Add missing #address-cells and #size-cells properties.
+ - Change the child node name with patternProperties.
+ - Simplify the nvmem-cells-names property.
+
+Changes from v1:
+ - Change to yaml format.
+---
+ .../devicetree/bindings/thermal/sprd-thermal.yaml  |  108 ++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+
+diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
 new file mode 100644
-index 0000000..b30c704
+index 0000000..3bfe055
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mq-pinctrl.yaml#
++$id: http://devicetree.org/schemas/thermal/sprd-thermal.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale IMX8MQ IOMUX Controller
++title: Spreadtrum thermal sensor controller bindings
 +
 +maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+description:
-+  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-+  for common binding part and usage.
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
 +
 +properties:
 +  compatible:
-+    const: fsl,imx8mq-iomuxc
++    const: sprd,ums512-thermal
 +
 +  reg:
 +    maxItems: 1
 +
-+# Client device subnode's properties
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: enable
++
++  nvmem-cells:
++    maxItems: 2
++    description:
++      Reference to nvmem nodes for the calibration data.
++
++  nvmem-cell-names:
++    maxItems: 2
++    items:
++      - const: thm_sign_cal
++      - const: thm_ratio_cal
++
++  "#thermal-sensor-cells":
++    const: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
 +patternProperties:
-+  'grp$':
++  "^([a-z]*-)?sensor(-section)?@[0-9]+$":
 +    type: object
 +    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
++      Represent one thermal sensor.
 +
 +    properties:
-+      fsl,pins:
++      reg:
++        description: Specify the sensor id.
++        maxItems: 1
++
++      nvmem-cells:
++        maxItems: 1
 +        description:
-+          each entry consists of 6 integers and represents the mux and config
-+          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-+          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-+          be found in <arch/arm64/boot/dts/freescale/imx8mq-pinfunc.h>. The last
-+          integer CONFIG is the pad setting value like pull-up on this pin. Please
-+          refer to i.MX8M Quad Reference Manual for detailed CONFIG settings.
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+          - items:
-+              items:
-+                - description: |
-+                    "mux_reg" indicates the offset of mux register.
-+                - description: |
-+                    "conf_reg" indicates the offset of pad configuration register.
-+                - description: |
-+                    "input_reg" indicates the offset of select input register.
-+                - description: |
-+                    "mux_val" indicates the mux value to be applied.
-+                - description: |
-+                    "input_val" indicates the select input value to be applied.
-+                - description: |
-+                    "pad_setting" indicates the pad configuration value to be applied.
++          Reference to an nvmem node for the calibration data.
++
++      nvmem-cell-names:
++        const: sen_delta_cal
 +
 +    required:
-+      - fsl,pins
-+
-+    additionalProperties: false
++      - reg
++      - nvmem-cells
++      - nvmem-cell-names
 +
 +required:
 +  - compatible
 +  - reg
-+
-+additionalProperties: false
++  - clocks
++  - clock-names
++  - nvmem-cells
++  - nvmem-cell-names
++  - "#thermal-sensor-cells"
++  - "#address-cells"
++  - "#size-cells"
 +
 +examples:
-+  # Pinmux controller node
 +  - |
-+    iomuxc: pinctrl@30330000 {
-+        compatible = "fsl,imx8mq-iomuxc";
-+        reg = <0x30330000 0x10000>;
++        ap_thm0: thermal@32200000 {
++                compatible = "sprd,ums512-thermal";
++                reg = <0 0x32200000 0 0x10000>;
++                clock-names = "enable";
++                clocks = <&aonapb_gate 32>;
++                #thermal-sensor-cells = <1>;
++                nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
++                nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
++                #address-cells = <1>;
++                #size-cells = <0>;
 +
-+        pinctrl_uart1: uart1grp {
-+            fsl,pins =
-+                <0x234 0x49C 0x4F4 0x0 0x0	0x49>,
-+                <0x238 0x4A0 0x4F4 0x0 0x0	0x49>;
++                prometheus-sensor@0 {
++                        reg = <0>;
++                        nvmem-cells = <&thm0_sen0>;
++                        nvmem-cell-names = "sen_delta_cal";
++                };
++
++                ank-sensor@1 {
++                        reg = <1>;
++                        nvmem-cells = <&thm0_sen1>;
++                        nvmem-cell-names = "sen_delta_cal";
++                };
 +        };
-+    };
-+
 +...
 -- 
-2.7.4
+1.7.9.5
 
