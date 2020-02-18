@@ -2,230 +2,103 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA64C34034
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 03:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BC9C34034
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 04:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF7720801
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 03:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F54206D5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 04:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HvA8KqO/"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="N6WnfoTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgBRDgh (ORCPT
+        id S1726276AbgBREM1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 22:36:37 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:54188 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgBRDgh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 22:36:37 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so388478pjc.3
-        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 19:36:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=GMlJ1wWVUDMxi0nbbeWDMhla9tCgEqbpniqRdViRdjM=;
-        b=HvA8KqO/Q+e62pyy3c/LrFlI13Vd1UgjV3Xh3lSYxPoYeie1cpgAvFezOmsQ8R32FH
-         RUs0eYuFZrcMK3A6AIN2F2BuVYF/wc3ITrfXd+mdRbmFEG45e6/omlE4/qPamdiY29/5
-         wCaQoKvaBKteTXLGiOAEpC8Bkpzt/QD5tftixp7769SJjmAm8oZ1+bJY86scYP8fH6c7
-         9kMfs4F4pZBjh2l9n7fhjJ/fGl+ddp1y81BL5KTVW0NUfPNY7tO7XPtW73f5tNw3IBXF
-         JKkcQwX8TKoJkp/jd82z6F1qvnXGFjEti7EghzCwdIfNq+g/cs8AAGe/k/oFM+qVh5xS
-         Igrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=GMlJ1wWVUDMxi0nbbeWDMhla9tCgEqbpniqRdViRdjM=;
-        b=EyM4tg3+19GcZZ/8/QEODmW1LCKqEydufWRTMVLQldRqqUZ/RoufBXzrBJ6WLQA5su
-         /A1b7EUVPMk3DKwXhP25u+dp9MZasJhvhRlsoW1+23u2uQHhxYCatLMX66inDcrTE+0f
-         K9aj/fQV+PUjjioceNhQgwD7jmg/9k3fRz8JltCXjtUDYG+EQQAB9G+q8WuBusfuQZ+/
-         3QGY4NKUaEf0ivOmwnZgh6a+IoxH/VT6C+xIV4WzQINp3X0N0WEIcHCLyxFIjL/etjkF
-         ELnAPgOWSvJSGXptthj20dzEahF2TYbDbN3uavJG1nQIkMB5BOhCPJj3KIGo/3K4+PxR
-         9dJA==
-X-Gm-Message-State: APjAAAUNVDAn2Zsex5f2UKad0qR3DuckgZTS3oIhupkqKV83SfJoOki5
-        3UKUOaDk3dj3xGf6xGgqt0EZLA==
-X-Google-Smtp-Source: APXvYqxUnEE6mqEu7xwgGEga0icooVySyy93QsCESjYnuqA5ZoqA++5NWN7QeLrYVw72C/KwTJHppA==
-X-Received: by 2002:a17:902:6b03:: with SMTP id o3mr18219766plk.331.1581996996682;
-        Mon, 17 Feb 2020 19:36:36 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a10sm2321969pgm.81.2020.02.17.19.36.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 19:36:35 -0800 (PST)
-Date:   Mon, 17 Feb 2020 19:35:42 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ckadabi@codeaurora.org, tsoni@codeaurora.org,
-        bryanh@codeaurora.org, psodagud@codeaurora.org,
-        rnayak@codeaurora.org, satyap@codeaurora.org,
-        pheragu@codeaurora.org
-Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
-Message-ID: <20200218033542.GY955802@ripper>
-References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
- <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
- <20200203193533.GL3948@builder>
- <5808f959-f0fc-85be-4bfa-980b5311adeb@codeaurora.org>
+        Mon, 17 Feb 2020 23:12:27 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55043 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726266AbgBREM0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 23:12:26 -0500
+X-UUID: cdb39c2320e145139c693c85c5567541-20200218
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=sC1dH8d6p1Sb7KU8Fpm99duFBOtY/J9QQu2NqxSwvKI=;
+        b=N6WnfoTKYUPY37LiLGDgStQon8O6ENar205hqs12I6Qs6XflcAJO9zhzPn7ct69epFnjRRxfxi5TNZwEBEyiTpn5UZD3TdJpA5pQ7rGHarmAe0SybGs8tQVoyIaYKe4Zp7xCpGdKdegUXCXDHouQbMYbokyqffS0ujhSWxpXdqY=;
+X-UUID: cdb39c2320e145139c693c85c5567541-20200218
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 889799796; Tue, 18 Feb 2020 12:12:20 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 18 Feb 2020 12:09:51 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 18 Feb 2020 12:11:50 +0800
+Message-ID: <1581999138.19053.21.camel@mtkswgap22>
+Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Stephen Boyd <sboyd@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        "Evan Green" <evgreen@chromium.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        "Joerg Roedel" <jroedel@suse.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        "Sean Wang" <Sean.Wang@mediatek.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>
+Date:   Tue, 18 Feb 2020 12:12:18 +0800
+In-Reply-To: <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com>
+References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com>
+         <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com>
+         <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5808f959-f0fc-85be-4bfa-980b5311adeb@codeaurora.org>
+X-TM-SNTS-SMTP: 84BB3C13CA23C8AB9C9ED080959C0C3F21F3FB9B8B07A59D24DCEF47D5C4BF1C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 16 Feb 06:14 PST 2020, Dwivedi, Avaneesh Kumar (avani) wrote:
+T24gU2F0LCAyMDIwLTAyLTE1IGF0IDAyOjQ3ICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KDQpIaSBTdGVwaGVuLA0KDQo+IEhpIFN0ZXBoZW4sDQo+IA0KPiBPbiAxMy8wMi8yMDIwIDAw
+OjQ0LCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+ID4gUXVvdGluZyBNYWNwYXVsIExpbiAoMjAyMC0w
+Mi0wNyAwMToyMDo0MykNCj4gPj4gVGhpcyBwYXRjaCBhZGRzIGJhc2ljIFNvQyBzdXBwb3J0IGZv
+ciBNZWRpYXRlaydzIG5ldyA4LWNvcmUgU29DLA0KPiA+PiBNVDY3NjUsIHdoaWNoIGlzIG1haW5s
+eSBmb3Igc21hcnRwaG9uZSBhcHBsaWNhdGlvbi4NCj4gPiANCj4gPiBDbG9jayBwYXRjaGVzIGxv
+b2sgT0sgdG8gbWUuIENhbiB5b3UgcmVzZW5kIHRoZW0gd2l0aG91dCB0aGUgZGVmY29uZmlnDQo+
+ID4gYW5kIGR0cyBwYXRjaGVzIGFuZCBhZGRyZXNzIE1hdHRoaWFzJyBxdWVzdGlvbj8NCj4gPiAN
+Cj4gDQo+IEknbSBub3Qgc3VyZSBpZiBJIHVuZGVyc3RhbmQgeW91LiBEbyB5b3UgcHJlZmVyIHRv
+IGhhdmUganVzdCB0aGUgY2xvY2sgcGFydHMNCj4gc2VuZCBhcyBhbiBpbmRlcGVuZGVudCB2ZXJz
+aW9uIHNvIHRoYXQgeW91IGNhbiBlYXNpZXIgYXBwbHkgdGhlIHBhdGNoZXMgdG8geW91cg0KPiB0
+cmVlPw0KPiANCj4gUGF0Y2ggMiwgNSwgNiBhbmQgNyBzaG91bGQgZ28gdGhyb3VnaCBteSB0cmVl
+Lg0KPiBTbyBkbyB5b3Ugd2FudCBhIHNlcmllcyB3aXRoIHBhdGNoZXMgMSwgMyBhbmQgND8NCj4g
+DQo+IFJlZ2FyZHMsDQo+IE1hdHRoaWFzDQoNCll1cCwgSSd2ZSBnb3QgYSBsaXR0bGUgYml0IGNv
+bmZ1c2VkLCB0b28uDQpTaG91bGQgSSBzZXBhcmF0ZSBhbmQgcmVzZW5kIHRoZXNlIHBhdGNoZXMg
+aW50byAyIHBhdGNoIHNldHM/DQpUaGUgMXN0IHBhdGNoIHNldCBpbmNsdWRlcyAjMSwgIzMsIGFu
+ZCAjND8NCkFuZCB0aGUgb3RoZXIgaW5jbHVkZXMgIzIsICM1LCAjNiwgYW5kICM3Pw0KDQpSZWdh
+cmRzLA0KTWFjcGF1bCBMaW4NCg0K
 
-> Thank you very much Bjorn for your comments, will address them and post
-> latest patchset soon.
-> 
-> On 2/4/2020 1:05 AM, Bjorn Andersson wrote:
-> > On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
-[..]
-> > > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> > > index d0a73e7..6b7c9d0 100644
-> > > --- a/drivers/soc/qcom/Kconfig
-> > > +++ b/drivers/soc/qcom/Kconfig
-> > > @@ -202,4 +202,16 @@ config QCOM_APR
-> > >   	  application processor and QDSP6. APR is
-> > >   	  used by audio driver to configure QDSP6
-> > >   	  ASM, ADM and AFE modules.
-> > > +
-> > > +config QCOM_EUD
-> > Please aim for keeping the sort order in this file (ignore QCOM_APR
-> > which obviously is in the wrong place)
-> Please help to elaborate more, do you mean adding configs in alphabetical
-> order?
-
-Yes, we want to maintain alphabetical sort order of the config options
-in the Kconfig file. Unfortunately I must have missed this as I picked
-up QCOM_APR - hence my ask to add you entry further up, even if the
-order isn't perfect...
-
-> > 
-> > > +       tristate "QTI Embedded USB Debugger (EUD)"
-> > > +       depends on ARCH_QCOM
-> > > +       help
-> > > +         The Embedded USB Debugger (EUD) driver is a driver for the
-> > > +         control peripheral which waits on events like USB attach/detach
-> > > +         and charger enable/disable. The control peripheral further helps
-> > > +         support the USB-based debug and trace capabilities.
-> > > +         This module enables support for Qualcomm Technologies, Inc.
-> > > +         Embedded USB Debugger (EUD).
-> > > +         If unsure, say N.
-> > >   endmenu
-[..]
-> > > +static ssize_t enable_store(struct device *dev,
-> > > +				struct device_attribute *attr,
-> > > +				const char *buf, size_t count)
-> > > +{
-> > > +	struct eud_chip *chip = dev_get_drvdata(dev);
-> > > +	int enable = 0;
-> > You shouldn't need to initialize this as you're checking the return
-> > value of sscanf().
-> OK
-> > 
-> > > +	int ret = 0;
-> > > +
-> > > +	if (sscanf(buf, "%du", &enable) != 1)
-> > > +		return -EINVAL;
-> > > +
-> > > +	if (enable == EUD_ENABLE_CMD)
-> > > +		ret = enable_eud(chip);
-> > If ret is !0 you should probably return that, rather than count...
-> ok
-> > 
-> > > +	else if (enable == EUD_DISABLE_CMD)
-> > > +		disable_eud(chip);
-> > > +	if (!ret)
-> > ...and then you don't need this check, or initialize ret to 0 above.
-> ok
-> > 
-> > > +		chip->enable = enable;
-> > So if I write 42 to "enable" nothing will change in the hardware, but
-> > chip->enable will be 42...
-> will change enable struct member to bool?
-> > 
-
-The problem I meant was hat if buf is "42", then you will hit the
-following code path:
-
-int ret = 0;
-sscanf(buf, "%du", &enable);
-chip->enable = 42;
-
-As enable isn't 1 or 0, neither conditional path is taken, but you still
-store the value in chip->enable.
-
-Changing enable to bool won't change this problem, adding an else and
-returning -EINVAL; would.
-
-> > > +	return count;
-> > > +}
-> > > +
-> > > +static DEVICE_ATTR_RW(enable);
-[..]
-> > > +static int msm_eud_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct eud_chip *chip;
-> > > +	struct resource *res;
-> > > +	int ret;
-> > > +
-> > > +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> > > +	if (!chip)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	chip->dev = &pdev->dev;
-> > > +	platform_set_drvdata(pdev, chip);
-> > > +
-> > > +	chip->extcon = devm_extcon_dev_allocate(&pdev->dev, eud_extcon_cable);
-> > Aren't we moving away from extcon in favor of the usb role switching
-> > thing?
-> 
-> i could see that usb role switch has been implemented for c type connector
-> and that connector is modeled as child of usb controller, but EUD is not a
-> true connector, it intercepts PHY signals and reroute it to USB controller
-> as per EUD Command issued by debug appliaction
-> 
-> i am not sure if i need to implement EUD DT node as child of usb controller,
-> if i do so, as per my understanding EUD driver need to set USB controller
-> mode(host or device mode) by calling usb role switch API's, please let me
-> know if my understanding is correct?
-> 
-
-I don't know how to properly represent this, but I would like the USB
-guys to chime in before merging something.
-
-> > 
-> > > +	if (IS_ERR(chip->extcon))
-> > > +		return PTR_ERR(chip->extcon);
-> > > +
-[..]
-> > > +static const struct of_device_id msm_eud_dt_match[] = {
-> > > +	{.compatible = "qcom,msm-eud"},
-> > Is this the one and only, past and future, version of the EUD hardware
-> > block? Or do we need this compatible to be more specific?
-> EUD h/w  IP is Qualcomm IP, As of now this is only hw IP available, if
-> future version of EUD IP comes, we can modify and add support then?
-
-You can add additional compatibles, but you can't change this one as
-existing devicetree files must continue to function.
-
-If you have a number of platforms that works with this very same
-implementation then you could make the binding require a specific
-platform and qcom,msm-eud (although qcom,eud should be enough?) and then
-keep the implementation as is.
-
-I.e. dt would say:
-	compatible = "qcom,sc7180-eud", "qcom,eud";
-
-And driver would match on the latter only, for now.
-
-Regards,
-Bjorn
