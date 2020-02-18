@@ -2,122 +2,84 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D471C34031
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435DEC34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33D32070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0ED2070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582059782;
-	bh=CUmLB15wNAUy95xcdWVQwrKRhKVUfn5Sh+qoryLbYRA=;
+	s=default; t=1582059850;
+	bh=698x42I2ufxl1x0O0W+a0wkRef0Ya1kV09YQY08Hf8M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I5UvB6RDI8+UyE9FsD/AT3Vd19uQGOkMdgyi+YGbi2nyru9RmZ8iGY2vg04oViBMP
-	 KzRgqT595Z+6mVGtFxI2jPwuRyRDqepx0t4u0dXjzWWC8h4Nj2bUW9zKir7IHFXMeF
-	 be+FYsDaSAKQqv1Dz7EuXoUR5pzMujRIMFIl8aYM=
+	b=q3124F7cVBCnwoWtOw5mQ/5Bp2qLQuBr4y97oXF9APFGnI4ibWcW2B9p9ya1MGPJl
+	 SDh8TchjwylNBf62E3esWLL8mgVYNYnlAKARHihUFl/+8Cq/et20ztGOjVKxxPcVui
+	 nexPu7eTH+KFcvLmQTDjV+r42YVXbdPNMQB2muC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgBRVDB (ORCPT
+        id S1726415AbgBRVEJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:03:01 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39127 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgBRVDB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:03:01 -0500
-Received: by mail-oi1-f194.google.com with SMTP id z2so21578645oih.6;
-        Tue, 18 Feb 2020 13:03:00 -0800 (PST)
+        Tue, 18 Feb 2020 16:04:09 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33931 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgBRVEJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:04:09 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l136so21605270oig.1;
+        Tue, 18 Feb 2020 13:04:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UK5x7Qbtz2YIvTi+VKSGzW9nmW1tqKcEU73lrOQhdio=;
-        b=bkEAe7qqHjS3OA361dgku6g3RFiHWgHwhudopUsFZ6YcrveNojKQJp849vJu0T5/0d
-         tGYeyRILMDOLPz5SD0XWTNHtACO7l9NbJR7s4zxEMd3r3QwN9dSj49nuXV9rPLCB5Max
-         q8gzmd0yCCrzGR2VREkpa85mS0VGT+60QBTNtb1oXTdl1pIO6/8deubYHEHKY9PJZpNR
-         gSq71f6dAW3YsW2OKY7IEDoe4HqCYaXAE8ECQ8TZaoeHEyxZTmhdKqdvvaF88jrOgSfv
-         dnktFtuK5v5lyiwyLxlNLTVpi2P6j4lCNQxW52V/eKO6s6brNpRB5mF8aq182nNSagQY
-         qXaA==
-X-Gm-Message-State: APjAAAV3Oujv1jeSaqSVC6nhFYF2g/Fn4gdaHUQnlQnyrZEqFb51AsBY
-        53Fp2d66VIg4BttdoY8VXw==
-X-Google-Smtp-Source: APXvYqwvqZC2ovpq0Z13HaqzdrI7kghsPwxNVTpsxm4b3jLIBoAM3cU8Ha17O1B+c6mFDeciX3U8bg==
-X-Received: by 2002:aca:b244:: with SMTP id b65mr2606745oif.40.1582059780301;
-        Tue, 18 Feb 2020 13:03:00 -0800 (PST)
+        bh=UwjjYnG/jWqlCLFoFu94p360e88borBKuEW+C88Dv3s=;
+        b=US1cE3z0CNzcgktY/liULmQaqp1u5yoiWyvqyUGT9OQHZv06+NkaF7O+LhhJhQW9L7
+         EjdCBPuyH86nduRbVou9wUIoVOVfFIwVYfHKlaLWqkGlLl2YH+F7vIghSTZQ3e1mSD3Z
+         uia9OgOab93T1KB41VtcI9ybqYTlZiXLVkwhtti+iMnhEaajo+uBxHC6/OD0Ymn13UB8
+         d+un4nZJoEJOuhrxPdUHiP6oWtwBfbXBV5TYelkB7qx0mEU1P6mGs/XpMMqwjbwt1+lN
+         4Teu6XFF/gF0tfhMQhvi9IRRl3lwoq/qPF9VJuGw+sY8iCxTLSFt0iNopuwSjYK05imN
+         6iyQ==
+X-Gm-Message-State: APjAAAWLUD7Mg88rHQvR7qLmWdV37Wv4GkppW8dRMD+Vwog6gIpvPCwI
+        hVphXXRYYEWe4bONoc0zVw==
+X-Google-Smtp-Source: APXvYqwHJDNZjVGmm+GSa20E6MAlz3y9ic6qbHKnImkXJJw2j5CVcKD+jcgP7v4fZRSddspoiFrHBw==
+X-Received: by 2002:aca:b808:: with SMTP id i8mr2457073oif.66.1582059847979;
+        Tue, 18 Feb 2020 13:04:07 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m22sm1753895otj.3.2020.02.18.13.02.59
+        by smtp.gmail.com with ESMTPSA id b9sm1723745otf.56.2020.02.18.13.04.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:02:59 -0800 (PST)
-Received: (nullmailer pid 31749 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:02:58 -0000
-Date:   Tue, 18 Feb 2020 15:02:58 -0600
+        Tue, 18 Feb 2020 13:04:07 -0800 (PST)
+Received: (nullmailer pid 974 invoked by uid 1000);
+        Tue, 18 Feb 2020 21:04:06 -0000
+Date:   Tue, 18 Feb 2020 15:04:06 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: usb: qcom,dwc3: Introduce
- interconnect properties for Qualcomm DWC3 driver
-Message-ID: <20200218210258.GA29667@bogus>
-References: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
- <1581668684-4182-2-git-send-email-sanm@codeaurora.org>
+To:     Mohammad Rasim <mohammad.rasim96@gmail.com>
+Cc:     linux-media@vger.kernel.org, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        Mohammad Rasim <mohammad.rasim96@gmail.com>
+Subject: Re: [PATCH v5 2/3] dt-bindings: media: add new kii pro key map
+Message-ID: <20200218210406.GA917@bogus>
+References: <20200214085802.28742-1-mohammad.rasim96@gmail.com>
+ <20200214085802.28742-3-mohammad.rasim96@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581668684-4182-2-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <20200214085802.28742-3-mohammad.rasim96@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 01:54:42PM +0530, Sandeep Maheswaram wrote:
-> Add documentation for the interconnects and interconnect-names
-> properties for USB.
+On Fri, 14 Feb 2020 11:58:01 +0300, Mohammad Rasim wrote:
+> Add new entry for rc-videostrong-kii-pro in linux,rc-map-name
 > 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
 > ---
->  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  Documentation/devicetree/bindings/media/rc.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> index 4a36ab5..236877e 100644
-> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> @@ -68,6 +68,22 @@ properties:
->    resets:
->      maxItems: 1
->  
-> +  interconnects:
-> +    description:
-> +      Pairs of phandles and interconnect provider specifiers
-> +      to denote the edge source and destination ports of
-> +      the interconnect path. Please refer to
-> +      Documentation/devicetree/bindings/interconnect/
-> +      for more details.
 
-No need to redefine a common property, but you do need to define how 
-many entries (maxItems).
-
-> +
-> +  interconnect-names:
-> +    description:
-> +      List of interconnect path name strings sorted in the same
-> +      order as the interconnects property. Consumer drivers will use
-> +      interconnect-names to match interconnect paths with interconnect
-> +      specifiers. Please refer to Documentation/devicetree/bindings/
-> +      interconnect/ for more details.
-
-Need to define what the names are.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
