@@ -2,97 +2,122 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9E1C3404B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D471C34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F72824656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33D32070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582059693;
-	bh=8XsYhsH4J/poaNbefwjdlRd8mx7pjYvtFV0PAYc2TxI=;
+	s=default; t=1582059782;
+	bh=CUmLB15wNAUy95xcdWVQwrKRhKVUfn5Sh+qoryLbYRA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gsCyXycIbhJQHdDjFebm0KCBTq3fthZj9yO8ST+3uNnEe9wSH1eEKCKR6Mi5rYBmW
-	 HL9iqOTNsezf/a5GZH+V+YPcVKZohEjk2NHOK60kkl5vbiaDXAyPfnmTlhaKLKRu+A
-	 BtvZMpgAFAepFQ+ZLpc1+4XBLDPGCdvtPqkBuP4A=
+	b=I5UvB6RDI8+UyE9FsD/AT3Vd19uQGOkMdgyi+YGbi2nyru9RmZ8iGY2vg04oViBMP
+	 KzRgqT595Z+6mVGtFxI2jPwuRyRDqepx0t4u0dXjzWWC8h4Nj2bUW9zKir7IHFXMeF
+	 be+FYsDaSAKQqv1Dz7EuXoUR5pzMujRIMFIl8aYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgBRVBc (ORCPT
+        id S1726415AbgBRVDB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:01:32 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44843 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgBRVBc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:01:32 -0500
-Received: by mail-ot1-f68.google.com with SMTP id h9so20908064otj.11;
-        Tue, 18 Feb 2020 13:01:30 -0800 (PST)
+        Tue, 18 Feb 2020 16:03:01 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39127 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgBRVDB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:03:01 -0500
+Received: by mail-oi1-f194.google.com with SMTP id z2so21578645oih.6;
+        Tue, 18 Feb 2020 13:03:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/Qkn6cuX05q9ckSQkSE2Wm9fSdo4DwXw0e9vVR3fD0g=;
-        b=USfFxYFa6g+TlszEDFATMzMVR2d+1lLs6qxIpqX+BOB4TEAtV2Sau1q8KoldC+L6b7
-         ZxW57ChXscKYHcOPu+vXT8mptR8oyiaWlH2H7ldrbHwn6KXq5k1d65r5SubIjf/aWEDO
-         qBCRUJYWxrXTtAPCboQcMNlbs8tDOeIOaqxWMT99ZFe0hxyK0jNzIY/IdKf7JovGN5kD
-         0H/JcZ/xdIxKwHes2yJr7U+QwDd2txh5qA5H4HlJuV7KH+xT+TFbh8DHDZzkQ48/+MWa
-         8mdDPqB3yoDa1wYilB3fSPQ5rZizCpQ06SAYY8o13WVqgikuL+BPIggeLijJEK2AAq2l
-         Gt8A==
-X-Gm-Message-State: APjAAAVizXROCsE30lLrZ6hvHaK0i1kP0AFhcJ8qtY3AM2+zcNRic+Yk
-        vJGF/cLfoA3WLZsnnnF7oQ==
-X-Google-Smtp-Source: APXvYqzliGHidKRoG1fR6TqZPT4hsnNA6zLluyoEJZeEy/c0FxPegzmG8/8F73s19U4pCm1BSaw7wQ==
-X-Received: by 2002:a05:6830:10d7:: with SMTP id z23mr17166431oto.114.1582059690302;
-        Tue, 18 Feb 2020 13:01:30 -0800 (PST)
+        bh=UK5x7Qbtz2YIvTi+VKSGzW9nmW1tqKcEU73lrOQhdio=;
+        b=bkEAe7qqHjS3OA361dgku6g3RFiHWgHwhudopUsFZ6YcrveNojKQJp849vJu0T5/0d
+         tGYeyRILMDOLPz5SD0XWTNHtACO7l9NbJR7s4zxEMd3r3QwN9dSj49nuXV9rPLCB5Max
+         q8gzmd0yCCrzGR2VREkpa85mS0VGT+60QBTNtb1oXTdl1pIO6/8deubYHEHKY9PJZpNR
+         gSq71f6dAW3YsW2OKY7IEDoe4HqCYaXAE8ECQ8TZaoeHEyxZTmhdKqdvvaF88jrOgSfv
+         dnktFtuK5v5lyiwyLxlNLTVpi2P6j4lCNQxW52V/eKO6s6brNpRB5mF8aq182nNSagQY
+         qXaA==
+X-Gm-Message-State: APjAAAV3Oujv1jeSaqSVC6nhFYF2g/Fn4gdaHUQnlQnyrZEqFb51AsBY
+        53Fp2d66VIg4BttdoY8VXw==
+X-Google-Smtp-Source: APXvYqwvqZC2ovpq0Z13HaqzdrI7kghsPwxNVTpsxm4b3jLIBoAM3cU8Ha17O1B+c6mFDeciX3U8bg==
+X-Received: by 2002:aca:b244:: with SMTP id b65mr2606745oif.40.1582059780301;
+        Tue, 18 Feb 2020 13:03:00 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm4379oia.21.2020.02.18.13.01.29
+        by smtp.gmail.com with ESMTPSA id m22sm1753895otj.3.2020.02.18.13.02.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:01:29 -0800 (PST)
-Received: (nullmailer pid 29601 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:01:28 -0000
-Date:   Tue, 18 Feb 2020 15:01:28 -0600
+        Tue, 18 Feb 2020 13:02:59 -0800 (PST)
+Received: (nullmailer pid 31749 invoked by uid 1000);
+        Tue, 18 Feb 2020 21:02:58 -0000
+Date:   Tue, 18 Feb 2020 15:02:58 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     David Heidelberg <david@ixit.cz>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        David Heidelberg <david@ixit.cz>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] dt-bindings: iio: light: add support for
- Dyna-Image AL3010
-Message-ID: <20200218210128.GA29568@bogus>
-References: <20200211191201.1049902-1-david@ixit.cz>
- <20200211191201.1049902-3-david@ixit.cz>
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v5 1/3] dt-bindings: usb: qcom,dwc3: Introduce
+ interconnect properties for Qualcomm DWC3 driver
+Message-ID: <20200218210258.GA29667@bogus>
+References: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
+ <1581668684-4182-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211191201.1049902-3-david@ixit.cz>
+In-Reply-To: <1581668684-4182-2-git-send-email-sanm@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2020 20:11:56 +0100, David Heidelberg wrote:
-> The Dyna-Image AL3010 is a 16-bit digital ambient light sensor which
-> provides a multiple gain function with linear response over a dynamic
-> range 1216/4863/19452/77806.
+On Fri, Feb 14, 2020 at 01:54:42PM +0530, Sandeep Maheswaram wrote:
+> Add documentation for the interconnects and interconnect-names
+> properties for USB.
 > 
-> Signed-off-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
-> v5
->  - drop requirement on interrups and vdd-supply
->  - s/al3010@1c/light-sensor@1c/
->  - dual license also under BSD
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
->  .../devicetree/bindings/iio/light/al3010.yaml | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/al3010.yaml
-> 
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> index 4a36ab5..236877e 100644
+> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> @@ -68,6 +68,22 @@ properties:
+>    resets:
+>      maxItems: 1
+>  
+> +  interconnects:
+> +    description:
+> +      Pairs of phandles and interconnect provider specifiers
+> +      to denote the edge source and destination ports of
+> +      the interconnect path. Please refer to
+> +      Documentation/devicetree/bindings/interconnect/
+> +      for more details.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+No need to redefine a common property, but you do need to define how 
+many entries (maxItems).
+
+> +
+> +  interconnect-names:
+> +    description:
+> +      List of interconnect path name strings sorted in the same
+> +      order as the interconnects property. Consumer drivers will use
+> +      interconnect-names to match interconnect paths with interconnect
+> +      specifiers. Please refer to Documentation/devicetree/bindings/
+> +      interconnect/ for more details.
+
+Need to define what the names are.
+
+Rob
