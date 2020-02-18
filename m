@@ -7,90 +7,93 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7CEC34049
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A466C34049
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D06F24125
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78F924125
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 21:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582060305;
-	bh=KJ8vglVapw/2iwFzdo5lxPghdHY+J8BXT8pm/rSrwzU=;
+	s=default; t=1582060435;
+	bh=jVC8I1sGpUiNMyiy8r1s4MV9S4tOyGLhWM1jmiBuVEo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZGi70NiSvf3vsvlLbaBqEZXChq0xy7/JY2/SmehqAzKNHockKHJQOsZL91ZM2o7J+
-	 3EElgS9StfqtrRiQwEYCfyK6IEfN/78u82evqa4+sCKrwiKcpFL4D+HerD7N1pBEBG
-	 D7ITAwqU+lIf0nuCumTe7n5zBWkqyjpcSDZYsZXs=
+	b=Kjr8ahENh3NZDQdtANWtS8sFnLBrtGwtsoBSMQQb5IInzFMJ3ZBEjnnLO100Dkrwd
+	 9jwVxBdg2P3peAbK+0uNci4Iov4fMBw0FvTSZl7IY1AprugCOmn3kojbwC2p8gghiU
+	 /FCrzrloR3q8pN5wNswTO7FLSLzHhEaNa/NpnLNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgBRVLk (ORCPT
+        id S1726645AbgBRVNv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:11:40 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35925 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgBRVLk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:11:40 -0500
-Received: by mail-ot1-f66.google.com with SMTP id j20so21004981otq.3;
-        Tue, 18 Feb 2020 13:11:39 -0800 (PST)
+        Tue, 18 Feb 2020 16:13:51 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39649 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgBRVNv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 16:13:51 -0500
+Received: by mail-oi1-f196.google.com with SMTP id z2so21610187oih.6;
+        Tue, 18 Feb 2020 13:13:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VF+9+FNI4E+Nip5+V6ijEpNvKUP4upuNUFTZZUsRCXg=;
-        b=ETmDyBQgdFxE+CzThVrH7bKsR3aHm3IdXSdhFT+8Px9cad/jN4LsKMmGPQWqVTf6gk
-         um3xP1rVIGVQjRS1+yitl99MffVU3EAGCs/XjN2lHE1QLs5+eL6Be670Irvy20rDnhYJ
-         BBrfssXVFKYm2H0PWVVtiIUJ4qiVALFtBNGt/Zq2TuUGrHXLSWnpHcshLuE5V3tIU67Z
-         pi/c5ACBqcWckdVpNan0WKa6B0sFIP0C9gIVM5jAWXiEkH1hde9xfGrOxIp3/+CxCKg2
-         6Mjg+ULMQC0rSpb/WFj++KjJZe+64x+Ky9D5PPaQemY3DGyzQQawWwlA6ORaxJmTFbYI
-         819w==
-X-Gm-Message-State: APjAAAWERIzDwy4yrnEcCrEdBQAnFFLBIsAtonfZzId0TEoVB0CgVZj4
-        6gX404SiV5pjCpSobYgHaA==
-X-Google-Smtp-Source: APXvYqwJzVO7Tt+nwt33yTfdT7FBGZHp27tmMJKxVMqskFLak+pv0Qur7ZcoIPtKeYrxDLetf1E5GQ==
-X-Received: by 2002:a05:6830:138b:: with SMTP id d11mr16239453otq.38.1582060299527;
-        Tue, 18 Feb 2020 13:11:39 -0800 (PST)
+        bh=Wsp21LIcG4NslijziS7uyMDJScAYzOtQaO+9/p80IQ4=;
+        b=Gn4kmXJu9n+uXGhlbfM9KPlbi5ycH4xKUSLbngI4euPIE/5WlodKz25tj2XHe1BQO8
+         xNzavCIzz50qIB4nBht9+qyPoznu+UM5iZJpOPhWXkcCefa11U9uAvyp9KX4x7RHosXu
+         ShT7FMEoKFxuF6MvwgiDECAgw0JFNbMTsZLKuTFWydWxE2kxBscJDniJI1iEWC7KZNbz
+         FvwBxrIX/2PTtvmP1PgWhGZaBZ0OXkhhn7NxL+Us5Ynp9mw5uBTRK98RjrHd9HiKj7NN
+         /+5SDiP3j1Y6qdoO9BWRQqw7Ss4OaWpcXRfVBSTBiUWAQHExlu6cGNtvL4SUmm8mWgOz
+         QBKA==
+X-Gm-Message-State: APjAAAWWY1wTEeRHNyBSUA2BVamo+lEiKfdwaABl5FjrZE7d5F4kIiIr
+        RJ330liDWIbi5LpjPN7Ciw==
+X-Google-Smtp-Source: APXvYqzV9oocyBJZGvkp1bADAbLS2xQl21KF+EyRyietsBdKoEM/3HRmoC9kQcpKj2d8Pz3raOUtlA==
+X-Received: by 2002:aca:3542:: with SMTP id c63mr2575156oia.135.1582060430256;
+        Tue, 18 Feb 2020 13:13:50 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r10sm1732782otn.37.2020.02.18.13.11.38
+        by smtp.gmail.com with ESMTPSA id m185sm13530oia.26.2020.02.18.13.13.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:11:38 -0800 (PST)
-Received: (nullmailer pid 12310 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:11:38 -0000
-Date:   Tue, 18 Feb 2020 15:11:38 -0600
+        Tue, 18 Feb 2020 13:13:49 -0800 (PST)
+Received: (nullmailer pid 15304 invoked by uid 1000);
+        Tue, 18 Feb 2020 21:13:48 -0000
+Date:   Tue, 18 Feb 2020 15:13:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, sriram.dash@samsung.com,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: net: can: Convert M_CAN to
- json-schema
-Message-ID: <20200218211138.GA12217@bogus>
-References: <20200207100306.20997-1-benjamin.gaignard@st.com>
- <20200207100306.20997-3-benjamin.gaignard@st.com>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car
+ PCIe  endpoint controller
+Message-ID: <20200218211348.GA15246@bogus>
+References: <20200208183641.6674-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200208183641.6674-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207100306.20997-3-benjamin.gaignard@st.com>
+In-Reply-To: <20200208183641.6674-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 7 Feb 2020 11:03:06 +0100, Benjamin Gaignard wrote:
-> Convert M_CAN bindings to json-schema
+On Sat,  8 Feb 2020 18:36:39 +0000, Lad Prabhakar wrote:
+> This patch adds the bindings for the R-Car PCIe endpoint driver.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
-> version 4:
-> - remove useless ref to can-transceiver.yaml
-> 
-> version 3:
-> - move can-transceive node into bosch,m_can.yaml bindings
->  .../devicetree/bindings/net/can/bosch,m_can.yaml   | 144 +++++++++++++++++++++
->  .../devicetree/bindings/net/can/m_can.txt          |  75 -----------
->  2 files changed, 144 insertions(+), 75 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
->  delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+>  .../devicetree/bindings/pci/rcar-pci-ep.yaml       | 76 ++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
