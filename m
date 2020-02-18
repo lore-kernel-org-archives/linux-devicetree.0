@@ -2,100 +2,267 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DC5C34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 08:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD10C34034
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 09:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FD121D7D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 08:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9D72464E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 09:05:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uXc+7s1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgBRI4g (ORCPT
+        id S1726318AbgBRJFs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:56:36 -0500
-Received: from mga06.intel.com ([134.134.136.31]:38072 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgBRI4g (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:56:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 00:56:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="314991670"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 18 Feb 2020 00:56:35 -0800
-Received: from [10.226.38.30] (unknown [10.226.38.30])
-        by linux.intel.com (Postfix) with ESMTP id 2ABC458033E;
-        Tue, 18 Feb 2020 00:56:31 -0800 (PST)
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        dinguyen@kernel.org, tien.fong.chee@intel.com
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
- <20200214121145.GF4827@sirena.org.uk>
- <4712cdc4-34cd-990b-3d53-3d394ae1250b@linux.intel.com>
- <20200217115213.GA9304@sirena.org.uk>
- <f5f868e5-a977-7487-9395-a76dd5e7c963@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <49bc16bc-297f-d58c-5b93-6397edf1fbda@linux.intel.com>
-Date:   Tue, 18 Feb 2020 16:56:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 18 Feb 2020 04:05:48 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33206 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbgBRJFs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 04:05:48 -0500
+Received: by mail-wr1-f68.google.com with SMTP id u6so22970134wrt.0
+        for <devicetree@vger.kernel.org>; Tue, 18 Feb 2020 01:05:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=ZQOUNLnI2259PEgDQeFnGl4MBwAdHmsWL1wSexCinM4=;
+        b=uXc+7s1riFQCb+A5ws5EF3BokKj3HF5Ic7fu+a6RWMuGmjkBH2YIJ5d/XCq/0hbPe8
+         ZdV/SnkczBOx9DNcZDRkEG62+CVv+Ul71XEunTqjDbZba1X8yaPVIXjo8ZcC2X6TZwzV
+         zJdM5EVbamvY8CL1TmWChxN3kC2d7sJcmT57hcBw7iuT3weuEUHczpA/dEa7J8NHyLSj
+         3FfbhHrvX8TMlqVUm32ZicYOl4h6wkXdN6dPRY1WZRglffWh8F9fo3uwGhstowwATguW
+         GlhpbGhH7eQOnT6OVc3ya1iec+VOHF2fM96YAJpoNJzX6sCVFkDt+WAG1J5VIhjCy3l/
+         6FBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=ZQOUNLnI2259PEgDQeFnGl4MBwAdHmsWL1wSexCinM4=;
+        b=UV2xYwBohU1foVE2zJcwQ59M/x1PMMITHQrjAGAXPpX0HOCOWNhWbjtDmecPpBzPjj
+         9BIwmhIhkTrGnTdB4bKC+ZCTJg0DH6bwF3Xr+xEMfFHU9strk2YQaRe7hA0rsoqYBuAF
+         mJ6GxRLtXCyDZ/TlioYcqCIltY38kEZhphq+3gyUGlpre1IDHHtmWqTbHc+t2NTTYSUy
+         mquvSCnOusG/r2V0XXLw88Rzx7ATIGvvPOzemyp1/1lQJVCDKxphHHnpeaGqosVahUKy
+         CEnK7vBD+xyTz5XyAPGx3IB82MuK6M8PKILSIQgzsZ8L8qrE3unWX2zxAw2qgdV62ZzO
+         ao5A==
+X-Gm-Message-State: APjAAAX783Cif3INAn3lcL5+NY1V6ViRSJhyxjUvzfdCTq0wXZGuucJU
+        u3OijR2uBQsuB7QQ38OzhmqSag==
+X-Google-Smtp-Source: APXvYqw7gVv24LXO4yo+TKhY0kNEn11cDs1o6RHPmwxTKhpnXMxlZFCrF93NRIGzbtr+nGTfG9euuQ==
+X-Received: by 2002:a5d:5647:: with SMTP id j7mr27755061wrw.265.1582016745546;
+        Tue, 18 Feb 2020 01:05:45 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id w7sm2722224wmi.9.2020.02.18.01.05.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 01:05:44 -0800 (PST)
+References: <20200120034937.128600-1-jian.hu@amlogic.com> <20200120034937.128600-3-jian.hu@amlogic.com> <1jftfq7ir8.fsf@starbuckisacylon.baylibre.com> <ce7d406e-b5bd-44c8-84fb-5edd3b3ffbce@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 2/5] clk: meson: add support for A1 PLL clock ops
+In-reply-to: <ce7d406e-b5bd-44c8-84fb-5edd3b3ffbce@amlogic.com>
+Date:   Tue, 18 Feb 2020 10:05:43 +0100
+Message-ID: <1jd0ac5kpk.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <f5f868e5-a977-7487-9395-a76dd5e7c963@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vignesh,
 
-On 17/2/2020 8:18 PM, Vignesh Raghavendra wrote:
-> Hi Vadivel,
+On Mon 10 Feb 2020 at 07:11, Jian Hu <jian.hu@amlogic.com> wrote:
+
+> Hi Jerome
 >
-> On 17/02/20 5:22 pm, Mark Brown wrote:
->> On Mon, Feb 17, 2020 at 05:28:38PM +0800, Ramuthevar, Vadivel MuruganX wrote:
->>> On 14/2/2020 8:11 PM, Mark Brown wrote:
->>>> Given that this is a new driver I'd be very surprised if it broke other
->>>> users?  I can imagine it might not work for them and it would definitely
->>>> be much better to get their review but it shouldn't be any worse than
->>>> the current lack of support.
->>> *[Vignesh]*  The legacy driver under drivers/mtd/spi-nor will be removed as
->>> we cannot
->>> support both SPI NOR and SPI NAND with single driver if its under
->>> spi-nor. New driver should be functionally equivalent to existing one.
->>> So I suggest you test this driver on legcay SoCFPGA products.
->> You're not actually removing the driver here, you're adding another
->> driver for the same thing.
+> Thanks for your suggestions.
+>
+> On 2020/2/4 18:24, Jerome Brunet wrote:
 >>
-> I agree with Mark here.
->
-> I realized that you are using same CONFIG option as the old one to build
-> this driver. This causes new driver to fail to probe as old driver would
-> bind to the node instead (both drivers will be built into the kernel and
-> both drivers have same compatible).
->
-> So, you should remove the old driver. Could you also include patches
-> removing old driver? New driver and bindings are anyways backward
-> compatible with existing one
-Sure , will remove the existing driver and sending single patch, Thanks!
+>> On Mon 20 Jan 2020 at 04:49, Jian Hu <jian.hu@amlogic.com> wrote:
+>>
+>>> Compared with the previous SoCs, self-adaption current module
+>>> is newly added for A1, and there is no reset parm except the
+>>> fixed pll. In A1 PLL, the PLL enable sequence is different, using
+>>> the new power-on sequence to enable the PLL.
+>>
+>> Things are getting clearer thanks to Martin's suggestions and I can
+>> understand what your driver is doing now
+>>
+>> However, I still have a problem with the fact that 2 different pll types
+>> are getting intertwined in this driver. Parameters mandatory to one is
+>> made optional to the other. Nothing clearly shows which needs what and
+>> the combinatorial are quickly growing.
+>>
+>> Apparently the only real difference is in enable/disable, So I would
+>> prefer if the a1 had dedicated function for these ops.
+>>
+>> I suppose you'll have to submit clk_hw_enable() and clk_hw_disable()
+>> to the framework to call the appropriate ops dependind on the SoC.
+>>
+> I am confused here.
+> What does clk_hw_is_enabled/clk_hw_enable/clk_hw_disable use here?
 
-Regards
-Vadivel
+I'm asking you to make different callback for .enable() and .disable().
+The .set_rate() callback of this driver needs to turn off and on the
+clock, so it needs to call the appropriate one.
+
+To do so, you should go through a clk_hw_xxxxx() function.
+
+>
+> clk_hw_is_enabled is intend to check a parm's existence? But
+> clk_hw_is_enabled which is existed in CCF to check a PLL is locked or
+> not. Maybe I understand wrong about your suggestions.
+>
+> Could you list a example for clk_hw_enable and clk_hw_disable function
+> implementation?
+
+drivers/clk/clk.c:523 : clk_hw_is_enabled()
+
+clk_hw_enable() and clk_hw_disable() so you'll need to implement these
+one and submit them.
+
+>>>
+>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>>> ---
+>>>   drivers/clk/meson/clk-pll.c | 47 +++++++++++++++++++++++++++++++------
+>>>   drivers/clk/meson/clk-pll.h |  2 ++
+>>>   2 files changed, 42 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+>>> index ddb1e5634739..10926291440f 100644
+>>> --- a/drivers/clk/meson/clk-pll.c
+>>> +++ b/drivers/clk/meson/clk-pll.c
+>>> @@ -283,10 +283,14 @@ static void meson_clk_pll_init(struct clk_hw *hw)
+>>>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>>     	if (pll->init_count) {
+>>> -		meson_parm_write(clk->map, &pll->rst, 1);
+>>> +		if (MESON_PARM_APPLICABLE(&pll->rst))
+>>> +			meson_parm_write(clk->map, &pll->rst, 1);
+>>> +
+>>
+>> replace by
+>>          enabled = clk_hw_is_enabled(hw)
+>>          if (enabled)
+>>             clk_hw_disable(hw)
+>>
+> clk_hw_is_enabled here is used to check 'pll->rst'?
+>>>   		regmap_multi_reg_write(clk->map, pll->init_regs,
+>>>   				       pll->init_count);
+>>> -		meson_parm_write(clk->map, &pll->rst, 0);
+>>> +
+>>> +		if (MESON_PARM_APPLICABLE(&pll->rst))
+>>> +			meson_parm_write(clk->map, &pll->rst, 0);
+>>
+>>         /* restore if necessary */
+>>         if (enabled)
+>>            clk_hw_enable(hw)
+>>
+>>>   	}
+>>>   }
+>>>   @@ -295,8 +299,11 @@ static int meson_clk_pll_is_enabled(struct clk_hw
+>>> *hw)
+>>>   	struct clk_regmap *clk = to_clk_regmap(hw);
+>>>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>>   -	if (meson_parm_read(clk->map, &pll->rst) ||
+>>> -	    !meson_parm_read(clk->map, &pll->en) ||
+>>> +	if (MESON_PARM_APPLICABLE(&pll->rst) &&
+>>> +	    meson_parm_read(clk->map, &pll->rst))
+>>> +		return 0;
+>>> +
+>>> +	if (!meson_parm_read(clk->map, &pll->en) ||
+>>>   	    !meson_parm_read(clk->map, &pll->l))
+>>>   		return 0;
+>>
+>> I suppose the pll can't be locked if it was in reset, so we could drop
+>> the check on `rst` entirely to simplify the function
+>>
+> OK, I will drop 'rst' check.
+>>>   @@ -323,13 +330,34 @@ static int meson_clk_pll_enable(struct clk_hw
+>>> *hw)
+>>>   		return 0;
+>>>     	/* Make sure the pll is in reset */
+>>> -	meson_parm_write(clk->map, &pll->rst, 1);
+>>> +	if (MESON_PARM_APPLICABLE(&pll->rst))
+>>> +		meson_parm_write(clk->map, &pll->rst, 1);
+>>>     	/* Enable the pll */
+>>>   	meson_parm_write(clk->map, &pll->en, 1);
+>>>     	/* Take the pll out reset */
+>>> -	meson_parm_write(clk->map, &pll->rst, 0);
+>>> +	if (MESON_PARM_APPLICABLE(&pll->rst))
+>>> +		meson_parm_write(clk->map, &pll->rst, 0);
+>>> +
+>>> +	/*
+>>> +	 * Compared with the previous SoCs, self-adaption current module
+>>> +	 * is newly added for A1, keep the new power-on sequence to enable the
+>>> +	 * PLL. The sequence is:
+>>> +	 * 1. enable the pll, delay for 10us
+>>> +	 * 2. enable the pll self-adaption current module, delay for 40us
+>>> +	 * 3. enable the lock detect module
+>>> +	 */
+>>> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>>> +		udelay(10);
+>>> +		meson_parm_write(clk->map, &pll->current_en, 1);
+>>> +		udelay(40);
+>>> +	};
+>>> +
+>>> +	if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
+>>> +		meson_parm_write(clk->map, &pll->l_detect, 1);
+>>> +		meson_parm_write(clk->map, &pll->l_detect, 0);
+>>> +	}
+>>>     	if (meson_clk_pll_wait_lock(hw))
+>>>   		return -EIO;
+>>> @@ -343,10 +371,15 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
+>>>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>>     	/* Put the pll is in reset */
+>>> -	meson_parm_write(clk->map, &pll->rst, 1);
+>>> +	if (MESON_PARM_APPLICABLE(&pll->rst))
+>>> +		meson_parm_write(clk->map, &pll->rst, 1);
+>>>     	/* Disable the pll */
+>>>   	meson_parm_write(clk->map, &pll->en, 0);
+>>> +
+>>> +	/* Disable PLL internal self-adaption current module */
+>>> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
+>>> +		meson_parm_write(clk->map, &pll->current_en, 0);
+>>>   }
+>>
+>> With the above clarified, it should be easy to properly split the
+>> functions between the legacy type and the a1 type.
+>>
+>> You'll need to update meson_clk_pll_set_rate() to call
+>>   - clk_hw_is_enabled()
+>>   - clk_hw_enable() and clk_hw_disable() (again, you'll need to add
+>>   those in the framework first)
+>>
+>>>     static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long
+>>> rate,
+>>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+>>> index 367efd0f6410..a2228c0fdce5 100644
+>>> --- a/drivers/clk/meson/clk-pll.h
+>>> +++ b/drivers/clk/meson/clk-pll.h
+>>> @@ -36,6 +36,8 @@ struct meson_clk_pll_data {
+>>>   	struct parm frac;
+>>>   	struct parm l;
+>>>   	struct parm rst;
+>>> +	struct parm current_en;
+>>> +	struct parm l_detect;
+>>>   	const struct reg_sequence *init_regs;
+>>>   	unsigned int init_count;
+>>>   	const struct pll_params_table *table;
+>>
+>> .
+>>
+
