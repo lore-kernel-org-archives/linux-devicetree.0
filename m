@@ -2,168 +2,117 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C8BC34034
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 03:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DDAC34022
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FD521D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 03:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F594214D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rqM9lTbW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K52oErQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgBRDEG (ORCPT
+        id S1726256AbgBRDN1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 22:04:06 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42599 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgBRDEG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 22:04:06 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so9877701pfz.9
-        for <devicetree@vger.kernel.org>; Mon, 17 Feb 2020 19:04:05 -0800 (PST)
+        Mon, 17 Feb 2020 22:13:27 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37862 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbgBRDN1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 22:13:27 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so356920pjb.2;
+        Mon, 17 Feb 2020 19:13:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Nal0vSzhjUSXQw3+qOaARWHAXZZO2AG5fTqWso3rl90=;
-        b=rqM9lTbWSK9RFXvsnXFktoJg33+bNVjzY48a7L97Xs3MMA9r7tjsSNF6bUPtXYgt+B
-         CKV/AxGQBAXG2LXYcc0uqXhMGV2MGB8B/9Rf2R9sFLneI7/DQgHZ0i8mRabQbSEwG7n7
-         2S3WhLg+oYRcA3lONEvY7P0UfLWAwrlq73hWe12O7aGx13kOvV1/XBimMwL3+1D/QzPY
-         0aidEeMR5dA83cEi39H2tVZAS29/EENQUKIdMYSCz5QVY+PHuR3UH0HQGeNEL7K3WYpP
-         YviElr5VQ2xssxGHZrfBMXqgCcFGSwlmpqnW2ENjNH84GNWbhCsuiNfSxL8zlATJCMjN
-         BOkg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QXKDYwEJ0FxdOMnutv0vajM2YUai+A8MQR7DaSJ50D8=;
+        b=K52oErQHhH1VOS2rZN6/4aypLstAfecJCe/0dHwYOQxReOfbBeAgIk5iOrwuR74dut
+         +X4DBNOJOcu+bps5CMA+Pe8icIX0UTJdE6qrDS+z0pGqyDPmelDdMDYCF+W+shvYFEz2
+         +t+GGcxWW22TPi20RBvTajOpA6i2HyzmN2CoFtrOaTC+AEVrV96UuSnFBNNR2vZ4oPA9
+         tvTUVR2QXobydoifr/ioajA2AEwqlDacsKGHnJ99+Xc2pt1rUF20T9ovZYryNlTnvIle
+         bFhww5NrHBPB9J6qMFEIL2hFukX5LzQ0Eb3dIr82CPhEKNvWyrGS2ImGVXcVC+zxdu5Q
+         pnfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Nal0vSzhjUSXQw3+qOaARWHAXZZO2AG5fTqWso3rl90=;
-        b=J1gFWHHBLYVUONgfPLwY9+GWLX7eC7qYwSJjowjN2DYFh3qEqidAZGGpM8xNFvu6I3
-         FDGF4vuOQDc7CpnWAfmn1vfouIT73+sdJ3ZpQNWDYj3gMhsSkB2xbMyP3rqjquzLMny1
-         9YHt83u3jSAn2IG3Z4wyv6F/GPkOAv6/NhlZJzY5uX4mH5rc3McFD4KTqK9DOVrXCPwW
-         R06j6wIz6bgQPn/TlYX7GQsBXj4IMlHG6OLJDE+bUdsV39xtUjEnTgWf1m3d5XTeGUoq
-         yUvSbPf+rXR+gecCV39XdeH7ng15ZLsZvNT3gHVFpPmMs/EcycEPyZI42FhxWE26Uykb
-         NNoA==
-X-Gm-Message-State: APjAAAX//AE+q/VgeMMZZ+t/b+Ju5IVkgGLo521erGZo7hC1Wg8Q2j36
-        dBN4DlPZUyVZ/LFbthb2BFBnzQ==
-X-Google-Smtp-Source: APXvYqzs4TcpmPL75g6Tz+Iv5FmPwMFXlHkNOa2hgrWXMyxEyi4CmkdcaWQDyM+DbzzxqPiDO9dtqQ==
-X-Received: by 2002:a63:ba03:: with SMTP id k3mr21562028pgf.52.1581995045220;
-        Mon, 17 Feb 2020 19:04:05 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h3sm792028pjs.0.2020.02.17.19.04.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QXKDYwEJ0FxdOMnutv0vajM2YUai+A8MQR7DaSJ50D8=;
+        b=mNFqRAuYUcytMwVhhKvGh+W9g1DP4Zif78+1Z8hfvTRgOwt/J4h3qLJpJv9znKRPcn
+         O3qf/0XPrvaOgkjMSl8GWJK5/ikZwlJK3H5hHwb8/XInrkge9Wuzs2o7fibb16QRdckm
+         rXHOj65u+Pydhewoc/x8axDyhc6pmkF2SESvSaTbu73EV5UpYumK0dC5bo8TQhsiGYF2
+         YdeYEsb1FgCes3Ptu9t0iMUcMBNEaf5G8VBsNXovq/6jgWUBCPgjecjSvT5HPpRp7QSL
+         OnnjLDKSebapNcqrrVW4HNwFwJ26MtfG8hdA7Z4qWDCVnSJvM2L7T3uct3OzF3EBxSZr
+         Ob7A==
+X-Gm-Message-State: APjAAAW5pT1KwageJR+G8UifVIBKNjmSJ5OK72pOcJ5Op1ouScug/wws
+        jNQVsa4NvQGcTGAr/g+MFsc=
+X-Google-Smtp-Source: APXvYqzx47gOz8vXOv1dcSyG2JwaSWwuAN6y+jr/G/nNBvxWFvH/XiVUGGsbruxEO9r6tVblvxUqLg==
+X-Received: by 2002:a17:902:547:: with SMTP id 65mr17940779plf.50.1581995605202;
+        Mon, 17 Feb 2020 19:13:25 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:180::6f94])
+        by smtp.gmail.com with ESMTPSA id b18sm1812595pfd.63.2020.02.17.19.13.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 19:04:04 -0800 (PST)
-Date:   Mon, 17 Feb 2020 19:03:10 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
-        broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org
-Subject: Re: [PATCH 1/6] soc: qcom: geni: Support for ICC voting
-Message-ID: <20200218030310.GV955802@ripper>
-References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
- <1581946205-27189-2-git-send-email-akashast@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581946205-27189-2-git-send-email-akashast@codeaurora.org>
+        Mon, 17 Feb 2020 19:13:24 -0800 (PST)
+From:   rentao.bupt@gmail.com
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH v3 0/5] aspeed-g6: enable usb support
+Date:   Mon, 17 Feb 2020 19:13:10 -0800
+Message-Id: <20200218031315.562-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 17 Feb 05:30 PST 2020, Akash Asthana wrote:
+From: Tao Ren <rentao.bupt@gmail.com>
 
-> Add necessary enums, macros and structure variables to support ICC BW
-> voting from individual SE drivers.
-> 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
->  include/linux/qcom-geni-se.h | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> index dd46494..b0adbfb 100644
-> --- a/include/linux/qcom-geni-se.h
-> +++ b/include/linux/qcom-geni-se.h
-> @@ -6,6 +6,8 @@
->  #ifndef _LINUX_QCOM_GENI_SE
->  #define _LINUX_QCOM_GENI_SE
->  
-> +#include <linux/interconnect.h>
-> +
->  /* Transfer mode supported by GENI Serial Engines */
->  enum geni_se_xfer_mode {
->  	GENI_SE_INVALID,
-> @@ -22,6 +24,13 @@ enum geni_se_protocol_type {
->  	GENI_SE_I3C,
->  };
->  
-> +/* Interconnect paths for GENI */
-> +enum geni_se_icc_path {
-> +	GENI_TO_CORE,
-> +	CPU_TO_GENI,
-> +	GENI_TO_DDR
-> +};
-> +
->  struct geni_wrapper;
->  struct clk;
->  
-> @@ -33,6 +42,13 @@ struct clk;
->   * @clk:		Handle to the core serial engine clock
->   * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
->   * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
-> + * @icc_path:		Array of interconnect path handles
-> + * @avg_bw_core:	Average bus bandwidth value for QUP core 2x clock
-> + * @peak_bw_core:	Peak bus bandwidth value for QUP core 2x clock
-> + * @avg_bw_cpu:		Average bus bandwidth value for CPU
-> + * @peak_bw_cpu:	Peak bus bandwidth value for CPU
-> + * @avg_bw_ddr:		Average bus bandwidth value for DDR
-> + * @peak_bw_ddr:	Peak bus bandwidth value for DDR
->   */
->  struct geni_se {
->  	void __iomem *base;
-> @@ -41,6 +57,13 @@ struct geni_se {
->  	struct clk *clk;
->  	unsigned int num_clk_levels;
->  	unsigned long *clk_perf_tbl;
-> +	struct icc_path *icc_path[3];
+The patch series aims at enabling USB Host and Gadget support on AST2600
+platforms.
 
-In all cases you refer to icc_path[IDENIFIER], so just give the three
-paths individual members and drop the enum above.
+Patch #1 replaces hardcoded vhub port/endpoint number with device tree
+properties, so that it's more convenient to add support for ast2600-vhub
+which provides more downstream ports and endpoints.
 
-Reards,
-Bjorn
+Patch #2 enables ast2600 support in aspeed-vhub usb gadget driver.
 
-> +	unsigned int avg_bw_core;
-> +	unsigned int peak_bw_core;
-> +	unsigned int avg_bw_cpu;
-> +	unsigned int peak_bw_cpu;
-> +	unsigned int avg_bw_ddr;
-> +	unsigned int peak_bw_ddr;
->  };
->  
->  /* Common SE registers */
-> @@ -229,6 +252,14 @@ struct geni_se {
->  #define GENI_SE_VERSION_MINOR(ver) ((ver & HW_VER_MINOR_MASK) >> HW_VER_MINOR_SHFT)
->  #define GENI_SE_VERSION_STEP(ver) (ver & HW_VER_STEP_MASK)
->  
-> +/* Core 2X clock frequency to BCM threshold mapping */
-> +#define CORE_2X_19_2_MHZ		960
-> +#define CORE_2X_50_MHZ			2500
-> +#define CORE_2X_100_MHZ			5000
-> +#define CORE_2X_150_MHZ			7500
-> +#define CORE_2X_200_MHZ			10000
-> +#define CORE_2X_236_MHZ			16383
-> +
->  #if IS_ENABLED(CONFIG_QCOM_GENI_SE)
->  
->  u32 geni_se_get_qup_hw_version(struct geni_se *se);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Patch #3 adds USB devices and according pin groups in aspeed-g6 dtsi.
+
+Patch #4 and #5 add vhub port/endpoint properties into aspeed-g4 and
+aspeed-g5 dtsi.
+
+Tao Ren (5):
+  usb: gadget: aspeed: read vhub properties from device tree
+  usb: gadget: aspeed: add ast2600 vhub support
+  ARM: dts: aspeed-g6: add usb functions
+  ARM: dts: aspeed-g5: add vhub port and endpoint properties
+  ARM: dts: aspeed-g4: add vhub port and endpoint properties
+
+ arch/arm/boot/dts/aspeed-g4.dtsi           |  2 +
+ arch/arm/boot/dts/aspeed-g5.dtsi           |  2 +
+ arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi   | 25 +++++++
+ arch/arm/boot/dts/aspeed-g6.dtsi           | 45 ++++++++++++
+ drivers/usb/gadget/udc/aspeed-vhub/Kconfig |  4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/core.c  | 79 +++++++++++++++-------
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c   | 30 +++++---
+ drivers/usb/gadget/udc/aspeed-vhub/epn.c   |  4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/hub.c   | 26 ++++---
+ drivers/usb/gadget/udc/aspeed-vhub/vhub.h  | 23 +++----
+ 10 files changed, 178 insertions(+), 62 deletions(-)
+
+-- 
+2.17.1
+
