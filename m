@@ -7,85 +7,87 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E16C3404C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 23:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFBDC34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 23:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8888524670
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 23:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66A424656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 23:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582066965;
-	bh=TEjhYB0IsTZAHR2KK7F/QjCeXx94uXQXiTd8GOVaUuU=;
+	s=default; t=1582067013;
+	bh=YEFqQv+lstuEqCgb6LglB6JO5IywnsuU/5UPXeklUDM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aC+QRsUhfRZQd4tkfU0StzEwSj6NKskUSEay1jN7WxUH4aEGcqihO5KeTXvgPyny1
-	 rNJLMLSeVkwOlMO5dtwKUd//jFIjqVHlY6/pmGcP6/ComAJG1um9cxHsnB8Q3Os/2h
-	 TtAQJRriTtIb+gGzYGBQtH7fZSoJQh9kx9SaKVlw=
+	b=I+dkkP4lyq6BWfD1HR1Ob413dit+JEfyZeZV698yL6LHE3fARTQyEc8joQpmMGhT4
+	 /8648Yjfdwg79ugy+35EfkBRI0wvURilykskdVrnGvxiuYiSckjHJyXE8o6nPxLpHS
+	 LF4qO8J8gAoZIxk8+CMWs1+M1YM4CuMrrQZvJyEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgBRXCp (ORCPT
+        id S1727756AbgBRXDY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:02:45 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39378 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbgBRXCo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 18:02:44 -0500
-Received: by mail-oi1-f193.google.com with SMTP id z2so21895491oih.6;
-        Tue, 18 Feb 2020 15:02:44 -0800 (PST)
+        Tue, 18 Feb 2020 18:03:24 -0500
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:37802 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbgBRXDX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 18:03:23 -0500
+Received: by mail-ot1-f48.google.com with SMTP id w23so4848298otj.4;
+        Tue, 18 Feb 2020 15:03:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Qdurl6q3a3eB4GyIQmTlaPHPli9FvMDsggjNiK6b9o=;
-        b=OxFicn/Y3pMVTnHB/boxzIuUtNlLM9Oj+ACMOYFv/cbm7LtHIKV2OltbTy7zO5FZRm
-         JgbYUN4q8gkRdj2HjfPAqBI5zlYDqMbh3dh+0BYuSxY5F9O9xLsA1pu8tYNQvyMppIeb
-         T5kOqZs77CRywximPhf2YWftppxcYRI9i3gX7D3jtmlEgBAzbagufDdx3rRvQdTuZWgj
-         6jVFPnKHLlX+Y9jNJPd/9BZttgjBoTKp/Z6cbzVNwOj9NCHx9AsxaCeZrxtysMCP5aPw
-         PwXUa5NY8ucysXsjclacxQWuFwFRBHZzsYRQ4B4lwmdNOtUwyFaw3LauKTpBNULNbKLO
-         w5Jg==
-X-Gm-Message-State: APjAAAXmlgFk52f3TVG3PcQ7NrQl1O2PNEZfdUTEGOy3uccwMThOmlTZ
-        LtV4nwfGO0lAdgvqt+Fwv8ShZr5Niw==
-X-Google-Smtp-Source: APXvYqzmF4QLmggvkwY8/szwJ4ToFkj6ea0y9bI9QY90+bM3sJJowbM21nmt30gu9Lr3d97D28YFkA==
-X-Received: by 2002:aca:1011:: with SMTP id 17mr2961684oiq.72.1582066964108;
-        Tue, 18 Feb 2020 15:02:44 -0800 (PST)
+        bh=/OUq9HnmLC39bwvwK3zdiIFd4Xyuiy+9BAYMbBqnLpE=;
+        b=MgtEsQ+Ssn4TX8RppXL48ogPVzvABz4sDdawibTmYecoHm0CAAyxHsPZdWA35z6f6r
+         HZUN+NqnyfJ7N6XBktGP3vdtKDmR9bzTryA1tOeVpZW43HkSf7Wh1jSoYl9XcVePXEMw
+         kOXeA2yB8BDR1PuVCNj4N/Cug52MWLjtOe2s0FYUM/1r3I0525uFod+90Ick2fB6yWxt
+         Gx6+yvguvS4RiSLIqwUDFg3UPeHaAaZxya0kCQEHiHJpSN31eSozJaYNR6v/4GM+k0ER
+         goAaHFwOWc90u8I221bvUkqc50W3C7GgXH23nMX9Fo47KvLrGqcenz2546DbuqV1cMZs
+         iHxg==
+X-Gm-Message-State: APjAAAVp7OHXzGz2DiJHj1yit7zs45bPaDHuI7lsc/M2XRQDhxYomsHi
+        ZvTT9MV0NyPE8p7SJbdXKw==
+X-Google-Smtp-Source: APXvYqxCzDLHXIGYjFlzG6Q6f8GZsOXUYoDWJm6RVL1HBDpxsnxGVcSPSLKELpFB+g2wI947gkqZiA==
+X-Received: by 2002:a9d:64ca:: with SMTP id n10mr17626635otl.325.1582067002984;
+        Tue, 18 Feb 2020 15:03:22 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 60sm1879234otu.45.2020.02.18.15.02.43
+        by smtp.gmail.com with ESMTPSA id w8sm1822780ote.80.2020.02.18.15.03.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 15:02:43 -0800 (PST)
-Received: (nullmailer pid 9843 invoked by uid 1000);
-        Tue, 18 Feb 2020 23:02:42 -0000
-Date:   Tue, 18 Feb 2020 17:02:42 -0600
+        Tue, 18 Feb 2020 15:03:22 -0800 (PST)
+Received: (nullmailer pid 11058 invoked by uid 1000);
+        Tue, 18 Feb 2020 23:03:21 -0000
+Date:   Tue, 18 Feb 2020 17:03:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: clock: Add support for Modem clocks
- in GCC
-Message-ID: <20200218230242.GA9790@bogus>
-References: <1582049733-17050-1-git-send-email-tdas@codeaurora.org>
- <1582049733-17050-2-git-send-email-tdas@codeaurora.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv3 2/2] dt-bindings: watchdog: Add compatible for QCS404,
+ SC7180, SDM845, SM8150
+Message-ID: <20200218230321.GA10954@bogus>
+References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
+ <a8bd3f4062fd7bb45aeab5aa55f6f31c14c69a96.1581459151.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582049733-17050-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <a8bd3f4062fd7bb45aeab5aa55f6f31c14c69a96.1581459151.git.saiprakash.ranjan@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Feb 2020 23:45:29 +0530, Taniya Das wrote:
-> Add clock ids for GCC MSS clocks which are required to bring the modem
-> out of reset.
+On Wed, 12 Feb 2020 03:54:30 +0530, Sai Prakash Ranjan wrote:
+> Add missing compatible for watchdog timer on QCS404,
+> SC7180, SDM845 and SM8150 SoCs.
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  include/dt-bindings/clock/qcom,gcc-sc7180.h | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
