@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C83C34034
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078CDC34035
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4662176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06F62176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgBRH5o (ORCPT
+        id S1726383AbgBRH5h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:57:44 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:53272 "EHLO inva020.nxp.com"
+        Tue, 18 Feb 2020 02:57:37 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:51864 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgBRH5i (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:57:38 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5FB4F1A0A1B;
-        Tue, 18 Feb 2020 08:57:37 +0100 (CET)
+        id S1726262AbgBRH5h (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 02:57:37 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0E38020335D;
+        Tue, 18 Feb 2020 08:57:34 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F6561A0289;
-        Tue, 18 Feb 2020 08:57:30 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BB3D7200A9B;
+        Tue, 18 Feb 2020 08:57:26 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 74087402E1;
-        Tue, 18 Feb 2020 15:57:20 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2973A4029B;
+        Tue, 18 Feb 2020 15:57:18 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
         stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
@@ -35,9 +35,9 @@ To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V4 4/4] dt-bindings: pinctrl: imx8mp: Replace the uint32-array with uint32-matrix
-Date:   Tue, 18 Feb 2020 15:51:40 +0800
-Message-Id: <1582012300-30260-4-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V4 2/4] dt-bindings: pinctrl: Convert i.MX8MM to json-schema
+Date:   Tue, 18 Feb 2020 15:51:38 +0800
+Message-Id: <1582012300-30260-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582012300-30260-1-git-send-email-Anson.Huang@nxp.com>
 References: <1582012300-30260-1-git-send-email-Anson.Huang@nxp.com>
@@ -47,34 +47,106 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The items of mux_reg/conf_reg/input_reg/mux_val/input_val/pad_setting
-should be uint32-matrix instead of uint32-array, fix it and improve the
-schema and example.
+Convert the i.MX8MM pinctrl binding to DT schema format using json-schema
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-New patch.
+Changes since V3:
+	- use uint32-matrix instead of uint32-array for fsl,pins.
 ---
- .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       | 25 ++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ .../bindings/pinctrl/fsl,imx8mm-pinctrl.txt        | 36 ----------
+ .../bindings/pinctrl/fsl,imx8mm-pinctrl.yaml       | 82 ++++++++++++++++++++++
+ 2 files changed, 82 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-index 2e31e12..6297e78 100644
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-@@ -30,8 +30,6 @@ patternProperties:
- 
-     properties:
-       fsl,pins:
--        allOf:
--          - $ref: /schemas/types.yaml#/definitions/uint32-array
-         description:
-           each entry consists of 6 integers and represents the mux and config
-           setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-@@ -39,6 +37,22 @@ patternProperties:
-           be found in <arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>. The last
-           integer CONFIG is the pad setting value like pull-up on this pin. Please
-           refer to i.MX8M Plus Reference Manual for detailed CONFIG settings.
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+deleted file mode 100644
+index e4e01c0..0000000
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-* Freescale IMX8MM IOMUX Controller
+-
+-Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+-for common binding part and usage.
+-
+-Required properties:
+-- compatible: "fsl,imx8mm-iomuxc"
+-- reg: should contain the base physical address and size of the iomuxc
+-  registers.
+-
+-Required properties in sub-nodes:
+-- fsl,pins: each entry consists of 6 integers and represents the mux and config
+-  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+-  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+-  <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last integer CONFIG is
+-  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Mini
+-  Reference Manual for detailed CONFIG settings.
+-
+-Examples:
+-
+-&uart1 {
+-       pinctrl-names = "default";
+-       pinctrl-0 = <&pinctrl_uart1>;
+-};
+-
+-iomuxc: pinctrl@30330000 {
+-        compatible = "fsl,imx8mm-iomuxc";
+-        reg = <0x0 0x30330000 0x0 0x10000>;
+-
+-        pinctrl_uart1: uart1grp {
+-                fsl,pins = <
+-                        MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX             0x140
+-                        MX8MM_IOMUXC_UART1_TXD_UART1_DCE_TX             0x140
+-                >;
+-        };
+-};
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
+new file mode 100644
+index 0000000..d98a386
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mm-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale IMX8MM IOMUX Controller
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description:
++  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
++  for common binding part and usage.
++
++properties:
++  compatible:
++    const: fsl,imx8mm-iomuxc
++
++  reg:
++    maxItems: 1
++
++# Client device subnode's properties
++patternProperties:
++  'grp$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++
++    properties:
++      fsl,pins:
++        description:
++          each entry consists of 6 integers and represents the mux and config
++          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
++          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
++          be found in <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last
++          integer CONFIG is the pad setting value like pull-up on this pin. Please
++          refer to i.MX8M Mini Reference Manual for detailed CONFIG settings.
 +        allOf:
 +          - $ref: /schemas/types.yaml#/definitions/uint32-matrix
 +          - items:
@@ -91,23 +163,33 @@ index 2e31e12..6297e78 100644
 +                    "input_val" indicates the select input value to be applied.
 +                - description: |
 +                    "pad_setting" indicates the pad configuration value to be applied.
- 
-     required:
-       - fsl,pins
-@@ -59,10 +73,9 @@ examples:
-         reg = <0x30330000 0x10000>;
- 
-         pinctrl_uart2: uart2grp {
--            fsl,pins = <
--                0x228 0x488 0x5F0 0x0 0x6	0x49
--                0x228 0x488 0x000 0x0 0x0	0x49
--            >;
++
++    required:
++      - fsl,pins
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  # Pinmux controller node
++  - |
++    iomuxc: pinctrl@30330000 {
++        compatible = "fsl,imx8mm-iomuxc";
++        reg = <0x30330000 0x10000>;
++
++        pinctrl_uart2: uart2grp {
 +            fsl,pins =
-+                <0x228 0x488 0x5F0 0x0 0x6	0x49>,
-+                <0x228 0x488 0x000 0x0 0x0	0x49>;
-         };
-     };
- 
++                <0x23C 0x4A4 0x4FC 0x0 0x0	0x140>,
++                <0x240 0x4A8 0x000 0x0 0x0	0x140>;
++        };
++    };
++
++...
 -- 
 2.7.4
 
