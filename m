@@ -2,116 +2,98 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18D4C34031
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 22:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4848FC3404C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 23:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A243D207FD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 22:54:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoN26OTS"
+	by mail.kernel.org (Postfix) with ESMTP id 1AACC24656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 23:00:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582066809;
+	bh=hZuJKxOP4U7426Vra7K1+TaONlARPiZSHSEw1mixIkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jouy7SKh64DuwkEdYXgPNuH3st40Bncwa3kBytekHy9SKwf4giPRGe0hzWzoAxHzZ
+	 6s0D7gOouMNzNkxKLs1kYvu6wOPEYb571Un3lqDcIGnDZ9yk9MEzpJ+DR+p18mpmlH
+	 N7HKq9oPxN1raHLVXlbDM3SMiCcIHG23Jjnthdwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgBRWyq (ORCPT
+        id S1726902AbgBRXAI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:54:46 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37735 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgBRWyp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 17:54:45 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m13so1652604pjb.2;
-        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DLcO2DKWECMZLG1IHbpSAq+iosbKYeAAnLf8zJftE2I=;
-        b=RoN26OTSoD8xQPX8Ejb8azpPGaUfxPDvq/VvNyKPUXC02u6KESX4+KewWJ0C3B6BvY
-         Qe1m2IweSiLDlgWK90aBCD09mUr1arr5/A8ACf2W+VfYSIlOLRZM9GnqkYCH1Hk9Agoj
-         +PNGQbijasxynJv26p7N5IwUoW2ory/yMjEaGzcnvWGXZ9Ty/Y4qskG2oDvwhP9uGs4U
-         7/Vzvi4mr8AnPcRhPfuz+jTCNtKEXjzqK2+uZ5DD5xXRui0DuhY8RuP2kRy9664Z9xkn
-         Ajfm5wDf5zrloWSVfa/c1AYPhfG8K/6YjkD/0dfA1novKrcoPB8Ky47OKjgh6sc2gsXF
-         GXwA==
+        Tue, 18 Feb 2020 18:00:08 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45442 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgBRXAI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 18:00:08 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v19so21875385oic.12;
+        Tue, 18 Feb 2020 15:00:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DLcO2DKWECMZLG1IHbpSAq+iosbKYeAAnLf8zJftE2I=;
-        b=MbT2RWCqmBBkJ42x+7Teut1a4S/gQhjz4Yunw2/mtV1WOdKpekVBIX8KbXwzy2D5fW
-         HAl6bDtDRet/MKxIn+VvPDw9oeb0pVVS9+EJKN4eTWX5ih5DS4PdJllXmzf9T5lRJxXb
-         inge/9zLoa5Obezo9N0H88dtZ9uCt12vMaZ+Lrm8Y6+5mWOKNurd1qSV5SaZJ9XkP8EQ
-         f2o1bwT3fdMA9y+bUKx0TiG/NBmZ6lsbRPS5UXsyfi8JbP4Y6UDtKciZm5LhIE7FJfKS
-         Nztr9uHgEgvqfn+aSp/g1N8rATrYWm3eP5ghbnnjGIlLD9BPuoEiTuec7YJts67XBPOy
-         BGLw==
-X-Gm-Message-State: APjAAAWjEZ7efmpTPbZQaagIqS5Ib4x1dEotrUcI3cFMKdA3Rzbx8Opn
-        uqrJTH+zmDzkqMnGTzYFe0w=
-X-Google-Smtp-Source: APXvYqxKyKfvB6gUIxasXk+3gpb22DtW5pbbJzCinqep7l23wSdhHK6tbwkFTvHB8sVofima6J/cHw==
-X-Received: by 2002:a17:90a:cc16:: with SMTP id b22mr5326984pju.65.1582066485149;
-        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id i2sm4403pjs.21.2020.02.18.14.54.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
-Date:   Tue, 18 Feb 2020 14:54:54 -0800
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] ASoC: dt-bindings: fsl_easrc: Add document for
- EASRC
-Message-ID: <20200218225454.GA32720@Asurada-Nvidia.nvidia.com>
-References: <cover.1582007379.git.shengjiu.wang@nxp.com>
- <a02af544c73914fe3a5ab2f35eb237ef68ee29e7.1582007379.git.shengjiu.wang@nxp.com>
+        bh=4SXS4Vx31CbjF24/0UdHiAqHrzVdz6zIaMwael6olmo=;
+        b=CEBiiC2ann36dhv+yU3P1hTsrOyHROUfFg13t6LyKxf8Lj/l/+7+bgUzK9qI+bo9f9
+         szvXDyI9hh6cav3f0MPjapiCi1vHGc1qQoYOrsyR7gwDcH3nlisfwVHQAMc9jp/lIWUY
+         kd2y8m8HEF4n96ULgK6fIkPG16cCWVXulbzjIKsMUdbK0qSoI3Bp3P+xs/VcLexN1mPV
+         xgyLJITBdVg6lNOCjQe+AuPqSUp7Qkj6r5MRz2gVvip4dVP4Ih6F1yyvs9XCje7G6TmB
+         ls2kAsjRu+Gzata5RQVuOofafaga0mU6faM5slWZqHBTAHqKnzfj7eeA0/pWfGGaka3t
+         arvQ==
+X-Gm-Message-State: APjAAAVw72NJ9JK3OaN4BwV3+NRADXXE2tp50lGNR4mFMEY+KrS6mZ1G
+        9+XcH+W9EdokONOUOXTrTQ==
+X-Google-Smtp-Source: APXvYqwJgOSwcWVN0or0SUmkODwvFUkixIAxPI8oMJiGMChfd9gdfTl91ghUYsw4eo3AjzGu/XuJbw==
+X-Received: by 2002:aca:815:: with SMTP id 21mr2917579oii.52.1582066805654;
+        Tue, 18 Feb 2020 15:00:05 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 5sm2120otr.13.2020.02.18.15.00.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 15:00:05 -0800 (PST)
+Received: (nullmailer pid 3608 invoked by uid 1000);
+        Tue, 18 Feb 2020 23:00:04 -0000
+Date:   Tue, 18 Feb 2020 17:00:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH v4 3/7] dt-bindings: clk: sprd: add bindings for sc9863a
+ clock controller
+Message-ID: <20200218230004.GA2060@bogus>
+References: <20200217032321.15164-1-zhang.lyra@gmail.com>
+ <20200217032321.15164-4-zhang.lyra@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a02af544c73914fe3a5ab2f35eb237ef68ee29e7.1582007379.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200217032321.15164-4-zhang.lyra@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 02:39:36PM +0800, Shengjiu Wang wrote:
-> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
-> IP module found on i.MX8MN.
+On Mon, 17 Feb 2020 11:23:17 +0800, Chunyan Zhang wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> add a new bindings to describe sc9863a clock compatible string.
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  .../devicetree/bindings/sound/fsl,easrc.txt   | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
+>  .../bindings/clock/sprd,sc9863a-clk.yaml      | 103 ++++++++++++++++++
+>  1 file changed, 103 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.txt b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
-> new file mode 100644
-> index 000000000000..0e8153165e3b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
-> @@ -0,0 +1,57 @@
-> +NXP Asynchronous Sample Rate Converter (ASRC) Controller
 
-Missing "Enhanced", I guess.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-And "ASRC" => "EASRC"
+Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.example.dts:38.11-44: Warning (ranges_format): /example-1/syscon@20e00000:ranges: "ranges" property has invalid length (16 bytes) (parent #address-cells == 1, child #address-cells == 1, #size-cells == 1)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.example.dt.yaml: clock-controller@21500000: clock-names: ['ext-26m', 'ext-32k'] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.example.dt.yaml: clock-controller@21500000: clocks: [[4294967295], [4294967295]] is too short
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
 
-> +The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
-
-Ditto
-
-> +signal associated with an input clock into a signal associated with a different
-> +output clock. The driver currently works as a Front End of DPCM with other Back
-> +Ends Audio controller such as ESAI, SSI and SAI. It has four context to support
-
-"context" => "contexts"
-
-Btw, what's the definition of this "context"?
-
-And, is SSI still available on imx8mn?
+See https://patchwork.ozlabs.org/patch/1238958
+Please check and re-submit.
