@@ -2,99 +2,158 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D28C3404B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5231FC34047
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE63B2173E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C20C2173E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582057481;
-	bh=5f98cBuHe/a1fe/SI4s1hmsWb7iBUYv/dCU9M1zj2/A=;
+	s=default; t=1582057919;
+	bh=oh7trNinL5HnQ47vhaNDfdVl4Rcr0N6EQQ6S3MAkd/o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2UBYTMQFtdBmH7qHoEsoHB2aIzORL6MTU9qImht9N3YLGupomnnTLLCXKA5BRCsOJ
-	 F2BK9oXbf7l59xnVFFS7daiLon2eulD6kRGBa8p15VP4nP9zEIzwP4lJX7aeDjYqdo
-	 aI7RPHnytMeXyV1OnAiY/zqvX64qFVYXeD9harHM=
+	b=d8irJi9zIPu1wtK/tWbycqeVsPuvPD4h2Kd5IhyMz4HuhSy3KWqBZftjEXOIGETX3
+	 swP3VseQY563px00JcqvdUTh/TH1bzPig6P1L3TwTF8NcCHwn+DJps5AVBSyLk+Jl9
+	 8vWd/r/2nEu+sZih7fiBamIgR82tPAkyY8KSyie0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgBRUYl (ORCPT
+        id S1726427AbgBRUbz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:24:41 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44894 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgBRUYl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:24:41 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d62so21422725oia.11;
-        Tue, 18 Feb 2020 12:24:40 -0800 (PST)
+        Tue, 18 Feb 2020 15:31:55 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37102 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRUby (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:31:54 -0500
+Received: by mail-oi1-f195.google.com with SMTP id q84so21512439oic.4;
+        Tue, 18 Feb 2020 12:31:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tO19nIckNkDU5JzuGmfbb1T3kIAPq1F96qlDELrXEPQ=;
-        b=YqbQ4XGoim0kYtlIQpOTu7pFKX5oP0arTkOTmIyXGgXV0OW25ro5shIRcDel8p+Sr+
-         VXJpD5MptyQ/LIo56gkPXEOYBMHUxtwf19PgWepDt84zfTKgVL7CXIPnr7c2mlya8Bz2
-         jBrF0/nlnrP9qxUQCV08Jzb/yuHpwTqM8y36XZyhhXoqYxU49lxiGEUFQ8ffn3SQdWJm
-         5wl9KG/wNWQRPTzSnthJb9h1rWzMJCD3DNTJrZhDAsJY2/y16cuX1+4YwM8g+8BrWBve
-         k6KrNLOInog4wkCzb5gaw2JIkkD2I/nYk78jkxat6KndrrOLyWH2Zllntdjw0C8LmdHK
-         eKfA==
-X-Gm-Message-State: APjAAAWAhy6tTnnvGXMJnaEIADZ8z+qvtIPasm+qChXL521vqYdpbFty
-        X1hTuYKpnb6WdDqFZ6gxjQ==
-X-Google-Smtp-Source: APXvYqx1k9+vtqpJhauuPUQGR/hJ0ExvHHpLBsIXoeSA3F4fnMZwLCKBfV9B2Eu8nKNc1Bl0nOCHVg==
-X-Received: by 2002:a05:6808:611:: with SMTP id y17mr2348472oih.146.1582057480260;
-        Tue, 18 Feb 2020 12:24:40 -0800 (PST)
+        bh=J/VxJ3xiwdS6/BWNfUPWpgIlaLG5DINnCPtjKZgxKdM=;
+        b=to4rJbzvx2eabws6ZIqorBVPxeBvz1PRGBHQrRNnzrPBYB9b8OtUIAGxg4nWCQvMh7
+         Rt8zwcB1IjXcMtjJOkSvnwixmoP5lXTe7dnq6PgDXuv7UdXa9/lHhejQ7syN7BJY7FN4
+         BQ/ToBs3tzaw3CDnjWyBmxo7RJy2dMPsy3gFcDMgwKDHoxvQ2gOya3UH3ZKHQcN+kqDp
+         /qJuZ9B/itpHUcm9eeJ+NtPRyW4kzjukHbbK+T75Ng53AQoI0hfmvlDRZfTVa+vkFisz
+         X+LUEYdfRF0GNjrAYSmSg+GKKD07IAPNE83gX4L/aemV4gCsQBYAeP7lLPYB9aA5QTuO
+         MzKg==
+X-Gm-Message-State: APjAAAUgxRk/6MgwUq8bRHtb/oAIeiVFfzzXXo76aoBpC+h/oR0Q2abI
+        KFJw2OG2osp5nhOJRgaXtQ==
+X-Google-Smtp-Source: APXvYqz4+tMO0xRMFlD+Nj7EMFcqW+z3eblcWmDWok4aK303S3lbrgXPLQt5ovOmoCv1EkypuhWhDA==
+X-Received: by 2002:aca:af50:: with SMTP id y77mr2515745oie.8.1582057913671;
+        Tue, 18 Feb 2020 12:31:53 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm1543312oia.21.2020.02.18.12.24.39
+        by smtp.gmail.com with ESMTPSA id y25sm1716518oto.27.2020.02.18.12.31.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:24:39 -0800 (PST)
-Received: (nullmailer pid 6545 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:24:39 -0000
-Date:   Tue, 18 Feb 2020 14:24:39 -0600
+        Tue, 18 Feb 2020 12:31:52 -0800 (PST)
+Received: (nullmailer pid 19094 invoked by uid 1000);
+        Tue, 18 Feb 2020 20:31:51 -0000
+Date:   Tue, 18 Feb 2020 14:31:51 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, logan.shaw@alliedtelesis.co.nz,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH 2/5] dt-bindings: hwmon: Document adt7475
- bypass-attenuator property
-Message-ID: <20200218202439.GA4617@bogus>
-References: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
- <20200217234657.9413-3-chris.packham@alliedtelesis.co.nz>
+To:     matthias.bgg@kernel.org
+Cc:     mark.rutland@arm.com, ck.hu@mediatek.com, p.zabel@pengutronix.de,
+        airlied@linux.ie, mturquette@baylibre.com, sboyd@kernel.org,
+        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
+        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
+        drinkcat@chromium.org, frank-w@public-files.de,
+        sean.wang@mediatek.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, wens@csie.org,
+        linux-mediatek@lists.infradead.org, rdunlap@infradead.org,
+        hsinyi@chromium.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 02/13] dt-bindings: display: mediatek: Add mmsys
+ binding description
+Message-ID: <20200218203151.GA15948@bogus>
+References: <20200213201953.15268-1-matthias.bgg@kernel.org>
+ <20200213201953.15268-3-matthias.bgg@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217234657.9413-3-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200213201953.15268-3-matthias.bgg@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Feb 2020 12:46:54 +1300, Chris Packham wrote:
+On Thu, Feb 13, 2020 at 09:19:42PM +0100, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
 > 
-> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+> The MediaTek DRM has a block called mmsys, which sets
+> the routing and enables the different blocks.
+> This patch adds one line for the mmsys bindings description and changes
+> the mmsys description to use the generic form of referring to a specific
+> Soc.
 > 
-> Add documentation for the bypass-attenuator-in[0-4] property.
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 > 
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
->  .../devicetree/bindings/hwmon/adt7475.yaml          | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
 > 
+> Changes in v7:
+> - add hint to the mmsys binding document
+> - make mmsys description generic
+> - fix typo in commit message
+> 
+> Changes in v6: None
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  .../bindings/display/mediatek/mediatek,disp.txt          | 3 +++
+>  .../bindings/display/mediatek/mediatek,mmsys.txt         | 9 +--------
+>  2 files changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index b91e709db7a4..8e453026ef78 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -24,6 +24,7 @@ connected to.
+>  For a description of the display interface sink function blocks, see
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt and
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+> +Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt.
+>  
+>  Required properties (all function blocks):
+>  - compatible: "mediatek,<chip>-disp-<function>", one of
+> @@ -43,7 +44,9 @@ Required properties (all function blocks):
+>  	"mediatek,<chip>-dpi"        		- DPI controller, see mediatek,dpi.txt
+>  	"mediatek,<chip>-disp-mutex" 		- display mutex
+>  	"mediatek,<chip>-disp-od"    		- overdrive
+> +	"mediatek,<chip>-mmsys", "syscon"	- provide clocks and components management
+>    the supported chips are mt2701, mt2712 and mt8173.
+> +
+>  - reg: Physical base address and length of the function block register space
+>  - interrupts: The interrupt signal from the function block (required, except for
+>    merge and split function blocks).
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
+> index 301eefbe1618..7bbadee820e3 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
+> @@ -5,14 +5,7 @@ The Mediatek mmsys controller provides various clocks to the system.
+>  
+>  Required Properties:
+>  
+> -- compatible: Should be one of:
+> -	- "mediatek,mt2701-mmsys", "syscon"
+> -	- "mediatek,mt2712-mmsys", "syscon"
+> -	- "mediatek,mt6779-mmsys", "syscon"
+> -	- "mediatek,mt6797-mmsys", "syscon"
+> -	- "mediatek,mt7623-mmsys", "mediatek,mt2701-mmsys", "syscon"
 
-My bot found errors running 'make dt_binding_check' on your patch:
+You've lost this information about the fallback...
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/adt7475.yaml: patternProperties:^bypass-attenuator-in[0-4]$:maximum: False schema does not allow 1
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/adt7475.yaml: patternProperties:^bypass-attenuator-in[0-4]$:minimum: False schema does not allow 0
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/hwmon/adt7475.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/hwmon/adt7475.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> -	- "mediatek,mt8173-mmsys", "syscon"
+> -	- "mediatek,mt8183-mmsys", "syscon"
+> +- compatible: "mediatek,<chip>-mmsys"
 
-See https://patchwork.ozlabs.org/patch/1239694
-Please check and re-submit.
+You are just going to have to add these all back when this is converted 
+to schema.
+
+Rob
