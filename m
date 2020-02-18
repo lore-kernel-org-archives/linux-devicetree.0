@@ -2,118 +2,151 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A58CC34022
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 01:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E93DC34022
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 01:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFB921D56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 01:44:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="CSF1Iph5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GVNTuwA5"
+	by mail.kernel.org (Postfix) with ESMTP id F28BF2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 01:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgBRBow (ORCPT
+        id S1726108AbgBRByr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:44:52 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:44041 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726107AbgBRBow (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:44:52 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id CC3CE6CB1;
-        Mon, 17 Feb 2020 20:44:51 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 17 Feb 2020 20:44:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=k
-        tP0xjLMEYow5iCaqBZHaqnwO8wceFlWoz7H7k4O0xM=; b=CSF1Iph5pp4vOyZeL
-        LGmqeplv+4ylrO/x70YmMfcWggiReinVQ3yb90y947u4uncH8wP66FQrAaIcXRY1
-        niPYqALKjfxthOU5BoK3N8KCBjjEuXdNrNJ7CUOHgax/mKCY4VtH/c4x8pwI+VEb
-        IOj6YcK3bGb0rkkL1NWBTFZ4KveA1N6Nl35GVlfRj8ZOldCctkvhwFPSb6xgbdcN
-        QaHgqAFk6QId33dp/3boQGeRuOJwmrDz8ZGi847KuAFi6n+d3jbq1VWOFcItMV/5
-        Wfvy7PvqW7M4nmqo8D5rqxadkZ8ek2LnfVL0Wl0TvfAPB9rPZyLYitdcs6zKOadG
-        kYaCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=ktP0xjLMEYow5iCaqBZHaqnwO8wceFlWoz7H7k4O0
-        xM=; b=GVNTuwA5FHJB7rHrw/IlqU+ChDQVJwnXfOBzXIcglBuetJUkEzMBtyCk/
-        hSLS6RKANUBT8bIibhU+2mhlyVHauVATvTEcxtN1UJxjZnYDpxMvVSyFjWraokB/
-        Fduimjg06dChp9OeyqHfs/y38GTafH39Q6SNmaWmBJDb0jkMGYp+utesivcrRBre
-        imap9PkskDGb6Ot6RDo4ZjlvNC50W21naaSXfh227bNdhH/sxpiQBSw6mPdE16sZ
-        urL/zNgWFKYok8BYY+KH/O4jik7JjrDJjy3Wmp1Gp/6+KjhrSGv5ExrkT9GcmxRd
-        wKPT+SrqFtqxpXVjOgvVioDlp/49g==
-X-ME-Sender: <xms:kkFLXpFVoqimNSYPZ9i_OtN7A_2b2eQVo-jr8hcxqeEe16FtTMEE1w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeejgdefjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:kkFLXp_ry0IomhF9gV77h-FQeJdENobIvLxdsoVEfGSdcG5fNB-KhA>
-    <xmx:kkFLXlmj-llT9aC3l-_jsDWxPiPcgd_2vWob-w5npInW2CvSx2JfBA>
-    <xmx:kkFLXs-b9KWeuSg9QslXBZhqkMGigL59cx7ZIhKs2042twxghnhAhA>
-    <xmx:k0FLXoVLLKcqDWrf4DXnoRpIvRmxqIcjWWh3soQfruWpxMbN4fCH7A>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 219B33060C28;
-        Mon, 17 Feb 2020 20:44:50 -0500 (EST)
-Subject: Re: [RFC PATCH 08/34] ASoC: sun8i-codec: Fix direction of AIF1
- outputs
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?Q?Myl=c3=a8ne_Josserand?= 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@kernel.org
-References: <20200217064250.15516-1-samuel@sholland.org>
- <20200217064250.15516-9-samuel@sholland.org>
- <20200217150935.GJ9304@sirena.org.uk>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <7108ff30-df7e-09bd-f895-2768347d45ba@sholland.org>
-Date:   Mon, 17 Feb 2020 19:44:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 17 Feb 2020 20:54:47 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:37711 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgBRByr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Feb 2020 20:54:47 -0500
+Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 18 Feb 2020
+ 09:55:08 +0800
+From:   Hanjie Lin <hanjie.lin@amlogic.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>
+CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH v9 0/3] arm64: meson: Add support for USB on Amlogic A1
+Date:   Tue, 18 Feb 2020 09:54:16 +0800
+Message-ID: <1581990859-135234-1-git-send-email-hanjie.lin@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200217150935.GJ9304@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.18.11.213]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/17/20 9:09 AM, Mark Brown wrote:
-> On Mon, Feb 17, 2020 at 12:42:24AM -0600, Samuel Holland wrote:
->> The naming convention for AIFs in this codec is to call the "DAC" the
->> path from the AIF into the codec, and the ADC the path from the codec
->> back to the AIF, regardless of if there is any analog path involved.
-> 
-> This renames widgets but does not update any DAPM routes from those
-> widgets which will break things if this patch is applied.
+This patchset adds support for USB on Amlogic A1 SoCs.
 
-This commit doesn't change the widget name, only the widget type. My commit
-message did not make that clear.
+Because of my mistake I fogot to add PHY maintainer(Kishon) to mail list in
+before versions, so I have to send this v8(and lateres) version again(only with dwc3
+bindings and driver patch removed).
 
->> Cc: stable@kernel.org
-> 
-> Why is this suitable for stable?  It's a random textual cleanup.
+This patchset is composed with :
+- bindings of the PHY
+- bindings of the USB Control Glue(already accepted in v7)
+- PHY Driver
+- USB Control Glue driver(already accepted in v7)
+- dts of the PHY and USB Controller
 
-This was one of the first patches I wrote. Now that I understand DAPM better, I
-realize that it has no functional impact, and this shouldn't go to stable.
-(snd_soc_dapm_aif_in and snd_soc_dapm_aif_out are handled exactly the same, so
-fixing the widget type is, as you say, just a textual cleanup.)
+The Amlogic A1 USB Complex is composed of :
+- 1 DWC3 USB controller for USB2 Host functionality
+- 1 USB2 PHY for USB2 Host functionality
+
+The USB Control Glue setups the clocks and the reset about DWC3 USB
+controller, and binds to the USB2 PHY. It also configures the 8bit
+UTMI interfaces for the USB2 PHY, including setting USB2 phy mode.
+
+The USB2 PHY driver initializes the phy analog settings, phy PLL 
+setup and phy tuning.
+
+This patchset is based on A1 clock/power domain/reset series at [0].
+
+Changes since v1:[1]
+ - integrate glue and phy drivers into g12a's
+ 
+Changes since v2:[2]
+ - modify amlogic,meson-g12a-usb-ctrl.yaml with dt_binding_check tool
+ - phy/glue driver use of_device_get_match_data to distinguish A1 from G12A
+
+Changes since v3:[3]
+ - fix bindings mistakes of the PHY according Rob's comments
+ - fix bindings mistakes of the USB Control Glue according Rob's comments
+ - phy driver add xtal_usb_phy clock which moved from glue driver
+ - glue driver use otg_mode instead of soc_id to support otg function
+
+Changes since v4:[4]
+ - phy driver revert reset-names changes
+ - phy driver change clock name to "xtal" to consistent with g12a
+ - glue driver add drvdata otg_switch_supported
+
+Changes since v5:[5]
+ - integrate phy bindings into g12a
+ - modify glue bindings format according to martin's advices
+ - glue driver add dwc3_meson_g12a_otg_init() do otg related work
+ - glue driver add clk_bulk_disable_unprepare() in remove
+
+Changes since v6:[6]
+ - fix glue bindings dt_check_bindings error.
+ - squash phy and glue dts patches and set usb status to disabled default
+
+Changes since v7:[7]
+ - remove already accepted dwc3 bindings and driver patch.
+
+ Changes since v8:[8]
+ - remove useless allOf mark of phy bindings
+ 
+[0]
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=185477
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=180055
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=189643
+
+[1] : https://lore.kernel.org/linux-amlogic/1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com
+
+[2] : https://lore.kernel.org/linux-amlogic/1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com
+
+[3] : https://lore.kernel.org/linux-amlogic/1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com
+
+[4] : https://lore.kernel.org/linux-amlogic/1578537045-23260-1-git-send-email-hanjie.lin@amlogic.com
+
+[5] : https://lore.kernel.org/linux-amlogic/1578634957-54826-1-git-send-email-hanjie.lin@amlogic.com
+
+[6] : https://lore.kernel.org/linux-amlogic/1579220504-110067-1-git-send-email-hanjie.lin@amlogic.com
+
+[7] : https://lore.kernel.org/linux-amlogic/1579489086-157767-1-git-send-email-hanjie.lin@amlogic.com
+
+[8] : https://lore.kernel.org/linux-amlogic/1581419454-12667-1-git-send-email-hanjie.lin@amlogic.com
+
+Hanjie Lin (3):
+  dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
+  phy: amlogic: Add Amlogic A1 USB2 PHY Driver
+  arm64: dts: meson: a1: Enable USB2 PHY and DWC3 controller
+
+ .../bindings/phy/amlogic,meson-g12a-usb2-phy.yaml  | 14 ++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          | 43 +++++++++++
+ drivers/phy/amlogic/phy-meson-g12a-usb2.c          | 85 +++++++++++++++-------
+ 3 files changed, 116 insertions(+), 26 deletions(-)
+
+-- 
+2.7.4
+
