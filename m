@@ -2,104 +2,72 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7956FC34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 12:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BE2C34026
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C7120659
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 12:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582030560;
-	bh=xKyP8NoOxgChUudL/jyG/REWXfqdH+OzVfNdN1v4MBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c6gQmFTlgc4qmZ7xr4eqyfC0NTi2H3RGDdPPw2H4OttDP/w8Q4QUk7u3DaZXdWZen
-	 pkz/ULPMtAKODZExosntd4ZC72VnvJmDVSxClAYJXRU2h8mXUl3bAuhub/kwMjzdJg
-	 4aOvnhtJ5UW2aiA/wURBVJpkmIloAnHuuiSNMbjo=
+	by mail.kernel.org (Postfix) with ESMTP id 5EE2B206EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgBRMz7 (ORCPT
+        id S1726445AbgBRNBU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 07:55:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:51652 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgBRMz7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 07:55:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 316511FB;
-        Tue, 18 Feb 2020 04:55:59 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A616F3F703;
-        Tue, 18 Feb 2020 04:55:58 -0800 (PST)
-Date:   Tue, 18 Feb 2020 12:55:57 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] rewrite mtk-quadspi spi-nor driver with spi-mem
-Message-ID: <20200218125557.GD4232@sirena.org.uk>
-References: <20200215065826.739102-1-gch981213@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/3yNEOqWowh/8j+e"
-Content-Disposition: inline
-In-Reply-To: <20200215065826.739102-1-gch981213@gmail.com>
-X-Cookie: No alcohol, dogs or horses.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 18 Feb 2020 08:01:20 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:1082 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726399AbgBRNBT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 08:01:19 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 18 Feb 2020 18:31:16 +0530
+Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 18 Feb 2020 18:30:41 +0530
+Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
+        id A544A4C42; Tue, 18 Feb 2020 18:30:40 +0530 (IST)
+From:   Pradeep P V K <ppvk@codeaurora.org>
+To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, rampraka@codeaurora.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
+        Pradeep P V K <ppvk@codeaurora.org>
+Subject: [RFC v4 0/2] Add SDHC interconnect bandwidth scaling
+Date:   Tue, 18 Feb 2020 18:30:31 +0530
+Message-Id: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add interconnect bandwidths for SDHC driver using OPP framework that
+is required by SDHC driver based on the clock frequency and bus width
+of the card. Otherwise, the system clocks may run at minimum clock
+speed and thus affecting the performance.
 
---/3yNEOqWowh/8j+e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This change is based on
+[RFC] mmc: host: sdhci-msm: Use the interconnect API
+(https://lkml.org/lkml/2018/10/11/499) and
 
-On Sat, Feb 15, 2020 at 02:58:24PM +0800, Chuanhong Guo wrote:
+[PATCH v6] Introduce Bandwidth OPPs for interconnects
+(https://lkml.org/lkml/2019/12/6/740)
 
-> To keep patchset small for easier reviewing, there will be 3 patchsets
-> including this one.
-> 1. add the new driver, which is this patchset.
-> 2. update existing dts for the new driver:
->    spi-max-frequency is missing in current mtk-quadspi binding. Old
->    driver parses child node manually so it doesn't need this, but
->    new spi-mem driver is probed via spi subsystem which requires the
->    presence of spi-max-frequency. Since this doesn't break old driver
->    support, I'll send this separately as a standalone patch.
+Pradeep P V K (2):
+  mmc: sdhci-msm: Add interconnect bus bandwidth scaling support
+  dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
 
-This is an ABI break so you shouldn't be doing this, if the existing
-binding works it should continue to work.
+ .../devicetree/bindings/mmc/sdhci-msm.txt          |  18 ++
+ drivers/mmc/host/sdhci-msm.c                       | 204 ++++++++++++++++++++-
+ 2 files changed, 218 insertions(+), 4 deletions(-)
 
-> 3. removing the old driver. I'll create this commit after 1 and 2 are
->    applied to avoid possible rebasing due to any changes in the old
->    driver.
+--
+changes from RFC v3 -> v4:
+- Addressed review comments from Bjorn and Matthias
+1.9.1
 
-This isn't great as it means we have a period with two drivers for the
-same thing in tree which is at best going to be confusing.  There's no
-advantage to splitting this out.
-
---/3yNEOqWowh/8j+e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5L3twACgkQJNaLcl1U
-h9CQ0Af/bCSGtGQh9O/SezBLGjZ59DSJjcG/kJ2CB/e5Ub3WkveUKq3prcIpbWRZ
-j7LZ1+3P0+IQJC2b4wWFTf6xOOoucP4Qb1qVBc1HyBt9SrqrrZ3SdEXzhbsYJ1Zq
-tLGrQ37qdRhfSpspLm1N3FN+EBZuVW3tYPclxUjkHTE50mu0wmMAk4OXtrbyBKp7
-H046klgqVPBXzTlP8mFTtp0/E/hYhrBUTqcEcUBTAw3nCMBMiVxUjdxRx+tB41CR
-TBBlM9+VwbxRbrzZC9IL5S+l+Bi9EW2axbZ2zFG7vOTc+AoCIT/PxwyZBshr8Xoh
-A7hM2b6D+BSbpRcPwjpZLi3E11d0ug==
-=CyQ7
------END PGP SIGNATURE-----
-
---/3yNEOqWowh/8j+e--
