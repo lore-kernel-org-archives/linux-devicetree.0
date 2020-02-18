@@ -2,143 +2,156 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361B3C34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 18:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE440C34026
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 18:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143DB2465D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 18:22:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KgxNtpob"
+	by mail.kernel.org (Postfix) with ESMTP id C603624655
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 18:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582051224;
+	bh=e0prGkshvWw2XTwL3+iei7JE8F3vbsgEto2sLKzoNxY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Sgq5QnCRZMKqWLU1O6cS3xQSCv+EGYHklYRV9dCmssZV/gKXFNtZunRsN7lNCWpH8
+	 1pgTaombijyCyi3zHcO8STJWA4XTgKBCgkylWdClSxa1jlAPZ7ZPbDkTUV+swVWjwb
+	 00lUoKzqSzPvoqeM07IxjsSaHV+I5GL2JNpTy1KA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgBRSWz (ORCPT
+        id S1726422AbgBRSkY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:22:55 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:32217 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726636AbgBRSWy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:22:54 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582050174; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=J5eQDgly6Od6K2D2z6YcEubcDGKZcSjnWibzy0LGV3M=; b=KgxNtpob5bPo574iGAV7M6o8lBq78HkTAwJpjzGlMuzQxXoa29EE332DycqlJpwcn7cS14dp
- QQlkujsnNFo5liaqmsnH9mAdF7e8s7VxmgeRfCJgqRmMUv/untnxAu1Fp2jtEu/NYxjHwwcx
- hzJeX2+MUd1jZo86nuPDIj5mnXo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4c2b77.7f0ec43316c0-smtp-out-n02;
- Tue, 18 Feb 2020 18:22:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 82012C4479D; Tue, 18 Feb 2020 18:22:47 +0000 (UTC)
-Received: from [192.168.0.107] (unknown [183.83.146.168])
+        Tue, 18 Feb 2020 13:40:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726225AbgBRSkY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:40:24 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DE274C43383;
-        Tue, 18 Feb 2020 18:22:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DE274C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add modem clock controller driver for
- SC7180
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org
-References: <1580357923-19783-1-git-send-email-tdas@codeaurora.org>
- <1580357923-19783-4-git-send-email-tdas@codeaurora.org>
- <20200130180856.6B65C20678@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <255a6ddf-bd34-3249-ad86-62cb486a7e41@codeaurora.org>
-Date:   Tue, 18 Feb 2020 23:52:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id E3BA124656;
+        Tue, 18 Feb 2020 18:40:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582051223;
+        bh=e0prGkshvWw2XTwL3+iei7JE8F3vbsgEto2sLKzoNxY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZbapHghKemvj/oI+zpPIruW3rQ0y+/IGCFK4hWmOUDx7Vi4fNxeSS/WMkU/tOfVw6
+         5U9tzmE0siFMLLMGiimacSWFAD6i3onMYAlpQEevIhoPtM05rP/W3Mn7mRRqz8OUEZ
+         FvJ+rEAk2hZeuYncgmnHdz8KREoKXg7XPBgExTnc=
+Received: by mail-qk1-f170.google.com with SMTP id h4so20556083qkm.0;
+        Tue, 18 Feb 2020 10:40:22 -0800 (PST)
+X-Gm-Message-State: APjAAAXMOybWhbMjP/PI5WyTkGrIoj25iB3wKpVv2e+lmQsAhJTKVBQW
+        6myrge+bZL3RZnK73O4cu1nqjyZvPb1bDrWCqQ==
+X-Google-Smtp-Source: APXvYqzzc5l2bT41Ulxw896RzAsZHa163jCmWCxKmNgy3aUdTfnzFWB1uBJXqNRZFmClh71pLAlutTDYlRFRVHXfwrQ=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr20551704qkg.152.1582051221993;
+ Tue, 18 Feb 2020 10:40:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200130180856.6B65C20678@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200218171321.30990-1-robh@kernel.org> <20200218181356.09ae0779@donnerap.cambridge.arm.com>
+In-Reply-To: <20200218181356.09ae0779@donnerap.cambridge.arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 18 Feb 2020 12:40:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJpDLn5Zr2UHno1TeReqrwZ-HAAfd78AouigGi4sAQuOw@mail.gmail.com>
+Message-ID: <CAL_JsqJpDLn5Zr2UHno1TeReqrwZ-HAAfd78AouigGi4sAQuOw@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/11] Removing Calxeda platform support
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        soc@kernel.org, Robert Richter <rrichter@marvell.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        kvm@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 1/30/2020 11:38 PM, Stephen Boyd wrote:
-> Quoting Taniya Das (2020-01-29 20:18:43)
->> Add support for the modem clock controller found on SC7180
->> based devices. This would allow modem drivers to probe and
->> control their clocks.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   drivers/clk/qcom/Kconfig      |   9 +++
->>   drivers/clk/qcom/Makefile     |   1 +
->>   drivers/clk/qcom/gcc-sc7180.c |  70 +++++++++++++++++++++
->>   drivers/clk/qcom/mss-sc7180.c | 143 ++++++++++++++++++++++++++++++++++++++++++
-> 
-> Please split this patch into two, one for gcc and one for mss.
-> 
-
-Taken care in the next patch series.
-
->>   4 files changed, 223 insertions(+)
->>   create mode 100644 drivers/clk/qcom/mss-sc7180.c
->>
->> diff --git a/drivers/clk/qcom/mss-sc7180.c b/drivers/clk/qcom/mss-sc7180.c
->> new file mode 100644
->> index 0000000..d82600e
->> --- /dev/null
->> +++ b/drivers/clk/qcom/mss-sc7180.c
->> @@ -0,0 +1,143 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/module.h>
->> +#include <linux/of_address.h>
->> +#include <linux/pm_clock.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/qcom,mss-sc7180.h>
->> +
->> +#include "clk-regmap.h"
->> +#include "clk-branch.h"
->> +#include "common.h"
->> +
-> [...]
->> +
->> +static struct regmap_config mss_regmap_config = {
-> 
-> Can this be const?
+On Tue, Feb 18, 2020 at 12:14 PM Andre Przywara <andre.przywara@arm.com> wr=
+ote:
 >
+> On Tue, 18 Feb 2020 11:13:10 -0600
+> Rob Herring <robh@kernel.org> wrote:
+>
+> Hi,
+>
+> > Calxeda has been defunct for 6 years now. Use of Calxeda servers carrie=
+d
+> > on for some time afterwards primarily as distro builders for 32-bit ARM=
+.
+> > AFAIK, those systems have been retired in favor of 32-bit VMs on 64-bit
+> > hosts.
+> >
+> > The other use of Calxeda Midway I'm aware of was testing 32-bit ARM KVM
+> > support as there are few or no other systems with enough RAM and LPAE. =
+Now
+> > 32-bit KVM host support is getting removed[1].
+> >
+> > While it's not much maintenance to support, I don't care to convert the
+> > Calxeda DT bindings to schema nor fix any resulting errors in the dts f=
+iles
+> > (which already don't exactly match what's shipping in firmware).
+>
+> While every kernel maintainer seems always happy to take patches with a n=
+egative diffstat, I wonder if this is really justification enough to remove=
+ a perfectly working platform. I don't really know about any active users, =
+but experience tells that some platforms really are used for quite a long t=
+ime, even if they are somewhat obscure. N900 or Netwinder, anyone?
+>
+> So to not give the impression that actually *everyone* (from that small s=
+ubset of people actively reading the kernel list) is happy with that, I thi=
+nk that having support for at least Midway would be useful. On the one hand=
+ it's a decent LPAE platform (with memory actually exceeding 4GB), and on t=
+he other hand it's something with capable I/O (SATA) and networking, so one=
+ can actually stress test the system. Which is the reason I was using that =
+for KVM testing, but even with that probably going away now there remain st=
+ill some use cases, and be it for general ARM(32) testing.
 
-Yes, next series is updated with the above.
+Does LPAE with more than 4GB actually need to work if there's not
+another platform out there?
 
->> +       .reg_bits       = 32,
->> +       .reg_stride     = 4,
->> +       .val_bits       = 32,
->> +       .fast_io        = true,
->> +};
->> +
+> I don't particularly care about the more optional parts like EDAC, cpuidl=
+e, or cpufreq, but I wonder if keeping in at least the rather small SATA an=
+d XGMAC drivers and basic platform support is feasible.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+cpuidle isn't actually stable from what I remember. I think without
+cpufreq, we default to 1.1GHz instead of 1.4.
 
---
+> If YAML DT bindings are used as an excuse, I am more than happy to conver=
+t those over.
+
+Thanks!
+
+>
+> And if anyone has any particular gripes with some code, maybe there is a =
+way to fix that instead of removing it? I was always wondering if we could =
+get rid of the mach-highbank directory, for instance. I think most of it is=
+ Highbank (Cortex-A9) related.
+
+All the reset/suspend/poweroff and coherency parts are shared. The SCU
+and L2 parts could be removed, but not really worth the surgery IMO.
+
+Rob
