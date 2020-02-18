@@ -7,94 +7,99 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0FAC3404B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76143C3404B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BB62173E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F0642173E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582058822;
-	bh=ejiCS41yifJLpgW8XpUz8UZsIF6W4WNIg4fCqZi9C28=;
+	s=default; t=1582058843;
+	bh=JBMLJ57X+E27WslZNzfKU5eMUuC3I3ipNWOQ4Axbqoo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kbBVewUdT8KHvtQmN/wfSY5JmGh/qB7ys79xsRqdvZI76dZ8ZhkEq3w+2Nf3LFc1K
-	 XtHRrr5/usTMMbzuutX/KX/4SgPZdEFlyfS3niErnmrAaN6+q4oWI4GApwqGaP5cWt
-	 TaF47R5L/FkgNqKi/Rof8BBu7NYfhN+cssOSbbOI=
+	b=CGdQh4e1nhTRoEB/pBca1zJo43I3lKBNVh4k8Q0em+Y7Jcp6Rs7KqmtOjPkrPpjJS
+	 jf0HFFdpSBVU3/qPsKOKdSEZhT2STUBEL2SOqSWExQkUQ5FgbySkfwQwOwWG0pOmPs
+	 WhNHis4KBHGd6NFeBQb2Vgj82kFR14QLmCcy+/JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgBRUqp (ORCPT
+        id S1726829AbgBRUrT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:46:45 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35158 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbgBRUqo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:46:44 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b18so21557130oie.2;
-        Tue, 18 Feb 2020 12:46:44 -0800 (PST)
+        Tue, 18 Feb 2020 15:47:19 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36771 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgBRUrS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:47:18 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so21559415oic.3;
+        Tue, 18 Feb 2020 12:47:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FdwqDUwoMmYtSAEuLCPUeBFayG1iXRKqm9tBHfT2PC8=;
-        b=me6yjH7EPvz5heRVnBwHGiP8YAvtSh6G6A3s5rcsKZLUOM5KZmTOqr1ikJrmaqodGQ
-         pknXeFFokBGVto0KvtuG4FLZdblgUAiQHK47T9eXATO1Jd14wm2DAQ5Hf5ypEMh/i1mv
-         CPeQ/VFGF+dgnPvUZ5nRn2//t1ko5MbR1uB5jIPmIwJbc8AkJ4VjdWWDXKGlqIWbRTfy
-         KkiOz4i4Bv0Q3OgRyUrztb8NvghM1LRrTTP3RChrmjQQg6zYt3eZS5pBjV5cZKMqq6CE
-         rhBGoF59kRM033gF7jXhDWxg3zdCsm/aH9xWClsryoI9emNm9nIJZEwpMQ3jHqeCtze3
-         KNtw==
-X-Gm-Message-State: APjAAAVxRJ0BvZ+NH+pGro4mPJuM5coFrilFsvQn26fkrG8VNXcBDYwC
-        3bnO5OtNDJGu8apdusPAyQ==
-X-Google-Smtp-Source: APXvYqznbe8xplYY/4+OhUA9lRm8BnQc3PLmlody7tZmE1B9QJMCd+Clmhs9KI5idHhweVRRpg+e/w==
-X-Received: by 2002:aca:4789:: with SMTP id u131mr2355446oia.43.1582058803756;
-        Tue, 18 Feb 2020 12:46:43 -0800 (PST)
+        bh=VPaoilgC2MVulKsvvmY3VL8acfEnq/hEkFxwm21dKyY=;
+        b=kwsuoJdfVhtQ5XAZPyC6/Ihu+u1L8lUqzAdSRfWzpjrGO97YmA5VJPS/bTUVEi7/0h
+         igrZcv0kh9lBOj9dgEvDl/jcMT1P574gFBfMM/IsO+7y+sFrHn4gyL/tO3SfnCL33qa9
+         aIn74/5l/956yKWEvEDRkeJVR4dQdSpjuRutfh5E79Rhgkx1u1hp0ChDPYRJVzB3qBiM
+         jMF1RisnDT5AGTNMlKb4aUPkZwt4agUmDcp+x/Csy9s1mvckHrcT1N5MMXbII07vPmWS
+         o8KKRQbnpq/UiIkRUozXhw+mmj0xLmkm/Jus/CmmD/W/tU9q+RAZFENC4SRzCujhjoGe
+         OIxA==
+X-Gm-Message-State: APjAAAVDF8r6WOt4hcFhrxTR/OQEIWDlsCfsZHz+P0spKHvCvZuMdbuR
+        fIVr/oVlqxFmdvO7A4ddIw==
+X-Google-Smtp-Source: APXvYqxps8IdMZeg25SMK6apXOiY+3Bdn4PwC0ZH41zv7AZ2UDrwTVfF/4BmTyrHIpnk7zX90lyxmQ==
+X-Received: by 2002:a54:4085:: with SMTP id i5mr2484867oii.17.1582058838189;
+        Tue, 18 Feb 2020 12:47:18 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y6sm1706747oti.44.2020.02.18.12.46.42
+        by smtp.gmail.com with ESMTPSA id i7sm1559438oib.42.2020.02.18.12.47.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:46:43 -0800 (PST)
-Received: (nullmailer pid 8677 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:46:42 -0000
-Date:   Tue, 18 Feb 2020 14:46:42 -0600
+        Tue, 18 Feb 2020 12:47:17 -0800 (PST)
+Received: (nullmailer pid 9634 invoked by uid 1000);
+        Tue, 18 Feb 2020 20:47:16 -0000
+Date:   Tue, 18 Feb 2020 14:47:16 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 07/18] dt-bindings: usb: dwc3: Add a
- gpio-usb-connector example
-Message-ID: <20200218204642.GA8639@bogus>
-References: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
- <20200210120723.91794-8-bryan.odonoghue@linaro.org>
+To:     JC Kuo <jckuo@nvidia.com>
+Cc:     gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        robh@kernel.org, jonathanh@nvidia.com, kishon@ti.com,
+        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        nkristam@nvidia.com, JC Kuo <jckuo@nvidia.com>
+Subject: Re: [PATCH v6 3/5] dt-bindings: phy: tegra: Add Tegra194 support
+Message-ID: <20200218204716.GA9575@bogus>
+References: <20200212061133.11665-1-jckuo@nvidia.com>
+ <20200212061133.11665-4-jckuo@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210120723.91794-8-bryan.odonoghue@linaro.org>
+In-Reply-To: <20200212061133.11665-4-jckuo@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 10 Feb 2020 12:07:12 +0000, Bryan O'Donoghue wrote:
-> A USB connector should be a child node of the USB controller
-> connector/usb-connector.txt. This patch adds an example of how to do this
-> to the dwc3 binding descriptions.
+On Wed, 12 Feb 2020 14:11:31 +0800, JC Kuo wrote:
+> Extend the bindings to cover the set of features found in Tegra194.
+> Note that, technically, there are four more supplies connected to the
+> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
+> , but the power sequencing requirements of Tegra194 require these to be
+> under the control of the PMIC.
 > 
-> It is necessary to declare a connector as a child-node of a USB controller
-> for role-switching to work, so this example should be helpful to others
-> implementing that.
+> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
+> is possible for some platforms have long signal trace that could not
+> provide sufficient electrical environment for Gen 2 speed. This patch
+> adds a "maximum-speed" property to usb3 ports which can be used to
+> specify the maximum supported speed for any particular USB 3.1 port.
+> For a port that is not capable of SuperSpeedPlus, "maximum-speed"
+> property should carry "super-speed".
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Acked-by: Felipe Balbi <balbi@kernel.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: JC Kuo <jckuo@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Changes in v6: none
+> Changes in v5:
+> - re-use "maximum-speed" instead of adding "nvidia,disable-gen2"
+> Changes in v4: none
+> Changes in v3: none
+> Changes in v2:
+> - fix a typo
+> 
+>  .../phy/nvidia,tegra124-xusb-padctl.txt        | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
