@@ -4,142 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15A2C34047
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EF4C34047
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 998A024655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81D324125
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582057162;
-	bh=rsHYLXZfIvowtjqTwKvChU1P5MegFFzjipifaN+35pY=;
+	s=default; t=1582057220;
+	bh=Ml9pFsd3SvWCXJWlOLjZQrxyOx8s6T42mLa9847+uO8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CuqseQcIau1myJ10oL4jp130pa8xOnF4kpsIlbz2dGzhot5vZlYzRqWpe1vtlNyoR
-	 PyzhLMAbyuaZexAsnUN5QhPYuZCG8wt+XlCIUfwJVdR9m0N+tnFrTqiEzVTwQX8XEm
-	 561pSi8nz1WUYzHYHa9Us2y4LgirolnqMpksBXNw=
+	b=KJLrjcOE2a1IJ5Lwfor2OOIeMyaLTukxkun5mVVHuin2NWCXQuMXZK4DMUcc6egrJ
+	 pkf3ntNi9yvBdqN11st/lBXdrSEWrvBFH0a3f067LFAtuctcNl6TRkP+26bpAH+Lla
+	 WxTXlDbo6Z0C0SBT1bRS4xv0ai/r5BZcy4q63yEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgBRUTW (ORCPT
+        id S1726477AbgBRUUU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:19:22 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39869 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgBRUTW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:19:22 -0500
-Received: by mail-oi1-f193.google.com with SMTP id z2so21445688oih.6;
-        Tue, 18 Feb 2020 12:19:21 -0800 (PST)
+        Tue, 18 Feb 2020 15:20:20 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35597 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbgBRUUU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:20:20 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r16so20868422otd.2;
+        Tue, 18 Feb 2020 12:20:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :content-id:user-agent;
-        bh=/oH+eSV6HonFGoyf1c7VOyN9K2wepQ+JN8XlQu5VFGQ=;
-        b=oddWER9MgP4CPGtyyZyPDIgiYPM4W+kIZjyTmTbEAgSoWCHBnJV/rBPVFnXFxdtL7F
-         Zppep8/4v3R8iDMYxNI1f/tpPlpcUTwW2TU0QN9VxNNMUSf6FlrNzpy9lTFC4fccdq2P
-         RrjUhX8HMUdUBY/696t2uo3KMgqSi+6f+fdqln0Gu4HZPdYEqTBgOSTlHQoHq23x2qox
-         hZQV1XkrfzsECnyTe6RJupWri/HvudYCksYUNZpvDIuvM8LA7fasXqIc+1uza45G/PoN
-         SST0IrotH+GrMXAG6lx0Nwd6UbfEQF9xEZQTAgaIlELNkATH/hb3dq2vegWomd/C25zL
-         25uQ==
-X-Gm-Message-State: APjAAAWCweYqJ9B6K5/MjVWDR5cevAkG9FnX4lAgw93oHRD1HUJ+L3XQ
-        z4zpsFd97cBph4vgPJpHSw==
-X-Google-Smtp-Source: APXvYqxbC09hZJmpCbOQiakXKMqr3SJqmjEG05VISMsBCbMdawmAIIsQlXS9RVG/WrW/lxEciCX1Cw==
-X-Received: by 2002:aca:d0a:: with SMTP id 10mr2313431oin.50.1582057161228;
-        Tue, 18 Feb 2020 12:19:21 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0sk/DiFbdUO1CjcLOsbgvHtz8ywIVcvdBJdDGhidsjg=;
+        b=JL18C3pCBTlenvdqJXAft45qjB7pNiYaCmnzhjrX72gRFMzUYtWKCO0moQCJVK6buM
+         gt/VRN5m3xSX3Zdhrz0ATH74mVg/1WGAExwwv2uoRUvRnvoPOnUNB7dN8ubygBCXyyNT
+         vJAw10SSTkhECfq1jdH+9a6aUZoLjL1aEKKWkdtB587LN+HUDtAX5nZHnv89eMr9l8WT
+         OLf39xxDHVbY5ff2/fFvEIu7nIAX3gC200GFSqEo6XlrNoKxpCYjub3Pj83KoHOShClN
+         v5Lu61iE1wLiLLe59saCG4bqCcLHvc4oooF02AXGTC6lpohGra+qCvemVZGFINeivHb0
+         NDMA==
+X-Gm-Message-State: APjAAAWQo5UjV5ByJPldpaVdvb2AsZo7/uPkCQQdtH/NONpQhzWVWvXP
+        GA++DmOMXwN/fsOa/+4mLw==
+X-Google-Smtp-Source: APXvYqyYp4q4l5K8GhDL9kSXvC3+KeqD2chiQs3xknPlpocsA8HgwMxMkWvRAMwYExwt9IlnRp8r5A==
+X-Received: by 2002:a9d:67c9:: with SMTP id c9mr17953988otn.144.1582057219213;
+        Tue, 18 Feb 2020 12:20:19 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g8sm1677015otq.19.2020.02.18.12.19.20
+        by smtp.gmail.com with ESMTPSA id d131sm1548444oia.36.2020.02.18.12.20.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:19:20 -0800 (PST)
-Received: (nullmailer pid 30683 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:19:19 -0000
-Date:   Tue, 18 Feb 2020 14:19:19 -0600
+        Tue, 18 Feb 2020 12:20:18 -0800 (PST)
+Received: (nullmailer pid 32149 invoked by uid 1000);
+        Tue, 18 Feb 2020 20:20:17 -0000
+Date:   Tue, 18 Feb 2020 14:20:17 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Eugene Zalkonnikov <ez@norphonic.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "development@norphonic.com" <development@norphonic.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] Device tree bindings for TI HDC20x0 humidity and
-  temperature sensors
-Message-ID: <20200218201919.GA28712@bogus>
-References: <CF7736B3-95D6-43E4-BC69-DDB0DFE2A86A@norphonic.com>
- <90EF52F7-82A2-4617-95FF-CCF37E3FEAC6@norphonic.com>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     devicetree@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
+Subject: Re: [PATCH v4] dt-bindings: mfd: Convert ChromeOS EC bindings to
+ json-schema
+Message-ID: <20200218202017.GA31468@bogus>
+References: <20200114021934.178057-1-ikjn@chromium.org>
+ <20200214062614.220699-1-ikjn@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <90EF52F7-82A2-4617-95FF-CCF37E3FEAC6@norphonic.com>
-Content-Language: en-US
-Content-ID: <3CCF2D6C85D1FC408616909C9D0D1D39@eurprd06.prod.outlook.com>
+In-Reply-To: <20200214062614.220699-1-ikjn@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 13 Feb 2020 22:18:13 +0000, Eugene Zalkonnikov wrote:
+On Fri, 14 Feb 2020 14:26:14 +0800, Ikjoon Jang wrote:
+> Convert the ChromeOS EC bindings to json-schema.
 > 
-> Amended device tree bindings for the driver.
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
 > 
-> Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
-> 
-> diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml
-> --- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	1970-01-01 01:00:00.000000000 +0100
-> +++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	2020-02-12 14:28:42.562903814 +0100
-> @@ -0,0 +1,43 @@
-> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HDC2010/HDC2080 humidity and temperature iio sensors
-> +
-> +maintainers:
-> +  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
-> +
-> +description: |
-> +  Relative humidity and tempereature sensors on I2C bus
-> +
-> +  Datasheets are available at:
-> +    http://www.ti.com/product/HDC2010/datasheet
-> +    http://www.ti.com/product/HDC2080/datasheet
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,hdc2010
-> +      - ti,hdc2080
-> +
-> +  vddd-supply:
-> +    description:
-> +      digital voltage regulator (see regulator/regulator.txt)
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      hdc200x@40 {
-> +          compatible = "ti,hdc2010";
-> +          reg = <0x40>;
-> +      };
-> +    };
+> ---
+> v4: text reflows, add type references, and fix examples
+> v3: node name changed in rpmsg example
+> v2: cleanup description, fix typos, remove LPC, and add RPMSG example
+> ---
+>  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ----------
+>  .../devicetree/bindings/mfd/cros-ec.yaml      | 139 ++++++++++++++++++
+>  2 files changed, 139 insertions(+), 76 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml: $id: path/filename 'iio/humidity/hdc2010.yaml' doesn't match actual filename
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/cros-ec.example.dt.yaml: cros-ec@0: 'google,cros-ec-spi-msg-delay', 'google,cros-ec-spi-pre-delay', 'spi-max-frequency' do not match any of the regexes: 'pinctrl-[0-9]+'
 
-See https://patchwork.ozlabs.org/patch/1237780
+See https://patchwork.ozlabs.org/patch/1237876
 Please check and re-submit.
