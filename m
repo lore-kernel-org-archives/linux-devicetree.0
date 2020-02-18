@@ -7,120 +7,107 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6C1C3404B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C09C34047
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477002176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5121207FD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582058396;
-	bh=1M7sJyKek2vzcD+WMBztTe3Vke3hE8g33/8xU4GekOY=;
+	s=default; t=1582058571;
+	bh=RB2WVt8Oo8pRTNKY0RyniN210moMOlPO/WZoFA+NcCE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lc+0cEjeo6qoYwK922HHZNvJHT74DJfPjnQ41omVqgoBLIuVWb44OeCza/r5DHYgd
-	 EhdeteI9vlXFyCfBHbrCie3HuIjKboZ6LPvoa5KT8gIg8pl4UGRdAqc/yuCO3yJOwA
-	 FEf9AU5drYGTSxnPm+KIwVxu+RqHE5TmVgMq3shI=
+	b=M/+CoAzpy5Syl/K3ZM6kcREgBkAR4AD9q/L27ISEGNmKNAs8NhAhDwnl9DtcpfVXd
+	 bvC6YuOCrT2x2c+4j+lIoIoi6esQLxwir94KrK+/TXq/hNNOGEoVyCKOFCKdGRMOwj
+	 pas/EWNQWt1h4lpYVx66b/DBoRHvDDcn/z92LKro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgBRUjx (ORCPT
+        id S1726681AbgBRUmv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:39:53 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41520 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRUjw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:39:52 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so20852454otc.8;
-        Tue, 18 Feb 2020 12:39:50 -0800 (PST)
+        Tue, 18 Feb 2020 15:42:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36102 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRUmv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:42:51 -0500
+Received: by mail-ot1-f65.google.com with SMTP id j20so20921423otq.3;
+        Tue, 18 Feb 2020 12:42:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C8j0O76ayqbfqE0bVu8zQXNeOaxgxzZC+4WywF7J+iw=;
-        b=WloVHiBsfD/pptWSgH0gzkPztMIEUfHpyFJaQEM/4z5HB4tKR4QXpnESbtGGwn+Y/B
-         BzwqI8OwTeWwOGCOCoYiDiDpasjPLFwdcIMBsrh4tTRe/cwuvvN+2xYr2gG6Jz9s3LL5
-         jNJAY4siQikOD+fHAaKblz7zNco5FOfnblcMuynJsEVpB79YV11UplKkJSI4h5Fr37ca
-         ntSY/sh7J0sdQjMXB8tOva4XT2u3WsF31ch09KdVys/kW1CMC3/zBc/wvQDulu4SBqMf
-         EwXJcaFKyCeK2NzdHQMSW4iwVtHf0Qjaf7Tmp5gxehHHhZBJUabKQzLLzkvcsrPkVSdw
-         EEiQ==
-X-Gm-Message-State: APjAAAWyjdbCYUOTIfaC8UCbxIxjuih+kOD5N1RfBCP7vE2ANs+yQtUu
-        nbinY6FEFzKpNZNv2nNTZw==
-X-Google-Smtp-Source: APXvYqyH1p5MWdMBardwNwTmNs1F6hhPi3TUJe8KGhFk/oPzVltIMKXI9kg6VgPOTDZoEaMQDFRXnA==
-X-Received: by 2002:a9d:116:: with SMTP id 22mr16069633otu.149.1582058390424;
-        Tue, 18 Feb 2020 12:39:50 -0800 (PST)
+        bh=fbxbwEaD4qF3WMZRRbbcfJIaLGPm78vL8TqgF9rVVVA=;
+        b=Q1x81srnkkxGxftk0rVGqR7GuIJw8PjgvFxxzJI6hmJvyf31IU6EfuvdGxs0VdVING
+         R1aUzms5D5EayZDsSj7Atw8iP0IhtWc1bnvrA64I3KWbmtQRhkOJ4conCkndZckM66ph
+         ll5ppXUssnl67ZvDh9+JQzI8slBlSIeqXbY+fe7Pv4dg4EX7qHBjp6KVptjQg+dtZSrc
+         8K13u8iIT/SDi/hctgFoUHQq8fIrl82vgeO0zhq5sftv9aWSo+gohruzIdTdOKqpx75H
+         iCpF/rIWwxPm+NhNpOvrhehw8v9gjQyMqsG1EUPiYVJVhRhmR1XOqxLylKYdat8k2VTN
+         asrQ==
+X-Gm-Message-State: APjAAAX92qHRz+clnOlUVqV7Mi+YOE5Tu7ka4Llp8mN948zX+AiATP2y
+        TL+CZxIjDPx6xNvo8sp9uQ==
+X-Google-Smtp-Source: APXvYqxIC26xwfaXsfuVbpL+ibxTaDBrPmM7K900gLuNY2/+tZr+rM1AS6Cj9VbvN/PVfLYNmFsuGw==
+X-Received: by 2002:a9d:6443:: with SMTP id m3mr16551864otl.20.1582058570147;
+        Tue, 18 Feb 2020 12:42:50 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w197sm446590oia.12.2020.02.18.12.39.48
+        by smtp.gmail.com with ESMTPSA id w201sm1547806oif.29.2020.02.18.12.42.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:39:49 -0800 (PST)
-Received: (nullmailer pid 31148 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:39:48 -0000
-Date:   Tue, 18 Feb 2020 14:39:48 -0600
+        Tue, 18 Feb 2020 12:42:49 -0800 (PST)
+Received: (nullmailer pid 3007 invoked by uid 1000);
+        Tue, 18 Feb 2020 20:42:48 -0000
+Date:   Tue, 18 Feb 2020 14:42:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Anu Ramanathan <anur@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ryder Lee <Ryder.Lee@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Subject: Re: [PATCH v7 1/7] dt-bindings: clock: mediatek: document clk
- bindings for Mediatek MT6765 SoC
-Message-ID: <20200218203948.GA28003@bogus>
-References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com>
- <1581067250-12744-2-git-send-email-macpaul.lin@mediatek.com>
- <d606aeb2-5327-ff13-0043-e70ef37522f5@gmail.com>
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v6 02/18] dt-bindings: phy: Add Qualcomm Synopsys
+ Hi-Speed USB PHY binding
+Message-ID: <20200218204248.GA2908@bogus>
+References: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
+ <20200210120723.91794-3-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d606aeb2-5327-ff13-0043-e70ef37522f5@gmail.com>
+In-Reply-To: <20200210120723.91794-3-bryan.odonoghue@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:47:25PM +0100, Matthias Brugger wrote:
+On Mon, 10 Feb 2020 12:07:07 +0000, Bryan O'Donoghue wrote:
+> From: Sriharsha Allenki <sallenki@codeaurora.org>
 > 
+> Adds bindings for Qualcomm's 28 nm USB PHY supporting Low-Speed, Full-Speed
+> and Hi-Speed USB connectivity on Qualcomm chipsets.
 > 
-> On 07/02/2020 10:20, Macpaul Lin wrote:
-> > From: Mars Cheng <mars.cheng@mediatek.com>
-> > 
-> > This patch adds the binding documentation for apmixedsys, audsys, camsys,
-> > imgsys, infracfg, mipi0a, topckgen, vcodecsys
-> > 
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> > Signed-off-by: Owen Chen <owen.chen@mediatek.com>
-> > Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> > ---
-> >  .../arm/mediatek/mediatek,apmixedsys.txt      |  1 +
-> >  .../bindings/arm/mediatek/mediatek,audsys.txt |  1 +
-> >  .../bindings/arm/mediatek/mediatek,camsys.txt |  1 +
-> >  .../bindings/arm/mediatek/mediatek,imgsys.txt |  1 +
-> >  .../arm/mediatek/mediatek,infracfg.txt        |  1 +
-> >  .../bindings/arm/mediatek/mediatek,mipi0a.txt | 28 +++++++++++++++++++
-> >  .../bindings/arm/mediatek/mediatek,mmsys.txt  |  1 +
-> >  .../arm/mediatek/mediatek,pericfg.txt         |  1 +
-> >  .../arm/mediatek/mediatek,topckgen.txt        |  1 +
-> >  .../arm/mediatek/mediatek,vcodecsys.txt       | 27 ++++++++++++++++++
+> [bod: Converted to YAML. Changed name dropping snps, 28nm components]
 > 
-> I think it's OK to put all the bindings, that only add one compatible in onw
-> patch. But I think mipi0a and vcodesys should each go into a separate patch, as
-> we will need a Ack by Rob for that.
+> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  .../bindings/phy/qcom,usb-hs-28nm.yaml        | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
+> 
 
-Yes, and DT schema for the new ones.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
