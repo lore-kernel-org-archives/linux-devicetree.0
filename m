@@ -7,93 +7,104 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EF4C34047
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1347C34049
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B81D324125
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE2F2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 20:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582057220;
-	bh=Ml9pFsd3SvWCXJWlOLjZQrxyOx8s6T42mLa9847+uO8=;
+	s=default; t=1582057256;
+	bh=fOnuByx4dmVbJ3SLtPhTrAwLaaVHcPJRB9AmsZUR3Fo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KJLrjcOE2a1IJ5Lwfor2OOIeMyaLTukxkun5mVVHuin2NWCXQuMXZK4DMUcc6egrJ
-	 pkf3ntNi9yvBdqN11st/lBXdrSEWrvBFH0a3f067LFAtuctcNl6TRkP+26bpAH+Lla
-	 WxTXlDbo6Z0C0SBT1bRS4xv0ai/r5BZcy4q63yEc=
+	b=2FnIy4+j+6Lu6wUSgBtF0yF9S4n7l4eNV5JDTcvxdbqFugLuOnEgXnBP92j5jSMJ8
+	 OncJrOXxrUZZy6qOgML3k6RpHDC3nw9IZtK91QzqnlfU7PEd8SoJFVzLSZqOBWiMWj
+	 h446IVMDiipBUTjFaTVE+94lpdjnBeZhDVHhM/mI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgBRUUU (ORCPT
+        id S1726481AbgBRUUw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:20:20 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35597 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgBRUUU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:20:20 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r16so20868422otd.2;
-        Tue, 18 Feb 2020 12:20:19 -0800 (PST)
+        Tue, 18 Feb 2020 15:20:52 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41463 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbgBRUUw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 15:20:52 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so21428759oie.8;
+        Tue, 18 Feb 2020 12:20:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0sk/DiFbdUO1CjcLOsbgvHtz8ywIVcvdBJdDGhidsjg=;
-        b=JL18C3pCBTlenvdqJXAft45qjB7pNiYaCmnzhjrX72gRFMzUYtWKCO0moQCJVK6buM
-         gt/VRN5m3xSX3Zdhrz0ATH74mVg/1WGAExwwv2uoRUvRnvoPOnUNB7dN8ubygBCXyyNT
-         vJAw10SSTkhECfq1jdH+9a6aUZoLjL1aEKKWkdtB587LN+HUDtAX5nZHnv89eMr9l8WT
-         OLf39xxDHVbY5ff2/fFvEIu7nIAX3gC200GFSqEo6XlrNoKxpCYjub3Pj83KoHOShClN
-         v5Lu61iE1wLiLLe59saCG4bqCcLHvc4oooF02AXGTC6lpohGra+qCvemVZGFINeivHb0
-         NDMA==
-X-Gm-Message-State: APjAAAWQo5UjV5ByJPldpaVdvb2AsZo7/uPkCQQdtH/NONpQhzWVWvXP
-        GA++DmOMXwN/fsOa/+4mLw==
-X-Google-Smtp-Source: APXvYqyYp4q4l5K8GhDL9kSXvC3+KeqD2chiQs3xknPlpocsA8HgwMxMkWvRAMwYExwt9IlnRp8r5A==
-X-Received: by 2002:a9d:67c9:: with SMTP id c9mr17953988otn.144.1582057219213;
-        Tue, 18 Feb 2020 12:20:19 -0800 (PST)
+        bh=qa4vyumhFAkQGXRJF5uIdfvI1ZiDY0SQJcSr0dyAsZg=;
+        b=gySFLoMxo+LWI3rBU4fvMF/4QeVmmIgK67AiGtQNAqVYDIBRozPJo5VMyckYjFK1Sw
+         /lYz74IGZWhq0th03l6w1q5oJeYQhD+xYlRRdlgyTaj84TtPZkroxy4ilSBf5fB8m5JT
+         +avycCULmgSHthadj0HwNY96KpcyycHimizafcMT41Ou/3mLrP/Kkxy76FUTQfcYbkYu
+         kyn+GQ4I2YQTibm7Hvhf8d3Fs1h61nhYB4xwrBR8X2qcmmhXz1Ql14Sy27DgKVOMDO+p
+         u1FFiTNzGNtSneevmqw+0jA91Bzh7rpmgeWk0SYnHoLTMnI4tq/LctHc/D8gdQngNgLo
+         Njtg==
+X-Gm-Message-State: APjAAAUtyk52GWBQMR+53ivoN/ChatpWG5IDXPzeRj2TqeOwjDyPBt6v
+        wVsjqWJcWrHE6Ouo89wR+Q==
+X-Google-Smtp-Source: APXvYqz+hvCSGzimhcRi7sOlVXHxj49AXLEsI2ig9xrGPNOybrxt90gohVGm2u83Ki65qYkzBoWeTw==
+X-Received: by 2002:a05:6808:64e:: with SMTP id z14mr2303530oih.79.1582057250315;
+        Tue, 18 Feb 2020 12:20:50 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d131sm1548444oia.36.2020.02.18.12.20.18
+        by smtp.gmail.com with ESMTPSA id j24sm1711288otk.7.2020.02.18.12.20.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:20:18 -0800 (PST)
-Received: (nullmailer pid 32149 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:20:17 -0000
-Date:   Tue, 18 Feb 2020 14:20:17 -0600
+        Tue, 18 Feb 2020 12:20:49 -0800 (PST)
+Received: (nullmailer pid 460 invoked by uid 1000);
+        Tue, 18 Feb 2020 20:20:48 -0000
+Date:   Tue, 18 Feb 2020 14:20:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     devicetree@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
-Subject: Re: [PATCH v4] dt-bindings: mfd: Convert ChromeOS EC bindings to
- json-schema
-Message-ID: <20200218202017.GA31468@bogus>
-References: <20200114021934.178057-1-ikjn@chromium.org>
- <20200214062614.220699-1-ikjn@chromium.org>
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     rui.zhang@intel.com, robh+dt@kernel.org, daniel.lezcano@linaro.org,
+        j-keerthy@ti.com, amit.kucheria@verdurent.com, t-kristo@ti.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v2 1/4] dt-bindings: thermal: k3: Add VTM bindings
+ documentation
+Message-ID: <20200218202048.GA32279@bogus>
+References: <20200214063443.23589-1-j-keerthy@ti.com>
+ <20200214063443.23589-2-j-keerthy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214062614.220699-1-ikjn@chromium.org>
+In-Reply-To: <20200214063443.23589-2-j-keerthy@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 14 Feb 2020 14:26:14 +0800, Ikjoon Jang wrote:
-> Convert the ChromeOS EC bindings to json-schema.
+On Fri, 14 Feb 2020 12:04:40 +0530, Keerthy wrote:
+> Add VTM bindings documentation. In the Voltage Thermal
+> Management Module(VTM), K3 AM654 supplies a voltage
+> reference and a temperature sensor feature that are gathered in the band
+> gap voltage and temperature sensor (VBGAPTS) module. The band
+> gap provides current and voltage reference for its internal
+> circuits and other analog IP blocks. The analog-to-digital
+> converter (ADC) produces an output value that is proportional
+> to the silicon temperature.
 > 
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
 > 
-> ---
-> v4: text reflows, add type references, and fix examples
-> v3: node name changed in rpmsg example
-> v2: cleanup description, fix typos, remove LPC, and add RPMSG example
-> ---
->  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ----------
->  .../devicetree/bindings/mfd/cros-ec.yaml      | 139 ++++++++++++++++++
->  2 files changed, 139 insertions(+), 76 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.yaml
+> Changes in v2:
+> 
+>   * Fixed make dt_binding_check errors.
+> 
+>  .../bindings/thermal/ti,am654-thermal.yaml    | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/cros-ec.example.dt.yaml: cros-ec@0: 'google,cros-ec-spi-msg-delay', 'google,cros-ec-spi-pre-delay', 'spi-max-frequency' do not match any of the regexes: 'pinctrl-[0-9]+'
+Error: Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dts:21.41-42 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1237876
+See https://patchwork.ozlabs.org/patch/1237882
 Please check and re-submit.
