@@ -2,485 +2,526 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2190C34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 11:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B8CC3403A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 11:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4E12173E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 11:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D205A2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 11:11:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kGXHZtoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgBRLHQ (ORCPT
+        id S1726510AbgBRLLf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:07:16 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38971 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgBRLHQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 06:07:16 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1j40ie-0000iS-Ni; Tue, 18 Feb 2020 12:07:12 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1j40ie-0002OZ-24; Tue, 18 Feb 2020 12:07:12 +0100
-Date:   Tue, 18 Feb 2020 12:07:12 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
-Message-ID: <20200218110712.7wllleu2w5myphyb@pengutronix.de>
-References: <20200108104746.1765-1-m.felsch@pengutronix.de>
- <20200108104746.1765-4-m.felsch@pengutronix.de>
- <AM6PR10MB2263733CA8E02F39A647258D80310@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+        Tue, 18 Feb 2020 06:11:35 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:64912 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726402AbgBRLLe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 06:11:34 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582024294; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=+ZhXrCGiroKxS0y2NbAXy2Q56OPm0h5198cey44uu/g=;
+ b=kGXHZtoJdxdMbpLqBURM6kCGA+2x/52tOYho6HgWziW3OyAAHb9pclO3pV0fbwFtTB9V8aSi
+ e090KVRzWANzr1cFeNDio6ftM+DV2qFPPjacghF0vl/UNOtN0htoiUpgHo3I8wt52zN4wEXJ
+ blkvJm37jo/wYzMo6v+ZJpvBOfA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4bc665.7fb70e70d570-smtp-out-n03;
+ Tue, 18 Feb 2020 11:11:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D7BFDC4479C; Tue, 18 Feb 2020 11:11:32 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ppvk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1BD43C43383;
+        Tue, 18 Feb 2020 11:11:31 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR10MB2263733CA8E02F39A647258D80310@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:05:45 up 95 days,  2:24, 122 users,  load average: 0.27, 0.55,
- 0.42
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Feb 2020 16:41:31 +0530
+From:   ppvk@codeaurora.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     adrian.hunter@intel.com, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        linux-mmc-owner@vger.kernel.org, mka@chromium.org,
+        Subhash Jadavani <subhashj@codeaurora.org>
+Subject: Re: [RFC v3 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
+ scaling support
+In-Reply-To: <20200208233910.GB955802@ripper>
+References: <1581086695-16645-1-git-send-email-ppvk@codeaurora.org>
+ <1581086695-16645-2-git-send-email-ppvk@codeaurora.org>
+ <20200208233910.GB955802@ripper>
+Message-ID: <48e0f11b7b8e278eba1004c1001706ae@codeaurora.org>
+X-Sender: ppvk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Bjorn,
 
-gentle ping. The mfd-code and the dt-bindings are landed in 5.6-rc1 but
-this patch is missing.
+Thanks for the review !
 
-Regards,
-  Marco
+On 2020-02-09 05:09, Bjorn Andersson wrote:
+> On Fri 07 Feb 06:44 PST 2020, Pradeep P V K wrote:
+> 
+>> Add interconnect bandwidths for SDHC driver using OPP framework that
+>> is required by SDHC driver based on the clock frequency and bus width
+>> of the card. Otherwise, the system clocks may run at minimum clock
+>> speed and thus affecting the performance.
+>> 
+>> This change is based on Georgi Djakov [RFC]
+>> (https://lkml.org/lkml/2018/10/11/499) and
+>> 
+>> Saravana Kannan [PATCH v6]
+>> (https://lkml.org/lkml/2019/12/6/740)
+> 
+> Write out the subject of these two patches, rather than stating that
+> it's based on one RFC and some PATCH version 6. Or just state that it's
+> based on work by Georgi and Saravana.
+> 
+Sure. i will update this in my next patch set.
 
-On 20-01-17 09:57, Adam Thomson wrote:
-> On 08 January 2020 10:48, Marco Felsch wrote:
+>> 
+>> change from RFC v2 -> v3 changes:
+>> - Modified interconnect bandwidth support using OPP framework.
+>> - Addressed review comments on v2.
 > 
-> > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-> > be used as input, output or have a special use-case.
-> > 
-> > The patch adds the support for the normal input/output use-case.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Move the changelog below the --- line
 > 
-> A little late, but:
-> 
-> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> 
-> > ---
-> > Changelog:
-> > v4:
-> > - add missing PIN_CONFIG_BIAS_DISABLE
-> > 
-> > v3:
-> > - add comment for gpio private include
-> > - add missing bits.h include
-> > - add pin_config state container and set initial pin state to push-pull
-> > - make use of GPIO_LINE_DIRECTION_{IN,OUT}
-> > - update MAINTAINERS entry -> gpio-da90??.c already covered but not
-> >   pinctrl-da90??.c
-> > 
-> > v2:
-> > - fix minor style issue
-> > - move from drivers/gpio to drivers/pinctrl
-> > - Fix spelling issue
-> > - rename local gpio_dir to gpio_mode
-> > - Add datasheet reference and TODO notes
-> > - move gpio to mfd-root node to avoid hierarchical interrupt chips
-> > - Add gpio-controller property check
-> > - remove of_device_id since we drop the gpio of-subnode
-> > - Drop da9062_gpio_get_hwgpio
-> > ---
-> >  MAINTAINERS                      |   1 +
-> >  drivers/pinctrl/Kconfig          |  12 ++
-> >  drivers/pinctrl/Makefile         |   1 +
-> >  drivers/pinctrl/pinctrl-da9062.c | 300 +++++++++++++++++++++++++++++++
-> >  4 files changed, 314 insertions(+)
-> >  create mode 100644 drivers/pinctrl/pinctrl-da9062.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index bd5847e802de..9692ff05cd14 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4867,6 +4867,7 @@ F:	drivers/leds/leds-da90??.c
-> >  F:	drivers/mfd/da903x.c
-> >  F:	drivers/mfd/da90??-*.c
-> >  F:	drivers/mfd/da91??-*.c
-> > +F:	drivers/pinctrl/pinctrl-da90??.c
-> >  F:	drivers/power/supply/da9052-battery.c
-> >  F:	drivers/power/supply/da91??-*.c
-> >  F:	drivers/regulator/da903x.c
-> > diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> > index 3bfbf2ff6e2b..88a3864f32a5 100644
-> > --- a/drivers/pinctrl/Kconfig
-> > +++ b/drivers/pinctrl/Kconfig
-> > @@ -126,6 +126,18 @@ config PINCTRL_DA850_PUPD
-> >  	  Driver for TI DA850/OMAP-L138/AM18XX pinconf. Used to control
-> >  	  pullup/pulldown pin groups.
-> > 
-> > +config PINCTRL_DA9062
-> > +	tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
-> > +	depends on MFD_DA9062
-> > +	select GPIOLIB
-> > +	help
-> > +	  The Dialog DA9062 PMIC provides multiple GPIOs that can be muxed for
-> > +	  different functions. This driver bundles a pinctrl driver to select the
-> > +	  function muxing and a GPIO driver to handle the GPIO when the GPIO
-> > +	  function is selected.
-> > +
-> > +	  Say yes to enable pinctrl and GPIO support for the DA9062 PMIC.
-> > +
-> >  config PINCTRL_DIGICOLOR
-> >  	bool
-> >  	depends on OF && (ARCH_DIGICOLOR || COMPILE_TEST)
-> > diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> > index 879f312bfb75..0b36a1cfca8a 100644
-> > --- a/drivers/pinctrl/Makefile
-> > +++ b/drivers/pinctrl/Makefile
-> > @@ -16,6 +16,7 @@ obj-$(CONFIG_PINCTRL_AT91PIO4)	+= pinctrl-at91-
-> > pio4.o
-> >  obj-$(CONFIG_PINCTRL_AMD)	+= pinctrl-amd.o
-> >  obj-$(CONFIG_PINCTRL_BM1880)	+= pinctrl-bm1880.o
-> >  obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
-> > +obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
-> >  obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
-> >  obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
-> >  obj-$(CONFIG_PINCTRL_GEMINI)	+= pinctrl-gemini.o
-> > diff --git a/drivers/pinctrl/pinctrl-da9062.c b/drivers/pinctrl/pinctrl-da9062.c
-> > new file mode 100644
-> > index 000000000000..f704ee0b2fd9
-> > --- /dev/null
-> > +++ b/drivers/pinctrl/pinctrl-da9062.c
-> > @@ -0,0 +1,300 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Dialog DA9062 pinctrl and GPIO driver.
-> > + * Based on DA9055 GPIO driver.
-> > + *
-> > + * TODO:
-> > + *   - add pinmux and pinctrl support (gpio alternate mode)
-> > + *
-> > + * Documents:
-> > + * [1] https://www.dialog-
-> > semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
-> > + *
-> > + * Copyright (C) 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-> > + */
-> > +#include <linux/bits.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +#include <linux/gpio/driver.h>
-> > +
-> > +#include <linux/mfd/da9062/core.h>
-> > +#include <linux/mfd/da9062/registers.h>
-> > +
-> > +/*
-> > + * We need this get the gpio_desc from a <gpio_chip,offset> tuple to decide if
-> > + * the gpio is active low without a vendor specific dt-binding.
-> > + */
-> > +#include <../gpio/gpiolib.h>
-> > +
-> > +#define DA9062_TYPE(offset)		(4 * (offset % 2))
-> > +#define DA9062_PIN_SHIFT(offset)	(4 * (offset % 2))
-> > +#define DA9062_PIN_ALTERNATE		0x00 /* gpio alternate mode */
-> > +#define DA9062_PIN_GPI			0x01 /* gpio in */
-> > +#define DA9062_PIN_GPO_OD		0x02 /* gpio out open-drain */
-> > +#define DA9062_PIN_GPO_PP		0x03 /* gpio out push-pull */
-> > +#define DA9062_GPIO_NUM			5
-> > +
-> > +struct da9062_pctl {
-> > +	struct da9062 *da9062;
-> > +	struct gpio_chip gc;
-> > +	unsigned int pin_config[DA9062_GPIO_NUM];
-> > +};
-> > +
-> > +static int da9062_pctl_get_pin_mode(struct da9062_pctl *pctl,
-> > +				    unsigned int offset)
-> > +{
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	int ret, val;
-> > +
-> > +	ret = regmap_read(regmap, DA9062AA_GPIO_0_1 + (offset >> 1), &val);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	val >>= DA9062_PIN_SHIFT(offset);
-> > +	val &= DA9062AA_GPIO0_PIN_MASK;
-> > +
-> > +	return val;
-> > +}
-> > +
-> > +static int da9062_pctl_set_pin_mode(struct da9062_pctl *pctl,
-> > +				    unsigned int offset, unsigned int mode_req)
-> > +{
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	unsigned int mode = mode_req;
-> > +	unsigned int mask;
-> > +	int ret;
-> > +
-> > +	mode &= DA9062AA_GPIO0_PIN_MASK;
-> > +	mode <<= DA9062_PIN_SHIFT(offset);
-> > +	mask = DA9062AA_GPIO0_PIN_MASK << DA9062_PIN_SHIFT(offset);
-> > +
-> > +	ret = regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-> > +				 mask, mode);
-> > +	if (!ret)
-> > +		pctl->pin_config[offset] = mode_req;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	int gpio_mode, val;
-> > +	int ret;
-> > +
-> > +	gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +	if (gpio_mode < 0)
-> > +		return gpio_mode;
-> > +
-> > +	switch (gpio_mode) {
-> > +	case DA9062_PIN_ALTERNATE:
-> > +		return -ENOTSUPP;
-> > +	case DA9062_PIN_GPI:
-> > +		ret = regmap_read(regmap, DA9062AA_STATUS_B, &val);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +		break;
-> > +	case DA9062_PIN_GPO_OD:
-> > +	case DA9062_PIN_GPO_PP:
-> > +		ret = regmap_read(regmap, DA9062AA_GPIO_MODE0_4, &val);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return !!(val & BIT(offset));
-> > +}
-> > +
-> > +static void da9062_gpio_set(struct gpio_chip *gc, unsigned int offset,
-> > +			    int value)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +
-> > +	regmap_update_bits(regmap, DA9062AA_GPIO_MODE0_4, BIT(offset),
-> > +			   value << offset);
-> > +}
-> > +
-> > +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	int gpio_mode;
-> > +
-> > +	gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +	if (gpio_mode < 0)
-> > +		return gpio_mode;
-> > +
-> > +	switch (gpio_mode) {
-> > +	case DA9062_PIN_ALTERNATE:
-> > +		return -ENOTSUPP;
-> > +	case DA9062_PIN_GPI:
-> > +		return GPIO_LINE_DIRECTION_IN;
-> > +	case DA9062_PIN_GPO_OD:
-> > +	case DA9062_PIN_GPO_PP:
-> > +		return GPIO_LINE_DIRECTION_OUT;
-> > +	}
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
-> > +				       unsigned int offset)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-> > +	unsigned int gpi_type;
-> > +	int ret;
-> > +
-> > +	ret = da9062_pctl_set_pin_mode(pctl, offset, DA9062_PIN_GPI);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/*
-> > +	 * If the gpio is active low we should set it in hw too. No worries
-> > +	 * about gpio_get() because we read and return the gpio-level. So the
-> > +	 * gpiolib active_low handling is still correct.
-> > +	 *
-> > +	 * 0 - active low, 1 - active high
-> > +	 */
-> > +	gpi_type = !gpiod_is_active_low(desc);
-> > +
-> > +	return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >>
-> > 1),
-> > +				DA9062AA_GPIO0_TYPE_MASK <<
-> > DA9062_TYPE(offset),
-> > +				gpi_type << DA9062_TYPE(offset));
-> > +}
-> > +
-> > +static int da9062_gpio_direction_output(struct gpio_chip *gc,
-> > +					unsigned int offset, int value)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	unsigned int pin_config = pctl->pin_config[offset];
-> > +	int ret;
-> > +
-> > +	ret = da9062_pctl_set_pin_mode(pctl, offset, pin_config);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	da9062_gpio_set(gc, offset, value);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-> > +				  unsigned long config)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	int gpio_mode;
-> > +
-> > +	/*
-> > +	 * We need to meet the following restrictions [1, Figure 18]:
-> > +	 * - PIN_CONFIG_BIAS_PULL_DOWN -> only allowed if the pin is used as
-> > +	 *				  gpio input
-> > +	 * - PIN_CONFIG_BIAS_PULL_UP   -> only allowed if the pin is used as
-> > +	 *				  gpio output open-drain.
-> > +	 */
-> > +
-> > +	switch (pinconf_to_config_param(config)) {
-> > +	case PIN_CONFIG_BIAS_DISABLE:
-> > +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +					  BIT(offset), 0);
-> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> > +		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +		if (gpio_mode < 0)
-> > +			return -EINVAL;
-> > +		else if (gpio_mode != DA9062_PIN_GPI)
-> > +			return -ENOTSUPP;
-> > +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +					  BIT(offset), BIT(offset));
-> > +	case PIN_CONFIG_BIAS_PULL_UP:
-> > +		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +		if (gpio_mode < 0)
-> > +			return -EINVAL;
-> > +		else if (gpio_mode != DA9062_PIN_GPO_OD)
-> > +			return -ENOTSUPP;
-> > +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +					  BIT(offset), BIT(offset));
-> > +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +		return da9062_pctl_set_pin_mode(pctl, offset,
-> > +						DA9062_PIN_GPO_OD);
-> > +	case PIN_CONFIG_DRIVE_PUSH_PULL:
-> > +		return da9062_pctl_set_pin_mode(pctl, offset,
-> > +						DA9062_PIN_GPO_PP);
-> > +	default:
-> > +		return -ENOTSUPP;
-> > +	}
-> > +}
-> > +
-> > +static int da9062_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct da9062 *da9062 = pctl->da9062;
-> > +
-> > +	return regmap_irq_get_virq(da9062->regmap_irq,
-> > +				   DA9062_IRQ_GPI0 + offset);
-> > +}
-> > +
-> > +static const struct gpio_chip reference_gc = {
-> > +	.owner = THIS_MODULE,
-> > +	.get = da9062_gpio_get,
-> > +	.set = da9062_gpio_set,
-> > +	.get_direction = da9062_gpio_get_direction,
-> > +	.direction_input = da9062_gpio_direction_input,
-> > +	.direction_output = da9062_gpio_direction_output,
-> > +	.set_config = da9062_gpio_set_config,
-> > +	.to_irq = da9062_gpio_to_irq,
-> > +	.can_sleep = true,
-> > +	.ngpio = DA9062_GPIO_NUM,
-> > +	.base = -1,
-> > +};
-> > +
-> > +static int da9062_pctl_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *parent = pdev->dev.parent;
-> > +	struct da9062_pctl *pctl;
-> > +	int i;
-> > +
-> > +	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
-> > +	if (!pctl)
-> > +		return -ENOMEM;
-> > +
-> > +	pctl->da9062 = dev_get_drvdata(parent);
-> > +	if (!pctl->da9062)
-> > +		return -EINVAL;
-> > +
-> > +	if (!device_property_present(parent, "gpio-controller"))
-> > +		return 0;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(pctl->pin_config); i++)
-> > +		pctl->pin_config[i] = DA9062_PIN_GPO_PP;
-> > +
-> > +	/*
-> > +	 * Currently the driver handles only the GPIO support. The
-> > +	 * pinctrl/pinmux support can be added later if needed.
-> > +	 */
-> > +	pctl->gc = reference_gc;
-> > +	pctl->gc.label = dev_name(&pdev->dev);
-> > +	pctl->gc.parent = &pdev->dev;
-> > +#ifdef CONFIG_OF_GPIO
-> > +	pctl->gc.of_node = parent->of_node;
-> > +#endif
-> > +
-> > +	platform_set_drvdata(pdev, pctl);
-> > +
-> > +	return devm_gpiochip_add_data(&pdev->dev, &pctl->gc, pctl);
-> > +}
-> > +
-> > +static struct platform_driver da9062_pctl_driver = {
-> > +	.probe = da9062_pctl_probe,
-> > +	.driver = {
-> > +		.name	= "da9062-gpio",
-> > +	},
-> > +};
-> > +module_platform_driver(da9062_pctl_driver);
-> > +
-> > +MODULE_AUTHOR("Marco Felsch <kernel@pengutronix.de>");
-> > +MODULE_DESCRIPTION("DA9062 PMIC pinctrl and GPIO Driver");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_ALIAS("platform:da9062-gpio");
-> > --
-> > 2.20.1
-> 
-> 
+ok.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>> 
+>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> 
+> You should read these as the history of how this patch reached LKML and
+> can use Co-developed-by to indicate that several people was part of a
+> single step.
+> 
+> So if you're both co-author and the one sending it to LKML then you
+> should have 4 Co-developed-by tags here.
+> 
+sure, i will follow this from my patch series.
+
+>> ---
+>>  drivers/mmc/host/sdhci-msm.c | 251 
+>> ++++++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 247 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/drivers/mmc/host/sdhci-msm.c 
+>> b/drivers/mmc/host/sdhci-msm.c
+>> index 71f29ba..f061cd8 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -11,8 +11,10 @@
+>>  #include <linux/mmc/mmc.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/interconnect.h>
+>>  #include <linux/iopoll.h>
+>>  #include <linux/regulator/consumer.h>
+>> +#include <linux/pm_opp.h>
+>> 
+>>  #include "sdhci-pltfm.h"
+>> 
+>> @@ -229,6 +231,14 @@ struct sdhci_msm_variant_info {
+>>  	const struct sdhci_msm_offset *offset;
+>>  };
+>> 
+>> +struct sdhci_msm_bus_vote_data {
+>> +
+> 
+> Move the { to the empty line.
+> 
+ok.
+>> +	struct icc_path *sdhc_to_ddr;
+>> +	struct icc_path *cpu_to_sdhc;
+>> +	bool skip_bus_bw_voting;
+>> +	u32 curr_freq;
+>> +};
+>> +
+>>  struct sdhci_msm_host {
+>>  	struct platform_device *pdev;
+>>  	void __iomem *core_mem;	/* MSM SDCC mapped address */
+>> @@ -255,8 +265,11 @@ struct sdhci_msm_host {
+>>  	bool use_cdr;
+>>  	u32 transfer_mode;
+>>  	bool updated_ddr_cfg;
+>> +	struct sdhci_msm_bus_vote_data *bus_vote_data;
+>>  };
+>> 
+>> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 
+>> enable);
+>> +
+>>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct 
+>> sdhci_host *host)
+>>  {
+>>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> @@ -1564,6 +1577,7 @@ static void sdhci_msm_set_clock(struct 
+>> sdhci_host *host, unsigned int clock)
+>> 
+>>  	msm_set_clock_rate_for_bus_mode(host, clock);
+>>  out:
+>> +	sdhci_msm_bus_voting(host, !!clock);
+>>  	__sdhci_msm_set_clock(host, clock);
+>>  }
+>> 
+>> @@ -1685,6 +1699,219 @@ static void 
+>> sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>>  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>>  }
+>> 
+>> +/*
+>> + * Returns required bandwidth in Bytes per Sec
+>> + */
+>> +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
+>> +					struct mmc_ios *ios)
+>> +{
+>> +	unsigned long bw;
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +	bw = msm_host->clk_rate;
+>> +
+>> +	if (ios->bus_width == MMC_BUS_WIDTH_4)
+>> +		bw /= 2;
+>> +	else if (ios->bus_width == MMC_BUS_WIDTH_1)
+>> +		bw /= 8;
+>> +
+>> +	return bw;
+> 
+> 
+> switch (ios->bus_width) {
+> case MMC_BUS_WIDTH_1:
+> 	return msm_host->clk_rate / 8;
+> case MMC_BUS_WIDTH_4:
+> 	return msm_host->clk_rate / 2;
+> case MMC_BUS_WIDTH_8:
+> 	return msm_host->clk_rate;
+> }
+> 
+ok. i will do this in my next patch.
+
+>> +}
+>> +
+>> +/*
+>> + * Helper function to parse the exact OPP node
+>> + * Returns OPP pointer on success else NULL on error
+>> + */
+>> +static struct dev_pm_opp *find_opp_for_freq(struct sdhci_msm_host 
+>> *msm_host,
+> 
+> A function with this name doesn't belong in the sdhci-msm driver.
+> 
+ok. i will update the function name accordingly.
+
+>> +							unsigned long bw)
+>> +{
+>> +	struct dev_pm_opp *opp;
+>> +	struct sdhci_host *host = mmc_priv(msm_host->mmc);
+>> +	unsigned int freq = bw;
+>> +	struct device *dev = &msm_host->pdev->dev;
+>> +
+>> +
+>> +	if (!freq)
+>> +		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
+>> +	else
+>> +		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
+>> +
+>> +	/* Max Bandwidth vote */
+>> +	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
+>> +		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
+>> +
+>> +	if (IS_ERR(opp)) {
+>> +		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
+>> +				freq, PTR_ERR(opp));
+>> +		return NULL;
+>> +	}
+>> +	return opp;
+>> +}
+>> +
+>> +/*
+>> + * This function sets the interconnect bus bandwidth
+>> + * vote based on bw (bandwidth) argument.
+>> + */
+>> +#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
+>> +static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
+>> +						unsigned int bw)
+>> +{
+>> +	int i;
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
+>> +	struct dev_pm_opp *opp;
+>> +	unsigned long freq = bw;
+>> +	unsigned long ib[BUS_INTERCONNECT_PATHS], 
+>> ab[BUS_INTERCONNECT_PATHS];
+>> +	int ddr_rc = 0, cpu_rc = 0;
+>> +
+>> +	if (!msm_host->bus_vote_data->sdhc_to_ddr ||
+>> +			!msm_host->bus_vote_data->cpu_to_sdhc)
+> 
+> Why not include this check in the calling code, which already checks 
+> for
+> skip_bus_bw_voting?
+> 
+This is actually redundant. This is not required here again. 
+skip_bus_bw_voting will set when
+the handlers are NULL. so i will remove this in my next patch set.
+
+>> +		return;
+>> +
+>> +	if (bw != vote_data->curr_freq) {
+> 
+> if (bw == vote_data->curr_freq)
+> 	return;
+> 
+> Will save you an indentation level in the rest of the function.
+> 
+sure. i will make the change accordingly.
+
+>> +		for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
+>> +			opp = find_opp_for_freq(msm_host, freq);
+>> +			if (opp) {
+>> +				ab[i] =	dev_pm_opp_get_bw(opp, &ib[i]);
+>> +				freq += 1; /* Next Band width vote */
+> 
+> Why do you request bw for sdhc-ddr and then bw+1 for cpu-sdhc?
+> 
+for sdhci-msm, the OPP's for path sdhc-ddr and cpu-sdhc are same, to 
+avoid
+OPP errors and warnings, i just added +1 for cpu-sdhc to differentiate 
+between
+sdhc-ddr and cpu-sdhc OPPS. This needs to be taken care while adding 
+opp's in dt
+for cpu-sdhc path.
+
+
+>> +				dev_pm_opp_put(opp);
+>> +			}
+>> +		}
+>> +		pr_debug("%s: freq:%d sdhc_to_ddr ab:%lu ib:%lu cpu_to_sdhc ab:%lu 
+>> ib:%lu\n",
+>> +				mmc_hostname(host->mmc), bw, ab[0], ib[0],
+>> +				ab[1], ib[1]);
+> 
+> You probably have compiler warnings here as not all code paths will get
+> here with ib and ab initialized.
+> 
+True. i will make the change accordingly.
+
+>> +		ddr_rc = icc_set_bw(vote_data->sdhc_to_ddr, 0, ib[0]);
+>> +		cpu_rc = icc_set_bw(vote_data->cpu_to_sdhc, 0, ib[1]);
+>> +		if (ddr_rc || cpu_rc) {
+>> +			pr_err("%s: icc_set() failed ddr_rc_err:%d cpu_rc_err:%d\n",
+> 
+> dev_err()
+> 
+ok.
+
+>> +				mmc_hostname(host->mmc), ddr_rc, cpu_rc);
+>> +			return;
+>> +		}
+>> +		vote_data->curr_freq = bw;
+>> +	}
+>> +}
+>> +
+>> +/*
+>> + * This function registers the device to OPP framework and
+>> + * parses few optional parameters from the device tree node.
+>> + * Returns NULL bvd pointer on error else a valid bvd pointer.
+>> + */
+>> +static struct sdhci_msm_bus_vote_data 
+>> *sdhci_msm_get_bus_vote_data(struct device
+>> +				       *dev, struct sdhci_msm_host *host)
+>> +
+>> +{
+>> +	struct platform_device *pdev = to_platform_device(dev);
+> 
+> Just pass the platform_device instead of passing &pdev->dev and then
+> container_of() it directly.
+> 
+This function is not required here. i will move the necessary code to 
+the caller fn().
+to look the code more simpler. i will make the changes accordingly in my 
+next patch series.
+
+>> +	struct sdhci_msm_bus_vote_data *vote_data = NULL;
+>> +	int ret = 0;
+> 
+> No need to initialize either vote_data or ret, given that they are both
+> written before read below.
+> 
+same as above.
+
+>> +
+>> +	if (!pdev) {
+> 
+> How could this happen?
+> 
+same as above.
+>> +		dev_err(dev, "Null platform device!\n");
+>> +		return NULL;
+>> +	}
+>> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
+>> +	if (!vote_data)
+>> +		return vote_data;
+>> +
+>> +	ret = dev_pm_opp_of_add_table(dev);
+>> +	if (ret) {
+>> +		if (ret == -ENODEV || ret == -ENODATA) {
+>> +			dev_dbg(dev, "OPP not found. Skip bus voting!!:%d\n",
+>> +					ret);
+>> +			vote_data->skip_bus_bw_voting = true;
+>> +		} else {
+>> +			dev_dbg(dev, "OPP regestration failed:%d\n", ret);
+>> +			goto err;
+>> +		}
+>> +	}
+>> +
+>> +	return vote_data;
+>> +err:
+>> +	devm_kfree(dev, vote_data);
+>> +	vote_data = NULL;
+> 
+> This is a local variable, no need to clear it.
+> 
+same as above.
+>> +	return vote_data;
+>> +}
+>> +
+>> +/*
+>> + * Helper function to register for OPP and interconnect
+>> + * frameworks.
+>> + */
+>> +static int sdhci_msm_bus_register(struct sdhci_msm_host *host,
+>> +				struct platform_device *pdev)
+>> +{
+>> +	struct sdhci_msm_bus_vote_data *vote_data;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret = 0;
+>> +
+>> +	vote_data = sdhci_msm_get_bus_vote_data(dev, host);
+>> +	if (!vote_data) {
+>> +		dev_dbg(&pdev->dev, "Failed to get bus_scale data\n");
+>> +		host->bus_vote_data = NULL;
+>> +		return -EINVAL;
+>> +	}
+>> +	host->bus_vote_data = vote_data;
+>> +
+>> +	vote_data->sdhc_to_ddr = of_icc_get(&pdev->dev, "sdhc-ddr");
+>> +	if (!vote_data->sdhc_to_ddr) {
+>> +		dev_dbg(&pdev->dev, "DT property for path %s missing\n",
+>> +				"sdhc-ddr");
+>> +		return -ENOENT;
+>> +	} else if (IS_ERR(vote_data->sdhc_to_ddr) {
+>> +		dev_dbg(&pdev->dev, "(%ld): failed getting %s path\n",
+>> +				PTR_ERR(vote_data->sdhc_to_ddr), "sdhc-ddr");
+>> +		ret = PTR_ERR(vote_data->sdhc_to_ddr);
+>> +		vote_data->sdhc_to_ddr = NULL;
+>> +		return ret;
+>> +	}
+>> +	vote_data->cpu_to_sdhc = of_icc_get(&pdev->dev, "cpu-sdhc");
+>> +	if (!vote_data->cpu_to_sdhc) {
+> 
+> Afaict there's no reason to hold onto sdhc_to_ddr or vote_data itself 
+> if
+> this happens.
+> 
+> I think things would be cleaner if you make this function return the
+> vote_data for success, NULL if the information was omitted or ERR_PTR()
+> in case invalid data was given.
+> 
+> Assign this in the caller, check for IS_ERR() and in the places where
+> you want to know if you are doing bus voting or not you can just check
+> for host->bus_vote_data - no need to check sdhc_to_ddr, cpu_to_sdhc and
+> skip_bus_bw_voting individually..
+> 
+> 
+> And given that it's an both-or-nothing this function would be cleaner 
+> if
+> you of_icc_get() both paths, then do error handling - and then follow 
+> up
+> with the introduction of devm and bulk operations to the icc API.
+> 
+Agree with your suggestions, will make this change in my next patch set.
+>> +		dev_dbg(&pdev->dev, "DT property for path %s missing\n",
+>> +					"cpu_to_sdhc");
+>> +		return -ENOENT;
+>> +	} else if (IS_ERR(vote_data->cpu_to_sdhc)) {
+>> +		dev_dbg(&pdev->dev, "(%ld): failed getting %s path\n",
+>> +				PTR_ERR(vote_data->cpu_to_sdhc), "cpu-sdhc");
+>> +		ret = PTR_ERR(vote_data->cpu_to_sdhc);
+>> +		vote_data->cpu_to_sdhc = NULL;
+>> +		return ret;
+>> +	}
+>> +	return ret;
+>> +}
+>> +
+>> +static void sdhci_msm_bus_unregister(struct device *dev,
+>> +				struct sdhci_msm_host *host)
+>> +{
+>> +	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
+>> +
+>> +	if (vote_data->skip_bus_bw_voting ||
+>> +		!vote_data->sdhc_to_ddr ||
+>> +		!vote_data->cpu_to_sdhc)
+>> +		return;
+>> +
+>> +	icc_put(vote_data->sdhc_to_ddr);
+>> +	icc_put(vote_data->cpu_to_sdhc);
+>> +}
+>> +
+>> +#define MSM_MMC_BUS_VOTING_DELAY        200 /* msecs */
+> 
+> This is unused.
+> 
+ok. i will remove.
+>> +
+>> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable)
+> 
+> Split this in an enable and a disable
+> 
+Why to split into two functions, most of the code is same and would be 
+simpler
+to use with the same name for both enable and disable.
+>> +{
+>> +	struct mmc_ios *ios = &host->mmc->ios;
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +	unsigned int bw;
+>> +
+>> +	if (msm_host->bus_vote_data->skip_bus_bw_voting)
+>> +		return;
+>> +
+>> +	if (enable) {
+>> +		bw = sdhci_get_bw_required(host, ios);
+>> +		sdhci_msm_bus_set_vote(host, bw);
+>> +	} else
+>> +		sdhci_msm_bus_set_vote(host, 0);
+>> +}
+>> +
+>>  static const struct sdhci_msm_variant_ops mci_var_ops = {
+>>  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>>  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+> 
+> Regards,
+> Bjorn
