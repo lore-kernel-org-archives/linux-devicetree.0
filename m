@@ -2,105 +2,104 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E665C34031
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEBFC34031
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FD72176D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7CD2176D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 07:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zRjwMWHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgBRHXp (ORCPT
+        id S1726206AbgBRH01 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:23:45 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:64016 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgBRHXp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 02:23:45 -0500
-X-AuditID: c0a8fbf4-489ff70000004419-60-5e4b90ff5c3c
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 0D.8D.17433.FF09B4E5; Tue, 18 Feb 2020 08:23:43 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Tue, 18 Feb 2020 08:23:39 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        Tue, 18 Feb 2020 02:26:27 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36854 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgBRH01 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 02:26:27 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01I7QDKD031977;
+        Tue, 18 Feb 2020 01:26:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582010773;
+        bh=dCDwEi1NILs2W8PNP2nGs/h1/l7croz6wFHCkYPYipo=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=zRjwMWHT0OaNYxBoxLtorHS6v3rINzz2qSq8IFLhsWivszYAue9eMTL4WCAvvLAy5
+         OI4FV7DhAHUwB57KuXijH/8DBcow/HWW02SbnLMMEfawJewXMBIRZxRsAzOHaRMhPj
+         OjhK8MPYk4zcDQueglu7V8rSMKGM3sq2Wdte2vGY=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01I7QD0j065660
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Feb 2020 01:26:13 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
+ Feb 2020 01:26:12 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 18 Feb 2020 01:26:12 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01I7Q8RI018709;
+        Tue, 18 Feb 2020 01:26:09 -0600
+Subject: Re: dma_mask limited to 32-bits with OF platform device
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>
+CC:     Roger Quadros <rogerq@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>,
+        <stefan.wahren@i2se.com>, <afaerber@suse.de>, <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Thread-Topic: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Thread-Index: AQHV4At5sLPMospsI0G2S3c08J9KoagWS84AgADGiACAA3X4gIAADG2AgAXzFoA=
-Date:   Tue, 18 Feb 2020 07:23:38 +0000
-Message-ID: <208a81c87e944c69d95da85d7fd0f3ea2bd61547.camel@fi.rohmeurope.com>
-References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200211190614.GP4543@sirena.org.uk>
-         <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
-         <20200214114749.GB4827@sirena.org.uk>
-         <375c7756fca56de4f2f85d1a1a4e0b01dadc290b.camel@fi.rohmeurope.com>
-In-Reply-To: <375c7756fca56de4f2f85d1a1a4e0b01dadc290b.camel@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <08DBE84724581D40814E2FDDE1264D17@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Nishanth Menon <nm@ti.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>
+References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
+ <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
+ <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
+ <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
+ <20200217132133.GA27134@lst.de> <848c4cab-ad96-9c42-b15b-eaffee7f3f8f@ti.com>
+Message-ID: <9ff32fa8-b6c4-04dc-b237-cac7c9a27d50@ti.com>
+Date:   Tue, 18 Feb 2020 09:26:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf0gTURzn3d3O88flOWd7rR/QIKL8VdAfJ0kIVsxMK8OiyNnVLrdym91u
-        YgWxiqRtRdOyH2NWpFKIGC0HalqxFlqiKWGZFWVKpUQFCvZ73eOq+df7vO/n14P3pXClk9RQ
-        JovICxauVEvGEPeu//Cnhj25+mWBYCpbMzJGspdDfQr27M9rGPuk3Ueyk6dCgG14NoCxvoZu
-        gj3eGYpie26LWdG6pktNQNfmfRWl8zc6Sd3Lpx2kbtK/YKNie2zmLk4s32wqsaSv2hlrfFup
-        KeuPr3hzbZx0AF+8C0RTkFkB+1w9CheIoZTMIICBW7V/L90A9r85AVyAokgmE7qeRyGDikmF
-        Nd/rSKTBmWoCfnG3EYhIZNbA6rFBXBathQ+PDODIq2LyYfNoMoIEswj+7C1HClqa+pqdQK46
-        gsPm3rACEdHMBjjU/YREGDDzodPxCUMYZ9TQ/25aIT+agfUdj3EZJ8Hx0d9/51rY+W2EQF04
-        swTeaE+XYRasP7dFTlkIz7pHouQnJMCHF8cID5jtnVHgjZi9EbN3htk7w3wFKBoBNHOm0hJO
-        5JenCbw9TbAazdKx22r2A/lrp1pBOJgTBBgFgmAOhWmT6MrsXL1y1i6r4YCRsxmLBXspbwsC
-        SOFaFZ2rXqdX0gbuwEFesP6j5lKEVk0vHqkqUjKoax/Pl/HCP3YeRWkhnXJaCk0Q+BK+Yo+p
-        VIzQGBWNwmM0KhtvMfACZxeNxWg3im3SciAqTurNQXbaVsaZpalsfQSSKc947VWcCtU2XMWV
-        hMVq4TVqmkZSBkmNdsv/ogmgpoA2UQ6Kk/b7f86EVIFJFeICHaoQuQilcYDzgdEPaVV0bbo+
-        692Or5sq9xo6pz6fOZqReH+D2bZ6cuvKOuuhcCI5GkhRLerqPJWin46vP8N99A4MuwfvFBcU
-        Zrc9X9xzIZz24uavte79h8Y8rV0Tpry7ysP3FmZ05Yewmuy8rG3VOXEtQ0Wr+x4UtKx3iK89
-        B9+fLJw30bh7+FiVlrAZueVLccHG/QHBGMn1nAMAAA==
+In-Reply-To: <848c4cab-ad96-9c42-b15b-eaffee7f3f8f@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TW9ybmluZyBNYXJrLA0KDQpPbiBGcmksIDIwMjAtMDItMTQgYXQgMTQ6MzIgKzAyMDAsIE1hdHRp
-IFZhaXR0aW5lbiB3cm90ZToNCj4gT24gRnJpLCAyMDIwLTAyLTE0IGF0IDExOjQ3ICswMDAwLCBN
-YXJrIEJyb3duIHdyb3RlOg0KPiA+IE9uIFdlZCwgRmViIDEyLCAyMDIwIGF0IDA2OjU2OjM3QU0g
-KzAwMDAsIFZhaXR0aW5lbiwgTWF0dGkgd3JvdGU6DQo+ID4gPiBPbiBUdWUsIDIwMjAtMDItMTEg
-YXQgMTk6MDYgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+ID4gPiA+IA0KPiA+IA0KPiA+IEl0
-IGlzIGEgYml0IGJ1dCBJIHRoaW5rIHRoYXQncyBzb2x2YWJsZSB3aXRoIHNvbWUgcmVmYWN0b3Jp
-bmcgaW4NCj4gPiBwbGFjZQ0KPiA+IChlZywgcHVzaGluZyB0aGluZ3MgaW50byBhIHNtYWxsZXIg
-c3RydWN0IGVtYmVkZGVkIGluIHRoZSBtYWluDQo+ID4gcmVndWxhdG9yDQo+ID4gb25lIGFuZCB0
-aGVuIG1vdmluZyB0aGVtIG91dCkuICBJIG1pZ2h0IGxvb2sgYXQgaXQgbXlzZWxmIGlmIG5vYm9k
-eQ0KPiA+IGVsc2UNCj4gPiBnZXRzIHRvIGl0IGZpcnN0Li4uDQo+IA0KPiBJIG5lZWQgc29tZXRo
-aW5nIGxpa2UgdGhpcyBpbiBvcmRlciB0byBjb252ZXJ0IEJEOTk5NTQgY3VycmVudCBhbmQNCj4g
-dm9sdGFnZSB2YWx1ZXMgdG8gcmVnaXN0ZXIgdmFsdWVzLiBJIHdpbGwgaGFwcGlseSB1c2Ugd2hh
-dC1ldmVyIHlvdQ0KPiBkbw0KPiBwdWxsIHRvZ2V0aGVyIC0gYnV0IGlmIHlvdSBkb24ndCBmZWVs
-IGxpa2UgZG9pbmcgaXQgbm93IEkgbWlnaHQgbG9vaw0KPiBhdA0KPiB0aGUgcmVndWxhdG9yIHBh
-cnQgd2hpbGUgSSBhbSB3b3JraW5nIHdpdGggQkQ5OTk1NCBhbnl3YXlzLiBQbGVhc2UNCj4ganVz
-dA0KPiBsZXQgbWUga25vdyBpZiB5b3Ugd2FudCBtZSB0byBzZWUgaWYgSSBjYW4gcHVsbCB0aGUg
-cmFuZ2Ugc3R1ZmYgb3V0DQo+IG9mDQo+IHJlZ3VsYXRvciBhcmVhLg0KDQpKdXN0IHRvIGF2b2lk
-IGR1cGxpY2F0ZSB3b3JrIC0gSSBzdGFydGVkIHdvcmtpbmcgd2l0aCB0aGlzLiBQbGVhc2UgbGV0
-DQptZSBrbm93IGlmIHlvdSBhcmUgYWxyZWFkeSB3b3JraW5nIG9uIGl0IHNvIEkgYW0gbm90IGRv
-aW5nIHRoaXMgaW4NCnZhaW4uDQoNCkJ5IHRoZSB3YXkgLSBkbyB5b3UgaGF2ZSBzb21lIG5pY2Ug
-dGVzdCBjYXNlcyBmb3IgcmVndWxhdG9ycyBoaWRkZW4NCnNvbWV3aGVyZT8gSWYgc28sIGRvIHlv
-dSB0aGluayB5b3UgY291bGQgc2hhcmUgdGhlbT8gSSBzdXJlIGhhdmUgc29tZQ0KZm9yIEJENzE4
-eDcgYnV0IHRoZXkgYXJlIHNvbWV3aGF0IGNsdW1zeSBhbmQgcmVxdWlyZSBzcGVjaWFsIEhXLiAo
-SSd2ZQ0KbmV2ZXIgbGlrZWQgdW5pdC10ZXN0cyBidXQgSSBtdXN0IGFkbWl0IHRoZXJlIGFyZSBz
-b21lIHNwZWNpZmljIGNhc2VzDQp3aGVyZSB0aGV5IHdvdWxkIGJlIHByZXR0eSB1c2FibGUpLg0K
-DQpCZXN0IFJlZ2FyZHMsDQoJTWF0dGkgVmFpdHRpbmVuDQo=
+Christoph,
+
+On 17/02/2020 16.54, Peter Ujfalusi wrote:
+> Christoph,
+> 
+> On 17/02/2020 15.21, Christoph Hellwig wrote:
+>> Roger,
+>>
+>> can you try the branch below and check if that helps?
+>>
+>>     git://git.infradead.org/users/hch/misc.git arm-dma-bus-limit
+>>
+>> Gitweb:
+>>
+>>     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/arm-dma-bus-limit
+> 
+> I'll test them on k2 tomorrow ;)
+
+fwiw, k2g works fine with the three patch applied. MMC uses ADMA, EDMA
+probes and audio works.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
