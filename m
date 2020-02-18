@@ -2,71 +2,95 @@ Return-Path: <SRS0=1Pza=4G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397CCC34026
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 09:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B942C34036
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1000521D7D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 09:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582019040;
-	bh=glEd8LJg33O82qVtAetCni+HqVd9K5Kd0qvxg1Lw4x4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IlLkFcJ5Za+sZzy0JHO11X+Uhk/zDa2Q4hK2jEDQE1/p2tHJyCJfdZ8roFRnuBsph
-	 J16p0VmZ9kN916QqxecNwJaJGMZdvZtUh9RqpFPLygU8JpiS7BLb77tYNhg24+ilOJ
-	 pUCeEdHXionlW8p9g+w1lGwb+CaKZItNwwghNlI8=
+	by mail.kernel.org (Postfix) with ESMTP id 3392620722
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgBRJn7 (ORCPT
+        id S1726496AbgBRK5N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:43:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgBRJn7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:43:59 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A37B7206E2;
-        Tue, 18 Feb 2020 09:43:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582019038;
-        bh=glEd8LJg33O82qVtAetCni+HqVd9K5Kd0qvxg1Lw4x4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BnC8as/2IqxRU9Yof3Riunpd5ghLEMkDOCHPGVqmZ92/AY3wlU0/16p4BSv3F/2P3
-         jZ0OwMQ+mStgxWyfe79suW0thBq9gNYEgONjCXPQKAtG9hNsK/5rVxLXcxWyEUlkOS
-         qeALyMVj3ieInr8CvOc2QiBSjnZ3iKyF6ieeZkEk=
-Date:   Tue, 18 Feb 2020 17:43:52 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 RESEND 1/7] ARM: dts: imx6sx: Improve UART pins macro
- defines
-Message-ID: <20200218094351.GE6075@dragon>
-References: <1581938021-16259-1-git-send-email-Anson.Huang@nxp.com>
+        Tue, 18 Feb 2020 05:57:13 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54846 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgBRK5N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 05:57:13 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 76F431C0371; Tue, 18 Feb 2020 11:57:11 +0100 (CET)
+Date:   Tue, 18 Feb 2020 11:57:10 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Convert common LED binding to
+ schema
+Message-ID: <20200218105710.GA28348@duo.ucw.cz>
+References: <20200108001738.8209-1-robh@kernel.org>
+ <bec9ab4a-da09-6ef1-7334-d19f11ab2523@gmail.com>
+ <CAL_Jsq+bOWJM5nvtY58+2DRtWQNzOPiVX9P===NOk4eBaE5OEA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581938021-16259-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAL_Jsq+bOWJM5nvtY58+2DRtWQNzOPiVX9P===NOk4eBaE5OEA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 07:13:35PM +0800, Anson Huang wrote:
-> Add DCE/DTE to UART pins macro defines to distinguish the
-> DCE and DTE functions, keep old defines at the end of file
-> for some time to make it backward compatible.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Applied all, thanks.
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > > Bindings for LED controllers can reference the common schema for the =
+LED
+> > > child nodes:
+> > >
+> > > patternProperties:
+> > >   "^led@[0-4]":
+> > >     type: object
+> > >     allOf:
+> > >       - $ref: common.yaml#
+> > >
+> > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > Cc: Dan Murphy <dmurphy@ti.com>
+> > > Cc: linux-leds@vger.kernel.org
+> > > Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Jacek, Please take this via led tree
+> >
+> > Currently Pavel maintains LED tree. Pavel?
+>=20
+> As it doesn't look like there's any conflicts, I've applied this
+> series to the DT tree.
+
+Thank you!
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXkvDBgAKCRAw5/Bqldv6
+8uTmAJ4q9FOCilnz5IzvOIzO/Pvu+CTcIACgk95eQ06CVaeLv5XJZIbCQUSPV9I=
+=mqJ6
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
