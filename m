@@ -2,203 +2,121 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C61DC3405F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF952C169F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE1924683
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:24:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O4HyybsN"
+	by mail.kernel.org (Postfix) with ESMTP id B965B24672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:41:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582137694;
+	bh=y154k2uuTbGD94Zlk02vS2B19qqnUVB2EVKv7l94kNw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=0+c6o3+r/7nufBkfnU5lnlT7ycaWH3wiqpAf0cuvj7JDwuFUjKQ2o3Of0kcHq6nis
+	 hNYmmKXRbhC5QGLUtdU1BqaIT6ZawBXBMhIInWYi/8lsjT3w3Vs8LWKqhWOuIvsa8v
+	 DWIaewoiypilXRzgvW1oWWPASzrzGVsocxAy9t5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBSSYn (ORCPT
+        id S1726648AbgBSSle (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:24:43 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34910 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgBSSYm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 13:24:42 -0500
-Received: by mail-io1-f65.google.com with SMTP id h8so1659389iob.2
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 10:24:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=smlfcUywMEBA2Gw1eHAbjNVoQlh2LXz5jWIz6aJcmfw=;
-        b=O4HyybsNXczsbhrrLu4qddjfAQuXg+JBoGLqWPg/hSHL/MiwlPJ7VLi677GK7dYdgU
-         skT/NGbNoll9J1+NV9EDP9BSSEsuS9UhB/4e8Xbm8I1uk7W24JlO9YyyAxjr2sbl/gak
-         ZQ62NhEncAgdLWVw67qx6fj8lVkDiZCr9Mpe9mhjtgjt973WgmcKyYzTA3oQFZwVKzld
-         9qoGBoiuZUVZGrO3A2UOAbHajl4eDCpwHoZUjn3ba25pB6pn2WlvVKRMBvDnSSi5nfkW
-         F8DzPx2Lb982yWUeGj1AVKPqKjRXBsi6COFkUBsyGQ2fcFByhCgjArwp88THYs/L0fSM
-         xCcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=smlfcUywMEBA2Gw1eHAbjNVoQlh2LXz5jWIz6aJcmfw=;
-        b=kyt8OjulqpbCAmfFjwi4f5ql91Q3jO537fKDU620xk3Zt81Xoyv7haIcRdI6mY5gId
-         e87kUSed6k5haSRMhXMVo0a8229t7nzlr270ZuYkp2ZrNqyCOL7ZuiGM7eaTZW4ZdMiw
-         ZESJQspK8AMSNmyUS/8aWKgk/uGrQhk+IKp45u5oVrUdGWjQNUV7qqNZ4RA6xGkaGFMX
-         Pf3XK9jQy45V/wJE+tle+J8eF3skYUeymhrkMJ8bT6rlnlXIX3ClYg5521yJWe8Cdhua
-         PmsWQCY1kueSR9ivz6wBwveOUKUnk0AHJFtATgrw0Lw3LF3MSIqZLxDjxQxaQhXHSlpD
-         CbZA==
-X-Gm-Message-State: APjAAAVJ1fetLOiYfOcDnCbTEEwkC/5kpGQkfLQixQLsu99vM6tqDjdm
-        OtdoUYj1HJVPrQWcpZHuueOKi8Jxe7jtDm/luCgO9w==
-X-Google-Smtp-Source: APXvYqxWEN30KM/Wzmg23n8n06SyNxQpEVoQeFFH1fNl9ZzFQKgO61ZWof893ZVTmjk1+rAp7WzAPQ2G/0k3qCSAPCE=
-X-Received: by 2002:a6b:4e13:: with SMTP id c19mr19787179iob.58.1582136681309;
- Wed, 19 Feb 2020 10:24:41 -0800 (PST)
+        Wed, 19 Feb 2020 13:41:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbgBSSle (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:41:34 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A62B24670;
+        Wed, 19 Feb 2020 18:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582137693;
+        bh=y154k2uuTbGD94Zlk02vS2B19qqnUVB2EVKv7l94kNw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Pg2nZ4uoohWZjP+BIMtpi2NMG9sPU8dIIUTvOC22OSIqGA70OfJB/rzFiJCYjpeww
+         DvQL878DwOMYisPb3aPKrLmjbuIOnIjYLwJaVOs1g/vlRJxfuyG+hZApM+W0rTipbe
+         QcDbarV7quXlg7jGtGql29sX3o8CfyG29JO0ztAU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 19 Feb 2020 11:24:30 -0700
-Message-ID: <CANLsYkzeAyGhYqewGaHfd-myW5EzE83WUOwAbKwTP-34pbUR-w@mail.gmail.com>
-Subject: Re: [PATCH 0/9] remoteproc: imx_rproc: support i.MX8/8M/7ULP
-To:     peng.fan@nxp.com
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
+References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com> <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com> <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com> <1581999138.19053.21.camel@mtkswgap22> <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
+Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Owen Chen <owen.chen@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
         Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Date:   Wed, 19 Feb 2020 10:41:32 -0800
+Message-ID: <158213769281.184098.14491216159423631295@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Peng,
+Quoting Matthias Brugger (2020-02-18 08:45:42)
+>=20
+>=20
+> On 18/02/2020 05:12, Macpaul Lin wrote:
+> > On Sat, 2020-02-15 at 02:47 +0100, Matthias Brugger wrote:
+> >=20
+> > Hi Stephen,
+> >=20
+> >> Hi Stephen,
+> >>
+> >> On 13/02/2020 00:44, Stephen Boyd wrote:
+> >>> Quoting Macpaul Lin (2020-02-07 01:20:43)
+> >>>> This patch adds basic SoC support for Mediatek's new 8-core SoC,
+> >>>> MT6765, which is mainly for smartphone application.
+> >>>
+> >>> Clock patches look OK to me. Can you resend them without the defconfig
+> >>> and dts patches and address Matthias' question?
+> >>>
+> >>
+> >> I'm not sure if I understand you. Do you prefer to have just the clock=
+ parts
+> >> send as an independent version so that you can easier apply the patche=
+s to your
+> >> tree?
+> >>
+> >> Patch 2, 5, 6 and 7 should go through my tree.
+> >> So do you want a series with patches 1, 3 and 4?
+> >>
+> >> Regards,
+> >> Matthias
+> >=20
+> > Yup, I've got a little bit confused, too.
+> > Should I separate and resend these patches into 2 patch sets?
+> > The 1st patch set includes #1, #3, and #4?
+> > And the other includes #2, #5, #6, and #7?
+> >=20
+>=20
+> Yes please do so. I think that's what Stephen referred to.
+>=20
 
-On Wed, 19 Feb 2020 at 00:33, <peng.fan@nxp.com> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> This patchset aim to replace NXP vendor imx_rpmsg.c driver.
-
-You mean remoteproc/imx_rproc.c ?  Upstream rpmsg/imx_rpmsg.c doesn't exist.
-
->
-> This patchset is tested with Loic PALLARDY's patch
-> "remoteproc: add support for co-processor loaded and booted before kernel"
-> https://patchwork.kernel.org/patch/11265869/,
-> and inspried from st's remoteproc early boot support.
-> Since Loic's patch is still under review, just expect your comments :)
-
-Did you base your work on top of Loic's because your MCU firmware is
-always loaded by the bootloader?  If not please send another revision
-of your work without early boot support.  When we have a clear view on
-how to proceed with the early boot support you can send another set to
-enable that.
-
-Thanks,
-Mathieu
-
->
-> Patch [1,2]/9: dt-bindings convert to json and new SoC support
-> Patch 3/9: skip firmware load when recovery. To i.MX8, firmware is not
->            handled by Linux.
->
-> Patch [4-9]/9: i.MX specific part to support rpmsg/virtio with mbox.
->       because NXP release image not have resoure table, so add resource
->       table in dts
->
-> My test dts diff for i.MX8QXP MEK, but I have tested this patchset
-> for i.MX8QXP MEK, i.MX8MM EVK, i.MX7ULP EVK:
->
-> +
-> +       imx8x-cm4 {
-> +               compatible = "fsl,imx8qxp-cm4";
-> +               rsrc-table = <
-> +                       0x1 0x2 0x0 0x0 0x18 0x5c
-> +                       3
-> +                       /*fw_rsc_vdev*/
-> +                       7 0 1 0 0 0x200
-> +                       /*fw_rsc_vdev_vring*/
-> +                       0x90000000 4096 256 1 0
-> +                       0x90008000 4096 256 2 0
-> +                       3
-> +                       /*fw_rsc_vdev*/
-> +                       7 1 1 0 0 0x200
-> +                       /*fw_rsc_vdev_vring*/
-> +                       0x90010000 4096 256 1 0
-> +                       0x90018000 4096 256 2 0
-> +               >;
-> +               early-booted;
-> +               mbox-names = "tx", "rx", "rxdb";
-> +               mboxes = <&lsio_mu5 0 1
-> +                         &lsio_mu5 1 1
-> +                         &lsio_mu5 3 1>;
-> +               mub-partition = <3>;
-> +               memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdev0buffer>,
-> +                               <&vdev1vring0>, <&vdev1vring1>, <&vdev0buffer>;
-> +       };
-> +
-> +       reserved-memory {
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-> +
-> +               vdev0vring0: vdev0vring0@90000000 {
-> +                       compatible = "shared-dma-pool";
-> +                       reg = <0 0x90000000 0 0x8000>;
-> +                       no-map;
-> +               };
-> +
-> +               vdev0vring1: vdev0vring1@90008000 {
-> +                       compatible = "shared-dma-pool";
-> +                       reg = <0 0x90008000 0 0x8000>;
-> +                       no-map;
-> +               };
-> +
-> +               vdev1vring0: vdev1vring0@90010000 {
-> +                       compatible = "shared-dma-pool";
-> +                       reg = <0 0x90010000 0 0x8000>;
-> +                       no-map;
-> +               };
-> +
-> +               vdev1vring1: vdev1vring1@90018000 {
-> +                       compatible = "shared-dma-pool";
-> +                       reg = <0 0x90018000 0 0x8000>;
-> +                       no-map;
-> +               };
-> +
-> +               vdev0buffer: vdev0buffer {
-> +                       compatible = "shared-dma-pool";
-> +                       reg = <0 0x90400000 0 0x100000>;
-> +                       no-map;
-> +               };
-> +       };
-> +
->
-> Peng Fan (9):
->   dt-bindings: remoteproc: Convert imx-rproc to json-schema
->   dt-bindings: remoteproc: imx-rproc: support i.MX[8,8M,7ULP]
->   remoteproc: add support to skip firmware load when recovery
->   remoteproc: imx_rproc: surport early booted remote processor
->   remoteproc: imx_rproc: parse early-booted property
->   remoteproc: imx_proc: enable virtio/mailbox
->   remoteproc: imx_rproc: add i.MX8QM/QXP
->   remoteproc: imx_rproc: support i.MX7ULP
->   remoteproc: imx_rproc: add i.MX8MM support
->
->  .../devicetree/bindings/remoteproc/imx-rproc.txt   |  33 --
->  .../devicetree/bindings/remoteproc/imx-rproc.yaml  |  95 +++++
->  drivers/remoteproc/imx_rproc.c                     | 455 +++++++++++++++++++--
->  drivers/remoteproc/remoteproc_core.c               |  19 +-
->  include/linux/remoteproc.h                         |   1 +
->  5 files changed, 531 insertions(+), 72 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
->
-> --
-> 2.16.4
->
+If those are the ones that aren't dts or defconfig patches sounds good
+to me.
