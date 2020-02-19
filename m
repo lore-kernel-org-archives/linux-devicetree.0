@@ -2,321 +2,366 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8537AC3404D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 10:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C4EC34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 10:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547BB21D56
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 10:05:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zHgvSM9C"
+	by mail.kernel.org (Postfix) with ESMTP id 4E14C207FD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 10:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgBSKFv (ORCPT
+        id S1726450AbgBSKOf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:05:51 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44208 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgBSKFv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 05:05:51 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so26334537ljj.11
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 02:05:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9ex0WUr4F2ykNAf/zHRS2tfhIPnCxChpfveEhtUGkE0=;
-        b=zHgvSM9CWvZNU8ODajadg6jZoZu9I9pM8v7X+PLxpLoQTcpd+p86aAb+pT1GJ8O8kr
-         jnMRWQ7KF/kcg7+AR7mMs4lKVphHwGUEW1O6yoZAzyDuhv5B+zaJAH4bbIBCXYOjMHZ0
-         AZakDmJDFII1L8ZG8fgsa+wFYd4mxhLOfqvjNDYTgJ8MoGJh0uHLCv9T7EWJd4Ea0da1
-         Xwxpp14HJvQlCmD0eiDMsgmfoQiZVqdoyPyzHCNUUzFQWp+VyQrP3UmnOLQyVGRfZabR
-         hwR7w+TxFgAEOm5BfYx5pToPWIB8UpW4txFgfhwj5V9R2aqGTT0d0fLKP89aJ2ukZkQt
-         1zSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9ex0WUr4F2ykNAf/zHRS2tfhIPnCxChpfveEhtUGkE0=;
-        b=NB+vAD4cjoIL+XGwn8aNhcgtmpRFh15dtX0j1iy1MtH6trdP+OOF4nCGBdlEP2Uoar
-         XcKFTo7vDEV/Z165e4Ni49EXxZYwviJbN/xSuVtLdSSFALQeLr8juyvHxxl5pcO6eSys
-         I5NXeERJGp2Y/VAhTqkYPbghzal4N4p/n/BkV8vbHt0g2x/i8L5SqSwN9r2Tqx6YzNnn
-         1tm6YFmVU01hUAoZB1kK0AY2+Kha/sXf2BtanC6RUfc9PPJOj9X2EKOPbygWCDT2sB5F
-         2W6cgV9ueSG4c3res221qR4zY9kf259lTOAonhP4A7LuCdHINmwl4KKqREcQ9+vZSEFb
-         x5eg==
-X-Gm-Message-State: APjAAAVG5e/2N6YUNyZ4+7H4B/gFmhGY5HhKMhT85ev8/YHqW+UJmg+2
-        WZ5zBvyoM5pppoV5TGIHZnUG8g==
-X-Google-Smtp-Source: APXvYqwaCKy7oDhbeUTUddmog8SqP+85G8xRkYZCus5ifHqXA/JQPPz7quKLDtwjJrb8W/sW1ted5A==
-X-Received: by 2002:a2e:9b12:: with SMTP id u18mr15590604lji.274.1582106748043;
-        Wed, 19 Feb 2020 02:05:48 -0800 (PST)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id r2sm1079982lff.63.2020.02.19.02.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 02:05:47 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/3 v2] dt-bindings: clock: Create YAML schema for ICST clocks
-Date:   Wed, 19 Feb 2020 11:05:41 +0100
-Message-Id: <20200219100543.78424-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.24.1
+        Wed, 19 Feb 2020 05:14:35 -0500
+Received: from mga12.intel.com ([192.55.52.136]:22702 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbgBSKOf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 05:14:35 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 02:14:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
+   d="scan'208";a="434434104"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Feb 2020 02:14:33 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1j4MNH-003Gb4-6U; Wed, 19 Feb 2020 12:14:35 +0200
+Date:   Wed, 19 Feb 2020 12:14:35 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+Subject: Re: [PATCH v2 2/2] phy: intel: Add driver support for Combophy
+Message-ID: <20200219101435.GM10400@smile.fi.intel.com>
+References: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
+ <b49e2f94631da003fb4b1409adc42fb81f77877b.1582021248.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b49e2f94631da003fb4b1409adc42fb81f77877b.1582021248.git.eswara.kota@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The ICST clocks used in the ARM Integrator, Versatile and
-RealView platforms are updated to use YAML schema, and two
-new ICST clocks used by the Integrator IM-PD1 logical module
-are added in the process.
+On Wed, Feb 19, 2020 at 11:31:30AM +0800, Dilip Kota wrote:
+> Combophy subsystem provides PHYs for various
+> controllers like PCIe, SATA and EMAC.
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Add a literal | to preserve formatting in the bindings
-- Collect Rob's review tag
----
- .../bindings/clock/arm,syscon-icst.yaml       | 102 ++++++++++++++++++
- .../bindings/clock/arm-integrator.txt         |  34 ------
- .../bindings/clock/arm-syscon-icst.txt        |  70 ------------
- 3 files changed, 102 insertions(+), 104 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/arm-integrator.txt
- delete mode 100644 Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+...
 
-diff --git a/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml b/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
-new file mode 100644
-index 000000000000..06c4d84e8c3d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
-@@ -0,0 +1,102 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/arm,syscon-icst.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM System Conctroller ICST Clocks
-+
-+maintainers:
-+  - Linus Walleij <linusw@kernel.org>
-+
-+description: The ICS525 and ICS307 oscillators are produced by Integrated
-+  Devices Technology (IDT). ARM integrated these oscillators deeply into their
-+  reference designs by adding special control registers that manage such
-+  oscillators to their system controllers.
-+
-+  The various ARM system controllers contain logic to serialize and initialize
-+  an ICST clock request after a write to the 32 bit register at an offset
-+  into the system controller. Furthermore, to even be able to alter one of
-+  these frequencies, the system controller must first be unlocked by
-+  writing a special token to another offset in the system controller.
-+
-+  Some ARM hardware contain special versions of the serial interface that only
-+  connects the low 8 bits of the VDW (missing one bit), hardwires RDW to
-+  different values and sometimes also hardwire the output divider. They
-+  therefore have special compatible strings as per this table (the OD value is
-+  the value on the pins, not the resulting output divider).
-+
-+  In the core modules and logic tiles, the ICST is a configurable clock fed
-+  from a 24 MHz clock on the motherboard (usually the main crystal) used for
-+  generating e.g. video clocks. It is located on the core module and there is
-+  only one of these. This clock node must be a subnode of the core module.
-+
-+  Hardware variant         RDW     OD          VDW
-+
-+  Integrator/AP            22      1           Bit 8 0, rest variable
-+  integratorap-cm
-+
-+  Integrator/AP            46      3           Bit 8 0, rest variable
-+  integratorap-sys
-+
-+  Integrator/AP            22 or   1           17 or (33 or 25 MHz)
-+  integratorap-pci         14      1           14
-+
-+  Integrator/CP            22      variable    Bit 8 0, rest variable
-+  integratorcp-cm-core
-+
-+  Integrator/CP            22      variable    Bit 8 0, rest variable
-+  integratorcp-cm-mem
-+
-+  The ICST oscillator must be provided inside a system controller node.
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - arm,syscon-icst525
-+      - arm,syscon-icst307
-+      - arm,syscon-icst525-integratorap-cm
-+      - arm,syscon-icst525-integratorap-sys
-+      - arm,syscon-icst525-integratorap-pci
-+      - arm,syscon-icst525-integratorcp-cm-core
-+      - arm,syscon-icst525-integratorcp-cm-mem
-+      - arm,integrator-cm-auxosc
-+      - arm,versatile-cm-auxosc
-+      - arm,impd-vco1
-+      - arm,impd-vco2
-+
-+  clocks:
-+    description: Parent clock for the ICST VCO
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+  lock-offset:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: Offset to the unlocking register for the oscillator
-+
-+  vco-offset:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: Offset to the VCO register for the oscillator
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - clocks
-+
-+examples:
-+  - |
-+    vco1: clock@00 {
-+      compatible = "arm,impd1-vco1";
-+      #clock-cells = <0>;
-+      lock-offset = <0x08>;
-+      vco-offset = <0x00>;
-+      clocks = <&sysclk>;
-+      clock-output-names = "IM-PD1-VCO1";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/arm-integrator.txt b/Documentation/devicetree/bindings/clock/arm-integrator.txt
-deleted file mode 100644
-index 11f5f95f571b..000000000000
---- a/Documentation/devicetree/bindings/clock/arm-integrator.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--Clock bindings for ARM Integrator and Versatile Core Module clocks
--
--Auxiliary Oscillator Clock
--
--This is a configurable clock fed from a 24 MHz chrystal,
--used for generating e.g. video clocks. It is located on the
--core module and there is only one of these.
--
--This clock node *must* be a subnode of the core module, since
--it obtains the base address for it's address range from its
--parent node.
--
--
--Required properties:
--- compatible: must be "arm,integrator-cm-auxosc" or "arm,versatile-cm-auxosc"
--- #clock-cells: must be <0>
--
--Optional properties:
--- clocks: parent clock(s)
--
--Example:
--
--core-module@10000000 {
--	xtal24mhz: xtal24mhz@24M {
--		#clock-cells = <0>;
--		compatible = "fixed-clock";
--		clock-frequency = <24000000>;
--	};
--	auxosc: cm_aux_osc@25M {
--		#clock-cells = <0>;
--		compatible = "arm,integrator-cm-auxosc";
--		clocks = <&xtal24mhz>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-deleted file mode 100644
-index 4cd81742038f..000000000000
---- a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-+++ /dev/null
-@@ -1,70 +0,0 @@
--ARM System Controller ICST clocks
--
--The ICS525 and ICS307 oscillators are produced by Integrated Devices
--Technology (IDT). ARM integrated these oscillators deeply into their
--reference designs by adding special control registers that manage such
--oscillators to their system controllers.
--
--The various ARM system controllers contain logic to serialize and initialize
--an ICST clock request after a write to the 32 bit register at an offset
--into the system controller. Furthermore, to even be able to alter one of
--these frequencies, the system controller must first be unlocked by
--writing a special token to another offset in the system controller.
--
--Some ARM hardware contain special versions of the serial interface that only
--connects the low 8 bits of the VDW (missing one bit), hardwires RDW to
--different values and sometimes also hardwire the output divider. They
--therefore have special compatible strings as per this table (the OD value is
--the value on the pins, not the resulting output divider):
--
--Hardware variant:        RDW     OD          VDW
--
--Integrator/AP            22      1           Bit 8 0, rest variable
--integratorap-cm
--
--Integrator/AP            46      3           Bit 8 0, rest variable
--integratorap-sys
--
--Integrator/AP            22 or   1           17 or (33 or 25 MHz)
--integratorap-pci         14      1           14
--
--Integrator/CP            22      variable    Bit 8 0, rest variable
--integratorcp-cm-core
--
--Integrator/CP            22      variable    Bit 8 0, rest variable
--integratorcp-cm-mem
--
--The ICST oscillator must be provided inside a system controller node.
--
--Required properties:
--- compatible: must be one of
--  "arm,syscon-icst525"
--  "arm,syscon-icst307"
--  "arm,syscon-icst525-integratorap-cm"
--  "arm,syscon-icst525-integratorap-sys"
--  "arm,syscon-icst525-integratorap-pci"
--  "arm,syscon-icst525-integratorcp-cm-core"
--  "arm,syscon-icst525-integratorcp-cm-mem"
--- lock-offset: the offset address into the system controller where the
--  unlocking register is located
--- vco-offset: the offset address into the system controller where the
--  ICST control register is located (even 32 bit address)
--- #clock-cells: must be <0>
--- clocks: parent clock, since the ICST needs a parent clock to derive its
--  frequency from, this attribute is compulsory.
--
--Example:
--
--syscon: syscon@10000000 {
--	compatible = "syscon";
--	reg = <0x10000000 0x1000>;
--
--	oscclk0: osc0@c {
--		compatible = "arm,syscon-icst307";
--		#clock-cells = <0>;
--		lock-offset = <0x20>;
--		vco-offset = <0x0c>;
--		clocks = <&xtal24mhz>;
--	};
--	(...)
--};
+> +static const char *const intel_iphy_names[] = {"pcie", "xpcs", "sata"};
+
++ blank line
+
+> +#define CLK_100MHZ		100000000
+> +#define CLK_156_25MHZ		156250000
+
+...
+
+> +enum {
+> +	PHY_0 = 0,
+
+Aren't enum:s start with 0 by the standard?
+Ditto for all enum:s.
+(Or, if it represents value from hardware, perhaps makes sense to put a comment
+ to each of such enum and then all values must be explicit)
+
+> +	PHY_1,
+> +	PHY_MAX_NUM,
+> +};
+
+...
+
+> +struct intel_cbphy_iphy {
+
+> +	struct phy		*phy;
+> +	struct device		*dev;
+
+Can dev be derived from phy? Or phy from dev?
+
+> +	bool			enable;
+> +	struct intel_combo_phy	*parent;
+> +	struct reset_control	*app_rst;
+> +	u32			id;
+> +};
+
+...
+
+> +static int intel_cbphy_iphy_enable(struct intel_cbphy_iphy *iphy, bool set)
+> +{
+> +	struct intel_combo_phy *cbphy = iphy->parent;
+
+> +	u32 val, bitn;
+> +
+> +	bitn = cbphy->phy_mode * 2 + iphy->id;
+
+Why not
+
+	u32 mask = BIT(cbphy->phy_mode * 2 + iphy->id);
+	u32 val;
+
+> +	/* Register: 0 is enable, 1 is disable */
+> +	val =  set ? 0 : BIT(bitn);
+
+	val = set ? 0 : mask;
+
+(why double space?)
+
+> +
+> +	return regmap_update_bits(cbphy->hsiocfg, REG_CLK_DISABLE(cbphy->bid),
+> +				 BIT(bitn), val);
+
+	return regmap_update_bits(..., mask, val);
+
+?
+
+> +}
+> +
+> +static int intel_cbphy_pcie_refclk_cfg(struct intel_cbphy_iphy *iphy, bool set)
+> +{
+> +	struct intel_combo_phy *cbphy = iphy->parent;
+> +	const u32 pad_dis_cfg_off = 0x174;
+> +	u32 val, bitn;
+> +
+> +	bitn = cbphy->id * 2 + iphy->id;
+> +
+> +	/* Register: 0 is enable, 1 is disable */
+> +	val = set ? 0 : BIT(bitn);
+> +
+> +	return regmap_update_bits(cbphy->syscfg, pad_dis_cfg_off, BIT(bitn),
+> +				 val);
+
+Ditto.
+
+> +}
+
+...
+
+> +static int intel_cbphy_iphy_cfg(struct intel_cbphy_iphy *iphy,
+> +				int (*phy_cfg)(struct intel_cbphy_iphy *))
+> +{
+> +	struct intel_combo_phy *cbphy = iphy->parent;
+> +	struct intel_cbphy_iphy *sphy;
+> +	int ret;
+> +
+> +	ret = phy_cfg(iphy);
+> +	if (ret)
+> +		return ret;
+> +
+
+> +	if (cbphy->aggr_mode == PHY_DL_MODE) {
+
+	if (x != y)
+		return 0;
+
+> +		sphy = &cbphy->iphy[PHY_1];
+> +		ret = phy_cfg(sphy);
+> +	}
+> +
+> +	return ret;
+
+	return phy_cfg(...);
+
+> +}
+
+...
+
+> +	switch (mode) {
+> +	case PHY_PCIE_MODE:
+
+> +		cb_mode = (aggr == PHY_DL_MODE) ?
+> +			  PCIE_DL_MODE : PCIE0_PCIE1_MODE;
+
+I think one line is okay here.
+
+> +		break;
+> +
+> +	case PHY_XPCS_MODE:
+> +		cb_mode = (aggr == PHY_DL_MODE) ? RXAUI_MODE : XPCS0_XPCS1_MODE;
+> +		break;
+> +
+> +	case PHY_SATA_MODE:
+> +		if (aggr == PHY_DL_MODE) {
+> +			dev_err(dev, "CBPHY%u mode:%u not support dual lane!\n",
+> +				cbphy->id, mode);
+> +			return -EINVAL;
+> +		}
+> +
+> +		cb_mode = SATA0_SATA1_MODE;
+> +		break;
+> +
+> +	default:
+> +		dev_err(dev, "CBPHY%u mode:%u not supported!\n",
+> +			cbphy->id, mode);
+> +		return -EINVAL;
+> +	}
+
+...
+
+
+> +	if (!atomic_read(&cbphy->init_cnt)) {
+
+Here it can be 0.
+
+> +		ret = clk_prepare_enable(cbphy->core_clk);
+> +		if (ret) {
+> +			dev_err(cbphy->dev, "Clock enable failed!\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = clk_set_rate(cbphy->core_clk, cbphy->clk_rate);
+> +		if (ret) {
+> +			dev_err(cbphy->dev, "Clock freq set to %lu failed!\n",
+> +				cbphy->clk_rate);
+> +			goto clk_err;
+> +		}
+> +
+> +		intel_cbphy_rst_assert(cbphy);
+> +		ret = intel_cbphy_set_mode(cbphy);
+> +		if (ret)
+> +			goto clk_err;
+> +	}
+> +
+> +	ret = intel_cbphy_iphy_enable(iphy, true);
+> +	if (ret) {
+> +		dev_err(dev, "Failed enabling Phy core\n");
+> +		goto clk_err;
+> +	}
+> +
+
+> +	if (!atomic_read(&cbphy->init_cnt))
+
+Here it can be 1.
+
+> +		intel_cbphy_rst_deassert(cbphy);
+
+Is it correct way to go?
+
+> +	ret = reset_control_deassert(iphy->app_rst);
+> +	if (ret) {
+> +		dev_err(dev, "PHY(%u:%u) phy deassert failed!\n",
+> +			COMBO_PHY_ID(iphy), PHY_ID(iphy));
+> +		goto clk_err;
+> +	}
+
+...
+
+> +		ret = intel_cbphy_iphy_cfg(iphy,
+> +					   intel_cbphy_pcie_en_pad_refclk);
+
+One line is fine here.
+
+> +		if (ret)
+> +			return ret;
+
+...
+
+> +		ret = intel_cbphy_iphy_cfg(iphy,
+> +					   intel_cbphy_pcie_dis_pad_refclk);
+
+Ditto.
+
+> +		if (ret)
+> +			return ret;
+
+...
+
+> +		return ret;
+> +	}
+> +
+> +	iphy->enable = true;
+> +	platform_set_drvdata(pdev, iphy);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +	if (cbphy->aggr_mode == PHY_DL_MODE) {
+> +		if (!iphy0->enable || !iphy1->enable) {
+
+	if (a) {
+		if (b) {
+			...
+		}
+	}
+
+is the same as
+	if (a && b) {
+		...
+	}
+
+We have it many times discussed internally.
+
+> +			dev_err(cbphy->dev,
+> +				"Dual lane mode but lane0: %s, lane1: %s\n",
+> +				iphy0->enable ? "on" : "off",
+> +				iphy1->enable ? "on" : "off");
+> +			return -EINVAL;
+> +		}
+> +	}
+
+...
+
+> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev),
+> +						 "intel,syscfg", NULL, 1, 0,
+> +						 &ref);
+> +	if (ret < 0)
+> +		return ret;
+> +
+
+> +	fwnode_handle_put(ref.fwnode);
+
+Why here?
+
+> +	cbphy->id = ref.args[0];
+
+> +	cbphy->syscfg = device_node_to_regmap(ref.fwnode->dev->of_node);
+
+You rather need to have fwnode_to_regmap(). It's easy to add as a preparatory patch.
+
+> +
+> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev), "intel,hsio",
+> +						 NULL, 1, 0, &ref);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	fwnode_handle_put(ref.fwnode);
+> +	cbphy->bid = ref.args[0];
+> +	cbphy->hsiocfg = device_node_to_regmap(ref.fwnode->dev->of_node);
+
+Ditto.
+
+> +	if (!device_property_read_u32(dev, "intel,phy-mode", &prop)) {
+
+Hmm... Why to mix device_property_*() vs. fwnode_property_*() ?
+
+> +		cbphy->phy_mode = prop;
+> +		if (cbphy->phy_mode >= PHY_MAX_MODE) {
+> +			dev_err(dev, "PHY mode: %u is invalid\n",
+> +				cbphy->phy_mode);
+> +			return -EINVAL;
+> +		}
+> +	}
+
+...
+
+> +	.owner =	THIS_MODULE,
+
+Do we still need this?
+
 -- 
-2.24.1
+With Best Regards,
+Andy Shevchenko
+
 
