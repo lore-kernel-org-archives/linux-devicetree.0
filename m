@@ -2,91 +2,195 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0A6C34031
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 03:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2956C3404F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164C622B48
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 03:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582081426;
-	bh=mVR+NZQneoCo48GbuZCZUtB9WfA6V/1A87KPT/VW/Ag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JAeLlQuARbVQVeBqTVS0UeGcrcOiGB1Z9s2WByXeCYVf3klACi5e4Jd7xBA9L8g2v
-	 MLfL2MdIJZ4tMw3Df5XGM2f6ZopIzNcQE0GVF/uiuvJDOcnxzPZgG2FoVCG8dQl/IU
-	 0NIxsH+ZS6KvACV4+5jMMwq5mbFOEg7A6U0VmEBc=
+	by mail.kernel.org (Postfix) with ESMTP id 79A2D24683
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CdpmAVZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgBSDDp (ORCPT
+        id S1726439AbgBSD2e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:03:45 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42686 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbgBSDDp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 22:03:45 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so21734742otd.9;
-        Tue, 18 Feb 2020 19:03:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3ww9jD9BZoI0pj8Fh4zqJj/5ENJzlS5CiCEh5EfEMME=;
-        b=RjtHgSawD+scBXOI9PMJe6xpfQvwRUKvXw7aPcr57p8lKoyK11jGlQbDrp6hlA0cpE
-         QVbLSuhrIb8OlhhiwkEe6pFY6Rb2Jt6jDEUToMHHLT3THkk2We7Fl25DxE7tQIN6eRDC
-         nPhfaGLmo3sGMYCwOkAzHWLtMpYasUW+Z+DsKhlMVwVgZYe55tuH4Aj1BS8OnUK47X2O
-         mDB8h5JXb/YAKFHvdargGEm3IgUBgmLdiQxLwLLHCObRgq32JXPuWs+dwiR7p15qDlcm
-         sOpmJ2YfwOdQN6++s21RJv2NSmf066bZDyDTuseLA8wl6rRR4NvAy4WYi34BIZMFDgs8
-         Gb4w==
-X-Gm-Message-State: APjAAAXjSlAl++gcZW60MxfJ3M0oTcDfeEJma0n1BOW4EilUwZfsJlrD
-        h+pu3n1+/hzKoZ3TcMn1OQ==
-X-Google-Smtp-Source: APXvYqzTdqeuboLoLPJb+yflZq5A5EEQsO0iTNPuA/QcWSn7buqxIsiMpRFFdj7EAa+AdIsqcpxByw==
-X-Received: by 2002:a9d:48d:: with SMTP id 13mr16994562otm.249.1582081423252;
-        Tue, 18 Feb 2020 19:03:43 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u18sm211383otq.26.2020.02.18.19.03.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 19:03:42 -0800 (PST)
-Received: (nullmailer pid 16790 invoked by uid 1000);
-        Wed, 19 Feb 2020 03:03:41 -0000
-Date:   Tue, 18 Feb 2020 21:03:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 RESEND 2/7] ARM: dts: imx6sx: Add missing UART RTS/CTS
- pins mux
-Message-ID: <20200219030341.GA16734@bogus>
-References: <1581938021-16259-1-git-send-email-Anson.Huang@nxp.com>
- <1581938021-16259-2-git-send-email-Anson.Huang@nxp.com>
+        Tue, 18 Feb 2020 22:28:34 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10618 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgBSD2e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 22:28:34 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4cab410000>; Tue, 18 Feb 2020 19:28:01 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 19:28:33 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 19:28:33 -0800
+Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
+ 2020 03:28:32 +0000
+Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
+ <20200218231503.GA19099@bogus>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
+Date:   Tue, 18 Feb 2020 19:28:36 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581938021-16259-2-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200218231503.GA19099@bogus>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582082881; bh=cyoNazDtmT/h6DgHu5pqneFWToIbbP0fvPs2dxTlGMQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=CdpmAVZEN1+rPUXrq9ZTWHWteIUNLSIzWrA/h8Q6AVwCh3Xe4Ldg0Ae3e+GxK7GcY
+         WacUUqIeiFWQEZwv0nLL99pvzd7yUg5NLPubTPS2AdWA9TN8XbQJ5bJzJhlHt8RWiJ
+         6TtgMMo7qUbLyfXy4x+CGr20WXD3ZKfZtjAwmfiJbSKnFl580R/kSRv7HVRDeRfjs+
+         DG1NxmOr8BuAAqNiKBcjMuDvb6+c8RLy2qK8dxdArj863jZSvKQewH3SZODclwBXVd
+         vmrRmSBURvYrfXz/xK9kY16Mw5IA3TJfGDN44vMmxj06JQg/J89pX6dCvGDarNLTJx
+         Ln17zs2CfuKFQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 17 Feb 2020 19:13:36 +0800, Anson Huang wrote:
-> Some of UART RTS/CTS pins' DCE/DTE mux function are missing,
-> add them.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
-> No change.
-> ---
->  arch/arm/boot/dts/imx6sx-pinfunc.h | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 2/18/20 3:15 PM, Rob Herring wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
+>> Tegra contains VI controller which can support up to 6 MIPI CSI
+>> camera sensors.
+>>
+>> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+>> VI channel and can capture from an external camera sensor or
+>> from built-in test pattern generator.
+>>
+>> This patch adds dt-bindings for Tegra VI and CSI.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
+>>   1 file changed, 47 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> index 9999255ac5b6..3d0ed540a646 100644
+>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> @@ -40,14 +40,24 @@ of the following host1x client modules:
+>>
+>>     Required properties:
+>>     - compatible: "nvidia,tegra<chip>-vi"
+>> -  - reg: Physical base address and length of the controller's registers.
+>> +  - reg: Physical base address and length of the controller registers.
+>>     - interrupts: The interrupt outputs from the controller.
+>> -  - clocks: Must contain one entry, for the module clock.
+>> +  - clocks: Must contain an entry for the module clock "vi"
+>>       See ../clocks/clock-bindings.txt for details.
+>>     - resets: Must contain an entry for each entry in reset-names.
+>>       See ../reset/reset.txt for details.
+>> -  - reset-names: Must include the following entries:
+>> -    - vi
+>> +  - reset-names: Must include the entry "vi"
+>> +
+>> +  Tegra210 has CSI part of VI sharing same host interface and register
+>> +  space. So, VI device node should have CSI child node.
+>> +
+>> +  - csi: mipi csi interface to vi
+>> +
+>> +    Required properties:
+>> +    - compatible: "nvidia,tegra<chip>-csi"
+>> +    - reg: Physical base address and length of the controller registers.
+>> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
+>> +      See ../clocks/clock-bindings.txt for details.
+>>
+>>   - epp: encoder pre-processor
+>>
+>> @@ -310,12 +320,41 @@ Example:
+>>                };
+>>
+>>                vi {
+>> -                     compatible = "nvidia,tegra20-vi";
+>> -                     reg = <0x54080000 0x00040000>;
+>> +                     compatible = "nvidia,tegra210-vi";
+>> +                     reg = <0x0 0x54080000 0x0 0x700>;
+>>                        interrupts = <0 69 0x04>;
+>> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
+>> -                     resets = <&tegra_car 100>;
+>> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+>> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
+>> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
+>> +                     clock-names = "vi";
+>> +                     resets = <&tegra_car 20>;
+>>                        reset-names = "vi";
+>> +
+>> +                     #address-cells = <2>;
+>> +                     #size-cells = <2>;
+>> +
+>> +                     ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
+>> +
+>> +                     csi@0x54080838 {
+> Drop '0x'
+Will fix in v4
+>
+>> +                             compatible = "nvidia,tegra210-csi";
+>> +                             reg = <0x0 0x54080838 0x0 0x2000>;
+> Kind of odd that this address and ranges address are not the same. And
+> also wrong that the size here exceeds the bounds of ranges.
+>
+> Also, best practice is to make the child address 0 or relative to the
+> parent.
+
+Actual CSI starts at offset 0x808 but we don't use couple of registers 
+at offset 0x808.
+
+Will update ranges in v4 to start from 0x838 offset and will make child 
+address relative to parent.
+
+>
+>> +                             status = "disabled";
+> Don't show status in examples.
+Will remove.
+>
+>> +                             assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
+>> +                                               <&tegra_car TEGRA210_CLK_CILCD>,
+>> +                                               <&tegra_car TEGRA210_CLK_CILE>;
+>> +                             assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
+>> +                                                      <&tegra_car TEGRA210_CLK_PLL_P>,
+>> +                                                      <&tegra_car TEGRA210_CLK_PLL_P>;
+>> +                             assigned-clock-rates = <102000000>,
+>> +                                                    <102000000>,
+>> +                                                    <102000000>;
+>> +                             clocks = <&tegra_car TEGRA210_CLK_CSI>,
+>> +                                      <&tegra_car TEGRA210_CLK_CILAB>,
+>> +                                      <&tegra_car TEGRA210_CLK_CILCD>,
+>> +                                      <&tegra_car TEGRA210_CLK_CILE>;
+>> +                             clock-names = "csi", "cilab", "cilcd", "cile";
+>> +                     };
+>> +
+>>                };
+>>
+>>                epp {
+>> --
+>> 2.7.4
+>>
