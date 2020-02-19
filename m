@@ -2,91 +2,90 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA648C34047
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 15:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2E3C34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 15:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE792465D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 15:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCE124671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 15:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582124659;
-	bh=aQz+oMVhP59pKCZfJYEh352KcY8oJwDTkUymrkIxseM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AgwQPmkC0Y7NXNccb/ULLpIK51Bp8nrzAujzVTIwXaFclS2j15VKQCso4MyPGTUJE
-	 HkfGtN/+5x1rUv00FrW4mdRHcNRP7KBvLKCK9up+KGSYSELXFbbqkAZcJEmsiV1XI5
-	 kqgCo2LlnD1wrk8KikjDJOWlVjh+4Cip+tS+NMhU=
+	s=default; t=1582124744;
+	bh=KLCNhehFoLS2QtbJ8R1nLapFTT9x/0GfRUKaDGhtdf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2T2FEAwKFrSruQQec3r4PAofyEdlRbfl47hcVEKxGEb5VLp+tRV49j4QHk1gHwqcn
+	 3MOgkMxc6mb6JYsodX22HOU4pCN+IILaPQYTyJmc9l0fWTe7fgZp0PBV+4jLiN9q4F
+	 ZOnX5g380g8wDRSDhdZG+HujeQay+HaM0GSZP0jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgBSPET (ORCPT
+        id S1726739AbgBSPFn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:04:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbgBSPES (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:04:18 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 148E8208C4;
-        Wed, 19 Feb 2020 15:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582124658;
-        bh=aQz+oMVhP59pKCZfJYEh352KcY8oJwDTkUymrkIxseM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XtKVEJx/AeacHMxTbLdnqQ7/GkRg3DpfDWXzbX/xj2gS93Z7Qm88Ebr0CgmW/o6dT
-         3QNuprDQh+wEoe5tNlsQmKnEs328cmDZr85hdUHbi1Y43hvOKrFKoXYHMWyQBtxQmh
-         ypl3Fyc188GC2ig7FYWKYRMemVBEVO9xULpA+3uY=
-Received: by mail-qk1-f173.google.com with SMTP id j8so348244qka.11;
-        Wed, 19 Feb 2020 07:04:18 -0800 (PST)
-X-Gm-Message-State: APjAAAWn0BvZf3IAKmMVHHjmZSg+F/ZOJOGYgObANQTLGYVzya+dKboG
-        zsMRmFH+o9CRp7Gsij7wj2jtKJS5hRTngcFcjw==
-X-Google-Smtp-Source: APXvYqzcchk/L5V4mDMKhenl4+M4iGEasL3H2WrAmp8nMQ4Ghi5sHELqsZj+RZiswZs/6V042u3atBZ4/sIrjz3et+o=
-X-Received: by 2002:a37:5347:: with SMTP id h68mr23305765qkb.393.1582124657261;
- Wed, 19 Feb 2020 07:04:17 -0800 (PST)
+        Wed, 19 Feb 2020 10:05:43 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40051 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgBSPFn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 10:05:43 -0500
+Received: by mail-ot1-f65.google.com with SMTP id i6so416207otr.7;
+        Wed, 19 Feb 2020 07:05:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SBKr6SKoCafYNmFC5MjIcmPvtNTyDNU/puwE+3je3yw=;
+        b=IAnoSWehFEL7vMivpe+ZE1ANDz7gZ/bdBTA04+nX9+Rl6F9sO5SWVt+BUnbARhwM2p
+         tnVLpIU9E6I9UIpXQSWj4yUPnsgaGii+WYOZ1VENO4QypcCK4uO2pbDGc9ejst2BcyTo
+         LAdwly7gNbCQKHvnyQyihxP8HnVnUItJFgb4NbSDFCJAvhhS/uda0g+TtS1ImpzEasLg
+         QNNjhjZNnXOgtaB43akoPHVI08PtHPj+8TlyXZ2t/mLpXr771/DeowLPdgwddLuTr8oa
+         pckvKx2AKuzl7KQFKUkB6uXUOadUcwwgLyl0kCA7LbEFL+eQU1drHR5kbtDEOiDDGAaP
+         CMJw==
+X-Gm-Message-State: APjAAAUqHAdeElqJTE7XHontWhQOGz8wUwJxYdT959tjHVeuZAZtP5Xe
+        wOacm3hf+smUQC0qJspXtQ==
+X-Google-Smtp-Source: APXvYqzQfbs3yejJP7JC1NIdQfNXPIqC6m0QklCphdJhvqRhtoYtKQhsaQx+0uOvCILhD83U6NqKKQ==
+X-Received: by 2002:a9d:7357:: with SMTP id l23mr19144503otk.10.1582124742732;
+        Wed, 19 Feb 2020 07:05:42 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g5sm3046otp.10.2020.02.19.07.05.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 07:05:41 -0800 (PST)
+Received: (nullmailer pid 22736 invoked by uid 1000);
+        Wed, 19 Feb 2020 15:05:41 -0000
+Date:   Wed, 19 Feb 2020 09:05:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
+        arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Subject: Re: [PATCH v2] ASoC: dt-bindings: stm32: convert i2s to json-schema
+Message-ID: <20200219150541.GA22679@bogus>
+References: <20200207120345.24672-1-olivier.moysan@st.com>
 MIME-Version: 1.0
-References: <20200114123821.2649367-1-thierry.reding@gmail.com> <CAL_JsqKJUdhjWx5z_-kedNNm4mD6oSGizqEQ57vxtGbMFySbbQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqKJUdhjWx5z_-kedNNm4mD6oSGizqEQ57vxtGbMFySbbQ@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 19 Feb 2020 09:04:06 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL5NzRcr6G-f0soGjb9p=+aJmU6xXEMQCLG7n0GSaxH1w@mail.gmail.com>
-Message-ID: <CAL_JsqL5NzRcr6G-f0soGjb9p=+aJmU6xXEMQCLG7n0GSaxH1w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: memory-controller: Update example for
- Tegra124 EMC
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207120345.24672-1-olivier.moysan@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:32 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, Jan 14, 2020 at 6:38 AM Thierry Reding <thierry.reding@gmail.com> wrote:
-> >
-> > From: Thierry Reding <treding@nvidia.com>
-> >
-> > The example in the Tegra124 EMC device tree binding looks like an old
-> > version that doesn't contain all the required fields. Update it with a
-> > version from the current DTS files to fix the make dt_binding_check
-> > target.
-> >
-> > Reported-by: Rob Herring <robh+dt@kernel.org>
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> >  .../nvidia,tegra124-emc.yaml                  | 19 +++++++++++--------
-> >  1 file changed, 11 insertions(+), 8 deletions(-)
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
-> Thanks for fixing quickly.
+On Fri, 7 Feb 2020 13:03:45 +0100, Olivier Moysan wrote:
+> Convert the STM32 I2S bindings to DT schema format using json-schema.
+> 
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> ---
+> Changes in v2:
+> - Define items order for clock and dma properties
+> ---
+>  .../bindings/sound/st,stm32-i2s.txt           | 62 -------------
+>  .../bindings/sound/st,stm32-i2s.yaml          | 87 +++++++++++++++++++
+>  2 files changed, 87 insertions(+), 62 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+> 
 
-Or not. I assumed you were going to send this via arm-soc given that's
-where the problem was, but given it still hasn't appeared anywhere and
-it's in master now I'll apply it.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
