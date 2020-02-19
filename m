@@ -2,151 +2,104 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D856C34047
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 10:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD768C34050
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 10:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68A120801
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 10:29:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zzcA9hwk"
+	by mail.kernel.org (Postfix) with ESMTP id 96E9C208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 10:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgBSK3g (ORCPT
+        id S1726484AbgBSKcl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:29:36 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:44717 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgBSK3g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 05:29:36 -0500
-Received: by mail-vs1-f66.google.com with SMTP id p6so14747784vsj.11
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 02:29:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=N/FWsOslLeWJ8wc9PPiLEWzxti0Lz4tyLMKB84GK8Qg=;
-        b=zzcA9hwk8oBqEzK/Sk5smaykWWWhkqLgdN2ggNaL0cspzNwa1q+GoinNOOoh2h9V51
-         Lv7ZUcQx+nj4ydcgo+MumePOIXyd+adldZYvoZGHUzMACLER4enSZC94mRb28MJr6c1A
-         J0zDWaHD7YQ525Kl6Y1gatEtQ406L9F6WgmgJkakqPk8Q+C9ZZgLDbcn0PVAxkoeaFBp
-         u1Zh99N7KbfqvYQDnfJFNmIip0HZ15FT2UcLc3U/w813BeSgu1q8swKVqPbRLuHM9XJ3
-         Uxz065dq2yY9KSl+injyEt5q+2tCcO4d067fxfYm7S/GKS+XZflxxlWeTWxnoNcErJqI
-         wpGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=N/FWsOslLeWJ8wc9PPiLEWzxti0Lz4tyLMKB84GK8Qg=;
-        b=tZZnh6kLFwBw/3IaDAZ4ytug/QxmcozSSNlXRDlmUkzZ78yaGtFfP45rBP8vutJeOt
-         NANQMp01Tfzn6Z9xYusJhx4vnwTH8UZDbzhpMS5yq7xJNTRjCM32RLmpIMenMtKPFmRK
-         ECEhroyblV5vlEJp4jsEY1jztLtOGIMzp6IMhAFwTfUq6UJGzhewFZeifaad0jwz3Tmm
-         jZIg4ru1hJ4ItI7IjsZmhUs2O/s0qcT98yqQegxHLif0zd/m2Cy7sN5b+TE1RYjh0QXz
-         6rHU5rXpKVWGPpd10FXhOPc+Op00KqnqERvWpyHq7G2gXi2stNf4YPPFsuAzUheO73bl
-         PHFQ==
-X-Gm-Message-State: APjAAAVWyUKdgAXY8u3jrDPwQyfCm+mKqPItp8XwoJoxlljdhksTtgX5
-        yShrNf3tq5EuptHGEt3r3fxicQi3aEVc7ePoWhNDTw==
-X-Google-Smtp-Source: APXvYqwdd1WVvropN/Ah9GWZ4j1iP+qWglk6pATFnqpFpANspIETm+lPq1ohJHYuPnh9a1IcHgjcTAcwzRPQ36OkB7Q=
-X-Received: by 2002:a67:5e45:: with SMTP id s66mr13897757vsb.200.1582108175469;
- Wed, 19 Feb 2020 02:29:35 -0800 (PST)
+        Wed, 19 Feb 2020 05:32:41 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48957 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgBSKcl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 05:32:41 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j4Meh-0000nA-Tr; Wed, 19 Feb 2020 11:32:35 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j4Meh-0008SQ-2y; Wed, 19 Feb 2020 11:32:35 +0100
+Date:   Wed, 19 Feb 2020 11:32:35 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     kernel@pengutronix.de, Geert Uytterhoeven <geert@glider.be>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: enabling a regulator before doing an ADC measurement
+Message-ID: <20200219103235.u2roy3uchlrxqgqw@pengutronix.de>
 MIME-Version: 1.0
-References: <20200128090636.13689-1-ludovic.barre@st.com> <20200128090636.13689-10-ludovic.barre@st.com>
- <853f4b14-a188-f329-34e5-8e88fcafa775@st.com>
-In-Reply-To: <853f4b14-a188-f329-34e5-8e88fcafa775@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 19 Feb 2020 11:28:59 +0100
-Message-ID: <CAPDyKFrKunZ1nDiSR-6ZgZNxkxs=_R-i3N9QWNovnZ4iY=DP=g@mail.gmail.com>
-Subject: Re: [PATCH V2 9/9] mmc: mmci: add sdmmc variant revision 2.0
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2020 at 15:44, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> hi Ulf
->
-> Le 1/28/20 =C3=A0 10:06 AM, Ludovic Barre a =C3=A9crit :
-> > This patch adds a sdmmc variant revision 2.0.
-> > This revision is backward compatible with 1.1, and adds dma
-> > link list support.
-> >
-> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> > ---
-> >   drivers/mmc/host/mmci.c | 30 ++++++++++++++++++++++++++++++
-> >   1 file changed, 30 insertions(+)
-> >
-> > diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> > index 24e630183ed4..a774c329c212 100644
-> > --- a/drivers/mmc/host/mmci.c
-> > +++ b/drivers/mmc/host/mmci.c
-> > @@ -275,6 +275,31 @@ static struct variant_data variant_stm32_sdmmc =3D=
- {
-> >       .init                   =3D sdmmc_variant_init,
-> >   };
-> >
-> > +static struct variant_data variant_stm32_sdmmcv2 =3D {
-> > +     .fifosize               =3D 16 * 4,
-> > +     .fifohalfsize           =3D 8 * 4,
-> > +     .f_max                  =3D 208000000,
-> > +     .stm32_clkdiv           =3D true,
-> > +     .cmdreg_cpsm_enable     =3D MCI_CPSM_STM32_ENABLE,
-> > +     .cmdreg_lrsp_crc        =3D MCI_CPSM_STM32_LRSP_CRC,
-> > +     .cmdreg_srsp_crc        =3D MCI_CPSM_STM32_SRSP_CRC,
-> > +     .cmdreg_srsp            =3D MCI_CPSM_STM32_SRSP,
-> > +     .cmdreg_stop            =3D MCI_CPSM_STM32_CMDSTOP,
-> > +     .data_cmd_enable        =3D MCI_CPSM_STM32_CMDTRANS,
-> > +     .irq_pio_mask           =3D MCI_IRQ_PIO_STM32_MASK,
-> > +     .datactrl_first         =3D true,
-> > +     .datacnt_useless        =3D true,
-> > +     .datalength_bits        =3D 25,
-> > +     .datactrl_blocksz       =3D 14,
-> > +     .datactrl_any_blocksz   =3D true,
-> > +     .stm32_idmabsize_mask   =3D GENMASK(16, 5),
-> > +     .dma_lli                =3D true,
-> > +     .busy_timeout           =3D true,
->
-> I forget "busy_detect           =3D true," property
-> I add this in next patch set
+Hello,
 
-No need for a re-send, I amended this when I applied it.
+I have a hardware setup that looks as follows:
 
->
-> > +     .busy_detect_flag       =3D MCI_STM32_BUSYD0,
-> > +     .busy_detect_mask       =3D MCI_STM32_BUSYD0ENDMASK,
-> > +     .init                   =3D sdmmc_variant_init,
-> > +};
-> > +
-> >   static struct variant_data variant_qcom =3D {
-> >       .fifosize               =3D 16 * 4,
-> >       .fifohalfsize           =3D 8 * 4,
-> > @@ -2343,6 +2368,11 @@ static const struct amba_id mmci_ids[] =3D {
-> >               .mask   =3D 0xf0ffffff,
-> >               .data   =3D &variant_stm32_sdmmc,
-> >       },
-> > +     {
-> > +             .id     =3D 0x00253180,
-> > +             .mask   =3D 0xf0ffffff,
-> > +             .data   =3D &variant_stm32_sdmmcv2,
-> > +     },
-> >       /* Qualcomm variants */
-> >       {
-> >               .id     =3D 0x00051180,
-> >
+                                ,-------------------.
+ ,---------.       ,---/ -------| current-regulator |
+ |  ADC    |       |            `-------------------'
+ |      CH0--------+
+ |         |       |
+ `.........'    ,-----.
+                |PT100|
+		`-----'
+		   |
+		   ⏚
 
-Kind regards
-Uffe
+So the idea is that I enable the regulator and then measure the adc's
+input to determine the resistance of the PT100 and so its temperature.
+
+I wonder if/how I should represent that in my device's device tree. I
+discussed this already a bit with Geert on irc and he came up with
+something like:
+
+	adc {
+		...
+		channel@0 {
+			reg = <0>;
+			supply = <&myregulator>;
+		};
+	};
+
+with the intention that the adc driver enables myregulator before
+starting a measurement on channel 0.
+
+Does this sound sensible? Does something like this maybe even already
+exist and I missed it?
+
+What is a bit special here is that usually a regulator is used to supply
+a device and it's just enabled at probe time (or when the device is
+started to be used) and disabled when done. Here the regulator is
+supposed to be enabled only during a measurement[1] to yield the reference
+current and doesn't supply a device. So maybe better use another
+property name instead of plain "supply", maybe "reference-supply"?
+
+Best regards
+Uwe
+
+[1] When the current measurement is done, the regulator must be swiched
+off again to not warm up the PT100 and so fudge future measurements.
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
