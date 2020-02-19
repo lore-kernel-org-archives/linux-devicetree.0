@@ -2,96 +2,97 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DCEC34047
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5491DC34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA4824673
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xHqG61oY"
+	by mail.kernel.org (Postfix) with ESMTP id 1C05624654
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582120214;
+	bh=hA9urcjcTZ9xT7r14FRC9Xm37pN89/H+vVci8y+Mp8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qNn54cody1doMiGnynT0xZQvn4UFGKg6gm7iAxJwQiXG686GRo7dgvbxOPAtDKqDr
+	 CYE6yu84TqEb65vQv/+T7TMrXAVokOYz23rnS4wsrUE/EHgigdhMrINwwOanYvdjbb
+	 LTjB67Vr/qWahGMfdlJNDavQ/5FhJnFEFY510rl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgBSNte (ORCPT
+        id S1726671AbgBSNuN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:49:34 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:11241 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbgBSNte (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:49:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582120174; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=nlOJ2QjC76fp//IJNgKlJ1in/DYwlbd9Ta/pZD7AXdY=; b=xHqG61oYnbQIEuNKZDbtGLUE9Kykcpx8JrP43P1gAi7Kq2wjup1+0fUqVtivIdgVbROmos11
- IDyQ3T4/+lfObnELqWOPAFykOZ1bE0TguJxmn+QqvJ6n/hm91QwPu7qQkR8RCybDFIcQhTcH
- ZzLpc4cik6T3N2vh+KkeGBynOF0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4d3ce1.7fe2ec9228f0-smtp-out-n01;
- Wed, 19 Feb 2020 13:49:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4EA97C447A0; Wed, 19 Feb 2020 13:49:20 +0000 (UTC)
-Received: from [10.252.222.65] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 555F8C43383;
-        Wed, 19 Feb 2020 13:49:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 555F8C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH 6/6] arm64: dts: sc7180: Add interconnect for QUP and QSPI
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
-        broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org
-References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
- <1581946205-27189-7-git-send-email-akashast@codeaurora.org>
- <20200218031830.GX955802@ripper>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <f82a28c7-63a4-b0e8-3902-5614dfed0f78@codeaurora.org>
-Date:   Wed, 19 Feb 2020 19:19:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 19 Feb 2020 08:50:13 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45791 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbgBSNuN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 08:50:13 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so131403otp.12;
+        Wed, 19 Feb 2020 05:50:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PDadwaa2tCalOGhbrNe+eCFiucqxINzGz8b3IuyJVBo=;
+        b=EGsSEAtLKFuTpzxcIzJ29HQJY0zofaY7DnrDaCzc7Nd/0nu8bq6suOGmsO0EthPJAV
+         PGhvnjGpA5/ZIK3qeyAdbL7h5JPk3xQd7crvCg2N5MAQQVqw0AewtgjCrGFwU7upd5H2
+         mvFYsWCFIzwujge6bHVq31oy4SuOLrhah4CM6DJZOAAxmD9RVl1Cg3EBxnxuwVsNjptV
+         Tu8Pjx2ySkdxfYbn0AyVM96HhSWOxezRxW0ovZREXjGagS+TSuVVzxTPoTIwI9L+4ebM
+         Ewa+cwlsSien2ZeIP+zSBfNR/uezp5JYVdEb3/6atEBKZc8KCgRinPS2RvANxQLJIAcM
+         AQyQ==
+X-Gm-Message-State: APjAAAXpPUIsrR9PeRNpu6EluZpLJKPPIuKeGjYk8YKdc5UOJhyskEdL
+        A2ouHV31hQxMido4IsqBCg==
+X-Google-Smtp-Source: APXvYqx9tjudoBcfo2l2gjTj/tz/jOPKzWnJusxxw8qa+pcBGOCG323+8cZRapiKtJcy/ffY1jGT2Q==
+X-Received: by 2002:a05:6830:1c8:: with SMTP id r8mr6946584ota.63.1582120212489;
+        Wed, 19 Feb 2020 05:50:12 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a1sm654837oti.2.2020.02.19.05.50.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 05:50:11 -0800 (PST)
+Received: (nullmailer pid 9937 invoked by uid 1000);
+        Wed, 19 Feb 2020 13:50:10 -0000
+Date:   Wed, 19 Feb 2020 07:50:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, orsonzhai@gmail.com, baolin.wang7@gmail.com,
+        freeman.liu@unisoc.com, zhang.lyra@gmail.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum
+ thermal documentation
+Message-ID: <20200219135010.GA9880@bogus>
+References: <444e45ce0a9b390b2502dfcefd1ddb36948fa8e1.1582013101.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200218031830.GX955802@ripper>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <444e45ce0a9b390b2502dfcefd1ddb36948fa8e1.1582013101.git.baolin.wang7@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Tue, 18 Feb 2020 16:10:27 +0800, Baolin Wang wrote:
+> From: Baolin Wang <baolin.wang@unisoc.com>
+> 
+> Add the Spreadtrum thermal documentation.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> ---
+> Changes from v2:
+>  - Add missing #address-cells and #size-cells properties.
+>  - Change the child node name with patternProperties.
+>  - Simplify the nvmem-cells-names property.
+> 
+> Changes from v1:
+>  - Change to yaml format.
+> ---
+>  .../devicetree/bindings/thermal/sprd-thermal.yaml  |  108 ++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> 
 
->> +				interconnects = <&qup_virt MASTER_QUP_CORE_0
->> +						&qup_virt SLAVE_QUP_CORE_0>,
->> +						<&gem_noc MASTER_APPSS_PROC
->> +						&config_noc SLAVE_QUP_0>,
->> +						<&aggre1_noc MASTER_QUP_0
->> +						&mc_virt SLAVE_EBI1>;
-> Please ignore the 80-char "limit" and write this as:
-> 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
-> 						<&gem_noc ...>,
-> 						<&aggre1_noc ...>;
->
-> Regards,
-> Bjorn
-
-ok
-
-Regards,
-
-Akash
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Reviewed-by: Rob Herring <robh@kernel.org>
