@@ -2,85 +2,97 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDCEC11D80
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F507C761A1
 	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9323324672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FBA24682
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582150867;
-	bh=M/V3DqoQPYDEYWzOoJqFkI84isLVy8Joxutnsm8NI4g=;
+	s=default; t=1582150966;
+	bh=PPFyD2KpxHxtue/MGXXNquiMGv4B+OkDvdfFb8vDdh8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Aa0sYh7IcdbqXLFWD4XZHXoD6J31bniJC85jmqN94+ib7M8R3w4zCuXAuyNxYt1Ul
-	 uhOo4nhFxPb6WyjqvryUB0rUwQkINij01zlT+Xsqe0xANtpxlnT8uGgTitgxaoXur0
-	 SvASeSjLVqlMBmQ+5iPOlcahKF0K/VvRfxfGaeYg=
+	b=ytvXWk2YdH8t82UTenNjVQqTGwW1nCKInFTayJrgejU2XomW1QORtlBdhyiGtyXcE
+	 s8pVaLmGoRMIutKekXfbRbcujkcPpIwzwa82k4ijlGI2BnsyeiJ5pEF8Ru9YH0VYtt
+	 o5lJ3iDuWYxN1lK3cefjUAYYsuHt8S0tBSy96STk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgBSWVH (ORCPT
+        id S1727291AbgBSWWp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:21:07 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42530 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgBSWVG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:21:06 -0500
-Received: by mail-oi1-f195.google.com with SMTP id j132so25478243oih.9;
-        Wed, 19 Feb 2020 14:21:06 -0800 (PST)
+        Wed, 19 Feb 2020 17:22:45 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44570 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbgBSWWp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:22:45 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h9so1739340otj.11;
+        Wed, 19 Feb 2020 14:22:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kgnszcGIgx8eKrYcFzUwT2aC+nFz0K5SNNaYzo9jGEA=;
-        b=qr3LvhZ6+dz08hO4i00YzKNK1XsbeiHacXLtSCDBk3CDeAgcowUTzkArGcAn8lkYKa
-         W6Z5/e9FueQNTEfasPONvEUyveFbOk8zg21ZDnivcBDCOPWLSSNGXO6deMNXnAYV8K+n
-         4IU3P/shD8au7tqGRJpaCm8mbR58djh4ZmNAYtHbwxuUyKm5hG5nuxHoBo+4ehwpJ8ra
-         5fW+YqD64/cSQwqfnCuLvuBoJ1Uyu/knukgeAVnbawoeDc1JHrf9DgmDpsxKJ5DkuBdY
-         OGXId1otT5QcBXhzyrTP/PzEYl5Ns0YTDXARXczAYR0lrjCJ9KDdLG1vB9PbBxGh0ohZ
-         wHDQ==
-X-Gm-Message-State: APjAAAV+FsWt9vL5e8GYkyrpt3rsIIiTrB7nZh6whCiM11s2Jh5vSm9c
-        aeoRUNT0wNFlfqUD739SIg==
-X-Google-Smtp-Source: APXvYqwLrlFcY4JuHilf0viUQ4JVawi4WxKwhLmGNJRu5pesDPyJiFwhX6oeNPnx4cXKDU+JnUCO5g==
-X-Received: by 2002:aca:5303:: with SMTP id h3mr5864795oib.109.1582150866258;
-        Wed, 19 Feb 2020 14:21:06 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:content-language
+         :user-agent;
+        bh=2sNkfWb3pfIlKB+u9ML9Dfe9kkvuZVvEoC0qldkLHAg=;
+        b=oI3LdgTZBAJbQgzfbrh4jTDKwNRaJ6x5WDlckhG0M57gmhBR4ogEv5qXAgi4XhHKxe
+         Z7H4wc+z7ePJJBwNwyjlt9k9g6+cIGwoQiTVamuKNUm7rUN3TBDpNO6gWSVrPZmG5Ise
+         NSsJxZfbv17rlM2dGLTaLoMWOiXB1g8g4kC9gzQYOZfrE57dSdiRhpOD2pX/SV5vWmc6
+         ghbxwGNViCEQ5asJBbCaB6Jmt1HVLgolwJKBqKLl2nyxFmkPi3Lli5qDOh89l9dY37QL
+         kyFjteZf/Eo9a3fGNl6BB5CYsdsLIViCPfxud22jKbmdiuEZivGAV2UOb9Lt5U0m4uXP
+         oNMg==
+X-Gm-Message-State: APjAAAW5OWsqL7P0FZ/igQ39CQhsDjMkJQpm39aqeU2zKTwyrCVaeyHk
+        QWgmf5JrlHT2mntkF4gW7g==
+X-Google-Smtp-Source: APXvYqz7rt85MIurXjJi9Zhc8regbA3GAy27xdpXY9iVID53QfHaCOnwuA5h4zSXeZvXkfnK6tcwTQ==
+X-Received: by 2002:a9d:6e02:: with SMTP id e2mr22323857otr.194.1582150964507;
+        Wed, 19 Feb 2020 14:22:44 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s12sm412573oic.31.2020.02.19.14.21.05
+        by smtp.gmail.com with ESMTPSA id n16sm382938otk.25.2020.02.19.14.22.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:21:05 -0800 (PST)
-Received: (nullmailer pid 10416 invoked by uid 1000);
-        Wed, 19 Feb 2020 22:21:05 -0000
-Date:   Wed, 19 Feb 2020 16:21:05 -0600
+        Wed, 19 Feb 2020 14:22:43 -0800 (PST)
+Received: (nullmailer pid 13215 invoked by uid 1000);
+        Wed, 19 Feb 2020 22:22:42 -0000
+Date:   Wed, 19 Feb 2020 16:22:42 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alexey Minnekhanov <alexey.min@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Alexey Minnekhanov <alexey.min@gmail.com>
-Subject: Re: [PATCH 2/5] dt-bindings: arm: Add kryo260 compatible
-Message-ID: <20200219222105.GA10282@bogus>
-References: <20200212170916.7494-1-alexey.min@gmail.com>
- <20200212170916.7494-3-alexey.min@gmail.com>
+To:     Oliver Graute <oliver.graute@kococonnector.com>
+Cc:     "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "peng.fan@nxp.com" <peng.fan@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] dt-bindings: arm64: imx: Add board binding for
+ i.MX8QM MEK  Board
+Message-ID: <20200219222242.GA13182@bogus>
+References: <20200213144451.31455-1-oliver.graute@kococonnector.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212170916.7494-3-alexey.min@gmail.com>
+In-Reply-To: <20200213144451.31455-1-oliver.graute@kococonnector.com>
+Content-Language: en-US
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 12 Feb 2020 20:09:13 +0300, Alexey Minnekhanov wrote:
-> Kryo260 is found in SDM660, so add it in list of cpu compatibles
+On Thu, 13 Feb 2020 14:46:05 +0000, Oliver Graute wrote:
 > 
-> Signed-off-by: Alexey Minnekhanov <alexey.min@gmail.com>
+> Add board binding for i.MX8QM MEK Board
+> 
+> Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> 
+>  this patch should belong to this series:
+> 
+>  https://patchwork.kernel.org/patch/10824573/
+> 
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
