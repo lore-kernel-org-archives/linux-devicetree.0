@@ -2,139 +2,203 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F85C34056
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C61DC3405F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3784A24670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE1924683
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaqnOCST"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O4HyybsN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgBSSXN (ORCPT
+        id S1726680AbgBSSYn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:23:13 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41205 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgBSSXN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 13:23:13 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so1389908ljc.8;
-        Wed, 19 Feb 2020 10:23:12 -0800 (PST)
+        Wed, 19 Feb 2020 13:24:43 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34910 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbgBSSYm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 13:24:42 -0500
+Received: by mail-io1-f65.google.com with SMTP id h8so1659389iob.2
+        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 10:24:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A0DawmgTFOk5Mt/7IqD0y3krbs71MNO7CcDeqbzxFm8=;
-        b=GaqnOCSTizR20UQOmQuOlyFxwqgWaRBW3GMqMLEuDrM6bpoSy0grtSEt4X5nz7L5a6
-         Ft2AgACH/A+x4efhf60jM7ChmmY24ZCPmCCXnZylRIeUQ2GP3SUY+xIrVWY52V7Qu3Tp
-         Xh0FmSTYQ7ND2F0fPqFjh7lbruvo5KmAGgS9eJ34Q4LU+82h5vuuPt7tUa43MDsvgVoq
-         kfova+Mzh8AV98TtPx3CFnGCjRQCnstRUwoeyfTLX+4ZWe5LtnRdrymGAd3NfGY9G3Tj
-         aMcK65gABupR8gAgBwwlcEQ1/CiB1F0T3eszAAoZepakDzQ9moMyW6T4Fnr0KzPNe6Rd
-         TbUg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=smlfcUywMEBA2Gw1eHAbjNVoQlh2LXz5jWIz6aJcmfw=;
+        b=O4HyybsNXczsbhrrLu4qddjfAQuXg+JBoGLqWPg/hSHL/MiwlPJ7VLi677GK7dYdgU
+         skT/NGbNoll9J1+NV9EDP9BSSEsuS9UhB/4e8Xbm8I1uk7W24JlO9YyyAxjr2sbl/gak
+         ZQ62NhEncAgdLWVw67qx6fj8lVkDiZCr9Mpe9mhjtgjt973WgmcKyYzTA3oQFZwVKzld
+         9qoGBoiuZUVZGrO3A2UOAbHajl4eDCpwHoZUjn3ba25pB6pn2WlvVKRMBvDnSSi5nfkW
+         F8DzPx2Lb982yWUeGj1AVKPqKjRXBsi6COFkUBsyGQ2fcFByhCgjArwp88THYs/L0fSM
+         xCcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A0DawmgTFOk5Mt/7IqD0y3krbs71MNO7CcDeqbzxFm8=;
-        b=Yp3oogapsweIvDpZNZCqqYrP95j5CeESTrvMJMqMbml9DdBfIFVXVZQ+lfJweUam85
-         ODLZyrRgKNZBfBfNuApOGGzOXpMI4dDFggwUUufEXvImNHpMDjEMN+COUe10PV+ITwfp
-         S9tLMDnXK9dkYxJsH1UZQFw9/yPpV4nJxzNMiUPv8OV11YOWhKpHBdsvrlbEzyHx8rId
-         uRjMDFXbrYizdsAXM0f8ve5abfo8eFjtWJgFzVeuqsvejaE/IDEmheMzWGlL0iujvM2c
-         ei7ERFdX7aUBfONPDdQdc5fS631POiaKXhgGaCvDShUgI/lKJXO5bbHJU+06RxixRHVj
-         f3Ew==
-X-Gm-Message-State: APjAAAVw2/O8iX2kQgA7NejQ1QT7pXMPZjuHf+B3fFKUGSVW2akooykR
-        j2Dk0vep5Xly8vm1YPWzqQKXdge976I8HA==
-X-Google-Smtp-Source: APXvYqzQD8cYW2x08QgY7vSJARPguIoWGRl3Toe0iZU9Smf5PWnzwSEyQKMwWxswm+NjYKjmNIquFQ==
-X-Received: by 2002:a2e:3619:: with SMTP id d25mr16201768lja.231.1582136590922;
-        Wed, 19 Feb 2020 10:23:10 -0800 (PST)
-Received: from Vesas-MacBook-Pro.local (87-100-247-140.bb.dnainternet.fi. [87.100.247.140])
-        by smtp.googlemail.com with ESMTPSA id e5sm201582lfn.66.2020.02.19.10.23.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 10:23:10 -0800 (PST)
-Subject: Re: [PATCH] devicetree: zynqmp.dtsi: Add bootmode selection support
-To:     Mike Looijmans <mike.looijmans@topic.nl>, robh+dt@kernel.org,
-        michal.simek@xilinx.com, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     m.tretter@pengutronix.de, nava.manne@xilinx.com,
-        rajan.vaja@xilinx.com, manish.narani@xilinx.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200219122036.24575-1-mike.looijmans@topic.nl>
-From:   =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
-Message-ID: <07c68809-f65f-91ff-62eb-f12aa8960634@gmail.com>
-Date:   Wed, 19 Feb 2020 20:23:09 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=smlfcUywMEBA2Gw1eHAbjNVoQlh2LXz5jWIz6aJcmfw=;
+        b=kyt8OjulqpbCAmfFjwi4f5ql91Q3jO537fKDU620xk3Zt81Xoyv7haIcRdI6mY5gId
+         e87kUSed6k5haSRMhXMVo0a8229t7nzlr270ZuYkp2ZrNqyCOL7ZuiGM7eaTZW4ZdMiw
+         ZESJQspK8AMSNmyUS/8aWKgk/uGrQhk+IKp45u5oVrUdGWjQNUV7qqNZ4RA6xGkaGFMX
+         Pf3XK9jQy45V/wJE+tle+J8eF3skYUeymhrkMJ8bT6rlnlXIX3ClYg5521yJWe8Cdhua
+         PmsWQCY1kueSR9ivz6wBwveOUKUnk0AHJFtATgrw0Lw3LF3MSIqZLxDjxQxaQhXHSlpD
+         CbZA==
+X-Gm-Message-State: APjAAAVJ1fetLOiYfOcDnCbTEEwkC/5kpGQkfLQixQLsu99vM6tqDjdm
+        OtdoUYj1HJVPrQWcpZHuueOKi8Jxe7jtDm/luCgO9w==
+X-Google-Smtp-Source: APXvYqxWEN30KM/Wzmg23n8n06SyNxQpEVoQeFFH1fNl9ZzFQKgO61ZWof893ZVTmjk1+rAp7WzAPQ2G/0k3qCSAPCE=
+X-Received: by 2002:a6b:4e13:: with SMTP id c19mr19787179iob.58.1582136681309;
+ Wed, 19 Feb 2020 10:24:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200219122036.24575-1-mike.looijmans@topic.nl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 19 Feb 2020 11:24:30 -0700
+Message-ID: <CANLsYkzeAyGhYqewGaHfd-myW5EzE83WUOwAbKwTP-34pbUR-w@mail.gmail.com>
+Subject: Re: [PATCH 0/9] remoteproc: imx_rproc: support i.MX8/8M/7ULP
+To:     peng.fan@nxp.com
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mike,
+Hi Peng,
 
-On 19.2.2020 14.20, Mike Looijmans wrote:
-> Add bootmode override support for ZynqMP devices. Allows one to select
-> a boot device by running "reboot qspi32" for example. Activate config
-> item CONFIG_SYSCON_REBOOT_MODE to make this work.
-> 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> ---
->   arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> index 26d926eb1431..4c38d77ecbba 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -246,6 +246,30 @@
->   			};
->   		};
->   
-> +		/* Clock and Reset control registers for LPD */
-> +		lpd_apb: apb@ff5e0000 {
-> +			compatible = "syscon", "simple-mfd";
-> +			reg = <0x0 0xff5e0000 0x0 0x400>;
-> +			reboot-mode {
-> +				compatible = "syscon-reboot-mode";
-> +				offset = <0x200>;
-> +				mask = <0xf100>;
-> +				/* Bit(8) is the "force user" bit */
-> +				mode-normal = <0x0000>;
-> +				mode-psjtag = <0x0100>;
-> +				mode-qspi24 = <0x1100>;
-> +				mode-qspi32 = <0x2100>;
-> +				mode-sd0    = <0x3100>;
-> +				mode-nand   = <0x4100>;
-> +				mode-sd1    = <0x6100>;
-> +				mode-emmc   = <0x6100>;
-> +				mode-usb0   = <0x7100>;
-> +				mode-pjtag0 = <0x8100>;
-> +				mode-pjtag1 = <0x9100>;
-> +				mode-sd1ls  = <0xe100>;
+On Wed, 19 Feb 2020 at 00:33, <peng.fan@nxp.com> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> This patchset aim to replace NXP vendor imx_rpmsg.c driver.
 
-This kinda looks a bit misuse of reboot mode support.
+You mean remoteproc/imx_rproc.c ?  Upstream rpmsg/imx_rpmsg.c doesn't exist.
 
-Usually you are signal with reboot-mode that you want to do factory 
-reset, enter recovery mode or such things.
+>
+> This patchset is tested with Loic PALLARDY's patch
+> "remoteproc: add support for co-processor loaded and booted before kernel"
+> https://patchwork.kernel.org/patch/11265869/,
+> and inspried from st's remoteproc early boot support.
+> Since Loic's patch is still under review, just expect your comments :)
 
-Now this signaling here is telling that this is used for selecting from 
-what device to boot from.
-
-Another problem is that this now modifies all Xilinx Zynq MPSoCs which 
-is kinda wrong. This behavior should really be product/board specific 
-and not common for all boards -- undoing this in product/board is 
-somewhat cumbersome. Now this change hijacks the "reboot <arg>" with 
-this behavior which is not so nice.
+Did you base your work on top of Loic's because your MCU firmware is
+always loaded by the bootloader?  If not please send another revision
+of your work without early boot support.  When we have a clear view on
+how to proceed with the early boot support you can send another set to
+enable that.
 
 Thanks,
-Vesa Jääskeläinen
+Mathieu
+
+>
+> Patch [1,2]/9: dt-bindings convert to json and new SoC support
+> Patch 3/9: skip firmware load when recovery. To i.MX8, firmware is not
+>            handled by Linux.
+>
+> Patch [4-9]/9: i.MX specific part to support rpmsg/virtio with mbox.
+>       because NXP release image not have resoure table, so add resource
+>       table in dts
+>
+> My test dts diff for i.MX8QXP MEK, but I have tested this patchset
+> for i.MX8QXP MEK, i.MX8MM EVK, i.MX7ULP EVK:
+>
+> +
+> +       imx8x-cm4 {
+> +               compatible = "fsl,imx8qxp-cm4";
+> +               rsrc-table = <
+> +                       0x1 0x2 0x0 0x0 0x18 0x5c
+> +                       3
+> +                       /*fw_rsc_vdev*/
+> +                       7 0 1 0 0 0x200
+> +                       /*fw_rsc_vdev_vring*/
+> +                       0x90000000 4096 256 1 0
+> +                       0x90008000 4096 256 2 0
+> +                       3
+> +                       /*fw_rsc_vdev*/
+> +                       7 1 1 0 0 0x200
+> +                       /*fw_rsc_vdev_vring*/
+> +                       0x90010000 4096 256 1 0
+> +                       0x90018000 4096 256 2 0
+> +               >;
+> +               early-booted;
+> +               mbox-names = "tx", "rx", "rxdb";
+> +               mboxes = <&lsio_mu5 0 1
+> +                         &lsio_mu5 1 1
+> +                         &lsio_mu5 3 1>;
+> +               mub-partition = <3>;
+> +               memory-region = <&vdev0vring0>, <&vdev0vring1>, <&vdev0buffer>,
+> +                               <&vdev1vring0>, <&vdev1vring1>, <&vdev0buffer>;
+> +       };
+> +
+> +       reserved-memory {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +               vdev0vring0: vdev0vring0@90000000 {
+> +                       compatible = "shared-dma-pool";
+> +                       reg = <0 0x90000000 0 0x8000>;
+> +                       no-map;
+> +               };
+> +
+> +               vdev0vring1: vdev0vring1@90008000 {
+> +                       compatible = "shared-dma-pool";
+> +                       reg = <0 0x90008000 0 0x8000>;
+> +                       no-map;
+> +               };
+> +
+> +               vdev1vring0: vdev1vring0@90010000 {
+> +                       compatible = "shared-dma-pool";
+> +                       reg = <0 0x90010000 0 0x8000>;
+> +                       no-map;
+> +               };
+> +
+> +               vdev1vring1: vdev1vring1@90018000 {
+> +                       compatible = "shared-dma-pool";
+> +                       reg = <0 0x90018000 0 0x8000>;
+> +                       no-map;
+> +               };
+> +
+> +               vdev0buffer: vdev0buffer {
+> +                       compatible = "shared-dma-pool";
+> +                       reg = <0 0x90400000 0 0x100000>;
+> +                       no-map;
+> +               };
+> +       };
+> +
+>
+> Peng Fan (9):
+>   dt-bindings: remoteproc: Convert imx-rproc to json-schema
+>   dt-bindings: remoteproc: imx-rproc: support i.MX[8,8M,7ULP]
+>   remoteproc: add support to skip firmware load when recovery
+>   remoteproc: imx_rproc: surport early booted remote processor
+>   remoteproc: imx_rproc: parse early-booted property
+>   remoteproc: imx_proc: enable virtio/mailbox
+>   remoteproc: imx_rproc: add i.MX8QM/QXP
+>   remoteproc: imx_rproc: support i.MX7ULP
+>   remoteproc: imx_rproc: add i.MX8MM support
+>
+>  .../devicetree/bindings/remoteproc/imx-rproc.txt   |  33 --
+>  .../devicetree/bindings/remoteproc/imx-rproc.yaml  |  95 +++++
+>  drivers/remoteproc/imx_rproc.c                     | 455 +++++++++++++++++++--
+>  drivers/remoteproc/remoteproc_core.c               |  19 +-
+>  include/linux/remoteproc.h                         |   1 +
+>  5 files changed, 531 insertions(+), 72 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
+>
+> --
+> 2.16.4
+>
