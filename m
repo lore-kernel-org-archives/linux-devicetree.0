@@ -2,82 +2,147 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6183AC34050
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 11:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC807C3404D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 11:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385E824670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 11:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB68221D56
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 11:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgBSLLf (ORCPT
+        id S1726497AbgBSLXJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:11:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52626 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 06:23:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:46812 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgBSLLf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:11:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AF769B11F;
-        Wed, 19 Feb 2020 11:11:33 +0000 (UTC)
-Message-ID: <5909a00b6f95b14a983ba86297c0af29c290d0c1.camel@suse.de>
-Subject: Re: [PATCH 4/4] ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-Date:   Wed, 19 Feb 2020 12:11:31 +0100
-In-Reply-To: <1581166975-22949-5-git-send-email-stefan.wahren@i2se.com>
-References: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com>
-         <1581166975-22949-5-git-send-email-stefan.wahren@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Z3GG+XB2cSE7kwAK7O6H"
-User-Agent: Evolution 3.34.3 
+        id S1726484AbgBSLXJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:23:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12F8231B;
+        Wed, 19 Feb 2020 03:23:09 -0800 (PST)
+Received: from [10.37.12.28] (unknown [10.37.12.28])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13CF43F6CF;
+        Wed, 19 Feb 2020 03:23:05 -0800 (PST)
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: Add dynamic-power-coefficient to
+ Exynos5422 CPUs
+To:     kgene@kernel.org, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        b.zolnierkie@samsung.com, dietmar.eggemann@arm.com
+References: <20200219095828.8063-1-lukasz.luba@arm.com>
+ <20200219095828.8063-2-lukasz.luba@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <d545fe0f-3af2-4d37-ab44-c78fba350029@arm.com>
+Date:   Wed, 19 Feb 2020 11:23:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200219095828.8063-2-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+My apologizes for the mistake in the subject. It should be
+"PATCH v2 1/2" (mistake in script arguments while sending).
+The same applies to the second patch, should be  "PATCH v2 2/2".
 
---=-Z3GG+XB2cSE7kwAK7O6H
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Regards,
+Lukasz
 
-On Sat, 2020-02-08 at 14:02 +0100, Stefan Wahren wrote:
-> This adds the labels for all the SoC GPIOs on the Raspberry Pi 4.
->=20
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-
-Patch applied with linus' Review tag.
-
-Thanks!
-Nicolas
-
-
---=-Z3GG+XB2cSE7kwAK7O6H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5NF+MACgkQlfZmHno8
-x/6CqAf+K9om+tz33E8dthw3hcUjPMENZG/D5qLKSIwqgCA1GP6d98AvL391IBEr
-mLBaZOEmws5YB70++XxAYPItxq6ictCaK2TGauHaTfLnYaCPUi8OMfssr6wEXXyw
-zoyNDg7kMjmJZpEuu2gW6qbmIzaMLkYlEK0mYYm0UhsOihbvGt+f3LlMS606S5Qt
-JRjPUgNgE1hUK3HCK8h/MZj3HDvvLZQcz4InESnFEeGU7HI9ozyR+tTu3c/jPQs+
-ta6erOveoIYmMU5dmz3dSqknne43Cue4MIhsOzgbzw4nQZ8yp+WVyG+NeTAM7PfR
-XnfmnuQtIic21pY5W2uUa9MmtBfECw==
-=yuBe
------END PGP SIGNATURE-----
-
---=-Z3GG+XB2cSE7kwAK7O6H--
-
+On 2/19/20 9:58 AM, lukasz.luba@arm.com wrote:
+> From: Lukasz Luba <lukasz.luba@arm.com>
+> 
+> To use Energy Aware Scheduler (EAS) the Energy Model (EM) should be
+> registered for CPUs. Add dynamic-power-coefficient into CPU nodes which
+> let CPUFreq subsystem register the EM structures. This will increase
+> energy efficiency of big.LITTLE platforms.
+> 
+> The 'dynamic-power-coefficient' values have been obtained experimenting
+> with different workloads. The power measurements taken from big CPU
+> Cluster and LITTLE CPU Cluster has been compared with official documents
+> and synthetic workloads estimations. The effective power ratio between
+> Cortex-A7 and Cortex-A15 CPUs (~3x) is also aligned with documentation.
+> 
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>   arch/arm/boot/dts/exynos5422-cpus.dtsi | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+> index 1b8605cf2407..4b641b9b8179 100644
+> --- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+> @@ -31,6 +31,7 @@
+>   			operating-points-v2 = <&cluster_a7_opp_table>;
+>   			#cooling-cells = <2>; /* min followed by max */
+>   			capacity-dmips-mhz = <539>;
+> +			dynamic-power-coefficient = <90>;
+>   		};
+>   
+>   		cpu1: cpu@101 {
+> @@ -43,6 +44,7 @@
+>   			operating-points-v2 = <&cluster_a7_opp_table>;
+>   			#cooling-cells = <2>; /* min followed by max */
+>   			capacity-dmips-mhz = <539>;
+> +			dynamic-power-coefficient = <90>;
+>   		};
+>   
+>   		cpu2: cpu@102 {
+> @@ -55,6 +57,7 @@
+>   			operating-points-v2 = <&cluster_a7_opp_table>;
+>   			#cooling-cells = <2>; /* min followed by max */
+>   			capacity-dmips-mhz = <539>;
+> +			dynamic-power-coefficient = <90>;
+>   		};
+>   
+>   		cpu3: cpu@103 {
+> @@ -67,6 +70,7 @@
+>   			operating-points-v2 = <&cluster_a7_opp_table>;
+>   			#cooling-cells = <2>; /* min followed by max */
+>   			capacity-dmips-mhz = <539>;
+> +			dynamic-power-coefficient = <90>;
+>   		};
+>   
+>   		cpu4: cpu@0 {
+> @@ -79,6 +83,7 @@
+>   			operating-points-v2 = <&cluster_a15_opp_table>;
+>   			#cooling-cells = <2>; /* min followed by max */
+>   			capacity-dmips-mhz = <1024>;
+> +			dynamic-power-coefficient = <310>;
+>   		};
+>   
+>   		cpu5: cpu@1 {
+> @@ -91,6 +96,7 @@
+>   			operating-points-v2 = <&cluster_a15_opp_table>;
+>   			#cooling-cells = <2>; /* min followed by max */
+>   			capacity-dmips-mhz = <1024>;
+> +			dynamic-power-coefficient = <310>;
+>   		};
+>   
+>   		cpu6: cpu@2 {
+> @@ -103,6 +109,7 @@
+>   			operating-points-v2 = <&cluster_a15_opp_table>;
+>   			#cooling-cells = <2>; /* min followed by max */
+>   			capacity-dmips-mhz = <1024>;
+> +			dynamic-power-coefficient = <310>;
+>   		};
+>   
+>   		cpu7: cpu@3 {
+> @@ -115,6 +122,7 @@
+>   			operating-points-v2 = <&cluster_a15_opp_table>;
+>   			#cooling-cells = <2>; /* min followed by max */
+>   			capacity-dmips-mhz = <1024>;
+> +			dynamic-power-coefficient = <310>;
+>   		};
+>   	};
+>   };
+> 
