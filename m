@@ -7,84 +7,85 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E042EC5ACC4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A24C7619D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D96924672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B2424672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582150465;
-	bh=N211GYwBeBK341ThgMDhwyjOl9k3AX/2zhp0K27AEWA=;
+	s=default; t=1582150523;
+	bh=7xWK/OPiC5l3gYBW06z42v6QoRX7M5hPgR3NnvKHuHI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yptUbCzEsMY3i6QSULpplFDvNWfEBvoWIYKXdjCSo7VOuvuFz+q+KZfowXWqMXxgv
-	 0bXOjBMI9mr3fPqFlRL2vyGieLAj1d7RHQUoFRQP5esDdKxRHmSzb4vhhiDdrNONQ5
-	 zagXpHdFEayERgVe5xv0SZhK6xb1FnL1JR6+HjEY=
+	b=Ku8fwrQfryEgWbscEOjyYC/jXUrAeRgO3C5K3EP0/BELtiNcNXFBa3o4wd6+zhMUJ
+	 biPowAC+eigZsrONWckAua6OoapOaarZ7jQ9HyO667kQYMbybmHHObcScN/y7b48t3
+	 BLcDJuqdBVbrkfFThSlN86n0L1aTTWJluqmx6EDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgBSWOZ (ORCPT
+        id S1727462AbgBSWPW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:14:25 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:32980 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727232AbgBSWOZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:14:25 -0500
-Received: by mail-ot1-f44.google.com with SMTP id w6so1778266otk.0;
-        Wed, 19 Feb 2020 14:14:24 -0800 (PST)
+        Wed, 19 Feb 2020 17:15:22 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39478 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbgBSWPW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:15:22 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so1752211oty.6;
+        Wed, 19 Feb 2020 14:15:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PCB28ZHMHLDxZ8UN0t28z/W7i0m8dXBxggY1wp5teCo=;
-        b=LocM/Y7b0RfVgs2EiT087MB4fF0EKI68woCpFn2kakVu1VP/K2jHx6/fsUp/SHs7vL
-         sXZDZn9h2rhe70OyHO4fHjCxOLVgzqyWOljhn32j7KZ7tz44G6xujU4AvmIvvb2WmKIa
-         8570dTnozpTmTYEWDSQag4qMA2pTUU2hf3G29ghDlo0+/5o0nozuTSqXe1qMVc6WN1PP
-         48P77bZiVZVlQExunH5uZFE4Z/xqdx7Owpdv+16xijmluhzVgMHBBdCz1z5EyAQcOpxd
-         EbsoUGO1OyTEcuip5D8JyPUyXDbFNLjOU31QtmoN/7EX9cCbaZu8MdpYWz7EC6ZqOvog
-         l/zQ==
-X-Gm-Message-State: APjAAAUEhnPFUus/91XFhpWKOO+1UsnA5bi5ceoNbdUP5YjkBt7laaDf
-        AdO68SW11E2v4epsRNLPyg==
-X-Google-Smtp-Source: APXvYqyobv41FyF6JR9Ye576ZoF0o/UE945k9arGF5Dektgk3qpqgQezDg6xv8alvXICKnJMdOqE9g==
-X-Received: by 2002:a9d:7851:: with SMTP id c17mr21733875otm.58.1582150464028;
-        Wed, 19 Feb 2020 14:14:24 -0800 (PST)
+        bh=EsyWvJOyrd+rl8zt/yVD/N5zbUQ/a+iWqVsccdyLl7c=;
+        b=REDC1tWh2UVn7cCpH8lW3xidpVHkEf5xvVR1usgBxIwEzCsVtfvmKETRffbtIy/f5m
+         hpv8dhLjpWzGVjxdHtQkfONXBsENZoJC7O4i1G9F7cjeBdnhfoyTPWe9AG3PkMCvPZEy
+         R/Ee7Z6OsLlXASRJBsLjqDFJ756N3ZQSyOy+/kLdF5npi0Va+sIurfY7EYH9Cw7p7J5c
+         VcwNY+vwPOmTKYaXGy1J18JY9h9B1aCG3pbDYsIhzhxMAy+P5b/SyRdcCNSa4KVHzgf8
+         M7VxydvjP9Y0GeQ5Ks64pXaqyJywCir767yrcdNlSUhBni1IdWAqeJkd4/8FAOfKQc+S
+         ci7w==
+X-Gm-Message-State: APjAAAWt8KiFDv+6ovIHDQj9ZYVrdwnk8/yaDEcdZV5em8DmXk+tAD6u
+        5ClVVChuNANHp52BQr3C0Q==
+X-Google-Smtp-Source: APXvYqxrUC2cR1cmZAnZ2pXCjXxrWUGvheKcevmkbL0KODlWdGTFn9ryHxdhD9TA1gW4M9OcUDhS8w==
+X-Received: by 2002:a9d:6443:: with SMTP id m3mr20508149otl.20.1582150521498;
+        Wed, 19 Feb 2020 14:15:21 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 17sm376115oty.48.2020.02.19.14.14.23
+        by smtp.gmail.com with ESMTPSA id i13sm402628oik.7.2020.02.19.14.15.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:14:23 -0800 (PST)
-Received: (nullmailer pid 32442 invoked by uid 1000);
-        Wed, 19 Feb 2020 22:14:22 -0000
-Date:   Wed, 19 Feb 2020 16:14:22 -0600
+        Wed, 19 Feb 2020 14:15:20 -0800 (PST)
+Received: (nullmailer pid 1518 invoked by uid 1000);
+        Wed, 19 Feb 2020 22:15:20 -0000
+Date:   Wed, 19 Feb 2020 16:15:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, festevam@gmail.com,
-        alsa-devel@alsa-project.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Paul Olaru <paul.olaru@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [RESEND 4/4] dt-bindings: dsp: fsl: Add fsl,imx8qm-dsp entry
-Message-ID: <20200219221422.GA32379@bogus>
-References: <20200210095817.13226-1-daniel.baluta@oss.nxp.com>
- <20200210095817.13226-5-daniel.baluta@oss.nxp.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        sakari.ailus@linux.intel.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, mchehab+huawei@kernel.org,
+        linux-media@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH 1/2] dt-bindings: media: csi: Add interconnects properties
+Message-ID: <20200219221520.GA1461@bogus>
+References: <20200210100417.78583-1-maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210095817.13226-5-daniel.baluta@oss.nxp.com>
+In-Reply-To: <20200210100417.78583-1-maxime@cerno.tech>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 10 Feb 2020 11:58:17 +0200, Daniel Baluta wrote:
-> From: Paul Olaru <paul.olaru@nxp.com>
+On Mon, 10 Feb 2020 11:04:16 +0100, Maxime Ripard wrote:
+> The Allwinner CSI controller is sitting beside the MBUS that is represented
+> as an interconnect.
 > 
-> This is the same DSP from the hardware point of view, but it gets a
-> different compatible string due to usage in a separate platform.
+> Make sure that the interconnect properties are valid in the binding.
 > 
-> Signed-off-by: Paul Olaru <paul.olaru@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Fixes: 7866d6903ce8 ("media: dt-bindings: media: sun4i-csi: Add compatible for CSI0 on R40")
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
->  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/media/allwinner,sun4i-a10-csi.yaml        | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
