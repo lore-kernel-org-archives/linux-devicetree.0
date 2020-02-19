@@ -2,102 +2,161 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D73C34047
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5DCC34050
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53F824670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487BA24672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RukMzdYR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzK2azsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgBSPNI (ORCPT
+        id S1727078AbgBSPNO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:13:08 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38191 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgBSPNI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 10:13:08 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a9so1041988wmj.3;
-        Wed, 19 Feb 2020 07:13:05 -0800 (PST)
+        Wed, 19 Feb 2020 10:13:14 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53439 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbgBSPNN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 10:13:13 -0500
+Received: by mail-wm1-f65.google.com with SMTP id s10so1043740wmh.3;
+        Wed, 19 Feb 2020 07:13:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lBnHOm9+KR9D6W7zBug28Lbh16kwAOqgMkWqDNeGK6o=;
-        b=RukMzdYRUrSyPSfWpOOlyN711haqeIYBdd3eN0Yz7/sQ7KlM03p14yPxg7f10bfr3I
-         1nQOLF3UGpDmQROejv6mqeCZHKgQvze+5Yh+LcFEjas0uLWHx4FQsGTx3G1ENdLuAk90
-         iLVTe99Z4naV1B95VxcpWWngbUoC8rpmHiQwws3C0uQeJ8YQvhAKfu6ya1AX9QpdS3W2
-         IEXwyE0Tqym1TpB6I/6GSRKihwkLp0jp6Ru4vVQ0tn8ifoDRNh4/j2EEGuWhBekwTuwz
-         NDWX3ceQ4gk2OrA0oxKj/ZQpZLZFextpFhWT3j7Urdmb3inyInUMrWTMR2IHYoIzS5Ab
-         I83A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=1siZHdXNaBkFw2rS9GSsHRiEk1ELAmyftewPvXED4Ls=;
+        b=TzK2azsUyUxFfoF3HlF7nIMC7bJ/FXVouyxM17lSbHna89caQmxbe3YWkhGmpHCaam
+         Vya2jCyzfrsEx/G2NI6mqXcbhABH7xIGBqME7OV6641tAiPItALbLtpSaFUmSvgb6QVz
+         UWoksRXDGnX8sik9RP4VQCZw755YoXTQH2TyrycOtB69+LqLg7XRs5wyfgCQ00j7W/lj
+         /FLzb0yEeyVDp+4PHnd4g68e378qck3xcnRcEPGRSJwtAJpl9ldMw0DGH+CzEARGcn0m
+         tMe9t7tRGPQT9db2SdUlIDo7RxfOPrwGeJ8bwPGnvfNXmj4H47pQLDcFqsUB0uJrhvDb
+         KQMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lBnHOm9+KR9D6W7zBug28Lbh16kwAOqgMkWqDNeGK6o=;
-        b=dHMVT2H/lDftY+3i+xik9URcuL5nhbucNuNBv3CB+BBoWcdtWLhCSsCQU6wL60uBK6
-         BVlln8NAmDXqFvsO+Yg//LNwc5FtNod7deLZKshTbH+PGW94TXYE0Y5bni20gtgH9pcB
-         ZrBeo2JcuSj7qvLxbLKfrefGCF7tEfFOuoWf28U+ICWYQR/AtTEIoyGDhqoBfpVjW+Zr
-         bpovhO0CsweqFtpUV/mim4TOjM7z/xfHIjziXdx0RKH1lf3tOkaKKdA3X9zRT/69zuuY
-         8AbDRsBrfYk59qH8XaWDF5klaqMnddXj5VIhbIYu27jffy0/GXC55NQz4amK+8MpC1P0
-         0u9Q==
-X-Gm-Message-State: APjAAAUbK1WrPTkIZEVaX1mS9siy7rLwOuM4SgMG+rx5MjO3qJrBIkgc
-        zKbuK3HG6Gzi+TkUSZXOtnw=
-X-Google-Smtp-Source: APXvYqzzc7eb8Leb62NNIsUSOZ0br96pqX0VUBn9tPBIfdh8Alps+1K3wJg1uJuk45qDHRDwj/DIXQ==
-X-Received: by 2002:a1c:e28a:: with SMTP id z132mr10371198wmg.157.1582125185060;
-        Wed, 19 Feb 2020 07:13:05 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=1siZHdXNaBkFw2rS9GSsHRiEk1ELAmyftewPvXED4Ls=;
+        b=P3qDMBUaQIcRxwgRjYU3KlWH3Plh8Ro4w3pFDshKXF0Z3e5vvvDpVjVWiPQRbHvl3R
+         2gOeh9Dx9pEpuOWr1zpzf6mUyQRR1WrMOmR59dNC98Z3tPeeUyPIW3l2uJKS4HVi3xuf
+         XVhv4Bv7Dm2Wd+bwQL+ZchTOTjGrngxJ00LeiWb1YXYLfuDWfDtJQsqf2XIK7hxORQbB
+         j4Rgc/ffBZnpU8SNU1tKj42eaibisy3Lh495FEv1x16iqw2XGbclUMkDVbuOAQuY8NP+
+         w6XITMJqlYw5h+i2eZ69NVIjty0/xc/yhJSsdc52+R3OPpV4Tuc6sOtzCoMRVYNnuiZx
+         RS7A==
+X-Gm-Message-State: APjAAAWMb+ZiCHX4PMvprTJhCvJjKDBgjwcbTu6ns2fEWmbvMZRMnadf
+        547Du6fifqFFzlNtomFTivs=
+X-Google-Smtp-Source: APXvYqwdCwAzCaozbkbv6ha96uV1jT92Ce4KkcBwQ9jzEwI6Fe9SA/aL23M2V/VyvgeGUnrFiGL4Qg==
+X-Received: by 2002:a1c:5f06:: with SMTP id t6mr10819075wmb.32.1582125191399;
+        Wed, 19 Feb 2020 07:13:11 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id b13sm83137wrq.48.2020.02.19.07.13.03
+        by smtp.gmail.com with ESMTPSA id b13sm83137wrq.48.2020.02.19.07.13.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 07:13:04 -0800 (PST)
+        Wed, 19 Feb 2020 07:13:10 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, davem@davemloft.net,
         netdev@vger.kernel.org
 Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next/devicetree 0/5] DT bindings for Felix DSA switch on LS1028A
-Date:   Wed, 19 Feb 2020 17:12:54 +0200
-Message-Id: <20200219151259.14273-1-olteanv@gmail.com>
+Subject: [PATCH v2 net-next/devicetree 5/5] arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+Date:   Wed, 19 Feb 2020 17:12:59 +0200
+Message-Id: <20200219151259.14273-6-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200219151259.14273-1-olteanv@gmail.com>
+References: <20200219151259.14273-1-olteanv@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-This series officializes the device tree bindings for the embedded
-Ethernet switch on NXP LS1028A (and for the reference design board).
-The driver has been in the tree since v5.4-rc6.
+Link the switch PHY nodes to the central MDIO controller PCIe endpoint
+node on LS1028A (implemented as PF3) so that PHYs are accessible via
+MDIO.
 
-As per feedback received in v1, I've changed the DT bindings for the
-internal ports from "gmii" to "internal". So I would like the entire
-series to be merged through a single tree, be it net-next or devicetree.
-If this happens, I would like the other maintainer to acknowledge this
-fact and the patches themselves. Thanks.
+Enable SGMII AN on the Felix PCS by telling PHYLINK that the VSC8514
+quad PHY is capable of in-band-status.
 
-Claudiu Manoil (2):
-  arm64: dts: fsl: ls1028a: add node for Felix switch
-  arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+The PHYs are used in poll mode due to an issue with the interrupt line
+on current revisions of the LS1028A-RDB board.
 
-Vladimir Oltean (3):
-  arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC
-    RCIE
-  net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
-  dt-bindings: net: dsa: ocelot: document the vsc9959 core
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+Changes in v2:
+None.
 
- .../devicetree/bindings/net/dsa/ocelot.txt    | 96 +++++++++++++++++++
- .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 51 ++++++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 85 +++++++++++++++-
- drivers/net/dsa/ocelot/felix.c                |  3 +-
- drivers/net/dsa/ocelot/felix_vsc9959.c        |  3 +-
- 5 files changed, 232 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+ .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index afb55653850d..9353c00e46a7 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -194,6 +194,57 @@
+ 	status = "disabled";
+ };
+ 
++&enetc_mdio_pf3 {
++	/* VSC8514 QSGMII quad PHY */
++	qsgmii_phy0: ethernet-phy@10 {
++		reg = <0x10>;
++	};
++
++	qsgmii_phy1: ethernet-phy@11 {
++		reg = <0x11>;
++	};
++
++	qsgmii_phy2: ethernet-phy@12 {
++		reg = <0x12>;
++	};
++
++	qsgmii_phy3: ethernet-phy@13 {
++		reg = <0x13>;
++	};
++};
++
++&mscc_felix_port0 {
++	status = "okay";
++	label = "swp0";
++	managed = "in-band-status";
++	phy-handle = <&qsgmii_phy0>;
++	phy-mode = "qsgmii";
++};
++
++&mscc_felix_port1 {
++	status = "okay";
++	label = "swp1";
++	managed = "in-band-status";
++	phy-handle = <&qsgmii_phy1>;
++	phy-mode = "qsgmii";
++};
++
++&mscc_felix_port2 {
++	status = "okay";
++	label = "swp2";
++	managed = "in-band-status";
++	phy-handle = <&qsgmii_phy2>;
++	phy-mode = "qsgmii";
++};
++
++&mscc_felix_port3 {
++	status = "okay";
++	label = "swp3";
++	managed = "in-band-status";
++	phy-handle = <&qsgmii_phy3>;
++	phy-mode = "qsgmii";
++};
++
+ &sai4 {
+ 	status = "okay";
+ };
 -- 
 2.17.1
 
