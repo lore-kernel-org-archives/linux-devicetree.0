@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA95C34050
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 08:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13904C34022
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 08:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C54208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 08:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF7B2465D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 08:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgBSIaY (ORCPT
+        id S1726512AbgBSIaw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:30:24 -0500
-Received: from out28-98.mail.aliyun.com ([115.124.28.98]:40100 "EHLO
-        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgBSIaY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 03:30:24 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4939859|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.236101-0.0277202-0.736179;DS=CONTINUE|ham_regular_dialog|0.0107653-0.000613517-0.988621;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.Gpe8RV3_1582100997;
+        Wed, 19 Feb 2020 03:30:52 -0500
+Received: from out28-219.mail.aliyun.com ([115.124.28.219]:59149 "EHLO
+        out28-219.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgBSIaw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 03:30:52 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1408996|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.658155-0.00392559-0.337919;DS=CONTINUE|ham_system_inform|0.00908082-0.000152978-0.990766;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.Gpe8RV3_1582100997;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gpe8RV3_1582100997)
           by smtp.aliyun-inc.com(10.147.40.2);
-          Wed, 19 Feb 2020 16:30:13 +0800
+          Wed, 19 Feb 2020 16:30:16 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -34,9 +34,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         daniel.lezcano@linaro.org, paul@crapouillou.net,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
         dongsheng.qiu@ingenic.com
-Subject: [PATCH 1/4] dt-bindings: timer: Add X1000 bindings.
-Date:   Wed, 19 Feb 2020 16:29:31 +0800
-Message-Id: <1582100974-129559-3-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH 3/4] clocksource: Ingenic: Add support for TCU of X1000.
+Date:   Wed, 19 Feb 2020 16:29:33 +0800
+Message-Id: <1582100974-129559-5-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -48,25 +48,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the timer bindings for the X1000 Soc from Ingenic.
+X1000 has a different TCU containing OST, since X1000, OST has been
+independent of TCU. This patch is prepare for later OST driver.
 
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- Documentation/devicetree/bindings/timer/ingenic,tcu.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clocksource/ingenic-timer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-index 0b63ceb..91f7049 100644
---- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-+++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-@@ -10,6 +10,7 @@ Required properties:
-   * ingenic,jz4740-tcu
-   * ingenic,jz4725b-tcu
-   * ingenic,jz4770-tcu
-+  * ingenic,x1000-tcu
-   followed by "simple-mfd".
- - reg: Should be the offset/length value corresponding to the TCU registers
- - clocks: List of phandle & clock specifiers for clocks external to the TCU.
+diff --git a/drivers/clocksource/ingenic-timer.c b/drivers/clocksource/ingenic-timer.c
+index 4bbdb3d..4963336 100644
+--- a/drivers/clocksource/ingenic-timer.c
++++ b/drivers/clocksource/ingenic-timer.c
+@@ -230,6 +230,7 @@ static const struct of_device_id ingenic_tcu_of_match[] = {
+ 	{ .compatible = "ingenic,jz4740-tcu", .data = &jz4740_soc_info, },
+ 	{ .compatible = "ingenic,jz4725b-tcu", .data = &jz4725b_soc_info, },
+ 	{ .compatible = "ingenic,jz4770-tcu", .data = &jz4740_soc_info, },
++	{ .compatible = "ingenic,x1000-tcu", .data = &jz4740_soc_info, },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -302,7 +303,7 @@ static int __init ingenic_tcu_init(struct device_node *np)
+ TIMER_OF_DECLARE(jz4740_tcu_intc,  "ingenic,jz4740-tcu",  ingenic_tcu_init);
+ TIMER_OF_DECLARE(jz4725b_tcu_intc, "ingenic,jz4725b-tcu", ingenic_tcu_init);
+ TIMER_OF_DECLARE(jz4770_tcu_intc,  "ingenic,jz4770-tcu",  ingenic_tcu_init);
+-
++TIMER_OF_DECLARE(x1000_tcu_intc,  "ingenic,x1000-tcu",  ingenic_tcu_init);
+ 
+ static int __init ingenic_tcu_probe(struct platform_device *pdev)
+ {
 -- 
 2.7.4
 
