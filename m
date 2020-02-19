@@ -2,144 +2,105 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A36C18DFF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D9FC169F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 19:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D802064C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28039206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 19:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582138929;
+	bh=ehY/IcmJlLWkLBLWPNZNlsP4wL/peyqF3cY50YkTKfI=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=KC3qhoOoDWsIhYi0EFLgBoBKePWaO/djAodLKF4TN8or5Pty1pL53bfbL/B8z+dk9
+	 j/HWKT5rLP+IbUcUCU5HLuOfZBCLqMQBuarF7UVmTVGFbVaf8Qn0jTxSPkq+faqKb0
+	 +Eltm0R2eSr8G6CLmjkjZjg8bIwYzawU+++l3r9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgBSS6l (ORCPT
+        id S1726756AbgBSTCE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:58:41 -0500
-Received: from nbd.name ([46.4.11.11]:57748 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbgBSS6l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:58:41 -0500
-Received: from [2a04:4540:1400:dd00:2cb7:e0af:5551:a051]
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <john@phrozen.org>)
-        id 1j4UYQ-00057x-UZ; Wed, 19 Feb 2020 19:58:39 +0100
-Subject: Re: [PATCH] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200219185226.1236-1-ansuelsmth@gmail.com>
-From:   John Crispin <john@phrozen.org>
-Message-ID: <3c2bdeaf-c54b-142b-367e-6573de700803@phrozen.org>
-Date:   Wed, 19 Feb 2020 19:58:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20200219185226.1236-1-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Feb 2020 14:02:04 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35983 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgBSTCE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 14:02:04 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 185so533021pfv.3;
+        Wed, 19 Feb 2020 11:02:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=DQ+8e/HKGBnHq6nvydGmkDGoz7qP42z+/5Gl8Bp1vXM=;
+        b=b6wsWYzz0dLWKsiIXsKzMSA8s/F1kQZcnl/azBTP3uXFetqwGwxg0zi2hINxAlbGG5
+         AGoGLGmbDDClNOR6h7xL7NuwrYNnP5hptLfCsinZ5TjnmsWvrfZR7MZ4S9dgkfZopV4g
+         uoK7rWn/ypObWivR/uuhDmWQJ2g24SMRt6LJoEAWKA60MBDJ6/BFzlIF1Farkf/PNNd+
+         6Rg1reTdDpnRNf6fPPhHrbS8EH36em39rbsNd5bE3zRmmoyUfA8SglrXNhRXYCG9+bv2
+         KVUDpxhrBVf1NXlCISkG2fPm0LSzTxxvmIvW1JqNSCfxkRo4fx5J4P8uh3i5+ciXxjVo
+         L74A==
+X-Gm-Message-State: APjAAAU/Ef9dre8PCrisnp+l7Eu6CReMAdJaxShl/5Cl7yNwTCLwQckb
+        tLrpPVYkYOuZIJuYQRDvzuA=
+X-Google-Smtp-Source: APXvYqz0zbVTnwXcEGrqgq+dh98mjID4Fk0tQbXlrqghd7SgO5JOQTS9S8t1iQSJu7hDmNsvT/X62g==
+X-Received: by 2002:a63:2254:: with SMTP id t20mr29921645pgm.423.1582138923106;
+        Wed, 19 Feb 2020 11:02:03 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id o16sm437367pgl.58.2020.02.19.11.02.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 11:02:02 -0800 (PST)
+Message-ID: <5e4d862a.1c69fb81.5dc73.17b5@mx.google.com>
+Date:   Wed, 19 Feb 2020 11:01:56 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     =?utf-8?b?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+CC:     linux-mips@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        paul@crapouillou.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        ralf@linux-mips.org, paulburton@kernel.org,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        dongsheng.qiu@ingenic.com
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH] MIPS: X1000: Fix clock of watchdog node.
+References:  <1581855028-25552-3-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To:  <1581855028-25552-3-git-send-email-zhouyanjie@wanyeetech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19/02/2020 19:52, Ansuel Smith wrote:
-> Add missing definition of rpm clk for ipq806x soc
-> 
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Thanks for sending this upstream,
-Acked-by: John Crispin <john@phrozen.org>
+Hello,
 
-> ---
->   .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
->   drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
->   include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
->   3 files changed, 40 insertions(+)
+周琰杰 (Zhou Yanjie) wrote:
+> The devicetree ABI was broken on purpose by commit 6d532143c915
+> ("watchdog: jz4740: Use regmap provided by TCU driver"), and
+> commit 1d9c30745455 ("watchdog: jz4740: Use WDT clock provided
+> by TCU driver"). The commit message of the latter explains why the ABI
+> was broken.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> index 944719bd586f..dd0def465c79 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> @@ -16,6 +16,7 @@ Required properties :
->   			"qcom,rpmcc-msm8974", "qcom,rpmcc"
->   			"qcom,rpmcc-apq8064", "qcom,rpmcc"
->   			"qcom,rpmcc-msm8996", "qcom,rpmcc"
-> +			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
->   			"qcom,rpmcc-msm8998", "qcom,rpmcc"
->   			"qcom,rpmcc-qcs404", "qcom,rpmcc"
->   
-> diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
-> index 9e3110a71f12..f71d228fd6bd 100644
-> --- a/drivers/clk/qcom/clk-rpm.c
-> +++ b/drivers/clk/qcom/clk-rpm.c
-> @@ -543,10 +543,45 @@ static const struct rpm_clk_desc rpm_clk_apq8064 = {
->   	.num_clks = ARRAY_SIZE(apq8064_clks),
->   };
->   
-> +/* ipq806x */
-> +DEFINE_CLK_RPM(ipq806x, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
-> +DEFINE_CLK_RPM(ipq806x, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
-> +DEFINE_CLK_RPM(ipq806x, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
-> +DEFINE_CLK_RPM(ipq806x, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
-> +DEFINE_CLK_RPM(ipq806x, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
-> +DEFINE_CLK_RPM(ipq806x, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
-> +DEFINE_CLK_RPM(ipq806x, nss_fabric_0_clk, nss_fabric_0_a_clk, QCOM_RPM_NSS_FABRIC_0_CLK);
-> +DEFINE_CLK_RPM(ipq806x, nss_fabric_1_clk, nss_fabric_1_a_clk, QCOM_RPM_NSS_FABRIC_1_CLK);
-> +
-> +static struct clk_rpm *ipq806x_clks[] = {
-> +	[RPM_APPS_FABRIC_CLK] = &ipq806x_afab_clk,
-> +	[RPM_APPS_FABRIC_A_CLK] = &ipq806x_afab_a_clk,
-> +	[RPM_CFPB_CLK] = &ipq806x_cfpb_clk,
-> +	[RPM_CFPB_A_CLK] = &ipq806x_cfpb_a_clk,
-> +	[RPM_DAYTONA_FABRIC_CLK] = &ipq806x_daytona_clk,
-> +	[RPM_DAYTONA_FABRIC_A_CLK] = &ipq806x_daytona_a_clk,
-> +	[RPM_EBI1_CLK] = &ipq806x_ebi1_clk,
-> +	[RPM_EBI1_A_CLK] = &ipq806x_ebi1_a_clk,
-> +	[RPM_SYS_FABRIC_CLK] = &ipq806x_sfab_clk,
-> +	[RPM_SYS_FABRIC_A_CLK] = &ipq806x_sfab_a_clk,
-> +	[RPM_SFPB_CLK] = &ipq806x_sfpb_clk,
-> +	[RPM_SFPB_A_CLK] = &ipq806x_sfpb_a_clk,
-> +	[RPM_NSS_FABRIC_0_CLK] = &ipq806x_nss_fabric_0_clk,
-> +	[RPM_NSS_FABRIC_0_A_CLK] = &ipq806x_nss_fabric_0_a_clk,
-> +	[RPM_NSS_FABRIC_1_CLK] = &ipq806x_nss_fabric_1_clk,
-> +	[RPM_NSS_FABRIC_1_A_CLK] = &ipq806x_nss_fabric_1_a_clk,
-> +};
-> +
-> +static const struct rpm_clk_desc rpm_clk_ipq806x = {
-> +	.clks = ipq806x_clks,
-> +	.num_clks = ARRAY_SIZE(ipq806x_clks),
-> +};
-> +
->   static const struct of_device_id rpm_clk_match_table[] = {
->   	{ .compatible = "qcom,rpmcc-msm8660", .data = &rpm_clk_msm8660 },
->   	{ .compatible = "qcom,rpmcc-apq8060", .data = &rpm_clk_msm8660 },
->   	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
-> +	{ .compatible = "qcom,rpmcc-ipq806x", .data = &rpm_clk_ipq806x },
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
-> diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-> index 8e3095720552..ae74c43c485d 100644
-> --- a/include/dt-bindings/clock/qcom,rpmcc.h
-> +++ b/include/dt-bindings/clock/qcom,rpmcc.h
-> @@ -37,6 +37,10 @@
->   #define RPM_XO_A0				27
->   #define RPM_XO_A1				28
->   #define RPM_XO_A2				29
-> +#define RPM_NSS_FABRIC_0_CLK			30
-> +#define RPM_NSS_FABRIC_0_A_CLK			31
-> +#define RPM_NSS_FABRIC_1_CLK			32
-> +#define RPM_NSS_FABRIC_1_A_CLK			33
->   
->   /* SMD RPM clocks */
->   #define RPM_SMD_XO_CLK_SRC				0
+> However, the current devicetree files were not updated to the new ABI
+> described in Documentation/devicetree/bindings/timer/ingenic,tcu.txt,
+> so the watchdog driver would not probe.
 > 
+> Fix this problem by updating the clock of watchdog node from
+> "&cgu X1000_CLK_RTCLK" to "&tcu TCU_CLK_WDT" to comply with the new
+> ABI.
+> 
+> Fixes: 7a16ccd300c2 ("[v8,1/4] MIPS: Ingenic: Add Ingenic X1000
+> support.").
 
+Applied to mips-fixes.
+
+> commit eb41113870c9
+> https://git.kernel.org/mips/c/eb41113870c9
+> 
+> Fixes: 7a16ccd300c2 ("[v8,1/4] MIPS: Ingenic: Add Ingenic X1000 support.").
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Signed-off-by: Paul Burton <paulburton@kernel.org>
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
