@@ -2,84 +2,78 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4DFC5ACC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB01C5ACC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D3C24670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CD021D56
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rWVv971t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgO2PZ3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgBSX1U (ORCPT
+        id S1726680AbgBSXhY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:27:20 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44962 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgBSX1U (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 18:27:20 -0500
-Received: by mail-pg1-f196.google.com with SMTP id g3so884661pgs.11;
-        Wed, 19 Feb 2020 15:27:20 -0800 (PST)
+        Wed, 19 Feb 2020 18:37:24 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:42141 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgBSXhY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 18:37:24 -0500
+Received: by mail-yw1-f68.google.com with SMTP id b81so1007918ywe.9;
+        Wed, 19 Feb 2020 15:37:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6JiFaz5iy9gmHgnooypOSxsxA0ut5ONuFdOKVlOwCFg=;
-        b=rWVv971tZXzMCXq1FdEk/AVgIB38nVbzCRKGwYiuo/d+7G/ZfKFWWWEOdUkzQ/rcZR
-         FxsuihZyd44JZAZFbtG/DgRR9Z8o66oMxnooTwsYlHEZLP3Q8zpBHhR4yNTltN2arc3g
-         k7f3MD8eJ4WroZ29wX5C7DK2Wx6uWwLS7nuo4wUtMJJ+oSfGRpOZzoMLQWpwQfUxj50K
-         2eYXiq49X9NpT/3abVPsfUm/mppohRwr0+jFNviQbuP70DpK+WFHSV++gGGuS7hUW1Pm
-         kPUoPHkvUuOQrN1ao6/20B0UFu8VUoYlFa0+O6BNoqQYPe9CMIP08rV72XtI3MOsr+Tb
-         u0aw==
+        bh=Orzy6eDvO44Ke7Q13dM0od3EjiBktCuUDbuSH/RXkbw=;
+        b=jgO2PZ3m52LdxQ7HUKo54WSwJAmkRB+fZTqgKFrKnkDDWMt2nfQPbpUxUPDWjTWpCL
+         ivKGgxXtFGtOpmFeBd6rHui9FEu0sYEG/KCcpqv6T84nFpEiJQimgzyzgBolnTPyKGZt
+         H2BNwX+iQamnXIfIGCgo8ZQ6wlm5QxF2faZW5nTfHaxSS9Oney3EC2pHN8cKBRbKrdZm
+         dVXC60aXsPSIhZgRRa4i/GudysFhIzOgdN+nW22U47A9M88JEWloIh+F6tuX8P3eFoqo
+         OSjeV1SCnojjACSK9EZf+lHI5nfT8InSR4T1D3nCqOoExgqYGOhCBJEj2wX1iKo+RmVU
+         DNhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6JiFaz5iy9gmHgnooypOSxsxA0ut5ONuFdOKVlOwCFg=;
-        b=tf04PCNHcxFESU3KD8K4XEjEBaulH2vysQnh5IoNq2QDsXAwii7H26GEe6+2dnIIFW
-         fMMHIFACCI0BJoG/0fNp2M5NpE2aBlDJ+KDuDh0LQUithUMoPiXficGcoNRT/a7D+btE
-         Cfx9Yt46T7XDOIbsOe8Y2HFA0aH4S+RfyWjLv3ShdDbAi5k7YaG5cgS9VHuUY7+6UkkJ
-         7sJdZJjNP/fLTL75z9EpN4SHJs+Vvgjr/wOkoaSW8cA4mXmiK7gnO8nUN0btRff517PS
-         1y+zkHIg6kJQC9yynwuBeiR2RQ4JPmA4r5e0txCbkGLar30hBphtEwtqCH1o0+2B7Pex
-         9MAg==
-X-Gm-Message-State: APjAAAVqx4AU9rL45BgHOMX6KMv+m3S5o+JFXfd1MmVvMm/YfQy21PSr
-        2W4l74q06id2ptjXQgDX+Ro=
-X-Google-Smtp-Source: APXvYqzq5to/NST8CWJIajv2bRAa9C+1cpIpDX1QKU7hisIV/jAiodj/ikTotObNse4EB9ovrbseUA==
-X-Received: by 2002:aa7:8bda:: with SMTP id s26mr29656770pfd.194.1582154839975;
-        Wed, 19 Feb 2020 15:27:19 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:a99d:cf29:8886:cbc? ([2001:4898:80e8:9:29ac:cf29:8886:cbc])
-        by smtp.gmail.com with ESMTPSA id w189sm682332pfw.157.2020.02.19.15.27.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 15:27:19 -0800 (PST)
-Subject: Re: [PATCH v11 1/2] dt-bindings: edac: dmc-520.yaml
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     James Morse <james.morse@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
-        ruizhao@microsoft.com, Lei Wang <lewan@microsoft.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>
-References: <5354a9c3-5b5a-486a-9d19-fa9be169faef@gmail.com>
- <20200217181055.GC14426@zn.tnic>
- <4c02326d-cf38-e1e1-1822-d24de22fa2cc@gmail.com>
- <20200219200358.GJ30966@zn.tnic>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <98d39c59-8ae0-0f7e-1bd4-3c83c1b6bee0@gmail.com>
-Date:   Wed, 19 Feb 2020 15:27:18 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        bh=Orzy6eDvO44Ke7Q13dM0od3EjiBktCuUDbuSH/RXkbw=;
+        b=oei7/6Y3iAQi1etPW2RJaIopW5W+E6qYeJe50JZADWnITu0EP/vo2aVjUwO/YF15M7
+         eC59+ONIdIU30f9zrSwJo0VWG22jQfqT5UEWBhCoqg9CBPda/MWggggdn0kxcYN488VX
+         /bl2YQ4wR0DbfSkc59ew83a40ONRa1d1bDWTcONHQdufftNg/dntP+IkDYWpZnuXAImz
+         H73xzi2C0XyplZGbjtprVh9E3k5urXrcDx6GF9zzLSVIU/vBbnWkUqJx1WA/T6+Akslu
+         0By9IIeUvaru9e+eMvMZtxgNHP8mvOo/yuf24iYbFh1xR7V1OEnL6EBeJke5b03qoBvD
+         lZ2Q==
+X-Gm-Message-State: APjAAAVp5e2NXC6Zs+dDZFH5zEip6dkTNsxh4sFfVRfpzFhPQPl09GlU
+        qnu9y+k+rFxEFFioXp2A4/s=
+X-Google-Smtp-Source: APXvYqzRXKQDTQ67CFUX8qautSExnmyWkTBqKK3Sejrsw0csxe/+Jd704xYLQR8q5t9xfi8k3WE4nw==
+X-Received: by 2002:a0d:e652:: with SMTP id p79mr22301622ywe.491.1582155442692;
+        Wed, 19 Feb 2020 15:37:22 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id b195sm745065ywh.80.2020.02.19.15.37.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Feb 2020 15:37:22 -0800 (PST)
+Subject: Re: [PATCH 1/2] of: unittest: add overlay gpio test to catch gpio hog
+ problem
+To:     Rob Herring <robh@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alan Tull <atull@kernel.org>
+References: <1580276765-29458-1-git-send-email-frowand.list@gmail.com>
+ <1580276765-29458-2-git-send-email-frowand.list@gmail.com>
+ <20200219215656.GA15842@bogus>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ff65f982-f71e-5bef-1811-fdb94fd7da2f@gmail.com>
+Date:   Wed, 19 Feb 2020 17:37:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200219200358.GJ30966@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200219215656.GA15842@bogus>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
@@ -87,19 +81,167 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/19/2020 12:03 PM, Borislav Petkov wrote:
-> On Tue, Feb 18, 2020 at 09:12:15AM -0800, Shiping Ji wrote:
->> Actually I didn't send v11 of the driver since it will be identical to v10,
->> sorry for keeping you waiting on this. Please review v10, thanks!
+On 2/19/20 3:56 PM, Rob Herring wrote:
+> On Tue, Jan 28, 2020 at 11:46:04PM -0600, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Geert reports that gpio hog nodes are not properly processed when
+>> the gpio hog node is added via an overlay reply and provides an
+>> RFC patch to fix the problem [1].
+>>
+>> Add a unittest that shows the problem.  Unittest will report "1 failed"
+>> test before applying Geert's RFC patch and "0 failed" after applying
+>> Geert's RFC patch.
 > 
-> Ok, both patches queued and will appear in linux-next soon.
-> 
-> Thanks for the effort and persistence!
-> 
-> :-)
+> What's the status of that? I don't want to leave the tests failing at 
+> least outside of a kernel release.
 
-Thanks a lot for the prompt action! This is great learning process for me :)
+I agree.  I would like to see my patches applied, showing the test fail,
+immediately followed by Geert's fix.  So my series should not go in
+until Geert's patch is ready.
 
---
-Best regards,
-Shiping Ji
+> 
+>>
+>> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>
+>> There are checkpatch warnings.
+>>   - New files are in a directory already covered by MAINTAINERS
+>>   - The undocumented compatibles are restricted to use by unittest
+>>     and should not be documented under Documentation
+>>   - The printk() KERN_<LEVEL> warnings are false positives.  The level
+>>     is supplied by a define parameter instead of a hard coded constant
+>>   - The lines over 80 characters are consistent with unittest.c style
+>>
+>> This unittest was also valuable in that it allowed me to explore
+>> possible issues related to the proposed solution to the gpio hog
+>> problem.
+>>
+>> changes since RFC:
+>>   - fixed node names in overlays
+>>   - removed unused fields from struct unittest_gpio_dev
+>>   - of_unittest_overlay_gpio() cleaned up comments
+>>   - of_unittest_overlay_gpio() moved saving global values into
+>>     probe_pass_count and chip_request_count more tightly around
+>>     test code expected to trigger changes in the global values
+>>
+>>  drivers/of/unittest-data/Makefile             |   8 +-
+>>  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
+>>  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
+>>  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
+>>  drivers/of/unittest.c                         | 255 ++++++++++++++++++++++++++
+>>  8 files changed, 372 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
+>>
+>> diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
+>> index 9b6807065827..009f4045c8e4 100644
+>> --- a/drivers/of/unittest-data/Makefile
+>> +++ b/drivers/of/unittest-data/Makefile
+>> @@ -21,7 +21,13 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtb.o \
+>>  			    overlay_bad_add_dup_prop.dtb.o \
+>>  			    overlay_bad_phandle.dtb.o \
+>>  			    overlay_bad_symbol.dtb.o \
+>> -			    overlay_base.dtb.o
+>> +			    overlay_base.dtb.o \
+>> +			    overlay_gpio_01.dtb.o \
+>> +			    overlay_gpio_02a.dtb.o \
+>> +			    overlay_gpio_02b.dtb.o \
+>> +			    overlay_gpio_03.dtb.o \
+>> +			    overlay_gpio_04a.dtb.o \
+>> +			    overlay_gpio_04b.dtb.o
+>>  
+>>  # enable creation of __symbols__ node
+>>  DTC_FLAGS_overlay += -@
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_01.dts b/drivers/of/unittest-data/overlay_gpio_01.dts
+>> new file mode 100644
+>> index 000000000000..f039e8bce3b6
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_01.dts
+>> @@ -0,0 +1,23 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_01 {
+> 
+> Missing unit address:
+> 
+> gpio@0
+
+But my changelog claimed that I fixed that, isn't that
+good enough?  :-)
+
+/me pulls big brown paper bag over head.
+
+And the same for all the issues you point out below, for the
+second patch version in a row.
+
+I'll re-spin on 5.6-rc1 and truly include the fixes.
+
+-Frank
+
+
+> 
+> 
+>> +		compatible = "unittest-gpio";
+>> +		reg = <0>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B";
+>> +
+>> +		line_b {
+> 
+> Don't use '_'.
+> 
+> line-b
+> 
+>> +			gpio-hog;
+>> +			gpios = <2 0>;
+>> +			input;
+>> +			line-name = "line-B-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_02a.dts b/drivers/of/unittest-data/overlay_gpio_02a.dts
+>> new file mode 100644
+>> index 000000000000..cdafab604793
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_02a.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_02 {
+> 
+> gpio@1
+> 
+> ...and a few more.
+> 
+>> +		compatible = "unittest-gpio";
+>> +		reg = <1>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B";
+>> +	};
+>> +};
+> 
+
