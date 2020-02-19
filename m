@@ -2,114 +2,92 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687CFC34022
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FBDC34022
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F3021D56
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF7824656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582147540;
+	bh=mfv/pL3ZEiWQQphjN9TDvanaEn6a7BTYp2d1xLoX0TY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ks40+v/O7GHJ8WpyxyDeJTWcI1qU4jg3F3mLj5MHfr/OlBrCftVe7Pr9ZGbEyCVwL
+	 VvNfpiiw4Qiic0rcKqkwoqG6hUp2nsykBirRtz+ovwB1pKC0dOJLe2RFPaceewIpwW
+	 FrhRGXBq+6N0P0Au8ZTUdGfttMqIqMx3hm6fOscM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgBSVRW (ORCPT
+        id S1727277AbgBSVZj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:17:22 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38990 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSVRW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 16:17:22 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id C31D428DE65
-Subject: Re: [RFC PATCH V5 0/3] media: support Mediatek sensor interface
- driver
-To:     Louis Kuo <louis.kuo@mediatek.com>, hans.verkuil@cisco.com,
-        laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org,
-        keiichiw@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc:     yuzhao@chromium.org, zwisler@chromium.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
-        sj.huang@mediatek.com, christie.yu@mediatek.com,
-        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
-        jungo.lin@mediatek.com, Rynn.Wu@mediatek.com,
-        linux-media@vger.kernel.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org,
-        "kernel@collabora.com" <kernel@collabora.com>
-References: <20200129081650.8027-1-louis.kuo@mediatek.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <f825b943-610e-ba19-cbfd-eea2dae2245f@collabora.com>
-Date:   Wed, 19 Feb 2020 18:17:10 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 19 Feb 2020 16:25:39 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39612 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgBSVZj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 16:25:39 -0500
+Received: by mail-oi1-f196.google.com with SMTP id z2so25332469oih.6;
+        Wed, 19 Feb 2020 13:25:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WCxKuFuKrKCmX1uT5gLX0bEHo5oCkRKj0kBnIt2u63M=;
+        b=JOSVdHoDopCv2+s+Gwxv8k25oW01alnL8rsEPehJdZHCBrqL0N80WwQoaaz9AHW+PA
+         0KO2TGqatqGX+qWzWK6Ryz4+hjS8pXRITKD+XuOEU6Q/wSmM58ReEZ7HhUIVKhdjbjfx
+         FuUiEXFh+IqFPfDpDIaNqb6C66p1SgPCpsXMiiOMyauDQPeERoteJE/0aVMhva7pz9iH
+         RwG4OjpVgFouZIJqeF2tYe1WXq+ea0zvjQ4C86r+Z3aUwuyP1lBOU9fEZQ1TkvfiN5TU
+         lut4ClkW9EvFxUPED+XC/CoftERkR7TeESHQwef9KmSUVquSpgsO1x84UwYtub7saS5V
+         6mng==
+X-Gm-Message-State: APjAAAUP8xlDO0zPHh0Oi2WmQyv2rmCffSrQdLRqHiuBrPVa05zKin/1
+        ANnlRhTbjx4VDl2map+z0w==
+X-Google-Smtp-Source: APXvYqwDVCsW3U1t+AEF60kSVA4s4dd6NUwHx6X/WAXPqRa5l1ABP+U4U73fvsww73PFx1TuvezuaA==
+X-Received: by 2002:a05:6808:b13:: with SMTP id s19mr5717061oij.119.1582147538427;
+        Wed, 19 Feb 2020 13:25:38 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j5sm321464otl.71.2020.02.19.13.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 13:25:37 -0800 (PST)
+Received: (nullmailer pid 29494 invoked by uid 1000);
+        Wed, 19 Feb 2020 21:25:36 -0000
+Date:   Wed, 19 Feb 2020 15:25:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Junho <djunho@gmail.com>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        michael.hennerich@analog.com, patrick.vasseur@c-s.fr,
+        alexandru.Ardelean@analog.com
+Subject: Re: [PATCH v2] dt-bindings: iio: adc: ad7923: Add binding
+ documentation for AD7928
+Message-ID: <20200219212536.GA29435@bogus>
+References: <20200218110647.24758-1-djunho@padtec.com.br>
 MIME-Version: 1.0
-In-Reply-To: <20200129081650.8027-1-louis.kuo@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218110647.24758-1-djunho@padtec.com.br>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Louis,
-
-On 1/29/20 6:16 AM, Louis Kuo wrote:
-> Hello,
+On Tue, 18 Feb 2020 08:06:47 -0300, Daniel Junho wrote:
+> From: Daniel Junho <djunho@gmail.com>
 > 
-> This is the RFC patch adding Sensor Inferface(seninf) driver on Mediatek mt8183 SoC, which will be used
-> in camera features on CrOS application.
-> It belongs to the first Mediatek's camera driver series based on V4L2 and media controller framework.
-> I posted the main part of the seninf driver as RFC to discuss first and would like some review comments
-> on the overall structure of the driver.
+> This patch add device tree binding documentation for AD7923 adc in YAML
+> format.
 > 
-> The driver is implemented with V4L2 framework.
-> 1. Register as a V4L2 sub-device.
-> 2. Only one entity with sink pads linked to camera sensors for choosing desired camera sensor by setup link
->    and with source pads linked to cam-io for routing different types of decoded packet datas to PASS1 driver
->    to generate sensor image frame and meta-data.
-
-If I understood correctly, the subdevice represents a bridge, with 4 sink pads and 8 source pads (12 total) right?
-And you can only route a sink to a source at a time and you can't use multiple sensors simultaneously, correct?
-
+> Signed-off-by: Daniel Junho <djunho@gmail.com>
+> ---
+> Changes in v2:
+> - Fix the license header to "GPL-2.0-only OR BSD-2-Clause";
+> - Change the Michael Hennerich email.
 > 
-> The overall file structure of the seninf driver is as following:
-> 
-> * mtk_seninf.c: Implement software and HW control flow of seninf driver.
-> * mtk_seninf_def.h: Define data structure and enumeration.
-> * mtk_seninf_reg.h: Define HW register R/W macros and HW register names.
-> 
-> [ V5: use recommended coding style, revise DT binding documentation]
-> 
->   media: platform: mtk-isp: Add Mediatek sensor interface driver
-
-It looks like patch 1/3 didn't reach linux-media mailing list
-    https://patchwork.linuxtv.org/project/linux-media/list/?series=1706
-I guess it's because of its size, you might need to break it into smaller patches.
-I see that mtk_seninf_reg.h is really big and not all of it is used, maybe you can split it up.
-
-
->   dt-bindings: mt8183: Add sensor interface dt-bindings
->   dts: arm64: mt8183: Add sensor interface nodes
-> 
->  .../bindings/media/mediatek-seninf.txt        |   66 +
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi      |   12 +
->  drivers/media/platform/Makefile               |    1 +
->  drivers/media/platform/mtk-isp/Kconfig        |   17 +
->  .../media/platform/mtk-isp/isp_50/Makefile    |    3 +
->  .../platform/mtk-isp/isp_50/seninf/Makefile   |    6 +
->  .../mtk-isp/isp_50/seninf/mtk_seninf.c        | 1112 +++
->  .../mtk-isp/isp_50/seninf/mtk_seninf_def.h    |   72 +
->  .../mtk-isp/isp_50/seninf/mtk_seninf_reg.h    | 7747 +++++++++++++++++
->  9 files changed, 9036 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.txt
->  create mode 100644 drivers/media/platform/mtk-isp/Kconfig
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf_def.h
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf_reg.h
+>  .../bindings/iio/adc/adi,ad7923.yaml          | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
 > 
 
-Thanks
-Helen
+Reviewed-by: Rob Herring <robh@kernel.org>
