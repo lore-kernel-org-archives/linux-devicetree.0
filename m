@@ -2,119 +2,91 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C586CC7619D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6314C5ACC4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCAA2464E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:07:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVlwwu2r"
+	by mail.kernel.org (Postfix) with ESMTP id ADAE72464E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582153941;
+	bh=uVdWup0wpgU3++rb54UglkWP9F1kJLPIbPV3Xzfyenk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kFzfYAPi3SMi414bYvvwdZ1+R5BbBryRDxXQIsB1XO0nPGFKH5YOKT0TO/ZY3aqoG
+	 Eoob1j0sr2XgxSHADoCXZ6XGt8sqPzR0b0G66oL1SNj0eYqTasu6IagPSq10OlMkfw
+	 peo2HxavLZpCb0yzwcHrBUHm6PliTtkeJZaM2VlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgBSXH3 (ORCPT
+        id S1726680AbgBSXMV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:07:29 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33019 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSXH3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 18:07:29 -0500
-Received: by mail-pj1-f66.google.com with SMTP id m7so532902pjs.0;
-        Wed, 19 Feb 2020 15:07:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B5o43CHmKfB5WT/Bs5/VID/7xQx6JihjpasEkUB+yOs=;
-        b=LVlwwu2rkRP+U/gcnGAWlcNcfA+6JKORjE8/L38OpwdFiGelOmo6w17KS+7ibVNib2
-         rEyBcUnyu5fthGLWHrZsPjtnO1icAuRgSCTOSGdE/d0RWlwE/4WiCfTL93rXLjvtmoLs
-         RkJ6avsnpFwhyQG9SW2ds6ZwKele4dS+ss1AtZGSc5ODWtSgW7hFCbeRpSIDFMJpX7Nn
-         sMRRwSwOMgsqE/4sR4XZQUol5oo/XDaEdeJCSxKPGyubYoYUyh9dXdRWFddflhaIz7tI
-         0tEyDjJjpUHCvJMLUlFJdz+NlJTmrYShgBw6Rb/6H8h0YV8WEucnjczz+r0TgP7mAYFQ
-         aZdQ==
+        Wed, 19 Feb 2020 18:12:21 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45494 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgBSXMV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 18:12:21 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v19so25592562oic.12
+        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 15:12:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B5o43CHmKfB5WT/Bs5/VID/7xQx6JihjpasEkUB+yOs=;
-        b=b9xQtNxuer3jjPS33X3Vy85/x8iZfzZr8Q7tGevx40zr4/Pz08iat7ZRSFHdQhKmXE
-         i2R4S3Xwx1X2vtklj4zeRqehlPWLD6MoBbhPVH43q1+83J1emduC2AL0HX47uY2H/0mY
-         waMeRt0aZ1rW3fmGO1xCa/1wS0Ry7fkk1oa9PSlVAvUNRACvazp0cQA0YCjR3fAoUtV1
-         +i89V4L3lR5mA9gkbCv4YZK0YT6Ugcwj7wTtzYjRpqfFTRHrmiAdO4SM1Ta7wqlUkP6B
-         6cfX/tF+I92Bfc6WHVSbyATcnGa1vwTFrKoOsIMUJMLtCI26CSPJO5xXKe2hVIxHF3vm
-         dPuA==
-X-Gm-Message-State: APjAAAUJcBo/Yt6w7CqInmAR8CnYFZCCXa+ccCfPjwqSjYD03VjIeNR6
-        dAY0yNzWEKEcoSyoCHrvG/vvnaOE
-X-Google-Smtp-Source: APXvYqwpMjAjqEhaKlm6LiE6pYaPBSJevu7vlGaTS9CdaYgi3tTDQegz/tQhdvJCwx8x1LHozv9rEQ==
-X-Received: by 2002:a17:902:9a8f:: with SMTP id w15mr29521500plp.30.1582153648341;
-        Wed, 19 Feb 2020 15:07:28 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 76sm679118pfx.97.2020.02.19.15.07.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Feb 2020 15:07:27 -0800 (PST)
-Date:   Wed, 19 Feb 2020 15:07:27 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Henry Shen <henry.shen@alliedtelesis.co.nz>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        guillaume.ligneul@gmail.com, jdelvare@suse.com, trivial@kernel.org,
-        venture@google.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] hwmon: (lm73) Add support for of_match_table
-Message-ID: <20200219230726.GA9285@roeck-us.net>
-References: <20200212030615.28537-1-henry.shen@alliedtelesis.co.nz>
- <20200212030615.28537-3-henry.shen@alliedtelesis.co.nz>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CLPRmzON2R02+/ZY31sqBcy//1vfhbocYVY0OJmPA7Q=;
+        b=dWULPtMSt2p46BK8w2P+M3Sk+hE8/WkMuzgA/jVDNMMIYj5QPN+C8Q61Ub6jSaPkKI
+         eN9sbFGL7CQBoFW9xa6G+FpyIVWPJ5r5MZVa0t1wcKdU4zuURjOjplTV78c8ep7kAVeg
+         ow1ewHXvIFQj2iQSfg8TIqaFrLa8uvn8O6YrUsHcM66mM+oHruw2TGKtbSJTUIyWHyuX
+         RhTT8uDOazCvOv0i6O7UbbSyG6UGXmHdx6Tu8Oj8xeRFvDm8OaDO4oWvSCwvpvC9gF5z
+         iEgOWKQDqNp8GjBOHenkg76vGY84340QrjOoYREu9G3CIB9f8dqWJEkUe/6I1afse2KY
+         jy6A==
+X-Gm-Message-State: APjAAAWglRuVBtRq5NUGLUCI+7CqD3DXxVmGOEqvKvbswh8GGHz8cc6O
+        cR+i7D4RhTffLdB1P9MNlA==
+X-Google-Smtp-Source: APXvYqyH6dHK8cr/NZ+DC/49bIcKPOlYG+691fjOnLj0uJTTKRot/Tcf71eVud11ZtmHjyKBDuPNUA==
+X-Received: by 2002:a54:4418:: with SMTP id k24mr77122oiw.46.1582153940062;
+        Wed, 19 Feb 2020 15:12:20 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h15sm420269otq.67.2020.02.19.15.12.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 15:12:19 -0800 (PST)
+Received: (nullmailer pid 17648 invoked by uid 1000);
+        Wed, 19 Feb 2020 23:12:18 -0000
+Date:   Wed, 19 Feb 2020 17:12:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] dt-bindings: panel: lvds: Add properties for clock
+ and data polarities
+Message-ID: <20200219231218.GA24409@bogus>
+References: <cover.b12a054012ce067fa2094894147f953ab816d8d0.1581682983.git-series.maxime@cerno.tech>
+ <620a740cec4186177ce346b092d4ba451e1420dc.1581682983.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212030615.28537-3-henry.shen@alliedtelesis.co.nz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <620a740cec4186177ce346b092d4ba451e1420dc.1581682983.git-series.maxime@cerno.tech>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 04:06:15PM +1300, Henry Shen wrote:
-> Add the of_match_table.
-> 
-> Signed-off-by: Henry Shen <henry.shen@alliedtelesis.co.nz>
+On Fri, Feb 14, 2020 at 01:24:39PM +0100, Maxime Ripard wrote:
+> Some LVDS encoders can support multiple polarities on the data and
+> clock lanes, and similarly some panels require a given polarity on
+> their inputs. Add a property on the panel to configure the encoder
+> properly.
 
-Applied to hwmon-next.
+If the panel requires a specific setting, then that can be implied by 
+the panel's compatible. Does Boris' format constraint solving series 
+help here?
 
-Thanks,
-Guenter
-
-> ---
-> Change in v2:
-> - add missing sign-off
-> 
->  drivers/hwmon/lm73.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/hwmon/lm73.c b/drivers/hwmon/lm73.c
-> index 1eeb9d7de2a0..733c48bf6c98 100644
-> --- a/drivers/hwmon/lm73.c
-> +++ b/drivers/hwmon/lm73.c
-> @@ -262,10 +262,20 @@ static int lm73_detect(struct i2c_client *new_client,
->  	return 0;
->  }
->  
-> +static const struct of_device_id lm73_of_match[] = {
-> +	{
-> +		.compatible = "ti,lm73",
-> +	},
-> +	{ },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, lm73_of_match);
-> +
->  static struct i2c_driver lm73_driver = {
->  	.class		= I2C_CLASS_HWMON,
->  	.driver = {
->  		.name	= "lm73",
-> +		.of_match_table = lm73_of_match,
->  	},
->  	.probe		= lm73_probe,
->  	.id_table	= lm73_ids,
+Rob
