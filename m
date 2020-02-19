@@ -2,96 +2,141 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52257C3404D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 07:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFCCC34022
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A86221D56
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 07:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D91208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q9i5Ygiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgBSHeD (ORCPT
+        id S1726779AbgBSHkc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:34:03 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:35050 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726772AbgBSHeC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:34:02 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 8FF63E0071;
-        Wed, 19 Feb 2020 07:34:14 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id HN17adJcV5R0; Wed, 19 Feb 2020 07:34:13 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 1EE14E0046;
-        Wed, 19 Feb 2020 07:34:13 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2QCWGCc6_F_A; Wed, 19 Feb 2020 07:34:12 +0000 (UTC)
-Received: from furthur.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 7C773DFCA2;
-        Wed, 19 Feb 2020 07:34:12 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 00/10] MMP2 CLK Update
-Date:   Wed, 19 Feb 2020 08:33:43 +0100
-Message-Id: <20200219073353.184336-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.24.1
+        Wed, 19 Feb 2020 02:40:32 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42636 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgBSHkc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 02:40:32 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01J7eCE9039727;
+        Wed, 19 Feb 2020 01:40:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582098012;
+        bh=VaG7B2bGbHNlAfHLv9Ip0v42uYVXRIDKNvFcIuScbYw=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=q9i5Ygiz8OfuCBFhUGMe5KWJiArr5HftFtDaiDyPd8HHxDwgKm72sQr0xugcN/br8
+         ps8KUzpV5mUHKnGTRgSx3FzpCJRLcRtGfWmCiikxWPp2LM0OfZq+DSMBfjubxPSH27
+         ql4N0DeM6myYiGZ/U4xofSz7POyS03Ap7TYflsUU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01J7eCWc120603
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Feb 2020 01:40:12 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
+ Feb 2020 01:40:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 19 Feb 2020 01:40:11 -0600
+Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01J7e8tQ093251;
+        Wed, 19 Feb 2020 01:40:08 -0600
+From:   Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: thermal: k3: Add VTM bindings
+ documentation
+To:     Rob Herring <robh@kernel.org>
+CC:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
+        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>,
+        <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <mark.rutland@arm.com>
+References: <20200214063443.23589-1-j-keerthy@ti.com>
+ <20200214063443.23589-2-j-keerthy@ti.com> <20200218202048.GA32279@bogus>
+Message-ID: <6895cf5e-9195-c914-f4ce-a83f36027dbf@ti.com>
+Date:   Wed, 19 Feb 2020 13:10:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200218202048.GA32279@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-please consider applying this patch series. Its goal is to ultimately
-provide accurate clock sources from PLLs configured by firmware on MMP2 a=
-nd
-MMP3. Currently they are hardcoded to more or less wrong values, which
-causes bad timings when they are use (e.g. to generate display clock).
 
-It starts off with a handful of cleanups:
+On 19/02/20 1:50 am, Rob Herring wrote:
+> On Fri, 14 Feb 2020 12:04:40 +0530, Keerthy wrote:
+>> Add VTM bindings documentation. In the Voltage Thermal
+>> Management Module(VTM), K3 AM654 supplies a voltage
+>> reference and a temperature sensor feature that are gathered in the band
+>> gap voltage and temperature sensor (VBGAPTS) module. The band
+>> gap provides current and voltage reference for its internal
+>> circuits and other analog IP blocks. The analog-to-digital
+>> converter (ADC) produces an output value that is proportional
+>> to the silicon temperature.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>
+>> Changes in v2:
+>>
+>>    * Fixed make dt_binding_check errors.
+>>
+>>   .../bindings/thermal/ti,am654-thermal.yaml    | 57 +++++++++++++++++++
+>>   1 file changed, 57 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> Error: Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dts:21.41-42 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1237882
+> Please check and re-submit.
 
-  [PATCH 01/10] clk: mmp2: Remove a unused prototype
-  [PATCH 02/10] clk: mmp2: Constify some strings
-  [PATCH 03/10] dt-bindings: clock: Convert marvell,mmp2-clock to
+Rob,
 
-The next patch adds the logic for calculating the rate of clock signals
-coming from the PLLs dynamically, while not actually switching the
-driver over to using it.
+I am using:
 
-  [PATCH 04/10] clk: mmp2: Add support for PLL clock sources
+Tree: https//github.com/devicetree-org/dt-schema.git
+branch: master
 
-Then MMP2 is switched over:
+I have make dt_binding_check working for 
+Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml
 
-  [PATCH 05/10] clk: mmp2: Stop pretending PLL outputs are constant
+Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dts
+is created without any errors :
 
-Switching MMP3 requires some more work, because until now, the driver
-has been the same for both versions of the SoC:
+https://pastebin.ubuntu.com/p/6MkMbKPpbY/
 
-  [PATCH 06/10] dt-bindings: clock: Add MMP3 compatible string
-  [PATCH 07/10] clk: mmp2: Check for MMP3
-  [PATCH 08/10] dt-bindings: marvell,mmp2: Add clock ids for MMP3 PLLs
-  [PATCH 09/10] clk: mmp2: Add PLLs that are available on MMP3
-  [PATCH 10/10] ARM: dts: mmp3: Use the MMP3 compatible string for
+I did not see any errors as the other files erred out.
 
-The hardware vendor doesn't supply documentation, so this is best-effort
-work based on the code dump from Marvell.
+Today i tried with DT_SCHEMA_FILES option and then finally reproduced 
+the errors. It is a bit confusing for the first time users.
 
-Tested on MMP2 and MMP3 based hardware I have; details in relevant
-commit messages.
+Now i have it compiled without any errors.
 
-Thank you,
-Lubo
+Posting v3 in a bit.
 
+- Keerthy
+
+
+> 
