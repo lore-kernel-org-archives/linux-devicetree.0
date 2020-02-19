@@ -2,167 +2,210 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520DFC34047
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D51C34051
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276142176D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EEB24671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M2b7jxAk"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="blZr4D+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgBSO3h (ORCPT
+        id S1727930AbgBSOej (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:29:37 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42204 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgBSO3h (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 09:29:37 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JETO18039703;
-        Wed, 19 Feb 2020 08:29:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582122564;
-        bh=We7nvfpRqSLcKVgr+VzwP/JnzIrFTf8St4dXLUroBqM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=M2b7jxAkvjhmjSTqvA/H9j6yCx0Snsx38uP9U/Kir7rGkrmtbmRmUjw13a19ZAaUX
-         ScrlHLKO+t/K6lgeMrbvfiOqCaDVOmuwQQ7OS0mHz27q1RLqP7vP8L5geh7XLQSVy6
-         BTW/3OxGeVsW4RouwIypjMzjQAFl+4b+2/v39itU=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JETOHr099749
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Feb 2020 08:29:24 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
- Feb 2020 08:29:23 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 19 Feb 2020 08:29:23 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JETKXJ008768;
-        Wed, 19 Feb 2020 08:29:21 -0600
-Subject: Re: dma_mask limited to 32-bits with OF platform device
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
- <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
- <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
- <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
- <20200217132133.GA27134@lst.de> <b3c56884-128e-a7e1-2e09-0e8de3c3512d@ti.com>
- <CAL_JsqLxECRKWG3SoORADtZ-gVbqCHyx9mhGzrCPO+X=--w8AQ@mail.gmail.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <15d0ac5f-4919-5852-cd95-93c24d8bdbb9@ti.com>
-Date:   Wed, 19 Feb 2020 16:29:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLxECRKWG3SoORADtZ-gVbqCHyx9mhGzrCPO+X=--w8AQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Wed, 19 Feb 2020 09:34:39 -0500
+Received: from mail-eopbgr50044.outbound.protection.outlook.com ([40.107.5.44]:36455
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727720AbgBSOei (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 09:34:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JB5XzE1SbseyvB45bjALNp6F2Dy1X5NdyU1pRH+cCxg2cmZpu2koe93Zny0znB80F7T+8IeLk73VOsPOlm1hgeODcVUXuyEJCC/QDSKNSOCUCrPtXVYA0OjBGG5ABQuHaYdTqVpCz9/Cfs/d3ADqz97KSd5aRLOuHhFF/+ityR3o3e1yBSWrbL8KT3tnU4oViVx9bQJ8ivyo9z5ockBRELpbBSfndnrD9rtUC8N1LLgFOj7I+PW63pCRMUaHVYXTCfOCTFQBUqeFAikwAfgZr6vHdrpnoiNReGg2N8dtAacuKNegM8rRp4i9uaycZjNyzjuPaAAYLcCSKVOKydyYow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+dCN5LQEx4h/uxxp39Cw1akoKKywbQL1tX6ulA8JmO0=;
+ b=a5FvQ2OIN9AovOgdmaZjZWBANQsPJTiPT3HfAxk6mOvLOrwtYBpOIqKkXL2kAMUaql9/QOF2cGCnxA3kiuQXd8Q++lrV/Gwahnu515kY0dxB4rxidB1LjYhkUqQ8iNcZsKdW4grKriHqkj3RYgR18rRkAhBH24C13r7cZeeXVBvizSgAxC6vwZWIflg/Ajb4hWYjFxOdzieMcHIW510KNiQ1SoCzwPwgks8yfcaczzJ4YcBuS70HJwGeIN5sxcsSV4Lm9NerCOIK6ZXPX7oqcKVfHyOO136EFyK4dIVgRTBL14KrT/e78S42+pE5xGR2BWYUh7Z0ggN77iymzCOsEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+dCN5LQEx4h/uxxp39Cw1akoKKywbQL1tX6ulA8JmO0=;
+ b=blZr4D+9KlX0HpBZvqurJgXSo7b6eP0o5zyuI70P5LO0xIOs/ZAEkleKpocX35gxF7n06VLWyds9TUqISnbf4bdDE8619OKMXNI1HjMAFP3a4YdLMBpVu7ObRwKLF4AkRkIXlfmLuM/tZCMBg+sYUw53zujnwiMipmVswL6NhaU=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6322.eurprd04.prod.outlook.com (20.179.35.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Wed, 19 Feb 2020 14:34:32 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 14:34:32 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "ohad@wizery.com" <ohad@wizery.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/9] dt-bindings: remoteproc: Convert imx-rproc to
+ json-schema
+Thread-Topic: [PATCH 1/9] dt-bindings: remoteproc: Convert imx-rproc to
+ json-schema
+Thread-Index: AQHV5vbonmiG8tzofUyTMtjSu9BVs6gijm6AgAAGNCA=
+Date:   Wed, 19 Feb 2020 14:34:32 +0000
+Message-ID: <AM0PR04MB44814713955807D7BB3E2CD088100@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+ <1582097265-20170-2-git-send-email-peng.fan@nxp.com>
+ <20200219140921.GA7031@bogus>
+In-Reply-To: <20200219140921.GA7031@bogus>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e68f2695-4a4c-4f16-3b9c-08d7b548d5f0
+x-ms-traffictypediagnostic: AM0PR04MB6322:|AM0PR04MB6322:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6322ADB1B9576FD04B104F1188100@AM0PR04MB6322.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0318501FAE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(366004)(396003)(346002)(136003)(376002)(39860400002)(189003)(199004)(7696005)(66476007)(66446008)(64756008)(66556008)(76116006)(26005)(316002)(45080400002)(33656002)(6916009)(54906003)(966005)(4326008)(86362001)(55016002)(7416002)(81166006)(9686003)(44832011)(5660300002)(478600001)(6506007)(81156014)(71200400001)(8936002)(8676002)(66946007)(186003)(52536014)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6322;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sjxLEs/B6syH+EZZGuKAMDHGoUoQr0HYMHBfg1FsNKGA7kzv2XQgoUKTNP0WkgQcyn92hNpg91Vikz4yPBfvbmxlt8HQ7Dp4qAqZqFcztuau0Wg5wcvRt4fqU77mD/7womp2lNl/OrZzxTnT4MBuTOhULCRNKaVZ6WrERXtlmtTUxGz2lR7WyQcX/3qEpB8CuBrXlECNBfImWKiGfrOHJRmdoQHrn11Delwv6njVg1E8SohoWsf/6A2nx8dJpbzs5oeLanJf7XZtkH9mhmY3jRek9ka8xO1i2Mgd02TJsAccjPn2nFSU6IrRTvxelucEzYzCMdx3drZbqgOBkjEqPSqjFZUtTThM5osnlQyedXoAw39x4AOOUGfDbJZ/1cNyK3DvZi82RpTUUH1G7HMXblV3o3UyWKEo7Ts3rcbz1rQeN0Px7ouEbaXbSToHl/ZLikd8sE6RuS/ldj9GFF1EDpcUkbEqKX0iJmZaDIjHiiEmyz8T6Uz/mR/rAUjZxTALDSzM6EP6j5H45MSBTc4L7OcW0MveQBbuozIqeNe5R8LbrCJ+qo1+WKCkHQuyJKpNzpQhNXkDED2iuZpaXM8/7nMd/p/jrdaKhzi5GUaIxFTIlObxBbY2O9fyJaPqYQrT
+x-ms-exchange-antispam-messagedata: +P9Jjo/cZIRFqbLJRLTqG4hbJdY+KZcusJLnrosxf3vM4qT2/cAY3i6rMQZhp5tQgVs+8tK/LiS43ePYSdnst7SkX5Z4qjnnkiEriC5sGitRGskfs+hA8PuGQuw02pnnuKvKjqY+XKzjbqFrSWEFmg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e68f2695-4a4c-4f16-3b9c-08d7b548d5f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 14:34:32.7028
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Zhs0zi/AqxjfozAAghbFaSCupEM67q4EBEcVTDf+fsl3FKt1j92tNHJjrkt1pufKGcAnE99gXgKiAEgrA0dq4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6322
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob,
+Hi Rob,
 
-On 18/02/2020 19:22, Rob Herring wrote:
-> On Tue, Feb 18, 2020 at 2:28 AM Roger Quadros <rogerq@ti.com> wrote:
->>
->> Chrishtoph,
->>
->> The branch works fine for SATA on DRA7 with CONFIG_LPAE once I
->> have the below DT fix.
->>
->> Do you intend to send these fixes to -stable?
->>
->> ------------------------- arch/arm/boot/dts/dra7.dtsi -------------------------
->> index d78b684e7fca..853ecf3cfb37 100644
->> @@ -645,6 +645,8 @@
->>                  sata: sata@4a141100 {
->>                          compatible = "snps,dwc-ahci";
->>                          reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
->> +                       #size-cells = <2>;
->> +                       dma-ranges = <0x00000000 0x00000000 0x1 0x00000000>;
-> 
-> dma-ranges should be in the parent (bus) node, not the device node.
+> Subject: Re: [PATCH 1/9] dt-bindings: remoteproc: Convert imx-rproc to
+> json-schema
+>=20
+> On Wed, 19 Feb 2020 15:27:37 +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > Convert the i.MX remoteproc binding to DT schema format using
+> > json-schema
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 33 ------------
+> >  .../devicetree/bindings/remoteproc/imx-rproc.yaml  | 61
+> > ++++++++++++++++++++++
+> >  2 files changed, 61 insertions(+), 33 deletions(-)  delete mode
+> > 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
+> >
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
 
-I didn't understand why.
+My command:
+make dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/r=
+emoteproc/imx-rproc.yaml
 
-There are many devices on the parent bus node and all devices might not have the 32-bit DMA limit
-the SATA controller has.
+and output:
 
-SATA controller is the bus master and the ATA devices are children of the SATA controller.
+  CHKDT   Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+  DTC     Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dt=
+.yaml
+  CHECK   Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dt=
+.yaml
 
- From Documentation/devicetree/booting-without-of.txt
+>=20
+> warning: no schema found in file:
+> Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/rem
+> oteproc/imx-rproc.yaml: ignoring, error in schema: properties: clocks: it=
+ems
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:
+> 21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen
+> node must be at root node
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/rem
+> oteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-processor
+> (See': '../clock/clock-bindings.txt)'} is not valid under any of the give=
+n
+> schemas (Possible causes of the failure):
+> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/
+> remoteproc/imx-rproc.yaml: properties:clocks:items: Additional properties
+> are not allowed ('Clock for co-processor (See' was unexpected)
+>=20
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/rem
+> oteproc/imx-rproc.yaml: properties:clocks: {'items': {'Clock for co-proce=
+ssor
+> (See': '../clock/clock-bindings.txt)'}} is not valid under any of the giv=
+en
+> schemas (Possible causes of the failure):
+> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/
+> remoteproc/imx-rproc.yaml: properties:clocks: 'maxItems' is a required
+> property
+> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/
+> remoteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-proces=
+sor
+> (See': '../clock/clock-bindings.txt)'} is not valid under any of the give=
+n
+> schemas (Possible causes of the failure):
+>=20
+> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/
+> remoteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-proces=
+sor
+> (See': '../clock/clock-bindings.txt)'} is not of type 'array'
+>=20
+>=20
+> Documentation/devicetree/bindings/Makefile:12: recipe for target
+> 'Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dts'
+> failed
+> make[1]: ***
+> [Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dts]
+> Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
 
-* DMA Bus master
-Optional property:
-- dma-ranges: <prop-encoded-array> encoded as arbitrary number of triplets of
-         (child-bus-address, parent-bus-address, length). Each triplet specified
-         describes a contiguous DMA address range.
-         The dma-ranges property is used to describe the direct memory access (DMA)
-         structure of a memory-mapped bus whose device tree parent can be accessed
-         from DMA operations originating from the bus. It provides a means of
-         defining a mapping or translation between the physical address space of
-         the bus and the physical address space of the parent of the bus.
-         (for more information see the Devicetree Specification)
+I'll check, and after get comments for other patches will send out v2.
 
-* DMA Bus child
-Optional property:
-- dma-ranges: <empty> value. if present - It means that DMA addresses
-         translation has to be enabled for this device.
-- dma-coherent: Present if dma operations are coherent
+Thanks,
+Peng.
 
-
-
-> 
->>                          interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->>                          phys = <&sata_phy>;
->>                          phy-names = "sata-phy";
->>
->>
->> cheers,
->> -roger
->>
->> On 17/02/2020 15:21, Christoph Hellwig wrote:
->>> Roger,
->>>
->>> can you try the branch below and check if that helps?
->>>
->>>       git://git.infradead.org/users/hch/misc.git arm-dma-bus-limit
->>>
->>> Gitweb:
->>>
->>>       http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/arm-dma-bus-limit
->>>
->>
->> --
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
--- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>=20
+> See
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch
+> work.ozlabs.org%2Fpatch%2F1240544&amp;data=3D02%7C01%7Cpeng.fan%40
+> nxp.com%7C28b6280f1e8d4cd48fff08d7b5455348%7C686ea1d3bc2b4c6fa92
+> cd99c5c301635%7C0%7C0%7C637177181663776763&amp;sdata=3DXfOrYdrVi
+> qB4jwZRjPFLM82Zz5BjTZQF7gNohDOcOCw%3D&amp;reserved=3D0
+> Please check and re-submit.
