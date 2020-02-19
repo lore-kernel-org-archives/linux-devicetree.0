@@ -2,97 +2,438 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C67DC34056
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75789C34056
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F1A207FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369F924670
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfNCQIIH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnWvR2uL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbgBSUm3 (ORCPT
+        id S1727462AbgBSU4X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:42:29 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42542 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSUm3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 15:42:29 -0500
-Received: by mail-il1-f193.google.com with SMTP id x2so12950779ila.9;
-        Wed, 19 Feb 2020 12:42:27 -0800 (PST)
+        Wed, 19 Feb 2020 15:56:23 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40423 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgBSU4W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 15:56:22 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t14so2177244wmi.5;
+        Wed, 19 Feb 2020 12:56:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xMDNRqXigFwE5mAPTxNYoRMwFlx8Rk5qiR4uZXsscw4=;
-        b=qfNCQIIH2j6wCkLKQ2mqWetFZntTRzqNjtBUM8anjzkPqf4Ynd0oWZWBb6hyrQPdCF
-         uN3+mto+zq5HiY0xnelQ4PTO7z5fp0Jptf5qhcMwXW26QHdu1ppBMrN3gLdBGvkz9+7T
-         uRGr6xPSZ2CPQYBvje7dwuPnzGTMvObbihSz3JgDRUVY/mlY9r1FmcAbwILshnrGxHoV
-         YQ7XIWi0j7DxuapC2Mxf0BgFsQfhqPDfPdS4oL0kZVxd1wsk1YdXR26HaffZljlbj16u
-         HGigXFMIMG0GQvDQ1WBnBaABCa1Y1CGM0wnxF/ut7KE88BxGE0dzo71L5H0o2zyYBRH3
-         /9hw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sMk/Y7Fqu98LytrpnZeBf0vMkusEQQP/lCvCtTwXUs4=;
+        b=SnWvR2uLDPWet7/2PIuVvUdACeAf9w4tf8I4HzlAQTQlLQF+jcgy30Tq1+E7pia9gh
+         sica45qA6OJq1ISNn92a+TmCHsqkjqNhfKokg3RipXZy1coAlVgEPwdplQVtETwxirvy
+         jtqpnDf3LJ4EV2oaqudxyrIWf4SKkWb4GhOckvw7LOEoviG6gz7U8HVNV4mjUPkHF3Mi
+         FmnNqHICSMV8EjAjAIlHxB+hoqjWjlgvtFtR4LuimT/s/n1a+la2mPHqS46uzvt25OQR
+         txz9vDC/jtfA7ZfiXFEYBN6LlH5+mFCZvjkJW/8T6WHkzgmLUbsOz6J0xWCf5xHXmSL6
+         et+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xMDNRqXigFwE5mAPTxNYoRMwFlx8Rk5qiR4uZXsscw4=;
-        b=Zqt/maHMHrjlYLj1DRb19O1RYnSCUOdo3R2aXSoZCT5MXyulP0P0zJ520p03SI93zB
-         4c1gbX+96TVxfwSc+eCB7op+bO4hX8MkLc23BMyvDGLj6cT2ABvk5gP2ze9vkA8o84pc
-         qlvUIC1JGYyvH+wWAuHF66sDurWk12X7eQJOTqyyodH4h/cJMaAOtl6/KoqqovisZY5J
-         Qwb2aHbz0ZKzV5h//F+yS/T9KD7WYKcKnhUhR8A2MWTcqhbIjwJyw4KYdbOB7icguLX+
-         /8R5EGpf2lUTeyvvuQuZ2j17NF4DiKbun46KJfvLEZz7xVubiNP6Y2hKl6gxA7nqePxP
-         TOrw==
-X-Gm-Message-State: APjAAAUJJnuAe+hG2YWkwPSuXHZqmhMEpYKy0Fv0jqdflwRmrrcIUYLx
-        7vXKtrI3jdjnUoajnrq4M0Q=
-X-Google-Smtp-Source: APXvYqxamlA1ssz9lk4Vdd4EvOofQze/gD2b+EfZA1Xkq+0ovJF0gt8l+vaKreCew2We51oCAM8OcA==
-X-Received: by 2002:a92:35c9:: with SMTP id c70mr26726162ilf.79.1582144947299;
-        Wed, 19 Feb 2020 12:42:27 -0800 (PST)
-Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
-        by smtp.gmail.com with ESMTPSA id l81sm305023ild.87.2020.02.19.12.42.26
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sMk/Y7Fqu98LytrpnZeBf0vMkusEQQP/lCvCtTwXUs4=;
+        b=nrzXw/PxZ+OBKP6SckER/zdcxgNtd77tVJJZIsUq330ChYKi8NI4kBBft1VsG3CVBn
+         v07XxySYSUgu//kT4EOC9U+7lN8M3vUynepfbJQ8TTj81rej1LZuwstwh/kTLD3MfUTA
+         k0DDvA2ga89rceZXHm1Mkpauasxg/81PtJ9I4y6eVOZHkgDGt8BltafMHREdd2V4hOPm
+         oyhrjwU6kl1Pjx0WgbvcJmbv/vxyxk2/4SStDGpHQSA+P6/NH67STSdntpK5DAeILgGQ
+         0cfj9RqrBEGiYh1Ae/+quv8Irkj54E8nzFCH6UEaO8VjCe3VYWJ6ISZd+irNVSoGy+iX
+         ooOQ==
+X-Gm-Message-State: APjAAAWe4/y+vW2QQceECE9F2wbKLu1B/Zjjl4+X1fLc0s/pmqoklNg+
+        SMCdQINmsGrjnt4b2pbcwhCvU5RlvO0=
+X-Google-Smtp-Source: APXvYqxfBKxU+0cLJYYZ4YvZ4KGKqVu8uWMSazJl/G4F1CmgKyg5eUtgqIK+6jG9VFrqiew9xXIt+g==
+X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr12116795wml.138.1582145778806;
+        Wed, 19 Feb 2020 12:56:18 -0800 (PST)
+Received: from Ansuel-XPS.localdomain ([5.170.106.116])
+        by smtp.googlemail.com with ESMTPSA id v15sm1435093wrf.7.2020.02.19.12.56.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:42:26 -0800 (PST)
-From:   Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Joshua Watt <JPEWhacker@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        Wed, 19 Feb 2020 12:56:17 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Sricharan R <sricharan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilia Lin <ilia.lin@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] ARM: dts: rockchip: Keep rk3288-tinker SD card IO powered during reboot
-Date:   Wed, 19 Feb 2020 14:42:20 -0600
-Message-Id: <20200219204224.34154-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cpufreq: qcom: Add support for krait based socs
+Date:   Wed, 19 Feb 2020 21:55:45 +0100
+Message-Id: <20200219205546.6800-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-IO voltage regulator for the SD card must be kept on all the time,
-otherwise when the board reboots the SD card can't be read by the
-bootloader.
+In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
+that has KRAIT processors the voltage/current value of each OPP
+varies based on the silicon variant in use.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+The required OPP related data is determined based on
+the efuse value. This is similar to the existing code for
+kryo cores. So adding support for krait cores here.
+
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- arch/arm/boot/dts/rk3288-tinker.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/opp/qcom-nvmem-cpufreq.txt       |   3 +-
+ drivers/cpufreq/Kconfig.arm                   |   2 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c          |   5 +
+ drivers/cpufreq/qcom-cpufreq-nvmem.c          | 181 ++++++++++++++++--
+ 4 files changed, 173 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
-index 312582c1bd37..acfaa12ec239 100644
---- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-+++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-@@ -276,6 +276,7 @@
- 			};
+diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+index 4751029b9b74..64f07417ecfb 100644
+--- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
++++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+@@ -19,7 +19,8 @@ In 'cpu' nodes:
  
- 			vccio_sd: LDO_REG5 {
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <3300000>;
+ In 'operating-points-v2' table:
+ - compatible: Should be
+-	- 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
++	- 'operating-points-v2-kryo-cpu' for apq8096, msm8996, msm8974,
++					     apq8064, ipq8064, msm8960 and ipq8074.
+ 
+ Optional properties:
+ --------------------
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index 3858d86cf409..15c1a1231516 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -128,7 +128,7 @@ config ARM_OMAP2PLUS_CPUFREQ
+ 
+ config ARM_QCOM_CPUFREQ_NVMEM
+ 	tristate "Qualcomm nvmem based CPUFreq"
+-	depends on ARM64
++	depends on ARCH_QCOM
+ 	depends on QCOM_QFPROM
+ 	depends on QCOM_SMEM
+ 	select PM_OPP
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index f2ae9cd455c1..cb9db16bea61 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -141,6 +141,11 @@ static const struct of_device_id blacklist[] __initconst = {
+ 	{ .compatible = "ti,dra7", },
+ 	{ .compatible = "ti,omap3", },
+ 
++	{ .compatible = "qcom,ipq8064", },
++	{ .compatible = "qcom,apq8064", },
++	{ .compatible = "qcom,msm8974", },
++	{ .compatible = "qcom,msm8960", },
++
+ 	{ }
+ };
+ 
+diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+index f0d2d5035413..35a616189030 100644
+--- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
++++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+@@ -49,12 +49,14 @@ struct qcom_cpufreq_drv;
+ struct qcom_cpufreq_match_data {
+ 	int (*get_version)(struct device *cpu_dev,
+ 			   struct nvmem_cell *speedbin_nvmem,
++			   char **pvs_name,
+ 			   struct qcom_cpufreq_drv *drv);
+ 	const char **genpd_names;
+ };
+ 
+ struct qcom_cpufreq_drv {
+-	struct opp_table **opp_tables;
++	struct opp_table **names_opp_tables;
++	struct opp_table **hw_opp_tables;
+ 	struct opp_table **genpd_opp_tables;
+ 	u32 versions;
+ 	const struct qcom_cpufreq_match_data *data;
+@@ -62,6 +64,81 @@ struct qcom_cpufreq_drv {
+ 
+ static struct platform_device *cpufreq_dt_pdev, *cpufreq_pdev;
+ 
++static void get_krait_bin_format_a(struct device *cpu_dev,
++					  int *speed, int *pvs, int *pvs_ver,
++					  struct nvmem_cell *pvs_nvmem, u8 *buf)
++{
++	u32 pte_efuse;
++
++	pte_efuse = *((u32 *)buf);
++
++	*speed = pte_efuse & 0xf;
++	if (*speed == 0xf)
++		*speed = (pte_efuse >> 4) & 0xf;
++
++	if (*speed == 0xf) {
++		*speed = 0;
++		dev_warn(cpu_dev, "Speed bin: Defaulting to %d\n", *speed);
++	} else {
++		dev_dbg(cpu_dev, "Speed bin: %d\n", *speed);
++	}
++
++	*pvs = (pte_efuse >> 10) & 0x7;
++	if (*pvs == 0x7)
++		*pvs = (pte_efuse >> 13) & 0x7;
++
++	if (*pvs == 0x7) {
++		*pvs = 0;
++		dev_warn(cpu_dev, "PVS bin: Defaulting to %d\n", *pvs);
++	} else {
++		dev_dbg(cpu_dev, "PVS bin: %d\n", *pvs);
++	}
++}
++
++static void get_krait_bin_format_b(struct device *cpu_dev,
++					  int *speed, int *pvs, int *pvs_ver,
++					  struct nvmem_cell *pvs_nvmem, u8 *buf)
++{
++	u32 pte_efuse, redundant_sel;
++
++	pte_efuse = *((u32 *)buf);
++	redundant_sel = (pte_efuse >> 24) & 0x7;
++	*speed = pte_efuse & 0x7;
++
++	/* 4 bits of PVS are in efuse register bits 31, 8-6. */
++	*pvs = ((pte_efuse >> 28) & 0x8) | ((pte_efuse >> 6) & 0x7);
++	*pvs_ver = (pte_efuse >> 4) & 0x3;
++
++	switch (redundant_sel) {
++	case 1:
++		*speed = (pte_efuse >> 27) & 0xf;
++		break;
++	case 2:
++		*pvs = (pte_efuse >> 27) & 0xf;
++		break;
++	}
++
++	/* Check SPEED_BIN_BLOW_STATUS */
++	if (pte_efuse & BIT(3)) {
++		dev_dbg(cpu_dev, "Speed bin: %d\n", *speed);
++	} else {
++		dev_warn(cpu_dev, "Speed bin not set. Defaulting to 0!\n");
++		*speed = 0;
++	}
++
++	/* Check PVS_BLOW_STATUS */
++	pte_efuse = *(((u32 *)buf) + 4);
++	pte_efuse &= BIT(21);
++	if (pte_efuse) {
++		dev_dbg(cpu_dev, "PVS bin: %d\n", *pvs);
++	} else {
++		dev_warn(cpu_dev, "PVS bin not set. Defaulting to 0!\n");
++		*pvs = 0;
++	}
++
++	dev_dbg(cpu_dev, "PVS version: %d\n", *pvs_ver);
++}
++
+ static enum _msm8996_version qcom_cpufreq_get_msm_id(void)
+ {
+ 	size_t len;
+@@ -93,11 +170,13 @@ static enum _msm8996_version qcom_cpufreq_get_msm_id(void)
+ 
+ static int qcom_cpufreq_kryo_name_version(struct device *cpu_dev,
+ 					  struct nvmem_cell *speedbin_nvmem,
++					  char **pvs_name,
+ 					  struct qcom_cpufreq_drv *drv)
+ {
+ 	size_t len;
+ 	u8 *speedbin;
+ 	enum _msm8996_version msm8996_version;
++	*pvs_name = NULL;
+ 
+ 	msm8996_version = qcom_cpufreq_get_msm_id();
+ 	if (NUM_OF_MSM8996_VERSIONS == msm8996_version) {
+@@ -125,10 +204,44 @@ static int qcom_cpufreq_kryo_name_version(struct device *cpu_dev,
+ 	return 0;
+ }
+ 
++static int qcom_cpufreq_krait_name_version(struct device *cpu_dev,
++					   struct nvmem_cell *speedbin_nvmem,
++					   char **pvs_name,
++					   struct qcom_cpufreq_drv *drv)
++{
++	int speed = 0, pvs = 0, pvs_ver = 0;
++	u8 *speedbin;
++	size_t len;
++
++	speedbin = nvmem_cell_read(speedbin_nvmem, &len);
++	if (len == 4) {
++		get_krait_bin_format_a(cpu_dev, &speed, &pvs, &pvs_ver,
++				       speedbin_nvmem, speedbin);
++	} else if (len == 8) {
++		get_krait_bin_format_b(cpu_dev, &speed, &pvs, &pvs_ver,
++				       speedbin_nvmem, speedbin);
++	} else {
++		dev_err(cpu_dev, "Unable to read nvmem data. Defaulting to 0!\n");
++		return -ENODEV;
++	}
++
++	snprintf(*pvs_name, sizeof("speedXX-pvsXX-vXX"), "speed%d-pvs%d-v%d",
++		 speed, pvs, pvs_ver);
++
++	drv->versions = (1 << speed);
++
++	kfree(speedbin);
++	return 0;
++}
++
+ static const struct qcom_cpufreq_match_data match_data_kryo = {
+ 	.get_version = qcom_cpufreq_kryo_name_version,
+ };
+ 
++static const struct qcom_cpufreq_match_data match_data_krait = {
++	.get_version = qcom_cpufreq_krait_name_version,
++};
++
+ static const char *qcs404_genpd_names[] = { "cpr", NULL };
+ 
+ static const struct qcom_cpufreq_match_data match_data_qcs404 = {
+@@ -141,6 +254,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 	struct nvmem_cell *speedbin_nvmem;
+ 	struct device_node *np;
+ 	struct device *cpu_dev;
++	char *pvs_name = "speedXX-pvsXX-vXX";
+ 	unsigned cpu;
+ 	const struct of_device_id *match;
+ 	int ret;
+@@ -153,7 +267,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 	if (!np)
+ 		return -ENOENT;
+ 
+-	ret = of_device_is_compatible(np, "operating-points-v2-kryo-cpu");
++	ret = of_device_is_compatible(np, "operating-points-v2-qcom-cpu");
+ 	if (!ret) {
+ 		of_node_put(np);
+ 		return -ENOENT;
+@@ -181,7 +295,8 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 			goto free_drv;
+ 		}
+ 
+-		ret = drv->data->get_version(cpu_dev, speedbin_nvmem, drv);
++		ret = drv->data->get_version(cpu_dev,
++							speedbin_nvmem, &pvs_name, drv);
+ 		if (ret) {
+ 			nvmem_cell_put(speedbin_nvmem);
+ 			goto free_drv;
+@@ -190,12 +305,20 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 	}
+ 	of_node_put(np);
+ 
+-	drv->opp_tables = kcalloc(num_possible_cpus(), sizeof(*drv->opp_tables),
++	drv->names_opp_tables = kcalloc(num_possible_cpus(),
++				  sizeof(*drv->names_opp_tables),
+ 				  GFP_KERNEL);
+-	if (!drv->opp_tables) {
++	if (!drv->names_opp_tables) {
+ 		ret = -ENOMEM;
+ 		goto free_drv;
+ 	}
++	drv->hw_opp_tables = kcalloc(num_possible_cpus(),
++				  sizeof(*drv->hw_opp_tables),
++				  GFP_KERNEL);
++	if (!drv->hw_opp_tables) {
++		ret = -ENOMEM;
++		goto free_opp1;
++	}
+ 
+ 	drv->genpd_opp_tables = kcalloc(num_possible_cpus(),
+ 					sizeof(*drv->genpd_opp_tables),
+@@ -213,11 +336,23 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 		}
+ 
+ 		if (drv->data->get_version) {
+-			drv->opp_tables[cpu] =
+-				dev_pm_opp_set_supported_hw(cpu_dev,
+-							    &drv->versions, 1);
+-			if (IS_ERR(drv->opp_tables[cpu])) {
+-				ret = PTR_ERR(drv->opp_tables[cpu]);
++
++			if (pvs_name) {
++				drv->names_opp_tables[cpu] = dev_pm_opp_set_prop_name(
++								     cpu_dev,
++								     pvs_name);
++				if (IS_ERR(drv->names_opp_tables[cpu])) {
++					ret = PTR_ERR(drv->names_opp_tables[cpu]);
++					dev_err(cpu_dev, "Failed to add OPP name %s\n",
++						pvs_name);
++					goto free_opp;
++				}
++			}
++
++			drv->hw_opp_tables[cpu] = dev_pm_opp_set_supported_hw(
++									 cpu_dev, &drv->versions, 1);
++			if (IS_ERR(drv->hw_opp_tables[cpu])) {
++				ret = PTR_ERR(drv->hw_opp_tables[cpu]);
+ 				dev_err(cpu_dev,
+ 					"Failed to set supported hardware\n");
+ 				goto free_genpd_opp;
+@@ -259,11 +394,18 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 	kfree(drv->genpd_opp_tables);
+ free_opp:
+ 	for_each_possible_cpu(cpu) {
+-		if (IS_ERR_OR_NULL(drv->opp_tables[cpu]))
++		if (IS_ERR_OR_NULL(drv->names_opp_tables[cpu]))
++			break;
++		dev_pm_opp_put_prop_name(drv->names_opp_tables[cpu]);
++	}
++	for_each_possible_cpu(cpu) {
++		if (IS_ERR_OR_NULL(drv->hw_opp_tables[cpu]))
+ 			break;
+-		dev_pm_opp_put_supported_hw(drv->opp_tables[cpu]);
++		dev_pm_opp_put_supported_hw(drv->hw_opp_tables[cpu]);
+ 	}
+-	kfree(drv->opp_tables);
++	kfree(drv->hw_opp_tables);
++free_opp1:
++	kfree(drv->names_opp_tables);
+ free_drv:
+ 	kfree(drv);
+ 
+@@ -278,13 +420,16 @@ static int qcom_cpufreq_remove(struct platform_device *pdev)
+ 	platform_device_unregister(cpufreq_dt_pdev);
+ 
+ 	for_each_possible_cpu(cpu) {
+-		if (drv->opp_tables[cpu])
+-			dev_pm_opp_put_supported_hw(drv->opp_tables[cpu]);
++		if (drv->names_opp_tables[cpu])
++			dev_pm_opp_put_supported_hw(drv->names_opp_tables[cpu]);
++		if (drv->hw_opp_tables[cpu])
++			dev_pm_opp_put_supported_hw(drv->hw_opp_tables[cpu]);
+ 		if (drv->genpd_opp_tables[cpu])
+ 			dev_pm_opp_detach_genpd(drv->genpd_opp_tables[cpu]);
+ 	}
+ 
+-	kfree(drv->opp_tables);
++	kfree(drv->names_opp_tables);
++	kfree(drv->hw_opp_tables);
+ 	kfree(drv->genpd_opp_tables);
+ 	kfree(drv);
+ 
+@@ -303,6 +448,10 @@ static const struct of_device_id qcom_cpufreq_match_list[] __initconst = {
+ 	{ .compatible = "qcom,apq8096", .data = &match_data_kryo },
+ 	{ .compatible = "qcom,msm8996", .data = &match_data_kryo },
+ 	{ .compatible = "qcom,qcs404", .data = &match_data_qcs404 },
++	{ .compatible = "qcom,ipq8064", .data = &match_data_krait },
++	{ .compatible = "qcom,apq8064", .data = &match_data_krait },
++	{ .compatible = "qcom,msm8974", .data = &match_data_krait },
++	{ .compatible = "qcom,msm8960", .data = &match_data_krait },
+ 	{},
+ };
+ 
 -- 
-2.17.1
+2.25.0
 
