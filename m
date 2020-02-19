@@ -2,91 +2,113 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6314C5ACC4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC863C5ACC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADAE72464E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582153941;
-	bh=uVdWup0wpgU3++rb54UglkWP9F1kJLPIbPV3Xzfyenk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kFzfYAPi3SMi414bYvvwdZ1+R5BbBryRDxXQIsB1XO0nPGFKH5YOKT0TO/ZY3aqoG
-	 Eoob1j0sr2XgxSHADoCXZ6XGt8sqPzR0b0G66oL1SNj0eYqTasu6IagPSq10OlMkfw
-	 peo2HxavLZpCb0yzwcHrBUHm6PliTtkeJZaM2VlI=
+	by mail.kernel.org (Postfix) with ESMTP id 835022464E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:20:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNuqnwZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBSXMV (ORCPT
+        id S1726762AbgBSXUI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:12:21 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45494 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgBSXMV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 18:12:21 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v19so25592562oic.12
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 15:12:20 -0800 (PST)
+        Wed, 19 Feb 2020 18:20:08 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40120 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgBSXUH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 18:20:07 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z7so886644pgk.7;
+        Wed, 19 Feb 2020 15:20:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zTjU5dQLnIByh50nZjXZubn4ZLHJkYRWG/8ptJLiRjw=;
+        b=ZNuqnwZQz4FPhaySnryBa1KYuR9FGehK5Ds+5qdR/Mxbf/TNvxEG6gCMYJpY95YbGu
+         tDgSoBOnqu3J+MOmT3Oni8Oaa7G6kpcPeG8tLgTCPew/qXaDN1kBcEen5q87vMU3mUDT
+         MEY+lzdNqwZW1NXv3qfo/ks6Jrh3K+/RVo5fu2LvTc74nnhH9W7hu6sOjDtnw+BfoGoZ
+         wFj66S2w2RPqIFPoc3rF5M/PrgzforO1gMj8U+cgkywv4sCN2XM6vwJaiMWjPnw6gDJA
+         1HFW2mr8MX2G8mfnDhKGvCp8T10c5H4EtG1xeIQb7IfptUjhyrvWSg2rnD3+ACXcPKaL
+         SqBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CLPRmzON2R02+/ZY31sqBcy//1vfhbocYVY0OJmPA7Q=;
-        b=dWULPtMSt2p46BK8w2P+M3Sk+hE8/WkMuzgA/jVDNMMIYj5QPN+C8Q61Ub6jSaPkKI
-         eN9sbFGL7CQBoFW9xa6G+FpyIVWPJ5r5MZVa0t1wcKdU4zuURjOjplTV78c8ep7kAVeg
-         ow1ewHXvIFQj2iQSfg8TIqaFrLa8uvn8O6YrUsHcM66mM+oHruw2TGKtbSJTUIyWHyuX
-         RhTT8uDOazCvOv0i6O7UbbSyG6UGXmHdx6Tu8Oj8xeRFvDm8OaDO4oWvSCwvpvC9gF5z
-         iEgOWKQDqNp8GjBOHenkg76vGY84340QrjOoYREu9G3CIB9f8dqWJEkUe/6I1afse2KY
-         jy6A==
-X-Gm-Message-State: APjAAAWglRuVBtRq5NUGLUCI+7CqD3DXxVmGOEqvKvbswh8GGHz8cc6O
-        cR+i7D4RhTffLdB1P9MNlA==
-X-Google-Smtp-Source: APXvYqyH6dHK8cr/NZ+DC/49bIcKPOlYG+691fjOnLj0uJTTKRot/Tcf71eVud11ZtmHjyKBDuPNUA==
-X-Received: by 2002:a54:4418:: with SMTP id k24mr77122oiw.46.1582153940062;
-        Wed, 19 Feb 2020 15:12:20 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h15sm420269otq.67.2020.02.19.15.12.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 15:12:19 -0800 (PST)
-Received: (nullmailer pid 17648 invoked by uid 1000);
-        Wed, 19 Feb 2020 23:12:18 -0000
-Date:   Wed, 19 Feb 2020 17:12:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zTjU5dQLnIByh50nZjXZubn4ZLHJkYRWG/8ptJLiRjw=;
+        b=ab3+CnO63Eu6h9RbkVl5Pf96K1EDPWbMe3DVyawJOtFt+1/yaesDm//057XpGHYnzt
+         IZ7V/p0lPE6ea73bkmY1G505yawDcWvg8lPnPq2t0+XmEUGbbgWEcxTA0rc49qODMF8f
+         F1YX9gYSxVbwYTjCDmfZF8ulw4vOeKHH0qQWVAzYNQ+jlX4GnBpPUV7kNdAGx7QaHjA1
+         WQBzH/msjpw3+MbjRIar26thr/Ya6iCFcF+Q/aNsxoqmuxMpJHmJGxqUyrcFFid8M/wr
+         a5Dr/93BeiA6ltWd2AkGixPnVE4thjLtE5kLvwbxL6DWCCUivGYXOg1zXGmEAus7765m
+         vBUw==
+X-Gm-Message-State: APjAAAW2I8pWfrsntcOcwVo/yACl/lAc7QqkKWjo/Advb5loew6zRw1M
+        9JSDtDRbJZIA4Jokey/nx6c=
+X-Google-Smtp-Source: APXvYqxz0n6zqalLUF3s6QqBodmosHFcUuuBe1/KTM20rWHdJjKmvRZx4tgia2eFo1BcWdur6hHGEQ==
+X-Received: by 2002:a63:354b:: with SMTP id c72mr26575153pga.99.1582154406970;
+        Wed, 19 Feb 2020 15:20:06 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2sm832488pjv.18.2020.02.19.15.20.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Feb 2020 15:20:06 -0800 (PST)
+Date:   Wed, 19 Feb 2020 15:20:05 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Julius Werner <jwerner@chromium.org>
+Cc:     Rob Herring <robh@kernel.org>, Evan Benn <evanbenn@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] dt-bindings: panel: lvds: Add properties for clock
- and data polarities
-Message-ID: <20200219231218.GA24409@bogus>
-References: <cover.b12a054012ce067fa2094894147f953ab816d8d0.1581682983.git-series.maxime@cerno.tech>
- <620a740cec4186177ce346b092d4ba451e1420dc.1581682983.git-series.maxime@cerno.tech>
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+Message-ID: <20200219232005.GA9737@roeck-us.net>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus>
+ <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <620a740cec4186177ce346b092d4ba451e1420dc.1581682983.git-series.maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 01:24:39PM +0100, Maxime Ripard wrote:
-> Some LVDS encoders can support multiple polarities on the data and
-> clock lanes, and similarly some panels require a given polarity on
-> their inputs. Add a property on the panel to configure the encoder
-> properly.
+On Wed, Feb 19, 2020 at 03:04:54PM -0800, Julius Werner wrote:
+> > You are not the first 'watchdog in firmware accessed via an SMC call'.
+> > Is there some more detail about what implementation this is? Part of
+> > TF-A? Defined by some spec (I can dream)?
+> 
+> This is just some random implementation written by me because we
+> needed one. I would like it to be the new generic implementation, but
+> it sounds like people here prefer the naming to be MediaTek specific
+> (at least for now). The other SMC watchdog we're aware of is
+> imx_sc_wdt but unfortunately that seems to hardcode platform-specific
 
-If the panel requires a specific setting, then that can be implied by 
-the panel's compatible. Does Boris' format constraint solving series 
-help here?
+There is one more pending, for Meson SMC.
 
-Rob
+https://patchwork.kernel.org/project/linux-watchdog/list/?series=227733
+
+Unfortunately it uses Meson firmware API functions, though it has pretty
+much the same functionality since those ultimately end up calling
+arm_smccc_smc().
+
+Guenter
+
+> details in the interface (at least in the pretimeout SMC) so we can't
+> just expand that. With this driver I tried to directly wrap the kernel
+> watchdog interface so it should be platform-agnostic and possible to
+> expand this driver to other platforms later if desired. The SMC
+> function ID would still always have to be platform-specific,
+> unfortunately (but we could pass it in through the device tree), since
+> the Arm SMC spec doesn't really leave any room for OS-generic SMCs
+> like this.
