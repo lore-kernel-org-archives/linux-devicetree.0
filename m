@@ -2,94 +2,180 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB68C3404D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D1AC34050
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7378320801
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB78A24654
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Irva5dhD"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pLv0ZS7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgBSNhK (ORCPT
+        id S1726786AbgBSNsG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:37:10 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46854 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727677AbgBSNg6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 08:36:58 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so513563wrl.13
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 05:36:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HwepP4vylkvrAMsKrJGWiwfWFEMFo390d/0hPnMfDnQ=;
-        b=Irva5dhDO7EeC/Gq61LwcdDA8SlWmI5WtROw0M6kcYEwuY1jDLSJ+y73xIUtZPyrj+
-         p3mFAKgb/uvVhkn9uCHbuA0guPmbGlioDgYymJFVf3MHc/q3A/0vEC/t9140r7ZLnUQl
-         Fr0fN2VVS2grIBPMAMi0teBetl/uTUELthI98JilwqkP4Iwma6YTDSNBhDkz9hyRaPGI
-         gtXMisst6zIZbntFjDhIUmkOLCM9D1xAw4ggRKOxh/IaYhkSci+8xVY+aklr6GNXDCDL
-         fwNgiBHAgXgzy6SIWPRyayR9I5fmAt11PAbnTcvhohV5oGjumm6ZQN+kkM/Uas3sNgHx
-         wxcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HwepP4vylkvrAMsKrJGWiwfWFEMFo390d/0hPnMfDnQ=;
-        b=GY92K5WphBSTAn+LSfLkWqTwiz51/cGcT43M9pgmSyTTFGUlzWt0p3hyh8M218jz+o
-         ++bUZz2whSn+/sv6zAJ3BwLqmutAflwIBJnUxsIVHE8210FTWfk/0wm+2gjtN6gVbP69
-         +CKl0L7U8MDLICA0Zigi0c1U4wPWZi2HDXmyv4MTUMnFkwE/+zZpL6fiiZEbg0fTV2s8
-         0sSSMXcYrWZOmxwYSRLyrCColh1bGHyK1fwvKDIi+BKGckqz9T7dkGg9TusETycp4bkS
-         4gfbmLUclZwW7DR3QJGBte7QczO5/3Tp6OsUNH6+hm4//kAMH3/PE3YqHophg/ofsHzl
-         jRIA==
-X-Gm-Message-State: APjAAAUDcjCFY3rfHs6NOuhZ9HOQfLrzpAkQ7VAJaUzsc/s/K4kPTfBH
-        ClCoenjK71HicDWNkeZkaZto/Q==
-X-Google-Smtp-Source: APXvYqzFBdf+KvQ/AaFbssZg7VHUlYCElqE3Jj98G953ZIChVvbutlzYOglzkBF0ek20O6lSxHLvQA==
-X-Received: by 2002:a5d:4f0f:: with SMTP id c15mr37854818wru.251.1582119415457;
-        Wed, 19 Feb 2020 05:36:55 -0800 (PST)
-Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id q124sm8856480wme.2.2020.02.19.05.36.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 05:36:54 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 0/2] ASoC: meson: add internal DAC support
-Date:   Wed, 19 Feb 2020 14:36:44 +0100
-Message-Id: <20200219133646.1035506-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 19 Feb 2020 08:48:06 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:63738 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726671AbgBSNsG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:48:06 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582120085; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=47ytio7+SX8hkv8Ij+f0DJYJWmeycJmxdmyF4ofod7w=; b=pLv0ZS7gVAj3uqSufVmWhzfWGzvwXPfcBfHLhdQJ8FCBBOZ++XuWM9xrmyt8Q+B203eMyRyH
+ u5qlz51Oi32QJDVCdaWfL7XBszvAUciJ98NH8Hf20r6O+l6gxX+u69LXG3WZyiO6dI3I+BW/
+ LRPnBiU7dmbwstpKfFoDiP9KFnA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4d3c8b.7f32dcc75d18-smtp-out-n03;
+ Wed, 19 Feb 2020 13:47:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76F8BC447A4; Wed, 19 Feb 2020 13:47:53 +0000 (UTC)
+Received: from [10.252.222.65] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0BDAEC43383;
+        Wed, 19 Feb 2020 13:47:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0BDAEC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH 3/6] i2c: i2c-qcom-geni: Add interconnect support
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org
+References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
+ <1581946205-27189-4-git-send-email-akashast@codeaurora.org>
+ <20200218224709.GF15781@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <84a7d97a-4e10-5509-9c87-af8a545c7385@codeaurora.org>
+Date:   Wed, 19 Feb 2020 19:17:44 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218224709.GF15781@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset adds support for the internal audio DAC provided on the
-Amlogic gxl, g12a and sm1 SoC families. On each of these SoC families,
-there is glue between this codec on the audio provider. The architecture
-is similar to the one used for the synopsys hdmi codec on these SoCs
+Hi Matthias,
 
-Jerome Brunet (2):
-  ASoC: meson: add t9015 internal codec binding documentation
-  ASoC: meson: add t9015 internal DAC driver
+On 2/19/2020 4:17 AM, Matthias Kaehlcke wrote:
+> On Mon, Feb 17, 2020 at 07:00:02PM +0530, Akash Asthana wrote:
+>> Get the interconnect paths for I2C based Serial Engine device
+>> and vote according to the bus speed of the driver.
+>>
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> ---
+>>   drivers/i2c/busses/i2c-qcom-geni.c | 84 ++++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 80 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+>> index 17abf60c..5de10a1 100644
+>> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+>> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+>> @@ -163,6 +163,44 @@ static void qcom_geni_i2c_conf(struct geni_i2c_dev *gi2c)
+>>   	writel_relaxed(val, gi2c->se.base + SE_I2C_SCL_COUNTERS);
+>>   }
+>>   
+>> +static int geni_i2c_icc_get(struct geni_se *se)
+>> +{
+>> +	if (!se)
+>> +		return -EINVAL;
+> check is not needed
+ok, will remove.
+>
+>> +
+>> +	se->icc_path[GENI_TO_CORE] = of_icc_get(se->dev, "qup-core");
+>> +	if (IS_ERR(se->icc_path[GENI_TO_CORE]))
+>> +		return PTR_ERR(se->icc_path[GENI_TO_CORE]);
+>> +
+>> +	se->icc_path[CPU_TO_GENI] = of_icc_get(se->dev, "qup-config");
+>> +	if (IS_ERR(se->icc_path[CPU_TO_GENI])) {
+>> +		icc_put(se->icc_path[GENI_TO_CORE]);
+>> +		se->icc_path[GENI_TO_CORE] = NULL;
+> echoing Bjorn's comments on 'tty: serial: qcom_geni_serial: Add
+> interconnect support', resetting is not needed since _probe() will
+> fail.
+ok, will remove
+>> +		return PTR_ERR(se->icc_path[CPU_TO_GENI]);
+>> +	}
+>> +
+>> +	se->icc_path[GENI_TO_DDR] = of_icc_get(se->dev, "qup-memory");
+>> +	if (IS_ERR(se->icc_path[GENI_TO_DDR])) {
+>> +		icc_put(se->icc_path[GENI_TO_CORE]);
+>> +		se->icc_path[GENI_TO_CORE] = NULL;
+> ditto
+ok
+>> +		icc_put(se->icc_path[CPU_TO_GENI]);
+>> +		se->icc_path[CPU_TO_GENI] = NULL;
+> ditto
+ok
+>> +		return PTR_ERR(se->icc_path[GENI_TO_DDR]);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +void geni_i2c_icc_put(struct geni_se *se)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(se->icc_path); i++) {
+>> +		icc_put(se->icc_path[i]);
+>> +		se->icc_path[i] = NULL;
+> not needed
+ok, will remove
+>> +	}
+>> +}
+>> +
+>>   static void geni_i2c_err_misc(struct geni_i2c_dev *gi2c)
+>>   {
+>>   	u32 m_cmd = readl_relaxed(gi2c->se.base + SE_GENI_M_CMD0);
+>> @@ -563,17 +601,34 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>>   	gi2c->adap.dev.of_node = pdev->dev.of_node;
+>>   	strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
+>>   
+>> +	ret = geni_i2c_icc_get(&gi2c->se);
+>> +	if (ret)
+>> +		return ret;
+>> +	/* Set the bus quota to a reasonable value */
+>> +	gi2c->se.avg_bw_core = Bps_to_icc(1000);
+>> +	gi2c->se.peak_bw_core = Bps_to_icc(CORE_2X_100_MHZ);
+>> +	gi2c->se.avg_bw_cpu = Bps_to_icc(1000);
+>> +	gi2c->se.peak_bw_cpu = Bps_to_icc(1000);
+>> +	gi2c->se.avg_bw_ddr = Bps_to_icc(gi2c->clk_freq_out);
+>> +	gi2c->se.peak_bw_ddr = Bps_to_icc(2 * gi2c->clk_freq_out);
+>> +
+>> +	/* Vote for core clocks and CPU for register access */
+>> +	icc_set_bw(gi2c->se.icc_path[GENI_TO_CORE], gi2c->se.avg_bw_core,
+>> +				gi2c->se.peak_bw_core);
+>> +	icc_set_bw(gi2c->se.icc_path[CPU_TO_GENI], gi2c->se.avg_bw_cpu,
+>> +				gi2c->se.peak_bw_cpu);
+> error handling needed?
 
- .../bindings/sound/amlogic,t9015.yaml         |  58 ++++
- sound/soc/meson/Kconfig                       |   8 +
- sound/soc/meson/Makefile                      |   2 +
- sound/soc/meson/t9015.c                       | 320 ++++++++++++++++++
- 4 files changed, 388 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/amlogic,t9015.yaml
- create mode 100644 sound/soc/meson/t9015.c
+I will add error handling for GENI_TO_CORE path in all the drivers. Will 
+it be okay if we don't handle errors for CPU_TO_GENI and GENI_TO_DDR path
+
+as CPU and DDR will be running at much higher frequency?
+
+Regards,
+
+Akash
 
 -- 
-2.24.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
