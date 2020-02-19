@@ -2,142 +2,89 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D19DC7619D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E042EC5ACC4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAA22465D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D96924672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582150397;
-	bh=ddoyKRwVDKIYIprPOKhr/kDrCRRWlvXxVqPXPWAljWo=;
+	s=default; t=1582150465;
+	bh=N211GYwBeBK341ThgMDhwyjOl9k3AX/2zhp0K27AEWA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E5Jm8gtdS1yxjnpP6+KZU2GztxZDQCRw+sRQuXv7wIx0jCN8IrSUOoF6J/lYyafYX
-	 EPL67qWmxaaQfVjmndO9YTvz2T8iBU5xFqlThN+B3D5fmYcAvSzVFgd/1yaOeUupKU
-	 1216BD7I2Q8VIvlgQis+uN4cw0DGaw+wvfxdKw24=
+	b=yptUbCzEsMY3i6QSULpplFDvNWfEBvoWIYKXdjCSo7VOuvuFz+q+KZfowXWqMXxgv
+	 0bXOjBMI9mr3fPqFlRL2vyGieLAj1d7RHQUoFRQP5esDdKxRHmSzb4vhhiDdrNONQ5
+	 zagXpHdFEayERgVe5xv0SZhK6xb1FnL1JR6+HjEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBSWNN (ORCPT
+        id S1727749AbgBSWOZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:13:13 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41685 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727232AbgBSWNN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:13:13 -0500
-Received: by mail-oi1-f196.google.com with SMTP id i1so25433925oie.8;
-        Wed, 19 Feb 2020 14:13:12 -0800 (PST)
+        Wed, 19 Feb 2020 17:14:25 -0500
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:32980 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727232AbgBSWOZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:14:25 -0500
+Received: by mail-ot1-f44.google.com with SMTP id w6so1778266otk.0;
+        Wed, 19 Feb 2020 14:14:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QCDRXvFi+gR1oNSsjcXCHacRJtQD8q7DV4e37/61Byk=;
-        b=smef+T69eC9WkkzH2P5wIDQyYMnCrd3sj13Bweli4qiH0kH0xJEvbFt2kY7g6YFfcF
-         e6ffo4ZltG871JHoSK64NHJR2YhAqmCKiQK3yJVkYmhSRIlM3XJZYcATerpeZQ1Ea08k
-         8N5eSLFXDLeP2xbxllwPU5kujZCiW95MdLCJKJjLTivatwtPyP/43YuJv/3Xb++9+5a6
-         AWZps9F+1Z0kMgxQ5gBk4jJZNFcK6iAt8qYxWTlj87F5Ad82D57L/YFSw2m0yHoRRzKX
-         CfXFoZgbNWfIt5ro6XTTX0UTr5oWR3ifPv4r6CBY5OJ35wkVeAdD/HeMTVjsjODWPPil
-         SeiQ==
-X-Gm-Message-State: APjAAAUxDvzQ6b4kd9o/5QTIJJCkNAJnbR1O6wZ3xlJpGfZU5oZk0kL5
-        64k3PAVgLRA+hMfPoNS6wg==
-X-Google-Smtp-Source: APXvYqwLFvsnaggZIZ/FphpHVECAI3EPZlrYh7AiYB66zYzCl73IpPqpn2LPQw1Q8GLsGZZvQeYS7w==
-X-Received: by 2002:aca:4306:: with SMTP id q6mr6190796oia.54.1582150392520;
-        Wed, 19 Feb 2020 14:13:12 -0800 (PST)
+        bh=PCB28ZHMHLDxZ8UN0t28z/W7i0m8dXBxggY1wp5teCo=;
+        b=LocM/Y7b0RfVgs2EiT087MB4fF0EKI68woCpFn2kakVu1VP/K2jHx6/fsUp/SHs7vL
+         sXZDZn9h2rhe70OyHO4fHjCxOLVgzqyWOljhn32j7KZ7tz44G6xujU4AvmIvvb2WmKIa
+         8570dTnozpTmTYEWDSQag4qMA2pTUU2hf3G29ghDlo0+/5o0nozuTSqXe1qMVc6WN1PP
+         48P77bZiVZVlQExunH5uZFE4Z/xqdx7Owpdv+16xijmluhzVgMHBBdCz1z5EyAQcOpxd
+         EbsoUGO1OyTEcuip5D8JyPUyXDbFNLjOU31QtmoN/7EX9cCbaZu8MdpYWz7EC6ZqOvog
+         l/zQ==
+X-Gm-Message-State: APjAAAUEhnPFUus/91XFhpWKOO+1UsnA5bi5ceoNbdUP5YjkBt7laaDf
+        AdO68SW11E2v4epsRNLPyg==
+X-Google-Smtp-Source: APXvYqyobv41FyF6JR9Ye576ZoF0o/UE945k9arGF5Dektgk3qpqgQezDg6xv8alvXICKnJMdOqE9g==
+X-Received: by 2002:a9d:7851:: with SMTP id c17mr21733875otm.58.1582150464028;
+        Wed, 19 Feb 2020 14:14:24 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n25sm418938oic.6.2020.02.19.14.13.11
+        by smtp.gmail.com with ESMTPSA id 17sm376115oty.48.2020.02.19.14.14.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:13:11 -0800 (PST)
-Received: (nullmailer pid 30690 invoked by uid 1000);
-        Wed, 19 Feb 2020 22:13:10 -0000
-Date:   Wed, 19 Feb 2020 16:13:10 -0600
+        Wed, 19 Feb 2020 14:14:23 -0800 (PST)
+Received: (nullmailer pid 32442 invoked by uid 1000);
+        Wed, 19 Feb 2020 22:14:22 -0000
+Date:   Wed, 19 Feb 2020 16:14:22 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.cz>, Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: mfd: motmdm: Add binding for
- motorola-mdm
-Message-ID: <20200219221310.GA26624@bogus>
-References: <20200210040107.10306-1-tony@atomide.com>
- <20200210040107.10306-4-tony@atomide.com>
+To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, festevam@gmail.com,
+        alsa-devel@alsa-project.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [RESEND 4/4] dt-bindings: dsp: fsl: Add fsl,imx8qm-dsp entry
+Message-ID: <20200219221422.GA32379@bogus>
+References: <20200210095817.13226-1-daniel.baluta@oss.nxp.com>
+ <20200210095817.13226-5-daniel.baluta@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210040107.10306-4-tony@atomide.com>
+In-Reply-To: <20200210095817.13226-5-daniel.baluta@oss.nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 08:01:05PM -0800, Tony Lindgren wrote:
-> Add a binding document for Motorola modems controllable by
-> TS 27.010 UART line discipline using serdev drivers.
+On Mon, 10 Feb 2020 11:58:17 +0200, Daniel Baluta wrote:
+> From: Paul Olaru <paul.olaru@nxp.com>
 > 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> This is the same DSP from the hardware point of view, but it gets a
+> different compatible string due to usage in a separate platform.
+> 
+> Signed-off-by: Paul Olaru <paul.olaru@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  .../mfd/motorola,mapphone-mdm6600.yaml        | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+>  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml b/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
-> new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
-> @@ -0,0 +1,37 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings please:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/motorola,mapphone-mdm6600.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Motorola Mapphone MDM6600 Modem
-> +
-> +maintainers:
-> +  - Tony Lindgren <tony@atomide.com>
-> +
-> +allOf:
-> +  - $ref: "motorola,mapphone-mdm6600.yaml#"
-
-Huh? A recursive include? I'm not sure how that didn't blow up.
-
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: motorola,mapphone-mdm6600-serial
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: usb
-> +
-> +required:
-> +  - compatible
-> +  - phys
-> +  - phy-names
-> +
-> +examples:
-> +  - |
-> +    modem {
-> +        compatible = "motorola,mapphone-mdm6600-serial";
-> +        phys = <&fsusb1_phy>;
-> +        phy-names = "usb";
-> +    };
-> -- 
-> 2.25.0
+Acked-by: Rob Herring <robh@kernel.org>
