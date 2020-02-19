@@ -2,98 +2,167 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D71DC3404D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 12:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E2AC34050
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 12:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0211421D56
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 12:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F315224654
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 12:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mgC9phzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgBSM30 (ORCPT
+        id S1727497AbgBSMoX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:29:26 -0500
-Received: from atl4mhfb03.myregisteredsite.com ([209.17.115.119]:60648 "EHLO
-        atl4mhfb03.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726491AbgBSM30 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:29:26 -0500
-X-Greylist: delayed 512 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 07:29:25 EST
-Received: from atl4mhob15.registeredsite.com (atl4mhob15.registeredsite.com [209.17.115.53])
-        by atl4mhfb03.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 01JCKqUq002336
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 07:20:52 -0500
-Received: from mailpod.hostingplatform.com (atl4qobmail02pod0.registeredsite.com [10.30.71.204])
-        by atl4mhob15.registeredsite.com (8.14.4/8.14.4) with ESMTP id 01JCKoeZ030201
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 07:20:51 -0500
-Received: (qmail 9089 invoked by uid 0); 19 Feb 2020 12:20:50 -0000
-X-TCPREMOTEIP: 81.173.50.109
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO mikebuntu.TOPIC.LOCAL) (mike@milosoftware.com@81.173.50.109)
-  by 0 with ESMTPA; 19 Feb 2020 12:20:50 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     robh+dt@kernel.org, michal.simek@xilinx.com, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     m.tretter@pengutronix.de, nava.manne@xilinx.com,
-        rajan.vaja@xilinx.com, manish.narani@xilinx.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] devicetree: zynqmp.dtsi: Add bootmode selection support
-Date:   Wed, 19 Feb 2020 13:20:36 +0100
-Message-Id: <20200219122036.24575-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Wed, 19 Feb 2020 07:44:23 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59690 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgBSMoX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 07:44:23 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JChssQ013710;
+        Wed, 19 Feb 2020 06:43:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582116234;
+        bh=kuB+R4Zi2k9ASFrC2H+1rMHduNuNh5eA+AYg21v4g+Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=mgC9phzEV5AoGxOpxa9dqlRaMAh35GL8N/ozSJsrZkZ0AacLYwTRLnkd//EeSZ+td
+         4y9qgpiinOlXbKtKlim4XT6T0fOxNVLMJQjrjnro6tthhrlsIJ3dfXHfXY5+ramSIm
+         lh8X8J+xBm4c1c4M9+NFA94EAj0TX+F1dcjfFfqw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JChsaV064935
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Feb 2020 06:43:54 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
+ Feb 2020 06:43:54 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 19 Feb 2020 06:43:54 -0600
+Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JChowE126704;
+        Wed, 19 Feb 2020 06:43:51 -0600
+Subject: Re: [PATCH v3 2/4] thermal: k3: Add support for bandgap sensors
+To:     Randy Dunlap <rdunlap@infradead.org>, <rui.zhang@intel.com>,
+        <robh+dt@kernel.org>, <daniel.lezcano@linaro.org>
+CC:     <amit.kucheria@verdurent.com>, <t-kristo@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <mark.rutland@arm.com>
+References: <20200219074314.22829-1-j-keerthy@ti.com>
+ <20200219074314.22829-3-j-keerthy@ti.com>
+ <ab0bc84b-189f-a9be-e838-a38c14fa702a@infradead.org>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <6b4ce7aa-4211-218f-68c2-5c451d8b7677@ti.com>
+Date:   Wed, 19 Feb 2020 18:13:56 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <ab0bc84b-189f-a9be-e838-a38c14fa702a@infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add bootmode override support for ZynqMP devices. Allows one to select
-a boot device by running "reboot qspi32" for example. Activate config
-item CONFIG_SYSCON_REBOOT_MODE to make this work.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 26d926eb1431..4c38d77ecbba 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -246,6 +246,30 @@
- 			};
- 		};
- 
-+		/* Clock and Reset control registers for LPD */
-+		lpd_apb: apb@ff5e0000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x0 0xff5e0000 0x0 0x400>;
-+			reboot-mode {
-+				compatible = "syscon-reboot-mode";
-+				offset = <0x200>;
-+				mask = <0xf100>;
-+				/* Bit(8) is the "force user" bit */
-+				mode-normal = <0x0000>;
-+				mode-psjtag = <0x0100>;
-+				mode-qspi24 = <0x1100>;
-+				mode-qspi32 = <0x2100>;
-+				mode-sd0    = <0x3100>;
-+				mode-nand   = <0x4100>;
-+				mode-sd1    = <0x6100>;
-+				mode-emmc   = <0x6100>;
-+				mode-usb0   = <0x7100>;
-+				mode-pjtag0 = <0x8100>;
-+				mode-pjtag1 = <0x9100>;
-+				mode-sd1ls  = <0xe100>;
-+			};
-+		};
-+
- 		/* GDMA */
- 		fpd_dma_chan1: dma@fd500000 {
- 			status = "disabled";
--- 
-2.17.1
+On 19/02/20 1:20 pm, Randy Dunlap wrote:
+> On 2/18/20 11:43 PM, Keerthy wrote:
+>> The bandgap provides current and voltage reference for its internal
+>> circuits and other analog IP blocks. The analog-to-digital
+>> converter (ADC) produces an output value that is proportional
+>> to the silicon temperature.
+>>
+>> Currently reading temperatures and trend computing is supported
+>> as there are no active/passive cooling agent supported.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   drivers/thermal/Kconfig      |  12 ++
+>>   drivers/thermal/Makefile     |   1 +
+>>   drivers/thermal/k3_bandgap.c | 342 +++++++++++++++++++++++++++++++++++
+>>   3 files changed, 355 insertions(+)
+>>   create mode 100644 drivers/thermal/k3_bandgap.c
+>>
+>> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+>> index 5a05db5438d6..fa598eddc7ac 100644
+>> --- a/drivers/thermal/Kconfig
+>> +++ b/drivers/thermal/Kconfig
+>> @@ -251,6 +251,18 @@ config IMX_THERMAL
+>>   	  cpufreq is used as the cooling device to throttle CPUs when the
+>>   	  passive trip is crossed.
+>>   
+>> +config K3_THERMAL
+>> +	bool "Texas Instruments K3 thermal support"
+> 
+> Hi,
+> Why is this bool and not tristate?
 
+Definitely can work as tristate. I will fix it next version.
+
+> 
+>> +	depends on THERMAL
+>> +	depends on ARCH_K3 || COMPILE_TEST
+>> +	help
+>> +	  If you say yes here you get thermal support for the Texas Instruments
+>> +	  K3 SoC family. The current chip supported is:
+>> +	   - AM654
+>> +
+>> +	  This includes temperature reading functionality and also trend
+>> +	  computation.
+>> +
+>>   config MAX77620_THERMAL
+>>   	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
+>>   	depends on MFD_MAX77620
+> 
+>> diff --git a/drivers/thermal/k3_bandgap.c b/drivers/thermal/k3_bandgap.c
+>> new file mode 100644
+>> index 000000000000..35d904eb9857
+>> --- /dev/null
+>> +++ b/drivers/thermal/k3_bandgap.c
+>> @@ -0,0 +1,342 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * TI Bandgap temperature sensor driver for K3 SoC Family
+>> + *
+>> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+>> + */
+> 
+>> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
+>> +			    int *temp)
+>> +{
+>> +	struct k3_bandgap *bgp;
+>> +	unsigned int dtemp, s0, s1, s2;
+>> +
+>> +	bgp = devdata->bgp;
+>> +	/**
+> 
+> "/**" is used to indicate kernel-doc notation in the Linux kernel source files,
+> but this comment is not kernel-doc notation, so please just use "/*".
+
+Okay
+
+> 
+>> +	 * Errata is applicable for am654 pg 1.0 silicon. There
+>> +	 * is a variation of the order for 8-10 degree centigrade.
+>> +	 * Work around that by getting the average of two closest
+>> +	 * readings out of three readings everytime we want to
+>> +	 * report temperatures.
+>> +	 *
+>> +	 * Errata workaround.
+>> +	 */
+> thanks.
+
+Thanks for the review.
+
+- Keerthy
+> 
