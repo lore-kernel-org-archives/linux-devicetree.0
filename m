@@ -2,142 +2,190 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851C8C3404E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 07:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DD4C3404E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 07:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C39B2176D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 07:50:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vDd3UE8R"
+	by mail.kernel.org (Postfix) with ESMTP id 75DCA222D9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 07:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgBSHub (ORCPT
+        id S1726469AbgBSH43 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:50:31 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42458 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgBSHua (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 02:50:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=8mFw61Czqg56/JxSmBKdUElYWIaIMTtisEbvrwNrP2k=; b=vDd3UE8R4dQygKI901pT7mIRLT
-        idFLmDlF/QiEq0wgvfbAD1gc9ivo1jGIjMKt3jONTogs+pWxEfvC6JN/gfmiLzyJ4bfCD8ufAIMiq
-        MYaebz1SFBThc64yw1bd5sP/m0EAHVXvi++NXX8sqylLQqo2R22QSdXPY4MBENp67jwJ1RHwfWuKv
-        WtEAT9w3xuQ7QEcDpU6HzzMF+BoHhI5H+OBM/+tdNi+CGqGd81YK71vRb6NG7QSKyDsm73PcqD0q1
-        2X3ipwMefMUaNNDeUxXOg7pYYMAo8LKz2L9rRqocTaG5G7lxa3sVz9qs318H5mChwfQr/M2XE/wrV
-        sElu2zAg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4K7q-0003cQ-2R; Wed, 19 Feb 2020 07:50:30 +0000
-Subject: Re: [PATCH v3 2/4] thermal: k3: Add support for bandgap sensors
-To:     Keerthy <j-keerthy@ti.com>, rui.zhang@intel.com,
-        robh+dt@kernel.org, daniel.lezcano@linaro.org
-Cc:     amit.kucheria@verdurent.com, t-kristo@ti.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        mark.rutland@arm.com
-References: <20200219074314.22829-1-j-keerthy@ti.com>
- <20200219074314.22829-3-j-keerthy@ti.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ab0bc84b-189f-a9be-e838-a38c14fa702a@infradead.org>
-Date:   Tue, 18 Feb 2020 23:50:29 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 02:56:29 -0500
+Received: from out28-146.mail.aliyun.com ([115.124.28.146]:35067 "EHLO
+        out28-146.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgBSH42 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 02:56:28 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07446616|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.182606-0.00178675-0.815607;DS=CONTINUE|ham_system_inform|0.277137-0.000238632-0.722624;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03291;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.Gpdxgpx_1582098977;
+Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gpdxgpx_1582098977)
+          by smtp.aliyun-inc.com(10.147.42.135);
+          Wed, 19 Feb 2020 15:56:19 +0800
+Subject: Re: [PATCH v5 1/7] clk: JZ4780: Add function for enable the second
+ core.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1581792932-108032-3-git-send-email-zhouyanjie@wanyeetech.com>
+ <1581864796.3.2@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org,
+        jiaxun.yang@flygoat.com, chenhc@lemote.com, allison@lohutok.net,
+        tglx@linutronix.de, daniel.lezcano@linaro.org,
+        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
+        ebiederm@xmission.com, miquel.raynal@bootlin.com,
+        paul@boddie.org.uk, hns@goldelico.com,
+        mips-creator-ci20-dev@googlegroups.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E4CEA17.4070009@wanyeetech.com>
+Date:   Wed, 19 Feb 2020 15:56:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200219074314.22829-3-j-keerthy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1581864796.3.2@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/18/20 11:43 PM, Keerthy wrote:
-> The bandgap provides current and voltage reference for its internal
-> circuits and other analog IP blocks. The analog-to-digital
-> converter (ADC) produces an output value that is proportional
-> to the silicon temperature.
-> 
-> Currently reading temperatures and trend computing is supported
-> as there are no active/passive cooling agent supported.
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  drivers/thermal/Kconfig      |  12 ++
->  drivers/thermal/Makefile     |   1 +
->  drivers/thermal/k3_bandgap.c | 342 +++++++++++++++++++++++++++++++++++
->  3 files changed, 355 insertions(+)
->  create mode 100644 drivers/thermal/k3_bandgap.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 5a05db5438d6..fa598eddc7ac 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -251,6 +251,18 @@ config IMX_THERMAL
->  	  cpufreq is used as the cooling device to throttle CPUs when the
->  	  passive trip is crossed.
->  
-> +config K3_THERMAL
-> +	bool "Texas Instruments K3 thermal support"
+Hi Paul,
 
-Hi,
-Why is this bool and not tristate?
+On 2020年02月16日 22:53, Paul Cercueil wrote:
+> Hi Zhou,
+>
+> Le dim., févr. 16, 2020 at 02:55, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
+>> Add "jz4780_core1_enable()" for enable the second core of JZ4780,
+>> prepare for later commits.
+>>
+>> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Tested-by: Paul Boddie <paul@boddie.org.uk>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> ---
+>>
+>> Notes:
+>>     v5:
+>>     New patch, split from [1/6] in v4.
+>>
+>>  drivers/clk/ingenic/jz4780-cgu.c | 58 
+>> ++++++++++++++++++++++++++++++++++++----
+>>  1 file changed, 53 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/clk/ingenic/jz4780-cgu.c 
+>> b/drivers/clk/ingenic/jz4780-cgu.c
+>> index d07fff1..4f81819 100644
+>> --- a/drivers/clk/ingenic/jz4780-cgu.c
+>> +++ b/drivers/clk/ingenic/jz4780-cgu.c
+>> @@ -16,7 +16,7 @@
+>>
+>>  /* CGU register offsets */
+>>  #define CGU_REG_CLOCKCONTROL    0x00
+>> -#define CGU_REG_PLLCONTROL    0x0c
+>> +#define CGU_REG_LCR            0x04
+>>  #define CGU_REG_APLL        0x10
+>>  #define CGU_REG_MPLL        0x14
+>>  #define CGU_REG_EPLL        0x18
+>> @@ -46,8 +46,8 @@
+>>  #define CGU_REG_CLOCKSTATUS    0xd4
+>>
+>>  /* bits within the OPCR register */
+>> -#define OPCR_SPENDN0        (1 << 7)
+>> -#define OPCR_SPENDN1        (1 << 6)
+>> +#define OPCR_SPENDN0        BIT(7)
+>> +#define OPCR_SPENDN1        BIT(6)
+>>
+>>  /* bits within the USBPCR register */
+>>  #define USBPCR_USB_MODE        BIT(31)
+>> @@ -88,6 +88,13 @@
+>>  #define USBVBFIL_IDDIGFIL_MASK    (0xffff << USBVBFIL_IDDIGFIL_SHIFT)
+>>  #define USBVBFIL_USBVBFIL_MASK    (0xffff)
+>>
+>> +/* bits within the LCR register */
+>> +#define LCR_PD_SCPU            BIT(31)
+>> +#define LCR_SCPUS            BIT(27)
+>> +
+>> +/* bits within the CLKGR1 register */
+>> +#define CLKGR1_CORE1        BIT(15)
+>> +
+>>  static struct ingenic_cgu *cgu;
+>>
+>>  static u8 jz4780_otg_phy_get_parent(struct clk_hw *hw)
+>> @@ -205,6 +212,47 @@ static const struct clk_ops jz4780_otg_phy_ops = {
+>>      .set_rate = jz4780_otg_phy_set_rate,
+>>  };
+>>
+>> +static int jz4780_core1_enable(struct clk_hw *hw)
+>> +{
+>> +    struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+>> +    struct ingenic_cgu *cgu = ingenic_clk->cgu;
+>> +    const unsigned int timeout = 100;
+>> +    unsigned long flags;
+>> +    unsigned int i;
+>> +    u32 lcr, clkgr1;
+>> +
+>> +    spin_lock_irqsave(&cgu->lock, flags);
+>> +
+>> +    lcr = readl(cgu->base + CGU_REG_LCR);
+>> +    lcr &= ~LCR_PD_SCPU;
+>> +    writel(lcr, cgu->base + CGU_REG_LCR);
+>> +
+>> +    clkgr1 = readl(cgu->base + CGU_REG_CLKGR1);
+>> +    clkgr1 &= ~CLKGR1_CORE1;
+>> +    writel(clkgr1, cgu->base + CGU_REG_CLKGR1);
+>> +
+>> +    spin_unlock_irqrestore(&cgu->lock, flags);
+>> +
+>> +    /* wait for the CPU to be powered up */
+>> +    for (i = 0; i < timeout; i++) {
+>> +        lcr = readl(cgu->base + CGU_REG_LCR);
+>> +        if (!(lcr & LCR_SCPUS))
+>> +            break;
+>> +        mdelay(1);
+>> +    }
+>
+> You can use readl_poll_timeout() from <linux/iopoll.h>.
 
-> +	depends on THERMAL
-> +	depends on ARCH_K3 || COMPILE_TEST
-> +	help
-> +	  If you say yes here you get thermal support for the Texas Instruments
-> +	  K3 SoC family. The current chip supported is:
-> +	   - AM654
-> +
-> +	  This includes temperature reading functionality and also trend
-> +	  computation.
-> +
->  config MAX77620_THERMAL
->  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->  	depends on MFD_MAX77620
+Sure.
 
-> diff --git a/drivers/thermal/k3_bandgap.c b/drivers/thermal/k3_bandgap.c
-> new file mode 100644
-> index 000000000000..35d904eb9857
-> --- /dev/null
-> +++ b/drivers/thermal/k3_bandgap.c
-> @@ -0,0 +1,342 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI Bandgap temperature sensor driver for K3 SoC Family
-> + *
-> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-
-> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
-> +			    int *temp)
-> +{
-> +	struct k3_bandgap *bgp;
-> +	unsigned int dtemp, s0, s1, s2;
-> +
-> +	bgp = devdata->bgp;
-> +	/**
-
-"/**" is used to indicate kernel-doc notation in the Linux kernel source files,
-but this comment is not kernel-doc notation, so please just use "/*".
-
-> +	 * Errata is applicable for am654 pg 1.0 silicon. There
-> +	 * is a variation of the order for 8-10 degree centigrade.
-> +	 * Work around that by getting the average of two closest
-> +	 * readings out of three readings everytime we want to
-> +	 * report temperatures.
-> +	 *
-> +	 * Errata workaround.
-> +	 */
-thanks.
--- 
-~Randy
+>
+>> +
+>> +    if (i == timeout) {
+>> +        pr_err("%s: Wait for power up core1 timeout\n", __func__);
+>> +        return -EBUSY;
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct clk_ops jz4780_core1_ops = {
+>> +    .enable = jz4780_core1_enable,
+>> +};
+>> +
+>>  static const s8 pll_od_encoding[16] = {
+>>      0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
+>>      0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
+>> @@ -701,9 +749,9 @@ static const struct ingenic_cgu_clk_info 
+>> jz4780_cgu_clocks[] = {
+>>      },
+>>
+>>      [JZ4780_CLK_CORE1] = {
+>> -        "core1", CGU_CLK_GATE,
+>> +        "core1", CGU_CLK_CUSTOM,
+>>          .parents = { JZ4780_CLK_CPU, -1, -1, -1 },
+>> -        .gate = { CGU_REG_CLKGR1, 15 },
+>> +        .custom = { &jz4780_core1_ops },
+>>      },
+>>
+>>  };
+>> -- 
+>> 2.7.4
+>>
+>
 
