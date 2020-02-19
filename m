@@ -2,167 +2,115 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E2AC34050
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 12:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D901C34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 12:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F315224654
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 12:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53DC24656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 12:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mgC9phzE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0CCmFUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgBSMoX (ORCPT
+        id S1726786AbgBSMst (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:44:23 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59690 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgBSMoX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 07:44:23 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JChssQ013710;
-        Wed, 19 Feb 2020 06:43:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582116234;
-        bh=kuB+R4Zi2k9ASFrC2H+1rMHduNuNh5eA+AYg21v4g+Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mgC9phzEV5AoGxOpxa9dqlRaMAh35GL8N/ozSJsrZkZ0AacLYwTRLnkd//EeSZ+td
-         4y9qgpiinOlXbKtKlim4XT6T0fOxNVLMJQjrjnro6tthhrlsIJ3dfXHfXY5+ramSIm
-         lh8X8J+xBm4c1c4M9+NFA94EAj0TX+F1dcjfFfqw=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JChsaV064935
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Feb 2020 06:43:54 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
- Feb 2020 06:43:54 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 19 Feb 2020 06:43:54 -0600
-Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JChowE126704;
-        Wed, 19 Feb 2020 06:43:51 -0600
-Subject: Re: [PATCH v3 2/4] thermal: k3: Add support for bandgap sensors
-To:     Randy Dunlap <rdunlap@infradead.org>, <rui.zhang@intel.com>,
-        <robh+dt@kernel.org>, <daniel.lezcano@linaro.org>
-CC:     <amit.kucheria@verdurent.com>, <t-kristo@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-References: <20200219074314.22829-1-j-keerthy@ti.com>
- <20200219074314.22829-3-j-keerthy@ti.com>
- <ab0bc84b-189f-a9be-e838-a38c14fa702a@infradead.org>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <6b4ce7aa-4211-218f-68c2-5c451d8b7677@ti.com>
-Date:   Wed, 19 Feb 2020 18:13:56 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 07:48:49 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37637 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgBSMst (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 07:48:49 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q23so240712ljm.4;
+        Wed, 19 Feb 2020 04:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dN5iCO8jDe/PtPLCP5+bsEVRnjfPHVQSbpy1yzeXeh8=;
+        b=j0CCmFUqCF0GipD0Gv123st5aD6tmNEimD2gqn5eu8O/YOpGEnsNoyT2C6cNcmEhgm
+         uFXj6wa9r6zJGDLJN/crPXOqyxipo5mvUWE583IfRlQS2skqxJnAs7QjMFXRIwmAEtjX
+         fs4UNS1T2AxJRUKRtOXNYCYeqp/v0QMRGmQaYsvZMUE+diO3XiT0lYiWPqr4+yKI9nrg
+         FE1YVcKcrJ9bTQtwCxWxaeZp95QGmytOs93FJ3qefk4q0OkWca2vRskIoZjdI0Que/bS
+         dM66EzF4nd93Lj0t6SqbdwwBcnjOvVW9yMQEsUbHk8rsXfPAkSctNxokZ3BRCsmqKl09
+         /GaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dN5iCO8jDe/PtPLCP5+bsEVRnjfPHVQSbpy1yzeXeh8=;
+        b=F7OGUbQRjjQQkUWCc5JRiTSfIeFawe6rZAKZYAFB5eB5tzLE9bqAx7qIcxR08EbU2y
+         IZrR7whiVn+4G6PxGZLVIsIf+ET6CT+HOJSUna5ImDgD6/dlBOFXEufHzxSxWHeHPJS8
+         eltt5XVe6to8xJ1bLype/kXRov6NSNRxqhqYugxXGIqhMK3WH91qDDC0DqDEeHj2zPew
+         WjGrbV9KK3oCYLfFuOgCZy9Z87IfF9mZTrVxmLdDRtxcGx1h2mBuIxtWbxed1txnYDf3
+         FE+CJYbhXSaEivmwVmPGhPS3+7b5fn504R4paCllB8O6Cdk2d3/24333UxhUrx6b56rW
+         hy1g==
+X-Gm-Message-State: APjAAAV+Wc6l56aHqQQcPsuAsimOnDt09lNB9PEX2n9a/PQJcWG+a7FE
+        Y8hPhRfoyhViX9Daqb4ftF6vG0ILZoSLFc0Rn/zlow==
+X-Google-Smtp-Source: APXvYqzHuSu+LmGKJcSnlYrT9QzvlCV+tLoHT5TpvGPcZeuRUnkxPmYQkKQ8fvmpb9gqs+zG7gLMzaZPLnlmuq9FBqI=
+X-Received: by 2002:a2e:5056:: with SMTP id v22mr15838180ljd.164.1582116527150;
+ Wed, 19 Feb 2020 04:48:47 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ab0bc84b-189f-a9be-e838-a38c14fa702a@infradead.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200219115709.3473072-1-oleksandr.suvorov@toradex.com>
+In-Reply-To: <20200219115709.3473072-1-oleksandr.suvorov@toradex.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 19 Feb 2020 09:48:35 -0300
+Message-ID: <CAOMZO5AZrQmYmEZVC9kpbaPe+Kg71SnCsfkMj0-f+adW3dLnBg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opanyuk <igor.opanyuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Oleksandr,
 
+On Wed, Feb 19, 2020 at 8:57 AM Oleksandr Suvorov
+<oleksandr.suvorov@toradex.com> wrote:
+>
+> SD/MMC on Colibri iMX7S/D modules successfully support
+> 200Mhz frequency in HS200 mode.
 
-On 19/02/20 1:20 pm, Randy Dunlap wrote:
-> On 2/18/20 11:43 PM, Keerthy wrote:
->> The bandgap provides current and voltage reference for its internal
->> circuits and other analog IP blocks. The analog-to-digital
->> converter (ADC) produces an output value that is proportional
->> to the silicon temperature.
->>
->> Currently reading temperatures and trend computing is supported
->> as there are no active/passive cooling agent supported.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   drivers/thermal/Kconfig      |  12 ++
->>   drivers/thermal/Makefile     |   1 +
->>   drivers/thermal/k3_bandgap.c | 342 +++++++++++++++++++++++++++++++++++
->>   3 files changed, 355 insertions(+)
->>   create mode 100644 drivers/thermal/k3_bandgap.c
->>
->> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->> index 5a05db5438d6..fa598eddc7ac 100644
->> --- a/drivers/thermal/Kconfig
->> +++ b/drivers/thermal/Kconfig
->> @@ -251,6 +251,18 @@ config IMX_THERMAL
->>   	  cpufreq is used as the cooling device to throttle CPUs when the
->>   	  passive trip is crossed.
->>   
->> +config K3_THERMAL
->> +	bool "Texas Instruments K3 thermal support"
-> 
-> Hi,
-> Why is this bool and not tristate?
+s/Mhz/MHz
 
-Definitely can work as tristate. I will fix it next version.
+>
+> Removing the unnecessary max-frequency limit significantly
+> increases the performance:
+>
+> == before fix ====
+> root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+> /dev/mmcblk0:
+>  Timing buffered disk reads: 252 MB in  3.02 seconds =  83.54 MB/sec
+> ==================
+>
+> === after fix ====
+> root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+> /dev/mmcblk0:
+>  Timing buffered disk reads: 408 MB in  3.00 seconds = 135.94 MB/sec
+> ==================
 
-> 
->> +	depends on THERMAL
->> +	depends on ARCH_K3 || COMPILE_TEST
->> +	help
->> +	  If you say yes here you get thermal support for the Texas Instruments
->> +	  K3 SoC family. The current chip supported is:
->> +	   - AM654
->> +
->> +	  This includes temperature reading functionality and also trend
->> +	  computation.
->> +
->>   config MAX77620_THERMAL
->>   	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->>   	depends on MFD_MAX77620
-> 
->> diff --git a/drivers/thermal/k3_bandgap.c b/drivers/thermal/k3_bandgap.c
->> new file mode 100644
->> index 000000000000..35d904eb9857
->> --- /dev/null
->> +++ b/drivers/thermal/k3_bandgap.c
->> @@ -0,0 +1,342 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * TI Bandgap temperature sensor driver for K3 SoC Family
->> + *
->> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
->> + */
-> 
->> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
->> +			    int *temp)
->> +{
->> +	struct k3_bandgap *bgp;
->> +	unsigned int dtemp, s0, s1, s2;
->> +
->> +	bgp = devdata->bgp;
->> +	/**
-> 
-> "/**" is used to indicate kernel-doc notation in the Linux kernel source files,
-> but this comment is not kernel-doc notation, so please just use "/*".
+Nice improvement :-)
 
-Okay
+>
+> Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D
+>                       1GB (eMMC) support")
 
-> 
->> +	 * Errata is applicable for am654 pg 1.0 silicon. There
->> +	 * is a variation of the order for 8-10 degree centigrade.
->> +	 * Work around that by getting the average of two closest
->> +	 * readings out of three readings everytime we want to
->> +	 * report temperatures.
->> +	 *
->> +	 * Errata workaround.
->> +	 */
-> thanks.
+Please keep the Fixes tag in a single line.
 
-Thanks for the review.
-
-- Keerthy
-> 
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
