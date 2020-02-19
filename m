@@ -2,95 +2,104 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F5AC34047
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 17:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96D2C34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 17:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849AF2467D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 17:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A513124673
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 17:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rTS8Mo3O"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="X2e0sx2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgBSRai (ORCPT
+        id S1726719AbgBSRfN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:30:38 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40540 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgBSRai (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 12:30:38 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so1549071wmi.5
-        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 09:30:35 -0800 (PST)
+        Wed, 19 Feb 2020 12:35:13 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44024 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgBSRfL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 12:35:11 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r11so1488750wrq.10
+        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 09:35:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Vzj5fYuKhjSJIX8LLdjrzndSdJzkfLdinYyCt3Ld6uA=;
-        b=rTS8Mo3OfNleBFSAn1y54h2JccThE9WwvMh1CPzzw8Yv/pYj4cc9te+MrhhNmIfNNC
-         yfMLNteGG2e0ZAG+BLaoho4eshauB17hHBJVUTQUMShg50KLiriDQfNh8KH3ZF8uc1dZ
-         WOUriIwI7kgYXc1ltbH177D3QQ6VSgG6tpZAbDp+kvoBwLCodiK0/tTVNyjFghyem1Pv
-         MKMcF4HEcr+GlYtisjzch3biOCeX3/FJjysohqklTAVaEM6UUBQAOcoszVsj9eHalJOv
-         hsk9E+Bb5gW7eR8kkEABhXOQvYd2l6jdyRDi91HdpmBNdmK5Il+GGcqBVVBeONfFY/gk
-         +0+w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SKZ1ddDPfUYCjUQ7kAF3t+orQ6m6BZIYkrSaotWcAmM=;
+        b=X2e0sx2O23WHDyj+CdogMOZnhLzlHGUY84Cw/1358tG4/lp0p4QzlF4gTn0S3FY5aF
+         wlKpLxS0Pq7GvSWtJJZlnc1/BhuJaSmmxc957ERCeTZfWstj/7P9ynHWGySHKdNut72W
+         OixpFUrGD9ADXYh9sGhd7pCeG+MDemjlpISXz9n5guTcFXHwC4ltNKQPsv1xZyo0nH/6
+         oedY9idCZ394g4kRJLT2t10k1kTREfbTfiWs8hohLdnCJxCwkXRaSe0izO0rYPp5W3V3
+         9d0Pm7TJCz+eu+Qnazm4qvj9KIpCTIg+eKRCDKN8gdAj8G6lYG+tTsbqRHk2AaBkxfcw
+         YygA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Vzj5fYuKhjSJIX8LLdjrzndSdJzkfLdinYyCt3Ld6uA=;
-        b=gEKoPB0lVLHqGFMlkE1IcMwlLQxWigodNwcbxIxO8GsvDkyvc4znOv+x9bOPuqwN8Q
-         2q8eKLQGD7nhRWxQhw/MKH3Y4N+3klmhg8wB+pIgXqDEhCDXkP7pT1ZHA0JJ3HQA71tB
-         g88C4QA6gu5tWNX0fbqNbb3sBLiG7m4W0V5bePZMrWEOQMXccIsyTvU0PjZAnm6GpLui
-         arLaDxNZSQ7QEhsrkB5L2nVABignUPmR/pDolvFsRjc3wtni5INi94BTe0hr68CLn5lB
-         ZHN5Xr+EwvI+9pbRX5ADeukdvlLuM2HBkfkZBA7PAz8uSn6+dyVUpupmysgBXK/zKtpg
-         1T+w==
-X-Gm-Message-State: APjAAAV7/vjzjnmnixUxU8mU+CNYcN4YNENSAF201ao1KN6kj2y3YDp9
-        Xj489IpiDEIKWt4KxRTlsHFs3Q==
-X-Google-Smtp-Source: APXvYqz8SvtcLoz81n/o1JvdjzZKZJ/qf8otl/+1C1BQrR5Z5QNE8zns0Qa9uLXu/e2c+diOPxnt3g==
-X-Received: by 2002:a7b:c3cd:: with SMTP id t13mr6145330wmj.88.1582133435029;
-        Wed, 19 Feb 2020 09:30:35 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id s65sm600755wmf.48.2020.02.19.09.30.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SKZ1ddDPfUYCjUQ7kAF3t+orQ6m6BZIYkrSaotWcAmM=;
+        b=C353/06SRR6X81EFRuREqqb8RgSQ9+uP7/LU5zwY/gYM70hicmiU8lWyUEkjVL131d
+         2n/9vVRYIsTX51zdOOPbK1syxnLsLZTY5xtA3xvJclebhbAVl1IdD6YqfPcBeuCQzkmz
+         S5IwUURz7At+XuTKYTvvkvPrWywXm2kyK15Ka46eRfjyY79IEnIVneNt6Ve+r6kTZqW2
+         SuRAQOVVcAP6N2iTDnerUYSoWUHzPJvA/zNiiH/Z/2/j6zpMrR7zcFNFcQXJK377CIRe
+         pc3D7Jv5kctaQ+nKYDTeMkiSas37LqI6H3nzQdh8Ns/1l6yO72s5QtJvb6/5yP1TW/2f
+         t4lg==
+X-Gm-Message-State: APjAAAWsbymtwgfDzyEYtDE7s6BFqR9xPKStxscWLl/chsZ+ZmKvO1DJ
+        67P0SNe/B9ayLPDo+cUiX9Y/mQ==
+X-Google-Smtp-Source: APXvYqzk6aYz8GK14PUd7/aAq+BxUqQaODL7ymtKvwWlFXfp7QfRzdYohN9IJrf2eOWE2Tw9MfdveA==
+X-Received: by 2002:adf:cd0a:: with SMTP id w10mr37515585wrm.107.1582133708455;
+        Wed, 19 Feb 2020 09:35:08 -0800 (PST)
+Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id v15sm648120wrf.7.2020.02.19.09.35.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 09:30:34 -0800 (PST)
-References: <20200219161625.1078051-1-jbrunet@baylibre.com> <20200219161625.1078051-3-jbrunet@baylibre.com> <20200219162000.GF4488@sirena.org.uk>
-User-agent: mu4e 1.3.3; emacs 26.3
+        Wed, 19 Feb 2020 09:35:07 -0800 (PST)
 From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org,
         Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 2/2] ASoC: meson: add t9015 internal DAC driver
-In-reply-to: <20200219162000.GF4488@sirena.org.uk>
-Date:   Wed, 19 Feb 2020 18:30:33 +0100
-Message-ID: <1j8skyxz5y.fsf@starbuckisacylon.baylibre.com>
+Subject: [PATCH v3 0/2] ASoC: meson: add internal DAC support
+Date:   Wed, 19 Feb 2020 18:35:01 +0100
+Message-Id: <20200219173503.1112561-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patchset adds support for the internal audio DAC provided on the
+Amlogic gxl, g12a and sm1 SoC families. On each of these SoC families,
+there is glue between this codec on the audio provider. The architecture
+is similar to the one used for the synopsys hdmi codec on these SoCs
 
-On Wed 19 Feb 2020 at 17:20, Mark Brown <broonie@kernel.org> wrote:
+Changes since v2 [1]:
+* Fix Mute kcontrol name
 
-> On Wed, Feb 19, 2020 at 05:16:25PM +0100, Jerome Brunet wrote:
->
->> +	SOC_SINGLE("Playback Mute Switch", VOL_CTRL1, DAC_SOFT_MUTE, 1, 0),
->> +	SOC_DOUBLE_TLV("Playback Volume", VOL_CTRL1, DACL_VC, DACR_VC,
->> +		       0xff, 0, dac_vol_tlv),
->
-> Sorry, that should just be plain "Playback Switch" - this can be used by
-> applications to present a combined mute/volume control together with the
-> Volume control
+Changes since v1 [0]:
+* Change some kcontrol names
+* Move DAC sources to DAPM
 
-Ah, Ok. I thought it was important to make difference between Mute
-(Playing silence) and a Stream stop ... I guess the app does not care
-about such detail. No problem, I'll fix this.
+[0]: https://lore.kernel.org/r/20200219133646.1035506-1-jbrunet@baylibre.com
+[1]: https://lore.kernel.org/r/20200219161625.1078051-1-jbrunet@baylibre.com
 
-> (though as in this case there's no per-channel control it
-> is possible some applications will struggle with that).
+Jerome Brunet (2):
+  ASoC: meson: add t9015 internal codec binding documentation
+  ASoC: meson: add t9015 internal DAC driver
 
-alsamixer seems happy enough with it :)
+ .../bindings/sound/amlogic,t9015.yaml         |  58 +++
+ sound/soc/meson/Kconfig                       |   8 +
+ sound/soc/meson/Makefile                      |   2 +
+ sound/soc/meson/t9015.c                       | 333 ++++++++++++++++++
+ 4 files changed, 401 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/amlogic,t9015.yaml
+ create mode 100644 sound/soc/meson/t9015.c
+
+-- 
+2.24.1
+
