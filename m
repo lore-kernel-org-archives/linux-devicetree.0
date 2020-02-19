@@ -2,139 +2,107 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9D3C34050
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22B1C34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8E424673
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="U+O32+tp"
+	by mail.kernel.org (Postfix) with ESMTP id 8298724673
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582128293;
+	bh=JgJ/vrMOiRMDUW3ju7uoxCx5v6yF1jGNqosrYOSOeIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L363ou6DhILVNRp813yTn/dKT4tTGCsaO71QqnPeLGGOkjCgvuLNbwDTSmix2aEH3
+	 voYj8t9OOO+No3Am7USrgsI7uRwL1HIfmeMzrRMdZnuLP5uqrUxRHreLOUuSagMZsy
+	 dyd/nKSXL05dc2autR6gV1D+WdV41EPh4Gm6yBrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgBSQEb (ORCPT
+        id S1726722AbgBSQEx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:04:31 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37506 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSQEb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 11:04:31 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1829D52B;
-        Wed, 19 Feb 2020 17:04:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1582128269;
-        bh=5kmhVcXfV5wEqcZomv5Pfg2wJzFwKTlbi/WI5GSb/hI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U+O32+tpCrui59NrxqWublVEY8ZciUyQjQA1giZNI6hYodj/BP1DsX71KURyLSSUl
-         wJoxxylRx+YLNOcL3cQhsyzokGyaX1LXzjbMA6VXpGvGWRS+H8ibq7Q8QfsSEWXDNu
-         dKRF0NuauZLUy8KFIA8AxQYZRUUIXm90U4J1JC48=
-Date:   Wed, 19 Feb 2020 18:04:10 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 19 Feb 2020 11:04:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:51850 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726645AbgBSQEx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 11:04:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F4B71FB;
+        Wed, 19 Feb 2020 08:04:52 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7D7A3F6CF;
+        Wed, 19 Feb 2020 08:04:51 -0800 (PST)
+Date:   Wed, 19 Feb 2020 16:04:50 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5] dt-bindings: display: renesas: du: Document optional
- reset properties
-Message-ID: <20200219160410.GX5070@pendragon.ideasonboard.com>
-References: <20200214082623.4893-1-geert+renesas@glider.be>
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ASoC: dt-bindings: simple-card: switch to yaml base
+ Documentation
+Message-ID: <20200219160450.GE4488@sirena.org.uk>
+References: <87blq1zr8n.wl-kuninori.morimoto.gx@renesas.com>
+ <20200219155808.GA25095@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Yb+qhiCg54lqZFXW"
 Content-Disposition: inline
-In-Reply-To: <20200214082623.4893-1-geert+renesas@glider.be>
+In-Reply-To: <20200219155808.GA25095@bogus>
+X-Cookie: FORTH IF HONK THEN
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
 
-On Fri, Feb 14, 2020 at 09:26:23AM +0100, Geert Uytterhoeven wrote:
-> Document the optional properties for describing module resets, to
-> support resetting display channels on R-Car Gen2 and Gen3.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> Who's taking this kind of patches?
-> V1 was submmitted in March 2017.
+--Yb+qhiCg54lqZFXW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My bad.
+On Wed, Feb 19, 2020 at 09:58:08AM -0600, Rob Herring wrote:
+> On Fri, Feb 14, 2020 at 02:13:05PM +0900, Kuninori Morimoto wrote:
+> > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> >=20
+> > This patch switches from .txt base to .yaml base Document.
 
-> 
-> v5:
->   - Rebase on top of renesas,cmms and renesas,vsps patches,
-> 
-> v4:
->   - Use "All but R8A7779" instead of "R8A779[0123456]", to reduce future
->     churn,
-> 
-> v3:
->   - Add Acked-by,
->   - Drop LVDS resets, as LVDS is now covered by a separate binding,
->   - Update the example.
-> 
-> v2:
->   - s/phandles/phandle/.
-> ---
->  .../devicetree/bindings/display/renesas,du.txt         | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> index eb4ae41fe41f83c7..51cd4d1627703a15 100644
-> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> @@ -50,6 +50,14 @@ Required Properties:
->      VSP instance that serves the DU channel, and the channel index identifies
->      the LIF instance in that VSP.
->  
-> +Optional properties:
-> +  - resets: A list of phandle + reset-specifier pairs, one for each entry in
-> +    the reset-names property.
-> +  - reset-names: Names of the resets. This property is model-dependent.
-> +    - All but R8A7779 use one reset for a group of one or more successive
-> +      channels. The resets must be named "du.x" with "x" being the numerical
-> +      index of the lowest channel in the group.
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
 
-I've now reviewed the patches that add those properties to our .dtsi
-files, and I wonder how we should handle the two SoCs that have DU0, DU1
-and DU3, but not DU2. The reset resource is tied to a group of two
-channels, so we would use du.0 and du.2 respectively, but that conflicts
-with the above text.
+> > +  dai-tdm-slot-num:
+> > +    description: see tdm-slot.txt.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
 
-I'm trying to think about the implementation on the driver side, where
-group resources are associated with a group object, whose index is
-computed by dividing the channel number by 2. We could have a special
-case in group initialization that uses du.3 instead of du.2 for the
-second group.
+> Is there a max?
 
-What do you think ? Probably overkill, and we should go for du.3 ?
+No.
 
-> +
->  Required nodes:
->  
->  The connections to the DU output video ports are modeled using the OF graph
-> @@ -96,6 +104,8 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
->  			 <&cpg CPG_MOD 722>,
->  			 <&cpg CPG_MOD 721>;
->  		clock-names = "du.0", "du.1", "du.2", "du.3";
-> +		resets = <&cpg 724>, <&cpg 722>;
-> +		reset-names = "du.0", "du.2";
->  		renesas,cmms = <&cmm0>, <&cmm1>, <&cmm2>, <&cmm3>;
->  		renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
->  
+> > +    description: see tdm-slot.txt.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
 
--- 
-Regards,
+> max is 32 or something much less than 2^32?
 
-Laurent Pinchart
+It'll be much less than 2^32 but could potentially be fairly large in a
+big telephony system.
+
+--Yb+qhiCg54lqZFXW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5NXKEACgkQJNaLcl1U
+h9DkIgf+PId+cf44wocBGhUhG5MM+TGNp2SLlvXDPC9TiWLqmdmtPLAYKVQQehxq
+v5dH0QMF9b3zI4zcMLX/LjT6UJGptws3jGlVQWTpxdl/4evXXgmYIJ/6F9PFClfl
+4qw6j/8DgmnFT4/Z3a/H4bXOjdooxbsU8YQ45xqHjwqlEhIkwWuWVvUCiVUt3wR1
+ds7xrNP2XUvckeC90M/OVmv9TDVzjkDEp5MrWRCUIK+ptKWtMDJNKlv5uF+Sh/FU
+ICjgBBiL82lrk9eRccdIVjjeXDFOwQMfx4KXW1IwfrbW+ZvAL9gP/UCQo5+pqVnq
+fHt1FURjfodweBdVzejev4FDZCWbAA==
+=MTvU
+-----END PGP SIGNATURE-----
+
+--Yb+qhiCg54lqZFXW--
