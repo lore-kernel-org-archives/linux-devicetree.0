@@ -2,246 +2,152 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB01C5ACC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E253C5ACC4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CD021D56
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:37:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgO2PZ3m"
+	by mail.kernel.org (Postfix) with ESMTP id 63F4824671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582156080;
+	bh=Lx0JvjH6kK2Mtkb2wpHR3KF41KC6alibmrjenySNb+o=;
+	h=In-Reply-To:References:Subject:From:To:Date:List-ID:From;
+	b=FfR2+GnlvmFwvwtzVuIVKha5nh3ViSFAcuakss3LnagUZtKxQeZeAJ4GVNwuSRE8n
+	 OMrD4Nusl9qT5bfzU7GaVBZ738JfvL8AKenwDObCITpXbDvDe8fGems/cJLog5N/0w
+	 0l7f9Dx1uh24VqaWWHvXWs2M2dD29JpdA5caHvPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBSXhY (ORCPT
+        id S1726797AbgBSXr4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:37:24 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:42141 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSXhY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 18:37:24 -0500
-Received: by mail-yw1-f68.google.com with SMTP id b81so1007918ywe.9;
-        Wed, 19 Feb 2020 15:37:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Orzy6eDvO44Ke7Q13dM0od3EjiBktCuUDbuSH/RXkbw=;
-        b=jgO2PZ3m52LdxQ7HUKo54WSwJAmkRB+fZTqgKFrKnkDDWMt2nfQPbpUxUPDWjTWpCL
-         ivKGgxXtFGtOpmFeBd6rHui9FEu0sYEG/KCcpqv6T84nFpEiJQimgzyzgBolnTPyKGZt
-         H2BNwX+iQamnXIfIGCgo8ZQ6wlm5QxF2faZW5nTfHaxSS9Oney3EC2pHN8cKBRbKrdZm
-         dVXC60aXsPSIhZgRRa4i/GudysFhIzOgdN+nW22U47A9M88JEWloIh+F6tuX8P3eFoqo
-         OSjeV1SCnojjACSK9EZf+lHI5nfT8InSR4T1D3nCqOoExgqYGOhCBJEj2wX1iKo+RmVU
-         DNhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Orzy6eDvO44Ke7Q13dM0od3EjiBktCuUDbuSH/RXkbw=;
-        b=oei7/6Y3iAQi1etPW2RJaIopW5W+E6qYeJe50JZADWnITu0EP/vo2aVjUwO/YF15M7
-         eC59+ONIdIU30f9zrSwJo0VWG22jQfqT5UEWBhCoqg9CBPda/MWggggdn0kxcYN488VX
-         /bl2YQ4wR0DbfSkc59ew83a40ONRa1d1bDWTcONHQdufftNg/dntP+IkDYWpZnuXAImz
-         H73xzi2C0XyplZGbjtprVh9E3k5urXrcDx6GF9zzLSVIU/vBbnWkUqJx1WA/T6+Akslu
-         0By9IIeUvaru9e+eMvMZtxgNHP8mvOo/yuf24iYbFh1xR7V1OEnL6EBeJke5b03qoBvD
-         lZ2Q==
-X-Gm-Message-State: APjAAAVp5e2NXC6Zs+dDZFH5zEip6dkTNsxh4sFfVRfpzFhPQPl09GlU
-        qnu9y+k+rFxEFFioXp2A4/s=
-X-Google-Smtp-Source: APXvYqzRXKQDTQ67CFUX8qautSExnmyWkTBqKK3Sejrsw0csxe/+Jd704xYLQR8q5t9xfi8k3WE4nw==
-X-Received: by 2002:a0d:e652:: with SMTP id p79mr22301622ywe.491.1582155442692;
-        Wed, 19 Feb 2020 15:37:22 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id b195sm745065ywh.80.2020.02.19.15.37.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Feb 2020 15:37:22 -0800 (PST)
-Subject: Re: [PATCH 1/2] of: unittest: add overlay gpio test to catch gpio hog
- problem
-To:     Rob Herring <robh@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alan Tull <atull@kernel.org>
-References: <1580276765-29458-1-git-send-email-frowand.list@gmail.com>
- <1580276765-29458-2-git-send-email-frowand.list@gmail.com>
- <20200219215656.GA15842@bogus>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <ff65f982-f71e-5bef-1811-fdb94fd7da2f@gmail.com>
-Date:   Wed, 19 Feb 2020 17:37:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 19 Feb 2020 18:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726681AbgBSXr4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 18:47:56 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BD5D24686;
+        Wed, 19 Feb 2020 23:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582156075;
+        bh=Lx0JvjH6kK2Mtkb2wpHR3KF41KC6alibmrjenySNb+o=;
+        h=In-Reply-To:References:Subject:From:To:Date:From;
+        b=xNyiO0FuY5nmioZrkBZUAv4IYD+K7/FrQQQ7hYyIirBZddKaIZAu9MATKU/JIUqzS
+         ntO7j4aQlQP+AHQ8mIq5prx3PlCT14CNrABQDvTcQZZSuGQr68ev3iRlzBBUyb8h3O
+         rEVSJV4PChrcOP8yRlUhU3kegj3vFx03T7tYccjw=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200219215656.GA15842@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582093655-9673-1-git-send-email-sivaprak@codeaurora.org>
+References: <1582093655-9673-1-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: ipq6018: Add a few device nodes
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, sivaprak@codeaurora.org
+Date:   Wed, 19 Feb 2020 15:47:54 -0800
+Message-ID: <158215607451.184098.15649983727508296275@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/19/20 3:56 PM, Rob Herring wrote:
-> On Tue, Jan 28, 2020 at 11:46:04PM -0600, frowand.list@gmail.com wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> Geert reports that gpio hog nodes are not properly processed when
->> the gpio hog node is added via an overlay reply and provides an
->> RFC patch to fix the problem [1].
->>
->> Add a unittest that shows the problem.  Unittest will report "1 failed"
->> test before applying Geert's RFC patch and "0 failed" after applying
->> Geert's RFC patch.
-> 
-> What's the status of that? I don't want to leave the tests failing at 
-> least outside of a kernel release.
+Quoting Sivaprakash Murugesan (2020-02-18 22:27:35)
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/=
+qcom/ipq6018.dtsi
+> index 0fb44e5..5d4dfb8 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> @@ -98,6 +121,36 @@
+>                 dma-ranges;
+>                 compatible =3D "simple-bus";
+> =20
+> +               rng: qrng@e1000 {
 
-I agree.  I would like to see my patches applied, showing the test fail,
-immediately followed by Geert's fix.  So my series should not go in
-until Geert's patch is ready.
+prng@e3000?
 
-> 
->>
->> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
->>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->> ---
->>
->> There are checkpatch warnings.
->>   - New files are in a directory already covered by MAINTAINERS
->>   - The undocumented compatibles are restricted to use by unittest
->>     and should not be documented under Documentation
->>   - The printk() KERN_<LEVEL> warnings are false positives.  The level
->>     is supplied by a define parameter instead of a hard coded constant
->>   - The lines over 80 characters are consistent with unittest.c style
->>
->> This unittest was also valuable in that it allowed me to explore
->> possible issues related to the proposed solution to the gpio hog
->> problem.
->>
->> changes since RFC:
->>   - fixed node names in overlays
->>   - removed unused fields from struct unittest_gpio_dev
->>   - of_unittest_overlay_gpio() cleaned up comments
->>   - of_unittest_overlay_gpio() moved saving global values into
->>     probe_pass_count and chip_request_count more tightly around
->>     test code expected to trigger changes in the global values
->>
->>  drivers/of/unittest-data/Makefile             |   8 +-
->>  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
->>  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
->>  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
->>  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
->>  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
->>  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
->>  drivers/of/unittest.c                         | 255 ++++++++++++++++++++++++++
->>  8 files changed, 372 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
->>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
->>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
->>  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
->>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
->>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
->>
->> diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
->> index 9b6807065827..009f4045c8e4 100644
->> --- a/drivers/of/unittest-data/Makefile
->> +++ b/drivers/of/unittest-data/Makefile
->> @@ -21,7 +21,13 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtb.o \
->>  			    overlay_bad_add_dup_prop.dtb.o \
->>  			    overlay_bad_phandle.dtb.o \
->>  			    overlay_bad_symbol.dtb.o \
->> -			    overlay_base.dtb.o
->> +			    overlay_base.dtb.o \
->> +			    overlay_gpio_01.dtb.o \
->> +			    overlay_gpio_02a.dtb.o \
->> +			    overlay_gpio_02b.dtb.o \
->> +			    overlay_gpio_03.dtb.o \
->> +			    overlay_gpio_04a.dtb.o \
->> +			    overlay_gpio_04b.dtb.o
->>  
->>  # enable creation of __symbols__ node
->>  DTC_FLAGS_overlay += -@
->> diff --git a/drivers/of/unittest-data/overlay_gpio_01.dts b/drivers/of/unittest-data/overlay_gpio_01.dts
->> new file mode 100644
->> index 000000000000..f039e8bce3b6
->> --- /dev/null
->> +++ b/drivers/of/unittest-data/overlay_gpio_01.dts
->> @@ -0,0 +1,23 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/dts-v1/;
->> +/plugin/;
->> +
->> +&unittest_test_bus {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	gpio_01 {
-> 
-> Missing unit address:
-> 
-> gpio@0
+> +                       compatible =3D "qcom,prng-ee";
+> +                       reg =3D <0xe3000 0x1000>;
+> +                       clocks =3D <&gcc GCC_PRNG_AHB_CLK>;
+> +                       clock-names =3D "core";
+> +               };
+> +
+> +               cryptobam: dma@704000 {
+> +                       compatible =3D "qcom,bam-v1.7.0";
+> +                       reg =3D <0x00704000 0x20000>;
+> +                       interrupts =3D <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks =3D <&gcc GCC_CRYPTO_AHB_CLK>;
+> +                       clock-names =3D "bam_clk";
+> +                       #dma-cells =3D <1>;
+> +                       qcom,ee =3D <1>;
+> +                       qcom,controlled-remotely =3D <1>;
+> +                       qcom,config-pipe-trust-reg =3D <0>;
+> +               };
+> @@ -146,6 +279,21 @@
+>                         interrupts =3D <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>                 };
+> =20
+> +               watchdog@b017000 {
+> +                       compatible =3D "qcom,kpss-wdt";
+> +                       interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
 
-But my changelog claimed that I fixed that, isn't that
-good enough?  :-)
+This isn't a rising edge interrupt?
 
-/me pulls big brown paper bag over head.
+> +                       reg =3D <0x0b017000 0x40>;
+> +                       clocks =3D <&sleep_clk>;
+> +                       timeout-sec =3D <10>;
+> +               };
+> +
+> +               apcs_glb: mailbox@b111000 {
+> +                       compatible =3D "qcom,ipq8074-apcs-apps-global";
+> +                       reg =3D <0x0b111000 0xc>;
+> +
+> +                       #mbox-cells =3D <1>;
+> +               };
+> +
+>                 timer {
+>                         compatible =3D "arm,armv8-timer";
+>                         interrupts =3D <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4)=
+ | IRQ_TYPE_LEVEL_LOW)>,
+> @@ -213,5 +361,85 @@
+>                         };
+>                 };
+> =20
+> +               q6v5_wcss: q6v5_wcss@cd00000 {
 
-And the same for all the issues you point out below, for the
-second patch version in a row.
+remoteproc@cd00000?
 
-I'll re-spin on 5.6-rc1 and truly include the fixes.
+> +                       compatible =3D "qcom,ipq8074-wcss-pil";
+> +                       reg =3D <0x0cd00000 0x4040>,
+> +                               <0x004ab000 0x20>;
+> +                       reg-names =3D "qdsp6",
+> +                                   "rmb";
+[...]
+> +                       glink-edge {
+> +                               interrupts =3D <GIC_SPI 321 IRQ_TYPE_EDGE=
+_RISING>;
+> +                               qcom,remote-pid =3D <1>;
+> +                               mboxes =3D <&apcs_glb 8>;
+> +
+> +                               rpm_requests {
+> +                                       qcom,glink-channels =3D "IPCRTR";
+> +                               };
+> +                       };
+> +               };
+> +
+> +       };
+> +
+> +       tcsr_mutex: tcsr-mutex {
 
--Frank
+hwlock?
 
-
-> 
-> 
->> +		compatible = "unittest-gpio";
->> +		reg = <0>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		ngpios = <2>;
->> +		gpio-line-names = "line-A", "line-B";
->> +
->> +		line_b {
-> 
-> Don't use '_'.
-> 
-> line-b
-> 
->> +			gpio-hog;
->> +			gpios = <2 0>;
->> +			input;
->> +			line-name = "line-B-input";
->> +		};
->> +	};
->> +};
->> diff --git a/drivers/of/unittest-data/overlay_gpio_02a.dts b/drivers/of/unittest-data/overlay_gpio_02a.dts
->> new file mode 100644
->> index 000000000000..cdafab604793
->> --- /dev/null
->> +++ b/drivers/of/unittest-data/overlay_gpio_02a.dts
->> @@ -0,0 +1,16 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/dts-v1/;
->> +/plugin/;
->> +
->> +&unittest_test_bus {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	gpio_02 {
-> 
-> gpio@1
-> 
-> ...and a few more.
-> 
->> +		compatible = "unittest-gpio";
->> +		reg = <1>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		ngpios = <2>;
->> +		gpio-line-names = "line-A", "line-B";
->> +	};
->> +};
-> 
-
+> +               compatible =3D "qcom,tcsr-mutex";
+> +               syscon =3D <&tcsr_mutex_regs 0 0x80>;
+> +               #hwlock-cells =3D <1>;
+> +       };
+> +
