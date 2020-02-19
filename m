@@ -2,152 +2,104 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E253C5ACC4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6A8C5ACC4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F4824671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582156080;
-	bh=Lx0JvjH6kK2Mtkb2wpHR3KF41KC6alibmrjenySNb+o=;
-	h=In-Reply-To:References:Subject:From:To:Date:List-ID:From;
-	b=FfR2+GnlvmFwvwtzVuIVKha5nh3ViSFAcuakss3LnagUZtKxQeZeAJ4GVNwuSRE8n
-	 OMrD4Nusl9qT5bfzU7GaVBZ738JfvL8AKenwDObCITpXbDvDe8fGems/cJLog5N/0w
-	 0l7f9Dx1uh24VqaWWHvXWs2M2dD29JpdA5caHvPc=
+	by mail.kernel.org (Postfix) with ESMTP id A2E862465D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 23:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KU1uqUYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgBSXr4 (ORCPT
+        id S1726751AbgBSX6T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:47:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbgBSXr4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 18:47:56 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BD5D24686;
-        Wed, 19 Feb 2020 23:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582156075;
-        bh=Lx0JvjH6kK2Mtkb2wpHR3KF41KC6alibmrjenySNb+o=;
-        h=In-Reply-To:References:Subject:From:To:Date:From;
-        b=xNyiO0FuY5nmioZrkBZUAv4IYD+K7/FrQQQ7hYyIirBZddKaIZAu9MATKU/JIUqzS
-         ntO7j4aQlQP+AHQ8mIq5prx3PlCT14CNrABQDvTcQZZSuGQr68ev3iRlzBBUyb8h3O
-         rEVSJV4PChrcOP8yRlUhU3kegj3vFx03T7tYccjw=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 19 Feb 2020 18:58:19 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40141 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgBSX6T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 18:58:19 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a142so25705086oii.7;
+        Wed, 19 Feb 2020 15:58:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BX9+oiU9NUzGK1+aV9/Uah0G+lhW9/DtCwBAHxWnn3I=;
+        b=KU1uqUYVxkoQfS26YEi+ztZu7uQD6NmCYAjnD4WbMrS3FbUgBPMQxL4cToOQRD6Uov
+         nHqZX7QwUxnmIRKEcKaP8NEsh/58I2e78+wWxDrpu1BXApMDiJMolk2hwg9CzqcOf9sW
+         YE4tYRCZaEyh/x1674lcZY1l/H0F0ArPvwmZIxON3DfEjagSV1uN/AxJKPXKBeA241xL
+         WqwyGwfYPVg0aO9XUojnJGQxro+u25NEoqXrbNR09NiA6eBYzNO4I80Q2dLPiRbdLZkb
+         04tkTaqeTm6+rrMCyLbyFF+HCBtuFvxa0v0YSX5dAdbBWko9TEenvJpgjmfSY9CevQ+/
+         hitw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BX9+oiU9NUzGK1+aV9/Uah0G+lhW9/DtCwBAHxWnn3I=;
+        b=M/VKtYr5IUMKwGD5odp0XvHvaoe8o3lESFzKYG/iV6lwy8S7p3dq+jrdlt5Ef71VT9
+         yMuM7Xb683bDcg6i+VnR+pfPJfXq391UVdiZQDnjn+/MRArlIdLJeh6qErvA3983LPud
+         vBcz4FDJLqP7zmqb6r6U18o05NFCtlX3MVMjxWEv+bS/8L+dvZFkvQOJgzugwOjMhA3V
+         gXJxcZRcHmcozN/9D9WxHlsvo0H2Tsy8nF5Dqa0A2qftHA7KNgVPsarsX9PV0RBt/mW5
+         yWF7eNPP9kEGjwWyTWqlMQtWcB3ulG3cV1AeKpX82boBIyxTjGU56HohsLBZN59iWIsd
+         pA3g==
+X-Gm-Message-State: APjAAAVAGhtbVde3ljRursK6Ova5VxM0tbgd8SJAuYAz++mPCDY0s0Wo
+        6avAN6w5llkezO2tQg7Rin2FwtNnZ2fTi4GHEM4=
+X-Google-Smtp-Source: APXvYqwRxzwlvasanDAZCzqmiAcIi+8du+kTb0XmBWuXgm+lcYoRDBqJdLFMRLpwiKeOks5taARgUtmAle4aHBvqjI0=
+X-Received: by 2002:aca:ddc2:: with SMTP id u185mr185041oig.24.1582156697455;
+ Wed, 19 Feb 2020 15:58:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582093655-9673-1-git-send-email-sivaprak@codeaurora.org>
-References: <1582093655-9673-1-git-send-email-sivaprak@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: ipq6018: Add a few device nodes
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, sivaprak@codeaurora.org
-Date:   Wed, 19 Feb 2020 15:47:54 -0800
-Message-ID: <158215607451.184098.15649983727508296275@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200215065826.739102-1-gch981213@gmail.com> <20200218125557.GD4232@sirena.org.uk>
+In-Reply-To: <20200218125557.GD4232@sirena.org.uk>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Thu, 20 Feb 2020 07:58:06 +0800
+Message-ID: <CAJsYDVL03KJv7eewGekBPCfpbOuTX0tJ6qZaydvJnBDzZ5vEwg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] rewrite mtk-quadspi spi-nor driver with spi-mem
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sivaprakash Murugesan (2020-02-18 22:27:35)
-> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/=
-qcom/ipq6018.dtsi
-> index 0fb44e5..5d4dfb8 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> @@ -98,6 +121,36 @@
->                 dma-ranges;
->                 compatible =3D "simple-bus";
-> =20
-> +               rng: qrng@e1000 {
+Hi!
 
-prng@e3000?
+On Tue, Feb 18, 2020 at 8:55 PM Mark Brown <broonie@kernel.org> wrote:
+> This is an ABI break so you shouldn't be doing this, if the existing
+> binding works it should continue to work.
 
-> +                       compatible =3D "qcom,prng-ee";
-> +                       reg =3D <0xe3000 0x1000>;
-> +                       clocks =3D <&gcc GCC_PRNG_AHB_CLK>;
-> +                       clock-names =3D "core";
-> +               };
-> +
-> +               cryptobam: dma@704000 {
-> +                       compatible =3D "qcom,bam-v1.7.0";
-> +                       reg =3D <0x00704000 0x20000>;
-> +                       interrupts =3D <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks =3D <&gcc GCC_CRYPTO_AHB_CLK>;
-> +                       clock-names =3D "bam_clk";
-> +                       #dma-cells =3D <1>;
-> +                       qcom,ee =3D <1>;
-> +                       qcom,controlled-remotely =3D <1>;
-> +                       qcom,config-pipe-trust-reg =3D <0>;
-> +               };
-> @@ -146,6 +279,21 @@
->                         interrupts =3D <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->                 };
-> =20
-> +               watchdog@b017000 {
-> +                       compatible =3D "qcom,kpss-wdt";
-> +                       interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+The missing spi-max-frequency is the only part preventing old
+device tree to work with this driver.
+If the goal is to make existing dt binding work, I could patch dt using
+of_add_property in v2. I saw similar device tree patching for legacy
+bindings in pinctrl-single driver.
 
-This isn't a rising edge interrupt?
+>
+> > 3. removing the old driver. I'll create this commit after 1 and 2 are
+> >    applied to avoid possible rebasing due to any changes in the old
+> >    driver.
+>
+> This isn't great as it means we have a period with two drivers for the
+> same thing in tree which is at best going to be confusing.  There's no
+> advantage to splitting this out.
 
-> +                       reg =3D <0x0b017000 0x40>;
-> +                       clocks =3D <&sleep_clk>;
-> +                       timeout-sec =3D <10>;
-> +               };
-> +
-> +               apcs_glb: mailbox@b111000 {
-> +                       compatible =3D "qcom,ipq8074-apcs-apps-global";
-> +                       reg =3D <0x0b111000 0xc>;
-> +
-> +                       #mbox-cells =3D <1>;
-> +               };
-> +
->                 timer {
->                         compatible =3D "arm,armv8-timer";
->                         interrupts =3D <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4)=
- | IRQ_TYPE_LEVEL_LOW)>,
-> @@ -213,5 +361,85 @@
->                         };
->                 };
-> =20
-> +               q6v5_wcss: q6v5_wcss@cd00000 {
+Got it. I'll add this patch in v2.
 
-remoteproc@cd00000?
-
-> +                       compatible =3D "qcom,ipq8074-wcss-pil";
-> +                       reg =3D <0x0cd00000 0x4040>,
-> +                               <0x004ab000 0x20>;
-> +                       reg-names =3D "qdsp6",
-> +                                   "rmb";
-[...]
-> +                       glink-edge {
-> +                               interrupts =3D <GIC_SPI 321 IRQ_TYPE_EDGE=
-_RISING>;
-> +                               qcom,remote-pid =3D <1>;
-> +                               mboxes =3D <&apcs_glb 8>;
-> +
-> +                               rpm_requests {
-> +                                       qcom,glink-channels =3D "IPCRTR";
-> +                               };
-> +                       };
-> +               };
-> +
-> +       };
-> +
-> +       tcsr_mutex: tcsr-mutex {
-
-hwlock?
-
-> +               compatible =3D "qcom,tcsr-mutex";
-> +               syscon =3D <&tcsr_mutex_regs 0 0x80>;
-> +               #hwlock-cells =3D <1>;
-> +       };
-> +
+--
+Regards,
+Chuanhong Guo
