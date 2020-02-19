@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5DFC3524E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89AAC34056
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB3224671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C47524671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582145831;
-	bh=ZLeSRaZ+bs57DBKQbEWc3gflC62avjUK1mfd1oFxx8o=;
+	s=default; t=1582145879;
+	bh=6QlRd8Du69I3h8MdKFCWb+X+r3yEic82mNtWwK6yTXM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=DJYIns+ERJTUaxlJwbAHFlQCtFvWIAk8LAiGmx/Z1NdZR0zvY5QSMq49bbI8LhMQ6
-	 gJO8bjK7KKD9nLzRWj8J9eUgZQKTqIvBusmK8SAWA7T2rMgXN1ta8JBXLpCPhdV5OK
-	 XKXMq2q7fIpQqq7odZ70BsG/vWmAsBmVd1tu1gBk=
+	b=cLxCUW2bQiuS/vkU3C9gw9JfQh5lwt0RZ5x+rkIqYgDX+9OwXhQ3cvUxmOaS6AmtT
+	 QWLqNHDVjjJUMcHYW+fFkf6MGbTG3cYxT29060B5M9RAKUCa9Hh2+xHnq87n66svrN
+	 tUwOcD9b2X5J9GJqGTBdp2LRLQ7/AwM2cTkhojKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgBSU5K (ORCPT
+        id S1726875AbgBSU57 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:57:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:56696 "EHLO foss.arm.com"
+        Wed, 19 Feb 2020 15:57:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:56808 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgBSU5K (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:57:10 -0500
+        id S1726739AbgBSU56 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 15:57:58 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F106FEC;
-        Wed, 19 Feb 2020 12:57:10 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73597FEC;
+        Wed, 19 Feb 2020 12:57:58 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A63AE3F68F;
-        Wed, 19 Feb 2020 12:57:09 -0800 (PST)
-Date:   Wed, 19 Feb 2020 20:57:08 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC82E3F68F;
+        Wed, 19 Feb 2020 12:57:57 -0800 (PST)
+Date:   Wed, 19 Feb 2020 20:57:56 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, heiko@sntech.de, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, pgwipeout@gmail.com
-Subject: Applied "ASoC: rockchip: Make RK3328 GPIO_MUTE control explicit" to the asoc tree
-In-Reply-To:  <5bc383ed1832f0f5d1dcb3c97ad92fd68e5217e3.1581376744.git.robin.murphy@arm.com>
-Message-Id:  <applied-5bc383ed1832f0f5d1dcb3c97ad92fd68e5217e3.1581376744.git.robin.murphy@arm.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: fix card registration regression." to the asoc tree
+In-Reply-To:  <20200219102526.692126-1-jbrunet@baylibre.com>
+Message-Id:  <applied-20200219102526.692126-1-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -52,7 +53,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: rockchip: Make RK3328 GPIO_MUTE control explicit
+   ASoC: fix card registration regression.
 
 has been applied to the asoc tree at
 
@@ -77,111 +78,83 @@ to this mail.
 Thanks,
 Mark
 
-From 87d12d5545fa72d67d99d797cdb464c0c7efb9c9 Mon Sep 17 00:00:00 2001
-From: Robin Murphy <robin.murphy@arm.com>
-Date: Tue, 18 Feb 2020 21:31:59 +0000
-Subject: [PATCH] ASoC: rockchip: Make RK3328 GPIO_MUTE control explicit
+From 6b62fa95b56bcc77cbbcc76e45f5170b4ec229b1 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Wed, 19 Feb 2020 11:25:26 +0100
+Subject: [PATCH] ASoC: fix card registration regression.
 
-The RK3328 reference design uses an external line driver IC as a buffer
-on the analog codec output, enabled by the GPIO_MUTE pin, and such a
-configuration is currently assumed in the codec driver's direct poking
-of GRF_SOC_CON10 to control the GPIO_MUTE output value. However, some
-boards wire up analog audio yet use that pin for some other purpose, so
-that assumption doesn't always hold. Update this functionality to rely
-on an explicit GPIO descriptor, such that it can be managed at the
-board level.
+This reverts commit b2354e4009a773c00054b964d937e1b81cb92078.
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/5bc383ed1832f0f5d1dcb3c97ad92fd68e5217e3.1581376744.git.robin.murphy@arm.com
+This change might have been desirable to ensure the uniqueness of
+the component name. It would have helped to better support linux
+devices which register multiple components, something is which more
+common than initially thought.
+
+However, some card driver are directly using dev_name() to fill the
+component names of the dai_link which is a problem if want to change
+the way ASoC generates the component names.
+
+Until we figure out the appropriate way to deal with this, revert the
+change and keep the names as they were. There might be a couple of warning
+related to debugfs (which were already present before the change) but it
+is still better than breaking working audio cards.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Link: https://lore.kernel.org/r/20200219102526.692126-1-jbrunet@baylibre.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/rk3328_codec.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ sound/soc/soc-core.c | 29 +----------------------------
+ 1 file changed, 1 insertion(+), 28 deletions(-)
 
-diff --git a/sound/soc/codecs/rk3328_codec.c b/sound/soc/codecs/rk3328_codec.c
-index 287c962ba00d..115706a55577 100644
---- a/sound/soc/codecs/rk3328_codec.c
-+++ b/sound/soc/codecs/rk3328_codec.c
-@@ -7,6 +7,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -31,7 +32,7 @@
- 
- struct rk3328_codec_priv {
- 	struct regmap *regmap;
--	struct regmap *grf;
-+	struct gpio_desc *mute;
- 	struct clk *mclk;
- 	struct clk *pclk;
- 	unsigned int sclk;
-@@ -106,16 +107,6 @@ static int rk3328_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	return 0;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 30c17fde14ca..518b652cf872 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -2442,33 +2442,6 @@ static int snd_soc_register_dais(struct snd_soc_component *component,
+ 	return ret;
  }
  
--static void rk3328_analog_output(struct rk3328_codec_priv *rk3328, int mute)
+-static char *snd_soc_component_unique_name(struct device *dev,
+-					   struct snd_soc_component *component)
 -{
--	unsigned int val = BIT(17);
+-	struct snd_soc_component *pos;
+-	int count = 0;
+-	char *name, *unique;
 -
--	if (mute)
--		val |= BIT(1);
+-	name = fmt_single_name(dev, &component->id);
+-	if (!name)
+-		return name;
 -
--	regmap_write(rk3328->grf, RK3328_GRF_SOC_CON10, val);
+-	/* Count the number of components registred by the device */
+-	for_each_component(pos) {
+-		if (dev == pos->dev)
+-			count++;
+-	}
+-
+-	/* Keep naming as it is for the 1st component */
+-	if (!count)
+-		return name;
+-
+-	unique = devm_kasprintf(dev, GFP_KERNEL, "%s-%d", name, count);
+-	devm_kfree(dev, name);
+-
+-	return unique;
 -}
 -
- static int rk3328_digital_mute(struct snd_soc_dai *dai, int mute)
+ static int snd_soc_component_initialize(struct snd_soc_component *component,
+ 	const struct snd_soc_component_driver *driver, struct device *dev)
  {
- 	struct rk3328_codec_priv *rk3328 =
-@@ -205,7 +196,7 @@ static int rk3328_codec_open_playback(struct rk3328_codec_priv *rk3328)
- 	}
+@@ -2477,7 +2450,7 @@ static int snd_soc_component_initialize(struct snd_soc_component *component,
+ 	INIT_LIST_HEAD(&component->card_list);
+ 	mutex_init(&component->io_mutex);
  
- 	msleep(rk3328->spk_depop_time);
--	rk3328_analog_output(rk3328, 1);
-+	gpiod_set_value(rk3328->mute, 0);
- 
- 	regmap_update_bits(rk3328->regmap, HPOUTL_GAIN_CTRL,
- 			   HPOUTL_GAIN_MASK, OUT_VOLUME);
-@@ -246,7 +237,7 @@ static int rk3328_codec_close_playback(struct rk3328_codec_priv *rk3328)
- {
- 	size_t i;
- 
--	rk3328_analog_output(rk3328, 0);
-+	gpiod_set_value(rk3328->mute, 1);
- 
- 	regmap_update_bits(rk3328->regmap, HPOUTL_GAIN_CTRL,
- 			   HPOUTL_GAIN_MASK, 0);
-@@ -446,7 +437,6 @@ static int rk3328_platform_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "missing 'rockchip,grf'\n");
- 		return PTR_ERR(grf);
- 	}
--	rk3328->grf = grf;
- 	/* enable i2s_acodec_en */
- 	regmap_write(grf, RK3328_GRF_SOC_CON2,
- 		     (BIT(14) << 16 | BIT(14)));
-@@ -458,7 +448,18 @@ static int rk3328_platform_probe(struct platform_device *pdev)
- 		rk3328->spk_depop_time = 200;
- 	}
- 
--	rk3328_analog_output(rk3328, 0);
-+	rk3328->mute = gpiod_get_optional(&pdev->dev, "mute", GPIOD_OUT_HIGH);
-+	if (IS_ERR(rk3328->mute))
-+		return PTR_ERR(rk3328->mute);
-+	/*
-+	 * Rock64 is the only supported platform to have widely relied on
-+	 * this; if we do happen to come across an old DTB, just leave the
-+	 * external mute forced off.
-+	 */
-+	if (!rk3328->mute && of_machine_is_compatible("pine64,rock64")) {
-+		dev_warn(&pdev->dev, "assuming implicit control of GPIO_MUTE; update devicetree if possible\n");
-+		regmap_write(grf, RK3328_GRF_SOC_CON10, BIT(17) | BIT(1));
-+	}
- 
- 	rk3328->mclk = devm_clk_get(&pdev->dev, "mclk");
- 	if (IS_ERR(rk3328->mclk))
+-	component->name = snd_soc_component_unique_name(dev, component);
++	component->name = fmt_single_name(dev, &component->id);
+ 	if (!component->name) {
+ 		dev_err(dev, "ASoC: Failed to allocate name\n");
+ 		return -ENOMEM;
 -- 
 2.20.1
 
