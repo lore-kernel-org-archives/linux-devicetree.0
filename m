@@ -2,106 +2,66 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BFDC18DFF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 19:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1FEC34056
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 19:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D7F24671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 19:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582138946;
-	bh=kYo8STywMoNPbXqq5MqKyc6HbXDhI5RlUyf1kHZ/nco=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=2pFTlvyrOjt8T8+op84Q9rKY83pm0yQUiERZcBqrzPgWDbQVmBeTNOjYim2I3fWH2
-	 0CsCKzP9rZLH//s8Zvm+79HwvYU2T4b8dM3sWo20Mscz1cFzLVg1zmLJswMXal3VpA
-	 rEszbSuRnFsH+z+cpwxZYzIY8IQGuc5JiXAYf4cw=
+	by mail.kernel.org (Postfix) with ESMTP id ED1BB208C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 19:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgBSTCW (ORCPT
+        id S1726682AbgBSTMO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:02:22 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37547 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgBSTCV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 14:02:21 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p14so530106pfn.4;
-        Wed, 19 Feb 2020 11:02:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=8ve6EAIa0mteEpntsUQ3aTXDFQ6XprvcJ5I+N3SPGaQ=;
-        b=gp/JWMdRuQhZq3r638Uh84x5b1u8kP3cOCU/cld5iaolDmtWtgn/7PNjuzktWfX657
-         K8r7hSYWtwQEJFyZdeSbYu+f7icosVg73HcDyqxn457TBzExZqfqm7WhtZMJmPGoXAT9
-         HBsSkbNxrGLoI0EGRPtLcIpCkcISXO//7DqDKgoQX3OiMD6oQDtie0ubh/ak0UhXl0qF
-         cCIf65r5UkPIdU9WvC12GF/7LJken8zvbcE5s/TXotLyWiGEh0LCyjxO6x92no7c27H7
-         vZT58abZz3D0yD6wq84lfOgD/w4XTYaTlkvbHO3bBpVs01iqGtOyrZdtRa0IfIrlcoIK
-         5nvg==
-X-Gm-Message-State: APjAAAUGeNn3RK1VJ0xzQsjaetoaJg7h6J1BaQcnDkIJDTQytaqijazY
-        S5IZw2u11PJulz1vSMH7Iq0=
-X-Google-Smtp-Source: APXvYqx9OcV1TGaGspwn3Rsjucan0AVm2E8MH3mexVmIn3LIMMiVSPGYNtKZFipTVy3mhbKlh2ouVQ==
-X-Received: by 2002:a63:2254:: with SMTP id t20mr29922920pgm.423.1582138940832;
-        Wed, 19 Feb 2020 11:02:20 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id l29sm428731pgb.86.2020.02.19.11.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 11:02:20 -0800 (PST)
-Message-ID: <5e4d863c.1c69fb81.25df8.14d3@mx.google.com>
-Date:   Wed, 19 Feb 2020 11:02:14 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        stable@vger.kernel.org
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH] MIPS: ingenic: DTS: Fix watchdog nodes
-References:  <20200211145337.16311-1-paul@crapouillou.net>
-In-Reply-To:  <20200211145337.16311-1-paul@crapouillou.net>
+        Wed, 19 Feb 2020 14:12:14 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:46528 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgBSTMO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 14:12:14 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C03A515ADF481;
+        Wed, 19 Feb 2020 11:12:13 -0800 (PST)
+Date:   Wed, 19 Feb 2020 11:12:13 -0800 (PST)
+Message-Id: <20200219.111213.2304689693183810621.davem@davemloft.net>
+To:     olteanv@gmail.com
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next/devicetree 0/5] DT bindings for Felix DSA
+ switch on LS1028A
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200219151259.14273-1-olteanv@gmail.com>
+References: <20200219151259.14273-1-olteanv@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Feb 2020 11:12:14 -0800 (PST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Wed, 19 Feb 2020 17:12:54 +0200
 
-Paul Cercueil wrote:
-> The devicetree ABI was broken on purpose by commit 6d532143c915
-> ("watchdog: jz4740: Use regmap provided by TCU driver"), and
-> commit 1d9c30745455 ("watchdog: jz4740: Use WDT clock provided
-> by TCU driver"). The commit message of the latter explains why the ABI
-> was broken.
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
 > 
-> However, the current devicetree files were not updated to the new ABI
-> described in Documentation/devicetree/bindings/timer/ingenic,tcu.txt,
-> so the watchdog driver would not probe.
+> This series officializes the device tree bindings for the embedded
+> Ethernet switch on NXP LS1028A (and for the reference design board).
+> The driver has been in the tree since v5.4-rc6.
 > 
-> Fix this problem by updating the watchdog nodes to comply with the new
-> ABI.
-> 
-> Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU
-> driver")
+> As per feedback received in v1, I've changed the DT bindings for the
+> internal ports from "gmii" to "internal". So I would like the entire
+> series to be merged through a single tree, be it net-next or devicetree.
+> If this happens, I would like the other maintainer to acknowledge this
+> fact and the patches themselves. Thanks.
 
-Applied to mips-fixes.
+I'm fine with this going through the devicetree tree.
 
-> commit 11479e8e3cd8
-> https://git.kernel.org/mips/c/11479e8e3cd8
-> 
-> Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU driver")
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
-
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+Acked-by: David S. Miller <davem@davemloft.net>
