@@ -2,123 +2,95 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783E7C34056
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F5AC34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 17:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50EF424672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849AF2467D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 17:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Fl1Gj/28"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rTS8Mo3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgBSQs6 (ORCPT
+        id S1726518AbgBSRai (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:48:58 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37842 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgBSQs6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 11:48:58 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8C4B7563;
-        Wed, 19 Feb 2020 17:48:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1582130936;
-        bh=/NCJBqhwDAR6YDS6oa/BRPHnFnk3elvzrzCS9GPuf0I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Fl1Gj/28pj7LawlvHF2l7kEbfqGW+IufCXIXE0i1vlVRxyxM9y9V/Q6j8FnAEMYSs
-         ohkTZmu1oW4AQsY0BxxSIcSda6uRUu1MbRLj+RLqzI583c9IsH2JCxapJVqsqr62lN
-         Wsd4MqboKPQD4xhovfIno8ENp6dlnwr3/19QgqLw=
-Date:   Wed, 19 Feb 2020 18:48:38 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5] dt-bindings: display: renesas: du: Document optional
- reset properties
-Message-ID: <20200219164838.GC5070@pendragon.ideasonboard.com>
-References: <20200214082623.4893-1-geert+renesas@glider.be>
- <20200219160410.GX5070@pendragon.ideasonboard.com>
- <CAMuHMdVEW1pjg=mf55dzi0uJ6f-qQCGXzzvTikffX+JAeJQEsQ@mail.gmail.com>
+        Wed, 19 Feb 2020 12:30:38 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40540 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbgBSRai (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 12:30:38 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so1549071wmi.5
+        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 09:30:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Vzj5fYuKhjSJIX8LLdjrzndSdJzkfLdinYyCt3Ld6uA=;
+        b=rTS8Mo3OfNleBFSAn1y54h2JccThE9WwvMh1CPzzw8Yv/pYj4cc9te+MrhhNmIfNNC
+         yfMLNteGG2e0ZAG+BLaoho4eshauB17hHBJVUTQUMShg50KLiriDQfNh8KH3ZF8uc1dZ
+         WOUriIwI7kgYXc1ltbH177D3QQ6VSgG6tpZAbDp+kvoBwLCodiK0/tTVNyjFghyem1Pv
+         MKMcF4HEcr+GlYtisjzch3biOCeX3/FJjysohqklTAVaEM6UUBQAOcoszVsj9eHalJOv
+         hsk9E+Bb5gW7eR8kkEABhXOQvYd2l6jdyRDi91HdpmBNdmK5Il+GGcqBVVBeONfFY/gk
+         +0+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Vzj5fYuKhjSJIX8LLdjrzndSdJzkfLdinYyCt3Ld6uA=;
+        b=gEKoPB0lVLHqGFMlkE1IcMwlLQxWigodNwcbxIxO8GsvDkyvc4znOv+x9bOPuqwN8Q
+         2q8eKLQGD7nhRWxQhw/MKH3Y4N+3klmhg8wB+pIgXqDEhCDXkP7pT1ZHA0JJ3HQA71tB
+         g88C4QA6gu5tWNX0fbqNbb3sBLiG7m4W0V5bePZMrWEOQMXccIsyTvU0PjZAnm6GpLui
+         arLaDxNZSQ7QEhsrkB5L2nVABignUPmR/pDolvFsRjc3wtni5INi94BTe0hr68CLn5lB
+         ZHN5Xr+EwvI+9pbRX5ADeukdvlLuM2HBkfkZBA7PAz8uSn6+dyVUpupmysgBXK/zKtpg
+         1T+w==
+X-Gm-Message-State: APjAAAV7/vjzjnmnixUxU8mU+CNYcN4YNENSAF201ao1KN6kj2y3YDp9
+        Xj489IpiDEIKWt4KxRTlsHFs3Q==
+X-Google-Smtp-Source: APXvYqz8SvtcLoz81n/o1JvdjzZKZJ/qf8otl/+1C1BQrR5Z5QNE8zns0Qa9uLXu/e2c+diOPxnt3g==
+X-Received: by 2002:a7b:c3cd:: with SMTP id t13mr6145330wmj.88.1582133435029;
+        Wed, 19 Feb 2020 09:30:35 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id s65sm600755wmf.48.2020.02.19.09.30.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 09:30:34 -0800 (PST)
+References: <20200219161625.1078051-1-jbrunet@baylibre.com> <20200219161625.1078051-3-jbrunet@baylibre.com> <20200219162000.GF4488@sirena.org.uk>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 2/2] ASoC: meson: add t9015 internal DAC driver
+In-reply-to: <20200219162000.GF4488@sirena.org.uk>
+Date:   Wed, 19 Feb 2020 18:30:33 +0100
+Message-ID: <1j8skyxz5y.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVEW1pjg=mf55dzi0uJ6f-qQCGXzzvTikffX+JAeJQEsQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
 
-On Wed, Feb 19, 2020 at 05:36:57PM +0100, Geert Uytterhoeven wrote:
-> On Wed, Feb 19, 2020 at 5:04 PM Laurent Pinchart wrote:
-> > On Fri, Feb 14, 2020 at 09:26:23AM +0100, Geert Uytterhoeven wrote:
-> > > Document the optional properties for describing module resets, to
-> > > support resetting display channels on R-Car Gen2 and Gen3.
-> > >
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> 
-> > > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > @@ -50,6 +50,14 @@ Required Properties:
-> > >      VSP instance that serves the DU channel, and the channel index identifies
-> > >      the LIF instance in that VSP.
-> > >
-> > > +Optional properties:
-> > > +  - resets: A list of phandle + reset-specifier pairs, one for each entry in
-> > > +    the reset-names property.
-> > > +  - reset-names: Names of the resets. This property is model-dependent.
-> > > +    - All but R8A7779 use one reset for a group of one or more successive
-> > > +      channels. The resets must be named "du.x" with "x" being the numerical
-> > > +      index of the lowest channel in the group.
-> >
-> > I've now reviewed the patches that add those properties to our .dtsi
-> > files, and I wonder how we should handle the two SoCs that have DU0, DU1
-> > and DU3, but not DU2. The reset resource is tied to a group of two
-> > channels, so we would use du.0 and du.2 respectively, but that conflicts
-> > with the above text.
-> >
-> > I'm trying to think about the implementation on the driver side, where
-> > group resources are associated with a group object, whose index is
-> > computed by dividing the channel number by 2. We could have a special
-> > case in group initialization that uses du.3 instead of du.2 for the
-> > second group.
-> >
-> > What do you think ? Probably overkill, and we should go for du.3 ?
-> 
-> The "division by 2" rule is valid for R-Car Gen3, but not for R-Car
-> Gen2, where there is only a single reset for all channels.
-> 
-> Originally we had "du.0-1" and "du.2-3" (hmm, somehow I missed adding
-> this to the changelog for the bindings,  but it is present in the
-> changelog for the DTS files), but after switching to "du.0" and "du.2",
-> I always envisioned implementing this by finding a "du.x" reset by
-> looping from the current channel index to 0.  That algorithm works for all
-> supported SoCs (irrespective of naming the second reset on R-Car H3-N
-> and M3-N "du.2" or "du.3" ;-)
-> 
-> As per your comment about single resets, we could drop reset-names on
-> R-Car Gen2, but doing so would mean another special case in the driver.
+On Wed 19 Feb 2020 at 17:20, Mark Brown <broonie@kernel.org> wrote:
 
-Probably not worth it indeed. We can handle all this in the driver,
-let's keep it as-is.
+> On Wed, Feb 19, 2020 at 05:16:25PM +0100, Jerome Brunet wrote:
+>
+>> +	SOC_SINGLE("Playback Mute Switch", VOL_CTRL1, DAC_SOFT_MUTE, 1, 0),
+>> +	SOC_DOUBLE_TLV("Playback Volume", VOL_CTRL1, DACL_VC, DACR_VC,
+>> +		       0xff, 0, dac_vol_tlv),
+>
+> Sorry, that should just be plain "Playback Switch" - this can be used by
+> applications to present a combined mute/volume control together with the
+> Volume control
 
--- 
-Regards,
+Ah, Ok. I thought it was important to make difference between Mute
+(Playing silence) and a Stream stop ... I guess the app does not care
+about such detail. No problem, I'll fix this.
 
-Laurent Pinchart
+> (though as in this case there's no per-channel control it
+> is possible some applications will struggle with that).
+
+alsamixer seems happy enough with it :)
