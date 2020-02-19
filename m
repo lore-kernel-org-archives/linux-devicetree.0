@@ -2,107 +2,120 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22B1C34047
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A9EC34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8298724673
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:04:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582128293;
-	bh=JgJ/vrMOiRMDUW3ju7uoxCx5v6yF1jGNqosrYOSOeIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L363ou6DhILVNRp813yTn/dKT4tTGCsaO71QqnPeLGGOkjCgvuLNbwDTSmix2aEH3
-	 voYj8t9OOO+No3Am7USrgsI7uRwL1HIfmeMzrRMdZnuLP5uqrUxRHreLOUuSagMZsy
-	 dyd/nKSXL05dc2autR6gV1D+WdV41EPh4Gm6yBrU=
+	by mail.kernel.org (Postfix) with ESMTP id C612C24654
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 16:10:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YRz9DrxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgBSQEx (ORCPT
+        id S1726530AbgBSQKZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:04:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:51850 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgBSQEx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:04:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F4B71FB;
-        Wed, 19 Feb 2020 08:04:52 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7D7A3F6CF;
-        Wed, 19 Feb 2020 08:04:51 -0800 (PST)
-Date:   Wed, 19 Feb 2020 16:04:50 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: dt-bindings: simple-card: switch to yaml base
- Documentation
-Message-ID: <20200219160450.GE4488@sirena.org.uk>
-References: <87blq1zr8n.wl-kuninori.morimoto.gx@renesas.com>
- <20200219155808.GA25095@bogus>
+        Wed, 19 Feb 2020 11:10:25 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18562 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgBSQKZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 11:10:25 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4d5dcf0000>; Wed, 19 Feb 2020 08:09:51 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 19 Feb 2020 08:10:24 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 19 Feb 2020 08:10:24 -0800
+Received: from [10.25.75.111] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
+ 2020 16:10:14 +0000
+CC:     <spujar@nvidia.com>, <devicetree@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <broonie@kernel.org>,
+        <atalambedu@nvidia.com>, <tiwai@suse.com>, <viswanathl@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <robh+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <sharadg@nvidia.com>,
+        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+ <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+ <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
+ <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
+ <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
+ <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
+ <1a84b393-938f-8bed-d08e-cc3bb6ed4844@gmail.com>
+ <0fc814c2-0dc6-7741-b954-463381ff7fb9@nvidia.com>
+ <b5c581b9-17af-d004-33fb-2cc782ab820a@gmail.com>
+ <9f73afdf-1e9a-cdbd-f972-a022d503ef51@nvidia.com>
+ <264d3354-8a2e-ee12-44ae-aff69213d551@nvidia.com>
+ <075e476a-36bb-5fee-15bc-76af4474a797@gmail.com>
+ <c6022a93-b79a-c691-1d75-d007d0b64ead@nvidia.com>
+ <3b42c858-733b-0d17-f457-8043d97f5058@gmail.com>
+ <62b8ffbc-aa32-ae44-6cb4-b176b8ba9b0e@nvidia.com>
+ <847739f8-6f54-cf64-54b8-94707944850b@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <319a0922-3de2-5d02-65c3-d96036eea6d9@nvidia.com>
+Date:   Wed, 19 Feb 2020 21:40:09 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Yb+qhiCg54lqZFXW"
-Content-Disposition: inline
-In-Reply-To: <20200219155808.GA25095@bogus>
-X-Cookie: FORTH IF HONK THEN
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <847739f8-6f54-cf64-54b8-94707944850b@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582128591; bh=Y4IVG9EdM9GGqYVDnKSi7S7GV3/7tEnqSahIk5yOcYk=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=YRz9DrxYbhYO6MTRtYvDuHjxISyreNHeLWM8zCWFBDDruqQ7Iu/eWxWcpvrSipAeN
+         +y1QGqIhOVyKFac4zZXp91ebRRec/wz5LQD9o107Ixrks2W4G92ivh3VWFmmT7y/rn
+         fS2qsZQFF36hhMiEBBEhcg/GFGcrYiNQb4RZF2O624d0UvCmvR5ul6qKf+PBYdwWcg
+         JwnX7UiisfcEa6rwlhs5yQTsza33PiBpoZIydDJecnDrCyppBbpk2nc4AZ+X797Va2
+         kRck5XiZTa3GPHWP+xfSbLUeCSCTquzreb9s3RTCFY3SNL/0l1bHFcF0ZsEI6rxT1a
+         wgbd5x3qJtG6Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---Yb+qhiCg54lqZFXW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2020 at 09:58:08AM -0600, Rob Herring wrote:
-> On Fri, Feb 14, 2020 at 02:13:05PM +0900, Kuninori Morimoto wrote:
-> > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> >=20
-> > This patch switches from .txt base to .yaml base Document.
+On 2/18/2020 6:30 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 14.02.2020 17:05, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 29/01/2020 03:41, Dmitry Osipenko wrote:
+>>
+>> ...
+>>
+>>> The !RPM case isn't supported by Tegra anymore in upstream kernel. I'm
+>>> trying to help to make yours driver better and gave you reasons to
+>>> remove the unneeded code, while you're keep saying that "there is no
+>>> harm to retain it", which is not a reason to clutter up the code. I
+>>> don't feel that it's worthwhile to continue arguing here.
+>> On further review, it does look like a reasonable argument to get rid of
+>> this now completely. Like you see less clutter and the soc-core should
+>> ensure that the card is shutdown before unloading. OK, so fine with me.
+> And the RPM core ensures that state is synced on disable, sorry if I
+> didn't make it clear before.
+>
+> +1 for less clutter :)
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+Done, I am removing explicit RPM suspend in the next revision. Thanks=20
+Dmitry and Jon.
 
-> > +  dai-tdm-slot-num:
-> > +    description: see tdm-slot.txt.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-
-> Is there a max?
-
-No.
-
-> > +    description: see tdm-slot.txt.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-
-> max is 32 or something much less than 2^32?
-
-It'll be much less than 2^32 but could potentially be fairly large in a
-big telephony system.
-
---Yb+qhiCg54lqZFXW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5NXKEACgkQJNaLcl1U
-h9DkIgf+PId+cf44wocBGhUhG5MM+TGNp2SLlvXDPC9TiWLqmdmtPLAYKVQQehxq
-v5dH0QMF9b3zI4zcMLX/LjT6UJGptws3jGlVQWTpxdl/4evXXgmYIJ/6F9PFClfl
-4qw6j/8DgmnFT4/Z3a/H4bXOjdooxbsU8YQ45xqHjwqlEhIkwWuWVvUCiVUt3wR1
-ds7xrNP2XUvckeC90M/OVmv9TDVzjkDEp5MrWRCUIK+ptKWtMDJNKlv5uF+Sh/FU
-ICjgBBiL82lrk9eRccdIVjjeXDFOwQMfx4KXW1IwfrbW+ZvAL9gP/UCQo5+pqVnq
-fHt1FURjfodweBdVzejev4FDZCWbAA==
-=MTvU
------END PGP SIGNATURE-----
-
---Yb+qhiCg54lqZFXW--
