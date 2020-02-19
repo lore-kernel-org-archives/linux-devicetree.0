@@ -2,112 +2,83 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA31C3524E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6764C3524E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20DF924670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cVd5LpRY"
+	by mail.kernel.org (Postfix) with ESMTP id 9B5D724654
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 21:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582148217;
+	bh=bex3ia3o7ks1qLsY7UOubSYiyKKJtXT/h4183Oe1kGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hx/QXsxSzlLv0ecBCiyQiqkWnm2PAh14TYR/AmItPQJJm/tQDnB7SvEO6bleBZT1R
+	 DCAmIiE/zKPg36AgD8Fq4MlvzwMWOjM8c1pzUEoMFfTWlvVL+bENXjIw4cKJ0Jy0PO
+	 p7FAPpRJ9F/LNqpKbHaUMIbUiLYNJ20gjwgpMO5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgBSVdQ (ORCPT
+        id S1727291AbgBSVg5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:33:16 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33394 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727640AbgBSVdQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:33:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582147995; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=ut8jzi9vRb4lppctqPUVYJg9Q2+ACOmilLmkDbNVngA=; b=cVd5LpRYUTCybvfQTWuAeBUDZ0dJy3I9Xhrt8JPZ8YegEFKytnoKH4ZOrbV9I4YVgJVtzq/d
- GDLP7xGlJn7Dz57ubmN6cc+ujB2916+ozxPLdqlIjStDzMY30x4gVjiX2KGYEZfaqzZ8AW8p
- bfSkcnx8Em4wx+EjTJ1GBZP8Ubk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4da993.7f54d14b0d18-smtp-out-n01;
- Wed, 19 Feb 2020 21:33:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C7D0FC433A2; Wed, 19 Feb 2020 21:33:07 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 10EEAC4479C;
-        Wed, 19 Feb 2020 21:33:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 10EEAC4479C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>, Sean Paul <sean@poorly.run>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
+        Wed, 19 Feb 2020 16:36:57 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36164 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSVg5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 16:36:57 -0500
+Received: by mail-oi1-f193.google.com with SMTP id c16so25388236oic.3;
+        Wed, 19 Feb 2020 13:36:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DuxIjKakUovTLWJrrUy0F4nZWjjNRF7r2EzINrOf4VY=;
+        b=WFnj8wcK2eJUrrcffgSbAbUaJmMo0hIvmQBKS6hYhbtdPspLvhRy4oypUjEzYDYdIK
+         rV3SKnBnTC7q6rSAAyXuWrGMjZTUuQSJtZxl9CUvGhMV4jH2KmfePB43pNRzLxpO5bEq
+         FqDaXGdYYjJiXlRh/tpRlYC+/tvj6ThIlWNAP8amBFEAtsh0Gyga4zDKSn7QYf4A7hQ1
+         9qGzanL5Yxn6zdHknzITGlGx5Ok0c1wpbmm+A8lRfy6VnHPPV1swY46VzYCGklw+XWpq
+         UowhmPdRpJnJ/YEQTscTsf8Tm8J38aKx2PhWw99Hm0WZAp9qzzkRM2bpKl4aoEyictmt
+         qO7g==
+X-Gm-Message-State: APjAAAXrjjihOQhe789sq2V4o7nurKj8SNAVRQz3BSPVTxYsgDawFbqm
+        i5VLCYg9bQjiHE6L6fWsvg==
+X-Google-Smtp-Source: APXvYqzr/vS7d9QJGh+dXQuTXIewzPQA3FFO3+dnNCb8cuSi1tgLl4sdiFnz8tCgRMksqfyJUey8Rg==
+X-Received: by 2002:aca:100e:: with SMTP id 14mr6121071oiq.88.1582148216399;
+        Wed, 19 Feb 2020 13:36:56 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p65sm380817oif.47.2020.02.19.13.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 13:36:55 -0800 (PST)
+Received: (nullmailer pid 13132 invoked by uid 1000);
+        Wed, 19 Feb 2020 21:36:55 -0000
+Date:   Wed, 19 Feb 2020 15:36:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v1 2/4] dt-bindings: display: msm: Add required dma-range property
-Date:   Wed, 19 Feb 2020 14:32:56 -0700
-Message-Id: <1582147978-31475-3-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
-References: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Add fsl,ls1028a-dspi compatible
+Message-ID: <20200219213655.GA13076@bogus>
+References: <20200218171418.18297-1-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218171418.18297-1-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The GMU node now requires a specific dma-range property so that the driver
-can use the DMA API to do the few memory allocations required by the GMU.
-This sets the IOMMU iova allocadtor to match the 'uncached' part of the
-GMU virtual address space.
+On Tue, 18 Feb 2020 18:14:17 +0100, Michael Walle wrote:
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> changes since v1:
+>  - none, this is a new patch
+> 
+>  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
-
- Documentation/devicetree/bindings/display/msm/gmu.yaml | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-index 776ff92..6952d5a 100644
---- a/Documentation/devicetree/bindings/display/msm/gmu.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-@@ -83,6 +83,13 @@ properties:
-       Phandle to the OPP table for the available GMU frequencies. Refer to
-       ../../opp/opp.txt for more information.
- 
-+  dma-ranges:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      Describe the dma-address range for the device. This should always
-+      describe the range between 0x60000000 and 0x80000000 which represents
-+      the uncached region of the GMU address space.
-+
- required:
-   - compatible
-   - reg
-@@ -95,6 +102,7 @@ required:
-   - power-domain-names
-   - iommus
-   - operating-points-v2
-+  - dma-ranges
- 
- examples:
-  - |
-@@ -127,4 +135,6 @@ examples:
- 
-         iommus = <&adreno_smmu 5>;
-         operating-points-v2 = <&gmu_opp_table>;
-+
-+        dma-ranges = <0 0x60000000 0 0x60000000 0 0x80000000>;
-    };
--- 
-2.7.4
+Acked-by: Rob Herring <robh@kernel.org>
