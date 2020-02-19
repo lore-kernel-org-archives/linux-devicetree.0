@@ -2,195 +2,212 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2956C3404F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AD8C34022
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A2D24683
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CdpmAVZE"
+	by mail.kernel.org (Postfix) with ESMTP id 4873524670
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgBSD2e (ORCPT
+        id S1726512AbgBSDbj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:28:34 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10618 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgBSD2e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Feb 2020 22:28:34 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4cab410000>; Tue, 18 Feb 2020 19:28:01 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Feb 2020 19:28:33 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 19:28:33 -0800
-Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
- 2020 03:28:32 +0000
-Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
- <20200218231503.GA19099@bogus>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
-Date:   Tue, 18 Feb 2020 19:28:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200218231503.GA19099@bogus>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582082881; bh=cyoNazDtmT/h6DgHu5pqneFWToIbbP0fvPs2dxTlGMQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=CdpmAVZEN1+rPUXrq9ZTWHWteIUNLSIzWrA/h8Q6AVwCh3Xe4Ldg0Ae3e+GxK7GcY
-         WacUUqIeiFWQEZwv0nLL99pvzd7yUg5NLPubTPS2AdWA9TN8XbQJ5bJzJhlHt8RWiJ
-         6TtgMMo7qUbLyfXy4x+CGr20WXD3ZKfZtjAwmfiJbSKnFl580R/kSRv7HVRDeRfjs+
-         DG1NxmOr8BuAAqNiKBcjMuDvb6+c8RLy2qK8dxdArj863jZSvKQewH3SZODclwBXVd
-         vmrRmSBURvYrfXz/xK9kY16Mw5IA3TJfGDN44vMmxj06JQg/J89pX6dCvGDarNLTJx
-         Ln17zs2CfuKFQ==
+        Tue, 18 Feb 2020 22:31:39 -0500
+Received: from mga11.intel.com ([192.55.52.93]:8520 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgBSDbj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:31:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 19:31:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
+   d="scan'208";a="382667731"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga004.jf.intel.com with ESMTP; 18 Feb 2020 19:31:36 -0800
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v2 1/2] dt-bindings: phy: Add YAML schemas for Intel Combophy
+Date:   Wed, 19 Feb 2020 11:31:29 +0800
+Message-Id: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Combophy subsystem provides PHY support to various
+controllers, viz. PCIe, SATA and EMAC.
+Adding YAML schemas for the same.
 
-On 2/18/20 3:15 PM, Rob Herring wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
->> Tegra contains VI controller which can support up to 6 MIPI CSI
->> camera sensors.
->>
->> Each Tegra CSI port from CSI unit can be one-to-one mapper to
->> VI channel and can capture from an external camera sensor or
->> from built-in test pattern generator.
->>
->> This patch adds dt-bindings for Tegra VI and CSI.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
->>   1 file changed, 47 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> index 9999255ac5b6..3d0ed540a646 100644
->> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> @@ -40,14 +40,24 @@ of the following host1x client modules:
->>
->>     Required properties:
->>     - compatible: "nvidia,tegra<chip>-vi"
->> -  - reg: Physical base address and length of the controller's registers.
->> +  - reg: Physical base address and length of the controller registers.
->>     - interrupts: The interrupt outputs from the controller.
->> -  - clocks: Must contain one entry, for the module clock.
->> +  - clocks: Must contain an entry for the module clock "vi"
->>       See ../clocks/clock-bindings.txt for details.
->>     - resets: Must contain an entry for each entry in reset-names.
->>       See ../reset/reset.txt for details.
->> -  - reset-names: Must include the following entries:
->> -    - vi
->> +  - reset-names: Must include the entry "vi"
->> +
->> +  Tegra210 has CSI part of VI sharing same host interface and register
->> +  space. So, VI device node should have CSI child node.
->> +
->> +  - csi: mipi csi interface to vi
->> +
->> +    Required properties:
->> +    - compatible: "nvidia,tegra<chip>-csi"
->> +    - reg: Physical base address and length of the controller registers.
->> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
->> +      See ../clocks/clock-bindings.txt for details.
->>
->>   - epp: encoder pre-processor
->>
->> @@ -310,12 +320,41 @@ Example:
->>                };
->>
->>                vi {
->> -                     compatible = "nvidia,tegra20-vi";
->> -                     reg = <0x54080000 0x00040000>;
->> +                     compatible = "nvidia,tegra210-vi";
->> +                     reg = <0x0 0x54080000 0x0 0x700>;
->>                        interrupts = <0 69 0x04>;
->> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
->> -                     resets = <&tegra_car 100>;
->> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
->> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
->> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
->> +                     clock-names = "vi";
->> +                     resets = <&tegra_car 20>;
->>                        reset-names = "vi";
->> +
->> +                     #address-cells = <2>;
->> +                     #size-cells = <2>;
->> +
->> +                     ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
->> +
->> +                     csi@0x54080838 {
-> Drop '0x'
-Will fix in v4
->
->> +                             compatible = "nvidia,tegra210-csi";
->> +                             reg = <0x0 0x54080838 0x0 0x2000>;
-> Kind of odd that this address and ranges address are not the same. And
-> also wrong that the size here exceeds the bounds of ranges.
->
-> Also, best practice is to make the child address 0 or relative to the
-> parent.
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+---
+Changes on v2:
 
-Actual CSI starts at offset 0x808 but we don't use couple of registers 
-at offset 0x808.
+ Add custom 'select'
+ Pass hardware instance entries with phandles and
+   remove cell-index and bid entries
+ Clock, register address space, are same for the children.
+   So move them to parent node.
+ Two PHY instances cannot run in different modes,
+   so move the phy-mode entry to parent node.
+ Add second child entry in the DT example.
 
-Will update ranges in v4 to start from 0x838 offset and will make child 
-address relative to parent.
+ .../devicetree/bindings/phy/intel,combo-phy.yaml   | 138 +++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
 
->
->> +                             status = "disabled";
-> Don't show status in examples.
-Will remove.
->
->> +                             assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
->> +                                               <&tegra_car TEGRA210_CLK_CILCD>,
->> +                                               <&tegra_car TEGRA210_CLK_CILE>;
->> +                             assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
->> +                                                      <&tegra_car TEGRA210_CLK_PLL_P>,
->> +                                                      <&tegra_car TEGRA210_CLK_PLL_P>;
->> +                             assigned-clock-rates = <102000000>,
->> +                                                    <102000000>,
->> +                                                    <102000000>;
->> +                             clocks = <&tegra_car TEGRA210_CLK_CSI>,
->> +                                      <&tegra_car TEGRA210_CLK_CILAB>,
->> +                                      <&tegra_car TEGRA210_CLK_CILCD>,
->> +                                      <&tegra_car TEGRA210_CLK_CILE>;
->> +                             clock-names = "csi", "cilab", "cilcd", "cile";
->> +                     };
->> +
->>                };
->>
->>                epp {
->> --
->> 2.7.4
->>
+diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+new file mode 100644
+index 000000000000..8e65a2a71e7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+@@ -0,0 +1,138 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Combophy Subsystem
++
++maintainers:
++  - Dilip Kota <eswara.kota@linux.intel.com>
++
++description: |
++  Intel Combophy subsystem supports PHYs for PCIe, EMAC and SATA
++  controllers. A single Combophy provides two PHY instances.
++
++# We need a select here so we don't match all nodes with 'simple-bus'
++select:
++  properties:
++    compatible:
++      contains:
++        const: intel,combo-phy
++  required:
++    - compatible
++
++properties:
++  $nodename:
++    pattern: "^combophy@[0-9]+$"
++
++  compatible:
++    items:
++      - const: intel,combo-phy
++      - const: simple-bus
++
++  clocks:
++    description: |
++      List of phandle and clock specifier pairs as listed
++      in clock-names property. Configure the clocks according
++      to the PHY mode.
++
++  reg:
++    items:
++      - description: ComboPhy core registers
++      - description: PCIe app core control registers
++
++  reg-names:
++    items:
++      - const: core
++      - const: app
++
++  resets:
++    maxItems: 2
++
++  reset-names:
++    items:
++      - const: phy
++      - const: core
++
++  intel,syscfg:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Chip configuration registers handle and ComboPhy instance id
++
++  intel,hsio:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: HSIO registers handle and ComboPhy instance id on NOC
++
++  intel,aggregation:
++    description: |
++      Specify the flag to confiure ComboPHY in dual lane mode.
++    type: boolean
++
++  intel,phy-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 2
++    description: |
++      Configure the mode of the PHY.
++        0 - PCIe
++        1 - xpcs
++        2 - sata
++
++patternProperties:
++  "^cb[0-9]phy@[0-9]+$":
++    type: object
++
++    properties:
++      compatible:
++        const: intel,phydev
++
++      "#phy-cells":
++        const: 0
++
++      resets:
++        description: |
++          reset handle according to the PHY mode.
++          See ../reset/reset.txt for details.
++
++    required:
++      - compatible
++      - "#phy-cells"
++
++required:
++  - compatible
++  - clocks
++  - reg
++  - reg-names
++  - intel,syscfg
++  - intel,hsio
++  - intel,phy-mode
++
++additionalProperties: false
++
++examples:
++  - |
++    combophy@0 {
++        compatible = "intel,combo-phy", "simple-bus";
++        clocks = <&cgu0 1>;
++        reg = <0xd0a00000 0x40000>,
++              <0xd0a40000 0x1000>;
++        reg-names = "core", "app";
++        resets = <&rcu0 0x50 6>,
++        	 <&rcu0 0x50 17>;
++        reset-names = "phy", "core";
++        intel,syscfg = <&sysconf 0>;
++        intel,hsio = <&hsiol 0>;
++        intel,phy-mode = <0>;
++
++        cb0phy0:cb0phy@0 {
++            compatible = "intel,phydev";
++            #phy-cells = <0>;
++            resets = <&rcu0 0x50 23>;
++        };
++
++        cb0phy1:cb0phy@1 {
++            compatible = "intel,phydev";
++            #phy-cells = <0>;
++            resets = <&rcu0 0x50 24>;
++        };
++    };
+-- 
+2.11.0
+
