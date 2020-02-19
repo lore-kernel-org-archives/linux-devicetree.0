@@ -2,155 +2,260 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B464C34050
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634C2C34047
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1D924654
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="z4egeqlS"
+	by mail.kernel.org (Postfix) with ESMTP id 2C34824656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582123348;
+	bh=W6+6Bdzc+nFCT886mpTg5D+WUTg1lRbfhrjBZeyUobE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CLiRAVtAS79JcqLnDpUr8vxPRKJF2Y61QrWX+k6WJEDhbg++zSE/240Tr4cN9zGEr
+	 lwZKhrpIfFDixWrAE61kz8XGHSyFFAaw1XWk2BMxijUUIrDc2wF2Q8vUD1nzdF+9BP
+	 /WQPzgaNo7ZLl/BoRKsG4hkFk2tkmD215p8QTLzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgBSOkH (ORCPT
+        id S1726604AbgBSOm1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:40:07 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58633 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726528AbgBSOkG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:40:06 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JEXi2Q030251;
-        Wed, 19 Feb 2020 15:39:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=l0m5SnrqcSKwIcJ02I4m47wU3dRyUV2O0AFo1NvXshc=;
- b=z4egeqlSPY3kDhwoRhFHWlSX7bCPaRHnu200fjlGNsRRzK2edQk0z03w3v2mTlpvUSCZ
- Nkwzix9UVdDCFumMwEg+AIYxxO4DNRxzP+1rGsunFDhge+EwGUiVGiFi4pG0f6xWcMB0
- z573OCTee15n34WTnddH30iFeAQ2CgFu/+5bmHjx6sf2jKCrzVq3GKbrOF4Z8zeBptiy
- 8GiEiRmXmJWrIQ7I8m+S+0l7etv9fmwtxDtZ+7YJquIHuItyTg7eo/pLhvgWKPzWXBAg
- 4o+vllWecsmTeDOimek+tyLd1GF60R1x1H1EKxi9gsJMwqM98LtT33SsUkKe/XVn/Qot ag== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub1bhcd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 15:39:51 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B903710003D;
-        Wed, 19 Feb 2020 15:39:44 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A1D342BEC6C;
-        Wed, 19 Feb 2020 15:39:44 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.45) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
- 2020 15:39:43 +0100
-Subject: Re: [PATCH 3/9] remoteproc: add support to skip firmware load when
- recovery
-To:     <peng.fan@nxp.com>, <ohad@wizery.com>,
-        <bjorn.andersson@linaro.org>, <robh+dt@kernel.org>,
-        <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
-        <kernel@pengutronix.de>, <festevam@gmail.com>
-CC:     <linux-imx@nxp.com>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
- <1582097265-20170-4-git-send-email-peng.fan@nxp.com>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <0d90b2c2-cb02-d052-57cb-b11c5f815f07@st.com>
-Date:   Wed, 19 Feb 2020 15:39:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 09:42:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbgBSOm1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 09:42:27 -0500
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8CCA24670;
+        Wed, 19 Feb 2020 14:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582123345;
+        bh=W6+6Bdzc+nFCT886mpTg5D+WUTg1lRbfhrjBZeyUobE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Q6rrVqsaEy4WbKAzVTNlyIzaA/gE/EoMQf2t1vl2fJV/icxRr0ChDvep4a0oNbtca
+         FtY0mDoxZTS5pDIDl9DMyli8vSvitQDrhniTHcsOPdEWYxMr3LZcTDucO0pirhrZXG
+         RQVligVJB37e34uiIzCtdy17JXnVGD/kF3X3PkKk=
+Received: by mail-qk1-f169.google.com with SMTP id t83so319565qke.3;
+        Wed, 19 Feb 2020 06:42:25 -0800 (PST)
+X-Gm-Message-State: APjAAAW8FdecG5CwzOgpl2NogjDO1+3CsdOwzC8//+VrA1DxcS5DX89S
+        GeN7WAo0esB+cgiSirQuPviNIEbGNjMq71CvoQ==
+X-Google-Smtp-Source: APXvYqwYfr8dnraFyGLum8QvHjHJ5i96SXqZnFjZaUAL/1vsnkTAyj3uphUfKkrkPEoyfxE9+G+DWp1h98tCz7Zzo+8=
+X-Received: by 2002:a37:6457:: with SMTP id y84mr24256558qkb.254.1582123344892;
+ Wed, 19 Feb 2020 06:42:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1582097265-20170-4-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
+References: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
+In-Reply-To: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 19 Feb 2020 08:42:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL56Ucpm2FK4BPKS+N=5Zxn1iQht7OdJK1pE7cPxtWL-w@mail.gmail.com>
+Message-ID: <CAL_JsqL56Ucpm2FK4BPKS+N=5Zxn1iQht7OdJK1pE7cPxtWL-w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add YAML schemas for Intel Combophy
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On 2/19/20 8:27 AM, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Remote processor such as M4 inside i.MX8QXP is not handled by Linux
-> when it is configured to run inside its own hardware partition by
-> system control unit(SCU). So even remote processor crash reset, it is
-> handled by SCU, not linux. To such case, firmware load should be
-> ignored, So introduce skip_fw_load_recovery and platform driver
-> should set it if needed.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On Tue, Feb 18, 2020 at 9:31 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>
+> Combophy subsystem provides PHY support to various
+> controllers, viz. PCIe, SATA and EMAC.
+> Adding YAML schemas for the same.
+>
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 > ---
->  drivers/remoteproc/remoteproc_core.c | 19 +++++++++++--------
->  include/linux/remoteproc.h           |  1 +
->  2 files changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 876b5420a32b..ca310e3582bf 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1678,20 +1678,23 @@ int rproc_trigger_recovery(struct rproc *rproc)
->  	if (ret)
->  		goto unlock_mutex;
->  
-> -	/* generate coredump */
-> -	rproc_coredump(rproc);
-> +	if (!rproc->skip_fw_load_recovery) {
-> +		/* generate coredump */
-> +		rproc_coredump(rproc);
->  
-> -	/* load firmware */
-> -	ret = request_firmware(&firmware_p, rproc->firmware, dev);
-> -	if (ret < 0) {
-> -		dev_err(dev, "request_firmware failed: %d\n", ret);
-> -		goto unlock_mutex;
-> +		/* load firmware */
-> +		ret = request_firmware(&firmware_p, rproc->firmware, dev);
-> +		if (ret < 0) {
-> +			dev_err(dev, "request_firmware failed: %d\n", ret);
-> +			goto unlock_mutex;
-> +		}
+> Changes on v2:
+>
+>  Add custom 'select'
+>  Pass hardware instance entries with phandles and
+>    remove cell-index and bid entries
+>  Clock, register address space, are same for the children.
+>    So move them to parent node.
+>  Two PHY instances cannot run in different modes,
+>    so move the phy-mode entry to parent node.
+>  Add second child entry in the DT example.
+>
+>  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 138 +++++++++++++++++++++
+>  1 file changed, 138 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+> new file mode 100644
+> index 000000000000..8e65a2a71e7f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+> @@ -0,0 +1,138 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel Combophy Subsystem
+> +
+> +maintainers:
+> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> +
+> +description: |
+> +  Intel Combophy subsystem supports PHYs for PCIe, EMAC and SATA
+> +  controllers. A single Combophy provides two PHY instances.
+> +
+> +# We need a select here so we don't match all nodes with 'simple-bus'
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: intel,combo-phy
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^combophy@[0-9]+$"
 
-Any specific reason to not reuse skip_fw_load here?
-FYI i'm reworking the Loic's patch and i plan to implement the recovery part using skip_fw_load...
+Unit addresses are hex.
 
-Regards
-Arnaud
+> +
+> +  compatible:
+> +    items:
+> +      - const: intel,combo-phy
 
->  	}
->  
->  	/* boot the remote processor up again */
->  	ret = rproc_start(rproc, firmware_p);
->  
-> -	release_firmware(firmware_p);
-> +	if (!rproc->skip_fw_load_recovery)
-> +		release_firmware(firmware_p);
->  
->  unlock_mutex:
->  	mutex_unlock(&rproc->lock);
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 4fd5bedab4fa..fe6ee253b385 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -514,6 +514,7 @@ struct rproc {
->  	bool has_iommu;
->  	bool auto_boot;
->  	bool skip_fw_load;
-> +	bool skip_fw_load_recovery;
->  	struct list_head dump_segments;
->  	int nb_vdev;
->  };
-> 
+Needs to be an SoC specific compatible.
+
+> +      - const: simple-bus
+> +
+> +  clocks:
+> +    description: |
+> +      List of phandle and clock specifier pairs as listed
+> +      in clock-names property. Configure the clocks according
+> +      to the PHY mode.
+
+How many?
+
+No need to redefine a common property name, drop description. Plus,
+where's clock-names?
+
+> +
+> +  reg:
+> +    items:
+> +      - description: ComboPhy core registers
+> +      - description: PCIe app core control registers
+> +
+> +  reg-names:
+> +    items:
+> +      - const: core
+> +      - const: app
+> +
+> +  resets:
+> +    maxItems: 2
+> +
+> +  reset-names:
+> +    items:
+> +      - const: phy
+> +      - const: core
+> +
+> +  intel,syscfg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Chip configuration registers handle and ComboPhy instance id
+> +
+> +  intel,hsio:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: HSIO registers handle and ComboPhy instance id on NOC
+> +
+> +  intel,aggregation:
+> +    description: |
+> +      Specify the flag to confiure ComboPHY in dual lane mode.
+> +    type: boolean
+> +
+> +  intel,phy-mode:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0
+> +    maximum: 2
+> +    description: |
+> +      Configure the mode of the PHY.
+> +        0 - PCIe
+> +        1 - xpcs
+> +        2 - sata
+
+Doesn't this need to be per PHY? Or the 2 PHYs have to be the same mode?
+
+Use the types defined in include/dt-bindings/phy/phy.h. You'll need to
+add XPCS which maybe should be more specific to distinguish 1G, 10G,
+etc. Also, we typically put the mode into the 'phys' cells so the mode
+lives with the client node.
+
+> +
+> +patternProperties:
+> +  "^cb[0-9]phy@[0-9]+$":
+
+^phy@...
+
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: intel,phydev
+> +
+> +      "#phy-cells":
+> +        const: 0
+> +
+> +      resets:
+> +        description: |
+> +          reset handle according to the PHY mode.
+> +          See ../reset/reset.txt for details.
+> +
+> +    required:
+> +      - compatible
+> +      - "#phy-cells"
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - reg
+> +  - reg-names
+> +  - intel,syscfg
+> +  - intel,hsio
+> +  - intel,phy-mode
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    combophy@0 {
+> +        compatible = "intel,combo-phy", "simple-bus";
+> +        clocks = <&cgu0 1>;
+> +        reg = <0xd0a00000 0x40000>,
+> +              <0xd0a40000 0x1000>;
+> +        reg-names = "core", "app";
+> +        resets = <&rcu0 0x50 6>,
+> +                <&rcu0 0x50 17>;
+> +        reset-names = "phy", "core";
+> +        intel,syscfg = <&sysconf 0>;
+> +        intel,hsio = <&hsiol 0>;
+> +        intel,phy-mode = <0>;
+> +
+> +        cb0phy0:cb0phy@0 {
+> +            compatible = "intel,phydev";
+> +            #phy-cells = <0>;
+> +            resets = <&rcu0 0x50 23>;
+> +        };
+> +
+> +        cb0phy1:cb0phy@1 {
+> +            compatible = "intel,phydev";
+> +            #phy-cells = <0>;
+> +            resets = <&rcu0 0x50 24>;
+> +        };
+> +    };
+> --
+> 2.11.0
+>
