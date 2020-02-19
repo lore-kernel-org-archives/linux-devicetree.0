@@ -2,121 +2,170 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF952C169F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C448DC169F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B965B24672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582137694;
-	bh=y154k2uuTbGD94Zlk02vS2B19qqnUVB2EVKv7l94kNw=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=0+c6o3+r/7nufBkfnU5lnlT7ycaWH3wiqpAf0cuvj7JDwuFUjKQ2o3Of0kcHq6nis
-	 hNYmmKXRbhC5QGLUtdU1BqaIT6ZawBXBMhIInWYi/8lsjT3w3Vs8LWKqhWOuIvsa8v
-	 DWIaewoiypilXRzgvW1oWWPASzrzGVsocxAy9t5o=
+	by mail.kernel.org (Postfix) with ESMTP id 9EE812064C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 18:53:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aphIdvxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgBSSle (ORCPT
+        id S1726613AbgBSSxo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:41:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgBSSle (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:41:34 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A62B24670;
-        Wed, 19 Feb 2020 18:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582137693;
-        bh=y154k2uuTbGD94Zlk02vS2B19qqnUVB2EVKv7l94kNw=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Pg2nZ4uoohWZjP+BIMtpi2NMG9sPU8dIIUTvOC22OSIqGA70OfJB/rzFiJCYjpeww
-         DvQL878DwOMYisPb3aPKrLmjbuIOnIjYLwJaVOs1g/vlRJxfuyG+hZApM+W0rTipbe
-         QcDbarV7quXlg7jGtGql29sX3o8CfyG29JO0ztAU=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
-References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com> <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com> <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com> <1581999138.19053.21.camel@mtkswgap22> <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
-Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
+        Wed, 19 Feb 2020 13:53:44 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44332 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgBSSxn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 13:53:43 -0500
+Received: by mail-wr1-f67.google.com with SMTP id m16so1762245wrx.11;
+        Wed, 19 Feb 2020 10:53:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ghgXYpoQgkOpnQL9griV2O/D69vhRotKDSv69SC7wTw=;
+        b=aphIdvxLLQVuRbuh8CtOwlBazoYgwcHZy07FPMUO6+2MqV8kxkfNSAarAeZjvroZDQ
+         JvJOUQbS7Scj1xgIuIG2Mv73dBl7xHp6l5/RoDVbYSG/kMhvHRV0CWUfYMzIlacXy/iF
+         hR1kWKV++qaMpYS4FtwoEZyc9FnV/wLFRGVJgz1Hm6f3vO7EzQ2FjOxvfm4gVT0ReJxA
+         N3/VwuJ2hwshqDLk4Q7II3hrgCu2Pkr7NgZHUOWA0ogNdBQ4/MqEmfrKCTY5OyUEZ/Rn
+         eY8FqHf8uL1GxxtvgbwSpql8OiBDM5eQ4YB13CdPMJPpFHqSuj8CF3dNjhV6wgu4ieYN
+         hs1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ghgXYpoQgkOpnQL9griV2O/D69vhRotKDSv69SC7wTw=;
+        b=bPokfOpfIJIwzSloQngBPPpn9VdBoRu+qypxwIHI092QNHDN2ORp40whbnuwjj/hKn
+         juWSwoASvUlgEH6FVXiJ+Yq/AEAm4DcmIMklhGqDITrp1wr72Wetl9oykdwRCAqQQkb6
+         /URG6ytOEiNjcmh0l0y0dVaN9I5HaSD5BP777XIFPlAc1RAtCxfBJILw/xwI1pbD30oj
+         hrw5dTshrHkuuHcYXSeikyQ4lBEZNPmWM1qqRZY+JiUp8BPZKJlUcIhvEBLMwb+m7hrr
+         OvPl31pu80B2Cy/pNpyC9iO8FC0roZAu5ONIuOPBbNbQMwdMIt+dRB4Yxa2Kwo+rIuqh
+         3G6Q==
+X-Gm-Message-State: APjAAAUQn8I3m1F7CzEbONFDZuSNeDkiDZnqpVcPQXtb6VjFFowdEmUO
+        clX2RpX1VlfTkcIGsFjkD7Y=
+X-Google-Smtp-Source: APXvYqzJBbPpR1y0eUU/KS69tU3ktGU6cgCfyAySvGRWiN2smoZm7JCv//IyN+xeGyLOH2xgXULwqQ==
+X-Received: by 2002:adf:df90:: with SMTP id z16mr36589917wrl.273.1582138421671;
+        Wed, 19 Feb 2020 10:53:41 -0800 (PST)
+Received: from Ansuel-XPS.localdomain ([5.170.105.173])
+        by smtp.googlemail.com with ESMTPSA id y131sm981452wmc.13.2020.02.19.10.53.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 10:53:40 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        Owen Chen <owen.chen@mediatek.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        mtk01761 <wendell.lin@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Date:   Wed, 19 Feb 2020 10:41:32 -0800
-Message-ID: <158213769281.184098.14491216159423631295@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
+Date:   Wed, 19 Feb 2020 19:52:25 +0100
+Message-Id: <20200219185226.1236-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Matthias Brugger (2020-02-18 08:45:42)
->=20
->=20
-> On 18/02/2020 05:12, Macpaul Lin wrote:
-> > On Sat, 2020-02-15 at 02:47 +0100, Matthias Brugger wrote:
-> >=20
-> > Hi Stephen,
-> >=20
-> >> Hi Stephen,
-> >>
-> >> On 13/02/2020 00:44, Stephen Boyd wrote:
-> >>> Quoting Macpaul Lin (2020-02-07 01:20:43)
-> >>>> This patch adds basic SoC support for Mediatek's new 8-core SoC,
-> >>>> MT6765, which is mainly for smartphone application.
-> >>>
-> >>> Clock patches look OK to me. Can you resend them without the defconfig
-> >>> and dts patches and address Matthias' question?
-> >>>
-> >>
-> >> I'm not sure if I understand you. Do you prefer to have just the clock=
- parts
-> >> send as an independent version so that you can easier apply the patche=
-s to your
-> >> tree?
-> >>
-> >> Patch 2, 5, 6 and 7 should go through my tree.
-> >> So do you want a series with patches 1, 3 and 4?
-> >>
-> >> Regards,
-> >> Matthias
-> >=20
-> > Yup, I've got a little bit confused, too.
-> > Should I separate and resend these patches into 2 patch sets?
-> > The 1st patch set includes #1, #3, and #4?
-> > And the other includes #2, #5, #6, and #7?
-> >=20
->=20
-> Yes please do so. I think that's what Stephen referred to.
->=20
+Add missing definition of rpm clk for ipq806x soc
 
-If those are the ones that aren't dts or defconfig patches sounds good
-to me.
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+ drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
+ include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
+ 3 files changed, 40 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index 944719bd586f..dd0def465c79 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -16,6 +16,7 @@ Required properties :
+ 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
++			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8998", "qcom,rpmcc"
+ 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
+ 
+diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
+index 9e3110a71f12..f71d228fd6bd 100644
+--- a/drivers/clk/qcom/clk-rpm.c
++++ b/drivers/clk/qcom/clk-rpm.c
+@@ -543,10 +543,45 @@ static const struct rpm_clk_desc rpm_clk_apq8064 = {
+ 	.num_clks = ARRAY_SIZE(apq8064_clks),
+ };
+ 
++/* ipq806x */
++DEFINE_CLK_RPM(ipq806x, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
++DEFINE_CLK_RPM(ipq806x, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
++DEFINE_CLK_RPM(ipq806x, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
++DEFINE_CLK_RPM(ipq806x, nss_fabric_0_clk, nss_fabric_0_a_clk, QCOM_RPM_NSS_FABRIC_0_CLK);
++DEFINE_CLK_RPM(ipq806x, nss_fabric_1_clk, nss_fabric_1_a_clk, QCOM_RPM_NSS_FABRIC_1_CLK);
++
++static struct clk_rpm *ipq806x_clks[] = {
++	[RPM_APPS_FABRIC_CLK] = &ipq806x_afab_clk,
++	[RPM_APPS_FABRIC_A_CLK] = &ipq806x_afab_a_clk,
++	[RPM_CFPB_CLK] = &ipq806x_cfpb_clk,
++	[RPM_CFPB_A_CLK] = &ipq806x_cfpb_a_clk,
++	[RPM_DAYTONA_FABRIC_CLK] = &ipq806x_daytona_clk,
++	[RPM_DAYTONA_FABRIC_A_CLK] = &ipq806x_daytona_a_clk,
++	[RPM_EBI1_CLK] = &ipq806x_ebi1_clk,
++	[RPM_EBI1_A_CLK] = &ipq806x_ebi1_a_clk,
++	[RPM_SYS_FABRIC_CLK] = &ipq806x_sfab_clk,
++	[RPM_SYS_FABRIC_A_CLK] = &ipq806x_sfab_a_clk,
++	[RPM_SFPB_CLK] = &ipq806x_sfpb_clk,
++	[RPM_SFPB_A_CLK] = &ipq806x_sfpb_a_clk,
++	[RPM_NSS_FABRIC_0_CLK] = &ipq806x_nss_fabric_0_clk,
++	[RPM_NSS_FABRIC_0_A_CLK] = &ipq806x_nss_fabric_0_a_clk,
++	[RPM_NSS_FABRIC_1_CLK] = &ipq806x_nss_fabric_1_clk,
++	[RPM_NSS_FABRIC_1_A_CLK] = &ipq806x_nss_fabric_1_a_clk,
++};
++
++static const struct rpm_clk_desc rpm_clk_ipq806x = {
++	.clks = ipq806x_clks,
++	.num_clks = ARRAY_SIZE(ipq806x_clks),
++};
++
+ static const struct of_device_id rpm_clk_match_table[] = {
+ 	{ .compatible = "qcom,rpmcc-msm8660", .data = &rpm_clk_msm8660 },
+ 	{ .compatible = "qcom,rpmcc-apq8060", .data = &rpm_clk_msm8660 },
+ 	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
++	{ .compatible = "qcom,rpmcc-ipq806x", .data = &rpm_clk_ipq806x },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index 8e3095720552..ae74c43c485d 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -37,6 +37,10 @@
+ #define RPM_XO_A0				27
+ #define RPM_XO_A1				28
+ #define RPM_XO_A2				29
++#define RPM_NSS_FABRIC_0_CLK			30
++#define RPM_NSS_FABRIC_0_A_CLK			31
++#define RPM_NSS_FABRIC_1_CLK			32
++#define RPM_NSS_FABRIC_1_A_CLK			33
+ 
+ /* SMD RPM clocks */
+ #define RPM_SMD_XO_CLK_SRC				0
+-- 
+2.25.0
+
