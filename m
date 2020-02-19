@@ -2,115 +2,85 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44EEC761A1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDCEC11D80
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0DC24670
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9323324672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 22:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582150821;
-	bh=zptnUhe8x6XQu4JtOln4erW54/6WiLKsn2E8nEuZBY4=;
+	s=default; t=1582150867;
+	bh=M/V3DqoQPYDEYWzOoJqFkI84isLVy8Joxutnsm8NI4g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ETQatoYdMWnRtItskgN6dJWfhfb/wOxtMlJSf+7QApnXIIe58ZA8Kt4P4YxtF1KfA
-	 kb6n7jutB5QspZS35xJ1P5w0jovzToZvac7B9rKXRMC6RYe9CC4jV8aNUGlCTEnb0v
-	 yjHGhrpUA5qzxpURYGacRAyAX7Q651LmXv+123KI=
+	b=Aa0sYh7IcdbqXLFWD4XZHXoD6J31bniJC85jmqN94+ib7M8R3w4zCuXAuyNxYt1Ul
+	 uhOo4nhFxPb6WyjqvryUB0rUwQkINij01zlT+Xsqe0xANtpxlnT8uGgTitgxaoXur0
+	 SvASeSjLVqlMBmQ+5iPOlcahKF0K/VvRfxfGaeYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgBSWUU (ORCPT
+        id S1727082AbgBSWVH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:20:20 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43843 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgBSWUU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:20:20 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so25458858oif.10;
-        Wed, 19 Feb 2020 14:20:20 -0800 (PST)
+        Wed, 19 Feb 2020 17:21:07 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42530 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgBSWVG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 17:21:06 -0500
+Received: by mail-oi1-f195.google.com with SMTP id j132so25478243oih.9;
+        Wed, 19 Feb 2020 14:21:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HoqrxNkiO4sNPwbZAyhaFYleU66OIoSnWRCO5MqVWZA=;
-        b=ZTCklV0BuzC4L+j3fRoPF8bl1T6doR7H0Ny7qEIAp1J95CtoSXV20NKcNgjxW5d5v/
-         uS8oNn6YeC7vNERD3R0QhOMfG942CjAI3YUwJrJ0OpRiu+YWvXPGJ9xEU09WhO5UDRjA
-         LWGwNSw+jt/IViAWUGOeIKByoE4wViEVn71CTFm2Pt19MDoNKBxki//BSB6MHCRVE22Q
-         TkOlJQsdAKRIujcdsFrz8kj23x+8Dln+4BzbDzVsZMOhY54lHL4QD5RwgoZtiCZPl7VK
-         q1U+VEaGAdiODhV+Nj9WMKnCrWaRiuhKaaKShSAZjdD3o6qhJj2gFcfCon6SLL4mv8EJ
-         sCZA==
-X-Gm-Message-State: APjAAAWrhxQkk1SDgq5xSDXXrVtJw3uXZst6SoW1YJ6yM+LpCXfoNpvE
-        S1c9nEeVBegaBn7gNA/jIA==
-X-Google-Smtp-Source: APXvYqweTSoqkjBqa80EjYR38p/0rwqrjoj1Bwt52lzGyBMpICjKEyD3wwxsGLI2bekiwMC9Vj24bA==
-X-Received: by 2002:aca:190b:: with SMTP id l11mr6388881oii.65.1582150820064;
-        Wed, 19 Feb 2020 14:20:20 -0800 (PST)
+        bh=kgnszcGIgx8eKrYcFzUwT2aC+nFz0K5SNNaYzo9jGEA=;
+        b=qr3LvhZ6+dz08hO4i00YzKNK1XsbeiHacXLtSCDBk3CDeAgcowUTzkArGcAn8lkYKa
+         W6Z5/e9FueQNTEfasPONvEUyveFbOk8zg21ZDnivcBDCOPWLSSNGXO6deMNXnAYV8K+n
+         4IU3P/shD8au7tqGRJpaCm8mbR58djh4ZmNAYtHbwxuUyKm5hG5nuxHoBo+4ehwpJ8ra
+         5fW+YqD64/cSQwqfnCuLvuBoJ1Uyu/knukgeAVnbawoeDc1JHrf9DgmDpsxKJ5DkuBdY
+         OGXId1otT5QcBXhzyrTP/PzEYl5Ns0YTDXARXczAYR0lrjCJ9KDdLG1vB9PbBxGh0ohZ
+         wHDQ==
+X-Gm-Message-State: APjAAAV+FsWt9vL5e8GYkyrpt3rsIIiTrB7nZh6whCiM11s2Jh5vSm9c
+        aeoRUNT0wNFlfqUD739SIg==
+X-Google-Smtp-Source: APXvYqwLrlFcY4JuHilf0viUQ4JVawi4WxKwhLmGNJRu5pesDPyJiFwhX6oeNPnx4cXKDU+JnUCO5g==
+X-Received: by 2002:aca:5303:: with SMTP id h3mr5864795oib.109.1582150866258;
+        Wed, 19 Feb 2020 14:21:06 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f3sm375970oto.57.2020.02.19.14.20.19
+        by smtp.gmail.com with ESMTPSA id s12sm412573oic.31.2020.02.19.14.21.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:20:19 -0800 (PST)
-Received: (nullmailer pid 9018 invoked by uid 1000);
-        Wed, 19 Feb 2020 22:20:18 -0000
-Date:   Wed, 19 Feb 2020 16:20:18 -0600
+        Wed, 19 Feb 2020 14:21:05 -0800 (PST)
+Received: (nullmailer pid 10416 invoked by uid 1000);
+        Wed, 19 Feb 2020 22:21:05 -0000
+Date:   Wed, 19 Feb 2020 16:21:05 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Alexey Minnekhanov <alexey.min@gmail.com>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/5] dt-bindings: arm: qcom: Add sdm630 and sdm660 SoCs
-Message-ID: <20200219222018.GA6988@bogus>
+        devicetree@vger.kernel.org,
+        Alexey Minnekhanov <alexey.min@gmail.com>
+Subject: Re: [PATCH 2/5] dt-bindings: arm: Add kryo260 compatible
+Message-ID: <20200219222105.GA10282@bogus>
 References: <20200212170916.7494-1-alexey.min@gmail.com>
- <20200212170916.7494-4-alexey.min@gmail.com>
+ <20200212170916.7494-3-alexey.min@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212170916.7494-4-alexey.min@gmail.com>
+In-Reply-To: <20200212170916.7494-3-alexey.min@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 08:09:14PM +0300, Alexey Minnekhanov wrote:
-> Add a SoC strings for the Qualcomm SDM630 and SDM660 SoCs.
-> Also document the new xiaomi,lavender compatible used in
-> a device tree binding.
+On Wed, 12 Feb 2020 20:09:13 +0300, Alexey Minnekhanov wrote:
+> Kryo260 is found in SDM660, so add it in list of cpu compatibles
 > 
 > Signed-off-by: Alexey Minnekhanov <alexey.min@gmail.com>
 > ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index 529d924931f1..c5af92acd427 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -36,6 +36,8 @@ description: |
->          msm8994
->          msm8996
->          sc7180
-> +        sdm630
-> +        sdm660
->          sdm845
->  
->    The 'board' element must be one of the following strings:
-> @@ -125,6 +127,11 @@ properties:
->                - samsung,a5u-eur
->            - const: qcom,msm8916
->  
-> +      - items:
-> +          - enum:
-> +              - xiaomi,lavender
-> +          - const: qcom,sdm660
 
-I think you want to keep this sorted by the compatible string and not be 
-in the middle of msm89xx.
+Applied, thanks.
 
-> +
->        - items:
->            - const: qcom,msm8996-mtp
->  
-> -- 
-> 2.20.1
-> 
+Rob
