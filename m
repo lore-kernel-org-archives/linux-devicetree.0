@@ -2,89 +2,89 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111E3C18E00
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE49C34056
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7F124673
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54EC208C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582142692;
-	bh=PTXcNLU7VFbKS/B8PLaK9EnVE3sefYyOOH070hQ/Kv4=;
+	s=default; t=1582142765;
+	bh=BJ1Bt+JfO5jm2fQFr5dhPuqJwbQRjxfPO26O/4fcMkM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E9HoVk5tFKy2rWwVZ81P7Im4jKlyMR2gV+tmPkuUywXoo8sGwV5GBL9O++LIIPmOu
-	 6qMBWvif8TRAR6XuB9ldzx9Fn1IrZkxqhto1s2KsasqXuVkwKWLBfh3S81YNMrLfd2
-	 cWtpo7+fYI+QS82aD5QrJq9WR3ByzF7mR7bGEHNY=
+	b=1/U8tpXfIJ3vLTAFMo3CFrJMOBLl+LG6kE7rSIoqQc7UBv7xPuyPjinb1bhmktHWa
+	 cG78kitbPCetFbugrpTmullocqPm+iFkoNFiFHSBPCvkJEmReL/7r6hF99UHrGQU2R
+	 YijYI6N//eE6Y1aP5P9zzjPDVfOsObBSb01KeLn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgBSUEt (ORCPT
+        id S1726651AbgBSUGF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:04:49 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37465 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgBSUEs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 15:04:48 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b3so192603otp.4;
-        Wed, 19 Feb 2020 12:04:48 -0800 (PST)
+        Wed, 19 Feb 2020 15:06:05 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41730 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgBSUGF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 15:06:05 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r27so1376855otc.8
+        for <devicetree@vger.kernel.org>; Wed, 19 Feb 2020 12:06:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y69m6YreEhpROt0GtdE3QRjZbmZdIsP2QJE7zPyHFN4=;
-        b=GveT5HD62VRq3wSZf1HAtvg4d+BWv43t8X9wj6DK5I2jC2yk3tw8icKrmb8GLpdJjL
-         C2zDkXpgyemOmGRhp2yT1mxm4XBWw5DgwotccL0GiIlH+3erUvBmfz4pFfN1ifrM/09R
-         lXlHmRJczn5Ee4eJaIug066ElVFudMAgFek/K8QvvyEWwRWDP64CTsTyhI+H/YpxyBLh
-         S4L+G1ehsPTxQh0erLltDnIwFUr805rwADzsnde7GTQaVNjqaYbQDgCzB8+QxxB7C9nt
-         GfjaZF5oWHJwy/pRji5Hdt0yY00Oexs6HGpwX9XakrYyHzF7g6zU8r1RA/an6V78Nj3d
-         Tbnw==
-X-Gm-Message-State: APjAAAXJeaP8pMsLhTtmr7WTinBzRh3ii+j63dOoBJngUSmX60KbCt1n
-        EAEMROfzzP8L4LDP6NRNNbyoqDGZdw==
-X-Google-Smtp-Source: APXvYqy9ep6W/LTmMOkwrhw7JdGWKGRsfHd4P94n6XKXnadr81O+WabVg5ygLiU9RKAYZBhcbDJl0A==
-X-Received: by 2002:a05:6830:1149:: with SMTP id x9mr21373149otq.156.1582142687849;
-        Wed, 19 Feb 2020 12:04:47 -0800 (PST)
+        bh=PMiPmtnVcRtQuuVXUkzcuK8mP/mgq/WYKhNUinVCtqI=;
+        b=G7dq152eJ+ubu878Xtm2p4chW6aPvaKW1FgrFnlIenYyb1v4L191GUjI7hAoZ33YfY
+         iq8IhYz7zwCgukFwMHqbTGtcdU86AzH2Hdw6mc6YFXwJJmj6Jg5HniDswl1jg3+7BciK
+         8odjklvqbUn92FkpYEtdUFL8W/WQgujmv+S6MGMdERm3EEYYyz9GF/yYI8WHTllcaKXG
+         TP3/fvZAm0GVty6FdgX8qroNEcBP9EE8kH3yHnt2gmbon9xD9xkzbnoGpOzwLIsEYH7D
+         6CmAl7tbtbfC8iarycp+yGoYbBJmQlOJOjkWDG3xxaPVKWiZSp+QcuCM0n0mZ0b3mqh/
+         eDHw==
+X-Gm-Message-State: APjAAAWSg5fQDJXFy8JZG1rQdRzD32PiZE+73/25WEyaRGZM7lG+lS1M
+        Rw/99oXRcijhJUPBgUfIL2ybVyXUig==
+X-Google-Smtp-Source: APXvYqxfR4IAZl8EANdQf8nAOzf+u9uAMHLdahvheRvuvuPF8YZVRxBkTHadhvOdr/HKnX7kN6bOHw==
+X-Received: by 2002:a9d:7696:: with SMTP id j22mr22136279otl.188.1582142764185;
+        Wed, 19 Feb 2020 12:06:04 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 3sm267357otd.15.2020.02.19.12.04.47
+        by smtp.gmail.com with ESMTPSA id 60sm265245otu.45.2020.02.19.12.06.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:04:47 -0800 (PST)
-Received: (nullmailer pid 15016 invoked by uid 1000);
-        Wed, 19 Feb 2020 20:04:46 -0000
-Date:   Wed, 19 Feb 2020 14:04:46 -0600
+        Wed, 19 Feb 2020 12:06:03 -0800 (PST)
+Received: (nullmailer pid 17037 invoked by uid 1000);
+        Wed, 19 Feb 2020 20:06:03 -0000
+Date:   Wed, 19 Feb 2020 14:06:03 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infread.org
-Subject: Re: [PATCH] MAINTAINERS: remove myself from DT bindings entry
-Message-ID: <20200219200446.GA8502@bogus>
-References: <20200206120457.9054-1-mark.rutland@arm.com>
+To:     bage@linutronix.de
+Cc:     devicetree@vger.kernel.org, Bastian Germann <bage@linutronix.de>,
+        Benedikt Spranger <b.spranger@linutronix.de>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Linutronix
+Message-ID: <20200219200603.GA16934@bogus>
+References: <20200206113328.7296-1-bage@linutronix.de>
+ <20200214111003.11115-1-bage@linutronix.de>
+ <20200214111003.11115-2-bage@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200206120457.9054-1-mark.rutland@arm.com>
+In-Reply-To: <20200214111003.11115-2-bage@linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 12:04:57PM +0000, Mark Rutland wrote:
-> For quite a while Rob has been handling DT binding maintenance, and I
-> haven't had the time to review bindings outside of a few targetted
-> cases. Given that, I think being listed in MAINTAINERS is more
-> misleading than helpful.
+On Fri, 14 Feb 2020 12:10:01 +0100, bage@linutronix.de wrote:
+> From: Bastian Germann <bage@linutronix.de>
 > 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
+> Add a vendor prefix for Linutronix GmbH.
+> Website: https://linutronix.de/
+> 
+> Co-developed-by: Benedikt Spranger <b.spranger@linutronix.de>
+> Signed-off-by: Benedikt Spranger <b.spranger@linutronix.de>
+> Signed-off-by: Bastian Germann <bage@linutronix.de>
 > ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-:( Applied.
-
-Feel free to continue to chime in on any crap bindings when you get the 
-urge. :)
+Applied, thanks.
 
 Rob
