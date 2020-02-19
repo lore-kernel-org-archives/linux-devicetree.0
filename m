@@ -2,164 +2,79 @@ Return-Path: <SRS0=2Ix+=4H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3470C34056
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 19:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2DCC3524E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C00207FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 19:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582142242;
-	bh=pyWHAxHUy06nRNZr4ZHe54BVql1Gar+S2v4+rgt09UE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JZuD1JMQjcoQCOTQ306rfqsDSZv0VH6Amqi17xDNhaiiKKWd5vfQCu2qPgXrfUWWw
-	 o5aQaGgwS9zRSLUvt2F0BRTPbtuXL02dLJo+qtcPFBvgKkPZqmQbvrwFaEgSC5ZJjr
-	 4EEJXe8V+jMqkn1Mpnb/yAjg54O2RH5+cWnhWTFM=
+	by mail.kernel.org (Postfix) with ESMTP id CC9B5208C4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 20:04:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NFrFNKpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgBST5W (ORCPT
+        id S1726651AbgBSUEF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:57:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45080 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgBST5V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 14:57:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v19so25041611oic.12;
-        Wed, 19 Feb 2020 11:57:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X7Cntp4AOEoOd/QDouJIkpO3jkbcftTYGpmm5Cp5JQk=;
-        b=UrFGWGwgEhHQq/tpb0chPcc75O4/SpRHXRjF4rOE0It+dFZJAEOLSAuE5BKw8ca5TS
-         gJVIviU/u/7cydAyRMiBSOxqGdJIXn/3HtZ/tiNY/Oq8HTg7OmqhMN225YUycBI4BDmT
-         zYWwQhYnZ9Ra2RuiRvzDQuJIM+Ib5Q9ELUX/PPBovbyxYEKJL983kiQ+AfMLgGCkKIjc
-         FFWEsLgHMst6+U62PhJbGevqSKa0dYR/dr9tO5J8pWXSX/zt9nWESzDxxMb0+uz2x+Fp
-         8GGQYoLAI7LPNRvRULRYojHNYGHaKeq7jrSJHqnefVWXl9NZcMouEwo9G+vY4VnDJsv8
-         9Ehw==
-X-Gm-Message-State: APjAAAXZmY1xFU5By/7Dkv4bxU4TsVKvs/wUSLSpkAwj7zJtCYSMyILC
-        WWgdk16Ip4cI9ZjQfrhOSxsaT+olYA==
-X-Google-Smtp-Source: APXvYqyD1fcoT1v/CiA2afjT5AB1aLfNBKse86anVISECPyrP3b78rWCg2sxIHL54q38S6YenlzRPA==
-X-Received: by 2002:aca:4789:: with SMTP id u131mr5446385oia.43.1582142241093;
-        Wed, 19 Feb 2020 11:57:21 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t132sm303349oie.8.2020.02.19.11.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 11:57:20 -0800 (PST)
-Received: (nullmailer pid 4616 invoked by uid 1000);
-        Wed, 19 Feb 2020 19:57:19 -0000
-Date:   Wed, 19 Feb 2020 13:57:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, mikko.mutanen@fi.rohmeurope.com,
-        markus.laine@fi.rohmeurope.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/5] dt-bindings: battry: add new battery
- parameters
-Message-ID: <20200219195719.GA3096@bogus>
-References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
- <205c01fe0555fe89226521a89a5b20933578780d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 19 Feb 2020 15:04:05 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:56866 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726634AbgBSUEF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Feb 2020 15:04:05 -0500
+Received: from zn.tnic (p200300EC2F095500E936A2094BFCA1EB.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5500:e936:a209:4bfc:a1eb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DF5581EC0C81;
+        Wed, 19 Feb 2020 21:04:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582142644;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=DAahp4Ht/gkJNFnbombgDUbRUyv2Pc4Kb1YJ7JE+TO4=;
+        b=NFrFNKppJQxs28KdnuWae3BEFfMUXQyOPtHqAFTR8KQc0u8rZSI5M9Mo7TJfl/VV93y08u
+        /LtVlznK9Xbry5KB7TDmCAfz7QxQR3lPSz0m40X1JoehShuPsi4u2ZQozzlx/Wo2qLlGcv
+        NkcJbtX4MckPTqGGaV0dOwNXFNBSnK8=
+Date:   Wed, 19 Feb 2020 21:03:59 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        ruizhao@microsoft.com, Lei Wang <lewan@microsoft.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>
+Subject: Re: [PATCH v11 1/2] dt-bindings: edac: dmc-520.yaml
+Message-ID: <20200219200358.GJ30966@zn.tnic>
+References: <5354a9c3-5b5a-486a-9d19-fa9be169faef@gmail.com>
+ <20200217181055.GC14426@zn.tnic>
+ <4c02326d-cf38-e1e1-1822-d24de22fa2cc@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <205c01fe0555fe89226521a89a5b20933578780d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <4c02326d-cf38-e1e1-1822-d24de22fa2cc@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 09:30:05AM +0200, Matti Vaittinen wrote:
-> Add:
-> 
->  - tricklecharge-current-microamp:
-> 
-> Some chargers have 3 charging stages. First one when battery is almost
-> empty is often called as trickle-charge. Last state when battery has been
-> "woken up" is usually called as fast-charge. In addition to this some
-> chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
-> pre-charge. Some batteries can benefit from this 3-phase charging
-> [citation needed].
+On Tue, Feb 18, 2020 at 09:12:15AM -0800, Shiping Ji wrote:
+> Actually I didn't send v11 of the driver since it will be identical to v10,
+> sorry for keeping you waiting on this. Please review v10, thanks!
 
-For car batteries at least, trickle charge is to keep battery full. But 
-maybe in that context, it would be 'charge-term-current-microamp'.
+Ok, both patches queued and will appear in linux-next soon.
 
-I'm just concerned that we end up with multiple properties that mean the 
-same thing. I think you're okay here.
+Thanks for the effort and persistence!
 
-> Introduce tricklecharge-current-microamp so that batteries can give
-> charging current limit for all three states.
-> 
->  - precharge-upper-limit-microvolt:
-> 
-> When battery voltage has reached certain limit we change from
-> trickle-charge to next charging state (pre-charge for BD99954). Allow
-> battery to specify this limit.
-> 
->  - re-charge-voltage-microvolt:
-> 
-> Allow giving a battery specific voltage limit for chargers which can
-> automatically re-start charging when battery has discharghed down to
-> this limit.
-> 
-> - over-voltage-threshold-microvolt
-> 
-> Allow specifying voltage threshold after which the battery is assumed to
-> be faulty.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-> index 5c913d4cf36c..7da044273e08 100644
-> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
->  behavior should a replacement that changes the battery type occur
->  without a corresponding update to the dtb.
->  
-> +Please note that not all charger drivers respect all of the properties.
-> +
->  Required Properties:
->   - compatible: Must be "simple-battery"
->  
->  Optional Properties:
-> + - over-voltage-threshold-microvolt: battery over-voltage limit
-> + - re-charge-voltage-microvolt: limit to automatically start charging again
->   - voltage-min-design-microvolt: drained battery voltage
->   - voltage-max-design-microvolt: fully charged battery voltage
->   - energy-full-design-microwatt-hours: battery design energy
->   - charge-full-design-microamp-hours: battery design capacity
-> + - tricklecharge-current-microamp: current for trickle-charge phase
+:-)
 
-trickle-charge-...
+-- 
+Regards/Gruss,
+    Boris.
 
->   - precharge-current-microamp: current for pre-charge phase
-> + - precharge-upper-limit-microvolt: limit when to change to constant charging
->   - charge-term-current-microamp: current for charge termination phase
->   - constant-charge-current-max-microamp: maximum constant input current
->   - constant-charge-voltage-max-microvolt: maximum constant input voltage
-> -- 
-> 2.21.0
-> 
-> 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
+https://people.kernel.org/tglx/notes-about-netiquette
