@@ -4,107 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D71BC34047
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90971C34050
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57432176D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688AC20801
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Feb 2020 14:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582120475;
-	bh=pZWh7elbnmiV7gJ/AjqZyG8cWHBS5zE3C38XtoAFYJo=;
+	s=default; t=1582121371;
+	bh=HFaXUgtzxw+7x9hkLBxzw5x+uzRjCqlLOOAm22GwX88=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sRRtdvy/yfKtb1/fYQGN1miJle2UPOIcqZDBIpsfeot+5p8MZriy80+7mJxI2ofDX
-	 qOhkFlH2hMUBtRN9magWFEJ+vSRyNGDZXPcl+uuzHm7BF0Sx5h2w4pmFl7zAMPEi0g
-	 30Lp1ocFSee1PHeXcJsPjez0jqu1EluiVORVeY9Y=
+	b=VvC4GvAR096aKaFeLE0VDpSu4Wi8M+B0hZZt0oFDy61sLNduhVrQyNfUcz+0qj1m+
+	 bM3+za6JmAk/sZqw7N+EzdVhyUE10wgDjf75yb0ejQnEIfluYU60WOpiph7bsGR2fp
+	 AcZU0NnudAk/Xje0Wv0EhiobqsZGZ7FTD8TK8ZAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgBSNyf (ORCPT
+        id S1728078AbgBSOJ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:54:35 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39343 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgBSNyf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 08:54:35 -0500
-Received: by mail-oi1-f194.google.com with SMTP id z2so23844606oih.6;
-        Wed, 19 Feb 2020 05:54:33 -0800 (PST)
+        Wed, 19 Feb 2020 09:09:27 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42816 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbgBSOJY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Feb 2020 09:09:24 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j132so23886923oih.9;
+        Wed, 19 Feb 2020 06:09:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9M75KITIRI2fIyzJ9QLJNNG7LlFCUvrsVp2MLwGj1Cw=;
-        b=LqkaPc/ypRNKhAuFQgXDYGzaDO+zdqP10HAkEodZLLlKG3SbzipeHqQJrCHNd27Q+9
-         nxskLQev761lzl42vhWXwiU0dmJQJApo13NYNnOmnSbWIacIAHltO0Casz/vDJ/aZOMa
-         4YW3dzsyoXMrmXOjrBH6tjYJo3xIesO4eMkUQNACFrND8qxAQCY3WKMVdhlcQ34Mm8OD
-         rQPlBB3r70pYtYphK8+eYOmXEl2CHm+BcBCCts2QY6VpqS0MYM5HgHBi/vvNnDCVwrJ9
-         dMfpFnBy78aA+vn+B5LvKbPtJnUbPQogZZIz5EejF9sumyLqu2rUzWU9azassVgJcRYX
-         Ai+g==
-X-Gm-Message-State: APjAAAWmzc9NMLcLnr3TUelpSZkQru4uxmtx1WzGTb+Cpxb3WJPH3SOF
-        /ilvq4QL/jtbHJS6c6ZIbw==
-X-Google-Smtp-Source: APXvYqxgkdnhXnfTH91w1CcgAgn8QY+egrxCu7nYqMzFGcTKbBJz8JhR7QEK1WiYhqYJ7Dht+Fql3g==
-X-Received: by 2002:a05:6808:18:: with SMTP id u24mr4722231oic.10.1582120472746;
-        Wed, 19 Feb 2020 05:54:32 -0800 (PST)
+        bh=w0+iwQxqNl/u797DK+0XyoBMJz+IIdj3rSrLkc2+kbs=;
+        b=QBOx2ZSEXrHbCmd8jU0LL/Exg7ryyHYwI4/suzaq+OGmsUro4i5bCrnSOSjqJR+qDN
+         ZaQcD2pLccnf6mBQnuYXri5F25tzTu07bfcuyjw0fxJwpNrni7kacSTbJIvBnSKCBF0z
+         uO1taak8+ritB2SxiBtGFhFubz8kBuasEsQ+hTf3PVNUbDffylA/+BEN//y/EZAyvJl5
+         LYr8ItwyOZp+Vx3sNp2xK5cV8uERzhz7oNA05wiCH/P9zMmPB/ckvqdvsfere4/JXMfx
+         Fd2xQiLfymEtcTs5tu+XyG+I5lpju0Z8T/30Mu+rDkYQtdrhBGU0tk/WXKDvv57v5zJt
+         Aj2A==
+X-Gm-Message-State: APjAAAVAQE+CuIYZn4ha6ljkouBtLL3QDJFzrYEBK7aamyJm4yPV7yi8
+        ch/ThXBqnk4DI6f1Czk9ww==
+X-Google-Smtp-Source: APXvYqyBzFjf4VEjf1EoLRQ0uCruPnwDHxFaEDDuZ7gw9XftwRfkd4+9xnhC8HJN5lU4jCtbEAB0lw==
+X-Received: by 2002:aca:3f8b:: with SMTP id m133mr4540584oia.51.1582121363283;
+        Wed, 19 Feb 2020 06:09:23 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p24sm644661otq.64.2020.02.19.05.54.31
+        by smtp.gmail.com with ESMTPSA id c10sm647696otl.77.2020.02.19.06.09.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 05:54:31 -0800 (PST)
-Received: (nullmailer pid 18549 invoked by uid 1000);
-        Wed, 19 Feb 2020 13:54:30 -0000
-Date:   Wed, 19 Feb 2020 07:54:30 -0600
+        Wed, 19 Feb 2020 06:09:22 -0800 (PST)
+Received: (nullmailer pid 8118 invoked by uid 1000);
+        Wed, 19 Feb 2020 14:09:21 -0000
+Date:   Wed, 19 Feb 2020 08:09:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add YAML schemas for Intel
- Combophy
-Message-ID: <20200219135430.GA17628@bogus>
-References: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
+To:     peng.fan@nxp.com
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/9] dt-bindings: remoteproc: Convert imx-rproc to
+ json-schema
+Message-ID: <20200219140921.GA7031@bogus>
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+ <1582097265-20170-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
+In-Reply-To: <1582097265-20170-2-git-send-email-peng.fan@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2020 11:31:29 +0800, Dilip Kota wrote:
-> Combophy subsystem provides PHY support to various
-> controllers, viz. PCIe, SATA and EMAC.
-> Adding YAML schemas for the same.
+On Wed, 19 Feb 2020 15:27:37 +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> Convert the i.MX remoteproc binding to DT schema format
+> using json-schema
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
-> Changes on v2:
-> 
->  Add custom 'select'
->  Pass hardware instance entries with phandles and
->    remove cell-index and bid entries
->  Clock, register address space, are same for the children.
->    So move them to parent node.
->  Two PHY instances cannot run in different modes,
->    so move the phy-mode entry to parent node.
->  Add second child entry in the DT example.
-> 
->  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 138 +++++++++++++++++++++
->  1 file changed, 138 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 33 ------------
+>  .../devicetree/bindings/remoteproc/imx-rproc.yaml  | 61 ++++++++++++++++++++++
+>  2 files changed, 61 insertions(+), 33 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml: properties:intel,phy-mode: {'$ref': '/schemas/types.yaml#/definitions/uint32', 'minimum': 0, 'maximum': 2, 'description': 'Configure the mode of the PHY.\n  0 - PCIe\n  1 - xpcs\n  2 - sata\n'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml: properties:intel,phy-mode: 'not' is a required property
+warning: no schema found in file: Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: ignoring, error in schema: properties: clocks: items
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-processor (See': '../clock/clock-bindings.txt)'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks:items: Additional properties are not allowed ('Clock for co-processor (See' was unexpected)
 
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/intel,combo-phy.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/phy/intel,combo-phy.example.dts] Error 1
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks: {'items': {'Clock for co-processor (See': '../clock/clock-bindings.txt)'}} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks: 'maxItems' is a required property
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-processor (See': '../clock/clock-bindings.txt)'} is not valid under any of the given schemas (Possible causes of the failure):
+		/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-processor (See': '../clock/clock-bindings.txt)'} is not of type 'array'
+
+
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dts] Error 1
 Makefile:1263: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1240526
+See https://patchwork.ozlabs.org/patch/1240544
 Please check and re-submit.
